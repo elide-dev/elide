@@ -78,6 +78,7 @@ import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cfg.ElideCLITool.GVM_RESOURCES
+import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
 import elide.tool.cli.options.EngineJavaScriptOptions
@@ -1530,106 +1531,132 @@ private typealias ContextAccessor = () -> PolyglotContext
       )
     }
 
-    resolveEngine(onByDefaultLangs).unwrap().use {
-      withDeferredContext(onByDefaultLangs) {
-        // warn about experimental status, as applicable
-        if (verbose && experimentalLangs.isNotEmpty()) {
-          logging.warn(
-            "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
-                    "considered experimental.",
-          )
-        }
-
-        when (val scriptTargetOrCode = runnable) {
-          // run in interactive mode
-          null, "-" -> if (useStdin || runnable == "-") {
-            // activate interactive behavior
-            enableInteractive()
-
-            // consume from stdin
-            primaryLang(null).let { lang ->
-              input.buffer.use { buffer ->
-                executeSource(
-                  "from stdin",
-                  langs,
-                  lang,
-                  it,
-                  Source.newBuilder(lang.symbol, buffer, "stdin")
-                    .cached(false)
-                    .buildLiteral(),
-                )
-              }
-            }
-          } else if (!serveMode()) {
-            logging.debug("Beginning interactive guest session")
-            enableInteractive()
-            beginInteractiveSession(
-              langs,
-              primaryLang(null),
-              engine(),
-              it,
+    try {
+      resolveEngine(onByDefaultLangs).unwrap().use {
+        withDeferredContext(onByDefaultLangs) {
+          // warn about experimental status, as applicable
+          if (verbose && experimentalLangs.isNotEmpty()) {
+            logging.warn(
+              "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
+                      "considered experimental.",
             )
-          } else {
-            logging.error("To run a server, pass a file, or code via stdin or `-c`")
           }
 
-          // run a script as a file, or perhaps a string literal
-          else -> if (executeLiteral) {
-            logging.trace("Interpreting runnable parameter as code")
-            executeSingleStatement(
-              langs,
-              primaryLang(null),
-              it,
-              scriptTargetOrCode,
-            )
-          } else {
-            // no literal execution flag = we need to parse `runnable` as a file path
-            logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
-            File(scriptTargetOrCode).let { scriptFile ->
-              primaryLang.invoke(scriptFile).let { lang ->
-                when (lang.executionMode) {
-                  // if this engine supports direct execution of source files, execute it that way
-                  ExecutionMode.SOURCE_DIRECT -> executeSource(
-                    scriptFile.name,
+          when (val scriptTargetOrCode = runnable) {
+            // run in interactive mode
+            null, "-" -> if (useStdin || runnable == "-") {
+              // activate interactive behavior
+              enableInteractive()
+
+              // consume from stdin
+              primaryLang(null).let { lang ->
+                input.buffer.use { buffer ->
+                  executeSource(
+                    "from stdin",
                     langs,
                     lang,
                     it,
-                    readExecutableScript(
-                      allSupportedLangs,
+                    Source.newBuilder(lang.symbol, buffer, "stdin")
+                      .cached(false)
+                      .buildLiteral(),
+                  )
+                }
+              }
+            } else if (!serveMode()) {
+              logging.debug("Beginning interactive guest session")
+              enableInteractive()
+              beginInteractiveSession(
+                langs,
+                primaryLang(null),
+                engine(),
+                it,
+              )
+            } else {
+              logging.error("To run a server, pass a file, or code via stdin or `-c`")
+            }
+
+            // run a script as a file, or perhaps a string literal
+            else -> if (executeLiteral) {
+              logging.trace("Interpreting runnable parameter as code")
+              executeSingleStatement(
+                langs,
+                primaryLang(null),
+                it,
+                scriptTargetOrCode,
+              )
+            } else {
+              // no literal execution flag = we need to parse `runnable` as a file path
+              logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
+              File(scriptTargetOrCode).let { scriptFile ->
+                primaryLang.invoke(scriptFile).let { lang ->
+                  when (lang.executionMode) {
+                    // if this engine supports direct execution of source files, execute it that way
+                    ExecutionMode.SOURCE_DIRECT -> executeSource(
+                      scriptFile.name,
                       langs,
                       lang,
-                      scriptFile,
-                    ),
-                  )
+                      it,
+                      readExecutableScript(
+                        allSupportedLangs,
+                        langs,
+                        lang,
+                        scriptFile,
+                      ),
+                    )
 
-                  // otherwise, if we need to "compile" this source first (as is the case for LLVM targets and JVM
-                  // targets like Java and Kotlin), then conduct that phase and load a symbol to begin execution.
-                  ExecutionMode.SOURCE_COMPILED -> executeCompiled(
-                    scriptFile,
-                    langs,
-                    lang,
-                    it,
-                    compileEntrypoint(
+                    // otherwise, if we need to "compile" this source first (as is the case for LLVM targets and JVM
+                    // targets like Java and Kotlin), then conduct that phase and load a symbol to begin execution.
+                    ExecutionMode.SOURCE_COMPILED -> executeCompiled(
+                      scriptFile,
+                      langs,
                       lang,
                       it,
-                      scriptFile,
-                    ),
-                  )
+                      compileEntrypoint(
+                        lang,
+                        it,
+                        scriptFile,
+                      ),
+                    )
+                  }
                 }
               }
             }
           }
         }
-      }
 
-      // don't exit if we have a running server
-      if (serverRunning.value) {
-        // wait for all tasks to arrive
-        logging.debug("Waiting for long-lived tasks to arrive")
-        phaser.value.arriveAndAwaitAdvance()
-        logging.debug("Exiting")
+        // don't exit if we have a running server
+        if (serverRunning.value) {
+          // wait for all tasks to arrive
+          logging.debug("Waiting for long-lived tasks to arrive")
+          phaser.value.arriveAndAwaitAdvance()
+          logging.debug("Exiting")
+        }
+        return success()
       }
-      return success()
+    } catch (err: AbstractToolError.Known) {
+      when (err.case) {
+        ShellError.FILE_NOT_FOUND -> {
+          logging.warn("File not found: '$runnable'")
+          return err("File not found", exitCode = 1)
+        }
+
+        ShellError.FILE_NOT_READABLE -> {
+          logging.warn("File not readable: '$runnable'")
+          return err("File not readable", exitCode = 1)
+        }
+
+        ShellError.NOT_A_FILE -> {
+          logging.warn("Not a file: '$runnable'")
+          return err("Not a file", exitCode = 1)
+        }
+
+        ShellError.FILE_TYPE_MISMATCH -> {
+          logging.warn("File type mismatch: '$runnable'")
+          return err("File type mismatch", exitCode = 1)
+        }
+
+        else -> throw err
+      }
     }
   }
 }

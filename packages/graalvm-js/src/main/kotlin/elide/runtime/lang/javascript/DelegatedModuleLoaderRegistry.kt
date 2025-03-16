@@ -62,7 +62,9 @@ public object DelegatedModuleLoaderRegistry : Predicate<DelegatedModuleRequest> 
   @JvmStatic private val registry: MutableList<DelegateFactory> = mutableListOf()
 
   // Ask delegate factories if they accept this.
-  override fun test(t: DelegatedModuleRequest): Boolean = registry.any { it.test(t) }
+  override fun test(t: DelegatedModuleRequest): Boolean = registry.any {
+    it.test(t)
+  }
 
   /**
    * Register a new delegate factory.
@@ -80,8 +82,18 @@ public object DelegatedModuleLoaderRegistry : Predicate<DelegatedModuleRequest> 
    * @return The module loader, if any.
    */
   @JvmStatic public fun resolve(request: DelegatedModuleRequest, realm: JSRealm): JSModuleLoader {
-    return requireNotNull(registry.firstOrNull { it.test(request) }?.invoke(realm)) {
+    return requireNotNull(resolveSafe(request, realm)) {
       "Expected a module loader to resolve the request, but none was found."
     }
+  }
+
+  /**
+   * Resolve a module request to a module loader or return `null` if none matches.
+   *
+   * @param request The request to resolve.
+   * @return The module loader, if any.
+   */
+  @JvmStatic public fun resolveSafe(request: DelegatedModuleRequest, realm: JSRealm): JSModuleLoader? {
+    return registry.firstOrNull { it.test(request) }?.invoke(realm)
   }
 }

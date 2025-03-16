@@ -44,7 +44,7 @@ Latest: <code>1.0.0-beta1</code>
 
 Elide is like Node or Python. Use it to run things:
 ```shell
-> elide ./my-typescript.{ts,js,py}
+> elide ./my-code.{ts,js,py}
 ```
 
 You can use Node APIs. You can even mix languages:

@@ -688,6 +688,8 @@ val testBase: Configuration by configurations.creating
 
 tasks {
   test {
+    // must be root project so that test scripts can be resolved during smoke tests
+    workingDir = rootProject.layout.projectDirectory.asFile
     maxHeapSize = "2G"
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")

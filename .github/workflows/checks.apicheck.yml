@@ -95,15 +95,14 @@ jobs:
         uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.1
         with:
           bun-version-file: config/bun-version
+      - name: "Setup: Elide"
+        uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
+        with:
+          version: "1.0.0-alpha15" # unlisted (interim)
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "10.6.2"
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
-      - name: "Setup: Yarn"
-        run: pnpm install -g yarn@1.22.19
       - name: "Setup: GraalVM (Java 23)"
         uses: graalvm/setup-graalvm@01ed653ac833fe80569f1ef9f25585ba2811baab # v1.3.3
         with:

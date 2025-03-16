@@ -61,8 +61,8 @@
   "scripts": {
     "build": "make build",
     "test": "make test",
-    "fmt:check": "pnpm biome format --config-path=config/biome.jsonc format --check .",
-    "fmt": "pnpm biome format --config-path=config/biome.jsonc format --write .",
+    "fmt:check": "cp -fv ./config/biome.jsonc . && pnpm biome format --check . ; rm -f biome.jsonc",
+    "fmt": "cp -fv ./config/biome.jsonc . && pnpm biome format . ; rm -f biome.jsonc",
     "upgrade-node": "yarn upgrade-interactive",
     "upgrade-gradle": "gradle-upgrade-interactive",
     "prettier": "prettier",

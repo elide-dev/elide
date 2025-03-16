@@ -103,7 +103,7 @@ jobs:
       - name: "Check: Buf Lint"
         uses: bufbuild/buf-lint-action@06f9dd823d873146471cfaaf108a993fe00e5325 # v1.1.1
         with:
-          input: proto
+          input: packages/proto
 
   ##
   ## Job: Buf Breaking
@@ -142,4 +142,4 @@ jobs:
         continue-on-error: ${{ inputs.ignore_breaking }}
         with:
           against: https://github.com/elide-dev/elide.git#branch=main
-          input: proto
+          input: packages/proto

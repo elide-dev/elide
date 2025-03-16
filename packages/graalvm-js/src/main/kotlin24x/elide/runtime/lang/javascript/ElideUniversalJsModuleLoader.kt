@@ -39,8 +39,10 @@ import com.oracle.truffle.js.runtime.objects.*
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord.Status
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.File
+import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
+import java.util.function.Predicate
 import elide.core.api.Symbolic
 import elide.runtime.Logging
 import elide.runtime.gvm.loader.ModuleInfo
@@ -63,6 +65,14 @@ private const val ELIDE_TS_LANGUAGE_ID = "ts"
 // All built-in Elide modules.
 private val allElideModules = sortedSetOf(
   "sqlite",
+)
+
+// All TypeScript extensions.
+private val tsExtensions = sortedSetOf(
+  "ts",
+  "tsx",
+  "cts",
+  "mts"
 )
 
 // Module prefixes which trigger some kind of behavior.
@@ -122,7 +132,7 @@ private val allNodeModules = sortedSetOf(
 )
 
 // All built-in Node modules.
-@Suppress("VARIABLE_NAME_INCORRECT") public object NodeModuleName {
+@Suppress("VARIABLE_NAME_INCORRECT") public object NodeModuleName : Predicate<String> {
   public const val ASSERT: String = "assert"
   public const val ASSERT_STRICT: String = "assert_strict"
   public const val ASYNC_HOOKS: String = "async_hooks"
@@ -170,12 +180,31 @@ private val allNodeModules = sortedSetOf(
   public const val WORKER: String = "worker"
   public const val WORKER_THREADS: String = "worker_threads"
   public const val ZLIB: String = "zlib"
+
+  // named modules do not contain periods or slashes
+  private val namedModuleRegex = Regex("^[^./]+$")
+
+  override fun test(t: String): Boolean {
+    return if (namedModuleRegex.matches(t)) {
+      // does it start with any of the prefixes?
+      if (':' in t) {
+        val prefix = t.substringBefore(':')
+        return prefix in specialModulePrefixes
+      }
+      t in allNodeModules
+    } else {
+      false
+    }
+  }
 }
 
 // Implements Elide's internal ECMA-compliant module loader.
 internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) : NpmCompatibleESModuleLoader(realm) {
   // Cache of injected modules.
   private val injectedModuleCache: MutableMap<String, JSModuleRecord> = ConcurrentSkipListMap()
+
+  // Cache of delegated modules.
+  private val delegatedModuleCache: MutableMap<String, JSModuleRecord> = ConcurrentSkipListMap()
 
   // Synthesize an injected module.
   private fun synthesizeInjected(
@@ -375,29 +404,30 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
   // Load a module which needs pre-compilation (or some other special load step).
   private fun loadDelegatedSourceModule(moduleSource: Source, moduleData: JSModuleData): JSModuleRecord {
     val req = DelegatedModuleRequest.of(moduleSource)
-    return when (DelegatedModuleLoaderRegistry.test(req)) {
-      // allow the delegated registry to load the module
-      true -> DelegatedModuleLoaderRegistry.resolve(req, realm).loadModule(moduleSource, moduleData).let {
-        when (it) {
-          // the loader returned `null`, opting out of resolution; continue with defaults
-          null -> super.loadModule(moduleSource, moduleData)
-
-          // we're good to return from here
-          else -> it
-        }
-      }
-
+    return when (val delegate = DelegatedModuleLoaderRegistry.resolveSafe(req, realm)) {
       // the delegated registry has indicated there is no matching loader for this
-      false -> super.loadModule(moduleSource, moduleData)
+      null -> super.loadModule(moduleSource, moduleData)
+
+      // allow the delegated registry to load the module
+      else -> when (val mod = delegate.loadModule(moduleSource, moduleData)) {
+        // the loader returned `null`, opting out of resolution; continue with defaults
+        null -> super.loadModule(moduleSource, moduleData)
+
+        // we're good to return from here
+        else -> mod
+      }
     }
   }
 
   // Load a module which needs pre-compilation (or some other special load step).
   private fun resolveDelegatedImportedModule(ref: ScriptOrModule, req: ModuleRequest, name: String): JSModuleRecord {
     val delegatedReq = DelegatedModuleRequest.of(name)
-    return when (DelegatedModuleLoaderRegistry.test(delegatedReq)) {
-      // allow the delegated registry to load the module
-      true -> DelegatedModuleLoaderRegistry.resolve(delegatedReq, realm).resolveImportedModule(ref, req).let {
+    return when (val delegate = DelegatedModuleLoaderRegistry.resolveSafe(delegatedReq, realm)) {
+      // the delegated registry has indicated there is no matching loader for this
+      null -> super.resolveImportedModule(ref, req)
+
+      // allow the delegated registry to load the module @TODO collapse
+      else -> delegate.resolveImportedModule(ref, req).let {
         when (it) {
           // the loader returned `null`, opting out of resolution; continue with defaults
           null -> super.resolveImportedModule(ref, req)
@@ -406,9 +436,6 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
           else -> it
         }
       }
-
-      // the delegated registry has indicated there is no matching loader for this
-      false -> super.resolveImportedModule(ref, req)
     }
   }
 
@@ -416,9 +443,11 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     val requested = moduleRequest.specifier.toString()
     val (prefix, unprefixed) = parsePrefixedMaybe(requested)
 
-    return when (determineModuleStrategy(requested)) {
+    return when (determineModuleStrategy(requested, referencingModule)) {
       FALLBACK -> super.resolveImportedModule(referencingModule, moduleRequest)
-      DELEGATED -> resolveDelegatedImportedModule(referencingModule, moduleRequest, unprefixed)
+      DELEGATED -> delegatedModuleCache.computeIfAbsent(unprefixed) {
+        resolveDelegatedImportedModule(referencingModule, moduleRequest, unprefixed)
+      }
       SYNTHETIC -> injectedModuleCache.computeIfAbsent(unprefixed) {
         synthesizeInjected(referencingModule, moduleRequest, prefix, unprefixed)
       }
@@ -501,9 +530,21 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
       if (ALWAYS_FALLBACK) {
         return FALLBACK
       }
-      return when (source.language) {
+      val sourceNameOrFileName = when {
+        source.name != null -> source.name
+        source.path != null -> Paths.get(source.path).fileName.toString()
+        source.uri != null -> Paths.get(source.uri).fileName.toString()
+        source.url != null -> Paths.get(source.url.toURI()).fileName.toString()
+        else -> null
+      }
+      val filenameExtension = sourceNameOrFileName?.substringAfterLast('.', "")
+
+      return when {
         // typescript/tsx/etc. is delegated, always
-        ELIDE_TS_LANGUAGE_ID -> DELEGATED
+        source.language == ELIDE_TS_LANGUAGE_ID -> DELEGATED
+
+        // filenames ending in `.ts`, `.tsx`, `.cts`, and `.mts` are delegated
+        filenameExtension != null && filenameExtension in tsExtensions -> DELEGATED
 
         // otherwise, fall back to regular module loader behavior
         else -> FALLBACK
@@ -511,24 +552,28 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     }
 
     // Determine the loading strategy to use for a given module request.
-    private fun determineModuleStrategy(requested: String): ModuleStrategy {
+    private fun determineModuleStrategy(requested: String, referrer: ScriptOrModule? = null): ModuleStrategy {
       if (ALWAYS_FALLBACK) {
         return FALLBACK
       }
-      if (requested.contains(File.separatorChar) || requested.contains('.')) {
-        return FALLBACK // we are not a filesystem loader
-      }
-
       val (prefix, unprefixed) = parsePrefixedMaybe(requested)
-      return when (prefix) {
+      return when {
         // un-prefixed modules may still be built-in (for example, `fs`).
-        null -> resolveUnprefixed(unprefixed)
+        prefix == null -> if (!requested.contains(File.separatorChar) && !requested.contains('.')) {
+          resolveUnprefixed(unprefixed)
+        } else when {
+          // ends in `.mts` or `.cts` or `.ts` or `.tsx` -> is delegated
+          unprefixed.substringAfterLast('.') in tsExtensions -> DELEGATED
+
+          // otherwise, fallback
+          else -> FALLBACK
+        }
 
         // special prefixes are always synthetic
-        in specialModulePrefixes -> SYNTHETIC
-
-        // otherwise we try delegation
-        else -> FALLBACK
+        else -> when (prefix in specialModulePrefixes) {
+          true -> SYNTHETIC
+          else -> FALLBACK
+        }
       }
     }
 

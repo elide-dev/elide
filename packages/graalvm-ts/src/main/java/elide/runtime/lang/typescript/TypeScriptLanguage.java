@@ -26,6 +26,8 @@ import elide.runtime.lang.javascript.DelegatedModuleLoaderRegistry;
 import elide.runtime.typescript.TypeScriptPrecompiler;
 import java.io.IOException;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.graalvm.polyglot.SandboxPolicy;
 import org.jetbrains.annotations.NotNull;
@@ -65,6 +67,14 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   public static final String IMPLEMENTATION_NAME = "TypeScript";
   public static final String ID = "ts";
   public static final String TYPESCRIPT_VERSION = "5.8.2";
+  private static final SortedSet<String> tsExtensions = new TreeSet<>();
+
+  static {
+    tsExtensions.add("ts");
+    tsExtensions.add("tsx");
+    tsExtensions.add("cts");
+    tsExtensions.add("mts");
+  }
 
   private static final TypeScriptPrecompiler tsPrecompiler = TypeScriptPrecompiler.obtain();
   private static final TypeScriptPrecompiledLoaderFactory tsLoaderFactory =
@@ -85,7 +95,12 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     public boolean test(
         DelegatedModuleLoaderRegistry.DelegatedModuleRequest delegatedModuleRequest) {
       var src = delegatedModuleRequest.source();
-      return ((src != null && src.hasCharacters() && ID.equals(src.getLanguage())));
+      if (src != null) {
+        return ID.equals(src.getLanguage());
+      }
+      var name = delegatedModuleRequest.label();
+      var fileExt = name.contains(".") ? name.substring(name.lastIndexOf('.') + 1) : "";
+      return tsExtensions.contains(fileExt);
     }
   }
 
@@ -124,7 +139,9 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     List<String> argumentNames = parsingRequest.getArgumentNames();
     Source tsSource = parsingRequest.getSource();
     var env = JavaScriptLanguage.getCurrentEnv();
-    Source jsSource = tsLoader.transpileSource(tsSource);
+    var path = tsSource.getPath();
+    var truffleFile = path != null ? env.getPublicTruffleFile(path) : null;
+    Source jsSource = tsLoader.transpileSource(tsSource, truffleFile);
     var parsed = (RootCallTarget) env.parseInternal(jsSource, argumentNames.toArray(new String[0]));
     return parsed.getRootNode().getCallTarget();
   }

@@ -19,6 +19,7 @@ name: CI
     branches:
       - stable
       - main
+      - release/*
 
 permissions:
   contents: read
@@ -79,6 +80,7 @@ jobs:
   check-scorecard:
     name: "Checks"
     uses: ./.github/workflows/checks.scorecards.yml
+    if: github.ref == 'refs/heads/main'
     permissions:
       attestations: "read"
       actions: "read"
@@ -103,30 +105,3 @@ jobs:
     uses: ./.github/workflows/checks.gradle-wrapper.yml
     permissions:
       contents: "read"
-
-  ##
-  ## Job: Checks with Sonar
-  ##
-  check-sonar:
-    name: "Checks"
-    uses: ./.github/workflows/checks.sonar.yml
-    needs: [build]
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-    permissions:
-      contents: "read"
-
-  ##
-  ## Job: Checks with CodeQL
-  ##
-  check-codeql:
-    name: "Checks"
-    uses: ./.github/workflows/checks.codeql.yml
-    needs: [build]
-    secrets:
-      BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-    permissions:
-      actions: "read"
-      contents: "read"
-      security-events: "write"

@@ -58,4 +58,4 @@ jobs:
         uses: bufbuild/buf-push-action@a654ff18effe4641ebea4a4ce242c49800728459 # v1.2.0
         with:
           buf_token: ${{ secrets.BUF_TOKEN }}
-          input: proto
+          input: packages/proto

@@ -65,7 +65,7 @@ import elide.tool.cli.ToolCommand
 
   /** Implements a known error case, defined from a [ToolErrorCase] implementation. */
   internal class Known internal constructor (
-    case: ToolErrorCase<*>,
+    internal val case: ToolErrorCase<*>,
     command: ToolCommand? = null,
     additionalMessage: String? = null,
     cause: Throwable? = null,

@@ -19,6 +19,7 @@ import com.aayushatharva.brotli4j.decoder.BrotliInputStream
 import com.aayushatharva.brotli4j.encoder.BrotliOutputStream
 import com.aayushatharva.brotli4j.encoder.Encoder
 import org.apache.commons.compress.compressors.CompressorStreamFactory
+import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -490,6 +491,12 @@ public data object ModernNodeZlibConstants : NodeZlibConstants {
 @Intrinsic internal class NodeZlibModule : SyntheticJSModule<NodeZlib>, AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeZlib.create() }
   override fun provide(): NodeZlib = singleton
+
+  init {
+    if (!ImageInfo.inImageCode()) {
+      Brotli4jLoader.ensureAvailability()
+    }
+  }
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[ZLIB_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }

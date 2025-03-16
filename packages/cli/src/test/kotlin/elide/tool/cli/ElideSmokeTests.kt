@@ -79,12 +79,7 @@ import elide.testing.annotations.TestCase
       testFile("stdlib.mjs"),
     )
 
-    private val knownBroken = sortedSetOf(
-      "brotli",
-      "stdlib",
-      "fs-promises",
-      "paths-default",
-    )
+    private val knownBroken = sortedSetOf<String>()
   }
 
   @TestFactory fun `smoke test`(): Stream<DynamicTest> = sequence<DynamicTest> {

@@ -46,3 +46,4 @@ tools/hakuna/dist
 coverage-error.log
 blink.log
 project/docs/apidocs
+packages/cli/README.md.br

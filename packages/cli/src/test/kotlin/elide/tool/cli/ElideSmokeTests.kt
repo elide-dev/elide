@@ -70,6 +70,8 @@ import elide.testing.annotations.TestCase
       testFile("paths.cjs"),
       testFile("paths.mjs"),
       testFile("paths-default.mjs"),
+      testFile("say_hello.mts"),
+      testFile("say_hello_raw.mts"),
       testFile("simple.js"),
       testFile("sqlite.mts"),
       testFile("sqlite.cjs"),
@@ -79,7 +81,9 @@ import elide.testing.annotations.TestCase
       testFile("stdlib.mjs"),
     )
 
-    private val knownBroken = sortedSetOf<String>()
+    private val knownBroken = sortedSetOf<String>(
+      "say_hello",
+    )
   }
 
   @TestFactory fun `smoke test`(): Stream<DynamicTest> = sequence<DynamicTest> {

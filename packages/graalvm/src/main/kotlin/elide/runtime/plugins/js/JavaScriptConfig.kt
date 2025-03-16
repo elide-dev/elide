@@ -169,6 +169,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   /** Whether to enable ESM support. */
   public var esm: Boolean = true
 
+  /** Whether to enable interop features (imports, etc). */
+  public var interop: Boolean = true
+
   /** Configure NPM support. */
   public fun npm(config: NpmConfig.() -> Unit) {
     npmConfig.apply(config)

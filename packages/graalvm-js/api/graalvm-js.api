@@ -67,7 +67,8 @@ public final class elide/runtime/lang/javascript/JavaScriptCompilerConfig$Compan
 
 public final class elide/runtime/lang/javascript/JavaScriptLang {
 	public static final field INSTANCE Lelide/runtime/lang/javascript/JavaScriptLang;
-	public final fun initialize ()V
+	public final fun initialize (Z)V
+	public static synthetic fun initialize$default (Lelide/runtime/lang/javascript/JavaScriptLang;ZILjava/lang/Object;)V
 	public final fun precompiler ()Lelide/runtime/lang/javascript/JavaScriptPrecompiler;
 }
 

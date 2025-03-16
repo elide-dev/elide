@@ -82,7 +82,7 @@ import elide.testing.annotations.TestCase
     )
 
     private val knownBroken = sortedSetOf<String>(
-      "say_hello",
+      "say_hello.mts",
     )
   }
 
@@ -106,7 +106,7 @@ import elide.testing.annotations.TestCase
           (!isPython && !isRuby && !isJava && !isKotlin && !isSwift && !isWasm)
         )
         Assumptions.assumeTrue(
-          it.file.nameWithoutExtension !in knownBroken
+          it.file.nameWithoutExtension !in knownBroken && it.file.name !in knownBroken
         )
 
         assertToolExitsWithCode(0, *it.args().toTypedArray())

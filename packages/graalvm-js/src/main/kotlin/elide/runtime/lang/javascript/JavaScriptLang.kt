@@ -33,9 +33,9 @@ public object JavaScriptLang {
   public fun precompiler(): JavaScriptPrecompiler = JavaScriptPrecompiler
 
   /** Initialize the JavaScript language layer. */
-  public fun initialize() {
+  public fun initialize(interop: Boolean = true) {
     if (initialized.compareAndSet(expect = false, update = true)) {
-      ElideJsModuleRouter.install()
+      ElideJsModuleRouter.install(interop)
     }
   }
 }

@@ -48,21 +48,27 @@ Elide is like Node or Python. Use it to run things:
 ```
 
 You can use Node APIs. You can even mix languages:
+```typescript
+// sample.mts
+
+// use node apis
+import { readFileSync } from "node:fs"
+
+// interoperate across languages 
+import sample from "./sample.py"
+
+// this is typescript - no build step needed first, like deno or bun
+const x: number = 42;
+
+console.log(sample.greeting() + ` The answer is ${x}`);
+```
 ```python
 # sample.py
 
 def greeting(name = "Elide"):
   return f"Hello, {name}!"
 ```
-```typescript
-// sample.mts
-import sample from "./sample.py"
 
-// shows that this is typescript
-const x: number = 42;
-
-console.log(sample.greeting() + ` The answer is ${x}`);
-```
 ```shell
 > elide ./sample.mts
 Hello, Elide! The answer is 42

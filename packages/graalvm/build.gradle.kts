@@ -185,7 +185,7 @@ sourceSets {
       layout.buildDirectory.dir("generated/proto/main/kotlin"),
     )
     proto {
-      srcDir("${rootProject.projectDir}/proto")
+      srcDir("${rootProject.projectDir}/packages/proto")
     }
   }
   if (enableBenchmarks) {

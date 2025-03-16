@@ -15,19 +15,19 @@ web-streams-polyfill "3.3.3"
     }
 dev-dependencies{
 "@biomejs/biome" "1.9.4"
-"@commitlint/cli" "19.7.1"
-"@commitlint/config-conventional" "19.7.1"
+"@commitlint/cli" "19.8.0"
+"@commitlint/config-conventional" "19.8.0"
 "@mdx-js/esbuild" "3.1.0"
 "@mitata/counters" "0.0.8"
 "@prettier/plugin-xml" "3.4.1"
 "@types/google-protobuf" "3.15.12"
-"@types/node" "22.13.8"
-commitlint "19.7.1"
+"@types/node" "22.13.10"
+commitlint "19.8.0"
 esbuild "0.25.0"
-eslint "9.21.0"
+eslint "9.22.0"
 express ">=4.21.2 <5.0.0-0"
 husky "9.1.7"
-lint-staged "15.4.3"
+lint-staged "15.5.0"
 mitata "1.0.34"
 postcss-cli "11.0.0"
 prettier "3.5.3"
@@ -143,25 +143,25 @@ resolved "https://registry.npmjs.org/@chevrotain/utils/-/utils-11.0.3.tgz"
 integrity "sha512-YslZMgtJUyuMbZ+aKvfF3x1f5liK4mWNxghFRv7jqRR9C3R3fAOGTTKvxXDa2Y1s9zSbcpuO0cAxDYsc9SrXoQ=="
 }
 pkg "@commitlint/cli"{
-version "19.7.1"
-resolved "https://registry.npmjs.org/@commitlint/cli/-/cli-19.7.1.tgz"
-integrity "sha512-iObGjR1tE/PfDtDTEfd+tnRkB3/HJzpQqRTyofS2MPPkDn1mp3DBC8SoPDayokfAy+xKhF8+bwRCJO25Nea0YQ=="
+version "19.8.0"
+resolved "https://registry.npmjs.org/@commitlint/cli/-/cli-19.8.0.tgz"
+integrity "sha512-t/fCrLVu+Ru01h0DtlgHZXbHV2Y8gKocTR5elDOqIRUzQd0/6hpt2VIWOj9b3NDo7y4/gfxeR2zRtXq/qO6iUg=="
 dependencies{
-"@commitlint/format" ">=19.5.0 <20.0.0-0"
-"@commitlint/lint" ">=19.7.1 <20.0.0-0"
-"@commitlint/load" ">=19.6.1 <20.0.0-0"
-"@commitlint/read" ">=19.5.0 <20.0.0-0"
-"@commitlint/types" ">=19.5.0 <20.0.0-0"
+"@commitlint/format" ">=19.8.0 <20.0.0-0"
+"@commitlint/lint" ">=19.8.0 <20.0.0-0"
+"@commitlint/load" ">=19.8.0 <20.0.0-0"
+"@commitlint/read" ">=19.8.0 <20.0.0-0"
+"@commitlint/types" ">=19.8.0 <20.0.0-0"
 tinyexec ">=0.3.0 <0.4.0-0"
 yargs ">=17.0.0 <18.0.0-0"
     }
 }
 pkg "@commitlint/config-conventional"{
-version "19.7.1"
-resolved "https://registry.npmjs.org/@commitlint/config-conventional/-/config-conventional-19.7.1.tgz"
-integrity "sha512-fsEIF8zgiI/FIWSnykdQNj/0JE4av08MudLTyYHm4FlLWemKoQvPNUYU2M/3tktWcCEyq7aOkDDgtjrmgWFbvg=="
+version "19.8.0"
+resolved "https://registry.npmjs.org/@commitlint/config-conventional/-/config-conventional-19.8.0.tgz"
+integrity "sha512-9I2kKJwcAPwMoAj38hwqFXG0CzS2Kj+SAByPUQ0SlHTfb7VUhYVmo7G2w2tBrqmOf7PFd6MpZ/a1GQJo8na8kw=="
 dependencies{
-"@commitlint/types" ">=19.5.0 <20.0.0-0"
+"@commitlint/types" ">=19.8.0 <20.0.0-0"
 conventional-changelog-conventionalcommits ">=7.0.2 <8.0.0-0"
     }
 }
@@ -547,6 +547,11 @@ version "2.1.3"
 resolved "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz"
 integrity "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
 }
+pkg "@eslint/config-helpers"{
+version "0.1.0"
+resolved "https://registry.npmjs.org/@eslint/config-helpers/-/config-helpers-0.1.0.tgz"
+integrity "sha512-kLrdPDJE1ckPo94kmPPf9Hfd0DU0Jw6oKYrhe+pwSC0iTUInmTa+w6fw8sGgcfkFJGNdWOUeOaDM4quW4a7OkA=="
+}
 pkg "@eslint/core"{
 version "0.12.0"
 resolved "https://registry.npmjs.org/@eslint/core/-/core-0.12.0.tgz"
@@ -585,9 +590,9 @@ resolved "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz"
 integrity "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
 }
 pkg "@eslint/js"{
-version "9.21.0"
-resolved "https://registry.npmjs.org/@eslint/js/-/js-9.21.0.tgz"
-integrity "sha512-BqStZ3HX8Yz6LvsF5ByXYrtigrV5AXADWLAGc7PH/1SxOb7/FIYYMszZZWiUou/GB9P2lXWk2SV4d+Z8h0nknw=="
+version "9.22.0"
+resolved "https://registry.npmjs.org/@eslint/js/-/js-9.22.0.tgz"
+integrity "sha512-vLFajx9o8d1/oL2ZkpMYbkLv8nDB6yaIwFNt7nI4+I80U/z03SxmfOMsLbvWr3p7C+Wnoh//aOu2pQW8cS0HCQ=="
 }
 pkg "@eslint/object-schema"{
 version "2.1.6"
@@ -808,9 +813,9 @@ resolved "https://registry.npmjs.org/@types/ms/-/ms-2.1.0.tgz"
 integrity "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="
 }
 pkg "@types/node"{
-version "22.13.8"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.13.8.tgz"
-integrity "sha512-G3EfaZS+iOGYWLLRCEAXdWK9my08oHNZ+FHluRiggIYJPOXzhOiDgpVCUHaUvyIC5/fj7C/p637jdzC666AOKQ=="
+version "22.13.10"
+resolved "https://registry.npmjs.org/@types/node/-/node-22.13.10.tgz"
+integrity "sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw=="
 dependencies{
 undici-types ">=6.20.0 <6.21.0-0"
     }
@@ -1234,12 +1239,12 @@ resolved "https://registry.npmjs.org/commander/-/commander-13.1.0.tgz"
 integrity "sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw=="
 }
 pkg commitlint{
-version "19.7.1"
-resolved "https://registry.npmjs.org/commitlint/-/commitlint-19.7.1.tgz"
-integrity "sha512-iNWqXl/A1WN8qd9JehqUpzbOxczNBE1nzBiYE33TkHeTptq7Cvg5U4j8PpvO92Nxganv6o/20IO3omP5N5M7/A=="
+version "19.8.0"
+resolved "https://registry.npmjs.org/commitlint/-/commitlint-19.8.0.tgz"
+integrity "sha512-O5waRm0RsjH1g2sT4ifTV58sBYW3wPjfclsdicj1NWUyF91aF0fSqFgKC8EEOUi9RRLKBOhlJarS6V1jWIUx1Q=="
 dependencies{
-"@commitlint/cli" ">=19.7.1 <20.0.0-0"
-"@commitlint/types" ">=19.5.0 <20.0.0-0"
+"@commitlint/cli" ">=19.8.0 <20.0.0-0"
+"@commitlint/types" ">=19.8.0 <20.0.0-0"
     }
 }
 pkg compare-func{
@@ -1690,16 +1695,17 @@ resolved "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp
 integrity "sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA=="
 }
 pkg eslint{
-version "9.21.0"
-resolved "https://registry.npmjs.org/eslint/-/eslint-9.21.0.tgz"
-integrity "sha512-KjeihdFqTPhOMXTt7StsDxriV4n66ueuF/jfPNC3j/lduHwr/ijDwJMsF+wyMJethgiKi5wniIE243vi07d3pg=="
+version "9.22.0"
+resolved "https://registry.npmjs.org/eslint/-/eslint-9.22.0.tgz"
+integrity "sha512-9V/QURhsRN40xuHXWjV64yvrzMjcz7ZyNoF2jJFmy9j/SLk0u1OLSZgXi28MrXjymnjEGSR80WCdab3RGMDveQ=="
 dependencies{
 "@eslint-community/eslint-utils" ">=4.2.0 <5.0.0-0"
 "@eslint-community/regexpp" ">=4.12.1 <5.0.0-0"
 "@eslint/config-array" ">=0.19.2 <0.20.0-0"
+"@eslint/config-helpers" ">=0.1.0 <0.2.0-0"
 "@eslint/core" ">=0.12.0 <0.13.0-0"
 "@eslint/eslintrc" ">=3.3.0 <4.0.0-0"
-"@eslint/js" "9.21.0"
+"@eslint/js" "9.22.0"
 "@eslint/plugin-kit" ">=0.2.7 <0.3.0-0"
 "@humanfs/node" ">=0.16.6 <0.17.0-0"
 "@humanwhocodes/module-importer" ">=1.0.1 <2.0.0-0"
@@ -1711,7 +1717,7 @@ chalk ">=4.0.0 <5.0.0-0"
 cross-spawn ">=7.0.6 <8.0.0-0"
 debug ">=4.3.2 <5.0.0-0"
 escape-string-regexp ">=4.0.0 <5.0.0-0"
-eslint-scope ">=8.2.0 <9.0.0-0"
+eslint-scope ">=8.3.0 <9.0.0-0"
 eslint-visitor-keys ">=4.2.0 <5.0.0-0"
 espree ">=10.3.0 <11.0.0-0"
 esquery ">=1.5.0 <2.0.0-0"
@@ -2577,9 +2583,9 @@ resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4
 integrity "sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg=="
 }
 pkg lint-staged{
-version "15.4.3"
-resolved "https://registry.npmjs.org/lint-staged/-/lint-staged-15.4.3.tgz"
-integrity "sha512-FoH1vOeouNh1pw+90S+cnuoFwRfUD9ijY2GKy5h7HS3OR7JVir2N2xrsa0+Twc1B7cW72L+88geG5cW4wIhn7g=="
+version "15.5.0"
+resolved "https://registry.npmjs.org/lint-staged/-/lint-staged-15.5.0.tgz"
+integrity "sha512-WyCzSbfYGhK7cU+UuDDkzUiytbfbi0ZdPy2orwtM75P3WTtQBzmG40cCxIa8Ii2+XjfxzLH6Be46tUfWS85Xfg=="
 dependencies{
 chalk ">=5.4.1 <6.0.0-0"
 commander ">=13.1.0 <14.0.0-0"

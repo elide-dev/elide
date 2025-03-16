@@ -54,7 +54,7 @@ private val CLONE_FN_SYMBOL = CLONE_FN_NAME.asPublicJsSymbol()
     doStructuredClone;
   """.trimIndent()
 
-  private val cloner = Source.newBuilder("js", structuredCloner, "structuredCloner.js")
+  private val cloner get() = Source.newBuilder("js", structuredCloner, "structuredCloner.js")
     .internal(true)
     .cached(true)
     .build()

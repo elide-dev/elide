@@ -1,0 +1,72 @@
+/// Describes an Elide project and its dependencies, build, distribution, and runtime configuration.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.project
+
+/// A name for the project.
+name: String?
+
+/// Version of the project.
+version: String?
+
+/// Optional description for the project, displayed when published as a package.
+description: String?
+
+/// Relative path to the source file evaluated by the runtime on startup.
+entrypoint: String?
+
+/// Describes an NPM package dependency.
+class NpmPackageSpec {
+  /// The name of the package.
+  name: String
+
+  /// The requested version, including any additional syntax for version ranges (e.g. '^1.5.0').
+  version: String?
+}
+
+/// Configuration for JavaScript dependency resolution using NPM.
+class NpmDependencies {
+  /// A list of NPM package dependencies to be resolved for this project.
+  packages: Listing<NpmPackageSpec>?
+}
+
+/// Describes a Pip package dependency.
+class PipPackageSpec {
+  /// The name of the package.
+  name: String
+}
+
+/// Configuration for Python dependency resolution using Pip.
+class PipDependencies {
+  /// A list of Pip packages to be resolved for this project.
+  packages: Listing<PipPackageSpec>?
+}
+
+/// Describes a Gem dependency.
+class GemSpec {
+  /// The name of the gem.
+  name: String
+
+  /// The version spec of the gem.
+  version: String?
+}
+
+/// Configuration for Ruby dependency resolution using Gems.
+class GemDependencies {
+  /// A list of gems to be resolved for this project.
+  packages: Listing<GemSpec>?
+}
+
+/// Dependency resolution configuration.
+class Dependencies {
+  /// Configure JavaScript dependencies using NPM.
+  npm: NpmDependencies?
+
+  /// Configure Python dependencies using Pip.
+  pip: PipDependencies?
+
+  /// Configure Ruby dependencies using Gems.
+  gems: GemDependencies?
+}
+
+/// Dependency resolution configuration.
+dependencies: Dependencies?

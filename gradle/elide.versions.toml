@@ -311,6 +311,7 @@ mrjar = { id = "me.champeau.mrjar", version.ref = "mrjar" }
 nexusPublishing = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexusPublishing" }
 node = { id = "com.github.node-gradle.node", version.ref = "node-plugin" }
 openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite-plugin" }
+pkl = { id = "org.pkl-lang", version.ref = "pkl" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
 protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
@@ -689,6 +690,7 @@ pkl-cli = { group = "org.pkl-lang", name = "pkl-cli", version.ref = "pkl" }
 pkl-codegen-java = { group = "org.pkl-lang", name = "pkl-codegen-java", version.ref = "pkl" }
 pkl-commons-cli = { group = "org.pkl-lang", name = "pkl-commons-cli", version.ref = "pkl" }
 pkl-config-java = { group = "org.pkl-lang", name = "pkl-config-java", version.ref = "pkl" }
+pkl-config-kotlin = { group = "org.pkl-lang", name = "pkl-config-kotlin", version.ref = "pkl" }
 pkl-core = { group = "org.pkl-lang", name = "pkl-core", version.ref = "pkl" }
 pkl-executor = { group = "org.pkl-lang", name = "pkl-executor", version.ref = "pkl" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgres" }

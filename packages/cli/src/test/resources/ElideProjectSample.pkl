@@ -1,0 +1,29 @@
+// this module reference should be replaced with a proper url import once we host our schema
+amends "../../main/pkl/Project.pkl"
+
+name = "ai-server"
+description = "Simple demo using LLM bindings and the built-in serving APIs."
+version = "1.0.0"
+
+entrypoint = "index.ts"
+
+dependencies {
+  npm {
+    packages {
+      new { name = "elide@1.7.1" }
+      new { name = "genstack@1.2.5" }
+    }
+  }
+
+  pip {
+    packages {
+      new { name = "numpy" }
+    }
+  }
+
+  gems {
+    packages {
+      new { name = "rails" version = "2.3.4" }
+    }
+  }
+}

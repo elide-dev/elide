@@ -78,13 +78,16 @@ Read more about Elide's [feature highlights](https://elide.dev)
 
 ## Installation
 
-You can install Elide on Linux (amd64) or macOS (amd64/arm64) by running:
+You can install Elide on Linux (amd64) or macOS (arm64) by running:
 
 ```shell
 curl -sSL --tlsv1.2 elide.sh | bash -s -
 ```
 
 After installation, you can run `elide --help` or `elide info` to see more information.
+
+> [!NOTE]
+> If you need a binary for a different arch, please file an issue.
 
 ### Using Elide via Docker
 

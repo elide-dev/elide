@@ -16,6 +16,7 @@ package elide.runtime.plugins.python
 import com.oracle.graal.python.PythonLanguage
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.io.FileSystem
+import org.graalvm.python.embedding.GraalPythonFilesystem
 import java.nio.file.Path
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
@@ -31,6 +32,9 @@ import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.vfs.LanguageVFS.LanguageVFSInfo
 import elide.runtime.vfs.registerLanguageVfs
+
+// Whether to enable the Python VFS.
+private const val ENABLE_PYTHON_VFS = false
 
 // Paths to prepend to Python's path before user-added paths, and after the system path.
 private val BUILTIN_PYTHON_PATHS = listOf(
@@ -126,16 +130,16 @@ private val BUILTIN_PYTHON_PATHS = listOf(
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
     init {
-      registerLanguageVfs(PYTHON_LANGUAGE_ID) {
-        object : LanguageVFSInfo {
-          override val router: (Path) -> Boolean get() = { path ->
-            path.toString().startsWith("<frozen ")
-          }
+      if (ENABLE_PYTHON_VFS) {
+        registerLanguageVfs(PYTHON_LANGUAGE_ID) {
+          object : LanguageVFSInfo {
+            override val router: (Path) -> Boolean get() = { path ->
+              path.toString().startsWith("<frozen ")
+            }
 
-          override val fsProvider: () -> FileSystem get() = {
-            org.graalvm.python.embedding.utils.VirtualFileSystem
-              .newBuilder()
-              .build()
+            override val fsProvider: () -> FileSystem get() = {
+              GraalPythonFilesystem.delegate()
+            }
           }
         }
       }

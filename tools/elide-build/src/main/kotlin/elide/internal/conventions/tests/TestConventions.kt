@@ -80,8 +80,8 @@ internal fun Project.configureTestLogger() {
     // use mocha-themed output
     theme = ThemeType.MOCHA_PARALLEL
 
-    val testExceptions = System.getenv("TEST_EXCEPTIONS") != null
-    val testVerbose = System.getenv("TEST_VERBOSE") != null
+    val testExceptions = isCI || System.getenv("TEST_EXCEPTIONS") != null
+    val testVerbose = isCI || System.getenv("TEST_VERBOSE") != null
     val testLogs = System.getenv("TEST_LOGS") != null
 
     // only show errors if specified in the environment

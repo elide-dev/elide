@@ -14,6 +14,8 @@ description: String?
 /// Relative path to the source file evaluated by the runtime on startup.
 entrypoint: String?
 
+scripts: Mapping<String, String>?
+
 /// Describes an NPM package dependency.
 class NpmPackageSpec {
   /// The name of the package.
@@ -27,6 +29,9 @@ class NpmPackageSpec {
 class NpmDependencies {
   /// A list of NPM package dependencies to be resolved for this project.
   packages: Listing<NpmPackageSpec>?
+
+  /// A list of NPM package dependencies used only in development environments.
+  devPackages: Listing<NpmPackageSpec>?
 }
 
 /// Describes a Pip package dependency.

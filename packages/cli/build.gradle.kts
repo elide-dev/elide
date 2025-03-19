@@ -53,7 +53,6 @@ plugins {
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.micronaut.aot)
   alias(libs.plugins.elide.conventions)
-  alias(libs.plugins.pkl)
 }
 
 // Flags affecting this build script:
@@ -277,16 +276,6 @@ val ktCompilerArgs = mutableListOf(
   "-opt-in=elide.runtime.core.DelicateElideApi",
 )
 
-pkl {
-  kotlinCodeGenerators {
-    register("buildCliConfigTypes") {
-      sourceModules.set(layout.projectDirectory.files("src/main/pkl/Project.pkl"))
-      generateKdoc = true
-      renames = mapOf("elide." to "elide.tool.config.")
-    }
-  }
-}
-
 elide {
   kotlin {
     powerAssert = true
@@ -508,6 +497,7 @@ dependencies {
   // KotlinX
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.ktoml)
 
   // Logging
   api(libs.slf4j)

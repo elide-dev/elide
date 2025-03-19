@@ -7,11 +7,20 @@ version = "1.0.0"
 
 entrypoint = "index.ts"
 
+scripts {
+  ["check"] = "tsc --no-emit"
+  ["test"] = "elide build && elide test"
+}
+
 dependencies {
   npm {
     packages {
       new { name = "elide@1.7.1" }
       new { name = "genstack@1.2.5" }
+    }
+
+    devPackages {
+      new { name = "@types/node@^18.11.18" }
     }
   }
 

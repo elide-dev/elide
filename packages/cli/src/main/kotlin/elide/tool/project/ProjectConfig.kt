@@ -16,7 +16,7 @@
 package elide.tool.project
 
 import kotlinx.serialization.Serializable
-import elide.tool.project.struct.nodepkg.NodePackage
+import elide.tool.project.manifest.NodePackageManifest
 
 /** Information about a single project-level configuration file. */
 sealed interface ProjectConfig {
@@ -37,7 +37,7 @@ sealed interface ProjectConfig {
 
   companion object {
     /** @return Wrapped [ProjectConfig] for the provided [path] and decoded Node package JSON [pkg] structure. */
-    @JvmStatic fun packageJson(path: String, pkg: NodePackage) = PackageJsonProjectConfig.wrapping(
+    @JvmStatic fun packageJson(path: String, pkg: NodePackageManifest) = PackageJsonProjectConfig.wrapping(
       path = path,
       config = pkg,
     )
@@ -46,13 +46,13 @@ sealed interface ProjectConfig {
   /** Project configuration modeled from a `package.json` file. */
     @JvmRecord @Serializable data class PackageJsonProjectConfig private constructor (
     override val path: String,
-    private val config: NodePackage,
+    private val config: NodePackageManifest,
   ): ProjectConfig {
     override val name: String? get() = config.name
     override val version: String? get() = config.version
 
     internal companion object {
-      @JvmStatic fun wrapping(path: String, config: NodePackage): PackageJsonProjectConfig =
+      @JvmStatic fun wrapping(path: String, config: NodePackageManifest): PackageJsonProjectConfig =
         PackageJsonProjectConfig(path, config)
     }
   }

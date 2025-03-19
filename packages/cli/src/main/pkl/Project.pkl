@@ -44,6 +44,9 @@ class PipPackageSpec {
 class PipDependencies {
   /// A list of Pip packages to be resolved for this project.
   packages: Listing<PipPackageSpec>?
+
+  /// A list of optional Pip packages to be resolved by consumers of this project
+  optionalPackages: List<PipPackageSpec>?
 }
 
 /// Describes a Gem dependency.
@@ -59,6 +62,9 @@ class GemSpec {
 class GemDependencies {
   /// A list of gems to be resolved for this project.
   packages: Listing<GemSpec>?
+
+  /// A list of gems to be resolved for this project in development mode only.
+  devPackages: Listing<GemSpec>?
 }
 
 /// Dependency resolution configuration.

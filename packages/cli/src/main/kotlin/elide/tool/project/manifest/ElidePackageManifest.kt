@@ -47,7 +47,7 @@ data class ElidePackageManifest(
   @JvmRecord @Serializable data class DependencyResolution(
     val npm: NpmDependencies = NpmDependencies(),
     val pip: PipDependencies = PipDependencies(),
-    val gem: GemDependencies = GemDependencies(),
+    val gems: GemDependencies = GemDependencies(),
   )
 }
 
@@ -74,7 +74,7 @@ fun DependencyResolution.merge(other: DependencyResolution): DependencyResolutio
   return DependencyResolution(
     npm = npm.merge(other.npm),
     pip = pip.merge(other.pip),
-    gem = gem.merge(other.gem),
+    gems = gems.merge(other.gems),
   )
 }
 

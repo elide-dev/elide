@@ -57,9 +57,7 @@ class CompositePackageManifestService(
     return codecForEcosystem(ecosystem).parse(source)
   }
 
-  override fun merge(manifests: List<PackageManifest>): ElidePackageManifest {
-    require(manifests.isNotEmpty())
-
+  override fun merge(manifests: Iterable<PackageManifest>): ElidePackageManifest {
     return manifests.fold(ElidePackageManifest()) { merged, manifest ->
       val codec = codecForManifest(manifest)
       merged.merge(codec.toElidePackage(manifest))

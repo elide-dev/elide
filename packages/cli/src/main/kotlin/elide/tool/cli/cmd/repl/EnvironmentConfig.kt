@@ -20,7 +20,7 @@ import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.plugins.env.EnvConfig.EnvVariableSource.DOTENV
 import elide.runtime.plugins.env.environment
 import elide.tool.cli.cfg.ElideCLITool
-import elide.tool.project.ProjectInfo
+import elide.tool.project.ElideProject
 
 /** Specifies settings for application environment. */
 @Introspected @ReflectiveAccess class EnvironmentConfig {
@@ -43,7 +43,7 @@ import elide.tool.project.ProjectInfo
   /** Apply these settings to created execution contexts. */
   @Suppress("KotlinConstantConditions")
   internal fun apply(
-    project: ProjectInfo?,
+    project: ElideProject?,
     config: PolyglotEngineConfiguration,
     host: Boolean = false,
     dotenv: Boolean = true,

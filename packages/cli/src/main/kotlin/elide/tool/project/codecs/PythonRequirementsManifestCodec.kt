@@ -47,7 +47,7 @@ class PythonRequirementsManifestCodec : PackageManifestCodec<PythonRequirementsM
   }
 
   companion object {
-    const val DEFAULT_EXTENSION = "requirements"
-    const val DEFAULT_NAME = "txt"
+    const val DEFAULT_EXTENSION = "txt"
+    const val DEFAULT_NAME = "requirements"
   }
 }

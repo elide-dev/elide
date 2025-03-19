@@ -1,0 +1,15 @@
+{
+    "name": "elide-js-sample",
+    "version": "1.0.0",
+    "description": "A sample Elide app",
+    "main": "index.js",
+    "scripts": {
+        "start": "elide index.js"
+    },
+    "dependencies": {
+        "foo": "^1.2.3"
+    },
+    "devDependencies": {
+        "bar": "^0.1.1"
+    }
+}

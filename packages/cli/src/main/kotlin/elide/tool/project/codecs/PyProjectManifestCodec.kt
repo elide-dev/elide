@@ -1,6 +1,7 @@
 package elide.tool.project.codecs
 
 import com.akuleshov7.ktoml.Toml
+import com.akuleshov7.ktoml.TomlIndentation
 import com.akuleshov7.ktoml.TomlInputConfig
 import com.akuleshov7.ktoml.TomlOutputConfig
 import java.io.InputStream
@@ -17,7 +18,7 @@ import elide.tool.project.manifest.ElidePackageManifest
 import elide.tool.project.manifest.PyProjectManifest
 
 @Singleton @ManifestCodec(ProjectEcosystem.Python)
-class PyProjectManifest : PackageManifestCodec<PyProjectManifest> {
+class PyProjectManifestCodec : PackageManifestCodec<PyProjectManifest> {
   override fun defaultPath(): Path = Path("$DEFAULT_NAME.$DEFAULT_EXTENSION")
   override fun supported(path: Path): Boolean {
     return path.nameWithoutExtension == DEFAULT_NAME && path.extension == DEFAULT_EXTENSION
@@ -67,15 +68,20 @@ class PyProjectManifest : PackageManifestCodec<PyProjectManifest> {
   }
 
   companion object {
-    const val DEFAULT_EXTENSION = "pyproject"
-    const val DEFAULT_NAME = "toml"
+    const val DEFAULT_NAME = "pyproject"
+    const val DEFAULT_EXTENSION = "toml"
 
     const val DEFAULT_PROJECT_NAME = "elide-project"
 
     private val ManifestToml by lazy {
       Toml(
         inputConfig = TomlInputConfig(ignoreUnknownNames = true),
-        outputConfig = TomlOutputConfig(),
+        outputConfig = TomlOutputConfig(
+          indentation = TomlIndentation.NONE,
+          ignoreDefaultValues = true,
+          ignoreNullValues = true,
+          explicitTables = false,
+        ),
       )
     }
   }

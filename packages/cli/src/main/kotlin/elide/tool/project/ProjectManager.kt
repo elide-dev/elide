@@ -13,19 +13,6 @@
 
 package elide.tool.project
 
-import kotlinx.coroutines.Deferred
-
-/**
- * # Project Manager
- */
-interface ProjectManager {
-  /**
-   * TBD.
-   */
-  suspend fun resolveProjectAsync(): Deferred<ProjectInfo?>
-
-  /**
-   * TBD.
-   */
-  suspend fun resolveProject(): ProjectInfo? = resolveProjectAsync().await()
+internal interface ProjectManager {
+  suspend fun resolveProject(): ElideProject?
 }

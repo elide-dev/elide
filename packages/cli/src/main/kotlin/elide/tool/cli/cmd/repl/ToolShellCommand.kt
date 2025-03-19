@@ -42,7 +42,9 @@ import org.jline.utils.AttributedString
 import org.jline.utils.AttributedStyle
 import org.slf4j.LoggerFactory
 import picocli.CommandLine.*
-import java.io.*
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -54,7 +56,7 @@ import java.util.function.Supplier
 import java.util.stream.Stream
 import javax.tools.ToolProvider
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.future.asCompletableFuture
+import kotlinx.coroutines.launch
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -69,8 +71,8 @@ import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.extensions.attach
-import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.GraalVMGuest
+import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.plugins.vfs.VfsListener
@@ -86,7 +88,7 @@ import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.err.ErrPrinter
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
-import elide.tool.project.ProjectInfo
+import elide.tool.project.ElideProject
 import elide.tool.project.ProjectManager
 
 /**
@@ -122,7 +124,7 @@ private typealias ContextAccessor = () -> PolyglotContext
   ],
 )
 @Introspected
-@Singleton internal class ToolShellCommand @Inject constructor (
+@Singleton internal class ToolShellCommand @Inject constructor(
   private val projectManager: ProjectManager,
   private val workdir: WorkdirManager,
 ) : AbstractSubcommand<ToolState, CommandContext>() {
@@ -188,7 +190,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     private val serverRunning = atomic(false)
 
     // Active project configuration.
-    private val activeProject = atomic<ProjectInfo?>(null)
+    private val activeProject = atomic<ElideProject?>(null)
 
   }
 
@@ -228,14 +230,16 @@ private typealias ContextAccessor = () -> PolyglotContext
   @Inject internal lateinit var registeredVfsListeners: Stream<VfsListener>
 
   // Intrinsics manager
-  private val intrinsicsManager: Supplier<IntrinsicsManager> get() = Supplier {
-    mainIntrinsicsManager.findFirst().orElseThrow()
-  }
+  private val intrinsicsManager: Supplier<IntrinsicsManager>
+    get() = Supplier {
+      mainIntrinsicsManager.findFirst().orElseThrow()
+    }
 
   // Event listeners for the vfs
-  private val vfsListeners: Supplier<List<VfsListener>> get() = Supplier {
-    registeredVfsListeners.toList()
-  }
+  private val vfsListeners: Supplier<List<VfsListener>>
+    get() = Supplier {
+      registeredVfsListeners.toList()
+    }
 
   /** Specifies the guest language to run. */
   @Option(
@@ -553,7 +557,7 @@ private typealias ContextAccessor = () -> PolyglotContext
       .option(LineReader.Option.ERASE_LINE_ON_FINISH, true)
       .build()
 
-    lineReader.value =reader
+    lineReader.value = reader
     langSyntax.value = languageHighlighter
     builtins.setLineReader(reader)
     history.attach(reader)
@@ -782,21 +786,25 @@ private typealias ContextAccessor = () -> PolyglotContext
     val maxErrLineSize = if (lineContextRendered.isNotEmpty()) lineContextRendered.maxOf { it.length } + pad else 0
 
     // calculate the maximum width needed to display the error box, but don't exceed the width of the terminal.
-    val width = maxOf(80, minOf(
-      term?.width ?: ErrPrinter.DEFAULT_MAX_WIDTH,
-      maxOf(
-        // message plus padding
-        message.length + pad + 1,
+    val width = maxOf(
+      80,
+      minOf(
+        term?.width ?: ErrPrinter.DEFAULT_MAX_WIDTH,
+        maxOf(
+          // message plus padding
+          message.length + pad + 1,
 
-        // error context lines
-        maxErrLineSize,
+          // error context lines
+          maxErrLineSize,
 
-        // advice
-        (advice?.length ?: 0) + pad,
+          // advice
+          (advice?.length ?: 0) + pad,
 
-        // stacktrace max line size
-        stacktraceLines.maxOfOrNull { it.length } ?: 0,
-    )))
+          // stacktrace max line size
+          stacktraceLines.maxOfOrNull { it.length } ?: 0,
+        ),
+      ),
+    )
 
     val textWidth = width - (pad / 2) + if (doPrintStack) {
       "      ".length
@@ -1146,12 +1154,12 @@ private typealias ContextAccessor = () -> PolyglotContext
 
   // Detect whether we are running in `serve` mode (with alias `start`).
   private fun serveMode(): Boolean = (
-    commandSpecifiesServer ||
-    executeServe ||
-    actionHint?.lowercase()?.trim().let {
-      it != null && it == "serve" || it == "start"
-    }
-  )
+          commandSpecifiesServer ||
+                  executeServe ||
+                  actionHint?.lowercase()?.trim().let {
+                    it != null && it == "serve" || it == "start"
+                  }
+          )
 
   // Read an executable script, and then execute the script and keep it started as a server.
   private fun readStartServer(
@@ -1237,28 +1245,30 @@ private typealias ContextAccessor = () -> PolyglotContext
     } catch (exc: PolyglotException) {
       logging.debug("Caught polyglot exception: $exc")
       if (logging.isEnabled(LogLevel.DEBUG)) {
-        logging.debug(StringBuilder().apply {
-          append("Error Info: ")
-          append("message{${exc.message}} ")
-          append("source{${exc.sourceLocation}} ")
-          append("isGuestException{${exc.isGuestException}} ")
-          append("isHostException{${exc.isHostException}} ")
-          append("isCancelled{${exc.isCancelled}} ")
-          append("isInterrupted{${exc.isInterrupted}} ")
-          append("isResourceExhausted{${exc.isResourceExhausted}} ")
-          append("isSyntaxError{${exc.isSyntaxError}} ")
-          append("isIncompleteSource{${exc.isIncompleteSource}} ")
-          append("isInternalError{${exc.isInternalError}} ")
-          append("cause{${exc.cause}}")
-          val guestObj = exc.guestObject
-          if (guestObj != null) {
-            append(" // Guest Object: ")
-            append("isHostObject{${guestObj.isHostObject}} ")
-            append("isNull{${guestObj.isNull}} ")
-            append("isException{${guestObj.isException}} ")
-            append("isString{${guestObj.isString}}")
-          }
-        }.toString())
+        logging.debug(
+          StringBuilder().apply {
+            append("Error Info: ")
+            append("message{${exc.message}} ")
+            append("source{${exc.sourceLocation}} ")
+            append("isGuestException{${exc.isGuestException}} ")
+            append("isHostException{${exc.isHostException}} ")
+            append("isCancelled{${exc.isCancelled}} ")
+            append("isInterrupted{${exc.isInterrupted}} ")
+            append("isResourceExhausted{${exc.isResourceExhausted}} ")
+            append("isSyntaxError{${exc.isSyntaxError}} ")
+            append("isIncompleteSource{${exc.isIncompleteSource}} ")
+            append("isInternalError{${exc.isInternalError}} ")
+            append("cause{${exc.cause}}")
+            val guestObj = exc.guestObject
+            if (guestObj != null) {
+              append(" // Guest Object: ")
+              append("isHostObject{${guestObj.isHostObject}} ")
+              append("isNull{${guestObj.isNull}} ")
+              append("isException{${guestObj.isException}} ")
+              append("isString{${guestObj.isString}}")
+            }
+          }.toString(),
+        )
       }
       when (val throwable = processUserCodeError(primaryLanguage, exc)) {
         null -> {}
@@ -1337,9 +1347,11 @@ private typealias ContextAccessor = () -> PolyglotContext
       }
     }.let {
       val runnable = runnable?.ifBlank { null }
-      args(if (runnable == null) it else {
-        listOf(runnable).plus(it).toTypedArray()
-      })
+      args(
+        if (runnable == null) it else {
+          listOf(runnable).plus(it).toTypedArray()
+        },
+      )
     }
 
     // configure support for guest languages
@@ -1382,13 +1394,13 @@ private typealias ContextAccessor = () -> PolyglotContext
 //           }
 //         }
 
-         PYTHON -> configure(elide.runtime.plugins.python.Python) {
-           logging.debug("Configuring Python VM")
-           installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-           resourcesPath = GVM_RESOURCES
-           executable = cmd
-           executableList = listOf(cmd).plus(args)
-         }
+        PYTHON -> configure(elide.runtime.plugins.python.Python) {
+          logging.debug("Configuring Python VM")
+          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+          resourcesPath = GVM_RESOURCES
+          executable = cmd
+          executableList = listOf(cmd).plus(args)
+        }
 
 //        // Secondary Engines: JVM
 //        JVM -> ignoreNotInstalled {
@@ -1471,8 +1483,10 @@ private typealias ContextAccessor = () -> PolyglotContext
     logging.debug("Shell/run command invoked")
     Elide.requestNatives(server = true, tooling = false)
 
-    // resolve project configuration
-    val projectConfigJob = projectManager.resolveProjectAsync()
+    // resolve project configuration (async)
+    launch {
+      activeProject.value = runCatching { projectManager.resolveProject() }.getOrNull()
+    }
 
     // begin resolving language support
     val supported = determineSupportedLanguages()
@@ -1481,16 +1495,6 @@ private typealias ContextAccessor = () -> PolyglotContext
       logging.debug("User asked for a list of supported languages. Printing and exiting.")
       out.line("Supported languages: ${allSupported.joinToString(", ")}")
       return success()
-    }
-
-    // resolve the language to use
-    val projectFut = projectConfigJob.asCompletableFuture()
-
-    // apply project configurations to context, if needed
-    projectFut.whenComplete { value, err ->
-      if (err == null && value != null) {
-        activeProject.value = value
-      }
     }
 
     logging.trace("All supported languages: ${allSupported.joinToString(", ") { it.id }}")
@@ -1514,9 +1518,11 @@ private typealias ContextAccessor = () -> PolyglotContext
     val experimentalLangs = allSupportedLangs.filter {
       it.experimental && !it.suppressExperimentalWarning
     }
-    val onByDefaultLangs = EnumSet.copyOf(allSupportedLangs.filter {
-      it.onByDefault
-    })
+    val onByDefaultLangs = EnumSet.copyOf(
+      allSupportedLangs.filter {
+        it.onByDefault
+      },
+    )
     val primaryLang: (File?) -> GuestLanguage = { target ->
       resolvePrimaryLanguage(
         language,

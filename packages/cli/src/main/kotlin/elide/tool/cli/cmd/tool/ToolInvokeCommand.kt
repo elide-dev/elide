@@ -22,6 +22,7 @@ import java.nio.file.Paths
 import java.util.EnumSet
 import java.util.Optional
 import kotlinx.coroutines.*
+import kotlin.io.path.pathString
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.core.api.Symbolic
@@ -132,7 +133,7 @@ private suspend fun Sequence<EmbeddedTool>.appliesToCurrent(
   // probing is only enabled if language support isn't explicitly specified.
   val effectiveLangs = if (!langsExplicit) {
     // we should probe for project-related files within the project root, or the current directory.
-    val projectDir = (project?.resolveProject()?.root ?: System.getProperty("user.dir"))
+    val projectDir = (project?.resolveProject()?.root?.pathString ?: System.getProperty("user.dir"))
       ?: error("Failed to resolve current or project directory; this is a bug in Elide.")
 
     coroutineScope {

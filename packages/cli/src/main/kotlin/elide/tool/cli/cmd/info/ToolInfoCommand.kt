@@ -55,6 +55,7 @@ import elide.tool.project.ProjectManager
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val version = Elide.version()
     val engine = Engine.create()
+    val projectRoot = workdir.projectRoot()
     val workingRoot = workdir.workingRoot()
     val tempRoot = workdir.tmpDirectory()
     val caches = workdir.cacheDirectory()
@@ -64,9 +65,8 @@ import elide.tool.project.ProjectManager
 
     val projectBlock = if (project == null) StringBuilder("") else StringBuilder().apply {
       appendLine("Project:")
-      appendLine("- Name: ${project.name ?: "(None)"}")
-      appendLine("- Version: ${project.version ?: "(None)"}")
-      appendLine("- Config: ${project.config?.path ?: "(None)"}")
+      appendLine("- Name: ${project.manifest.name ?: "(None)"}")
+      appendLine("- Version: ${project.manifest.version ?: "(None)"}")
       appendLine("- Root Path: ${project.root}")
       when (val env = project.env) {
         null -> {}
@@ -99,6 +99,7 @@ import elide.tool.project.ProjectManager
       appendLine("- Transport: ${libraryGroupLoaded("transport").label()} (${transportEngine})")
       appendLine()
       appendLine("Paths: ")
+      appendLine("- Project Root: ${projectRoot?.absolutePath}")
       appendLine("- Working Root: ${workingRoot.absolutePath}")
       appendLine("- Temporary Root: ${tempRoot.absolutePath}")
       appendLine("- Native Libs: ${natives.absolutePath}")

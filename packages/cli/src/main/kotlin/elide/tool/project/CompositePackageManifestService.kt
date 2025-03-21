@@ -68,7 +68,7 @@ class CompositePackageManifestService(
     return codecForEcosystem(ecosystem).fromElidePackage(manifest)
   }
 
-  override fun encode(manifest: PackageManifest, ecosystem: ProjectEcosystem, output: OutputStream) {
+  override fun encode(manifest: PackageManifest, output: OutputStream) {
     val codec = codecForManifest(manifest)
     codec.write(manifest, output)
   }

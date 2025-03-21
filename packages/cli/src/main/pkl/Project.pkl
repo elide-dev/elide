@@ -14,7 +14,7 @@ description: String?
 /// Relative path to the source file evaluated by the runtime on startup.
 entrypoint: String?
 
-scripts: Mapping<String, String>?
+scripts: Mapping<String, String> = new {}
 
 /// Describes an NPM package dependency.
 class NpmPackageSpec {
@@ -28,10 +28,10 @@ class NpmPackageSpec {
 /// Configuration for JavaScript dependency resolution using NPM.
 class NpmDependencies {
   /// A list of NPM package dependencies to be resolved for this project.
-  packages: Listing<NpmPackageSpec>?
+  packages: Listing<NpmPackageSpec> = new {}
 
   /// A list of NPM package dependencies used only in development environments.
-  devPackages: Listing<NpmPackageSpec>?
+  devPackages: Listing<NpmPackageSpec> = new {}
 }
 
 /// Describes a Pip package dependency.
@@ -43,10 +43,10 @@ class PipPackageSpec {
 /// Configuration for Python dependency resolution using Pip.
 class PipDependencies {
   /// A list of Pip packages to be resolved for this project.
-  packages: Listing<PipPackageSpec>?
+  packages: Listing<PipPackageSpec> = new {}
 
   /// A list of optional Pip packages to be resolved by consumers of this project
-  optionalPackages: List<PipPackageSpec>?
+  optionalPackages: Mapping<String, Listing<PipPackageSpec>> = new {}
 }
 
 /// Describes a Gem dependency.
@@ -61,23 +61,23 @@ class GemSpec {
 /// Configuration for Ruby dependency resolution using Gems.
 class GemDependencies {
   /// A list of gems to be resolved for this project.
-  packages: Listing<GemSpec>?
+  packages: Listing<GemSpec> = new {}
 
   /// A list of gems to be resolved for this project in development mode only.
-  devPackages: Listing<GemSpec>?
+  devPackages: Listing<GemSpec> = new {}
 }
 
 /// Dependency resolution configuration.
 class Dependencies {
   /// Configure JavaScript dependencies using NPM.
-  npm: NpmDependencies?
+  npm: NpmDependencies = new {}
 
   /// Configure Python dependencies using Pip.
-  pip: PipDependencies?
+  pip: PipDependencies = new {}
 
   /// Configure Ruby dependencies using Gems.
-  gems: GemDependencies?
+  gems: GemDependencies = new {}
 }
 
 /// Dependency resolution configuration.
-dependencies: Dependencies?
+dependencies: Dependencies = new {}

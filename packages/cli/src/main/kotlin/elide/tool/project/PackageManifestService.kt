@@ -17,6 +17,6 @@ interface PackageManifestService {
 
   fun export(manifest: ElidePackageManifest, ecosystem: ProjectEcosystem): PackageManifest
 
-  fun encode(manifest: PackageManifest, ecosystem: ProjectEcosystem, output: OutputStream)
+  fun encode(manifest: PackageManifest, output: OutputStream)
 }
 

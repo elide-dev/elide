@@ -690,7 +690,7 @@ tasks {
   test {
     // must be root project so that test scripts can be resolved during smoke tests
     workingDir = rootProject.layout.projectDirectory.asFile
-    maxHeapSize = "2G"
+    maxHeapSize = "8G"
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
     systemProperty("elide.internals", "true")

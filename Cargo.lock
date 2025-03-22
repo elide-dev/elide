@@ -129,6 +129,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dcfed56ad506cb2c684a14971b8861fdc3baaaae314b9e5f9bb532cbe3ba7a4f"
 
 [[package]]
+name = "arbitrary"
+version = "1.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dde20b3d026af13f561bdd0f15edf01fc734f0dafcedbaf42bba506a9517f223"
+dependencies = [
+ "derive_arbitrary",
+]
+
+[[package]]
 name = "arcstr"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -151,16 +160,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 
 [[package]]
-name = "assert-unchecked"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7330592adf847ee2e3513587b4db2db410a0d751378654e7e993d9adcbe5c795"
-
-[[package]]
 name = "astral-tokio-tar"
-version = "0.5.1"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "65152cbda42e8ab5ecff69e8811e8333d69188c7d5c41e3eedb8d127e3f23b27"
+checksum = "1abb2bfba199d9ec4759b797115ba6ae435bdd920ce99783bb53aeff57ba919b"
 dependencies = [
  "filetime",
  "futures-core",
@@ -484,9 +487,9 @@ dependencies = [
 
 [[package]]
 name = "backon"
-version = "1.4.0"
+version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49fef586913a57ff189f25c9b3d034356a5bf6b3fa9a7f067588fe1698ba1f5d"
+checksum = "970d91570c01a8a5959b36ad7dd1c30642df24b6b3068710066f6809f7033bb7"
 dependencies = [
  "fastrand",
  "gloo-timers",
@@ -610,9 +613,9 @@ dependencies = [
 
 [[package]]
 name = "boxcar"
-version = "0.2.10"
+version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "225450ee9328e1e828319b48a89726cffc1b0ad26fd9211ad435de9fa376acae"
+checksum = "6740c6e2fc6360fa57c35214c7493826aee95993926092606f27c983b40837be"
 dependencies = [
  "loom",
 ]
@@ -824,9 +827,9 @@ dependencies = [
 
 [[package]]
 name = "cc"
-version = "1.2.16"
+version = "1.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be714c154be609ec7f5dad223a33bf1482fff90472de28f7362806e6d4832b8c"
+checksum = "1fcb57c740ae1daf453ae85f16e37396f672b039e00d9d866e07ddb24e328e3a"
 dependencies = [
  "jobserver",
  "libc",
@@ -929,9 +932,9 @@ dependencies = [
 
 [[package]]
 name = "clap_complete"
-version = "4.5.46"
+version = "4.5.47"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5c5508ea23c5366f77e53f5a0070e5a84e51687ec3ef9e0464c86dc8d13ce98"
+checksum = "c06f5378ea264ad4f82bbc826628b5aad714a75abf6ece087e923010eb937fb6"
 dependencies = [
  "clap",
 ]
@@ -1027,6 +1030,20 @@ name = "compact_str"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3b79c4069c6cad78e2e0cdfcbd26275770669fb39fd308a752dc110e83b9af32"
+dependencies = [
+ "castaway",
+ "cfg-if",
+ "itoa",
+ "rustversion",
+ "ryu",
+ "static_assertions",
+]
+
+[[package]]
+name = "compact_str"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3fdb1325a1cece981e8a296ab8f0f9b63ae357bd0784a9faaf548cc7b480707a"
 dependencies = [
  "castaway",
  "cfg-if",
@@ -1353,11 +1370,22 @@ dependencies = [
 
 [[package]]
 name = "deranged"
-version = "0.3.11"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b42b6fa04a440b495c8b04d0e71b707c585f83cb9cb28cf8cd0d976c315e31b4"
+checksum = "9c9e6a11ca8224451684bc0d7d5a7adbf8f2fd6887261a1cfc3c0432f9d4068e"
 dependencies = [
  "powerfmt",
+]
+
+[[package]]
+name = "derive_arbitrary"
+version = "1.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "30542c1ad912e0e3d22a1935c290e12e8a29d704a420177a31faad4a601a0800"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -1589,20 +1617,20 @@ dependencies = [
 
 [[package]]
 name = "etcetera"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "136d1b5283a1ab77bd9257427ffd09d8667ced0570b6f938942bc7568ed5b943"
+checksum = "5d14b66eac142247efb8561051ff0fb3d3f58a09801a541b89f46dcc4cc67b84"
 dependencies = [
  "cfg-if",
  "home",
- "windows-sys 0.48.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
 name = "etcetera"
-version = "0.9.0"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d14b66eac142247efb8561051ff0fb3d3f58a09801a541b89f46dcc4cc67b84"
+checksum = "26c7b13d0780cb82722fd59f6f57f925e143427e4a75313a6c77243bf5326ae6"
 dependencies = [
  "cfg-if",
  "home",
@@ -1918,14 +1946,16 @@ dependencies = [
 
 [[package]]
 name = "getrandom"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43a49c392881ce6d5c3b8cb70f98717b7c07aabbdff06687b9030dbfbe2725f8"
+checksum = "73fea8450eea4bac3940448fb7ae50d91f034f941199fcd9d909a5a07aa455f0"
 dependencies = [
  "cfg-if",
+ "js-sys",
  "libc",
- "wasi 0.13.3+wasi-0.2.2",
- "windows-targets 0.52.6",
+ "r-efi",
+ "wasi 0.14.2+wasi-0.2.4",
+ "wasm-bindgen",
 ]
 
 [[package]]
@@ -2908,9 +2938,9 @@ dependencies = [
 
 [[package]]
 name = "libmimalloc-sys"
-version = "0.1.39"
+version = "0.1.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23aa6811d3bd4deb8a84dde645f943476d13b248d818edcf8ce0b2f37f036b44"
+checksum = "07d0e07885d6a754b9c7993f2625187ad694ee985d60f23355ff0e7077261502"
 dependencies = [
  "cc",
  "libc",
@@ -2973,6 +3003,12 @@ dependencies = [
  "autocfg",
  "scopeguard",
 ]
+
+[[package]]
+name = "lockfree-object-pool"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9374ef4228402d4b7e403e5838cb880d9ee663314b0a900d5a6aabf0c213552e"
 
 [[package]]
 name = "log"
@@ -3160,9 +3196,9 @@ dependencies = [
 
 [[package]]
 name = "mimalloc"
-version = "0.1.43"
+version = "0.1.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68914350ae34959d83f732418d51e2427a794055d0b9529f48259ac07af65633"
+checksum = "99585191385958383e13f6b822e6b6d8d9cf928e7d286ceb092da92b43c87bc1"
 dependencies = [
  "libmimalloc-sys",
 ]
@@ -3861,8 +3897,8 @@ checksum = "1036865bb9422d3300cf723f657c2851d0e9ab12567854b1f4eba3d77decf564"
 
 [[package]]
 name = "oxc"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "oxc_allocator",
  "oxc_ast",
@@ -3897,9 +3933,9 @@ dependencies = [
 
 [[package]]
 name = "oxc-miette"
-version = "2.1.2"
+version = "2.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "288e20c3f5128c433165c23bcac0169fce6520c5decc2ae7cc5cce5898d861d5"
+checksum = "b8c278d00ecc50ee84aba4768a7ab74eb325dff4dca8c0581495b850d53480ba"
 dependencies = [
  "cfg-if",
  "owo-colors",
@@ -3922,21 +3958,21 @@ dependencies = [
 
 [[package]]
 name = "oxc_allocator"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "allocator-api2",
- "assert-unchecked",
  "bumpalo",
  "hashbrown 0.15.2",
+ "oxc_data_structures",
  "rustc-hash",
  "simdutf8",
 ]
 
 [[package]]
 name = "oxc_ast"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "bitflags 2.9.0",
  "cow-utils",
@@ -3951,8 +3987,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_ast_macros"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3961,8 +3997,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_ast_visit"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "oxc_allocator",
  "oxc_ast",
@@ -3972,8 +4008,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_cfg"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "bitflags 2.9.0",
  "itertools 0.14.0",
@@ -3986,8 +4022,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_codegen"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "bitflags 2.9.0",
  "cow-utils",
@@ -4006,17 +4042,16 @@ dependencies = [
 
 [[package]]
 name = "oxc_data_structures"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
- "assert-unchecked",
  "ropey",
 ]
 
 [[package]]
 name = "oxc_diagnostics"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "cow-utils",
  "oxc-miette",
@@ -4024,8 +4059,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_ecmascript"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "cow-utils",
  "num-bigint",
@@ -4037,8 +4072,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_estree"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 
 [[package]]
 name = "oxc_index"
@@ -4048,8 +4083,8 @@ checksum = "2fa07b0cfa997730afed43705766ef27792873fdf5215b1391949fec678d2392"
 
 [[package]]
 name = "oxc_isolated_declarations"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "bitflags 2.9.0",
  "oxc_allocator",
@@ -4064,8 +4099,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_mangler"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "fixedbitset",
  "itertools 0.14.0",
@@ -4080,8 +4115,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_minifier"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "cow-utils",
  "oxc_allocator",
@@ -4101,10 +4136,9 @@ dependencies = [
 
 [[package]]
 name = "oxc_parser"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
- "assert-unchecked",
  "bitflags 2.9.0",
  "cow-utils",
  "memchr",
@@ -4112,6 +4146,7 @@ dependencies = [
  "num-traits",
  "oxc_allocator",
  "oxc_ast",
+ "oxc_data_structures",
  "oxc_diagnostics",
  "oxc_ecmascript",
  "oxc_regular_expression",
@@ -4123,8 +4158,8 @@ dependencies = [
 
 [[package]]
 name = "oxc_regular_expression"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "oxc_allocator",
  "oxc_ast_macros",
@@ -4138,10 +4173,9 @@ dependencies = [
 
 [[package]]
 name = "oxc_semantic"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
- "assert-unchecked",
  "itertools 0.14.0",
  "oxc_allocator",
  "oxc_ast",
@@ -4174,10 +4208,10 @@ dependencies = [
 
 [[package]]
 name = "oxc_span"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
- "compact_str",
+ "compact_str 0.9.0",
  "oxc-miette",
  "oxc_allocator",
  "oxc_ast_macros",
@@ -4186,15 +4220,15 @@ dependencies = [
 
 [[package]]
 name = "oxc_syntax"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
- "assert-unchecked",
  "bitflags 2.9.0",
  "cow-utils",
  "nonmax",
  "oxc_allocator",
  "oxc_ast_macros",
+ "oxc_data_structures",
  "oxc_estree",
  "oxc_index",
  "oxc_span",
@@ -4206,11 +4240,11 @@ dependencies = [
 
 [[package]]
 name = "oxc_transformer"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
  "base64 0.22.1",
- "compact_str",
+ "compact_str 0.9.0",
  "cow-utils",
  "indexmap 2.8.0",
  "itoa",
@@ -4235,10 +4269,10 @@ dependencies = [
 
 [[package]]
 name = "oxc_traverse"
-version = "0.58.1"
-source = "git+https://github.com/elide-dev/oxc?rev=fef680a4775559805e99622fb5aa6155cdf47034#fef680a4775559805e99622fb5aa6155cdf47034"
+version = "0.61.1"
+source = "git+https://github.com/elide-dev/oxc?rev=57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2#57b3e95e6ddb7bc5e7e88d40e255f14e92bd4ab2"
 dependencies = [
- "compact_str",
+ "compact_str 0.9.0",
  "itoa",
  "oxc_allocator",
  "oxc_ast",
@@ -4563,7 +4597,7 @@ dependencies = [
  "java_native",
  "jni",
  "jni-sys",
- "rustix 1.0.2",
+ "rustix 1.0.3",
  "sysinfo",
 ]
 
@@ -4594,9 +4628,9 @@ dependencies = [
 
 [[package]]
 name = "priority-queue"
-version = "2.2.2"
+version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f759742601cb7ee8df8780e5f7f9ab7134fb6c5dd2748a61ddd7c960e24db2f8"
+checksum = "6af7c37f3487fd85d8e576b32095e1fe8c4860472f035d25472f1223b5026c88"
 dependencies = [
  "autocfg",
  "equivalent",
@@ -4740,11 +4774,12 @@ dependencies = [
 
 [[package]]
 name = "quinn"
-version = "0.11.6"
+version = "0.11.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62e96808277ec6f97351a2380e6c25114bc9e67037775464979f3037c92d05ef"
+checksum = "c3bd15a6f2967aef83887dcb9fec0014580467e33720d073560cf015a5683012"
 dependencies = [
  "bytes 1.10.1",
+ "cfg_aliases",
  "pin-project-lite",
  "quinn-proto",
  "quinn-udp",
@@ -4754,17 +4789,18 @@ dependencies = [
  "thiserror 2.0.12",
  "tokio",
  "tracing",
+ "web-time",
 ]
 
 [[package]]
 name = "quinn-proto"
-version = "0.11.9"
+version = "0.11.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a2fe5ef3495d7d2e377ff17b1a8ce2ee2ec2a18cde8b6ad6619d65d0701c135d"
+checksum = "b820744eb4dc9b57a3398183639c511b5a26d2ed702cedd3febaa1393caa22cc"
 dependencies = [
  "bytes 1.10.1",
- "getrandom 0.2.15",
- "rand 0.8.5",
+ "getrandom 0.3.2",
+ "rand 0.9.0",
  "ring",
  "rustc-hash",
  "rustls",
@@ -4804,6 +4840,12 @@ name = "quoted_printable"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "640c9bd8497b02465aeef5375144c26062e0dcd5939dfcbb0f5db76cb8c17c73"
+
+[[package]]
+name = "r-efi"
+version = "5.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "74765f6d916ee2faa39bc8e68e4f3ed8949b48cccdac59983d287a7cb71ce9c5"
 
 [[package]]
 name = "rancor"
@@ -4871,7 +4913,7 @@ version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99d9a13982dcf210057a8a78572b2217b667c3beacbf3a0d8b454f6f82837d38"
 dependencies = [
- "getrandom 0.3.1",
+ "getrandom 0.3.2",
 ]
 
 [[package]]
@@ -4897,12 +4939,12 @@ dependencies = [
 [[package]]
 name = "red_knot_python_semantic"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anyhow",
  "bitflags 2.9.0",
  "camino",
- "compact_str",
+ "compact_str 0.9.0",
  "countme",
  "drop_bomb",
  "hashbrown 0.15.2",
@@ -4973,14 +5015,14 @@ dependencies = [
 
 [[package]]
 name = "reflink-copy"
-version = "0.1.25"
+version = "0.1.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b86038e146b9a61557e1a2e58cdf2eddc0b46ce141b55541b1c1b9f3189d618"
+checksum = "78c81d000a2c524133cc00d2f92f019d399e57906c3b7119271a2495354fe895"
 dependencies = [
  "cfg-if",
  "libc",
- "rustix 1.0.2",
- "windows 0.60.0",
+ "rustix 1.0.3",
+ "windows 0.61.1",
 ]
 
 [[package]]
@@ -5038,9 +5080,9 @@ dependencies = [
 
 [[package]]
 name = "reqwest"
-version = "0.12.14"
+version = "0.12.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "989e327e510263980e231de548a33e63d34962d29ae61b467389a1a09627a254"
+checksum = "d19c46a6fdd48bc4dab94b6103fccc55d34c67cc0ad04653aad4ea2a07cd7bbb"
 dependencies = [
  "async-compression",
  "base64 0.22.1",
@@ -5215,8 +5257,8 @@ dependencies = [
 
 [[package]]
 name = "ruff"
-version = "0.11.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+version = "0.11.2"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anyhow",
  "argfile",
@@ -5270,7 +5312,7 @@ dependencies = [
 [[package]]
 name = "ruff_annotate_snippets"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anstyle",
  "memchr",
@@ -5280,7 +5322,7 @@ dependencies = [
 [[package]]
 name = "ruff_cache"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "filetime",
  "glob",
@@ -5293,13 +5335,13 @@ dependencies = [
 [[package]]
 name = "ruff_db"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "camino",
  "countme",
  "dashmap",
  "dunce",
- "etcetera 0.8.0",
+ "etcetera 0.10.0",
  "filetime",
  "glob",
  "ignore",
@@ -5318,13 +5360,13 @@ dependencies = [
  "thiserror 2.0.12",
  "tracing",
  "web-time",
- "zip",
+ "zip 0.6.6",
 ]
 
 [[package]]
 name = "ruff_diagnostics"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anyhow",
  "is-macro",
@@ -5336,7 +5378,7 @@ dependencies = [
 [[package]]
 name = "ruff_formatter"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "drop_bomb",
  "ruff_cache",
@@ -5352,7 +5394,7 @@ dependencies = [
 [[package]]
 name = "ruff_graph"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anyhow",
  "clap",
@@ -5366,13 +5408,13 @@ dependencies = [
  "salsa",
  "schemars",
  "serde",
- "zip",
+ "zip 0.6.6",
 ]
 
 [[package]]
 name = "ruff_index"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "ruff_macros",
  "salsa",
@@ -5380,8 +5422,8 @@ dependencies = [
 
 [[package]]
 name = "ruff_linter"
-version = "0.11.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+version = "0.11.2"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "aho-corasick",
  "anyhow",
@@ -5441,7 +5483,7 @@ dependencies = [
 [[package]]
 name = "ruff_macros"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "itertools 0.14.0",
  "proc-macro2",
@@ -5453,7 +5495,7 @@ dependencies = [
 [[package]]
 name = "ruff_notebook"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anyhow",
  "itertools 0.14.0",
@@ -5471,11 +5513,11 @@ dependencies = [
 [[package]]
 name = "ruff_python_ast"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "aho-corasick",
  "bitflags 2.9.0",
- "compact_str",
+ "compact_str 0.9.0",
  "is-macro",
  "itertools 0.14.0",
  "memchr",
@@ -5492,7 +5534,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_codegen"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "ruff_python_ast",
  "ruff_python_literal",
@@ -5504,7 +5546,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_formatter"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anyhow",
  "clap",
@@ -5531,7 +5573,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_index"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "ruff_python_ast",
  "ruff_python_parser",
@@ -5543,7 +5585,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_literal"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "bitflags 2.9.0",
  "itertools 0.14.0",
@@ -5554,11 +5596,11 @@ dependencies = [
 [[package]]
 name = "ruff_python_parser"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "bitflags 2.9.0",
  "bstr",
- "compact_str",
+ "compact_str 0.9.0",
  "memchr",
  "ruff_python_ast",
  "ruff_python_trivia",
@@ -5573,7 +5615,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_semantic"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "bitflags 2.9.0",
  "is-macro",
@@ -5592,7 +5634,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_stdlib"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "bitflags 2.9.0",
  "unicode-ident",
@@ -5601,7 +5643,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_trivia"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "itertools 0.14.0",
  "ruff_source_file",
@@ -5612,7 +5654,7 @@ dependencies = [
 [[package]]
 name = "ruff_server"
 version = "0.2.2"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anyhow",
  "crossbeam",
@@ -5648,7 +5690,7 @@ dependencies = [
 [[package]]
 name = "ruff_source_file"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "memchr",
  "ruff_text_size",
@@ -5658,7 +5700,7 @@ dependencies = [
 [[package]]
 name = "ruff_text_size"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "serde",
 ]
@@ -5666,11 +5708,11 @@ dependencies = [
 [[package]]
 name = "ruff_workspace"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=2de8455e43efc55b2ed302c0bdf4e59744338504#2de8455e43efc55b2ed302c0bdf4e59744338504"
+source = "git+https://github.com/elide-dev/ruff?rev=e4f5fe8cf735a57951397e56af688f1f01c4b7b0#e4f5fe8cf735a57951397e56af688f1f01c4b7b0"
 dependencies = [
  "anyhow",
  "colored",
- "etcetera 0.8.0",
+ "etcetera 0.10.0",
  "glob",
  "globset",
  "ignore",
@@ -5756,9 +5798,9 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "1.0.2"
+version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7178faa4b75a30e269c71e61c353ce2748cf3d76f0c44c393f4e60abf49b825"
+checksum = "e56a18552996ac8d29ecc3b190b4fdbb2d91ca4ec396de7bbffaf43f3d637e96"
 dependencies = [
  "bitflags 2.9.0",
  "errno",
@@ -5769,9 +5811,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.23.23"
+version = "0.23.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47796c98c480fce5406ef69d1c76378375492c3b0a0de587be0c1d9feb12f395"
+checksum = "822ee9188ac4ec04a2f0531e55d035fb2de73f18b41a63c70c2712503b6fb13c"
 dependencies = [
  "once_cell",
  "ring",
@@ -5813,9 +5855,9 @@ dependencies = [
 
 [[package]]
 name = "rustls-webpki"
-version = "0.102.8"
+version = "0.103.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64ca1bc8749bd4cf37b5ce386cc146580777b4e8572c7b97baf22c83f444bee9"
+checksum = "0aa4eeac2588ffff23e9d7a7e9b3f971c5fb5b7ebc9452745e0c232c64f83b2f"
 dependencies = [
  "ring",
  "rustls-pki-types",
@@ -5843,10 +5885,10 @@ checksum = "dd29631678d6fb0903b69223673e122c32e9ae559d0960a38d574695ebc0ea15"
 [[package]]
 name = "salsa"
 version = "0.19.0"
-source = "git+https://github.com/salsa-rs/salsa.git?rev=095d8b2b8115c3cf8bf31914dd9ea74648bb7cf9#095d8b2b8115c3cf8bf31914dd9ea74648bb7cf9"
+source = "git+https://github.com/salsa-rs/salsa.git?rev=d758691ba17ee1a60c5356ea90888d529e1782ad#d758691ba17ee1a60c5356ea90888d529e1782ad"
 dependencies = [
  "boxcar",
- "compact_str",
+ "compact_str 0.8.1",
  "crossbeam-queue",
  "dashmap",
  "hashbrown 0.15.2",
@@ -5865,12 +5907,12 @@ dependencies = [
 [[package]]
 name = "salsa-macro-rules"
 version = "0.19.0"
-source = "git+https://github.com/salsa-rs/salsa.git?rev=095d8b2b8115c3cf8bf31914dd9ea74648bb7cf9#095d8b2b8115c3cf8bf31914dd9ea74648bb7cf9"
+source = "git+https://github.com/salsa-rs/salsa.git?rev=d758691ba17ee1a60c5356ea90888d529e1782ad#d758691ba17ee1a60c5356ea90888d529e1782ad"
 
 [[package]]
 name = "salsa-macros"
 version = "0.19.0"
-source = "git+https://github.com/salsa-rs/salsa.git?rev=095d8b2b8115c3cf8bf31914dd9ea74648bb7cf9#095d8b2b8115c3cf8bf31914dd9ea74648bb7cf9"
+source = "git+https://github.com/salsa-rs/salsa.git?rev=d758691ba17ee1a60c5356ea90888d529e1782ad#d758691ba17ee1a60c5356ea90888d529e1782ad"
 dependencies = [
  "heck",
  "proc-macro2",
@@ -6357,6 +6399,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "simd-adler32"
+version = "0.3.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d66dc143e6b11c1eddc06d5c423cfc97062865baf299914ab64caa38182078fe"
+
+[[package]]
 name = "simdutf8"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6614,14 +6662,14 @@ checksum = "e502f78cdbb8ba4718f566c418c52bc729126ffd16baee5baa718cf25dd5a69a"
 
 [[package]]
 name = "tempfile"
-version = "3.19.0"
+version = "3.19.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "488960f40a3fd53d72c2a29a58722561dee8afdd175bd88e3db4677d7b2ba600"
+checksum = "7437ac7763b9b123ccf33c338a5cc1bac6f69b45a136c19bdd8a65e3916435bf"
 dependencies = [
  "fastrand",
- "getrandom 0.3.1",
+ "getrandom 0.3.2",
  "once_cell",
- "rustix 1.0.2",
+ "rustix 1.0.3",
  "windows-sys 0.59.0",
 ]
 
@@ -6658,7 +6706,7 @@ version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "45c6481c4829e4cc63825e62c49186a34538b7b2750b73b266581ffb612fb5ed"
 dependencies = [
- "rustix 1.0.2",
+ "rustix 1.0.3",
  "windows-sys 0.59.0",
 ]
 
@@ -6790,9 +6838,9 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.3.39"
+version = "0.3.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dad298b01a40a23aac4580b67e3dbedb7cc8402f3592d7f49469de2ea4aecdd8"
+checksum = "9d9c75b47bdff86fa3334a3db91356b8d7d86a9b839dab7d0bdc5c3d3a077618"
 dependencies = [
  "deranged",
  "itoa",
@@ -6805,15 +6853,15 @@ dependencies = [
 
 [[package]]
 name = "time-core"
-version = "0.1.3"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "765c97a5b985b7c11d7bc27fa927dc4fe6af3a6dfb021d28deb60d3bf51e76ef"
+checksum = "c9e9a38711f559d9e3ce1cdb06dd7c5b8ea546bc90052da6d06bb76da74bb07c"
 
 [[package]]
 name = "time-macros"
-version = "0.2.20"
+version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8093bc3e81c3bc5f7879de09619d06c9a5a5e45ca44dfeeb7225bae38005c5c"
+checksum = "29aa485584182073ed57fd5004aa09c371f021325014694e432313345865fd04"
 dependencies = [
  "num-conv",
  "time-core",
@@ -7453,7 +7501,7 @@ version = "1.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "458f7a779bf54acc9f347480ac654f68407d3aab21269a6e3c9f922acd9e2da9"
 dependencies = [
- "getrandom 0.3.1",
+ "getrandom 0.3.2",
  "js-sys",
  "rand 0.9.0",
  "serde",
@@ -7474,8 +7522,8 @@ dependencies = [
 
 [[package]]
 name = "uv"
-version = "0.6.6"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+version = "0.6.9"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anstream",
  "anyhow",
@@ -7543,12 +7591,14 @@ dependencies = [
  "uv-pypi-types",
  "uv-python",
  "uv-requirements",
+ "uv-requirements-txt",
  "uv-resolver",
  "uv-scripts",
  "uv-settings",
  "uv-shell",
  "uv-static",
  "uv-tool",
+ "uv-torch",
  "uv-trampoline-builder",
  "uv-types",
  "uv-version",
@@ -7558,13 +7608,13 @@ dependencies = [
  "version-ranges 0.1.1 (git+https://github.com/astral-sh/pubgrub?rev=b70cf707aa43f21b32f3a61b8a0889b15032d5c4)",
  "walkdir",
  "which",
- "zip",
+ "zip 2.4.2",
 ]
 
 [[package]]
 name = "uv-auth"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -7584,12 +7634,13 @@ dependencies = [
  "uv-once-map",
  "uv-small-str",
  "uv-static",
+ "uv-warnings",
 ]
 
 [[package]]
 name = "uv-build-backend"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "csv",
  "flate2",
@@ -7615,13 +7666,13 @@ dependencies = [
  "uv-warnings",
  "version-ranges 0.1.1 (git+https://github.com/astral-sh/pubgrub?rev=b70cf707aa43f21b32f3a61b8a0889b15032d5c4)",
  "walkdir",
- "zip",
+ "zip 2.4.2",
 ]
 
 [[package]]
 name = "uv-build-frontend"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anstream",
  "fs-err 3.1.0",
@@ -7655,13 +7706,14 @@ dependencies = [
 [[package]]
 name = "uv-cache"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "clap",
  "fs-err 3.1.0",
  "nanoid",
  "rmp-serde",
  "rustc-hash",
+ "same-file",
  "serde",
  "tempfile",
  "tracing",
@@ -7681,7 +7733,7 @@ dependencies = [
 [[package]]
 name = "uv-cache-info"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "fs-err 3.1.0",
  "globwalk",
@@ -7696,7 +7748,7 @@ dependencies = [
 [[package]]
 name = "uv-cache-key"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "hex",
  "memchr",
@@ -7708,7 +7760,7 @@ dependencies = [
 [[package]]
 name = "uv-cli"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anstream",
  "anyhow",
@@ -7728,6 +7780,7 @@ dependencies = [
  "uv-resolver",
  "uv-settings",
  "uv-static",
+ "uv-torch",
  "uv-version",
  "uv-warnings",
 ]
@@ -7735,7 +7788,7 @@ dependencies = [
 [[package]]
 name = "uv-client"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -7778,6 +7831,7 @@ dependencies = [
  "uv-pypi-types",
  "uv-small-str",
  "uv-static",
+ "uv-torch",
  "uv-version",
  "uv-warnings",
 ]
@@ -7785,13 +7839,14 @@ dependencies = [
 [[package]]
 name = "uv-configuration"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "clap",
  "either",
  "fs-err 3.1.0",
  "rayon",
  "rustc-hash",
+ "same-file",
  "schemars",
  "serde",
  "serde-untagged",
@@ -7803,11 +7858,11 @@ dependencies = [
  "uv-cache",
  "uv-cache-info",
  "uv-cache-key",
+ "uv-distribution-types",
  "uv-normalize",
  "uv-pep440",
  "uv-pep508",
  "uv-platform-tags",
- "uv-pypi-types",
  "uv-static",
  "which",
 ]
@@ -7815,7 +7870,7 @@ dependencies = [
 [[package]]
 name = "uv-console"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "console",
 ]
@@ -7823,7 +7878,7 @@ dependencies = [
 [[package]]
 name = "uv-dirs"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "etcetera 0.9.0",
  "fs-err 3.1.0",
@@ -7834,7 +7889,7 @@ dependencies = [
 [[package]]
 name = "uv-dispatch"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "futures 0.3.31",
@@ -7866,7 +7921,7 @@ dependencies = [
 [[package]]
 name = "uv-distribution"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "either",
@@ -7906,13 +7961,13 @@ dependencies = [
  "uv-types",
  "uv-workspace",
  "walkdir",
- "zip",
+ "zip 2.4.2",
 ]
 
 [[package]]
 name = "uv-distribution-filename"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "memchr",
  "rkyv",
@@ -7930,7 +7985,7 @@ dependencies = [
 [[package]]
 name = "uv-distribution-types"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "arcstr",
  "bitflags 2.9.0",
@@ -7966,7 +8021,7 @@ dependencies = [
 [[package]]
 name = "uv-extract"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "astral-tokio-tar",
  "async-compression",
@@ -7986,13 +8041,13 @@ dependencies = [
  "uv-distribution-filename",
  "uv-pypi-types",
  "xz2",
- "zip",
+ "zip 2.4.2",
 ]
 
 [[package]]
 name = "uv-fs"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "backon",
  "dunce",
@@ -8016,7 +8071,7 @@ dependencies = [
 [[package]]
 name = "uv-git"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "cargo-util",
@@ -8040,7 +8095,7 @@ dependencies = [
 [[package]]
 name = "uv-git-types"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "serde",
  "thiserror 2.0.12",
@@ -8051,7 +8106,7 @@ dependencies = [
 [[package]]
 name = "uv-globfilter"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "globset",
  "regex",
@@ -8064,7 +8119,7 @@ dependencies = [
 [[package]]
 name = "uv-install-wheel"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "clap",
  "configparser",
@@ -8100,7 +8155,7 @@ dependencies = [
 [[package]]
 name = "uv-installer"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "async-channel",
@@ -8138,7 +8193,7 @@ dependencies = [
 [[package]]
 name = "uv-macros"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -8149,7 +8204,7 @@ dependencies = [
 [[package]]
 name = "uv-metadata"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "async_zip",
  "fs-err 3.1.0",
@@ -8160,13 +8215,13 @@ dependencies = [
  "uv-distribution-filename",
  "uv-normalize",
  "uv-pypi-types",
- "zip",
+ "zip 2.4.2",
 ]
 
 [[package]]
 name = "uv-normalize"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "rkyv",
  "schemars",
@@ -8177,7 +8232,7 @@ dependencies = [
 [[package]]
 name = "uv-once-map"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "dashmap",
  "futures 0.3.31",
@@ -8187,7 +8242,7 @@ dependencies = [
 [[package]]
 name = "uv-options-metadata"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "serde",
 ]
@@ -8195,7 +8250,7 @@ dependencies = [
 [[package]]
 name = "uv-pep440"
 version = "0.7.0"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "rkyv",
  "serde",
@@ -8208,7 +8263,7 @@ dependencies = [
 [[package]]
 name = "uv-pep508"
 version = "0.6.0"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "arcstr",
  "boxcar",
@@ -8231,7 +8286,7 @@ dependencies = [
 [[package]]
 name = "uv-performance-memory-allocator"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "mimalloc",
  "tikv-jemallocator",
@@ -8240,7 +8295,7 @@ dependencies = [
 [[package]]
 name = "uv-platform-tags"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "memchr",
  "rkyv",
@@ -8253,7 +8308,7 @@ dependencies = [
 [[package]]
 name = "uv-publish"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "astral-tokio-tar",
  "async-compression",
@@ -8289,7 +8344,7 @@ dependencies = [
 [[package]]
 name = "uv-pypi-types"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "hashbrown 0.15.2",
  "indexmap 2.8.0",
@@ -8303,12 +8358,10 @@ dependencies = [
  "serde",
  "serde-untagged",
  "thiserror 2.0.12",
- "toml",
  "toml_edit",
  "tracing",
  "url",
  "uv-distribution-filename",
- "uv-fs",
  "uv-git-types",
  "uv-normalize",
  "uv-pep440",
@@ -8319,7 +8372,7 @@ dependencies = [
 [[package]]
 name = "uv-python"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "clap",
@@ -8365,15 +8418,15 @@ dependencies = [
  "uv-trampoline-builder",
  "uv-warnings",
  "which",
- "windows-registry 0.5.0",
- "windows-result 0.3.1",
+ "windows-registry 0.5.1",
+ "windows-result 0.3.2",
  "windows-sys 0.59.0",
 ]
 
 [[package]]
 name = "uv-requirements"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "configparser",
@@ -8408,7 +8461,7 @@ dependencies = [
 [[package]]
 name = "uv-requirements-txt"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "fs-err 3.1.0",
  "memchr",
@@ -8431,7 +8484,7 @@ dependencies = [
 [[package]]
 name = "uv-resolver"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "arcstr",
  "clap",
@@ -8487,7 +8540,7 @@ dependencies = [
 [[package]]
 name = "uv-scripts"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "fs-err 3.1.0",
  "indoc",
@@ -8506,7 +8559,7 @@ dependencies = [
 [[package]]
 name = "uv-settings"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "clap",
  "fs-err 3.1.0",
@@ -8531,13 +8584,14 @@ dependencies = [
  "uv-python",
  "uv-resolver",
  "uv-static",
+ "uv-torch",
  "uv-warnings",
 ]
 
 [[package]]
 name = "uv-shell"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "home",
@@ -8545,15 +8599,15 @@ dependencies = [
  "tracing",
  "uv-fs",
  "uv-static",
- "windows-registry 0.5.0",
- "windows-result 0.3.1",
+ "windows-registry 0.5.1",
+ "windows-result 0.3.2",
  "windows-sys 0.59.0",
 ]
 
 [[package]]
 name = "uv-small-str"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "arcstr",
  "rkyv",
@@ -8564,7 +8618,7 @@ dependencies = [
 [[package]]
 name = "uv-state"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "fs-err 3.1.0",
  "tempfile",
@@ -8574,7 +8628,7 @@ dependencies = [
 [[package]]
 name = "uv-static"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "uv-macros",
 ]
@@ -8582,7 +8636,7 @@ dependencies = [
 [[package]]
 name = "uv-tool"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "fs-err 3.1.0",
  "pathdiff",
@@ -8594,6 +8648,7 @@ dependencies = [
  "tracing",
  "uv-cache",
  "uv-dirs",
+ "uv-distribution-types",
  "uv-fs",
  "uv-install-wheel",
  "uv-installer",
@@ -8608,20 +8663,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "uv-torch"
+version = "0.1.0"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
+dependencies = [
+ "clap",
+ "either",
+ "fs-err 3.1.0",
+ "schemars",
+ "serde",
+ "thiserror 2.0.12",
+ "tracing",
+ "uv-distribution-types",
+ "uv-normalize",
+ "uv-pep440",
+ "uv-platform-tags",
+ "uv-static",
+]
+
+[[package]]
 name = "uv-trampoline-builder"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "fs-err 3.1.0",
  "thiserror 2.0.12",
  "uv-fs",
- "zip",
+ "zip 2.4.2",
 ]
 
 [[package]]
 name = "uv-types"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anyhow",
  "rustc-hash",
@@ -8643,13 +8717,13 @@ dependencies = [
 
 [[package]]
 name = "uv-version"
-version = "0.6.6"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+version = "0.6.9"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 
 [[package]]
 name = "uv-virtualenv"
 version = "0.0.4"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "fs-err 3.1.0",
  "itertools 0.14.0",
@@ -8667,7 +8741,7 @@ dependencies = [
 [[package]]
 name = "uv-warnings"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "anstream",
  "owo-colors",
@@ -8677,7 +8751,7 @@ dependencies = [
 [[package]]
 name = "uv-workspace"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=2a9bade4df863445846c3601bad194ed902fdae1#2a9bade4df863445846c3601bad194ed902fdae1"
+source = "git+https://github.com/elide-dev/uv?rev=42a87da857a7fa30f12ea5c93c45de16334e7edd#42a87da857a7fa30f12ea5c93c45de16334e7edd"
 dependencies = [
  "fs-err 3.1.0",
  "glob",
@@ -8841,9 +8915,9 @@ checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 
 [[package]]
 name = "wasi"
-version = "0.13.3+wasi-0.2.2"
+version = "0.14.2+wasi-0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "26816d2e1a4a36a2940b96c5296ce403917633dff8f3440e9b236ed6f6bacad2"
+checksum = "9683f9a5a998d873c0d21fcbe3c083009670149a8fab228644b8bd36b2c48cb3"
 dependencies = [
  "wit-bindgen-rt",
 ]
@@ -9061,12 +9135,12 @@ dependencies = [
 
 [[package]]
 name = "windows"
-version = "0.60.0"
+version = "0.61.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ddf874e74c7a99773e62b1c671427abf01a425e77c3d3fb9fb1e4883ea934529"
+checksum = "c5ee8f3d025738cb02bad7868bbb5f8a6327501e870bf51f1b455b0a2454a419"
 dependencies = [
  "windows-collections",
- "windows-core 0.60.1",
+ "windows-core 0.61.0",
  "windows-future",
  "windows-link",
  "windows-numerics",
@@ -9074,11 +9148,11 @@ dependencies = [
 
 [[package]]
 name = "windows-collections"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5467f79cc1ba3f52ebb2ed41dbb459b8e7db636cc3429458d9a852e15bc24dec"
+checksum = "3beeceb5e5cfd9eb1d76b381630e82c4241ccd0d27f1a39ed41b2760b255c5e8"
 dependencies = [
- "windows-core 0.60.1",
+ "windows-core 0.61.0",
 ]
 
 [[package]]
@@ -9117,24 +9191,24 @@ dependencies = [
 
 [[package]]
 name = "windows-core"
-version = "0.60.1"
+version = "0.61.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ca21a92a9cae9bf4ccae5cf8368dce0837100ddf6e6d57936749e85f152f6247"
+checksum = "4763c1de310c86d75a878046489e2e5ba02c649d185f21c67d4cf8a56d098980"
 dependencies = [
- "windows-implement 0.59.0",
- "windows-interface 0.59.0",
+ "windows-implement 0.60.0",
+ "windows-interface 0.59.1",
  "windows-link",
- "windows-result 0.3.1",
- "windows-strings 0.3.1",
+ "windows-result 0.3.2",
+ "windows-strings 0.4.0",
 ]
 
 [[package]]
 name = "windows-future"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a787db4595e7eb80239b74ce8babfb1363d8e343ab072f2ffe901400c03349f0"
+checksum = "7a1d6bbefcb7b60acd19828e1bc965da6fcf18a7e39490c5f8be71e54a19ba32"
 dependencies = [
- "windows-core 0.60.1",
+ "windows-core 0.61.0",
  "windows-link",
 ]
 
@@ -9162,9 +9236,9 @@ dependencies = [
 
 [[package]]
 name = "windows-implement"
-version = "0.59.0"
+version = "0.60.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83577b051e2f49a058c308f17f273b570a6a758386fc291b5f6a934dd84e48c1"
+checksum = "a47fddd13af08290e67f4acabf4b459f647552718f683a7b415d290ac744a836"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -9195,9 +9269,9 @@ dependencies = [
 
 [[package]]
 name = "windows-interface"
-version = "0.59.0"
+version = "0.59.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb26fd936d991781ea39e87c3a27285081e3c0da5ca0fcbc02d368cc6f52ff01"
+checksum = "bd9211b69f8dcdfa817bfd14bf1c97c9188afa36f4750130fcdf3f400eca9fa8"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -9206,17 +9280,17 @@ dependencies = [
 
 [[package]]
 name = "windows-link"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6dccfd733ce2b1753b03b6d3c65edf020262ea35e20ccdf3e288043e6dd620e3"
+checksum = "76840935b766e1b0a05c0066835fb9ec80071d4c09a16f6bd5f7e655e3c14c38"
 
 [[package]]
 name = "windows-numerics"
-version = "0.1.1"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "005dea54e2f6499f2cee279b8f703b3cf3b5734a2d8d21867c8f44003182eeed"
+checksum = "9150af68066c4c5c07ddc0ce30421554771e528bde427614c61038bc2c92c2b1"
 dependencies = [
- "windows-core 0.60.1",
+ "windows-core 0.61.0",
  "windows-link",
 ]
 
@@ -9226,20 +9300,20 @@ version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4286ad90ddb45071efd1a66dfa43eb02dd0dfbae1545ad6cc3c51cf34d7e8ba3"
 dependencies = [
- "windows-result 0.3.1",
+ "windows-result 0.3.2",
  "windows-strings 0.3.1",
  "windows-targets 0.53.0",
 ]
 
 [[package]]
 name = "windows-registry"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c44a98275e31bfd112bb06ba96c8ab13c03383a3753fdddd715406a1824c7e0"
+checksum = "ad1da3e436dc7653dfdf3da67332e22bff09bb0e28b0239e1624499c7830842e"
 dependencies = [
  "windows-link",
- "windows-result 0.3.1",
- "windows-strings 0.3.1",
+ "windows-result 0.3.2",
+ "windows-strings 0.4.0",
 ]
 
 [[package]]
@@ -9262,9 +9336,9 @@ dependencies = [
 
 [[package]]
 name = "windows-result"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06374efe858fab7e4f881500e6e86ec8bc28f9462c47e5a9941a0142ad86b189"
+checksum = "c64fd11a4fd95df68efcfee5f44a294fe71b8bc6a91993e2791938abcc712252"
 dependencies = [
  "windows-link",
 ]
@@ -9284,6 +9358,15 @@ name = "windows-strings"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "87fa48cc5d406560701792be122a10132491cff9d0aeb23583cc2dcafc847319"
+dependencies = [
+ "windows-link",
+]
+
+[[package]]
+name = "windows-strings"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7a2ba9642430ee452d5a7aa78d72907ebe8cfda358e8cb7918a2050581322f97"
 dependencies = [
  "windows-link",
 ]
@@ -9542,9 +9625,9 @@ checksum = "a096fc628cb2c601e13c401ca0c354806424a7f5716000d69b76044eb8e624b9"
 
 [[package]]
 name = "wit-bindgen-rt"
-version = "0.33.0"
+version = "0.39.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3268f3d866458b787f390cf61f4bbb563b922d091359f9608842999eaee3943c"
+checksum = "6f42320e61fe2cfd34354ecb597f86f413484a798ba44a8ca1165c58d42da6c1"
 dependencies = [
  "bitflags 2.9.0",
 ]
@@ -9577,7 +9660,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0d65cbf2f12c15564212d48f4e3dfb87923d25d611f2aed18f4cb23f0413d89e"
 dependencies = [
  "libc",
- "rustix 1.0.2",
+ "rustix 1.0.3",
 ]
 
 [[package]]
@@ -9621,18 +9704,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.8.23"
+version = "0.8.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fd97444d05a4328b90e75e503a34bad781f14e28a823ad3557f0750df1ebcbc6"
+checksum = "2586fea28e186957ef732a5f8b3be2da217d65c5969d4b1e17f973ebbe876879"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.23"
+version = "0.8.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6352c01d0edd5db859a63e2605f4ea3183ddbd15e2c4a9e7d32184df75e4f154"
+checksum = "a996a8f63c5c4448cd959ac1bab0aaa3306ccfd060472f85943ee0750f0169be"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -9697,7 +9780,23 @@ dependencies = [
  "byteorder",
  "crc32fast",
  "crossbeam-utils",
+]
+
+[[package]]
+name = "zip"
+version = "2.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fabe6324e908f85a1c52063ce7aa26b68dcb7eb6dbc83a2d148403c9bc3eba50"
+dependencies = [
+ "arbitrary",
+ "crc32fast",
+ "crossbeam-utils",
+ "displaydoc",
  "flate2",
+ "indexmap 2.8.0",
+ "memchr",
+ "thiserror 2.0.12",
+ "zopfli",
 ]
 
 [[package]]
@@ -9705,6 +9804,20 @@ name = "zlib-rs"
 version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b20717f0917c908dc63de2e44e97f1e6b126ca58d0e391cee86d504eb8fbd05"
+
+[[package]]
+name = "zopfli"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e5019f391bac5cf252e93bbcc53d039ffd62c7bfb7c150414d61369afe57e946"
+dependencies = [
+ "bumpalo",
+ "crc32fast",
+ "lockfree-object-pool",
+ "log",
+ "once_cell",
+ "simd-adler32",
+]
 
 [[package]]
 name = "zstd"
@@ -9717,18 +9830,18 @@ dependencies = [
 
 [[package]]
 name = "zstd-safe"
-version = "7.2.3"
+version = "7.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3051792fbdc2e1e143244dc28c60f73d8470e93f3f9cbd0ead44da5ed802722"
+checksum = "8f49c4d5f0abb602a93fb8736af2a4f4dd9512e36f7f570d66e65ff867ed3b9d"
 dependencies = [
  "zstd-sys",
 ]
 
 [[package]]
 name = "zstd-sys"
-version = "2.0.14+zstd.1.5.7"
+version = "2.0.15+zstd.1.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8fb060d4926e4ac3a3ad15d864e99ceb5f343c6b34f5bd6d81ae6ed417311be5"
+checksum = "eb81183ddd97d0c74cedf1d50d85c8d08c1b8b68ee863bdee9e706eedba1a237"
 dependencies = [
  "cc",
  "pkg-config",

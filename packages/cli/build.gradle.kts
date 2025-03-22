@@ -632,7 +632,7 @@ micronaut {
 tasks.withType(Test::class).configureEach {
   useJUnitPlatform()
   systemProperty("elide.test", "true")
-  maxHeapSize = "1g"
+  maxHeapSize = "8g"
 }
 
 private fun <T> onlyIf(flag: Boolean, value: T): T? = value.takeIf { flag }

@@ -30,9 +30,12 @@ import elide.runtime.gvm.internals.ProcessManager
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ProcessAPI
 import elide.runtime.intrinsics.js.node.process.*
+import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.plugins.env.EnvConfig
 import elide.vm.annotations.Polyglot
 
@@ -50,6 +53,7 @@ import elide.vm.annotations.Polyglot
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[NodeProcess.SYMBOL.asJsSymbol()] = singleton
     bindings[NodeProcess.PUBLIC_SYMBOL.asPublicJsSymbol()] = singleton
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.PROCESS)) { singleton }
   }
 }
 

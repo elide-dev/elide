@@ -24,8 +24,7 @@ import elide.testing.annotations.TestCase
   override fun provide(): NodeStringDecoderModule = NodeStringDecoderModule()
   @Inject lateinit var stringDecoder: NodeStringDecoderModule
 
-  // @TODO(sgammon): Not yet fully supported
-  override fun expectCompliance(): Boolean = false
+  override fun expectCompliance(): Boolean = true
 
   override fun requiredMembers(): Sequence<String> = sequence {
     yield("StringDecoder")

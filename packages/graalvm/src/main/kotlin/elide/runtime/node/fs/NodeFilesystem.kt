@@ -138,7 +138,7 @@ private const val FS_C_COPYFILE_FICLONE_FORCE = "COPYFILE_FICLONE_FORCE"
   init {
     if (ENABLE_SYNTHESIZED) {
       ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS)) { std }
-      ModuleRegistry.deferred(ModuleInfo.of("fs_promises")) { promises }
+      ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS_PROMISES)) { promises }
     }
   }
 }

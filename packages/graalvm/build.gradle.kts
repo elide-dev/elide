@@ -440,7 +440,7 @@ graalvmNative {
       standard {}
     }
     metadataCopy {
-      inputTaskNames.addAll(listOf("run", "optimizedRun", "test"))
+      inputTaskNames = listOf("run", "optimizedRun")
       if (gradle.startParameter.taskNames.contains("test") || properties.containsKey("agentTest")) {
         outputDirectories.add("src/test/resources/META-INF/native-image")
       } else {

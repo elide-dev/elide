@@ -268,6 +268,15 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
 
     // JS symbol for the `URLSearchParams` constructor.
     private val URL_SEARCH_PARAMS_SYMBOL = GLOBAL_URL_SEARCH_PARAMS.asPublicJsSymbol()
+
+    // Default constructor entry for `URLSearchParams`.
+    @JvmStatic public val constructor = ProxyInstantiable { arguments ->
+      when (arguments.size) {
+        0 -> URLSearchParams()
+        1 -> URLSearchParams(arguments[0])
+        else -> throw valueError("Invalid number of arguments: ${arguments.size}")
+      }
+    }
   }
 
   /**
@@ -359,6 +368,7 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
   public class MutableURLSearchParams private constructor (backingMap: URLParamsMap) :
     AbstractMutableURLSearchParams(backingMap),
     IMutableSearchParams {
+
     @Polyglot constructor() : this(URLParamsMap.empty())
 
     @Polyglot constructor(other: Any?) : this(when (other) {
@@ -375,13 +385,7 @@ internal class URLSearchParamsIntrinsic : AbstractJsIntrinsic() {
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `URLSearchParams`
-    bindings[URL_SEARCH_PARAMS_SYMBOL] = ProxyInstantiable { arguments ->
-      when (arguments.size) {
-        0 -> URLSearchParams()
-        1 -> URLSearchParams(arguments[0])
-        else -> throw valueError("Invalid number of arguments: ${arguments.size}")
-      }
-    }
+    bindings[URL_SEARCH_PARAMS_SYMBOL] = constructor
   }
 }
 

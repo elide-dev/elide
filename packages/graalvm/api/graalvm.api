@@ -2702,6 +2702,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/AssertAPI : eli
 	public static synthetic fun equal$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
 	public abstract fun fail (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V
 	public abstract fun fail (Ljava/lang/String;)V
+	public abstract fun fail (Lorg/graalvm/polyglot/Value;)V
 	public static synthetic fun fail$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;ILjava/lang/Object;)V
 	public static synthetic fun fail$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/String;ILjava/lang/Object;)V
 	public abstract fun ifError (Ljava/lang/Object;)V
@@ -2716,8 +2717,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/AssertAPI : eli
 	public static synthetic fun notDeepStrictEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
 	public abstract fun notEqual (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
 	public static synthetic fun notEqual$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
-	public abstract fun notOk (Ljava/lang/Object;Ljava/lang/Object;)V
-	public static synthetic fun notOk$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;ILjava/lang/Object;)V
+	public abstract fun notOk ([Ljava/lang/Object;)V
 	public abstract fun ok ([Ljava/lang/Object;)V
 	public abstract fun rejects (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;)V
 	public static synthetic fun rejects$default (Lelide/runtime/intrinsics/js/node/AssertAPI;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/String;ILjava/lang/Object;)V
@@ -6309,7 +6309,7 @@ public final class elide/runtime/node/childProcess/ChildProcessHandle : elide/ru
 public final class elide/runtime/node/childProcess/ChildProcessHandle$Companion {
 }
 
-public final class elide/runtime/node/childProcess/ChildProcessSyncHandle : elide/runtime/node/childProcess/AbstractChildProcessHandle, elide/runtime/intrinsics/js/node/childProcess/ChildProcessSync, org/graalvm/polyglot/proxy/ProxyObject {
+public final class elide/runtime/node/childProcess/ChildProcessSyncHandle : elide/runtime/node/childProcess/AbstractChildProcessHandle, elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/js/node/childProcess/ChildProcessSync {
 	public synthetic fun <init> (Ljava/lang/ProcessHandle;Lelide/runtime/node/childProcess/CallResult;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getError ()Lelide/runtime/intrinsics/js/err/JsError;
 	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
@@ -6321,10 +6321,7 @@ public final class elide/runtime/node/childProcess/ChildProcessSyncHandle : elid
 	public fun getStatus ()Ljava/lang/Integer;
 	public fun getStderr-yYnEUWU ()Ljava/io/InputStream;
 	public fun getStdout-yYnEUWU ()Ljava/io/InputStream;
-	public fun hasMember (Ljava/lang/String;)Z
 	public static final fun of (Ljava/lang/ProcessHandle;Lelide/runtime/node/childProcess/CallResult;)Lelide/runtime/node/childProcess/ChildProcessSyncHandle;
-	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
-	public fun removeMember (Ljava/lang/String;)Z
 }
 
 public final class elide/runtime/node/childProcess/ChildProcessTimeout : elide/runtime/node/childProcess/ChildProcessException {

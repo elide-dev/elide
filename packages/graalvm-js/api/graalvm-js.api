@@ -38,6 +38,10 @@ public final class elide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$D
 	public final fun of (Ljava/lang/String;)Lelide/runtime/lang/javascript/DelegatedModuleLoaderRegistry$DelegatedModuleRequest;
 }
 
+public final class elide/runtime/lang/javascript/ElideUniversalJsModuleLoaderKt {
+	public static final fun asJsSymbolString (Ljava/lang/String;)Ljava/lang/String;
+}
+
 public abstract interface class elide/runtime/lang/javascript/JSModuleProvider {
 	public abstract fun resolve (Lelide/runtime/gvm/loader/ModuleInfo;)Ljava/lang/Object;
 }
@@ -121,6 +125,9 @@ public final class elide/runtime/lang/javascript/NodeModuleName : java/util/func
 	public static final field READLINE_PROMISES Ljava/lang/String;
 	public static final field REPL Ljava/lang/String;
 	public static final field STREAM Ljava/lang/String;
+	public static final field STREAM_CONSUMERS Ljava/lang/String;
+	public static final field STREAM_PROMISES Ljava/lang/String;
+	public static final field STREAM_WEB Ljava/lang/String;
 	public static final field STRING_DECODER Ljava/lang/String;
 	public static final field TEST Ljava/lang/String;
 	public static final field TIMERS Ljava/lang/String;

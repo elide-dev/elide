@@ -800,6 +800,7 @@ public class EmbeddedGuestVFSImpl private constructor (
       bundle: Int,
       folder: ArchiveEntry,
       tarball: ArchiveInputStream<*>,
+      bufstream: BufferedInputStream,
       memoryFS: FileSystem,
       prefix: String,
       deferred: Boolean,
@@ -833,6 +834,7 @@ public class EmbeddedGuestVFSImpl private constructor (
               bundle,
               entry,
               tarball,
+              bufstream,
               memoryFS,
               entry.name,
               deferred,
@@ -848,16 +850,15 @@ public class EmbeddedGuestVFSImpl private constructor (
             offset += entry.size
 
             if (!deferred) {
-              val filebuf = BufferedInputStream(tarball)
-              val filedata = if (!tarball.canReadEntryData(entry)) {
+              val fileData = if (!tarball.canReadEntryData(entry)) {
                 throw IOException("Failed to read entry data for '${entry.name}'")
-              } else filebuf.readBytes()
+              } else bufstream.readBytes()
 
               // add file
               writeFileToMemoryFS(
                 entry,
                 memoryFS,
-                filedata,
+                fileData,
                 fileBuilder,
               )
             }
@@ -891,11 +892,13 @@ public class EmbeddedGuestVFSImpl private constructor (
 
       val inputset = inputs.iterator()
       var tarball: ArchiveInputStream<*>? = inputset.next()
+      var bufstream = tarball?.let { BufferedInputStream(it) }
       var bundle = 0
 
       while (tarball != null) {
         var entry = tarball.nextEntry
-        while (entry != null) {
+
+        while (entry != null && bufstream != null) {
           // provision a new generic tree entry, which carries either a file or directory but never both
           val fsEntry = FileTreeEntry.newBuilder()
           if (entry.isDirectory) {
@@ -904,6 +907,7 @@ public class EmbeddedGuestVFSImpl private constructor (
               bundle,
               entry,
               tarball,
+              bufstream,
               memoryFS,
               entry.name,
               deferred,
@@ -924,11 +928,10 @@ public class EmbeddedGuestVFSImpl private constructor (
 
             if (!deferred) {
               // read the file into the buffer
-              val filebuf = BufferedInputStream(tarball)
               val filedata = if (!tarball.canReadEntryData(entry)) {
                 throw IOException("Failed to read entry data for '${entry.name}'")
               } else {
-                filebuf.readBytes()
+                bufstream.readBytes()
               }
 
               writeFileToMemoryFS(
@@ -963,6 +966,8 @@ public class EmbeddedGuestVFSImpl private constructor (
           inputset.next().also {
             offset = 0L
             bundle += 1
+            bufstream!!.close()
+            bufstream = BufferedInputStream(it)
           }
         } else {
           null

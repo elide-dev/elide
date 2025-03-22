@@ -12,6 +12,7 @@
  */
 package elide.runtime.node
 
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
@@ -19,6 +20,7 @@ import elide.runtime.node.stream.NodeStreamWebModule
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `stream/web` built-in module. */
+@Ignore("Polyfilled and thus not available to the host")
 @TestCase internal class NodeStreamWebTest : NodeModuleConformanceTest<NodeStreamWebModule>() {
   override val moduleName: String get() = "stream/web"
   override fun provide(): NodeStreamWebModule = NodeStreamWebModule()

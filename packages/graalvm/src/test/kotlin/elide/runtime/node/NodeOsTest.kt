@@ -212,7 +212,7 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
       """
       const { equal } = require("assert");
       const { availableParallelism } = require("os");
-      equal(availableParallelism(), '${acquire().availableParallelism()}');
+      equal(availableParallelism(), ${acquire().availableParallelism()});
     """
     }
   }
@@ -416,7 +416,7 @@ internal class NodeOsTest : NodeModuleConformanceTest<NodeOperatingSystemModule>
     """
       const { equal } = require("assert");
       const { getPriority } = require("os");
-      equal(getPriority(), '${acquire().getPriority()}');
+      equal(getPriority(), ${acquire().getPriority()});
     """
   }
 

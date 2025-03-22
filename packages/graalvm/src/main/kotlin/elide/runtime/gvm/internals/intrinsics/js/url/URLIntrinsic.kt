@@ -44,9 +44,18 @@ private const val GLOBAL_URL = "URL"
 
 /** Implements an intrinsic for the `URL` global defined by the WhatWG URL Specification. */
 @Intrinsic(GLOBAL_URL, internal = false) internal class URLIntrinsic : AbstractJsIntrinsic() {
-  internal companion object {
+  companion object {
     // `URL` class symbol.
     private val URL_SYMBOL = GLOBAL_URL.asPublicJsSymbol()
+
+    // `URL` class constructor.
+    @JvmStatic val constructor = ProxyInstantiable { arguments ->
+      when (arguments.size) {
+        1 -> URLValue(arguments[0])
+        2 -> URLValue(arguments[0], arguments[1])
+        else -> throw valueError("Invalid number of arguments: ${arguments.size}")
+      }
+    }
 
     // Resolve a known protocol for the provided URI, or `null`.
     @JvmStatic private fun knownProtocol(target: NativeURL): KnownProtocol? = when (val scheme = target.scheme) {
@@ -1252,12 +1261,6 @@ private const val GLOBAL_URL = "URL"
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `URL`
-    bindings[URL_SYMBOL] = ProxyInstantiable { arguments ->
-      when (arguments.size) {
-        1 -> URLValue(arguments[0])
-        2 -> URLValue(arguments[0], arguments[1])
-        else -> throw valueError("Invalid number of arguments: ${arguments.size}")
-      }
-    }
+    bindings[URL_SYMBOL] = constructor
   }
 }

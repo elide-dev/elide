@@ -23,7 +23,6 @@ package elide.runtime.node.childProcess
 import com.google.common.util.concurrent.Futures.withTimeout
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
-import org.graalvm.polyglot.proxy.ProxyObject
 import org.jetbrains.annotations.VisibleForTesting
 import java.io.File
 import java.io.InputStream
@@ -52,6 +51,8 @@ import elide.runtime.gvm.internals.ProcessManager
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.URL
@@ -81,6 +82,26 @@ private const val NO_ENCODING = ChildProcessDefaults.ENCODING
 
 // Whether to enable IPC features.
 private const val ENABLE_ELIDE_IPC_BOOT = false
+
+// Module function and property names.
+private const val MODULE_FN_SPAWN = "spawn"
+private const val MODULE_FN_EXEC = "exec"
+private const val MODULE_FN_EXEC_FILE = "execFile"
+private const val MODULE_FN_FORK = "fork"
+private const val MODULE_FN_SPAWN_SYNC = "spawnSync"
+private const val MODULE_FN_EXEC_SYNC = "execSync"
+private const val MODULE_FN_EXEC_FILE_SYNC = "execFileSync"
+
+// Module keys for the child process module.
+private val MODULE_MEMBER_KEYS = arrayOf(
+  MODULE_FN_SPAWN,
+  MODULE_FN_EXEC,
+  MODULE_FN_EXEC_FILE,
+  MODULE_FN_FORK,
+  MODULE_FN_SPAWN_SYNC,
+  MODULE_FN_EXEC_SYNC,
+  MODULE_FN_EXEC_FILE_SYNC,
+)
 
 // Names of events which are emitted for/upon `ChildProcess` objects.
 internal data object ChildProcessEvents {
@@ -123,9 +144,7 @@ private val globalIpcServer by lazy { InterElideIPCServer() }
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[CHILD_PROCESS_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { instance }
     bindings[CHILD_PROCESS_CLASS_SYMBOL.asJsSymbol()] = ChildProcessHandle::class.java
-
-    // @TODO: need ProxyObject support for NodeChildProcess
-    // ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CHILD_PROCESS)) { instance }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CHILD_PROCESS)) { instance }
   }
 }
 
@@ -824,7 +843,7 @@ private val CHILD_PROCESS_SYNC_HANDLE_PROPS_AND_METHODS = arrayOf(
 public class ChildProcessSyncHandle private constructor(
   private val handle: ProcessHandle,
   result: CallResult<ProcOptions>,
-) : ProxyObject, ChildProcessSync, AbstractChildProcessHandle(result) {
+) : ReadOnlyProxyObject, ChildProcessSync, AbstractChildProcessHandle(result) {
   @get:Polyglot override val pid: Long get() = handle.pid()
   @get:Polyglot override val status: Int? get() = result.get()?.exit?.code?.toInt()
   @get:Polyglot override val signal: String? get() = termination.exitSignal.takeIf { it.isNotEmpty() }
@@ -847,11 +866,6 @@ public class ChildProcessSyncHandle private constructor(
   @get:Polyglot override val error: elide.runtime.intrinsics.js.err.JsError? get() = null
 
   override fun getMemberKeys(): Array<String> = CHILD_PROCESS_SYNC_HANDLE_PROPS_AND_METHODS
-  override fun hasMember(key: String?): Boolean = key != null && key in CHILD_PROCESS_SYNC_HANDLE_PROPS_AND_METHODS
-  override fun putMember(key: String?, value: Value?) { /* no-op */
-  }
-
-  override fun removeMember(key: String?): Boolean = false
 
   override fun getMember(key: String?): Any? = when (key) {
     "pid" -> pid
@@ -965,7 +979,7 @@ internal class NodeChildProcess(
   private val filesystem: Optional<Supplier<NodeFilesystemModule>>,
   private val standardStreams: StandardStreamsProvider,
   private val executorProvider: GuestExecutorProvider
-) : ChildProcessAPI {
+) : ReadOnlyProxyObject, ChildProcessAPI {
   // Obtained executor for child-process operations.
   private val executor by lazy { executorProvider.executor() }
 
@@ -998,6 +1012,83 @@ internal class NodeChildProcess(
         else -> throw JsError.of("Failed to launch process", cause = cause)
       }
     }
+  }
+
+  override fun getMemberKeys(): Array<String> = MODULE_MEMBER_KEYS
+
+  private fun argsAndOptions(one: Value?, two: Value?): Pair<Value?, Value?> {
+    var args: Value? = null
+    var options: Value? = null
+
+    when {
+      // `[ ], { } | ''` (args, options)
+      two != null && one != null -> {
+        args = one
+        options = two
+      }
+
+      // `{ } | ''` (options)
+      two == null && one != null && !one.hasArrayElements() && (one.hasMembers() || one.isString) -> {
+        // in this case, the second prop is probably options.
+        options = two
+      }
+    }
+    return args to options
+  }
+
+  override fun getMember(key: String?): Any? = when (key) {
+    MODULE_FN_SPAWN -> ProxyExecutable {
+      val command = it.getOrNull(0) ?: throw JsError.typeError("Expected command argument")
+      val args = it.getOrNull(1)
+      val options = it.getOrNull(2)
+      spawn(command, args, options)
+    }
+
+    MODULE_FN_SPAWN_SYNC -> ProxyExecutable {
+      val command = it.getOrNull(0) ?: throw JsError.typeError("Expected command argument")
+      val second = it.getOrNull(1)
+      val third = it.getOrNull(2)
+      val (args, options) = argsAndOptions(second, third)
+      spawnSync(command, args, options)
+    }
+
+    MODULE_FN_EXEC -> ProxyExecutable {
+      val command = it.getOrNull(0) ?: throw JsError.typeError("Expected command argument")
+      val options = it.getOrNull(1)
+      val callback = it.getOrNull(2)
+      exec(command, options, callback)
+    }
+
+    MODULE_FN_EXEC_SYNC -> ProxyExecutable {
+      val command = it.getOrNull(0) ?: throw JsError.typeError("Expected command argument")
+      val options = it.getOrNull(1)
+      execSync(command, options)
+    }
+
+    MODULE_FN_EXEC_FILE -> ProxyExecutable {
+      val file = it.getOrNull(0) ?: throw JsError.typeError("Expected file argument")
+      val args = it.getOrNull(1)
+      val options = it.getOrNull(2)
+      val callback = it.getOrNull(3)
+      execFile(file, args, options, callback)
+    }
+
+    MODULE_FN_EXEC_FILE_SYNC -> ProxyExecutable {
+      val file = it.getOrNull(0) ?: throw JsError.typeError("Expected file argument")
+      val second = it.getOrNull(1)
+      val third = it.getOrNull(2)
+      val (args, options) = argsAndOptions(second, third)
+      execFileSync(file, args, options)
+    }
+
+    MODULE_FN_FORK -> ProxyExecutable {
+      val modulePath = it.getOrNull(0) ?: throw JsError.typeError("Expected module path argument")
+      val args = it.getOrNull(1)
+      val options = it.getOrNull(2)
+      fork(modulePath, args, options)
+    }
+
+    else -> null
   }
 
   @Polyglot override fun spawn(command: Value, args: Value?, options: Value?): ChildProcess {

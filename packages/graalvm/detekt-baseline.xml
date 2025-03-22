@@ -10,12 +10,11 @@
     <ID>ForbiddenComment:JavaScript.kt$JavaScript$// @TODO: breakage in graalvm with `en_US`</ID>
     <ID>ForbiddenComment:JsEncoding.kt$TextDecoder$// @TODO: honor `DecodeOptions` from host?</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
-    <ID>ForbiddenComment:NodeAssert.kt$NodeAssertModule$// @TODO: fully support `ProxyObject` so this module can be synthetic</ID>
-    <ID>ForbiddenComment:NodeChildProcess.kt$NodeChildProcessModule$// @TODO: need ProxyObject support for NodeChildProcess</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this will need normalization for non-unix test runs</ID>
+    <ID>ForbiddenComment:NodeURL.kt$NodeURL$// TODO: Implement these methods.</ID>
     <ID>ForbiddenComment:NodeZlib.kt$BrotliDecompressStream$// @TODO: flushing for readables</ID>
     <ID>ForbiddenComment:NodeZlib.kt$InflateStream$// @TODO: flushing for readables</ID>
     <ID>ForbiddenComment:NodeZlib.kt$NodeZlib$// @TODO: honor zlib options</ID>

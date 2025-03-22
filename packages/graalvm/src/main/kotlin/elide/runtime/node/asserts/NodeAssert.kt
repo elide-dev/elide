@@ -37,19 +37,28 @@ import java.util.function.Function
 import kotlin.jvm.optionals.getOrNull
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
+import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.JsException
 import elide.runtime.intrinsics.js.node.AssertAPI
+import elide.runtime.intrinsics.js.node.AssertStrictAPI
 import elide.runtime.intrinsics.js.node.asserts.AssertionError
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.lang.javascript.SyntheticJSModule.ExportedSymbol
+import elide.runtime.lang.javascript.asJsSymbolString
 import elide.vm.annotations.Polyglot
 
 // Symbol where the internal module implementation is installed.
 private const val ASSERT_MODULE_SYMBOL: String = "node_${NodeModuleName.ASSERT}"
+
+// Symbol where the internal module implementation is installed.
+private val ASSERT_STRICT_MODULE_SYMBOL: String = "node_${NodeModuleName.ASSERT_STRICT.asJsSymbolString()}"
 
 // Symbol where the assertion error type is installed.
 private const val ASSERTION_ERROR_SYMBOL: String = "AssertionError"
@@ -71,6 +80,7 @@ private const val METHOD_THROWS = "throws"
 private const val METHOD_DOES_NOT_THROW = "doesNotThrow"
 private const val METHOD_REJECTS = "rejects"
 private const val METHOD_DOES_NOT_REJECT = "doesNotReject"
+private const val METHOD_IF_ERROR = "ifError"
 
 // Methods provided by the Node assert module.
 private val assertionModuleMethods = arrayOf(
@@ -91,6 +101,27 @@ private val assertionModuleMethods = arrayOf(
   METHOD_DOES_NOT_THROW,
   METHOD_REJECTS,
   METHOD_DOES_NOT_REJECT,
+  METHOD_IF_ERROR,
+  ASSERTION_ERROR_SYMBOL,
+)
+
+// Methods provided by the Node `assert/strict` module.
+private val strictAssertionMethods = arrayOf(
+  METHOD_DOES_NOT_MATCH,
+  METHOD_THROWS,
+  METHOD_DOES_NOT_THROW,
+  METHOD_REJECTS,
+  METHOD_DOES_NOT_REJECT,
+  METHOD_IF_ERROR,
+  METHOD_OK,
+  METHOD_FAIL,
+  METHOD_STRICT,
+  METHOD_DEEP_EQUAL,
+  METHOD_DEEP_STRICT_EQUAL,
+  METHOD_NOT_DEEP_EQUAL,
+  METHOD_NOT_DEEP_STRICT_EQUAL,
+  METHOD_MATCH,
+  ASSERTION_ERROR_SYMBOL,
 )
 
 // Installs the Node assert module into the intrinsic bindings.
@@ -99,7 +130,6 @@ private val assertionModuleMethods = arrayOf(
   override fun provide(): AssertAPI = instance
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    // @TODO: fully support `ProxyObject` so this module can be synthetic
     bindings[ASSERT_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { provide() }
     bindings[ASSERTION_ERROR_SYMBOL.asJsSymbol()] = ProxyInstantiable {
       val messageOrErr = it.getOrNull(0)
@@ -108,6 +138,7 @@ private val assertionModuleMethods = arrayOf(
         else -> NodeAssertionError()
       }
     }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.ASSERT)) { provide() }
   }
 
   override fun exports(): Array<ExportedSymbol> = assertionModuleMethods.map {
@@ -115,6 +146,19 @@ private val assertionModuleMethods = arrayOf(
   }.plus(
     ExportedSymbol.default(METHOD_ASSERT),
   ).toTypedArray()
+}
+
+// Installs the Node assert module into the intrinsic bindings.
+@Intrinsic internal class NodeAssertStrictModule : AbstractNodeBuiltinModule() {
+  private val singleton by lazy { NodeAssertStrict.create() }
+
+  // Provide a compliant instance of the OS API to the DI context.
+  fun provide(): AssertStrictAPI = singleton
+
+  override fun install(bindings: MutableIntrinsicBindings) {
+    bindings[ASSERT_STRICT_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.ASSERT_STRICT)) { singleton }
+  }
 }
 
 // Implements Node's `AssertionError` type, which is thrown for assertion failures.
@@ -195,7 +239,7 @@ public fun assertionError(
   operatorValue,
 )
 
-internal class NodeAssert private constructor () : AssertAPI {
+internal class NodeAssert private constructor () : ReadOnlyProxyObject, AssertAPI {
   companion object {
     @JvmStatic fun create(): AssertAPI = NodeAssert()
   }
@@ -221,6 +265,12 @@ internal class NodeAssert private constructor () : AssertAPI {
           else -> false
         }
 
+        // Constructors are truthy.
+        value.canInstantiate() -> true
+
+        // Executable targets are truthy.
+        value.canExecute() -> true
+
         // Non-empty objects should pass
         value.isProxyObject -> value.memberKeys.isNotEmpty()
 
@@ -240,6 +290,10 @@ internal class NodeAssert private constructor () : AssertAPI {
           value.asHostObject<Any>(),
           message,
         )
+
+        value.hasArrayElements() -> value.arraySize > 0
+        value.hasHashEntries() -> value.hashSize > 0
+        value.hasMembers() -> value.memberKeys.isNotEmpty()
 
         else -> error("Unrecognized polyglot value type: $value (${value.metaObject} / ${value::class.java.name})")
       }
@@ -280,12 +334,16 @@ internal class NodeAssert private constructor () : AssertAPI {
     checkTruthy(false, values.firstOrNull(), values.getOrNull(2))
   }
 
-  @Polyglot override fun notOk(value: Any?, message: Any?) {
-    checkTruthy(true, value, message)
+  @Polyglot override fun notOk(vararg values: Any?) {
+    checkTruthy(true, values.firstOrNull(), values.getOrNull(2))
   }
 
   @Polyglot override fun fail(message: String?) {
     throw assertionError(message)
+  }
+
+  @Polyglot override fun fail(message: Value) {
+    fail(if (message.isNull) null else message.asString())
   }
 
   @Polyglot override fun fail(actual: Any?, expected: Any?, message: String?, operator: String?, stackStartFn: Any?) {
@@ -325,6 +383,8 @@ internal class NodeAssert private constructor () : AssertAPI {
         actual is Value && expected is Value -> when {
           actual.isNull && expected.isNull -> true
           actual.isNull || expected.isNull -> false
+          actual.isBoolean && expected.isBoolean -> actual.asBoolean() == expected.asBoolean()
+          actual.isString && expected.isString -> actual.asString() == expected.asString()
           actual.isNumber && expected.isNumber -> when {
             expected.fitsInShort() && actual.fitsInShort() -> actual.asShort() == expected.asShort()
             expected.fitsInInt() && actual.fitsInInt() -> actual.asInt() == expected.asInt()
@@ -895,5 +955,120 @@ internal class NodeAssert private constructor () : AssertAPI {
 
   @Polyglot override fun doesNotReject(asyncFn: Any, error: Any?, message: String?) {
     runAsyncWithCapturedExceptions(false, asyncFn, error, message)
+  }
+
+  override fun getMemberKeys(): Array<String> = assertionModuleMethods
+
+  @Suppress("SpreadOperator")
+  override fun getMember(key: String): Any? = when (key) {
+    METHOD_OK -> ProxyExecutable { ok(*it) }
+    METHOD_NOT_OK -> ProxyExecutable { notOk(*it) }
+    METHOD_EQUAL -> ProxyExecutable { equal(it.firstOrNull(), it.getOrNull(1), it.getOrNull(2)?.asString()) }
+    METHOD_STRICT -> ProxyExecutable { strict(it.firstOrNull(), it.getOrNull(1), it.getOrNull(2)?.asString()) }
+    METHOD_NOT_EQUAL -> ProxyExecutable { notEqual(it.firstOrNull(), it.getOrNull(1), it.getOrNull(2)?.asString()) }
+    METHOD_DEEP_EQUAL -> this::deepEqual
+    METHOD_NOT_DEEP_EQUAL -> this::notDeepEqual
+    METHOD_DEEP_STRICT_EQUAL -> this::deepStrictEqual
+    METHOD_NOT_DEEP_STRICT_EQUAL -> this::notDeepStrictEqual
+    METHOD_REJECTS -> this::rejects
+    METHOD_DOES_NOT_REJECT -> this::doesNotReject
+
+    METHOD_IF_ERROR -> ProxyExecutable {
+      // ifError(value: Any?)
+      ifError(it.firstOrNull())
+    }
+
+    METHOD_ASSERT -> ProxyExecutable {
+      // assert(value: Any, message: String?)
+      val value = it.getOrNull(0) ?: throw JsError.typeError("First argument to `assert` must be a value")
+      val message = it.getOrNull(1)
+      return@ProxyExecutable assert(value, message?.asString())
+    }
+
+    METHOD_MATCH -> ProxyExecutable {
+      // match(string: String, regexp: Value, message: String?)
+      val string = it.getOrNull(0) ?: throw JsError.typeError("First arg to `match` must be a string")
+      val regexp = it.getOrNull(1) ?: throw JsError.typeError("Second arg to `match` must be a RegExp or string")
+      val message = it.getOrNull(2)
+      return@ProxyExecutable match(string.asString(), regexp, message?.asString())
+    }
+
+    METHOD_DOES_NOT_MATCH -> ProxyExecutable {
+      // doesNotMatch(string: String, regexp: Value, message: String?)
+      val string = it.getOrNull(0) ?: throw JsError.typeError("First arg to `doesNotMatch` must be a string")
+      val regexp = it.getOrNull(1) ?: throw JsError.typeError("Second arg to `doesNotMatch` must be a RegExp or string")
+      val message = it.getOrNull(2)
+      return@ProxyExecutable doesNotMatch(string.asString(), regexp, message?.asString())
+    }
+
+    METHOD_THROWS -> ProxyExecutable {
+      // throws(fn: Any, error: Any?, message: String?)
+      val fn = it.getOrNull(0) ?: throw JsError.typeError("First arg to `throws` must be a function")
+      val error = it.getOrNull(1)
+      val message = it.getOrNull(2)
+      return@ProxyExecutable throws(fn, error, message?.asString())
+    }
+
+    METHOD_DOES_NOT_THROW -> ProxyExecutable {
+      // doesNotThrow(fn: Any, error: Any?, message: String?)
+      val fn = it.getOrNull(0) ?: throw JsError.typeError("First arg to `doesNotThrow` must be a function")
+      val error = it.getOrNull(1)
+      val message = it.getOrNull(2)
+      return@ProxyExecutable doesNotThrow(fn, error, message?.asString())
+    }
+
+    METHOD_FAIL -> ProxyExecutable {
+      // fail(message: String?)
+      // fail(actual: Any?, expected: Any?, message: String?, operator: String?, stackStartFn: Any?)
+      when (it.size) {
+        0 -> fail(null)
+        1 -> fail(it.first())
+        else -> fail(
+          it.firstOrNull(),
+          it.getOrNull(1),
+          it.getOrNull(2)?.asString(),
+          it.getOrNull(3)?.asString(),
+          it.getOrNull(4),
+        )
+      }
+    }
+
+    ASSERTION_ERROR_SYMBOL -> AssertionError::class.java
+
+    else -> null
+  }
+}
+
+/**
+ * # Node API: `assert/strict`
+ */
+internal class NodeAssertStrict private constructor() : ReadOnlyProxyObject, AssertStrictAPI {
+  //
+
+  internal companion object {
+    fun create(): NodeAssertStrict = NodeAssertStrict()
+  }
+
+  // @TODO not yet implemented
+
+  override fun getMemberKeys(): Array<String> = strictAssertionMethods
+
+  override fun getMember(key: String?): Any? = when (key) {
+    METHOD_DOES_NOT_MATCH,
+    METHOD_THROWS,
+    METHOD_DOES_NOT_THROW,
+    METHOD_REJECTS,
+    METHOD_DOES_NOT_REJECT,
+    METHOD_IF_ERROR,
+    METHOD_OK,
+    METHOD_FAIL,
+    METHOD_STRICT,
+    METHOD_DEEP_EQUAL,
+    METHOD_DEEP_STRICT_EQUAL,
+    METHOD_NOT_DEEP_EQUAL,
+    METHOD_NOT_DEEP_STRICT_EQUAL,
+    METHOD_MATCH -> ProxyExecutable { TODO("`node:assert/strict.$key' is not implemented yet") }
+    ASSERTION_ERROR_SYMBOL -> AssertionError::class.java
+    else -> null
   }
 }

@@ -17,11 +17,30 @@ import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.StreamConsumersAPI
+import elide.runtime.lang.javascript.NodeModuleName
+import elide.runtime.lang.javascript.asJsSymbolString
 
 // Internal symbol where the Node built-in module is installed.
-private const val STREAM_CONSUMERS_MODULE_SYMBOL = "node_stream_consumers"
+private val STREAM_CONSUMERS_MODULE_SYMBOL = "node_${NodeModuleName.STREAM_CONSUMERS.asJsSymbolString()}"
+
+private const val CONSUMERS_ARRAYBUFFER_FN = "arrayBuffer"
+private const val CONSUMERS_BLOB_FN = "blob"
+private const val CONSUMERS_BUFFER_FN = "buffer"
+private const val CONSUMERS_TEXT_FN = "text"
+private const val CONSUMERS_JSON_FN = "json"
+
+private val ALL_CONSUMERS_PROPS = arrayOf(
+  CONSUMERS_ARRAYBUFFER_FN,
+  CONSUMERS_BLOB_FN,
+  CONSUMERS_BUFFER_FN,
+  CONSUMERS_TEXT_FN,
+  CONSUMERS_JSON_FN
+)
 
 // Installs the Node stream consumers module into the intrinsic bindings.
 @Intrinsic
@@ -30,14 +49,21 @@ private const val STREAM_CONSUMERS_MODULE_SYMBOL = "node_stream_consumers"
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[STREAM_CONSUMERS_MODULE_SYMBOL.asJsSymbol()] = provide()
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.STREAM_CONSUMERS)) { provide() }
   }
 }
 
 /**
  * # Node API: `stream/consumers`
  */
-internal class NodeStreamConsumers : StreamConsumersAPI {
+internal class NodeStreamConsumers : ReadOnlyProxyObject, StreamConsumersAPI {
   //
+
+  override fun getMemberKeys(): Array<String> = ALL_CONSUMERS_PROPS
+
+  override fun getMember(key: String?): Any? = when (key) {
+    else -> null
+  }
 
   internal companion object {
     private val SINGLETON = NodeStreamConsumers()

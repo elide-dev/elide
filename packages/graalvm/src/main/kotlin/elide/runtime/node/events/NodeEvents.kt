@@ -33,6 +33,8 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
+import elide.runtime.gvm.loader.ModuleInfo
+import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.Disposable
 import elide.runtime.intrinsics.js.JsPromise
@@ -40,10 +42,11 @@ import elide.runtime.intrinsics.js.AbortSignal
 import elide.runtime.intrinsics.js.node.EventsAPI
 import elide.runtime.intrinsics.js.node.events.*
 import elide.runtime.intrinsics.js.node.events.EventListener
+import elide.runtime.lang.javascript.NodeModuleName
 import elide.vm.annotations.Polyglot
 
 // Internal symbol where the Node built-in module is installed.
-private const val EVENTS_MODULE_SYMBOL = "node_events"
+private const val EVENTS_MODULE_SYMBOL = "node_${NodeModuleName.EVENTS}"
 
 // Public symbol where `EventTarget` is installed.
 private const val EVENT_TARGET_SYMBOL = "EventTarget"
@@ -64,6 +67,7 @@ private const val DEFAULT_DEFAULT_MAX_LISTENERS = 10
     bindings[EVENTS_MODULE_SYMBOL.asJsSymbol()] = NodeEventsModuleFacade.obtain()
     bindings[EVENT_TARGET_SYMBOL.asPublicJsSymbol()] = EventTarget::class.java
     bindings[CUSTOM_EVENT_SYMBOL.asPublicJsSymbol()] = CustomEvent.Factory
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.EVENTS)) { provide() }
   }
 }
 

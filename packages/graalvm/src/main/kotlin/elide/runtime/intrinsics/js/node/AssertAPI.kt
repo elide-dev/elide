@@ -43,15 +43,20 @@ import elide.vm.annotations.Polyglot
    * `message` parameter. If the `message` parameter is undefined, a default error message is assigned. If the `message`
    * parameter is an instance of an `Error` then it will be thrown as the error.
    *
-   * @param value The value to test.
-   * @param message The message to display on error.
+   * @param values First value is the value to check; second value, if any, is used as a string error message, thrown if
+   *   the first value does not test as falsy.
    */
-  @Polyglot public fun notOk(value: Any?, message: Any? = null)
+  @Polyglot public fun notOk(vararg values: Any?)
 
   /**
    * ## Assert: `fail(message)`
    */
   @Polyglot public fun fail(message: String? = null)
+
+  /**
+   * ## Assert: `fail(message)`
+   */
+  @Polyglot public fun fail(message: Value)
 
   /**
    * ## Assert: `fail(message)`

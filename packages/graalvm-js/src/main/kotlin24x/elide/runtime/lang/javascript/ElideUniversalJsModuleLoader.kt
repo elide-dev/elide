@@ -38,7 +38,6 @@ import com.oracle.truffle.js.runtime.builtins.JSFunctionData
 import com.oracle.truffle.js.runtime.objects.*
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord.Status
 import org.graalvm.polyglot.proxy.ProxyObject
-import java.io.File
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
@@ -94,6 +93,7 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.CONSOLE,
   NodeModuleName.CONSTANTS,
   NodeModuleName.CRYPTO,
+  NodeModuleName.DIAGNOSTICS_CHANNEL,
   NodeModuleName.DGRAM,
   NodeModuleName.DNS,
   NodeModuleName.DOMAIN,
@@ -117,6 +117,9 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.READLINE_PROMISES,
   NodeModuleName.REPL,
   NodeModuleName.STREAM,
+  NodeModuleName.STREAM_CONSUMERS,
+  NodeModuleName.STREAM_PROMISES,
+  NodeModuleName.STREAM_WEB,
   NodeModuleName.STRING_DECODER,
   NodeModuleName.TEST,
   NodeModuleName.TIMERS,
@@ -131,10 +134,19 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.ZLIB,
 )
 
+/**
+ * Utility to convert a string to a valid JS symbol string.
+ *
+ * @receiver The string to convert.
+ * @return The converted string.
+ */
+@Suppress("NOTHING_TO_INLINE")
+public inline fun String.asJsSymbolString(): String = replace("/", "_")
+
 // All built-in Node modules.
 @Suppress("VARIABLE_NAME_INCORRECT") public object NodeModuleName : Predicate<String> {
   public const val ASSERT: String = "assert"
-  public const val ASSERT_STRICT: String = "assert_strict"
+  public const val ASSERT_STRICT: String = "assert/strict"
   public const val ASYNC_HOOKS: String = "async_hooks"
   public const val BUFFER: String = "buffer"
   public const val CHILD_PROCESS: String = "child_process"
@@ -145,7 +157,7 @@ private val allNodeModules = sortedSetOf(
   public const val DIAGNOSTICS_CHANNEL: String = "diagnostics_channel"
   public const val DGRAM: String = "dgram"
   public const val DNS: String = "dns"
-  public const val DNS_PROMISES: String = "dns_promises"
+  public const val DNS_PROMISES: String = "dns/promises"
   public const val DOMAIN: String = "domain"
   public const val EVENTS: String = "events"
   public const val FS: String = "fs"
@@ -154,7 +166,7 @@ private val allNodeModules = sortedSetOf(
   public const val HTTP2: String = "http2"
   public const val HTTPS: String = "https"
   public const val INSPECTOR: String = "inspector"
-  public const val INSPECTOR_PROMISES: String = "inspector_promises"
+  public const val INSPECTOR_PROMISES: String = "inspector/promises"
   public const val MODULE: String = "module"
   public const val NET: String = "net"
   public const val OS: String = "os"
@@ -164,9 +176,12 @@ private val allNodeModules = sortedSetOf(
   public const val PUNYCODE: String = "punycode"
   public const val QUERYSTRING: String = "querystring"
   public const val READLINE: String = "readline"
-  public const val READLINE_PROMISES: String = "readline_promises"
+  public const val READLINE_PROMISES: String = "readline/promises"
   public const val REPL: String = "repl"
   public const val STREAM: String = "stream"
+  public const val STREAM_CONSUMERS: String = "stream/consumers"
+  public const val STREAM_PROMISES: String = "stream/promises"
+  public const val STREAM_WEB: String = "stream/web"
   public const val STRING_DECODER: String = "string_decoder"
   public const val TEST: String = "test"
   public const val TIMERS: String = "timers"
@@ -181,15 +196,15 @@ private val allNodeModules = sortedSetOf(
   public const val WORKER_THREADS: String = "worker_threads"
   public const val ZLIB: String = "zlib"
 
-  // named modules do not contain periods or slashes
-  private val namedModuleRegex = Regex("^[^./]+$")
+  // named modules do not contain periods
+  private val namedModuleRegex = Regex("^[^.]+$")
 
   override fun test(t: String): Boolean {
     return if (namedModuleRegex.matches(t)) {
       // does it start with any of the prefixes?
       if (':' in t) {
         val prefix = t.substringBefore(':')
-        return prefix in specialModulePrefixes
+        return prefix in specialModulePrefixes || t in allNodeModules
       }
       t in allNodeModules
     } else {
@@ -442,8 +457,9 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
   override fun resolveImportedModule(referencingModule: ScriptOrModule, moduleRequest: ModuleRequest): JSModuleRecord {
     val requested = moduleRequest.specifier.toString()
     val (prefix, unprefixed) = parsePrefixedMaybe(requested)
+    val mod = toModuleInfo(unprefixed)
 
-    return when (determineModuleStrategy(requested, referencingModule)) {
+    return when (determineModuleStrategy(requested, referencingModule, builtin = mod)) {
       FALLBACK -> super.resolveImportedModule(referencingModule, moduleRequest)
       DELEGATED -> delegatedModuleCache.computeIfAbsent(unprefixed) {
         resolveDelegatedImportedModule(referencingModule, moduleRequest, unprefixed)
@@ -553,19 +569,24 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
 
     // Determine the loading strategy to use for a given module request.
     @Suppress("UNUSED_PARAMETER")
-    private fun determineModuleStrategy(requested: String, referrer: ScriptOrModule? = null): ModuleStrategy {
+    private fun determineModuleStrategy(
+      requested: String,
+      referrer: ScriptOrModule? = null,
+      builtin: ModuleInfo? = null,
+    ): ModuleStrategy {
       if (ALWAYS_FALLBACK) {
         return FALLBACK
       }
+      // built-in modules are always synthetic
+      if (builtin != null) {
+        return SYNTHETIC
+      }
       val (prefix, unprefixed) = parsePrefixedMaybe(requested)
       return when {
-        // un-prefixed modules may still be built-in (for example, `fs`).
-        prefix == null -> if (!requested.contains(File.separatorChar) && !requested.contains('.')) {
-          resolveUnprefixed(unprefixed)
-        } else when {
-          // otherwise, fallback to delegates, which will opt-out if needed
-          else -> DELEGATED
-        }
+        // un-prefixed modules may still be built-in (for example, `fs`). these names can contain slashes, so they can
+        // look like file paths, even though they aren't. as a result, we pass unconditionally to `resolveUnprefixed`,
+        // which is empowered to assign `DELEGATED` mode if it doesn't know what to do.
+        prefix == null -> resolveUnprefixed(unprefixed)
 
         // special prefixes are always synthetic
         else -> when (prefix in specialModulePrefixes) {
@@ -575,9 +596,10 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
       }
     }
 
-    @Suppress("UNUSED_PARAMETER")
+    @Suppress("UNUSED_PARAMETER", "FunctionOnlyReturningConstant")
     private fun loadStaticDelegatedModule(realm: JSRealm, mod: ModuleInfo): CommonJSModuleProvider<*>? {
-      TODO("Delegated module loading in static contexts is not implemented yet")
+      // TODO("Delegated module loading in static contexts is not implemented yet")
+      return null
     }
 
     // Load a synthetic module in a static context; typically only from CommonJS.
@@ -595,7 +617,7 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
       } // bail out in always-fallback mode
       val mod = toModuleInfo(moduleIdentifier) ?: return null // bail out if it's not a module we recognize
 
-      return when (determineModuleStrategy(moduleIdentifier)) {
+      return when (determineModuleStrategy(moduleIdentifier, builtin = mod)) {
         FALLBACK -> null // bail out if the strategy fn says so
         DELEGATED -> loadStaticDelegatedModule(realm, mod)
         SYNTHETIC -> loadStaticSynthesizedModule(mod)

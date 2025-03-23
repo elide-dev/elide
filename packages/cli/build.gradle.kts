@@ -117,7 +117,7 @@ val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
 val enableNativeTransportV2 = false
 val enableSqliteStatic = true
-val enableStatic = false
+val enableStatic = isRelease
 val enableStaticJni = true
 val preferShared = false
 val enableToolchains = false
@@ -233,10 +233,14 @@ val jvmCompileArgs = listOfNotNull(
   "--enable-preview",
   "--add-modules=jdk.unsupported",
   "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
-//  "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
-  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
-  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
-  // "--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
+  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.aarch64=com.oracle.truffle.enterprise.svm",
+  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.amd64=com.oracle.truffle.enterprise.svm",
+  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code=com.oracle.truffle.enterprise.svm",
+  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=com.oracle.truffle.enterprise.svm",
+  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code=org.graalvm.truffle.runtime",
+  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code.stack=org.graalvm.truffle.runtime",
+  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=org.graalvm.truffle.runtime",
+  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.services=org.graalvm.truffle.runtime",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
@@ -1169,6 +1173,7 @@ val commonNativeArgs = listOfNotNull(
   "-Dtruffle.TrustAllTruffleRuntimeProviders=true",
   "-Dgraalvm.locatorDisabled=false",
   "-Dpolyglotimpl.DisableVersionChecks=false",
+  "-Dpolyglotimpl.AttachLibraryFailureAction=throw",
   "-Dnetty.default.allocator.max-order=3",
   "-Dnetty.resource-leak-detector-level=DISABLED",
   "-Djansi.eager=false",
@@ -1284,7 +1289,7 @@ val releaseCFlags: List<String> = listOf(
   "-fPIE",
   "-flto",
 ).plus(
-  listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang)
+  listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang && !HostManager.hostIsMac)
 ).plus(
   // Add protection flags for release.
   when (targetArch) {
@@ -1429,7 +1434,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libumbrella.dylib",
   "-H:NativeLinkerOption=$nativesPath/libjs.dylib",
   "-H:NativeLinkerOption=$nativesPath/libposix.dylib",
-  "-H:NativeLinkerOption=$nativesPath/libterminal.dylib",
+  "-H:NativeLinkerOption=$nativesPath/libterminal.a",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
 ) else listOf(
@@ -1437,7 +1442,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx48g",
+  "-J-Xmx64g",
   "--parallelism=12",
 ))).plus(if (oracleGvm && enableAuxCache) listOf(
   "-H:+AuxiliaryEngineCache",

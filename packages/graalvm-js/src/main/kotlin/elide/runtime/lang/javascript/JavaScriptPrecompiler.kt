@@ -13,7 +13,6 @@
 package elide.runtime.lang.javascript
 
 import org.graalvm.nativeimage.ImageInfo
-import kotlinx.atomicfu.atomic
 import elide.annotations.API
 import elide.runtime.core.lib.NativeLibraries
 import elide.runtime.diag.Diagnostics
@@ -39,13 +38,18 @@ public object JavaScriptPrecompiler : Precompiler.SourcePrecompiler<JavaScriptCo
 
   internal fun initialize() {
     if (!initialized) {
-      NativeLibraries.resolve(JS_LIB) { didLoad: Boolean ->
+      if (ImageInfo.inImageCode()) {
         initialized = true
-        libDidLoad = didLoad
+        libDidLoad = true
+      } else {
+        NativeLibraries.resolve(JS_LIB) { didLoad: Boolean ->
+          initialized = true
+          libDidLoad = didLoad
+        }
+        if (!libDidLoad) error(
+          "Failed to load JavaScript parser library ('libjs.so' / 'libjs.a')"
+        )
       }
-      if (!libDidLoad) error(
-        "Failed to load JavaScript parser library ('libjs.so' / 'libjs.a')"
-      )
     }
   }
 

@@ -16,6 +16,7 @@ package elide.runtime.node.events
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
@@ -54,8 +55,27 @@ private const val EVENT_TARGET_SYMBOL = "EventTarget"
 // Public symbol where `CustomEvent` is installed.
 private const val CUSTOM_EVENT_SYMBOL = "CustomEvent"
 
+// Public symbol where `Event` is installed.
+private const val EVENT_CLS_SYMBOL = "Event"
+
+// Name of the event listener class.
+private const val EVENT_LISTENER_CLS = "EventListener"
+
+// Name of the event emitter class.
+private const val EVENT_EMITTER_CLS = "EventEmitter"
+
 // Maximum number of listeners to set as a default value.
 private const val DEFAULT_DEFAULT_MAX_LISTENERS = 10
+
+private const val ADD_EVENT_LISTENER_FN = "addEventListener"
+private const val REMOVE_EVENT_LISTENER_FN = "removeEventListener"
+private const val DISPATCH_EVENT_FN = "dispatchEvent"
+
+private val allEventTargetProps = arrayOf(
+  ADD_EVENT_LISTENER_FN,
+  REMOVE_EVENT_LISTENER_FN,
+  DISPATCH_EVENT_FN,
+)
 
 // Installs the Node `events` built-in module.
 @Intrinsic
@@ -67,6 +87,7 @@ private const val DEFAULT_DEFAULT_MAX_LISTENERS = 10
     bindings[EVENTS_MODULE_SYMBOL.asJsSymbol()] = NodeEventsModuleFacade.obtain()
     bindings[EVENT_TARGET_SYMBOL.asPublicJsSymbol()] = EventTarget::class.java
     bindings[CUSTOM_EVENT_SYMBOL.asPublicJsSymbol()] = CustomEvent.Factory
+    bindings[EVENT_CLS_SYMBOL.asPublicJsSymbol()] = Event::class.java
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.EVENTS)) { provide() }
   }
 }
@@ -85,6 +106,9 @@ private fun guestValueToEvent(value: Value): Event = when {
 
 // Convert a guest value into an `EventListener`.
 private fun guestValueToListener(value: Value): EventListener = when {
+  // callback fns
+  value.canExecute() -> GuestEventListener.of(value)
+
   // host-implemented listeners
   value.isHostObject -> value.asHostObject()
 
@@ -107,6 +131,9 @@ internal object StandardEventName {
 
   /** Dispatched on `EventEmitter` instances when an existing listener is removed for any event. */
   const val REMOVE_LISTENER = "removeListener"
+
+  /** Dispatched on `MessagePort` instances when a message is emitted. */
+  const val MESSAGE = "message"
 }
 
 /**
@@ -269,10 +296,126 @@ public interface EventAware : EventTarget, EventEmitter {
   }
 }
 
+/**
+ * ## Event-aware Proxy
+ *
+ * Extends [EventAware] with support for [ProxyObject]; this allows event-aware types to receive and provide handlers
+ * via property assignment and retrieval.
+ *
+ * This facilitates the pattern of:
+ * ```javascript
+ * const eventAware = /* ... */;
+ * eventAware.onevent = (event) => { /* ... */ };
+ * ```
+ *
+ * Such assignments are converted to a single-constituent event listener, which overwrites any existing listener for the
+ * event described by `on<x>`. Property retrieval is also supported. Assigning `null` or `undefined` to a matching event
+ * handler property (or deleting it) all result in the handler being detached.
+ *
+ * Additionally, standard properties are handled on behalf of [EventAware]; this includes functions such as:
+ * - [EventTarget.addEventListener]
+ * - [EventTarget.removeEventListener]
+ * - [EventTarget.dispatchEvent]
+ *
+ * @see EventAware base [EventAware] implementation
+ * @see EventTarget the event target interface
+ */
+public class EventAwareProxy private constructor (private val relay: EventAware): ProxyObject, EventAware by relay {
+  public companion object {
+    @JvmStatic public fun create(): EventAwareProxy = EventAwareProxy(EventAware.create())
+    @JvmStatic public fun create(events: Iterable<String>): EventAwareProxy = EventAwareProxy(EventAware.create(events))
+    @JvmStatic public fun create(vararg events: String): EventAwareProxy = EventAwareProxy(EventAware.create(*events))
+  }
+
+  // Affixed handlers via properties.
+  private val affixedHandlers: MutableList<String> = LinkedList<String>()
+
+  // Handler mapping for property-affixed events.
+  private val handlerMap: MutableMap<String, EventListener> = ConcurrentSkipListMap()
+
+  // Match a property name against a potential event name.
+  private fun isEventPropertyKey(name: String): String? = name.lowercase().let { lowered ->
+    when {
+      lowered.startsWith("on") -> lowered.substring(2)
+      else -> null
+    }
+  }
+
+  // Attach a guest handler.
+  private fun attachHandler(key: String, handler: Value) {
+    affixedHandlers.add(key)
+    handlerMap[key] = guestValueToListener(handler)
+  }
+
+  // Detach a guest handler.
+  private fun detachHandler(key: String) {
+    affixedHandlers.remove(key)
+    handlerMap.remove(key)
+  }
+
+  override fun getMemberKeys(): List<String> = affixedHandlers + allEventTargetProps
+
+  override fun hasMember(key: String): Boolean = key in allEventTargetProps || key in affixedHandlers
+
+  override fun removeMember(key: String): Boolean = when (val ev = isEventPropertyKey(key)) {
+    null -> super.removeMember(key)
+    else -> if (ev !in affixedHandlers) false else true.also { detachHandler(ev) }
+  }
+
+  override fun putMember(key: String, value: Value?): Unit = when (val ev = isEventPropertyKey(key)) {
+    null -> {}
+
+    // if we are provided a null type for handler assignment, we should behave as if the handler was detached.
+    else -> if (value == null || value.isNull) detachHandler(ev) else attachHandler(ev, value)
+  }
+
+  override fun getMember(key: String): Any? = when (val ev = isEventPropertyKey(key)) {
+    null -> when (key) {
+      ADD_EVENT_LISTENER_FN -> ProxyExecutable {
+        when (it.size) {
+          0, 1 -> throw JsError.valueError("Event type and listener are required")
+          2 -> relay.addEventListener(
+            it.getOrNull(0)?.asString() ?: throw JsError.typeError("Event type must be a string"),
+            guestValueToListener(it.getOrNull(1) ?: throw JsError.typeError("Listener must be a function")),
+          )
+          else -> relay.addEventListener(
+            it.getOrNull(0)?.asString() ?: throw JsError.typeError("Event type must be a string"),
+            it.getOrNull(1) ?: throw JsError.typeError("Listener must be a function"),
+            it.getOrNull(2),
+          )
+        }
+      }
+
+      REMOVE_EVENT_LISTENER_FN -> ProxyExecutable {
+        when (it.size) {
+          0, 1 -> throw JsError.valueError("Event type and listener are required")
+          2 -> relay.removeEventListener(
+            it.getOrNull(0)?.asString() ?: throw JsError.typeError("Event type must be a string"),
+            guestValueToListener(it.getOrNull(1) ?: throw JsError.typeError("Listener must be a function")),
+          )
+          else -> relay.removeEventListener(
+            it.getOrNull(0)?.asString() ?: throw JsError.typeError("Event type must be a string"),
+            it[1],
+            it[2],
+          )
+        }
+      }
+
+      DISPATCH_EVENT_FN -> ProxyExecutable {
+        val event = it.getOrNull(0) ?: throw JsError.typeError("Event argument is required")
+        if (!event.isHostObject || event.metaObject.metaQualifiedName != Event::class.qualifiedName)
+          throw JsError.typeError("Event argument must be an Event instance")
+        relay.dispatchEvent(event.`as`<Event>(Event::class.java))
+      }
+
+      else -> null
+    }
+    else -> handlerMap[ev]
+  }
+}
+
 // Implementation of an event-aware relay, which hosts event services for an encapsulating object.
-private class EventAwareRelay(
-  private val knownEvents: SortedSet<String>? = null,
-) : EventAware {
+private class EventAwareRelay(private val knownEvents: SortedSet<String>? = null) : EventAware {
   // Whether this event dispatch is still open for events.
   private val open: AtomicBoolean = AtomicBoolean(true)
 
@@ -332,10 +475,10 @@ private class EventAwareRelay(
     appendEventListener(type, options.capture, listener.bind(this, options))
   }
 
-  private fun dispatchProtect(block: () -> Unit) {
+  private inline fun dispatchProtect(block: () -> Unit) {
     try {
       block()
-    } catch (e: Throwable) {
+    } catch (_: Throwable) {
       // default: do nothing
     }
   }
@@ -618,10 +761,10 @@ private class EventAwareRelay(
   }
 
   @Polyglot override fun getMember(key: String): Any? = when (key) {
-    "Event" -> Event::class.java
-    "EventTarget" -> EventTarget::class.java
-    "EventListener" -> EventListener::class.java
-    "EventEmitter" -> EventEmitter::class.java
+    EVENT_CLS_SYMBOL -> Event::class.java
+    EVENT_TARGET_SYMBOL -> EventTarget::class.java
+    EVENT_LISTENER_CLS -> EventListener::class.java
+    EVENT_EMITTER_CLS -> EventEmitter::class.java
     "EventEmitterAsyncResource" -> TODO("Not yet implemented: `EventEmitterAsyncResource`")
     "defaultMaxListeners" -> defaultMaxListeners
     "errorMonitor" -> errorMonitor

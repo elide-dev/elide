@@ -10,13 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.js.node.events
-
-import elide.annotations.API
+package elide.runtime.intrinsics.js
 
 /**
- * ## Event Emitter Or Target
+ * # Transferable
  *
- * Represents either an [EventEmitter] or an [EventTarget]; unifies common behavior between the two.
+ * Marker interface which describes a type that can safely be transferred between execution contexts; in practice, such
+ * contexts are typically different threads or workers.
  */
-@API public sealed interface EventEmitterOrTarget
+public interface Transferable

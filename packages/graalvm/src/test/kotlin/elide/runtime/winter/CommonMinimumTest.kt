@@ -60,7 +60,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "CryptoKey",
     "DOMException",
     "DecompressionStream",
-    "Event",
     "FormData",
     "SubtleCrypto",
     "TextDecoderStream",
@@ -86,6 +85,8 @@ private const val ENABLE_SUPPRESSIONS = true
     "File",
     "FormData",
     "Headers",
+    "MessageChannel",
+    "MessagePort",
     "ReadableByteStreamController",
     "ReadableStream",
     "ReadableStreamBYOBReader",
@@ -143,15 +144,12 @@ private const val ENABLE_SUPPRESSIONS = true
   private fun withFreshContext(block: suspend Context.() -> Unit): Unit = PolyglotEngine {
     hostAccess = ALLOW_ALL
 
-    vfs {
-      useHost = true
-    }
-
-    install(Wasm)
-    install(JavaScript) {
+    vfs { useHost = true }
+    configure(Wasm)
+    configure(JavaScript) {
       npm {
         enabled = true
-        modulesPath = System.getenv("PWD")
+        modulesPath = System.getProperty("user.dir")
         wasm = true
       }
     }

@@ -12,8 +12,6 @@
  */
 package elide.runtime.lang.javascript
 
-import org.graalvm.nativeimage.ImageInfo
-import kotlinx.atomicfu.atomic
 import elide.annotations.API
 import elide.runtime.core.lib.NativeLibraries
 import elide.runtime.diag.Diagnostics
@@ -52,7 +50,7 @@ public object JavaScriptPrecompiler : Precompiler.SourcePrecompiler<JavaScriptCo
   @Suppress("TooGenericExceptionCaught")
   override fun invoke(req: PrecompileSourceRequest<JavaScriptCompilerConfig>, input: String): String? = try {
     initialize()
-    precompile(req.source.name, input).also {
+    precompile(req.config, req.source.name, input).also {
       // after running the precompiler, consume all matching diagnostics (if present), and throw them back to the caller
       if (Diagnostics.dirty(LANG_TAG_JS)) Diagnostics.query(LANG_TAG_JS, TOOL_PRECOMPILER, true).let { diag ->
         PrecompilerNotice.Companion.from(DiagnosticsContainer.Companion.from(diag))
@@ -62,17 +60,30 @@ public object JavaScriptPrecompiler : Precompiler.SourcePrecompiler<JavaScriptCo
     throw PrecompilerError("Precompile failed: ${err.javaClass.simpleName} ${err.message}", err)
   }
 
+  // Precompile with assigned configuration.
+  private fun precompile(config: JavaScriptCompilerConfig, name: String, input: String): String? {
+    val ts = config.typescript
+    val jsx = config.jsx
+    val esm = config.esm || name.endsWith(".mjs")
+    return precompile(name, input, ts, jsx, esm)
+  }
+
   /**
-   * ## Precompile JavaScript
+   * ## Precompile JavaScript/TypeScript
    *
    * This method accepts code in the form of JSX, TSX, TypeScript, or JavaScript, and will act to parse it using the
    * native parser, and then lower it into compliant ECMA code which is runnable by Elide.
    *
    * @param name Filename for the code provided herein
    * @param code Code contents from the file in question
+   * @param ts Whether the code is expected to support TypeScript types or not
+   * @param jsx Whether the code is expected to support JSX/TSX or not
+   * @param esm Whether the code is expected to be an ES Module or not
    * @return Lowered source-code which should be used instead
    */
-  @JvmStatic @JvmName("precompile") private external fun precompile(name: String, code: String): String?
+  @JvmStatic
+  @JvmName("precompile")
+  private external fun precompile(name: String, code: String, ts: Boolean, jsx: Boolean, esm: Boolean): String?
 
   /** Provider for the [JavaScriptPrecompiler]. */
   public class Provider : Precompiler.Provider<JavaScriptPrecompiler> {

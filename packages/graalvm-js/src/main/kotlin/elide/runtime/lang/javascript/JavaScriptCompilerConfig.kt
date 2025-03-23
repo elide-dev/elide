@@ -16,9 +16,17 @@ import elide.runtime.precompiler.Precompiler
 
 /**
  * ## Java Script Compiler Config
+ *
+ * @property sourceMaps Whether to generate source maps.
+ * @property jsx Whether to support JSX.
+ * @property esm Whether to support ECMAScript modules.
+ * @property typescript Whether to support TypeScript.
  */
 public data class JavaScriptCompilerConfig(
   val sourceMaps: Boolean = true,
+  val jsx: Boolean = true,
+  val esm: Boolean = true,
+  val typescript: Boolean = true,
 ) : Precompiler.Configuration {
   public companion object {
     /** Default JavaScript compiler configuration. */

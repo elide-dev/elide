@@ -1,0 +1,12 @@
+{
+  "name": "@elide/logparse",
+  "version": "1.0.0",
+  "private": true,
+  "bin": {
+    "logparse": "./dist/logparse"
+  },
+  "scripts": {
+    "build": "bun build --compile --bytecode --minify --sourcemap --outfile=./dist/logparse ./index.ts",
+    "logparse": "bun run build && ./dist/logparse"
+  }
+}

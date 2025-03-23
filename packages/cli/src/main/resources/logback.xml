@@ -19,11 +19,20 @@
 
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator" />
 
+  <appender name="STD_FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${user.home}/elide.log</file>
+    <append>true</append>
+    <encoder>
+      <pattern>%-4relative %d{HH:mm:ss.SSS} [%thread] %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <target>System.out</target>
     <immediateFlush>true</immediateFlush>
     <encoder>
-      <pattern>%msg%n</pattern>
+<!--      <pattern>%msg%n</pattern>-->
+      <pattern>%-4relative %d{HH:mm:ss.SSS} [%thread] %msg%n</pattern>
     </encoder>
   </appender>
 
@@ -31,7 +40,7 @@
     <target>System.err</target>
     <withJansi>true</withJansi>
     <encoder>
-      <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
+      <pattern>%magenta(elide) %-4relative %white(%-12d{HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %msg%n</pattern>
     </encoder>
   </appender>
 
@@ -40,7 +49,7 @@
     <target>System.err</target>
     <immediateFlush>false</immediateFlush>
     <encoder>
-      <pattern>%magenta(elide) %white(%-12d{HH:mm:ss.SSS}) %highlight(%-5level) %msg%n</pattern>
+      <pattern>%magenta(elide) %-4relative %white(%-12d{HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %msg%n</pattern>
     </encoder>
   </appender>
 

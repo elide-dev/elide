@@ -54,14 +54,20 @@ public class elide/runtime/lang/javascript/JSRealmPatcher {
 public final class elide/runtime/lang/javascript/JavaScriptCompilerConfig : elide/runtime/precompiler/Precompiler$Configuration {
 	public static final field Companion Lelide/runtime/lang/javascript/JavaScriptCompilerConfig$Companion;
 	public fun <init> ()V
-	public fun <init> (Z)V
-	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZZ)V
+	public synthetic fun <init> (ZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
-	public final fun copy (Z)Lelide/runtime/lang/javascript/JavaScriptCompilerConfig;
-	public static synthetic fun copy$default (Lelide/runtime/lang/javascript/JavaScriptCompilerConfig;ZILjava/lang/Object;)Lelide/runtime/lang/javascript/JavaScriptCompilerConfig;
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun copy (ZZZZ)Lelide/runtime/lang/javascript/JavaScriptCompilerConfig;
+	public static synthetic fun copy$default (Lelide/runtime/lang/javascript/JavaScriptCompilerConfig;ZZZZILjava/lang/Object;)Lelide/runtime/lang/javascript/JavaScriptCompilerConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun getDEFAULT ()Lelide/runtime/lang/javascript/JavaScriptCompilerConfig;
+	public final fun getEsm ()Z
+	public final fun getJsx ()Z
 	public final fun getSourceMaps ()Z
+	public final fun getTypescript ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

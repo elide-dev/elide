@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
     name = TypeScriptLanguage.NAME,
     implementationName = TypeScriptLanguage.IMPLEMENTATION_NAME,
     version = TypeScriptLanguage.TYPESCRIPT_VERSION,
-    dependentLanguages = "js",
+    dependentLanguages = TypeScriptLanguage.JS_ID,
     defaultMimeType = TypeScriptLanguage.APPLICATION_MIME_TYPE,
     website = "https://docs.elide.dev",
     fileTypeDetectors = TypeScriptFileTypeDetector.class,
@@ -57,26 +57,37 @@ import org.jetbrains.annotations.NotNull;
     characterMimeTypes = {
       TypeScriptLanguage.TEXT_MIME_TYPE,
       TypeScriptLanguage.APPLICATION_MIME_TYPE,
-      TypeScriptLanguage.MODULE_MIME_TYPE
+      TypeScriptLanguage.MODULE_MIME_TYPE,
+      TypeScriptLanguage.TSX_MIME_TYPE,
+      TypeScriptLanguage.JSX_MIME_TYPE
     })
 public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   public static final String TEXT_MIME_TYPE = "text/typescript";
   public static final String APPLICATION_MIME_TYPE = "application/typescript";
   public static final String MODULE_MIME_TYPE = "application/typescript+module";
+  public static final String TSX_MIME_TYPE = "application/typescript+tsx";
+  public static final String JSX_MIME_TYPE = "application/javascript+jsx";
   public static final String NAME = "TypeScript";
   public static final String IMPLEMENTATION_NAME = "TypeScript";
   public static final String ID = "ts";
-  public static final String TYPESCRIPT_VERSION = "5.8.2";
-  private static final SortedSet<String> tsExtensions = new TreeSet<>();
+  public static final String JS_ID = "js";
+  public static final String TYPESCRIPT_VERSION = "oxc main";
+  public static final String EXTENSION_TS = ID;
+  public static final String EXTENSION_TSX = "tsx";
+  public static final String EXTENSION_JSX = "jsx";
+  public static final String EXTENSION_CTS = "cts";
+  public static final String EXTENSION_MTS = "mts";
+  public static final SortedSet<String> tsExtensions = new TreeSet<>();
 
   static {
-    tsExtensions.add("ts");
-    tsExtensions.add("tsx");
-    tsExtensions.add("cts");
-    tsExtensions.add("mts");
+    tsExtensions.add(EXTENSION_TS);
+    tsExtensions.add(EXTENSION_TSX);
+    tsExtensions.add(
+        EXTENSION_JSX); // `jsx` is piped through typescript to leverage the precompiler
+    tsExtensions.add(EXTENSION_CTS);
+    tsExtensions.add(EXTENSION_MTS);
   }
 
-  private static final TypeScriptPrecompiler tsPrecompiler = TypeScriptPrecompiler.obtain();
   private static final TypeScriptPrecompiledLoaderFactory tsLoaderFactory =
       new TypeScriptPrecompiledLoaderFactory();
 
@@ -88,7 +99,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
       implements DelegatedModuleLoaderRegistry.DelegateFactory {
     @Override
     public @NotNull JSModuleLoader invoke(@NotNull JSRealm realm) {
-      return new TypeScriptPrecompiledLoader(realm, tsPrecompiler);
+      return new TypeScriptPrecompiledLoader(realm, TypeScriptPrecompiler.obtain());
     }
 
     @Override
@@ -105,7 +116,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   }
 
   private void initializeJsRealm(Env currentEnv) {
-    LanguageInfo jsInfo = currentEnv.getInternalLanguages().get("js");
+    LanguageInfo jsInfo = currentEnv.getInternalLanguages().get(JS_ID);
     currentEnv.initializeLanguage(jsInfo);
   }
 
@@ -117,7 +128,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     var realm = ctx.createRealm(jsEnv);
     if (!compilerInitialized.get()) {
       compilerInitialized.compareAndSet(false, true);
-      tsLoader = new TypeScriptPrecompiledLoader(realm, tsPrecompiler);
+      tsLoader = new TypeScriptPrecompiledLoader(realm, TypeScriptPrecompiler.obtain());
       DelegatedModuleLoaderRegistry.register(tsLoaderFactory);
     }
     return realm;
@@ -155,7 +166,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
   @Override
   protected boolean patchContext(JSRealm context, Env newEnv) {
     // Restore the TypeScript loader, which can't be persisted to the aux cache.
-    tsLoader = new TypeScriptPrecompiledLoader(context, tsPrecompiler);
+    tsLoader = new TypeScriptPrecompiledLoader(context, TypeScriptPrecompiler.obtain());
     return true;
   }
 }

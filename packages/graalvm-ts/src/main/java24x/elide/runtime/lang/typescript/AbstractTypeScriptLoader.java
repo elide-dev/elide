@@ -20,10 +20,12 @@ import com.oracle.truffle.js.builtins.commonjs.NpmCompatibleESModuleLoader;
 import com.oracle.truffle.js.lang.JavaScriptLanguage;
 import com.oracle.truffle.js.runtime.JSException;
 import com.oracle.truffle.js.runtime.JSRealm;
+import com.oracle.truffle.js.runtime.objects.AbstractModuleRecord;
 import com.oracle.truffle.js.runtime.objects.JSModuleData;
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord;
 import com.oracle.truffle.js.runtime.objects.ScriptOrModule;
 import java.io.IOException;
+import java.net.URI;
 import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +35,7 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
   }
 
   @SuppressWarnings("SameParameterValue")
-  @NotNull private JSModuleRecord tryLoadTypeScriptExt(
+  @NotNull private AbstractModuleRecord tryLoadTypeScriptExt(
       @NotNull ScriptOrModule referrer,
       @NotNull String originalSpecifier,
       @NotNull Module.ModuleRequest moduleRequest,
@@ -42,28 +44,28 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
     var specifierTS = TruffleString.fromJavaStringUncached(specifier, TruffleString.Encoding.UTF_8);
     var tsModuleRequest =
         com.oracle.js.parser.ir.Module.ModuleRequest.create(
-            specifierTS, moduleRequest.getAttributes());
+            specifierTS, moduleRequest.attributes());
 
     return super.resolveImportedModule(referrer, tsModuleRequest);
   }
 
   @SuppressWarnings("SameParameterValue")
-  @NotNull private JSModuleRecord tryLoadTypeScriptDir(
+  @NotNull private AbstractModuleRecord tryLoadTypeScriptDir(
       @NotNull ScriptOrModule referrer,
       @NotNull String originalSpecifier,
       @NotNull Module.ModuleRequest moduleRequest,
       @NotNull String file) {
     var specifier = originalSpecifier + "/" + file;
     var specifierTS = TruffleString.fromJavaStringUncached(specifier, TruffleString.Encoding.UTF_8);
-    var tsModuleRequest = Module.ModuleRequest.create(specifierTS, moduleRequest.getAttributes());
+    var tsModuleRequest = Module.ModuleRequest.create(specifierTS, moduleRequest.attributes());
     return super.resolveImportedModule(referrer, tsModuleRequest);
   }
 
-  @Nullable private JSModuleRecord loadAsTypeScriptFallback(
+  @Nullable private AbstractModuleRecord loadAsTypeScriptFallback(
       @NotNull ScriptOrModule referrer,
       @NotNull Module.ModuleRequest request,
       @Nullable JSException e1) {
-    var originalSpecifier = request.getSpecifier().toJavaStringUncached();
+    var originalSpecifier = request.specifier().toJavaStringUncached();
 
     try {
       // maybe it's a naked import, and we can find it by appending `.ts`?
@@ -92,11 +94,11 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
   }
 
   @Override
-  @NotNull public JSModuleRecord resolveImportedModule(
+  @NotNull public AbstractModuleRecord resolveImportedModule(
       ScriptOrModule referrer, Module.ModuleRequest moduleRequest) {
     try {
       var env = JavaScriptLanguage.getCurrentEnv();
-      var specifier = moduleRequest.getSpecifier().toJavaStringUncached();
+      var specifier = moduleRequest.specifier().toJavaStringUncached();
       var parentSrc = referrer.getSource();
       var maybeParentPath = parentSrc.getPath();
       var maybeParentUri = parentSrc.getURI();
@@ -112,7 +114,7 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
       // did we find the import?
       if (maybeFile != null) {
         try {
-          return loadModuleFromUrl(referrer, moduleRequest, maybeFile, null);
+          return loadModuleFromFile(referrer, moduleRequest, maybeFile, null);
         } catch (IOException e) {
           // failed to load; fallback to normal behavior
         }
@@ -130,31 +132,33 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
   }
 
   @Override
-  @NotNull public JSModuleRecord loadModule(Source source, JSModuleData moduleData) {
-    return super.loadModule(source, moduleData);
+  protected AbstractModuleRecord loadModuleFromURL(
+      ScriptOrModule referrer, Module.ModuleRequest moduleRequest, URI moduleURI)
+      throws IOException {
+    return super.loadModuleFromURL(referrer, moduleRequest, moduleURI);
   }
 
   @Override
-  @NotNull protected JSModuleRecord loadModuleFromUrl(
+  protected AbstractModuleRecord loadModuleFromFile(
       ScriptOrModule referrer,
       Module.ModuleRequest moduleRequest,
-      TruffleFile maybeModuleFile,
-      @Nullable String maybeCanonicalPath)
+      TruffleFile moduleFile,
+      String maybeCanonicalPath)
       throws IOException {
-    if (maybeModuleFile != null && maybeModuleFile.exists()) {
-      var canonicalPath = maybeModuleFile.getCanonicalFile().getPath();
+    if (moduleFile != null && moduleFile.exists()) {
+      var canonicalPath = moduleFile.getCanonicalFile().getPath();
       var maybeModuleMapEntry = moduleMap.get(canonicalPath);
       if (maybeModuleMapEntry != null) {
         return maybeModuleMapEntry;
       }
 
-      Source source = transpileModule(referrer, moduleRequest, maybeModuleFile, canonicalPath);
+      Source source = transpileModule(referrer, moduleRequest, moduleFile, canonicalPath);
       JSModuleData parsedModule = realm.getContext().getEvaluator().envParseModule(realm, source);
       var module = new JSModuleRecord(parsedModule, this);
       moduleMap.put(canonicalPath, module);
       return module;
     }
-    return super.loadModuleFromUrl(referrer, moduleRequest, maybeModuleFile, maybeCanonicalPath);
+    return super.loadModuleFromFile(referrer, moduleRequest, moduleFile, maybeCanonicalPath);
   }
 
   @NotNull abstract Source transpileModule(

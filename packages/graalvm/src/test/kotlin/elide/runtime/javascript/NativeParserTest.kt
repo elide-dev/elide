@@ -95,7 +95,9 @@ class NativeParserTest {
       JavaScriptPrecompiler.precompile(
         PrecompileSourceRequest(
           source = PrecompileSourceInfo("example.jsx"),
-          config = JavaScriptCompilerConfig.DEFAULT,
+          config = JavaScriptCompilerConfig.DEFAULT.copy(
+            jsx = true,
+          ),
         ),
         code,
       )
@@ -110,7 +112,10 @@ class NativeParserTest {
       JavaScriptPrecompiler.precompile(
         PrecompileSourceRequest(
           source = PrecompileSourceInfo("example.tsx"),
-          config = JavaScriptCompilerConfig.DEFAULT,
+          config = JavaScriptCompilerConfig.DEFAULT.copy(
+            typescript = true,
+            jsx = true,
+          ),
         ),
         code,
       )

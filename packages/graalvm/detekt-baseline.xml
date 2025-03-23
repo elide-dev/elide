@@ -14,6 +14,7 @@
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this will need normalization for non-unix test runs</ID>
+    <ID>ForbiddenComment:NodeStream.kt$NodeStreamModule$// @TODO: Cannot register natively because some stream types are polyfilled</ID>
     <ID>ForbiddenComment:NodeURL.kt$NodeURL$// TODO: Implement these methods.</ID>
     <ID>ForbiddenComment:NodeZlib.kt$BrotliDecompressStream$// @TODO: flushing for readables</ID>
     <ID>ForbiddenComment:NodeZlib.kt$InflateStream$// @TODO: flushing for readables</ID>
@@ -69,7 +70,6 @@
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *rest)</ID>
     <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
     <ID>SwallowedException:NettyTransport.kt$NettyTransport$unsatisfied: UnsatisfiedLinkError</ID>
-    <ID>SwallowedException:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
     <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$e: java.net.URISyntaxException</ID>
     <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$syntaxErr: java.net.URISyntaxException</ID>
     <ID>SwallowedException:WebCryptoIntrinsicTest.kt$WebCryptoIntrinsicTest$err: Throwable</ID>
@@ -80,7 +80,6 @@
     <ID>TooGenericExceptionCaught:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractGVMScript.kt$AbstractGVMScript$exc: Exception</ID>
     <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
-    <ID>TooGenericExceptionCaught:NodeEvents.kt$EventAwareRelay$e: Throwable</ID>
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy.SQLiteTransactionImpl$err: Throwable</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>

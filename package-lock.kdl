@@ -8,10 +8,9 @@ jszip "3.10.1"
 lz-string "1.5.0"
 postcss "8.5.3"
 preact "10.26.4"
-react "19.0.0"
-react-dom "19.0.0"
+react "18.3.1"
+react-dom "18.3.1"
 typescript "5.8.2"
-web-streams-polyfill "3.3.3"
     }
 dev-dependencies{
 "@biomejs/biome" "1.9.4"
@@ -22,6 +21,8 @@ dev-dependencies{
 "@prettier/plugin-xml" "3.4.1"
 "@types/google-protobuf" "3.15.12"
 "@types/node" "22.13.11"
+bun "1.2.5"
+bun-types "1.2.5"
 commitlint "19.8.0"
 esbuild "0.25.0"
 eslint "9.23.0"
@@ -35,7 +36,6 @@ prettier-plugin-java "2.6.7"
 prettier-plugin-properties "0.3.0"
 prettier-plugin-sh "0.15.0"
 prettier-plugin-toml "2.0.2"
-readable-stream "4.5.2"
     }
 }
 pkg "@babel/code-frame"{
@@ -685,6 +685,61 @@ version "0.0.8"
 resolved "https://registry.npmjs.org/@mitata/counters/-/counters-0.0.8.tgz"
 integrity "sha512-f11w0Y1ETFlarDP7CePj8Z+y8Gv5Ax4gMxWsEwrqh0kH/YIY030Ezx5SUJeQg0YPTZ2OHKGcLG1oGJbIqHzaJA=="
 }
+pkg "@oven/bun-darwin-aarch64"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-aarch64/-/bun-darwin-aarch64-1.2.5.tgz"
+integrity "sha512-ggZfdpgUJ/OiWrfcfTgHeSTHcec5HAjkGrZHL9FJ/R60sydRKPYHgAgexdIoJAGfsCVAL+x7y8NSTRIAX8J4Ng=="
+}
+pkg "@oven/bun-darwin-x64"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-x64/-/bun-darwin-x64-1.2.5.tgz"
+integrity "sha512-4zqyQLJB33s99KcTxH6yQqH5EYBmF1qofQTtLsToIFbIZN1NqSp/aegYiGmxO5Kj/BuWsy8Wf8MS6vX2O0o2Lw=="
+}
+pkg "@oven/bun-darwin-x64-baseline"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-x64-baseline/-/bun-darwin-x64-baseline-1.2.5.tgz"
+integrity "sha512-3W1RO3/D6Z1S79J47F/DLzmK+dgkYq5hS1ShOCSBAYTTA2b1ZuymaN8avGzSb9ed5W0QfxtyeAksfEY2xUBOqA=="
+}
+pkg "@oven/bun-linux-aarch64"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64/-/bun-linux-aarch64-1.2.5.tgz"
+integrity "sha512-NQFtAVyQyJhLYrhFVxKdh6cqrDNc60pBnBGLQSO8PU+oyFyiJ3e3gGXjLzMbxd6cJxNIK5FZ0JIq96WljKAhlg=="
+}
+pkg "@oven/bun-linux-aarch64-musl"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64-musl/-/bun-linux-aarch64-musl-1.2.5.tgz"
+integrity "sha512-URlISBOE2HQi8qdru691OYywJRwChxMfXFbk26tCgdZ01LgGAKsIjAYylefuSsPuA697imDN3Pel3D7rveusmw=="
+}
+pkg "@oven/bun-linux-x64"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64/-/bun-linux-x64-1.2.5.tgz"
+integrity "sha512-pa3kQ4cXNV0jk5aM8+Hdmxr+b4QoPVgeAIA454SN5l3hMGfNsHjczKpsz0ksInZ8506iMMTCPEBXpyQJcSme+Q=="
+}
+pkg "@oven/bun-linux-x64-baseline"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-baseline/-/bun-linux-x64-baseline-1.2.5.tgz"
+integrity "sha512-fCm/qp7e3VYlaoRs6NIEsKubPqyxjzLv8/qZkxeLLOlPd7CS8L26UY4KPOSjA+wrhPT+Nxsyvl/EEJq2R/iauA=="
+}
+pkg "@oven/bun-linux-x64-musl"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl/-/bun-linux-x64-musl-1.2.5.tgz"
+integrity "sha512-DuU2kQnY48g9tNWjFrZqyG+U2emCBwlhOPxbuY/TMVVNSTMAcQbE/bb3s2pZdhZH5ssjc5SH/ZyWU1TePcYB2A=="
+}
+pkg "@oven/bun-linux-x64-musl-baseline"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl-baseline/-/bun-linux-x64-musl-baseline-1.2.5.tgz"
+integrity "sha512-H7tuJz7mZvOTPo4yLbIXIxkiDGWSGd2DbwGl4zNol/FURqGsKQVqpomv86yl9KCXsUUOm5FX2i5Ed+ro8N//Cg=="
+}
+pkg "@oven/bun-windows-x64"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-windows-x64/-/bun-windows-x64-1.2.5.tgz"
+integrity "sha512-oNDdPmzsCyvCATiYgkKWgxOeEx2F7m/i2MGUba+YJAeVXJsJg9iPJrLVBtETvKoSAgkXViwoUEw2U25jRYsp4g=="
+}
+pkg "@oven/bun-windows-x64-baseline"{
+version "1.2.5"
+resolved "https://registry.npmjs.org/@oven/bun-windows-x64-baseline/-/bun-windows-x64-baseline-1.2.5.tgz"
+integrity "sha512-j5FxI8FeKfWI6rEXA+1O3ASBMTp5CFcZ7MR+/aCpiBKrDse32wLaZMVGnvqQqs4y0YHUvR8b7eXHHTboezjL1w=="
+}
 pkg "@prettier/plugin-xml"{
 version "3.4.1"
 resolved "https://registry.npmjs.org/@prettier/plugin-xml/-/plugin-xml-3.4.1.tgz"
@@ -725,14 +780,6 @@ resolved "https://registry.npmjs.org/@types/conventional-commits-parser/-/conven
 integrity "sha512-7uz5EHdzz2TqoMfV7ee61Egf5y6NkcO4FB/1iCCQnbeiI1F3xzv3vK5dBCXUCLQgGYS+mUeigK1iKQzvED+QnQ=="
 dependencies{
 "@types/node" ">=0.0.0"
-    }
-}
-pkg "@types/conventional-commits-parser" "@types/node"{
-version "22.13.10"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.13.10.tgz"
-integrity "sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw=="
-dependencies{
-undici-types ">=6.20.0 <6.21.0-0"
     }
 }
 pkg "@types/debug"{
@@ -805,6 +852,14 @@ version "3.0.3"
 resolved "https://registry.npmjs.org/@types/unist/-/unist-3.0.3.tgz"
 integrity "sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q=="
 }
+pkg "@types/ws"{
+version "8.5.14"
+resolved "https://registry.npmjs.org/@types/ws/-/ws-8.5.14.tgz"
+integrity "sha512-bd/YFLW+URhBzMXurx7lWByOu+xzU9+kb3RboOteXYDfW+tr+JZa99OyNmPINEGB/ahzKrEuc8rcv4gnpJmxTw=="
+dependencies{
+"@types/node" ">=0.0.0"
+    }
+}
 pkg "@ungap/structured-clone"{
 version "1.3.0"
 resolved "https://registry.npmjs.org/@ungap/structured-clone/-/structured-clone-1.3.0.tgz"
@@ -824,14 +879,6 @@ resolved "https://registry.npmjs.org/chevrotain/-/chevrotain-7.1.1.tgz"
 integrity "sha512-wy3mC1x4ye+O+QkEinVJkPf5u2vsrDIYW9G7ZuwFl6v/Yu0LwUuT2POsb+NUWApebyxfkQq6+yDfRExbnI5rcw=="
 dependencies{
 regexp-to-ast "0.5.0"
-    }
-}
-pkg abort-controller{
-version "3.0.0"
-resolved "https://registry.npmjs.org/abort-controller/-/abort-controller-3.0.0.tgz"
-integrity "sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg=="
-dependencies{
-event-target-shim ">=5.0.0 <6.0.0-0"
     }
 }
 pkg accepts{
@@ -924,11 +971,6 @@ version "1.0.2"
 resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
 integrity "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="
 }
-pkg base64-js{
-version "1.5.1"
-resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
-integrity "sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA=="
-}
 pkg binary-extensions{
 version "2.3.0"
 resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.3.0.tgz"
@@ -986,13 +1028,31 @@ node-releases ">=2.0.19 <3.0.0-0"
 update-browserslist-db ">=1.1.1 <2.0.0-0"
     }
 }
-pkg buffer{
-version "6.0.3"
-resolved "https://registry.npmjs.org/buffer/-/buffer-6.0.3.tgz"
-integrity "sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA=="
+pkg bun{
+version "1.2.5"
+resolved "https://registry.npmjs.org/bun/-/bun-1.2.5.tgz"
+integrity "sha512-fbQLt+DPiGUrPKdmsHRRT7cQAlfjdxPVFvLZrsUPmKiTdv+pU50ypdx9yRJluknSbyaZchFVV7Lx2KXikXKX2Q=="
+optional-dependencies{
+"@oven/bun-darwin-aarch64" "1.2.5"
+"@oven/bun-darwin-x64" "1.2.5"
+"@oven/bun-darwin-x64-baseline" "1.2.5"
+"@oven/bun-linux-aarch64" "1.2.5"
+"@oven/bun-linux-aarch64-musl" "1.2.5"
+"@oven/bun-linux-x64" "1.2.5"
+"@oven/bun-linux-x64-baseline" "1.2.5"
+"@oven/bun-linux-x64-musl" "1.2.5"
+"@oven/bun-linux-x64-musl-baseline" "1.2.5"
+"@oven/bun-windows-x64" "1.2.5"
+"@oven/bun-windows-x64-baseline" "1.2.5"
+    }
+}
+pkg bun-types{
+version "1.2.5"
+resolved "https://registry.npmjs.org/bun-types/-/bun-types-1.2.5.tgz"
+integrity "sha512-3oO6LVGGRRKI4kHINx5PIdIgnLRb7l/SprhzqXapmoYkFl5m4j6EvALvbDVuuBFaamB46Ap6HCUxIXNLCGy+tg=="
 dependencies{
-base64-js ">=1.3.1 <2.0.0-0"
-ieee754 ">=1.2.1 <2.0.0-0"
+"@types/node" ">=0.0.0"
+"@types/ws" ">=8.5.10 <8.6.0-0"
     }
 }
 pkg bytes{
@@ -1853,20 +1913,10 @@ version "1.8.1"
 resolved "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
 integrity "sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg=="
 }
-pkg event-target-shim{
-version "5.0.1"
-resolved "https://registry.npmjs.org/event-target-shim/-/event-target-shim-5.0.1.tgz"
-integrity "sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ=="
-}
 pkg eventemitter3{
 version "5.0.1"
 resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-5.0.1.tgz"
 integrity "sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA=="
-}
-pkg events{
-version "3.3.0"
-resolved "https://registry.npmjs.org/events/-/events-3.3.0.tgz"
-integrity "sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q=="
 }
 pkg execa{
 version "8.0.1"
@@ -2222,11 +2272,6 @@ integrity "sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1
 dependencies{
 safer-buffer ">=2.1.2 <3.0.0"
     }
-}
-pkg ieee754{
-version "1.2.1"
-resolved "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
-integrity "sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA=="
 }
 pkg ignore{
 version "5.3.2"
@@ -2665,6 +2710,14 @@ pkg longest-streak{
 version "3.1.0"
 resolved "https://registry.npmjs.org/longest-streak/-/longest-streak-3.1.0.tgz"
 integrity "sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g=="
+}
+pkg loose-envify{
+version "1.4.0"
+resolved "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz"
+integrity "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="
+dependencies{
+js-tokens ">=3.0.0 <4.0.0-0||>=4.0.0 <5.0.0-0"
+    }
 }
 pkg lz-string{
 version "1.5.0"
@@ -3779,11 +3832,6 @@ version "1.0.3"
 resolved "https://registry.npmjs.org/pretty-hrtime/-/pretty-hrtime-1.0.3.tgz"
 integrity "sha512-66hKPCr+72mlfiSjlEB1+45IjXSqvVAIy6mocupoww4tBFE9R9IhwwUGoI4G++Tc9Aq+2rxOt0RFU6gPcrte0A=="
 }
-pkg process{
-version "0.11.10"
-resolved "https://registry.npmjs.org/process/-/process-0.11.10.tgz"
-integrity "sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A=="
-}
 pkg process-nextick-args{
 version "2.0.1"
 resolved "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz"
@@ -3833,16 +3881,20 @@ unpipe "1.0.0"
     }
 }
 pkg react{
-version "19.0.0"
-resolved "https://registry.npmjs.org/react/-/react-19.0.0.tgz"
-integrity "sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ=="
+version "18.3.1"
+resolved "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
+integrity "sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ=="
+dependencies{
+loose-envify ">=1.1.0 <2.0.0-0"
+    }
 }
 pkg react-dom{
-version "19.0.0"
-resolved "https://registry.npmjs.org/react-dom/-/react-dom-19.0.0.tgz"
-integrity "sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ=="
+version "18.3.1"
+resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
+integrity "sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw=="
 dependencies{
-scheduler ">=0.25.0 <0.26.0-0"
+loose-envify ">=1.1.0 <2.0.0-0"
+scheduler ">=0.23.2 <0.24.0-0"
     }
 }
 pkg read-cache{
@@ -3851,18 +3903,6 @@ resolved "https://registry.npmjs.org/read-cache/-/read-cache-1.0.0.tgz"
 integrity "sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA=="
 dependencies{
 pify ">=2.3.0 <3.0.0-0"
-    }
-}
-pkg readable-stream{
-version "4.5.2"
-resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-4.5.2.tgz"
-integrity "sha512-yjavECdqeZ3GLXNgRXgeQEdz9fvDDkNKyHnbHRFtOr7/LcfgBcmct7t/ET+HaCTqfh06OzoAxrkN/IfjJBVe+g=="
-dependencies{
-abort-controller ">=3.0.0 <4.0.0-0"
-buffer ">=6.0.3 <7.0.0-0"
-events ">=3.3.0 <4.0.0-0"
-process ">=0.11.10 <0.12.0-0"
-string_decoder ">=1.3.0 <2.0.0-0"
     }
 }
 pkg readdirp{
@@ -4012,9 +4052,12 @@ resolved "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
 integrity "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="
 }
 pkg scheduler{
-version "0.25.0"
-resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.25.0.tgz"
-integrity "sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA=="
+version "0.23.2"
+resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.23.2.tgz"
+integrity "sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ=="
+dependencies{
+loose-envify ">=1.1.0 <2.0.0-0"
+    }
 }
 pkg semver{
 version "7.7.1"
@@ -4217,14 +4260,6 @@ resolved "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz"
 integrity "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A=="
 dependencies{
 ansi-regex ">=5.0.1 <6.0.0-0"
-    }
-}
-pkg string_decoder{
-version "1.3.0"
-resolved "https://registry.npmjs.org/string_decoder/-/string_decoder-1.3.0.tgz"
-integrity "sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA=="
-dependencies{
-safe-buffer ">=5.2.0 <5.3.0-0"
     }
 }
 pkg stringify-entities{
@@ -4528,11 +4563,6 @@ dependencies{
 "@types/unist" ">=3.0.0 <4.0.0-0"
 unist-util-stringify-position ">=4.0.0 <5.0.0-0"
     }
-}
-pkg web-streams-polyfill{
-version "3.3.3"
-resolved "https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-3.3.3.tgz"
-integrity "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="
 }
 pkg which{
 version "2.0.2"

@@ -94,7 +94,7 @@ internal val applicationContextBuilder = ApplicationContext
     "",
     " Usage:  ",
     "    or:  elide @|bold,fg(cyan) info|help|discord|bug...|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(yellow) srcfile.<js|ts|...>|@ [OPTIONS]",
+    "    or:  elide @|bold,fg(yellow) srcfile.<js|ts|jsx|tsx|py...>|@ [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
     "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [FILE] [ARG...]",

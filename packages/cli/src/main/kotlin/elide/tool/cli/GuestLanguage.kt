@@ -15,6 +15,8 @@
 
 package elide.tool.cli
 
+import elide.runtime.lang.typescript.TypeScriptLanguage
+
 /** Specifies languages supported for REPL access. */
 enum class GuestLanguage (
   internal val id: String,
@@ -23,8 +25,8 @@ enum class GuestLanguage (
   internal val onByDefault: Boolean = false,
   internal val experimental: Boolean = false,
   internal val suppressExperimentalWarning: Boolean = false,
-  internal val extensions: List<String> = emptyList(),
-  internal val mimeTypes: List<String> = emptyList(),
+  internal val extensions: Set<String> = emptySet(),
+  internal val mimeTypes: Set<String> = emptySet(),
   internal val dependsOn: List<GuestLanguage> = emptyList(),
   internal val executionMode: ExecutionMode = ExecutionMode.SOURCE_DIRECT,
   internal val secondary: Boolean = dependsOn.isNotEmpty(),
@@ -35,8 +37,8 @@ enum class GuestLanguage (
     formalName = "JavaScript",
     experimental = false,
     onByDefault = true,
-    extensions = listOf("js", "cjs", "mjs"),
-    mimeTypes = listOf("application/javascript", "application/javascript+module", "application/ecmascript"),
+    extensions = sortedSetOf("js", "cjs", "mjs"),
+    mimeTypes = sortedSetOf("application/javascript", "application/javascript+module", "application/ecmascript"),
   ),
 
   /** JavaScript VM enabled with TypeScript support. */
@@ -46,8 +48,14 @@ enum class GuestLanguage (
     formalName = "TypeScript",
     experimental = true,
     onByDefault = true,
-    extensions = listOf("ts", "cts", "mts", "tsx"),
-    mimeTypes = listOf("application/typescript", "application/x-typescript", "text/typescript"),
+    extensions = sortedSetOf(
+      TypeScriptLanguage.EXTENSION_TS,
+      TypeScriptLanguage.EXTENSION_CTS,
+      TypeScriptLanguage.EXTENSION_MTS,
+      TypeScriptLanguage.EXTENSION_TSX,
+      TypeScriptLanguage.EXTENSION_JSX,
+    ),
+    mimeTypes = sortedSetOf("application/typescript", "application/x-typescript", "text/typescript"),
   ),
 
   /** Interactive nested JVM. */
@@ -56,7 +64,7 @@ enum class GuestLanguage (
     formalName = "LLVM",
     experimental = true,
     executionMode = ExecutionMode.SOURCE_COMPILED,
-    extensions = listOf("bc"),
+    extensions = sortedSetOf("bc"),
   ),
 
   /** Interactive Python VM. */
@@ -65,8 +73,8 @@ enum class GuestLanguage (
     formalName = "Python",
     experimental = true,
     onByDefault = true,
-    extensions = listOf("py"),
-    mimeTypes = listOf("application/x-python-code", "text/x-python")
+    extensions = sortedSetOf("py"),
+    mimeTypes = sortedSetOf("application/x-python-code", "text/x-python")
   ),
 
   /** Interactive Python VM. */
@@ -75,7 +83,7 @@ enum class GuestLanguage (
     formalName = "Ruby",
     experimental = true,
     onByDefault = true,
-    extensions = listOf("rb"),
+    extensions = sortedSetOf("rb"),
   ),
 
   /** Interactive nested JVM. */
@@ -85,8 +93,7 @@ enum class GuestLanguage (
     formalName = "JVM",
     experimental = true,
     executionMode = ExecutionMode.SOURCE_COMPILED,
-    extensions = listOf("class"),
-    mimeTypes = emptyList(),
+    extensions = sortedSetOf("class"),
   ),
 
   /** Interactive nested Java. */
@@ -95,8 +102,7 @@ enum class GuestLanguage (
     formalName = "JVM",
     experimental = true,
     executionMode = ExecutionMode.SOURCE_COMPILED,
-    extensions = listOf("java"),
-    mimeTypes = emptyList(),
+    extensions = sortedSetOf("java"),
   ),
 
   /** Interactive nested JVM with Kotlin support. */
@@ -106,7 +112,7 @@ enum class GuestLanguage (
     engine = ENGINE_JVM,
     experimental = true,
     executionMode = ExecutionMode.SOURCE_COMPILED,
-    extensions = listOf("kt", "kts"),
+    extensions = sortedSetOf("kt", "kts"),
     dependsOn = listOf(JVM),
   ),
 
@@ -116,7 +122,7 @@ enum class GuestLanguage (
     engine = ENGINE_JVM,
     formalName = "Groovy",
     experimental = true,
-    extensions = listOf("groovy"),
+    extensions = sortedSetOf("groovy"),
     executionMode = ExecutionMode.SOURCE_COMPILED,
     dependsOn = listOf(JVM),
   ),
@@ -127,7 +133,7 @@ enum class GuestLanguage (
     engine = ENGINE_JVM,
     formalName = "Scala",
     experimental = true,
-    extensions = listOf("scala"),
+    extensions = sortedSetOf("scala"),
     executionMode = ExecutionMode.SOURCE_COMPILED,
     dependsOn = listOf(JVM),
   ),
@@ -138,8 +144,8 @@ enum class GuestLanguage (
     formalName = "WASM",
     experimental = true,
     suppressExperimentalWarning = true,
-    extensions = listOf("wasm"),
-    mimeTypes = listOf("application/wasm"),
+    extensions = sortedSetOf("wasm"),
+    mimeTypes = sortedSetOf("application/wasm"),
   ),
 
   /** Apple Pkl. */
@@ -148,8 +154,8 @@ enum class GuestLanguage (
     formalName = "Pkl",
     experimental = true,
     suppressExperimentalWarning = true,
-    extensions = listOf("pkl", "pcl"),
-    mimeTypes = listOf("application/pkl", "text/pkl"),
+    extensions = sortedSetOf("pkl", "pcl"),
+    mimeTypes = sortedSetOf("application/pkl", "text/pkl"),
   );
 
   companion object {

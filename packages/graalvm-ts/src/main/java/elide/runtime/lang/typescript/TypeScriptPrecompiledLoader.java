@@ -17,8 +17,7 @@ import com.oracle.truffle.api.TruffleFile;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.js.lang.JavaScriptLanguage;
 import com.oracle.truffle.js.runtime.JSRealm;
-import com.oracle.truffle.js.runtime.objects.JSModuleData;
-import com.oracle.truffle.js.runtime.objects.JSModuleRecord;
+import com.oracle.truffle.js.runtime.objects.AbstractModuleRecord;
 import com.oracle.truffle.js.runtime.objects.ScriptOrModule;
 import elide.runtime.lang.javascript.JavaScriptCompilerConfig;
 import elide.runtime.precompiler.Precompiler;
@@ -54,17 +53,11 @@ class TypeScriptPrecompiledLoader extends AbstractTypeScriptLoader {
   }
 
   @Override
-  public @NotNull JSModuleRecord resolveImportedModule(
+  public @NotNull AbstractModuleRecord resolveImportedModule(
       ScriptOrModule referrer, Module.ModuleRequest moduleRequest) {
     // @TODO support for typescript imports
     // fallback to regular module loading behavior
     return super.resolveImportedModule(referrer, moduleRequest);
-  }
-
-  @Override
-  public @NotNull JSModuleRecord loadModule(Source source, JSModuleData moduleData) {
-    // @TODO hooks to support typescript imports
-    return super.loadModule(source, moduleData);
   }
 
   @Override

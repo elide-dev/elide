@@ -24,7 +24,7 @@ package elide.runtime.core
    * @param configure A configuration DSL block to be applied to the plugin on installation.
    * @return A plugin instance added to the registry after installation.
    */
-  @Deprecated("Use installLazy instead", ReplaceWith("installLazy(plugin, configure)"))
+  @Deprecated("Use configure instead, which is lazy", ReplaceWith("configure(plugin, configure)"))
   public fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit = { }): I
 
   /**

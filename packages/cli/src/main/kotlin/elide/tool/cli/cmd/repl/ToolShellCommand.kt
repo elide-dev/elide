@@ -1484,9 +1484,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     Elide.requestNatives(server = true, tooling = false)
 
     // resolve project configuration (async)
-    launch {
-      activeProject.value = runCatching { projectManager.resolveProject() }.getOrNull()
-    }
+    val projectResolution = launch { activeProject.value = runCatching { projectManager.resolveProject() }.getOrNull() }
 
     // begin resolving language support
     val supported = determineSupportedLanguages()
@@ -1535,6 +1533,12 @@ private typealias ContextAccessor = () -> PolyglotContext
           else -> target
         },
       )
+    }
+
+    // if no entrypoint was specified, attempt to use the one in the project manifest
+    if (runnable == null) {
+      projectResolution.join()
+      runnable = activeProject.value?.manifest?.entrypoint
     }
 
     try {

@@ -25,6 +25,7 @@ import com.oracle.js.parser.ir.Module.ExportEntry
 import com.oracle.js.parser.ir.Module.ModuleRequest
 import com.oracle.truffle.api.CallTarget
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
+import com.oracle.truffle.api.TruffleFile
 import com.oracle.truffle.api.frame.VirtualFrame
 import com.oracle.truffle.api.source.Source
 import com.oracle.truffle.js.builtins.commonjs.NpmCompatibleESModuleLoader
@@ -36,8 +37,8 @@ import com.oracle.truffle.js.runtime.JavaScriptRootNode
 import com.oracle.truffle.js.runtime.Strings
 import com.oracle.truffle.js.runtime.builtins.JSFunctionData
 import com.oracle.truffle.js.runtime.objects.*
-import com.oracle.truffle.js.runtime.objects.JSModuleRecord.Status
 import org.graalvm.polyglot.proxy.ProxyObject
+import java.net.URI
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
@@ -48,9 +49,6 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.lang.javascript.DelegatedModuleLoaderRegistry.DelegatedModuleRequest
 import elide.runtime.lang.javascript.ElideUniversalJsModuleLoader.ModuleStrategy.*
-
-// Whether assertions are enabled for comparison with regular module imports.
-private const val COMPARE_WITH_BASE = false
 
 // Whether to disable this loader and apply default behavior.
 private const val ALWAYS_FALLBACK = false
@@ -71,7 +69,8 @@ private val tsExtensions = sortedSetOf(
   "ts",
   "tsx",
   "cts",
-  "mts"
+  "mts",
+  "jsx",
 )
 
 // Module prefixes which trigger some kind of behavior.
@@ -216,10 +215,10 @@ public inline fun String.asJsSymbolString(): String = replace("/", "_")
 // Implements Elide's internal ECMA-compliant module loader.
 internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) : NpmCompatibleESModuleLoader(realm) {
   // Cache of injected modules.
-  private val injectedModuleCache: MutableMap<String, JSModuleRecord> = ConcurrentSkipListMap()
+  private val injectedModuleCache: MutableMap<String, AbstractModuleRecord> = ConcurrentSkipListMap()
 
   // Cache of delegated modules.
-  private val delegatedModuleCache: MutableMap<String, JSModuleRecord> = ConcurrentSkipListMap()
+  private val delegatedModuleCache: MutableMap<String, AbstractModuleRecord> = ConcurrentSkipListMap()
 
   // Synthesize an injected module.
   private fun synthesizeInjected(
@@ -227,7 +226,7 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     moduleRequest: ModuleRequest,
     prefix: String?,
     name: String,
-  ): JSModuleRecord {
+  ): AbstractModuleRecord {
     if (name in moduleMap) {
       return requireNotNull(moduleMap[name])
     }
@@ -308,10 +307,10 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
             val module = JSArguments.getUserArgument(frame.arguments, 0) as JSModuleRecord
 
             module.environment?.let {
-              assert(module.status == Status.Evaluating)
+              assert(module.status == CyclicModuleRecord.Status.Evaluating)
               setSyntheticModuleExport(module)
             } ?: run {
-              assert(module.status == Status.Linking)
+              assert(module.status == CyclicModuleRecord.Status.Linking)
               module.environment = frame.materialize()
             }
             return Undefined.instance
@@ -370,37 +369,6 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
           functionData,
           frameDescriptor,
         )
-        if (COMPARE_WITH_BASE) {
-          val base = super.resolveImportedModule(referencingModule, moduleRequest)
-          when {
-            base.module.localExportEntries.size != modRecord.localExportEntries.size -> error(
-              "Mismatch between expected export count ('${base.module.localExportEntries.size}') and " +
-                "actual export count ('${modRecord.localExportEntries.size}') for module '$name'",
-            )
-            base.module.imports.size != modRecord.imports.size -> error(
-              "Mismatch between expected import count ('${base.module.imports.size}') and " +
-                "actual import count ('${modRecord.imports.size}') for module '$name'",
-            )
-            base.module.indirectExportEntries.size != modRecord.indirectExportEntries.size -> error(
-              "Mismatch between expected indirect export count ('${base.module.indirectExportEntries.size}') and " +
-                "actual indirect export count ('${modRecord.indirectExportEntries.size}') for module '$name'",
-            )
-            base.module.starExportEntries.size != modRecord.starExportEntries.size -> error(
-              "Mismatch between expected star export count ('${base.module.starExportEntries.size}') and " +
-                "actual star export count ('${modRecord.starExportEntries.size}') for module '$name'",
-            )
-            base.moduleData.frameDescriptor.numberOfSlots != data.frameDescriptor.numberOfSlots -> error(
-              "Mismatch between expected slot count ('${base.moduleData.frameDescriptor.numberOfSlots}') and " +
-                "actual slot count ('${data.frameDescriptor.numberOfSlots}') for module '$name'",
-            )
-            base.moduleData.frameDescriptor.numberOfAuxiliarySlots
-              != data.frameDescriptor.numberOfAuxiliarySlots -> error(
-              "Mismatch between expected auxiliary slot count " +
-                "('${base.moduleData.frameDescriptor.numberOfAuxiliarySlots}') and " +
-                "actual auxiliary slot count ('${data.frameDescriptor.numberOfAuxiliarySlots}') for module '$name'",
-            )
-          }
-        }
         ElideSyntheticModuleRecord(
           prefix?.let { ModuleQualifier.resolve(it) } ?: ModuleQualifier.ELIDE,
           data,
@@ -417,25 +385,30 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
   }
 
   // Load a module which needs pre-compilation (or some other special load step).
-  private fun loadDelegatedSourceModule(moduleSource: Source, moduleData: JSModuleData): JSModuleRecord {
-    val req = DelegatedModuleRequest.of(moduleSource)
-    return when (val delegate = DelegatedModuleLoaderRegistry.resolveSafe(req, realm)) {
-      // the delegated registry has indicated there is no matching loader for this
-      null -> super.loadModule(moduleSource, moduleData)
+  private fun loadDelegatedSourceModule(
+    referrer: ScriptOrModule,
+    moduleRequest: ModuleRequest?,
+    orElse: () -> AbstractModuleRecord,
+  ): AbstractModuleRecord {
+    val src = referrer.source
+    val req = DelegatedModuleRequest.of(src)
+    return when (
+      val mod = DelegatedModuleLoaderRegistry.resolveSafe(req, realm)?.resolveImportedModule(referrer, moduleRequest)
+    ) {
+      // the loader returned `null`, opting out of resolution; continue with defaults
+      null -> orElse.invoke()
 
-      // allow the delegated registry to load the module
-      else -> when (val mod = delegate.loadModule(moduleSource, moduleData)) {
-        // the loader returned `null`, opting out of resolution; continue with defaults
-        null -> super.loadModule(moduleSource, moduleData)
-
-        // we're good to return from here
-        else -> mod
-      }
+      // we're good to return from here
+      else -> mod
     }
   }
 
   // Load a module which needs pre-compilation (or some other special load step).
-  private fun resolveDelegatedImportedModule(ref: ScriptOrModule, req: ModuleRequest, name: String): JSModuleRecord {
+  private fun resolveDelegatedImportedModule(
+    ref: ScriptOrModule,
+    req: ModuleRequest,
+    name: String,
+  ): AbstractModuleRecord {
     val delegatedReq = DelegatedModuleRequest.of(name)
     return when (val delegate = DelegatedModuleLoaderRegistry.resolveSafe(delegatedReq, realm)) {
       // the delegated registry has indicated there is no matching loader for this
@@ -454,7 +427,10 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     }
   }
 
-  override fun resolveImportedModule(referencingModule: ScriptOrModule, moduleRequest: ModuleRequest): JSModuleRecord {
+  override fun resolveImportedModule(
+    referencingModule: ScriptOrModule,
+    moduleRequest: ModuleRequest,
+  ): AbstractModuleRecord {
     val requested = moduleRequest.specifier.toString()
     val (prefix, unprefixed) = parsePrefixedMaybe(requested)
     val mod = toModuleInfo(unprefixed)
@@ -470,13 +446,36 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     }
   }
 
-  override fun loadModule(moduleSource: Source, moduleData: JSModuleData): JSModuleRecord =
-    when (determineModuleStrategy(moduleSource)) {
+  override fun loadModuleFromFile(
+    referrer: ScriptOrModule,
+    moduleRequest: ModuleRequest?,
+    moduleFile: TruffleFile?,
+    maybeCanonicalPath: String?,
+  ): AbstractModuleRecord? {
+    return when (determineModuleStrategy(requireNotNull(referrer.source))) {
       // source modules (aside from meta-languages) are always handled by the base loader
-      FALLBACK -> super.loadModule(moduleSource, moduleData)
-      DELEGATED -> loadDelegatedSourceModule(moduleSource, moduleData)
+      FALLBACK -> super.loadModuleFromFile(referrer, moduleRequest, moduleFile, maybeCanonicalPath)
+      DELEGATED -> loadDelegatedSourceModule(referrer, moduleRequest) {
+        super.loadModuleFromFile(referrer, moduleRequest, moduleFile, maybeCanonicalPath)
+      }
       else -> error("Mode is not supported for source loading")
     }
+  }
+
+  override fun loadModuleFromURL(
+    referrer: ScriptOrModule,
+    moduleRequest: ModuleRequest?,
+    moduleURI: URI?,
+  ): AbstractModuleRecord? {
+    return when (determineModuleStrategy(requireNotNull(referrer.source))) {
+      // source modules (aside from meta-languages) are always handled by the base loader
+      FALLBACK -> super.loadModuleFromURL(referrer, moduleRequest, moduleURI)
+      DELEGATED -> loadDelegatedSourceModule(referrer, moduleRequest) {
+        super.loadModuleFromURL(referrer, moduleRequest, moduleURI)
+      }
+      else -> error("Mode is not supported for source loading")
+    }
+  }
 
   // Strategies for loading modules.
   enum class ModuleStrategy {
@@ -615,12 +614,18 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
       if (ALWAYS_FALLBACK) {
         return null
       } // bail out in always-fallback mode
-      val mod = toModuleInfo(moduleIdentifier) ?: return null // bail out if it's not a module we recognize
+      val mod = toModuleInfo(moduleIdentifier)
 
-      return when (determineModuleStrategy(moduleIdentifier, builtin = mod)) {
+      return when (val strategy = determineModuleStrategy(moduleIdentifier, builtin = mod)) {
         FALLBACK -> null // bail out if the strategy fn says so
-        DELEGATED -> loadStaticDelegatedModule(realm, mod)
-        SYNTHETIC -> loadStaticSynthesizedModule(mod)
+        else -> when (mod) {
+          null -> null
+          else -> when (strategy) {
+            DELEGATED -> loadStaticDelegatedModule(realm, mod)
+            SYNTHETIC -> loadStaticSynthesizedModule(mod)
+            else -> null
+          }
+        }
       }
     }
 

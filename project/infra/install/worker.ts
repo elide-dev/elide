@@ -381,14 +381,9 @@ async function record(
   const backend = params?.backend || ServingBackend.r2
 
   env.ANALYTICS.writeDataPoint({
-    "indexes": [version],
-    "doubles": [duration],
-    "blobs": [
-      platform,
-      backend,
-      success ? "success" : "fail",
-      cached ? "cached" : "fresh"
-    ],
+    indexes: [version],
+    doubles: [duration],
+    blobs: [platform, backend, success ? "success" : "fail", cached ? "cached" : "fresh"],
   })
 }
 
@@ -421,15 +416,7 @@ export default class extends WorkerEntrypoint<Env> {
       obj.writeHttpMetadata(headers)
       headers.set("ETag", obj.httpEtag)
       const resp = new Response(obj.body, { headers })
-      this.ctx.waitUntil(record(
-        this.env,
-        start,
-        url,
-        request,
-        resp,
-        true,
-        false,
-      ))
+      this.ctx.waitUntil(record(this.env, start, url, request, resp, true, false))
       return resp
     }
 
@@ -441,15 +428,7 @@ export default class extends WorkerEntrypoint<Env> {
     // 3. if the http cache matched, serve it directly.
     if (cached) {
       console.log("Match cached response; returning", { url, request })
-      this.ctx.waitUntil(record(
-        this.env,
-        start,
-        url,
-        request,
-        cached,
-        true,
-        true,
-      ))
+      this.ctx.waitUntil(record(this.env, start, url, request, cached, true, true))
       return cached
     }
 
@@ -468,15 +447,11 @@ export default class extends WorkerEntrypoint<Env> {
         this.ctx.waitUntil(cache.put(url, response.clone()))
       }
       // 7. all responses should be recorded for metrics.
-      this.ctx.waitUntil(
-        record(this.env, start, url, request, response, true, false, params)
-      )
+      this.ctx.waitUntil(record(this.env, start, url, request, response, true, false, params))
       return response
     } catch (err) {
       if (err instanceof Response) {
-        this.ctx.waitUntil(
-          record(this.env, start, url, request, err, false, false)
-        )
+        this.ctx.waitUntil(record(this.env, start, url, request, err, false, false))
         return err
       }
       throw err

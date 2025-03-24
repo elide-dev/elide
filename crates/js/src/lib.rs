@@ -19,10 +19,7 @@ use java_native::jni;
 use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use jni::sys::jboolean;
-use oxc::codegen::CodegenOptions;
-use oxc::parser::ParseOptions;
 use oxc::span::SourceType;
-use oxc::transformer::TransformOptions;
 
 /// Code generation tools for JavaScript; interoperates with `parser` and other exposed modules.
 mod codegen;
@@ -63,9 +60,6 @@ pub fn precompile<'a>(
   };
   let generatorOptions = GeneratorOptions {
     source_type,
-    parser: Some(ParseOptions::default()),
-    codegen: Some(CodegenOptions::default()),
-    transform: Some(TransformOptions::default()),
     ..default_options
   };
 

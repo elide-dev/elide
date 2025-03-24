@@ -32,6 +32,22 @@
       ]
     },
     {
+      "type": "elide.runtime.node.process.EnvironmentAccessMediator",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "java.util.Map",
+      "allDeclaredMethods": true
+    },
+    {
+      "type": "elide.runtime.intrinsics.js.node.process.ProcessEnvironmentAPI",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.runtime.intrinsics.server.http.HttpRouter"
     },
     {

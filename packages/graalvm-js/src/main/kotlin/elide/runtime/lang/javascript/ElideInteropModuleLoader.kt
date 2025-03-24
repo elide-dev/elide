@@ -22,7 +22,6 @@ import com.oracle.js.parser.ir.Module.ExportEntry
 import com.oracle.truffle.api.CallTarget
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
 import com.oracle.truffle.api.TruffleFile
-import com.oracle.truffle.api.TruffleLanguage.InlineParsingRequest
 import com.oracle.truffle.api.frame.VirtualFrame
 import com.oracle.truffle.api.source.Source
 import com.oracle.truffle.js.lang.JavaScriptLanguage
@@ -32,13 +31,12 @@ import com.oracle.truffle.js.runtime.JSRealm
 import com.oracle.truffle.js.runtime.JavaScriptRootNode
 import com.oracle.truffle.js.runtime.Strings
 import com.oracle.truffle.js.runtime.builtins.JSFunctionData
+import com.oracle.truffle.js.runtime.objects.CyclicModuleRecord
 import com.oracle.truffle.js.runtime.objects.JSModuleData
 import com.oracle.truffle.js.runtime.objects.JSModuleLoader
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord
-import com.oracle.truffle.js.runtime.objects.JSModuleRecord.Status
 import com.oracle.truffle.js.runtime.objects.ScriptOrModule
 import com.oracle.truffle.js.runtime.objects.Undefined
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import java.util.EnumSet
 import java.util.TreeSet
@@ -183,10 +181,10 @@ internal object ElideInteropModuleLoader : DelegatedModuleLoaderRegistry.Delegat
       override fun execute(frame: VirtualFrame): Any {
         val module = JSArguments.getUserArgument(frame.arguments, 0) as JSModuleRecord
         module.environment?.let {
-          assert(module.status == Status.Evaluating)
+          assert(module.status == CyclicModuleRecord.Status.Evaluating)
           setInteropModuleDefaultExport(frame, module)
         } ?: run {
-          assert(module.status == Status.Linking)
+          assert(module.status == CyclicModuleRecord.Status.Linking)
           module.environment = frame.materialize()
         }
         return Undefined.instance
@@ -263,10 +261,6 @@ internal object ElideInteropModuleLoader : DelegatedModuleLoaderRegistry.Delegat
   }
 
   override fun invoke(realm: JSRealm): JSModuleLoader = this
-
-  override fun loadModule(moduleSource: Source, moduleData: JSModuleData): JSModuleRecord {
-    TODO("Not yet implemented: Evaluation of foreign modules")
-  }
 
   override fun resolveImportedModule(
     referencingModule: ScriptOrModule,

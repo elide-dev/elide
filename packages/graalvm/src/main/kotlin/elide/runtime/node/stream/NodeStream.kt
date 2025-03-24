@@ -30,8 +30,6 @@ import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
-import elide.runtime.gvm.loader.ModuleInfo
-import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
@@ -51,7 +49,8 @@ private const val STREAM_MODULE_SYMBOL = "node_${NodeModuleName.STREAM}"
 
   override fun install(bindings: MutableIntrinsicBindings) {
     bindings[STREAM_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
-    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.STREAM)) { singleton }
+    // @TODO: Cannot register natively because some stream types are polyfilled
+    // ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.STREAM)) { singleton }
   }
 }
 

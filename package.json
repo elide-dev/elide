@@ -13,9 +13,7 @@
     "last 3 safari versions"
   ],
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": ["@commitlint/config-conventional"]
   },
   "dependencies": {
     "browserslist": "4.24.4",
@@ -26,11 +24,9 @@
     "lz-string": "1.5.0",
     "postcss": "8.5.3",
     "preact": "10.26.4",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "readable-stream": "4.5.2",
-    "typescript": "5.8.2",
-    "web-streams-polyfill": "3.3.3"
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "typescript": "5.8.2"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
@@ -41,6 +37,8 @@
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
     "@types/node": "22.13.11",
+    "bun": "1.2.5",
+    "bun-types": "1.2.5",
     "commitlint": "19.8.0",
     "esbuild": "0.25.0",
     "eslint": "9.23.0",
@@ -53,8 +51,7 @@
     "prettier-plugin-java": "2.6.7",
     "prettier-plugin-properties": "0.3.0",
     "prettier-plugin-sh": "0.15.0",
-    "prettier-plugin-toml": "2.0.2",
-    "readable-stream": "4.5.2"
+    "prettier-plugin-toml": "2.0.2"
   },
   "resolutions": {
     "jszip": "3.10.1",
@@ -64,7 +61,7 @@
     "build": "make build",
     "test": "make test",
     "fmt:check": "cp -fv ./config/biome.jsonc . && pnpm biome format --check . ; rm -f biome.jsonc",
-    "fmt": "cp -fv ./config/biome.jsonc . && pnpm biome format . ; rm -f biome.jsonc",
+    "fmt": "cp -fv ./config/biome.jsonc . && pnpm biome format . --write ; rm -f biome.jsonc",
     "upgrade-node": "yarn upgrade-interactive",
     "upgrade-gradle": "gradle-upgrade-interactive",
     "prettier": "prettier",
@@ -73,11 +70,6 @@
     "lint:check": "prettier --check  . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java"
   },
   "prettier": {
-    "plugins": [
-      "@prettier/plugin-xml",
-      "prettier-plugin-toml",
-      "prettier-plugin-sh",
-      "prettier-plugin-properties"
-    ]
+    "plugins": ["@prettier/plugin-xml", "prettier-plugin-toml", "prettier-plugin-sh", "prettier-plugin-properties"]
   }
 }

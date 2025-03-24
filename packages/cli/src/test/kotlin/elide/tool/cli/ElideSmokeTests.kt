@@ -70,6 +70,8 @@ import elide.testing.annotations.TestCase
       testFile("paths.cjs"),
       testFile("paths.mjs"),
       testFile("paths-default.mjs"),
+      testFile("react-imports.mjs"),
+      testFile("react-render.tsx"),
       testFile("say_hello.mts"),
       testFile("say_hello_raw.mts"),
       testFile("simple.js"),

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,15 +19,19 @@ class TypeScriptFileTypeDetector implements TruffleFile.FileTypeDetector {
   public String findMimeType(TruffleFile file) {
     String fileName = file.getName();
     if (fileName != null) {
-      if (fileName.endsWith(".ts")) {
-        return "application/typescript";
+      if (fileName.endsWith(TypeScriptLanguage.EXTENSION_TS)) {
+        return TypeScriptLanguage.APPLICATION_MIME_TYPE;
       }
-
-      if (fileName.endsWith(".mts")) {
-        return "application/typescript+module";
+      if (fileName.endsWith(TypeScriptLanguage.EXTENSION_MTS)) {
+        return TypeScriptLanguage.MODULE_MIME_TYPE;
+      }
+      if (fileName.endsWith(TypeScriptLanguage.EXTENSION_TSX)) {
+        return TypeScriptLanguage.TSX_MIME_TYPE;
+      }
+      if (fileName.endsWith(TypeScriptLanguage.EXTENSION_JSX)) {
+        return TypeScriptLanguage.JSX_MIME_TYPE;
       }
     }
-
     return null;
   }
 

@@ -31,6 +31,7 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
 
   @Inject private lateinit var manifests: PackageManifestService
 
+  @Suppress("unused")
   @Option(
     names = ["--export"],
     description = ["Export third-party manifests for the current Elide project"],
@@ -57,7 +58,7 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
   )
   private var overwrite: Boolean = false
 
-  private suspend fun CommandContext.export(state: ToolContext<ToolState>): CommandResult {
+  private suspend fun CommandContext.export(): CommandResult {
     if (listTargets) {
       output {
         appendLine("Supported export targets:")
@@ -74,6 +75,7 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
       .takeUnless { it.isEmpty() } ?: Target.entries
 
     var failed = false
+
     for (target in exportTargets) {
       val manifest = runCatching { manifests.export(project.manifest, target.ecosystem) }
         .onFailure { output { appendLine("Failed to export ${target.targetName}: $it") } }
@@ -97,7 +99,6 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
         output { appendLine("Failed to write $manifestFile: $it") }
         failed = true
       }
-
     }
 
     return if (failed) CommandResult.err() else CommandResult.success()
@@ -105,6 +106,6 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     // only exporting manifests is currently supported
-    return export(state)
+    return export()
   }
 }

@@ -96,7 +96,6 @@ import elide.tool.project.manifest.PythonRequirementsManifest
         "-r other-requirements.txt",
         "-c constraints.txt",
         "./downloads/numpy-1.9.2-cp34-none-win32.whl",
-        "http://wxpython.org/Phoenix/snapshot-builds/wxPython_Phoenix-3.0.3.dev1820+49a8884-cp34-none-win_amd64.whl",
       ),
     )
 
@@ -113,7 +112,6 @@ import elide.tool.project.manifest.PythonRequirementsManifest
             "-r other-requirements.txt",
             "-c constraints.txt",
             "./downloads/numpy-1.9.2-cp34-none-win32.whl",
-            "http://wxpython.org/Phoenix/snapshot-builds/wxPython_Phoenix-3.0.3.dev1820+49a8884-cp34-none-win_amd64.whl",
           ).map { ElidePackageManifest.PipPackage(it) },
         ),
       ),

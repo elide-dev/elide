@@ -1,0 +1,9 @@
+[project]
+name = "spam-eggs"
+version = "2020.0.0"
+dependencies = ["httpx", "gidgethub[httpx]>4.0.0", "django>2.1; os_name != 'nt'", "django>2.0; os_name == 'nt'"]
+description = "Lovely Spam! Wonderful Spam!"
+
+[project.optional-dependencies]
+gui = ["PyQt5"]
+

@@ -14,24 +14,25 @@
 package elide.tool.cli.cmd.tool
 
 import io.micronaut.core.annotation.Introspected
-import picocli.CommandLine.Command
-import picocli.CommandLine.Option
-import picocli.CommandLine.Parameters
+import picocli.CommandLine.*
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.EnumSet
-import java.util.Optional
+import java.util.*
 import kotlinx.coroutines.*
+import kotlin.io.path.pathString
+import kotlin.jvm.optionals.getOrNull
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.core.api.Symbolic
 import elide.runtime.Logger
 import elide.tool.cli.*
-import elide.tool.cli.AbstractSubcommand
-import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.tool.EmbeddedTool.*
-import elide.tool.cli.cmd.tool.ToolAction.*
+import elide.tool.cli.cmd.tool.ToolAction.FORMAT
+import elide.tool.cli.cmd.tool.ToolAction.INSTALL
 import elide.tool.io.RuntimeWorkdirManager
+import elide.tool.project.ElideProject
+import elide.tool.project.PackageManifestService
 import elide.tool.project.ProjectManager
 
 // Tool constants.
@@ -121,18 +122,32 @@ private val uvActions = sortedSetOf(
 private const val jsHint = "package.json"
 private const val pyHint = "requirements.txt"
 
+// Check if there is configuration relevant to this language in the project manifest (e.g. dependencies)
+private fun ElideProject.usesLanguage(language: GuestLanguage): Boolean = when (language) {
+  GuestLanguage.JS, GuestLanguage.TYPESCRIPT -> manifest.dependencies.npm.packages.isNotEmpty() ||
+          manifest.dependencies.npm.devPackages.isNotEmpty()
+
+  GuestLanguage.PYTHON -> manifest.dependencies.pip.packages.isNotEmpty() ||
+          manifest.dependencies.pip.optionalPackages.isNotEmpty()
+
+  GuestLanguage.RUBY -> manifest.dependencies.gems.packages.isNotEmpty() ||
+          manifest.dependencies.gems.devPackages.isNotEmpty()
+
+  else -> false
+}
+
 // Filter eligible tools by their applicability based on language and project settings.
 private suspend fun Sequence<EmbeddedTool>.appliesToCurrent(
   logger: Logger,
   tools: Array<String>,
   langs: EnumSet<GuestLanguage>,
-  project: ProjectManager?,
+  project: ElideProject?,
   langsExplicit: Boolean,
 ): Sequence<EmbeddedTool> {
   // probing is only enabled if language support isn't explicitly specified.
   val effectiveLangs = if (!langsExplicit) {
     // we should probe for project-related files within the project root, or the current directory.
-    val projectDir = (project?.resolveProject()?.root ?: System.getProperty("user.dir"))
+    val projectDir = (project?.root?.pathString ?: System.getProperty("user.dir"))
       ?: error("Failed to resolve current or project directory; this is a bug in Elide.")
 
     coroutineScope {
@@ -148,7 +163,7 @@ private suspend fun Sequence<EmbeddedTool>.appliesToCurrent(
           }
         }
       }.toList().awaitAll().filter {
-        it.second
+        it.second || project?.usesLanguage(it.first) == true
       }.map { it.first }.toSortedSet()
     }
   } else {
@@ -211,6 +226,7 @@ private enum class ToolAction (
 @Singleton internal class ToolInvokeCommand : AbstractSubcommand<ToolState, CommandContext>() {
   @Inject lateinit var activeProject: Optional<ProjectManager>
   @Inject lateinit var workdirManager: Optional<RuntimeWorkdirManager>
+  @Inject lateinit var manifests: PackageManifestService
 
   /**
    * Tools to run with the current linter invocation; optional.
@@ -255,6 +271,10 @@ private enum class ToolAction (
     arity = "0..N",
   )
   private var argsAndPaths: List<String> = emptyList()
+
+  private fun tempToolDir(): Path {
+    return workdirManager.get().tmpDirectory(create = true).toPath()
+  }
 
   // Suspending call to run a single tool through the native interface.
   private suspend fun CommandContext.runSingle(
@@ -305,7 +325,7 @@ private enum class ToolAction (
     action: ToolAction,
     tools: Array<String>,
     langs: EnumSet<GuestLanguage> = EnumSet.noneOf(GuestLanguage::class.java),
-    project: ProjectManager? = null,
+    project: ElideProject? = null,
     langsExplicit: Boolean = false,
   ): Sequence<EmbeddedTool> = EmbeddedTool.defaultFor(action).appliesToCurrent(
     Statics.logging,
@@ -361,6 +381,9 @@ private enum class ToolAction (
       return success()
     }
 
+    // resolve and parse project configuration from manifests
+    val project = activeProject.getOrNull()?.resolveProject()
+
     // decode instruction alias and resolve it to an action
     val instruction = commandSpec?.commandLine()?.parent?.parseResult?.originalArgs()?.firstOrNull() ?: DEFAULT_ACTION
     val action = ToolAction.resolve(instruction)
@@ -369,7 +392,7 @@ private enum class ToolAction (
       action,
       tools = tools,
       langs = EnumSet.noneOf(GuestLanguage::class.java),
-      project = activeProject.orElse(null),
+      project = project,
       langsExplicit = false, // @TODO explicit language selection
     )).toList()
 

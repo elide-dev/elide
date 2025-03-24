@@ -41,6 +41,7 @@ import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.pkl.ToolPklCommand
+import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.state.CommandState
@@ -80,6 +81,7 @@ internal val applicationContextBuilder = ApplicationContext
     ToolShellCommand::class,
     ToolPklCommand::class,
     ToolDiscordCommand::class,
+    ToolProjectCommand::class,
   ],
   headerHeading = ("@|bold,fg(magenta)%n" +
           "   ______     __         __     _____     ______%n" +

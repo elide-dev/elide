@@ -63,15 +63,11 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     private val darwinCachesPath = "/Library/caches/elide/v${Elide.version()}"
     private val projectAnchorFiles = arrayOf(
       ".git",
+      "elide.pkl",
       "package.json",
-      "pkg.elide.yml",
-      "pkg.elide.yaml",
-      "pkg.elide.toml",
-      "pkg.elide.json",
-      "pkg.elide.js",
-      "pkg.elide.kts",
-      "pkg.elide.py",
-      "pkg.elide.rb",
+      "requirements.txt",
+      "pyproject.toml",
+      "Gemfile",
     )
 
     private fun persistentTempPath(): Path = when (HostPlatform.resolve().os) {

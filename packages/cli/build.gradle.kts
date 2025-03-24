@@ -424,6 +424,7 @@ dependencies {
       libs.pkl.core,
       libs.pkl.commons.cli,
       libs.pkl.cli,
+      libs.pkl.config.kotlin,
     ).forEach {
       implementation(it) { pklExclusions() }
     }
@@ -496,6 +497,7 @@ dependencies {
   // KotlinX
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.ktoml)
 
   // Logging
   api(libs.slf4j)
@@ -2244,4 +2246,8 @@ fun BuildNativeImageTask.createFinalizer() {
 
 tasks.withType<BuildNativeImageTask>().all {
   createFinalizer()
+}
+
+tasks.installDist.configure {
+  duplicatesStrategy = DuplicatesStrategy.WARN
 }

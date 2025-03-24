@@ -1,6 +1,36 @@
 {
   "reflection": [
     {
+      "type": "[B"
+    },
+    {
+      "type": "[C"
+    },
+    {
+      "type": "[D"
+    },
+    {
+      "type": "[F"
+    },
+    {
+      "type": "[I"
+    },
+    {
+      "type": "[J"
+    },
+    {
+      "type": "[Ljava.lang.String;"
+    },
+    {
+      "type": "[Ljavax.management.openmbean.CompositeData;"
+    },
+    {
+      "type": "[S"
+    },
+    {
+      "type": "[Z"
+    },
+    {
       "type": "ch.qos.logback.classic.encoder.PatternLayoutEncoder",
       "methods": [
         {
@@ -667,6 +697,24 @@
       ]
     },
     {
+      "type": "elide.runtime.javascript.$MessageChannelBuiltin$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.javascript.$MessageChannelBuiltin$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.runtime.javascript.$NavigatorBuiltin$Definition",
       "methods": [
         {
@@ -719,6 +767,9 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "elide.runtime.lang.typescript.TypeScriptLanguageProvider"
     },
     {
       "type": "elide.runtime.node.asserts.$NodeAssertModule$Definition",

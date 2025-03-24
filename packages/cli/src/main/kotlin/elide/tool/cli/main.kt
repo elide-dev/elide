@@ -25,6 +25,7 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
 import kotlin.system.exitProcess
 import elide.tool.cli.Elide.Companion.installStatics
 
@@ -117,10 +118,14 @@ inline fun setStaticProperties(binPath: String) {
   // Patch the Java library path to include the binary's own parent directory.
   val currentJavaPath = System.getProperty("java.library.path")
   val path = Path(binPath).parent
+  val absPeerPath = path.absolutePathString()
   var newJavaPath = currentJavaPath
   newJavaPath = "$path:$newJavaPath"
   System.setProperty("java.library.path", newJavaPath)
 
+  System.setProperty("io.netty.tmpdir", absPeerPath)
+  System.setProperty("io.netty.native.workdir", absPeerPath)
+  System.setProperty("io.netty.native.tryPatchShadedId", "false")
   System.setProperty("elide.js.vm.enableStreams", "true")
   System.setProperty("org.jline.terminal.disableDeprecatedProviderWarning", "true")
   System.setProperty("java.util.logging.config.class", "elide.tool.cli.InertLoggerConfigurator")
@@ -147,7 +152,7 @@ fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {
   setStaticProperties(binPath)
   if (installStatics) {
     earlyLog("Installing statics")
-    Statics.mountArgs(args)
+    Statics.mountArgs(binPath, args)
     installStatics(binPath, args, System.getProperty("user.dir"))
     earlyLog("Installing bridge handler for SLF4j")
     SLF4JBridgeHandler.install()

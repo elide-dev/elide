@@ -81,6 +81,7 @@ import elide.testing.annotations.TestCase
       testFile("sqlite.ts"),
       testFile("stdlib.cjs"),
       testFile("stdlib.mjs"),
+      testFile("py_json.py"),
     )
 
     private val knownBroken = sortedSetOf<String>(

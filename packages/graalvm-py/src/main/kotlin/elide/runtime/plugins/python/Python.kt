@@ -18,6 +18,7 @@ import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.python.embedding.GraalPythonFilesystem
 import java.nio.file.Path
+import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
@@ -89,24 +90,21 @@ private val BUILTIN_PYTHON_PATHS = listOf(
 
     builder.setOptions(
       "python.HPyBackend" to "nfi",
-      "python.PosixModuleBackend" to "java",
+      "python.PosixModuleBackend" to "native",
       "python.PythonPath" to renderPythonPath(),
     )
     config.resourcesPath?.let {
-      builder.setOptions(
-        "python.HPyBackend" to "nfi",
-        "python.PosixModuleBackend" to "java",
-      )
-
       if (ImageInfo.inImageCode()) {
         val (pythonVersion, graalPyVersion) = resolveGraalPythonVersions()
+        val pythonBase = "$it/python/python-home"
+        logging.debug("Python home: $pythonBase")
 
         builder.setOptions(
-          "python.CoreHome" to "$it/python/python-home/lib/graalpy$graalPyVersion",
-          "python.SysPrefix" to "$it/python/python-home/lib/graalpy$graalPyVersion",
-          "python.StdLibHome" to "$it/python/python-home/lib/python$pythonVersion",
-          "python.CAPI" to "$it/python/python-home/lib/graalpy$graalPyVersion",
-          "python.PythonHome" to "$it/python/python-home",
+          "python.CoreHome" to "$pythonBase/lib/graalpy$graalPyVersion",
+          "python.SysPrefix" to "$pythonBase/lib/graalpy$graalPyVersion",
+          "python.StdLibHome" to "$pythonBase/lib/python$pythonVersion",
+          "python.CAPI" to "$pythonBase/lib/graalpy$graalPyVersion",
+          "python.PythonHome" to pythonBase,
         )
       }
     }
@@ -121,10 +119,11 @@ private val BUILTIN_PYTHON_PATHS = listOf(
   }
 
   public companion object Plugin : AbstractLanguagePlugin<PythonConfig, Python>() {
+    private val logging by lazy { Logging.of(Python::class) }
     private const val PYTHON_LANGUAGE_ID = "python"
     private const val PYTHON_PLUGIN_ID = "Python"
     private const val ENABLE_EXPERIMENTAL = true
-    private const val ENABLE_PANAMA = true
+    private const val ENABLE_PANAMA = false
     private const val GPY_LIST_SEPARATOR = "🏆"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)

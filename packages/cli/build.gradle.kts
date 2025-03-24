@@ -373,7 +373,6 @@ buildConfig {
   useKotlinOutput()
   buildConfigField("String", "ELIDE_RELEASE_TYPE", if (isRelease) "\"RELEASE\"" else "\"DEV\"")
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"$cliVersion\"")
-  buildConfigField("String", "GVM_RESOURCES", "\"${gvmResourcesPath}\"")
 }
 
 val pklDependencies: Configuration by configurations.creating
@@ -1053,6 +1052,11 @@ val nativeMonitoring = listOfNotNull(
   onlyIf(enableJmx, "threaddump"),
 ).joinToString(",")
 
+val ffmConfigPath = layout.projectDirectory
+  .file("src/main/resources/META-INF/native-image/dev/elide/elide-cli/ffm.json")
+  .asFile
+  .path
+
 val commonNativeArgs = listOfNotNull(
   // Debugging flags:
   // "--verbose",
@@ -1064,6 +1068,7 @@ val commonNativeArgs = listOfNotNull(
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
   onlyIf(enableFfm, "-H:+ForeignAPISupport"),
+  onlyIf(enableFfm, "-H:ForeignConfigurationFiles=$ffmConfigPath"),
   onlyIf(dumpPointsTo, "-H:PrintAnalysisCallTreeType=CSV"),
   onlyIf(dumpPointsTo, "-H:+PrintImageObjectTree"),
   onlyIf(enabledFeatures.isNotEmpty(), "--features=${enabledFeatures.joinToString(",")}"),
@@ -1354,6 +1359,7 @@ val jvmDefs = mutableMapOf(
   "elide.graalvm.ee" to oracleGvm.toString(),
   "elide.mosaic" to enableMosaic.toString(),
   "elide.staticJni" to enableStaticJni.toString(),
+  "elide.langResources" to gvmResourcesPath,
   "elide.targetLibc" to glibcTarget,
   "elide.js.vm.enableStreams" to "true",
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),

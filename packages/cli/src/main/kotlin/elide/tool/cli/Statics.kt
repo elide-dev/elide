@@ -47,10 +47,14 @@ internal object Statics {
     }
   }
 
+  private val binPath = atomic<String>("")
   private val initialArgs = atomic<Array<String>>(emptyArray())
 
   /** Invocation args. */
   internal val args: Array<String> get() = initialArgs.value
+
+  /** Path to the running binary. */
+  internal val bin: String get() = binPath.value.ifEmpty { "elide" }
 
   // Stream which drops all data.
   private val noOpStream by lazy {
@@ -74,8 +78,9 @@ internal object Statics {
       else -> delegatedErrStream.value ?: System.err
     }
 
-  internal fun mountArgs(args: Array<String>) {
+  internal fun mountArgs(bin: String, args: Array<String>) {
     check(initialArgs.value.isEmpty()) { "Args are not initialized yet!" }
+    binPath.value = bin
     initialArgs.value = args
   }
 

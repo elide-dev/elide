@@ -77,7 +77,6 @@ import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
-import elide.tool.cli.cfg.ElideCLITool.GVM_RESOURCES
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
@@ -1350,12 +1349,20 @@ private typealias ContextAccessor = () -> PolyglotContext
     val cmd = ProcessHandle.current().info().command().orElse("elide")
     val args = Statics.args
 
+    val gvmResources = System.getProperty("elide.langResources")
+      ?.let { Path(it) }
+      ?.resolve("resources")
+      ?.absolutePathString()
+
+    logging.debug {
+      "Lang resources: $gvmResources"
+    }
     langs.forEach { lang ->
       when (lang) {
         // Primary Engines
         JS -> configure(elide.runtime.plugins.js.JavaScript) {
           logging.debug("Configuring JS VM")
-          resourcesPath = GVM_RESOURCES
+          resourcesPath = gvmResources
           executable = cmd
           executableList = listOf(cmd).plus(args)
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
@@ -1364,12 +1371,12 @@ private typealias ContextAccessor = () -> PolyglotContext
 
         WASM -> configure(elide.runtime.plugins.wasm.Wasm) {
           logging.debug("Configuring WASM VM")
-          resourcesPath = GVM_RESOURCES
+          resourcesPath = gvmResources
         }
 
         TYPESCRIPT -> configure(elide.runtime.plugins.typescript.TypeScript) {
           logging.debug("Configuring TypeScript support")
-          resourcesPath = GVM_RESOURCES
+          resourcesPath = gvmResources
         }
 
 //        RUBY -> ignoreNotInstalled {
@@ -1385,7 +1392,7 @@ private typealias ContextAccessor = () -> PolyglotContext
          PYTHON -> configure(elide.runtime.plugins.python.Python) {
            logging.debug("Configuring Python VM")
            installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-           resourcesPath = GVM_RESOURCES
+           resourcesPath = gvmResources
            executable = cmd
            executableList = listOf(cmd).plus(args)
          }

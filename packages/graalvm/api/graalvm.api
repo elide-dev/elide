@@ -1396,6 +1396,7 @@ public abstract class elide/runtime/gvm/internals/vfs/AbstractDelegateVFS : elid
 }
 
 public final class elide/runtime/gvm/internals/vfs/AccessDomain : java/lang/Enum {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/AccessDomain$Companion;
 	public static final field GUEST Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public static final field HOST Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
@@ -1403,7 +1404,12 @@ public final class elide/runtime/gvm/internals/vfs/AccessDomain : java/lang/Enum
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessDomain;
 }
 
-public final class elide/runtime/gvm/internals/vfs/AccessRequest {
+public final class elide/runtime/gvm/internals/vfs/AccessDomain$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessRequest : java/lang/Record {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/AccessRequest$Companion;
 	public fun <init> (Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)V
 	public final fun component1 ()Ljava/util/Set;
 	public final fun component2 ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
@@ -1411,25 +1417,57 @@ public final class elide/runtime/gvm/internals/vfs/AccessRequest {
 	public final fun component4 ()Ljava/nio/file/Path;
 	public final fun copy (Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
 	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/AccessRequest;Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
+	public final fun domain ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getDomain ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
-	public final fun getPath ()Ljava/nio/file/Path;
-	public final fun getScope ()Lelide/runtime/gvm/internals/vfs/AccessScope;
-	public final fun getType ()Ljava/util/Set;
 	public fun hashCode ()I
 	public final fun isRead ()Z
 	public final fun isWrite ()Z
+	public final fun path ()Ljava/nio/file/Path;
+	public final fun scope ()Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public fun toString ()Ljava/lang/String;
+	public final fun type ()Ljava/util/Set;
 }
 
-public final class elide/runtime/gvm/internals/vfs/AccessResponse {
+public final class elide/runtime/gvm/internals/vfs/AccessRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/vfs/AccessRequest$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/vfs/AccessRequest;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessRequest$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessResponse : java/lang/Record {
 	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/AccessResult;Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun allow (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public final fun component1 ()Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Throwable;
+	public final fun copy (Lelide/runtime/gvm/internals/vfs/AccessResult;Ljava/lang/String;Ljava/lang/Throwable;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/AccessResponse;Lelide/runtime/gvm/internals/vfs/AccessResult;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
 	public static final fun deny (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
-	public final fun getErr ()Ljava/lang/Throwable;
-	public final fun getPolicy ()Lelide/runtime/gvm/internals/vfs/AccessResult;
-	public final fun getReason ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun err ()Ljava/lang/Throwable;
+	public fun hashCode ()I
+	public final fun policy ()Lelide/runtime/gvm/internals/vfs/AccessResult;
+	public final fun reason ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
 	public static final fun unsupported (Ljava/lang/Throwable;Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessResponse$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/vfs/AccessResponse$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/internals/vfs/AccessResponse;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
 public final class elide/runtime/gvm/internals/vfs/AccessResult : java/lang/Enum {
@@ -1441,6 +1479,7 @@ public final class elide/runtime/gvm/internals/vfs/AccessResult : java/lang/Enum
 }
 
 public final class elide/runtime/gvm/internals/vfs/AccessScope : java/lang/Enum {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/AccessScope$Companion;
 	public static final field DIRECTORY Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public static final field FILE Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public static final field UNSPECIFIED Lelide/runtime/gvm/internals/vfs/AccessScope;
@@ -1449,13 +1488,166 @@ public final class elide/runtime/gvm/internals/vfs/AccessScope : java/lang/Enum 
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessScope;
 }
 
+public final class elide/runtime/gvm/internals/vfs/AccessScope$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/runtime/gvm/internals/vfs/AccessType : java/lang/Enum {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/AccessType$Companion;
 	public static final field DELETE Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static final field READ Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static final field WRITE Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/AccessType;
 	public static fun values ()[Lelide/runtime/gvm/internals/vfs/AccessType;
+}
+
+public final class elide/runtime/gvm/internals/vfs/AccessType$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/vfs/CompressionMode : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field BROTLI Lelide/runtime/gvm/internals/vfs/CompressionMode;
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/CompressionMode$Companion;
+	public static final field DEFLATE Lelide/runtime/gvm/internals/vfs/CompressionMode;
+	public static final field GZIP Lelide/runtime/gvm/internals/vfs/CompressionMode;
+	public static final field IDENTITY Lelide/runtime/gvm/internals/vfs/CompressionMode;
+	public static final field SNAPPY Lelide/runtime/gvm/internals/vfs/CompressionMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getNumber ()I
+	public final fun getProtoEnum ()Ltools/elide/data/CompressionMode;
+	public fun getSymbol ()Ljava/lang/Integer;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/CompressionMode;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/CompressionMode;
+}
+
+public final class elide/runtime/gvm/internals/vfs/CompressionMode$Companion : elide/core/api/Symbolic$SealedResolver {
+	public fun resolve (I)Lelide/runtime/gvm/internals/vfs/CompressionMode;
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/DirectoryRecord : elide/runtime/gvm/internals/vfs/DirectoryRecordAPI {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Companion;
+	public static fun native ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public static fun newBuilder ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public static fun proto (Ltools/elide/vfs/Directory$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public abstract fun toBuilder ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public abstract fun toProto ()Ltools/elide/vfs/Directory;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/DirectoryRecord$Builder : elide/runtime/gvm/internals/vfs/DirectoryRecordAPI {
+	public abstract fun addChildren (Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public abstract fun addChildren (Lelide/runtime/gvm/internals/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public abstract fun addChildren (Ljava/util/List;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public abstract fun build ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public abstract fun getChildrenList ()Ljava/util/List;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun setChildrenList (Ljava/util/List;)V
+	public abstract fun setName (Ljava/lang/String;)V
+}
+
+public final class elide/runtime/gvm/internals/vfs/DirectoryRecord$Companion {
+	public final fun native ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public final fun newBuilder ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public final fun proto (Ltools/elide/vfs/Directory$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public static synthetic fun proto$default (Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Companion;Ltools/elide/vfs/Directory$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/vfs/DirectoryRecord$DefaultDirectoryRecordBuilder : elide/runtime/gvm/internals/vfs/DirectoryRecord$Builder {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun addChildren (Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public fun addChildren (Lelide/runtime/gvm/internals/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public fun addChildren (Ljava/util/List;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public fun build ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$DefaultDirectoryRecordBuilder;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/DirectoryRecord$DefaultDirectoryRecordBuilder;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$DefaultDirectoryRecordBuilder;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getChildrenList ()Ljava/util/List;
+	public fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun setChildrenList (Ljava/util/List;)V
+	public fun setName (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/DirectoryRecord$NativeDirectoryRecord : java/lang/Record, elide/runtime/gvm/internals/vfs/DirectoryRecord {
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun childrenList ()Ljava/util/List;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$NativeDirectoryRecord;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/DirectoryRecord$NativeDirectoryRecord;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$NativeDirectoryRecord;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getChildrenList ()Ljava/util/List;
+	public synthetic fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun name ()Ljava/lang/String;
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public fun toProto ()Ltools/elide/vfs/Directory;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/DirectoryRecord$ProtoDirectoryRecord : elide/runtime/gvm/internals/vfs/DirectoryRecord {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/Directory;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$ProtoDirectoryRecord;
+	public static fun constructor-impl (Ltools/elide/vfs/Directory;)Ltools/elide/vfs/Directory;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/Directory;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/Directory;Ltools/elide/vfs/Directory;)Z
+	public fun getChildrenList ()Ljava/util/List;
+	public static fun getChildrenList-impl (Ltools/elide/vfs/Directory;)Ljava/util/List;
+	public fun getName ()Ljava/lang/String;
+	public static fun getName-impl (Ltools/elide/vfs/Directory;)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/Directory;)I
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public static fun toBuilder-impl (Ltools/elide/vfs/Directory;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public fun toProto ()Ltools/elide/vfs/Directory;
+	public static fun toProto-impl (Ltools/elide/vfs/Directory;)Ltools/elide/vfs/Directory;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/Directory;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/Directory;
+}
+
+public final class elide/runtime/gvm/internals/vfs/DirectoryRecord$ProtoDirectoryRecordBuilder : elide/runtime/gvm/internals/vfs/DirectoryRecord$Builder {
+	public fun addChildren (Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public fun addChildren (Lelide/runtime/gvm/internals/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public fun addChildren (Ljava/util/List;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public static fun addChildren-impl (Ltools/elide/vfs/Directory$Builder;Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public static fun addChildren-impl (Ltools/elide/vfs/Directory$Builder;Lelide/runtime/gvm/internals/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public static fun addChildren-impl (Ltools/elide/vfs/Directory$Builder;Ljava/util/List;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public static final synthetic fun box-impl (Ltools/elide/vfs/Directory$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord$ProtoDirectoryRecordBuilder;
+	public fun build ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public static fun build-impl (Ltools/elide/vfs/Directory$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public static fun constructor-impl (Ltools/elide/vfs/Directory$Builder;)Ltools/elide/vfs/Directory$Builder;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/Directory$Builder;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/Directory$Builder;Ltools/elide/vfs/Directory$Builder;)Z
+	public fun getChildrenList ()Ljava/util/List;
+	public static fun getChildrenList-impl (Ltools/elide/vfs/Directory$Builder;)Ljava/util/List;
+	public fun getName ()Ljava/lang/String;
+	public static fun getName-impl (Ltools/elide/vfs/Directory$Builder;)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/Directory$Builder;)I
+	public fun setChildrenList (Ljava/util/List;)V
+	public static fun setChildrenList-impl (Ltools/elide/vfs/Directory$Builder;Ljava/util/List;)V
+	public fun setName (Ljava/lang/String;)V
+	public static fun setName-impl (Ltools/elide/vfs/Directory$Builder;Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/Directory$Builder;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/Directory$Builder;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/DirectoryRecordAPI : elide/runtime/gvm/internals/vfs/FileSystemRecordAPI {
+	public fun getChildrenCount ()I
+	public abstract fun getChildrenList ()Ljava/util/List;
 }
 
 public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
@@ -1490,7 +1682,7 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 
 public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl : elide/runtime/gvm/internals/vfs/AbstractDelegateVFS {
 	public static final field EmbeddedVFSFactory Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$EmbeddedVFSFactory;
-	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;Ljava/nio/file/FileSystem;Ltools/elide/vfs/Filesystem;ZLjava/util/Map;Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;Ljava/nio/file/FileSystem;Lelide/runtime/gvm/internals/vfs/FilesystemInfo;ZLjava/util/Map;Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun allowsHostFileAccess ()Z
 	public fun allowsHostSocketAccess ()Z
 	public fun existsAny (Ljava/nio/file/Path;)Z
@@ -1611,35 +1803,35 @@ public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$Embedded
 }
 
 public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory : java/lang/Record, elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsObjectInfo {
-	public fun <init> (Ljava/lang/String;ILtools/elide/vfs/Directory;)V
+	public fun <init> (Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;)V
 	public fun bundle ()I
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()I
-	public final fun component3 ()Ltools/elide/vfs/Directory;
-	public final fun copy (Ljava/lang/String;ILtools/elide/vfs/Directory;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;Ljava/lang/String;ILtools/elide/vfs/Directory;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;
+	public final fun component3 ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
+	public final fun copy (Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getBundle ()I
 	public synthetic fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun info ()Ltools/elide/vfs/Directory;
+	public final fun info ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
 	public fun path ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo : java/lang/Record, elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsObjectInfo {
-	public fun <init> (Ljava/lang/String;ILtools/elide/vfs/File;)V
+	public fun <init> (Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/FileRecord$Builder;)V
 	public fun bundle ()I
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()I
-	public final fun component3 ()Ltools/elide/vfs/File;
-	public final fun copy (Ljava/lang/String;ILtools/elide/vfs/File;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;Ljava/lang/String;ILtools/elide/vfs/File;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;
+	public final fun component3 ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public final fun copy (Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/FileRecord$Builder;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/FileRecord$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getBundle ()I
 	public synthetic fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun info ()Ltools/elide/vfs/File;
+	public final fun info ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
 	public fun path ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 }
@@ -1647,6 +1839,399 @@ public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileI
 public abstract interface class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsObjectInfo {
 	public abstract fun getBundle ()I
 	public abstract fun getPath ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/EntryCase : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/EntryCase$Companion;
+	public static final field DIRECTORY Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public static final field FILE Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getNumber ()I
+	public final fun getProtoEnum ()Ltools/elide/vfs/TreeEntry$EntryCase;
+	public fun getSymbol ()Ljava/lang/Integer;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/EntryCase;
+}
+
+public final class elide/runtime/gvm/internals/vfs/EntryCase$Companion : elide/core/api/Symbolic$SealedResolver {
+	public fun resolve (I)Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FileRecord : elide/runtime/gvm/internals/vfs/FileRecordAPI {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/FileRecord$Companion;
+	public static fun native ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public static fun newBuilder ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public static fun proto (Ltools/elide/vfs/File$Builder;)Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public abstract fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public abstract fun toProto ()Ltools/elide/vfs/File;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FileRecord$Builder : elide/runtime/gvm/internals/vfs/FileRecordAPI {
+	public abstract fun build ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public abstract fun getModified ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getOffset ()J
+	public abstract fun getSize ()J
+	public abstract fun setModified (Lelide/runtime/gvm/internals/vfs/FileTimestamp;)V
+	public abstract fun setName (Ljava/lang/String;)V
+	public abstract fun setOffset (J)V
+	public abstract fun setSize (J)V
+}
+
+public final class elide/runtime/gvm/internals/vfs/FileRecord$Companion {
+	public final fun native ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public final fun newBuilder ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public final fun proto (Ltools/elide/vfs/File$Builder;)Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public static synthetic fun proto$default (Lelide/runtime/gvm/internals/vfs/FileRecord$Companion;Ltools/elide/vfs/File$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FileRecord$DefaultFileRecordBuilder : elide/runtime/gvm/internals/vfs/FileRecord$Builder {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;JJLelide/runtime/gvm/internals/vfs/FileTimestamp;)V
+	public synthetic fun <init> (Ljava/lang/String;JJLelide/runtime/gvm/internals/vfs/FileTimestamp;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun build ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()J
+	public final fun component4 ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public final fun copy (Ljava/lang/String;JJLelide/runtime/gvm/internals/vfs/FileTimestamp;)Lelide/runtime/gvm/internals/vfs/FileRecord$DefaultFileRecordBuilder;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/FileRecord$DefaultFileRecordBuilder;Ljava/lang/String;JJLelide/runtime/gvm/internals/vfs/FileTimestamp;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/FileRecord$DefaultFileRecordBuilder;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getModified ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public fun getName ()Ljava/lang/String;
+	public fun getOffset ()J
+	public fun getSize ()J
+	public fun hashCode ()I
+	public fun setModified (Lelide/runtime/gvm/internals/vfs/FileTimestamp;)V
+	public fun setName (Ljava/lang/String;)V
+	public fun setOffset (J)V
+	public fun setSize (J)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FileRecord$NativeFileRecord : java/lang/Record, elide/runtime/gvm/internals/vfs/FileRecord {
+	public fun <init> (Ljava/lang/String;JJLelide/runtime/gvm/internals/vfs/FileTimestamp;)V
+	public synthetic fun <init> (Ljava/lang/String;JJLelide/runtime/gvm/internals/vfs/FileTimestamp;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun component3 ()J
+	public final fun component4 ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public final fun copy (Ljava/lang/String;JJLelide/runtime/gvm/internals/vfs/FileTimestamp;)Lelide/runtime/gvm/internals/vfs/FileRecord$NativeFileRecord;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/FileRecord$NativeFileRecord;Ljava/lang/String;JJLelide/runtime/gvm/internals/vfs/FileTimestamp;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/FileRecord$NativeFileRecord;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getModified ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getOffset ()J
+	public synthetic fun getSize ()J
+	public fun hashCode ()I
+	public fun modified ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public fun name ()Ljava/lang/String;
+	public fun offset ()J
+	public fun size ()J
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public fun toProto ()Ltools/elide/vfs/File;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FileRecord$ProtoFileRecord : elide/runtime/gvm/internals/vfs/FileRecord {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/File;)Lelide/runtime/gvm/internals/vfs/FileRecord$ProtoFileRecord;
+	public static fun constructor-impl (Ltools/elide/vfs/File;)Ltools/elide/vfs/File;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/File;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/File;Ltools/elide/vfs/File;)Z
+	public fun getModified ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public static fun getModified-impl (Ltools/elide/vfs/File;)Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public fun getName ()Ljava/lang/String;
+	public static fun getName-impl (Ltools/elide/vfs/File;)Ljava/lang/String;
+	public fun getOffset ()J
+	public static fun getOffset-impl (Ltools/elide/vfs/File;)J
+	public fun getSize ()J
+	public static fun getSize-impl (Ltools/elide/vfs/File;)J
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/File;)I
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public static fun toBuilder-impl (Ltools/elide/vfs/File;)Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
+	public fun toProto ()Ltools/elide/vfs/File;
+	public static fun toProto-impl (Ltools/elide/vfs/File;)Ltools/elide/vfs/File;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/File;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/File;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FileRecord$ProtoFileRecordBuilder : elide/runtime/gvm/internals/vfs/FileRecord$Builder {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/File$Builder;)Lelide/runtime/gvm/internals/vfs/FileRecord$ProtoFileRecordBuilder;
+	public fun build ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public static fun build-impl (Ltools/elide/vfs/File$Builder;)Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public static fun constructor-impl (Ltools/elide/vfs/File$Builder;)Ltools/elide/vfs/File$Builder;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/File$Builder;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/File$Builder;Ltools/elide/vfs/File$Builder;)Z
+	public fun getModified ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public static fun getModified-impl (Ltools/elide/vfs/File$Builder;)Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public fun getName ()Ljava/lang/String;
+	public static fun getName-impl (Ltools/elide/vfs/File$Builder;)Ljava/lang/String;
+	public fun getOffset ()J
+	public static fun getOffset-impl (Ltools/elide/vfs/File$Builder;)J
+	public fun getSize ()J
+	public static fun getSize-impl (Ltools/elide/vfs/File$Builder;)J
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/File$Builder;)I
+	public fun setModified (Lelide/runtime/gvm/internals/vfs/FileTimestamp;)V
+	public static fun setModified-impl (Ltools/elide/vfs/File$Builder;Lelide/runtime/gvm/internals/vfs/FileTimestamp;)V
+	public fun setName (Ljava/lang/String;)V
+	public static fun setName-impl (Ltools/elide/vfs/File$Builder;Ljava/lang/String;)V
+	public fun setOffset (J)V
+	public static fun setOffset-impl (Ltools/elide/vfs/File$Builder;J)V
+	public fun setSize (J)V
+	public static fun setSize-impl (Ltools/elide/vfs/File$Builder;J)V
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/File$Builder;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/File$Builder;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FileRecordAPI : elide/runtime/gvm/internals/vfs/FileSystemRecordAPI {
+	public abstract fun getModified ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public abstract fun getOffset ()J
+	public abstract fun getSize ()J
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FileSystemRecordAPI {
+	public abstract fun getName ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FileTimestamp : elide/runtime/gvm/internals/vfs/FileTimestampAPI {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/FileTimestamp$Companion;
+	public abstract fun toProto ()Lcom/google/protobuf/Timestamp;
+	public static fun wrapping (Lcom/google/protobuf/Timestamp;)Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FileTimestamp$Builder : elide/runtime/gvm/internals/vfs/FileTimestampAPI {
+	public abstract fun build ()Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+	public abstract fun getNanos ()I
+	public abstract fun getSeconds ()J
+	public abstract fun setNanos (I)V
+	public abstract fun setSeconds (J)V
+}
+
+public final class elide/runtime/gvm/internals/vfs/FileTimestamp$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public final fun wrapping (Lcom/google/protobuf/Timestamp;)Lelide/runtime/gvm/internals/vfs/FileTimestamp;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FileTimestamp$ProtoTimestamp : elide/runtime/gvm/internals/vfs/FileTimestamp {
+	public static final synthetic fun box-impl (Lcom/google/protobuf/Timestamp;)Lelide/runtime/gvm/internals/vfs/FileTimestamp$ProtoTimestamp;
+	public static fun constructor-impl (Lcom/google/protobuf/Timestamp;)Lcom/google/protobuf/Timestamp;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lcom/google/protobuf/Timestamp;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lcom/google/protobuf/Timestamp;Lcom/google/protobuf/Timestamp;)Z
+	public fun getNanos ()I
+	public static fun getNanos-impl (Lcom/google/protobuf/Timestamp;)I
+	public fun getSeconds ()J
+	public static fun getSeconds-impl (Lcom/google/protobuf/Timestamp;)J
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lcom/google/protobuf/Timestamp;)I
+	public fun toProto ()Lcom/google/protobuf/Timestamp;
+	public static fun toProto-impl (Lcom/google/protobuf/Timestamp;)Lcom/google/protobuf/Timestamp;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lcom/google/protobuf/Timestamp;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lcom/google/protobuf/Timestamp;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FileTimestampAPI {
+	public abstract fun getNanos ()I
+	public abstract fun getSeconds ()J
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FilesystemInfo : elide/runtime/gvm/internals/vfs/FilesystemInfoAPI {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Companion;
+	public static fun default ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo;
+	public abstract fun getMetadata ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public abstract fun getRoot ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public static fun native ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public static fun newBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public static fun proto (Ltools/elide/vfs/Filesystem$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public abstract fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public abstract fun toProto ()Ltools/elide/vfs/Filesystem;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FilesystemInfo$Builder : elide/runtime/gvm/internals/vfs/FilesystemInfoAPI {
+	public abstract fun build ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo;
+	public abstract fun getMetadata ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public abstract fun getRoot ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public abstract fun setMetadata (Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;)V
+	public abstract fun setRoot (Lelide/runtime/gvm/internals/vfs/TreeEntry;)V
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemInfo$Companion {
+	public final fun default ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo;
+	public final fun native ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public final fun newBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public final fun proto (Ltools/elide/vfs/Filesystem$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public static synthetic fun proto$default (Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Companion;Ltools/elide/vfs/Filesystem$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemInfo$DefaultFilesystemInfoBuilder : elide/runtime/gvm/internals/vfs/FilesystemInfo$Builder {
+	public fun <init> ()V
+	public fun <init> (Lelide/runtime/gvm/internals/vfs/TreeEntry;Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;)V
+	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/TreeEntry;Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun build ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo;
+	public final fun component1 ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public final fun component2 ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public final fun copy (Lelide/runtime/gvm/internals/vfs/TreeEntry;Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$DefaultFilesystemInfoBuilder;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/FilesystemInfo$DefaultFilesystemInfoBuilder;Lelide/runtime/gvm/internals/vfs/TreeEntry;Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$DefaultFilesystemInfoBuilder;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMetadata ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public fun getRoot ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public fun hashCode ()I
+	public fun setMetadata (Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;)V
+	public fun setRoot (Lelide/runtime/gvm/internals/vfs/TreeEntry;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemInfo$FilesystemInfoProto : elide/runtime/gvm/internals/vfs/FilesystemInfo {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/Filesystem;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$FilesystemInfoProto;
+	public static fun constructor-impl (Ltools/elide/vfs/Filesystem;)Ltools/elide/vfs/Filesystem;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/Filesystem;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/Filesystem;Ltools/elide/vfs/Filesystem;)Z
+	public fun getMetadata ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public static fun getMetadata-impl (Ltools/elide/vfs/Filesystem;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public fun getRoot ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public static fun getRoot-impl (Ltools/elide/vfs/Filesystem;)Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/Filesystem;)I
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public static fun toBuilder-impl (Ltools/elide/vfs/Filesystem;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public fun toProto ()Ltools/elide/vfs/Filesystem;
+	public static fun toProto-impl (Ltools/elide/vfs/Filesystem;)Ltools/elide/vfs/Filesystem;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/Filesystem;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/Filesystem;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemInfo$FilesystemInfoProtoBuilder : elide/runtime/gvm/internals/vfs/FilesystemInfo$Builder {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/Filesystem$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$FilesystemInfoProtoBuilder;
+	public fun build ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo;
+	public static fun build-impl (Ltools/elide/vfs/Filesystem$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo;
+	public static fun constructor-impl (Ltools/elide/vfs/Filesystem$Builder;)Ltools/elide/vfs/Filesystem$Builder;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/Filesystem$Builder;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/Filesystem$Builder;Ltools/elide/vfs/Filesystem$Builder;)Z
+	public fun getMetadata ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public static fun getMetadata-impl (Ltools/elide/vfs/Filesystem$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public fun getRoot ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public static fun getRoot-impl (Ltools/elide/vfs/Filesystem$Builder;)Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/Filesystem$Builder;)I
+	public fun setMetadata (Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;)V
+	public static fun setMetadata-impl (Ltools/elide/vfs/Filesystem$Builder;Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;)V
+	public fun setRoot (Lelide/runtime/gvm/internals/vfs/TreeEntry;)V
+	public static fun setRoot-impl (Ltools/elide/vfs/Filesystem$Builder;Lelide/runtime/gvm/internals/vfs/TreeEntry;)V
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/Filesystem$Builder;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/Filesystem$Builder;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemInfo$NativeFilesystemInfo : elide/runtime/gvm/internals/vfs/FilesystemInfo {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/FilesystemInfo$NativeFilesystemInfo$Companion;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$NativeFilesystemInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public fun getMetadata ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public static fun getMetadata-impl (Lkotlin/Pair;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public fun getRoot ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public static fun getRoot-impl (Lkotlin/Pair;)Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public static final fun of (Lelide/runtime/gvm/internals/vfs/TreeEntry;Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo;
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public static fun toBuilder-impl (Lkotlin/Pair;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo$Builder;
+	public fun toProto ()Ltools/elide/vfs/Filesystem;
+	public static fun toProto-impl (Lkotlin/Pair;)Ltools/elide/vfs/Filesystem;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemInfo$NativeFilesystemInfo$Companion {
+	public final fun of (Lelide/runtime/gvm/internals/vfs/TreeEntry;Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;)Lelide/runtime/gvm/internals/vfs/FilesystemInfo;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FilesystemInfoAPI {
+	public abstract fun getMetadata ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata;
+	public abstract fun getRoot ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public fun hasRoot ()Z
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FilesystemMetadata {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Companion;
+	public static fun native ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public static fun newBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public static fun proto (Ltools/elide/vfs/Filesystem$Metadata$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public abstract fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public abstract fun toProto ()Ltools/elide/vfs/Filesystem$Metadata;
+	public static fun wrapping-Sow667s (Ltools/elide/vfs/Filesystem$Metadata;)Ltools/elide/vfs/Filesystem$Metadata;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder : elide/runtime/gvm/internals/vfs/FilesystemMetadataAPI {
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$Companion {
+	public final fun native ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public final fun newBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public final fun proto (Ltools/elide/vfs/Filesystem$Metadata$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public static synthetic fun proto$default (Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Companion;Ltools/elide/vfs/Filesystem$Metadata$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public final fun wrapping-Sow667s (Ltools/elide/vfs/Filesystem$Metadata;)Ltools/elide/vfs/Filesystem$Metadata;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$DefaultFilesystemMetadataBuilder : elide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder {
+	public fun <init> ()V
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$NativeFilesystemMetadata : elide/runtime/gvm/internals/vfs/FilesystemMetadata {
+	public fun <init> ()V
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public fun toProto ()Ltools/elide/vfs/Filesystem$Metadata;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$ProtoFilesystemMetadata : elide/runtime/gvm/internals/vfs/FilesystemMetadata {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/Filesystem$Metadata;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$ProtoFilesystemMetadata;
+	public static fun constructor-impl (Ltools/elide/vfs/Filesystem$Metadata;)Ltools/elide/vfs/Filesystem$Metadata;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/Filesystem$Metadata;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/Filesystem$Metadata;Ltools/elide/vfs/Filesystem$Metadata;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/Filesystem$Metadata;)I
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public static fun toBuilder-impl (Ltools/elide/vfs/Filesystem$Metadata;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder;
+	public fun toProto ()Ltools/elide/vfs/Filesystem$Metadata;
+	public static fun toProto-impl (Ltools/elide/vfs/Filesystem$Metadata;)Ltools/elide/vfs/Filesystem$Metadata;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/Filesystem$Metadata;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/Filesystem$Metadata;
+}
+
+public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$ProtoFilesystemMetadataBuilder : elide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$ProtoFilesystemMetadataBuilder;
+	public static fun constructor-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;)Ltools/elide/vfs/Filesystem$Metadata$Builder;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/Filesystem$Metadata$Builder;Ltools/elide/vfs/Filesystem$Metadata$Builder;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/Filesystem$Metadata$Builder;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/FilesystemMetadataAPI {
 }
 
 public abstract class elide/runtime/gvm/internals/vfs/GuestIOException : java/io/IOException {
@@ -1666,6 +2251,198 @@ public abstract interface class elide/runtime/gvm/internals/vfs/GuestVFSPolicy {
 public final class elide/runtime/gvm/internals/vfs/GuestVFSPolicy$Companion {
 	public static final field DEFAULT_READ_ONLY Z
 	public final fun getDEFAULTS ()Lelide/runtime/gvm/internals/vfs/GuestVFSPolicy;
+}
+
+public final class elide/runtime/gvm/internals/vfs/HashAlgorithm : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/HashAlgorithm$Companion;
+	public static final field IDENTITY Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field MD5 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field SHA1 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field SHA2 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field SHA256 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field SHA384 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field SHA3_224 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field SHA3_256 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field SHA3_512 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static final field SHA512 Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getNumber ()I
+	public final fun getProtoEnum ()Ltools/elide/std/HashAlgorithm;
+	public fun getSymbol ()Ljava/lang/Integer;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public static fun values ()[Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+}
+
+public final class elide/runtime/gvm/internals/vfs/HashAlgorithm$Companion : elide/core/api/Symbolic$SealedResolver {
+	public fun resolve (I)Lelide/runtime/gvm/internals/vfs/HashAlgorithm;
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/TreeEntry : elide/runtime/gvm/internals/vfs/TreeEntryAPI {
+	public static final field Companion Lelide/runtime/gvm/internals/vfs/TreeEntry$Companion;
+	public abstract fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public abstract fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public abstract fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public fun hasDirectory ()Z
+	public fun hasFile ()Z
+	public static fun native ()Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public static fun newBuilder ()Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public static fun proto (Ltools/elide/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public abstract fun toBuilder ()Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public abstract fun toProto ()Ltools/elide/vfs/TreeEntry;
+	public static fun wrapping-J5lrTWI (Ltools/elide/vfs/TreeEntry;)Ltools/elide/vfs/TreeEntry;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/TreeEntry$Builder : elide/runtime/gvm/internals/vfs/TreeEntryAPI {
+	public abstract fun build ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public abstract fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public abstract fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public abstract fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public abstract fun setDirectory (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)V
+	public abstract fun setFile (Lelide/runtime/gvm/internals/vfs/FileRecord;)V
+}
+
+public final class elide/runtime/gvm/internals/vfs/TreeEntry$Companion {
+	public final fun native ()Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public final fun newBuilder ()Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public final fun proto (Ltools/elide/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public static synthetic fun proto$default (Lelide/runtime/gvm/internals/vfs/TreeEntry$Companion;Ltools/elide/vfs/TreeEntry$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public final fun wrapping-J5lrTWI (Ltools/elide/vfs/TreeEntry;)Ltools/elide/vfs/TreeEntry;
+}
+
+public final class elide/runtime/gvm/internals/vfs/TreeEntry$DefaultTreeEntryBuilder : elide/runtime/gvm/internals/vfs/TreeEntry$Builder {
+	public fun <init> ()V
+	public fun <init> (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;Lelide/runtime/gvm/internals/vfs/FileRecord;)V
+	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;Lelide/runtime/gvm/internals/vfs/FileRecord;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun build ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public final fun component1 ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public final fun component2 ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public final fun copy (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;Lelide/runtime/gvm/internals/vfs/FileRecord;)Lelide/runtime/gvm/internals/vfs/TreeEntry$DefaultTreeEntryBuilder;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/TreeEntry$DefaultTreeEntryBuilder;Lelide/runtime/gvm/internals/vfs/DirectoryRecord;Lelide/runtime/gvm/internals/vfs/FileRecord;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/TreeEntry$DefaultTreeEntryBuilder;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public fun hashCode ()I
+	public fun setDirectory (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)V
+	public fun setFile (Lelide/runtime/gvm/internals/vfs/FileRecord;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/TreeEntry$JvmTreeEntry : elide/runtime/gvm/internals/vfs/TreeEntry {
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public fun toProto ()Ltools/elide/vfs/TreeEntry;
+}
+
+public final class elide/runtime/gvm/internals/vfs/TreeEntry$JvmTreeEntry$Dir : elide/runtime/gvm/internals/vfs/TreeEntry$JvmTreeEntry {
+	public static final synthetic fun box-impl (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)Lelide/runtime/gvm/internals/vfs/TreeEntry$JvmTreeEntry$Dir;
+	public static fun constructor-impl (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)Z
+	public fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public static fun getDirectory-impl (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public static fun getFile-impl (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public static fun getType-impl (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+}
+
+public final class elide/runtime/gvm/internals/vfs/TreeEntry$JvmTreeEntry$File : elide/runtime/gvm/internals/vfs/TreeEntry$JvmTreeEntry {
+	public static final synthetic fun box-impl (Lelide/runtime/gvm/internals/vfs/FileRecord;)Lelide/runtime/gvm/internals/vfs/TreeEntry$JvmTreeEntry$File;
+	public static fun constructor-impl (Lelide/runtime/gvm/internals/vfs/FileRecord;)Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/runtime/gvm/internals/vfs/FileRecord;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/runtime/gvm/internals/vfs/FileRecord;Lelide/runtime/gvm/internals/vfs/FileRecord;)Z
+	public fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public static fun getDirectory-impl (Lelide/runtime/gvm/internals/vfs/FileRecord;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public static fun getFile-impl (Lelide/runtime/gvm/internals/vfs/FileRecord;)Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public static fun getType-impl (Lelide/runtime/gvm/internals/vfs/FileRecord;)Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/runtime/gvm/internals/vfs/FileRecord;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/runtime/gvm/internals/vfs/FileRecord;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+}
+
+public final class elide/runtime/gvm/internals/vfs/TreeEntry$None : elide/runtime/gvm/internals/vfs/TreeEntry {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/vfs/TreeEntry$None;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public fun hashCode ()I
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public fun toProto ()Ltools/elide/vfs/TreeEntry;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/vfs/TreeEntry$ProtoTreeEntry : elide/runtime/gvm/internals/vfs/TreeEntry {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/TreeEntry$ProtoTreeEntry;
+	public static fun constructor-impl (Ltools/elide/vfs/TreeEntry;)Ltools/elide/vfs/TreeEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/TreeEntry;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/TreeEntry;Ltools/elide/vfs/TreeEntry;)Z
+	public fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public static fun getDirectory-impl (Ltools/elide/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public static fun getFile-impl (Ltools/elide/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public static fun getType-impl (Ltools/elide/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public fun hasDirectory ()Z
+	public static fun hasDirectory-impl (Ltools/elide/vfs/TreeEntry;)Z
+	public fun hasFile ()Z
+	public static fun hasFile-impl (Ltools/elide/vfs/TreeEntry;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/TreeEntry;)I
+	public fun toBuilder ()Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public static fun toBuilder-impl (Ltools/elide/vfs/TreeEntry;)Lelide/runtime/gvm/internals/vfs/TreeEntry$Builder;
+	public fun toProto ()Ltools/elide/vfs/TreeEntry;
+	public static fun toProto-impl (Ltools/elide/vfs/TreeEntry;)Ltools/elide/vfs/TreeEntry;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/TreeEntry;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/TreeEntry;
+}
+
+public final class elide/runtime/gvm/internals/vfs/TreeEntry$ProtoTreeEntryBuilder : elide/runtime/gvm/internals/vfs/TreeEntry$Builder {
+	public static final synthetic fun box-impl (Ltools/elide/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/TreeEntry$ProtoTreeEntryBuilder;
+	public fun build ()Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public static fun build-impl (Ltools/elide/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/TreeEntry;
+	public static fun constructor-impl (Ltools/elide/vfs/TreeEntry$Builder;)Ltools/elide/vfs/TreeEntry$Builder;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ltools/elide/vfs/TreeEntry$Builder;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ltools/elide/vfs/TreeEntry$Builder;Ltools/elide/vfs/TreeEntry$Builder;)Z
+	public fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public static fun getDirectory-impl (Ltools/elide/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public static fun getFile-impl (Ltools/elide/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public static fun getType-impl (Ltools/elide/vfs/TreeEntry$Builder;)Lelide/runtime/gvm/internals/vfs/EntryCase;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ltools/elide/vfs/TreeEntry$Builder;)I
+	public fun setDirectory (Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)V
+	public static fun setDirectory-impl (Ltools/elide/vfs/TreeEntry$Builder;Lelide/runtime/gvm/internals/vfs/DirectoryRecord;)V
+	public fun setFile (Lelide/runtime/gvm/internals/vfs/FileRecord;)V
+	public static fun setFile-impl (Ltools/elide/vfs/TreeEntry$Builder;Lelide/runtime/gvm/internals/vfs/FileRecord;)V
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ltools/elide/vfs/TreeEntry$Builder;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ltools/elide/vfs/TreeEntry$Builder;
+}
+
+public abstract interface class elide/runtime/gvm/internals/vfs/TreeEntryAPI {
+	public abstract fun getDirectory ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord;
+	public abstract fun getFile ()Lelide/runtime/gvm/internals/vfs/FileRecord;
+	public abstract fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
 }
 
 public synthetic class elide/runtime/gvm/intrinsics/$BuiltinIntrinsicsResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

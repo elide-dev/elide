@@ -20,7 +20,7 @@ dev-dependencies{
 "@mitata/counters" "0.0.8"
 "@prettier/plugin-xml" "3.4.1"
 "@types/google-protobuf" "3.15.12"
-"@types/node" "22.13.11"
+"@types/node" "22.13.13"
 bun "1.2.5"
 bun-types "1.2.5"
 commitlint "19.8.0"
@@ -840,9 +840,9 @@ resolved "https://registry.npmjs.org/@types/ms/-/ms-2.1.0.tgz"
 integrity "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="
 }
 pkg "@types/node"{
-version "22.13.11"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.13.11.tgz"
-integrity "sha512-iEUCUJoU0i3VnrCmgoWCXttklWcvoCIx4jzcP22fioIVSdTmjgoEvmAO/QPw6TcS9k5FrNgn4w7q5lGOd1CT5g=="
+version "22.13.13"
+resolved "https://registry.npmjs.org/@types/node/-/node-22.13.13.tgz"
+integrity "sha512-ClsL5nMwKaBRwPcCvH8E7+nU4GxHVx1axNvMZTFHMEfNI7oahimt26P5zjVCRrjiIWj6YFXfE1v3dEp94wLcGQ=="
 dependencies{
 undici-types ">=6.20.0 <6.21.0-0"
     }

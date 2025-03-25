@@ -335,7 +335,6 @@ public abstract interface class elide/runtime/gvm/cfg/GuestVMConfiguration : io/
 	public fun getInspector ()Lelide/runtime/gvm/cfg/GuestVMInspectConfig;
 	public fun getLanguages ()Ljava/util/List;
 	public fun getLocale ()Ljava/util/Locale;
-	public fun getPrimary ()Ltools/elide/assets/EmbeddedScriptLanguage;
 	public fun getVfs ()Lelide/runtime/gvm/cfg/GuestIOConfiguration;
 }
 
@@ -398,7 +397,7 @@ public abstract interface class elide/runtime/gvm/cfg/JsRuntimeConfig : elide/ru
 	public fun getCharset ()Ljava/nio/charset/Charset;
 	public fun getDefaultLocale ()Ljava/util/Locale;
 	public fun getEsm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsEsmConfig;
-	public fun getLanguage ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public fun getLanguage ()Lelide/runtime/plugins/js/JavaScriptVersion;
 	public fun getLocale ()Ljava/util/Locale;
 	public fun getNpm ()Lelide/runtime/gvm/cfg/JsRuntimeConfig$JsNpmConfig;
 	public fun getSourceMaps ()Ljava/lang/Boolean;
@@ -419,7 +418,7 @@ public final class elide/runtime/gvm/cfg/JsRuntimeConfig$Companion {
 	public static final field DEFAULT_V8_COMPAT Z
 	public static final field DEFAULT_WASM Z
 	public final fun getDEFAULT_CHARSET ()Ljava/nio/charset/Charset;
-	public final fun getDEFAULT_JS_LANGUAGE_LEVEL ()Ltools/elide/assets/EmbeddedScriptMetadata$JsScriptMetadata$JsLanguageLevel;
+	public final fun getDEFAULT_JS_LANGUAGE_LEVEL ()Lelide/runtime/plugins/js/JavaScriptVersion;
 	public final fun getDEFAULT_LOCALE ()Ljava/util/Locale;
 	public final fun getDEFAULT_TIMEZONE ()Ljava/time/ZoneId;
 }
@@ -2003,30 +2002,6 @@ public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$DefaultFil
 
 public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$FilesystemMetadataData : elide/runtime/gvm/internals/vfs/FilesystemMetadata {
 	public fun <init> ()V
-}
-
-public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$ProtoFilesystemMetadata : elide/runtime/gvm/internals/vfs/FilesystemMetadata {
-	public static final synthetic fun box-impl (Ltools/elide/vfs/Filesystem$Metadata;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$ProtoFilesystemMetadata;
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ltools/elide/vfs/Filesystem$Metadata;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ltools/elide/vfs/Filesystem$Metadata;Ltools/elide/vfs/Filesystem$Metadata;)Z
-	public fun hashCode ()I
-	public static fun hashCode-impl (Ltools/elide/vfs/Filesystem$Metadata;)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ltools/elide/vfs/Filesystem$Metadata;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ltools/elide/vfs/Filesystem$Metadata;
-}
-
-public final class elide/runtime/gvm/internals/vfs/FilesystemMetadata$ProtoFilesystemMetadataBuilder : elide/runtime/gvm/internals/vfs/FilesystemMetadata$Builder {
-	public static final synthetic fun box-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;)Lelide/runtime/gvm/internals/vfs/FilesystemMetadata$ProtoFilesystemMetadataBuilder;
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ltools/elide/vfs/Filesystem$Metadata$Builder;Ltools/elide/vfs/Filesystem$Metadata$Builder;)Z
-	public fun hashCode ()I
-	public static fun hashCode-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ltools/elide/vfs/Filesystem$Metadata$Builder;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ltools/elide/vfs/Filesystem$Metadata$Builder;
 }
 
 public abstract interface class elide/runtime/gvm/internals/vfs/FilesystemMetadataAPI {

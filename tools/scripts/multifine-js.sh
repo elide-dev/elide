@@ -10,3 +10,4 @@ hyperfine \
   -n 'deno' "deno run $@" \
   -n 'bun' "bun run $@" \
   -n 'elide' "./packages/cli/build/native/$PROFILE/elide run --host:allow-io $ELIDE_ARGS $@"
+

@@ -22,6 +22,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.io.IOUtils
+import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
@@ -79,7 +80,6 @@ import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
-import elide.tool.cli.cfg.ElideCLITool.GVM_RESOURCES
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
@@ -287,37 +287,43 @@ private typealias ContextAccessor = () -> PolyglotContext
     validate = false,
     exclusive = false,
     heading = "%nAccess Control:%n",
-  ) internal var accessControl: AccessControlOptions = AccessControlOptions()
+  )
+  var accessControl: AccessControlOptions = AccessControlOptions()
 
   /** App environment settings. */
   @ArgGroup(
     exclusive = false,
     heading = "%nEnvironment:%n",
-  ) internal var appEnvironment: EnvironmentConfig = EnvironmentConfig()
+  )
+  internal var appEnvironment: EnvironmentConfig = EnvironmentConfig()
 
   /** Chrome inspector settings. */
   @ArgGroup(
     exclusive = false,
     heading = "%nInspector:%n",
-  ) internal var inspector: InspectorConfig = InspectorConfig()
+  )
+  internal var inspector: InspectorConfig = InspectorConfig()
 
   /** DAP host settings. */
   @ArgGroup(
     exclusive = false,
     heading = "%nDebugger:%n",
-  ) internal var debugger: DebugConfig = DebugConfig()
+  )
+  internal var debugger: DebugConfig = DebugConfig()
 
   /** Language selector. */
   @ArgGroup(
     exclusive = false,
     heading = "%nLanguage Selection:%n",
-  ) internal var language: LanguageSelector = LanguageSelector()
+  )
+  internal var language: LanguageSelector = LanguageSelector()
 
   /** Settings specific to JavaScript. */
   @ArgGroup(
     validate = false,
     heading = "%nEngine: JavaScript%n",
-  ) internal var jsSettings: EngineJavaScriptOptions = EngineJavaScriptOptions()
+  )
+  internal var jsSettings: EngineJavaScriptOptions = EngineJavaScriptOptions()
 
   /** File to run within the VM. */
   @Parameters(
@@ -1359,15 +1365,29 @@ private typealias ContextAccessor = () -> PolyglotContext
     val intrinsics = intrinsicsManager.get().resolver()
 
     // resolve entrypoint arguments
-    val cmd = ProcessHandle.current().info().command().orElse("elide")
+    val cmd = if (ImageInfo.inImageCode()) {
+      ProcessHandle.current().info().command().orElse("elide")
+    } else {
+      "elide"
+    }
     val args = Statics.args
+
+    // configure resource path
+    val gvmResources = when (ImageInfo.inImageCode()) {
+      true -> Statics.binPath.parent.resolve("resources")
+
+      // in JVM mode, pull from system properties
+      else -> requireNotNull(System.getProperty("elide.gvmResources")) {
+        "Failed to resolve GraalVM resources path: please set `elide.gvmResources`"
+      }.let { Path(it) }
+    }
 
     langs.forEach { lang ->
       when (lang) {
         // Primary Engines
         JS -> configure(elide.runtime.plugins.js.JavaScript) {
           logging.debug("Configuring JS VM")
-          resourcesPath = GVM_RESOURCES
+          resourcesPath = gvmResources
           executable = cmd
           executableList = listOf(cmd).plus(args)
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
@@ -1376,18 +1396,18 @@ private typealias ContextAccessor = () -> PolyglotContext
 
         WASM -> configure(elide.runtime.plugins.wasm.Wasm) {
           logging.debug("Configuring WASM VM")
-          resourcesPath = GVM_RESOURCES
+          resourcesPath = gvmResources
         }
 
         TYPESCRIPT -> configure(elide.runtime.plugins.typescript.TypeScript) {
           logging.debug("Configuring TypeScript support")
-          resourcesPath = GVM_RESOURCES
+          resourcesPath = gvmResources
         }
 
 //        RUBY -> ignoreNotInstalled {
 //           install(elide.runtime.plugins.ruby.Ruby) {
 //             logging.debug("Configuring Ruby VM")
-//             resourcesPath = GVM_RESOURCES
+//             resourcesPath = gvmResources
 //             executable = cmd
 //             executableList = listOf(cmd).plus(args)
 //             installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
@@ -1397,7 +1417,7 @@ private typealias ContextAccessor = () -> PolyglotContext
         PYTHON -> configure(elide.runtime.plugins.python.Python) {
           logging.debug("Configuring Python VM")
           installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-          resourcesPath = GVM_RESOURCES
+          resourcesPath = gvmResources
           executable = cmd
           executableList = listOf(cmd).plus(args)
         }

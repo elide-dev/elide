@@ -80,7 +80,7 @@ import elide.runtime.plugins.js.JavaScript
     super.beforeAnalysis(access)
 
     PolyglotEngine {
-      install(JavaScript)
+      configure(JavaScript)
     }
   }
 }

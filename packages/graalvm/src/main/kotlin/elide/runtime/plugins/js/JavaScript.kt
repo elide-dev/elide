@@ -34,10 +34,11 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   private val config: JavaScriptConfig,
   @Suppress("unused") private val resources: LanguagePluginManifest,
   private val environment: Environment? = null,
+  private val scope: InstallationScope,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // if applicable, install the env plugin bindings
-    environment?.install(context, JavaScript)
+    environment?.configure(scope, context, JavaScript)
 
     // apply init-time settings
     config.applyTo(context)
@@ -179,7 +180,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       configureLanguageSupport(scope)
 
       val embedded = resolveEmbeddedManifest(scope)
-      val instance = JavaScript(config, embedded, env)
+      val instance = JavaScript(config, embedded, env, scope)
 
       // register resources with the VFS
       if (!config.labsConfig.disableVfs) {

@@ -13,17 +13,15 @@
 
 package org.graalvm.python.embedding
 
-import com.oracle.graal.python.resources.PythonResource
 import org.graalvm.polyglot.io.FileSystem
 
 // Exposes GraalPython's filesystem so it can be delegated within Elide.
 public object GraalPythonFilesystem {
-  private val vfs = VirtualFileSystem
+  public fun delegate(): FileSystem = VirtualFileSystem
     .newBuilder()
-    .allowHostIO(VirtualFileSystem.HostIO.READ)
+    .allowHostIO(VirtualFileSystem.HostIO.READ_WRITE)
     .caseInsensitive(false)
-    .resourceLoadingClass(PythonResource::class.java)
-    .build()
-
-  public fun delegate(): FileSystem = vfs.delegatingFileSystem
+    .resourceLoadingClass(VirtualFileSystem::class.java)
+    .resourceDirectory("META-INF/resources")
+    .build().delegatingFileSystem
 }

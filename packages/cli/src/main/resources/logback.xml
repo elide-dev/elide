@@ -20,7 +20,8 @@
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator" />
 
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <target>System.err</target>
+    <target>System.out</target>
+    <immediateFlush>true</immediateFlush>
     <encoder>
       <pattern>%msg%n</pattern>
     </encoder>

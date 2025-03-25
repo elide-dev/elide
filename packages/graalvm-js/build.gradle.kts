@@ -42,26 +42,11 @@ elide {
   }
 }
 
-val enableEdgeJvm = false
-val edgeVersion = "25x"
-val baseVersion = "24x"
-val effectivePatchedVersion = if (enableEdgeJvm) edgeVersion else baseVersion
-
-sourceSets {
-  main {
-    if (enableEdgeJvm) {
-      kotlin.srcDirs("src/main/kotlin$edgeVersion")
-    } else {
-      kotlin.srcDirs("src/main/kotlin$baseVersion")
-    }
-  }
-}
-
 val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
 val patchedLibs = files(
-  gvmJarsRoot.file("graaljs-$effectivePatchedVersion.jar"),
-  gvmJarsRoot.file("truffle-api-$effectivePatchedVersion.jar"),
+  gvmJarsRoot.file("graaljs.jar"),
+  gvmJarsRoot.file("truffle-api.jar"),
 )
 
 val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }

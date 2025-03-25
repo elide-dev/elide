@@ -24,6 +24,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import kotlinx.atomicfu.atomic
 import kotlinx.collections.immutable.toImmutableList
@@ -88,8 +89,13 @@ import elide.runtime.core.internals.MutableEngineLifecycle
     override fun registeredBundles(): List<URL> =
       registeredBundles.toImmutableList()
 
-    override fun deferred(block: () -> Unit) {
-      inFlight.computeIfAbsent("", { LinkedList() }).add(exec.invoke().submit { block.invoke() })
+    override fun <T> deferred(block: () -> T): Future<T> {
+      if (!EXPERIMENTAL_INIT_EXECUTOR) {
+        return Futures.immediateFuture(block.invoke())
+      }
+      val fut = exec.invoke().submit<T> { block.invoke() }
+      inFlight.computeIfAbsent("", { LinkedList() }).add(fut)
+      return fut
     }
   }
 
@@ -131,7 +137,10 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   @Suppress("DEPRECATION")
   override fun <C : Any, I : Any> configure(plugin: EnginePlugin<C, I>, configure: C.() -> Unit) {
     assert(!initialized.value) { "Cannot configure engine plugins after initialization is complete" }
-    assert(plugin.key.id !in seenPlugins) { "A plugin with the provided key is already registered" }
+    if (plugin.key.id in seenPlugins) {
+      // Plugin already installed; no-op
+      return
+    }
     seenPlugins.add(plugin.key.id)
 
     if (EXPERIMENTAL_INIT_EXECUTOR) {

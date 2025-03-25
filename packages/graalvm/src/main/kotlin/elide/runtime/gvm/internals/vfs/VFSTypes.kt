@@ -16,6 +16,7 @@ import java.nio.file.Path
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
+import java.util.SortedSet
 
 // -- Basic: Files, Directories, Trees -- //
 
@@ -552,7 +553,7 @@ public interface FilesystemInfoAPI {
 /** Specifies an access request for a resource managed by the virtual file system layer. */
 @Serializable @JvmRecord public data class AccessRequest(
   /** Access types needed for this operation. */
-  val type: Set<AccessType>,
+  val type: SortedSet<AccessType>,
 
   /** Access domain from which this operation originates. */
   val domain: AccessDomain,
@@ -562,12 +563,38 @@ public interface FilesystemInfoAPI {
 
   /** Specifies the path to which this request relates. */
   val path: Path,
-) {
+) : Comparable<AccessRequest> {
   /** Whether this operation constitutes a read, with no writes. */
   val isRead: Boolean get() = type.contains(AccessType.READ) && !isWrite
 
   /** Whether this operation constitutes a write operation (or delete). */
   val isWrite: Boolean get() = type.contains(AccessType.WRITE) || type.contains(AccessType.DELETE)
+
+  override fun compareTo(other: AccessRequest): Int {
+    return path.compareTo(other.path)
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as AccessRequest
+
+    if (type != other.type) return false
+    if (domain != other.domain) return false
+    if (scope != other.scope) return false
+    if (path != other.path) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = type.hashCode()
+    result = 31 * result + domain.hashCode()
+    result = 31 * result + scope.hashCode()
+    result = 31 * result + path.hashCode()
+    return result
+  }
 }
 
 /** Enumerates result types for a virtual file system access request. */

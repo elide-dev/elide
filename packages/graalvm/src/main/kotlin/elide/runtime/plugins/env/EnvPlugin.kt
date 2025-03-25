@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,7 +19,6 @@ import org.graalvm.polyglot.proxy.ProxyIterator
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
-import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.vm.annotations.Polyglot
@@ -33,9 +32,24 @@ import elide.vm.annotations.Polyglot
  * @see EnvConfig
  */
 @DelicateElideApi public class Environment private constructor(public val config: EnvConfig) {
+  @Volatile private var envInstalled = false
+
   /** Collect the configured environment variables and keep the ones currently present. */
-  private val effectiveEnvironment: Map<String, String?> by lazy {
-    config.app.isolatedEnvironmentVariables.filter { it.value.isPresent }.mapValues { it.value.value }
+  private val effectiveEnvironment: Map<String, String> by lazy {
+    config.app.isolatedEnvironmentVariables
+      .filter { it.value.isPresent }
+      .mapValues { it.value.value!! }
+  }
+
+  private inner class DeferredEnvMap : Map<String, String> {
+    override operator fun get(key: String): String? = effectiveEnvironment[key]
+    override val size: Int get() = effectiveEnvironment.size
+    override val keys: Set<String> get() = effectiveEnvironment.keys
+    override val entries: Set<Map.Entry<String, String>> get() = effectiveEnvironment.entries
+    override val values: Collection<String> get() = effectiveEnvironment.values
+    override fun containsKey(key: String): Boolean = key in effectiveEnvironment
+    override fun containsValue(value: String): Boolean = effectiveEnvironment.containsValue(value)
+    override fun isEmpty(): Boolean = false
   }
 
   /** A proxied map for guest language access to env; it should not be mutable. */
@@ -71,12 +85,7 @@ import elide.vm.annotations.Polyglot
     if (!config.app.enabled) return
 
     // apply configured app environment
-    builder.environment(effectiveEnvironment)
-  }
-
-  /** Inject the environment polyglot bindings into a [context]. */
-  internal fun onContextInitialize(context: PolyglotContext) {
-    context.bindings().putMember(APP_ENV_BIND_PATH, proxiedEnvMap)
+    builder.environment(DeferredEnvMap())
   }
 
   /**
@@ -86,8 +95,13 @@ import elide.vm.annotations.Polyglot
    * This method should be used by language plugins to opt into using the virtual environment support, and should be
    * called during the [ContextInitialized][elide.runtime.core.EngineLifecycleEvent.ContextInitialized] event.
    */
-  public fun install(context: PolyglotContext, language: GuestLanguage) {
-    context.bindings(language).putMember(APP_ENV_BIND_PATH, proxiedEnvMap)
+  public fun configure(scope: InstallationScope, context: PolyglotContext, language: GuestLanguage) {
+    scope.deferred {
+      if (!envInstalled) {
+        envInstalled = true
+        context.bindings(language).putMember(APP_ENV_BIND_PATH, proxiedEnvMap)
+      }
+    }
   }
 
   /** Identifier for the [Environment] plugin, which provides isolated application environment. */
@@ -104,7 +118,6 @@ import elide.vm.annotations.Polyglot
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::onContextCreate)
-      scope.lifecycle.on(ContextInitialized, instance::onContextInitialize)
 
       return instance
     }
@@ -113,5 +126,5 @@ import elide.vm.annotations.Polyglot
 
 /** Configure the [Environment] plugin, installing it if not already present. */
 @DelicateElideApi public fun PolyglotEngineConfiguration.environment(configure: EnvConfig.() -> Unit) {
-  plugin(Environment)?.config?.apply(configure) ?: install(Environment, configure)
+  plugin(Environment)?.config?.apply(configure) ?: configure(Environment, configure)
 }

@@ -37,7 +37,12 @@ import elide.runtime.core.PolyglotContext.EvaluationOptions
   }
 
   override fun bindings(language: GuestLanguage?): PolyglotValue {
-    return language?.let { context.getBindings(it.languageId) } ?: context.polyglotBindings
+    try {
+      context.enter()
+      return language?.let { context.getBindings(it.languageId) } ?: context.polyglotBindings
+    } finally {
+      context.leave()
+    }
   }
 
   override fun parse(source: Source): PolyglotValue {

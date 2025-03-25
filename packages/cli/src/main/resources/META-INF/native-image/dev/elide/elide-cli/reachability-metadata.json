@@ -1601,7 +1601,9 @@
     },
     {
       "type": "elide.tool.cli.Elide",
-      "allDeclaredFields": true
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tool.cli.EnvironmentPropertiesOptimizationLoader"
@@ -3173,6 +3175,12 @@
     }
   ],
   "resources": [
+    {
+      "glob": "META-INF/services/org/jline/terminal/provider/jni"
+    },
+    {
+      "glob": "META-INF/services/org/jline/terminal/provider/jni/**"
+    },
     {
       "glob": "ElideTool.properties"
     },

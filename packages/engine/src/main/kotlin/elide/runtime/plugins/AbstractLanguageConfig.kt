@@ -15,6 +15,7 @@ package elide.runtime.plugins
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
+import java.nio.file.Path
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
@@ -43,7 +44,7 @@ import elide.runtime.core.PolyglotContext
   public var executableList: List<String>? = null
 
   /** Path to native libraries and resources. */
-  public var resourcesPath: String? = null
+  public var resourcesPath: Path? = null
 
   /**
    * Configure intrinsic bindings for this language. These bindings will be available as top-level symbols in every

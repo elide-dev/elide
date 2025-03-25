@@ -16,6 +16,7 @@ import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.polyglot.io.IOAccess
 import java.net.URI
 import java.util.*
+import java.util.concurrent.Future
 import elide.runtime.Logging
 import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.*
@@ -46,32 +47,47 @@ import elide.runtime.vfs.languageVfsRegistry
  * }
  * ```
  */
-@DelicateElideApi public class Vfs private constructor(public val config: VfsConfig) {
+@DelicateElideApi public class Vfs private constructor(
+  public val config: VfsConfig,
+  private val scope: InstallationScope,
+) {
   /** Plugin logger instance. */
   private val logging by lazy { Logging.of(Vfs::class) }
 
   /** Pre-configured VFS, created when the engine is initialized. */
-  private lateinit var fileSystem: FileSystem
+  private lateinit var fileSystem: Future<FileSystem>
+
+  // Initialize the VFS layer.
+  private fun initFilesystem() {
+    if (::fileSystem.isInitialized) return
+
+    // select the VFS implementation depending on the configuration if no host access is requested, use an embedded
+    // in-memory vfs implementation.
+    fileSystem = scope.deferred {
+      if (!config.useHost) {
+        logging.debug("No host access requested, using in-memory vfs")
+        acquireEmbeddedVfs(config.writable, config.deferred, config.registeredBundles)
+      } else {
+        // python and ruby have their own virtual filesystem delegates
+        if (!config.languages.any { it.languageId == "ruby" || it.languageId == "python" }) {
+          // if the configuration requires host access, we use a hybrid vfs
+          logging.debug("Host access requested, using hybrid vfs")
+          HybridVfs.acquire(config.writable, config.registeredBundles)
+        } else acquireCompoundVfs(
+          config.useHost,
+          config.writable,
+          config.deferred,
+          config.registeredBundles,
+          config.languages,
+        )
+      }.also { vfs ->
+        onVfsReady(vfs)
+      }
+    }
+  }
 
   internal fun onEngineCreated(@Suppress("unused_parameter") builder: PolyglotEngineBuilder) {
-    // select the VFS implementation depending on the configuration
-    // if no host access is requested, use an embedded in-memory vfs
-    if (!config.useHost) {
-      logging.debug("No host access requested, using in-memory vfs")
-      acquireEmbeddedVfs(config.writable, config.deferred, config.registeredBundles)
-    } else {
-      // python and ruby have their own virtual filesystem delegates
-      if (!config.languages.any { it.languageId == "ruby" || it.languageId == "python" }) {
-        // if the configuration requires host access, we use a hybrid vfs
-        logging.debug("Host access requested, using hybrid vfs")
-        HybridVfs.acquire(config.writable, config.registeredBundles)
-      } else {
-        acquireCompoundVfs(config.useHost, config.writable, config.deferred, config.registeredBundles, config.languages)
-      }
-    }.let { vfs ->
-      onVfsReady(vfs)
-      fileSystem = vfs
-    }
+    initFilesystem()
   }
 
   private fun onVfsReady(vfs: GuestVFS) {
@@ -80,9 +96,15 @@ import elide.runtime.vfs.languageVfsRegistry
 
   /** Configure a context builder to use a custom [fileSystem]. */
   internal fun configureContext(builder: PolyglotContextBuilder) {
+    // perform first-init lazily if not done already
+    if (!::fileSystem.isInitialized) {
+      logging.warn("VFS not initialized, attempting to initialize now")
+      initFilesystem()
+    }
+
     // use the configured VFS for each context
     builder.allowIO(IOAccess.newBuilder()
-        .fileSystem(fileSystem)
+        .fileSystem(fileSystem.get())
         .allowHostSocketAccess(true)  // @TODO(sgammon): needs policy enforcement
         .build())
   }
@@ -96,7 +118,7 @@ import elide.runtime.vfs.languageVfsRegistry
       val allRegisteredProducer = { scope.registeredBundles() }
       val config = VfsConfig(scope.configuration, allRegisteredProducer)
       config.apply(configuration)
-      val instance = Vfs(config)
+      val instance = Vfs(config, scope)
 
       // subscribe to lifecycle events
       scope.lifecycle.on(EngineCreated, instance::onEngineCreated)
@@ -162,5 +184,5 @@ import elide.runtime.vfs.languageVfsRegistry
 
 /** Configure the [Vfs] plugin, installing it if not already present. */
 @DelicateElideApi public fun PolyglotEngineConfiguration.vfs(configure: VfsConfig.() -> Unit) {
-  plugin(Vfs)?.config?.apply(configure) ?: install(Vfs, configure)
+  plugin(Vfs)?.config?.apply(configure) ?: configure(Vfs, configure)
 }

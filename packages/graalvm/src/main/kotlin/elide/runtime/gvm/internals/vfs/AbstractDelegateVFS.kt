@@ -12,7 +12,10 @@
  */
 package elide.runtime.gvm.internals.vfs
 
+import com.google.common.cache.Cache
+import com.google.common.cache.CacheBuilder
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
@@ -22,6 +25,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.*
 import java.nio.file.attribute.FileAttribute
 import java.util.*
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.LogLevel
@@ -55,6 +59,28 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
       AccessMode.WRITE -> AccessType.WRITE
       AccessMode.EXECUTE -> error("`EXECUTE` access mode is not supported by Elide VFS")
     }
+
+    /** Path to user's home cache directory. */
+    private val userHomeCache by lazy {
+      Paths.get(System.getProperty("user.home"), ".cache").toString()
+    }
+
+    /** Set of access types that are read-only. */
+    private val readOnlyAccess by lazy {
+      sortedSetOf(AccessType.READ)
+    }
+
+    /** Process-wide file attributes cache. */
+    private val attributesCache: Cache<Pair<Path, String>, MutableMap<String, Any>> = CacheBuilder.newBuilder()
+      .expireAfterWrite(10, TimeUnit.SECONDS)
+      .maximumSize(100)
+      .build()
+
+    /** Process-wide access check cache. */
+    private val accessCache: Cache<AccessRequest, AccessResponse> = CacheBuilder.newBuilder()
+      .expireAfterWrite(10, TimeUnit.SECONDS)
+      .maximumSize(100)
+      .build()
 
     /** Construct from a Micronaut-driven configuration. */
     @JvmStatic internal fun withConfig(ioConfig: GuestIOConfiguration): EffectiveGuestVFSConfig {
@@ -132,14 +158,29 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
   }
 
   override fun checkAccess(path: Path, modes: MutableSet<out AccessMode>, vararg linkOptions: LinkOption) {
+    // special case: if we are accessing a python `<frozen ...>` module, we should always allow it.
+    val pathStr = path.toString()
+    if (pathStr.startsWith("<frozen ")) {
+      debugLog {
+        "Allowing access to frozen module"
+      }
+      return
+    }
+    // if the access request involves the user's cache dir, allow it.
+    if (pathStr.startsWith(userHomeCache)) {
+      debugLog {
+        "Allowing access to user cache"
+      }
+      return
+    }
     debugLog {
-      "Checking access to path: $path, modes: $modes, linkOptions: $linkOptions"
+      "Checking access to path: $pathStr, modes: $modes, linkOptions: $linkOptions"
     }
     // @TODO(sgammon): why is it doing this
-    val accessTypes = if (modes.isEmpty()) {
-      EnumSet.of(AccessType.READ)
+    val accessTypes: SortedSet<AccessType> = if (modes.isEmpty()) {
+      readOnlyAccess
     } else {
-      EnumSet.copyOf(modes.map { it.toAccessType() })
+      modes.map { it.toAccessType() }.toSortedSet()
     }
 
     checkPolicy(
@@ -163,14 +204,7 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
   override fun createDirectory(dir: Path, vararg attrs: FileAttribute<*>) {
     debugLog { "Creating directory at path: '$dir'" }
     enforce(type = AccessType.WRITE, domain = AccessDomain.GUEST, scope = AccessScope.DIRECTORY, path = dir)
-
-    try {
-      backing.provider().createDirectory(dir, *attrs)
-    } catch (thr: Throwable) {
-      val stacktrace = thr.printStackTrace()
-      logging.error("Error while creating directory: $dir\n$stacktrace")
-      throw thr
-    }
+    backing.provider().createDirectory(dir, *attrs)
   }
 
   override fun newByteChannel(
@@ -187,17 +221,16 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
         options,
         *attrs
       )
-    } catch (thr: Throwable) {
-      when (thr) {
+    } catch (err: IOException) {
+      when (err) {
         is FileNotFoundException, is NoSuchFileException -> {
           if (suppressNotFound.get()) {
-            throw thr
+            throw err
           }
         }
       }
-      val stacktrace = thr.printStackTrace()
-      logging.error("Error while reading file (fs = $backing): $path\n$stacktrace")
-      throw thr
+      logging.error("Error while reading file (fs = $backing): $path", err)
+      throw err
     }
   }
 
@@ -208,9 +241,12 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
   }
 
   override fun readAttributes(path: Path, attributes: String, vararg options: LinkOption): MutableMap<String, Any> {
-    debugLog { "Reading attributes for file at path: '$path'" }
     enforce(type = AccessType.READ, domain = AccessDomain.GUEST, path = path)
-    return backing.provider().readAttributes(path, attributes, *options).apply {
+    val cached = attributesCache.getIfPresent(path to attributes)
+    if (cached != null) {
+      return cached
+    }
+    return backing.provider().readAttributes(path, attributes, *options).toMutableMap().apply {
       if (containsKey("ino")) {
         // fix: convert `ino` to `long`, which gvm filesystems expect
         this["ino"] = when (val ino = this["ino"]) {
@@ -218,6 +254,8 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
           else -> ino
         }
       }
+    }.also {
+      attributesCache.put(path to attributes, it)
     }
   }
 
@@ -236,7 +274,7 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
 
   override fun move(source: Path, target: Path, vararg options: CopyOption?) {
     debugLog { "Moving from '$source' -> '$target' (options: $options)" }
-    enforce(type = EnumSet.of(AccessType.READ, AccessType.DELETE), domain = AccessDomain.GUEST, path = source)
+    enforce(type = sortedSetOf(AccessType.READ, AccessType.DELETE), domain = AccessDomain.GUEST, path = source)
     enforce(type = AccessType.WRITE, domain = AccessDomain.GUEST, path = target)
     backing.provider().move(source, target, *options)
   }
@@ -310,6 +348,10 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
   }
 
   override fun checkPolicy(request: AccessRequest): AccessResponse {
+    // special case: if we are accessing a python `<frozen ...>` module, we should always allow it.
+    if (request.path.toString().startsWith("<frozen ")) {
+      return AccessResponse.allow("Frozen module access")
+    }
     // if we're in read-only mode, and the `request` represents an operation that writes (or deletes), we can reject it
     // outright because we know it to be un-supported.
     return if (config.readOnly && request.isWrite) {
@@ -318,11 +360,14 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
       }
       AccessResponse.deny("Filesystem is in read-only mode")
     } else {
-      // otherwise, defer to the attached policy.
       debugLog {
         "Delegating policy check to attached policy"
       }
-      config.policy.evaluateForPath(request)
+      when (val cached = accessCache.getIfPresent(request)) {
+        // otherwise, defer to the attached policy.
+        null -> config.policy.evaluateForPath(request).also { accessCache.put(request, it) }
+        else -> cached
+      }
     }
   }
 }

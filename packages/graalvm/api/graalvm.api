@@ -1305,8 +1305,10 @@ public abstract class elide/runtime/gvm/internals/vfs/AbstractBaseVFS : elide/ru
 	public static synthetic fun checkPolicy$default (Lelide/runtime/gvm/internals/vfs/AbstractBaseVFS;Lelide/runtime/gvm/internals/vfs/AccessType;Lelide/runtime/gvm/internals/vfs/AccessDomain;Ljava/nio/file/Path;Lelide/runtime/gvm/internals/vfs/AccessScope;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
 	protected final fun enforce (Lelide/runtime/gvm/internals/vfs/AccessType;Lelide/runtime/gvm/internals/vfs/AccessDomain;Ljava/nio/file/Path;Lelide/runtime/gvm/internals/vfs/AccessScope;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
 	protected final fun enforce (Ljava/util/EnumSet;Lelide/runtime/gvm/internals/vfs/AccessDomain;Ljava/nio/file/Path;Lelide/runtime/gvm/internals/vfs/AccessScope;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	protected final fun enforce (Ljava/util/SortedSet;Lelide/runtime/gvm/internals/vfs/AccessDomain;Ljava/nio/file/Path;Lelide/runtime/gvm/internals/vfs/AccessScope;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
 	public static synthetic fun enforce$default (Lelide/runtime/gvm/internals/vfs/AbstractBaseVFS;Lelide/runtime/gvm/internals/vfs/AccessType;Lelide/runtime/gvm/internals/vfs/AccessDomain;Ljava/nio/file/Path;Lelide/runtime/gvm/internals/vfs/AccessScope;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
 	public static synthetic fun enforce$default (Lelide/runtime/gvm/internals/vfs/AbstractBaseVFS;Ljava/util/EnumSet;Lelide/runtime/gvm/internals/vfs/AccessDomain;Ljava/nio/file/Path;Lelide/runtime/gvm/internals/vfs/AccessScope;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
+	public static synthetic fun enforce$default (Lelide/runtime/gvm/internals/vfs/AbstractBaseVFS;Ljava/util/SortedSet;Lelide/runtime/gvm/internals/vfs/AccessDomain;Ljava/nio/file/Path;Lelide/runtime/gvm/internals/vfs/AccessScope;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessResponse;
 	public abstract fun getLogging ()Lelide/runtime/Logger;
 	public abstract fun getPath ([Ljava/lang/String;)Ljava/nio/file/Path;
 	public abstract fun readStream (Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/io/InputStream;
@@ -1407,15 +1409,17 @@ public final class elide/runtime/gvm/internals/vfs/AccessDomain$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
-public final class elide/runtime/gvm/internals/vfs/AccessRequest : java/lang/Record {
+public final class elide/runtime/gvm/internals/vfs/AccessRequest : java/lang/Record, java/lang/Comparable {
 	public static final field Companion Lelide/runtime/gvm/internals/vfs/AccessRequest$Companion;
-	public fun <init> (Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)V
-	public final fun component1 ()Ljava/util/Set;
+	public fun <init> (Ljava/util/SortedSet;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)V
+	public fun compareTo (Lelide/runtime/gvm/internals/vfs/AccessRequest;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public final fun component1 ()Ljava/util/SortedSet;
 	public final fun component2 ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public final fun component3 ()Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public final fun component4 ()Ljava/nio/file/Path;
-	public final fun copy (Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/AccessRequest;Ljava/util/Set;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
+	public final fun copy (Ljava/util/SortedSet;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/AccessRequest;Ljava/util/SortedSet;Lelide/runtime/gvm/internals/vfs/AccessDomain;Lelide/runtime/gvm/internals/vfs/AccessScope;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/AccessRequest;
 	public final fun domain ()Lelide/runtime/gvm/internals/vfs/AccessDomain;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
@@ -1424,7 +1428,7 @@ public final class elide/runtime/gvm/internals/vfs/AccessRequest : java/lang/Rec
 	public final fun path ()Ljava/nio/file/Path;
 	public final fun scope ()Lelide/runtime/gvm/internals/vfs/AccessScope;
 	public fun toString ()Ljava/lang/String;
-	public final fun type ()Ljava/util/Set;
+	public final fun type ()Ljava/util/SortedSet;
 }
 
 public final class elide/runtime/gvm/internals/vfs/AccessRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -1617,7 +1621,7 @@ public final class elide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig {
 
 public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl : elide/runtime/gvm/internals/vfs/AbstractDelegateVFS {
 	public static final field EmbeddedVFSFactory Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$EmbeddedVFSFactory;
-	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;Ljava/nio/file/FileSystem;Lelide/runtime/gvm/internals/vfs/FilesystemInfo;ZLjava/util/Map;Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/gvm/internals/vfs/EffectiveGuestVFSConfig;Ljava/nio/file/FileSystem;Lkotlin/jvm/functions/Function0;ZLjava/util/Map;Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun allowsHostFileAccess ()Z
 	public fun allowsHostSocketAccess ()Z
 	public fun existsAny (Ljava/nio/file/Path;)Z
@@ -1738,36 +1742,36 @@ public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$Embedded
 }
 
 public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory : java/lang/Record, elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsObjectInfo {
-	public fun <init> (Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;)V
+	public fun <init> (Ljava/lang/String;ILkotlin/sequences/Sequence;)V
 	public fun bundle ()I
+	public final fun childrenList ()Lkotlin/sequences/Sequence;
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()I
-	public final fun component3 ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
-	public final fun copy (Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;
+	public final fun component3 ()Lkotlin/sequences/Sequence;
+	public final fun copy (Ljava/lang/String;ILkotlin/sequences/Sequence;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;Ljava/lang/String;ILkotlin/sequences/Sequence;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsDirectory;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getBundle ()I
 	public synthetic fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun info ()Lelide/runtime/gvm/internals/vfs/DirectoryRecord$Builder;
 	public fun path ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo : java/lang/Record, elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsObjectInfo {
-	public fun <init> (Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/FileRecord$Builder;)V
+	public fun <init> (Ljava/lang/String;II)V
 	public fun bundle ()I
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()I
-	public final fun component3 ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
-	public final fun copy (Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/FileRecord$Builder;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;Ljava/lang/String;ILelide/runtime/gvm/internals/vfs/FileRecord$Builder;ILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;
+	public final fun component3 ()I
+	public final fun copy (Ljava/lang/String;II)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;Ljava/lang/String;IIILjava/lang/Object;)Lelide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl$VfsFileInfo;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getBundle ()I
 	public synthetic fun getPath ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun info ()Lelide/runtime/gvm/internals/vfs/FileRecord$Builder;
 	public fun path ()Ljava/lang/String;
+	public final fun size ()I
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -8519,8 +8523,8 @@ public final class elide/runtime/plugins/env/EnvPluginKt {
 public final class elide/runtime/plugins/env/Environment {
 	public static final field Plugin Lelide/runtime/plugins/env/Environment$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/env/EnvConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun configure (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
 	public final fun getConfig ()Lelide/runtime/plugins/env/EnvConfig;
-	public final fun install (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
 }
 
 public final class elide/runtime/plugins/env/Environment$Plugin : elide/runtime/core/EnginePlugin {
@@ -8537,7 +8541,7 @@ public final class elide/runtime/plugins/js/ExtensionsKt {
 
 public final class elide/runtime/plugins/js/JavaScript {
 	public static final field Plugin Lelide/runtime/plugins/js/JavaScript$Plugin;
-	public synthetic fun <init> (Lelide/runtime/plugins/js/JavaScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lelide/runtime/plugins/env/Environment;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/plugins/js/JavaScriptConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;Lelide/runtime/plugins/env/Environment;Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class elide/runtime/plugins/js/JavaScript$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
@@ -8619,7 +8623,7 @@ public final class elide/runtime/plugins/js/JavaScriptVersion : java/lang/Enum {
 
 public final class elide/runtime/plugins/vfs/Vfs {
 	public static final field Plugin Lelide/runtime/plugins/vfs/Vfs$Plugin;
-	public synthetic fun <init> (Lelide/runtime/plugins/vfs/VfsConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/plugins/vfs/VfsConfig;Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getConfig ()Lelide/runtime/plugins/vfs/VfsConfig;
 }
 

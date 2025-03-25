@@ -17,11 +17,7 @@
   "MagicNumber"
 )
 
-import com.google.protobuf.gradle.id
-import com.google.protobuf.gradle.proto
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import kotlinx.benchmark.gradle.JvmBenchmarkTarget
-import kotlinx.benchmark.gradle.benchmark
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -34,12 +30,10 @@ plugins {
   kotlin("jvm")
   kotlin("plugin.serialization")
 
-  alias(libs.plugins.protobuf)
   alias(libs.plugins.micronaut.minimal.library)
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.graalvm)
   alias(libs.plugins.jmh)
-  alias(libs.plugins.kotlinx.plugin.benchmark)
   alias(libs.plugins.ksp)
   alias(libs.plugins.elide.conventions)
 }
@@ -70,7 +64,6 @@ val oracleGvmLibs = oracleGvm
 val enableJpms = false
 val enableEdge = false
 val enableSqlite = true
-val enableBenchmarks = false
 val enableStaticJni = true
 val enableToolchains = true
 val enableTransportV2 = false
@@ -147,7 +140,6 @@ elide {
     spotless = true
     diktat = false
     ktlint = false
-    checkstyle = false  // protobuf files
   }
 }
 
@@ -178,31 +170,10 @@ sourceSets {
   val main by getting {
     java.srcDirs(
       layout.projectDirectory.dir("src/main/java9"),
-      layout.buildDirectory.dir("generated/proto/main/java"),
     )
     kotlin.srcDirs(
       layout.projectDirectory.dir("src/main/kotlin"),
-      layout.buildDirectory.dir("generated/proto/main/kotlin"),
     )
-    proto {
-      srcDir("${rootProject.projectDir}/packages/proto")
-    }
-  }
-  if (enableBenchmarks) {
-    val benchmarks by creating {
-      kotlin.srcDirs(
-        layout.projectDirectory.dir("src/benchmarks/kotlin"),
-      )
-    }
-  }
-}
-
-if (enableBenchmarks) kotlin {
-  sourceSets {
-    val main by getting
-    val benchmarks by getting {
-      dependsOn(main)
-    }
   }
 }
 
@@ -410,19 +381,6 @@ val testLibArgs = sharedLibArgs.plus(listOf(
 val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-graalvm.nil")
 val baseLayer = project(":packages:engine").layout.buildDirectory.file("native/nativeLayerCompile/elide-base.nil")
 
-protobuf {
-  protoc {
-    artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
-  }
-  generateProtoTasks {
-    ofSourceSet("main").forEach {
-      it.builtins {
-        id("kotlin")
-      }
-    }
-  }
-}
-
 graalvmNative {
   testSupport = true
   useArgFile = true
@@ -477,21 +435,6 @@ graalvmNative {
   }
 }
 
-if (enableBenchmarks) benchmark {
-  configurations {
-    named("main") {
-      warmups = 3
-      iterations = 2
-    }
-  }
-  targets {
-    if (enableBenchmarks) register("benchmarks") {
-      this as JvmBenchmarkTarget
-      jmhVersion = libs.versions.jmh.lib.get()
-    }
-  }
-}
-
 micronaut {
   enableNativeImage(true)
   version = libs.versions.micronaut.lib.get()
@@ -503,31 +446,6 @@ micronaut {
       "elide.runtime.gvm.internals.*",
       "elide.runtime.gvm.intrinsics.*",
     ))
-  }
-}
-
-if (enableBenchmarks) {
-  val benchmarksCompileClasspath: Configuration by configurations.getting {
-    extendsFrom(
-      configurations.compileClasspath.get(),
-    )
-  }
-  val benchmarksImplementation: Configuration by configurations.getting {
-    extendsFrom(
-      configurations.implementation.get(),
-      configurations.testImplementation.get(),
-    )
-  }
-  val benchmarksRuntimeOnly: Configuration by configurations.getting {
-    extendsFrom(
-      configurations.runtimeOnly.get(),
-      configurations.testRuntimeOnly.get()
-    )
-  }
-
-  dependencies {
-    // Benchmarks
-    benchmarksRuntimeOnly(libs.kotlinx.benchmark.runtime)
   }
 }
 
@@ -552,16 +470,6 @@ dependencies {
   api(projects.packages.graalvmTs)
   api(projects.packages.graalvmJs)
   api(projects.packages.graalvmWasm)
-
-  // Protocol Dependencies
-  implementation(libs.google.common.html.types.proto) {
-    exclude(group = "com.google.protobuf", module = "protobuf-java")
-    exclude(group = "com.google.protobuf", module = "protobuf-util")
-  }
-  api(libs.google.common.html.types.types) {
-    exclude(group = "com.google.protobuf", module = "protobuf-java")
-    exclude(group = "com.google.protobuf", module = "protobuf-util")
-  }
 
   // GraalVM / Truffle
   api(libs.graalvm.truffle.api)
@@ -629,9 +537,6 @@ dependencies {
   // SQLite
   if (enableSqlite) implementation(projects.packages.sqlite)
   else compileOnly(projects.packages.sqlite)
-
-  implementation(libs.protobuf.java)
-  implementation(libs.protobuf.kotlin)
 
   api(libs.graalvm.polyglot)
   api(libs.graalvm.js.language)
@@ -730,16 +635,7 @@ tasks {
     }
   }
 
-  afterEvaluate {
-    listOf(named("kspKotlin")).forEach { task ->
-      task.configure {
-        dependsOn(generateProto)
-      }
-    }
-  }
-
   compileJava {
-    dependsOn(generateProto.name)
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 
@@ -750,7 +646,6 @@ tasks {
   }
 
   compileTestJava {
-    dependsOn(generateProto.name)
     options.javaModuleVersion = version as String
     if (enableJpms) modularity.inferModulePath = true
 
@@ -775,12 +670,6 @@ tasks {
 
   named("nativeLayerCompile").configure {
     dependsOn(":packages:engine:nativeLayerCompile")
-  }
-}
-
-if (enableBenchmarks) afterEvaluate {
-  tasks.named("benchmarksBenchmark", JavaExec::class) {
-    systemProperty("java.library.path", javaLibPath.get().toString())
   }
 }
 
@@ -903,10 +792,6 @@ val selectedRustNatives: String = if (isRelease)
   buildRustNativesForHostRelease.name
 else
   buildRustNativesForHost.name
-
-tasks.jar {
-  exclude("**/*.proto")
-}
 
 val natives by tasks.registering {
   group = "build"

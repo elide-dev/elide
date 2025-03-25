@@ -67,7 +67,6 @@ import elide.runtime.gvm.GuestLanguage
 
   override fun getRequiredFeatures(): MutableList<Class<out Feature>> {
     return arrayListOf(
-      ProtocolBuffers::class.java,
       VirtualFilesystem::class.java,
     )
   }

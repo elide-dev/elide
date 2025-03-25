@@ -18,18 +18,6 @@ import elide.annotations.engine.VMFeature
 /** GraalVM feature which enables reflection required for VFS (Virtual File System) services. */
 @VMFeature
 internal class VirtualFilesystem : FrameworkFeature {
-  internal companion object {
-    private val vfsClasses = listOf(
-      "elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl",
-    )
-  }
-
-  /** @inheritDoc */
-  override fun getRequiredFeatures(): MutableList<Class<out Feature>> = arrayListOf(
-    ProtocolBuffers::class.java,
-  )
-
-  /** @inheritDoc */
   override fun isInConfiguration(access: Feature.IsInConfigurationAccess): Boolean {
     return (
       // the VFS interface and embedded impl must be in the classpath
@@ -37,13 +25,9 @@ internal class VirtualFilesystem : FrameworkFeature {
     )
   }
 
-  /** @inheritDoc */
   override fun beforeAnalysis(access: Feature.BeforeAnalysisAccess) {
-    vfsClasses.forEach {
-      registerClassForReflection(access, it)
-    }
+    // Nothing to do.
   }
 
-  /** @inheritDoc */
   override fun getDescription(): String = "Configures guest VFS features"
 }

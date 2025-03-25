@@ -35,12 +35,22 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest.Embed
 import elide.runtime.plugins.bindings.Bindings
 
 // Default engine for pre-warming.
-private val defaultEngine = Engine.create()
+private val defaultEngine = Engine.create("js", "ts", "wasm", "python", "pkl")
 
 // Default context for pre-warming.
 private val defaultContext = Context.newBuilder()
   .engine(defaultEngine)
   .build()
+
+/**
+ * @return The default polyglot engine.
+ */
+public fun Engine.default(): Engine = defaultEngine
+
+/**
+ * @return The default polyglot context.
+ */
+public fun Context.default(): Context = defaultContext
 
 /**
  * Abstract base class for language plugins.

@@ -54,6 +54,7 @@ internal class KotlinResource : InternalResource {
   }
 
   private fun basePath(): Path = Path.of("META-INF", "elide", "embedded", "runtime", "kt")
+
   companion object {
     @Suppress("unused")
     const val ID: String = KOTLIN_RESOURCES_ID

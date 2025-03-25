@@ -13,6 +13,7 @@
 package elide.runtime.core
 
 import java.net.URL
+import java.util.concurrent.Future
 
 /**
  * Engine plugins provide a generic way to extend a [PolyglotEngine] and its [PolyglotContext] instances using an
@@ -128,7 +129,7 @@ public interface EnginePlugin<Config : Any, Instance : Any> {
     /**
      * Register a deferred block which runs after all other plugin init tasks.
      */
-    public fun deferred(block: () -> Unit)
+    public fun <T> deferred(block: () -> T): Future<T>
 
     /**
      * Register a VFS bundle which should be made available when this plug-in is operational.

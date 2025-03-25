@@ -138,7 +138,7 @@ val enableExperimentalLlvmEdge = false
 val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64"
 val enableEmbeddedResources = false
 val enableResourceFilter = false
-val enableAuxCache = true
+val enableAuxCache = false
 val enableAuxCacheTrace = true
 val enableJpms = false
 val enableConscrypt = false
@@ -147,7 +147,7 @@ val enableEmbeddedJvm = false
 val enableEmbeddedBuilder = false
 val enableBuildReport = true
 val enableHeapReport = false
-val enableG1 = false
+val enableG1 = true
 val enablePreinit = true
 val enablePgo = findProperty("elide.pgo") != "false"
 val enablePgoSampling = false
@@ -191,7 +191,7 @@ val exclusions = listOfNotNull(
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 25
+val edgeJvmTarget = 24
 val stableJvmTarget = 23
 
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
@@ -230,7 +230,6 @@ val jvmOnlyCompileArgs: List<String> = listOfNotNull(
 )
 
 val jvmCompileArgs = listOfNotNull(
-  "--enable-preview",
   "--add-modules=jdk.unsupported",
   "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
 //  "--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
@@ -373,7 +372,6 @@ buildConfig {
   useKotlinOutput()
   buildConfigField("String", "ELIDE_RELEASE_TYPE", if (isRelease) "\"RELEASE\"" else "\"DEV\"")
   buildConfigField("String", "ELIDE_TOOL_VERSION", "\"$cliVersion\"")
-  buildConfigField("String", "GVM_RESOURCES", "\"${gvmResourcesPath}\"")
 }
 
 val pklDependencies: Configuration by configurations.creating
@@ -668,7 +666,9 @@ val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
 val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+RemoveUnusedSymbols",
   "-H:+ParseRuntimeOptions",
-  "-H:+JNIEnhancedErrorCodes",
+  "-H:+TrackPrimitiveValues",
+  "-H:+UsePredicates",
+  "-H:+AllowUnsafeAllocationOfAllInstantiatedTypes",  // fix: oracle/graal#10912
   onlyIf(oracleGvm && enableAuxCache, "-H:ReservedAuxiliaryImageBytes=${8 * 1024 * 1024}"),
   onlyIf(enableExperimentalLlvmBackend, "-H:CompilerBackend=llvm"),
   onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
@@ -1057,6 +1057,11 @@ val nativeMonitoring = listOfNotNull(
   onlyIf(enableJmx, "threaddump"),
 ).joinToString(",")
 
+val ffmConfigPath = layout.projectDirectory
+  .file("src/main/resources/META-INF/native-image/dev/elide/elide-cli/ffm.json")
+  .asFile
+  .path
+
 val commonNativeArgs = listOfNotNull(
   // Debugging flags:
   // "--verbose",
@@ -1066,15 +1071,16 @@ val commonNativeArgs = listOfNotNull(
   "-H:+UnlockExperimentalVMOptions",
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
+  onlyIf(isDebug, "-H:+JNIEnhancedErrorCodes"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
   onlyIf(enableFfm, "-H:+ForeignAPISupport"),
+  onlyIf(enableFfm, "-H:ForeignConfigurationFiles=$ffmConfigPath"),
   onlyIf(dumpPointsTo, "-H:PrintAnalysisCallTreeType=CSV"),
   onlyIf(dumpPointsTo, "-H:+PrintImageObjectTree"),
   onlyIf(enabledFeatures.isNotEmpty(), "--features=${enabledFeatures.joinToString(",")}"),
   // Common flags:
   "-march=$elideBinaryArch",
   "--no-fallback",
-  "--enable-preview",
   "--enable-http",
   "--enable-https",
   "--install-exit-handlers",
@@ -1102,6 +1108,9 @@ val commonNativeArgs = listOfNotNull(
   "-H:+PreserveFramePointer",
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
+  "-H:-IncludeLanguageResources",
+  "-H:+CopyLanguageResources",
+  "-H:+GenerateEmbeddedResourcesFile",
   "-H:-ReduceImplicitExceptionStackTraceInformation",
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:ExcludeResources=META-INF/native/libumbrella.so",
@@ -1363,6 +1372,7 @@ val jvmDefs = mutableMapOf(
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
   "elide.kotlin.verbose" to "false",
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
+  "elide.gvmResources" to gvmResourcesPath,
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
   "io.netty.allocator.type" to "adaptive",
@@ -1952,6 +1962,9 @@ tasks {
     jvmDefs.forEach {
       systemProperty(it.key, it.value)
     }
+    if (findProperty("elide.initLog") == "true") {
+      systemProperty("elide.initLog", "true")
+    }
 
     systemProperty(
       "micronaut.environments",
@@ -2003,7 +2016,12 @@ tasks {
       listOf(
         "-verbose:class",
       ).onlyIf(enableVerboseClassLoading)
-    ))
+    ).plus(listOf(
+      "-Xms64m",
+      "-Xmx4g",
+      "-XX:+UnlockExperimentalVMOptions",
+      "--enable-native-access=ALL-UNNAMED",
+    )))
 
     standardInput = System.`in`
     standardOutput = System.out
@@ -2099,7 +2117,13 @@ tasks {
       listOf(
         "-verbose:class",
       ).onlyIf(enableVerboseClassLoading)
-    ))
+    ).plus(listOf(
+      "-Xms64m",
+      "-Xmx4g",
+      "-XX:+UnlockExperimentalVMOptions",
+      "--enable-native-access=ALL-UNNAMED",
+      // "-agentpath:/opt/visualvm/visualvm/lib/deployed/jdk16/linux-amd64/libprofilerinterface.so=/opt/visualvm/visualvm/lib,5140",
+    )))
 
     standardInput = System.`in`
     standardOutput = System.out

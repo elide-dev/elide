@@ -21,6 +21,7 @@ import io.micronaut.context.ApplicationContextBuilder
 import io.micronaut.context.ApplicationContextConfigurer
 import io.micronaut.context.BeanContext
 import io.micronaut.context.annotation.ContextConfigurer
+import io.micronaut.core.annotation.Introspected
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.ProcessProperties
 import picocli.CommandLine
@@ -108,6 +109,7 @@ internal val applicationContextBuilder = ApplicationContext
   ],
 )
 @Suppress("MemberVisibilityCanBePrivate")
+@Introspected
 @Context @Singleton class Elide : ToolCommandBase<CommandContext>() {
   companion object {
     /** Name of the tool. */
@@ -124,6 +126,9 @@ internal val applicationContextBuilder = ApplicationContext
 
     private val bundle = ResourceBundle.getBundle("ElideTool", Locale.US)
     private val errHandler = DefaultErrorHandler.acquire()
+
+    // Initialization timestamp.
+    private val initTime by lazy { System.currentTimeMillis() }
 
     // Builder for the CLI entrypoint.
     private val cliBuilder get() = CommandLine(Elide::class.java, object: CommandLine.IFactory {
@@ -153,7 +158,9 @@ internal val applicationContextBuilder = ApplicationContext
     // Init logging.
     @JvmStatic private fun initLog(message: String) {
       if (INIT_LOGGING) {
-        System.err.println("[entry] $message")
+        val now = System.currentTimeMillis()
+        val delta = now - initTime
+        System.err.println("[entry] [${delta}ms] $message")
       }
     }
 
@@ -178,6 +185,7 @@ internal val applicationContextBuilder = ApplicationContext
         if (tooling) {
           dev.elide.cli.bridge.CliNativeBridge.initialize()
         }
+        initLog("Natives ready")
       }
     }
 

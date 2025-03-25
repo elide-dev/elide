@@ -372,8 +372,37 @@ public abstract class AbstractBaseVFS<VFS> protected constructor (
    * @param scope Whether this path is known to be a file, or directory, or it is not known.
    * @return Response from the policy check, indicating whether the request is allowed.
    */
+  @Deprecated("Use enforce with SortedSet<AccessType> instead.")
   protected fun enforce(
     type: EnumSet<AccessType>,
+    domain: AccessDomain,
+    path: Path,
+    scope: AccessScope = AccessScope.UNSPECIFIED,
+  ): AccessResponse = checkPolicy(
+    type.toSortedSet(),
+    domain,
+    path,
+    scope,
+  )
+
+  /**
+   * Subclass API: Enforcement.
+   *
+   * This method is the protected entrypoint for enforcement of guest I/O policy. Calls to this method first check the
+   * sanity of a given request (for example, writes can be refused outright if the file-system is read-only), and then
+   * evaluate any attached policy to determine whether the request should be allowed.
+   *
+   * If the request is not allowed, an I/O exception is raised and the call is forbidden. If the request is allowed, it
+   * is passed on to the backing implementation, as applicable.
+   *
+   * @param type Type(s) of access which are being requested.
+   * @param domain Access domain for this request: is it coming from the guest, or the host?
+   * @param path Path to the file or directory being accessed.
+   * @param scope Whether this path is known to be a file, or directory, or it is not known.
+   * @return Response from the policy check, indicating whether the request is allowed.
+   */
+  protected fun enforce(
+    type: SortedSet<AccessType>,
     domain: AccessDomain,
     path: Path,
     scope: AccessScope = AccessScope.UNSPECIFIED,
@@ -407,7 +436,7 @@ public abstract class AbstractBaseVFS<VFS> protected constructor (
     path: Path,
     scope: AccessScope = AccessScope.UNSPECIFIED,
   ): AccessResponse = enforce(
-    EnumSet.of(type),
+    sortedSetOf(type),
     domain,
     path,
     scope,
@@ -432,7 +461,7 @@ public abstract class AbstractBaseVFS<VFS> protected constructor (
     path: Path,
     scope: AccessScope = AccessScope.UNSPECIFIED,
   ): AccessResponse = checkPolicy(AccessRequest(
-    type = setOf(type),
+    type = sortedSetOf(type),
     domain = domain,
     scope = scope,
     path = path,
@@ -452,7 +481,7 @@ public abstract class AbstractBaseVFS<VFS> protected constructor (
    * @return Response from the policy check, indicating whether the request is allowed.
    */
   internal fun checkPolicy(
-    type: Set<AccessType>,
+    type: SortedSet<AccessType>,
     domain: AccessDomain,
     path: Path,
     scope: AccessScope = AccessScope.UNSPECIFIED,

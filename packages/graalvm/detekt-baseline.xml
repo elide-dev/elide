@@ -4,6 +4,7 @@
   <CurrentIssues>
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
     <ID>CyclomaticComplexMethod:NodeFilesystem.kt$NodeFilesystemProxy$override fun getMember(key: String?): Any?</ID>
+    <ID>ForbiddenComment:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$// @TODO: cannot defer this because indexing happens as a side-effect</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:JavaScript.kt$JavaScript$// @TODO: breakage in graalvm with `en_US`</ID>
@@ -51,7 +52,6 @@
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal"</ID>
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$MutableURLSearchParams : AbstractMutableURLSearchParamsIMutableSearchParams</ID>
     <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt$URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
-    <ID>PrintStackTrace:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr</ID>
     <ID>RethrowCaughtException:AbstractGVMScript.kt$AbstractGVMScript$throw exc</ID>
     <ID>SpreadOperator:AbstractDelegateVFS.kt$AbstractDelegateVFS$(segments[0], *segments.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$(*supportedFeatures())</ID>
@@ -75,7 +75,6 @@
     <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt$AbstractDualTest.TestResultContext$throw exc.get()!!</ID>
     <ID>ThrowsCount:SqliteQueryRenderer.kt$SqliteQueryRenderer$private fun StringBuilder.renderValue( trigger: Char, renderedSoFar: Int, subject: String, position: Int, ctx: QueryTemplateContext?, ): Int</ID>
     <ID>ThrowsCount:URLSearchParamsIntrinsic.kt$private fun IURLSearchParams.pluckMember(key: String): Any</ID>
-    <ID>TooGenericExceptionCaught:AbstractDelegateVFS.kt$AbstractDelegateVFS$thr: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractGVMScript.kt$AbstractGVMScript$exc: Exception</ID>
     <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy$err: Throwable</ID>

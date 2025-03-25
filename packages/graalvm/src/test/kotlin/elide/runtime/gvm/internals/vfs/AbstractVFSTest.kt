@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.AccessMode
 import java.nio.file.Path
-import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.runtime.vfs.GuestVFS
@@ -102,14 +101,14 @@ internal abstract class AbstractVFSTest<VFS, Builder, Factory>
 
     // should deny multiple access with write
     assertDenied(vfs.checkPolicy(
-      type = EnumSet.of(AccessType.READ, AccessType.WRITE),
+      type = sortedSetOf(AccessType.READ, AccessType.WRITE),
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
     ), "write operation should be denied in read-only mode")
 
     // should deny multiple access with write
     assertDenied(vfs.checkPolicy(
-      type = EnumSet.of(AccessType.READ, AccessType.DELETE),
+      type = sortedSetOf(AccessType.READ, AccessType.DELETE),
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
     ), "delete operation should be denied in read-only mode")
@@ -145,14 +144,14 @@ internal abstract class AbstractVFSTest<VFS, Builder, Factory>
 
     // should allow multiple access with write
     assertAllowed(vfs.checkPolicy(
-      type = EnumSet.of(AccessType.READ, AccessType.WRITE),
+      type = sortedSetOf(AccessType.READ, AccessType.WRITE),
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
     ), "write operation should be allowed in writable mode")
 
     // should deny multiple access with write
     assertAllowed(vfs.checkPolicy(
-      type = EnumSet.of(AccessType.READ, AccessType.DELETE),
+      type = sortedSetOf(AccessType.READ, AccessType.DELETE),
       path = Path.of("/some-path.txt"),
       domain = AccessDomain.GUEST,
     ), "delete operation should be allowed in writable mode")

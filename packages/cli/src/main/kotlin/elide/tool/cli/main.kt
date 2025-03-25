@@ -29,7 +29,7 @@ import kotlin.system.exitProcess
 import elide.tool.cli.Elide.Companion.installStatics
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
-private val ENABLE_CLI_ENTRY_V2 = System.getenv("ELIDE_EXPERIMENTAL")?.ifBlank { null } != null
+private const val ENABLE_CLI_ENTRY_V2 = false
 
 // Whether to log early init messages.
 private const val EARLY_INIT_LOG = false
@@ -147,7 +147,7 @@ fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {
   setStaticProperties(binPath)
   if (installStatics) {
     earlyLog("Installing statics")
-    Statics.mountArgs(args)
+    Statics.mountArgs(binPath, args)
     installStatics(binPath, args, System.getProperty("user.dir"))
     earlyLog("Installing bridge handler for SLF4j")
     SLF4JBridgeHandler.install()

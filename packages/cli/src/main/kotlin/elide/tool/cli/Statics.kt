@@ -18,7 +18,8 @@ package elide.tool.cli
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.PrintStream
-import java.util.concurrent.atomic.AtomicReference
+import java.nio.file.Path
+import java.nio.file.Paths
 import kotlinx.atomicfu.atomic
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -47,10 +48,14 @@ internal object Statics {
     }
   }
 
-  private val initialArgs = atomic<Array<String>>(emptyArray())
+  @Volatile private var execBinPath: String = ""
+  @Volatile private var initialArgs = emptyArray<String>()
 
   /** Invocation args. */
-  internal val args: Array<String> get() = initialArgs.value
+  internal val args: Array<String> get() = initialArgs
+
+  internal val bin: String get() = execBinPath
+  internal val binPath: Path by lazy { Paths.get(bin).toAbsolutePath() }
 
   // Stream which drops all data.
   private val noOpStream by lazy {
@@ -62,21 +67,22 @@ internal object Statics {
   val `in`: InputStream get() =
     delegatedInStream.value ?: System.`in`
 
-  val out: PrintStream get() =
+  @JvmField var out: PrintStream =
     when (disableStreams) {
       true -> noOpStream
       else -> delegatedOutStream.value ?: System.out
     }
 
-  val err: PrintStream get() =
+  @JvmField var err: PrintStream =
     when (disableStreams) {
       true -> noOpStream
       else -> delegatedErrStream.value ?: System.err
     }
 
-  internal fun mountArgs(args: Array<String>) {
-    check(initialArgs.value.isEmpty()) { "Args are not initialized yet!" }
-    initialArgs.value = args
+  internal fun mountArgs(bin: String, args: Array<String>) {
+    check(initialArgs.isEmpty()) { "Args are not initialized yet!" }
+    execBinPath = bin
+    initialArgs = args
   }
 
   internal fun assignStreams(out: PrintStream, err: PrintStream, `in`: InputStream) {

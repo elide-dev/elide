@@ -93,11 +93,6 @@ private val BUILTIN_PYTHON_PATHS = listOf(
       "python.PythonPath" to renderPythonPath(),
     )
     config.resourcesPath?.let {
-      builder.setOptions(
-        "python.HPyBackend" to "nfi",
-        "python.PosixModuleBackend" to "java",
-      )
-
       if (ImageInfo.inImageCode()) {
         val (pythonVersion, graalPyVersion) = resolveGraalPythonVersions()
 
@@ -129,22 +124,6 @@ private val BUILTIN_PYTHON_PATHS = listOf(
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
-    init {
-      if (ENABLE_PYTHON_VFS) {
-        registerLanguageVfs(PYTHON_LANGUAGE_ID) {
-          object : LanguageVFSInfo {
-            override val router: (Path) -> Boolean get() = { path ->
-              path.toString().startsWith("<frozen ")
-            }
-
-            override val fsProvider: () -> FileSystem get() = {
-              GraalPythonFilesystem.delegate()
-            }
-          }
-        }
-      }
-    }
-
     override fun install(scope: InstallationScope, configuration: PythonConfig.() -> Unit): Python {
       configureLanguageSupport(scope)
 
@@ -158,6 +137,20 @@ private val BUILTIN_PYTHON_PATHS = listOf(
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
+      if (ENABLE_PYTHON_VFS) {
+        registerLanguageVfs(PYTHON_LANGUAGE_ID) {
+          object : LanguageVFSInfo {
+            override val router: (Path) -> Boolean get() = { path ->
+              val str = path.toString()
+              str.startsWith("<frozen ") || str.contains("/python-home/")
+            }
+
+            override val fsProvider: () -> FileSystem get() = {
+              GraalPythonFilesystem.delegate()
+            }
+          }
+        }
+      }
 
       // register resources with the VFS
       installEmbeddedBundles(scope, resources)

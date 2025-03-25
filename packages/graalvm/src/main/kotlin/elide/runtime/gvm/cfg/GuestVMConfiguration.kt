@@ -14,7 +14,6 @@ package elide.runtime.gvm.cfg
 
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.core.util.Toggleable
-import tools.elide.assets.EmbeddedScriptLanguage
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -69,11 +68,6 @@ public interface GuestVMConfiguration : Toggleable {
    *   only includes `js`.
    */
   @Nullable public val languages: List<String>? get() = DEFAULT_LANGUAGES
-
-  /**
-   * @return Primary guest VM to boot and use as a server agent. Defaults to `js`.
-   */
-  public val primary: EmbeddedScriptLanguage get() = EmbeddedScriptLanguage.JS
 
   /**
    * @return Default character set to apply when exchanging raw data with the JS VM. Defaults to `UTF-8`.

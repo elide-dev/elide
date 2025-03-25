@@ -10,15 +10,17 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.gvm.cfg
 
+import elide.runtime.plugins.js.JavaScriptVersion
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.core.util.Toggleable
-import tools.elide.assets.EmbeddedScriptMetadata.JsScriptMetadata.JsLanguageLevel
 import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
 import java.time.ZoneId
 import java.util.*
+import elide.runtime.core.DelicateElideApi
 
 /**
  * # JS VM Configuration
@@ -88,7 +90,7 @@ public interface JsRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
     public const val DEFAULT_TYPESCRIPT: Boolean = false  // temporary default
 
     /** Default JS language level. */
-    public val DEFAULT_JS_LANGUAGE_LEVEL: JsLanguageLevel = JsLanguageLevel.ES2022
+    public val DEFAULT_JS_LANGUAGE_LEVEL: JavaScriptVersion = JavaScriptVersion.ES2022
 
     /** Default JS VM locale. */
     public val DEFAULT_LOCALE: Locale get() = LanguageDefaults.DEFAULT_LOCALE
@@ -133,9 +135,9 @@ public interface JsRuntimeConfig : Toggleable, GuestRuntimeConfiguration {
   public val typescript: Boolean? get() = DEFAULT_TYPESCRIPT
 
   /**
-   * @return ECMA Script language level to apply within the VM; defaults to [JsLanguageLevel.ES2022].
+   * @return ECMA Script language level to apply within the VM; defaults to [JavaScriptVersion.ES2022].
    */
-  public val language: JsLanguageLevel? get() = DEFAULT_JS_LANGUAGE_LEVEL
+  public val language: JavaScriptVersion? get() = DEFAULT_JS_LANGUAGE_LEVEL
 
   /**
    * @return Default locale to apply to the JS VM. Defaults to the system default.

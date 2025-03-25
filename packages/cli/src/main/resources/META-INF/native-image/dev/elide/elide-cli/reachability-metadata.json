@@ -1629,6 +1629,30 @@
       "allDeclaredFields": true
     },
     {
+      "type": "elide.tool.cli.cmd.project.ToolProjectCommand",
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.project.$ToolProjectCommand$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.project.$ToolProjectCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.cmd.discord.$ToolDiscordCommand$Definition",
       "methods": [
         {

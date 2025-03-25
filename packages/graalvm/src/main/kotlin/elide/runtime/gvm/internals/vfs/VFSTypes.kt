@@ -10,17 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("DEPRECATION")
-
 package elide.runtime.gvm.internals.vfs
 
 import java.nio.file.Path
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
-
-// Whether to use the legacy protobuf types for VFS.
-private const val USE_PROTOBUF = false
 
 // -- Basic: Files, Directories, Trees -- //
 
@@ -63,16 +58,6 @@ private const val HASH_SHA3_512 = 9
   /** Protocol number for this compression type. */
   public val number: Int get() = symbol
 
-  /** Access the old (deprecated) enum. */
-  @Deprecated("Use the native `CompressionMode` enum instead")
-  public val protoEnum: tools.elide.data.CompressionMode get() = when (this) {
-    IDENTITY -> tools.elide.data.CompressionMode.IDENTITY
-    GZIP -> tools.elide.data.CompressionMode.GZIP
-    BROTLI -> tools.elide.data.CompressionMode.BROTLI
-    SNAPPY -> tools.elide.data.CompressionMode.SNAPPY
-    DEFLATE -> tools.elide.data.CompressionMode.DEFLATE
-  }
-
   public companion object: Symbolic.SealedResolver<Int, CompressionMode> {
     override fun resolve(symbol: Int): CompressionMode = when (symbol) {
       CONST_IDENTITY -> IDENTITY
@@ -90,7 +75,7 @@ private const val HASH_SHA3_512 = 9
  *
  * Describes a generic file timestamp.
  */
-public interface FileTimestampAPI {
+public sealed interface FileTimestampAPI {
   /** Absolute seconds since epoch. */
   public val seconds: Long
 
@@ -104,10 +89,6 @@ public interface FileTimestampAPI {
  * Describes a generic file timestamp.
  */
 @Serializable public sealed interface FileTimestamp: FileTimestampAPI {
-  /** @return Legacy proto for this timestamp. */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toProto(): com.google.protobuf.Timestamp
-
   /** Mutable builder for file timestamps. */
   public sealed interface Builder : FileTimestampAPI {
     override var seconds: Long
@@ -115,60 +96,24 @@ public interface FileTimestampAPI {
     public fun build(): FileTimestamp
   }
 
-  /** Defines a [FileTimestamp] backed by a protocol buffer. */
-  @JvmInline public value class ProtoTimestamp(private val ts: com.google.protobuf.Timestamp): FileTimestamp {
-    override val seconds: Long get() = ts.seconds
-    override val nanos: Int get() = ts.nanos
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): com.google.protobuf.Timestamp = ts
-  }
-
-  /** Defines a [FileTimestamp] builder backed by a protocol buffer. */
-  @JvmInline public value class ProtoTimestampBuilder(
-    private val builder: com.google.protobuf.Timestamp.Builder
-  ): Builder {
-    override var seconds: Long
-      get() = builder.seconds
-      set(value) { builder.seconds = value }
-
-    override var nanos: Int
-      get() = builder.nanos
-      set(value) { builder.nanos = value }
-
-    override fun build(): FileTimestamp = ProtoTimestamp(builder.build())
-  }
-
   /** Defines a [FileTimestamp] builder backed by JVM data. */
-  @JvmInline public value class NativeTimestamp(private val pair: Pair<Long, Int>): FileTimestamp {
+  @JvmInline public value class TimestampPair internal constructor (
+    private val pair: Pair<Long, Int>
+  ): FileTimestamp {
     override val seconds: Long get() = pair.first
     override val nanos: Int get() = pair.second
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): com.google.protobuf.Timestamp = com.google.protobuf.Timestamp.newBuilder()
-      .setSeconds(seconds)
-      .setNanos(nanos)
-      .build()
   }
 
   /** Defines a [FileTimestamp] builder backed by JVM data. */
-  public data class NativeTimestampBuilder(
+  public data class TimestampPairBuilder internal constructor (
     override var seconds: Long = 0,
     override var nanos: Int = 0,
   ): Builder {
-    override fun build(): FileTimestamp = NativeTimestamp(seconds to nanos)
+    override fun build(): FileTimestamp = TimestampPair(seconds to nanos)
   }
 
   public companion object {
-    /** @return Timestamp wrapping the provided [ts]. */
-    @Deprecated("Stop using protobuf for vfs")
-    @JvmStatic public fun wrapping(ts: com.google.protobuf.Timestamp): FileTimestamp =
-      ProtoTimestamp(ts)
-
-    @JvmStatic public fun native(): Builder = NativeTimestampBuilder()
-    @JvmStatic public fun proto(builder: com.google.protobuf.Timestamp.Builder? = null): Builder =
-      ProtoTimestampBuilder(builder ?: com.google.protobuf.Timestamp.newBuilder())
-    @JvmStatic public fun newBuilder(): Builder = if (USE_PROTOBUF) proto() else native()
+    @JvmStatic public fun newBuilder(): Builder = TimestampPairBuilder()
   }
 }
 
@@ -177,7 +122,7 @@ public interface FileTimestampAPI {
  *
  * API adhered to by both files and directories.
  */
-public interface FileSystemRecordAPI {
+public sealed interface FileSystemRecordAPI {
   /**
    * Name of this file or directory.
    */
@@ -189,7 +134,7 @@ public interface FileSystemRecordAPI {
  *
  * Describes the API adhered to by [FileRecord] objects, and, in mutable form, by [FileRecord.Builder] objects.
  */
-public interface FileRecordAPI : FileSystemRecordAPI {
+public sealed interface FileRecordAPI : FileSystemRecordAPI {
   /**
    * Size of the file, in bytes.
    */
@@ -211,18 +156,6 @@ public interface FileRecordAPI : FileSystemRecordAPI {
  */
 @Serializable public sealed interface FileRecord : FileRecordAPI {
   /**
-   * Convert this file record to a builder.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toBuilder(): Builder
-
-  /**
-   * Convert this file into a V1 proto.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toProto(): tools.elide.vfs.File
-
-  /**
    * File record builder.
    */
   public sealed interface Builder: FileRecordAPI {
@@ -234,36 +167,21 @@ public interface FileRecordAPI : FileSystemRecordAPI {
   }
 
   /** Implements a [FileRecord] backed by regular JVM data. */
-  @JvmRecord public data class NativeFileRecord(
+  @JvmRecord public data class FileRecordData internal constructor(
     override val name: String,
     override val size: Long = 0,
     override val offset: Long = 0,
     override val modified: FileTimestamp? = null,
-  ): FileRecord {
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.File = tools.elide.vfs.File.newBuilder()
-      .setName(name)
-      .setSize(size)
-      .setOffset(offset)
-      .build()
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = DefaultFileRecordBuilder(
-      name = name,
-      size = size,
-      offset = offset,
-      modified = modified,
-    )
-  }
+  ): FileRecord
 
   /** Implements a default [FileRecord] builder. */
-  public data class DefaultFileRecordBuilder(
+  public data class DefaultFileRecordBuilder internal constructor(
     override var name: String = "",
     override var size: Long = 0,
     override var offset: Long = 0,
     override var modified: FileTimestamp? = null,
   ): Builder {
-    override fun build(): FileRecord = NativeFileRecord(
+    override fun build(): FileRecord = FileRecordData(
       name = name,
       size = size,
       offset = offset,
@@ -271,61 +189,10 @@ public interface FileRecordAPI : FileSystemRecordAPI {
     )
   }
 
-  /** Implements a [FileRecord] backed by a protocol buffer. */
-  @JvmInline public value class ProtoFileRecord(private val file: tools.elide.vfs.File): FileRecord {
-    override val name: String get() = file.name
-    override val size: Long get() = file.size
-    override val offset: Long get() = file.offset
-    override val modified: FileTimestamp? get() = FileTimestamp.wrapping(file.modified)
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = proto(file.toBuilder())
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.File = file
-  }
-
-  /** Implements a default [FileRecord] builder. */
-  @JvmInline public value class ProtoFileRecordBuilder(private val builder: tools.elide.vfs.File.Builder):
-    Builder {
-
-    override var name: String
-      get() = builder.name
-      set(value) { builder.name = value }
-
-    override var size: Long
-      get() = builder.size
-      set(value) { builder.size = value }
-
-    override var offset: Long
-      get() = builder.offset
-      set(value) { builder.offset = value }
-
-    override var modified: FileTimestamp?
-      get() = if (builder.hasModified()) FileTimestamp.wrapping(builder.modified) else null
-      set(value) {
-        if (value == null) {
-          builder.clearModified()
-        } else {
-          builder.setModified(value.toProto())
-        }
-      }
-
-    override fun build(): FileRecord = ProtoFileRecord(builder.build())
-  }
-
   /** Factory methods for [FileRecord]. */
   public companion object {
-    /** @return Empty native [FileRecord] builder. */
-    @JvmStatic public fun native(): Builder = DefaultFileRecordBuilder()
-
-    /** @return Empty native [FileRecord] builder which uses protocol buffers. */
-    @Deprecated("Stop using protobuf for vfs")
-    @JvmStatic public fun proto(builder: tools.elide.vfs.File.Builder? = null): Builder =
-      ProtoFileRecordBuilder(builder ?: tools.elide.vfs.File.newBuilder())
-
     /** @return Empty [FileRecord] builder. */
-    @JvmStatic public fun newBuilder(): Builder = if (USE_PROTOBUF) proto() else native()
+    @JvmStatic public fun newBuilder(): Builder = DefaultFileRecordBuilder()
   }
 }
 
@@ -356,21 +223,6 @@ internal typealias FileRecordBuilder = FileRecord.Builder
   /** Protocol number for this hash algorithm. */
   public val number: Int get() = symbol
 
-  /** Access the old (deprecated) enum. */
-  @Deprecated("Use the native `HashAlgorithm` enum instead")
-  public val protoEnum: tools.elide.std.HashAlgorithm get() = when (this) {
-    IDENTITY -> tools.elide.std.HashAlgorithm.IDENTITY
-    MD5 -> tools.elide.std.HashAlgorithm.MD5
-    SHA1 -> tools.elide.std.HashAlgorithm.SHA1
-    SHA2 -> tools.elide.std.HashAlgorithm.SHA2
-    SHA256 -> tools.elide.std.HashAlgorithm.SHA256
-    SHA384 -> tools.elide.std.HashAlgorithm.SHA384
-    SHA512 -> tools.elide.std.HashAlgorithm.SHA512
-    SHA3_224 -> tools.elide.std.HashAlgorithm.SHA3_224
-    SHA3_256 -> tools.elide.std.HashAlgorithm.SHA3_256
-    SHA3_512 -> tools.elide.std.HashAlgorithm.SHA3_512
-  }
-
   public companion object: Symbolic.SealedResolver<Int, HashAlgorithm> {
     override fun resolve(symbol: Int): HashAlgorithm = when (symbol) {
       CONST_IDENTITY -> IDENTITY
@@ -391,7 +243,7 @@ internal typealias FileRecordBuilder = FileRecord.Builder
 /**
  * Tree entry API.
  */
-public interface TreeEntryAPI {
+public sealed interface TreeEntryAPI {
   /**
    * Case for which property is set.
    */
@@ -417,18 +269,6 @@ public interface TreeEntryAPI {
   override val type: EntryCase
   override val directory: DirectoryRecord
   override val file: FileRecord
-
-  /**
-   * Convert this tree entry to a builder.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toBuilder(): Builder
-
-  /**
-   * Convert this tree entry to a legacy protocol buffer.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toProto(): tools.elide.vfs.TreeEntry
 
   /**
    * Whether a directory is set.
@@ -457,53 +297,24 @@ public interface TreeEntryAPI {
     override val directory: DirectoryRecord get() = DirectoryRecord.newBuilder().apply {
       name = "/"
     }.build()
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = DefaultTreeEntryBuilder()
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.TreeEntry = tools.elide.vfs.TreeEntry.newBuilder().let {
-      it.directory = DirectoryRecord.newBuilder().apply {
-        name = "/"
-      }.build().toProto()
-      it.build()
-    }
   }
 
-  /** Implements a [TreeEntry] backed by regular JVM data. */
-  public sealed interface JvmTreeEntry : TreeEntry {
-    /** Sealed [JvmTreeEntry] holding a [DirectoryRecord]. */
-    @JvmInline public value class Dir(private val dir: DirectoryRecord) : JvmTreeEntry {
-      override val directory: DirectoryRecord get() = dir
-      override val file: FileRecord get() = error("Cannot access `file` on `Dir`")
-      override val type: EntryCase get() = EntryCase.DIRECTORY
-    }
+  /** Sealed [TreeEntry] holding a [DirectoryRecord]. */
+  @JvmInline public value class Dir internal constructor(private val dir: DirectoryRecord) : TreeEntry {
+    override val directory: DirectoryRecord get() = dir
+    override val file: FileRecord get() = error("Cannot access `file` on `Dir`")
+    override val type: EntryCase get() = EntryCase.DIRECTORY
+  }
 
-    /** Sealed [JvmTreeEntry] holding a [FileRecord]. */
-    @JvmInline public value class File(private val backing: FileRecord) : JvmTreeEntry {
-      override val directory: DirectoryRecord get() = error("Cannot access `file` on `File`")
-      override val file: FileRecord get() = backing
-      override val type: EntryCase get() = EntryCase.FILE
-    }
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = DefaultTreeEntryBuilder(
-      directory = directory,
-      file = file,
-    )
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.TreeEntry = tools.elide.vfs.TreeEntry.newBuilder().let {
-      when (type) {
-        EntryCase.FILE -> it.file = file.toProto()
-        EntryCase.DIRECTORY -> it.directory = directory.toProto()
-      }
-      it.build()
-    }
+  /** Sealed [TreeEntry] holding a [FileRecord]. */
+  @JvmInline public value class File internal constructor(private val backing: FileRecord) : TreeEntry {
+    override val directory: DirectoryRecord get() = error("Cannot access `file` on `File`")
+    override val file: FileRecord get() = backing
+    override val type: EntryCase get() = EntryCase.FILE
   }
 
   /** Implements a default [TreeEntry] builder. */
-  public data class DefaultTreeEntryBuilder(
+  public data class DefaultTreeEntryBuilder internal constructor(
     override var directory: DirectoryRecord? = null,
     override var file: FileRecord? = null,
   ) : Builder {
@@ -514,66 +325,14 @@ public interface TreeEntryAPI {
     }
 
     override fun build(): TreeEntry = when (type) {
-      EntryCase.DIRECTORY -> JvmTreeEntry.Dir(requireNotNull(directory))
-      EntryCase.FILE -> JvmTreeEntry.File(requireNotNull(file))
-      else -> error("No directory or file set")
+      EntryCase.DIRECTORY -> Dir(requireNotNull(directory))
+      EntryCase.FILE -> File(requireNotNull(file))
+      else -> None
     }
   }
 
-  /** Implements a [TreeEntry] backed by a protocol buffer. */
-  @JvmInline public value class ProtoTreeEntry(private val entry: tools.elide.vfs.TreeEntry): TreeEntry {
-    override val type: EntryCase get() = EntryCase.resolve(entry.entryCase.number)
-    override fun hasDirectory(): Boolean = entry.hasDirectory()
-    override fun hasFile(): Boolean = entry.hasFile()
-
-    override val directory: DirectoryRecord get() =
-      if (entry.hasDirectory()) DirectoryRecord.ProtoDirectoryRecord(entry.directory) else error("No directory set")
-    override val file: FileRecord get() =
-      if (entry.hasFile()) FileRecord.ProtoFileRecord(entry.file) else error("No file set")
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = proto(entry.toBuilder())
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.TreeEntry = entry
-  }
-
-  /** Implements a [TreeEntry] builder backed by a protocol buffer. */
-  @JvmInline public value class ProtoTreeEntryBuilder(private val builder: tools.elide.vfs.TreeEntry.Builder): Builder {
-    override var directory: DirectoryRecord?
-      get() = if (builder.hasDirectory())
-        DirectoryRecord.ProtoDirectoryRecord(builder.directory) else null
-      set(value) {
-        when (value) {
-          null -> builder.clearDirectory()
-          else -> builder.directory = value.toProto()
-        }
-      }
-
-    override var file: FileRecord?
-      get() = if (builder.hasFile()) FileRecord.ProtoFileRecord(builder.file) else null
-
-      set(value) {
-        when (value) {
-          null -> builder.clearFile()
-          else -> builder.file = value.toProto()
-        }
-      }
-
-    override val type: EntryCase get() = EntryCase.resolve(builder.entryCase.number)
-    override fun build(): TreeEntry = ProtoTreeEntry(builder.build())
-  }
-
   public companion object {
-    @JvmStatic public fun native(): Builder = DefaultTreeEntryBuilder()
-
-    @JvmStatic public fun proto(builder: tools.elide.vfs.TreeEntry.Builder? = null): Builder =
-      ProtoTreeEntryBuilder(builder ?: tools.elide.vfs.TreeEntry.newBuilder())
-
-    @JvmStatic public fun wrapping(entry: tools.elide.vfs.TreeEntry): ProtoTreeEntry =
-      ProtoTreeEntry(entry)
-
-    @JvmStatic public fun newBuilder(): Builder = if (USE_PROTOBUF) proto() else native()
+    @JvmStatic public fun newBuilder(): Builder = DefaultTreeEntryBuilder()
   }
 }
 
@@ -589,13 +348,6 @@ public interface TreeEntryAPI {
   /** @return The protocol number for this entry case. */
   public val number: Int get() = symbol
 
-  /** @return The old (deprecated) enum for this entry case. */
-  @Deprecated("Use the native `EntryCase` enum instead")
-  public val protoEnum: tools.elide.vfs.TreeEntry.EntryCase get() = when (this) {
-    FILE -> tools.elide.vfs.TreeEntry.EntryCase.FILE
-    DIRECTORY -> tools.elide.vfs.TreeEntry.EntryCase.DIRECTORY
-  }
-
   public companion object: Symbolic.SealedResolver<Int, EntryCase> {
     override fun resolve(symbol: Int): EntryCase = when (symbol) {
       FILE_ENTRY -> FILE
@@ -608,7 +360,7 @@ public interface TreeEntryAPI {
 /**
  * Directory record API.
  */
-public interface DirectoryRecordAPI : FileSystemRecordAPI {
+public sealed interface DirectoryRecordAPI : FileSystemRecordAPI {
   /**
    * List of children under this directory.
    */
@@ -625,18 +377,6 @@ public interface DirectoryRecordAPI : FileSystemRecordAPI {
  */
 @Serializable public sealed interface DirectoryRecord : DirectoryRecordAPI {
   /**
-   * Convert this directory record to a builder.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toBuilder(): Builder
-
-  /**
-   * Convert this directory record to a legacy protocol buffer.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toProto(): tools.elide.vfs.Directory
-
-  /**
    * Directory record builder.
    */
   public sealed interface Builder : DirectoryRecordAPI {
@@ -649,25 +389,13 @@ public interface DirectoryRecordAPI : FileSystemRecordAPI {
   }
 
   /** Implements a [DirectoryRecord] backed by regular JVM data. */
-  @JvmRecord public data class NativeDirectoryRecord(
+  @JvmRecord public data class DirectoryRecordData internal constructor(
     override val name: String,
     override val childrenList: List<TreeEntry> = emptyList(),
-  ): DirectoryRecord {
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.Directory = tools.elide.vfs.Directory.newBuilder()
-      .setName(name)
-      .addAllChildren(childrenList.map { it.toProto() })
-      .build()
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = DefaultDirectoryRecordBuilder(
-      name = name,
-      childrenList = childrenList.toMutableList(),
-    )
-  }
+  ): DirectoryRecord
 
   /** Implements a default [DirectoryRecord] builder. */
-  public data class DefaultDirectoryRecordBuilder(
+  public data class DefaultDirectoryRecordBuilder internal constructor(
     override var name: String = "",
     override var childrenList: MutableList<TreeEntry> = mutableListOf(),
   ) : Builder {
@@ -683,59 +411,14 @@ public interface DirectoryRecordAPI : FileSystemRecordAPI {
       childrenList.addAll(children)
     }
 
-    override fun build(): DirectoryRecord = NativeDirectoryRecord(
+    override fun build(): DirectoryRecord = DirectoryRecordData(
       name = name,
       childrenList = childrenList,
     )
   }
 
-  /** Implements a [DirectoryRecord] backed by a protocol buffer. */
-  @JvmInline public value class ProtoDirectoryRecord(private val dir: tools.elide.vfs.Directory): DirectoryRecord {
-    override val name: String get() = dir.name
-    override val childrenList: List<TreeEntry> get() = dir.childrenList.map { TreeEntry.wrapping(it) }
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = proto(dir.toBuilder())
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.Directory = dir
-  }
-
-  /** Implements a [DirectoryRecord] builder backed by a protocol buffer. */
-  @JvmInline public value class ProtoDirectoryRecordBuilder(
-    private val builder: tools.elide.vfs.Directory.Builder
-  ): Builder {
-    override var name: String
-      get() = builder.name
-      set(value) { builder.name = value }
-
-    override var childrenList: MutableList<TreeEntry>
-      get() = builder.childrenList.map { TreeEntry.wrapping(it) }.toMutableList()
-      set(value) { builder.addAllChildren(value.map { it.toProto() }) }
-
-    override fun addChildren(children: List<TreeEntry>): Builder = apply {
-      builder.addAllChildren(children.map { it.toProto() })
-    }
-
-    override fun addChildren(builder: TreeEntry.Builder): Builder = apply {
-      this.builder.addChildren(builder.build().toProto())
-    }
-
-    override fun addChildren(entry: TreeEntry): Builder = apply {
-      this.builder.addChildren(entry.toProto())
-    }
-
-    override fun build(): DirectoryRecord = ProtoDirectoryRecord(builder.build())
-  }
-
   public companion object {
-    @JvmStatic public fun native(): Builder = DefaultDirectoryRecordBuilder()
-
-    @Deprecated("Stop using protobuf for vfs")
-    @JvmStatic public fun proto(builder: tools.elide.vfs.Directory.Builder? = null): Builder =
-      ProtoDirectoryRecordBuilder(builder ?: tools.elide.vfs.Directory.newBuilder())
-
-    @JvmStatic public fun newBuilder(): Builder = if (USE_PROTOBUF) proto() else native()
+    @JvmStatic public fun newBuilder(): Builder = DefaultDirectoryRecordBuilder()
   }
 }
 
@@ -750,70 +433,25 @@ internal typealias DirectoryRecordBuilder = DirectoryRecord.Builder
 /**
  * Filesystem metadata API.
  */
-public interface FilesystemMetadataAPI {
-
-}
+public interface FilesystemMetadataAPI
 
 /**
  * Filesystem metadata.
  */
 @Serializable public sealed interface FilesystemMetadata {
   /**
-   * Convert this filesystem metadata to a builder.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toBuilder(): Builder
-
-  /**
-   * Convert this filesystem metadata to a legacy protocol buffer.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toProto(): tools.elide.vfs.Filesystem.Metadata
-
-  /**
    * Filesystem metadata builder.
    */
   public sealed interface Builder : FilesystemMetadataAPI
-
-  /** Implements a [FilesystemMetadata] backed by a protocol buffer. */
-  @JvmInline public value class ProtoFilesystemMetadata(
-    private val meta: tools.elide.vfs.Filesystem.Metadata
-  ) : FilesystemMetadata {
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = proto(meta.toBuilder())
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.Filesystem.Metadata = meta
-  }
-
-  /** Implements a [FilesystemMetadata] builder backed by a protocol buffer. */
-  @JvmInline public value class ProtoFilesystemMetadataBuilder(
-    private val builder: tools.elide.vfs.Filesystem.Metadata.Builder,
-  ) : Builder {
-    //
-  }
 
   /** Implements a [FilesystemMetadata] backed by regular JVM data. */
   public class DefaultFilesystemMetadataBuilder: Builder
 
   /** Implements a [FilesystemMetadata] backed by regular JVM data. */
-  public class NativeFilesystemMetadata: FilesystemMetadata {
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder =
-      TODO("Not yet implemented: `NativeFilesystemMetadata.toBuilder`")
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.Filesystem.Metadata =
-      TODO("Not yet implemented: `NativeFilesystemMetadata.toProto`")
-  }
+  public class FilesystemMetadataData: FilesystemMetadata
 
   public companion object {
-    @JvmStatic public fun wrapping(meta: tools.elide.vfs.Filesystem.Metadata): ProtoFilesystemMetadata =
-      ProtoFilesystemMetadata(meta)
-    @JvmStatic public fun proto(builder: tools.elide.vfs.Filesystem.Metadata.Builder? = null): Builder =
-      ProtoFilesystemMetadataBuilder(builder ?: tools.elide.vfs.Filesystem.Metadata.newBuilder())
-    @JvmStatic public fun native(): Builder = DefaultFilesystemMetadataBuilder()
-    @JvmStatic public fun newBuilder(): Builder = if (USE_PROTOBUF) proto() else native()
+    @JvmStatic public fun newBuilder(): Builder = DefaultFilesystemMetadataBuilder()
   }
 }
 
@@ -842,18 +480,6 @@ public interface FilesystemInfoAPI {
   override val metadata: FilesystemMetadata?
 
   /**
-   * Convert this filesystem info to a builder.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toBuilder(): Builder
-
-  /**
-   * Convert this filesystem info to a legacy protocol buffer.
-   */
-  @Deprecated("Stop using protobuf for vfs")
-  public fun toProto(): tools.elide.vfs.Filesystem
-
-  /**
    * Filesystem info builder.
    */
   public sealed interface Builder : FilesystemInfoAPI {
@@ -863,95 +489,28 @@ public interface FilesystemInfoAPI {
   }
 
   /** Implements a [FilesystemInfo] backed by regular JVM data. */
-  public data class DefaultFilesystemInfoBuilder(
+  public data class DefaultFilesystemInfoBuilder internal constructor(
     override var root: TreeEntry? = null,
     override var metadata: FilesystemMetadata? = null,
   ): Builder {
-    override fun build(): FilesystemInfo = NativeFilesystemInfo.of(
-      root = root ?: TreeEntry.None,
-      metadata = metadata,
+    override fun build(): FilesystemInfo = FilesystemInfoData(
+      (root ?: TreeEntry.None) to metadata,
     )
   }
 
   /** Implements a [FilesystemInfo] backed by regular JVM data. */
-  @JvmInline public value class NativeFilesystemInfo private constructor (
+  @JvmInline public value class FilesystemInfoData internal constructor(
     private val pair: Pair<TreeEntry, FilesystemMetadata?>,
   ): FilesystemInfo {
     override val root: TreeEntry get() = pair.first
     override val metadata: FilesystemMetadata? get() = pair.second
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.Filesystem = tools.elide.vfs.Filesystem.newBuilder()
-      .setRoot(root.toProto())
-      .let { builder ->
-        metadata?.let {
-          builder.setMetadata(it.toProto())
-        }
-        builder
-      }
-      .build()
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = DefaultFilesystemInfoBuilder(root, metadata)
-
-    public companion object {
-      @JvmStatic public fun of(root: TreeEntry, metadata: FilesystemMetadata?): FilesystemInfo =
-        NativeFilesystemInfo(root to metadata)
-    }
-  }
-
-  /** Implements a [FilesystemInfo] backed by a protocol buffer. */
-  @JvmInline public value class FilesystemInfoProtoBuilder(
-    private val builder: tools.elide.vfs.Filesystem.Builder,
-  ): Builder {
-    override var root: TreeEntry?
-      get() = TreeEntry.wrapping(builder.root)
-      set(value) {
-        when (value) {
-          null -> builder.clearRoot()
-          else -> builder.root = value.toProto()
-        }
-      }
-
-    override var metadata: FilesystemMetadata?
-      get() = FilesystemMetadata.wrapping(builder.metadata)
-      set(value) {
-        when (value) {
-          null -> builder.clearMetadata()
-          else -> builder.metadata = value.toProto()
-        }
-      }
-
-    override fun build(): FilesystemInfo = FilesystemInfoProto(builder.build())
-  }
-
-  /** Implements a [FilesystemInfo] backed by a protocol buffer. */
-  @JvmInline public value class FilesystemInfoProto(private val fs: tools.elide.vfs.Filesystem): FilesystemInfo {
-    override val root: TreeEntry get() = TreeEntry.wrapping(fs.root)
-    override val metadata: FilesystemMetadata? get() = when (fs.hasMetadata()) {
-      true -> FilesystemMetadata.wrapping(fs.metadata)
-      else -> null
-    }
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toBuilder(): Builder = proto(fs.toBuilder())
-
-    @Deprecated("Stop using protobuf for vfs")
-    override fun toProto(): tools.elide.vfs.Filesystem = fs
   }
 
   public companion object {
     // Default empty FS instance.
-    private val defaultInstance by lazy { native().build() }
-
-    @Deprecated("Stop using protobuf for vfs")
-    @JvmStatic public fun proto(builder: tools.elide.vfs.Filesystem.Builder? = null): Builder =
-      FilesystemInfoProtoBuilder(builder ?: tools.elide.vfs.Filesystem.newBuilder())
-    @JvmStatic public fun native(): Builder = DefaultFilesystemInfoBuilder()
-    @JvmStatic public fun newBuilder(): Builder = proto()
-    @JvmStatic public fun default(): FilesystemInfo = if (USE_PROTOBUF) proto(
-      tools.elide.vfs.Filesystem.getDefaultInstance().toBuilder()
-    ).build() else defaultInstance
+    private val defaultInstance by lazy { DefaultFilesystemInfoBuilder().build() }
+    @JvmStatic public fun newBuilder(): Builder = DefaultFilesystemInfoBuilder()
+    @JvmStatic public fun default(): FilesystemInfo = defaultInstance
   }
 }
 

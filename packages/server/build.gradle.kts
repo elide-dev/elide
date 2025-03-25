@@ -88,7 +88,6 @@ dependencies {
   api(libs.kotlinx.coroutines.core.jvm)
   api(libs.kotlinx.html.jvm)
   api(libs.kotlinx.serialization.core.jvm)
-  api(libs.protobuf.java)
 
   // Modules
   api(projects.packages.base)
@@ -112,10 +111,6 @@ dependencies {
 
   // Kotlin Wrappers
   implementation(libs.kotlinx.wrappers.css)
-
-  // Protocol Buffers
-  implementation(libs.protobuf.util)
-  implementation(libs.protobuf.kotlin)
 
   // Micronaut
   implementation(mn.micronaut.aop)

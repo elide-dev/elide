@@ -117,8 +117,6 @@ dependencies {
   implementation(libs.plugin.spotless)
   implementation(libs.plugin.testLogger)
   implementation(libs.plugin.versionCheck)
-  implementation(libs.protobuf.java)
-  implementation(libs.protobuf.util)
 
   // jetbrains
   implementation(libs.plugin.compose)

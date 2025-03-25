@@ -17,7 +17,6 @@ package elide.runtime.gvm.internals.vfs
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Feature
 import com.google.common.jimfs.Jimfs
-import com.google.protobuf.Timestamp
 import io.micronaut.context.annotation.Requires
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveInputStream
@@ -32,6 +31,7 @@ import java.nio.channels.SeekableByteChannel
 import java.nio.file.*
 import java.nio.file.DirectoryStream.Filter
 import java.nio.file.attribute.FileAttribute
+import java.util.UUID
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
@@ -43,7 +43,6 @@ import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.gvm.cfg.GuestIOConfiguration
-import elide.util.UUID
 
 // Maps `<id>:<path>` to a cached bundle entry.
 private val bundleCache: MutableMap<String, Pair<ArchiveEntry, ByteArray>> = HashMap()
@@ -204,7 +203,7 @@ public class EmbeddedGuestVFSImpl private constructor (
   internal constructor(
     config: EffectiveGuestVFSConfig,
   ) : this (
-    "elide-${UUID.random()}",
+    "elide-${UUID.randomUUID().toString().uppercase()}",
     config,
     config.buildFs().build(),
     FilesystemInfo.default(),
@@ -970,7 +969,7 @@ public class EmbeddedGuestVFSImpl private constructor (
     ): Triple<FilesystemInfo, FileSystem, Map<Int, BundleInfo>> {
       // build a new empty in-memory FS
       val inMemoryFS = Jimfs.newFileSystem(
-        "elide-${UUID.random()}",
+        "elide-${UUID.randomUUID().toString().uppercase()}",
         fsConfig.build(),
       )
 
@@ -1176,7 +1175,7 @@ public class EmbeddedGuestVFSImpl private constructor (
         else -> bundle
       }
       val effectiveFS = fs ?: Jimfs.newFileSystem(
-        "elide-${UUID.random()}",
+        "elide-${UUID.randomUUID().toString().uppercase()}",
         fsConfig.build(),
       )
 

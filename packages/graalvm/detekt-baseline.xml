@@ -4,7 +4,6 @@
   <CurrentIssues>
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
     <ID>CyclomaticComplexMethod:NodeFilesystem.kt$NodeFilesystemProxy$override fun getMember(key: String?): Any?</ID>
-    <ID>ExplicitGarbageCollectionCall:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$gc()</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
     <ID>ForbiddenComment:JavaScript.kt$JavaScript$// @TODO: breakage in graalvm with `en_US`</ID>
@@ -42,7 +41,6 @@
     <ID>MatchingDeclarationName:EnvPlugin.kt$Environment</ID>
     <ID>MatchingDeclarationName:Types.kt$GuestHandlerFunction</ID>
     <ID>MatchingDeclarationName:VfsPlugin.kt$Vfs</ID>
-    <ID>MaxLineLength:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl$assert(bundleStream.canReadEntryData(entry)) { "Bundle '${bundle.location}' cannot read entry '${info.path}'" }</ID>
     <ID>MaxLineLength:JsConcurrentMap.kt$JsConcurrentMap.Factory$*</ID>
     <ID>MaxLineLength:JsMutableMultiMap.kt$JsMutableMultiMap.Factory$@JvmStatic override</ID>
     <ID>MaxLineLength:URLIntrinsicTest.kt$URLIntrinsicTest$"equal,https://dl.elide.dev/test?abc=123&amp;def=456,https://dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>

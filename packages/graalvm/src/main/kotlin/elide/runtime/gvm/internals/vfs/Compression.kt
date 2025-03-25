@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,7 +17,6 @@
 
 package elide.runtime.gvm.internals.vfs
 
-import tools.elide.data.CompressionMode
 import elide.core.api.Symbolic
 import elide.core.api.Symbolic.SealedResolver
 import elide.proto.api.Named

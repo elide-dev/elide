@@ -19,8 +19,6 @@ import java.nio.file.*
 import java.util.*
 import elide.runtime.Logger
 import elide.runtime.vfs.GuestVFS
-import elide.runtime.gvm.internals.vfs.AbstractBaseVFS.VFSBuilder
-import elide.runtime.gvm.internals.vfs.AbstractBaseVFS.VFSFactory
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.BundleInfo
 import elide.runtime.gvm.internals.vfs.EmbeddedGuestVFSImpl.VfsObjectInfo
 

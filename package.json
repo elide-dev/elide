@@ -13,7 +13,9 @@
     "last 3 safari versions"
   ],
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "dependencies": {
     "browserslist": "4.24.4",
@@ -36,7 +38,7 @@
     "@mitata/counters": "0.0.8",
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
-    "@types/node": "22.13.11",
+    "@types/node": "22.13.13",
     "bun": "1.2.5",
     "bun-types": "1.2.5",
     "commitlint": "19.8.0",
@@ -70,6 +72,11 @@
     "lint:check": "prettier --check  . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java"
   },
   "prettier": {
-    "plugins": ["@prettier/plugin-xml", "prettier-plugin-toml", "prettier-plugin-sh", "prettier-plugin-properties"]
+    "plugins": [
+      "@prettier/plugin-xml",
+      "prettier-plugin-toml",
+      "prettier-plugin-sh",
+      "prettier-plugin-properties"
+    ]
   }
 }

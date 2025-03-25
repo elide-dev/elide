@@ -38,6 +38,8 @@ import "elide/vfs/file.proto";
 // entries can hold children (either `File` or other `Directory` objects), by way of their `TreeEntry` children. Entries
 // of type `Directory` are virtualized and carry no data.
 message Directory {
+  option deprecated = true;
+
   // Name of the directory.
   string name = 1;
 
@@ -53,6 +55,8 @@ message Directory {
 // Describes a single entry within a given virtual file system managed by Elide. Tree entries can hold `File` or
 // `Directory` objects. Directories can, themselves, hold child `TreeEntry` objects, but files cannot.
 message TreeEntry {
+  option deprecated = true;
+
   // Reference to the tree entry which holds this entry as a parent. If no parent is present, the `TreeEntry` models the
   // root entry of the virtual file system. In other words, all non-root `TreeEntry` objects have a parent.
   TreeEntry parent = 1;
@@ -72,8 +76,12 @@ message TreeEntry {
 // Describes a root singleton metadata record which points to the root `TreeEntry` of a given virtual file system
 // managed by Elide. Only one `Filesystem` may exist per image.
 message Filesystem {
+  option deprecated = true;
+
   // Filesystem-wide metadata calculated by build tools and provided at runtime.
   message Metadata {
+    option deprecated = true;
+
     // Size of the entire virtual file system, uncompressed, in bytes.
     uint64 size = 1;
 

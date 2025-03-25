@@ -51,8 +51,12 @@ enum KnownMimeType {
 // See individual properties for more information. `File` objects can only be held by `TreeEntry` objects. `Directory`
 // objects refer to their child `TreeEntry` constituents.
 message File {
+  option deprecated = true;
+
   // Cryptographic fingerprint of file data.
   message Fingerprint {
+    option deprecated = true;
+
     // Specifies the held fingerprint data.
     oneof fingerprint {
       // CRC32 fingerprint data.
@@ -68,6 +72,8 @@ message File {
 
   // Combines a compressed and uncompressed fingerprint of file data.
   message FileFingerprint {
+    option deprecated = true;
+
     // Describes the compressed representation's fingerprint.
     Fingerprint compressed = 1;
 

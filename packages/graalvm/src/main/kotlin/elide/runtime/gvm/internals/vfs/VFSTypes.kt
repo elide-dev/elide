@@ -20,7 +20,7 @@ import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
 
 // Whether to use the legacy protobuf types for VFS.
-private const val USE_PROTOBUF = true
+private const val USE_PROTOBUF = false
 
 // -- Basic: Files, Directories, Trees -- //
 

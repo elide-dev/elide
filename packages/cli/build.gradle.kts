@@ -417,6 +417,7 @@ dependencies {
 
   fun ExternalModuleDependency.pklExclusions() {
     exclude("org.pkl-lang", "pkl-server")
+    exclude("org.pkl-lang", "pkl-config-java-all")
   }
 
   if (enablePkl) {
@@ -424,6 +425,7 @@ dependencies {
       libs.pkl.core,
       libs.pkl.commons.cli,
       libs.pkl.cli,
+      libs.pkl.config.java,
       libs.pkl.config.kotlin,
     ).forEach {
       implementation(it) { pklExclusions() }

@@ -84,6 +84,7 @@ import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
 import elide.tool.cli.options.EngineJavaScriptOptions
+import elide.tool.cli.options.EnginePythonOptions
 import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.err.ErrPrinter
 import elide.tool.extensions.installIntrinsics
@@ -324,6 +325,13 @@ private typealias ContextAccessor = () -> PolyglotContext
     heading = "%nEngine: JavaScript%n",
   )
   internal var jsSettings: EngineJavaScriptOptions = EngineJavaScriptOptions()
+
+  /** Settings specific to Python. */
+  @ArgGroup(
+    validate = false,
+    heading = "%nEngine: Python%n",
+  )
+  internal var pySettings: EnginePythonOptions = EnginePythonOptions()
 
   /** File to run within the VM. */
   @Parameters(
@@ -1420,6 +1428,7 @@ private typealias ContextAccessor = () -> PolyglotContext
           resourcesPath = gvmResources
           executable = cmd
           executableList = listOf(cmd).plus(args)
+          pySettings.apply(this)
         }
 
 //        // Secondary Engines: JVM

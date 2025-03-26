@@ -87,11 +87,11 @@ private val BUILTIN_PYTHON_PATHS = listOf(
       }
     }
     val (engine, nfi) = when (config.pythonEngine) {
+      "default",
       "java" -> "java" to "nfi"
       "native" -> "native" to "nfi"
       else -> error("Unsupported Python engine: ${config.pythonEngine}")
     }
-
     builder.setOptions(
       "python.HPyBackend" to nfi,
       "python.PosixModuleBackend" to engine,

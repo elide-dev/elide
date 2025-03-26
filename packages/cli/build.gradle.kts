@@ -117,7 +117,7 @@ val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
 val enableNativeTransportV2 = false
 val enableSqliteStatic = true
-val enableStatic = isRelease
+val enableStatic = false
 val enableStaticJni = true
 val preferShared = false
 val enableToolchains = false

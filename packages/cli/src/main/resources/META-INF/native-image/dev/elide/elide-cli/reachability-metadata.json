@@ -1,6 +1,12 @@
 {
   "reflection": [
     {
+      "type": "elide.tool.cli.options.EnginePythonOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "ch.qos.logback.classic.encoder.PatternLayoutEncoder",
       "methods": [
         {

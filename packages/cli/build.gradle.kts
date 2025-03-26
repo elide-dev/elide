@@ -1073,6 +1073,7 @@ val commonNativeArgs = listOfNotNull(
   // "-H:+PlatformInterfaceCompatibilityMode",
   // "--trace-object-instantiation=",
   "-H:+UnlockExperimentalVMOptions",
+  "-H:-EnterpriseCloneReadElimination",  // fix for oracle/graal#10882
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(isDebug, "-H:+JNIEnhancedErrorCodes"),

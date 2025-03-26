@@ -22,6 +22,9 @@ import elide.runtime.plugins.AbstractLanguageConfig
   /** Additional Python paths to load (i.e., `PYTHONPATH`). */
   public var additionalPythonPaths: MutableList<String> = LinkedList()
 
+  /** Engine to use for Python's stdlib; defaults to `java`, another option is `native`. */
+  public var pythonEngine: String = "java"
+
   /** Apply init-time settings to a new [context]. */
   internal fun applyTo(context: PolyglotContext) {
     // register intrinsics

@@ -86,10 +86,15 @@ private val BUILTIN_PYTHON_PATHS = listOf(
         builder.enableOptions("python.UsePanama")
       }
     }
+    val (engine, nfi) = when (config.pythonEngine) {
+      "java" -> "java" to "nfi"
+      "native" -> "native" to "nfi"
+      else -> error("Unsupported Python engine: ${config.pythonEngine}")
+    }
 
     builder.setOptions(
-      "python.HPyBackend" to "nfi",
-      "python.PosixModuleBackend" to "java",
+      "python.HPyBackend" to nfi,
+      "python.PosixModuleBackend" to engine,
       "python.PythonPath" to renderPythonPath(),
     )
     config.resourcesPath?.let {

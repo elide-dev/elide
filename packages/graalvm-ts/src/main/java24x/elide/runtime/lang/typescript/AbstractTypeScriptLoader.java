@@ -26,8 +26,8 @@ import com.oracle.truffle.js.runtime.objects.JSModuleRecord;
 import com.oracle.truffle.js.runtime.objects.ScriptOrModule;
 import java.io.IOException;
 import java.net.URI;
-import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
   protected AbstractTypeScriptLoader(JSRealm realm) {

@@ -14,14 +14,10 @@ package elide.runtime.gvm.internals;
 
 import elide.runtime.exec.GuestExecutor;
 import elide.runtime.gvm.EngineContextAPI;
-import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.NotThreadSafe;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Engine;
 import org.jetbrains.annotations.NotNull;
 
-@Immutable
-@NotThreadSafe
 record EngineThreadContext(GuestExecutor executor, Engine engine, Context context)
     implements EngineContextAPI {
   @Override

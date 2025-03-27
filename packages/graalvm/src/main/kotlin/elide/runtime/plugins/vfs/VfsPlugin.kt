@@ -69,7 +69,7 @@ import elide.runtime.vfs.languageVfsRegistry
         acquireEmbeddedVfs(config.writable, config.deferred, config.registeredBundles)
       } else {
         // python and ruby have their own virtual filesystem delegates
-        if (!config.languages.any { it.languageId == "ruby" || it.languageId == "python" }) {
+        if (!config.languages.any { it.languageId == "ruby" }) {
           // if the configuration requires host access, we use a hybrid vfs
           logging.debug("Host access requested, using hybrid vfs")
           HybridVfs.acquire(config.writable, config.registeredBundles)

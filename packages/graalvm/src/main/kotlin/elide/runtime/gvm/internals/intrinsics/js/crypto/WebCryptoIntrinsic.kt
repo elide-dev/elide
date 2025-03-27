@@ -46,9 +46,6 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, ProxyObject, AbstractJsIntrins
   internal companion object {
     /** Injected name of the Base64 global. */
     const val GLOBAL_CRYPTO = "crypto"
-
-    /** Crypto symbol. */
-    private val CRYPTO_SYMBOL = GLOBAL_CRYPTO.asPublicJsSymbol()
   }
 
   // Lazy-initialized secure random generator.
@@ -57,7 +54,7 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, ProxyObject, AbstractJsIntrins
   }
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    bindings[CRYPTO_SYMBOL] = this
+    bindings[GLOBAL_CRYPTO.asPublicJsSymbol()] = this
   }
 
   private fun throwRandomValuesOverflow(): QuotaExceededError {

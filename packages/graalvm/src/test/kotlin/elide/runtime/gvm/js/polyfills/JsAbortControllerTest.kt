@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.*
 import elide.runtime.exec.GuestExecution
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.intrinsics.js.abort.AbortController
 import elide.runtime.gvm.internals.intrinsics.js.abort.AbortSignal
 import elide.runtime.gvm.js.AbstractJsTest
@@ -93,7 +94,7 @@ import elide.testing.annotations.TestCase
   }.fails()
 
   @Test fun `AbortSignal factory should support aborted()`() = dual {
-    val signal = assertNotNull(AbortSignal.factory(exec).abort())
+    val signal = assertNotNull(AbortSignal.factory(GuestExecutorProvider { exec }).abort())
     assertTrue(signal.aborted, "Signal should be pre-aborted")
   }.guest {
     // language=JavaScript
@@ -139,9 +140,9 @@ import elide.testing.annotations.TestCase
     assertTrue(aborted.aborted)
     assertTrue(reasoned.aborted)
     assertNotNull(reasoned.reason)
-    val signal = assertNotNull(AbortSignal.factory(exec).abort())
+    val signal = assertNotNull(AbortSignal.factory(GuestExecutorProvider { exec }).abort())
     assertTrue(signal.aborted, "Signal should be pre-aborted")
-    val fac = assertNotNull(AbortSignal.factory(exec))
+    val fac = assertNotNull(AbortSignal.factory(GuestExecutorProvider { exec }))
     val delegateByFactory = assertNotNull(fac.any(listOf(orig)))
     assertFalse(delegateByFactory.aborted)
     assertNull(delegateByFactory.reason)
@@ -271,7 +272,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `AbortSignal - timeout should schedule abort`() {
-    val fac = AbortSignal.factory(exec)
+    val fac = AbortSignal.factory(GuestExecutorProvider { exec })
     val sig = fac.timeout(500)
     assertFalse(sig.aborted)
     assertNull(sig.reason)

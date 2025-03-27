@@ -1106,8 +1106,10 @@ public final class elide/runtime/plugins/AbstractLanguagePlugin$PreinitScript : 
 }
 
 public final class elide/runtime/plugins/AbstractLanguagePluginKt {
-	public static final fun default (Lorg/graalvm/polyglot/Context;)Lorg/graalvm/polyglot/Context;
-	public static final fun default (Lorg/graalvm/polyglot/Engine;)Lorg/graalvm/polyglot/Engine;
+	public static final fun defaultPolyglotContext ()Lorg/graalvm/polyglot/Context;
+	public static final fun defaultPolyglotContextBuilder ()Lorg/graalvm/polyglot/Context$Builder;
+	public static final fun defaultPolyglotEngine ()Lorg/graalvm/polyglot/Engine;
+	public static final fun defaultPolyglotEngineBuilder ()Lorg/graalvm/polyglot/Engine$Builder;
 }
 
 public final class elide/runtime/plugins/bindings/Bindings {

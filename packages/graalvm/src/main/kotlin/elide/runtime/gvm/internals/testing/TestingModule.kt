@@ -25,16 +25,13 @@ import elide.runtime.intrinsics.testing.TestingAPI
 import elide.runtime.intrinsics.testing.TestingAPI.TestGraphNode.*
 import elide.vm.annotations.Polyglot
 
-// Internal symbol where test bindings are installed.
-private const val TESTING_MODULE_SYMBOL = "elide_testing"
-
 // Installs the Elide test runner and API bindings.
 @Intrinsic
 @Factory internal class ElideTestingModule : AbstractNodeBuiltinModule() {
   @Singleton fun provide(): TestingAPI = TestingImpl.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[TESTING_MODULE_SYMBOL.asJsSymbol()] = provide()
+    // not available yet
   }
 }
 

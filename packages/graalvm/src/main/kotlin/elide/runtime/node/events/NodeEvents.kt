@@ -32,7 +32,6 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
@@ -45,9 +44,6 @@ import elide.runtime.intrinsics.js.node.events.*
 import elide.runtime.intrinsics.js.node.events.EventListener
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.vm.annotations.Polyglot
-
-// Internal symbol where the Node built-in module is installed.
-private const val EVENTS_MODULE_SYMBOL = "node_${NodeModuleName.EVENTS}"
 
 // Public symbol where `EventTarget` is installed.
 private const val EVENT_TARGET_SYMBOL = "EventTarget"
@@ -84,7 +80,6 @@ private val allEventTargetProps = arrayOf(
 
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[EVENTS_MODULE_SYMBOL.asJsSymbol()] = NodeEventsModuleFacade.obtain()
     bindings[EVENT_TARGET_SYMBOL.asPublicJsSymbol()] = EventTarget::class.java
     bindings[CUSTOM_EVENT_SYMBOL.asPublicJsSymbol()] = CustomEvent.Factory
     bindings[EVENT_CLS_SYMBOL.asPublicJsSymbol()] = Event::class.java

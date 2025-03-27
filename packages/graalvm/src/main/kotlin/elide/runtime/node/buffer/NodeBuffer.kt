@@ -19,7 +19,6 @@ import java.util.*
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
@@ -27,12 +26,6 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.BufferAPI
 import elide.runtime.lang.javascript.NodeModuleName
-
-// Internal symbol where the bindings for the 'buffer' module are installed.
-private const val BUFFER_MODULE_SYMBOL_ROOT = "node_${NodeModuleName.BUFFER}"
-
-// Symbol at which the main module intrinsic is installed.
-private const val BUFFER_MODULE_SYMBOL = "${BUFFER_MODULE_SYMBOL_ROOT}_module"
 
 // Symbol at which the [NodeBlob] class is installed.
 private const val BLOB_SYMBOL = "Blob"
@@ -62,9 +55,11 @@ private const val K_CONSTANTS = "constants"
 
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[BUFFER_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
-    bindings[BLOB_SYMBOL.asPublicJsSymbol()] = NodeBlob::class.java
-    bindings[FILE_SYMBOL.asPublicJsSymbol()] = NodeFile::class.java
+    val blob = BLOB_SYMBOL.asPublicJsSymbol()
+    val file = FILE_SYMBOL.asPublicJsSymbol()
+    if (blob in bindings) return
+    bindings[blob] = NodeBlob::class.java
+    bindings[file] = NodeFile::class.java
 
     // A single NodeBufferClass instance acts as metaobject for the `Buffer` type;
     // it will also be exposed as part of the `node:buffer` module by guest init code

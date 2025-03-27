@@ -13,6 +13,9 @@
 package elide.runtime.plugins.js
 
 import com.oracle.truffle.js.runtime.JSContextOptions
+import org.graalvm.polyglot.Source
+import java.nio.charset.StandardCharsets
+import kotlin.io.readText
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.*
 import elide.runtime.core.EnginePlugin.InstallationScope
@@ -26,6 +29,7 @@ import elide.runtime.core.plugin
 import elide.runtime.lang.javascript.JavaScriptLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
+import elide.runtime.plugins.defaultPolyglotContext
 import elide.runtime.plugins.env.Environment
 import elide.runtime.plugins.js.JavaScriptVersion.*
 
@@ -45,7 +49,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
 
     // run embedded initialization code
     if (!config.labsConfig.disablePolyfills) {
-      executePreambleScripts(context, javascriptPreamble)
+      context.enter()
+      context.evaluate(javascriptPreambleSrc)
+      context.leave()
     }
   }
 
@@ -161,10 +167,20 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     override val languageId: String = JS_LANGUAGE_ID
     override val key: Key<JavaScript> = Key(JS_PLUGIN_ID)
 
-    @JvmStatic private val javascriptPreamble = initializePreambleScripts(
-      JS_LANGUAGE_ID,
-      "polyfills.js",
-    )
+    @JvmStatic private val javascriptPreambleSrc: Source = requireNotNull(
+      JavaScriptLang::class.java.classLoader.getResourceAsStream("META-INF/elide/embedded/runtime/js/polyfills.js")
+    ) {
+      "Failed to locate `polyfills.js`; please check the classpath"
+    }.bufferedReader(StandardCharsets.UTF_8).use {
+      it.readText().let {
+        Source.newBuilder("js", it, "<polyfills>")
+          .name("<polyfills>")
+          .cached(true)
+          .internal(true)
+          .interactive(false)
+          .build()
+      }
+    }
 
     override fun install(scope: InstallationScope, configuration: JavaScriptConfig.() -> Unit): JavaScript {
       // resolve the env plugin (if present, otherwise ignore silently)

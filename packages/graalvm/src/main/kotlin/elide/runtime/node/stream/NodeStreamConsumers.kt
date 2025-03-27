@@ -16,17 +16,12 @@ import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.StreamConsumersAPI
 import elide.runtime.lang.javascript.NodeModuleName
-import elide.runtime.lang.javascript.asJsSymbolString
-
-// Internal symbol where the Node built-in module is installed.
-private val STREAM_CONSUMERS_MODULE_SYMBOL = "node_${NodeModuleName.STREAM_CONSUMERS.asJsSymbolString()}"
 
 private const val CONSUMERS_ARRAYBUFFER_FN = "arrayBuffer"
 private const val CONSUMERS_BLOB_FN = "blob"
@@ -48,7 +43,6 @@ private val ALL_CONSUMERS_PROPS = arrayOf(
   @Singleton internal fun provide(): StreamConsumersAPI = NodeStreamConsumers.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[STREAM_CONSUMERS_MODULE_SYMBOL.asJsSymbol()] = provide()
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.STREAM_CONSUMERS)) { provide() }
   }
 }

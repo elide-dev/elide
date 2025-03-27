@@ -16,16 +16,12 @@ import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.StringDecoderAPI
 import elide.runtime.lang.javascript.NodeModuleName
-
-// Internal symbol where the Node built-in module is installed.
-private const val STRING_DECODER_MODULE_SYMBOL = "node_${NodeModuleName.STRING_DECODER}"
 
 // Properties and methods.
 private const val STRING_DECODER_CONSTRUCTOR_FN = "StringDecoder"
@@ -41,7 +37,6 @@ private val STRING_DECODER_PROPS = arrayOf(
   @Singleton internal fun provide(): StringDecoderAPI = NodeStringDecoder.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[STRING_DECODER_MODULE_SYMBOL.asJsSymbol()] = provide()
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.STRING_DECODER)) { provide() }
   }
 }
@@ -60,7 +55,7 @@ internal class NodeStringDecoder : ReadOnlyProxyObject, StringDecoderAPI {
   }
 
   internal companion object {
-    private val SINGLETON = NodeStringDecoder()
+    private val SINGLETON by lazy { NodeStringDecoder() }
     fun obtain(): NodeStringDecoder = SINGLETON
   }
 }

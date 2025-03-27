@@ -14,6 +14,8 @@ package elide.runtime.plugins
 
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
+import org.graalvm.polyglot.HostAccess
+import org.graalvm.polyglot.PolyglotAccess
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import java.nio.charset.StandardCharsets
@@ -31,26 +33,128 @@ import kotlinx.serialization.json.decodeFromStream
 import kotlin.io.bufferedReader
 import elide.runtime.core.*
 import elide.runtime.core.EnginePlugin.InstallationScope
+import elide.runtime.core.extensions.enableOptions
+import elide.runtime.core.extensions.setOptions
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest.EmbeddedResource
 import elide.runtime.plugins.bindings.Bindings
 
+// Default engine's resident builder.
+private val defaultEngineBuilder = Engine.newBuilder()
+  .initializeDefaultEngine()
+
 // Default engine for pre-warming.
-private val defaultEngine = Engine.create("js", "ts", "wasm", "python", "pkl")
+private val defaultEngine = defaultEngineBuilder.build()
+
+// Default context's resident builder.
+private val defaultContextBuilder = Context.newBuilder()
+  .engine(defaultEngine)
+  .initializeDefaultContext(defaults = true)
 
 // Default context for pre-warming.
-private val defaultContext = Context.newBuilder()
-  .engine(defaultEngine)
+private val defaultContext = defaultContextBuilder.build()
+
+// Initialize default engine settings.
+@OptIn(DelicateElideApi::class)
+private fun Engine.Builder.initializeDefaultEngine(): Engine.Builder = apply {
+  allowExperimentalOptions(true)
+  useSystemProperties(false)
+
+  setOptions(
+    "engine.Mode" to "latency",
+  )
+  enableOptions(
+    "engine.BackgroundCompilation",
+    "engine.UsePreInitializedContext",
+    "engine.Compilation",
+    "engine.MultiTier",
+    "engine.Splitting",
+    "engine.OSR",
+  )
+}
+
+// Default host access privileges.
+private val contextHostAccess = HostAccess.newBuilder(HostAccess.ALL)
+  .allowImplementationsAnnotatedBy(HostAccess.Implementable::class.java)
+  .allowAccessAnnotatedBy(HostAccess.Export::class.java)
+  .allowArrayAccess(true)
+  .allowBufferAccess(true)
+  .allowAccessInheritance(true)
+  .allowIterableAccess(true)
+  .allowIteratorAccess(true)
+  .allowListAccess(true)
+  .allowMapAccess(true)
   .build()
+
+// Initialize default context settings.
+@OptIn(DelicateElideApi::class)
+private fun Context.Builder.initializeDefaultContext(defaults: Boolean = false): Context.Builder = apply {
+  allowExperimentalOptions(true)
+  allowValueSharing(true)
+  allowCreateThread(true)
+  allowCreateProcess(true)
+  allowHostClassLoading(true)
+  allowAllAccess(true)
+  allowNativeAccess(true)
+  allowHostClassLookup { true }
+  allowInnerContextOptions(true)
+  allowHostAccess(contextHostAccess)
+  allowPolyglotAccess(PolyglotAccess.ALL)
+  useSystemExit(false)
+
+  if (!defaults) {
+    setOptions(
+      "js.ecmascript-version" to "2024",
+    )
+    enableOptions(
+      "js.atomics",
+      "js.class-fields",
+      "js.direct-byte-buffer",
+      "js.global-property",
+      "js.error-cause",
+      "js.foreign-hash-properties",
+      "js.foreign-object-prototype",
+      "js.import-attributes",
+      "js.intl-402",
+      "js.iterator-helpers",
+      "js.json-modules",
+      "js.lazy-translation",
+      "js.new-set-methods",
+      "js.performance",
+      "js.shared-array-buffer",
+      "js.strict",
+      "js.temporal",
+      "js.webassembly",
+      // Experimental:
+      "js.async-context",
+      "js.async-iterator-helpers",
+      "js.async-stack-traces",
+      "js.atomics-wait-async",
+      "js.bind-member-functions",
+      "js.esm-eval-returns-exports",
+      "js.scope-optimization",
+    )
+  }
+}
+
+/**
+ * @return The default polyglot engine builder.
+ */
+public fun defaultPolyglotEngineBuilder(): Engine.Builder = defaultEngineBuilder
+
+/**
+ * @return The default polyglot context builder.
+ */
+public fun defaultPolyglotContextBuilder(): Context.Builder = defaultContextBuilder
 
 /**
  * @return The default polyglot engine.
  */
-public fun Engine.default(): Engine = defaultEngine
+public fun defaultPolyglotEngine(): Engine = defaultEngine
 
 /**
  * @return The default polyglot context.
  */
-public fun Context.default(): Context = defaultContext
+public fun defaultPolyglotContext(): Context = defaultContext
 
 /**
  * Abstract base class for language plugins.

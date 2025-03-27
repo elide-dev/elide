@@ -71,9 +71,6 @@ import elide.runtime.node.fs.resolveEncodingString
 import elide.vm.annotations.Polyglot
 import com.google.common.util.concurrent.ListenableFuture as Future
 
-// Internal symbol where the Node built-in module is installed.
-private const val CHILD_PROCESS_MODULE_SYMBOL = "node_${NodeModuleName.CHILD_PROCESS}"
-
 // Internal symbol where the Node `ChildProcess` class is installed.
 private const val CHILD_PROCESS_CLASS_SYMBOL = "NodeChildProcess"
 
@@ -142,7 +139,6 @@ private val globalIpcServer by lazy { InterElideIPCServer() }
   @Singleton internal fun ipcServer(): InterElideIPCServer = globalIpcServer
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[CHILD_PROCESS_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { instance }
     bindings[CHILD_PROCESS_CLASS_SYMBOL.asJsSymbol()] = ChildProcessHandle::class.java
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.CHILD_PROCESS)) { instance }
   }

@@ -16,7 +16,7 @@ package elide.runtime.gvm.internals.intrinsics.js.abort
 
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.exec.GuestExecutor
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
@@ -30,28 +30,18 @@ private const val GLOBAL_ABORT_SIGNAL = "AbortSignal"
 
 // Mounts access to `AbortController`.
 @Intrinsic(GLOBAL_ABORT_CONTROLLER, internal = false) internal class AbortControllerIntrinsic : AbstractJsIntrinsic() {
-  internal companion object {
-    // `AbortController` class symbol.
-    private val ABORT_CONTROLLER_SYMBOL = GLOBAL_ABORT_CONTROLLER.asPublicJsSymbol()
-  }
-
   override fun install(bindings: MutableIntrinsicBindings) {
     // mounts `AbortController` and constructors.
-    bindings[ABORT_CONTROLLER_SYMBOL] = AbortController.Factory
+    bindings[GLOBAL_ABORT_CONTROLLER.asPublicJsSymbol()] = AbortController.Factory
   }
 }
 
 // Mounts access to `AbortSignal`.
 @Intrinsic(GLOBAL_ABORT_SIGNAL, internal = false) internal class AbortSignalIntrinsic @Inject constructor(
-  private val guestExecutor: GuestExecutor,
+  private val guestExecutor: GuestExecutorProvider,
 ) : AbstractJsIntrinsic() {
-  internal companion object {
-    // `AbortSignal` class symbol.
-    private val ABORT_SIGNAL_SYMBOL = GLOBAL_ABORT_SIGNAL.asPublicJsSymbol()
-  }
-
   override fun install(bindings: MutableIntrinsicBindings) {
     // mounts `AbortController` and constructors.
-    bindings[ABORT_SIGNAL_SYMBOL] = AbortSignal.factory(guestExecutor)
+    bindings[GLOBAL_ABORT_SIGNAL.asPublicJsSymbol()] = AbortSignal.factory(guestExecutor)
   }
 }

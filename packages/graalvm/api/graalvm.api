@@ -607,15 +607,15 @@ public final class elide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$C
 	public static synthetic fun aborted$default (Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Companion;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal;
 	public final fun create ()Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal;
 	public final fun delegated (Ljava/lang/Iterable;)Lelide/runtime/gvm/internals/intrinsics/js/abort/Abortable;
-	public final fun factory (Lelide/runtime/exec/GuestExecutor;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory;
+	public final fun factory (Lelide/runtime/exec/GuestExecutorProvider;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory;
 	public final fun timeout (JLjava/util/concurrent/TimeUnit;Lelide/runtime/exec/GuestExecutor;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal;
 }
 
 public final class elide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory : elide/runtime/intrinsics/js/AbortSignal$Factory {
-	public synthetic fun <init> (Lelide/runtime/exec/GuestExecutor;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/exec/GuestExecutorProvider;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun abort ()Lelide/runtime/intrinsics/js/AbortSignal;
 	public fun any (Ljava/lang/Iterable;)Lelide/runtime/intrinsics/js/AbortSignal;
-	public static final fun bound (Lelide/runtime/exec/GuestExecutor;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory;
+	public static final fun bound (Lelide/runtime/exec/GuestExecutorProvider;)Lelide/runtime/gvm/internals/intrinsics/js/abort/AbortSignal$Factory;
 	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
@@ -2149,6 +2149,17 @@ public abstract interface class elide/runtime/gvm/internals/vfs/TreeEntryAPI {
 	public abstract fun getType ()Lelide/runtime/gvm/internals/vfs/EntryCase;
 }
 
+public synthetic class elide/runtime/gvm/intrinsics/$BuildTimeIntrinsicsResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/runtime/gvm/intrinsics/$BuiltinIntrinsicsResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2176,6 +2187,15 @@ public synthetic class elide/runtime/gvm/intrinsics/$ServiceIntrinsicsResolver$D
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/gvm/intrinsics/BuildTimeIntrinsicsResolver : elide/runtime/intrinsics/IntrinsicsResolver {
+	public static final field Companion Lelide/runtime/gvm/intrinsics/BuildTimeIntrinsicsResolver$Companion;
+	public fun <init> (Lelide/runtime/exec/GuestExecutor;Ljava/util/Optional;Lelide/runtime/node/fs/VfsInitializerListener;)V
+	public fun generate (Lelide/runtime/gvm/GuestLanguage;Z)Lkotlin/sequences/Sequence;
+}
+
+public final class elide/runtime/gvm/intrinsics/BuildTimeIntrinsicsResolver$Companion {
 }
 
 public final class elide/runtime/gvm/intrinsics/CachedIntrinsicsResolver : elide/runtime/intrinsics/IntrinsicsResolver {

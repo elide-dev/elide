@@ -15,7 +15,6 @@ package elide.runtime.diag
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.function.Predicate
-import javax.annotation.concurrent.ThreadSafe
 import kotlinx.atomicfu.atomic
 import elide.runtime.diag.Severity.INFO
 
@@ -30,7 +29,7 @@ import elide.runtime.diag.Severity.INFO
  * Generally speaking, diagnostics are reported in cases where the engine intends to crash before continuing (compiler
  * errors, warnings in strict mode).
  */
-@ThreadSafe public class DiagnosticsContainer private constructor (initial: Sequence<DiagnosticInfo>? = null) :
+public class DiagnosticsContainer private constructor (initial: Sequence<DiagnosticInfo>? = null) :
   DiagnosticsReceiver, DiagnosticsSuite {
   // Whether this container has locked.
   private val isLocked = atomic(false)

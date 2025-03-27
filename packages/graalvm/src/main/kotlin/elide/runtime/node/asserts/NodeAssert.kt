@@ -51,14 +51,7 @@ import elide.runtime.intrinsics.js.node.asserts.AssertionError
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.runtime.lang.javascript.SyntheticJSModule.ExportedSymbol
-import elide.runtime.lang.javascript.asJsSymbolString
 import elide.vm.annotations.Polyglot
-
-// Symbol where the internal module implementation is installed.
-private const val ASSERT_MODULE_SYMBOL: String = "node_${NodeModuleName.ASSERT}"
-
-// Symbol where the internal module implementation is installed.
-private val ASSERT_STRICT_MODULE_SYMBOL: String = "node_${NodeModuleName.ASSERT_STRICT.asJsSymbolString()}"
 
 // Symbol where the assertion error type is installed.
 private const val ASSERTION_ERROR_SYMBOL: String = "AssertionError"
@@ -130,15 +123,17 @@ private val strictAssertionMethods = arrayOf(
   override fun provide(): AssertAPI = instance
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[ASSERT_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { provide() }
-    bindings[ASSERTION_ERROR_SYMBOL.asJsSymbol()] = ProxyInstantiable {
-      val messageOrErr = it.getOrNull(0)
-      when {
-        messageOrErr != null -> NodeAssertionError(messageOrErr)
-        else -> NodeAssertionError()
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.ASSERT)) { provide() }
+    val sym = ASSERTION_ERROR_SYMBOL.asJsSymbol()
+    if (sym !in bindings) {
+      bindings[ASSERTION_ERROR_SYMBOL.asJsSymbol()] = ProxyInstantiable {
+        val messageOrErr = it.getOrNull(0)
+        when {
+          messageOrErr != null -> NodeAssertionError(messageOrErr)
+          else -> NodeAssertionError()
+        }
       }
     }
-    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.ASSERT)) { provide() }
   }
 
   override fun exports(): Array<ExportedSymbol> = assertionModuleMethods.map {
@@ -156,7 +151,6 @@ private val strictAssertionMethods = arrayOf(
   fun provide(): AssertStrictAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[ASSERT_STRICT_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.ASSERT_STRICT)) { singleton }
   }
 }

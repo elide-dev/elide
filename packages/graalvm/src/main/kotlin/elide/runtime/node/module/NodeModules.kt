@@ -12,10 +12,8 @@
  */
 package elide.runtime.node.module
 
-import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
@@ -23,16 +21,12 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ModuleAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
-// Internal symbol where the Node built-in module is installed.
-private const val MODULE_MODULE_SYMBOL = "node_${NodeModuleName.MODULE}"
-
 // Installs the Node `module` module into the intrinsic bindings.
 @Intrinsic internal class NodeModulesModule : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeModules.obtain() }
   internal fun provide(): ModuleAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[MODULE_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.MODULE)) { singleton }
   }
 }

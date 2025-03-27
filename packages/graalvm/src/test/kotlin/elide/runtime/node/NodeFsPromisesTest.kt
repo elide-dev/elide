@@ -16,6 +16,7 @@ package elide.runtime.node
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import jakarta.inject.Provider
 import kotlinx.coroutines.guava.asDeferred
 import kotlin.test.*
 import elide.annotations.Inject
@@ -42,8 +43,10 @@ import elide.testing.annotations.TestCase
   override val moduleName: String get() = "fs/promises"
   override fun provide(): NodeFilesystemModule = NodeFilesystemModule(
     path,
-    VfsInitializerListener().also {
-      it.onVfsCreated(EmbeddedGuestVFS.empty())
+    Provider {
+      VfsInitializerListener().also {
+        it.onVfsCreated(EmbeddedGuestVFS.empty())
+      }
     },
     execProvider,
   )

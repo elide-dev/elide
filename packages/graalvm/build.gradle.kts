@@ -308,6 +308,7 @@ val initializeAtBuildTime = listOf(
   "elide.runtime.gvm.internals.sqlite",
   "elide.runtime.gvm.internals.sqlite.SqliteModule",
   "elide.runtime.lang.javascript.JavaScriptPrecompiler",
+  "elide.runtime.gvm.intrinsics.BuildTimeIntrinsicsResolver",
   "java.sql",
   "org.slf4j",
   "org.sqlite",

@@ -30,7 +30,6 @@ import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
@@ -45,9 +44,6 @@ import elide.vm.annotations.Polyglot
 
 // Name of this module.
 internal const val NODE_OS_NAME: String = "os"
-
-// Original primordial symbol for this module.
-internal const val NODE_OS_SYMBOL: String = "node_${NODE_OS_NAME}"
 
 // Constants for cross-OS values.
 private const val win32EOL: String = "\r\n"
@@ -198,8 +194,6 @@ private val moduleMembers = arrayOf(
   @Singleton override fun provide(): OperatingSystemAPI = NodeOperatingSystem.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[NODE_OS_SYMBOL.asJsSymbol()] = NodeOperatingSystem.obtain()
-
     ModuleRegistry.deferred(ModuleInfo.of(NODE_OS_NAME)) {
       ChildProcessNative.initialize()
       NodeOperatingSystem.obtain()

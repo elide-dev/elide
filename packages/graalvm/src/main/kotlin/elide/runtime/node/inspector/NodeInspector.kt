@@ -12,10 +12,8 @@
  */
 package elide.runtime.node.inspector
 
-import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
@@ -23,15 +21,11 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.InspectorAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
-// Symbol where the internal module implementation is installed.
-private const val INSPECTOR_MODULE_SYMBOL: String = "node_${NodeModuleName.INSPECTOR}"
-
 // Installs the Node inspector module into the intrinsic bindings.
 @Intrinsic internal class NodeInspectorModule : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeInspector.create() }
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[INSPECTOR_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.INSPECTOR)) { singleton }
   }
 }

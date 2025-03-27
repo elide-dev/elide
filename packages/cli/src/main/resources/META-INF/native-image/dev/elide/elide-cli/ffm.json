@@ -2,6 +2,9 @@
   "downcalls": [
     {
       "descriptor": "(long,int,long,long,long)int"
+    },
+    {
+      "descriptor": "(long,int)int"
     }
   ]
 }

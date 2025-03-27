@@ -35,6 +35,7 @@ import elide.runtime.node.asserts.NodeAssertModule
 import elide.runtime.node.asserts.NodeAssertStrictModule
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
+import elide.runtime.lang.javascript.JavaScriptLang
 import elide.runtime.node.buffer.NodeBufferModule
 import elide.runtime.node.buffer.NodeBufferModuleFacade
 import elide.runtime.plugins.js.JavaScript as JavaScriptPlugin
@@ -85,14 +86,22 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     // resolve the script
     val script = op.invoke(ctx)
 
+    // install js utilities if needed
+    JavaScriptLang.initialize()
+
     // prep intrinsic bindings under test
     val langBindings = if (bind) {
       val target = HashMap<Symbol, Any>()
       val binding = GuestIntrinsic.MutableIntrinsicBindings.Factory.wrap(target)
       provide().install(binding)
       if (bindAssert && !target.any { it.key.symbol.contains("assert") }) {
-        NodeAssertModule().install(binding)
-        NodeAssertStrictModule().install(binding)
+        try {
+          // these need to be called unconditionally so that modules are prepared for loading.
+          NodeAssertModule().install(binding)
+          NodeAssertStrictModule().install(binding)
+        } catch (_: IllegalStateException) {
+          // ignore
+        }
       }
       if (bindConsole && !target.any { it.key.symbol.contains("console") }) {
         ConsoleIntrinsic().install(binding)
@@ -176,7 +185,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
 
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.apply {
-      install(JavaScriptPlugin)
+      configure(JavaScriptPlugin)
       vfs { deferred = false }
     }
   }

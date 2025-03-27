@@ -212,6 +212,10 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
     options: MutableSet<out OpenOption>,
     vararg attrs: FileAttribute<*>
   ): SeekableByteChannel {
+    val pathStr = path.toString()
+    if (pathStr.startsWith("<frozen ")) {
+      throw NoSuchFileException(pathStr, null, "Frozen module access")
+    }
     debugLog { "Opening byte channel for file at path: '$path'" }
     enforce(type = AccessType.READ, domain = AccessDomain.GUEST, scope = AccessScope.FILE, path = path)
 
@@ -229,7 +233,6 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
           }
         }
       }
-      logging.error("Error while reading file (fs = $backing): $path", err)
       throw err
     }
   }

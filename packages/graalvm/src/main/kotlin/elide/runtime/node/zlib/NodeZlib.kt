@@ -34,7 +34,6 @@ import java.util.zip.*
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
@@ -50,9 +49,6 @@ import elide.runtime.node.stream.ColdInputStream
 import elide.runtime.node.stream.WrappedInputStream
 import elide.runtime.node.stream.WrappedOutputStream
 import elide.vm.annotations.Polyglot
-
-// Internal symbol where the Node built-in module is installed.
-private const val ZLIB_MODULE_SYMBOL = "node_${NodeModuleName.ZLIB}"
 
 private const val K_FLUSH = "flush"
 private const val K_FINISH_FLUSH = "finishFlush"
@@ -499,7 +495,6 @@ public data object ModernNodeZlibConstants : NodeZlibConstants {
   }
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[ZLIB_MODULE_SYMBOL.asJsSymbol()] = ProxyExecutable { singleton }
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.ZLIB)) { singleton }
   }
 }

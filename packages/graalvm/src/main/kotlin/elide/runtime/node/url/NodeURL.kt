@@ -18,16 +18,12 @@ import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.URLAPI
 import elide.runtime.lang.javascript.NodeModuleName
-
-// Internal symbol where the Node built-in module is installed.
-private const val URL_MODULE_SYMBOL = "node_${NodeModuleName.URL}"
 
 // Constructor for `URL`.
 private const val URL_CONSTRUCTOR_FN = "URL"
@@ -57,7 +53,6 @@ private val URL_MODULE_MEMBERS = arrayOf(
   @Singleton internal fun provide(): URLAPI = NodeURL.obtain()
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[URL_MODULE_SYMBOL.asJsSymbol()] = provide()
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.URL)) { NodeURL.obtain() }
   }
 }

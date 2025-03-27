@@ -39,33 +39,21 @@ internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
 
     /** Global where the `Headers` constructor is mounted. */
     private const val GLOBAL_HEADERS = "Headers"
-
-    // `Headers` intrinsic symbol.
-    private val HEADERS_SYMBOL = GLOBAL_HEADERS.asJsSymbol()
-
-    // `Request` intrinsic symbol.
-    private val REQUEST_SYMBOL = GLOBAL_REQUEST.asJsSymbol()
-
-    // `Response` intrinsic symbol.
-    private val RESPONSE_SYMBOL = GLOBAL_RESPONSE.asJsSymbol()
-
-    // `fetch` intrinsic symbol.
-    private val FETCH_SYMBOL = GLOBAL_FETCH.asJsSymbol()
   }
 
   /** @inheritDoc */
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `Headers`
-    bindings[HEADERS_SYMBOL] = FetchHeadersIntrinsic::class.java
+    bindings[GLOBAL_HEADERS.asJsSymbol()] = FetchHeadersIntrinsic::class.java
 
     // mount `Request`
-    bindings[REQUEST_SYMBOL] = FetchRequestIntrinsic::class.java
+    bindings[GLOBAL_REQUEST.asJsSymbol()] = FetchRequestIntrinsic::class.java
 
     // mount `Response`
-    bindings[RESPONSE_SYMBOL] = FetchResponseIntrinsic::class.java
+    bindings[GLOBAL_RESPONSE.asJsSymbol()] = FetchResponseIntrinsic::class.java
 
     // mount `fetch` method
-    bindings[FETCH_SYMBOL] = { request: Value ->
+    bindings[GLOBAL_FETCH.asJsSymbol()] = { request: Value ->
       handleFetch(request)
     }
   }

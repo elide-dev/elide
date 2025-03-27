@@ -1,7 +1,7 @@
 #!/bin/bash
 
-WARMUPS=200
-RUNS=200
+WARMUPS=100
+RUNS=100
 PROFILE=nativeOptimizedCompile
 
 hyperfine \
@@ -9,5 +9,5 @@ hyperfine \
   -n 'node' "node $@" \
   -n 'deno' "deno run $@" \
   -n 'bun' "bun run $@" \
-  -n 'elide' "./packages/cli/build/native/$PROFILE/elide run --host:allow-io $ELIDE_ARGS $@"
+  -n 'elide' "./packages/cli/build/native/$PROFILE/elide run --host:allow-io --js:strict --js:experimental-disable-polyfills $ELIDE_ARGS $@"
 

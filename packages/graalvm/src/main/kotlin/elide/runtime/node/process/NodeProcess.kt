@@ -20,6 +20,7 @@ import org.graalvm.nativeimage.ProcessProperties
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.atomic.AtomicReference
+import jakarta.inject.Provider
 import kotlin.collections.Map.Entry
 import kotlin.system.exitProcess
 import elide.annotations.Inject
@@ -28,7 +29,6 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.ProcessManager
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
@@ -42,16 +42,19 @@ import elide.vm.annotations.Polyglot
 // Installs the Node process module into the intrinsic bindings.
 @Intrinsic(NodeProcess.PUBLIC_SYMBOL, internal = false)
 @Singleton internal class NodeProcessModule @Inject constructor(
-  private val envConfig: EnvConfig? = null,
+  private val envConfigProvider: Provider<EnvConfig?> = Provider { null },
 ) : AbstractNodeBuiltinModule() {
-  fun provide(): ProcessAPI = if (envConfig == null) NodeProcess.obtain() else NodeProcess.create(
-    env = EnvAccessor.of(envConfig),
-  )
+  private fun envConfig(): EnvConfig? = envConfigProvider.get()
+
+  fun provide(): ProcessAPI = envConfig().let { envConfig ->
+    if (envConfig == null) NodeProcess.obtain() else NodeProcess.create(
+      env = EnvAccessor.of(envConfig),
+    )
+  }
 
   private val singleton by lazy { provide() }
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[NodeProcess.SYMBOL.asJsSymbol()] = singleton
     bindings[NodeProcess.PUBLIC_SYMBOL.asPublicJsSymbol()] = singleton
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.PROCESS)) { singleton }
   }

@@ -28,6 +28,7 @@ import java.nio.file.attribute.PosixFilePermission.OWNER_WRITE
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
 import java.util.stream.Stream
+import jakarta.inject.Provider
 import kotlin.streams.asStream
 import kotlin.test.*
 import elide.annotations.Inject
@@ -60,8 +61,10 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
   override val moduleName: String get() = "fs"
   override fun provide(): NodeFilesystemModule = NodeFilesystemModule(
     path,
-    VfsInitializerListener().also {
-      it.onVfsCreated(EmbeddedGuestVFS.empty())
+    Provider {
+      VfsInitializerListener().also {
+        it.onVfsCreated(EmbeddedGuestVFS.empty())
+      }
     },
     execProvider,
   )

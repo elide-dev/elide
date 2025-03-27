@@ -31,6 +31,7 @@ import java.nio.file.AccessMode.*
 import java.util.*
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Supplier
+import jakarta.inject.Provider
 import kotlinx.coroutines.CoroutineDispatcher
 import elide.annotations.Eager
 import elide.annotations.Factory
@@ -42,7 +43,6 @@ import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl.Companion.spawn
 import elide.runtime.gvm.js.JsError
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
@@ -63,9 +63,6 @@ import elide.vm.annotations.Polyglot
 
 // Default copy mode value.
 private const val DEFAULT_COPY_MODE: Int = 0
-
-// Whether to enable synthesized modules.
-private const val ENABLE_SYNTHESIZED: Boolean = true
 
 // Names of `fs` methods, properties, and constants.
 
@@ -116,30 +113,23 @@ private const val FS_C_COPYFILE_FICLONE_FORCE = "COPYFILE_FICLONE_FORCE"
 @Intrinsic
 @Factory @Singleton internal class NodeFilesystemModule(
   private val pathModule: NodePathsModule,
-  private val vfs: VfsInitializerListener,
+  private val vfs: Provider<VfsInitializerListener>,
   private val executorProvider: GuestExecutorProvider,
 ) : AbstractNodeBuiltinModule() {
   private val std: FilesystemAPI by lazy {
-    NodeFilesystem.createStd(executorProvider.executor(), pathModule.paths, vfs.get())
+    NodeFilesystem.createStd(executorProvider.executor(), pathModule.paths, vfs.get().get())
   }
 
   private val promises: FilesystemPromiseAPI by lazy {
-    NodeFilesystem.createPromises(executorProvider.executor(), pathModule.paths, vfs.get())
+    NodeFilesystem.createPromises(executorProvider.executor(), pathModule.paths, vfs.get().get())
   }
 
   @Singleton fun provideStd(): FilesystemAPI = std
   @Singleton fun providePromises(): FilesystemPromiseAPI = promises
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[NodeFilesystem.SYMBOL_STD.asJsSymbol()] = ProxyExecutable { provideStd() }
-    bindings[NodeFilesystem.SYMBOL_PROMISES.asJsSymbol()] = ProxyExecutable { providePromises() }
-  }
-
-  init {
-    if (ENABLE_SYNTHESIZED) {
-      ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS)) { std }
-      ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS_PROMISES)) { promises }
-    }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS)) { std }
+    ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.FS_PROMISES)) { promises }
   }
 }
 

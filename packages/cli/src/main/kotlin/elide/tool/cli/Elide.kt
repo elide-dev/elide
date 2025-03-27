@@ -56,7 +56,7 @@ private const val DEFAULT_CMD_TIMEOUT = 30
 // Pre-initialized application builder.
 internal val applicationContextBuilder = ApplicationContext
   .builder()
-  .environments("cli")
+  .environments("cli", if (ImageInfo.inImageCode()) "native" else "jvm")
   .defaultEnvironments("cli")
   .eagerInitAnnotated(Eager::class.java)
   .eagerInitSingletons(false)
@@ -346,7 +346,7 @@ internal val applicationContextBuilder = ApplicationContext
           .deduceEnvironment(false)
           .deduceCloudEnvironment(false)
           .banner(false)
-          .environments("cli")
+          .environments("cli", if (ImageInfo.inImageCode()) "native" else "jvm")
           .defaultEnvironments("cli")
           .eagerInitAnnotated(Eager::class.java)
           .eagerInitConfiguration(true)

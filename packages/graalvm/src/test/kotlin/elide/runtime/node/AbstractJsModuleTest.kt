@@ -24,10 +24,10 @@ import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
+import elide.runtime.lang.javascript.JavaScriptLang
 import elide.runtime.node.asserts.NodeAssertModule
 import elide.runtime.node.asserts.NodeAssertStrictModule
 import elide.runtime.node.buffer.NodeBufferModule
-import elide.runtime.node.buffer.NodeBufferModuleFacade
 import elide.runtime.plugins.env.EnvConfig
 import elide.runtime.plugins.env.environment
 import elide.runtime.plugins.js.JavaScript
@@ -56,7 +56,7 @@ internal abstract class AbstractJsModuleTest<T : GuestIntrinsic> : AbstractJsInt
 
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.apply {
-      install(JavaScript)
+      configure(JavaScript)
       environment { configureEnvironment() }
       vfs { configureVfs() }
     }
@@ -70,6 +70,7 @@ internal abstract class AbstractJsModuleTest<T : GuestIntrinsic> : AbstractJsInt
     bindBuffer: Boolean = true,
   ) {
     // install bindings under test, if directed
+    JavaScriptLang.initialize()
     val target = polyglotContext.bindings(JavaScript)
 
     // prep intrinsic bindings under test
@@ -84,7 +85,7 @@ internal abstract class AbstractJsModuleTest<T : GuestIntrinsic> : AbstractJsInt
         ConsoleIntrinsic().install(binding)
       }
       if (bindAssert && !group.any { it.key.symbol.contains("assert") }) {
-        NodeAssertModule().install(binding)
+        //NodeAssertModule().install(binding)
         NodeAssertStrictModule().install(binding)
       }
       if (bindBuffer && !group.any { it.key.symbol.contains("buffer") }) {

@@ -21,6 +21,7 @@ import kotlinx.atomicfu.AtomicBoolean
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
 import elide.runtime.exec.GuestExecutor
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.node.events.CustomEvent
 import elide.runtime.intrinsics.js.node.events.Event
@@ -180,13 +181,13 @@ public class AbortSignal private constructor (
      * @param bound Guest executor to use for abort signal scheduling.
      * @return Abort signal factory.
      */
-    public fun factory(bound: GuestExecutor): Factory = Factory.bound(bound)
+    public fun factory(bound: GuestExecutorProvider): Factory = Factory.bound(bound)
   }
 
   // Implements constructor interfaces for `AbortSignal`.
-  public class Factory private constructor (private val guestExecutor: GuestExecutor) : AbortSignalAPI.Factory {
+  public class Factory private constructor (private val guestExecutor: GuestExecutorProvider) : AbortSignalAPI.Factory {
     internal companion object {
-      @JvmStatic fun bound(guestExecutor: GuestExecutor): Factory = Factory(guestExecutor)
+      @JvmStatic fun bound(guestExecutor: GuestExecutorProvider): Factory = Factory(guestExecutor)
     }
 
     // Return an abort signal which has already been aborted.
@@ -196,7 +197,11 @@ public class AbortSignal private constructor (
     @Polyglot override fun any(iterable: Iterable<AbortSignalAPI>): AbortSignalAPI = delegated(iterable)
 
     // Return an abort signal which aborts after a timeout.
-    @Polyglot override fun timeout(time: Int): AbortSignalAPI = timeout(time.toLong(), MILLISECONDS, guestExecutor)
+    @Polyglot override fun timeout(time: Int): AbortSignalAPI = timeout(
+      time.toLong(),
+      MILLISECONDS,
+      guestExecutor.executor(),
+    )
 
     override fun getMemberKeys(): Array<String> = arrayOf(
       "abort",

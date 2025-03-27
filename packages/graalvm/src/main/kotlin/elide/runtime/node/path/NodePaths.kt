@@ -22,7 +22,6 @@ import java.nio.file.Paths
 import java.util.LinkedList
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
@@ -32,7 +31,6 @@ import elide.runtime.intrinsics.js.node.path.Path
 import elide.runtime.intrinsics.js.node.path.PathFactory
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
-import elide.runtime.node.path.NodePaths.SYMBOL
 import elide.runtime.node.path.PathStyle.POSIX
 import elide.runtime.node.path.PathStyle.WIN32
 import elide.vm.annotations.Polyglot
@@ -273,7 +271,6 @@ public class PathBuf private constructor(
   override fun provide(): PathAPI = paths
 
   override fun install(bindings: MutableIntrinsicBindings) {
-    bindings[SYMBOL.asJsSymbol()] = provide()
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.PATH)) { provide() }
   }
 }

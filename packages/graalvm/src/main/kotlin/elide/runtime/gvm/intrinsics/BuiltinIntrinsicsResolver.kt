@@ -14,7 +14,6 @@
 
 package elide.runtime.gvm.intrinsics
 
-import io.micronaut.context.annotation.Infrastructure
 import java.util.stream.Stream
 import kotlin.streams.asSequence
 import elide.annotations.Context
@@ -25,7 +24,7 @@ import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.IntrinsicsResolver
 
 /** Resolve intrinsics known at build-time via annotation processing. */
-@Context @Singleton @Infrastructure internal class BuiltinIntrinsicsResolver : IntrinsicsResolver {
+@Context @Singleton internal class BuiltinIntrinsicsResolver : IntrinsicsResolver {
   /** All candidate guest intrinsics. */
   @Inject lateinit var intrinsicsStream: Stream<GuestIntrinsic>
 

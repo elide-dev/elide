@@ -80,15 +80,6 @@ fun PathAPI.testExtname(parsed: PathIntrinsic): String? {
     """
   }.fails()
 
-  // Private path intrinsic should be present.
-  @Test fun `path module intrinsic should be present`() = executeGuest {
-    // language=javascript
-    """
-      test(primordials.node_path).isNotNull();
-      test(primordials.node_assert).isNotNull();
-    """
-  }.doesNotFail()
-
   @Test fun `should be able to create the path module`() {
     assertNotNull(NodePaths.create())
     assertNotNull(NodePaths.create(POSIX))

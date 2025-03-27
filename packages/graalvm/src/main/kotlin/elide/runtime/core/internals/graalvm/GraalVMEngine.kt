@@ -47,6 +47,9 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
 import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23
 import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23_1
 import elide.runtime.lang.typescript.TypeScriptLanguage
+import elide.runtime.plugins.defaultPolyglotContextBuilder
+import elide.runtime.plugins.defaultPolyglotEngine
+import elide.runtime.plugins.defaultPolyglotEngineBuilder
 import elide.vm.annotations.Polyglot
 import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 
@@ -60,9 +63,8 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
 @DelicateElideApi public class GraalVMEngine private constructor(
   private val lifecycle: MutableEngineLifecycle,
   private val config: GraalVMConfiguration,
-  private val engine: Engine,
+  private val engine: Engine = defaultPolyglotEngine(),
 ) : PolyglotEngine {
-
   /** Select an [EnvironmentAccess] configuration from the [HostAccess] settings for this engine. */
   private fun HostAccess.toEnvAccess(): EnvironmentAccess? = when (this) {
     ALLOW_ENV, ALLOW_ALL -> EnvironmentAccess.INHERIT
@@ -76,37 +78,13 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
    * encapsulation provided by the core API; it should be used only in select cases where accessing the GraalVM engine
    * directly is less complex than implementing a new abstraction for the desired feature.
    */
-  override fun unwrap(): Engine {
-    return engine
-  }
+  override fun unwrap(): Engine = engine
 
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
   private fun createContext(cfg: Builder.() -> Unit, finalizer: Builder.() -> Context = { build() }): GraalVMContext {
-    val contextHostAccess = PolyglotHostAccess.newBuilder(PolyglotHostAccess.ALL)
-      .allowImplementationsAnnotatedBy(PolyglotHostAccess.Implementable::class.java)
-      .allowAccessAnnotatedBy(Polyglot::class.java)
-      .allowArrayAccess(true)
-      .allowBufferAccess(true)
-      .allowAccessInheritance(true)
-      .allowIterableAccess(true)
-      .allowIteratorAccess(true)
-      .allowListAccess(true)
-      .allowMapAccess(true)
-      .build()
-
     // build a new context using the shared engine
-    val builder = Context.newBuilder()
-      .allowExperimentalOptions(true)
+    val builder = defaultPolyglotContextBuilder()
       .allowEnvironmentAccess(config.hostAccess.toEnvAccess())
-      .allowPolyglotAccess(PolyglotAccess.ALL)
-      .allowValueSharing(true)
-      .allowHostAccess(contextHostAccess)
-      .allowInnerContextOptions(true)
-      .allowCreateThread(true)
-      .allowCreateProcess(true)
-      .allowHostClassLoading(true)
-      .allowNativeAccess(true)
-      .allowHostClassLookup { true }
       .engine(engine)
 
     // allow plugins to customize the context on creation
@@ -235,12 +213,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     /** Logger used for engine instances */
     private val engineLogger by lazy { Logging.named("elide:engine") }
 
-    /** Contexts to pre-initialize at image build time. */
-    private val preinitializeContexts = System.getProperty(
-      "polyglot.image-build-time.PreinitializeContexts",
-      "js,python"
-    )
-
     /** Whether to emit trace messages for aux cache usage. */
     private val traceCache = System.getProperty("elide.traceCache", "false") == "true"
 
@@ -281,10 +253,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       }.distinct().toTypedArray()
 
       engineLogger.debug { "Creating GraalVM engine with languages: ${languages.joinToString(", ")}" }
-      val builder = Engine.newBuilder(*languages).apply {
-        useSystemProperties(false)
-        allowExperimentalOptions(true)
-
+      val builder = defaultPolyglotEngineBuilder().apply {
         // stub streams
         if (enableStreams != "true") {
           `in`(StubbedInputStream)
@@ -295,27 +264,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
         // assign core log handler
         logHandler(EngineLogHandler(engineLogger))
 
-        // base options enabled for every engine
-        enableOptions(
-          "engine.BackgroundCompilation",
-          "engine.UsePreInitializedContext",
-          "engine.Compilation",
-          "engine.MultiTier",
-          "engine.Splitting",
-          "engine.OSR",
-        )
-
-        // set number of compiler threads
-        option(
-          "engine.CompilerThreads",
-          min(max(Runtime.getRuntime().availableProcessors() / 4, 8), 2).toString(),
-        )
-
         // jit compile on second root call
-        option(
-          "engine.Mode",
-          "latency",
-        )
         option(
           "engine.FirstTierMinInvokeThreshold",
           "2",
@@ -324,29 +273,6 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
           "engine.LastTierCompilationThreshold",
           "2000",
         )
-
-        configuration.hostRuntime.on(GVM_23.andLower()) {
-          enableOptions("engine.InlineAcrossTruffleBoundary")
-        }
-
-        configuration.hostRuntime.on(GVM_23.andLower()) {
-          enableOptions(
-            "engine.Inlining",
-            "engine.InlineAcrossTruffleBoundary",
-          )
-        }
-
-        configuration.hostRuntime.on(GVM_23_1.andHigher()) {
-          enableOptions(
-            "engine.Inlining",
-            "engine.InlineAcrossTruffleBoundary",
-            "compiler.Inlining",
-            "compiler.EncodedGraphCache",
-            "compiler.InlineAcrossTruffleBoundary",
-          )
-
-          disableOption("engine.WarnOptionDeprecation")
-        }
 
         // isolate options
         if (ENABLE_ISOLATES) {
@@ -384,8 +310,7 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
             creatingAuxCache = true
           }
           if (auxCacheReady) {
-            engineLogger.debug { "Aux cache is active at path: '$auxCacheActual' (contexts: '$preinitializeContexts')" }
-            option("engine.PreinitializeContexts", preinitializeContexts)
+            engineLogger.debug { "Aux cache is active (path: '$auxCacheActual')" }
             option("engine.CachePreinitializeContext", "true")
             option("engine.CacheCompile", "hot")
 

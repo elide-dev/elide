@@ -160,6 +160,7 @@ dependencies {
     projects.packages.graalvmPy,
     projects.packages.graalvmRb,
     projects.packages.graalvmTs,
+    projects.packages.localAi,
     projects.packages.http,
     projects.packages.server,
     projects.packages.ssr,

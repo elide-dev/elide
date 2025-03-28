@@ -25,18 +25,131 @@ import elide.testing.annotations.TestCase
   override fun provide(): ElideLLMModule = module
   override val pureModuleName: String get() = "llm"
 
+  override fun requiredMembers(): Sequence<String> = sequence {
+    yield("local")
+    yield("remote")
+    yield("params")
+    yield("huggingface")
+    yield("version")
+  }
+
   @Test override fun testInjectable() {
     assertNotNull(module) { "Main LLM module should be injectable" }
   }
 
   @Test fun testLlmApiVersion() = dual {
     val expected = "v1"
-    val version = provide().module().version()
+    val version = provide().provide().version()
     assertEquals(expected, version)
   }.guest {
     // language=JavaScript
     """
       const { version } = require("elide:llm");
+      test(version()).isNotNull();
+      test(version()).isEqualTo('v1');
+    """
+  }
+
+  @Test fun testModelParameterSpec() = executeGuest {
+    // language=JavaScript
+    """
+      const { params } = require("elide:llm");
+      const modelParams = params();
+      test(modelParams).isNotNull();
+    """
+  }.doesNotFail()
+
+  @Test fun testHuggingFaceModelSpec() = executeGuest {
+    // language=JavaScript
+    """
+      const { huggingface } = require("elide:llm");
+      const spec = huggingface({
+        "repo": "TheBloke/Llama-2-7B-Chat-GGUF",
+        "name": "llama-2-7b-chat.Q4_K_M.gguf",
+      })
+      test(spec).isNotNull();
+    """
+  }.doesNotFail()
+
+  @Test fun testCanImportLocalFromTop() = executeGuest {
+    // language=JavaScript
+    """
+      const { local } = require("elide:llm");
+      test(local).isNotNull();
+    """
+  }.doesNotFail()
+
+  @Test fun testCanImportRemoteFromTop() = executeGuest {
+    // language=JavaScript
+    """
+      const { remote } = require("elide:llm");
+      test(remote).isNotNull();
+    """
+  }.doesNotFail()
+
+  @Test fun testCanImportLocalDirectly() = executeGuest {
+    // language=JavaScript
+    """
+      const local = require("elide:llm/local");
+      test(local).isNotNull();
+    """
+  }.doesNotFail()
+
+  @Test fun testCanImportRemoteDirectly() = executeGuest {
+    // language=JavaScript
+    """
+      const remote = require("elide:llm/remote");
+      test(remote).isNotNull();
+    """
+  }.doesNotFail()
+
+  @Test fun testLlmApiVersionLocalFromTop() = dual {
+    val expected = "v1"
+    val version = provide().provide().version()
+    assertEquals(expected, version)
+  }.guest {
+    // language=JavaScript
+    """
+      const { local } = require("elide:llm");
+      test(local.version()).isNotNull();
+      test(local.version()).isEqualTo('v1');
+    """
+  }
+
+  @Test fun testLlmApiVersionLocalDirect() = dual {
+    val expected = "v1"
+    val version = provide().provide().version()
+    assertEquals(expected, version)
+  }.guest {
+    // language=JavaScript
+    """
+      const { version } = require("elide:llm/local");
+      test(version()).isNotNull();
+      test(version()).isEqualTo('v1');
+    """
+  }
+
+  @Test fun testLlmApiVersionRemoteFromTop() = dual {
+    val expected = "v1"
+    val version = provide().provide().version()
+    assertEquals(expected, version)
+  }.guest {
+    // language=JavaScript
+    """
+      const { remote } = require("elide:llm");
+      test(remote.version()).isNotNull();
+      test(remote.version()).isEqualTo('v1');
+    """
+  }
+
+  @Test fun testLlmApiVersionRemoteDirect() = dual {
+    val expected = "v1"
+    val version = provide().provide().version()
+    assertEquals(expected, version)
+  }.guest {
+    // language=JavaScript
+    """
+      const { version } = require("elide:llm/remote");
       test(version()).isNotNull();
       test(version()).isEqualTo('v1');
     """

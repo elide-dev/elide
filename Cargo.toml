@@ -109,7 +109,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "2c53a728b0128290260e3ce676e25a2a0d94ff56", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "a278d73f1ee084ce6a12bf47fae0adce83cec2ff", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -117,7 +117,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "2c53a728b0128290260e3ce
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "664c77a6e12b4735c0000bbb44f895c892c62aa0" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "ab3bab14217d75c06c5d86e2ef1ba65c48091b23" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "4975c2f02761021df073443374a38f53d2cc5598" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "9ae2900dc3c86daf2f6e977e9d774c56e14d1ed3" }

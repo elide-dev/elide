@@ -467,6 +467,7 @@ dependencies {
   api(projects.packages.base)
   api(projects.packages.core)
   api(projects.packages.ssr)
+  api(projects.packages.localAi)
   api(projects.packages.engine)
   api(projects.packages.graalvmTs)
   api(projects.packages.graalvmJs)

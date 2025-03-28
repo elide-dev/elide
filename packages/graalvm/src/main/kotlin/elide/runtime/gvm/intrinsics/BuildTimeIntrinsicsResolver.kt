@@ -14,6 +14,7 @@
 
 package elide.runtime.gvm.intrinsics
 
+import com.oracle.truffle.api.CompilerDirectives
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Replaces
 import java.util.Optional
@@ -30,14 +31,15 @@ import elide.runtime.gvm.internals.intrinsics.js.base64.Base64Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.codec.JsEncodingIntrinsics
 import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.crypto.WebCryptoIntrinsic
-import elide.runtime.gvm.internals.intrinsics.js.stream.CoreStreamsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
 import elide.runtime.gvm.internals.js.JsTimersIntrinsic
+import elide.runtime.gvm.internals.sqlite.ElideSqliteModule
 import elide.runtime.gvm.internals.testing.ElideTestingModule
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.IntrinsicsResolver
+import elide.runtime.intrinsics.ai.ElideLLMModule
 import elide.runtime.intrinsics.js.err.ValueErrorIntrinsic
 import elide.runtime.javascript.MessageChannelBuiltin
 import elide.runtime.javascript.NavigatorBuiltin
@@ -91,10 +93,9 @@ import elide.runtime.plugins.env.EnvConfig
   }
 
   public companion object {
-    @Volatile private lateinit var exec: GuestExecutor
-    @Volatile private lateinit var envConfigSupplier: Provider<EnvConfig?>
-    @Volatile private lateinit var listener: VfsInitializerListener
-
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var exec: GuestExecutor
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var envConfigSupplier: Provider<EnvConfig?>
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var listener: VfsInitializerListener
     @JvmStatic private val execProvider = GuestExecutorProvider { exec }
     @JvmStatic private val vfsListenerProvider = Provider { listener }
     @JvmStatic private val assert = NodeAssertModule()
@@ -145,7 +146,10 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val structuredClone = StructuredCloneBuiltin()
     @JvmStatic private val valueError = ValueErrorIntrinsic()
     @JvmStatic private val elideBuiltin = ElideIntrinsic()
+    @JvmStatic private val elideSqlite = ElideSqliteModule()
+    @JvmStatic private val elideLlm = ElideLLMModule(execProvider)
 
+    // All built-ins and intrinsics.
     @JvmStatic private val all = arrayOf(
       assert,
       assertStrict,
@@ -195,6 +199,8 @@ import elide.runtime.plugins.env.EnvConfig
       valueError,
       structuredClone,
       elideBuiltin,
+      elideSqlite,
+      elideLlm,
     )
   }
 

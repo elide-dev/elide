@@ -2472,6 +2472,38 @@ public abstract interface class elide/runtime/intrinsics/Symbol : elide/core/api
 	public abstract fun isInternal ()Z
 }
 
+public synthetic class elide/runtime/intrinsics/ai/$ElideLLMModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/intrinsics/ai/$ElideLLMModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun isBuildable ()Z
+}
+
+public abstract interface class elide/runtime/intrinsics/ai/AIEngine {
+}
+
+public final class elide/runtime/intrinsics/ai/ElideLLMModule : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic {
+	public fun <init> (Lelide/runtime/exec/GuestExecutorProvider;)V
+	public fun install (Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/ai/LLMAPI : elide/runtime/interop/ReadOnlyProxyObject {
+	public abstract fun version ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/ai/LLMEngine {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/AbortController {
 	public abstract fun abort (Ljava/lang/Object;)V
 	public static synthetic fun abort$default (Lelide/runtime/intrinsics/js/AbortController;Ljava/lang/Object;ILjava/lang/Object;)V

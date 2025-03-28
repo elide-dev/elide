@@ -22,10 +22,6 @@ repository = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
 
-[profile.release]
-opt-level = "s"
-lto = true
-
 [lib]
 crate-type = ["lib", "staticlib", "cdylib"]
 

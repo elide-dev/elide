@@ -45,6 +45,9 @@ debug = true
 incremental = false
 codegen-units = 1
 
+[profile.release.package.local-ai]
+opt-level = "s"
+
 [profile.dev.package.builder]
 opt-level = 3
 debug = true

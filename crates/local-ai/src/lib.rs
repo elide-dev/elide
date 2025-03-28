@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,12 +22,16 @@
 pub mod aimodel;
 pub mod cli;
 
+pub mod blocking;
+pub mod threaded;
+
 use std::io::Write;
 use std::num::NonZeroU32;
 use std::path::PathBuf;
-use std::pin::{Pin, pin};
+use std::pin::Pin;
 use std::sync::Mutex;
 use std::time::Duration;
+
 // Re-exports.
 #[cfg(feature = "aitool")]
 pub use crate::cli::AiArgs;
@@ -39,8 +43,8 @@ pub use crate::aimodel::Model;
 use anyhow::{Context, Error, bail};
 use java_native::jni;
 use jni::JNIEnv;
-use jni::objects::{JClass, JObject, JString};
-use jni::sys::{JNI_FALSE, JNI_TRUE, jboolean, jint, jlong};
+use jni::objects::JClass;
+use jni::sys::{JNI_TRUE, jboolean};
 use llama_cpp_2::context::params::LlamaContextParams;
 use llama_cpp_2::ggml_time_us;
 use llama_cpp_2::llama_backend::LlamaBackend;
@@ -64,32 +68,6 @@ const DEFAULT_CONTEXT_WINDOW: u32 = 2048;
 // Llama backend; available after init.
 static BACKEND: Mutex<Option<LlamaBackend>> = Mutex::new(None);
 
-// Held (pinned) result for later use.
-static SYNC_RESULT: Mutex<Option<String>> = Mutex::new(None);
-
-// Held (pinned) error result for later use.
-static SYNC_ERR: Mutex<Option<String>> = Mutex::new(None);
-
-/// Mount a synchronous inference result for later consumption.
-fn mount_sync_result(result: String) {
-  let mut guard = SYNC_RESULT.lock().unwrap();
-  *guard = Some(result);
-}
-
-/// Mount a synchronous inference error for later consumption.
-fn mount_sync_err(result: String) {
-  let mut guard = SYNC_ERR.lock().unwrap();
-  *guard = Some(result);
-}
-
-/// Clear any synchronous error or result.
-fn clear_sync_results() {
-  let mut guard = SYNC_RESULT.lock().unwrap();
-  *guard = None;
-  let mut guard2 = SYNC_ERR.lock().unwrap();
-  *guard2 = None;
-}
-
 /// Prepare a model for use.
 async fn prep_model(model: Model) -> Result<PathBuf, Box<dyn std::error::Error>> {
   // prep and load model
@@ -108,7 +86,8 @@ async fn do_infer(
   threads_batch: Option<i32>,
   length: Option<i32>,
   seed: Option<u32>,
-) -> Result<String, Error> {
+  cbk: Option<Box<dyn Fn(Result<String, Error>) + Send>>,
+) -> Result<Option<String>, Error> {
   //noinspection RsUnwrap
   let mut backend = BACKEND.lock().unwrap();
   let backend = backend.as_mut().expect("backend not initialized");
@@ -194,7 +173,25 @@ async fn do_infer(
     LlamaSampler::greedy(),
   ]);
 
-  let mut rendered_outbuf = Vec::<String>::new();
+  let rendered_outbuf = Mutex::new(Vec::new());
+  let mut is_callback_mode = false;
+  let use_chunk = if cbk.is_some() {
+    is_callback_mode = true;
+    Box::new(move |chunk: String| {
+      if let Some(cbk) = &cbk {
+        cbk(Ok(chunk));
+      } else {
+        panic!("failed to locate callback");
+      }
+      0
+    }) as Box<dyn Fn(String) -> i32>
+  } else {
+    Box::new(|chunk: String| {
+      let mut buf = rendered_outbuf.lock().unwrap();
+      buf.push(chunk);
+      0
+    }) as Box<dyn Fn(String) -> i32>
+  };
 
   while n_cur <= n_len {
     // sample the next token
@@ -215,11 +212,11 @@ async fn do_infer(
       let mut output_string = String::with_capacity(32);
       let _decode_result = decoder.decode_to_string(&output_bytes, &mut output_string, false);
       if DEBUG_LOGS {
-        rendered_outbuf.push(output_string.clone());
+        use_chunk(output_string.clone());
         print!("{output_string}");
         std::io::stdout().flush()?;
       } else {
-        rendered_outbuf.push(output_string);
+        use_chunk(output_string);
       }
       batch.clear();
       batch.add(token, n_cur, &[0], true)?;
@@ -243,8 +240,12 @@ async fn do_infer(
     );
     println!("{}", ctx.timings());
   }
-  let rendered_out = rendered_outbuf.join("");
-  Ok(rendered_out)
+  if is_callback_mode {
+    Ok(None)
+  } else {
+    let rendered_out = rendered_outbuf.lock().unwrap().join("");
+    Ok(Some(rendered_out))
+  }
 }
 
 /// Initialize the native AI backend.
@@ -257,235 +258,6 @@ pub fn initialize(_env: JNIEnv, _class: JClass<'_>, default_verbose: jboolean) -
   }
   *guard = Some(backend);
   JNI_TRUE
-}
-
-/// Infer synchronously against the configured model backend.
-#[jni("elide.runtime.localai.NativeLocalAi")]
-pub fn inferSync<'a>(
-  mut env: JNIEnv<'a>,
-  _class: JClass<'a>,
-  verbose: jboolean,
-  gpu_layers_j: jint,
-  disable_gpu: jboolean,
-  allow_download: jboolean,
-  path_j: JString<'a>,
-  prompt_j: JString<'a>,
-  hugging_face_repo_j: JString<'a>,
-  hugging_face_name_j: JString<'a>,
-  hugging_face_token_j: JString<'a>,
-  ctx_size: jint,
-  thread_count: jint,
-  thread_batch_count: jint,
-  length: jint,
-  seed_j: jint,
-) -> jboolean {
-  // resolve params
-  let model_params = {
-    #[cfg(any(feature = "cuda", feature = "vulkan"))]
-    if !(disable_gpu == JNI_TRUE) {
-      LlamaModelParams::default().with_n_gpu_layers(gpu_layers_j)
-    } else {
-      LlamaModelParams::default()
-    }
-    #[cfg(not(any(feature = "cuda", feature = "vulkan")))]
-    LlamaModelParams::default()
-  };
-  if DEBUG_LOGS {
-    eprintln!("gpu layers: {:?}", gpu_layers_j);
-    eprintln!("disable gpu: {:?}", disable_gpu);
-    eprintln!("allow download: {:?}", allow_download);
-    eprintln!("model params: {:?}", model_params);
-  }
-
-  // resolve input values
-  let path_str: String = env
-    .get_string(&path_j)
-    .expect("path string is required")
-    .into();
-  let prompt_str: String = env
-    .get_string(&prompt_j)
-    .expect("prompt string is required")
-    .into();
-  let hugging_repo: String = env
-    .get_string(&hugging_face_repo_j)
-    .expect("hface repo string is required")
-    .into();
-  let hugging_name: String = env
-    .get_string(&hugging_face_name_j)
-    .expect("hface name string is required")
-    .into();
-  let hface_token: String = env
-    .get_string(&hugging_face_token_j)
-    .expect("hface token string is required")
-    .into();
-
-  if DEBUG_LOGS {
-    eprintln!("huggingface repo: {:?}", hugging_repo);
-    eprintln!("huggingface name: {:?}", hugging_name);
-    eprintln!("huggingface token: {:?}", hface_token);
-    eprintln!("path: {:?}", path_str);
-    eprintln!("would prompt with: {:?}", prompt_str);
-  }
-
-  // if `hugging_repo` is non-empty, we configure a hugging face model
-  let model = if !hugging_repo.is_empty() {
-    Model::HuggingFace {
-      repo: hugging_repo,
-      model: hugging_name,
-    }
-  } else {
-    Model::Local {
-      path: path_str.into(),
-    }
-  };
-  // pin for use
-  let model_params = pin!(model_params);
-
-  // execute synchronously via tokio
-  let prepared_model: Result<PathBuf, Box<dyn std::error::Error>> =
-    tokio::runtime::Builder::new_current_thread()
-      .enable_all()
-      .build()
-      .unwrap()
-      .block_on(async { prep_model(model.clone()).await });
-
-  let ctx_size_effective = if ctx_size > 0 {
-    ctx_size
-  } else {
-    DEFAULT_CONTEXT_WINDOW as i32
-  };
-  let thread_count_effective = if thread_count > 0 {
-    thread_count
-  } else {
-    DEFAULT_THREADS
-  };
-  let thread_batch_count_effective = if thread_batch_count > 0 {
-    thread_batch_count
-  } else {
-    DEFAULT_THREAD_BATCH
-  };
-  let length_effective = if length > 0 { length } else { DEFAULT_LENGTH };
-  let seed_effective: u32 = if seed_j > 0 {
-    seed_j as u32
-  } else {
-    DEFAULT_SEED
-  };
-
-  if DEBUG_LOGS {
-    eprintln!("ctx size: {:?}", ctx_size_effective);
-    eprintln!("thread count: {:?}", thread_count_effective);
-    eprintln!("thread batch count: {:?}", thread_batch_count_effective);
-    eprintln!("length: {:?}", length_effective);
-  }
-
-  match prepared_model {
-    Ok(model_path) => {
-      if DEBUG_LOGS {
-        eprintln!("model path: {:?}", model_path);
-      }
-      let result: Result<String, Error> = tokio::runtime::Builder::new_current_thread()
-        .enable_all()
-        .build()
-        .unwrap()
-        .block_on(async {
-          do_infer(
-            verbose,
-            model_params,
-            prompt_str,
-            model_path,
-            NonZeroU32::new(ctx_size_effective as u32),
-            Some(thread_count_effective),
-            Some(thread_batch_count_effective),
-            Some(length_effective),
-            Some(seed_effective),
-          )
-          .await
-        });
-
-      match result {
-        Ok(result) => {
-          if DEBUG_LOGS {
-            eprintln!("result: {:?}", result);
-          }
-          mount_sync_result(result);
-          JNI_TRUE
-        }
-        Err(e) => {
-          if DEBUG_LOGS {
-            eprintln!("inference failed: {:?}", e);
-          }
-          mount_sync_err(e.to_string());
-          JNI_FALSE
-        }
-      }
-    }
-    Err(e) => {
-      eprintln!(" to prepareinference failed: {:?}", e);
-      JNI_FALSE
-    }
-  }
-}
-
-/// Infer asynchronously against the configured model backend.
-#[jni("elide.runtime.localai.NativeLocalAi")]
-pub fn inferAsync<'a>(
-  _env: JNIEnv<'a>,
-  _class: JClass<'a>,
-  _verbose: jboolean,
-  _gpu_layers_j: jint,
-  _disable_gpu: jboolean,
-  _allow_download: jboolean,
-  _path_j: JString<'a>,
-  _prompt_j: JString<'a>,
-  _hugging_face_repo_j: JString<'a>,
-  _hugging_face_name_j: JString<'a>,
-  _hugging_face_token_j: JString<'a>,
-  _ctx_size_j: jint,
-  _thread_count_j: jint,
-  _thread_batch_count_j: jint,
-  _length_j: jint,
-  _seed_j: jlong,
-  _chunk_callback_j: JObject<'a>,
-) -> jint {
-  todo!("not yet implemented: `inferAsync`")
-}
-
-/// Gather static results from the last synchronous inference.
-#[jni("elide.runtime.localai.NativeLocalAi")]
-pub fn results<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>) -> JString<'a> {
-  // first, gather the result and error, if any
-  let result = SYNC_RESULT.lock().unwrap().take();
-  let err = SYNC_ERR.lock().unwrap().take();
-
-  // if there is an error, we should throw it
-  if let Some(err) = err {
-    let exc = env
-      .find_class("java/lang/RuntimeException")
-      .expect("unable to find exception class");
-    let ret = env.new_string("").expect("unable to create empty string");
-    env.throw_new(exc, err).expect("unable to throw error");
-    ret
-  } else {
-    match result {
-      // wrap the string and return
-      Some(out) => {
-        let ret = env.new_string(out).expect("unable to create return string");
-        clear_sync_results();
-        ret
-      }
-
-      None => {
-        let exc = env
-          .find_class("java/lang/RuntimeException")
-          .expect("unable to find exception class");
-        let ret = env.new_string("").expect("unable to create empty string");
-        env
-          .throw_new(exc, "No inference result available".to_string())
-          .expect("unable to throw error");
-        ret
-      }
-    }
-  }
 }
 
 /// De-initialize the native AI backend.

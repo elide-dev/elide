@@ -3349,6 +3349,18 @@
   ],
   "jni": [
     {
+      "type": "elide.runtime.localai.InferenceCallbackRegistry",
+      "methods": [
+        {
+          "name": "onChunkReady",
+          "parameterTypes": [
+            "int",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
       "type": "[Lsun.java2d.loops.GraphicsPrimitive;"
     },
     {

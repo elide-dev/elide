@@ -15,6 +15,7 @@ default = [
   "lib",
   "all",
   "entry",
+  "js",
   "oro",
 ]
 allocator = [

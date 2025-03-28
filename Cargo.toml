@@ -63,14 +63,19 @@ builder = { path = "crates/builder" }
 diag = { path = "crates/diag" }
 substrate = { path = "crates/substrate" }
 umbrella = { path = "tools/umbrella" }
+local-ai = { path = "crates/local-ai" }
 
 ## Dependencies
+anyhow = { version = "1.0.97" }
+llama-cpp-2 = { version = "0.1.102" }
 bindgen = { version = "0.71.1" }
 build_const = { version = "0.2.2", default-features = false }
 bumpalo = { version = "3.17.0" }
+encoding_rs = { version = "0.8.35" }
 cc = { version = "1.2.15", features = ["parallel"] }
 clap = { version = "4.5.30", features = ["derive"] }
 console-subscriber = { version = "0.4.1" }
+hf-hub = { version = "0.4.2" }
 java_native = { git = "https://github.com/elide-tools/jni-macros", rev = "7dc95cc2d7534761d0b16899dcda9e7729bdb89d" }
 jni = { version = "0.21.1", default-features = false, features = [] }
 jni-sys = { version = "0.4.0" }
@@ -83,6 +88,7 @@ rustix = { version = "1.0.2", features = ["process"] }
 serde = { version = "1.0.218", default-features = false }
 sysinfo = { version = "0.33.1" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
+tracing-subscriber = { version = "0.3.19" }
 tokio = { version = "1", default-features = false, features = [
   "fs",
   "io-util",

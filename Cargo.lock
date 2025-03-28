@@ -169,7 +169,7 @@ dependencies = [
  "futures-core",
  "libc",
  "portable-atomic",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "tokio",
  "tokio-stream",
  "xattr 1.5.0",
@@ -553,6 +553,29 @@ dependencies = [
 
 [[package]]
 name = "bindgen"
+version = "0.69.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "271383c67ccabffb7381723dea0672a673f292304fcb45c01cc648c7a8d58088"
+dependencies = [
+ "bitflags 2.9.0",
+ "cexpr",
+ "clang-sys",
+ "itertools 0.12.1",
+ "lazy_static",
+ "lazycell",
+ "log",
+ "prettyplease",
+ "proc-macro2",
+ "quote",
+ "regex",
+ "rustc-hash 1.1.0",
+ "shlex",
+ "syn 2.0.100",
+ "which 4.4.2",
+]
+
+[[package]]
+name = "bindgen"
 version = "0.71.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5f58bf3d7db68cfbac37cfc485a8d711e87e064c3d0fe0435b92f7a407f9d6b3"
@@ -566,7 +589,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "regex",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "shlex",
  "syn 2.0.100",
 ]
@@ -662,7 +685,7 @@ checksum = "b4ae4235e6dac0694637c763029ecea1a2ec9e4e06ec2729bd21ba4d9c863eb7"
 name = "builder"
 version = "1.0.0-beta1"
 dependencies = [
- "bindgen",
+ "bindgen 0.71.1",
  "build_const",
  "cc",
  "rustc_version",
@@ -987,7 +1010,7 @@ dependencies = [
  "nix",
  "terminfo",
  "thiserror 2.0.12",
- "which",
+ "which 7.0.2",
  "windows-sys 0.59.0",
 ]
 
@@ -1573,7 +1596,7 @@ dependencies = [
 name = "entry"
 version = "1.0.0-beta1"
 dependencies = [
- "bindgen",
+ "bindgen 0.71.1",
  "builder",
  "bumpalo",
  "libloading",
@@ -1581,6 +1604,26 @@ dependencies = [
  "substrate",
  "tikv-jemallocator",
  "umbrella",
+]
+
+[[package]]
+name = "enumflags2"
+version = "0.7.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba2f4b465f5318854c6f8dd686ede6c0a9dc67d4b1ac241cf0eb51521a309147"
+dependencies = [
+ "enumflags2_derive",
+]
+
+[[package]]
+name = "enumflags2_derive"
+version = "0.7.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fc4caf64a58d7a6d65ab00639b046ff54399a39f5f2554728895ace4b297cd79"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -1683,6 +1726,15 @@ dependencies = [
  "libc",
  "libredox",
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "find_cuda_helper"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9f9e65c593dd01ac77daad909ea4ad17f0d6d1776193fc8ea766356177abdad"
+dependencies = [
+ "glob",
 ]
 
 [[package]]
@@ -2089,6 +2141,12 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "hermit-abi"
+version = "0.3.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
+
+[[package]]
+name = "hermit-abi"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fbf6a919d6cf397374f7dfeeea91d974c7c0a7221d0d0f4f20d859d329e53fcc"
@@ -2104,6 +2162,30 @@ name = "hex"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
+
+[[package]]
+name = "hf-hub"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cc03dcb0b0a83ae3f3363ec811014ae669f083e4e499c66602f447c4828737a1"
+dependencies = [
+ "dirs",
+ "futures 0.3.31",
+ "http",
+ "indicatif",
+ "libc",
+ "log",
+ "native-tls",
+ "num_cpus",
+ "rand 0.8.5",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.12",
+ "tokio",
+ "ureq",
+ "windows-sys 0.59.0",
+]
 
 [[package]]
 name = "home"
@@ -2686,6 +2768,15 @@ checksum = "7943c866cc5cd64cbc25b2e01621d07fa8eb2a1a23160ee81ce38704e97b8ecf"
 
 [[package]]
 name = "itertools"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
+dependencies = [
+ "either",
+]
+
+[[package]]
+name = "itertools"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
@@ -2897,6 +2988,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
+name = "lazycell"
+version = "1.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
+
+[[package]]
 name = "libc"
 version = "0.2.171"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2994,6 +3091,48 @@ name = "litemap"
 version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23fb14cb19457329c82206317a5663005a4d404783dc74f4252769b0d5f42856"
+
+[[package]]
+name = "llama-cpp-2"
+version = "0.1.102"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a419bb48efa0f8389a82301f1f64e2874568a3fbf6f62f8ddab5324382b82768"
+dependencies = [
+ "enumflags2",
+ "llama-cpp-sys-2",
+ "thiserror 1.0.69",
+ "tracing",
+ "tracing-core",
+]
+
+[[package]]
+name = "llama-cpp-sys-2"
+version = "0.1.102"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0522f9894e22dd988dd2e34222bda7acba53a0dcce744ca6d8ddce905ba33a4e"
+dependencies = [
+ "bindgen 0.69.5",
+ "cc",
+ "cmake",
+ "find_cuda_helper",
+ "glob",
+ "walkdir",
+]
+
+[[package]]
+name = "local-ai"
+version = "1.0.0-beta1"
+dependencies = [
+ "anyhow",
+ "clap",
+ "encoding_rs",
+ "hf-hub",
+ "java_native",
+ "jni",
+ "llama-cpp-2",
+ "tokio",
+ "tracing-subscriber",
+]
 
 [[package]]
 name = "lock_api"
@@ -3324,7 +3463,7 @@ dependencies = [
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "wasm-streams",
- "which",
+ "which 7.0.2",
 ]
 
 [[package]]
@@ -3582,6 +3721,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "num_cpus"
+version = "1.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4161fcb6d602d4d2081af7c3a45852d875a03dd337a6bfdd6e06407b61342a43"
+dependencies = [
+ "hermit-abi 0.3.9",
+ "libc",
+]
+
+[[package]]
 name = "number_prefix"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3792,7 +3941,7 @@ dependencies = [
  "serde_json",
  "thiserror 1.0.69",
  "tracing",
- "which",
+ "which 7.0.2",
 ]
 
 [[package]]
@@ -3925,7 +4074,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c5482acf27be53699af8214b9067b71117f34d74974db4b0feef1c09b556c274"
 dependencies = [
  "nom 8.0.0",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde_json",
  "thiserror 2.0.12",
@@ -3966,7 +4115,7 @@ dependencies = [
  "bumpalo",
  "hashbrown 0.15.2",
  "oxc_data_structures",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "simdutf8",
 ]
 
@@ -4018,7 +4167,7 @@ dependencies = [
  "oxc_index",
  "oxc_syntax",
  "petgraph",
- "rustc-hash",
+ "rustc-hash 2.1.1",
 ]
 
 [[package]]
@@ -4037,7 +4186,7 @@ dependencies = [
  "oxc_sourcemap",
  "oxc_span",
  "oxc_syntax",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "ryu-js",
 ]
 
@@ -4095,7 +4244,7 @@ dependencies = [
  "oxc_ecmascript",
  "oxc_span",
  "oxc_syntax",
- "rustc-hash",
+ "rustc-hash 2.1.1",
 ]
 
 [[package]]
@@ -4111,7 +4260,7 @@ dependencies = [
  "oxc_index",
  "oxc_semantic",
  "oxc_span",
- "rustc-hash",
+ "rustc-hash 2.1.1",
 ]
 
 [[package]]
@@ -4132,7 +4281,7 @@ dependencies = [
  "oxc_span",
  "oxc_syntax",
  "oxc_traverse",
- "rustc-hash",
+ "rustc-hash 2.1.1",
 ]
 
 [[package]]
@@ -4153,7 +4302,7 @@ dependencies = [
  "oxc_regular_expression",
  "oxc_span",
  "oxc_syntax",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "seq-macro",
 ]
 
@@ -4168,7 +4317,7 @@ dependencies = [
  "oxc_estree",
  "oxc_span",
  "phf",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "unicode-id-start",
 ]
 
@@ -4189,7 +4338,7 @@ dependencies = [
  "oxc_span",
  "oxc_syntax",
  "phf",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "self_cell",
 ]
 
@@ -4202,7 +4351,7 @@ dependencies = [
  "base64-simd",
  "cfg-if",
  "cow-utils",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde_json",
 ]
@@ -4234,7 +4383,7 @@ dependencies = [
  "oxc_index",
  "oxc_span",
  "phf",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "ryu-js",
  "unicode-id-start",
 ]
@@ -4262,7 +4411,7 @@ dependencies = [
  "oxc_span",
  "oxc_syntax",
  "oxc_traverse",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde_json",
  "sha1",
@@ -4283,7 +4432,7 @@ dependencies = [
  "oxc_semantic",
  "oxc_span",
  "oxc_syntax",
- "rustc-hash",
+ "rustc-hash 2.1.1",
 ]
 
 [[package]]
@@ -4428,7 +4577,7 @@ dependencies = [
  "once_cell",
  "pep440_rs",
  "regex",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "smallvec",
  "thiserror 1.0.69",
@@ -4730,7 +4879,7 @@ dependencies = [
  "indexmap 2.8.0",
  "log",
  "priority-queue",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "thiserror 2.0.12",
  "version-ranges 0.1.1 (git+https://github.com/astral-sh/pubgrub?rev=b70cf707aa43f21b32f3a61b8a0889b15032d5c4)",
 ]
@@ -4784,7 +4933,7 @@ dependencies = [
  "pin-project-lite",
  "quinn-proto",
  "quinn-udp",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "rustls",
  "socket2",
  "thiserror 2.0.12",
@@ -4803,7 +4952,7 @@ dependencies = [
  "getrandom 0.3.2",
  "rand 0.9.0",
  "ring",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "rustls",
  "rustls-pki-types",
  "slab",
@@ -4963,7 +5112,7 @@ dependencies = [
  "ruff_python_trivia",
  "ruff_source_file",
  "ruff_text_size",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "salsa",
  "smallvec",
  "static_assertions",
@@ -5088,6 +5237,7 @@ dependencies = [
  "async-compression",
  "base64 0.22.1",
  "bytes 1.10.1",
+ "encoding_rs",
  "futures-channel",
  "futures-core",
  "futures-util",
@@ -5117,6 +5267,7 @@ dependencies = [
  "serde_json",
  "serde_urlencoded",
  "sync_wrapper",
+ "system-configuration",
  "tokio",
  "tokio-native-tls",
  "tokio-rustls",
@@ -5296,7 +5447,7 @@ dependencies = [
  "ruff_source_file",
  "ruff_text_size",
  "ruff_workspace",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde_json",
  "shellexpand",
@@ -5355,7 +5506,7 @@ dependencies = [
  "ruff_python_trivia",
  "ruff_source_file",
  "ruff_text_size",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "salsa",
  "serde",
  "thiserror 2.0.12",
@@ -5385,7 +5536,7 @@ dependencies = [
  "ruff_cache",
  "ruff_macros",
  "ruff_text_size",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "static_assertions",
  "tracing",
@@ -5465,7 +5616,7 @@ dependencies = [
  "ruff_python_trivia",
  "ruff_source_file",
  "ruff_text_size",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde_json",
  "similar",
@@ -5527,7 +5678,7 @@ dependencies = [
  "ruff_python_trivia",
  "ruff_source_file",
  "ruff_text_size",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "salsa",
  "serde",
 ]
@@ -5563,7 +5714,7 @@ dependencies = [
  "ruff_python_trivia",
  "ruff_source_file",
  "ruff_text_size",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "smallvec",
  "static_assertions",
@@ -5606,7 +5757,7 @@ dependencies = [
  "ruff_python_ast",
  "ruff_python_trivia",
  "ruff_text_size",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "static_assertions",
  "unicode-ident",
  "unicode-normalization",
@@ -5627,7 +5778,7 @@ dependencies = [
  "ruff_python_parser",
  "ruff_python_stdlib",
  "ruff_text_size",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "smallvec",
 ]
@@ -5677,7 +5828,7 @@ dependencies = [
  "ruff_source_file",
  "ruff_text_size",
  "ruff_workspace",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde_json",
  "shellexpand",
@@ -5736,7 +5887,7 @@ dependencies = [
  "ruff_python_semantic",
  "ruff_python_stdlib",
  "ruff_source_file",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "shellexpand",
  "strum",
@@ -5768,6 +5919,12 @@ name = "rustc-demangle"
 version = "0.1.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "719b953e2095829ee67db738b3bfa9fa368c94900df327b3f07fe6e794d2fe1f"
+
+[[package]]
+name = "rustc-hash"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
 
 [[package]]
 name = "rustc-hash"
@@ -5816,6 +5973,7 @@ version = "0.23.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "822ee9188ac4ec04a2f0531e55d035fb2de73f18b41a63c70c2712503b6fb13c"
 dependencies = [
+ "log",
  "once_cell",
  "ring",
  "rustls-pki-types",
@@ -5898,7 +6056,7 @@ dependencies = [
  "parking_lot 0.12.3",
  "portable-atomic",
  "rayon",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "salsa-macro-rules",
  "salsa-macros",
  "smallvec",
@@ -6455,6 +6613,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "socks"
+version = "0.3.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f0c3dbbd9ae980613c6dd8e28a9407b50509d3803b57624d5dfe8315218cd58b"
+dependencies = [
+ "byteorder",
+ "libc",
+ "winapi",
+]
+
+[[package]]
 name = "spdx"
 version = "0.10.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6467,7 +6636,7 @@ dependencies = [
 name = "sqlite"
 version = "1.0.0-beta1"
 dependencies = [
- "bindgen",
+ "bindgen 0.71.1",
  "builder",
  "java_native",
 ]
@@ -6547,7 +6716,7 @@ dependencies = [
 name = "substrate"
 version = "1.0.0-beta1"
 dependencies = [
- "bindgen",
+ "bindgen 0.71.1",
  "builder",
 ]
 
@@ -6645,6 +6814,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "system-configuration"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c879d448e9d986b661742763247d3693ed13609438cf3d006f51f5368a5ba6b"
+dependencies = [
+ "bitflags 2.9.0",
+ "core-foundation 0.9.4",
+ "system-configuration-sys",
+]
+
+[[package]]
+name = "system-configuration-sys"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8e1d1b10ced5ca923a1fcb8d03e96b8d3268065d724548c0211415ff6ac6bac4"
+dependencies = [
+ "core-foundation-sys",
+ "libc",
+]
+
+[[package]]
 name = "tar"
 version = "0.4.44"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6697,7 +6887,7 @@ dependencies = [
 name = "terminal"
 version = "1.0.0-beta1"
 dependencies = [
- "bindgen",
+ "bindgen 0.71.1",
  "builder",
 ]
 
@@ -7448,10 +7638,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "02d1a66277ed75f640d608235660df48c8e3c19f3b4edb6a263315626cc3c01d"
 dependencies = [
  "base64 0.22.1",
+ "flate2",
  "log",
  "native-tls",
  "once_cell",
+ "rustls",
+ "rustls-pki-types",
+ "serde",
+ "serde_json",
+ "socks",
  "url",
+ "webpki-roots",
 ]
 
 [[package]]
@@ -7547,7 +7744,7 @@ dependencies = [
  "regex",
  "reqwest",
  "rkyv",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "self-replace",
  "serde",
  "serde_json",
@@ -7608,7 +7805,7 @@ dependencies = [
  "uv-workspace",
  "version-ranges 0.1.1 (git+https://github.com/astral-sh/pubgrub?rev=b70cf707aa43f21b32f3a61b8a0889b15032d5c4)",
  "walkdir",
- "which",
+ "which 7.0.2",
  "zip 2.5.0",
 ]
 
@@ -7626,7 +7823,7 @@ dependencies = [
  "reqwest",
  "reqwest-middleware",
  "rust-netrc",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "schemars",
  "serde",
  "tokio",
@@ -7681,7 +7878,7 @@ dependencies = [
  "itertools 0.14.0",
  "owo-colors",
  "regex",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde_json",
  "tempfile",
@@ -7713,7 +7910,7 @@ dependencies = [
  "fs-err 3.1.0",
  "nanoid",
  "rmp-serde",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "same-file",
  "serde",
  "tempfile",
@@ -7846,7 +8043,7 @@ dependencies = [
  "either",
  "fs-err 3.1.0",
  "rayon",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "same-file",
  "schemars",
  "serde",
@@ -7865,7 +8062,7 @@ dependencies = [
  "uv-pep508",
  "uv-platform-tags",
  "uv-static",
- "which",
+ "which 7.0.2",
 ]
 
 [[package]]
@@ -7895,7 +8092,7 @@ dependencies = [
  "anyhow",
  "futures 0.3.31",
  "itertools 0.14.0",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "thiserror 2.0.12",
  "tokio",
  "tracing",
@@ -7933,7 +8130,7 @@ dependencies = [
  "reqwest",
  "reqwest-middleware",
  "rmp-serde",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "tempfile",
  "thiserror 2.0.12",
@@ -7997,7 +8194,7 @@ dependencies = [
  "percent-encoding",
  "petgraph",
  "rkyv",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "schemars",
  "serde",
  "serde_json",
@@ -8032,7 +8229,7 @@ dependencies = [
  "md-5",
  "rayon",
  "reqwest",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "sha2",
  "thiserror 2.0.12",
  "tokio",
@@ -8090,7 +8287,7 @@ dependencies = [
  "uv-git-types",
  "uv-static",
  "uv-version",
- "which",
+ "which 7.0.2",
 ]
 
 [[package]]
@@ -8131,7 +8328,7 @@ dependencies = [
  "pathdiff",
  "reflink-copy",
  "regex",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "same-file",
  "schemars",
  "self-replace",
@@ -8163,7 +8360,7 @@ dependencies = [
  "fs-err 3.1.0",
  "futures 0.3.31",
  "rayon",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "same-file",
  "tempfile",
  "thiserror 2.0.12",
@@ -8271,7 +8468,7 @@ dependencies = [
  "indexmap 2.8.0",
  "itertools 0.14.0",
  "regex",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "schemars",
  "serde",
  "smallvec",
@@ -8300,7 +8497,7 @@ source = "git+https://github.com/elide-dev/uv?rev=664c77a6e12b4735c0000bbb44f895
 dependencies = [
  "memchr",
  "rkyv",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "thiserror 2.0.12",
  "uv-small-str",
@@ -8321,7 +8518,7 @@ dependencies = [
  "reqwest",
  "reqwest-middleware",
  "reqwest-retry",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde_json",
  "thiserror 2.0.12",
@@ -8355,7 +8552,7 @@ dependencies = [
  "petgraph",
  "regex",
  "rkyv",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "serde-untagged",
  "thiserror 2.0.12",
@@ -8418,7 +8615,7 @@ dependencies = [
  "uv-static",
  "uv-trampoline-builder",
  "uv-warnings",
- "which",
+ "which 7.0.2",
  "windows-registry 0.5.1",
  "windows-result 0.3.2",
  "windows-sys 0.59.0",
@@ -8434,7 +8631,7 @@ dependencies = [
  "console",
  "fs-err 3.1.0",
  "futures 0.3.31",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "thiserror 2.0.12",
  "toml",
@@ -8500,7 +8697,7 @@ dependencies = [
  "petgraph",
  "pubgrub",
  "rkyv",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "same-file",
  "schemars",
  "serde",
@@ -8699,7 +8896,7 @@ version = "0.0.1"
 source = "git+https://github.com/elide-dev/uv?rev=664c77a6e12b4735c0000bbb44f895c892c62aa0#664c77a6e12b4735c0000bbb44f895c892c62aa0"
 dependencies = [
  "anyhow",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "thiserror 2.0.12",
  "url",
  "uv-cache",
@@ -8746,7 +8943,7 @@ source = "git+https://github.com/elide-dev/uv?rev=664c77a6e12b4735c0000bbb44f895
 dependencies = [
  "anstream",
  "owo-colors",
- "rustc-hash",
+ "rustc-hash 2.1.1",
 ]
 
 [[package]]
@@ -8758,7 +8955,7 @@ dependencies = [
  "glob",
  "itertools 0.14.0",
  "owo-colors",
- "rustc-hash",
+ "rustc-hash 2.1.1",
  "serde",
  "thiserror 2.0.12",
  "tokio",
@@ -9049,6 +9246,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2210b291f7ea53617fbafcc4939f10914214ec15aace5ba62293a668f322c5c9"
 dependencies = [
  "rustls-pki-types",
+]
+
+[[package]]
+name = "which"
+version = "4.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "87ba24419a2078cd2b0f2ede2691b6c66d8e47836da3b6db8265ebad47afbfc7"
+dependencies = [
+ "either",
+ "home",
+ "once_cell",
+ "rustix 0.38.44",
 ]
 
 [[package]]

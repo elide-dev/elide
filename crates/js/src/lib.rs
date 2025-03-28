@@ -47,16 +47,12 @@ pub fn precompile<'a>(
     } else {
       Some(SourceType::ts())
     }
+  } else if jsx == jni::sys::JNI_TRUE {
+    Some(SourceType::jsx())
+  } else if esm == jni::sys::JNI_TRUE {
+    Some(SourceType::mjs())
   } else {
-    if jsx == jni::sys::JNI_TRUE {
-      Some(SourceType::jsx())
-    } else {
-      if esm == jni::sys::JNI_TRUE {
-        Some(SourceType::mjs())
-      } else {
-        Some(SourceType::cjs())
-      }
-    }
+    Some(SourceType::cjs())
   };
   let generatorOptions = GeneratorOptions {
     source_type,

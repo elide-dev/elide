@@ -66,7 +66,5 @@ public object NativeLibraries {
    * @param path The path to the library.
    * @param name The name of the library to load.
    */
-  public fun loadLibrary(path: String, name: String): Boolean {
-    return runCatching { System.load(path + name) }.isSuccess
-  }
+  public fun loadLibrary(path: String, name: String): Boolean = runCatching { System.load(path + name) }.isSuccess
 }

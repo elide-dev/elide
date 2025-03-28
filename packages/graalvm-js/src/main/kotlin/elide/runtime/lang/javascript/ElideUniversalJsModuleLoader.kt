@@ -62,6 +62,9 @@ private const val ELIDE_TS_LANGUAGE_ID = "ts"
 // All built-in Elide modules.
 private val allElideModules = sortedSetOf(
   "sqlite",
+  "llm",
+  "llm/local",
+  "llm/remote",
 )
 
 // All TypeScript extensions.

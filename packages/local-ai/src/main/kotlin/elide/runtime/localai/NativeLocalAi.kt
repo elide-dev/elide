@@ -20,13 +20,9 @@ import java.util.stream.Stream
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
-import kotlin.collections.asSequence
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 import kotlin.random.Random
-import kotlin.streams.asSequence
 import elide.runtime.core.lib.NativeLibraries
 
 /**
@@ -47,11 +43,11 @@ import elide.runtime.core.lib.NativeLibraries
  * - [infer] is much more efficient; it returns a [InferenceResults.Suspending] object immediately, and inference takes
  *   place in the background through a hot stream.
  *
- * Results are made uniform via the [NativeLocalAi.InferenceResults] API, which is sealed to include:
+ * Results are made uniform via the [InferenceResults] API, which is sealed to include:
  *
- * - [NativeLocalAi.InferenceResults.Error] for failed inference operations.
- * - [NativeLocalAi.InferenceResults.Streamed] for streamed results (i.e. via Java [Stream]s).
- * - [NativeLocalAi.InferenceResults.Suspending] for suspending results (i.e. via Kotlin [Flow]s).
+ * - [InferenceResults.Error] for failed inference operations.
+ * - [InferenceResults.Streamed] for streamed results (i.e. via Java [Stream]s).
+ * - [InferenceResults.Suspending] for suspending results (i.e. via Kotlin [Flow]s).
  *
  * ## Native Code
  *
@@ -75,139 +71,6 @@ public object NativeLocalAi : AutoCloseable {
     }
   }
 
-  /**
-   * ### Parameters
-   *
-   * Parameters for configuring local AI inference; these are consumed statically, and passed to the native layer for
-   * use by the inference engine.
-   *
-   * @property verbose Flag to emit native inference logs to stderr.
-   * @property allowDownload Flag to allow downloading of models from HuggingFace.
-   * @property disableGpu Flag to forcibly disable GPU support.
-   * @property gpuLayers The number of GPU layers to use for local AI inference; if GPU layers are not supported by the
-   *   native layer, this parameter is ignored.
-   * @property contextSize The context window size to use for inference.
-   * @property huggingFaceToken The HuggingFace API token to use for downloading models, or `null` if not applicable.
-   * @property threadCount The number of threads to use for inference.
-   * @property threadBatchCount The number of threads to use for batching.
-   * @property length Explicit token length (prompt + desired output) for generation, or `null` to default (`42`).
-   * @constructor Create a set of local AI parameters.
-   */
-  @JvmRecord public data class Parameters private constructor (
-    public val verbose: Boolean = DEFAULT_VERBOSE,
-    public val allowDownload: Boolean = DEFAULT_ALLOW_DOWNLOAD,
-    public val disableGpu: Boolean = DISABLE_GPU,
-    public val huggingFaceToken: String? = System.getenv("HUGGINGFACE_TOKEN"),
-    public val gpuLayers: UInt = DEFAULT_GPU_LAYERS,
-    public val contextSize: UInt = DEFAULT_CONTEXT_SIZE,
-    public val threadCount: UInt = DEFAULT_THREAD_COUNT,
-    public val threadBatchCount: UInt = DEFAULT_THREAD_BATCH_COUNT,
-    public val length: UInt? = null,
-  ) {
-    public companion object {
-      /** Kill-switch for GPU support. */
-      public const val DISABLE_GPU: Boolean = false
-
-      /** Default flag to emit native inference logs to stderr. */
-      public const val DEFAULT_VERBOSE: Boolean = false
-
-      /** Default flag to allow downloading of models from HuggingFace. */
-      public const val DEFAULT_ALLOW_DOWNLOAD: Boolean = true
-
-      /** Default GPU layer count, where supported. */
-      public const val DEFAULT_GPU_LAYERS: UInt = 1000u
-
-      /** Default context window size. */
-      public const val DEFAULT_CONTEXT_SIZE: UInt = 2048u
-
-      /** Default thread count. */
-      public const val DEFAULT_THREAD_COUNT: UInt = 16u
-
-      /** Default thread batch value. */
-      public const val DEFAULT_THREAD_BATCH_COUNT: UInt = 4u
-
-      /** @return Parameters with the provided values. */
-      @JvmStatic public fun create(
-        verbose: Boolean = DEFAULT_VERBOSE,
-        gpuLayers: UInt = DEFAULT_GPU_LAYERS,
-        disableGpu: Boolean = DISABLE_GPU,
-        contextSize: UInt = DEFAULT_CONTEXT_SIZE,
-        allowDownload: Boolean = DEFAULT_ALLOW_DOWNLOAD,
-        threadCount: UInt = DEFAULT_THREAD_COUNT,
-        threadBatchCount: UInt = DEFAULT_THREAD_BATCH_COUNT,
-        huggingFaceToken: String? = System.getenv("HUGGINGFACE_TOKEN"),
-      ): Parameters = Parameters(
-        verbose = verbose,
-        disableGpu = disableGpu,
-        gpuLayers = gpuLayers,
-        contextSize = contextSize,
-        huggingFaceToken = huggingFaceToken,
-        allowDownload = allowDownload,
-        threadCount = threadCount,
-        threadBatchCount = threadBatchCount,
-      )
-
-      /** @return Default inference parameters. */
-      @JvmStatic public fun defaults(): Parameters = create()
-    }
-  }
-
-  /**
-   * ### Model Specification
-   *
-   * Model specification objects describe the AI model which is used for inference. The engine supports local models
-   * which are available on-disk, as well as remote models hosted on platforms like HuggingFace. If a remote model is
-   * selected, it will be downloaded and cached locally for use.
-   *
-   * See [OnDiskModel] and [HuggingFaceModel] for more information.
-   *
-   * When selecting a model, certain parameters or other inputs may need alignment with expected values. Consult the
-   * model's documentation for more information.
-   */
-  public sealed interface Model {
-    /**
-     * Local (On-disk) Model
-     *
-     * Describes a model which already resides on-disk at a known path.
-     *
-     * @property path The path to the model on disk.
-     * @constructor Create a local model specification.
-     */
-    @JvmInline public value class OnDiskModel internal constructor (public val path: Path) : Model
-
-    /**
-     * Remote (HuggingFace) model.
-     *
-     * Describes a model which is hosted on HuggingFace, and must be downloaded and cached for local use; the parameters
-     * [repo] and [name] are used to identify the model, and [path] is the local path where the model is cached.
-     *
-     * @property repo The HuggingFace repository where the model is hosted.
-     * @property name The name of the model within the repository.
-     * @property path The local path where the model is cached; if `null`, one will be calculated at runtime.
-     * @constructor Create a HuggingFace model specification.
-     */
-    @JvmRecord public data class HuggingFaceModel internal constructor (
-      public val repo: String,
-      public val name: String,
-      public val path: Path? = null,
-    ) : Model
-
-    /** Factories for model specifications. */
-    public companion object {
-      /** @return Configured local path for a model. */
-      @JvmStatic public fun atPath(path: Path): OnDiskModel = OnDiskModel(path)
-
-      /** @return Configured HuggingFace parameters for a model. */
-      @JvmStatic public fun huggingface(repo: String, name: String, path: Path? = null): HuggingFaceModel {
-        return HuggingFaceModel(
-          repo = repo,
-          name = name,
-          path = path,
-        )
-      }
-    }
-  }
-
   // Determine a default path to store a model at.
   @JvmStatic private fun defaultModelPath(model: Model.HuggingFaceModel): Path =
     Files.createTempDirectory("elide-localai-${model.hashCode()}")
@@ -220,102 +83,6 @@ public object NativeLocalAi : AutoCloseable {
         return if (promptLength > 0) promptLength + (params.contextSize.toInt() / 2) else params.contextSize.toInt()
       }
       else -> return explicitLength
-    }
-  }
-
-  /**
-   * ## Inference Results
-   *
-   * Specifies the uniform API defined by each inference result container type. Inference containers can hold their
-   * result data ahead of time, or buffer it as it arrives, or provide it to callers in chunked/streaming form.
-   *
-   * @property success Whether the operation succeeded.
-   */
-  public sealed interface InferenceResults {
-    /** Whether the operation succeeded. */
-    public val success: Boolean
-
-    /**
-     * ### Inference Results (Error)
-     *
-     * Static result which indicates a failed inference operation; if possible, a message is specified.
-     *
-     * @property message Error message describing what caused inference to fail.
-     */
-    @JvmInline public value class Error internal constructor(private val msg: String) : InferenceResults {
-      override val success: Boolean get() = false
-
-      /** Error message which caused inference to fail. */
-      public val message: String get() = msg
-    }
-
-    /**
-     * ### Inference Results (Streamed)
-     *
-     * Streamed results of a local AI inference operation.
-     *
-     * @param stream Stream of tokens generated by the inference operation.
-     */
-    @JvmInline public value class Streamed internal constructor(public val stream: Stream<String>) : InferenceResults {
-      override val success: Boolean get() = true
-
-      /** Resulting token stream as a Kotlin sequence. */
-      public val sequence: Sequence<String> get() = stream.asSequence()
-    }
-
-    /**
-     * ### Inference Results (Suspending)
-     *
-     * Streamed results of a local AI inference operation.
-     *
-     * @param flow Flow of tokens generated by the inference operation.
-     */
-    @JvmInline public value class Suspending @PublishedApi internal constructor(
-      private val flow: Flow<String>,
-    ) : InferenceResults {
-      override val success: Boolean get() = true
-
-      /** Resulting token flow. */
-      public fun asFlow(): Flow<String> = flow
-
-      /** Collect the results into a collection. */
-      public suspend fun collect(): Collection<String> = flow.toList()
-    }
-
-    /**
-     * ### Inference Results (Synchronous)
-     *
-     * Synchronous results of a local AI inference operation.
-     *
-     * @param value The results buffered as a string.
-     */
-    @JvmInline public value class Sync internal constructor(public val value: Collection<String>) : InferenceResults {
-      override val success: Boolean get() = true
-
-      /** Resulting token stream as a Kotlin sequence. */
-      public val sequence: Sequence<String> get() = value.asSequence()
-    }
-
-    /** Factories for inference results. */
-    public companion object {
-      /** @return Streamed inference results. */
-      @JvmStatic
-      public inline fun suspending(crossinline producer: suspend FlowCollector<String>.() -> Unit): Suspending {
-        return flow {
-          producer()
-        }.let {
-          Suspending(it)
-        }
-      }
-
-      /** @return Streamed inference results. */
-      @JvmStatic public fun streamed(stream: Stream<String>): InferenceResults = Streamed(stream)
-
-      /** @return Synchronous inference results [Collection] of [String]s. */
-      @JvmStatic public fun of(value: Collection<String>): InferenceResults = Sync(value)
-
-      /** @return Synchronous inference results from a [String]. */
-      @JvmStatic public fun of(value: String): InferenceResults = Sync(listOf(value))
     }
   }
 
@@ -336,26 +103,6 @@ public object NativeLocalAi : AutoCloseable {
       null -> "" to ""
       else -> huggingFace
     }
-  }
-
-  /**
-   * ## Inference Chunk Callback
-   *
-   * Callback type which is used to consume chunks of generated inference output. An object of this type is defined by
-   * the engine or developer, and is called from the native inference layer (via JNI) as inference output is generated
-   * from background threads.
-   *
-   * See [infer] for more information.
-   */
-  @FunctionalInterface public fun interface InferenceChunkCallback {
-    /**
-     * Receive a chunk of generated output from an inference operation.
-     *
-     * This method is called from the native layer, so it must be available for use via reflection and JNI.
-     *
-     * @param chunk The chunk of output generated by the inference operation.
-     */
-    public fun onChunk(chunk: String)
   }
 
   /**

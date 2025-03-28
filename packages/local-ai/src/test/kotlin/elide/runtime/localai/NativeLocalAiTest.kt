@@ -16,8 +16,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertNotNull
 import kotlinx.coroutines.test.runTest
 import kotlin.test.assertTrue
-import elide.runtime.localai.NativeLocalAi.Model
-import elide.runtime.localai.NativeLocalAi.Parameters
 import elide.testing.annotations.Test
 
 class NativeLocalAiTest {

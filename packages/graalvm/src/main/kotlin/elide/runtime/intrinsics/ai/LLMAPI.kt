@@ -12,7 +12,11 @@
  */
 package elide.runtime.intrinsics.ai
 
+import org.graalvm.polyglot.Value
 import elide.runtime.interop.ReadOnlyProxyObject
+import elide.runtime.localai.Parameters
+import elide.runtime.localai.Model
+import elide.vm.annotations.Polyglot
 
 /**
  * ## LLM API
@@ -23,5 +27,29 @@ public interface LLMAPI : ReadOnlyProxyObject {
    *
    * @return Version of the active LLM API.
    */
-  public fun version(): String
+  @Polyglot public fun version(): String
+
+  /**
+   * Generate or build model parameters for use with LLMs; provided values override defaults.
+   *
+   * @param options Options to use for generation.
+   * @return Generated model parameters.
+   */
+  @Polyglot public fun params(options: Value?): Parameters
+
+  /**
+   * Generate a model spec for an on-disk model.
+   *
+   * @param options Model options.
+   * @return Generated model parameters.
+   */
+  @Polyglot public fun localModel(options: Value): Model
+
+  /**
+   * Generate a model spec for a remote model based on HuggingFace.
+   *
+   * @param options Model options.
+   * @return Generated model parameters.
+   */
+  @Polyglot public fun huggingface(options: Value): Model
 }

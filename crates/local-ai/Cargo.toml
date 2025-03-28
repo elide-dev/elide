@@ -22,6 +22,10 @@ repository = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
 
+[profile.release]
+opt-level = "s"
+lto = true
+
 [lib]
 crate-type = ["lib", "staticlib", "cdylib"]
 
@@ -33,7 +37,10 @@ path = "src/main.rs"
 cuda = []
 vulkan = []
 aitool = ["tokio"]
-default = ["aitool"]
+default = ["aitool", "nonblocking"]
+unsafe = []
+blocking = []
+nonblocking = []
 debug = []
 
 [dependencies]
@@ -46,3 +53,4 @@ jni = { workspace = true, default-features = false }
 llama-cpp-2 = { workspace = true }
 tokio = { workspace = true, optional = true }
 tracing-subscriber = { workspace = true }
+lazy_static = { workspace = true }

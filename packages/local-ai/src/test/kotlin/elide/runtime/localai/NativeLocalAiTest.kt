@@ -14,6 +14,8 @@ package elide.runtime.localai
 
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertNotNull
+import kotlinx.coroutines.test.runTest
+import kotlin.test.assertTrue
 import elide.runtime.localai.NativeLocalAi.Model
 import elide.runtime.localai.NativeLocalAi.Parameters
 import elide.testing.annotations.Test
@@ -32,7 +34,7 @@ class NativeLocalAiTest {
     assertDoesNotThrow { NativeLocalAi.ensureAvailable() }
   }
 
-  @Test fun testBasicPrompt() {
+  @Test fun testSyncPromptHuggingFace() {
     val results = assertDoesNotThrow {
       NativeLocalAi.inferSync(
         Parameters.defaults(),
@@ -41,5 +43,18 @@ class NativeLocalAiTest {
       )
     }
     assertNotNull(results)
+  }
+
+  @Test fun testStreamingPromptHuggingFace() = runTest {
+    val inference = assertDoesNotThrow {
+      NativeLocalAi.infer(
+        Parameters.defaults(),
+        model = llama2_7b,
+        prompt = "Complete the sentence and don't add more: The quick brown fox jumped over",
+      )
+    }
+    val collected = inference.collect().joinToString()
+    assertNotNull(collected)
+    assertTrue(collected.isNotEmpty())
   }
 }

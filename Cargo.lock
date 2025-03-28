@@ -3129,7 +3129,9 @@ dependencies = [
  "hf-hub",
  "java_native",
  "jni",
+ "lazy_static",
  "llama-cpp-2",
+ "rand 0.8.5",
  "tokio",
  "tracing-subscriber",
 ]

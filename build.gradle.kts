@@ -138,12 +138,6 @@ buildscript {
   }
 }
 
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(22)
-  }
-}
-
 dependencies {
   // Kover: Coverage Reporting
   listOfNotNull(

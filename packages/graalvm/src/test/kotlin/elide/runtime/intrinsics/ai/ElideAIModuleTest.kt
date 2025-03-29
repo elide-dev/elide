@@ -12,7 +12,9 @@
  */
 package elide.runtime.intrinsics.ai
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertNotNull
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 import elide.annotations.Inject
 import elide.runtime.node.ElideJsModuleTest
@@ -31,6 +33,8 @@ import elide.testing.annotations.TestCase
     yield("params")
     yield("huggingface")
     yield("version")
+    yield("infer")
+    yield("inferSync")
   }
 
   @Test override fun testInjectable() {
@@ -65,7 +69,7 @@ import elide.testing.annotations.TestCase
       const { huggingface } = require("elide:llm");
       const spec = huggingface({
         "repo": "TheBloke/Llama-2-7B-Chat-GGUF",
-        "name": "llama-2-7b-chat.Q4_K_M.gguf",
+        "name": "llama-2-7b-chat.Q4_K_M.gguf"
       })
       test(spec).isNotNull();
     """
@@ -154,4 +158,54 @@ import elide.testing.annotations.TestCase
       test(version()).isEqualTo('v1');
     """
   }
+
+  @Test @Ignore fun testHuggingFaceInferSync() = executeGuest {
+    // language=JavaScript
+    """
+      const { huggingface, params } = require("elide:llm");
+      const { inferSync } = require("elide:llm/local");
+
+      const llama2_7b = huggingface({
+        "repo": "TheBloke/Llama-2-7B-Chat-GGUF",
+        "name": "llama-2-7b-chat.Q4_K_M.gguf"
+      })
+      test(llama2_7b).isNotNull();
+      const result = inferSync(
+        params(),
+        llama2_7b,
+        "Complete the sentence: The quick brown fox jumped over",
+      )
+      test(result).isNotNull();
+      test(typeof result === 'string').isEqualTo(true);
+    """
+  }.doesNotFail()
+
+  @Test @Ignore fun testHuggingFaceInfer() = executeGuest {
+    // language=JavaScript
+    """
+      const { huggingface, params } = require("elide:llm");
+      const { infer } = require("elide:llm/local");
+
+      const llama2_7b = huggingface({
+        "repo": "TheBloke/Llama-2-7B-Chat-GGUF",
+        "name": "llama-2-7b-chat.Q4_K_M.gguf"
+      })
+      test(llama2_7b).isNotNull();
+      async function doTest() {
+        const result = await infer(
+            params(),
+            llama2_7b,
+            "Complete the sentence: The quick brown fox jumped over",
+        )
+        test(result).isNotNull();
+        test(typeof result === 'string').isEqualTo(true);
+        return result;
+      }
+      doTest().then((result) => {
+        test(result).isNotNull();
+      }, (err) => {
+        console.error("Failed to infer:", err);
+      });
+    """
+  }.doesNotFail()
 }

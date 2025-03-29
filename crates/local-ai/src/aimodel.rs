@@ -50,7 +50,7 @@ impl Model {
         Ok(v) => Ok(v),
         Err(e) => {
           eprintln!("Error downloading model: {:?}", e);
-          panic!("failed to download model");
+          Err(anyhow::anyhow!("Error downloading model: {:?}", e))
         }
       },
     }

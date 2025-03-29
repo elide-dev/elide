@@ -61,6 +61,11 @@ public sealed interface Model {
 
     /** @return Configured HuggingFace parameters for a model. */
     @JvmStatic public fun huggingface(repo: String, name: String, path: Path? = null): HuggingFaceModel {
+      require(repo.isNotEmpty()) { "HuggingFace model `repo` must not be empty" }
+      require(repo.isNotBlank()) { "HuggingFace model `repo` must not be blank" }
+      require(name.isNotEmpty()) { "HuggingFace model `name` must not be empty" }
+      require(name.isNotBlank()) { "HuggingFace model `name` must not be blank" }
+
       return HuggingFaceModel(
         repo = repo,
         name = name,

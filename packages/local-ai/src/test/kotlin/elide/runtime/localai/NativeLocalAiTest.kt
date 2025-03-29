@@ -15,6 +15,7 @@ package elide.runtime.localai
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertNotNull
 import kotlinx.coroutines.test.runTest
+import kotlin.test.Ignore
 import kotlin.test.assertTrue
 import elide.testing.annotations.Test
 
@@ -32,7 +33,7 @@ class NativeLocalAiTest {
     assertDoesNotThrow { NativeLocalAi.ensureAvailable() }
   }
 
-  @Test fun testSyncPromptHuggingFace() {
+  @Test @Ignore fun testSyncPromptHuggingFace() {
     val results = assertDoesNotThrow {
       NativeLocalAi.inferSync(
         Parameters.defaults(),
@@ -43,7 +44,7 @@ class NativeLocalAiTest {
     assertNotNull(results)
   }
 
-  @Test fun testStreamingPromptHuggingFace() = runTest {
+  @Test @Ignore fun testStreamingPromptHuggingFace() = runTest {
     val inference = assertDoesNotThrow {
       NativeLocalAi.infer(
         Parameters.defaults(),

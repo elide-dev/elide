@@ -174,7 +174,6 @@ include(
   ":crates:entry",
   ":crates:js",
   ":crates:posix",
-  ":crates:protocol",
   ":crates:sqlite",
   ":crates:substrate",
   ":crates:terminal",
@@ -203,7 +202,6 @@ include(
   ":packages:ssr",
   ":packages:terminal",
   ":packages:test",
-  ":packages:tooling",
   ":tools:reports",
   ":tools:umbrella",
 )

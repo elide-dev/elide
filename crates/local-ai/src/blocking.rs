@@ -14,57 +14,25 @@
 use java_native::jni;
 use jni::JNIEnv;
 use jni::objects::{JClass, JString};
+use jni::sys::jstring;
 
 #[cfg(feature = "blocking")]
 use {
+  crate::{
+    DEBUG_LOGS, DEFAULT_CONTEXT_WINDOW, DEFAULT_LENGTH, DEFAULT_SEED, DEFAULT_THREAD_BATCH,
+    DEFAULT_THREADS, Model, do_infer, prep_model,
+  },
   anyhow::Error,
-  jni::sys::{JNI_FALSE, JNI_TRUE, jboolean, jint},
+  jni::sys::{jboolean, jint},
   llama_cpp_2::model::params::LlamaModelParams,
   std::num::NonZeroU32,
+  std::path::PathBuf,
   std::pin::pin,
-  std::sync::Mutex,
 };
-
-#[cfg(feature = "blocking")]
-use crate::{
-  DEBUG_LOGS, DEFAULT_CONTEXT_WINDOW, DEFAULT_LENGTH, DEFAULT_SEED, DEFAULT_THREAD_BATCH,
-  DEFAULT_THREADS, Model, do_infer, prep_model,
-};
-
-// Held (pinned) result for later use.
-#[cfg(feature = "blocking")]
-static SYNC_RESULT: Mutex<Option<String>> = Mutex::new(None);
-
-// Held (pinned) error result for later use.
-#[cfg(feature = "blocking")]
-static SYNC_ERR: Mutex<Option<String>> = Mutex::new(None);
-
-/// Mount a synchronous inference result for later consumption.
-#[cfg(feature = "blocking")]
-fn mount_sync_result(result: String) {
-  let mut guard = SYNC_RESULT.lock().unwrap();
-  *guard = Some(result);
-}
-
-/// Mount a synchronous inference error for later consumption.
-#[cfg(feature = "blocking")]
-fn mount_sync_err(result: String) {
-  let mut guard = SYNC_ERR.lock().unwrap();
-  *guard = Some(result);
-}
-
-/// Clear any synchronous error or result.
-#[cfg(feature = "blocking")]
-fn clear_sync_results() {
-  let mut guard = SYNC_RESULT.lock().unwrap();
-  *guard = None;
-  let mut guard2 = SYNC_ERR.lock().unwrap();
-  *guard2 = None;
-}
 
 #[cfg(not(feature = "blocking"))]
 #[jni("elide.runtime.localai.NativeLocalAi")]
-pub fn inferSync<'a>() {
+pub fn inferSync<'a>() -> jstring {
   // no-op
 }
 
@@ -88,7 +56,7 @@ pub fn inferSync<'a>(
   thread_batch_count: jint,
   length: jint,
   seed_j: jint,
-) -> jboolean {
+) -> jstring {
   // resolve params
   let model_params = {
     #[cfg(any(feature = "cuda", feature = "vulkan"))]
@@ -220,67 +188,26 @@ pub fn inferSync<'a>(
           if DEBUG_LOGS {
             eprintln!("result: {:?}", out);
           }
-          mount_sync_result(out);
-          JNI_TRUE
+          let ret = env.new_string(out).expect("unable to create result string");
+          (**ret).into()
         }
         Err(e) => {
           if DEBUG_LOGS {
             eprintln!("inference failed (sync): {:?}", e);
           }
-          mount_sync_err(e.to_string());
-          JNI_FALSE
+          let ret = env
+            .new_string(e.to_string())
+            .expect("unable to create error string");
+          (**ret).into()
         }
       }
     }
     Err(e) => {
       eprintln!("inference failed (sync): {:?}", e);
-      JNI_FALSE
-    }
-  }
-}
-
-#[cfg(not(feature = "blocking"))]
-#[jni("elide.runtime.localai.NativeLocalAi")]
-pub fn results<'a>(env: JNIEnv<'a>, _class: JClass<'a>) -> JString<'a> {
-  let ret = env.new_string("").expect("unable to create empty string");
-  ret
-}
-
-/// Gather static results from the last synchronous inference.
-#[cfg(feature = "blocking")]
-#[jni("elide.runtime.localai.NativeLocalAi")]
-pub fn results<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>) -> JString<'a> {
-  // first, gather the result and error, if any
-  let result = SYNC_RESULT.lock().unwrap().take();
-  let err = SYNC_ERR.lock().unwrap().take();
-
-  // if there is an error, we should throw it
-  if let Some(err) = err {
-    let exc = env
-      .find_class("java/lang/RuntimeException")
-      .expect("unable to find exception class");
-    let ret = env.new_string("").expect("unable to create empty string");
-    env.throw_new(exc, err).expect("unable to throw error");
-    ret
-  } else {
-    match result {
-      // wrap the string and return
-      Some(out) => {
-        let ret = env.new_string(out).expect("unable to create return string");
-        clear_sync_results();
-        ret
-      }
-
-      None => {
-        let exc = env
-          .find_class("java/lang/RuntimeException")
-          .expect("unable to find exception class");
-        let ret = env.new_string("").expect("unable to create empty string");
-        env
-          .throw_new(exc, "No inference result available".to_string())
-          .expect("unable to throw error");
-        ret
-      }
+      let ret = env
+        .new_string(e.to_string())
+        .expect("unable to create error string");
+      (**ret).into()
     }
   }
 }

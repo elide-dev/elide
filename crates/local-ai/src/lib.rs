@@ -88,6 +88,9 @@ async fn do_infer(
   seed: Option<u32>,
   cbk: Option<Box<dyn Fn(Result<String, Error>) + Send>>,
 ) -> Result<Option<String>, Error> {
+  if DEBUG_LOGS {
+    eprintln!("INF(do_infer): resolving backend");
+  }
   //noinspection RsUnwrap
   let mut backend = BACKEND.lock().unwrap();
   let backend = backend.as_mut().expect("backend not initialized");

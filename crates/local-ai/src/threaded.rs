@@ -106,7 +106,7 @@ pub fn inferAsync<'a>(
     eprintln!("huggingface name: {:?}", hugging_name);
     eprintln!("huggingface token: {:?}", hface_token);
     eprintln!("path: {:?}", path_str);
-    eprintln!("would prompt with: {:?}", prompt_str);
+    eprintln!("prompt with: {:?}", prompt_str);
   }
 
   // if `hugging_repo` is non-empty, we configure a hugging face model
@@ -159,8 +159,14 @@ pub fn inferAsync<'a>(
   // Create a global reference that outlives the current JNI call
   let vm = env.get_java_vm().expect("failed to get java vm");
 
+  if DEBUG_LOGS {
+    eprintln!("prepping callback for vm");
+  }
   let cbk = Box::new(move |chunk_result: Result<String, anyhow::Error>| {
     // re-attach to jvm as we may be in a new thread
+    if DEBUG_LOGS {
+      eprintln!("inference callback invoked; attaching thread");
+    }
     let mut env = match vm.attach_current_thread() {
       Ok(env) => env,
       Err(e) => {
@@ -168,11 +174,23 @@ pub fn inferAsync<'a>(
         return;
       }
     };
+    if env.exception_check() {
+      if DEBUG_LOGS {
+        eprintln!("exception check tripped! dropping callback");
+      }
+      env.exception_describe();
+      env.exception_clear();
+      return;
+    }
     let cbk_cls = env
       .find_class("elide/runtime/localai/InferenceCallbackRegistry")
       .expect("failed to find callback class");
+
     match chunk_result {
       Ok(tokens) => {
+        if DEBUG_LOGS {
+          eprintln!("result available; allocating jstring");
+        }
         let chunk_jstr = match env.new_string(tokens) {
           Ok(s) => s,
           Err(e) => {
@@ -181,6 +199,9 @@ pub fn inferAsync<'a>(
           }
         };
         {
+          if DEBUG_LOGS {
+            eprintln!("firing `onChunkReady` callback");
+          }
           let _ = env
             .call_static_method(
               cbk_cls,
@@ -193,7 +214,13 @@ pub fn inferAsync<'a>(
       }
 
       Err(err) => {
+        if DEBUG_LOGS {
+          eprintln!("err; prepping to throw rxe");
+        }
         if let Ok(exc) = env.find_class("java/lang/RuntimeException") {
+          if DEBUG_LOGS {
+            eprintln!("throwing rxe");
+          }
           let _ = env.throw_new(exc, format!("inference failed: {:?}", err));
         } else {
           eprintln!("Failed to find exception class");
@@ -206,10 +233,20 @@ pub fn inferAsync<'a>(
     }
   });
 
+  if DEBUG_LOGS {
+    eprintln!("firing inf engine task");
+  }
   INF_ENGINE.block_on(async {
+    if DEBUG_LOGS {
+      eprintln!("INF: resolving model");
+    }
     let model_path = prep_model(model.clone())
       .await
       .expect("failed to prepare model");
+
+    if DEBUG_LOGS {
+      eprintln!("INF: do_infer");
+    }
     do_infer(
       verbose,
       model_params,

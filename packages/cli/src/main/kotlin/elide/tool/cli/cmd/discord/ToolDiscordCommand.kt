@@ -13,6 +13,8 @@
 
 package elide.tool.cli.cmd.discord
 
+import com.github.kinquirer.KInquirer
+import com.github.kinquirer.components.promptConfirm
 import io.micronaut.core.annotation.Introspected
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -36,19 +38,12 @@ import elide.tool.cli.ToolState
     private const val REDIRECT_TARGET = "https://elide.dev/discord"
   }
 
-  /** Whether to open the link in the default browser (defaults to `true`). */
-  @Option(
-    names = ["--open"],
-    description = ["Open the link, if possible"],
-    defaultValue = "true",
-  )
-  var openLink: Boolean = true
-
   @Suppress("DEPRECATION")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val printLink: () -> Unit = {
       println("Open link to join Discord: $REDIRECT_TARGET")
     }
+    val openLink = KInquirer.promptConfirm("Open the link? 'No' will print it in the console", default = false)
     if (openLink) withContext(Dispatchers.IO) {
       val os = System.getProperty("os.name", "unknown").lowercase()
 

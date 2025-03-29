@@ -514,6 +514,10 @@ dependencies {
   // General
   implementation(libs.smartexception)
   implementation(libs.magicProgress)
+  implementation(libs.inquirer) {
+    exclude(group = "org.jline", module = "jline")
+    exclude(group = "org.fusesource.jansi", module = "jansi")
+  }
 
   runtimeOnly(mn.micronaut.graal)
   implementation(mn.netty.handler)

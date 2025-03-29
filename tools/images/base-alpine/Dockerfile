@@ -6,7 +6,7 @@ FROM alpine:${ALPINE_VERSION}${ALPINE_HASH}
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base (Alpine)"
 LABEL org.opencontainers.image.description="Base image for Elide apps and tools built on top of musl-libc"
-LABEL org.opencontainers.image.version=v1.0.0-beta1
+LABEL org.opencontainers.image.version=v1.0.0-beta2
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=alpine:${ALPINE_VERSION}
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/base-alpine/Dockerfile

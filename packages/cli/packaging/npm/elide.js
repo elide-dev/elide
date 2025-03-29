@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-const version = "1.0.0-beta1"
+const version = "1.0.0-beta2"
 
 const os = require("node:os")
 const fs = require("node:fs")
@@ -39,7 +39,7 @@ function getNativeBinary() {
   if (arch === undefined || platform === undefined) {
     console.error(`FATAL: Your platform/architecture combination ${os.platform()} - ${os.arch()} is not yet supported.
     You may need to compile Elide yourself, or use the JVM version.
-    See instructions at https://github.com/elide-dev/v3.`)
+    See instructions at https://github.com/elide-dev/elide.`)
     return Promise.resolve(1)
   }
 

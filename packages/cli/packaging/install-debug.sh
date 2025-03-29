@@ -63,7 +63,7 @@
 set -e
 set +x
 
-TOOL_REVISION="1.0.0-beta1"
+TOOL_REVISION="1.0.0-beta2"
 INSTALLER_VERSION="v0.17"
 
 TOOL="cli"

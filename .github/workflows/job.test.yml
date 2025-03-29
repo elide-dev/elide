@@ -115,6 +115,9 @@ name: Tests
       BUILDLESS_APIKEY:
         required: false
         description: "Buildless API Key"
+      HUGGINGFACE_TOKEN:
+        required: true
+        description: "HuggingFace Token"
       BUILDBOT_SERVICE_ACCOUNT:
         required: false
         description: "GCP Service Account"
@@ -355,6 +358,7 @@ jobs:
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
         run: |
           ./gradlew \
             test \

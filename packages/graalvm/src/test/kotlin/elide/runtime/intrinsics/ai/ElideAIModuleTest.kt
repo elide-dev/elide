@@ -12,7 +12,6 @@
  */
 package elide.runtime.intrinsics.ai
 
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.assertNotNull
 import kotlin.test.Ignore
 import kotlin.test.assertEquals

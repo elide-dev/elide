@@ -4,6 +4,7 @@
   <CurrentIssues>
     <ID>ComplexCondition:NodeAssertTest.kt$NodeAssertTest$(left is Value &amp;&amp; left.isNull) || (right is Value &amp;&amp; right.isNull)</ID>
     <ID>CyclomaticComplexMethod:NodeFilesystem.kt$NodeFilesystemProxy$override fun getMember(key: String?): Any?</ID>
+    <ID>ForbiddenComment:ElideLLMModule.kt$ElideLLMImpl$// TODO: resolve this based on config</ID>
     <ID>ForbiddenComment:EmbeddedGuestVFSImpl.kt$EmbeddedGuestVFSImpl.EmbeddedVFSFactory$// @TODO: cannot defer this because indexing happens as a side-effect</ID>
     <ID>ForbiddenComment:HostVFS.kt$HostVFS$// @TODO: OS-specific? configurable?</ID>
     <ID>ForbiddenComment:IntrinsicsResolver.kt$IntrinsicsResolver$// @TODO: disablement</ID>
@@ -66,6 +67,7 @@
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asHostObject&lt;Statement>(), *it.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *it.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *rest)</ID>
+    <ID>SwallowedException:ElideLLMModule.kt$ElideLocalLLMImpl$err: ExecutionException</ID>
     <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
     <ID>SwallowedException:NettyTransport.kt$NettyTransport$unsatisfied: UnsatisfiedLinkError</ID>
     <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$e: java.net.URISyntaxException</ID>

@@ -3,42 +3,28 @@ public final class elide/runtime/localai/InferenceCallbackRegistry {
 	public static final fun onChunkReady (ILjava/lang/String;)V
 }
 
-public final class elide/runtime/localai/NativeLocalAi : java/lang/AutoCloseable {
-	public static final field INSTANCE Lelide/runtime/localai/NativeLocalAi;
-	public fun close ()V
-	public static final fun ensureAvailable ()V
-	public static final fun infer-Qc9aTNE (Lelide/runtime/localai/NativeLocalAi$Parameters;Lelide/runtime/localai/NativeLocalAi$Model;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun inferSync (Lelide/runtime/localai/NativeLocalAi$Parameters;Lelide/runtime/localai/NativeLocalAi$Model;Ljava/lang/String;)Lelide/runtime/localai/NativeLocalAi$InferenceResults;
-	public static final fun load ()V
-}
-
-public abstract interface class elide/runtime/localai/NativeLocalAi$InferenceChunkCallback {
+public abstract interface class elide/runtime/localai/InferenceChunkCallback {
 	public abstract fun onChunk (Ljava/lang/String;)V
 }
 
-public final class elide/runtime/localai/NativeLocalAi$InferenceChunkCallbackImpl : elide/runtime/localai/NativeLocalAi$InferenceChunkCallback, java/lang/AutoCloseable {
-	public fun close ()V
-	public fun onChunk (Ljava/lang/String;)V
-}
-
-public abstract interface class elide/runtime/localai/NativeLocalAi$InferenceResults {
-	public static final field Companion Lelide/runtime/localai/NativeLocalAi$InferenceResults$Companion;
+public abstract interface class elide/runtime/localai/InferenceResults {
+	public static final field Companion Lelide/runtime/localai/InferenceResults$Companion;
 	public abstract fun getSuccess ()Z
-	public static fun of (Ljava/lang/String;)Lelide/runtime/localai/NativeLocalAi$InferenceResults;
-	public static fun of (Ljava/util/Collection;)Lelide/runtime/localai/NativeLocalAi$InferenceResults;
-	public static fun streamed (Ljava/util/stream/Stream;)Lelide/runtime/localai/NativeLocalAi$InferenceResults;
-	public static fun suspending-9jV7kNk (Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+	public static fun of (Ljava/lang/String;)Lelide/runtime/localai/InferenceResults;
+	public static fun of (Ljava/util/Collection;)Lelide/runtime/localai/InferenceResults;
+	public static fun streamed (Ljava/util/stream/Stream;)Lelide/runtime/localai/InferenceResults;
+	public static fun suspending-goT1RSs (Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Companion {
-	public final fun of (Ljava/lang/String;)Lelide/runtime/localai/NativeLocalAi$InferenceResults;
-	public final fun of (Ljava/util/Collection;)Lelide/runtime/localai/NativeLocalAi$InferenceResults;
-	public final fun streamed (Ljava/util/stream/Stream;)Lelide/runtime/localai/NativeLocalAi$InferenceResults;
-	public final fun suspending-9jV7kNk (Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+public final class elide/runtime/localai/InferenceResults$Companion {
+	public final fun of (Ljava/lang/String;)Lelide/runtime/localai/InferenceResults;
+	public final fun of (Ljava/util/Collection;)Lelide/runtime/localai/InferenceResults;
+	public final fun streamed (Ljava/util/stream/Stream;)Lelide/runtime/localai/InferenceResults;
+	public final fun suspending-goT1RSs (Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Error : elide/runtime/localai/NativeLocalAi$InferenceResults {
-	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/localai/NativeLocalAi$InferenceResults$Error;
+public final class elide/runtime/localai/InferenceResults$Error : elide/runtime/localai/InferenceResults {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/localai/InferenceResults$Error;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
@@ -52,8 +38,8 @@ public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Error : 
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Streamed : elide/runtime/localai/NativeLocalAi$InferenceResults {
-	public static final synthetic fun box-impl (Ljava/util/stream/Stream;)Lelide/runtime/localai/NativeLocalAi$InferenceResults$Streamed;
+public final class elide/runtime/localai/InferenceResults$Streamed : elide/runtime/localai/InferenceResults {
+	public static final synthetic fun box-impl (Ljava/util/stream/Stream;)Lelide/runtime/localai/InferenceResults$Streamed;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/util/stream/Stream;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/util/stream/Stream;Ljava/util/stream/Stream;)Z
@@ -68,9 +54,9 @@ public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Streamed
 	public final synthetic fun unbox-impl ()Ljava/util/stream/Stream;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Suspending : elide/runtime/localai/NativeLocalAi$InferenceResults {
+public final class elide/runtime/localai/InferenceResults$Suspending : elide/runtime/localai/InferenceResults {
 	public static final fun asFlow-impl (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
-	public static final synthetic fun box-impl (Lkotlinx/coroutines/flow/Flow;)Lelide/runtime/localai/NativeLocalAi$InferenceResults$Suspending;
+	public static final synthetic fun box-impl (Lkotlinx/coroutines/flow/Flow;)Lelide/runtime/localai/InferenceResults$Suspending;
 	public static final fun collect-impl (Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static fun constructor-impl (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 	public fun equals (Ljava/lang/Object;)Z
@@ -85,8 +71,8 @@ public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Suspendi
 	public final synthetic fun unbox-impl ()Lkotlinx/coroutines/flow/Flow;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Sync : elide/runtime/localai/NativeLocalAi$InferenceResults {
-	public static final synthetic fun box-impl (Ljava/util/Collection;)Lelide/runtime/localai/NativeLocalAi$InferenceResults$Sync;
+public final class elide/runtime/localai/InferenceResults$Sync : elide/runtime/localai/InferenceResults {
+	public static final synthetic fun box-impl (Ljava/util/Collection;)Lelide/runtime/localai/InferenceResults$Sync;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/util/Collection;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/util/Collection;Ljava/util/Collection;)Z
@@ -101,24 +87,24 @@ public final class elide/runtime/localai/NativeLocalAi$InferenceResults$Sync : e
 	public final synthetic fun unbox-impl ()Ljava/util/Collection;
 }
 
-public abstract interface class elide/runtime/localai/NativeLocalAi$Model {
-	public static final field Companion Lelide/runtime/localai/NativeLocalAi$Model$Companion;
-	public static fun atPath-nansG1Q (Ljava/nio/file/Path;)Ljava/nio/file/Path;
-	public static fun huggingface (Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/localai/NativeLocalAi$Model$HuggingFaceModel;
+public abstract interface class elide/runtime/localai/Model {
+	public static final field Companion Lelide/runtime/localai/Model$Companion;
+	public static fun atPath-NpHPi3U (Ljava/nio/file/Path;)Ljava/nio/file/Path;
+	public static fun huggingface (Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/localai/Model$HuggingFaceModel;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$Model$Companion {
-	public final fun atPath-nansG1Q (Ljava/nio/file/Path;)Ljava/nio/file/Path;
-	public final fun huggingface (Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/localai/NativeLocalAi$Model$HuggingFaceModel;
-	public static synthetic fun huggingface$default (Lelide/runtime/localai/NativeLocalAi$Model$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/localai/NativeLocalAi$Model$HuggingFaceModel;
+public final class elide/runtime/localai/Model$Companion {
+	public final fun atPath-NpHPi3U (Ljava/nio/file/Path;)Ljava/nio/file/Path;
+	public final fun huggingface (Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/localai/Model$HuggingFaceModel;
+	public static synthetic fun huggingface$default (Lelide/runtime/localai/Model$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/localai/Model$HuggingFaceModel;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$Model$HuggingFaceModel : java/lang/Record, elide/runtime/localai/NativeLocalAi$Model {
+public final class elide/runtime/localai/Model$HuggingFaceModel : java/lang/Record, elide/runtime/localai/Model {
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/nio/file/Path;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/localai/NativeLocalAi$Model$HuggingFaceModel;
-	public static synthetic fun copy$default (Lelide/runtime/localai/NativeLocalAi$Model$HuggingFaceModel;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/localai/NativeLocalAi$Model$HuggingFaceModel;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/localai/Model$HuggingFaceModel;
+	public static synthetic fun copy$default (Lelide/runtime/localai/Model$HuggingFaceModel;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/localai/Model$HuggingFaceModel;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public final fun name ()Ljava/lang/String;
@@ -127,8 +113,8 @@ public final class elide/runtime/localai/NativeLocalAi$Model$HuggingFaceModel : 
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$Model$OnDiskModel : elide/runtime/localai/NativeLocalAi$Model {
-	public static final synthetic fun box-impl (Ljava/nio/file/Path;)Lelide/runtime/localai/NativeLocalAi$Model$OnDiskModel;
+public final class elide/runtime/localai/Model$OnDiskModel : elide/runtime/localai/Model {
+	public static final synthetic fun box-impl (Ljava/nio/file/Path;)Lelide/runtime/localai/Model$OnDiskModel;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/nio/file/Path;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/nio/file/Path;Ljava/nio/file/Path;)Z
@@ -140,8 +126,22 @@ public final class elide/runtime/localai/NativeLocalAi$Model$OnDiskModel : elide
 	public final synthetic fun unbox-impl ()Ljava/nio/file/Path;
 }
 
-public final class elide/runtime/localai/NativeLocalAi$Parameters : java/lang/Record {
-	public static final field Companion Lelide/runtime/localai/NativeLocalAi$Parameters$Companion;
+public final class elide/runtime/localai/NativeLocalAi : java/lang/AutoCloseable {
+	public static final field INSTANCE Lelide/runtime/localai/NativeLocalAi;
+	public fun close ()V
+	public static final fun ensureAvailable ()V
+	public static final fun infer-FKUhmrU (Lelide/runtime/localai/Parameters;Lelide/runtime/localai/Model;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun inferSync (Lelide/runtime/localai/Parameters;Lelide/runtime/localai/Model;Ljava/lang/String;)Lelide/runtime/localai/InferenceResults;
+	public static final fun load ()V
+}
+
+public final class elide/runtime/localai/NativeLocalAi$InferenceChunkCallbackImpl : elide/runtime/localai/InferenceChunkCallback, java/lang/AutoCloseable {
+	public fun close ()V
+	public fun onChunk (Ljava/lang/String;)V
+}
+
+public final class elide/runtime/localai/Parameters : java/lang/Record {
+	public static final field Companion Lelide/runtime/localai/Parameters$Companion;
 	public static final field DEFAULT_ALLOW_DOWNLOAD Z
 	public static final field DEFAULT_CONTEXT_SIZE I
 	public static final field DEFAULT_GPU_LAYERS I
@@ -160,10 +160,10 @@ public final class elide/runtime/localai/NativeLocalAi$Parameters : java/lang/Re
 	public final fun component8-pVg5ArA ()I
 	public final fun component9-0hXNFcg ()Lkotlin/UInt;
 	public final fun contextSize ()I
-	public final fun copy--bZUimA (ZZZLjava/lang/String;IIIILkotlin/UInt;)Lelide/runtime/localai/NativeLocalAi$Parameters;
-	public static synthetic fun copy--bZUimA$default (Lelide/runtime/localai/NativeLocalAi$Parameters;ZZZLjava/lang/String;IIIILkotlin/UInt;ILjava/lang/Object;)Lelide/runtime/localai/NativeLocalAi$Parameters;
-	public static final fun create-kaqE_pc (ZIZIZIILjava/lang/String;)Lelide/runtime/localai/NativeLocalAi$Parameters;
-	public static final fun defaults ()Lelide/runtime/localai/NativeLocalAi$Parameters;
+	public final fun copy--bZUimA (ZZZLjava/lang/String;IIIILkotlin/UInt;)Lelide/runtime/localai/Parameters;
+	public static synthetic fun copy--bZUimA$default (Lelide/runtime/localai/Parameters;ZZZLjava/lang/String;IIIILkotlin/UInt;ILjava/lang/Object;)Lelide/runtime/localai/Parameters;
+	public static final fun create-kaqE_pc (ZIZIZIILjava/lang/String;)Lelide/runtime/localai/Parameters;
+	public static final fun defaults ()Lelide/runtime/localai/Parameters;
 	public final fun disableGpu ()Z
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun gpuLayers ()I
@@ -176,9 +176,9 @@ public final class elide/runtime/localai/NativeLocalAi$Parameters : java/lang/Re
 	public final fun verbose ()Z
 }
 
-public final class elide/runtime/localai/NativeLocalAi$Parameters$Companion {
-	public final fun create-kaqE_pc (ZIZIZIILjava/lang/String;)Lelide/runtime/localai/NativeLocalAi$Parameters;
-	public static synthetic fun create-kaqE_pc$default (Lelide/runtime/localai/NativeLocalAi$Parameters$Companion;ZIZIZIILjava/lang/String;ILjava/lang/Object;)Lelide/runtime/localai/NativeLocalAi$Parameters;
-	public final fun defaults ()Lelide/runtime/localai/NativeLocalAi$Parameters;
+public final class elide/runtime/localai/Parameters$Companion {
+	public final fun create-kaqE_pc (ZIZIZIILjava/lang/String;)Lelide/runtime/localai/Parameters;
+	public static synthetic fun create-kaqE_pc$default (Lelide/runtime/localai/Parameters$Companion;ZIZIZIILjava/lang/String;ILjava/lang/Object;)Lelide/runtime/localai/Parameters;
+	public final fun defaults ()Lelide/runtime/localai/Parameters;
 }
 

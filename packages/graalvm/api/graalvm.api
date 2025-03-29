@@ -2492,16 +2492,56 @@ public final synthetic class elide/runtime/intrinsics/ai/$ElideLLMModule$Introsp
 public abstract interface class elide/runtime/intrinsics/ai/AIEngine {
 }
 
-public final class elide/runtime/intrinsics/ai/ElideLLMModule : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic {
+public final class elide/runtime/intrinsics/ai/ElideLLMModule : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic, elide/runtime/lang/javascript/SyntheticJSModule {
 	public fun <init> (Lelide/runtime/exec/GuestExecutorProvider;)V
 	public fun install (Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;)V
+	public fun provide ()Lelide/runtime/intrinsics/ai/LLMAPI;
+	public synthetic fun provide ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/intrinsics/ai/InferenceOperation : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/js/node/events/EventTarget {
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public abstract fun getPromise ()Lelide/runtime/intrinsics/js/JsPromise;
 }
 
 public abstract interface class elide/runtime/intrinsics/ai/LLMAPI : elide/runtime/interop/ReadOnlyProxyObject {
+	public abstract fun huggingface (Lorg/graalvm/polyglot/Value;)Lelide/runtime/localai/Model;
+	public abstract fun infer (Lelide/runtime/localai/Parameters;Lelide/runtime/localai/Model;Lelide/runtime/intrinsics/ai/PromptInput;)Lelide/runtime/intrinsics/ai/InferenceOperation;
+	public abstract fun infer ([Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/ai/InferenceOperation;
+	public abstract fun inferSync (Lelide/runtime/localai/Parameters;Lelide/runtime/localai/Model;Lelide/runtime/intrinsics/ai/PromptInput;)Ljava/lang/String;
+	public abstract fun inferSync ([Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public abstract fun localModel (Lorg/graalvm/polyglot/Value;)Lelide/runtime/localai/Model;
+	public abstract fun params (Lorg/graalvm/polyglot/Value;)Lelide/runtime/localai/Parameters;
 	public abstract fun version ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/ai/LLMEngine {
+}
+
+public abstract interface class elide/runtime/intrinsics/ai/PromptInput {
+	public static final field Companion Lelide/runtime/intrinsics/ai/PromptInput$Companion;
+	public static fun of (Ljava/lang/String;)Lelide/runtime/intrinsics/ai/PromptInput;
+	public abstract fun render ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/ai/PromptInput$Companion {
+	public final fun of (Ljava/lang/String;)Lelide/runtime/intrinsics/ai/PromptInput;
+}
+
+public final class elide/runtime/intrinsics/ai/PromptInput$StringPrompt : elide/runtime/intrinsics/ai/PromptInput {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/intrinsics/ai/PromptInput$StringPrompt;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun render ()Ljava/lang/String;
+	public static fun render-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/AbortController {

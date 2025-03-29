@@ -18,7 +18,6 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import org.graalvm.polyglot.Value
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.runBlocking
@@ -26,12 +25,9 @@ import elide.runtime.exec.GuestExecutor
 import elide.runtime.intrinsics.js.JsPromise
 import elide.vm.annotations.Polyglot
 
-/**
- * TBD.
- */
 internal class JsPromiseImpl<T> private constructor (
   private val ready: AtomicBoolean = AtomicBoolean(false),
-  private val latch: CountDownLatch? = null,
+  private val latch: CountDownLatch = CountDownLatch(1),
   private val producer: () -> T,
   private val future: ListenableFuture<T>,
   private val value: AtomicReference<T> = AtomicReference(),
@@ -69,8 +65,11 @@ internal class JsPromiseImpl<T> private constructor (
       } finally {
         executed.set(true)
         ready.set(true)
-        latch?.countDown()
+        latch.countDown()
       }
+    } else {
+      // if the promise is already executing, wait for it to finish, preferring a latch...
+      latch.await()
     }
 
     // invoke followups
@@ -141,7 +140,7 @@ internal class JsPromiseImpl<T> private constructor (
   }
 
   @Polyglot override fun then(onFulfilled: Value, onCatch: Value?): JsPromise<T> = then({
-    onFulfilled.execute(it)
+    onFulfilled.execute(it ?: value.get() ?: future.get())
   }, {
     // if a catch function was provided, defer to that. otherwise, throw.
     when (onCatch) {

@@ -2508,8 +2508,8 @@ public abstract interface class elide/runtime/intrinsics/ai/InferenceOperation :
 
 public abstract interface class elide/runtime/intrinsics/ai/LLMAPI : elide/runtime/interop/ReadOnlyProxyObject {
 	public abstract fun huggingface (Lorg/graalvm/polyglot/Value;)Lelide/runtime/localai/Model;
-	public abstract fun infer (Lelide/runtime/localai/Parameters;Lelide/runtime/localai/Model;Lelide/runtime/intrinsics/ai/PromptInput;)Lelide/runtime/intrinsics/ai/InferenceOperation;
-	public abstract fun infer ([Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/ai/InferenceOperation;
+	public abstract fun infer (Lelide/runtime/localai/Parameters;Lelide/runtime/localai/Model;Lelide/runtime/intrinsics/ai/PromptInput;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun infer ([Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun inferSync (Lelide/runtime/localai/Parameters;Lelide/runtime/localai/Model;Lelide/runtime/intrinsics/ai/PromptInput;)Ljava/lang/String;
 	public abstract fun inferSync ([Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 	public abstract fun localModel (Lorg/graalvm/polyglot/Value;)Lelide/runtime/localai/Model;

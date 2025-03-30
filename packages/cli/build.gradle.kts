@@ -1332,14 +1332,10 @@ val releaseCFlags: List<String> = listOf(
 )
 
 // PGO profiles to specify in release mode.
-val profiles: List<String> = if (enableEdge) listOf(
-  "js-brotli.iprof",
-  "pkl-eval.iprof",
-  "ts-hello.iprof",
-  "ts-sqlite.iprof",
-) else listOfNotNull(
+val profiles: List<String> = listOfNotNull(
   "cli-help.iprof",
   "cli-version.iprof",
+  "js-fs.iprof",
   "js-hello.iprof",
   "pkl-eval.iprof",
   onlyIf(enablePython, "py-hello.iprof"),

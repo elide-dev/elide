@@ -19,9 +19,17 @@
 
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator" />
 
-  <appender name="STD_FILE" class="ch.qos.logback.core.FileAppender">
+  <appender name="STD_FILE_TIMED" class="ch.qos.logback.core.FileAppender">
     <file>${user.home}/elide.log</file>
     <append>true</append>
+    <encoder>
+      <pattern>%-4relative %d{HH:mm:ss.SSS} [%thread] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="CONSOLE_TIMED" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.out</target>
+    <immediateFlush>true</immediateFlush>
     <encoder>
       <pattern>%-4relative %d{HH:mm:ss.SSS} [%thread] %msg%n</pattern>
     </encoder>
@@ -31,8 +39,7 @@
     <target>System.out</target>
     <immediateFlush>true</immediateFlush>
     <encoder>
-<!--      <pattern>%msg%n</pattern>-->
-      <pattern>%-4relative %d{HH:mm:ss.SSS} [%thread] %msg%n</pattern>
+      <pattern>%msg%n</pattern>
     </encoder>
   </appender>
 

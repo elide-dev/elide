@@ -11,7 +11,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 USER dev
-RUN echo "Installing Elide..." && curl -sSL elide.sh | bash -s -
+RUN echo "Installing Elide..." && curl -sSL elide.sh | bash -s - -- --install-rev=1.0.0-beta2
 
 FROM --platform=linux/amd64 debian:stable-slim AS runtime
 

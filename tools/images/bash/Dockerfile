@@ -23,7 +23,7 @@ RUN apt-get update \
 USER dev
 
 RUN echo "Installing Elide..." \
-  && curl -sSL elide.sh | bash -s - \
+  && curl -sSL elide.sh | bash -s - -- --install-rev=1.0.0-beta2 \
   && which elide \
   && elide --help \
   && elide info \

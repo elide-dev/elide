@@ -3182,6 +3182,9 @@
   ],
   "resources": [
     {
+      "glob": "linux-x86-64/libudev.so"
+    },
+    {
       "glob": "META-INF/services/org/jline/terminal/provider/jni"
     },
     {

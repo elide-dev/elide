@@ -1282,6 +1282,7 @@ val experimentalFlags = listOf(
 // C compiler flags to be included on Linux only.
 val linuxOnlyCFlags: List<String> = listOf(
   "-fstack-clash-protection",
+  "-fopenmp",
 )
 
 // C compiler flags which are always included.
@@ -1291,7 +1292,6 @@ val commonCFlags: List<String> = listOf(
   "-fexceptions",
   "-ffunction-sections",
   "-fdata-sections",
-  "-fopenmp",
 //  "-fno-omit-frame-pointer",
 //  "-v",
 //  "-fno-strict-aliasing",
@@ -1457,7 +1457,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
   "-H:NativeLinkerOption=-lm",
-  "-H:NativeLinkerOption=-lgomp",
+  "-H:NativeLinkerOption=-lstdc++",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
 ) else listOf(

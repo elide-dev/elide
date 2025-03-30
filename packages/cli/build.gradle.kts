@@ -63,6 +63,7 @@ plugins {
 // - `elide.targetOs`: `darwin`, `linux`, `windows`
 // - `elide.targetArch`: `amd64`, `arm64`
 // - `elide.targetLibc`: `glibc` or `musl`
+// - `elide.static`: `true` or `false`
 // - `elide.march`: `native`, `compatibility`
 // - `elide.compiler`: Custom compiler name or path
 // - `elide.linker`: Custom linker name or path
@@ -117,7 +118,7 @@ val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
 val enableNativeTransportV2 = false
 val enableSqliteStatic = true
-val enableStatic = false
+val enableStatic = findProperty("elide.static") == "true"
 val enableStaticJni = true
 val preferShared = false
 val enableToolchains = false

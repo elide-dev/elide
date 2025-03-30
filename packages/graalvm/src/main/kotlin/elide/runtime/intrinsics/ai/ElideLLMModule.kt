@@ -12,6 +12,7 @@
  */
 package elide.runtime.intrinsics.ai
 
+import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
@@ -281,7 +282,7 @@ internal sealed class BaseLLMImpl : LLMAPI, ReadOnlyProxyObject {
   @Polyglot override fun localModel(options: Value): Model = Model.local(options)
   @Polyglot override fun huggingface(options: Value): Model = Model.huggingface(options)
 
-  @Polyglot override fun infer(args: Array<Value>): InferenceOperation {
+  @Polyglot override fun infer(args: Array<Value>): JsPromise<String> {
     val (params, model, input) = prepareInferenceArgs(args)
     return infer(params, model, input)
   }
@@ -307,7 +308,7 @@ internal class ElideLLMImpl internal constructor (private val mod: ElideLLMModul
   // Resolve the configured/default implementation of the LLM API (local or remote).
   private fun resolveImpl(): BaseLLMImpl = mod.localLlm() // TODO: resolve this based on config
 
-  @Polyglot override fun infer(params: Parameters, model: Model, input: PromptInput): InferenceOperation {
+  @Polyglot override fun infer(params: Parameters, model: Model, input: PromptInput): JsPromise<String> {
     return resolveImpl().infer(params, model, input)
   }
 
@@ -351,17 +352,19 @@ internal class InferenceOperationImpl internal constructor (
 
 // Implements the local LLM module.
 internal class ElideLocalLLMImpl internal constructor (private val guestExec: GuestExecutorProvider) : BaseLLMImpl() {
-  @Polyglot override fun infer(params: Parameters, model: Model, input: PromptInput): InferenceOperation {
+  @Polyglot override fun infer(params: Parameters, model: Model, input: PromptInput): JsPromise<String> {
     return try {
-      execPool.submit<InferenceResults> {
-        runBlocking(Dispatchers.IO) {
-          NativeLocalAi.infer(params, model, input.render()).let { op ->
-            InferenceResults.of(op.collect())
-          }
+      // @TODO disgusting
+      JsPromise.wrapping(execPool.submit<String> {
+        when (val result = NativeLocalAi.inferSync(params, model, input.render())) {
+          is InferenceResults.Error -> throw JsError.of(
+            "Inference failed: ${result.message}",
+          )
+
+          is InferenceResults.Sync -> result.value.joinToString()
+          else -> error("Unexpected inference result")
         }
-      }.let { task ->
-        InferenceOperationImpl(task, guestExec)
-      }
+      })
     } catch (err: ExecutionException) {
       throw JsError.of(
         "Inference failed: ${err.message}",
@@ -385,7 +388,7 @@ internal class ElideLocalLLMImpl internal constructor (private val guestExec: Gu
           "Inference failed: ${(results as InferenceResults.Error).message}",
         )
         true -> when (results) {
-          is InferenceResults.Sync -> results.value.joinToString("")
+          is InferenceResults.Sync -> results.sequence.toList().joinToString()
           else -> error("Invalid results for synchronous inference: $results")
         }
       }
@@ -395,7 +398,7 @@ internal class ElideLocalLLMImpl internal constructor (private val guestExec: Gu
 
 // Implements the remote LLM module.
 internal class ElideRemoteLLMImpl internal constructor (private val guestExec: GuestExecutorProvider) : BaseLLMImpl() {
-  @Polyglot override fun infer(params: Parameters, model: Model, input: PromptInput): InferenceOperation {
+  @Polyglot override fun infer(params: Parameters, model: Model, input: PromptInput): JsPromise<String> {
     TODO("Not yet implemented: `ElideRemoteLLM.infer`")
   }
 

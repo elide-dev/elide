@@ -12,8 +12,10 @@
  */
 package elide.runtime.intrinsics.ai
 
+import com.google.common.util.concurrent.ListenableFuture
 import org.graalvm.polyglot.Value
 import elide.runtime.interop.ReadOnlyProxyObject
+import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.localai.InferenceResults
 import elide.runtime.localai.Parameters
 import elide.runtime.localai.Model
@@ -143,7 +145,7 @@ public interface LLMAPI : ReadOnlyProxyObject {
    * @param input Prompt input for this inference call.
    * @return A handle to the inference operation.
    */
-  @Polyglot public fun infer(params: Parameters, model: Model, input: PromptInput): InferenceOperation
+  @Polyglot public fun infer(params: Parameters, model: Model, input: PromptInput): JsPromise<String>
 
   /**
    * ### Infer (Guest/Asynchronous)
@@ -159,5 +161,5 @@ public interface LLMAPI : ReadOnlyProxyObject {
    * @param args Arguments to use for model dispatch.
    * @return A handle to the inference operation.
    */
-  @Polyglot public fun infer(args: Array<Value>): InferenceOperation
+  @Polyglot public fun infer(args: Array<Value>): JsPromise<String>
 }

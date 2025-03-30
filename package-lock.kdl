@@ -782,14 +782,6 @@ dependencies{
 "@types/node" ">=0.0.0"
     }
 }
-pkg "@types/conventional-commits-parser" "@types/node"{
-version "22.13.13"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.13.13.tgz"
-integrity "sha512-ClsL5nMwKaBRwPcCvH8E7+nU4GxHVx1axNvMZTFHMEfNI7oahimt26P5zjVCRrjiIWj6YFXfE1v3dEp94wLcGQ=="
-dependencies{
-undici-types ">=6.20.0 <6.21.0-0"
-    }
-}
 pkg "@types/debug"{
 version "4.1.12"
 resolved "https://registry.npmjs.org/@types/debug/-/debug-4.1.12.tgz"
@@ -866,14 +858,6 @@ resolved "https://registry.npmjs.org/@types/ws/-/ws-8.5.14.tgz"
 integrity "sha512-bd/YFLW+URhBzMXurx7lWByOu+xzU9+kb3RboOteXYDfW+tr+JZa99OyNmPINEGB/ahzKrEuc8rcv4gnpJmxTw=="
 dependencies{
 "@types/node" ">=0.0.0"
-    }
-}
-pkg "@types/ws" "@types/node"{
-version "22.13.13"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.13.13.tgz"
-integrity "sha512-ClsL5nMwKaBRwPcCvH8E7+nU4GxHVx1axNvMZTFHMEfNI7oahimt26P5zjVCRrjiIWj6YFXfE1v3dEp94wLcGQ=="
-dependencies{
-undici-types ">=6.20.0 <6.21.0-0"
     }
 }
 pkg "@ungap/structured-clone"{
@@ -1069,14 +1053,6 @@ integrity "sha512-P4hHhk7kjF99acXqKvltyuMQ2kf/rzIw3ylEDpCxDS9Xa0X0Yp/gJu/vDCucmW
 dependencies{
 "@types/node" ">=0.0.0"
 "@types/ws" ">=0.0.0"
-    }
-}
-pkg bun-types "@types/node"{
-version "22.13.13"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.13.13.tgz"
-integrity "sha512-ClsL5nMwKaBRwPcCvH8E7+nU4GxHVx1axNvMZTFHMEfNI7oahimt26P5zjVCRrjiIWj6YFXfE1v3dEp94wLcGQ=="
-dependencies{
-undici-types ">=6.20.0 <6.21.0-0"
     }
 }
 pkg bytes{

@@ -17,9 +17,10 @@ import java.lang.AutoCloseable
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.stream.Stream
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 import kotlin.random.Random
@@ -176,7 +177,7 @@ public object NativeLocalAi : AutoCloseable {
     ensureAvailable()
     val (huggingFace, path) = resolveModelInfo(model)
     val (huggingFaceRepo, huggingFaceName) = huggingFace
-    return when (inferSync(
+    return when (val out = inferSync(
       verbose = params.verbose,
       disableGpu = params.disableGpu,
       gpuLayers = params.gpuLayers.toInt(),
@@ -191,10 +192,8 @@ public object NativeLocalAi : AutoCloseable {
       huggingFaceName = huggingFaceName,
       huggingFaceToken = params.huggingFaceToken ?: "",
     )) {
-      false -> error("Failed to perform local inference: Could not execute `inferSync`")
-      true -> (results() ?: error("No local inference results available")).let {
-        InferenceResults.of(it.lines().filter { it.isNotEmpty() })
-      }
+      null -> error("Failed to perform local inference: Could not execute `inferSync`")
+      else -> InferenceResults.of(out)
     }
   }
 
@@ -225,27 +224,26 @@ public object NativeLocalAi : AutoCloseable {
       val (huggingFaceRepo, huggingFaceName) = huggingFace
 
       val operationId: Int = Random.nextInt()
-      InferenceChunkCallbackImpl(coroutineContext, this).use { callback ->
-        callback.activate(operationId)
-        coroutineScope {
-          inferAsync(
-            operationId = operationId,
-            verbose = params.verbose,
-            disableGpu = params.disableGpu,
-            gpuLayers = params.gpuLayers.toInt(),
-            ctxSize = params.contextSize.toInt(),
-            threadCount = params.threadCount.toInt(),
-            threadBatchCount = params.threadBatchCount.toInt(),
-            length = computePromptLength(params, prompt),
-            allowDownload = params.allowDownload,
-            path = path.toString(),
-            prompt = prompt,
-            huggingFaceRepo = huggingFaceRepo,
-            huggingFaceName = huggingFaceName,
-            huggingFaceToken = params.huggingFaceToken ?: "",
-          )
-        }.also {
+      val callback = InferenceChunkCallbackImpl(coroutineContext, this)
+      callback.activate(operationId)
+      withContext(Dispatchers.IO) {
+        inferSync(
+          verbose = params.verbose,
+          disableGpu = params.disableGpu,
+          gpuLayers = params.gpuLayers.toInt(),
+          ctxSize = params.contextSize.toInt(),
+          threadCount = params.threadCount.toInt(),
+          threadBatchCount = params.threadBatchCount.toInt(),
+          length = computePromptLength(params, prompt),
+          allowDownload = params.allowDownload,
+          path = path.toString(),
+          prompt = prompt,
+          huggingFaceRepo = huggingFaceRepo,
+          huggingFaceName = huggingFaceName,
+          huggingFaceToken = params.huggingFaceToken ?: "",
+        ).also {
           callback.complete(operationId)
+          callback.close()
         }
       }
     }
@@ -282,7 +280,7 @@ public object NativeLocalAi : AutoCloseable {
    * @param threadCount The number of threads to use for inference.
    * @param threadBatchCount The number of threads to use for batching.
    * @param length The combined length of the prompt and output to generate, as a count of tokens.
-   * @return Whether inference was successful; gather results via [results].
+   * @return Full results of the inference call.
    */
   @Suppress("LongParameterList")
   @JvmStatic @JvmName("inferSync") private external fun inferSync(
@@ -299,7 +297,7 @@ public object NativeLocalAi : AutoCloseable {
     threadCount: Int,
     threadBatchCount: Int,
     length: Int,
-  ): Boolean
+  ): String?
 
   /**
    * ### Native Inference (Asynchronous)
@@ -323,7 +321,6 @@ public object NativeLocalAi : AutoCloseable {
    * @param threadCount The number of threads to use for inference.
    * @param threadBatchCount The number of threads to use for batching.
    * @param length The combined length of the prompt and output to generate, as a count of tokens.
-   * @return Whether inference was successful; gather results via [results].
    */
   @Suppress("LongParameterList")
   @JvmStatic @JvmName("inferAsync") private external fun inferAsync(
@@ -342,19 +339,6 @@ public object NativeLocalAi : AutoCloseable {
     threadBatchCount: Int,
     length: Int,
   )
-
-  /**
-   * ### Results (Synchronous)
-   *
-   * Retrieve the buffered results of a synchronous local inference operation; if no results are available at all,
-   * `null` is returned. Otherwise, an instance of [InferenceResults] is returned.
-   *
-   * For errors arising from synchronous use, an object also may be returned in the form of [InferenceResults.Error].
-   * [inferSync] should always be called before this method.
-   *
-   * @return The results of the inference operation, or `null` if no results are available.
-   */
-  @JvmStatic @JvmName("results") private external fun results(): String?
 
   /**
    * ### De-initialize

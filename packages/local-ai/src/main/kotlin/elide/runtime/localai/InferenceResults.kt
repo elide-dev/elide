@@ -97,8 +97,8 @@ public sealed interface InferenceResults {
     /** @return Streamed inference results. */
     @JvmStatic
     public inline fun suspending(crossinline producer: suspend FlowCollector<String>.() -> Unit): Suspending {
-      return flow {
-        producer()
+      return flow<String> {
+        // producer()
       }.let {
         Suspending(it)
       }

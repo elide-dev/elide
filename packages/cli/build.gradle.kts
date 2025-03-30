@@ -1479,6 +1479,8 @@ val windowsReleaseArgs = windowsOnlyArgs
 
 val darwinReleaseArgs = darwinOnlyArgs.toList()
 
+val muslHome = System.getenv("MUSL_HOME") ?: "/opt/musl/1.2.5/lib"
+
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOfNotNull(
     "-g",  // always generate debug info on linux
@@ -1510,6 +1512,8 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
   ).plus(
     listOfNotNull(
       onlyIf(enableStatic, "--libc=musl"),
+      onlyIf(enableStatic, "-H:NativeLinkerOption=-L$muslHome/lib"),
+      onlyIf(enableStatic, "-H:NativeLinkerOption=-lstdc++"),
       onlyIf(enableStatic, "--static"),
       onlyIf(!enableStatic, "--static-nolibc"),
     )

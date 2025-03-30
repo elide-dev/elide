@@ -3124,6 +3124,7 @@ name = "local-ai"
 version = "1.0.0-beta1"
 dependencies = [
  "anyhow",
+ "builder",
  "clap",
  "encoding_rs",
  "hf-hub",

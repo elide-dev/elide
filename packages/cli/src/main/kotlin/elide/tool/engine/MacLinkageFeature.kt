@@ -10,6 +10,8 @@ import elide.annotations.engine.VMFeature
   private val macFrameworks = listOf(
     "Security",
     "SystemConfiguration",
+    "Metal",
+    "Accelerate",
   )
 
   override fun getDescription(): String = "Linkage configuration for modern macOS"

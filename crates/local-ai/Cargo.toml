@@ -39,6 +39,9 @@ blocking = []
 nonblocking = []
 debug = []
 
+[build-dependencies]
+builder = { workspace = true }
+
 [dependencies]
 anyhow = { workspace = true }
 clap = { workspace = true, features = ["derive"] }

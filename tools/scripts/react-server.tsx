@@ -1,3 +1,4 @@
+/// <reference path="../../packages/types/index.d.ts" />
 import { renderToString } from "react-dom/server"
 
 const port = 8080

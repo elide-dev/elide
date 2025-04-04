@@ -62,7 +62,7 @@ plugins {
 // - `elide.target`: Known target, like `linux-amd64`, `linux-amd64-musl`, `darwin-amd64`, or `windows-amd64`
 // - `elide.targetOs`: `darwin`, `linux`, `windows`
 // - `elide.targetArch`: `amd64`, `arm64`
-// - `elide.targetLibc`: `glibc` or `musl`
+// - `elide.targetLibc`: `glibc`, `musl`, `bionic`
 // - `elide.static`: `true` or `false`
 // - `elide.march`: `native`, `compatibility`
 // - `elide.compiler`: Custom compiler name or path
@@ -165,7 +165,7 @@ val enableJvmstat = false
 val enableJmx = false
 val enableVerboseClassLoading = false
 val jniDebug = false
-val glibcTarget = if (enableStatic) "musl" else "glibc"
+val libcTarget = (findProperty("elide.targetLibc") as? String) ?: (if (enableStatic) "musl" else "glibc")
 val dumpPointsTo = false
 val elideTarget = TargetInfo.current(project)
 val fallbackGc = findProperty("elide.gc") ?: "serial"
@@ -1108,7 +1108,6 @@ val commonNativeArgs = listOfNotNull(
   "--enable-url-protocols=http,https",
   "--color=always",
   "--initialize-at-build-time",
-  "--exact-reachability-metadata",
   "--link-at-build-time=elide",
   "--link-at-build-time=dev.elide",
   "--link-at-build-time=org.pkl",
@@ -1379,7 +1378,7 @@ val jvmDefs = mutableMapOf(
   "elide.graalvm.ee" to oracleGvm.toString(),
   "elide.mosaic" to enableMosaic.toString(),
   "elide.staticJni" to enableStaticJni.toString(),
-  "elide.targetLibc" to glibcTarget,
+  "elide.targetLibc" to libcTarget,
   "elide.js.vm.enableStreams" to "true",
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
   "elide.kotlin.verbose" to "false",
@@ -1559,7 +1558,7 @@ val nativeOverrideArgs: List<String> = listOf()
 
 fun nativeCliImageArgs(
   platform: String = "generic",
-  target: String = glibcTarget,
+  target: String = libcTarget,
   debug: Boolean = isDebug,
   test: Boolean = false,
   sharedLib: Boolean = false,

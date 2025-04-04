@@ -1,0 +1,35 @@
+{
+  "name": "@elide-dev/types",
+  "version": "1.0.0-beta2",
+  "description": "TypeScript types for Elide",
+  "license": "MIT",
+  "types": "./index.d.ts",
+  "type": "commonjs",
+  "files": [
+    "./*.d.ts"
+  ],
+  "homepage": "https://elide.dev",
+  "dependencies": {
+    "@types/node": "*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
+    "@definitelytyped/dtslint": "^0.0.199",
+    "@definitelytyped/eslint-plugin": "^0.0.197",
+    "bun": "1.2.8",
+    "publint": "0.3.10",
+    "typescript": "^5.0.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "fmt": "echo $(which biome) && biome format --write .",
+    "check": "pnpm build && biome lint . && publint",
+    "fix": "biome lint --fix .",
+    "dtslint": "dtslint types"
+  },
+  "keywords": [
+    "elide",
+    "runtime",
+    "types"
+  ]
+}

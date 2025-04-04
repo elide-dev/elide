@@ -49,6 +49,7 @@ encoding_rs = { workspace = true }
 hf-hub = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
+exec = { workspace = true }
 llama-cpp-2 = { workspace = true }
 tokio = { workspace = true, optional = true }
 tracing-subscriber = { workspace = true }

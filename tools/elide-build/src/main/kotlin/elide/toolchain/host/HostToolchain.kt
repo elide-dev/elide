@@ -27,13 +27,19 @@ private const val ARM64 = "arm64"
 private const val AMD64 = "amd64"
 private const val X86_64 = "x86_64"
 private const val AARCH64 = "aarch64"
+private const val ARMV7 = "armv7"
 private const val GNU = "gnu"
 private const val MUSL = "musl"
+private const val BIONIC = "bionic"
 private const val MSVC = "msvc"
 private const val APPLE = "apple"
 private const val DARWIN = "darwin"
 private const val LINUX = "linux"
 private const val WINDOWS = "windows"
+private const val ANDROID = "android"
+private const val ANDROIDEABI = "androideabi"
+private const val UNKNOWN = "unknown"
+private const val PC = "pc"
 private const val LINUX_AMD64_MUSL = "$LINUX-$AMD64-$MUSL"
 private const val LINUX_AMD64_GNU = "$LINUX-$AMD64"
 private const val LINUX_AARCH64_MUSL = "$LINUX-$AARCH64-$MUSL"
@@ -41,6 +47,8 @@ private const val LINUX_AARCH64_GNU = "$LINUX-$AARCH64"
 private const val DARWIN_AARCH64 = "$DARWIN-$AARCH64"
 private const val DARWIN_AMD64 = "$DARWIN-$AMD64"
 private const val WINDOWS_AMD64 = "$WINDOWS-$AMD64"
+private const val ANDROID_X86_64 = "$X86_64-$LINUX-$ANDROID"
+private const val ANDROID_ARMV7 = "$ARMV7-$LINUX-$ANDROIDEABI"
 
 private fun Project.getProp(name: String): String? = (properties[name] as? String)?.ifBlank { null }
 
@@ -84,11 +92,13 @@ public enum class Architecture {
 public enum class Libc {
   Gnu,
   Musl,
+  Bionic,
   Msvc;
 
   public companion object {
     @JvmStatic public fun from(token: String): Libc = when (token.lowercase().trim()) {
       MUSL -> Musl
+      BIONIC -> Bionic
       MSVC -> Msvc
       else -> Gnu
     }
@@ -360,16 +370,20 @@ public enum class ElideTarget(
   LINUX_AMD64_MUSL(LINUX, AMD64, MUSL),
   LINUX_AARCH64_GNU(LINUX, AARCH64, GNU),
   LINUX_AARCH64_MUSL(LINUX, AARCH64, MUSL),
+  LINUX_AMD64_BIONIC(LINUX, AMD64, BIONIC),
+  LINUX_AARCH64_BIONIC(LINUX, AARCH64, BIONIC),
   WINDOWS_AMD64(WINDOWS, AMD64, MSVC);
 
   override val triple: String get() = when (this) {
     LINUX_AMD64_MUSL,
     LINUX_AMD64_GNU,
     LINUX_AARCH64_GNU,
-    LINUX_AARCH64_MUSL -> "${canonicalArch(arch)}-unknown-$os-$libc"
+    LINUX_AARCH64_MUSL -> "${canonicalArch(arch)}-$UNKNOWN-$os-$libc"
+    LINUX_AMD64_BIONIC -> ANDROID_X86_64
+    LINUX_AARCH64_BIONIC -> ANDROID_ARMV7
     MACOS_AARCH64,
     MACOS_AMD64 -> "${canonicalArch(arch)}-$APPLE-$os"
-    WINDOWS_AMD64 -> "${canonicalArch(arch)}-pc-$os-$libc"
+    WINDOWS_AMD64 -> "${canonicalArch(arch)}-$PC-$os-$libc"
   }
 
   private companion object {
@@ -381,6 +395,12 @@ public enum class ElideTarget(
   }
 }
 
+private fun Project.resolveTargetArch(): String {
+  val explicit = getProp(ELIDE_ARCH)
+  val host = System.getProperty("os.arch").lowercase().trim()
+  return explicit ?: host
+}
+
 private fun Project.findTarget(os: String, arch: String, libc: String): ElideTarget {
   return when (val assembled = ElideTarget.entries.find { it.os == os && it.arch == arch && it.libc == libc }) {
     // ---- 3. Then we should take after the host.
@@ -390,13 +410,17 @@ private fun Project.findTarget(os: String, arch: String, libc: String): ElideTar
 
       // Linux supports multiple libc implementations and architectures.
       HostManager.hostIsLinux -> when (val linuxLibc = getProp(ELIDE_LIBC) ?: GNU) {
-        GNU -> when (System.getProperty("os.arch").lowercase().trim()) {
+        GNU -> when (resolveTargetArch()) {
           AARCH64 -> ElideTarget.LINUX_AARCH64_GNU
           else -> ElideTarget.LINUX_AMD64_GNU
         }
-        MUSL -> when (System.getProperty("os.arch").lowercase().trim()) {
+        MUSL -> when (resolveTargetArch()) {
           AARCH64 -> ElideTarget.LINUX_AARCH64_MUSL
           else -> ElideTarget.LINUX_AMD64_MUSL
+        }
+        BIONIC -> when (resolveTargetArch()) {
+          AARCH64 -> ElideTarget.LINUX_AARCH64_BIONIC
+          else -> ElideTarget.LINUX_AMD64_BIONIC
         }
         else -> error("Unsupported libc: $linuxLibc")
       }

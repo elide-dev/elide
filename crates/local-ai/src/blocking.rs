@@ -189,7 +189,7 @@ pub fn inferSync<'a>(
             eprintln!("result: {:?}", out);
           }
           let ret = env.new_string(out).expect("unable to create result string");
-          (**ret).into()
+          **ret
         }
         Err(e) => {
           if DEBUG_LOGS {
@@ -198,7 +198,7 @@ pub fn inferSync<'a>(
           let ret = env
             .new_string(e.to_string())
             .expect("unable to create error string");
-          (**ret).into()
+          **ret
         }
       }
     }
@@ -207,7 +207,7 @@ pub fn inferSync<'a>(
       let ret = env
         .new_string(e.to_string())
         .expect("unable to create error string");
-      (**ret).into()
+      **ret
     }
   }
 }

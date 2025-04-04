@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -48,6 +48,9 @@ const RELEASE: &str = "release";
 
 /// Minimum supported version of macOS.
 pub const MACOS_MIN: &str = "12.3";
+
+/// Minimum supported version of Android.
+const android_api_version: &str = "21";
 
 /// Enumerates the types of build profiles which Elide supports.
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
@@ -543,6 +546,38 @@ pub fn base_lib_paths() -> Vec<String> {
     "aarch64"
   };
 
+  // NDK_HOME; add lib paths if building for android
+  let ndk_home = var("NDK_HOME").unwrap_or_else(|_| "".to_string());
+  let ndk_lib = if target.contains("android") {
+    format!(
+      "{}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/{}/{}",
+      ndk_home, target, android_api_version
+    )
+  } else {
+    "".to_string()
+  };
+  let ndk_lib_base = if target.contains("android") {
+    format!(
+      "{}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/{}",
+      ndk_home, target
+    )
+  } else {
+    "".to_string()
+  };
+  let ndk_arch_lib = if target.contains("android") {
+    let lib_target = match target.as_str() {
+      "x86_64-linux-android" => "x86_64-unknown-linux-gnu",
+      "aarch64-linux-android" => "aarch64-unknown-linux-gnu",
+      _ => "unknown-linux-gnu",
+    };
+    format!(
+      "{}/toolchains/llvm/prebuilt/linux-x86_64/lib/{}",
+      ndk_home, lib_target
+    )
+  } else {
+    "".to_string()
+  };
+
   vec![
     format!("{}/lib", gvm_home),
     format!("{}/lib/server", gvm_home),
@@ -550,6 +585,9 @@ pub fn base_lib_paths() -> Vec<String> {
     format!("{}/{}", target_base, profile),
     format!("{}/{}/lib", target_base, profile),
     sqlite_libs,
+    ndk_lib,
+    ndk_lib_base,
+    ndk_arch_lib,
   ]
 }
 
@@ -567,7 +605,9 @@ pub fn lib_paths(extras: Option<Vec<String>>) -> Vec<String> {
 pub fn cargo_lib_metadata(extra_lib_paths: Option<Vec<String>>) -> Vec<String> {
   let paths = lib_paths(extra_lib_paths);
   for path in paths.iter() {
-    println!("cargo:rustc-link-search=native={}", path);
+    if !path.is_empty() {
+      println!("cargo:rustc-link-search=native={}", path);
+    }
   }
   paths
 }
@@ -575,6 +615,13 @@ pub fn cargo_lib_metadata(extra_lib_paths: Option<Vec<String>>) -> Vec<String> {
 /// Obtain a consistent value identifying the target operating system.
 pub fn target_os() -> OperatingSystem {
   OperatingSystem::current()
+}
+
+/// Determine whether we are targeting Android.
+pub fn is_android() -> bool {
+  // check TARGET for `android` token
+  let target = var("TARGET").unwrap();
+  target.contains("android")
 }
 
 /// Obtain a consistent value identifying the target CPU architecture.

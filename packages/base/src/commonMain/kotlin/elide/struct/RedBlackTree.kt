@@ -14,7 +14,6 @@
 
 package elide.struct
 
-import kotlin.concurrent.Volatile
 import kotlin.jvm.JvmField
 import kotlin.jvm.Transient
 import elide.struct.RedBlackTree.NodeColor.BLACK

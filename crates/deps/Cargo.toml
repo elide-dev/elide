@@ -25,6 +25,9 @@ license = { workspace = true }
 [lib]
 crate-type = ["lib"]
 
+[build-dependencies]
+builder = { workspace = true }
+
 [dependencies]
 ## Local
 # base = { workspace = true }

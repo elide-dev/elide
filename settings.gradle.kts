@@ -90,6 +90,8 @@ dependencyResolutionManagement {
         includeGroup("org.jetbrains.reflekt")
         includeGroup("com.google.devtools.ksp")
         includeGroup("org.pkl-lang")
+        includeGroup("dev.karmakrafts")
+        includeGroup("dev.karmakrafts.filament")
         includeGroupAndSubgroups("org.graalvm")
         includeGroupByRegex("org.graalvm.*")
 
@@ -168,22 +170,12 @@ rootProject.name = "elide"
 
 // Build modules.
 include(
-  ":crates:builder",
-  ":crates:deps",
-  ":crates:diag",
-  ":crates:entry",
-  ":crates:js",
-  ":crates:posix",
-  ":crates:sqlite",
-  ":crates:substrate",
-  ":crates:terminal",
-  ":crates:transport",
-  ":crates:local-ai",
   ":packages:base",
   ":packages:bom",
   ":packages:cli",
   ":packages:core",
   ":packages:engine",
+  ":packages:exec",
   ":packages:graalvm",
   ":packages:graalvm-java",
   ":packages:graalvm-jvm",

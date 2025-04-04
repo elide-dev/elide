@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024 Elide Technologies, Inc.
+# Copyright (c) 2024-2025 Elide Technologies, Inc.
 #
 # Licensed under the MIT license (the "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
@@ -23,8 +23,8 @@ exclude = ["crates/build", "crates/transport", "third_party", "runtime"]
 [workspace.package]
 license = "MIT"
 edition = "2024"
-rust-version = "1.85.0"
-version = "1.0.0-beta1"
+rust-version = "1.86.0"
+version = "1.0.0-beta2"
 authors = ["Elide Technologies, Inc."]
 homepage = "https://elide.dev"
 documentation = "https://docs.elide.dev"
@@ -43,7 +43,11 @@ lto = true
 strip = "debuginfo"
 debug = true
 incremental = false
+panic = 'abort'
 codegen-units = 1
+
+[profile.release.package.diag]
+opt-level = "s"
 
 [profile.release.package.local-ai]
 opt-level = "s"
@@ -66,6 +70,7 @@ builder = { path = "crates/builder" }
 diag = { path = "crates/diag" }
 substrate = { path = "crates/substrate" }
 umbrella = { path = "tools/umbrella" }
+exec = { path = "crates/exec" }
 
 ## Dependencies
 lazy_static = { version = "1.5.0" }

@@ -68,6 +68,12 @@ const DEFAULT_CONTEXT_WINDOW: u32 = 2048;
 // Llama backend; available after init.
 static BACKEND: Mutex<Option<LlamaBackend>> = Mutex::new(None);
 
+/// A callback which receives an inference result.
+pub type InferenceCallback = dyn Fn(Result<String, Error>) + Send;
+
+/// A boxed inference callback.
+pub type BoxedInferenceCallback = Box<InferenceCallback>;
+
 /// Prepare a model for use.
 async fn prep_model(model: Model) -> Result<PathBuf, Box<dyn std::error::Error>> {
   // prep and load model
@@ -86,7 +92,7 @@ async fn do_infer(
   threads_batch: Option<i32>,
   length: Option<i32>,
   seed: Option<u32>,
-  cbk: Option<Box<dyn Fn(Result<String, Error>) + Send>>,
+  cbk: Option<BoxedInferenceCallback>,
 ) -> Result<Option<String>, Error> {
   if DEBUG_LOGS {
     eprintln!("INF(do_infer): resolving backend");

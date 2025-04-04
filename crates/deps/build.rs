@@ -11,22 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-use builder::{OperatingSystem, cargo_lib_metadata, target_os};
+use builder::cargo_lib_metadata;
 
 fn main() {
   cargo_lib_metadata(None);
-
-  match target_os() {
-    OperatingSystem::Linux => {
-      println!("cargo:rustc-link-lib=dylib=gomp");
-      println!("cargo:rustc-link-lib=dylib=m");
-      println!("cargo:rustc-link-lib=dylib=z");
-    }
-    OperatingSystem::Darwin => {
-      println!("cargo:rustc-link-lib=dylib=c++");
-      println!("cargo:rustc-link-lib=dylib=m");
-      println!("cargo:rustc-link-lib=dylib=z");
-    }
-    _ => {}
-  }
 }

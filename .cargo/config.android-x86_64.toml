@@ -11,23 +11,15 @@
 # License for the specific language governing permissions and limitations under the License.
 #
 
-[package]
-name = "diag"
-version = { workspace = true }
-edition = { workspace = true }
-rust-version = { workspace = true }
-homepage = { workspace = true }
-documentation = { workspace = true }
-repository = { workspace = true }
-authors = { workspace = true }
-license = { workspace = true }
+[build]
+rustflags = [
+  # Enforce completely position-independent executables.
+  "-Crelocation-model=pic",
+]
 
-[lib]
-crate-type = ["lib", "staticlib", "cdylib"]
-
-[build-dependencies]
-builder = { workspace = true }
-
-[dependencies]
-java_native = { workspace = true }
-jni = { workspace = true, default-features = false }
+[env]
+CC = { value = "clang", relative = false }
+ELIDE_ROOT = { value = ".", relative = true }
+SQLITE3_STATIC = { value = "1" }
+SQLITE3_LIB_DIR = { value = "third_party/sqlite/install/lib", relative = true }
+SQLITE3_INCLUDE_DIR = { value = "third_party/sqlite/install/include", relative = true }

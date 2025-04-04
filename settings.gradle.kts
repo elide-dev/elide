@@ -168,17 +168,6 @@ rootProject.name = "elide"
 
 // Build modules.
 include(
-  ":crates:builder",
-  ":crates:deps",
-  ":crates:diag",
-  ":crates:entry",
-  ":crates:js",
-  ":crates:posix",
-  ":crates:sqlite",
-  ":crates:substrate",
-  ":crates:terminal",
-  ":crates:transport",
-  ":crates:local-ai",
   ":packages:base",
   ":packages:bom",
   ":packages:cli",

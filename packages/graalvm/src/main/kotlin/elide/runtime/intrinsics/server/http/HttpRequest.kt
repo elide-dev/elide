@@ -12,14 +12,44 @@
  */
 package elide.runtime.intrinsics.server.http
 
-import org.graalvm.polyglot.HostAccess.Export
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.interop.ReadOnlyProxyObject
+import elide.vm.annotations.Polyglot
+
+private const val HTTP_REQUEST_PROP_URI = "uri"
+private const val HTTP_REQUEST_PROP_METHOD = "method"
+private const val HTTP_REQUEST_PROP_VERSION = "version"
+private const val HTTP_REQUEST_PROP_BODY = "body"
+
+// Methods and properties on an HTTP request.
+private val httpRequestProps = arrayOf(
+  HTTP_REQUEST_PROP_URI,
+  HTTP_REQUEST_PROP_METHOD,
+  HTTP_REQUEST_PROP_VERSION,
+  HTTP_REQUEST_PROP_BODY,
+)
 
 /** Represents an incoming HTTP request received by the server, accessible by guest code. */
-@DelicateElideApi public interface HttpRequest {
+@DelicateElideApi public interface HttpRequest : ReadOnlyProxyObject {
   /** The URI (path) for this request. */
-  @get:Export public val uri: String
+  @get:Polyglot public val uri: String
 
   /** The HTTP method for this request */
-  @get:Export public val method: HttpMethod
+  @get:Polyglot public val method: HttpMethod
+
+  /** The HTTP version for this request */
+  @get:Polyglot public val version: String
+
+  /** The HTTP body for this request, or `null` */
+  @get:Polyglot public val body: String?
+
+  override fun getMemberKeys(): Array<String> = httpRequestProps
+
+  override fun getMember(key: String?): Any? = when (key) {
+    HTTP_REQUEST_PROP_URI -> uri
+    HTTP_REQUEST_PROP_METHOD -> method
+    HTTP_REQUEST_PROP_VERSION -> version
+    HTTP_REQUEST_PROP_BODY -> body
+    else -> null
+  }
 }

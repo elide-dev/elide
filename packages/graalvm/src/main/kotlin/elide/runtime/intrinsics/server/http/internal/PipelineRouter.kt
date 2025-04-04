@@ -105,9 +105,22 @@ import elide.vm.annotations.Polyglot
         if (pattern == null) return@matcher true
 
         // otherwise return true when the pattern matches the requested path
-        pattern.matchEntire(request.uri)?.also { match ->
-          // TODO(@darvld): replace with polyglot equivalent
-          val requestParams = JsProxy.build { /* empty */ }
+        val (matchString, params) = if (request.uri.contains("?")) {
+          // strip query string from the request URI
+          request.uri.substringBefore("?") to request.uri.substringAfter("?")
+        } else {
+          request.uri to null
+        }
+        val jsParams = params?.split("&")?.associate {
+          val (key, value) = it.split("=")
+          key to value
+        }
+        pattern.matchEntire(matchString)?.also { match ->
+          val requestParams = JsProxy.build {
+            jsParams?.forEach { (key, value) ->
+              put(key, value)
+            }
+          }
 
           // extract path variables and add them to the request
           for (variable in pathVariables) match.groups[variable]?.let {

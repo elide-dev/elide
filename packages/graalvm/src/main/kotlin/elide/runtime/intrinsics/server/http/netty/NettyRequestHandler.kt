@@ -28,7 +28,7 @@ import io.netty.handler.codec.http.HttpRequest as NettyHttpRequest
 /**
  * A custom shareable (thread-safe) handler used to bridge the Netty server with guest code.
  *
- * Given the thread-local approach used by the the server intrinsics, a single [NettyRequestHandler] can be safely
+ * Given the thread-local approach used by the server intrinsics, a single [NettyRequestHandler] can be safely
  * used from different threads (hence the [@Sharable][Sharable] marker).
  */
 @DelicateElideApi @Sharable internal class NettyRequestHandler(

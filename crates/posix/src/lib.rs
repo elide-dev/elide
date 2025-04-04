@@ -162,6 +162,7 @@ mod tests {
     assert_eq!(result, -1);
   }
 
+  #[allow(clippy::zombie_processes)]
   #[test]
   fn test_subproc_killwith_sigkill() {
     // start a subprocess calling into `sleep`
@@ -190,6 +191,7 @@ mod tests {
     }
   }
 
+  #[allow(clippy::zombie_processes)]
   #[test]
   fn test_subproc_killwith_sigterm() {
     // start a subprocess calling into `sleep`

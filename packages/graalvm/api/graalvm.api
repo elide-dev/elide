@@ -6124,9 +6124,14 @@ public final class elide/runtime/intrinsics/server/http/HttpMethod : java/lang/E
 	public static fun values ()[Lelide/runtime/intrinsics/server/http/HttpMethod;
 }
 
-public abstract interface class elide/runtime/intrinsics/server/http/HttpRequest {
+public abstract interface class elide/runtime/intrinsics/server/http/HttpRequest : elide/runtime/interop/ReadOnlyProxyObject {
+	public abstract fun getBody ()Ljava/lang/String;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
 	public abstract fun getMethod ()Lelide/runtime/intrinsics/server/http/HttpMethod;
 	public abstract fun getUri ()Ljava/lang/String;
+	public abstract fun getVersion ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/server/http/HttpResponse : elide/runtime/intrinsics/server/http/ExpressResponseAPI {

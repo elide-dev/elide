@@ -45,11 +45,11 @@ public class PromiseRejectedException(public val reason: Any? = null) : RuntimeE
  */
 public interface JsPromise<out T> : ProxyObject {
   /** Whether the promise has been resolved or rejected. */
-  public val isClosed: Boolean
+  public val isDone: Boolean
 
   /**
    * Register a function to be called when the promise is fulfilled, and optionally, another callback to handle
-   * rejection. If the promise is already [closed][isClosed], the callbacks may be invoked immediately.
+   * rejection. If the promise is already [closed][isDone], the callbacks may be invoked immediately.
    *
    * @return this promise object.
    */
@@ -57,7 +57,7 @@ public interface JsPromise<out T> : ProxyObject {
 
   /**
    * Register a guest value to be called when the promise is fulfilled, and optionally, another callback to handle
-   * rejection. If the promise is already [closed][isClosed], the callbacks may be invoked immediately.
+   * rejection. If the promise is already [closed][isDone], the callbacks may be invoked immediately.
    *
    * @return this promise object.
    */
@@ -124,7 +124,7 @@ public interface JsPromise<out T> : ProxyObject {
     }
 
     /** Create a new promise encapsulating the result of launching an async operation on this guest executor. */
-    @JvmStatic public fun <T> GuestExecutor.of(fn: () -> T): JsPromise<T> = wrap(submit(fn))
+    @JvmStatic public fun <T> GuestExecutor.spawn(fn: () -> T): JsPromise<T> = wrap(submit(fn))
 
     /** Create a new promise wrapping the given supplier's getter. */
     @JvmStatic public fun <T> GuestExecutor.of(supplier: Supplier<T>): JsPromise<T> = wrap(submit(supplier::get))
@@ -183,4 +183,39 @@ public inline fun <reified T> JsPromise<T>.asDeferred(): Deferred<T> {
   if (this is CompletableJsPromise) deferred.invokeOnCompletion(::reject)
 
   return deferred
+}
+
+/**
+ * A type-safe wrapper that enables the use of a promise-like guest [value], aloowing its use as a regular [JsPromise]
+ * transparently.
+ */
+@JvmInline public value class GuestJsPromise<T>(public val value: Value) : JsPromise<T> {
+  override val isDone: Boolean get() = false
+
+  override fun then(onFulfilled: Value, onCatch: Value?): JsPromise<T> {
+    return GuestJsPromise(value.invokeMember(THEN_MEMBER, onFulfilled, onCatch))
+  }
+
+  override fun then(onFulfilled: (T) -> Unit, onCatch: ((Any?) -> Unit)?): JsPromise<T> {
+    return GuestJsPromise(value.invokeMember(THEN_MEMBER, onFulfilled, onCatch))
+  }
+
+  override fun catch(onRejected: (Any?) -> Unit): JsPromise<T> {
+    return GuestJsPromise(value.invokeMember(CATCH_MEMBER, onRejected))
+  }
+
+  override fun catch(onRejected: Value): JsPromise<T> {
+    return GuestJsPromise(value.invokeMember(CATCH_MEMBER, onRejected))
+  }
+
+  public companion object {
+    private const val THEN_MEMBER = "then"
+    private const val CATCH_MEMBER = "catch"
+
+    /** Wrap a promise-like guest [value] into a [GuestJsPromise], allowing its use a type-safe [JsPromise]. */
+    public fun <T> from(value: Value): GuestJsPromise<T> {
+      require(value.canInvokeMember(THEN_MEMBER)) { "The provided value is not a promise" }
+      return GuestJsPromise(value)
+    }
+  }
 }

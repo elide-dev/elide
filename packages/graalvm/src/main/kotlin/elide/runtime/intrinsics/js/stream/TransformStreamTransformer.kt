@@ -14,15 +14,19 @@ package elide.runtime.intrinsics.js.stream
 
 import org.graalvm.polyglot.Value
 import elide.runtime.intrinsics.js.JsPromise
-import elide.vm.annotations.Polyglot
+import elide.runtime.intrinsics.js.ReadableStream
 
-public interface WritableStreamDefaultWriter {
-  @get:Polyglot public val closed: JsPromise<Unit>
-  @get:Polyglot public val ready: JsPromise<Unit>
-  @get:Polyglot public val desiredSize: Double?
+public interface TransformStreamTransformer {
+  public val readableType: ReadableStream.Type get() = ReadableStream.Type.Default
+  public val writableType: Any get() = Unit
 
-  @Polyglot public fun write(chunk: Value): JsPromise<Unit>
-  @Polyglot public fun releaseLock()
-  @Polyglot public fun abort(reason: Any? = null): JsPromise<Unit>
-  @Polyglot public fun close(): JsPromise<Unit>
+  public fun start(controller: TransformStreamDefaultController): JsPromise<Unit> = JsPromise.resolved(Unit)
+  public fun flush(controller: TransformStreamDefaultController): JsPromise<Unit> = JsPromise.resolved(Unit)
+
+  public fun transform(chunk: Value, controller: TransformStreamDefaultController): JsPromise<Unit> {
+    controller.enqueue(chunk)
+    return JsPromise.resolved(Unit)
+  }
+
+  public fun cancel(reason: Any? = null): JsPromise<Unit> = JsPromise.resolved(Unit)
 }

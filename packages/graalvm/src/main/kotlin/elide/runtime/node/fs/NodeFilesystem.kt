@@ -47,7 +47,7 @@ import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
-import elide.runtime.intrinsics.js.JsPromise.Companion.of
+import elide.runtime.intrinsics.js.JsPromise.Companion.spawn
 import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.Error
 import elide.runtime.intrinsics.js.err.TypeError
@@ -336,7 +336,7 @@ internal abstract class FilesystemBase(
   // Obtain current context, if any, and then execute in the background; once execution completes, the context is again
   // entered, and execution continues.
   protected inline fun <reified T> withExec(noinline op: () -> T): JsPromise<T> = try {
-    exec.of { op() }
+    exec.spawn { op() }
   } catch (err: Throwable) {
     JsPromise.rejected(err)
   }

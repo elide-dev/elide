@@ -12,10 +12,11 @@
  */
 package elide.runtime.intrinsics.js.stream
 
-import elide.annotations.API
+import org.graalvm.polyglot.Value
+import elide.vm.annotations.Polyglot
 
-/**
- * ## Readable Stream BYOB Request
- */
-@API public interface ReadableStreamBYOBRequest {
+public interface ReadableStreamBYOBRequest {
+  @get:Polyglot public val view: Value?
+  @Polyglot public fun respond(bytesWritten: Long)
+  @Polyglot public fun respondWithNewView(view: Value)
 }

@@ -10,15 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.js.stream
+package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
-import org.graalvm.polyglot.Value
-import elide.vm.annotations.Polyglot
+import elide.runtime.gvm.api.Intrinsic
+import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 
-public interface TransformStreamDefaultController {
-  @get:Polyglot public val desiredSize: Double?
-
-  @Polyglot public fun enqueue(chunk: Value)
-  @Polyglot public fun error(reason: Value)
-  @Polyglot public fun terminate()
+/** Implementation of transform streams (via the Web Streams standard). */
+@Intrinsic(global = "TransformStream") internal class TransformStreamIntrinsic : AbstractJsIntrinsic() {
+  override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
+    // not yet implemented
+  }
 }

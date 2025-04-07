@@ -10,20 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.js.stream
+package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
-import elide.vm.annotations.Polyglot
+import elide.runtime.gvm.api.Intrinsic
+import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 
-/**
- * ## Queuing Strategy
- *
- * Describes built-in queuing strategies for streams.
- */
-public sealed interface QueuingStrategy {
-  /**
-   * Returns the size value dictated by this strategy; implementation-specific.
-   *
-   * @return Size value.
-   */
-  @Polyglot public fun size(): Int
+/** Implementation of writable streams (via the Web Streams standard). */
+@Intrinsic(global = "WritableStream") internal class WritableStreamIntrinsic : AbstractJsIntrinsic() {
+  override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
+    // not yet implemented
+  }
 }

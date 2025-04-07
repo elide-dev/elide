@@ -13,24 +13,99 @@
 package elide.runtime.intrinsics.js
 
 import org.graalvm.polyglot.HostAccess
+import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
 import elide.annotations.API
-import elide.runtime.gvm.internals.intrinsics.js.webstreams.WebStreamsIntrinsic.ReadableStreamImpl
-import elide.runtime.intrinsics.js.stream.QueuingStrategy
-import elide.runtime.intrinsics.js.stream.ReadableStreamSource
+import elide.runtime.exec.GuestExecution
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.*
+import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
+import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.Default
+import elide.runtime.intrinsics.js.stream.*
 import elide.vm.annotations.Polyglot
 
 /**
  * # Web Streams: Readable Stream.
  *
- * Models the `ReadableStream` interface, defined by the WhatWG Streams Standard (https://streams.spec.whatwg.org/).
+ * Models the `ReadableStream` interface, defined by the [WhatWG Streams Standard](https://streams.spec.whatwg.org/).
  * Readable streams implement streams of arbitrary data which can be consumed by an interested developer, and form part
  * of the wider Web Streams API.
  */
 @API @HostAccess.Implementable public interface ReadableStream : Stream {
+  /**
+   * Encapsulates the result of a read; [done] indicates whether the [value] is the final value that will be available
+   * from the source.
+   */
+  public data class ReadResult(
+    @Polyglot val value: Value?,
+    @Polyglot val done: Boolean,
+  )
+
+  /** Defines the type of streams implemented by the standard. */
+  public enum class Type {
+    /**
+     * The default stream type, which uses a `ReadableStreamDefaultController` and `ReadableStreamDefaultReader`
+     * instances.
+     */
+    Default,
+
+    /**
+     * A stream optimized for byte operations, using `ReadableStreamBYOBController and `ReadableStreamBYOBReader`
+     * types, which allow consumers to provide their own buffers for sources to write the data in.
+     */
+    BYOB;
+
+    public companion object {
+      /**
+       * Select a stream/source [Type] from the given string [value]. This is intended to be used on values returned
+       * by [ReadableStreamSource.type]. The [Default] type will be used in every case except when [value] is the
+       * string "bytes"s.
+       */
+      public fun fromGuestValue(value: String): Type {
+        return if (value == "bytes") BYOB
+        else Default
+      }
+    }
+  }
+
+  /**
+   * When used as part of the reader options in [ReadableStream.getReader], the returned reader instance will match
+   * this setting. Note that using [BYOB] mode on a default stream will result in an error (but [Default] is always
+   * allowed).
+   */
+  public enum class ReaderMode {
+    /** Requests a default reader, which moves elements from the stream as they are. Available for all stream types. */
+    Default,
+
+    /**
+     * Requests a BYOB reader, which allows passing a custom buffer for the data to be written into. Available only for
+     * BYOB streams.
+     */
+    BYOB,
+  }
+
+  /** Whether the stream is currently [locked](https://streams.spec.whatwg.org/#lock) to a [reader]. */
+  @get:Polyglot public val locked: Boolean
+
+  /** Cancel the stream with an optional reason, releasing the underlying source. */
+  @Polyglot public fun cancel(reason: Any? = null): JsPromise<Unit>
+
+  /**
+   * Obtain a new [ReadableStreamReader] instance and lock the stream to it, preventing any new readers from being
+   * acquired until it is released.
+   *
+   * If the stream is already [locked], an error will be thrown.
+   */
+  @Polyglot public fun getReader(options: Value? = null): ReadableStreamReader
+
+  @Polyglot public fun pipeThrough(transform: TransformStream, options: Value? = null): ReadableStream
+
+  @Polyglot public fun pipeTo(destination: WritableStream, options: Value? = null): JsPromise<Unit>
+
+  @Polyglot public fun tee(): Array<ReadableStream>
+
   /**
    * ## Readable Stream: Factory.
    *
@@ -40,16 +115,16 @@ import elide.vm.annotations.Polyglot
    *
    * @param Impl Implementation of [ReadableStream] which is created by this factory.
    */
-  public interface Factory<Impl> : ProxyInstantiable where Impl: ReadableStream {
+  public interface Factory<Impl> : ProxyInstantiable where Impl : ReadableStream {
     /**
      * Constructor for a custom [ReadableStream], which implements the provided [source] and [queueingStrategy], if
      * provided.
      *
      * @param source Source for the [ReadableStream].
-     * @param queueingStrategy Optional [QueuingStrategy] for the [ReadableStream].
+     * @param queueingStrategy Optional [QueueingStrategy] for the [ReadableStream].
      * @return A new [ReadableStream] instance.
      */
-    @Polyglot public fun create(source: ReadableStreamSource, queueingStrategy: QueuingStrategy?): ReadableStream
+    @Polyglot public fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream
 
     /**
      * Constructor for a custom [ReadableStream], which implements the provided [source].
@@ -100,13 +175,37 @@ import elide.vm.annotations.Polyglot
   }
 
   /** Default constructors/factory methods for [ReadableStream] instances. */
-  public companion object DefaultFactory : ProxyInstantiable by ReadableStreamImpl.Factory, Factory<ReadableStream> {
-    @Polyglot override fun create(source: ReadableStreamSource, queueingStrategy: QueuingStrategy?): ReadableStream =
-      ReadableStreamImpl.create(source, queueingStrategy)
-    override fun empty(): ReadableStream = ReadableStreamImpl.empty()
-    override fun wrap(input: InputStream): ReadableStream = ReadableStreamImpl.wrap(input)
-    override fun wrap(reader: Reader): ReadableStream = ReadableStreamImpl.wrap(reader)
-    override fun wrap(bytes: ByteArray): ReadableStream = ReadableStreamImpl.wrap(bytes)
-    override fun wrap(buffer: ByteBuffer): ReadableStream = ReadableStreamImpl.wrap(buffer)
+  public companion object DefaultFactory : ProxyInstantiable, Factory<ReadableStream> {
+    // TODO(@darvld): replace with proper local guest executor API once available
+    private val streamExecutor = GuestExecution.workStealing()
+
+    override fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream {
+      return when (source.type) {
+        Type.Default -> ReadableDefaultStream(
+          source,
+          queueingStrategy ?: QueueingStrategy.DefaultReadStrategy,
+          streamExecutor,
+        )
+
+        Type.BYOB -> ReadableByteStream(
+          source,
+          queueingStrategy ?: QueueingStrategy.DefaultReadStrategy,
+          streamExecutor,
+        )
+      }
+    }
+
+    override fun newInstance(vararg arguments: Value?): Any {
+      val source = arguments.getOrNull(0)?.let(::GuestReadableStreamSource) ?: ReadableStreamSource.Empty
+      val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from) ?: QueueingStrategy.DefaultReadStrategy
+
+      return create(source, strategy)
+    }
+
+    override fun empty(): ReadableStream = create(ReadableStreamEmptySource)
+    override fun wrap(input: InputStream): ReadableStream = create(ReadableStreamInputStreamSource(input))
+    override fun wrap(reader: Reader): ReadableStream = create(ReadableStreamReaderSource(reader))
+    override fun wrap(bytes: ByteArray): ReadableStream = wrap(ByteBuffer.wrap(bytes))
+    override fun wrap(buffer: ByteBuffer): ReadableStream = create(ReadableStreamBufferSource(buffer))
   }
 }

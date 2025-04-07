@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.internals.intrinsics.js
 
 import org.graalvm.polyglot.Value
@@ -64,7 +63,7 @@ internal class JsPromiseImpl<T> private constructor(token: Token) : CompletableJ
   private val onReject: MutableList<(Any?) -> Unit> = mutableListOf()
 
   /** The promise is considered as 'closed' once the [token] is no longer [Pending]. */
-  override val isClosed: Boolean get() = token.get() != Pending
+  override val isDone: Boolean get() = token.get() != Pending
 
   @Suppress("UNCHECKED_CAST")
   override fun then(onFulfilled: (T) -> Unit, onCatch: ((Any?) -> Unit)?): JsPromise<T> = apply {

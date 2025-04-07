@@ -12,12 +12,13 @@
  */
 package elide.runtime.intrinsics.js.stream
 
-import elide.annotations.API
+import elide.vm.annotations.Polyglot
 
 /**
- * # Readable Stream Controller
- *
- * Defines shared functionality between [ReadableByteStreamController] and [ReadableStreamDefaultController].
+ * Interface for stream controller implementations, providing the shared methods specified in the
+ * [WHATWG standard](https://streams.spec.whatwg.org).
  */
-@API public sealed interface ReadableStreamController {
+public sealed interface ReadableStreamController {
+  /** Desired total size for the inbound queue, used for backpressure control. */
+  @get:Polyglot public val desiredSize: Double?
 }

@@ -13,6 +13,7 @@
 package elide.runtime.intrinsics.js
 
 import elide.annotations.API
+import elide.vm.annotations.Polyglot
 
 /**
  * # Transform Stream
@@ -30,5 +31,8 @@ import elide.annotations.API
    *
    * @param Impl Implementation of [TransformStream] which is created by this factory.
    */
-  public interface Factory<Impl> where Impl: TransformStream {}
+  public interface Factory<Impl> where Impl : TransformStream {}
+
+  @get:Polyglot public val readable: ReadableStream
+  @get:Polyglot public val writable: WritableStream
 }

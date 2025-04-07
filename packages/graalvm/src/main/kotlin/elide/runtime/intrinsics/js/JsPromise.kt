@@ -45,11 +45,11 @@ public class PromiseRejectedException(public val reason: Any? = null) : RuntimeE
  */
 public interface JsPromise<out T> : ProxyObject {
   /** Whether the promise has been resolved or rejected. */
-  public val isClosed: Boolean
+  public val isDone: Boolean
 
   /**
    * Register a function to be called when the promise is fulfilled, and optionally, another callback to handle
-   * rejection. If the promise is already [closed][isClosed], the callbacks may be invoked immediately.
+   * rejection. If the promise is already [closed][isDone], the callbacks may be invoked immediately.
    *
    * @return this promise object.
    */
@@ -57,7 +57,7 @@ public interface JsPromise<out T> : ProxyObject {
 
   /**
    * Register a guest value to be called when the promise is fulfilled, and optionally, another callback to handle
-   * rejection. If the promise is already [closed][isClosed], the callbacks may be invoked immediately.
+   * rejection. If the promise is already [closed][isDone], the callbacks may be invoked immediately.
    *
    * @return this promise object.
    */
@@ -124,7 +124,7 @@ public interface JsPromise<out T> : ProxyObject {
     }
 
     /** Create a new promise encapsulating the result of launching an async operation on this guest executor. */
-    @JvmStatic public fun <T> GuestExecutor.of(fn: () -> T): JsPromise<T> = wrap(submit(fn))
+    @JvmStatic public fun <T> GuestExecutor.spawn(fn: () -> T): JsPromise<T> = wrap(submit(fn))
 
     /** Create a new promise wrapping the given supplier's getter. */
     @JvmStatic public fun <T> GuestExecutor.of(supplier: Supplier<T>): JsPromise<T> = wrap(submit(supplier::get))

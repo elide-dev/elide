@@ -12,10 +12,12 @@
  */
 package elide.runtime.intrinsics.js.stream
 
-import elide.annotations.API
+import elide.vm.annotations.Polyglot
 
-/**
- * ## Transform Stream Default Controller
- */
-@API public interface TransformStreamDefaultController {
+public interface TransformStreamDefaultController {
+  @get:Polyglot public val desiredSize: Double?
+
+  @Polyglot public fun enqueue(chunk: Any? = null)
+  @Polyglot public fun error(reason: Any? = null)
+  @Polyglot public fun terminate()
 }

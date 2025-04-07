@@ -12,10 +12,10 @@
  */
 package elide.runtime.intrinsics.js.stream
 
-import elide.annotations.API
+import elide.runtime.intrinsics.js.AbortSignal
+import elide.vm.annotations.Polyglot
 
-/**
- * ## Writable Stream Default Controller
- */
-@API public interface WritableStreamDefaultController {
+public interface WritableStreamDefaultController {
+  @get:Polyglot public val signal: AbortSignal
+  @Polyglot public fun error(e: Any? = null)
 }

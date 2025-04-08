@@ -5,9 +5,7 @@
   "license": "MIT",
   "types": "./index.d.ts",
   "type": "commonjs",
-  "files": [
-    "./*.d.ts"
-  ],
+  "files": ["./*.d.ts"],
   "homepage": "https://elide.dev",
   "dependencies": {
     "@types/node": "*"
@@ -27,9 +25,5 @@
     "fix": "biome lint --fix .",
     "dtslint": "dtslint types"
   },
-  "keywords": [
-    "elide",
-    "runtime",
-    "types"
-  ]
+  "keywords": ["elide", "runtime", "types"]
 }

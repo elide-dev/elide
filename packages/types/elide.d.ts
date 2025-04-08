@@ -11,25 +11,21 @@
  * This module aliases `globalThis.Elide`.
  */
 declare module "elide" {
-  declare var platform: Platform;
-  declare var arch: Architecture;
+  declare var platform: Platform
+  declare var arch: Architecture
 }
 
-type Platform =
-  "android"
-  | "darwin"
-  | "linux"
-  | "win32";
+type Platform = "android" | "darwin" | "linux" | "win32"
 
-type Architecture = "arm64" | "x64";
+type Architecture = "arm64" | "x64"
 
 type ProcessInfo = {
-  readonly platform: Platform,
-  readonly arch: Architecture;
+  readonly platform: Platform
+  readonly arch: Architecture
 }
 
 declare var Elide: {
-  readonly version: string;
-  readonly process: ProcessInfo;
-  readonly http: ElideHttp;
+  readonly version: string
+  readonly process: ProcessInfo
+  readonly http: ElideHttp
 }

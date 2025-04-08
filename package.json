@@ -18,15 +18,15 @@
   "dependencies": {
     "browserslist": "4.24.4",
     "cssnano": "7.0.6",
-    "esbuild": "0.25.1",
+    "esbuild": "0.25.2",
     "google-protobuf": "3.21.4",
     "jszip": "3.10.1",
     "lz-string": "1.5.0",
     "postcss": "8.5.3",
-    "preact": "10.26.4",
+    "preact": "10.26.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
@@ -36,12 +36,12 @@
     "@mitata/counters": "0.0.8",
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
-    "@types/node": "22.13.14",
-    "bun": "1.2.7",
-    "bun-types": "1.2.7",
+    "@types/node": "22.14.0",
+    "bun": "1.2.8",
+    "bun-types": "1.2.8",
     "commitlint": "19.8.0",
     "esbuild": "0.25.0",
-    "eslint": "9.23.0",
+    "eslint": "9.24.0",
     "express": "^4.21.2",
     "husky": "9.1.7",
     "lint-staged": "15.5.0",
@@ -50,8 +50,8 @@
     "prettier": "3.5.3",
     "prettier-plugin-java": "2.6.7",
     "prettier-plugin-properties": "0.3.0",
-    "prettier-plugin-sh": "0.15.0",
-    "prettier-plugin-toml": "2.0.2"
+    "prettier-plugin-sh": "0.16.1",
+    "prettier-plugin-toml": "2.0.4"
   },
   "resolutions": {
     "jszip": "3.10.1",

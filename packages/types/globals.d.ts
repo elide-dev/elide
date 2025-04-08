@@ -5,8 +5,8 @@ declare module "elide" {
 interface Crypto {}
 
 declare var Crypto: {
-  prototype: Crypto;
-  new (): Crypto;
-};
+  prototype: Crypto
+  new (): Crypto
+}
 
-declare var crypto: Crypto;
+declare var crypto: Crypto

@@ -69,60 +69,60 @@ declare module "elide:sqlite" {
       options?:
         | number
         | {
-        /**
-         * Open the database as read-only (no write operations, no create).
-         *
-         * Equivalent to {@link constants.SQLITE_OPEN_READONLY}
-         */
-        readonly?: boolean;
-        /**
-         * Allow creating a new database
-         *
-         * Equivalent to {@link constants.SQLITE_OPEN_CREATE}
-         */
-        create?: boolean;
-        /**
-         * Open the database as read-write
-         *
-         * Equivalent to {@link constants.SQLITE_OPEN_READWRITE}
-         */
-        readwrite?: boolean;
+            /**
+             * Open the database as read-only (no write operations, no create).
+             *
+             * Equivalent to {@link constants.SQLITE_OPEN_READONLY}
+             */
+            readonly?: boolean
+            /**
+             * Allow creating a new database
+             *
+             * Equivalent to {@link constants.SQLITE_OPEN_CREATE}
+             */
+            create?: boolean
+            /**
+             * Open the database as read-write
+             *
+             * Equivalent to {@link constants.SQLITE_OPEN_READWRITE}
+             */
+            readwrite?: boolean
 
-        /**
-         * When set to `true`, integers are returned as `bigint` types.
-         *
-         * When set to `false`, integers are returned as `number` types and truncated to 52 bits.
-         *
-         * @default false
-         * @since v1.1.14
-         */
-        safeIntegers?: boolean;
+            /**
+             * When set to `true`, integers are returned as `bigint` types.
+             *
+             * When set to `false`, integers are returned as `number` types and truncated to 52 bits.
+             *
+             * @default false
+             * @since v1.1.14
+             */
+            safeIntegers?: boolean
 
-        /**
-         * When set to `false` or `undefined`:
-         * - Queries missing bound parameters will NOT throw an error
-         * - Bound named parameters in JavaScript need to exactly match the SQL query.
-         *
-         * @example
-         * ```ts
-         * const db = new Database(":memory:", { strict: false });
-         * db.run("INSERT INTO foo (name) VALUES ($name)", { $name: "foo" });
-         * ```
-         *
-         * When set to `true`:
-         * - Queries missing bound parameters will throw an error
-         * - Bound named parameters in JavaScript no longer need to be `$`, `:`, or `@`. The SQL query will remain prefixed.
-         *
-         * @example
-         * ```ts
-         * const db = new Database(":memory:", { strict: true });
-         * db.run("INSERT INTO foo (name) VALUES ($name)", { name: "foo" });
-         * ```
-         * @since v1.1.14
-         */
-        strict?: boolean;
-      },
-    );
+            /**
+             * When set to `false` or `undefined`:
+             * - Queries missing bound parameters will NOT throw an error
+             * - Bound named parameters in JavaScript need to exactly match the SQL query.
+             *
+             * @example
+             * ```ts
+             * const db = new Database(":memory:", { strict: false });
+             * db.run("INSERT INTO foo (name) VALUES ($name)", { $name: "foo" });
+             * ```
+             *
+             * When set to `true`:
+             * - Queries missing bound parameters will throw an error
+             * - Bound named parameters in JavaScript no longer need to be `$`, `:`, or `@`. The SQL query will remain prefixed.
+             *
+             * @example
+             * ```ts
+             * const db = new Database(":memory:", { strict: true });
+             * db.run("INSERT INTO foo (name) VALUES ($name)", { name: "foo" });
+             * ```
+             * @since v1.1.14
+             */
+            strict?: boolean
+          },
+    )
 
     /**
      * This is an alias of `new Database()`
@@ -134,26 +134,26 @@ declare module "elide:sqlite" {
       options?:
         | number
         | {
-        /**
-         * Open the database as read-only (no write operations, no create).
-         *
-         * Equivalent to {@link constants.SQLITE_OPEN_READONLY}
-         */
-        readonly?: boolean;
-        /**
-         * Allow creating a new database
-         *
-         * Equivalent to {@link constants.SQLITE_OPEN_CREATE}
-         */
-        create?: boolean;
-        /**
-         * Open the database as read-write
-         *
-         * Equivalent to {@link constants.SQLITE_OPEN_READWRITE}
-         */
-        readwrite?: boolean;
-      },
-    ): Database;
+            /**
+             * Open the database as read-only (no write operations, no create).
+             *
+             * Equivalent to {@link constants.SQLITE_OPEN_READONLY}
+             */
+            readonly?: boolean
+            /**
+             * Allow creating a new database
+             *
+             * Equivalent to {@link constants.SQLITE_OPEN_CREATE}
+             */
+            create?: boolean
+            /**
+             * Open the database as read-write
+             *
+             * Equivalent to {@link constants.SQLITE_OPEN_READWRITE}
+             */
+            readwrite?: boolean
+          },
+    ): Database
 
     /**
      * Execute a SQL query **without returning any results**.
@@ -204,11 +204,11 @@ declare module "elide:sqlite" {
      * | `bigint` | `INTEGER` |
      * | `null` | `NULL` |
      */
-    run<ParamsType extends SQLQueryBindings[]>(sqlQuery: string, ...bindings: ParamsType[]): Changes;
+    run<ParamsType extends SQLQueryBindings[]>(sqlQuery: string, ...bindings: ParamsType[]): Changes
     /**
      This is an alias of {@link Database.prototype.run}
      */
-    exec<ParamsType extends SQLQueryBindings[]>(sqlQuery: string, ...bindings: ParamsType[]): Changes;
+    exec<ParamsType extends SQLQueryBindings[]>(sqlQuery: string, ...bindings: ParamsType[]): Changes
 
     /**
      * Compile a SQL query and return a {@link Statement} object. This is the
@@ -237,7 +237,7 @@ declare module "elide:sqlite" {
     query<ReturnType, ParamsType extends SQLQueryBindings | SQLQueryBindings[]>(
       sqlQuery: string,
     ): // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
-      Statement<ReturnType, ParamsType extends any[] ? ParamsType : [ParamsType]>;
+    Statement<ReturnType, ParamsType extends any[] ? ParamsType : [ParamsType]>
 
     /**
      * Compile a SQL query and return a {@link Statement} object.
@@ -263,7 +263,7 @@ declare module "elide:sqlite" {
       sqlQuery: string,
       params?: ParamsType,
     ): // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
-      Statement<ReturnType, ParamsType extends any[] ? ParamsType : [ParamsType]>;
+    Statement<ReturnType, ParamsType extends any[] ? ParamsType : [ParamsType]>
 
     /**
      * Is the database in a transaction?
@@ -279,7 +279,7 @@ declare module "elide:sqlite" {
      * console.log(db.inTransaction());
      * ```
      */
-    get inTransaction(): boolean;
+    get inTransaction(): boolean
 
     /**
      * Close the database connection.
@@ -309,7 +309,7 @@ declare module "elide:sqlite" {
        * In The future, Bun may default `throwOnError` to be true but for backwards compatibility, it is false by default.
        */
       throwOnError?: boolean,
-    ): void;
+    ): void
 
     /**
      * The filename passed when `new Database()` was called
@@ -320,14 +320,14 @@ declare module "elide:sqlite" {
      * // => "mydb.sqlite"
      * ```
      */
-    readonly filename: string;
+    readonly filename: string
 
     /**
      * The underlying `sqlite3` database handle
      *
      * In native code, this is not a file descriptor, but an index into an array of database handles
      */
-    readonly handle: number;
+    readonly handle: number
 
     /**
      * Load a SQLite3 extension
@@ -339,7 +339,7 @@ declare module "elide:sqlite" {
      * @param extension name/path of the extension to load
      * @param entryPoint optional entry point of the extension
      */
-    loadExtension(extension: string, entryPoint?: string): void;
+    loadExtension(extension: string, entryPoint?: string): void
 
     /**
      * Change the dynamic library path to SQLite
@@ -354,9 +354,9 @@ declare module "elide:sqlite" {
      *
      * @param path The path to the SQLite library
      */
-    static setCustomSQLite(path: string): boolean;
+    static setCustomSQLite(path: string): boolean
 
-    [Symbol.dispose](): void;
+    [Symbol.dispose](): void
 
     /**
      * Creates a function that always runs inside a transaction. When the
@@ -392,16 +392,16 @@ declare module "elide:sqlite" {
       /**
        * uses "BEGIN DEFERRED"
        */
-      deferred: (...args: any) => void;
+      deferred: (...args: any) => void
       /**
        * uses "BEGIN IMMEDIATE"
        */
-      immediate: (...args: any) => void;
+      immediate: (...args: any) => void
       /**
        * uses "BEGIN EXCLUSIVE"
        */
-      exclusive: (...args: any) => void;
-    };
+      exclusive: (...args: any) => void
+    }
 
     /**
      * Save the database to an in-memory {@link Buffer} object.
@@ -411,7 +411,7 @@ declare module "elide:sqlite" {
      * @param name Name to save the database as @default "main"
      * @returns Buffer containing the serialized database
      */
-    serialize(name?: string): Buffer;
+    serialize(name?: string): Buffer
 
     /**
      * Load a serialized SQLite3 database
@@ -480,7 +480,7 @@ declare module "elide:sqlite" {
      * });
      * ```
      */
-    static deserialize(serialized: NodeJS.TypedArray | ArrayBufferLike, isReadOnly?: boolean): Database;
+    static deserialize(serialized: NodeJS.TypedArray | ArrayBufferLike, isReadOnly?: boolean): Database
 
     /**
      * Load a serialized SQLite3 database. This version enables you to specify
@@ -553,18 +553,18 @@ declare module "elide:sqlite" {
     static deserialize(
       serialized: NodeJS.TypedArray | ArrayBufferLike,
       options?: { readonly?: boolean; strict?: boolean; safeIntegers?: boolean },
-    ): Database;
+    ): Database
 
     /**
      * See `sqlite3_file_control` for more information.
      * @link https://www.sqlite.org/c3ref/file_control.html
      */
-    fileControl(op: number, arg?: ArrayBufferView | number): number;
+    fileControl(op: number, arg?: ArrayBufferView | number): number
     /**
      * See `sqlite3_file_control` for more information.
      * @link https://www.sqlite.org/c3ref/file_control.html
      */
-    fileControl(zDbName: string, op: number, arg?: ArrayBufferView | number): number;
+    fileControl(zDbName: string, op: number, arg?: ArrayBufferView | number): number
   }
 
   /**
@@ -601,7 +601,7 @@ declare module "elide:sqlite" {
      *
      * This is used internally by the {@link Database} class. Probably you don't need to call this yourself.
      */
-    constructor(nativeHandle: any);
+    constructor(nativeHandle: any)
 
     /**
      * Execute the prepared statement and return all results as objects.
@@ -622,7 +622,7 @@ declare module "elide:sqlite" {
      * // => [{bar: "foo"}]
      * ```
      */
-    all(...params: ParamsType): ReturnType[];
+    all(...params: ParamsType): ReturnType[]
 
     /**
      * Execute the prepared statement and return **the first** result.
@@ -657,7 +657,7 @@ declare module "elide:sqlite" {
      * | `bigint` | `INTEGER` |
      * | `null` | `NULL` |
      */
-    get(...params: ParamsType): ReturnType | null;
+    get(...params: ParamsType): ReturnType | null
 
     /**
      * Execute the prepared statement and return an
@@ -665,8 +665,8 @@ declare module "elide:sqlite" {
      * @param params optional values to bind to the statement. If omitted, the statement is run with the last bound values or no parameters if there are none.
      *
      */
-    iterate(...params: ParamsType): IterableIterator<ReturnType>;
-    [Symbol.iterator](): IterableIterator<ReturnType>;
+    iterate(...params: ParamsType): IterableIterator<ReturnType>
+    [Symbol.iterator](): IterableIterator<ReturnType>
 
     /**
      * Execute the prepared statement. This returns `undefined`.
@@ -698,7 +698,7 @@ declare module "elide:sqlite" {
      * | `bigint` | `INTEGER` |
      * | `null` | `NULL` |
      */
-    run(...params: ParamsType): Changes;
+    run(...params: ParamsType): Changes
 
     /**
      * Execute the prepared statement and return the results as an array of arrays.
@@ -738,7 +738,7 @@ declare module "elide:sqlite" {
      * | `bigint` | `INTEGER` |
      * | `null` | `NULL` |
      */
-    values(...params: ParamsType): Array<Array<string | bigint | number | boolean | Uint8Array>>;
+    values(...params: ParamsType): Array<Array<string | bigint | number | boolean | Uint8Array>>
 
     /**
      * The names of the columns returned by the prepared statement.
@@ -750,7 +750,7 @@ declare module "elide:sqlite" {
      * // => ["bar"]
      * ```
      */
-    readonly columnNames: string[];
+    readonly columnNames: string[]
 
     /**
      * The number of parameters expected in the prepared statement.
@@ -767,7 +767,7 @@ declare module "elide:sqlite" {
      * // => 2
      * ```
      */
-    readonly paramsCount: number;
+    readonly paramsCount: number
 
     /**
      * Finalize the prepared statement, freeing the resources used by the
@@ -780,12 +780,12 @@ declare module "elide:sqlite" {
      *
      * Internally, this calls `sqlite3_finalize`.
      */
-    finalize(): void;
+    finalize(): void
 
     /**
      * Calls {@link finalize} if it wasn't already called.
      */
-    [Symbol.dispose](): void;
+    [Symbol.dispose](): void
 
     /**
      * Return the expanded SQL string for the prepared statement.
@@ -801,7 +801,7 @@ declare module "elide:sqlite" {
      * // => "SELECT * FROM foo WHERE bar = 'baz'"
      * ```
      */
-    toString(): string;
+    toString(): string
 
     /**
      *
@@ -839,14 +839,14 @@ declare module "elide:sqlite" {
      * // => Date(1995, 12, 19)
      * ```
      */
-    as<T = unknown>(Class: new (...args: any[]) => T): Statement<T, ParamsType>;
+    as<T = unknown>(Class: new (...args: any[]) => T): Statement<T, ParamsType>
 
     /**
      * Native object representing the underlying `sqlite3_stmt`
      *
      * This is left untyped because the ABI of the native bindings may change at any time.
      */
-    readonly native: any;
+    readonly native: any
   }
 
   /**
@@ -859,142 +859,142 @@ declare module "elide:sqlite" {
      * Open the database as read-only (no write operations, no create).
      * @constant 0x00000001
      */
-    SQLITE_OPEN_READONLY: number;
+    SQLITE_OPEN_READONLY: number
     /**
      * Open the database for reading and writing
      * @constant 0x00000002
      */
-    SQLITE_OPEN_READWRITE: number;
+    SQLITE_OPEN_READWRITE: number
     /**
      * Allow creating a new database
      * @constant 0x00000004
      */
-    SQLITE_OPEN_CREATE: number;
+    SQLITE_OPEN_CREATE: number
     /**
      * @constant 0x00000008
      */
-    SQLITE_OPEN_DELETEONCLOSE: number;
+    SQLITE_OPEN_DELETEONCLOSE: number
     /**
      * @constant 0x00000010
      */
-    SQLITE_OPEN_EXCLUSIVE: number;
+    SQLITE_OPEN_EXCLUSIVE: number
     /**
      * @constant 0x00000020
      */
-    SQLITE_OPEN_AUTOPROXY: number;
+    SQLITE_OPEN_AUTOPROXY: number
     /**
      * @constant 0x00000040
      */
-    SQLITE_OPEN_URI: number;
+    SQLITE_OPEN_URI: number
     /**
      * @constant 0x00000080
      */
-    SQLITE_OPEN_MEMORY: number;
+    SQLITE_OPEN_MEMORY: number
     /**
      * @constant 0x00000100
      */
-    SQLITE_OPEN_MAIN_DB: number;
+    SQLITE_OPEN_MAIN_DB: number
     /**
      * @constant 0x00000200
      */
-    SQLITE_OPEN_TEMP_DB: number;
+    SQLITE_OPEN_TEMP_DB: number
     /**
      * @constant 0x00000400
      */
-    SQLITE_OPEN_TRANSIENT_DB: number;
+    SQLITE_OPEN_TRANSIENT_DB: number
     /**
      * @constant 0x00000800
      */
-    SQLITE_OPEN_MAIN_JOURNAL: number;
+    SQLITE_OPEN_MAIN_JOURNAL: number
     /**
      * @constant 0x00001000
      */
-    SQLITE_OPEN_TEMP_JOURNAL: number;
+    SQLITE_OPEN_TEMP_JOURNAL: number
     /**
      * @constant 0x00002000
      */
-    SQLITE_OPEN_SUBJOURNAL: number;
+    SQLITE_OPEN_SUBJOURNAL: number
     /**
      * @constant 0x00004000
      */
-    SQLITE_OPEN_SUPER_JOURNAL: number;
+    SQLITE_OPEN_SUPER_JOURNAL: number
     /**
      * @constant 0x00008000
      */
-    SQLITE_OPEN_NOMUTEX: number;
+    SQLITE_OPEN_NOMUTEX: number
     /**
      * @constant 0x00010000
      */
-    SQLITE_OPEN_FULLMUTEX: number;
+    SQLITE_OPEN_FULLMUTEX: number
     /**
      * @constant 0x00020000
      */
-    SQLITE_OPEN_SHAREDCACHE: number;
+    SQLITE_OPEN_SHAREDCACHE: number
     /**
      * @constant 0x00040000
      */
-    SQLITE_OPEN_PRIVATECACHE: number;
+    SQLITE_OPEN_PRIVATECACHE: number
     /**
      * @constant 0x00080000
      */
-    SQLITE_OPEN_WAL: number;
+    SQLITE_OPEN_WAL: number
     /**
      * @constant 0x01000000
      */
-    SQLITE_OPEN_NOFOLLOW: number;
+    SQLITE_OPEN_NOFOLLOW: number
     /**
      * @constant 0x02000000
      */
-    SQLITE_OPEN_EXRESCODE: number;
+    SQLITE_OPEN_EXRESCODE: number
     /**
      * @constant 0x01
      */
-    SQLITE_PREPARE_PERSISTENT: number;
+    SQLITE_PREPARE_PERSISTENT: number
     /**
      * @constant 0x02
      */
-    SQLITE_PREPARE_NORMALIZE: number;
+    SQLITE_PREPARE_NORMALIZE: number
     /**
      * @constant 0x04
      */
-    SQLITE_PREPARE_NO_VTAB: number;
+    SQLITE_PREPARE_NO_VTAB: number
 
     /**
      * @constant 1
      */
-    SQLITE_FCNTL_LOCKSTATE: number;
+    SQLITE_FCNTL_LOCKSTATE: number
     /**
      * @constant 2
      */
-    SQLITE_FCNTL_GET_LOCKPROXYFILE: number;
+    SQLITE_FCNTL_GET_LOCKPROXYFILE: number
     /**
      * @constant 3
      */
-    SQLITE_FCNTL_SET_LOCKPROXYFILE: number;
+    SQLITE_FCNTL_SET_LOCKPROXYFILE: number
     /**
      * @constant 4
      */
-    SQLITE_FCNTL_LAST_ERRNO: number;
+    SQLITE_FCNTL_LAST_ERRNO: number
     /**
      * @constant 5
      */
-    SQLITE_FCNTL_SIZE_HINT: number;
+    SQLITE_FCNTL_SIZE_HINT: number
     /**
      * @constant 6
      */
-    SQLITE_FCNTL_CHUNK_SIZE: number;
+    SQLITE_FCNTL_CHUNK_SIZE: number
     /**
      * @constant 7
      */
-    SQLITE_FCNTL_FILE_POINTER: number;
+    SQLITE_FCNTL_FILE_POINTER: number
     /**
      * @constant 8
      */
-    SQLITE_FCNTL_SYNC_OMITTED: number;
+    SQLITE_FCNTL_SYNC_OMITTED: number
     /**
      * @constant 9
      */
-    SQLITE_FCNTL_WIN32_AV_RETRY: number;
+    SQLITE_FCNTL_WIN32_AV_RETRY: number
     /**
      * @constant 10
      *
@@ -1014,132 +1014,132 @@ declare module "elide:sqlite" {
      * ```
      *
      */
-    SQLITE_FCNTL_PERSIST_WAL: number;
+    SQLITE_FCNTL_PERSIST_WAL: number
     /**
      * @constant 11
      */
-    SQLITE_FCNTL_OVERWRITE: number;
+    SQLITE_FCNTL_OVERWRITE: number
     /**
      * @constant 12
      */
-    SQLITE_FCNTL_VFSNAME: number;
+    SQLITE_FCNTL_VFSNAME: number
     /**
      * @constant 13
      */
-    SQLITE_FCNTL_POWERSAFE_OVERWRITE: number;
+    SQLITE_FCNTL_POWERSAFE_OVERWRITE: number
     /**
      * @constant 14
      */
-    SQLITE_FCNTL_PRAGMA: number;
+    SQLITE_FCNTL_PRAGMA: number
     /**
      * @constant 15
      */
-    SQLITE_FCNTL_BUSYHANDLER: number;
+    SQLITE_FCNTL_BUSYHANDLER: number
     /**
      * @constant 16
      */
-    SQLITE_FCNTL_TEMPFILENAME: number;
+    SQLITE_FCNTL_TEMPFILENAME: number
     /**
      * @constant 18
      */
-    SQLITE_FCNTL_MMAP_SIZE: number;
+    SQLITE_FCNTL_MMAP_SIZE: number
     /**
      * @constant 19
      */
-    SQLITE_FCNTL_TRACE: number;
+    SQLITE_FCNTL_TRACE: number
     /**
      * @constant 20
      */
-    SQLITE_FCNTL_HAS_MOVED: number;
+    SQLITE_FCNTL_HAS_MOVED: number
     /**
      * @constant 21
      */
-    SQLITE_FCNTL_SYNC: number;
+    SQLITE_FCNTL_SYNC: number
     /**
      * @constant 22
      */
-    SQLITE_FCNTL_COMMIT_PHASETWO: number;
+    SQLITE_FCNTL_COMMIT_PHASETWO: number
     /**
      * @constant 23
      */
-    SQLITE_FCNTL_WIN32_SET_HANDLE: number;
+    SQLITE_FCNTL_WIN32_SET_HANDLE: number
     /**
      * @constant 24
      */
-    SQLITE_FCNTL_WAL_BLOCK: number;
+    SQLITE_FCNTL_WAL_BLOCK: number
     /**
      * @constant 25
      */
-    SQLITE_FCNTL_ZIPVFS: number;
+    SQLITE_FCNTL_ZIPVFS: number
     /**
      * @constant 26
      */
-    SQLITE_FCNTL_RBU: number;
+    SQLITE_FCNTL_RBU: number
     /**
      * @constant 27
      */
-    SQLITE_FCNTL_VFS_POINTER: number;
+    SQLITE_FCNTL_VFS_POINTER: number
     /**
      * @constant 28
      */
-    SQLITE_FCNTL_JOURNAL_POINTER: number;
+    SQLITE_FCNTL_JOURNAL_POINTER: number
     /**
      * @constant 29
      */
-    SQLITE_FCNTL_WIN32_GET_HANDLE: number;
+    SQLITE_FCNTL_WIN32_GET_HANDLE: number
     /**
      * @constant 30
      */
-    SQLITE_FCNTL_PDB: number;
+    SQLITE_FCNTL_PDB: number
     /**
      * @constant 31
      */
-    SQLITE_FCNTL_BEGIN_ATOMIC_WRITE: number;
+    SQLITE_FCNTL_BEGIN_ATOMIC_WRITE: number
     /**
      * @constant 32
      */
-    SQLITE_FCNTL_COMMIT_ATOMIC_WRITE: number;
+    SQLITE_FCNTL_COMMIT_ATOMIC_WRITE: number
     /**
      * @constant 33
      */
-    SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE: number;
+    SQLITE_FCNTL_ROLLBACK_ATOMIC_WRITE: number
     /**
      * @constant 34
      */
-    SQLITE_FCNTL_LOCK_TIMEOUT: number;
+    SQLITE_FCNTL_LOCK_TIMEOUT: number
     /**
      * @constant 35
      */
-    SQLITE_FCNTL_DATA_VERSION: number;
+    SQLITE_FCNTL_DATA_VERSION: number
     /**
      * @constant 36
      */
-    SQLITE_FCNTL_SIZE_LIMIT: number;
+    SQLITE_FCNTL_SIZE_LIMIT: number
     /**
      * @constant 37
      */
-    SQLITE_FCNTL_CKPT_DONE: number;
+    SQLITE_FCNTL_CKPT_DONE: number
     /**
      * @constant 38
      */
-    SQLITE_FCNTL_RESERVE_BYTES: number;
+    SQLITE_FCNTL_RESERVE_BYTES: number
     /**
      * @constant 39
      */
-    SQLITE_FCNTL_CKPT_START: number;
+    SQLITE_FCNTL_CKPT_START: number
     /**
      * @constant 40
      */
-    SQLITE_FCNTL_EXTERNAL_READER: number;
+    SQLITE_FCNTL_EXTERNAL_READER: number
     /**
      * @constant 41
      */
-    SQLITE_FCNTL_CKSM_FILE: number;
+    SQLITE_FCNTL_CKSM_FILE: number
     /**
      * @constant 42
      */
-    SQLITE_FCNTL_RESET_CACHE: number;
-  };
+    SQLITE_FCNTL_RESET_CACHE: number
+  }
 
   /**
    * The native module implementing the sqlite3 C bindings
@@ -1153,7 +1153,7 @@ declare module "elide:sqlite" {
    * If you need to use it directly for some reason, please let us know because
    * that probably points to a deficiency in this API.
    */
-  export var native: any;
+  export var native: any
 
   export type SQLQueryBindings =
     | string
@@ -1162,16 +1162,16 @@ declare module "elide:sqlite" {
     | number
     | boolean
     | null
-    | Record<string, string | bigint | NodeJS.TypedArray | number | boolean | null>;
+    | Record<string, string | bigint | NodeJS.TypedArray | number | boolean | null>
 
-  export default Database;
+  export default Database
 
   /**
    * Errors from SQLite have a name `SQLiteError`.
    *
    */
   export class SQLiteError extends Error {
-    readonly name: "SQLiteError";
+    readonly name: "SQLiteError"
 
     /**
      * The SQLite3 extended error code
@@ -1180,7 +1180,7 @@ declare module "elide:sqlite" {
      *
      * @since v1.0.21
      */
-    errno: number;
+    errno: number
 
     /**
      * The name of the SQLite3 error code
@@ -1190,7 +1190,7 @@ declare module "elide:sqlite" {
      *
      * @since v1.0.21
      */
-    code?: string;
+    code?: string
 
     /**
      * The UTF-8 byte offset of the sqlite3 query that failed, if known
@@ -1199,7 +1199,7 @@ declare module "elide:sqlite" {
      *
      * @since v1.0.21
      */
-    readonly byteOffset: number;
+    readonly byteOffset: number
   }
 
   /**
@@ -1211,11 +1211,11 @@ declare module "elide:sqlite" {
     /**
      * The number of rows changed by the last `run` or `exec` call.
      */
-    changes: number;
+    changes: number
 
     /**
      * If `safeIntegers` is `true`, this is a `bigint`. Otherwise, it is a `number`.
      */
-    lastInsertRowid: number | bigint;
+    lastInsertRowid: number | bigint
   }
 }

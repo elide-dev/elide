@@ -7,10 +7,10 @@ google-protobuf "3.21.4"
 jszip "3.10.1"
 lz-string "1.5.0"
 postcss "8.5.3"
-preact "10.26.4"
+preact "10.26.5"
 react "18.3.1"
 react-dom "18.3.1"
-typescript "5.8.2"
+typescript "5.8.3"
     }
 dev-dependencies{
 "@biomejs/biome" "1.9.4"
@@ -20,12 +20,12 @@ dev-dependencies{
 "@mitata/counters" "0.0.8"
 "@prettier/plugin-xml" "3.4.1"
 "@types/google-protobuf" "3.15.12"
-"@types/node" "22.13.14"
-bun "1.2.7"
-bun-types "1.2.7"
+"@types/node" "22.14.0"
+bun "1.2.8"
+bun-types "1.2.8"
 commitlint "19.8.0"
 esbuild "0.25.0"
-eslint "9.23.0"
+eslint "9.24.0"
 express ">=4.21.2 <5.0.0-0"
 husky "9.1.7"
 lint-staged "15.5.0"
@@ -34,8 +34,8 @@ postcss-cli "11.0.1"
 prettier "3.5.3"
 prettier-plugin-java "2.6.7"
 prettier-plugin-properties "0.3.0"
-prettier-plugin-sh "0.15.0"
-prettier-plugin-toml "2.0.2"
+prettier-plugin-sh "0.16.1"
+prettier-plugin-toml "2.0.4"
     }
 }
 pkg "@babel/code-frame"{
@@ -525,9 +525,9 @@ resolved "https://registry.npmjs.org/@eslint-community/regexpp/-/regexpp-4.12.1.
 integrity "sha512-CCZCDJuduB9OUkFkY2IgppNZMi2lBQgD2qzwXkEia16cge2pijY/aXi96CJMquDMn3nJdlPV1A5KrJEXwfLNzQ=="
 }
 pkg "@eslint/config-array"{
-version "0.19.2"
-resolved "https://registry.npmjs.org/@eslint/config-array/-/config-array-0.19.2.tgz"
-integrity "sha512-GNKqxfHG2ySmJOBSHg7LxeUx4xpuCoFjacmlCoYWEbaPXLwvfIjixRI12xCQZeULksQb23uiA8F40w5TojpV7w=="
+version "0.20.0"
+resolved "https://registry.npmjs.org/@eslint/config-array/-/config-array-0.20.0.tgz"
+integrity "sha512-fxlS1kkIjx8+vy2SjuCB94q3htSNrufYTXubwiBFeaQHbH6Ipi43gFJq2zCMt6PHhImH3Xmr0NksKDvchWlpQQ=="
 dependencies{
 "@eslint/object-schema" ">=2.1.6 <3.0.0-0"
 debug ">=4.3.1 <5.0.0-0"
@@ -590,9 +590,9 @@ resolved "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz"
 integrity "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
 }
 pkg "@eslint/js"{
-version "9.23.0"
-resolved "https://registry.npmjs.org/@eslint/js/-/js-9.23.0.tgz"
-integrity "sha512-35MJ8vCPU0ZMxo7zfev2pypqTwWTofFZO6m4KAtdoFhRpLJUpHTZZ+KB3C7Hb1d7bULYwO4lJXGCi5Se+8OMbw=="
+version "9.24.0"
+resolved "https://registry.npmjs.org/@eslint/js/-/js-9.24.0.tgz"
+integrity "sha512-uIY/y3z0uvOGX8cp1C2fiC4+ZmBhp6yZWkojtHL1YEMnRt1Y63HB9TM17proGEmeG7HeUY+UP36F0aknKYTpYA=="
 }
 pkg "@eslint/object-schema"{
 version "2.1.6"
@@ -686,59 +686,59 @@ resolved "https://registry.npmjs.org/@mitata/counters/-/counters-0.0.8.tgz"
 integrity "sha512-f11w0Y1ETFlarDP7CePj8Z+y8Gv5Ax4gMxWsEwrqh0kH/YIY030Ezx5SUJeQg0YPTZ2OHKGcLG1oGJbIqHzaJA=="
 }
 pkg "@oven/bun-darwin-aarch64"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-darwin-aarch64/-/bun-darwin-aarch64-1.2.7.tgz"
-integrity "sha512-pz9bzZpCnUUbU1OGvS3A2Wl8wMH70C32PCXu7KgF4vsPA2f4hF5C7x2Bjq1aaEDaT6sMq3ZI4Eq4afcLuhaGDQ=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-aarch64/-/bun-darwin-aarch64-1.2.8.tgz"
+integrity "sha512-O97RiReqBVzno5qLgoFX/dYI+xO+jSTIw0S+Cp1MRedXMZEqEgi8ql3ExWpteZyvUGBiXdvc0sQSOQwPoEwiPA=="
 }
 pkg "@oven/bun-darwin-x64"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-darwin-x64/-/bun-darwin-x64-1.2.7.tgz"
-integrity "sha512-zLYi/SGGbE8se6vEGmCvRMP1FWmH9xzQwEqo/saaqI5vcvPceKvpzRYmlqHNhSq2WUdkbTSXivn5/lqDr0jVFw=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-x64/-/bun-darwin-x64-1.2.8.tgz"
+integrity "sha512-aofXwEl3ZzQgiOw/ITzAlXIpQiWeslvIVxol5/n/7Dv8Ekfrqhvo+j/uvEvY0KDECUn8gNIHwa839d701u/rhA=="
 }
 pkg "@oven/bun-darwin-x64-baseline"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-darwin-x64-baseline/-/bun-darwin-x64-baseline-1.2.7.tgz"
-integrity "sha512-LqRyWScuKXkH8yCY6dO+VVTelG6L7fGCBq+YiYvVZKLEHtFDrdkwiBQ24pnT97d0aZdT3IO+vw+tKyCkXnIL/Q=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-x64-baseline/-/bun-darwin-x64-baseline-1.2.8.tgz"
+integrity "sha512-SqckVEKEALPJ1TLE+w1xlieZW5coRmmm2nxV5sxMs5BqUb6asrhJ+Wp51KePScvb2ctN7A00SGpROxVq2IA5GQ=="
 }
 pkg "@oven/bun-linux-aarch64"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64/-/bun-linux-aarch64-1.2.7.tgz"
-integrity "sha512-3J0BqJoDR2ZGGYfRWQBdqxmVxpV+n/2Tic031INmBhdZPCFSOzRFdDWVFN4QMvdG0Lb5C9y6G9cQAU9+c8yX2A=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64/-/bun-linux-aarch64-1.2.8.tgz"
+integrity "sha512-BYzMj7H49xwmUBlHwfIXm/ky1D8yZyyVOnyRDNLTT+3+/odw7TTz3/+lZEBPGyet2tZ6oyBeis1xSZ9vYwSzZA=="
 }
 pkg "@oven/bun-linux-aarch64-musl"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64-musl/-/bun-linux-aarch64-musl-1.2.7.tgz"
-integrity "sha512-Wf7rlLDLb25asGKYxgFrfsnk4YVULVoulBMdnKQitfcWY2UlB3SE36aeMAuDuBH7fBE38d4bnzB3SyTY8UP3TA=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64-musl/-/bun-linux-aarch64-musl-1.2.8.tgz"
+integrity "sha512-rl15SGTFCNj1PE/I2VpUc4XvOZXDCPlqgJGTAObH7+731ET6wgclAehp0x7s2qdyDN4awPnOtold+FYvMH/g9Q=="
 }
 pkg "@oven/bun-linux-x64"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-linux-x64/-/bun-linux-x64-1.2.7.tgz"
-integrity "sha512-XiEFTIPcs7M/Y96M17CCtprLKTPIwcMGTQmMb6HXdGbnIfuVdN6bzyKQheUudbDdoIMNm5p0e4jgPACRYTdpfw=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64/-/bun-linux-x64-1.2.8.tgz"
+integrity "sha512-AzvrOAUGsKI9U7eYIbJbgtLVq9Jhx8dExt9QY6PtCgBklUlpTBU+9T+HPgXJqtIJYGtn9C9W4EBGjq9fEgy08A=="
 }
 pkg "@oven/bun-linux-x64-baseline"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-linux-x64-baseline/-/bun-linux-x64-baseline-1.2.7.tgz"
-integrity "sha512-IayUMK7AOsEoj5Zs51l/hyr1KKVQiTDjJ8sIR5Q/Sgz1nZCR82+pyp/zs+gSyJGSNmIyOpSFJ+35cYBbyumOmw=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-baseline/-/bun-linux-x64-baseline-1.2.8.tgz"
+integrity "sha512-j0SxtM9XYCE0N7vnUzuYfnP2iFSoTsQ7pF+K0DPUr/+zmBVJ5tcZUU3xRPc4St86zSrMUD3J2tIUTNksxo81sw=="
 }
 pkg "@oven/bun-linux-x64-musl"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl/-/bun-linux-x64-musl-1.2.7.tgz"
-integrity "sha512-GufKmrAnRZMG+c1wxNHBc6zhdlGA4TAo/qGid7ZSI2br5dfZWOoRpOYe7gZ52A50nQS6qGHnRLroGsVoRmrJ0Q=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl/-/bun-linux-x64-musl-1.2.8.tgz"
+integrity "sha512-NgjwsqRWRbCycTlLxg2mka3ZW8cnLPwkmg/zWRe9yjMutU7TGPV0Ak8cCf9PvA6Xgmrz+/HSO1ohO6Pii6Tb3w=="
 }
 pkg "@oven/bun-linux-x64-musl-baseline"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl-baseline/-/bun-linux-x64-musl-baseline-1.2.7.tgz"
-integrity "sha512-d7qQWINnx/8hzLF5FTQYCajRVxaTmJcWkXfZNrFju7+Q69Ajqo23bb16PeXgVSOsy/MxCTzMw3gFI78A2KtryQ=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl-baseline/-/bun-linux-x64-musl-baseline-1.2.8.tgz"
+integrity "sha512-JbkQ452sYyK/TZGCvYz5eCmnlIazhPqkuEfZDwr9K2hfaY8JGJKwkC1sLxM3yvfoXzPgDrPFvYGBU75hmrJHTQ=="
 }
 pkg "@oven/bun-windows-x64"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-windows-x64/-/bun-windows-x64-1.2.7.tgz"
-integrity "sha512-XtlBQCZ15L3bcBu1QfywUmg7Y4G6YZW9zZ7q5NHTsvr7jiJTOAAsGTkLBDMfoXxLyIgBGaPygBXnjQ64WGnjtQ=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-windows-x64/-/bun-windows-x64-1.2.8.tgz"
+integrity "sha512-9nQ45l6LCG+v0AUoBQrrSqsznO0Y36EyQ9sJmDYsI4faPmkHd+cQiyNnMFO5vIwjTXbB3Hb65ql7bjNYbP/O5g=="
 }
 pkg "@oven/bun-windows-x64-baseline"{
-version "1.2.7"
-resolved "https://registry.npmjs.org/@oven/bun-windows-x64-baseline/-/bun-windows-x64-baseline-1.2.7.tgz"
-integrity "sha512-N8iIBmf1WOQ8vapJB+Ya/gcVlpu1xarehsPEQqnT4Y3C47/eh674mX4LQU7EQOjS3M8/yPgoXtnzhSf9BfCg2w=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/@oven/bun-windows-x64-baseline/-/bun-windows-x64-baseline-1.2.8.tgz"
+integrity "sha512-fVZ1hNhA9Gph76jToSc5lglNO7Y349v4IUwZaBH25ypenyPPrBoxH11D8v/EB95CsUej4KyWieYcxUiTNZUVmg=="
 }
 pkg "@prettier/plugin-xml"{
 version "3.4.1"
@@ -749,16 +749,16 @@ dependencies{
     }
 }
 pkg "@taplo/core"{
-version "0.1.1"
-resolved "https://registry.npmjs.org/@taplo/core/-/core-0.1.1.tgz"
-integrity "sha512-BG/zLGf5wiNXGEVPvUAAX/4ilB3PwDUY2o0MV0y47mZbDZ9ad9UK/cIQsILat3bqbPJsALVbU6k3cskNZ3vAQg=="
+version "0.2.0"
+resolved "https://registry.npmjs.org/@taplo/core/-/core-0.2.0.tgz"
+integrity "sha512-r8bl54Zj1In3QLkiW/ex694bVzpPJ9EhwqT9xkcUVODnVUGirdB1JTsmiIv0o1uwqZiwhi8xNnTOQBRQCpizrQ=="
 }
 pkg "@taplo/lib"{
-version "0.4.0-alpha.2"
-resolved "https://registry.npmjs.org/@taplo/lib/-/lib-0.4.0-alpha.2.tgz"
-integrity "sha512-DV/Re3DPVY+BhBtLZ3dmP4mP6YMLSsgq9qGLXwOV38lvNF/fBlgvQswzlXmzCEefL/3q2eMoefZpOI/+GLuCNA=="
+version "0.5.0"
+resolved "https://registry.npmjs.org/@taplo/lib/-/lib-0.5.0.tgz"
+integrity "sha512-+xIqpQXJco3T+VGaTTwmhxLa51qpkQxCjRwezjFZgr+l21ExlywJFcDfTrNmL6lG6tqb0h8GyJKO3UPGPtSCWg=="
 dependencies{
-"@taplo/core" ">=0.1.0 <0.2.0-0"
+"@taplo/core" ">=0.2.0 <0.3.0-0"
     }
 }
 pkg "@trysound/sax"{
@@ -780,6 +780,14 @@ resolved "https://registry.npmjs.org/@types/conventional-commits-parser/-/conven
 integrity "sha512-7uz5EHdzz2TqoMfV7ee61Egf5y6NkcO4FB/1iCCQnbeiI1F3xzv3vK5dBCXUCLQgGYS+mUeigK1iKQzvED+QnQ=="
 dependencies{
 "@types/node" ">=0.0.0"
+    }
+}
+pkg "@types/conventional-commits-parser" "@types/node"{
+version "22.13.14"
+resolved "https://registry.npmjs.org/@types/node/-/node-22.13.14.tgz"
+integrity "sha512-Zs/Ollc1SJ8nKUAgc7ivOEdIBM8JAKgrqqUYi2J997JuKO7/tpQC+WCetQ1sypiKCQWHdvdg9wBNpUPEWZae7w=="
+dependencies{
+undici-types ">=6.20.0 <6.21.0-0"
     }
 }
 pkg "@types/debug"{
@@ -840,12 +848,17 @@ resolved "https://registry.npmjs.org/@types/ms/-/ms-2.1.0.tgz"
 integrity "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="
 }
 pkg "@types/node"{
-version "22.13.14"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.13.14.tgz"
-integrity "sha512-Zs/Ollc1SJ8nKUAgc7ivOEdIBM8JAKgrqqUYi2J997JuKO7/tpQC+WCetQ1sypiKCQWHdvdg9wBNpUPEWZae7w=="
+version "22.14.0"
+resolved "https://registry.npmjs.org/@types/node/-/node-22.14.0.tgz"
+integrity "sha512-Kmpl+z84ILoG+3T/zQFyAJsU6EPTmOCj8/2+83fSN6djd6I4o7uOuGIH6vq3PrjY5BGitSbFuMN18j3iknubbA=="
 dependencies{
-undici-types ">=6.20.0 <6.21.0-0"
+undici-types ">=6.21.0 <6.22.0-0"
     }
+}
+pkg "@types/node" undici-types{
+version "6.21.0"
+resolved "https://registry.npmjs.org/undici-types/-/undici-types-6.21.0.tgz"
+integrity "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ=="
 }
 pkg "@types/unist"{
 version "3.0.3"
@@ -1029,27 +1042,27 @@ update-browserslist-db ">=1.1.1 <2.0.0-0"
     }
 }
 pkg bun{
-version "1.2.7"
-resolved "https://registry.npmjs.org/bun/-/bun-1.2.7.tgz"
-integrity "sha512-qG4BH08wbAIN7cEXDi22MVUdmteUQLMmiHps8uGCcHcmI10LTyM0p2V8u18ns89rjWhsNZwkxQ3u/Tq10y9oGw=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/bun/-/bun-1.2.8.tgz"
+integrity "sha512-X8r9UuXAruvpE37u/JVfvJI8KRdFf9hUdTLw00DMScnBe7Xerawd/VvmFVT9Y/NrmXDAdDp0Dm6N6bulZYTGvA=="
 optional-dependencies{
-"@oven/bun-darwin-aarch64" "1.2.7"
-"@oven/bun-darwin-x64" "1.2.7"
-"@oven/bun-darwin-x64-baseline" "1.2.7"
-"@oven/bun-linux-aarch64" "1.2.7"
-"@oven/bun-linux-aarch64-musl" "1.2.7"
-"@oven/bun-linux-x64" "1.2.7"
-"@oven/bun-linux-x64-baseline" "1.2.7"
-"@oven/bun-linux-x64-musl" "1.2.7"
-"@oven/bun-linux-x64-musl-baseline" "1.2.7"
-"@oven/bun-windows-x64" "1.2.7"
-"@oven/bun-windows-x64-baseline" "1.2.7"
+"@oven/bun-darwin-aarch64" "1.2.8"
+"@oven/bun-darwin-x64" "1.2.8"
+"@oven/bun-darwin-x64-baseline" "1.2.8"
+"@oven/bun-linux-aarch64" "1.2.8"
+"@oven/bun-linux-aarch64-musl" "1.2.8"
+"@oven/bun-linux-x64" "1.2.8"
+"@oven/bun-linux-x64-baseline" "1.2.8"
+"@oven/bun-linux-x64-musl" "1.2.8"
+"@oven/bun-linux-x64-musl-baseline" "1.2.8"
+"@oven/bun-windows-x64" "1.2.8"
+"@oven/bun-windows-x64-baseline" "1.2.8"
     }
 }
 pkg bun-types{
-version "1.2.7"
-resolved "https://registry.npmjs.org/bun-types/-/bun-types-1.2.7.tgz"
-integrity "sha512-P4hHhk7kjF99acXqKvltyuMQ2kf/rzIw3ylEDpCxDS9Xa0X0Yp/gJu/vDCucmWpiur5qJ0lwB2bWzOXa2GlHqA=="
+version "1.2.8"
+resolved "https://registry.npmjs.org/bun-types/-/bun-types-1.2.8.tgz"
+integrity "sha512-D5npfxKIGuYe9dTHLK1hi4XFmbMdKYoLrgyd25rrUyCrnyU4ljmQW7vDdonvibKeyU72mZuixIhQ2J+q6uM0Mg=="
 dependencies{
 "@types/node" ">=0.0.0"
 "@types/ws" ">=0.0.0"
@@ -1735,17 +1748,17 @@ resolved "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp
 integrity "sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA=="
 }
 pkg eslint{
-version "9.23.0"
-resolved "https://registry.npmjs.org/eslint/-/eslint-9.23.0.tgz"
-integrity "sha512-jV7AbNoFPAY1EkFYpLq5bslU9NLNO8xnEeQXwErNibVryjk67wHVmddTBilc5srIttJDBrB0eMHKZBFbSIABCw=="
+version "9.24.0"
+resolved "https://registry.npmjs.org/eslint/-/eslint-9.24.0.tgz"
+integrity "sha512-eh/jxIEJyZrvbWRe4XuVclLPDYSYYYgLy5zXGGxD6j8zjSAxFEzI2fL/8xNq6O2yKqVt+eF2YhV+hxjV6UKXwQ=="
 dependencies{
 "@eslint-community/eslint-utils" ">=4.2.0 <5.0.0-0"
 "@eslint-community/regexpp" ">=4.12.1 <5.0.0-0"
-"@eslint/config-array" ">=0.19.2 <0.20.0-0"
+"@eslint/config-array" ">=0.20.0 <0.21.0-0"
 "@eslint/config-helpers" ">=0.2.0 <0.3.0-0"
 "@eslint/core" ">=0.12.0 <0.13.0-0"
 "@eslint/eslintrc" ">=3.3.1 <4.0.0-0"
-"@eslint/js" "9.23.0"
+"@eslint/js" "9.24.0"
 "@eslint/plugin-kit" ">=0.2.7 <0.3.0-0"
 "@humanfs/node" ">=0.16.6 <0.17.0-0"
 "@humanwhocodes/module-importer" ">=1.0.1 <2.0.0-0"
@@ -3779,9 +3792,9 @@ resolved "https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser
 integrity "sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ=="
 }
 pkg preact{
-version "10.26.4"
-resolved "https://registry.npmjs.org/preact/-/preact-10.26.4.tgz"
-integrity "sha512-KJhO7LBFTjP71d83trW+Ilnjbo+ySsaAgCfXOXUlmGzJ4ygYPWmysm77yg4emwfmoz3b22yvH5IsVFHbhUaH5w=="
+version "10.26.5"
+resolved "https://registry.npmjs.org/preact/-/preact-10.26.5.tgz"
+integrity "sha512-fmpDkgfGU6JYux9teDWLhj9mKN55tyepwYbxHgQuIxbWQzgFg5vk7Mrrtfx7xRxq798ynkY4DDDxZr235Kk+4w=="
 }
 pkg prelude-ls{
 version "1.2.1"
@@ -3811,20 +3824,20 @@ dot-properties ">=1.0.0 <2.0.0-0"
     }
 }
 pkg prettier-plugin-sh{
-version "0.15.0"
-resolved "https://registry.npmjs.org/prettier-plugin-sh/-/prettier-plugin-sh-0.15.0.tgz"
-integrity "sha512-U0PikJr/yr2bzzARl43qI0mApBj0C1xdAfA04AZa6LnvIKawXHhuy2fFo6LNA7weRzGlAiNbaEFfKMFo0nZr/A=="
+version "0.16.1"
+resolved "https://registry.npmjs.org/prettier-plugin-sh/-/prettier-plugin-sh-0.16.1.tgz"
+integrity "sha512-6V7VKG5nyQ/nuXGyhr0+rKJ/1BejRk3fccYKWabatl0MEMqxA/0GGZrOHoqPUIfjzwegmAbOLeVGG0K+oBAJSg=="
 dependencies{
 mvdan-sh ">=0.10.1 <0.11.0-0"
 sh-syntax ">=0.4.2 <0.5.0-0"
     }
 }
 pkg prettier-plugin-toml{
-version "2.0.2"
-resolved "https://registry.npmjs.org/prettier-plugin-toml/-/prettier-plugin-toml-2.0.2.tgz"
-integrity "sha512-tUIIhyfdVX5DMsLGKX/2qaEwi3W48OkUSR7XC91PRI5jFzhexmaYWkrSP1Xh/eWUcEc0TVMQenM3lB09xLQstQ=="
+version "2.0.4"
+resolved "https://registry.npmjs.org/prettier-plugin-toml/-/prettier-plugin-toml-2.0.4.tgz"
+integrity "sha512-uOTNPClqnE3T9XJ8hCqAJek70Jnk3/ZuAG/aXRTmrWbVe8lJyuZ60KV7OtgWqF+iGZOPVpkh+giHhX9GZYRHGA=="
 dependencies{
-"@taplo/lib" ">=0.4.0-alpha.2 <0.5.0-0"
+"@taplo/lib" ">=0.5.0 <0.6.0-0"
     }
 }
 pkg pretty-hrtime{
@@ -4430,9 +4443,9 @@ mime-types ">=2.1.24 <2.2.0-0"
     }
 }
 pkg typescript{
-version "5.8.2"
-resolved "https://registry.npmjs.org/typescript/-/typescript-5.8.2.tgz"
-integrity "sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ=="
+version "5.8.3"
+resolved "https://registry.npmjs.org/typescript/-/typescript-5.8.3.tgz"
+integrity "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="
 }
 pkg undici-types{
 version "6.20.0"

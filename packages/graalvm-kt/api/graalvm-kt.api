@@ -25,6 +25,17 @@ public final class elide/runtime/gvm/kotlin/KotlinLanguage : com/oracle/truffle/
 public final class elide/runtime/gvm/kotlin/KotlinLanguage$Companion {
 }
 
+public abstract interface class elide/runtime/gvm/kotlin/KotlinRunnable : elide/runtime/precompiler/Precompiler$BundleInfo, java/util/concurrent/Callable {
+}
+
+public abstract class elide/runtime/gvm/kotlin/scripting/ElideKotlinScript {
+	public fun <init> ()V
+}
+
+public final class elide/runtime/gvm/kotlin/scripting/ScriptWithMavenDepsConfiguration : kotlin/script/experimental/api/ScriptCompilationConfiguration {
+	public static final field INSTANCE Lelide/runtime/gvm/kotlin/scripting/ScriptWithMavenDepsConfiguration;
+}
+
 public final class elide/runtime/plugins/kotlin/ExtensionsKt {
 	public static final fun kotlin (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
 	public static synthetic fun kotlin$default (Lelide/runtime/core/PolyglotContext;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/graalvm/polyglot/Value;

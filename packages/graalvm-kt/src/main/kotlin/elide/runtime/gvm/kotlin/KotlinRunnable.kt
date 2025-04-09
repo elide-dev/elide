@@ -14,15 +14,12 @@
 package elide.runtime.gvm.kotlin
 
 import org.graalvm.polyglot.Value
-import java.nio.file.Path
-import elide.runtime.precompiler.Precompiler.BundleInfo
+import java.util.concurrent.Callable
+import elide.runtime.precompiler.Precompiler
 
-internal data class KotlinJarBundleInfo(
-  override val name: String,
-  override val path: Path,
-) : BundleInfo, KotlinRunnable {
-  // Always null: this represents a JAR on disk.
-  override fun call(): Value? = null
-
-  override fun toString(): String = "KotlinJarBundleInfo(name='$name', path=$path)"
-}
+/**
+ * ## Kotlin Runnable
+ *
+ * Describes each type of supported Kotlin runnable; includes Kotlin scripts and precompiled Kotlin JARs.
+ */
+public sealed interface KotlinRunnable : Callable<Value?>, Precompiler.BundleInfo

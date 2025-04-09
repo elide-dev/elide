@@ -124,6 +124,9 @@ internal val applicationContextBuilder = ApplicationContext
     // Application context; initialized early for CLI use.
     @Volatile private lateinit var applicationContext: ApplicationContext
 
+    private const val PITCH_LINK = "https://elide.dev/pitch"
+    private const val PLAYGROUND_LINK = "https://elide.dev/playground"
+
     private val bundle = ResourceBundle.getBundle("ElideTool", Locale.US)
     private val errHandler = DefaultErrorHandler.acquire()
 
@@ -360,6 +363,18 @@ internal val applicationContextBuilder = ApplicationContext
   // Bean context.
   @Inject internal lateinit var beanContext: BeanContext
 
+  @CommandLine.Option(
+    names = ["--pitch"],
+    hidden = true,
+  )
+  internal var pitch: Boolean = false
+
+  @CommandLine.Option(
+    names = ["--playground"],
+    hidden = true,
+  )
+  internal var playground: Boolean = false
+
   /** Source file shortcut alias. */
   @Parameters(
     index = "0",
@@ -380,28 +395,49 @@ internal val applicationContextBuilder = ApplicationContext
   )
   internal var args: List<String>? = null
 
+  private suspend fun CommandContext.openElidePitch() {
+    promptForLink(
+      forThing = "the Elide pitch",
+      promptMessage = "Open Elide's pitch?",
+      redirectTarget = PITCH_LINK,
+      force = true,
+    )
+  }
+
+  private suspend fun CommandContext.openElidePlayground() {
+    promptForLink(
+      forThing = "the Elide playground",
+      promptMessage = "Open the Elide Playground in a codespace?",
+      redirectTarget = PITCH_LINK,
+    )
+  }
+
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
-    if (srcfile == "discord" || Statics.args.firstOrNull() == "discord") {
-      beanContext.getBean(ToolDiscordCommand::class.java).let {
-        it.call()
-        return it.commandResult.get()
-      }
-    } else {
-      // proxy to the `shell` command for a naked run
-      val bean = beanContext.getBean(ToolShellCommand::class.java).apply {
-        this@Elide.srcfile?.let {
-          if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
-            runnable = it
-            if (this@Elide.args?.isNotEmpty() == true) {
-              arguments = this@Elide.args!!
+    return when {
+      pitch -> CommandResult.success().also { openElidePitch() }
+      playground -> CommandResult.success().also { openElidePlayground() }
+      else -> if (srcfile == "discord" || Statics.args.firstOrNull() == "discord") {
+        beanContext.getBean(ToolDiscordCommand::class.java).let {
+          it.call()
+          return it.commandResult.get()
+        }
+      } else {
+        // proxy to the `shell` command for a naked run
+        val bean = beanContext.getBean(ToolShellCommand::class.java).apply {
+          this@Elide.srcfile?.let {
+            if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
+              runnable = it
+              if (this@Elide.args?.isNotEmpty() == true) {
+                arguments = this@Elide.args!!
+              }
+            } else {
+              languageHint = it
             }
-          } else {
-            languageHint = it
           }
         }
+        bean.call()
+        bean.commandResult.get()
       }
-      bean.call()
-      return bean.commandResult.get()
     }
   }
 }

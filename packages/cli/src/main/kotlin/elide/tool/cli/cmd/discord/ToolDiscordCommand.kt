@@ -13,18 +13,14 @@
 
 package elide.tool.cli.cmd.discord
 
-import com.github.kinquirer.KInquirer
-import com.github.kinquirer.components.promptConfirm
 import io.micronaut.core.annotation.Introspected
 import picocli.CommandLine.Command
-import picocli.CommandLine.Option
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import elide.annotations.Singleton
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
+import elide.tool.cli.promptForLink
 
 /** Opens the Discord invite redirect. */
 @Command(
@@ -40,23 +36,11 @@ import elide.tool.cli.ToolState
 
   @Suppress("DEPRECATION")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val printLink: () -> Unit = {
-      println("Open link to join Discord: $REDIRECT_TARGET")
-    }
-    val openLink = KInquirer.promptConfirm("Open the link? 'No' will print it in the console", default = false)
-    if (openLink) withContext(Dispatchers.IO) {
-      val os = System.getProperty("os.name", "unknown").lowercase()
-
-      when {
-        os.contains("windows") -> {
-          Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler $REDIRECT_TARGET")
-        }
-        os.contains("mac") || os.contains("darwin") || os.contains("linux") -> {
-          Runtime.getRuntime().exec("open $REDIRECT_TARGET")
-        }
-        else -> printLink.invoke()
-      }
-    } else printLink.invoke()
+    promptForLink(
+      redirectTarget = REDIRECT_TARGET,
+      forThing = "Discord",
+      promptMessage = "Open link to join Discord",
+    )
     return success()
   }
 }

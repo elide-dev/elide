@@ -17,12 +17,12 @@ import org.graalvm.polyglot.Value
 import java.nio.file.Path
 import elide.runtime.precompiler.Precompiler.BundleInfo
 
-internal data class KotlinJarBundleInfo(
+internal class KotlinScriptCallable(
   override val name: String,
   override val path: Path,
+  private val callable: () -> Value?,
 ) : BundleInfo, KotlinRunnable {
-  // Always null: this represents a JAR on disk.
-  override fun call(): Value? = null
+  override fun call(): Value? = callable.invoke()
 
-  override fun toString(): String = "KotlinJarBundleInfo(name='$name', path=$path)"
+  override fun toString(): String = "KotlinScriptCallable(name='$name', path=$path)"
 }

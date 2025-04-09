@@ -62,12 +62,15 @@ dependencies {
   implementation(libs.kotlinx.atomicfu)
   implementation(libs.kotlin.scripting.jvm)
   implementation(libs.kotlin.scripting.jvm.host)
-  implementation(libs.kotlin.scripting.compiler)
+  implementation(libs.kotlin.scripting.compiler.embeddable)
   implementation(libs.kotlin.compiler.embedded)
+  implementation(libs.kotlin.scripting.dependencies)
+  implementation(libs.kotlin.scripting.dependencies.maven)
 
   embeddedKotlinResources(libs.kotlin.stdlib)
   embeddedKotlinResources(libs.kotlin.reflect)
   embeddedKotlinResources(libs.kotlin.scripting.runtime)
+  embeddedKotlinResources(libs.kotlin.scripting.jvm)
 
   // Testing
   testImplementation(projects.packages.test)
@@ -134,7 +137,11 @@ val prepKotlinResources by tasks.registering(Copy::class) {
       // remove version tag from each jar
       val name = it.split(".").first().split("-")
         .dropLast(1).joinToString("-")
-      "$name.jar"
+      if (name.isEmpty()) {
+        it
+      } else {
+        "$name.jar"
+      }
     }
   }
   destinationDir = intermediateResources.get().dir("lib").asFile

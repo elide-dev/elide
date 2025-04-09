@@ -57,6 +57,24 @@ elide {
   }
 }
 
+kover {
+  currentProject {
+    instrumentation {
+      excludedClasses.addAll(listOf(
+        "elide.runtime.plugins.python.features.JNIFeature",
+        "elide.runtime.plugins.python.features.BouncyCastleFeature",
+      ))
+    }
+  }
+  reports {
+    filters {
+      excludes {
+        packages("elide.runtime.plugins.python.features")
+      }
+    }
+  }
+}
+
 val oracleGvm = true
 val enableEdge = false
 val enableToolchains = true

@@ -1,7 +1,6 @@
 test
 allTests
 koverXmlReport
-koverBinaryReport
 koverVerify
 copyCoverageReports
 -x detekt

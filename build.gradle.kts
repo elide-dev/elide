@@ -334,6 +334,7 @@ apiValidation {
       "cli",
       "sqlite",
       "reports",
+      "exec",
     ).plus(
       if (buildBenchmarks == "true") {
         listOf(

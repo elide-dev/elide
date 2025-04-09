@@ -40,7 +40,7 @@ internal class LifecycleEventsTest {
 
   private fun <T> testLifecycleEvent(event: EngineLifecycleEvent<T>, prepare: (PolyglotEngine) -> Unit = { }) {
     val plugin = InstrumentedLifecyclePlugin(event)
-    val engine = PolyglotEngine { install(plugin) }
+    val engine = PolyglotEngine { configure(plugin) }
 
     prepare(engine)
 

@@ -39,7 +39,7 @@ internal class EngineFactoryTest {
       }
     }
     
-    val engine = PolyglotEngine { install(plugin) { configurationCalled = true } }
+    val engine = PolyglotEngine { configure(plugin) { configurationCalled = true } }
     val context = engine.acquire()
     
     assertIs<GraalVMEngine>(engine, "should return a GraalVM engine implementation")

@@ -29,7 +29,7 @@ import elide.runtime.plugins.python.python
 @OptIn(DelicateElideApi::class)
 abstract class PythonTest : AbstractDualTest<AbstractDualTest.Python>() {
   override fun configureEngine(config: PolyglotEngineConfiguration) {
-    config.install(Python)
+    config.configure(Python)
   }
 
   @Suppress("SameParameterValue")

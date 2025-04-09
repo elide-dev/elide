@@ -33,7 +33,7 @@ import elide.runtime.plugins.ruby.Ruby as RubyPlugin
 @OptIn(DelicateElideApi::class)
 abstract class AbstractRubyIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T, Ruby>() {
   override fun configureEngine(config: PolyglotEngineConfiguration) {
-    config.install(RubyPlugin)
+    config.configure(RubyPlugin)
   }
 
   // Logic to execute a guest-side test.

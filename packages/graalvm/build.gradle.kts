@@ -144,21 +144,18 @@ elide {
 }
 
 kover {
-  excludeInstrumentation {
-    classes(
-      "elide.runtime.gvm.js.JavaScript",
-      "elide.runtime.gvm.internals.intrinsics.NativeRuntime",
-      "elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature",
-      "elide.runtime.feature.engine.NativeConsoleFeature",
-      "elide.runtime.feature.engine.NativeCryptoFeature",
-      "elide.runtime.feature.engine.NativeSQLiteFeature",
-      "elide.runtime.feature.engine.NativeTransportFeature",
-    )
-    packages(
-      "elide.runtime.feature",
-      "elide.runtime.feature.*",
-      "elide.runtime.feature.engine",
-    )
+  currentProject {
+    instrumentation {
+      excludedClasses.addAll(listOf(
+        "elide.runtime.gvm.js.JavaScript",
+        "elide.runtime.gvm.internals.intrinsics.NativeRuntime",
+        "elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature",
+        "elide.runtime.feature.engine.NativeConsoleFeature",
+        "elide.runtime.feature.engine.NativeCryptoFeature",
+        "elide.runtime.feature.engine.NativeSQLiteFeature",
+        "elide.runtime.feature.engine.NativeTransportFeature",
+      ))
+    }
   }
 }
 

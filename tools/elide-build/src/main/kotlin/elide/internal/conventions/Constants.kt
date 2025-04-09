@@ -98,6 +98,9 @@ public object Constants {
     /** Constant: pinned version of Groovy. */
     const val GROOVY = "4.0.18"
 
+    /** Constant: defines the Jacoco version in use. */
+    const val JACOCO = "0.8.13"
+
     /** Constant: pinned version of Buf. */
     const val BUF = "1.28.1"
 

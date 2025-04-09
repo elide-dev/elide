@@ -39,7 +39,6 @@ import elide.toolchain.host.TargetInfo
 
 plugins {
   java
-  jacoco
   publishing
   `java-library`
   `jvm-test-suite`

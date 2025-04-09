@@ -12,11 +12,11 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.3",
-    "@definitelytyped/dtslint": "^0.0.199",
-    "@definitelytyped/eslint-plugin": "^0.0.197",
+    "@definitelytyped/dtslint": "^0.2.32",
+    "@definitelytyped/eslint-plugin": "^0.1.23",
     "bun": "1.2.8",
     "publint": "0.3.10",
-    "typescript": "^5.0.2"
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "build": "tsc",

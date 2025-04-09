@@ -100,7 +100,6 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           arguments: |
             koverVerify
-            koverBinaryReport
             koverXmlReport
             -x nativeCompile
             -x nativeOptimizedCompile

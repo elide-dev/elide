@@ -365,7 +365,6 @@ jobs:
             jvmTest \
             allTests \
             koverXmlReport \
-            koverBinaryReport \
             koverVerify \
             -x nativeTest \
             --scan \

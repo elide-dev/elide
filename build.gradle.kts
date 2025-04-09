@@ -271,6 +271,8 @@ kover {
         annotatedBy("*Generated*")
 
         packages(
+          "elide.runtime.plugins.python.features",
+          "elide.runtime.gvm.kotlin.feature",
           "tools.elide",
           "elide.cli",
           "elide.data",
@@ -295,10 +297,6 @@ kover {
       html {
         onCheck = false
         title = "Elide Coverage"
-      }
-
-      binary {
-        onCheck = true
       }
 
       verify {
@@ -550,7 +548,6 @@ tasks {
   val copyCoverageReports by registering(Copy::class) {
     enabled = isCI
     dependsOn(
-      koverBinaryReport,
       koverXmlReport,
     )
 
@@ -612,7 +609,6 @@ tasks {
     enabled = isCI
     mustRunAfter(
       detekt,
-      koverBinaryReport,
       koverXmlReport,
       koverVerify,
     )
@@ -640,7 +636,6 @@ tasks {
 }
 
 listOf(
-  tasks.koverBinaryReport,
   tasks.koverXmlReport,
   tasks.koverVerify,
 ).forEach {

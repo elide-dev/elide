@@ -16,7 +16,7 @@ import elide.runtime.plugins.java.shell.GuestJavaEvaluator
 @OptIn(DelicateElideApi::class) class JavaShellTest {
   /** Acquire a [PolyglotEngine] configured with the [Java] plugin. */
   private fun configureEngine() = PolyglotEngine {
-    install(Java)
+    configure(Java)
   }
 
   private fun wrapEspresso(block: () -> Unit) {

@@ -21,7 +21,7 @@ import elide.testing.annotations.Test
 
   /** Acquire a [PolyglotEngine] configured with the [Kotlin] plugin. */
   private fun configureEngine() = PolyglotEngine {
-    install(Kotlin) {
+    configure(Kotlin) {
       guestClasspathRoot = tempClasspathRoot.absolutePath
     }
   }

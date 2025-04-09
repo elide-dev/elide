@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -19,6 +19,7 @@ import kotlin.test.fail
 import elide.runtime.core.*
 import elide.runtime.plugins.vfs.Vfs
 import elide.runtime.plugins.vfs.include
+import elide.runtime.plugins.vfs.vfs
 
 @OptIn(DelicateElideApi::class)
 internal class JsPluginTest {
@@ -34,7 +35,7 @@ internal class JsPluginTest {
    * This method is intended to be used for convenience in [withJsPlugin]'s `configureEngine` argument.
    */
   private fun useResourceBundle(vararg bundles: String): PolyglotEngineConfiguration.() -> Unit = {
-    getOrInstall(Vfs) {
+    configure(Vfs) {
       for(bundle in bundles) include(resource(bundle))
     }
   }
@@ -62,9 +63,11 @@ internal class JsPluginTest {
     use: PolyglotContext.() -> Unit,
   ) {
     val engine = PolyglotEngine {
-      install(JavaScript, configurePlugin)
+      configure(JavaScript, configurePlugin)
       configureEngine()
-      getOrInstall(Vfs)
+      vfs {
+        // Nothing to configure.
+      }
     }
 
     use(engine.acquire())

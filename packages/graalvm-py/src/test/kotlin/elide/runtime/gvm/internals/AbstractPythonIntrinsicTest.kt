@@ -32,7 +32,7 @@ import elide.runtime.plugins.python.Python as PythonPlugin
 @OptIn(DelicateElideApi::class)
 abstract class AbstractPythonIntrinsicTest<T : GuestIntrinsic> : AbstractIntrinsicTest<T, Python>() {
   override fun configureEngine(config: PolyglotEngineConfiguration) {
-    config.install(PythonPlugin)
+    config.configure(PythonPlugin)
   }
 
   // Logic to execute a guest-side test.

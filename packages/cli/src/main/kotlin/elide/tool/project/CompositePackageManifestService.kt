@@ -28,6 +28,7 @@ class CompositePackageManifestService(
     pythonRequirementsCodec,
   )
 
+  @Suppress("UNCHECKED_CAST")
   private fun codecForEcosystem(ecosystem: ProjectEcosystem): PackageManifestCodec<PackageManifest> = when (ecosystem) {
     ProjectEcosystem.Elide -> elideCodec
     ProjectEcosystem.Node -> nodeCodec
@@ -36,6 +37,7 @@ class CompositePackageManifestService(
     ProjectEcosystem.Ruby -> error("Ruby environments are not supported yet")
   } as PackageManifestCodec<PackageManifest>
 
+  @Suppress("UNCHECKED_CAST")
   private fun codecForManifest(manifest: PackageManifest): PackageManifestCodec<PackageManifest> = when (manifest) {
     is ElidePackageManifest -> elideCodec
     is NodePackageManifest -> nodeCodec

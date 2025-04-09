@@ -134,6 +134,7 @@ internal object ElideInteropModuleLoader : DelegatedModuleLoaderRegistry.Delegat
     }
   }
 
+  @Suppress("UNUSED_PARAMETER")
   private fun spawnInteropModule(
     referencingModule: ScriptOrModule,
     moduleRequest: Module.ModuleRequest,

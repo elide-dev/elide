@@ -29,7 +29,7 @@ import elide.runtime.plugins.ruby.ruby
 @OptIn(DelicateElideApi::class)
 abstract class RubyTest : AbstractDualTest<AbstractDualTest.Ruby>() {
   override fun configureEngine(config: PolyglotEngineConfiguration) {
-    config.install(Ruby)
+    config.configure(Ruby)
   }
 
   @Suppress("SameParameterValue")

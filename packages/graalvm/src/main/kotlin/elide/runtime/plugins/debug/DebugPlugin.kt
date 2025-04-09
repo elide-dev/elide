@@ -83,5 +83,5 @@ import elide.runtime.core.extensions.setOption
 
 /** Configure the [Debug] plugin, installing it if not already present. */
 @DelicateElideApi public fun PolyglotEngineConfiguration.debug(configure: DebugConfig.() -> Unit) {
-  plugin(Debug)?.config?.apply(configure) ?: install(Debug, configure)
+  plugin(Debug)?.config?.apply(configure) ?: configure(Debug, configure)
 }

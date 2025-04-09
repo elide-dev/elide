@@ -88,9 +88,7 @@ internal class NodeWebStreams : ReadOnlyProxyObject, WebStreamsAPI {
 
   override fun getMemberKeys(): Array<String> = WEB_STREAMS_PROPS
 
-  override fun getMember(key: String?): Any? = when (key) {
-    else -> null
-  }
+  override fun getMember(key: String?): Any? = null
 
   internal companion object {
     private val SINGLETON = NodeWebStreams()

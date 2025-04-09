@@ -19,7 +19,6 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.GuestLanguageEvaluator
 import elide.runtime.core.PolyglotContext
-import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.java.shell.GuestJavaEvaluator
 import elide.runtime.plugins.jvm.Jvm
@@ -51,7 +50,7 @@ import elide.runtime.plugins.jvm.Jvm
 
     override fun install(scope: InstallationScope, configuration: JavaConfig.() -> Unit): Java {
       // apply the JVM plugin first
-      scope.configuration.getOrInstall(Jvm)
+      scope.configuration.configure(Jvm)
 
       // apply the configuration and create the plugin instance
       val config = JavaConfig().apply(configuration)

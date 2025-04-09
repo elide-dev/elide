@@ -137,7 +137,7 @@ internal abstract class AbstractJsTest : AbstractDualTest<JavaScript>() {
 
   override fun configureEngine(config: PolyglotEngineConfiguration) {
     config.apply {
-      install(JavaScriptPlugin)
+      configure(JavaScriptPlugin)
       vfs { deferred = false }
     }
   }

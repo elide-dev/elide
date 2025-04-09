@@ -50,7 +50,7 @@ import elide.runtime.core.PolyglotEngine
 
   /** Acquire a [PolyglotContext] configured with the [Jvm] plugin and custom classpath entries. */
   private fun configureEngine() = PolyglotEngine {
-    install(Jvm) {
+    configure(Jvm) {
       classpathEntries.forEach {
         val entry = tempClasspath.resolve(it.removePrefix("/"))
 

@@ -55,9 +55,7 @@ internal class NodeStreamConsumers : ReadOnlyProxyObject, StreamConsumersAPI {
 
   override fun getMemberKeys(): Array<String> = ALL_CONSUMERS_PROPS
 
-  override fun getMember(key: String?): Any? = when (key) {
-    else -> null
-  }
+  override fun getMember(key: String?): Any? = null
 
   internal companion object {
     private val SINGLETON = NodeStreamConsumers()

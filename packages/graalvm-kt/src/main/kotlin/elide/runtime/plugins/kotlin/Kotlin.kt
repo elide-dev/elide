@@ -20,7 +20,6 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.GuestLanguageEvaluator
 import elide.runtime.core.PolyglotContext
-import elide.runtime.core.getOrInstall
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.jvm.Jvm
 import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
@@ -92,11 +91,9 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
       val resources = resolveEmbeddedManifest(scope)
 
       // apply the JVM plugin and register the custom classpath entries
-      scope.configuration.getOrInstall(Jvm)
-        .config
-        .apply {
-          classpath(resolveOrExtractGuestClasspath(config, resources))
-        }
+      scope.configuration.configure(Jvm) {
+        classpath(resolveOrExtractGuestClasspath(config, resources))
+      }
 
       // apply the configuration and register events
       val instance = Kotlin(config)

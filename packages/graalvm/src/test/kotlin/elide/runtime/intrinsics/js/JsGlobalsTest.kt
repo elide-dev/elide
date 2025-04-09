@@ -318,7 +318,7 @@ private const val ENABLE_SUPPRESSIONS = true
       useHost = true
     }
 
-    install(JavaScript) {
+    configure(JavaScript) {
       npm {
         enabled = true
         modulesPath = System.getenv("PWD")

@@ -17,12 +17,11 @@ package elide.runtime.node
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import jakarta.inject.Provider
-import kotlinx.coroutines.guava.asDeferred
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
-import elide.runtime.intrinsics.js.deferred
+import elide.runtime.intrinsics.js.asDeferred
 import elide.runtime.intrinsics.js.node.WritableFilesystemPromiseAPI
 import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
 import elide.runtime.intrinsics.js.node.path.Path
@@ -173,7 +172,7 @@ import elide.testing.annotations.TestCase
       dual {
         val data = assertNotNull(
           fs.readFile(Path.from(samplePath), ReadFileOptions(encoding = "utf8"))
-            .deferred()
+            .asDeferred()
             .await(),
         )
         assertIs<String>(data)
@@ -205,7 +204,7 @@ import elide.testing.annotations.TestCase
       assertTrue(Files.exists(srcPath), "src file should exist before creation")
       assertFalse(Files.exists(destPath), "dest file should not exist before creation")
       assertIs<WritableFilesystemPromiseAPI>(fs)
-      fs.copyFile(Path.from(srcPath), Path.from(destPath)).deferred().await()
+      fs.copyFile(Path.from(srcPath), Path.from(destPath)).asDeferred().await()
       assertTrue(Files.exists(destPath), "file should exist after creation")
       assertEquals("Hello, world!", Files.readString(destPath))
 

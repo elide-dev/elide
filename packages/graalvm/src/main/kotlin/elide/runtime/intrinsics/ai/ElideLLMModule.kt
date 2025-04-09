@@ -332,7 +332,7 @@ internal class InferenceOperationImpl internal constructor (
   private val events: EventAwareProxy = EventAwareProxy.create(),
 ) : InferenceOperation, EventTarget by events {
   // Provide as a JS promise.
-  @get:Polyglot override val promise: JsPromise<InferenceResults> get() = JsPromise.wrapping(task)
+  @get:Polyglot override val promise: JsPromise<InferenceResults> get() = JsPromise.wrap(task)
 
   override fun putMember(key: String?, value: Value?) {
     if (key != null) {
@@ -355,7 +355,7 @@ internal class ElideLocalLLMImpl internal constructor (private val guestExec: Gu
   @Polyglot override fun infer(params: Parameters, model: Model, input: PromptInput): JsPromise<String> {
     return try {
       // @TODO disgusting
-      JsPromise.wrapping(execPool.submit<String> {
+      JsPromise.wrap(execPool.submit<String> {
         when (val result = NativeLocalAi.inferSync(params, model, input.render())) {
           is InferenceResults.Error -> throw JsError.of(
             "Inference failed: ${result.message}",

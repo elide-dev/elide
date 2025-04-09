@@ -25,6 +25,7 @@ import elide.http.Body
 import elide.http.Request
 import elide.http.body.NettyBody
 import elide.http.body.PrimitiveBody
+import elide.http.request.JavaNetHttpUri
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.js.JsError
@@ -80,7 +81,10 @@ internal class FetchRequestIntrinsic internal constructor (
 
     @JvmStatic override fun forRequest(request: Request): FetchRequestIntrinsic {
       return FetchRequestIntrinsic(
-        targetUrl = URLIntrinsic.URLValue.fromString(request.url.toString()),
+        targetUrl = when (val url = request.url) {
+          is JavaNetHttpUri -> URLIntrinsic.URLValue.fromString(url.absoluteString())
+          else -> error("Unsupported URL value: ${request.url}")
+        },
         targetMethod = request.method.symbol,
 
         requestHeaders = FetchHeaders.fromPairs(request.headers.asOrdered().flatMap { header ->

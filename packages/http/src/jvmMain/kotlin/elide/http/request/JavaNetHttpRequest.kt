@@ -16,6 +16,7 @@ package elide.http.request
 import java.net.http.HttpRequest
 import elide.http.Body
 import elide.http.Headers
+import elide.http.Http
 import elide.http.HttpUrl
 import elide.http.Method
 import elide.http.MutableRequest
@@ -25,17 +26,26 @@ import elide.http.headers.JavaNetHttpHeaders
 import elide.http.toProtocolVersion
 
 // Implements a platform-specific HTTP request type for `java.net.http`.
-@JvmInline internal value class JavaNetHttpRequest(private val backing: HttpRequest): PlatformHttpRequest<HttpRequest> {
-  override val request: HttpRequest get() = backing
-  override val version: ProtocolVersion get() = backing.toProtocolVersion()
-  override val method: Method get() = Method.of(backing.method())
-  override val url: HttpUrl get() = JavaNetHttpUri(backing.uri())
-  override val headers: Headers get() = JavaNetHttpHeaders(backing.headers())
-  override fun toMutable(): MutableRequest = JavaNetMutableHttpRequest.of(backing)
-  override val body: Body get() = backing.bodyPublisher().let { pub ->
+@JvmInline internal value class JavaNetHttpRequest(
+  private val pair: Pair<HttpRequest, Http.HttpRequestOptions?>,
+): PlatformHttpRequest<HttpRequest> {
+  constructor(req: HttpRequest): this(req to null)
+
+  override val request: HttpRequest get() = pair.first
+  override val version: ProtocolVersion get() = pair.first.toProtocolVersion()
+  override val method: Method get() = Method.of(pair.first.method())
+  override val url: HttpUrl get() = JavaNetHttpUri(pair.first.uri())
+  override val headers: Headers get() = JavaNetHttpHeaders(pair.first.headers())
+  override fun toMutable(): MutableRequest = JavaNetMutableHttpRequest.of(pair.first)
+  override val body: Body get() = pair.first.bodyPublisher().let { pub ->
     when {
       pub == null || pub.isEmpty || pub.get().contentLength() == 0L -> Body.Empty
       else -> PublisherBody(pub.get())
     }
+  }
+
+  companion object {
+    @JvmStatic fun from(req: HttpRequest, options: Http.HttpRequestOptions?): JavaNetHttpRequest =
+      JavaNetHttpRequest(req to options)
   }
 }

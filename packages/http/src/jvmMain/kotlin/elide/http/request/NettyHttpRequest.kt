@@ -18,6 +18,7 @@ import io.netty.handler.codec.http.HttpRequest
 import java.net.URI
 import elide.http.Body
 import elide.http.Headers
+import elide.http.Http
 import elide.http.HttpUrl
 import elide.http.Method
 import elide.http.MutableRequest
@@ -26,14 +27,18 @@ import elide.http.body.NettyBody
 import elide.http.headers.NettyHttpHeaders
 
 // Implements a `PlatformHttpRequest` backed by a raw Netty HTTP request.
-@JvmInline internal value class NettyHttpRequest(private val req: HttpRequest): PlatformHttpRequest<HttpRequest> {
-  override val request: HttpRequest get() = req
-  override val method: Method get() = NettyHttpMethod(req.method())
-  override val url: HttpUrl get() = JavaNetHttpUri(URI.create(req.uri()))
-  override val headers: Headers get() = NettyHttpHeaders(req.headers())
-  override fun toMutable(): MutableRequest = NettyMutableHttpRequest(req)
+@JvmInline internal value class NettyHttpRequest(
+  private val pair: Pair<HttpRequest, Http.HttpRequestOptions?>,
+): PlatformHttpRequest<HttpRequest> {
+  constructor(req: HttpRequest): this(req to null)
 
-  override val body: Body get() = when (req) {
+  override val request: HttpRequest get() = pair.first
+  override val method: Method get() = NettyHttpMethod(pair.first.method())
+  override val url: HttpUrl get() = JavaNetHttpUri.from(URI.create(pair.first.uri()), pair.second)
+  override val headers: Headers get() = NettyHttpHeaders(pair.first.headers())
+  override fun toMutable(): MutableRequest = NettyMutableHttpRequest(pair.first)
+
+  override val body: Body get() = when (val req = pair.first) {
     is FullHttpRequest -> if (req.content().readableBytes() > 0) {
       NettyBody(req.content())
     } else {
@@ -43,12 +48,17 @@ import elide.http.headers.NettyHttpHeaders
     else -> Body.Empty
   }
 
-  override val version: ProtocolVersion get() = when (req.protocolVersion().majorVersion()) {
+  override val version: ProtocolVersion get() = when (pair.first.protocolVersion().majorVersion()) {
     2 -> ProtocolVersion.HTTP_2
-    else -> when (req.protocolVersion().minorVersion()) {
+    else -> when (pair.first.protocolVersion().minorVersion()) {
       0 -> ProtocolVersion.HTTP_1_0
       1 -> ProtocolVersion.HTTP_1_1
       else -> ProtocolVersion.HTTP_1_0
     }
+  }
+
+  companion object {
+    @JvmStatic fun from(req: HttpRequest, options: Http.HttpRequestOptions?): NettyHttpRequest =
+      NettyHttpRequest(req to options)
   }
 }

@@ -27,22 +27,20 @@ import elide.vm.annotations.Polyglot
 internal class FetchResponseIntrinsic private constructor (
   responseUrl: String,
   responseStatus: Int,
-  responseText: String,
   responseHeaders: FetchHeaders,
+  responseText: String? = null,
   body: ReadableStream? = null,
   responseRedirected: Boolean = false,
 ) : FetchMutableResponse {
   @Polyglot constructor(): this(
     responseUrl = Defaults.DEFAULT_URL,
     responseStatus = Defaults.DEFAULT_STATUS,
-    responseText = Defaults.DEFAULT_STATUS_TEXT,
     responseHeaders = FetchHeadersIntrinsic.empty(),
   )
 
   constructor(bodyContent: String?): this(
     responseUrl = Defaults.DEFAULT_URL,
     responseStatus = Defaults.DEFAULT_STATUS,
-    responseText = Defaults.DEFAULT_STATUS_TEXT,
     responseHeaders = FetchHeadersIntrinsic.empty(),
      body = bodyContent?.let { ReadableStream.wrap(it.toByteArray(StandardCharsets.UTF_8)) },
   )
@@ -50,7 +48,7 @@ internal class FetchResponseIntrinsic private constructor (
   constructor(bodyContent: String?, options: FetchResponseOptions): this(
     responseUrl = options.url ?: Defaults.DEFAULT_URL,
     responseStatus = options.status ?: Defaults.DEFAULT_STATUS,
-    responseText = options.statusText ?: Defaults.DEFAULT_STATUS_TEXT,
+    responseText = options.statusText,
     responseHeaders = options.headers ?: FetchHeadersIntrinsic.empty(),
     body = bodyContent?.let { ReadableStream.wrap(it.toByteArray(StandardCharsets.UTF_8)) },
   )
@@ -87,7 +85,6 @@ internal class FetchResponseIntrinsic private constructor (
     @JvmStatic @Polyglot internal fun empty(): FetchResponseIntrinsic = FetchResponseIntrinsic(
       responseUrl = Defaults.DEFAULT_URL,
       responseStatus = Defaults.DEFAULT_STATUS,
-      responseText = Defaults.DEFAULT_STATUS_TEXT,
       responseHeaders = FetchHeadersIntrinsic.empty(),
     )
 
@@ -130,6 +127,9 @@ internal class FetchResponseIntrinsic private constructor (
   // Response body consumption status.
   private val bodyConsumed: AtomicBoolean = AtomicBoolean(false)
 
+  // Indicate whether a body is present.
+  internal val bodyPresent: Boolean get() = responseBody.get() != null
+
   override var headers: FetchHeaders
     @Polyglot get() = responseHeaders.get()
     @Polyglot set(value) = responseHeaders.set(value)
@@ -139,7 +139,7 @@ internal class FetchResponseIntrinsic private constructor (
     @Polyglot set(value) = responseStatus.set(value)
 
   override var statusText: String
-    @Polyglot get() = responseText.get()
+    @Polyglot get() = responseText.get() ?: ""
     @Polyglot set(value) = responseText.set(value)
 
   override var url: String
@@ -151,6 +151,9 @@ internal class FetchResponseIntrinsic private constructor (
   @get:Polyglot override val redirected: Boolean get() = responseRedirected.get()
 
   override fun toString(): String {
-    return "$status $statusText"
+    return when {
+      statusText.isNotBlank() -> "$status $statusText"
+      else -> status.toString()
+    }
   }
 }

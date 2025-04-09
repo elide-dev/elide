@@ -55,7 +55,13 @@ private val HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS = arrayOf(
   @get:Polyglot override val running: Boolean get() = serverRunning.get()
 
   /** Construct a new [ChannelHandler] used as initializer for client channels. */
-  private fun prepareChannelInitializer(): ChannelHandler = NettyChannelInitializer(NettyRequestHandler(router, exec))
+  private fun prepareChannelInitializer(): ChannelHandler = NettyChannelInitializer(NettyRequestHandler(
+    router,
+    exec,
+    scheme = "http:",
+    host = config.host,
+    port = config.port.toUShort(),
+  ))
 
   @Polyglot override fun start() {
     logging.debug("Starting server")

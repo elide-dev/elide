@@ -21,7 +21,9 @@ const handlers = {
 // noinspection JSUnusedGlobalSymbols
 export default {
   async fetch(request) {
+    console.log(`Request: ${request.method} ${request.url}`)
     const url = new URL(request.url)
+    console.log(`Routing for: ${request.method} ${url.pathname}`)
     const handler = handlers[`${request.method} ${url.pathname}`]
     if (!handler) return new Response(null, { status: 404 })
     return await handler(request)

@@ -39,9 +39,9 @@ import elide.runtime.precompiler.PrecompilerNotice
 import elide.runtime.precompiler.PrecompilerNoticeWithOutput
 
 // Implements a precompiler which compiles Kotlin to Java bytecode.
-internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinJarBundleInfo> {
+internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinRunnable> {
   // Embedded Kotlin version.
-  private const val KOTLIN_VERSION = "2.1.20-RC2"
+  private const val KOTLIN_VERSION = "2.1.20"
   private val kotlinVerbose by lazy {
     System.getProperty("elide.kotlin.verbose") == "true"
   }
@@ -75,7 +75,7 @@ internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotl
   }
 
   @Suppress("TooGenericExceptionCaught")
-  override fun invoke(req: PrecompileSourceRequest<KotlinCompilerConfig>, input: String): KotlinJarBundleInfo {
+  override fun invoke(req: PrecompileSourceRequest<KotlinCompilerConfig>, input: String): KotlinRunnable {
     val closeables = LinkedList<Closeable>()
     val tmproot = Files.createTempDirectory("elide-kt-precompile")
     val tmpfile = tmproot.resolve(req.source.name).toFile()
@@ -108,18 +108,33 @@ internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotl
     val diagnostics = DiagnosticsListener()
     val svcs = Services.EMPTY
     val kotlinMajorMinor = KOTLIN_VERSION.substringBeforeLast('.')
+    val isKotlinScript = req.source.path?.endsWith(".kts") == true || req.source.name.endsWith(".kts")
     val args = ktCompiler.createArguments().apply {
       destinationAsFile = jarfile
-      disableStandardScript = true
+      disableStandardScript = !isKotlinScript
       jdkHome = javaToolchainHome.absolutePathString()
-      freeArgs = listOf(tmpfile.absolutePath)
+      freeArgs = mutableListOf(tmpfile.absolutePath)
       apiVersion = kotlinMajorMinor
       languageVersion = kotlinMajorMinor
+      useFirLT = !isKotlinScript // fix: fir K2 LT is not supported for scripts yet
       kotlinVersionRoot?.absolutePathString()?.let {
         kotlinHome = it
       }
     }
-
+    if (isKotlinScript) {
+      // if we are running a kotlin script, wire together the runnable and script template, and return it in a deferred
+      // form; such runs do not need the precompiler.
+      return KotlinScriptCallable(
+        name = req.source.name,
+        path = tmpfile.toPath(),
+      ) {
+        // execute as a script
+        ElideKotlinScriptExecutor.execute(
+          req.source,
+          tmpfile,
+        )
+      }
+    }
     try {
       ktCompiler.exec(diagnostics, svcs, args)
     } catch (rxe: RuntimeException) {

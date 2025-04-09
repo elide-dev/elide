@@ -17,7 +17,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.*
 import kotlinx.coroutines.test.runTest
 import kotlin.io.path.exists
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertNotNull
@@ -47,7 +46,6 @@ class KotlinPrecompilerTest {
     assertNotNull(svc)
   }
 
-  @Ignore
   @Test fun `precompile kotlin`() = runTest {
     // language=kotlin
     val src = """
@@ -62,6 +60,34 @@ class KotlinPrecompilerTest {
           PrecompileSourceRequest(
             source = PrecompileSourceInfo(
               name = "Example.kt",
+            ),
+            config = KotlinCompilerConfig.DEFAULT,
+          ),
+          src,
+        )
+      }
+    )
+    assertNotNull(diag)
+    assertNotNull(result)
+    assertTrue(result.name.isNotEmpty())
+    assertTrue(result.path.exists())
+  }
+
+  @Test fun `precompile kotlin script`() = runTest {
+    // language=kotlin
+    val src = """
+      fun fn() {
+        System.out.println("Hello, world!")
+      }
+      fn()
+    """.trimIndent()
+
+    val (diag, result) = assertNotNull(
+      assertDoesNotThrow {
+        KotlinPrecompiler.precompileSafe(
+          PrecompileSourceRequest(
+            source = PrecompileSourceInfo(
+              name = "Example.kts",
             ),
             config = KotlinCompilerConfig.DEFAULT,
           ),

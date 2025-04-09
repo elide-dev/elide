@@ -18,6 +18,8 @@ import com.adarshr.gradle.testlogger.theme.ThemeType
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.testing.Test
+import org.gradle.kotlin.dsl.the
+import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import elide.internal.conventions.Constants
@@ -33,6 +35,8 @@ internal fun Project.configureTestExecution() {
 /** Configure Kover test reports in CI. */
 internal fun Project.configureKover() {
   extensions.getByType(KoverProjectExtension::class.java).apply {
+    useJacoco(Constants.Versions.JACOCO)
+
     reports {
       total {
         xml {
@@ -57,6 +61,9 @@ internal fun Project.configureKover() {
 
 /** Configure Jacoco test reports for JVM projects. */
 internal fun Project.configureJacoco() {
+  the<JacocoPluginExtension>().apply {
+    toolVersion = Constants.Versions.JACOCO
+  }
   tasks.named("jacocoTestReport", JacocoReport::class.java) {
     dependsOn(tasks.named("test"))
     reports.xml.required.set(true)

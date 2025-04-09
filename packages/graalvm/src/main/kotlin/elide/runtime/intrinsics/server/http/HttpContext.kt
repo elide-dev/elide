@@ -12,19 +12,23 @@
  */
 package elide.runtime.intrinsics.server.http
 
+import io.netty.channel.ChannelHandlerContext
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.exec.GuestExecutor
 
 /**
  * A lightweight container for values bound to a specific [HttpRequest]. The [HttpContext] is meant to hold
  * values such as those extracted from path variables.
  */
 @DelicateElideApi public class HttpContext private constructor(
-  private val map: MutableMap<String, Any?>
+  private val map: MutableMap<String, Any?>,
+  internal val exec: GuestExecutor,
+  internal val channelContext: ChannelHandlerContext,
 ) : MutableMap<String, Any?> by map, ProxyObject {
   /** Constructs a new empty context. */
-  internal constructor() : this(mutableMapOf())
+  internal constructor(exec: GuestExecutor, chan: ChannelHandlerContext) : this(mutableMapOf(), exec, chan)
 
   override fun getMember(key: String): Any {
     return map[key] ?: error("no member found with key $key")

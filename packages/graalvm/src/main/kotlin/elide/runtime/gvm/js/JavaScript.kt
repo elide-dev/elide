@@ -16,6 +16,7 @@ import com.oracle.truffle.js.runtime.objects.JSDynamicObject
 import com.oracle.truffle.js.runtime.objects.Null
 import com.oracle.truffle.js.runtime.objects.Undefined
 import io.micronaut.http.HttpRequest
+import org.graalvm.polyglot.Source
 import java.io.InputStream
 import java.io.Reader
 import elide.runtime.gvm.ExecutableScript
@@ -66,6 +67,18 @@ public object JavaScript {
       ExecutableScript.ScriptSource.LITERAL,
       code.toString(),
     )
+  }
+
+  /**
+   * ## JavaScript: Literal from string.
+   *
+   * Wrap the provided JavaScript [code] in an [ExecutableScript] which can be prepared for execution.
+   *
+   * @param code Code to wrap.
+   * @return Executable script for the provided code snippet.
+   */
+  @JvmStatic public fun wrapped(code: Source): ExecutableScript {
+    return JsExecutableScript.of(code)
   }
 
   /**

@@ -12,6 +12,7 @@
  */
 package elide.runtime.intrinsics.js
 
+import elide.annotations.API
 import elide.vm.annotations.Polyglot
 
 /**
@@ -42,7 +43,7 @@ import elide.vm.annotations.Polyglot
  * constructor, available globally. An instantiated `Request` can then be passed to `fetch` to initiate an HTTP request
  * (host permissions permitting).
  */
-public interface FetchRequest {
+@API public interface FetchRequest {
   /** Default values applied to [FetchRequest] interfaces. */
   public object Defaults {
     /** Default `cache` value. */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,13 +12,17 @@
  */
 package elide.runtime.intrinsics.server.http
 
+import io.netty.channel.ChannelHandlerContext
 import elide.annotations.API
+import elide.http.Response
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
+import elide.runtime.intrinsics.js.FetchResponse
+import elide.runtime.intrinsics.server.http.netty.NettyHttpResponse
 import elide.vm.annotations.Polyglot
 
 /** Represents an HTTP response returned by the server, accessible from guest code. */
-@API @DelicateElideApi public interface HttpResponse: ExpressResponseAPI {
+@API @DelicateElideApi public interface HttpResponse: FetchResponse, ExpressResponseAPI {
   /**
    * Provide a header to the response; this method is exported to guest code.
    *
@@ -48,5 +52,12 @@ import elide.vm.annotations.Polyglot
    */
   @Polyglot override fun append(name: String, value: String?) {
     header(name, value ?: "")
+  }
+
+  /** Factories for obtaining an [HttpResponse]. */
+  public companion object {
+    /** @return Create an [HttpResponse] from a [Response]. */
+    @JvmStatic public fun of(response: Response, ctx: ChannelHandlerContext): HttpResponse =
+      NettyHttpResponse.from(response, ctx, includeDefaults = true)
   }
 }

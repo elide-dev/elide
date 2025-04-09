@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -54,6 +54,8 @@ import elide.runtime.core.DelicateElideApi
 
       return map
     }
+
+  override val isEmpty: Boolean get() = backing.get()?.isEmpty() == true && super.isEmpty
 
   override fun register(handler: GuestHandler): Int {
     backingRegistry.add(handler)

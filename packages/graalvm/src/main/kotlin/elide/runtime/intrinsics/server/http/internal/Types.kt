@@ -12,6 +12,8 @@
  */
 package elide.runtime.intrinsics.server.http.internal
 
+import elide.http.MutableResponse
+import elide.http.Request
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.intrinsics.server.http.HttpContext
 import elide.runtime.intrinsics.server.http.HttpRequest
@@ -21,7 +23,7 @@ import elide.runtime.intrinsics.server.http.HttpResponse
  * Represents the signature of a method used as request handler. The [GuestHandler] wrapper implements this signature
  * by executing a guest value.
  */
-@DelicateElideApi internal fun interface GuestHandlerFunction {
+@DelicateElideApi internal fun interface GuestHandlerFunction<T> {
   /**
    * Handle an incoming HTTP [request] by accessing the outgoing [response] and a [context] shared between all the
    * handlers in the pipeline. The return value indicates whether the next handler will be invoked.
@@ -31,7 +33,7 @@ import elide.runtime.intrinsics.server.http.HttpResponse
    * @param context A generic container used to pass data between handlers in the pipeline.
    * @return Whether the next handler in the pipeline (if any) will be invoked after this one.
    */
-  operator fun invoke(request: HttpRequest, response: HttpResponse, context: HttpContext): Boolean
+  operator fun invoke(request: Request, response: MutableResponse, context: HttpContext): T
 }
 
 /** Internal alias used for a list of handler references. */

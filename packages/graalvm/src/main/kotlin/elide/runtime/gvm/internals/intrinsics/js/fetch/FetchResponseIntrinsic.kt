@@ -12,6 +12,8 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
+import org.graalvm.polyglot.Value
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
@@ -30,6 +32,55 @@ internal class FetchResponseIntrinsic private constructor (
   body: ReadableStream? = null,
   responseRedirected: Boolean = false,
 ) : FetchMutableResponse {
+  @Polyglot constructor(): this(
+    responseUrl = Defaults.DEFAULT_URL,
+    responseStatus = Defaults.DEFAULT_STATUS,
+    responseText = Defaults.DEFAULT_STATUS_TEXT,
+    responseHeaders = FetchHeadersIntrinsic.empty(),
+  )
+
+  constructor(bodyContent: String?): this(
+    responseUrl = Defaults.DEFAULT_URL,
+    responseStatus = Defaults.DEFAULT_STATUS,
+    responseText = Defaults.DEFAULT_STATUS_TEXT,
+    responseHeaders = FetchHeadersIntrinsic.empty(),
+     body = bodyContent?.let { ReadableStream.wrap(it.toByteArray(StandardCharsets.UTF_8)) },
+  )
+
+  constructor(bodyContent: String?, options: FetchResponseOptions): this(
+    responseUrl = options.url ?: Defaults.DEFAULT_URL,
+    responseStatus = options.status ?: Defaults.DEFAULT_STATUS,
+    responseText = options.statusText ?: Defaults.DEFAULT_STATUS_TEXT,
+    responseHeaders = options.headers ?: FetchHeadersIntrinsic.empty(),
+    body = bodyContent?.let { ReadableStream.wrap(it.toByteArray(StandardCharsets.UTF_8)) },
+  )
+
+  data class FetchResponseOptions(
+    var url: String? = null,
+    var status: Int? = null,
+    var statusText: String? = null,
+    var headers: FetchHeaders? = null,
+  ) {
+    companion object {
+      @JvmStatic fun from(value: Value): FetchResponseOptions = when {
+        value.hasMembers() -> FetchResponseOptions(
+          url = value.getMember("url")?.asString(),
+          status = value.getMember("status")?.asInt(),
+          statusText = value.getMember("statusText")?.asString(),
+          headers = FetchHeadersIntrinsic.from(value.getMember("headers")),
+        )
+        value.hasHashEntries() -> FetchResponseOptions(
+          url = value.getHashValue("url")?.asString(),
+          status = value.getHashValue("status")?.asInt(),
+          statusText = value.getHashValue("statusText")?.asString(),
+          headers = FetchHeadersIntrinsic.from(value.getHashValue("headers")),
+        )
+        value.isNull -> FetchResponseOptions()
+        else -> error("Unrecognized Fetch response constructor options: $value")
+      }
+    }
+  }
+
   /** Typed constructor methods for `Response` objects. */
   internal object ResponseConstructors {
     /** @return Empty response. */
@@ -79,35 +130,27 @@ internal class FetchResponseIntrinsic private constructor (
   // Response body consumption status.
   private val bodyConsumed: AtomicBoolean = AtomicBoolean(false)
 
-  /** @inheritDoc */
   override var headers: FetchHeaders
-    get() = responseHeaders.get()
-    set(value) = responseHeaders.set(value)
+    @Polyglot get() = responseHeaders.get()
+    @Polyglot set(value) = responseHeaders.set(value)
 
-  /** @inheritDoc */
   override var status: Int
-    get() = responseStatus.get()
-    set(value) = responseStatus.set(value)
+    @Polyglot get() = responseStatus.get()
+    @Polyglot set(value) = responseStatus.set(value)
 
-  /** @inheritDoc */
   override var statusText: String
-    get() = responseText.get()
-    set(value) = responseText.set(value)
+    @Polyglot get() = responseText.get()
+    @Polyglot set(value) = responseText.set(value)
 
-  /** @inheritDoc */
   override var url: String
-    get() = responseUrl.get()
-    set(value) = responseUrl.set(value)
+    @Polyglot get() = responseUrl.get()
+    @Polyglot set(value) = responseUrl.set(value)
 
-  /** @inheritDoc */
-  override val body: ReadableStream
-    get() = responseBody.get()
+  @get:Polyglot override val body: ReadableStream get() = responseBody.get()
+  @get:Polyglot override val bodyUsed: Boolean get() = bodyConsumed.get()
+  @get:Polyglot override val redirected: Boolean get() = responseRedirected.get()
 
-  /** @inheritDoc */
-  override val bodyUsed: Boolean
-    get() = bodyConsumed.get()
-
-  /** @inheritDoc */
-  override val redirected: Boolean
-    get() = responseRedirected.get()
+  override fun toString(): String {
+    return "$status $statusText"
+  }
 }

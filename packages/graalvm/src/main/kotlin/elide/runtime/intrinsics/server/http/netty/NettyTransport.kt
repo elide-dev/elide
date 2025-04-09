@@ -31,8 +31,8 @@ import kotlin.reflect.KClass
 import elide.runtime.intrinsics.server.http.netty.NettyTransport.Companion.resolve
 
 /**
- * Defines a specific transport used by the Netty backend, the [resolve] function will return the preferred
- * [NettyTransport] for the current platform.
+ * Defines the transport used by the Netty backend, the [resolve] function will return the preferred [NettyTransport]
+ * for the current platform.
  */
 internal sealed interface NettyTransport<T : ServerSocketChannel> {
   /** Configure and return a transport-specific [EventLoopGroup]. */
@@ -49,7 +49,7 @@ internal sealed interface NettyTransport<T : ServerSocketChannel> {
     try {
       scope.group(eventLoopGroup())
       scope.channel(socketChannel().java)
-    } catch (unsatisfied: UnsatisfiedLinkError) {
+    } catch (_: UnsatisfiedLinkError) {
       scope.group(NioEventLoopGroup())
       scope.channel(NioServerSocketChannel::class.java)
     }

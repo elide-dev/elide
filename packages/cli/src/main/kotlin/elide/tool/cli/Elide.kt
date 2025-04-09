@@ -37,6 +37,7 @@ import elide.annotations.Singleton
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.runtime.gvm.internals.ProcessManager
+import elide.runtime.gvm.internals.intrinsics.ElideIntrinsic
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
@@ -114,6 +115,10 @@ internal val applicationContextBuilder = ApplicationContext
   companion object {
     /** Name of the tool. */
     const val TOOL_NAME: String = "elide"
+
+    init {
+      ElideIntrinsic.setVersion(ELIDE_TOOL_VERSION)
+    }
 
     // Whether to log early init messages.
     private const val INIT_LOGGING: Boolean = false

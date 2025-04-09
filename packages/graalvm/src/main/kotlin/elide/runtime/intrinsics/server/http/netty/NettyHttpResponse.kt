@@ -10,6 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:Suppress("unused", "UNUSED_PARAMETER")
+
 package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.buffer.Unpooled
@@ -24,9 +26,12 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
+import elide.http.Response
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.js.JsError
+import elide.runtime.intrinsics.js.FetchHeaders
+import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.server.http.HttpRequest
 import elide.runtime.intrinsics.server.http.HttpResponse
 import elide.vm.annotations.Polyglot
@@ -52,60 +57,69 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
   private val sent = AtomicBoolean(false)
 
   /** Whether the response has already been sent. */
-  private val body = AtomicReference<PolyglotValue>(null)
+  private val responseBody = AtomicReference<PolyglotValue>(null)
 
   /** Explicit status set by guest code. */
-  private val status = AtomicInteger(0)
+  private val responseStatus = AtomicInteger(0)
+
+  /** Headers for this response, dispatched once the response is sent to the client. */
+  private val responseHeaders = DefaultHttpHeaders()
+
+  @get:Polyglot override val body: ReadableStream?
+    get() = TODO("Not yet implemented") // TODO: implement body stream
+
+  @get:Polyglot override val bodyUsed: Boolean
+    get() = TODO("Not yet implemented") // TODO: implement bodyUsed
+
+  @get:Polyglot override val headers: FetchHeaders
+    get() = TODO("Not yet implemented") // TODO: implement headers
 
   /** The HTTP version of the response. */
   @Volatile private var httpVersion = HttpVersion.HTTP_1_1
 
-  /** Headers for this response, dispatched once the response is sent to the client. */
-  private val headers = DefaultHttpHeaders()
-
   init {
     // prepare headers
-    headers
+    responseHeaders
       .set(HttpHeaderNames.CONTENT_TYPE, HttpHeaderValues.TEXT_PLAIN)
       .set(HttpHeaderNames.SERVER, "elide")
   }
 
   @Polyglot override fun header(name: String, value: String) {
-    headers.set(name, value)
+    responseHeaders.set(name, value)
   }
 
   @Polyglot override fun set(name: String, value: String?) {
-    headers.set(name, value)
+    responseHeaders.set(name, value)
   }
 
   @Polyglot override fun get(name: String): String? {
-    return headers.get(name)
+    return responseHeaders.get(name)
   }
 
   @Polyglot override fun append(name: String, value: String?) {
-    headers.add(name, value)
+    responseHeaders.add(name, value)
   }
 
   @Polyglot override fun status(status: Int) {
-    this.status.set(status)
+    this.responseStatus.set(status)
   }
 
   @Polyglot override fun send(status: Int, body: PolyglotValue?) {
     status(status)
-    this.body.set(body)
+    this.responseBody.set(body)
     end()
   }
 
   @Polyglot override fun end() {
-    val status = status.get()
+    val status = responseStatus.get()
     val effective = if (status == 0) HttpResponseStatus.OK.code() else status
-    send(HttpResponseStatus.valueOf(effective), body.get())
+    send(HttpResponseStatus.valueOf(effective), responseBody.get())
   }
 
   // Fills response headers expected by-spec.
   private fun fillResponseHeaders() {
     if (includeDefaults) {
-      headers.set(HttpHeaderNames.DATE, DateFormatter.format(Date.from(Instant.now())))
+      responseHeaders.set(HttpHeaderNames.DATE, DateFormatter.format(Date.from(Instant.now())))
     }
   }
 
@@ -126,20 +140,20 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
     fillResponseHeaders()
 
     val response = if (content != null) {
-      headers.set(HttpHeaderNames.CONTENT_LENGTH, content.writerIndex())
+      responseHeaders.set(HttpHeaderNames.CONTENT_LENGTH, content.writerIndex())
 
       DefaultFullHttpResponse(
         /* version = */ httpVersion,
         /* status = */ status,
         /* content = */ content,
-        /* headers = */ headers,
+        /* headers = */ responseHeaders,
         /* trailingHeaders = */ EmptyHttpHeaders.INSTANCE,
       )
     } else {
       DefaultHttpResponse(
         /* version = */ httpVersion,
         /* status = */ status,
-        /* headers = */ headers,
+        /* headers = */ responseHeaders,
       )
     }
 
@@ -216,5 +230,11 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
     "end" -> ProxyExecutable { this.end() }
 
     else -> null
+  }
+
+  companion object {
+    @JvmStatic fun from(res: Response, ctx: ChannelHandlerContext, includeDefaults: Boolean = true): NettyHttpResponse {
+      TODO("not yet implemented")
+    }
   }
 }

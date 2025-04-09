@@ -18,6 +18,8 @@ import io.netty.handler.codec.http.DefaultFullHttpResponse
 import io.netty.handler.codec.http.DefaultHttpHeaders
 import io.netty.handler.codec.http.FullHttpResponse
 import io.netty.handler.codec.http.HttpResponse
+import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.HttpVersion
 import elide.http.Body
 import elide.http.Headers
 import elide.http.MutableResponse
@@ -28,7 +30,9 @@ import elide.http.headers.NettyHttpHeaders
 import elide.http.toProtocolVersion
 
 // Implements a platform HTTP response using Netty.
-@JvmInline internal value class NettyHttpResponse (private val resp: HttpResponse): PlatformHttpResponse<HttpResponse> {
+@JvmInline public value class NettyHttpResponse internal constructor (
+  private val resp: HttpResponse,
+): PlatformHttpResponse<HttpResponse> {
   override val response: HttpResponse get() = resp
   override val status: Status get() = NettyHttpStatus(resp.status())
   override val headers: Headers get() = NettyHttpHeaders(resp.headers())

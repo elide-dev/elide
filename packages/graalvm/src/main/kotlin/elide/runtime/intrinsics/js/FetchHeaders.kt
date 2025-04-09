@@ -12,6 +12,8 @@
  */
 package elide.runtime.intrinsics.js
 
+import org.graalvm.polyglot.Value
+import elide.annotations.API
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchHeadersIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMultiMap
 
@@ -37,7 +39,7 @@ import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMultiMap
  * Multiple header values, by spec, can often be reduced to comma-separated values within the same header name. Child
  * implementations are expected to provide a render function which performs this task from held values.
  */
-public interface FetchHeaders : MultiMapLike<String, String> {
+@API public interface FetchHeaders : MultiMapLike<String, String> {
 
   /**
    * ## Fetch: Headers factory.
@@ -88,6 +90,13 @@ public interface FetchHeaders : MultiMapLike<String, String> {
      * @return Immutable copy of the provided fetch headers.
      */
     public fun from(previous: FetchHeaders): Impl
+
+    /**
+     * Create headers from a guest [value].
+     *
+     * @return Immutable copy of the provided guest value headers.
+     */
+    public fun from(value: Value?): Impl
   }
 
   /** Factory for default-implementation instances of [FetchHeaders]. */
@@ -135,6 +144,13 @@ public interface FetchHeaders : MultiMapLike<String, String> {
      * @return Immutable copy of the provided fetch headers.
      */
     override fun from(previous: FetchHeaders): FetchHeaders = FetchHeadersIntrinsic.from(previous)
+
+    /**
+     * Create headers from a guest [value].
+     *
+     * @return Immutable copy of the provided guest value headers.
+     */
+    override fun from(value: Value?): FetchHeaders = FetchHeadersIntrinsic.from(value)
   }
 
   /**

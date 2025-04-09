@@ -58,7 +58,8 @@ import elide.runtime.intrinsics.js.ReadableStream
      * TBD.
      */
     override fun wrap(bytes: ByteArray): ReadableStreamImpl {
-      TODO("Not yet implemented")
+      // @TODO
+      return ReadableStreamImpl()
     }
 
     /**

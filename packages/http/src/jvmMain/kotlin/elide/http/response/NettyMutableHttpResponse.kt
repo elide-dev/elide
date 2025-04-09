@@ -13,9 +13,13 @@
 
 package elide.http.response
 
+import io.netty.buffer.ByteBufAllocator
+import io.netty.handler.codec.http.DefaultFullHttpResponse
+import io.netty.handler.codec.http.DefaultHttpHeaders
 import io.netty.handler.codec.http.FullHttpResponse
 import io.netty.handler.codec.http.HttpResponse
 import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.HttpVersion
 import java.nio.charset.StandardCharsets
 import elide.http.Body
 import elide.http.MutableHeaders
@@ -28,7 +32,7 @@ import elide.http.headers.NettyMutableHttpHeaders
 import elide.http.toProtocolVersion
 
 // Implements a platform HTTP response using Netty with mutability.
-@JvmInline internal value class NettyMutableHttpResponse(private val resp: FullHttpResponse):
+@JvmInline public value class NettyMutableHttpResponse internal constructor (private val resp: FullHttpResponse):
   PlatformMutableHttpResponse<HttpResponse> {
   override val response: HttpResponse get() = resp
   override fun build(): Response = NettyHttpResponse(resp)
@@ -60,4 +64,16 @@ import elide.http.toProtocolVersion
         else -> error("Unsupported body type: ${value::class.simpleName}")
       }
     }
+
+  public companion object {
+    @JvmStatic public fun empty(): NettyMutableHttpResponse = NettyMutableHttpResponse(
+      DefaultFullHttpResponse(
+        HttpVersion.HTTP_1_1,
+        HttpResponseStatus.OK,
+        ByteBufAllocator.DEFAULT.buffer(),
+        DefaultHttpHeaders(),
+        DefaultHttpHeaders(),
+      ),
+    )
+  }
 }

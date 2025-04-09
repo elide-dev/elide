@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,10 +14,14 @@ package elide.runtime.intrinsics.server.http
 
 import org.graalvm.polyglot.Source
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.GuestLanguage
 import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotValue
+import elide.runtime.exec.GuestExecutorProvider
+import elide.runtime.gvm.internals.GVMInvocationBindings
 import elide.runtime.gvm.internals.intrinsics.installElideBuiltin
-import elide.runtime.intrinsics.ElideBindings
+import elide.runtime.gvm.internals.js.JsExecutableScript
+import elide.runtime.gvm.internals.js.JsInvocationBindings
+import elide.runtime.intrinsics.server.http.internal.GuestHandler
 import elide.runtime.intrinsics.server.http.internal.HandlerRegistry
 import elide.runtime.intrinsics.server.http.internal.NoopServerEngine
 import elide.runtime.intrinsics.server.http.internal.PipelineRouter
@@ -50,6 +54,47 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
  * (such as `server.start()` or any similar constructs).
  */
 @DelicateElideApi public class HttpServerAgent {
+  private fun initializeForRegistry(
+    handlerRegistry: HandlerRegistry,
+    entrypoint: Source,
+    value: PolyglotValue,
+    router: PipelineRouter? = null,
+  ): PolyglotValue {
+    // if no handlers are registered by virtue of executing the entrypoint, it probably means the script handed back
+    // a suite of exports, which we can use to resolve the entrypoint.
+    return if (handlerRegistry.isEmpty) {
+      JsInvocationBindings.entrypoint(
+        script = JsExecutableScript.of(entrypoint),
+        value = value,
+      ).let { entry ->
+        require(entry.bindings.supported().contains(GVMInvocationBindings.DispatchStyle.SERVER)) {
+          "No server returned or configured by script"
+        }
+        // resolve the server entrypoint
+        val boundEntry = when (val binding = entry.bindings) {
+          is JsInvocationBindings.JsServer,
+          is JsInvocationBindings.JsCompound -> requireNotNull(
+            binding.mapped.values.find {
+              it.info.type == JsInvocationBindings.JsEntrypointType.SERVER
+            }
+          )
+
+          else -> error("Unsupported binding: Please configure or export a server from the entrypoint")
+        }
+        if (router == null) {
+          handlerRegistry.register(GuestHandler.async(boundEntry.value))
+        } else {
+          router.handle(boundEntry.value)
+        }
+        check(!handlerRegistry.isEmpty) { "Failed to register guest handler" }
+        boundEntry.value
+      }
+    } else {
+      // fallback to the regular entrypoint
+      value
+    }
+  }
+
   /**
    * Configure and start a new HTTP server, using the provided [entrypoint] to configure the routing and binding
    * behavior through injected intrinsics.
@@ -62,6 +107,7 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
    */
   public fun run(
     entrypoint: Source,
+    execProvider: GuestExecutorProvider,
     acquireContext: () -> PolyglotContext
   ) {
     // a thread-local registry that re-evaluates the entrypoint on each thread to
@@ -77,7 +123,7 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     // configure the router and server engine
     val config = NettyServerConfig()
     val router = PipelineRouter(handlerRegistry)
-    val engine = NettyServerEngine(config, router)
+    val engine = NettyServerEngine(config, router, execProvider)
 
     // prepare a new context, injecting the router to allow guest code to register
     // handlers; this differs from thread-local initialization in that the router
@@ -85,8 +131,15 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     acquireContext().apply {
       installEngine(engine)
       evaluate(entrypoint).also {
+        initializeForRegistry(
+          handlerRegistry = handlerRegistry,
+          entrypoint = entrypoint,
+          value = it,
+          router = router,
+        )
+
         // automatically start if requested
-        if (config.autoStart) engine.start()
+        if (config.autoStart || !handlerRegistry.isEmpty) engine.start()
       }
     }
   }
@@ -103,12 +156,18 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     registry: HandlerRegistry,
     context: PolyglotContext,
     entrypoint: Source,
-  ) {
+  ): PolyglotValue {
     // inject the registry into the context to allow guest code to register handlers,
     // this is required for correct initialization of the registry since thread-local
     // references to each handler are required
     installEngine(NoopServerEngine(NettyServerConfig(), registry))
-    context.evaluate(entrypoint)
+    return context.evaluate(entrypoint).also {
+      initializeForRegistry(
+        handlerRegistry = registry,
+        entrypoint = entrypoint,
+        value = it,
+      )
+    }
   }
 
   public companion object {
@@ -118,12 +177,6 @@ import elide.runtime.intrinsics.server.http.netty.NettyServerEngine
     /** Install a server [engine] at the standard [ENGINE_BIND_PATH] in this context. */
     private fun installEngine(engine: HttpServerEngine) {
       installElideBuiltin("http", engine)
-    }
-
-    // TODO(@darvld): use a cleaner approach here
-    /** Hack used to resolve a [GuestLanguage] from a raw source without accessing language plugins. */
-    private fun resolveLanguage(source: Source): GuestLanguage = object : GuestLanguage {
-      override val languageId: String = source.language
     }
   }
 }

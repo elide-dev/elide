@@ -12,18 +12,18 @@
  */
 package elide.runtime.intrinsics.server.http.internal
 
+import elide.http.Request
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.js.JsProxy
 import elide.runtime.intrinsics.server.http.HttpContext
 import elide.runtime.intrinsics.server.http.HttpMethod
-import elide.runtime.intrinsics.server.http.HttpRequest
 import elide.runtime.intrinsics.server.http.HttpRouter
 import elide.vm.annotations.Polyglot
 
 /**
- * The HTTP Router resolves [GuestHandler] references for an incoming [HttpRequest].
+ * The HTTP Router resolves [GuestHandler] references for an incoming [Request].
  *
  * Route handlers are registered using the [handle] method, which also writes to an internal [handlerRegistry].
  */
@@ -37,16 +37,26 @@ import elide.vm.annotations.Polyglot
    */
   private val pipeline = mutableListOf<PipelineStage>()
 
+  /**
+   * Register a guest value from the host as an unconditional handler.
+   *
+   * @param handler Handler to register
+   */
+  internal fun handle(handler: PolyglotValue) {
+    val key = handlerRegistry.register(GuestHandler.async(handler))
+    pipeline.add(PipelineStage(key, unconditionalMatcher()))
+  }
+
   @Polyglot override fun handle(method: String?, path: String?, handler: PolyglotValue) {
     // store the handler reference and get the key
-    val key = handlerRegistry.register(GuestHandler.of(handler))
+    val key = handlerRegistry.register(GuestHandler.simple(handler))
 
     // register the handler as a stage in the pipeline
     pipeline.add(PipelineStage(key, compileMatcher(path, method?.let(HttpMethod::valueOf))))
   }
 
   /** Resolve a handler pipeline that iterates over every stage matching the incoming [request]. */
-  internal fun pipeline(request: HttpRequest, context: HttpContext): ResolvedPipeline = sequence {
+  internal fun pipeline(request: Request, context: HttpContext): ResolvedPipeline = sequence {
     // iterate over every handler in the pipeline
     pipeline.forEachIndexed { index, stage ->
       // test the stage against the incoming request
@@ -71,7 +81,14 @@ import elide.vm.annotations.Polyglot
     private val PathVariableRegex = Regex(":(?<$MATCHER_NAME_GROUP>\\w+)")
 
     /**
-     * Returns a function that tests whether an incoming [HttpRequest] should be passed to a handler, using a
+     * Returns a matcher which always evaluates to `true`.
+     */
+    private fun unconditionalMatcher(): PipelineMatcher = { _, _ ->
+      true
+    }
+
+    /**
+     * Returns a function that tests whether an incoming [Request] should be passed to a handler, using a
      * [template] string and optionally filtering by HTTP [method]. Path variables included in the [template] will be
      * captured by the matcher and added to the request proxy.
      *
@@ -99,17 +116,18 @@ import elide.vm.annotations.Polyglot
 
       return matcher@{ request, context ->
         // Filter by HTTP method
-        if (method != null && method != request.method) return@matcher false
+        if (method != null && method.name != request.method.symbol) return@matcher false
 
         // if no matcher template is specified, accept all paths
         if (pattern == null) return@matcher true
 
         // otherwise return true when the pattern matches the requested path
-        val (matchString, params) = if (request.uri.contains("?")) {
+        val urlStr = request.url.toString()
+        val (matchString, params) = if (urlStr.contains("?")) {
           // strip query string from the request URI
-          request.uri.substringBefore("?") to request.uri.substringAfter("?")
+          urlStr.substringBefore("?") to urlStr.substringAfter("?")
         } else {
-          request.uri to null
+          request.url.toString() to null
         }
         val jsParams = params?.split("&")?.associate {
           val (key, value) = it.split("=")

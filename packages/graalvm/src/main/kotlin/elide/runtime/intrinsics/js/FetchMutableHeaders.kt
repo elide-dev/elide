@@ -12,12 +12,13 @@
  */
 package elide.runtime.intrinsics.js
 
+import elide.annotations.API
 import elide.vm.annotations.Polyglot
 
 /**
  * TBD.
  */
-public interface FetchMutableHeaders : FetchHeaders {
+@API public interface FetchMutableHeaders : FetchHeaders {
   /**
    * TBD.
    */

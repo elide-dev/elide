@@ -10,13 +10,24 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
 import io.micronaut.http.HttpRequest
+import io.netty.buffer.ByteBufInputStream
+import org.graalvm.polyglot.Value
 import java.io.InputStream
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import elide.http.Body
+import elide.http.Request
+import elide.http.body.NettyBody
+import elide.http.body.PrimitiveBody
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
+import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.*
 import elide.vm.annotations.Polyglot
 
@@ -26,12 +37,34 @@ internal class FetchRequestIntrinsic internal constructor (
   targetMethod: String = FetchRequest.Defaults.DEFAULT_METHOD,
   requestHeaders: FetchHeaders = FetchHeadersIntrinsic.empty(),
   private val bodyData: InputStream? = null,
-) : FetchMutableRequest {
-  /** TBD. */
+) : FetchMutableRequest, elide.runtime.intrinsics.server.http.HttpRequest {
+  /**
+   * Implements options for the fetch Request constructor.
+   */
+  @JvmRecord data class FetchRequestOptions(
+    val method: String = FetchRequest.Defaults.DEFAULT_METHOD,
+    val headers: FetchHeaders? = null,
+    val body: Value? = null,
+  ) {
+    companion object {
+      @JvmStatic fun from(value: Value): FetchRequestOptions = when {
+        value.hasMembers() -> FetchRequestOptions(
+          method = value.getMember("method").asString(),
+          body = if (value.hasMember("body")) value.getMember("body") else null,
+          headers = when {
+            value.hasMember("headers") -> {
+              val headersValue = value.getMember("headers")
+              if (headersValue.isNull) null else FetchHeaders.from(headersValue)
+            }
+            else -> null
+          },
+        )
+        else -> throw JsError.typeError("Invalid options for Request")
+      }
+    }
+  }
+
   internal companion object Factory : FetchMutableRequest.RequestFactory<FetchMutableRequest> {
-    /**
-     * TBD.
-     */
     @JvmStatic override fun forRequest(request: HttpRequest<*>): FetchMutableRequest {
       return FetchRequestIntrinsic(
         targetUrl = URLIntrinsic.URLValue.fromURL(request.uri),
@@ -42,6 +75,27 @@ internal class FetchRequestIntrinsic internal constructor (
           }
         }),
         bodyData = request.getBody(InputStream::class.java).orElse(null),
+      )
+    }
+
+    @JvmStatic override fun forRequest(request: Request): FetchRequestIntrinsic {
+      return FetchRequestIntrinsic(
+        targetUrl = URLIntrinsic.URLValue.fromString(request.url.toString()),
+        targetMethod = request.method.symbol,
+
+        requestHeaders = FetchHeaders.fromPairs(request.headers.asOrdered().flatMap { header ->
+          header.value.values.map { value ->
+            header.name.name to value
+          }
+        }.toList()),
+
+        bodyData = when (val body = request.body) {
+          is Body.Empty -> null
+          is NettyBody -> ByteBufInputStream(body.unwrap())
+          is PrimitiveBody.StringBody -> body.unwrap().byteInputStream(StandardCharsets.UTF_8)
+          is PrimitiveBody.Bytes -> body.unwrap().inputStream()
+          else -> error("Unrecognized body type: ${request.body}")
+        },
       )
     }
   }
@@ -76,33 +130,33 @@ internal class FetchRequestIntrinsic internal constructor (
 
   // -- Interface: Mutable HTTP Request -- //
 
-  /** @inheritDoc */
   @get:Polyglot @set:Polyglot override var headers: FetchHeaders
     get() = requestHeaders.get()
     set(subject) = requestHeaders.set(subject)
 
-  /** @inheritDoc */
   @get:Polyglot @set:Polyglot override var url: String
     get() = targetUrl.get().toString()
     set(newTarget) = targetUrl.set(URLIntrinsic.URLValue.fromString(newTarget))
 
-  /** @inheritDoc */
   @get:Polyglot @set:Polyglot override var method: String
     get() = targetMethod.get()
     set(value) = targetMethod.set(value)
 
+  override val uri: String get() = targetUrl.get().toString()
+  override val version: String get() = "HTTP/1.1" // @TODO make accurate
+
   // -- Interface: Immutable HTTP Request -- //
 
-  /** @inheritDoc */
+  @get:Polyglot override val bodyUsed: Boolean get() = bodyConsumed.get()
+  @get:Polyglot override val destination: String get() = targetUrl.get().toString()
+
   @get:Polyglot override val body: ReadableStream? get() {
     if (bodyData == null) return null
     if (!bodyConsumed.get()) bodyConsumed.set(true)
     return ReadableStream.wrap(bodyData)
   }
 
-  /** @inheritDoc */
-  @get:Polyglot override val bodyUsed: Boolean get() = bodyConsumed.get()
-
-  /** @inheritDoc */
-  @get:Polyglot override val destination: String get() = targetUrl.get().toString()
+  override fun toString(): String {
+    return "$version $method $url"
+  }
 }

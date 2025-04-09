@@ -12,6 +12,7 @@
  */
 package elide.runtime.gvm.internals.js
 
+import org.graalvm.polyglot.Source
 import java.util.*
 import elide.runtime.gvm.ExecutableScript.ScriptSource
 import elide.runtime.gvm.ExecutableScript.ScriptType
@@ -52,6 +53,11 @@ internal class JsExecutableScript private constructor (
     /** @return JavaScript executable script wrapping the provided [ScriptSource]. */
     @JvmStatic internal fun of(source: ScriptSource, spec: String): JsExecutableScript = JsExecutableScript(
       source to spec
+    )
+
+    /** @return JavaScript executable script wrapping the provided [ScriptSource]. */
+    @JvmStatic internal fun of(source: Source): JsExecutableScript = JsExecutableScript(
+      ScriptSource.fromExtant(source) to source.name,
     )
 
     /** @return JavaScript executable script wrapping the provided [ScriptSource] and explicit [type]. */

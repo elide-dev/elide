@@ -17,8 +17,10 @@ package elide.runtime.javascript
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import jakarta.inject.Singleton
+import kotlinx.atomicfu.atomic
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
+import elide.runtime.gvm.internals.intrinsics.ElideIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
@@ -41,7 +43,7 @@ private const val NAVIGATOR_CLASS_NAME = "Navigator"
 private val NAVIGATOR_CLASS_SYMBOL = NAVIGATOR_CLASS_NAME.asPublicJsSymbol()
 
 // User-Agent token to include in the `navigator.userAgent` property.
-private const val ELIDE_UA_TOKEN = "Elide/alpha-v1"
+private const val ELIDE_UA_TOKEN = "Elide"
 
 /**
  * ## Navigator Built-in
@@ -76,5 +78,5 @@ private const val ELIDE_UA_TOKEN = "Elide/alpha-v1"
     else -> null
   }
 
-  private fun elideUserAgent(): String = ELIDE_UA_TOKEN
+  private fun elideUserAgent(): String = "$ELIDE_UA_TOKEN/${ElideIntrinsic.version()}"
 }

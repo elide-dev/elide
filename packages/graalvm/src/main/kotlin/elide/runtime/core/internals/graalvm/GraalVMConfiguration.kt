@@ -89,9 +89,10 @@ import elide.runtime.core.internals.MutableEngineLifecycle
     override fun registeredBundles(): List<URL> =
       registeredBundles.toImmutableList()
 
+    @Suppress("UNCHECKED_CAST", "KotlinConstantConditions")
     override fun <T> deferred(block: () -> T): Future<T> {
       if (!EXPERIMENTAL_INIT_EXECUTOR) {
-        return Futures.immediateFuture(block.invoke())
+        return Futures.immediateFuture(requireNotNull(block.invoke()))
       }
       val fut = exec.invoke().submit<T> { block.invoke() }
       inFlight.computeIfAbsent("", { LinkedList() }).add(fut)

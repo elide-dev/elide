@@ -12,10 +12,11 @@
  */
 package elide.runtime.intrinsics.server.http.internal
 
-import org.graalvm.polyglot.HostAccess.Export
+import kotlinx.atomicfu.atomic
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.intrinsics.server.http.HttpRouter
+import elide.vm.annotations.Polyglot
 
 /**
  * A Handler Registry manages references to guest values that act as request handlers. [GuestHandler] references are
@@ -24,6 +25,11 @@ import elide.runtime.intrinsics.server.http.HttpRouter
  * @see ThreadLocalHandlerRegistry
  */
 @DelicateElideApi internal abstract class HandlerRegistry : HttpRouter {
+  private val hasHandlers = atomic(false)
+
+  /** Indicate whether handlers are bound. */
+  open val isEmpty: Boolean get() = !hasHandlers.value
+
   /**
    * Register a new [handler] reference, assigned to the next stage in the pipeline.
    *
@@ -40,7 +46,14 @@ import elide.runtime.intrinsics.server.http.HttpRouter
    */
   abstract fun resolve(stage: Int): GuestHandler?
 
-  @Export override fun handle(method: String?, path: String?, handler: PolyglotValue) {
-    register(GuestHandler.of(handler))
+  // Internal access to register pure guest values. In this case, routing is delegated to the application.
+  internal fun handle(guest: PolyglotValue) {
+    require(guest.canExecute()) { "Guest server handlers must be executable" }
+    register(GuestHandler.async(guest))
+  }
+
+  @Polyglot override fun handle(method: String?, path: String?, handler: PolyglotValue) {
+    hasHandlers.value = true
+    register(GuestHandler.simple(handler))
   }
 }

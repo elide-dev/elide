@@ -109,6 +109,20 @@ internal class FetchHeadersIntrinsic private constructor (
         data = concrete.internalDataForCopy(),
       )
     }
+
+    /**
+     * Create headers from a guest [value].
+     *
+     * @return Immutable copy of the provided guest value headers.
+     */
+    @JvmStatic override fun from(value: Value?): FetchHeadersIntrinsic = empty().also {
+      if (value != null) when {
+        value.hasMembers() -> value.memberKeys.forEach { key ->
+          it.data.put(key, value.getMember(key).asString())
+        }
+        else -> error("Invalid headers value; please provide a simple object")
+      }
+    }
   }
 
 
@@ -125,7 +139,7 @@ internal class FetchHeadersIntrinsic private constructor (
       initialValue.isHostObject -> {
         (try {
           initialValue.`as`(FetchHeadersIntrinsic::class.java)
-        } catch (err: ClassCastException) {
+        } catch (_: ClassCastException) {
           throw IllegalArgumentException(
             "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'"
           )
@@ -152,7 +166,7 @@ internal class FetchHeadersIntrinsic private constructor (
         val mapKeysIter = initialValue.hashKeysIterator
         val iterWrap = object: Iterator<String> {
           override fun hasNext(): Boolean = mapKeysIter.hasIteratorNextElement()
-          override fun next(): String = mapKeysIter.iteratorNextElement.asString()
+          override fun next(): String = mapKeysIter.iteratorNextElement?.asString() ?: throw NoSuchElementException()
         }
         val buf = allocateMap()
         iterWrap.forEach { mapKey ->
@@ -203,12 +217,10 @@ internal class FetchHeadersIntrinsic private constructor (
     return op.invoke()
   }
 
-  /** @inheritDoc */
   @Polyglot override fun keys(): JsIterator<String> = lockForIteration {
     JsIteratorFactory.forIterator(data.keys.iterator())
   }
 
-  /** @inheritDoc */
   @Polyglot override fun values(): JsIterator<String> = lockForIteration {
     data.keys.map {
       get(it)!!  // safe to use !! here because we are iterating over known keys.
@@ -217,27 +229,23 @@ internal class FetchHeadersIntrinsic private constructor (
     }
   }
 
-  /** @inheritDoc */
   @Polyglot override fun append(name: String, value: String): Unit = onlyIfUnlocked {
     val has = data.has(name)
     data.append(name, value)
     if (has) trimCache(name)
   }
 
-  /** @inheritDoc */
   @Polyglot override fun delete(name: String): Unit = onlyIfUnlocked {
     data.remove(name)
     trimCache(name)
   }
 
-  /** @inheritDoc */
   @Polyglot override fun set(name: String, value: String): Unit = onlyIfUnlocked {
     val has = data.has(name)
     data.set(name, value)
     if (has) trimCache(name)
   }
 
-  /** @inheritDoc */
   override fun render(flatten: Boolean): Map<String, List<String>> {
     return data.keys.stream().parallel().map {
       val value = data.getAll(it)
@@ -250,5 +258,9 @@ internal class FetchHeadersIntrinsic private constructor (
       { it.first },
       { it.second },
     ))
+  }
+
+  override fun toString(): String {
+    return "Headers(size = ${size})"
   }
 }

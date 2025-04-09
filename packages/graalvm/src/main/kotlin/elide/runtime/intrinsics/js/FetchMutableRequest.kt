@@ -13,13 +13,15 @@
 package elide.runtime.intrinsics.js
 
 import io.micronaut.http.HttpRequest
+import elide.annotations.API
+import elide.http.Request
 import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic
 import elide.vm.annotations.Polyglot
 
 /**
  * TBD.
  */
-public interface FetchMutableRequest : FetchRequest {
+@API public interface FetchMutableRequest : FetchRequest {
   /**
    * TBD.
    */
@@ -43,6 +45,11 @@ public interface FetchMutableRequest : FetchRequest {
      * TBD.
      */
     public fun forRequest(request: HttpRequest<*>): Impl
+
+    /**
+     * TBD.
+     */
+    public fun forRequest(request: Request): Impl
   }
 
   /**
@@ -52,8 +59,13 @@ public interface FetchMutableRequest : FetchRequest {
     /**
      * TBD.
      */
-    @JvmStatic override fun forRequest(request: HttpRequest<*>): FetchMutableRequest {
-      return FetchRequestIntrinsic.forRequest(request)
-    }
+    @JvmStatic override fun forRequest(request: HttpRequest<*>): FetchMutableRequest =
+      FetchRequestIntrinsic.forRequest(request)
+
+    /**
+     * TBD.
+     */
+    @JvmStatic override fun forRequest(request: Request): FetchMutableRequest =
+      FetchRequestIntrinsic.forRequest(request)
   }
 }

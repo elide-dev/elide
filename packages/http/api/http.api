@@ -992,6 +992,74 @@ public abstract interface class elide/http/request/PlatformMutableHttpRequest : 
 	public abstract fun getRequest ()Ljava/lang/Object;
 }
 
+public final class elide/http/response/NettyHttpResponse : elide/http/response/PlatformHttpResponse {
+	public static final synthetic fun box-impl (Lio/netty/handler/codec/http/HttpResponse;)Lelide/http/response/NettyHttpResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lio/netty/handler/codec/http/HttpResponse;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lio/netty/handler/codec/http/HttpResponse;Lio/netty/handler/codec/http/HttpResponse;)Z
+	public fun getBody ()Lelide/http/Body;
+	public static fun getBody-impl (Lio/netty/handler/codec/http/HttpResponse;)Lelide/http/Body;
+	public fun getHeaders ()Lelide/http/Headers;
+	public static fun getHeaders-impl (Lio/netty/handler/codec/http/HttpResponse;)Lelide/http/Headers;
+	public fun getResponse ()Lio/netty/handler/codec/http/HttpResponse;
+	public synthetic fun getResponse ()Ljava/lang/Object;
+	public static fun getResponse-impl (Lio/netty/handler/codec/http/HttpResponse;)Lio/netty/handler/codec/http/HttpResponse;
+	public fun getStatus ()Lelide/http/Status;
+	public static fun getStatus-impl (Lio/netty/handler/codec/http/HttpResponse;)Lelide/http/Status;
+	public fun getTrailers ()Lelide/http/Headers;
+	public static fun getTrailers-impl (Lio/netty/handler/codec/http/HttpResponse;)Lelide/http/Headers;
+	public fun getVersion ()Lelide/http/ProtocolVersion;
+	public static fun getVersion-impl (Lio/netty/handler/codec/http/HttpResponse;)Lelide/http/ProtocolVersion;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lio/netty/handler/codec/http/HttpResponse;)I
+	public synthetic fun toMutable ()Lelide/http/MutableMessage;
+	public fun toMutable ()Lelide/http/MutableResponse;
+	public static fun toMutable-impl (Lio/netty/handler/codec/http/HttpResponse;)Lelide/http/MutableResponse;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lio/netty/handler/codec/http/HttpResponse;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lio/netty/handler/codec/http/HttpResponse;
+}
+
+public final class elide/http/response/NettyMutableHttpResponse : elide/http/response/PlatformMutableHttpResponse {
+	public static final field Companion Lelide/http/response/NettyMutableHttpResponse$Companion;
+	public static final synthetic fun box-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Lelide/http/response/NettyMutableHttpResponse;
+	public synthetic fun build ()Lelide/http/Message;
+	public fun build ()Lelide/http/Response;
+	public static fun build-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Lelide/http/Response;
+	public static final fun empty-XFFgoUU ()Lio/netty/handler/codec/http/FullHttpResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lio/netty/handler/codec/http/FullHttpResponse;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lio/netty/handler/codec/http/FullHttpResponse;Lio/netty/handler/codec/http/FullHttpResponse;)Z
+	public fun getBody ()Lelide/http/Body;
+	public static fun getBody-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Lelide/http/Body;
+	public synthetic fun getHeaders ()Lelide/http/Headers;
+	public fun getHeaders ()Lelide/http/MutableHeaders;
+	public static fun getHeaders-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Lelide/http/MutableHeaders;
+	public fun getResponse ()Lio/netty/handler/codec/http/HttpResponse;
+	public synthetic fun getResponse ()Ljava/lang/Object;
+	public static fun getResponse-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Lio/netty/handler/codec/http/HttpResponse;
+	public fun getStatus ()Lelide/http/Status;
+	public static fun getStatus-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Lelide/http/Status;
+	public synthetic fun getTrailers ()Lelide/http/Headers;
+	public fun getTrailers ()Lelide/http/MutableHeaders;
+	public static fun getTrailers-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Lelide/http/MutableHeaders;
+	public fun getVersion ()Lelide/http/ProtocolVersion;
+	public static fun getVersion-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Lelide/http/ProtocolVersion;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lio/netty/handler/codec/http/FullHttpResponse;)I
+	public fun setBody (Lelide/http/Body;)V
+	public static fun setBody-impl (Lio/netty/handler/codec/http/FullHttpResponse;Lelide/http/Body;)V
+	public fun setStatus (Lelide/http/Status;)V
+	public static fun setStatus-impl (Lio/netty/handler/codec/http/FullHttpResponse;Lelide/http/Status;)V
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lio/netty/handler/codec/http/FullHttpResponse;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lio/netty/handler/codec/http/FullHttpResponse;
+}
+
+public final class elide/http/response/NettyMutableHttpResponse$Companion {
+	public final fun empty-XFFgoUU ()Lio/netty/handler/codec/http/FullHttpResponse;
+}
+
 public abstract interface class elide/http/response/PlatformHttpResponse : elide/http/Response$PlatformResponse {
 	public abstract fun getResponse ()Ljava/lang/Object;
 }

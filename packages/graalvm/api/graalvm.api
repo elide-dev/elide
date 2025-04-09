@@ -101,6 +101,7 @@ public final class elide/runtime/gvm/ExecutableScript$ScriptSource {
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
 	public static final fun fromEmbedded-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
+	public static final fun fromExtant-VA3aAn0 (Lorg/graalvm/polyglot/Source;)Ljava/lang/String;
 	public static final fun fromFile-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun fromResource-VA3aAn0 (Ljava/lang/String;)Ljava/lang/String;
 	public static final fun getLITERAL-ulLWtvI ()Ljava/lang/String;
@@ -512,6 +513,27 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/$ElideIntrin
 	public fun hasBuilder ()Z
 	public fun instantiate ()Ljava/lang/Object;
 	public fun isBuildable ()Z
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/ElideIntrinsic : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic, elide/runtime/gvm/api/ElideAPI, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/gvm/internals/intrinsics/ElideIntrinsic$Companion;
+	public fun <init> ()V
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getProcess ()Lelide/runtime/intrinsics/js/node/ProcessAPI;
+	public fun getVersion ()Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun install (Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;)V
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public static final fun setVersion (Ljava/lang/String;)V
+	public fun supports (Lelide/runtime/gvm/GuestLanguage;)Z
+	public static final fun version ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/internals/intrinsics/ElideIntrinsic$Companion {
+	public final fun setVersion (Ljava/lang/String;)V
+	public final fun version ()Ljava/lang/String;
 }
 
 public final class elide/runtime/gvm/internals/intrinsics/ElideIntrinsicKt {
@@ -2235,6 +2257,7 @@ public final class elide/runtime/gvm/js/JavaScript {
 	public static final field INSTANCE Lelide/runtime/gvm/js/JavaScript;
 	public static final fun embedded (Ljava/lang/String;)Lelide/runtime/gvm/ExecutableScript;
 	public static final fun literal (Ljava/lang/CharSequence;)Lelide/runtime/gvm/ExecutableScript;
+	public static final fun wrapped (Lorg/graalvm/polyglot/Source;)Lelide/runtime/gvm/ExecutableScript;
 }
 
 public final class elide/runtime/gvm/js/JavaScript$Inputs {
@@ -2607,6 +2630,7 @@ public abstract interface class elide/runtime/intrinsics/js/FetchHeaders : elide
 public final class elide/runtime/intrinsics/js/FetchHeaders$DefaultFactory : elide/runtime/intrinsics/js/FetchHeaders$Factory {
 	public fun empty ()Lelide/runtime/intrinsics/js/FetchHeaders;
 	public fun from (Lelide/runtime/intrinsics/js/FetchHeaders;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/FetchHeaders;
 	public fun from ([Lkotlin/Pair;)Lelide/runtime/intrinsics/js/FetchHeaders;
 	public fun fromMap (Ljava/util/Map;)Lelide/runtime/intrinsics/js/FetchHeaders;
 	public fun fromMultiMap (Ljava/util/Map;)Lelide/runtime/intrinsics/js/FetchHeaders;
@@ -2616,6 +2640,7 @@ public final class elide/runtime/intrinsics/js/FetchHeaders$DefaultFactory : eli
 public abstract interface class elide/runtime/intrinsics/js/FetchHeaders$Factory {
 	public abstract fun empty ()Lelide/runtime/intrinsics/js/FetchHeaders;
 	public abstract fun from (Lelide/runtime/intrinsics/js/FetchHeaders;)Lelide/runtime/intrinsics/js/FetchHeaders;
+	public abstract fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/FetchHeaders;
 	public abstract fun from ([Lkotlin/Pair;)Lelide/runtime/intrinsics/js/FetchHeaders;
 	public abstract fun fromMap (Ljava/util/Map;)Lelide/runtime/intrinsics/js/FetchHeaders;
 	public abstract fun fromMultiMap (Ljava/util/Map;)Lelide/runtime/intrinsics/js/FetchHeaders;
@@ -2630,6 +2655,7 @@ public abstract interface class elide/runtime/intrinsics/js/FetchMutableHeaders 
 
 public abstract interface class elide/runtime/intrinsics/js/FetchMutableRequest : elide/runtime/intrinsics/js/FetchRequest {
 	public static final field DefaultFactory Lelide/runtime/intrinsics/js/FetchMutableRequest$DefaultFactory;
+	public static fun forRequest (Lelide/http/Request;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
 	public static fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
 	public abstract fun getHeaders ()Lelide/runtime/intrinsics/js/FetchHeaders;
 	public abstract fun getMethod ()Ljava/lang/String;
@@ -2640,11 +2666,14 @@ public abstract interface class elide/runtime/intrinsics/js/FetchMutableRequest 
 }
 
 public final class elide/runtime/intrinsics/js/FetchMutableRequest$DefaultFactory : elide/runtime/intrinsics/js/FetchMutableRequest$RequestFactory {
+	public fun forRequest (Lelide/http/Request;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
+	public synthetic fun forRequest (Lelide/http/Request;)Lelide/runtime/intrinsics/js/FetchRequest;
 	public fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchMutableRequest;
 	public synthetic fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/FetchMutableRequest$RequestFactory {
+	public abstract fun forRequest (Lelide/http/Request;)Lelide/runtime/intrinsics/js/FetchRequest;
 	public abstract fun forRequest (Lio/micronaut/http/HttpRequest;)Lelide/runtime/intrinsics/js/FetchRequest;
 }
 
@@ -6124,20 +6153,33 @@ public final class elide/runtime/intrinsics/server/http/HttpMethod : java/lang/E
 	public static fun values ()[Lelide/runtime/intrinsics/server/http/HttpMethod;
 }
 
-public abstract interface class elide/runtime/intrinsics/server/http/HttpRequest : elide/runtime/interop/ReadOnlyProxyObject {
-	public abstract fun getBody ()Ljava/lang/String;
+public abstract interface class elide/runtime/intrinsics/server/http/HttpRequest : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/js/FetchRequest {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/HttpRequest$Companion;
+	public abstract fun getBody ()Lelide/runtime/intrinsics/js/ReadableStream;
 	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
-	public abstract fun getMethod ()Lelide/runtime/intrinsics/server/http/HttpMethod;
+	public abstract fun getMethod ()Ljava/lang/String;
 	public abstract fun getUri ()Ljava/lang/String;
+	public abstract fun getUrl ()Ljava/lang/String;
 	public abstract fun getVersion ()Ljava/lang/String;
+	public static fun of (Lelide/http/Request;)Lelide/runtime/intrinsics/server/http/HttpRequest;
 }
 
-public abstract interface class elide/runtime/intrinsics/server/http/HttpResponse : elide/runtime/intrinsics/server/http/ExpressResponseAPI {
+public final class elide/runtime/intrinsics/server/http/HttpRequest$Companion {
+	public final fun of (Lelide/http/Request;)Lelide/runtime/intrinsics/server/http/HttpRequest;
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/HttpResponse : elide/runtime/intrinsics/js/FetchResponse, elide/runtime/intrinsics/server/http/ExpressResponseAPI {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/HttpResponse$Companion;
 	public fun append (Ljava/lang/String;Ljava/lang/String;)V
 	public abstract fun header (Ljava/lang/String;Ljava/lang/String;)V
+	public static fun of (Lelide/http/Response;Lio/netty/channel/ChannelHandlerContext;)Lelide/runtime/intrinsics/server/http/HttpResponse;
 	public abstract fun send (ILorg/graalvm/polyglot/Value;)V
+}
+
+public final class elide/runtime/intrinsics/server/http/HttpResponse$Companion {
+	public final fun of (Lelide/http/Response;Lio/netty/channel/ChannelHandlerContext;)Lelide/runtime/intrinsics/server/http/HttpResponse;
 }
 
 public abstract interface class elide/runtime/intrinsics/server/http/HttpRouter {
@@ -6147,7 +6189,7 @@ public abstract interface class elide/runtime/intrinsics/server/http/HttpRouter 
 public final class elide/runtime/intrinsics/server/http/HttpServerAgent {
 	public static final field Companion Lelide/runtime/intrinsics/server/http/HttpServerAgent$Companion;
 	public fun <init> ()V
-	public final fun run (Lorg/graalvm/polyglot/Source;Lkotlin/jvm/functions/Function0;)V
+	public final fun run (Lorg/graalvm/polyglot/Source;Lelide/runtime/exec/GuestExecutorProvider;Lkotlin/jvm/functions/Function0;)V
 }
 
 public final class elide/runtime/intrinsics/server/http/HttpServerAgent$Companion {

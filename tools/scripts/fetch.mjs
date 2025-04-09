@@ -1,4 +1,3 @@
-console.log("Fetch: ", Fetch)
 console.log("Headers: ", Headers)
 console.log("Request: ", Request)
 console.log("Response: ", Response)

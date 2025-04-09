@@ -13,9 +13,15 @@
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
+import java.io.InputStream
+import java.nio.charset.StandardCharsets
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
+import elide.runtime.gvm.js.JsError
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.*
 import elide.vm.annotations.Polyglot
@@ -41,19 +47,63 @@ internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
     private const val GLOBAL_HEADERS = "Headers"
   }
 
-  /** @inheritDoc */
+  @OptIn(DelicateElideApi::class)
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     // mount `Headers`
-    bindings[GLOBAL_HEADERS.asJsSymbol()] = FetchHeadersIntrinsic::class.java
+    bindings[GLOBAL_HEADERS.asPublicJsSymbol()] = FetchHeadersIntrinsic::class.java
 
     // mount `Request`
-    bindings[GLOBAL_REQUEST.asJsSymbol()] = FetchRequestIntrinsic::class.java
+    bindings[GLOBAL_REQUEST.asPublicJsSymbol()] = ProxyInstantiable {
+      val first = it.getOrNull(0)
+      val second = it.getOrNull(1)
+
+      // first parameter is expected to be a URL string or parsed URL
+      val url: URLIntrinsic.URLValue = when {
+        first != null && first.isProxyObject -> first.asProxyObject<URLIntrinsic.URLValue>()
+        first != null && first.isString -> URLIntrinsic.URLValue.create(first.asString())
+        else -> throw JsError.typeError("First parameter to Request must be a string or URL")
+      }
+      val options = when {
+        second == null || second.isNull -> FetchRequestIntrinsic.FetchRequestOptions()
+        else -> FetchRequestIntrinsic.FetchRequestOptions.from(second)
+      }
+      FetchRequestIntrinsic(
+        targetUrl = url,
+        targetMethod = options.method,
+        requestHeaders = options.headers ?: FetchHeadersIntrinsic.empty(),
+        bodyData = when {
+          options.body == null || options.body.isNull -> null
+          options.body.isString -> options.body.asString().byteInputStream(StandardCharsets.UTF_8)
+          else -> throw JsError.typeError("Body must be a string or byte array")
+        },
+      )
+    }
 
     // mount `Response`
-    bindings[GLOBAL_RESPONSE.asJsSymbol()] = FetchResponseIntrinsic::class.java
+    bindings[GLOBAL_RESPONSE.asPublicJsSymbol()] = ProxyInstantiable {
+      val first = it.getOrNull(0)
+      val second = it.getOrNull(1)
+      if (first == null && second == null) {
+        return@ProxyInstantiable FetchResponseIntrinsic(null, FetchResponseIntrinsic.FetchResponseOptions())
+      }
+
+      val bodyValue: Value? = when {
+        first == null || first.isNull -> null
+        first.isString -> first
+        else -> error("Unsupported `Response` body type")
+      }
+      val options = when {
+        second == null || second.isNull -> FetchResponseIntrinsic.FetchResponseOptions()
+        else -> FetchResponseIntrinsic.FetchResponseOptions.from(second)
+      }
+      FetchResponseIntrinsic(
+        bodyValue?.asString(),
+        options,
+      )
+    }
 
     // mount `fetch` method
-    bindings[GLOBAL_FETCH.asJsSymbol()] = { request: Value ->
+    bindings[GLOBAL_FETCH.asPublicJsSymbol()] = { request: Value ->
       handleFetch(request)
     }
   }
@@ -76,12 +126,10 @@ internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
     else -> error("Unsupported invocation of `fetch`")
   }
 
-  /** @inheritDoc */
   override fun fetch(url: String): JsPromise<FetchResponse> = fetch(
     FetchRequestIntrinsic(url)
   )
 
-  /** @inheritDoc */
   override fun fetch(request: FetchRequest): JsPromise<FetchResponse> {
     TODO("Fetch is not implemented yet")
   }

@@ -1400,6 +1400,7 @@ val jvmDefs = mutableMapOf(
   "io.netty.native.workdir" to nativesPath,
   "io.netty.native.deleteLibAfterLoading" to false.toString(),
   "java.util.concurrent.ForkJoinPool.common.parallelism" to "2",
+  "polyglot.js.esm-eval-returns-exports" to "true",
   // "java.util.concurrent.ForkJoinPool.common.threadFactory" to "",
   // "java.util.concurrent.ForkJoinPool.common.exceptionHandler" to "",
 )

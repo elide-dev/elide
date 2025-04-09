@@ -12,12 +12,13 @@
  */
 package elide.runtime.intrinsics.js
 
+import elide.annotations.API
 import elide.vm.annotations.Polyglot
 
 /**
- * TBD.
+ * # Fetch API
  */
-public interface FetchAPI {
+@API public interface FetchAPI {
   /**
    * TBD.
    */

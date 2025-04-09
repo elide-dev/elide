@@ -12,6 +12,7 @@
  */
 package elide.runtime.gvm
 
+import org.graalvm.polyglot.Source
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.*
@@ -137,6 +138,9 @@ import java.util.*
 
       /** @return Script source which references an embedded script by [name]. */
       @JvmStatic fun fromEmbedded(name: String) = ScriptSource("$PROTOCOL_EMBEDDED://$name")
+
+      /** @return Script source which wraps an existing [source]. */
+      @JvmStatic fun fromExtant(source: Source) = ScriptSource(source.name)
 
       /** Symbol for a literal script. */
       @JvmStatic val LITERAL: ScriptSource = LITERAL_SCRIPT

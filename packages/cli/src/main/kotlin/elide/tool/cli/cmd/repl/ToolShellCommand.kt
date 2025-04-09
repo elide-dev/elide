@@ -72,6 +72,7 @@ import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.extensions.attach
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
@@ -128,6 +129,7 @@ private typealias ContextAccessor = () -> PolyglotContext
 @Singleton internal class ToolShellCommand @Inject constructor(
   private val projectManager: ProjectManager,
   private val workdir: WorkdirManager,
+  private val guestExec: GuestExecutorProvider,
 ) : AbstractSubcommand<ToolState, CommandContext>() {
   internal companion object {
     private const val TOOL_LOGGER_NAME: String = "tool"
@@ -1182,13 +1184,14 @@ private typealias ContextAccessor = () -> PolyglotContext
     language: GuestLanguage,
     ctxAccessor: ContextAccessor,
     source: Source,
+    execProvider: GuestExecutorProvider,
   ) {
     try {
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
       // initialize the server intrinsic and run using the provided source
-      serverAgent.run(entrypoint = source) { resolvePolyglotContext(langs) }
+      serverAgent.run(source, execProvider) { resolvePolyglotContext(langs) }
       phaser.value.register()
       serverRunning.value = true
     } catch (exc: PolyglotException) {
@@ -1232,6 +1235,7 @@ private typealias ContextAccessor = () -> PolyglotContext
       primaryLanguage,
       ctxAccessor,
       source,
+      guestExec,
     ) else try {
       // enter VM context
       logging.trace("Entered VM for script execution ('${primaryLanguage.id}'). Consuming script from: '$label'")

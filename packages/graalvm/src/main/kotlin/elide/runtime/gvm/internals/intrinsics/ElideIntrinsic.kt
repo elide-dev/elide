@@ -17,6 +17,7 @@ package elide.runtime.gvm.internals.intrinsics
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.LinkedList
+import kotlinx.atomicfu.atomic
 import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.GuestLanguage
@@ -27,6 +28,7 @@ import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.node.process.NodeProcess
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ProcessAPI
+import elide.runtime.javascript.NavigatorBuiltin
 import elide.vm.annotations.Polyglot
 
 // Symbol where the main Elide API is installed for guest use.
@@ -45,12 +47,21 @@ public fun installElideBuiltin(name: String, value: Any) {
   ElideIntrinsic.install(name, value)
 }
 
-@Intrinsic(ELIDE_SYMBOL, internal = false) @Singleton internal class ElideIntrinsic :
+@Intrinsic(ELIDE_SYMBOL, internal = false) @Singleton public class ElideIntrinsic :
   ElideAPI,
   ProxyObject,
   AbstractJsIntrinsic() {
-  companion object {
+  public companion object {
     private val SINGLETON = ElideIntrinsic()
+    @JvmStatic private val VERSION_HOLDER = atomic(ELIDE_VERSION_STUBBED)
+
+    @JvmStatic public fun setVersion(value: String) {
+      VERSION_HOLDER.value = value
+    }
+
+    @JvmStatic public fun version(): String {
+      return VERSION_HOLDER.value
+    }
 
     internal fun install(name: String, value: Any) {
       SINGLETON.install(name, value)
@@ -75,7 +86,7 @@ public fun installElideBuiltin(name: String, value: Any) {
   override fun supports(language: GuestLanguage): Boolean = language.engine == "js"
 
   @get:Polyglot override val process: ProcessAPI get() = NodeProcess.obtain()
-  @get:Polyglot override val version: String get() = ELIDE_VERSION_STUBBED
+  @get:Polyglot override val version: String get() = VERSION_HOLDER.value
 
   override fun getMemberKeys(): Array<String> = BASE_ELIDE_PROPS_AND_METHODS + deferredPropsAndMethods.toTypedArray()
   override fun hasMember(key: String?): Boolean = key in BASE_ELIDE_PROPS_AND_METHODS || key in deferredPropsAndMethods

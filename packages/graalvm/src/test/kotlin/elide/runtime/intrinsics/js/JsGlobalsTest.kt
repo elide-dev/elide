@@ -247,8 +247,7 @@ private const val ENABLE_SUPPRESSIONS = true
     "TransformStreamDefaultController",
     "WritableStreamDefaultController",
     "WritableStreamDefaultWriter",
-  ).plus(
-    fetchGlobals
+    "fetch",  // last remaining fetch polyfill
   )).toSortedSet()
 
   // Globals which are expected not to be found host-side.

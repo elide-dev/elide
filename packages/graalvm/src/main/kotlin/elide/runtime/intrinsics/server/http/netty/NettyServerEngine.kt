@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -22,6 +22,7 @@ import java.net.InetSocketAddress
 import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.intrinsics.server.http.HttpServerEngine
 import elide.runtime.intrinsics.server.http.internal.PipelineRouter
 import elide.vm.annotations.Polyglot
@@ -43,6 +44,7 @@ private val HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS = arrayOf(
 @DelicateElideApi internal class NettyServerEngine(
   @get:Polyglot override val config: NettyServerConfig,
   @get:Polyglot override val router: PipelineRouter,
+  private val exec: GuestExecutorProvider,
 ) : HttpServerEngine, ProxyObject {
   /** Thread-safe flag to signal  */
   private val serverRunning = AtomicBoolean(false)
@@ -53,9 +55,7 @@ private val HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS = arrayOf(
   @get:Polyglot override val running: Boolean get() = serverRunning.get()
 
   /** Construct a new [ChannelHandler] used as initializer for client channels. */
-  private fun prepareChannelInitializer(): ChannelHandler {
-    return NettyChannelInitializer(NettyRequestHandler(router))
-  }
+  private fun prepareChannelInitializer(): ChannelHandler = NettyChannelInitializer(NettyRequestHandler(router, exec))
 
   @Polyglot override fun start() {
     logging.debug("Starting server")

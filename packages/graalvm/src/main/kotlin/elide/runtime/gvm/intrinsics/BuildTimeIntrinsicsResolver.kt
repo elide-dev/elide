@@ -31,6 +31,7 @@ import elide.runtime.gvm.internals.intrinsics.js.base64.Base64Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.codec.JsEncodingIntrinsics
 import elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.crypto.WebCryptoIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
@@ -103,6 +104,7 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val diag = NodeDiagnosticsChannelModule()
     @JvmStatic private val cluster = NodeClusterModule()
     @JvmStatic private val events = NodeEventsModule()
+    @JvmStatic private val fetch = FetchIntrinsic()
     @JvmStatic private val console = ConsoleIntrinsic()
     @JvmStatic private val consoleModule = NodeConsoleModule()
     @JvmStatic private val url = URLIntrinsic()
@@ -166,6 +168,7 @@ import elide.runtime.plugins.env.EnvConfig
       readline,
       readlinePromises,
       events,
+      fetch,
       net,
       timers,
       os,

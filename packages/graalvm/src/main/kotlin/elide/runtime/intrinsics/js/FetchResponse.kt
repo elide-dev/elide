@@ -12,6 +12,7 @@
  */
 package elide.runtime.intrinsics.js
 
+import elide.annotations.API
 import elide.vm.annotations.Polyglot
 
 /**
@@ -50,7 +51,7 @@ import elide.vm.annotations.Polyglot
  * Responses can be created from within a JavaScript guest, or received from within a guest context when executing a
  * fetched [FetchRequest] (host permissions permitting).
  */
-public interface FetchResponse {
+@API public interface FetchResponse {
   /** Default values applied to [FetchResponse] interfaces. */
   public object Defaults {
     /** Default value for `type`. */

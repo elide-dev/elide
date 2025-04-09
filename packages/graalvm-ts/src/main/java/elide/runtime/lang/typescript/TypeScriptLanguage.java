@@ -153,7 +153,7 @@ public class TypeScriptLanguage extends TruffleLanguage<JSRealm> {
     var path = tsSource.getPath();
     var truffleFile = path != null ? env.getPublicTruffleFile(path) : null;
     Source jsSource = tsLoader.transpileSource(tsSource, truffleFile);
-    var parsed = (RootCallTarget) env.parseInternal(jsSource, argumentNames.toArray(new String[0]));
+    var parsed = (RootCallTarget) env.parsePublic(jsSource, argumentNames.toArray(new String[0]));
     return parsed.getRootNode().getCallTarget();
   }
 

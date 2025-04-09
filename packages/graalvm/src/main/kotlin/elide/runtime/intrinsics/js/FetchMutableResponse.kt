@@ -12,12 +12,13 @@
  */
 package elide.runtime.intrinsics.js
 
+import elide.annotations.API
 import elide.vm.annotations.Polyglot
 
 /**
  * TBD.
  */
-public interface FetchMutableResponse : FetchResponse {
+@API public interface FetchMutableResponse : FetchResponse {
   /**
    * TBD.
    */

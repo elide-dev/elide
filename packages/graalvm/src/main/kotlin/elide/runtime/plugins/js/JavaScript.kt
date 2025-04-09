@@ -41,11 +41,11 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
   private val scope: InstallationScope,
 ) {
   private fun initializeContext(context: PolyglotContext) {
-    // if applicable, install the env plugin bindings
-    environment?.configure(scope, context, JavaScript)
-
     // apply init-time settings
     config.applyTo(context)
+
+    // if applicable, install the env plugin bindings
+    environment?.configure(scope, context, JavaScript)
 
     // run embedded initialization code
     if (!config.labsConfig.disablePolyfills) {
@@ -129,7 +129,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.shell" to config.interactive,
       "js.v8-compat" to config.v8,
       // Experimental:
-      "js.esm-eval-returns-exports" to config.esm,
       "js.v8-intrinsics" to config.v8,
     )
 

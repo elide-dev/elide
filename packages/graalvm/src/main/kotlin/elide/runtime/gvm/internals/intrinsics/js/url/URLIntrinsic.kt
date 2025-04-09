@@ -1009,13 +1009,13 @@ private const val GLOBAL_URL = "URL"
 
       // -- Factories: JS -- //
 
-      @JvmStatic @Polyglot override fun create(url: URL): URL =
+      @JvmStatic @Polyglot override fun create(url: URL): URLValue =
         fromURL(url as URLValue)
 
-      @JvmStatic @Polyglot override fun create(url: String): URL =
+      @JvmStatic @Polyglot override fun create(url: String): URLValue =
         fromString(url)
 
-      @JvmStatic @Polyglot override fun create(url: String, base: String): URL =
+      @JvmStatic @Polyglot override fun create(url: String, base: String): URLValue =
         fromString(url)  // @TODO(sgammon): relative URLs
 
       @JvmStatic @Polyglot override fun createObjectURL(file: File): URL =

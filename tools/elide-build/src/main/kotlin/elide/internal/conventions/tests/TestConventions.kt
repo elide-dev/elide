@@ -19,7 +19,7 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.testing.Test
 import org.gradle.testing.jacoco.tasks.JacocoReport
-import kotlinx.kover.gradle.plugin.dsl.KoverReportExtension
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
 import elide.internal.conventions.Constants
 import elide.internal.conventions.isCI
 
@@ -32,10 +32,14 @@ internal fun Project.configureTestExecution() {
 
 /** Configure Kover test reports in CI. */
 internal fun Project.configureKover() {
-  extensions.getByType(KoverReportExtension::class.java).apply {
-    defaults {
-      //  generate an XML report when running the `check` task in CI
-      xml { onCheck = isCI }
+  extensions.getByType(KoverProjectExtension::class.java).apply {
+    reports {
+      total {
+        xml {
+          //  generate an XML report when running the `check` task in CI
+          onCheck.set(isCI)
+        }
+      }
     }
   }
 

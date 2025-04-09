@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MagicNumber")
 
 /**
  * Elide Runtime
@@ -24,8 +24,6 @@ import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format.HTML
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format.SARIF
 import java.util.Properties
-import kotlinx.kover.gradle.plugin.dsl.GroupingEntityType
-import kotlinx.kover.gradle.plugin.dsl.MetricType
 import kotlinx.validation.KotlinApiCompareTask
 import elide.internal.conventions.project.Projects
 
@@ -258,8 +256,11 @@ sonar {
 
 // --- Kover ----------------------------------------------------------------------------------------------------------
 //
-koverReport {
-  defaults {
+
+kover {
+  useJacoco(libs.versions.jacoco.get())
+
+  reports {
     filters {
       includes {
         packages("elide")
@@ -286,38 +287,34 @@ koverReport {
       }
     }
 
-    xml {
-      onCheck = false
-    }
+    total {
+      xml {
+        onCheck = false
+      }
 
-    html {
-      onCheck = false
-      title = "Elide Coverage"
-    }
+      html {
+        onCheck = false
+        title = "Elide Coverage"
+      }
 
-    binary {
-      onCheck = true
-    }
+      binary {
+        onCheck = true
+      }
 
-    verify {
-      rule {
-        isEnabled = true
-        entity = GroupingEntityType.APPLICATION
-
-        bound {
-          minValue = 10
-          maxValue = 99
-          metric = MetricType.LINE
-        }
-        bound {
-          minValue = 10
-          maxValue = 99
-          metric = MetricType.BRANCH
-        }
-        bound {
-          minValue = 10
-          maxValue = 99
-          metric = MetricType.INSTRUCTION
+      verify {
+        rule {
+          bound {
+            minValue = 10
+            maxValue = 99
+          }
+          bound {
+            minValue = 10
+            maxValue = 99
+          }
+          bound {
+            minValue = 10
+            maxValue = 99
+          }
         }
       }
     }

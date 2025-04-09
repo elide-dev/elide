@@ -28,6 +28,9 @@ internal val HTTP_SERVER_CONFIG_PROPS_AND_METHODS = arrayOf(
   "onBind",
 )
 
+// Default host to use for HTTP services.
+private const val DEFAULT_ELIDE_HTTP_SERVER_HOST = "localhost"
+
 // Default port to use for HTTP services.
 private const val DEFAULT_ELIDE_HTTP_SERVER_PORT = 8080
 
@@ -42,6 +45,9 @@ private const val DEFAULT_ELIDE_HTTP_SERVER_PORT = 8080
    */
   internal var onBindCallback: GuestCallback? = null
     private set
+
+  /** The host to which the server will bind when listening for connections, defaults to `localhost`. */
+  @Polyglot public open var host: String = DEFAULT_ELIDE_HTTP_SERVER_HOST
 
   /** The port to which the server will bind when listening for connections, defaults to `8080`. */
   @Polyglot public open var port: Int = DEFAULT_ELIDE_HTTP_SERVER_PORT

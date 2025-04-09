@@ -66,9 +66,6 @@ import elide.vm.annotations.Polyglot
     /** Default value for `status` when creating a redirect. */
     public const val DEFAULT_STATUS_REDIRECT: Int = 302
 
-    /** Default value for `statusText`. */
-    public const val DEFAULT_STATUS_TEXT: String = "OK"
-
     /** Default value for `url`. */
     public const val DEFAULT_URL: String = ""
   }
@@ -207,7 +204,7 @@ import elide.vm.annotations.Polyglot
    *
    * See also: [MDN, Response.statusText](https://developer.mozilla.org/en-US/docs/Web/API/Response/statusText).
    */
-  @get:Polyglot public val statusText: String get() = Defaults.DEFAULT_STATUS_TEXT
+  @get:Polyglot public val statusText: String get() = ""
 
   /**
    * ## Response: Type.

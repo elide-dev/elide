@@ -19,6 +19,9 @@ import elide.http.request.NettyHttpRequest
 import elide.http.response.JavaNetHttpResponse
 import elide.http.response.MicronautHttpResponse
 import elide.http.response.NettyHttpResponse
+import io.micronaut.http.HttpRequest as MicronautRequest
+import io.netty.handler.codec.http.HttpRequest as NettyRequest
+import java.net.http.HttpRequest as JavaHttpRequest
 
 /**
  * # HTTP Utilities
@@ -40,13 +43,31 @@ import elide.http.response.NettyHttpResponse
  */
 public object Http {
   /**
+   * HTTP request options.
+   *
+   * Describes options which affect how an HTTP request is expressed, but aren't part of the request itself. Used when
+   * inflating requests to different types.
+   *
+   * @property version HTTP protocol version
+   * @property host Host name
+   * @property port Port number
+   * @property scheme Scheme (e.g. `http` or `https`)
+   */
+  @JvmRecord public data class HttpRequestOptions(
+    public val version: ProtocolVersion = ProtocolVersion.HTTP_1_1,
+    public val host: String? = null,
+    public val port: UShort? = null,
+    public val scheme: String? = null,
+  )
+
+  /**
    * Create an Elide HTTP request from a JDK HTTP request.
    *
    * @param req JDK HTTP request to wrap
    * @return Elide HTTP request
    */
-  @JvmStatic public fun request(req: java.net.http.HttpRequest): Request =
-    JavaNetHttpRequest(req)
+  @JvmStatic public fun request(req: JavaHttpRequest, options: HttpRequestOptions? = null): Request =
+    JavaNetHttpRequest.from(req, options)
 
   /**
    * Create an Elide HTTP request from a Netty HTTP request.
@@ -54,8 +75,8 @@ public object Http {
    * @param req Netty HTTP request to wrap
    * @return Elide HTTP request
    */
-  @JvmStatic public fun request(req: io.netty.handler.codec.http.HttpRequest): Request =
-    NettyHttpRequest(req)
+  @JvmStatic public fun request(req: NettyRequest, options: HttpRequestOptions? = null): Request =
+    NettyHttpRequest.from(req, options)
 
   /**
    * Create an Elide HTTP request from a Micronaut HTTP request.
@@ -64,8 +85,8 @@ public object Http {
    * @param req Micronaut HTTP request to wrap
    * @return Elide HTTP request
    */
-  @JvmStatic public fun <T> request(req: io.micronaut.http.HttpRequest<T>): Request =
-    MicronautHttpRequest(req)
+  @JvmStatic public fun <T> request(req: MicronautRequest<T>, options: HttpRequestOptions? = null): Request =
+    MicronautHttpRequest.from(req, options)
 
   /**
    * Create an Elide HTTP response from a JDK HTTP response.
@@ -102,7 +123,7 @@ public object Http {
  * @receiver JDK HTTP request to convert
  * @return Universal HTTP request type
  */
-public fun java.net.http.HttpRequest.toUniversalHttpRequest(): Request =
+public fun JavaHttpRequest.toUniversalHttpRequest(): Request =
   Http.request(this)
 
 /**
@@ -111,7 +132,7 @@ public fun java.net.http.HttpRequest.toUniversalHttpRequest(): Request =
  * @receiver Netty HTTP request to convert
  * @return Universal HTTP request type
  */
-public fun io.netty.handler.codec.http.HttpRequest.toUniversalHttpRequest(): Request =
+public fun NettyRequest.toUniversalHttpRequest(): Request =
   Http.request(this)
 
 /**
@@ -120,7 +141,7 @@ public fun io.netty.handler.codec.http.HttpRequest.toUniversalHttpRequest(): Req
  * @receiver Micronaut HTTP request to convert
  * @return Universal HTTP request type
  */
-public fun <T> io.micronaut.http.HttpRequest<T>.toUniversalHttpRequest(): Request =
+public fun <T> MicronautRequest<T>.toUniversalHttpRequest(): Request =
   Http.request(this)
 
 /**

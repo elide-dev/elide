@@ -203,12 +203,33 @@ public abstract interface class elide/http/Headers$PlatformHeaders : elide/http/
 
 public final class elide/http/Http {
 	public static final field INSTANCE Lelide/http/Http;
-	public static final fun request (Lio/micronaut/http/HttpRequest;)Lelide/http/Request;
-	public static final fun request (Lio/netty/handler/codec/http/HttpRequest;)Lelide/http/Request;
-	public static final fun request (Ljava/net/http/HttpRequest;)Lelide/http/Request;
+	public static final fun request (Lio/micronaut/http/HttpRequest;Lelide/http/Http$HttpRequestOptions;)Lelide/http/Request;
+	public static final fun request (Lio/netty/handler/codec/http/HttpRequest;Lelide/http/Http$HttpRequestOptions;)Lelide/http/Request;
+	public static final fun request (Ljava/net/http/HttpRequest;Lelide/http/Http$HttpRequestOptions;)Lelide/http/Request;
+	public static synthetic fun request$default (Lio/micronaut/http/HttpRequest;Lelide/http/Http$HttpRequestOptions;ILjava/lang/Object;)Lelide/http/Request;
+	public static synthetic fun request$default (Lio/netty/handler/codec/http/HttpRequest;Lelide/http/Http$HttpRequestOptions;ILjava/lang/Object;)Lelide/http/Request;
+	public static synthetic fun request$default (Ljava/net/http/HttpRequest;Lelide/http/Http$HttpRequestOptions;ILjava/lang/Object;)Lelide/http/Request;
 	public static final fun response (Lio/micronaut/http/HttpResponse;)Lelide/http/Response;
 	public static final fun response (Lio/netty/handler/codec/http/HttpResponse;)Lelide/http/Response;
 	public static final fun response (Ljava/net/http/HttpResponse;)Lelide/http/Response;
+}
+
+public final class elide/http/Http$HttpRequestOptions : java/lang/Record {
+	public synthetic fun <init> (Lelide/http/ProtocolVersion;Ljava/lang/String;Lkotlin/UShort;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/http/ProtocolVersion;Ljava/lang/String;Lkotlin/UShort;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/http/ProtocolVersion;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3-XRpZGF0 ()Lkotlin/UShort;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy-4XFHN7s (Lelide/http/ProtocolVersion;Ljava/lang/String;Lkotlin/UShort;Ljava/lang/String;)Lelide/http/Http$HttpRequestOptions;
+	public static synthetic fun copy-4XFHN7s$default (Lelide/http/Http$HttpRequestOptions;Lelide/http/ProtocolVersion;Ljava/lang/String;Lkotlin/UShort;Ljava/lang/String;ILjava/lang/Object;)Lelide/http/Http$HttpRequestOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun host ()Ljava/lang/String;
+	public final fun port ()Lkotlin/UShort;
+	public final fun scheme ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public final fun version ()Lelide/http/ProtocolVersion;
 }
 
 public final class elide/http/HttpExtensionsJvmKt {
@@ -982,6 +1003,40 @@ public abstract interface class elide/http/headers/PlatformHttpHeaders : elide/h
 
 public abstract interface class elide/http/headers/PlatformMutableHttpHeaders : elide/http/MutableHeaders$PlatformMutableHeaders {
 	public abstract fun getHeaders ()Ljava/lang/Object;
+}
+
+public final class elide/http/request/JavaNetHttpUri : elide/http/HttpUrl$PlatformHttpUrl {
+	public static final field Companion Lelide/http/request/JavaNetHttpUri$Companion;
+	public static final fun absoluteString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/http/request/JavaNetHttpUri;
+	public static fun constructor-impl (Ljava/net/URI;)Lkotlin/Pair;
+	public static fun constructor-impl (Lkotlin/Pair;)Lkotlin/Pair;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public static final fun from-pLZ97CQ (Ljava/net/URI;Lelide/http/Http$HttpRequestOptions;)Lkotlin/Pair;
+	public fun getHost ()Ljava/lang/String;
+	public static fun getHost-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public fun getParams ()Lelide/http/Params;
+	public static fun getParams-impl (Lkotlin/Pair;)Lelide/http/Params;
+	public fun getPath ()Ljava/lang/String;
+	public static fun getPath-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public fun getPort-Mh2AYeg ()S
+	public static fun getPort-Mh2AYeg (Lkotlin/Pair;)S
+	public fun getScheme ()Ljava/lang/String;
+	public static fun getScheme-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public synthetic fun getValue ()Ljava/lang/Object;
+	public fun getValue ()Ljava/net/URI;
+	public static fun getValue-impl (Lkotlin/Pair;)Ljava/net/URI;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/http/request/JavaNetHttpUri$Companion {
+	public final fun from-pLZ97CQ (Ljava/net/URI;Lelide/http/Http$HttpRequestOptions;)Lkotlin/Pair;
 }
 
 public abstract interface class elide/http/request/PlatformHttpRequest : elide/http/Request$PlatformRequest {

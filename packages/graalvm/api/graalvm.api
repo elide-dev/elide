@@ -2733,7 +2733,6 @@ public final class elide/runtime/intrinsics/js/FetchResponse$Defaults {
 	public static final field DEFAULT_REDIRECTED Z
 	public static final field DEFAULT_STATUS I
 	public static final field DEFAULT_STATUS_REDIRECT I
-	public static final field DEFAULT_STATUS_TEXT Ljava/lang/String;
 	public static final field DEFAULT_TYPE Ljava/lang/String;
 	public static final field DEFAULT_URL Ljava/lang/String;
 	public static final field INSTANCE Lelide/runtime/intrinsics/js/FetchResponse$Defaults;
@@ -6197,6 +6196,7 @@ public final class elide/runtime/intrinsics/server/http/HttpServerAgent$Companio
 
 public class elide/runtime/intrinsics/server/http/HttpServerConfig : org/graalvm/polyglot/proxy/ProxyObject {
 	public fun getAutoStart ()Z
+	public fun getHost ()Ljava/lang/String;
 	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
@@ -6205,6 +6205,7 @@ public class elide/runtime/intrinsics/server/http/HttpServerConfig : org/graalvm
 	public fun onBind (Lorg/graalvm/polyglot/Value;)V
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public fun setAutoStart (Z)V
+	public fun setHost (Ljava/lang/String;)V
 	public fun setPort (I)V
 }
 

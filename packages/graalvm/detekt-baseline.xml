@@ -14,6 +14,7 @@
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: implement bodyUsed</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: implement headers</ID>
     <ID>ForbiddenComment:NettyHttpResponse.kt$NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
+    <ID>ForbiddenComment:NettyRequestHandler.kt$// @TODO: write body</ID>
     <ID>ForbiddenComment:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
     <ID>ForbiddenComment:NodePathTest.kt$NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
@@ -27,7 +28,6 @@
     <ID>ForbiddenComment:NodeZlib.kt$UnzipStream$// @TODO: flushing for readables</ID>
     <ID>ForbiddenComment:TypeError.kt$// @TODO: deprecate and replace with type mapping</ID>
     <ID>ImplicitDefaultLocale:NodeOperatingSystem.kt$NodeOperatingSystem.BaseOS$String.format( "%d.%d.%d.%d", (bits and 0x0000000000ff000000L) shr 24, (bits and 0x0000000000ff0000L) shr 16, (bits and 0x0000000000ff00L) shr 8, bits and 0xffL, )</ID>
-    <ID>IteratorNotThrowingNoSuchElementException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$&lt;no name provided> : Iterator</ID>
     <ID>IteratorNotThrowingNoSuchElementException:JsIterator.kt$JsIterator&lt;T> : IteratorProxyIteratorProxyIterable</ID>
     <ID>LargeClass:AbstractJsMapTest.kt$AbstractJsMapTest&lt;MapLike> : AbstractJsTest</ID>
     <ID>LargeClass:URLIntrinsicTest.kt$URLIntrinsicTest : AbstractJsIntrinsicTest</ID>
@@ -70,7 +70,6 @@
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *it.drop(1).toTypedArray())</ID>
     <ID>SpreadOperator:SqliteModule.kt$SqliteDatabaseProxy$(query.asString(), *rest)</ID>
     <ID>SwallowedException:ElideLLMModule.kt$ElideLocalLLMImpl$err: ExecutionException</ID>
-    <ID>SwallowedException:FetchHeadersIntrinsic.kt$FetchHeadersIntrinsic$err: ClassCastException</ID>
     <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$e: java.net.URISyntaxException</ID>
     <ID>SwallowedException:URLIntrinsic.kt$URLIntrinsic.ParsedURL$syntaxErr: java.net.URISyntaxException</ID>
     <ID>SwallowedException:WebCryptoIntrinsicTest.kt$WebCryptoIntrinsicTest$err: Throwable</ID>
@@ -83,7 +82,6 @@
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy.SQLiteTransactionImpl$err: Throwable</ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
-    <ID>UnusedPrivateMember:HttpServerAgent.kt$HttpServerAgent.Companion$private fun resolveLanguage(source: Source): GuestLanguage</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
   </CurrentIssues>
 </SmellBaseline>

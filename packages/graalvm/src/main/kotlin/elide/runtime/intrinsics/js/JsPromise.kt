@@ -43,7 +43,7 @@ public class PromiseRejectedException(public val reason: Any? = null) : RuntimeE
  *
  * @see CompletableJsPromise
  */
-public interface JsPromise<T> : ProxyObject {
+public interface JsPromise<out T> : ProxyObject {
   /** Whether the promise has been resolved or rejected. */
   public val isClosed: Boolean
 

@@ -104,6 +104,8 @@ buildscript {
       url = uri("https://oss.sonatype.org/content/repositories/snapshots")
       content {
         includeGroup("dev.elide")
+        includeGroup("com.google.devtools.ksp")
+        includeGroup("com.google.devtools.ksp.gradle.plugin")
       }
     }
     mavenCentral()

@@ -11,10 +11,14 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
+
 package elide.runtime.gvm.kotlin.feature
 
+import com.oracle.svm.core.jdk.FileSystemProviderSupport
+import jdk.internal.jrtfs.JrtFileSystemProvider
 import org.graalvm.nativeimage.hosted.Feature
-import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
+import elide.runtime.feature.FrameworkFeature
 
 /**
  * ## Kotlin Compiler Feature
@@ -22,8 +26,10 @@ import org.graalvm.nativeimage.hosted.Feature.BeforeAnalysisAccess
  * Configures the Native Image build to be aware of Kotlin language resources that must be installed alongside Elide at
  * runtime to support compilation of Kotlin source.
  */
-@Suppress("unused") internal class KotlinCompilerFeature : Feature {
-  override fun beforeAnalysis(access: BeforeAnalysisAccess) {
-    // Nothing yet.
+@Suppress("unused") internal class KotlinCompilerFeature : FrameworkFeature {
+  override fun getDescription(): String = "Configures the Kotlin compiler"
+
+  override fun afterRegistration(access: Feature.AfterRegistrationAccess?) {
+    FileSystemProviderSupport.register(JrtFileSystemProvider())
   }
 }

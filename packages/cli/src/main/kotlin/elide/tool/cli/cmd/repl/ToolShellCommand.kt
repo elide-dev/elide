@@ -57,7 +57,9 @@ import java.util.function.Supplier
 import java.util.stream.Stream
 import javax.tools.ToolProvider
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -76,15 +78,25 @@ import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
+import elide.runtime.gvm.kotlin.KotlinCompilerConfig
+import elide.runtime.gvm.kotlin.KotlinJarBundleInfo
+import elide.runtime.gvm.kotlin.KotlinLanguage
+import elide.runtime.gvm.kotlin.KotlinPrecompiler
+import elide.runtime.gvm.kotlin.KotlinScriptCallable
 import elide.runtime.intrinsics.server.http.HttpServerAgent
+import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
+import elide.runtime.precompiler.Precompiler
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
+import elide.tool.cli.options.EngineJavaOptions
 import elide.tool.cli.options.EngineJavaScriptOptions
+import elide.tool.cli.options.EngineJvmOptions
+import elide.tool.cli.options.EngineKotlinOptions
 import elide.tool.cli.options.EnginePythonOptions
 import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.err.ErrPrinter
@@ -334,6 +346,27 @@ private typealias ContextAccessor = () -> PolyglotContext
     heading = "%nEngine: Python%n",
   )
   internal var pySettings: EnginePythonOptions = EnginePythonOptions()
+
+  /** Settings specific to JVM. */
+  @ArgGroup(
+    validate = false,
+    heading = "%nEngine: JVM%n",
+  )
+  internal var jvmSettings: EngineJvmOptions = EngineJvmOptions()
+
+  /** Settings specific to Java. */
+  @ArgGroup(
+    validate = false,
+    heading = "%nEngine: Java%n",
+  )
+  internal var javaSettings: EngineJavaOptions = EngineJavaOptions()
+
+  /** Settings specific to Kotlin. */
+  @ArgGroup(
+    validate = false,
+    heading = "%nEngine: Kotlin%n",
+  )
+  internal var kotlinSettings: EngineKotlinOptions = EngineKotlinOptions()
 
   /** File to run within the VM. */
   @Parameters(
@@ -1080,17 +1113,49 @@ private typealias ContextAccessor = () -> PolyglotContext
     }
   }
 
+  private fun KotlinJarBundleInfo.asSource(): Source {
+    TODO("Not yet implemented: ${this::class.simpleName}")
+  }
+
   // Resolve a compiler for the provided language, compile the entrypoint, and return the resolved executable symbol.
-  private fun compileEntrypoint(language: GuestLanguage, ctxAccessor: ContextAccessor, entry: File): Value {
-    when (language) {
+  private fun compileEntrypoint(language: GuestLanguage, ctxAccessor: ContextAccessor, entry: File): ShellRunnable {
+    return when (language) {
       // use the host java compiler, which supports up to the maximum JVM bytecode level anyway
-      JAVA -> ToolProvider.getSystemJavaCompiler().let {
-        error("No way to compile pure Java yet")
+      JAVA -> ShellRunnable.HostExecutable {
+        ToolProvider.getSystemJavaCompiler().let {
+          error("No way to compile pure Java yet")
+        }
       }
 
       // use the embedded kotlin compiler to compile to java bytecode first
-      KOTLIN -> {
-        error("No Kotlin compilation support on-the-fly yet")
+      KOTLIN -> ShellRunnable.HostExecutable {
+        val sourceInfo = Precompiler.PrecompileSourceInfo(
+          name = entry.name,
+          path = entry.toPath(),
+        )
+        val config = KotlinCompilerConfig.DEFAULT
+
+        runBlocking(Dispatchers.IO) {
+          KotlinPrecompiler.precompile(
+            Precompiler.PrecompileSourceRequest(
+              sourceInfo,
+              config,
+            ),
+            entry.readText(StandardCharsets.UTF_8),
+          )
+        }.let {
+          when (it) {
+            null -> error("Failed to precompile Kotlin runnable")
+            is KotlinScriptCallable -> it.apply(
+              ctxAccessor.invoke()
+            )
+            is KotlinJarBundleInfo -> {
+              val ctx = ctxAccessor()
+              val interpreter = GuestKotlinEvaluator(ctx)
+              interpreter.evaluate(it.asSource(), ctx)
+            }
+          }
+        }
       }
 
       else -> error("Compiled sources for language '${language.name}' are not yet supported")
@@ -1205,18 +1270,25 @@ private typealias ContextAccessor = () -> PolyglotContext
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
     ctxAccessor: ContextAccessor,
-    entrypoint: Value,
+    entrypoint: ShellRunnable,
   ) {
-    when (primaryLanguage) {
-      JAVA -> {
-        error("No ability to execute compiled Java yet")
-      }
+    when (entrypoint) {
+      is ShellRunnable.HostExecutable -> entrypoint.value.call()
 
-      KOTLIN -> {
-        error("No ability to execute compiled entrypoint symbols yet")
-      }
+      is ShellRunnable.GuestExecutable -> {
+        require(entrypoint.value.canExecute()) { "Guest compiled entrypoint is not executable" }
+        when (primaryLanguage) {
+          JAVA -> {
+            error("No ability to execute compiled Java yet")
+          }
 
-      else -> error("No ability to execute compiled entrypoint symbols yet for language: $primaryLanguage")
+          KOTLIN -> {
+            error("No ability to execute compiled entrypoint symbols yet")
+          }
+
+          else -> error("No ability to execute compiled entrypoint symbols yet for language: $primaryLanguage")
+        }
+      }
     }
   }
 
@@ -1435,35 +1507,86 @@ private typealias ContextAccessor = () -> PolyglotContext
           pySettings.apply(this)
         }
 
-//        // Secondary Engines: JVM
-//        JVM -> ignoreNotInstalled {
-//          install(elide.runtime.plugins.jvm.Jvm) {
-//            logging.debug("Configuring JVM")
-//            multithreading = !langs.contains(JS)
-//          }
-//
-//          install(elide.runtime.plugins.java.Java) {
-//            logging.debug("Configuring Java")
-//          }
-//        }
-//
-//        GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
-//
-//        KOTLIN -> install(elide.runtime.plugins.kotlin.Kotlin) {
-//          val classpathDir = workdir.cacheDirectory()
-//            .resolve("elide-kotlin-runtime")
-//            .absolutePath
-//
-//          logging.debug("Configuring Kotlin with classpath root $classpathDir")
-//          guestClasspathRoot = classpathDir
-//        }
-//
-//        SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
-//
-//        // Secondary engines: LLVM
-//        LLVM -> install(elide.runtime.plugins.llvm.LLVM) {
-//          // Nothing at this time.
-//        }
+        // Secondary Engines: JVM
+        JVM, KOTLIN, JAVA, SCALA, GROOVY -> {
+          val javaHome: String? = System.getProperty("java.home")
+            ?.ifBlank { null }
+            ?.takeIf { it.isNotEmpty() }
+            ?: System.getenv("JAVA_HOME")
+              ?.ifBlank { null }
+              ?.takeIf { it.isNotEmpty() }
+
+          if (javaHome == null) {
+            logging.warn {
+              "JAVA_HOME is not set; JVM features may not work properly."
+            }
+          } else if (javaHome != System.getProperty("java.home")) {
+            System.setProperty("java.home", javaHome)
+          }
+
+          val classpathDir = workdir.cacheDirectory()
+            .resolve("elide-kotlin-runtime")
+            .absolutePath
+
+          val langResources = gvmResources.resolve("kotlin")
+            .resolve(KotlinLanguage.VERSION)
+            .resolve("lib")
+          val langHomeResources = Path(System.getProperty("user.home"))
+            .resolve("elide")
+            .resolve("resources")
+            .resolve("kotlin")
+            .resolve(KotlinLanguage.VERSION)
+            .resolve("lib")
+          val elideKotlinRuntime = langHomeResources
+            .resolve("elide-kotlin-runtime.jar")
+          val elideKotlinStdlib = langHomeResources
+            .resolve("kotlin-stdlib.jar")
+          val elideKotlinReflect = langHomeResources
+            .resolve("kotlin-reflect.jar")
+          val extras = LinkedList<String>()
+          val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
+          if (extraHome != null) {
+            val extraHomePath = Path(extraHome)
+            extras.add(extraHomePath.absolutePathString())
+            extras.add(extraHomePath.resolve("elide-kotlin-runtime.jar").absolutePathString())
+          }
+          val fullClasspath = (if (extras.isNotEmpty()) extras else mutableListOf()).plus(listOf(
+            classpathDir,
+            langResources.absolutePathString(),
+            langHomeResources.absolutePathString(),
+            elideKotlinRuntime.absolutePathString(),
+            elideKotlinStdlib.absolutePathString(),
+            elideKotlinReflect.absolutePathString(),
+          ))
+
+          configure(elide.runtime.plugins.jvm.Jvm) {
+            logging.debug("Configuring JVM")
+            resourcesPath = gvmResources
+            multithreading = !langs.contains(JS)
+            classpath(fullClasspath)
+            javaHome?.let { guestJavaHome = it }
+          }.also {
+            configure(elide.runtime.plugins.java.Java) {
+              logging.debug("Configuring Java")
+            }
+            when (lang) {
+              KOTLIN -> configure(elide.runtime.plugins.kotlin.Kotlin) {
+                logging.debug("Configuring Kotlin with classpath root $classpathDir")
+                guestClasspathRoots.addAll(fullClasspath)
+                javaHome?.let { guestJavaHome = it }
+                extraHome?.let { guestKotlinHome = it }
+              }
+              GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
+              SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+              else -> {}
+            }
+          }
+        }
+
+        // Secondary engines: LLVM
+        LLVM -> configure(elide.runtime.plugins.llvm.LLVM) {
+          // Nothing at this time.
+        }
 
         else -> {}
       }
@@ -1549,11 +1672,6 @@ private typealias ContextAccessor = () -> PolyglotContext
     val experimentalLangs = allSupportedLangs.filter {
       it.experimental && !it.suppressExperimentalWarning
     }
-    val onByDefaultLangs = EnumSet.copyOf(
-      allSupportedLangs.filter {
-        it.onByDefault
-      },
-    )
     val primaryLang: (File?) -> GuestLanguage = { target ->
       resolvePrimaryLanguage(
         language,
@@ -1567,6 +1685,11 @@ private typealias ContextAccessor = () -> PolyglotContext
         },
       )
     }
+    val onByDefaultLangs = EnumSet.copyOf(
+      allSupportedLangs.filter {
+        it.onByDefault || (!executeLiteral && runnable != null && it.extensions.any { runnable!!.endsWith(it) })
+      },
+    )
 
     // if no entrypoint was specified, attempt to use the one in the project manifest
     if (runnable == null) {

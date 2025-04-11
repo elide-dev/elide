@@ -25,6 +25,7 @@ import org.graalvm.buildtools.gradle.tasks.GenerateResourcesConfigFile
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
+import org.gradle.kotlin.dsl.provideDelegate
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_23
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -32,6 +33,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.LinkedList
 import kotlin.collections.listOf
+import kotlin.text.split
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.toolchain.host.Criteria
 import elide.toolchain.host.TargetCriteria
@@ -109,9 +111,9 @@ val enableTs = true
 val enablePython = true
 val enablePythonDynamic = true
 val enableRuby = false
-val enableLlvm = false
-val enableJvm = false
-val enableKotlin = false
+val enableLlvm = true
+val enableJvm = true
+val enableKotlin = true
 val enableSqlite = true
 val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
@@ -183,7 +185,6 @@ logger.lifecycle("Building for architecture '$elideBinaryArch' (default: '$defau
 val exclusions = listOfNotNull(
   // always exclude the jline native lib; we provide it ourselves
   libs.jline.native,
-  libs.jline.terminal.jna,
 
   // only include jline jni integration if ffm is disabled
   //if (enableFfm) libs.jline.terminal.jni else null,
@@ -242,6 +243,7 @@ val jvmCompileArgs = listOfNotNull(
   "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code.stack=org.graalvm.truffle.runtime",
   "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=org.graalvm.truffle.runtime",
   "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.services=org.graalvm.truffle.runtime",
+  "--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
@@ -383,7 +385,7 @@ buildConfig {
 val pklDependencies: Configuration by configurations.creating
 val cliJitOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
 val cliNativeOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
-
+val embeddedKotlinResources: Configuration by configurations.creating { isCanBeResolved = true }
 val classpathExtras: Configuration by configurations.creating {
   extendsFrom(configurations.runtimeClasspath.get())
 }
@@ -392,6 +394,27 @@ val jvmOnly: Configuration by configurations.creating {
   isCanBeConsumed = false
   isCanBeResolved = true
 }
+
+val stdlibJar = provider {
+  embeddedKotlinResources.filter {
+    it.name.contains("kotlin") && it.name.contains("stdlib")
+  }
+}
+val reflectJar = provider {
+  embeddedKotlinResources.filter {
+    it.name.contains("kotlin") && it.name.contains("reflect")
+  }
+}
+val scriptRuntimeJar = provider {
+  embeddedKotlinResources.filter {
+    it.name.contains("kotlin") && it.name.contains("script-runtime")
+  }
+}
+val kotlinResourceFiles = mapOf(
+  "kotlin-stdlib.jar" to stdlibJar,
+  "kotlin-reflect.jar" to reflectJar,
+  "kotlin-script-runtime.jar" to scriptRuntimeJar,
+)
 
 dependencies {
   aotApplication(libs.graalvm.svm)
@@ -412,6 +435,11 @@ dependencies {
   implementation(libs.dirs)
   implementation(libs.snakeyaml)
   implementation(mn.micronaut.json.core)
+
+  embeddedKotlinResources(libs.kotlin.stdlib)
+  embeddedKotlinResources(libs.kotlin.reflect)
+  embeddedKotlinResources(libs.kotlin.scripting.runtime)
+  embeddedKotlinResources(libs.kotlin.scripting.jvm)
 
   // Native-image transitive compile dependencies
   implementation(libs.jakarta.validation)
@@ -448,6 +476,7 @@ dependencies {
   implementation(libs.jline.console)
   implementation(libs.jline.terminal.core)
   implementation(libs.jline.terminal.jni)
+  implementation(libs.jline.terminal.jna)
 
   if (enableFfm) {
     //implementation(libs.jline.terminal.ffm)
@@ -492,7 +521,11 @@ dependencies {
     if (enableJvm) {
       implementation(projects.packages.graalvmJvm)
       implementation(projects.packages.graalvmJava)
-      if (enableKotlin) implementation(projects.packages.graalvmKt)
+      implementation(projects.packages.graalvmKt)
+    } else {
+      compileOnly(projects.packages.graalvmJvm)
+      compileOnly(projects.packages.graalvmJava)
+      compileOnly(projects.packages.graalvmKt)
     }
   }
 
@@ -728,6 +761,7 @@ val enabledFeatures = listOfNotNull(
   onlyIf(oracleGvm && enableExperimental, "com.oracle.svm.enterprise.truffle.PolyglotIsolateHostFeature"),
   onlyIf(enableJnaStatic && HostManager.hostIsMac, "com.sun.jna.SubstrateStaticJNA"),
   onlyIf(enableSqlite, "elide.runtime.feature.engine.NativeSQLiteFeature"),
+  onlyIf(enableKotlin, "elide.runtime.gvm.kotlin.feature.KotlinCompilerFeature"),
 )
 
 val enabledSecurityProviders = listOfNotNull(
@@ -808,6 +842,9 @@ val initializeAtBuildtime: List<String> = listOf(
   "elide.runtime.lang.typescript",
   "elide.runtime.typescript",
   "elide.runtime.plugins.js.JavaScript",
+  "elide.runtime.plugins.js.JavaScript\$Plugin",
+  "elide.runtime.plugins.AbstractLanguagePlugin",
+  "elide.runtime.plugins.AbstractLanguagePlugin\$Companion",
   "elide.tool.io.RuntimeWorkdirManager",
   "elide.tool.io.RuntimeWorkdirManager\$Companion",
   "elide.tool.err.DefaultErrorHandler",
@@ -816,7 +853,35 @@ val initializeAtBuildtime: List<String> = listOf(
   "elide.tool.err.DefaultStructuredErrorRecorder\$Companion",
   "elide.runtime.core.internals.graalvm.GraalVMEngine\$Companion",
   "elide.runtime.gvm.intrinsics.BuildTimeIntrinsicsResolver",
-)
+).plus(listOf(
+  "org.jetbrains.kotlin.config",
+  "org.jetbrains.kotlin.config.ApiVersion",
+  "org.jetbrains.kotlin.config.LanguageVersion",
+  "org.jetbrains.kotlin.config.MavenComparableVersion",
+  "org.jetbrains.kotlin.com.intellij.openapi.util.Key",
+  "org.jetbrains.kotlin.load.java.ReportLevel",
+  "org.jetbrains.kotlin.load.java.ReportLevel\$Companion",
+  "org.jetbrains.kotlin.load.java.Jsr305Settings",
+  "org.jetbrains.kotlin.load.java.JavaTypeEnhancementState",
+  "org.jetbrains.kotlin.load.java.JavaTypeEnhancementState\$Companion\$DEFAULT\$1",
+  "org.jetbrains.kotlin.com.intellij.util.containers.IntKeyWeakValueHashMap",
+  "org.jetbrains.kotlin.it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap",
+  "org.jetbrains.kotlin.com.intellij.util.containers.IntKeyWeakValueHashMap\$MyReference",
+  "org.eclipse.aether.repository.RemoteRepository",
+  "org.eclipse.aether.repository.RepositoryPolicy",
+
+  // JDK image reader
+  //"jdk.internal.jimage.ImageReader",
+  //"jdk.internal.jimage.BasicImageReader",
+  //"jdk.internal.jimage.ImageReader\$SharedImageReader",
+  //"jdk.internal.jimage.ImageHeader",
+  //"jdk.internal.jimage.ImageReader\$Directory",
+  //"jdk.internal.jimage.ImageReader\$Resource",
+  //"jdk.internal.jrtfs.JrtFileSystemProvider",
+  //"jdk.internal.jimage.ImageStringsReader",
+  //"jdk.internal.jimage.ImageLocation",
+  //"jdk.internal.jimage.decompressor.Decompressor",
+).onlyIf(enableKotlin))
 
 val initializeAtBuildTimeTest: List<String> = listOf(
   "org.junit.platform.launcher.core.LauncherConfig",
@@ -940,7 +1005,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.micronaut.context.env.exp.RandomPropertyExpressionResolver",
   "io.micronaut.context.env.exp.RandomPropertyExpressionResolver${'$'}LazyInit",
 
-  // --- Kotlin -----
+  // --- Kotlin (Runtime) -----
 
   "kotlin.random.AbstractPlatformRandom",
   "kotlin.random.XorWowRandom",
@@ -948,7 +1013,22 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "kotlin.random.Random${'$'}Default",
   "kotlin.random.RandomKt",
   "kotlin.random.jdk8.PlatformThreadLocalRandom",
-  "org.jetbrains.kotlin",
+
+  // --- Kotlin (SDK) -----
+
+  "org.jetbrains.kotlin.com.intellij.psi.LanguageSubstitutors",
+  "org.jetbrains.kotlin.com.intellij.openapi.util.objectTree.ThrowableInterner",
+  "org.jetbrains.kotlin.com.intellij.ide.plugins.PluginEnabler",
+  "org.jetbrains.kotlin.com.intellij.ide.plugins.DisabledPluginsState",
+  "org.jetbrains.kotlin.com.intellij.openapi.vfs.impl.VirtualFileManagerImpl",
+  "org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.SharedImplUtil",
+  "org.jetbrains.kotlin.com.intellij.util.concurrency.AppScheduledExecutorService\$Holder",
+  "org.jetbrains.kotlin.com.intellij.util.CachedValueStabilityChecker",
+  "org.jetbrains.kotlin.com.intellij.DynamicBundle\$DynamicBundleInternal",
+  "org.jetbrains.kotlin.com.intellij.util.CachedValueLeakChecker",
+  "org.jetbrains.kotlin.com.intellij.util.AbstractQuery",
+  "org.jetbrains.kotlin.com.intellij.util.ConcurrentLongObjectHashMap",
+  "org.jetbrains.kotlin.com.intellij.openapi.progress.impl.CoreProgressManager",
 
   // --- Netty -----
 
@@ -1023,17 +1103,8 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   // --- Elide -----
 
-  "elide.runtime.intrinsics.server.http.netty.NettyRequestHandler",
-  "elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
   "elide.runtime.intrinsics.server.http.netty.IOUringTransport",
   "elide.runtime.gvm.internals.node.process.NodeProcess${'$'}NodeProcessModuleImpl",
-
-  // --- Elide CLI -----
-
-  "elide.tool.cli.cmd.help.HelpCommand",
-  "elide.tool.cli.cmd.discord",
-  "elide.tool.cli.cmd.discord.ToolDiscordCommand",
-  "elide.tool.cli.cmd.selftest.SelfTestCommand",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
@@ -1085,6 +1156,11 @@ val commonNativeArgs = listOfNotNull(
   // "-H:TempDirectory=/tmp/elide-native",
   // "-H:+PlatformInterfaceCompatibilityMode",
   // "--trace-object-instantiation=",
+  //"-J-Djdk.image.use.jvm.map=false",
+  // "--trace-object-instantiation=java.lang.Thread",
+  // "--trace-object-instantiation=com.google.common.jimfs.SystemJimfsFileSystemProvider",
+  // "--trace-object-instantiation=java.util.concurrent.ForkJoinWorkerThread\$InnocuousForkJoinWorkerThread",
+  "--trace-object-instantiation=org.jetbrains.kotlin.com.intellij.util.ConcurrentLongObjectHashMap",
   "-H:+UnlockExperimentalVMOptions",
   "-H:-EnterpriseCloneReadElimination",  // fix for oracle/graal#10882
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
@@ -1104,7 +1180,7 @@ val commonNativeArgs = listOfNotNull(
   "--install-exit-handlers",
   // @TODO breaks with old configs, and new configs can't use the agent.
   // "--exact-reachability-metadata",
-  "--enable-url-protocols=http,https",
+  "--enable-url-protocols=http,https,jar",
   "--color=always",
   "--initialize-at-build-time",
   "--link-at-build-time=elide",
@@ -1121,10 +1197,12 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
   "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
+  "-J--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
   "-H:+PreserveFramePointer",
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
+  "-H:-AddAllFileSystemProviders",
   "-H:-IncludeLanguageResources",
   "-H:+CopyLanguageResources",
   "-H:+GenerateEmbeddedResourcesFile",
@@ -1207,6 +1285,7 @@ val commonNativeArgs = listOfNotNull(
   "-Dkotlinx.coroutines.scheduler.core.pool.size=2",
   "-Dkotlinx.coroutines.scheduler.max.pool.size=2",
   "-Dkotlinx.coroutines.scheduler.default.name=ElideDefault",
+  "-H:+AllowJRTFileSystem",
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContexts=$preinitContextsList"),
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true"),
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeAllowExperimentalOptions=true"),
@@ -1382,7 +1461,9 @@ val jvmDefs = mutableMapOf(
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
   "elide.kotlin.verbose" to "false",
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
+  "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
   "elide.gvmResources" to gvmResourcesPath,
+  "jdk.image.use.jvm.map" to "false",
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
   "io.netty.allocator.type" to "adaptive",
@@ -1683,6 +1764,7 @@ graalvmNative {
 
       // compute main compile args
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
+
       buildArgs.add(
         "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeCompile").get().asFile.path}",
       )
@@ -1933,9 +2015,34 @@ tasks {
     }
   }
 
+  val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
+  val intermediateResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
+  val kotlinHomePath: String = kotlinHomeRoot.get().asFile.absolutePath
+
+  val prepKotlinResources by registering(Copy::class) {
+    from(embeddedKotlinResources) {
+      exclude {
+        // don't include the jetbrains annotations
+        it.name.contains("annotations")
+      }
+      rename {
+        // remove version tag from each jar
+        val name = it.split(".").first().split("-")
+          .dropLast(1).joinToString("-")
+        if (name.isEmpty()) {
+          it
+        } else {
+          "$name.jar"
+        }
+      }
+    }
+    destinationDir = intermediateResources.get().dir("lib").asFile
+  }
+
   processResources {
     dependsOn(
       ":packages:graalvm:buildRustNativesForHost",
+      prepKotlinResources,
     )
     filterResources()
 
@@ -1995,6 +2102,9 @@ tasks {
     systemProperty(
       "picocli.ansi",
       "tty",
+    )
+    environment(
+      "KOTLIN_HOME" to kotlinHomePath,
     )
     systemProperty(
       "elide.nativeTransport.v2",
@@ -2130,7 +2240,9 @@ tasks {
         }
       ).joinToString(File.pathSeparator)
     )
-
+    environment(
+      "KOTLIN_HOME" to kotlinHomePath,
+    )
     jvmDefs.map {
       systemProperty(it.key, it.value)
     }

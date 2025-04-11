@@ -38,6 +38,18 @@ internal fun Project.configureKover() {
     useJacoco(Constants.Versions.JACOCO)
 
     reports {
+      filters {
+        excludes {
+          annotatedBy.addAll(
+            "elide.annotations.Generated",
+            "elide.annotations.engine.VMFeature",
+            "com.oracle.svm.core.annotate.TargetClass",
+          )
+          inheritedFrom.addAll(
+            "org.graalvm.nativeimage.hosted.Feature",
+          )
+        }
+      }
       total {
         xml {
           //  generate an XML report when running the `check` task in CI

@@ -16,7 +16,6 @@ package elide.runtime.gvm.kotlin
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.*
 import kotlinx.coroutines.test.runTest
-import kotlin.io.path.exists
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertNotNull
@@ -70,7 +69,6 @@ class KotlinPrecompilerTest {
     assertNotNull(diag)
     assertNotNull(result)
     assertTrue(result.name.isNotEmpty())
-    assertTrue(result.path.exists())
   }
 
   @Test fun `precompile kotlin script`() = runTest {
@@ -98,6 +96,5 @@ class KotlinPrecompilerTest {
     assertNotNull(diag)
     assertNotNull(result)
     assertTrue(result.name.isNotEmpty())
-    assertTrue(result.path.exists())
   }
 }

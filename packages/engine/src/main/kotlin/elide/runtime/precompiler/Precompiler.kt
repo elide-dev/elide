@@ -52,7 +52,7 @@ public sealed interface Precompiler<C, I, O> where C : Precompiler.Configuration
    */
   public interface BundleInfo {
     public val name: String
-    public val path: Path
+    public val path: Path?
   }
 
   /**

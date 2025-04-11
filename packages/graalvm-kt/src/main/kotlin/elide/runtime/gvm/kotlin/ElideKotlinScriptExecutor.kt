@@ -11,24 +11,19 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.gvm.kotlin
 
+import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
-import java.io.File
-import kotlin.script.experimental.api.ScriptEvaluationConfiguration
-import kotlin.script.experimental.host.toScriptSource
-import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
-import kotlin.script.experimental.jvmhost.createJvmCompilationConfigurationFromTemplate
-import elide.runtime.gvm.kotlin.scripting.ElideKotlinScript
-import elide.runtime.precompiler.Precompiler
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
+import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 
 // Kotlin script host executor.
 internal object ElideKotlinScriptExecutor {
-  @Suppress("UNUSED_PARAMETER")
-  @JvmStatic fun execute(source: Precompiler.PrecompileSourceInfo, file: File): Value? {
-    val compilationConfiguration = createJvmCompilationConfigurationFromTemplate<ElideKotlinScript>()
-    val eval = ScriptEvaluationConfiguration()
-    BasicJvmScriptingHost().eval(file.toScriptSource(), compilationConfiguration, eval)
-    return null
+  @JvmStatic fun execute(ctx: PolyglotContext, source: Source): Value? {
+    return GuestKotlinEvaluator(ctx).evaluate(source, ctx)
   }
 }

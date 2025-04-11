@@ -13,6 +13,7 @@
 
 package elide.runtime.gvm.kotlin
 
+import org.graalvm.polyglot.Source
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity.*
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation
@@ -31,7 +32,9 @@ import kotlinx.atomicfu.atomic
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import elide.runtime.Logging
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.diag.*
+import elide.runtime.plugins.kotlin.Kotlin
 import elide.runtime.precompiler.Precompiler
 import elide.runtime.precompiler.Precompiler.*
 import elide.runtime.precompiler.PrecompilerError
@@ -39,7 +42,7 @@ import elide.runtime.precompiler.PrecompilerNotice
 import elide.runtime.precompiler.PrecompilerNoticeWithOutput
 
 // Implements a precompiler which compiles Kotlin to Java bytecode.
-internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinRunnable> {
+public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinRunnable> {
   // Embedded Kotlin version.
   private const val KOTLIN_VERSION = "2.1.20"
   private val kotlinVerbose by lazy {
@@ -74,8 +77,21 @@ internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotl
     }
   }
 
+  @OptIn(DelicateElideApi::class)
   @Suppress("TooGenericExceptionCaught")
   override fun invoke(req: PrecompileSourceRequest<KotlinCompilerConfig>, input: String): KotlinRunnable {
+    val isKotlinScript = req.source.path?.endsWith(".kts") == true || req.source.name.endsWith(".kts")
+    if (isKotlinScript) {
+      // if we are running a kotlin script, wire together the runnable and script template, and return it in a deferred
+      // form; such runs do not need the precompiler.
+      return KotlinScriptCallable(name = req.source.name, path = req.source.path) { ctx ->
+        // execute as a script
+        ElideKotlinScriptExecutor.execute(
+          ctx,
+          Source.newBuilder(Kotlin.languageId, input, req.source.name).build(),
+        )
+      }
+    }
     val closeables = LinkedList<Closeable>()
     val tmproot = Files.createTempDirectory("elide-kt-precompile")
     val tmpfile = tmproot.resolve(req.source.name).toFile()
@@ -108,31 +124,16 @@ internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotl
     val diagnostics = DiagnosticsListener()
     val svcs = Services.EMPTY
     val kotlinMajorMinor = KOTLIN_VERSION.substringBeforeLast('.')
-    val isKotlinScript = req.source.path?.endsWith(".kts") == true || req.source.name.endsWith(".kts")
     val args = ktCompiler.createArguments().apply {
       destinationAsFile = jarfile
-      disableStandardScript = !isKotlinScript
+      disableStandardScript = true
       jdkHome = javaToolchainHome.absolutePathString()
       freeArgs = mutableListOf(tmpfile.absolutePath)
       apiVersion = kotlinMajorMinor
       languageVersion = kotlinMajorMinor
-      useFirLT = !isKotlinScript // fix: fir K2 LT is not supported for scripts yet
+      useFirLT = true
       kotlinVersionRoot?.absolutePathString()?.let {
         kotlinHome = it
-      }
-    }
-    if (isKotlinScript) {
-      // if we are running a kotlin script, wire together the runnable and script template, and return it in a deferred
-      // form; such runs do not need the precompiler.
-      return KotlinScriptCallable(
-        name = req.source.name,
-        path = tmpfile.toPath(),
-      ) {
-        // execute as a script
-        ElideKotlinScriptExecutor.execute(
-          req.source,
-          tmpfile,
-        )
       }
     }
     try {
@@ -173,11 +174,7 @@ internal object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotl
 
     override fun hasErrors(): Boolean = errorsSeen.value
 
-    override fun report(
-severity: CompilerMessageSeverity,
- message: String,
- location: CompilerMessageSourceLocation?
-) {
+    override fun report(severity: CompilerMessageSeverity, message: String, location: CompilerMessageSourceLocation?) {
       if (kotlinVerbose) {
         val msg = "[kotlinc] $severity: $message"
         when {
@@ -194,7 +191,7 @@ severity: CompilerMessageSeverity,
   }
 
   // Service-loader provider for the Kotlin precompiler.
-  class Provider : Precompiler.Provider<KotlinPrecompiler> {
+  public class Provider : Precompiler.Provider<KotlinPrecompiler> {
     override fun get(): KotlinPrecompiler = KotlinPrecompiler
   }
 }

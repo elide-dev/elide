@@ -11,17 +11,22 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:OptIn(DelicateElideApi::class)
+package elide.tool.cli.options
 
-package elide.runtime.gvm.kotlin
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
+import picocli.CommandLine.Option
+import elide.tool.cli.GuestLanguage
 
-import org.graalvm.polyglot.Value
-import java.nio.file.Path
-import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotContext
-import elide.runtime.precompiler.Precompiler.BundleInfo
+/** Java engine options. */
+@Introspected @ReflectiveAccess class EngineJavaOptions : AbstractEngineOptions() {
+  override val engine: GuestLanguage get() = GuestLanguage.JAVA
 
-public data class KotlinJarBundleInfo(override val name: String, override val path: Path) : BundleInfo, KotlinRunnable {
-  override fun apply(context: PolyglotContext): Value? = null // Always null: this represents a JAR on disk.
-  override fun toString(): String = "KotlinJarBundleInfo(name='$name', path=$path)"
+  /** Whether to activate JVM debug mode. */
+  @Option(
+    names = ["--java:debug"],
+    description = ["Enable JVM debug mode"],
+    defaultValue = "false",
+  )
+  override var debug: Boolean = false
 }

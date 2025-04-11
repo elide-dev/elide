@@ -28,7 +28,7 @@ import elide.runtime.gvm.kotlin.feature.KotlinResource
 private const val KOTLIN_ID = "kotlin"
 private const val KOTLIN_NAME = "Kotlin"
 private const val KOTLIN_IMPL = "Kotlin/JVM (Espresso)"
-private const val KOTLIN_IMPL_VERSION = "2.1.20-RC2-r1"
+private const val KOTLIN_IMPL_VERSION = "2.1.20"
 private const val KOTLIN_MIME_TYPE = "application/x-kotlin"
 
 /**
@@ -68,9 +68,12 @@ public class KotlinLanguage : TruffleLanguage<EspressoContext>() {
   }
 
   @Suppress("UNUSED", "UnusedPrivateProperty") public companion object {
+    public const val VERSION: String = KOTLIN_IMPL_VERSION
+
     @JvmStatic private val ESPRESSO: LanguageReference<EspressoLanguage> = LanguageReference.create(
       EspressoLanguage::class.java,
     )
+
     @JvmStatic private val REFERENCE: LanguageReference<KotlinLanguage> = LanguageReference.create(
       KotlinLanguage::class.java,
     )

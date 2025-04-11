@@ -13,6 +13,7 @@
 
 package elide.runtime.plugins.kotlin
 
+import java.nio.file.Files
 import kotlin.io.path.*
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
@@ -57,10 +58,12 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
     private fun resolveOrExtractGuestClasspath(config: KotlinConfig, manifest: LanguagePluginManifest): List<String> {
       return runCatching {
         val entries = manifest.resources[GUEST_CLASSPATH_KEY] ?: return emptyList()
-        val root = Path(config.guestClasspathRoot)
+        val roots = config.guestClasspathRoots.map { Path(it) }
 
         entries.map { entry ->
-          val output = root.resolve(entry)
+          val output = roots.firstNotNullOfOrNull {
+            it.resolve(entry).takeIf { Files.exists(it) }
+          } ?: error("Missing classpath entry $entry in guest classpath roots: ${config.guestClasspathRoots}")
 
           // reuse entry if already extracted
           if (output.exists()) {

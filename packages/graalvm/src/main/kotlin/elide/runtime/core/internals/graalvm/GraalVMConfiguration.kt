@@ -172,7 +172,6 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   }
 
   override fun args(args: Array<String>) {
-    assert(args.isNotEmpty()) { "Entrypoint arguments must not be empty" }
     entrypointArgs.value = args
   }
 

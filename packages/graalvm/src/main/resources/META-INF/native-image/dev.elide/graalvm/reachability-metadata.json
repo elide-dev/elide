@@ -1,6 +1,17 @@
 {
   "reflection": [
     {
+      "type": "org.jetbrains.kotlin.utils.PathUtil"
+    },
+    {
+      "type": "elide.runtime.gvm.kotlin.scripting.ScriptWithMavenDepsConfiguration",
+      "fields": [
+        {
+          "name": "NSTANCE"
+        }
+      ]
+    },
+    {
       "type": "com.google.protobuf.Timestamp$Builder",
       "methods": [
         {
@@ -984,6 +995,10 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "elide.runtime.gvm.kotlin.scripting.ScriptWithMavenDepsConfiguration",
+      "allDeclaredFields": true
     },
     {
       "type": "com.google.protobuf.DescriptorProtos$FeatureSet"
@@ -3636,6 +3651,9 @@
     }
   ],
   "resources": [
+    {
+      "glob": "org/jetbrains/kotlin/utils/PathUtil.class"
+    },
     {
       "glob": "META-INF/services/com.oracle.graal.python.builtins.PythonBuiltins"
     },

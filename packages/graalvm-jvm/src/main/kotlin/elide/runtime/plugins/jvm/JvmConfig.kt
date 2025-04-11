@@ -36,6 +36,11 @@ import elide.runtime.plugins.AbstractLanguageConfig
    */
   public var multithreading: Boolean = true
 
+  /**
+   * Set the path to JAVA_HOME that should be used, if known.
+   */
+  public var guestJavaHome: String? = null
+
   /** Returns a string representation of the classpath to be used by the guest Espresso JVM. */
   internal fun collectClasspath(): String = classpathEntries.joinToString(CLASSPATH_ENTRY_SEPARATOR)
 

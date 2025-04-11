@@ -10,9 +10,9 @@ import jakarta.inject.Inject
 
 abstract class AbstractEntryTest {
   val testRuby = false
-  val testPython = false
+  val testPython = true
   val testJava = false
-  val testKotlin = false
+  val testKotlin = true
   val testSwift = false
   val testWasm = false
 

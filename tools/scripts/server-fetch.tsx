@@ -1,7 +1,7 @@
 /// <reference path="../../packages/types/index.d.ts" />
 // noinspection ES6UnusedImports
 
-import * as React from "react"
+//import * as React from "react"
 import { renderToString } from "react-dom/server"
 
 function Component(props: { message: string }) {

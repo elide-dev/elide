@@ -34,6 +34,10 @@ pluginManagement {
         includeGroup("dev.javamodules")
       }
     }
+    maven {
+      name = "oss-snapshots"
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+    }
     gradlePluginPortal()
     mavenCentral()
     google()
@@ -62,6 +66,13 @@ dependencyResolutionManagement {
       content {
         includeGroup("com.google.guava")
         includeGroup("dev.javamodules")
+      }
+    }
+    maven {
+      name = "oss-snapshots"
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+      content {
+        includeGroup("com.google.devtools.ksp")
       }
     }
     gradlePluginPortal()

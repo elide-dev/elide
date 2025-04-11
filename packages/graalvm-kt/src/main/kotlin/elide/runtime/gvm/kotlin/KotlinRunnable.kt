@@ -11,10 +11,14 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.gvm.kotlin
 
 import org.graalvm.polyglot.Value
-import java.util.concurrent.Callable
+import java.util.function.Function
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
 import elide.runtime.precompiler.Precompiler
 
 /**
@@ -22,4 +26,4 @@ import elide.runtime.precompiler.Precompiler
  *
  * Describes each type of supported Kotlin runnable; includes Kotlin scripts and precompiled Kotlin JARs.
  */
-public sealed interface KotlinRunnable : Callable<Value?>, Precompiler.BundleInfo
+public sealed interface KotlinRunnable : Function<PolyglotContext, Value?>, Precompiler.BundleInfo

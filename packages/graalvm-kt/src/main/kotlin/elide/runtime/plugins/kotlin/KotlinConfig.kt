@@ -26,7 +26,17 @@ import elide.runtime.plugins.AbstractLanguageConfig
    * after the application finishes executing. A reasonable platform-specific default value will be used if this
    * property is not explicitly set.
    */
-  public var guestClasspathRoot: String = defaultClasspathRoot()
+  public var guestClasspathRoots: MutableList<String> = mutableListOf(defaultClasspathRoot())
+
+  /**
+   * Sets the guest-side JAVA_HOME to use, if known.
+   */
+  public var guestJavaHome: String? = null
+
+  /**
+   * Sets the guest-side KOTLIN_HOME to use, if known.
+   */
+  public var guestKotlinHome: String? = null
 
   private companion object {
     /** Resolve a platform-specific temporary directory used to extract guest classpath entries. */

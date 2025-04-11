@@ -11,17 +11,12 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:OptIn(DelicateElideApi::class)
+package elide.tool.cli.cmd.repl
 
-package elide.runtime.gvm.kotlin
+import java.util.concurrent.Callable
+import elide.runtime.core.PolyglotValue
 
-import org.graalvm.polyglot.Value
-import java.nio.file.Path
-import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotContext
-import elide.runtime.precompiler.Precompiler.BundleInfo
-
-public data class KotlinJarBundleInfo(override val name: String, override val path: Path) : BundleInfo, KotlinRunnable {
-  override fun apply(context: PolyglotContext): Value? = null // Always null: this represents a JAR on disk.
-  override fun toString(): String = "KotlinJarBundleInfo(name='$name', path=$path)"
+internal sealed interface ShellRunnable {
+  @JvmInline value class GuestExecutable(val value: PolyglotValue) : ShellRunnable
+  @JvmInline value class HostExecutable(val value: Callable<PolyglotValue>): ShellRunnable
 }

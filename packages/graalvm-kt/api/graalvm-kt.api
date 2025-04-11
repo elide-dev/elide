@@ -16,8 +16,24 @@ public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion {
 	public final fun getDEFAULT ()Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
 }
 
+public final class elide/runtime/gvm/kotlin/KotlinJarBundleInfo : elide/runtime/gvm/kotlin/KotlinRunnable, elide/runtime/precompiler/Precompiler$BundleInfo {
+	public fun <init> (Ljava/lang/String;Ljava/nio/file/Path;)V
+	public fun apply (Lelide/runtime/core/PolyglotContext;)Lorg/graalvm/polyglot/Value;
+	public synthetic fun apply (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/nio/file/Path;
+	public final fun copy (Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getName ()Ljava/lang/String;
+	public fun getPath ()Ljava/nio/file/Path;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/runtime/gvm/kotlin/KotlinLanguage : com/oracle/truffle/api/TruffleLanguage {
 	public static final field Companion Lelide/runtime/gvm/kotlin/KotlinLanguage$Companion;
+	public static final field VERSION Ljava/lang/String;
 	public fun <init> ()V
 	public synthetic fun createContext (Lcom/oracle/truffle/api/TruffleLanguage$Env;)Ljava/lang/Object;
 }
@@ -25,7 +41,28 @@ public final class elide/runtime/gvm/kotlin/KotlinLanguage : com/oracle/truffle/
 public final class elide/runtime/gvm/kotlin/KotlinLanguage$Companion {
 }
 
-public abstract interface class elide/runtime/gvm/kotlin/KotlinRunnable : elide/runtime/precompiler/Precompiler$BundleInfo, java/util/concurrent/Callable {
+public final class elide/runtime/gvm/kotlin/KotlinPrecompiler : elide/runtime/precompiler/Precompiler$BundlePrecompiler {
+	public static final field INSTANCE Lelide/runtime/gvm/kotlin/KotlinPrecompiler;
+	public synthetic fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/String;)Lelide/runtime/gvm/kotlin/KotlinRunnable;
+}
+
+public final class elide/runtime/gvm/kotlin/KotlinPrecompiler$Provider : elide/runtime/precompiler/Precompiler$Provider {
+	public fun <init> ()V
+	public fun get ()Lelide/runtime/gvm/kotlin/KotlinPrecompiler;
+	public synthetic fun get ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/gvm/kotlin/KotlinRunnable : elide/runtime/precompiler/Precompiler$BundleInfo, java/util/function/Function {
+}
+
+public final class elide/runtime/gvm/kotlin/KotlinScriptCallable : elide/runtime/gvm/kotlin/KotlinRunnable, elide/runtime/precompiler/Precompiler$BundleInfo {
+	public fun <init> (Ljava/lang/String;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)V
+	public fun apply (Lelide/runtime/core/PolyglotContext;)Lorg/graalvm/polyglot/Value;
+	public synthetic fun apply (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun getName ()Ljava/lang/String;
+	public fun getPath ()Ljava/nio/file/Path;
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract class elide/runtime/gvm/kotlin/scripting/ElideKotlinScript {
@@ -58,7 +95,21 @@ public final class elide/runtime/plugins/kotlin/Kotlin$Plugin : elide/runtime/pl
 }
 
 public final class elide/runtime/plugins/kotlin/KotlinConfig : elide/runtime/plugins/AbstractLanguageConfig {
-	public final fun getGuestClasspathRoot ()Ljava/lang/String;
-	public final fun setGuestClasspathRoot (Ljava/lang/String;)V
+	public final fun getGuestClasspathRoots ()Ljava/util/List;
+	public final fun getGuestJavaHome ()Ljava/lang/String;
+	public final fun getGuestKotlinHome ()Ljava/lang/String;
+	public final fun setGuestClasspathRoots (Ljava/util/List;)V
+	public final fun setGuestJavaHome (Ljava/lang/String;)V
+	public final fun setGuestKotlinHome (Ljava/lang/String;)V
+}
+
+public final class elide/runtime/plugins/kotlin/KotlinCoreEnvironmentCompanion {
+	public fun <init> ()V
+}
+
+public final class elide/runtime/plugins/kotlin/shell/GuestKotlinEvaluator : elide/runtime/core/GuestLanguageEvaluator {
+	public fun <init> (Lelide/runtime/core/PolyglotContext;)V
+	public fun accepts (Lorg/graalvm/polyglot/Source;)Z
+	public fun evaluate (Lorg/graalvm/polyglot/Source;Lelide/runtime/core/PolyglotContext;)Lorg/graalvm/polyglot/Value;
 }
 

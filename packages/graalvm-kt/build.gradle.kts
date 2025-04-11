@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -45,11 +46,23 @@ elide {
   native {
     target = NativeTarget.LIB
   }
+
+  checks {
+    diktat = false
+  }
 }
+
+val javacFlags = listOf(
+  "--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
+)
 
 val embeddedKotlinResources: Configuration by configurations.creating {
   isCanBeResolved = true
 }
+
+val embeddedKotlinRuntime = layout.projectDirectory.file(
+  "src/main/resources/META-INF/elide/embedded/runtime/kt/elide-kotlin-runtime.jar"
+).asFile
 
 dependencies {
   api(projects.packages.engine)
@@ -66,11 +79,14 @@ dependencies {
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlin.scripting.dependencies)
   implementation(libs.kotlin.scripting.dependencies.maven)
+  api(files(embeddedKotlinRuntime))
+  compileOnly(libs.graalvm.svm)
 
   embeddedKotlinResources(libs.kotlin.stdlib)
   embeddedKotlinResources(libs.kotlin.reflect)
   embeddedKotlinResources(libs.kotlin.scripting.runtime)
   embeddedKotlinResources(libs.kotlin.scripting.jvm)
+  embeddedKotlinResources(files(embeddedKotlinRuntime))
 
   // Testing
   testImplementation(projects.packages.test)
@@ -102,7 +118,7 @@ val filesMap = mapOf(
 
 val jvmDefs = listOf(
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
-  "elide.kotlin.verbose" to "true",
+  "elide.kotlin.verbose" to "false",
 )
 
 val defs = provider {
@@ -148,6 +164,7 @@ val prepKotlinResources by tasks.registering(Copy::class) {
 }
 
 val ktRuntimeTarget = "META-INF/elide/embedded/runtime/kt"
+val ktRuntimeRoot = layout.projectDirectory.dir("src/main/resources/$ktRuntimeTarget")
 val buildKotlinResourcesArchive by tasks.registering(Zip::class) {
   dependsOn(prepKotlinResources)
   archiveFileName = archiveName
@@ -173,6 +190,17 @@ tasks.test {
   )
   environment(
     "KOTLIN_HOME" to kotlinHomePath,
+    "ELIDE_KOTLIN_HOME" to ktRuntimeRoot.asFile.absolutePath,
   )
   requireNotNull(jvmArgs).addAll(testJvmArgs)
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+  compilerOptions {
+    freeCompilerArgs.addAll(javacFlags.map { "-Xjavac-arguments=$it" })
+  }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+  options.compilerArgs.addAll(javacFlags)
 }

@@ -1,0 +1,117 @@
+public abstract interface class elide/exec/Action {
+	public abstract fun execute (Lelide/exec/Action$ActionContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/exec/Action$ActionContext : elide/exec/Context {
+}
+
+public abstract interface class elide/exec/Container {
+	public abstract fun contains (Ljava/lang/Object;)Z
+	public abstract fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getCount-pVg5ArA ()I
+	public abstract fun getValue (Ljava/lang/Object;Lkotlin/reflect/KProperty;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/exec/Container$Mutable : elide/exec/Container {
+	public abstract fun clear ()V
+	public abstract fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public abstract fun set (Ljava/lang/Object;Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/exec/Context {
+}
+
+public abstract interface class elide/exec/Coordinator {
+}
+
+public abstract interface class elide/exec/Coordinator$Options {
+}
+
+public abstract interface class elide/exec/Dependencies {
+}
+
+public abstract interface class elide/exec/Dependency : elide/exec/Input, elide/exec/Satisfiable {
+}
+
+public final class elide/exec/Execution {
+	public static final field INSTANCE Lelide/exec/Execution;
+	public final fun coordinator (Lelide/exec/Coordinator$Options;)Lelide/exec/Coordinator;
+}
+
+public abstract interface class elide/exec/Graph {
+	public abstract fun asSequence ()Lkotlin/sequences/Sequence;
+	public abstract fun getRoot ()Ljava/lang/Object;
+}
+
+public abstract interface class elide/exec/Graph$MutableGraph : elide/exec/Graph {
+	public abstract fun add (Ljava/lang/Object;)V
+	public abstract fun dependsOn (Ljava/lang/Object;Ljava/lang/Object;)V
+}
+
+public abstract interface class elide/exec/Input {
+}
+
+public abstract interface class elide/exec/Inputs {
+}
+
+public abstract interface class elide/exec/Output {
+}
+
+public abstract interface class elide/exec/Outputs {
+}
+
+public abstract interface class elide/exec/Result {
+}
+
+public abstract interface class elide/exec/RootTask : elide/exec/Task {
+	public fun getId ()Lelide/exec/TaskId;
+}
+
+public final class elide/exec/RootTask$RootTaskId : elide/exec/TaskId {
+	public static final field INSTANCE Lelide/exec/RootTask$RootTaskId;
+	public fun compareTo (Lelide/exec/TaskId;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/exec/Satisfiable {
+	public abstract fun getStatus ()Lelide/exec/Status;
+}
+
+public abstract interface class elide/exec/State {
+	public abstract fun getStatus ()Lelide/exec/Status;
+}
+
+public final class elide/exec/Status : java/lang/Enum {
+	public static final field FAIL Lelide/exec/Status;
+	public static final field PENDING Lelide/exec/Status;
+	public static final field QUEUED Lelide/exec/Status;
+	public static final field READY Lelide/exec/Status;
+	public static final field RUNNING Lelide/exec/Status;
+	public static final field SUCCESS Lelide/exec/Status;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getFailure ()Z
+	public final fun getSuccess ()Z
+	public final fun getTerminal ()Z
+	public static fun valueOf (Ljava/lang/String;)Lelide/exec/Status;
+	public static fun values ()[Lelide/exec/Status;
+}
+
+public abstract interface class elide/exec/Task : elide/exec/Satisfiable {
+	public abstract fun getAction ()Lelide/exec/Action;
+	public abstract fun getDependencies ()Lelide/exec/Dependencies;
+	public abstract fun getId ()Lelide/exec/TaskId;
+	public abstract fun getInputs ()Lelide/exec/Inputs;
+	public abstract fun getOutputs ()Lelide/exec/Outputs;
+	public abstract fun getStatus ()Lelide/exec/Status;
+}
+
+public abstract interface class elide/exec/TaskGraph : elide/exec/Graph {
+	public abstract fun getRoot ()Lelide/exec/RootTask;
+}
+
+public abstract interface class elide/exec/TaskId : java/lang/Comparable {
+}
+

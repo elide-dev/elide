@@ -193,6 +193,7 @@ fun main(args: Array<String>): Unit = try {
     runInner(args)
   } catch (err: RuntimeException) {
     unhandledExc.compareAndSet(null, err)
+    err.printStackTrace()
     1
   }
 } finally {

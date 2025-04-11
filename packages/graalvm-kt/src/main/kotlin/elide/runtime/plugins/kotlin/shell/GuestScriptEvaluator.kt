@@ -126,7 +126,7 @@ import elide.runtime.plugins.jvm.interop.guestClass
       loader.defineClass(name.removeSuffix(".class"), guestBytecode)
     }
 
-    // load the compiled script class,
+    // load the compiled script class
     return loader.loadClass(script.scriptClassFQName)
   }
 
@@ -152,10 +152,10 @@ import elide.runtime.plugins.jvm.interop.guestClass
   }
 
   internal companion object {
-    /** Marker string used to verify the correct type of a value returned by the evaluator. */
+    /** Marker string used to verify the correct type returned by the evaluator. */
     internal const val RETURN_TYPE_POLYGLOT_VALUE = "elide.runtime.core.PolyglotValue"
 
-    /** A mutable map of script classes and evaluation results which servers to reuse script executions. */
+    /** A mutable map of script classes and evaluation results for servers to reuse script executions. */
     private val JvmScriptEvaluationConfigurationKeys.evaluatedScripts by PropertiesCollection
       .key<MutableMap<PolyglotValue, EvaluationResult>>(isTransient = true)
 

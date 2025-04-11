@@ -33,6 +33,13 @@ pluginManagement {
         includeGroup("dev.javamodules")
       }
     }
+    maven {
+      name = "oss-snapshots"
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+      content {
+        includeGroup("com.google.devtools.ksp.gradle.plugin")
+      }
+    }
     gradlePluginPortal()
     mavenCentral()
     google()
@@ -51,14 +58,19 @@ plugins {
 }
 
 buildscript {
-  val asm = "9.7.1"
-  val coverage = "1.0.766"
-
+  repositories {
+    maven {
+      name = "oss-snapshots"
+      url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+      content {
+        includeGroup("com.google.devtools.ksp")
+      }
+    }
+  }
   dependencies {
+    val asm = "9.8"
     classpath("org.ow2.asm:asm:$asm")
     classpath("org.ow2.asm:asm-tree:$asm")
-    classpath("org.jetbrains.intellij.deps:intellij-coverage-agent:$coverage")
-    classpath("org.jetbrains.intellij.deps:intellij-coverage-reporter:$coverage")
   }
 }
 
@@ -88,7 +100,6 @@ dependencyResolutionManagement {
         includeGroup("org.capnproto")
         includeGroup("net.java.dev.jna")
         includeGroup("org.jetbrains.reflekt")
-        includeGroup("com.google.devtools.ksp")
         includeGroup("org.pkl-lang")
         includeGroup("dev.karmakrafts")
         includeGroup("dev.karmakrafts.filament")
@@ -118,6 +129,8 @@ dependencyResolutionManagement {
       url = uri("https://oss.sonatype.org/content/repositories/snapshots")
       content {
         includeGroup("dev.elide")
+        includeGroup("com.google.devtools.ksp")
+        includeGroup("com.google.devtools.ksp.gradle.plugin")
       }
     }
     maven {
@@ -151,6 +164,10 @@ dependencyResolutionManagement {
     maven {
       name = "sonatype-snapshots"
       url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+      content {
+        includeGroup("com.google.devtools.ksp")
+        includeGroup("com.google.devtools.ksp.gradle.plugin")
+      }
     }
     mavenCentral()
     maven { url = uri("https://jitpack.io") }

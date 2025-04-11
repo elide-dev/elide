@@ -12,6 +12,8 @@
  */
 package elide.runtime.feature
 
+import com.google.common.jimfs.SystemJimfsFileSystemProvider
+import com.oracle.svm.core.jdk.FileSystemProviderSupport
 import org.graalvm.nativeimage.hosted.Feature
 import elide.annotations.engine.VMFeature
 
@@ -27,6 +29,12 @@ internal class VirtualFilesystem : FrameworkFeature {
 
   override fun beforeAnalysis(access: Feature.BeforeAnalysisAccess) {
     // Nothing to do.
+  }
+
+  @Suppress("DEPRECATION")
+  override fun afterRegistration(access: Feature.AfterRegistrationAccess?) {
+    // register jimfs
+    FileSystemProviderSupport.register(SystemJimfsFileSystemProvider())
   }
 
   override fun getDescription(): String = "Configures guest VFS features"

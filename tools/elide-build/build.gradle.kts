@@ -35,6 +35,20 @@ plugins {
 group = "dev.elide.tools"
 version = rootProject.version as String
 
+repositories {
+  maven {
+    name = "oss-snapshots"
+    url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+    content {
+      includeGroup("com.google.devtools.ksp")
+      includeGroup("com.google.devtools.ksp.gradle.plugin")
+    }
+  }
+  gradlePluginPortal()
+  mavenCentral()
+  google()
+}
+
 gradlePlugin {
   plugins {
     create("elideInternalBuild") {

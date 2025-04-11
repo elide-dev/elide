@@ -70,7 +70,9 @@ public final class elide/runtime/plugins/jvm/Jvm$Plugin : elide/runtime/plugins/
 public final class elide/runtime/plugins/jvm/JvmConfig : elide/runtime/plugins/AbstractLanguageConfig {
 	public final fun classpath (Ljava/lang/Iterable;)V
 	public final fun classpath ([Ljava/lang/String;)V
+	public final fun getGuestJavaHome ()Ljava/lang/String;
 	public final fun getMultithreading ()Z
+	public final fun setGuestJavaHome (Ljava/lang/String;)V
 	public final fun setMultithreading (Z)V
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -18,17 +18,32 @@ import org.jetbrains.kotlin.cli.common.repl.GenericReplCompilingEvaluatorBase
 import org.jetbrains.kotlin.cli.common.repl.ReplCodeLine
 import org.jetbrains.kotlin.cli.common.repl.ReplEvalResult.*
 import org.jetbrains.kotlin.cli.common.repl.ReplFullEvaluator
+import kotlin.script.experimental.api.ResultWithDiagnostics
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
+import kotlin.script.experimental.api.ScriptDiagnostic
 import kotlin.script.experimental.api.ScriptEvaluationConfiguration
+import kotlin.script.experimental.api.compilerOptions
+import kotlin.script.experimental.api.displayName
+import kotlin.script.experimental.api.hostConfiguration
 import kotlin.script.experimental.api.valueOrNull
+import kotlin.script.experimental.host.ScriptingHostConfiguration
 import kotlin.script.experimental.host.toScriptSource
+import kotlin.script.experimental.jvm.defaultJvmScriptingHostConfiguration
+import kotlin.script.experimental.jvm.jvm
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.repl.JvmReplCompiler
 import kotlin.script.experimental.jvmhost.repl.JvmReplEvaluator
+import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.GuestLanguageEvaluator
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
+import elide.runtime.diag.Diagnostic
+import elide.runtime.diag.DiagnosticInfo
+
+// Convert a script compile/evaluation report to a diagnostic.
+private fun ScriptDiagnostic.toDiagnostic(): Diagnostic = DiagnosticInfo.mutable().apply {
+}.build()
 
 /**
  * An interactive Kotlin interpreter capable of compiling and evaluating snippets of code, for use in a REPL. Use the
@@ -53,19 +68,46 @@ import elide.runtime.core.PolyglotValue
  *
  * @see GuestScriptEvaluator
  */
-@DelicateElideApi internal class GuestKotlinEvaluator(private val context: PolyglotContext) : GuestLanguageEvaluator {
+@DelicateElideApi public class GuestKotlinEvaluator(private val context: PolyglotContext) : GuestLanguageEvaluator {
+  /** Scripting host configuration. */
+  private val hostConfig: ScriptingHostConfiguration by lazy {
+    ScriptingHostConfiguration(defaultJvmScriptingHostConfiguration) {
+      jvm {
+        // Nothing at this time.
+      }
+    }
+  }
+
   /** Shared evaluation configuration used by the scripting [host] and the [repl]. */
-  private val evaluationConfig: ScriptEvaluationConfiguration by lazy { ScriptEvaluationConfiguration() }
+  private val evaluationConfig: ScriptEvaluationConfiguration by lazy {
+    ScriptEvaluationConfiguration {
+      jvm {
+        hostConfiguration(hostConfig)
+      }
+    }
+  }
 
   /** Shared compilation configuration used by the [repl]. */
-  private val compilationConfig: ScriptCompilationConfiguration by lazy { ScriptCompilationConfiguration() }
+  private val compilationConfig: ScriptCompilationConfiguration by lazy {
+    ScriptCompilationConfiguration {
+      jvm {
+        displayName("Elide Kotlin")
+        hostConfiguration(hostConfig)
+        // this[CLIConfigurationKeys.PATH_TO_KOTLIN_COMPILER_JAR] = null
+        compilerOptions
+      }
+    }
+  }
 
   /** Guest evaluator used by the scripting [host] and the [repl]. */
   private val evaluator: GuestScriptEvaluator by lazy { GuestScriptEvaluator(context) }
 
+  /** Logging pipe. */
+  private val logger by lazy { Logging.of(GuestKotlinEvaluator::class) }
+
   /** A scripting host for evaluating full Kotlin scripts. */
   private val host: BasicJvmScriptingHost by lazy {
-    BasicJvmScriptingHost(evaluator = GuestScriptEvaluator(context))
+    BasicJvmScriptingHost(hostConfig, evaluator = GuestScriptEvaluator(context))
   }
 
   /** A REPL evaluator capable of compiling a snippet before evaluating it. */
@@ -113,16 +155,32 @@ import elide.runtime.core.PolyglotValue
         is Error.Runtime -> throw RuntimeException("Exception during snippet evaluation", replResult.cause)
       }
 
-      // evaluate the script using the jvm host
-      false -> {
-        val scriptResult = host.eval(
-          script = sourceContents.toScriptSource(),
-          compilationConfiguration = compilationConfig,
-          evaluationConfiguration = evaluationConfig,
-        )
-
-        // return the script instance (similar to how evaluating esm sources returns a module)
-        scriptResult.valueOrNull()?.returnValue?.scriptInstance as? PolyglotValue ?: PolyglotValue.asValue(null)
+      // evaluate the script using the jvm host. return the script instance (similar to how evaluating esm sources
+      // returns a module).
+      false -> when (val returnvalue = host.eval(
+        script = sourceContents.toScriptSource(),
+        compilationConfiguration = compilationConfig,
+        evaluationConfiguration = evaluationConfig,
+      )) {
+        is ResultWithDiagnostics.Success<*> ->
+          returnvalue.valueOrNull()?.returnValue?.scriptInstance as? PolyglotValue ?: PolyglotValue.asValue(null)
+        is ResultWithDiagnostics.Failure -> {
+          val reports = returnvalue.reports
+          reports.map { it to it.toDiagnostic() }.forEach {
+            it.first.render(
+              withSeverity = true,
+              withLocation = true,
+              withException = true,
+              withStackTrace = true,
+            ).let {
+              logger.error {
+                "Failed to evaluate Kotlin script:\n$it"
+              }
+            }
+          }
+          // map compilation/evaluation errors to exceptions
+          error("Script evaluation error: ${reports.size} errors")
+        }
       }
     }
   }

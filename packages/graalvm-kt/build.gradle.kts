@@ -86,6 +86,7 @@ dependencies {
   embeddedKotlinResources(libs.kotlin.reflect)
   embeddedKotlinResources(libs.kotlin.scripting.runtime)
   embeddedKotlinResources(libs.kotlin.scripting.jvm)
+  embeddedKotlinResources(libs.kotlinx.coroutines.core.jvm)
   embeddedKotlinResources(files(embeddedKotlinRuntime))
 
   // Testing

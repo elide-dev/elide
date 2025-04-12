@@ -162,11 +162,11 @@ jobs:
         run: |
           echo "SCCACHE_GHA_ENABLED=true" >> $GITHUB_ENV
           echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
-      - name: "Setup: GraalVM (Java 23)"
+      - name: "Setup: GraalVM (Java 24)"
         uses: graalvm/setup-graalvm@01ed653ac833fe80569f1ef9f25585ba2811baab # v1.3.3
         with:
           distribution: "graalvm"
-          java-version: "23"
+          java-version: "24"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Python (3.12)"
         uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0

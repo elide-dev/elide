@@ -56,7 +56,7 @@ jobs:
         uses: graalvm/setup-graalvm@01ed653ac833fe80569f1ef9f25585ba2811baab # v1.3.3
         with:
           distribution: "graalvm"
-          java-version: 23
+          java-version: 24
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: "auth"
         name: "Setup: Authorize Service Account"

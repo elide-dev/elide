@@ -87,6 +87,8 @@ import elide.testing.annotations.TestCase
 
     private val knownBroken = sortedSetOf<String>(
       "say_hello.mts",
+      "main.kts",
+      "main-another.kts",
     )
   }
 

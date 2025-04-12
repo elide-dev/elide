@@ -12,6 +12,7 @@
  */
 package elide.runtime.plugins
 
+import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.HostAccess
@@ -53,23 +54,35 @@ private val defaultContextBuilder = Context.newBuilder()
 // Default context for pre-warming.
 private val defaultContext = defaultContextBuilder.build()
 
+// JIT compilation enabled by default in GraalVM.
+private val truffleJitEnabled = (
+  System.getProperty("truffle.TruffleRuntime") != "com.oracle.truffle.api.impl.DefaultTruffleRuntime"
+)
+
 // Initialize default engine settings.
 @OptIn(DelicateElideApi::class)
 private fun Engine.Builder.initializeDefaultEngine(): Engine.Builder = apply {
   allowExperimentalOptions(true)
-  useSystemProperties(false)
 
-  setOptions(
-    "engine.Mode" to "latency",
-  )
-  enableOptions(
-    "engine.BackgroundCompilation",
-    "engine.UsePreInitializedContext",
-    "engine.Compilation",
-    "engine.MultiTier",
-    "engine.Splitting",
-    "engine.OSR",
-  )
+  // on jvm, we need to honor system properties
+  if (ImageInfo.inImageCode()) {
+    useSystemProperties(false)
+  }
+
+  // in non-optimizing runtime circumstances, we can't enable jit features
+  if (truffleJitEnabled) {
+    setOptions(
+      "engine.Mode" to "latency",
+    )
+    enableOptions(
+      "engine.BackgroundCompilation",
+      "engine.UsePreInitializedContext",
+      "engine.Compilation",
+      "engine.MultiTier",
+      "engine.Splitting",
+      "engine.OSR",
+    )
+  }
 }
 
 // Default host access privileges.

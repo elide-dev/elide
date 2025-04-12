@@ -205,22 +205,22 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     private const val EXPERIMENTAL_DROP_INTERNALS = false
 
     /** Whether internal symbols should be withheld from guest code. */
-    private val shouldDropInternals = System.getProperty("elide.internals") != "true"
+    @JvmStatic private val shouldDropInternals = System.getProperty("elide.internals") != "true"
 
     /** Whether to enable output/input stream access by guest languages (by default). */
-    private val enableStreams = System.getProperty("elide.js.vm.enableStreams", "false")
+    @JvmStatic private val enableStreams = System.getProperty("elide.js.vm.enableStreams", "false")
 
     /** Logger used for engine instances */
-    private val engineLogger by lazy { Logging.named("elide:engine") }
+    @JvmStatic private val engineLogger by lazy { Logging.named("elide:engine") }
 
     /** Whether to emit trace messages for aux cache usage. */
-    private val traceCache = System.getProperty("elide.traceCache", "false") == "true"
+    @JvmStatic private val traceCache = System.getProperty("elide.traceCache", "false") == "true"
 
     /** Whether to use the auxiliary engine cache. */
-    private val enableAuxCache = System.getProperty("elide.auxCache", "false") == "true"
+    @JvmStatic private val enableAuxCache = System.getProperty("elide.auxCache", "false") == "true"
 
     /** Whether the auxiliary cache is actually enabled. */
-    private val useAuxCache = (
+    @JvmStatic private val useAuxCache = (
       ENABLE_AUX_CACHE &&
       enableAuxCache &&
       System.getProperty("elide.test") != "true" &&
@@ -231,12 +231,20 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
       !Platform.includedIn(Platform.WINDOWS::class.java)  // disabled on windows - not supported
     )
 
+    // JIT compilation enabled by default in GraalVM.
+    @JvmStatic private val truffleJitEnabled = (
+      System.getProperty("truffle.TruffleRuntime") != "com.oracle.truffle.api.impl.DefaultTruffleRuntime"
+    )
+
     /**
      * Creates a new [GraalVMEngine] using the provided [configuration]. This method triggers the [EngineCreated] event
      * for registered plugins.
      */
     @Suppress("SpreadOperator", "LongMethod")
-    public fun create(configuration: GraalVMConfiguration, lifecycle: MutableEngineLifecycle): GraalVMEngine {
+    @JvmStatic public fun create(
+      configuration: GraalVMConfiguration,
+      lifecycle: MutableEngineLifecycle,
+    ): GraalVMEngine {
       val auxCachePath = System.getProperty("elide.cachePath")?.ifBlank { null }
 
       val languages = configuration.languages.flatMap {
@@ -265,24 +273,26 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
         logHandler(EngineLogHandler(engineLogger))
 
         // jit compile on second root call
-        option(
-          "engine.FirstTierMinInvokeThreshold",
-          "2",
-        )
-        option(
-          "engine.LastTierCompilationThreshold",
-          "2000",
-        )
+        if (truffleJitEnabled) {
+          option(
+            "engine.FirstTierMinInvokeThreshold",
+            "2",
+          )
+          option(
+            "engine.LastTierCompilationThreshold",
+            "2000",
+          )
 
-        // isolate options
-        if (ENABLE_ISOLATES) {
-          engineLogger.debug { "Isolates are active (lang: 'js')" }
-          option("engine.UntrustedCodeMitigation", "none")
-          option("engine.SpawnIsolate", "js")
-          option("engine.MaxIsolateMemory", "2GB")
+          // isolate options
+          if (ENABLE_ISOLATES) {
+            engineLogger.debug { "Isolates are active (lang: 'js')" }
+            option("engine.UntrustedCodeMitigation", "none")
+            option("engine.SpawnIsolate", "js")
+            option("engine.MaxIsolateMemory", "2GB")
+          }
         }
 
-        if (useAuxCache) {
+        if (truffleJitEnabled && useAuxCache) {
           var auxCacheReady = true
           var creatingAuxCache = System.getProperty("elide.writeAuxCache") == "true"
           val auxCacheParent: Path =

@@ -210,6 +210,15 @@ val jvmDefs = mapOf(
   "java.library.path" to javaLibPath.get(),
 )
 
+val testJvmDefs = jvmDefs.plus(listOf(
+  "elide.test" to "true",
+  "elide.internals" to "true",
+  "elide.js.preloadModules" to "false",
+  "elide.js.vm.enableStreams" to "true",
+  "java.util.concurrent.ForkJoinPool.common.parallelism" to "4",
+  "truffle.TruffleRuntime" to "com.oracle.truffle.api.impl.DefaultTruffleRuntime",
+))
+
 val initializeAtRunTime = listOfNotNull(
   "elide.runtime.intrinsics.server.http.netty.NettyRequestHandler",
   "elide.runtime.intrinsics.server.http.netty.NettyHttpResponse",
@@ -595,21 +604,24 @@ tasks {
     // must be root project so that test scripts can be resolved during smoke tests
     workingDir = rootProject.layout.projectDirectory.asFile
     maxHeapSize = "8G"
+    maxParallelForks = 4
     environment("ELIDE_TEST", "true")
-    systemProperty("elide.test", "true")
-    systemProperty("elide.internals", "true")
     systemProperty("elide.natives", nativesPath)
-    systemProperty("elide.js.preloadModules", "false")
-    systemProperty("elide.js.vm.enableStreams", "true")
-    systemProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "4")
     systemProperty("java.library.path", javaLibPath.get().toString())
+    testJvmDefs.forEach {
+      systemProperty(it.key, it.value)
+    }
 
     jvmArgs(listOf(
       "--add-modules=jdk.unsupported",
       "--enable-native-access=ALL-UNNAMED",
-      "-XX:+UseG1GC",
+      "--sun-misc-unsafe-memory-access=allow",
+      "--illegal-native-access=allow",
       "-XX:+UnlockExperimentalVMOptions",
+      "-XX:+UseG1GC",
       "-XX:+TrustFinalNonStaticFields",
+      "-Xnoclassgc",
+      "-Xshare:auto",
     ))
 
     if (enableToolchains) javaLauncher = gvmLauncher

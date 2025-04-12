@@ -1,7 +1,7 @@
 [versions]
 micronaut-core = "4.8.9"
 micronaut-context = "4.8.9"
-micronaut-platform = "4.7.6"
+micronaut-platform = "4.8.0"
 micronaut-picocli = "5.7.0"
 micronaut-graal = "4.8.9"
 micronaut-runtime = "4.8.9"

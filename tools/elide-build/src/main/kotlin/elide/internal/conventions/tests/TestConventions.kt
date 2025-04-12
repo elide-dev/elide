@@ -19,14 +19,10 @@ import com.adarshr.gradle.testlogger.theme.ThemeType
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.testing.Test
-import org.gradle.jvm.toolchain.JavaLauncher
-import org.gradle.jvm.toolchain.JavaToolchainSpec
-import org.gradle.kotlin.dsl.systemProperties
 import org.gradle.kotlin.dsl.the
 import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
-import kotlin.collections.plus
 import elide.internal.conventions.Constants
 import elide.internal.conventions.isCI
 
@@ -65,8 +61,17 @@ internal fun Test.configureTestVm(toolchain: Int) {
     ))
   }
 
-  systemProperties.putAll(defs.toMap())
-  jvmArgs.addAll(args)
+  defs.toMap().forEach {
+    if (it.key !in systemProperties) {
+      systemProperties[it.key] = it.value
+    }
+  }
+
+  args.forEach {
+    if (it !in jvmArgs) {
+      jvmArgs.add(it)
+    }
+  }
 }
 
 /** Configure Kover test reports in CI. */

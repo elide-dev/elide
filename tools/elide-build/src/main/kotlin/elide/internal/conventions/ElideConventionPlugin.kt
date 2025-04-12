@@ -239,8 +239,10 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
       if (conventions.kotlin.requested && kover) configureKover()
       if (conventions.jvm.requested && jacoco) configureJacoco()
 
-      tasks.withType<Test>().configureEach {
-        configureTestVm(jvmToolchain)
+      afterEvaluate {
+        tasks.withType<Test>().configureEach {
+          configureTestVm(jvmToolchain)
+        }
       }
     }
   }

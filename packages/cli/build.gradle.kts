@@ -235,14 +235,6 @@ val jvmOnlyCompileArgs: List<String> = listOfNotNull(
 val jvmCompileArgs = listOfNotNull(
   "--add-modules=jdk.unsupported",
   "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
-  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.aarch64=com.oracle.truffle.enterprise.svm",
-  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.amd64=com.oracle.truffle.enterprise.svm",
-  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code=com.oracle.truffle.enterprise.svm",
-  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=com.oracle.truffle.enterprise.svm",
-  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code=org.graalvm.truffle.runtime",
-  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code.stack=org.graalvm.truffle.runtime",
-  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=org.graalvm.truffle.runtime",
-  "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.services=org.graalvm.truffle.runtime",
   "--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",

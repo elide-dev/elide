@@ -195,7 +195,7 @@ val exclusions = listOfNotNull(
 
 // Java Launcher (GraalVM at either EA or LTS)
 val edgeJvmTarget = 24
-val stableJvmTarget = 23
+val stableJvmTarget = 24
 
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val stableJvm = JavaVersion.toVersion(stableJvmTarget)

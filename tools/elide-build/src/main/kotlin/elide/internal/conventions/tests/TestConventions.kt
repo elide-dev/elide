@@ -19,10 +19,14 @@ import com.adarshr.gradle.testlogger.theme.ThemeType
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.testing.Test
+import org.gradle.jvm.toolchain.JavaLauncher
+import org.gradle.jvm.toolchain.JavaToolchainSpec
+import org.gradle.kotlin.dsl.systemProperties
 import org.gradle.kotlin.dsl.the
 import org.gradle.testing.jacoco.plugins.JacocoPluginExtension
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
+import kotlin.collections.plus
 import elide.internal.conventions.Constants
 import elide.internal.conventions.isCI
 
@@ -31,6 +35,38 @@ internal fun Project.configureTestExecution() {
   tasks.withType(Test::class.java).configureEach {
     maxParallelForks = Constants.Tests.MAX_PARALLEL_FORKS
   }
+}
+
+/** Configure VM args and aspects of test running. */
+internal fun Test.configureTestVm(toolchain: Int) {
+  val defs = mutableListOf<Pair<String, String>>(
+    "elide.test" to "true",
+    "elide.internals" to "true",
+    "truffle.TruffleRuntime" to "com.oracle.truffle.api.impl.DefaultTruffleRuntime",
+  )
+  val args = mutableListOf<String>(
+    "-XX:+UnlockExperimentalVMOptions",
+    "-XX:+UseG1GC",
+    "-XX:+TrustFinalNonStaticFields",
+    "-Xshare:auto",
+  )
+  if (toolchain > 21) {
+    // add args for regular native access; enable unsupported modules (for unsafe)
+    args.addAll(listOf(
+      "--add-modules=jdk.unsupported",
+      "--enable-native-access=ALL-UNNAMED",
+    ))
+  }
+  if (toolchain > 23) {
+    // add args for native access at jvm24+
+    args.addAll(listOf(
+      "--sun-misc-unsafe-memory-access=allow",
+      "--illegal-native-access=allow",
+    ))
+  }
+
+  systemProperties.putAll(defs.toMap())
+  jvmArgs.addAll(args)
 }
 
 /** Configure Kover test reports in CI. */

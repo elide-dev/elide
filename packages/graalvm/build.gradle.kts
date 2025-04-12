@@ -211,12 +211,9 @@ val jvmDefs = mapOf(
 )
 
 val testJvmDefs = jvmDefs.plus(listOf(
-  "elide.test" to "true",
-  "elide.internals" to "true",
   "elide.js.preloadModules" to "false",
   "elide.js.vm.enableStreams" to "true",
   "java.util.concurrent.ForkJoinPool.common.parallelism" to "4",
-  "truffle.TruffleRuntime" to "com.oracle.truffle.api.impl.DefaultTruffleRuntime",
 ))
 
 val initializeAtRunTime = listOfNotNull(
@@ -611,18 +608,6 @@ tasks {
     testJvmDefs.forEach {
       systemProperty(it.key, it.value)
     }
-
-    jvmArgs(listOf(
-      "--add-modules=jdk.unsupported",
-      "--enable-native-access=ALL-UNNAMED",
-      "--sun-misc-unsafe-memory-access=allow",
-      "--illegal-native-access=allow",
-      "-XX:+UnlockExperimentalVMOptions",
-      "-XX:+UseG1GC",
-      "-XX:+TrustFinalNonStaticFields",
-      "-Xnoclassgc",
-      "-Xshare:auto",
-    ))
 
     if (enableToolchains) javaLauncher = gvmLauncher
   }

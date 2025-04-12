@@ -12,12 +12,6 @@
  */
 package elide.runtime.intrinsics.js
 
-import elide.runtime.intrinsics.js.stream.ByteLengthQueuingStrategy
-import elide.runtime.intrinsics.js.stream.CountQueuingStrategy
-import elide.runtime.intrinsics.js.stream.ReadableByteStreamController
-import elide.runtime.intrinsics.js.stream.ReadableStreamBYOBReader
-import elide.runtime.intrinsics.js.stream.ReadableStreamBYOBRequest
-
 /**
  * # Stream
  *

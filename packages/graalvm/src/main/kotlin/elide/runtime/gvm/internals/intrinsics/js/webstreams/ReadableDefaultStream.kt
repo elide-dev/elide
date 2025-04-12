@@ -1,13 +1,13 @@
-package elide.runtime.gvm.internals.intrinsics.js.webstreams.readable
+package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import com.google.common.util.concurrent.AtomicDouble
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
-import elide.runtime.gvm.internals.intrinsics.js.webstreams.readable.ReadableDefaultStream.ReadResult
-import elide.runtime.intrinsics.js.CompletableJsPromise
-import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.intrinsics.js.*
+import elide.runtime.intrinsics.js.ReadableStream.ReadResult
 import elide.runtime.intrinsics.js.err.TypeError
+import elide.runtime.intrinsics.js.stream.*
 import elide.vm.annotations.Polyglot
 
 /** Shorthand for a completable promise used to define read queues. */
@@ -19,14 +19,8 @@ private typealias DefaultReadRequest = CompletableJsPromise<ReadResult>
  */
 internal class ReadableDefaultStream internal constructor(
   override val source: ReadableStreamSource,
-  override val strategy: ReadableStreamQueuingStrategy,
-) : ReadableStream() {
-  /**
-   * Encapsulates the result of a read; [done] indicates whether the [chunk] is the final value that will be available
-   * from the source.
-   */
-  data class ReadResult(val chunk: Any?, val done: Boolean)
-
+  override val strategy: QueueingStrategy = QueueingStrategy.Default,
+) : AbstractReadableStream() {
   /** An arbitrary [chunk] value with an attached [size], as calculated by the stream's queueing strategy. */
   data class SizedChunk(val chunk: Any?, val size: Double)
 
@@ -34,24 +28,25 @@ internal class ReadableDefaultStream internal constructor(
    * [`ReadableStreamDefaultController`](https://streams.spec.whatwg.org/#rs-default-controller-class) spec
    * implementation, including all the exposed fields and methods in the spec.
    */
-  private inner class ReadableStreamDefaultController : ReadableStreamController {
+  private inner class ControllerImpl : ReadableStreamDefaultController {
     /** Atomic controller state flag. */
     private val controllerState = AtomicInteger(CONTROLLER_STARTED)
 
-    /** Desired total size for the inbound queue, used for backpressure control. */
-    val desiredSize: Double?
+    override val desiredSize: Double?
       @Polyglot get() = when (streamState.get()) {
         STREAM_CLOSED -> 0.0
         STREAM_READABLE -> strategy.highWaterMark() - sourceChunksSize.get()
         else -> null
       }
 
-    init {
-      // setup the source
+    fun setup() {
+      // set up the source
       runCatching { source.start(this) }
-        .onFailure(::error)
+        .onFailure {
+          error(it)
+        }
         .onSuccess {
-          controllerState.set(CONTROLLER_STARTED)
+          controllerState.compareAndSet(CONTROLLER_UNINITIALIZED, CONTROLLER_STARTED)
           if (shouldPull()) pull()
         }
     }
@@ -75,32 +70,20 @@ internal class ReadableDefaultStream internal constructor(
       return source.cancel(reason)
     }
 
-    /**
-     * Close the controller and the associated stream. If there are undelivered chunks, the stream will not be closed
-     * until they are claimed.
-     */
-    @Polyglot fun close() {
+    @Polyglot override fun close() {
       if (controllerState.getAndSet(CONTROLLER_CLOSING) == CONTROLLER_CLOSING) return
       // don't close the stream if there are undelivered elements
       if (sourceChunks.isEmpty()) this@ReadableDefaultStream.close()
     }
 
-    /**
-     * Shut down the controller and associated stream with the given error [reason]. Unlike [close], this method does
-     * not wait for undelivered elements to be claimed, all unread data will be lost.
-     */
-    @Polyglot fun error(reason: Any? = null) {
+    @Polyglot override fun error(reason: Any?) {
       if (streamState.get() != STREAM_READABLE) return
       sourceChunks.clear()
       sourceChunksSize.set(0.0)
       this@ReadableDefaultStream.error(reason)
     }
 
-    /**
-     * Enqueue a new chunk, making it available immediately for readers. If any pending read requests are found, the
-     * chunk will be delivered directly without using the queue.
-     */
-    @Polyglot fun enqueue(chunk: Any? = null) {
+    @Polyglot override fun enqueue(chunk: Any?) {
       // check the controller isn't closing or closed
       if (controllerState.get() == CONTROLLER_CLOSING || streamState.get() != STREAM_READABLE) {
         throw TypeError.create("Controller is closing or stream is not readable")
@@ -166,16 +149,14 @@ internal class ReadableDefaultStream internal constructor(
     }
   }
 
-
   /**
    * [`ReadableStreamDefaultReader`](https://streams.spec.whatwg.org/#default-reader-class) spec
    * implementation, including all the exposed fields and methods in the spec.
    */
-  private inner class ReadableStreamDefaultReader : ReadableStreamReader {
-    /** A promised that completes when the reader is closed, and rejects when the reader errors. */
-    @Polyglot val closed: CompletableJsPromise<Unit> = CompletableJsPromise()
+  private inner class ReadableStreamDefaultReaderImpl : ReadableStreamDefaultReader {
+    @Polyglot override val closed: CompletableJsPromise<Unit> = JsPromise()
 
-    init {
+    fun setup() {
       // early closure
       when (streamState.get()) {
         STREAM_CLOSED -> closed.resolve(Unit)
@@ -184,16 +165,17 @@ internal class ReadableDefaultStream internal constructor(
       }
     }
 
-    /** Read a chunk from the stream, returning a promise that is fulfilled with the result. */
-    @Polyglot fun read(): JsPromise<ReadResult> {
-      if (closed.isDone) throw TypeError.create("Reader has been closed")
+    @Polyglot override fun read(): JsPromise<ReadResult> {
+      if (reader.get() !== this) throw TypeError.create("Reader is detached")
       return when (streamState.get()) {
         STREAM_READABLE -> {
           // consume queued chunks if available; if the stream was closed after polling, mark as 'done'
-          controller.poll()?.let { return JsPromise.resolved(ReadResult(it, streamState.get() != STREAM_READABLE)) }
+          controller.poll()?.let {
+            return JsPromise.resolved(ReadResult(it.chunk, streamState.get() != STREAM_READABLE))
+          }
 
           // enqueue read request and pull
-          CompletableJsPromise<ReadResult>().also { request ->
+          JsPromise<ReadResult>().also { request ->
             readQueue.add(request)
             controller.pullIfNeeded()
           }
@@ -204,18 +186,13 @@ internal class ReadableDefaultStream internal constructor(
       }
     }
 
-    /**
-     * Release this reader's lock on the stream, allowing a new reader to be acquired and invalidating this instance.
-     * Pending reads will still complete normally.
-     */
-    @Polyglot fun releaseLock() {
+    @Polyglot override fun releaseLock() {
       if (closed.isDone) throw TypeError.create("Reader has already been released")
       closed.reject(TypeError.create("Reader lock was released"))
       reader.set(null)
     }
 
-    /** Cancel the stream for this reader. */
-    @Polyglot fun cancel() {
+    @Polyglot override fun cancel() {
       this@ReadableDefaultStream.cancel()
     }
   }
@@ -235,17 +212,17 @@ internal class ReadableDefaultStream internal constructor(
    */
   private val readQueue: ConcurrentLinkedQueue<DefaultReadRequest> = ConcurrentLinkedQueue()
 
-  /** Handle used by the [source] to push new chunks and control the stream. */
-  private val controller = ReadableStreamDefaultController()
+  /** Stored cause for the stream's failure. */
+  private val errorCause = AtomicReference<Any>()
 
   /**
    * Handle used by consumers to read chunks; if not `null`, the stream is considered 'locked' and must be released
    * before a new reader can be acquired.
    */
-  private val reader = AtomicReference<ReadableStreamDefaultReader>()
+  private val reader = AtomicReference<ReadableStreamDefaultReaderImpl>()
 
-  /** Stored cause for the stream's failure. */
-  private val errorCause = AtomicReference<Any>()
+  /** Handle used by the [source] to push new chunks and control the stream. */
+  private val controller = ControllerImpl().also { it.setup() }
 
   @get:Polyglot override val locked: Boolean get() = reader.get() != null
 
@@ -282,7 +259,13 @@ internal class ReadableDefaultStream internal constructor(
   }
 
   @Polyglot override fun getReader(options: Any?): ReadableStreamReader {
-    if (reader.getAndUpdate { it ?: ReadableStreamDefaultReader() } != null) throw TypeError.create("Stream is locked")
+    if (reader.getAndUpdate { current ->
+        current ?: ReadableStreamDefaultReaderImpl().also { it.setup() }
+      } != null) throw TypeError.create("Stream is locked")
     return reader.get()
   }
+
+  override fun pipeThrough(transform: TransformStream, options: Any?): ReadableStream = TODO("Not yet implemented")
+  override fun pipeTo(destination: WritableStream, options: Any?): JsPromise<Unit> = TODO("Not yet implemented")
+  override fun tee(): Array<ReadableStream> = TODO("Not yet implemented")
 }

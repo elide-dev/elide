@@ -64,7 +64,7 @@ internal class JsPromiseImpl<T> private constructor(token: Token) : CompletableJ
   private val onReject: MutableList<(Any?) -> Unit> = mutableListOf()
 
   /** The promise is considered as 'closed' once the [token] is no longer [Pending]. */
-  override val isClosed: Boolean get() = token.get() != Pending
+  override val isDone: Boolean get() = token.get() != Pending
 
   @Suppress("UNCHECKED_CAST")
   override fun then(onFulfilled: (T) -> Unit, onCatch: ((Any?) -> Unit)?): JsPromise<T> = apply {

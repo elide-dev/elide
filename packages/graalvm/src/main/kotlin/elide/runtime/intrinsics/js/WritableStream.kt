@@ -13,6 +13,8 @@
 package elide.runtime.intrinsics.js
 
 import elide.annotations.API
+import elide.runtime.intrinsics.js.stream.WritableStreamDefaultWriter
+import elide.vm.annotations.Polyglot
 
 /**
  * # Writable Stream
@@ -30,5 +32,11 @@ import elide.annotations.API
    *
    * @param Impl Implementation of [WritableStream] which is created by this factory.
    */
-  public interface Factory<Impl> where Impl: WritableStream {}
+  public interface Factory<Impl> where Impl : WritableStream {}
+
+  @get:Polyglot public val locked: Boolean
+
+  @Polyglot public fun getWriter(): WritableStreamDefaultWriter
+  @Polyglot public fun abort(reason: Any? = null): JsPromise<Unit>
+  @Polyglot public fun close()
 }

@@ -1,20 +1,14 @@
-/*
- * Copyright (c) 2024-2025 Elide Technologies, Inc.
- *
- * Licensed under the MIT license (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
- *
- *   https://opensource.org/license/mit/
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under the License.
- */
 package elide.runtime.intrinsics.js.stream
 
-import elide.annotations.API
+import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.intrinsics.js.ReadableStream.ReadResult
+import elide.vm.annotations.Polyglot
 
 /**
- * ## Readable Stream Default Reader
+ * A reader used by streams in default mode, used to read arbitrary chunks of data. Default readers do not support
+ * BYOB operations.
  */
-@API public interface ReadableStreamDefaultReader
+public interface ReadableStreamDefaultReader : ReadableStreamReader {
+    /** Read a chunk from the stream, returning a promise that is fulfilled with the result. */
+    @Polyglot public fun read(): JsPromise<ReadResult>
+}

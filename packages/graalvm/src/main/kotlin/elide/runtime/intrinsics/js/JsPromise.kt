@@ -45,11 +45,11 @@ public class PromiseRejectedException(public val reason: Any? = null) : RuntimeE
  */
 public interface JsPromise<out T> : ProxyObject {
   /** Whether the promise has been resolved or rejected. */
-  public val isClosed: Boolean
+  public val isDone: Boolean
 
   /**
    * Register a function to be called when the promise is fulfilled, and optionally, another callback to handle
-   * rejection. If the promise is already [closed][isClosed], the callbacks may be invoked immediately.
+   * rejection. If the promise is already [closed][isDone], the callbacks may be invoked immediately.
    *
    * @return this promise object.
    */
@@ -57,7 +57,7 @@ public interface JsPromise<out T> : ProxyObject {
 
   /**
    * Register a guest value to be called when the promise is fulfilled, and optionally, another callback to handle
-   * rejection. If the promise is already [closed][isClosed], the callbacks may be invoked immediately.
+   * rejection. If the promise is already [closed][isDone], the callbacks may be invoked immediately.
    *
    * @return this promise object.
    */

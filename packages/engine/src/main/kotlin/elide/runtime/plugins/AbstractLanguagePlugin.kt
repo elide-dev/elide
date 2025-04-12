@@ -57,7 +57,7 @@ private val defaultContext = defaultContextBuilder.build()
 // JIT compilation enabled by default in GraalVM.
 private val truffleJitEnabled = (
   System.getProperty("truffle.TruffleRuntime") != "com.oracle.truffle.api.impl.DefaultTruffleRuntime"
-)
+  )
 
 // Initialize default engine settings.
 @OptIn(DelicateElideApi::class)

@@ -562,8 +562,7 @@ dependencies {
   }
 
   // Tests
-  testImplementation(kotlin("test"))
-  testImplementation(kotlin("test-junit5"))
+  testImplementation(libs.kotlin.test.junit5)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)

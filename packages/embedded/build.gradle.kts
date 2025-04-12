@@ -14,7 +14,7 @@ private fun <T> List<T>.onlyIf(flag: Boolean): List<T> = if (flag) this else emp
 val nativeTest = findProperty("elide.embedded.tests.native")?.toString()?.toBooleanStrictOrNull() == true
 
 val oracleGvm = false
-val jvmTarget = 21
+val jvmTarget = 22
 val stamp = (project.properties["elide.stamp"] as? String ?: "false").toBooleanStrictOrNull() ?: false
 val cliVersion = if (stamp) {
   libs.versions.elide.asProvider().get()

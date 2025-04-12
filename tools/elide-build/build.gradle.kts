@@ -11,10 +11,10 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("DSL_SCOPE_VIOLATION")
+@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage", "MagicNumber")
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_22
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -63,11 +63,11 @@ gradlePlugin {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_21
-  targetCompatibility = JavaVersion.VERSION_21
+  sourceCompatibility = JavaVersion.VERSION_22
+  targetCompatibility = JavaVersion.VERSION_22
 
   toolchain {
-    languageVersion = JavaLanguageVersion.of(23)
+    languageVersion = JavaLanguageVersion.of(24)
   }
 }
 
@@ -75,11 +75,11 @@ kotlin {
   explicitApi()
   
   compilerOptions {
-    jvmTarget = JVM_21
+    jvmTarget = JVM_22
     javaParameters = true
     allWarningsAsErrors = true
-    apiVersion = KOTLIN_2_0
-    languageVersion = KOTLIN_2_0
+    apiVersion = KOTLIN_2_1
+    languageVersion = KOTLIN_2_1
     freeCompilerArgs = listOf(
       "-Xcontext-receivers",
       "-Xskip-prerelease-check",
@@ -90,15 +90,11 @@ kotlin {
   }
 }
 
-fun MutableList<String>.addIfNotPresent(arg: String) {
-  if (!contains(arg)) add(arg)
-}
-
 tasks.withType<KotlinCompile>().configureEach {
   compilerOptions {
-    jvmTarget = JVM_21
-    apiVersion = KOTLIN_2_0
-    languageVersion = KOTLIN_2_0
+    jvmTarget = JVM_22
+    apiVersion = KOTLIN_2_1
+    languageVersion = KOTLIN_2_1
   }
 }
 

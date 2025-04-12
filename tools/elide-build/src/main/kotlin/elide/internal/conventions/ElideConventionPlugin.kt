@@ -22,8 +22,11 @@ import org.gradle.api.Project
 import org.gradle.api.distribution.plugins.DistributionPlugin
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import org.gradle.api.publish.plugins.PublishingPlugin
+import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaToolchainService
+import org.gradle.kotlin.dsl.withType
 import org.gradle.plugins.signing.SigningPlugin
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.sonarqube.gradle.SonarQubePlugin
 import javax.inject.Inject
 import kotlinx.kover.gradle.plugin.KoverGradlePlugin
@@ -50,6 +53,7 @@ import elide.internal.conventions.tests.configureJacoco
 import elide.internal.conventions.tests.configureKover
 import elide.internal.conventions.tests.configureTestExecution
 import elide.internal.conventions.tests.configureTestLogger
+import elide.internal.conventions.tests.configureTestVm
 
 public abstract class ElideConventionPlugin : Plugin<Project> {
   @get:Inject protected abstract val javaToolchainService: JavaToolchainService
@@ -182,10 +186,21 @@ public abstract class ElideConventionPlugin : Plugin<Project> {
 
     // -- Conventions: JVM --------------------------------------------------------------------------------------------
     //
+
+    val defaultJvmTargetString = (findProperty(Versions.JVM_TARGET) as? String) ?: Versions.JVM_DEFAULT
+    val defaultJvmTarget = JvmTarget.fromTarget(defaultJvmTargetString)
+    var jvmTarget: JvmTarget = defaultJvmTarget
+
+    val defaultJvmToolchainString = (findProperty(Versions.JVM_TOOLCHAIN) as? String) ?: Versions.JVM_TOOLCHAIN_DEFAULT
+    var jvmToolchain: Int = defaultJvmToolchainString.toInt()
+
     maybeApplyConvention(conventions.jvm) {
       if (alignVersions) alignJvmVersion()
       if (forceJvm17) alignJvmVersion(overrideVersion = Versions.JVM_DEFAULT)
-      else if (target != null) alignJvmVersion(overrideVersion = target!!.target)
+      else if (target != null) {
+        jvmTarget = requireNotNull(target)
+        alignJvmVersion(overrideVersion = target!!.target)
+      }
     }
 
     // -- Conventions: Native -----------------------------------------------------------------------------------------

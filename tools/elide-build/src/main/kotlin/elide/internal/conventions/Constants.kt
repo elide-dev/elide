@@ -113,8 +113,14 @@ public object Constants {
     /** Property: defines the target JVM version. */
     const val JVM_TARGET = "versions.java.target"
 
+    /** Property: defines the target JVM version for the toolchain. */
+    const val JVM_TOOLCHAIN = "versions.java.toolchain"
+
     /** Property: JVM bytecode target if no other version is specified. */
     const val JVM_DEFAULT = "23"
+
+    /** Property: JVM bytecode target expected for the toolchain. */
+    const val JVM_TOOLCHAIN_DEFAULT = "24"
 
     /** GraalVM metadata repository version. */
     const val GRAALVM_METADATA = "0.3.16"

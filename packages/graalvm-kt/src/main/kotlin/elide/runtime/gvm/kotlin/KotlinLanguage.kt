@@ -68,6 +68,7 @@ public class KotlinLanguage : TruffleLanguage<EspressoContext>() {
   }
 
   @Suppress("UNUSED", "UnusedPrivateProperty") public companion object {
+    public const val ID: String = KOTLIN_ID
     public const val VERSION: String = KOTLIN_IMPL_VERSION
 
     @JvmStatic private val ESPRESSO: LanguageReference<EspressoLanguage> = LanguageReference.create(

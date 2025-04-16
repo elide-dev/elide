@@ -14,6 +14,7 @@ package elide.runtime.gvm.internals.vfs
 
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
+import org.graalvm.nativeimage.ImageInfo
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
@@ -71,16 +72,20 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
     }
 
     /** Process-wide file attributes cache. */
-    private val attributesCache: Cache<Pair<Path, String>, MutableMap<String, Any>> = CacheBuilder.newBuilder()
-      .expireAfterWrite(10, TimeUnit.SECONDS)
-      .maximumSize(100)
-      .build()
+    private val attributesCache: Cache<Pair<Path, String>, MutableMap<String, Any>> by lazy {
+      CacheBuilder.newBuilder()
+        .expireAfterWrite(10, TimeUnit.SECONDS)
+        .maximumSize(100)
+        .build()
+    }
 
     /** Process-wide access check cache. */
-    private val accessCache: Cache<AccessRequest, AccessResponse> = CacheBuilder.newBuilder()
-      .expireAfterWrite(10, TimeUnit.SECONDS)
-      .maximumSize(100)
-      .build()
+    private val accessCache: Cache<AccessRequest, AccessResponse> by lazy {
+      CacheBuilder.newBuilder()
+        .expireAfterWrite(10, TimeUnit.SECONDS)
+        .maximumSize(100)
+        .build()
+    }
 
     /** Construct from a Micronaut-driven configuration. */
     @JvmStatic internal fun withConfig(ioConfig: GuestIOConfiguration): EffectiveGuestVFSConfig {
@@ -245,9 +250,11 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
 
   override fun readAttributes(path: Path, attributes: String, vararg options: LinkOption): MutableMap<String, Any> {
     enforce(type = AccessType.READ, domain = AccessDomain.GUEST, path = path)
-    val cached = attributesCache.getIfPresent(path to attributes)
-    if (cached != null) {
-      return cached
+    if (ImageInfo.inImageRuntimeCode()) {
+      val cached = attributesCache.getIfPresent(path to attributes)
+      if (cached != null) {
+        return cached
+      }
     }
     return backing.provider().readAttributes(path, attributes, *options).toMutableMap().apply {
       if (containsKey("ino")) {
@@ -366,7 +373,10 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
       debugLog {
         "Delegating policy check to attached policy"
       }
-      when (val cached = accessCache.getIfPresent(request)) {
+      if (ImageInfo.inImageBuildtimeCode()) {
+        // don't use caching in build-time code; it drags in Guava's cache implementation
+        config.policy.evaluateForPath(request)
+      } else when (val cached = accessCache.getIfPresent(request)) {
         // otherwise, defer to the attached policy.
         null -> config.policy.evaluateForPath(request).also { accessCache.put(request, it) }
         else -> cached

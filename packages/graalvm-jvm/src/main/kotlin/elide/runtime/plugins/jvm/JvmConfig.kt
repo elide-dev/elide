@@ -55,9 +55,8 @@ import elide.runtime.plugins.AbstractLanguageConfig
   }
 
   /** Apply init-time settings to a new [context]. */
-  internal fun applyTo(context: PolyglotContext) {
-    // register intrinsics
-    applyBindings(context, Jvm)
+  @Suppress("UNUSED_PARAMETER") internal fun applyTo(context: PolyglotContext) {
+    // Nothing to do at this time.
   }
 
   private companion object {

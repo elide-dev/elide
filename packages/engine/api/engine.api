@@ -987,7 +987,7 @@ public abstract interface class elide/runtime/lang/LanguagePlugin {
 public abstract class elide/runtime/plugins/AbstractLanguageConfig {
 	public static final field Companion Lelide/runtime/plugins/AbstractLanguageConfig$Companion;
 	public fun <init> ()V
-	protected final fun applyBindings (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
+	protected fun applyBindings (Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
 	public static synthetic fun applyBindings$default (Lelide/runtime/plugins/AbstractLanguageConfig;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;ILjava/lang/Object;)V
 	public final fun bindings (Lkotlin/jvm/functions/Function1;)V
 	public final fun getExecutable ()Ljava/lang/String;

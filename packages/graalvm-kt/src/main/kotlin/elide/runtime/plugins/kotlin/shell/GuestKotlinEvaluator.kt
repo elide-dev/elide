@@ -13,6 +13,7 @@
 
 package elide.runtime.plugins.kotlin.shell
 
+import com.oracle.truffle.api.CompilerDirectives
 import org.graalvm.polyglot.Source
 import org.jetbrains.kotlin.cli.common.repl.GenericReplCompilingEvaluatorBase
 import org.jetbrains.kotlin.cli.common.repl.ReplCodeLine
@@ -130,6 +131,7 @@ private fun ScriptDiagnostic.toDiagnostic(): Diagnostic = DiagnosticInfo.mutable
 
   override fun accepts(source: Source): Boolean = source.hasCharacters()
 
+  @CompilerDirectives.TruffleBoundary
   override fun evaluate(source: Source, context: PolyglotContext): PolyglotValue {
     require(accepts(source)) { "Only text-based sources are supported." }
     val sourceContents = source.characters.toString()

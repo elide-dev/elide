@@ -89,6 +89,8 @@ internal fun Project.configureKover() {
           )
           inheritedFrom.addAll(
             "org.graalvm.nativeimage.hosted.Feature",
+            "com.oracle.truffle.api.provider.InternalResourceProvider",
+            "com.oracle.truffle.api.InternalResource\$Id",
           )
         }
       }

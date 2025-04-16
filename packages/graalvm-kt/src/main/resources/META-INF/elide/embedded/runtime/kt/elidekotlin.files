@@ -1,4 +1,7 @@
-META-INF/elide/embedded/runtime/kt/elide-kotlin-runtime.jar = rw-rw-r--
-META-INF/elide/embedded/runtime/kt/kotlin-stdlib.jar = rw-rw-r--
-META-INF/elide/embedded/runtime/kt/kotlin-reflect.jar = rw-rw-r--
-META-INF/elide/embedded/runtime/kt/kotlin-script-runtime.jar = rw-rw-r--
+META-INF/elide/embedded/runtime/kt/elide-kotlin-runtime.jar = r--r--r--
+META-INF/elide/embedded/runtime/kt/kotlin-stdlib.jar = r--r--r--
+META-INF/elide/embedded/runtime/kt/kotlin-reflect.jar = r--r--r--
+META-INF/elide/embedded/runtime/kt/kotlin-script-runtime.jar = r--r--r--
+META-INF/elide/embedded/runtime/kt/kotlin-scripting-common.jar = r--r--r--
+META-INF/elide/embedded/runtime/kt/kotlin-scripting-jvm.jar = r--r--r--
+META-INF/elide/embedded/runtime/kt/kotlinx-coroutines-core-jvm.jar = r--r--r--

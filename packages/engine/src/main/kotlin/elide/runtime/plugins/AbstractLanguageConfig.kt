@@ -61,7 +61,7 @@ import elide.runtime.core.PolyglotContext
    * @param context The context to apply the bindings to.
    * @param language The language scope for the bindings. If `null`, bindings are applied to all languages.
    */
-  @DelicateElideApi protected fun applyBindings(context: PolyglotContext, language: GuestLanguage? = null) {
+  @DelicateElideApi protected open fun applyBindings(context: PolyglotContext, language: GuestLanguage? = null) {
     with(context.bindings(language)) {
       val internals = HashMap<String, Any>()
 

@@ -25,7 +25,9 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
 import kotlin.system.exitProcess
+import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.tool.cli.Elide.Companion.installStatics
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
@@ -134,6 +136,20 @@ inline fun setStaticProperties(binPath: String) {
   System.setProperty("kotlinx.coroutines.scheduler.core.pool.size", "2")
   System.setProperty("kotlinx.coroutines.scheduler.max.pool.size", "2")
   System.setProperty("kotlinx.coroutines.scheduler.default.name", "ElideDefault")
+
+  // kotlin path; only used if kotlinc is invoked
+  val kotlinLibsPath = path
+    .resolve("resources")
+    .resolve("kotlin")
+    .resolve(KotlinLanguage.VERSION)
+    .resolve("lib")
+
+  // kotlin stdlib and reflect paths
+  val kotlinStdlibPath = kotlinLibsPath.resolve("kotlin-stdlib.jar")
+  val kotlinReflectPath = kotlinLibsPath.resolve("kotlin-reflect.jar")
+
+  System.setProperty("kotlin.java.stdlib.jar", kotlinStdlibPath.absolutePathString())
+  System.setProperty("kotlin.java.reflect.jar", kotlinReflectPath.absolutePathString())
   System.setProperty(org.fusesource.jansi.AnsiConsole.JANSI_MODE, org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE)
   System.setProperty(org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL, "false")
 }

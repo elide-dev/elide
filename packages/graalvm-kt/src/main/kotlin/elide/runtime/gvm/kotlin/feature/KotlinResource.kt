@@ -21,7 +21,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 
-private const val KOTLIN_RESOURCES_ID = "kotlin-home"
+internal const val KOTLIN_RESOURCES_ID = "kotlin-home"
 
 // Informs the compiler about Kotlin Home language resources.
 @Id(KOTLIN_RESOURCES_ID, optional = false)

@@ -860,18 +860,6 @@ val initializeAtBuildtime: List<String> = listOf(
   "org.jetbrains.kotlin.com.intellij.util.containers.IntKeyWeakValueHashMap\$MyReference",
   "org.eclipse.aether.repository.RemoteRepository",
   "org.eclipse.aether.repository.RepositoryPolicy",
-
-  // JDK image reader
-  //"jdk.internal.jimage.ImageReader",
-  //"jdk.internal.jimage.BasicImageReader",
-  //"jdk.internal.jimage.ImageReader\$SharedImageReader",
-  //"jdk.internal.jimage.ImageHeader",
-  //"jdk.internal.jimage.ImageReader\$Directory",
-  //"jdk.internal.jimage.ImageReader\$Resource",
-  //"jdk.internal.jrtfs.JrtFileSystemProvider",
-  //"jdk.internal.jimage.ImageStringsReader",
-  //"jdk.internal.jimage.ImageLocation",
-  //"jdk.internal.jimage.decompressor.Decompressor",
 ).onlyIf(enableKotlin))
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -889,6 +877,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tool.err.ErrorHandler${'$'}ErrorContext",
   "com.google.protobuf.RuntimeVersion",
   "sun.java2d.pipe.Region",
+  "sun.java2d.SurfaceData",
   "sun.rmi.server.Util",
   "sun.awt.X11.XWM",
   "sun.awt.X11.XSystemTrayPeer",
@@ -1145,13 +1134,7 @@ val commonNativeArgs = listOfNotNull(
   // Debugging flags:
   // "--verbose",
   // "-H:TempDirectory=/tmp/elide-native",
-  // "-H:+PlatformInterfaceCompatibilityMode",
   // "--trace-object-instantiation=",
-  //"-J-Djdk.image.use.jvm.map=false",
-  // "--trace-object-instantiation=java.lang.Thread",
-  // "--trace-object-instantiation=com.google.common.jimfs.SystemJimfsFileSystemProvider",
-  // "--trace-object-instantiation=java.util.concurrent.ForkJoinWorkerThread\$InnocuousForkJoinWorkerThread",
-  "--trace-object-instantiation=org.jetbrains.kotlin.com.intellij.util.ConcurrentLongObjectHashMap",
   "-H:+UnlockExperimentalVMOptions",
   "-H:-EnterpriseCloneReadElimination",  // fix for oracle/graal#10882
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),

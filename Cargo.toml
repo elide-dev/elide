@@ -94,7 +94,7 @@ orogene = { git = "https://github.com/elide-dev/orogene", rev = "024c67173c29ae2
 rustc_version = { version = "0.4.1" }
 rustix = { version = "1.0.2", features = ["process"] }
 serde = { version = "1.0.218", default-features = false }
-sysinfo = { version = "0.33.1" }
+sysinfo = { version = "0.34.2" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
 tracing-subscriber = { version = "0.3.19" }
 tokio = { version = "1", default-features = false, features = [
@@ -114,7 +114,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "fbd4f92f15404ef558b7d29172eeb33fd8d3fa0f", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "17c7bda59397ceae5265ec33221c9bf3ce8ff527", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -122,7 +122,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "fbd4f92f15404ef558b7d29
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "dd788a0f470987276f41528ed19a7030be8f5f29" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "df35919d5adeaf7db2b120ca923511ef37091f38" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "f0c3abd1989a79af39d4b5debe042e4c2a0d4f9f" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "807a8a7a2902013d9367c6dbd825dbf23e896a3a" }

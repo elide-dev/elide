@@ -123,7 +123,7 @@ public object Constants {
     const val JVM_TOOLCHAIN_DEFAULT = "24"
 
     /** GraalVM metadata repository version. */
-    const val GRAALVM_METADATA = "0.3.16"
+    const val GRAALVM_METADATA = "0.3.19"
 
     /** Version to pin for Diktat. */
     const val DIKTAT = "2.0.0"
@@ -156,7 +156,7 @@ public object Constants {
     const val OKIO = "3.10.2"
 
     /** GraalVM version. */
-    const val GRAALVM = "24.2.0"
+    const val GRAALVM = "24.2.1"
   }
 
   /** Kotlin conventions. */

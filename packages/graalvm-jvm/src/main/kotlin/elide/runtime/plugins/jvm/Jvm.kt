@@ -73,10 +73,10 @@ import elide.runtime.plugins.AbstractLanguagePlugin
   }
 
   public companion object Plugin : AbstractLanguagePlugin<JvmConfig, Jvm>() {
-    private val logging by lazy { Logging.of(Jvm::class) }
     private const val JVM_LANGUAGE_ID = "java"
     private const val JVM_MANIFEST_KEY = "jvm"
     private const val JVM_PLUGIN_ID = "JVM"
+    private val logging by lazy { Logging.of(Jvm::class) }
     override val manifestKey: String = JVM_MANIFEST_KEY
     override val languageId: String = JVM_LANGUAGE_ID
     override val key: Key<Jvm> = Key(JVM_PLUGIN_ID)

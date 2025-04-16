@@ -13,6 +13,7 @@
 
 package elide.runtime.plugins.jvm
 
+import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
@@ -63,13 +64,16 @@ import elide.runtime.plugins.AbstractLanguagePlugin
     )
 
     // guest classpath
-    builder.option("java.Classpath", config.collectClasspath())
+    val classpath = config.collectClasspath()
+    builder.option("java.Classpath", classpath)
+    logging.debug { "Using guest classpath: $classpath" }
 
     // threading
     builder.setOption("java.MultiThreaded", config.multithreading)
   }
 
   public companion object Plugin : AbstractLanguagePlugin<JvmConfig, Jvm>() {
+    private val logging by lazy { Logging.of(Jvm::class) }
     private const val JVM_LANGUAGE_ID = "java"
     private const val JVM_MANIFEST_KEY = "jvm"
     private const val JVM_PLUGIN_ID = "JVM"

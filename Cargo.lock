@@ -576,6 +576,26 @@ dependencies = [
 
 [[package]]
 name = "bindgen"
+version = "0.70.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f49d8fed880d473ea71efb9bf597651e77201bdd4893efe54c9e5d65ae04ce6f"
+dependencies = [
+ "bitflags 2.9.0",
+ "cexpr",
+ "clang-sys",
+ "itertools 0.13.0",
+ "log",
+ "prettyplease",
+ "proc-macro2",
+ "quote",
+ "regex",
+ "rustc-hash 1.1.0",
+ "shlex",
+ "syn 2.0.100",
+]
+
+[[package]]
+name = "bindgen"
 version = "0.71.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5f58bf3d7db68cfbac37cfc485a8d711e87e064c3d0fe0435b92f7a407f9d6b3"
@@ -1276,6 +1296,12 @@ name = "crossbeam-utils"
 version = "0.8.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d0a5c400df2834b80a4c3327b3aad3a4c4cd4de0629063962b03235697506a28"
+
+[[package]]
+name = "crunchy"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "43da5946c66ffcc7745f48db692ffbb10a83bfe0afd96235c5c2a4fb23994929"
 
 [[package]]
 name = "crypto-common"
@@ -2090,6 +2116,16 @@ dependencies = [
  "tokio",
  "tokio-util",
  "tracing",
+]
+
+[[package]]
+name = "half"
+version = "2.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "459196ed295495a68f7d7fe1d84f6c4b7ff0e21fe3017b2f283c6fac3ad803c9"
+dependencies = [
+ "cfg-if",
+ "crunchy",
 ]
 
 [[package]]
@@ -3140,6 +3176,7 @@ dependencies = [
  "jni",
  "lazy_static",
  "llama-cpp-2",
+ "mlx-rs",
  "tokio",
  "tracing-subscriber",
 ]
@@ -3216,6 +3253,15 @@ dependencies = [
  "cc",
  "libc",
  "pkg-config",
+]
+
+[[package]]
+name = "mach-sys"
+version = "0.5.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "48460c2e82a3a0de197152fdf8d2c2d5e43adc501501553e439bf2156e6f87c7"
+dependencies = [
+ "fastrand",
 ]
 
 [[package]]
@@ -3403,6 +3449,65 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "359f76430b20a79f9e20e115b3428614e654f04fab314482fc0fda0ebd3c6044"
 dependencies = [
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "mlx-internal-macros"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f0756e4528d38dfd2c30551e3cb05f42b346d4b9fd14a867767d86353232056d"
+dependencies = [
+ "darling",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
+]
+
+[[package]]
+name = "mlx-macros"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "177ff342309c789defa1552e763ea8fbb5548e3ec17134a45009a27fbddb6c26"
+dependencies = [
+ "darling",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
+]
+
+[[package]]
+name = "mlx-rs"
+version = "0.21.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba3f7d54d10fe14e896725c3103a6a09b623d1737f0f74f5238967297fd520e2"
+dependencies = [
+ "dyn-clone",
+ "half",
+ "itertools 0.14.0",
+ "libc",
+ "mach-sys",
+ "mlx-internal-macros",
+ "mlx-macros",
+ "mlx-sys",
+ "num-complex",
+ "num-traits",
+ "num_enum",
+ "parking_lot 0.12.3",
+ "paste",
+ "smallvec",
+ "strum 0.26.3",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "mlx-sys"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af33a6b662998e5bb4099b1a191b4352fcb11d97706e82e4c8922fe200bb11f2"
+dependencies = [
+ "bindgen 0.70.1",
+ "cc",
+ "cmake",
 ]
 
 [[package]]
@@ -3738,6 +3843,27 @@ checksum = "4161fcb6d602d4d2081af7c3a45852d875a03dd337a6bfdd6e06407b61342a43"
 dependencies = [
  "hermit-abi 0.3.9",
  "libc",
+]
+
+[[package]]
+name = "num_enum"
+version = "0.7.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4e613fc340b2220f734a8595782c551f1250e969d87d3be1ae0579e8d4065179"
+dependencies = [
+ "num_enum_derive",
+]
+
+[[package]]
+name = "num_enum_derive"
+version = "0.7.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af1844ef2428cc3e1cb900be36181049ef3d3193c63e43026cfe202983b27a56"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
 ]
 
 [[package]]
@@ -4810,6 +4936,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "proc-macro-crate"
+version = "3.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "edce586971a4dfaa28950c6f18ed55e0406c1ab88bbce2c6f6293a7aaba73d35"
+dependencies = [
+ "toml_edit",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5138,8 +5273,8 @@ dependencies = [
  "salsa",
  "smallvec",
  "static_assertions",
- "strum",
- "strum_macros",
+ "strum 0.27.1",
+ "strum_macros 0.27.1",
  "test-case",
  "thiserror 2.0.12",
  "tracing",
@@ -5473,7 +5608,7 @@ dependencies = [
  "serde",
  "serde_json",
  "shellexpand",
- "strum",
+ "strum 0.27.1",
  "tempfile",
  "thiserror 2.0.12",
  "tikv-jemallocator",
@@ -5642,8 +5777,8 @@ dependencies = [
  "serde_json",
  "similar",
  "smallvec",
- "strum",
- "strum_macros",
+ "strum 0.27.1",
+ "strum_macros 0.27.1",
  "thiserror 2.0.12",
  "toml",
  "typed-arena",
@@ -5913,7 +6048,7 @@ dependencies = [
  "rustc-hash 2.1.1",
  "serde",
  "shellexpand",
- "strum",
+ "strum 0.27.1",
  "toml",
 ]
 
@@ -6716,11 +6851,33 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "strum"
+version = "0.26.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8fec0f0aef304996cf250b31b5a10dee7980c85da9d759361292b8bca5a18f06"
+dependencies = [
+ "strum_macros 0.26.4",
+]
+
+[[package]]
+name = "strum"
 version = "0.27.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f64def088c51c9510a8579e3c5d67c65349dcf755e5479ad3d010aa6454e2c32"
 dependencies = [
- "strum_macros",
+ "strum_macros 0.27.1",
+]
+
+[[package]]
+name = "strum_macros"
+version = "0.26.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c6bee85a5a24955dc440386795aa378cd9cf82acd5f764469152d2270e581be"
+dependencies = [
+ "heck",
+ "proc-macro2",
+ "quote",
+ "rustversion",
+ "syn 2.0.100",
 ]
 
 [[package]]

@@ -126,3 +126,7 @@ uv = { git = "https://github.com/elide-dev/uv", rev = "dd788a0f470987276f41528ed
 
 ## Ruff
 ruff = { git = "https://github.com/elide-dev/ruff", rev = "f0c3abd1989a79af39d4b5debe042e4c2a0d4f9f" }
+
+## Apple/macOS
+mlx-rs = { version = "0.21.0" }
+

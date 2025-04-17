@@ -38,6 +38,9 @@ unsafe = []
 blocking = []
 nonblocking = []
 debug = []
+mlx = ["dep:mlx-rs"]
+metal = ["mlx-rs/metal"]
+accelerate = ["mlx-rs/accelerate"]
 
 [build-dependencies]
 builder = { workspace = true }
@@ -54,3 +57,7 @@ llama-cpp-2 = { workspace = true }
 tokio = { workspace = true, optional = true }
 tracing-subscriber = { workspace = true }
 lazy_static = { workspace = true }
+
+## Only on macOS
+[target.'cfg(target_os = "macos")'.dependencies]
+mlx-rs = { workspace = true, optional = true }

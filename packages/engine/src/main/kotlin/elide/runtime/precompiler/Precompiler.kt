@@ -61,15 +61,50 @@ public sealed interface Precompiler<C, I, O> where C : Precompiler.Configuration
   public interface Configuration
 
   /**
+   * Base interface which explains sources to precompilers.
+   */
+  public sealed interface SourceInfo {
+    /**
+     * Name of the source code or source set being precompiled.
+     */
+    public val name: String
+
+    /**
+     * Provide a sequence of all source files which are being precompiled.
+     *
+     * @return A sequence of paths to all source files.
+     */
+    public fun allSources(): Sequence<Path>
+  }
+
+  /**
    * Holds information about the source code being precompiled.
    *
    * @param name Name of the source code being precompiled.
    * @param path Path to the source code being precompiled.
    */
   @JvmRecord public data class PrecompileSourceInfo(
-    val name: String,
+    override val name: String,
     val path: Path? = null,
-  )
+  ) : SourceInfo {
+    override fun allSources(): Sequence<Path> = when (path) {
+      null -> emptySequence()
+      else -> sequenceOf(path)
+    }
+  }
+
+  /**
+   * Holds information about multiple source files under pre-compilation.
+   *
+   * @param name Name of the source code being precompiled.
+   * @param paths Paths to the source code being precompiled.
+   */
+  @JvmRecord public data class PrecompileSourceSet(
+    override val name: String,
+    val paths: List<Path>,
+  ) : SourceInfo {
+    override fun allSources(): Sequence<Path> = paths.asSequence()
+  }
 
   /**
    * Represents a request from the engine to precompile source code.
@@ -78,7 +113,7 @@ public sealed interface Precompiler<C, I, O> where C : Precompiler.Configuration
    * @param config Configuration for the precompiler.
    */
   public class PrecompileSourceRequest<C>(
-    public val source: PrecompileSourceInfo,
+    public val source: SourceInfo,
     public val config: C,
   )
 

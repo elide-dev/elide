@@ -3,6 +3,7 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ComplexCondition:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$(base != null &amp;&amp; (base.parentFile == null || base.absolutePath == "/")) || files.isEmpty()</ID>
+    <ID>ForbiddenComment:DelegatedToolCommand.kt$DelegatedToolCommand$// @TODO: delegated error handling</ID>
     <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet&lt;GuestLanguage>)</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>

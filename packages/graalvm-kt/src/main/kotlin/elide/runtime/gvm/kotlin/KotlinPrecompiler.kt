@@ -41,10 +41,41 @@ import elide.runtime.precompiler.PrecompilerError
 import elide.runtime.precompiler.PrecompilerNotice
 import elide.runtime.precompiler.PrecompilerNoticeWithOutput
 
+/**
+ * Create a [DiagnosticInfo] object from a Kotlin compiler message.
+ *
+ * @param sev Severity of the message.
+ * @param msg Message text.
+ * @param location Source location of the message.
+ * @return A [DiagnosticInfo] object representing the message.
+ */
+public fun Diagnostic.Companion.fromKotlincDiagnostic(
+  sev: CompilerMessageSeverity,
+  msg: String,
+  location: CompilerMessageSourceLocation?,
+): DiagnosticInfo = object : DiagnosticInfo {
+  override val position: SourceLocation? get() = location?.let {
+    SourceLocation(location.line.toUInt(), location.column.toUInt())
+  }
+
+  // @TODO source reference
+  override val message: String get() = msg
+  override val severity: Severity get() = when (sev) {
+    EXCEPTION,
+    ERROR -> Severity.ERROR
+    WARNING,
+    STRONG_WARNING -> Severity.WARN
+    INFO,
+    LOGGING,
+    OUTPUT -> Severity.INFO
+  }
+}
+
 // Implements a precompiler which compiles Kotlin to Java bytecode.
 public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinRunnable> {
   // Embedded Kotlin version.
-  private const val KOTLIN_VERSION = "2.1.20"
+  public const val KOTLIN_VERSION: String = "2.1.20"
+
   private val kotlinVerbose by lazy {
     System.getProperty("elide.kotlin.verbose") == "true"
   }
@@ -55,36 +86,22 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
     languageVersion = LanguageVersion.KOTLIN_2_1,
   )
 
-  private fun Diagnostic.Companion.from(
-    sev: CompilerMessageSeverity,
-    msg: String,
-    location: CompilerMessageSourceLocation?,
-  ): DiagnosticInfo = object : DiagnosticInfo {
-    override val position: SourceLocation? get() = location?.let {
-      SourceLocation(location.line.toUInt(), location.column.toUInt())
-    }
-
-    // @TODO source reference
-    override val message: String get() = msg
-    override val severity: Severity get() = when (sev) {
-      EXCEPTION,
-      ERROR -> Severity.ERROR
-      WARNING,
-      STRONG_WARNING -> Severity.WARN
-      INFO,
-      LOGGING,
-      OUTPUT -> Severity.INFO
-    }
-  }
-
   @OptIn(DelicateElideApi::class)
   @Suppress("TooGenericExceptionCaught")
   override fun invoke(req: PrecompileSourceRequest<KotlinCompilerConfig>, input: String): KotlinRunnable {
-    val isKotlinScript = req.source.path?.endsWith(".kts") == true || req.source.name.endsWith(".kts")
+    val srcs = req.source.allSources().toList()
+    val isKotlinScript = req.source.name.endsWith(".kts") || srcs.any {
+      it.endsWith(".kts")
+    }
     if (isKotlinScript) {
+      // should only be provided with one input in this case
+      check(srcs.size < 2) {
+        "Kotlin script precompilation should be provided with a maximum of one source file"
+      }
+
       // if we are running a kotlin script, wire together the runnable and script template, and return it in a deferred
       // form; such runs do not need the precompiler.
-      return KotlinScriptCallable(name = req.source.name, path = req.source.path) { ctx ->
+      return KotlinScriptCallable(name = req.source.name, path = srcs.firstOrNull()) { ctx ->
         // execute as a script
         ElideKotlinScriptExecutor.execute(
           ctx,
@@ -156,7 +173,7 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
     }
   }
 
-  // Report diagnostics from Kotlin's compiler.
+  /** Report diagnostics from Kotlin's compiler. */
   private class DiagnosticsListener(
     private var container: DiagnosticsContainer = DiagnosticsContainer.create()
   ) : MessageCollector,
@@ -186,7 +203,7 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
       if (severity == ERROR || severity == EXCEPTION) {
         errorsSeen.value = true
       }
-      container.report(Diagnostic.from(severity, message, location))
+      container.report(Diagnostic.fromKotlincDiagnostic(severity, message, location))
     }
   }
 

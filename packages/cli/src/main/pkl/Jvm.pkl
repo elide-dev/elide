@@ -1,0 +1,18 @@
+/// Describes KJVM configurations for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.jvm
+
+/// JVM target levels as integers.
+typealias JvmTargetLevel = "latest" | "stable" | "auto" | Int8(isBetween(8, 29))
+
+/// JVM target levels as enumeration.
+typealias JvmTarget = JvmTargetLevel
+
+/// Specifies settings which apply to JVM targets.
+class JvmSettings {
+  /// Set the JVM bytecode target level for this project.
+  target: JvmTarget = "auto"
+
+  /// Set a custom Java Home override for this project.
+  javaHome: String? = null
+}

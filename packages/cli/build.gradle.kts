@@ -185,12 +185,6 @@ logger.lifecycle("Building for architecture '$elideBinaryArch' (default: '$defau
 val exclusions = listOfNotNull(
   // always exclude the jline native lib; we provide it ourselves
   libs.jline.native,
-
-  // only include jline jni integration if ffm is disabled
-  //if (enableFfm) libs.jline.terminal.jni else null,
-
-  // exclude kotlin compiler if kotlin is not enabled; it includes shadowed jline configs
-  if (enableKotlin) null else libs.kotlin.compiler.embedded,
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
@@ -406,6 +400,7 @@ dependencies {
   implementation(libs.dirs)
   implementation(libs.snakeyaml)
   implementation(mn.micronaut.json.core)
+  implementation(libs.kotlin.compiler.embedded)
 
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 
@@ -860,6 +855,9 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "sun.awt.X11.XDragAndDropProtocols",
   "com.github.ajalt.mordant.terminal.terminalinterface.ffm.TerminalInterfaceFfmLinux",
   "com.github.ajalt.mordant.internal.MppInternalKt",
+  "elide.tool.Environment",
+  "elide.tool.Environment\$HostEnv",
+  "elide.tool.Environment\$Companion",
 
   // @TODO switch to built-in brotli
   "org.apache.commons.compress.compressors.brotli.BrotliCompressorInputStream",
@@ -1112,7 +1110,6 @@ val commonNativeArgs = listOfNotNull(
   // "-H:TempDirectory=/tmp/elide-native",
   // "--trace-object-instantiation=",
   "-H:+UnlockExperimentalVMOptions",
-  "-H:-EnterpriseCloneReadElimination",  // fix for oracle/graal#10882
   onlyIf(enableCustomCompiler && !cCompiler.isNullOrEmpty(), "--native-compiler-path=$cCompiler"),
   onlyIf(isDebug, "-H:+JNIVerboseLookupErrors"),
   onlyIf(isDebug, "-H:+JNIEnhancedErrorCodes"),
@@ -1408,6 +1405,8 @@ val jvmDefs = mutableMapOf(
   "elide.staticJni" to enableStaticJni.toString(),
   "elide.targetLibc" to libcTarget,
   "elide.js.vm.enableStreams" to "true",
+  "elide.jvm" to enableJvm.toString(),
+  "elide.kotlin" to enableKotlin.toString(),
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
   "elide.kotlin.verbose" to "false",
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
@@ -1950,7 +1949,13 @@ fun Jar.applyJarSettings() {
 
 val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
 val intermediateKotlinResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
-val kotlinHomePath: String = kotlinHomeRoot.get().asFile.absolutePath
+
+// note: the traditional KOTLIN_HOME path does not end with `lib`, so it should point to the versioned kotlin root here,
+// even though elide's own paths include `lib`.
+val kotlinHomePath: String = kotlinHomeRoot.get()
+  .asFile
+  .resolve(libs.versions.kotlin.sdk.get())
+  .absolutePath
 
 val prepKotlinResources by tasks.registering(Copy::class) {
   from(embeddedKotlin)

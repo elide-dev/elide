@@ -19,6 +19,7 @@ import com.github.ajalt.clikt.core.PrintHelpMessage
 import com.github.ajalt.clikt.parsers.CommandLineParser
 import com.github.ajalt.clikt.parsers.flatten
 import io.micronaut.configuration.picocli.MicronautFactory
+import org.graalvm.nativeimage.ImageInfo
 import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
 import kotlinx.atomicfu.atomic
@@ -44,6 +45,9 @@ internal var exitOnComplete = true
 
 // Unhandled error that caused exit, if any.
 internal val unhandledExc = atomic<Throwable?>(null)
+
+// Whether an embedded JVM is available.
+val embeddedJvmEnabled = System.getProperty("elide.jvm.embedded") == "true"
 
 private inline fun earlyLog(msg: String) {
   if (EARLY_INIT_LOG) println("[init] $msg")
@@ -137,21 +141,45 @@ inline fun setStaticProperties(binPath: String) {
   System.setProperty("kotlinx.coroutines.scheduler.max.pool.size", "2")
   System.setProperty("kotlinx.coroutines.scheduler.default.name", "ElideDefault")
 
-  // kotlin path; only used if kotlinc is invoked
-  val kotlinLibsPath = path
-    .resolve("resources")
-    .resolve("kotlin")
-    .resolve(KotlinLanguage.VERSION)
-    .resolve("lib")
-
-  // kotlin stdlib and reflect paths
-  val kotlinStdlibPath = kotlinLibsPath.resolve("kotlin-stdlib.jar")
-  val kotlinReflectPath = kotlinLibsPath.resolve("kotlin-reflect.jar")
-
-  System.setProperty("kotlin.java.stdlib.jar", kotlinStdlibPath.absolutePathString())
-  System.setProperty("kotlin.java.reflect.jar", kotlinReflectPath.absolutePathString())
   System.setProperty(org.fusesource.jansi.AnsiConsole.JANSI_MODE, org.fusesource.jansi.AnsiConsole.JANSI_MODE_FORCE)
   System.setProperty(org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL, "false")
+
+  // if no java home property is set, and an env variable is set, propagate it
+  if (System.getProperty("java.home") == null) {
+    when (System.getenv("JAVA_HOME")?.ifBlank { null }?.let { javaHome ->
+      System.setProperty("java.home", javaHome)
+    }) {
+      null -> {
+        // if no java home is set at all, and elide shipped with an embedded jvm, use that
+        if (embeddedJvmEnabled) {
+          path.resolve("jvm").let { jvmPath ->
+            System.setProperty("java.home", jvmPath.absolutePathString())
+          }
+        }
+      }
+
+      // otherwise do nothing
+      else -> {}
+    }
+  }
+
+  // only set the stdlib/reflect paths if we are in a native image context. otherwise, the "binary path" may be a path
+  // to the java binary, rather than elide.
+  if (ImageInfo.inImageCode()) {
+    // kotlin path; only used if kotlinc is invoked
+    val kotlinLibsPath = path
+      .resolve("resources")
+      .resolve("kotlin")
+      .resolve(KotlinLanguage.VERSION)
+      .resolve("lib")
+
+    // kotlin stdlib and reflect paths
+    val kotlinStdlibPath = kotlinLibsPath.resolve("kotlin-stdlib.jar")
+    val kotlinReflectPath = kotlinLibsPath.resolve("kotlin-reflect.jar")
+
+    System.setProperty("kotlin.java.stdlib.jar", kotlinStdlibPath.absolutePathString())
+    System.setProperty("kotlin.java.reflect.jar", kotlinReflectPath.absolutePathString())
+  }
 }
 
 fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {

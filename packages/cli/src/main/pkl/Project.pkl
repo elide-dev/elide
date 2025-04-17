@@ -2,6 +2,9 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.project
 
+import "Jvm.pkl" as jvm
+import "Kotlin.pkl" as kotlin
+
 /// A name for the project.
 name: String?
 
@@ -17,6 +20,19 @@ entrypoint: String?
 /// Script mappings; each entry is a name and a script to run.
 scripts: Mapping<String, String> = new {}
 
+//
+// ------ Dependencies ----------------------------------------------------------------------------------------------
+//
+
+/// Specifies a package version string, which can be `latest`, or a specific semver, or a version range.
+typealias PackageVersion = "latest" | String
+
+/// Typealias for a dependency repository name.
+typealias RepositoryName = String
+
+/// Typealias for a dependency repository URL.
+typealias RepositoryUrl = Uri
+
 /// Describes an NPM package dependency.
 class NpmPackageSpec {
   /// The name of the package.
@@ -26,6 +42,15 @@ class NpmPackageSpec {
   version: String?
 }
 
+/// Describes an NPM repository to include when resolving dependencies.
+class NpmRepositorySpec {
+  /// Name of this custom NPM repository.
+  name: RepositoryName
+
+  /// Base URL for this NPM repository.
+  url: RepositoryUrl
+}
+
 /// Configuration for JavaScript dependency resolution using NPM.
 class NpmDependencies {
   /// A list of NPM package dependencies to be resolved for this project.
@@ -33,6 +58,42 @@ class NpmDependencies {
 
   /// A list of NPM package dependencies used only in development environments.
   devPackages: Listing<NpmPackageSpec> = new {}
+}
+
+/// Describes a Maven package dependency.
+class MavenPackageSpec {
+  /// Group for the package.
+  group: String?
+
+  /// Name for the package.
+  name: String?
+
+  /// Version or symbolic version for the package.
+  version: PackageVersion
+
+  /// Full Maven coordinate for the package; if specified, this is preferred to the group and name.
+  coordinate: String?
+
+  /// Name of a custom repository to pull this dependency from.
+  repository: RepositoryName?
+}
+
+/// Describes a Maven repository to include when resolving dependencies.
+class MavenRepositorySpec {
+  /// URL where this repository can be accessed.
+  url: RepositoryUrl?
+
+  /// File path to a local repository.
+  path: String?
+}
+
+/// Configuration for Maven dependency resolution.
+class MavenDependencies {
+  /// A list of Maven package dependencies to be resolved for this project.
+  packages: Listing<MavenPackageSpec> = new {}
+
+  /// A suite of extra Maven repositories.
+  repositories: Mapping<String, MavenRepositorySpec> = new {}
 }
 
 /// Describes a Pip package dependency.
@@ -85,6 +146,9 @@ class HuggingFaceDependencies {
 
 /// Dependency resolution configuration.
 class Dependencies {
+  /// Configure JVM dependencies using Maven.
+  maven: MavenDependencies = new {}
+
   /// Configure JavaScript dependencies using NPM.
   npm: NpmDependencies = new {}
 
@@ -100,3 +164,13 @@ class Dependencies {
 
 /// Dependency resolution configuration.
 dependencies: Dependencies = new {}
+
+//
+// ------ Configuration ---------------------------------------------------------------------------------------------
+//
+
+/// Configure JVM runtime settings.
+jvm: jvm.JvmSettings
+
+/// Configure Kotlin language settings.
+kotlin: kotlin.KotlinSettings

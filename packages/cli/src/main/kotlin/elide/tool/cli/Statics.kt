@@ -56,6 +56,8 @@ internal object Statics {
 
   internal val bin: String get() = execBinPath
   internal val binPath: Path by lazy { Paths.get(bin).toAbsolutePath() }
+  internal val elideHome: Path by lazy { binPath.parent }
+  internal val resourcesPath: Path by lazy { elideHome.resolve("resources").toAbsolutePath() }
 
   // Stream which drops all data.
   private val noOpStream by lazy {

@@ -1161,27 +1161,49 @@ public abstract interface class elide/runtime/precompiler/Precompiler$BytecodePr
 public abstract interface class elide/runtime/precompiler/Precompiler$Configuration {
 }
 
-public final class elide/runtime/precompiler/Precompiler$PrecompileSourceInfo : java/lang/Record {
+public final class elide/runtime/precompiler/Precompiler$PrecompileSourceInfo : java/lang/Record, elide/runtime/precompiler/Precompiler$SourceInfo {
 	public fun <init> (Ljava/lang/String;Ljava/nio/file/Path;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/nio/file/Path;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun allSources ()Lkotlin/sequences/Sequence;
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/nio/file/Path;
 	public final fun copy (Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;
 	public static synthetic fun copy$default (Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;
 	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun name ()Ljava/lang/String;
+	public fun name ()Ljava/lang/String;
 	public final fun path ()Ljava/nio/file/Path;
 	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/precompiler/Precompiler$PrecompileSourceRequest {
-	public fun <init> (Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;Ljava/lang/Object;)V
+	public fun <init> (Lelide/runtime/precompiler/Precompiler$SourceInfo;Ljava/lang/Object;)V
 	public final fun getConfig ()Ljava/lang/Object;
-	public final fun getSource ()Lelide/runtime/precompiler/Precompiler$PrecompileSourceInfo;
+	public final fun getSource ()Lelide/runtime/precompiler/Precompiler$SourceInfo;
+}
+
+public final class elide/runtime/precompiler/Precompiler$PrecompileSourceSet : java/lang/Record, elide/runtime/precompiler/Precompiler$SourceInfo {
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public fun allSources ()Lkotlin/sequences/Sequence;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Lelide/runtime/precompiler/Precompiler$PrecompileSourceSet;
+	public static synthetic fun copy$default (Lelide/runtime/precompiler/Precompiler$PrecompileSourceSet;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lelide/runtime/precompiler/Precompiler$PrecompileSourceSet;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun name ()Ljava/lang/String;
+	public final fun paths ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/precompiler/Precompiler$Provider : java/util/function/Supplier {
+}
+
+public abstract interface class elide/runtime/precompiler/Precompiler$SourceInfo {
+	public abstract fun allSources ()Lkotlin/sequences/Sequence;
+	public abstract fun getName ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/precompiler/Precompiler$SourcePrecompiler : elide/runtime/precompiler/Precompiler {
@@ -1258,5 +1280,1318 @@ public abstract interface class elide/runtime/vfs/LanguageVFS$LanguageVFSInfo {
 public final class elide/runtime/vfs/LanguageVFSKt {
 	public static final fun languageVfsRegistry ()Ljava/util/Map;
 	public static final fun registerLanguageVfs (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)V
+}
+
+public abstract class elide/tool/AbstractJvmMultiPathContainer : elide/tool/MultiPath$MultiPathContainer {
+	public static final field Companion Lelide/tool/AbstractJvmMultiPathContainer$Companion;
+	public synthetic fun <init> (ILkotlinx/serialization/internal/SerializationConstructorMarker;)V
+	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun clear ()V
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun removeIf (Ljava/util/function/Predicate;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public static final synthetic fun write$Self (Lelide/tool/AbstractJvmMultiPathContainer;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
+}
+
+public final class elide/tool/AbstractJvmMultiPathContainer$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tool/Argument : elide/tool/Arguments {
+	public static final field Companion Lelide/tool/Argument$Companion;
+	public abstract fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public static fun of (Ljava/lang/String;)Lelide/tool/Argument;
+	public static fun of (Lkotlin/Pair;)Lelide/tool/Argument;
+}
+
+public final class elide/tool/Argument$Companion {
+	public final fun of (Ljava/lang/String;)Lelide/tool/Argument;
+	public final fun of (Lkotlin/Pair;)Lelide/tool/Argument;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tool/Argument$KeyValueArg : elide/tool/Argument {
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public static fun asArgumentSequence-impl (Lkotlin/Pair;)Lkotlin/sequences/Sequence;
+	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public static fun asArgumentString-impl (Lkotlin/Pair;Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/tool/Argument$KeyValueArg;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/tool/Argument$StringArg : elide/tool/Argument {
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public static fun asArgumentSequence-impl (Ljava/lang/String;)Lkotlin/sequences/Sequence;
+	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public static fun asArgumentString-impl (Ljava/lang/String;Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tool/Argument$StringArg;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tool/ArgumentContext {
+	public abstract fun getArgSeparator ()C
+	public abstract fun getKvToken ()C
+}
+
+public final class elide/tool/ArgumentContext$Default : elide/tool/ArgumentContext {
+	public static final field INSTANCE Lelide/tool/ArgumentContext$Default;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getArgSeparator ()C
+	public fun getKvToken ()C
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/ArgumentExtensionsKt {
+	public static final fun asArgumentString (Lelide/tool/Argument;)Ljava/lang/String;
+	public static final fun asArgumentString (Lelide/tool/Argument;Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public static final fun asArgumentString (Lelide/tool/Arguments$Suite;Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public static synthetic fun asArgumentString$default (Lelide/tool/Arguments$Suite;Lelide/tool/ArgumentContext;ILjava/lang/Object;)Ljava/lang/String;
+	public static final fun toStringBuilder (Lelide/tool/Arguments$Suite;Lelide/tool/ArgumentContext;Ljava/lang/StringBuilder;)Ljava/lang/StringBuilder;
+	public static synthetic fun toStringBuilder$default (Lelide/tool/Arguments$Suite;Lelide/tool/ArgumentContext;Ljava/lang/StringBuilder;ILjava/lang/Object;)Ljava/lang/StringBuilder;
+}
+
+public abstract interface class elide/tool/Arguments {
+	public static final field Companion Lelide/tool/Arguments$Companion;
+	public fun asArgumentList ()Ljava/util/List;
+	public abstract fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public static fun empty ()Lelide/tool/Arguments$EmptyArguments;
+	public static fun from (Ljava/util/Collection;)Lelide/tool/Arguments$Suite;
+	public static fun from (Lkotlin/sequences/Sequence;)Lelide/tool/Arguments$Suite;
+	public fun get (I)Lelide/tool/Argument;
+	public static fun of (Ljava/lang/String;)Lelide/tool/Arguments;
+	public static fun of (Ljava/util/Collection;)Lelide/tool/Arguments$Suite;
+	public static fun of (Lkotlin/Pair;)Lelide/tool/Arguments$Suite;
+	public static fun of (Lkotlin/sequences/Sequence;)Lelide/tool/Arguments$Suite;
+}
+
+public final class elide/tool/Arguments$ArgumentList : elide/tool/Arguments$Suite, java/util/Collection, kotlin/jvm/internal/markers/KMappedMarker {
+	public fun add (Lelide/tool/Argument;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public static fun asArgumentSequence-impl (Lkotlinx/collections/immutable/PersistentList;)Lkotlin/sequences/Sequence;
+	public static final synthetic fun box-impl (Lkotlinx/collections/immutable/PersistentList;)Lelide/tool/Arguments$ArgumentList;
+	public fun clear ()V
+	public fun contains (Lelide/tool/Argument;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public static fun contains-impl (Lkotlinx/collections/immutable/PersistentList;Lelide/tool/Argument;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public static fun containsAll-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/util/Collection;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlinx/collections/immutable/PersistentList;Lkotlinx/collections/immutable/PersistentList;)Z
+	public fun getSize ()I
+	public static fun getSize-impl (Lkotlinx/collections/immutable/PersistentList;)I
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlinx/collections/immutable/PersistentList;)I
+	public fun isEmpty ()Z
+	public static fun isEmpty-impl (Lkotlinx/collections/immutable/PersistentList;)Z
+	public fun iterator ()Ljava/util/Iterator;
+	public static fun iterator-impl (Lkotlinx/collections/immutable/PersistentList;)Ljava/util/Iterator;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun removeIf (Ljava/util/function/Predicate;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public synthetic fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toMutable ()Lelide/tool/MutableArguments;
+	public static fun toMutable-impl (Lkotlinx/collections/immutable/PersistentList;)Lelide/tool/MutableArguments;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlinx/collections/immutable/PersistentList;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlinx/collections/immutable/PersistentList;
+}
+
+public final class elide/tool/Arguments$Companion {
+	public final fun empty ()Lelide/tool/Arguments$EmptyArguments;
+	public final fun from (Ljava/util/Collection;)Lelide/tool/Arguments$Suite;
+	public final fun from (Lkotlin/sequences/Sequence;)Lelide/tool/Arguments$Suite;
+	public final fun of (Ljava/lang/String;)Lelide/tool/Arguments;
+	public final fun of (Ljava/util/Collection;)Lelide/tool/Arguments$Suite;
+	public final fun of (Lkotlin/Pair;)Lelide/tool/Arguments$Suite;
+	public final fun of (Lkotlin/sequences/Sequence;)Lelide/tool/Arguments$Suite;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tool/Arguments$EmptyArguments : elide/tool/Arguments$Suite {
+	public static final field INSTANCE Lelide/tool/Arguments$EmptyArguments;
+	public fun add (Lelide/tool/Argument;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public fun clear ()V
+	public fun contains (Lelide/tool/Argument;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getSize ()I
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun removeIf (Ljava/util/function/Predicate;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public final fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/Arguments$SingleArgument : elide/tool/Arguments$Suite {
+	public fun add (Lelide/tool/Argument;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public static fun asArgumentSequence-impl (Lelide/tool/Argument;)Lkotlin/sequences/Sequence;
+	public static final synthetic fun box-impl (Lelide/tool/Argument;)Lelide/tool/Arguments$SingleArgument;
+	public fun clear ()V
+	public fun contains (Lelide/tool/Argument;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public static fun contains-impl (Lelide/tool/Argument;Lelide/tool/Argument;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public static fun containsAll-impl (Lelide/tool/Argument;Ljava/util/Collection;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/tool/Argument;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/tool/Argument;Lelide/tool/Argument;)Z
+	public fun getSize ()I
+	public static fun getSize-impl (Lelide/tool/Argument;)I
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/tool/Argument;)I
+	public fun isEmpty ()Z
+	public static fun isEmpty-impl (Lelide/tool/Argument;)Z
+	public fun iterator ()Ljava/util/Iterator;
+	public static fun iterator-impl (Lelide/tool/Argument;)Ljava/util/Iterator;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun removeIf (Ljava/util/function/Predicate;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public synthetic fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/tool/Argument;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/tool/Argument;
+}
+
+public abstract interface class elide/tool/Arguments$Suite : elide/tool/Arguments, java/util/Collection, kotlin/jvm/internal/markers/KMappedMarker {
+	public fun toMutable ()Lelide/tool/MutableArguments;
+}
+
+public final class elide/tool/Classpath : elide/tool/MultiPath$MultiPathContainer {
+	public static final field Companion Lelide/tool/Classpath$Companion;
+	public synthetic fun <init> (Lelide/tool/JvmMultiPathContainer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asList ()Ljava/util/List;
+	public fun asPathSequence ()Lkotlin/sequences/Sequence;
+	public fun asSequence ()Lkotlin/sequences/Sequence;
+	public fun clear ()V
+	public fun contains (Lelide/tool/MultiPath$Entry;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun contains (Ljava/lang/String;)Z
+	public fun contains (Ljava/nio/file/Path;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public static final fun empty ()Lelide/tool/Classpath;
+	public static final fun from (Ljava/util/Collection;)Lelide/tool/Classpath;
+	public fun get (I)Lelide/tool/Argument;
+	public fun get-WZ4Q5Ns (I)Lelide/tool/JvmMultiPathEntry;
+	public synthetic fun get-WZ4Q5Ns (I)Lelide/tool/MultiPath$Entry;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getPaths ()Ljava/util/List;
+	public fun getRole ()Lelide/tool/JvmMultiPath;
+	public synthetic fun getRole ()Ljava/lang/Enum;
+	public fun getSize ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public static final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/Classpath;
+	public fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath;
+	public fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath;
+	public fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath;
+	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun removeIf (Ljava/util/function/Predicate;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public final fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toMutable ()Lelide/tool/MultiPath$MutableMultiPath;
+}
+
+public final class elide/tool/Classpath$Companion {
+	public final fun empty ()Lelide/tool/Classpath;
+	public final fun from (Ljava/util/Collection;)Lelide/tool/Classpath;
+	public final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/Classpath;
+}
+
+public abstract interface class elide/tool/Environment : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
+	public static final field Companion Lelide/tool/Environment$Companion;
+	public static fun empty ()Lelide/tool/Environment$EmptyEnvironment;
+	public static fun from-jk2ZVD4 (Ljava/util/Map;)Lkotlinx/collections/immutable/PersistentMap;
+	public static fun host ()Lelide/tool/Environment$HostEnv;
+	public static fun of-jk2ZVD4 (Lkotlinx/collections/immutable/PersistentMap;)Lkotlinx/collections/immutable/PersistentMap;
+	public static fun of-jk2ZVD4 ([Lkotlin/Pair;)Lkotlinx/collections/immutable/PersistentMap;
+	public abstract fun toMutable ()Lelide/tool/MutableEnvironment;
+}
+
+public final class elide/tool/Environment$Companion {
+	public final fun empty ()Lelide/tool/Environment$EmptyEnvironment;
+	public final fun from-jk2ZVD4 (Ljava/util/Map;)Lkotlinx/collections/immutable/PersistentMap;
+	public final fun host ()Lelide/tool/Environment$HostEnv;
+	public final fun of-jk2ZVD4 (Lkotlinx/collections/immutable/PersistentMap;)Lkotlinx/collections/immutable/PersistentMap;
+	public final fun of-jk2ZVD4 ([Lkotlin/Pair;)Lkotlinx/collections/immutable/PersistentMap;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tool/Environment$CompoundEnv : elide/tool/Environment {
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/tool/Environment$CompoundEnv;
+	public fun clear ()V
+	public synthetic fun compute (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun compute (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun computeIfAbsent (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+	public fun computeIfAbsent (Ljava/lang/String;Ljava/util/function/Function;)Ljava/lang/String;
+	public synthetic fun computeIfPresent (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun computeIfPresent (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public static fun containsKey-impl (Lkotlin/Pair;Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public static fun containsValue-impl (Lkotlin/Pair;Ljava/lang/String;)Z
+	public synthetic fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public final synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public static fun get-impl (Lkotlin/Pair;Ljava/lang/String;)Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public static fun getEntries-impl (Lkotlin/Pair;)Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public static fun getKeys-impl (Lkotlin/Pair;)Ljava/util/Set;
+	public static fun getOrDefault-impl (Lkotlin/Pair;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun getSize ()I
+	public static fun getSize-impl (Lkotlin/Pair;)I
+	public fun getValues ()Ljava/util/Collection;
+	public static fun getValues-impl (Lkotlin/Pair;)Ljava/util/Collection;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public fun isEmpty ()Z
+	public static fun isEmpty-impl (Lkotlin/Pair;)Z
+	public synthetic fun keySet ()Ljava/util/Set;
+	public synthetic fun merge (Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun merge (Ljava/lang/String;Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public synthetic fun putIfAbsent (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun putIfAbsent (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/Object;)Ljava/lang/String;
+	public fun remove (Ljava/lang/Object;Ljava/lang/Object;)Z
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+	public fun replace (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun replace (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+	public fun replaceAll (Ljava/util/function/BiFunction;)V
+	public synthetic fun size ()I
+	public fun toMutable ()Lelide/tool/MutableEnvironment;
+	public static fun toMutable-impl (Lkotlin/Pair;)Lelide/tool/MutableEnvironment;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+	public synthetic fun values ()Ljava/util/Collection;
+}
+
+public final class elide/tool/Environment$EmptyEnvironment : elide/tool/Environment, java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
+	public static final field INSTANCE Lelide/tool/Environment$EmptyEnvironment;
+	public fun clear ()V
+	public synthetic fun compute (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun compute (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun computeIfAbsent (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+	public fun computeIfAbsent (Ljava/lang/String;Ljava/util/function/Function;)Ljava/lang/String;
+	public synthetic fun computeIfPresent (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun computeIfPresent (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun merge (Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun merge (Ljava/lang/String;Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public synthetic fun putIfAbsent (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun putIfAbsent (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/Object;)Ljava/lang/String;
+	public fun remove (Ljava/lang/Object;Ljava/lang/Object;)Z
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+	public fun replace (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun replace (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+	public fun replaceAll (Ljava/util/function/BiFunction;)V
+	public final fun size ()I
+	public fun toMutable ()Lelide/tool/MutableEnvironment;
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class elide/tool/Environment$HostEnv : elide/tool/Environment, java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
+	public static final field INSTANCE Lelide/tool/Environment$HostEnv;
+	public fun clear ()V
+	public synthetic fun compute (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun compute (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun computeIfAbsent (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+	public fun computeIfAbsent (Ljava/lang/String;Ljava/util/function/Function;)Ljava/lang/String;
+	public synthetic fun computeIfPresent (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun computeIfPresent (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public final fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public final synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public fun getSize ()I
+	public fun getValues ()Ljava/util/Collection;
+	public fun hashCode ()I
+	public fun isEmpty ()Z
+	public final fun keySet ()Ljava/util/Set;
+	public synthetic fun merge (Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun merge (Ljava/lang/String;Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public synthetic fun putIfAbsent (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun putIfAbsent (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/Object;)Ljava/lang/String;
+	public fun remove (Ljava/lang/Object;Ljava/lang/Object;)Z
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+	public fun replace (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun replace (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+	public fun replaceAll (Ljava/util/function/BiFunction;)V
+	public final fun size ()I
+	public fun toMutable ()Lelide/tool/MutableEnvironment;
+	public fun toString ()Ljava/lang/String;
+	public final fun values ()Ljava/util/Collection;
+}
+
+public final class elide/tool/Environment$MappedEnv : elide/tool/Environment, java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
+	public static final synthetic fun box-impl (Lkotlinx/collections/immutable/PersistentMap;)Lelide/tool/Environment$MappedEnv;
+	public fun clear ()V
+	public synthetic fun compute (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun compute (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun computeIfAbsent (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+	public fun computeIfAbsent (Ljava/lang/String;Ljava/util/function/Function;)Ljava/lang/String;
+	public synthetic fun computeIfPresent (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun computeIfPresent (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public static fun containsKey-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public static fun containsValue-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/String;)Z
+	public synthetic fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlinx/collections/immutable/PersistentMap;Lkotlinx/collections/immutable/PersistentMap;)Z
+	public final synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public static fun get-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/String;)Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public static fun getEntries-impl (Lkotlinx/collections/immutable/PersistentMap;)Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public static fun getKeys-impl (Lkotlinx/collections/immutable/PersistentMap;)Ljava/util/Set;
+	public static fun getOrDefault-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun getSize ()I
+	public static fun getSize-impl (Lkotlinx/collections/immutable/PersistentMap;)I
+	public fun getValues ()Ljava/util/Collection;
+	public static fun getValues-impl (Lkotlinx/collections/immutable/PersistentMap;)Ljava/util/Collection;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlinx/collections/immutable/PersistentMap;)I
+	public fun isEmpty ()Z
+	public static fun isEmpty-impl (Lkotlinx/collections/immutable/PersistentMap;)Z
+	public synthetic fun keySet ()Ljava/util/Set;
+	public synthetic fun merge (Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun merge (Ljava/lang/String;Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public synthetic fun putIfAbsent (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun putIfAbsent (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/Object;)Ljava/lang/String;
+	public fun remove (Ljava/lang/Object;Ljava/lang/Object;)Z
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+	public fun replace (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun replace (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+	public fun replaceAll (Ljava/util/function/BiFunction;)V
+	public synthetic fun size ()I
+	public fun toMutable ()Lelide/tool/MutableEnvironment;
+	public static fun toMutable-impl (Lkotlinx/collections/immutable/PersistentMap;)Lelide/tool/MutableEnvironment;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlinx/collections/immutable/PersistentMap;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlinx/collections/immutable/PersistentMap;
+	public synthetic fun values ()Ljava/util/Collection;
+}
+
+public abstract interface class elide/tool/Inputs {
+	public static final field Companion Lelide/tool/Inputs$Companion;
+}
+
+public final class elide/tool/Inputs$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tool/Inputs$Files : elide/tool/Inputs {
+}
+
+public abstract interface class elide/tool/Inputs$Values : elide/tool/Inputs {
+}
+
+public final class elide/tool/JvmMultiPath : java/lang/Enum {
+	public static final field CLASSPATH Lelide/tool/JvmMultiPath;
+	public static final field MODULEPATH Lelide/tool/JvmMultiPath;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tool/JvmMultiPath;
+	public static fun values ()[Lelide/tool/JvmMultiPath;
+}
+
+public final class elide/tool/JvmMultiPathContainer : elide/tool/AbstractJvmMultiPathContainer {
+	public fun <init> (Lelide/tool/JvmMultiPath;Lkotlinx/collections/immutable/PersistentList;Lkotlinx/collections/immutable/PersistentSet;)V
+	public synthetic fun <init> (Lelide/tool/JvmMultiPath;Lkotlinx/collections/immutable/PersistentList;Lkotlinx/collections/immutable/PersistentSet;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public fun asPathSequence ()Lkotlin/sequences/Sequence;
+	public static final fun empty ()Lelide/tool/JvmMultiPathContainer;
+	public static final fun from (Lelide/tool/JvmMultiPath;Ljava/util/Collection;)Lelide/tool/JvmMultiPathContainer;
+	public synthetic fun getEntries ()Ljava/util/Set;
+	public fun getEntries ()Lkotlinx/collections/immutable/PersistentSet;
+	public synthetic fun getPaths ()Ljava/util/List;
+	public fun getPaths ()Lkotlinx/collections/immutable/PersistentList;
+	public fun getRole ()Lelide/tool/JvmMultiPath;
+	public synthetic fun getRole ()Ljava/lang/Enum;
+	public static final fun of (Lelide/tool/JvmMultiPath;Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/JvmMultiPathContainer;
+	public fun plus (Lelide/tool/MultiPath;)Lelide/tool/JvmMultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath;
+	public fun plus (Ljava/nio/file/Path;)Lelide/tool/JvmMultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath;
+	public fun plus (Ljava/util/Collection;)Lelide/tool/AbstractJvmMultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath;
+	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/JvmMultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public fun toMutable ()Lelide/tool/MultiPath$MutableMultiPath;
+}
+
+public final class elide/tool/JvmMultiPathContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tool/JvmMultiPathContainer$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tool/JvmMultiPathContainer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tool/JvmMultiPathContainer;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tool/JvmMultiPathEntry : java/lang/Record, elide/tool/MultiPath$Entry {
+	public static final field Companion Lelide/tool/JvmMultiPathEntry$Companion;
+	public fun <init> (Lelide/tool/JvmMultiPathEntryType;Ljava/nio/file/Path;)V
+	public final fun component1 ()Lelide/tool/JvmMultiPathEntryType;
+	public final fun component2 ()Ljava/nio/file/Path;
+	public final fun copy (Lelide/tool/JvmMultiPathEntryType;Ljava/nio/file/Path;)Lelide/tool/JvmMultiPathEntry;
+	public static synthetic fun copy$default (Lelide/tool/JvmMultiPathEntry;Lelide/tool/JvmMultiPathEntryType;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/tool/JvmMultiPathEntry;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getPath ()Ljava/nio/file/Path;
+	public fun hashCode ()I
+	public fun path ()Ljava/nio/file/Path;
+	public fun toString ()Ljava/lang/String;
+	public final fun type ()Lelide/tool/JvmMultiPathEntryType;
+}
+
+public final class elide/tool/JvmMultiPathEntry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tool/JvmMultiPathEntry$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tool/JvmMultiPathEntry;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tool/JvmMultiPathEntry;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tool/JvmMultiPathEntry$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tool/JvmMultiPathEntryType : java/lang/Enum {
+	public static final field DIRECTORY Lelide/tool/JvmMultiPathEntryType;
+	public static final field JAR Lelide/tool/JvmMultiPathEntryType;
+	public static final field JMOD Lelide/tool/JvmMultiPathEntryType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tool/JvmMultiPathEntryType;
+	public static fun values ()[Lelide/tool/JvmMultiPathEntryType;
+}
+
+public final class elide/tool/Modulepath : elide/tool/MultiPath$MultiPathContainer {
+	public static final field Companion Lelide/tool/Modulepath$Companion;
+	public synthetic fun <init> (Lelide/tool/JvmMultiPathContainer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asList ()Ljava/util/List;
+	public fun asPathSequence ()Lkotlin/sequences/Sequence;
+	public fun asSequence ()Lkotlin/sequences/Sequence;
+	public fun clear ()V
+	public fun contains (Lelide/tool/MultiPath$Entry;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun contains (Ljava/lang/String;)Z
+	public fun contains (Ljava/nio/file/Path;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public static final fun empty ()Lelide/tool/Modulepath;
+	public static final fun from (Ljava/util/Collection;)Lelide/tool/Modulepath;
+	public fun get (I)Lelide/tool/Argument;
+	public fun get-WZ4Q5Ns (I)Lelide/tool/JvmMultiPathEntry;
+	public synthetic fun get-WZ4Q5Ns (I)Lelide/tool/MultiPath$Entry;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getPaths ()Ljava/util/List;
+	public fun getRole ()Lelide/tool/JvmMultiPath;
+	public synthetic fun getRole ()Ljava/lang/Enum;
+	public fun getSize ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public static final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/Modulepath;
+	public fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath;
+	public fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath;
+	public fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath;
+	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun removeIf (Ljava/util/function/Predicate;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public final fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toMutable ()Lelide/tool/MultiPath$MutableMultiPath;
+}
+
+public final class elide/tool/Modulepath$Companion {
+	public final fun empty ()Lelide/tool/Modulepath;
+	public final fun from (Ljava/util/Collection;)Lelide/tool/Modulepath;
+	public final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/Modulepath;
+}
+
+public abstract interface class elide/tool/MultiPath : elide/tool/Argument {
+	public static final field Companion Lelide/tool/MultiPath$Companion;
+	public fun asList ()Ljava/util/List;
+	public abstract fun asPathSequence ()Lkotlin/sequences/Sequence;
+	public abstract fun asSequence ()Lkotlin/sequences/Sequence;
+	public abstract fun contains (Ljava/lang/String;)Z
+	public abstract fun contains (Ljava/nio/file/Path;)Z
+	public abstract fun get (I)Lelide/tool/Argument;
+	public abstract fun get-WZ4Q5Ns (I)Lelide/tool/MultiPath$Entry;
+	public abstract fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath;
+	public abstract fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath;
+	public abstract fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath;
+	public abstract fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public abstract fun toMutable ()Lelide/tool/MultiPath$MutableMultiPath;
+}
+
+public final class elide/tool/MultiPath$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tool/MultiPath$Entry {
+	public abstract fun getPath ()Ljava/nio/file/Path;
+}
+
+public abstract interface class elide/tool/MultiPath$MultiPathContainer : elide/tool/MultiPath, java/util/Collection, kotlin/jvm/internal/markers/KMappedMarker {
+	public static final field Companion Lelide/tool/MultiPath$MultiPathContainer$Companion;
+	public fun asSequence ()Lkotlin/sequences/Sequence;
+	public fun contains (Lelide/tool/MultiPath$Entry;)Z
+	public fun contains (Ljava/lang/Object;)Z
+	public fun contains (Ljava/lang/String;)Z
+	public fun contains (Ljava/nio/file/Path;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public fun get (I)Lelide/tool/Argument;
+	public fun get-WZ4Q5Ns (I)Lelide/tool/MultiPath$Entry;
+	public abstract fun getEntries ()Ljava/util/Set;
+	public abstract fun getPaths ()Ljava/util/List;
+	public abstract fun getRole ()Ljava/lang/Enum;
+	public fun getSize ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public abstract fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MultiPathContainer;
+	public abstract fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MultiPathContainer;
+	public abstract fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MultiPathContainer;
+	public abstract fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun size ()I
+}
+
+public final class elide/tool/MultiPath$MultiPathContainer$Companion {
+	public final fun serializer (Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tool/MultiPath$MutableMultiPath : elide/tool/MultiPath, java/util/Collection, kotlin/jvm/internal/markers/KMutableCollection {
+}
+
+public abstract interface class elide/tool/MultiPath$MutableMultiPathContainer : elide/tool/MultiPath$MultiPathContainer, elide/tool/MultiPath$MutableMultiPath {
+	public abstract fun add (Ljava/nio/file/Path;)Z
+	public abstract fun build ()Lelide/tool/MultiPath$MultiPathContainer;
+	public abstract fun iterator ()Ljava/util/Iterator;
+	public abstract fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public abstract fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public abstract fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public abstract fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public abstract fun set (ILjava/nio/file/Path;)Z
+	public synthetic fun toMutable ()Lelide/tool/MultiPath$MutableMultiPath;
+	public fun toMutable ()Lelide/tool/MultiPath$MutableMultiPathContainer;
+}
+
+public abstract interface class elide/tool/MutableArguments : elide/tool/Arguments, elide/tool/Arguments$Suite {
+	public static final field Companion Lelide/tool/MutableArguments$Companion;
+	public abstract fun build ()Lelide/tool/Arguments;
+	public static fun from (Lelide/tool/Arguments;)Lelide/tool/MutableArguments;
+	public static fun from (Lkotlinx/collections/immutable/PersistentList;)Lelide/tool/MutableArguments;
+	public fun toMutable ()Lelide/tool/MutableArguments;
+}
+
+public final class elide/tool/MutableArguments$Companion {
+	public final fun from (Lelide/tool/Arguments;)Lelide/tool/MutableArguments;
+	public final fun from (Lkotlinx/collections/immutable/PersistentList;)Lelide/tool/MutableArguments;
+}
+
+public final class elide/tool/MutableArguments$MutableArgumentList : elide/tool/MutableArguments, java/util/List, kotlin/jvm/internal/markers/KMutableList {
+	public fun add (ILelide/tool/Argument;)V
+	public synthetic fun add (ILjava/lang/Object;)V
+	public fun add (Lelide/tool/Argument;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public static fun add-impl (Ljava/util/List;ILelide/tool/Argument;)V
+	public static fun add-impl (Ljava/util/List;Lelide/tool/Argument;)Z
+	public fun addAll (ILjava/util/Collection;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public static fun addAll-impl (Ljava/util/List;ILjava/util/Collection;)Z
+	public static fun addAll-impl (Ljava/util/List;Ljava/util/Collection;)Z
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public static fun asArgumentSequence-impl (Ljava/util/List;)Lkotlin/sequences/Sequence;
+	public static final synthetic fun box-impl (Ljava/util/List;)Lelide/tool/MutableArguments$MutableArgumentList;
+	public fun build ()Lelide/tool/Arguments;
+	public static fun build-impl (Ljava/util/List;)Lelide/tool/Arguments;
+	public fun clear ()V
+	public static fun clear-impl (Ljava/util/List;)V
+	public static fun constructor-impl (Ljava/util/List;)Ljava/util/List;
+	public fun contains (Lelide/tool/Argument;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public static fun contains-impl (Ljava/util/List;Lelide/tool/Argument;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public static fun containsAll-impl (Ljava/util/List;Ljava/util/Collection;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/util/List;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/util/List;Ljava/util/List;)Z
+	public fun get (I)Lelide/tool/Argument;
+	public synthetic fun get (I)Ljava/lang/Object;
+	public static fun get-impl (Ljava/util/List;I)Lelide/tool/Argument;
+	public fun getSize ()I
+	public static fun getSize-impl (Ljava/util/List;)I
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/util/List;)I
+	public fun indexOf (Lelide/tool/Argument;)I
+	public final fun indexOf (Ljava/lang/Object;)I
+	public static fun indexOf-impl (Ljava/util/List;Lelide/tool/Argument;)I
+	public fun isEmpty ()Z
+	public static fun isEmpty-impl (Ljava/util/List;)Z
+	public fun iterator ()Ljava/util/Iterator;
+	public static fun iterator-impl (Ljava/util/List;)Ljava/util/Iterator;
+	public fun lastIndexOf (Lelide/tool/Argument;)I
+	public final fun lastIndexOf (Ljava/lang/Object;)I
+	public static fun lastIndexOf-impl (Ljava/util/List;Lelide/tool/Argument;)I
+	public fun listIterator ()Ljava/util/ListIterator;
+	public fun listIterator (I)Ljava/util/ListIterator;
+	public static fun listIterator-impl (Ljava/util/List;)Ljava/util/ListIterator;
+	public static fun listIterator-impl (Ljava/util/List;I)Ljava/util/ListIterator;
+	public final fun remove (I)Lelide/tool/Argument;
+	public synthetic fun remove (I)Ljava/lang/Object;
+	public fun remove (Lelide/tool/Argument;)Z
+	public final fun remove (Ljava/lang/Object;)Z
+	public static fun remove-impl (Ljava/util/List;Lelide/tool/Argument;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public static fun removeAll-impl (Ljava/util/List;Ljava/util/Collection;)Z
+	public fun removeAt (I)Lelide/tool/Argument;
+	public static fun removeAt-impl (Ljava/util/List;I)Lelide/tool/Argument;
+	public fun retainAll (Ljava/util/Collection;)Z
+	public static fun retainAll-impl (Ljava/util/List;Ljava/util/Collection;)Z
+	public fun set (ILelide/tool/Argument;)Lelide/tool/Argument;
+	public synthetic fun set (ILjava/lang/Object;)Ljava/lang/Object;
+	public static fun set-impl (Ljava/util/List;ILelide/tool/Argument;)Lelide/tool/Argument;
+	public synthetic fun size ()I
+	public fun subList (II)Ljava/util/List;
+	public static fun subList-impl (Ljava/util/List;II)Ljava/util/List;
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/util/List;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/util/List;
+}
+
+public final class elide/tool/MutableArguments$PersistentArgumentList : elide/tool/MutableArguments, kotlinx/collections/immutable/PersistentList {
+	public fun add (ILelide/tool/Argument;)Lkotlinx/collections/immutable/PersistentList;
+	public fun add (ILelide/tool/Argument;)V
+	public synthetic fun add (ILjava/lang/Object;)Lkotlinx/collections/immutable/PersistentList;
+	public synthetic fun add (ILjava/lang/Object;)V
+	public fun add (Lelide/tool/Argument;)Lkotlinx/collections/immutable/PersistentList;
+	public fun add (Lelide/tool/Argument;)Z
+	public synthetic fun add (Ljava/lang/Object;)Lkotlinx/collections/immutable/PersistentCollection;
+	public synthetic fun add (Ljava/lang/Object;)Lkotlinx/collections/immutable/PersistentList;
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public static fun add-impl (Lkotlinx/collections/immutable/PersistentList;ILelide/tool/Argument;)Lkotlinx/collections/immutable/PersistentList;
+	public static fun add-impl (Lkotlinx/collections/immutable/PersistentList;Lelide/tool/Argument;)Lkotlinx/collections/immutable/PersistentList;
+	public fun addAll (ILjava/util/Collection;)Lkotlinx/collections/immutable/PersistentList;
+	public fun addAll (ILjava/util/Collection;)Z
+	public synthetic fun addAll (Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentCollection;
+	public fun addAll (Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentList;
+	public fun addAll (Ljava/util/Collection;)Z
+	public static fun addAll-impl (Lkotlinx/collections/immutable/PersistentList;ILjava/util/Collection;)Lkotlinx/collections/immutable/PersistentList;
+	public static fun addAll-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentList;
+	public fun addFirst (Lelide/tool/Argument;)V
+	public synthetic fun addFirst (Ljava/lang/Object;)V
+	public fun addLast (Lelide/tool/Argument;)V
+	public synthetic fun addLast (Ljava/lang/Object;)V
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public static fun asArgumentSequence-impl (Lkotlinx/collections/immutable/PersistentList;)Lkotlin/sequences/Sequence;
+	public static final synthetic fun box-impl (Lkotlinx/collections/immutable/PersistentList;)Lelide/tool/MutableArguments$PersistentArgumentList;
+	public fun build ()Lelide/tool/Arguments;
+	public static fun build-impl (Lkotlinx/collections/immutable/PersistentList;)Lelide/tool/Arguments;
+	public synthetic fun builder ()Lkotlinx/collections/immutable/PersistentCollection$Builder;
+	public fun builder ()Lkotlinx/collections/immutable/PersistentList$Builder;
+	public static fun builder-impl (Lkotlinx/collections/immutable/PersistentList;)Lkotlinx/collections/immutable/PersistentList$Builder;
+	public synthetic fun clear ()Lkotlinx/collections/immutable/PersistentCollection;
+	public fun clear ()Lkotlinx/collections/immutable/PersistentList;
+	public fun clear ()V
+	public static fun clear-impl (Lkotlinx/collections/immutable/PersistentList;)Lkotlinx/collections/immutable/PersistentList;
+	public static fun constructor-impl (Lkotlinx/collections/immutable/PersistentList;)Lkotlinx/collections/immutable/PersistentList;
+	public fun contains (Lelide/tool/Argument;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public static fun contains-impl (Lkotlinx/collections/immutable/PersistentList;Lelide/tool/Argument;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public static fun containsAll-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/util/Collection;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlinx/collections/immutable/PersistentList;Lkotlinx/collections/immutable/PersistentList;)Z
+	public fun get (I)Lelide/tool/Argument;
+	public synthetic fun get (I)Ljava/lang/Object;
+	public static fun get-impl (Lkotlinx/collections/immutable/PersistentList;I)Lelide/tool/Argument;
+	public fun getSize ()I
+	public static fun getSize-impl (Lkotlinx/collections/immutable/PersistentList;)I
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlinx/collections/immutable/PersistentList;)I
+	public fun indexOf (Lelide/tool/Argument;)I
+	public final fun indexOf (Ljava/lang/Object;)I
+	public static fun indexOf-impl (Lkotlinx/collections/immutable/PersistentList;Lelide/tool/Argument;)I
+	public fun isEmpty ()Z
+	public static fun isEmpty-impl (Lkotlinx/collections/immutable/PersistentList;)Z
+	public fun iterator ()Ljava/util/Iterator;
+	public static fun iterator-impl (Lkotlinx/collections/immutable/PersistentList;)Ljava/util/Iterator;
+	public fun lastIndexOf (Lelide/tool/Argument;)I
+	public final fun lastIndexOf (Ljava/lang/Object;)I
+	public static fun lastIndexOf-impl (Lkotlinx/collections/immutable/PersistentList;Lelide/tool/Argument;)I
+	public fun listIterator ()Ljava/util/ListIterator;
+	public fun listIterator (I)Ljava/util/ListIterator;
+	public static fun listIterator-impl (Lkotlinx/collections/immutable/PersistentList;)Ljava/util/ListIterator;
+	public static fun listIterator-impl (Lkotlinx/collections/immutable/PersistentList;I)Ljava/util/ListIterator;
+	public fun remove (I)Lelide/tool/Argument;
+	public synthetic fun remove (I)Ljava/lang/Object;
+	public fun remove (Lelide/tool/Argument;)Lkotlinx/collections/immutable/PersistentList;
+	public synthetic fun remove (Ljava/lang/Object;)Lkotlinx/collections/immutable/PersistentCollection;
+	public synthetic fun remove (Ljava/lang/Object;)Lkotlinx/collections/immutable/PersistentList;
+	public fun remove (Ljava/lang/Object;)Z
+	public static fun remove-impl (Lkotlinx/collections/immutable/PersistentList;Lelide/tool/Argument;)Lkotlinx/collections/immutable/PersistentList;
+	public synthetic fun removeAll (Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentCollection;
+	public fun removeAll (Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentList;
+	public fun removeAll (Ljava/util/Collection;)Z
+	public synthetic fun removeAll (Lkotlin/jvm/functions/Function1;)Lkotlinx/collections/immutable/PersistentCollection;
+	public fun removeAll (Lkotlin/jvm/functions/Function1;)Lkotlinx/collections/immutable/PersistentList;
+	public static fun removeAll-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentList;
+	public static fun removeAll-impl (Lkotlinx/collections/immutable/PersistentList;Lkotlin/jvm/functions/Function1;)Lkotlinx/collections/immutable/PersistentList;
+	public fun removeAt (I)Lkotlinx/collections/immutable/PersistentList;
+	public static fun removeAt-impl (Lkotlinx/collections/immutable/PersistentList;I)Lkotlinx/collections/immutable/PersistentList;
+	public fun removeFirst ()Lelide/tool/Argument;
+	public synthetic fun removeFirst ()Ljava/lang/Object;
+	public fun removeLast ()Lelide/tool/Argument;
+	public synthetic fun removeLast ()Ljava/lang/Object;
+	public fun replaceAll (Ljava/util/function/UnaryOperator;)V
+	public synthetic fun retainAll (Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentCollection;
+	public fun retainAll (Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentList;
+	public fun retainAll (Ljava/util/Collection;)Z
+	public static fun retainAll-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/util/Collection;)Lkotlinx/collections/immutable/PersistentList;
+	public fun set (ILelide/tool/Argument;)Lelide/tool/Argument;
+	public fun set (ILelide/tool/Argument;)Lkotlinx/collections/immutable/PersistentList;
+	public synthetic fun set (ILjava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun set (ILjava/lang/Object;)Lkotlinx/collections/immutable/PersistentList;
+	public static fun set-impl (Lkotlinx/collections/immutable/PersistentList;ILelide/tool/Argument;)Lkotlinx/collections/immutable/PersistentList;
+	public synthetic fun size ()I
+	public fun sort (Ljava/util/Comparator;)V
+	public synthetic fun subList (II)Ljava/util/List;
+	public fun subList (II)Lkotlinx/collections/immutable/ImmutableList;
+	public static fun subList-impl (Lkotlinx/collections/immutable/PersistentList;II)Lkotlinx/collections/immutable/ImmutableList;
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlinx/collections/immutable/PersistentList;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlinx/collections/immutable/PersistentList;
+}
+
+public final class elide/tool/MutableClasspath : elide/tool/MultiPath$MutableMultiPathContainer {
+	public static final field Companion Lelide/tool/MutableClasspath$Companion;
+	public synthetic fun <init> (Lelide/tool/MutableJvmMultiPathContainer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun add (Ljava/nio/file/Path;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asList ()Ljava/util/List;
+	public fun asPathSequence ()Lkotlin/sequences/Sequence;
+	public fun asSequence ()Lkotlin/sequences/Sequence;
+	public fun build ()Lelide/tool/MultiPath$MultiPathContainer;
+	public fun clear ()V
+	public fun contains (Lelide/tool/MultiPath$Entry;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun contains (Ljava/lang/String;)Z
+	public fun contains (Ljava/nio/file/Path;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public static final fun empty ()Lelide/tool/MutableClasspath;
+	public static final fun from (Ljava/util/Collection;)Lelide/tool/MutableClasspath;
+	public fun get (I)Lelide/tool/Argument;
+	public fun get-WZ4Q5Ns (I)Lelide/tool/JvmMultiPathEntry;
+	public synthetic fun get-WZ4Q5Ns (I)Lelide/tool/MultiPath$Entry;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getPaths ()Ljava/util/List;
+	public fun getRole ()Lelide/tool/JvmMultiPath;
+	public synthetic fun getRole ()Ljava/lang/Enum;
+	public fun getSize ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public static final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/MutableClasspath;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public fun remove (Lelide/tool/MultiPath$Entry;)Z
+	public final fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public fun set (ILjava/nio/file/Path;)Z
+	public final fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public synthetic fun toMutable ()Lelide/tool/MultiPath$MutableMultiPath;
+	public fun toMutable ()Lelide/tool/MultiPath$MutableMultiPathContainer;
+}
+
+public final class elide/tool/MutableClasspath$Companion {
+	public final fun empty ()Lelide/tool/MutableClasspath;
+	public final fun from (Ljava/util/Collection;)Lelide/tool/MutableClasspath;
+	public final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/MutableClasspath;
+}
+
+public abstract interface class elide/tool/MutableEnvironment : elide/tool/Environment {
+	public static final field Companion Lelide/tool/MutableEnvironment$Companion;
+	public abstract fun build ()Lelide/tool/Environment;
+	public static fun empty ()Lelide/tool/MutableEnvironment;
+	public static fun from (Lelide/tool/Environment;)Lelide/tool/MutableEnvironment;
+	public static fun from (Lkotlinx/collections/immutable/PersistentMap;)Lelide/tool/MutableEnvironment;
+}
+
+public final class elide/tool/MutableEnvironment$Companion {
+	public final fun empty ()Lelide/tool/MutableEnvironment;
+	public final fun from (Lelide/tool/Environment;)Lelide/tool/MutableEnvironment;
+	public final fun from (Lkotlinx/collections/immutable/PersistentMap;)Lelide/tool/MutableEnvironment;
+}
+
+public final class elide/tool/MutableEnvironment$PersistentEnvMap : elide/tool/MutableEnvironment {
+	public static final synthetic fun box-impl (Lkotlinx/collections/immutable/PersistentMap;)Lelide/tool/MutableEnvironment$PersistentEnvMap;
+	public fun build ()Lelide/tool/Environment;
+	public static fun build-impl (Lkotlinx/collections/immutable/PersistentMap;)Lelide/tool/Environment;
+	public fun clear ()V
+	public synthetic fun compute (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun compute (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun computeIfAbsent (Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+	public fun computeIfAbsent (Ljava/lang/String;Ljava/util/function/Function;)Ljava/lang/String;
+	public synthetic fun computeIfPresent (Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun computeIfPresent (Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public final fun containsKey (Ljava/lang/Object;)Z
+	public fun containsKey (Ljava/lang/String;)Z
+	public static fun containsKey-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/String;)Z
+	public final fun containsValue (Ljava/lang/Object;)Z
+	public fun containsValue (Ljava/lang/String;)Z
+	public static fun containsValue-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/String;)Z
+	public synthetic fun entrySet ()Ljava/util/Set;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlinx/collections/immutable/PersistentMap;Lkotlinx/collections/immutable/PersistentMap;)Z
+	public final synthetic fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public final fun get (Ljava/lang/Object;)Ljava/lang/String;
+	public fun get (Ljava/lang/String;)Ljava/lang/String;
+	public static fun get-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/String;)Ljava/lang/String;
+	public fun getEntries ()Ljava/util/Set;
+	public static fun getEntries-impl (Lkotlinx/collections/immutable/PersistentMap;)Ljava/util/Set;
+	public fun getKeys ()Ljava/util/Set;
+	public static fun getKeys-impl (Lkotlinx/collections/immutable/PersistentMap;)Ljava/util/Set;
+	public static fun getOrDefault-impl (Lkotlinx/collections/immutable/PersistentMap;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun getSize ()I
+	public static fun getSize-impl (Lkotlinx/collections/immutable/PersistentMap;)I
+	public fun getValues ()Ljava/util/Collection;
+	public static fun getValues-impl (Lkotlinx/collections/immutable/PersistentMap;)Ljava/util/Collection;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlinx/collections/immutable/PersistentMap;)I
+	public fun isEmpty ()Z
+	public static fun isEmpty-impl (Lkotlinx/collections/immutable/PersistentMap;)Z
+	public synthetic fun keySet ()Ljava/util/Set;
+	public synthetic fun merge (Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;
+	public fun merge (Ljava/lang/String;Ljava/lang/String;Ljava/util/function/BiFunction;)Ljava/lang/String;
+	public synthetic fun put (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun put (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun putAll (Ljava/util/Map;)V
+	public synthetic fun putIfAbsent (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public fun putIfAbsent (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public synthetic fun remove (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun remove (Ljava/lang/Object;)Ljava/lang/String;
+	public fun remove (Ljava/lang/Object;Ljava/lang/Object;)Z
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+	public synthetic fun replace (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z
+	public fun replace (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public fun replace (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
+	public fun replaceAll (Ljava/util/function/BiFunction;)V
+	public synthetic fun size ()I
+	public fun toMutable ()Lelide/tool/MutableEnvironment;
+	public static fun toMutable-impl (Lkotlinx/collections/immutable/PersistentMap;)Lelide/tool/MutableEnvironment;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlinx/collections/immutable/PersistentMap;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlinx/collections/immutable/PersistentMap;
+	public synthetic fun values ()Ljava/util/Collection;
+}
+
+public final class elide/tool/MutableJvmMultiPathContainer : elide/tool/MultiPath$MutableMultiPathContainer {
+	public fun <init> (Lelide/tool/JvmMultiPath;Ljava/util/List;Ljava/util/Set;)V
+	public synthetic fun <init> (Lelide/tool/JvmMultiPath;Ljava/util/List;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun add (Ljava/nio/file/Path;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public fun asPathSequence ()Lkotlin/sequences/Sequence;
+	public fun build ()Lelide/tool/MultiPath$MultiPathContainer;
+	public fun clear ()V
+	public static final fun empty ()Lelide/tool/MutableJvmMultiPathContainer;
+	public static final fun from (Lelide/tool/JvmMultiPath;Ljava/util/Collection;)Lelide/tool/MutableJvmMultiPathContainer;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getPaths ()Ljava/util/List;
+	public fun getRole ()Lelide/tool/JvmMultiPath;
+	public synthetic fun getRole ()Ljava/lang/Enum;
+	public fun iterator ()Ljava/util/Iterator;
+	public static final fun of (Lelide/tool/JvmMultiPath;Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/MutableJvmMultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath;
+	public fun plus (Lelide/tool/MultiPath;)Lelide/tool/MutableJvmMultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath;
+	public fun plus (Ljava/nio/file/Path;)Lelide/tool/MutableJvmMultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath;
+	public fun plus (Ljava/util/Collection;)Lelide/tool/MutableJvmMultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MutableJvmMultiPathContainer;
+	public fun remove (Lelide/tool/MultiPath$Entry;)Z
+	public final fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public fun set (ILjava/nio/file/Path;)Z
+	public fun setEntries (Ljava/util/Set;)V
+	public fun setPaths (Ljava/util/List;)V
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public synthetic fun toMutable ()Lelide/tool/MultiPath$MutableMultiPath;
+	public synthetic fun toMutable ()Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public fun toMutable ()Lelide/tool/MutableJvmMultiPathContainer;
+}
+
+public final class elide/tool/MutableJvmMultiPathContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tool/MutableJvmMultiPathContainer$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tool/MutableJvmMultiPathContainer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tool/MutableJvmMultiPathContainer;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tool/MutableModulepath : elide/tool/MultiPath$MutableMultiPathContainer {
+	public static final field Companion Lelide/tool/MutableModulepath$Companion;
+	public synthetic fun <init> (Lelide/tool/MutableJvmMultiPathContainer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public synthetic fun add (Ljava/lang/Object;)Z
+	public fun add (Ljava/nio/file/Path;)Z
+	public fun addAll (Ljava/util/Collection;)Z
+	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
+	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asList ()Ljava/util/List;
+	public fun asPathSequence ()Lkotlin/sequences/Sequence;
+	public fun asSequence ()Lkotlin/sequences/Sequence;
+	public fun build ()Lelide/tool/MultiPath$MultiPathContainer;
+	public fun clear ()V
+	public fun contains (Lelide/tool/MultiPath$Entry;)Z
+	public final fun contains (Ljava/lang/Object;)Z
+	public fun contains (Ljava/lang/String;)Z
+	public fun contains (Ljava/nio/file/Path;)Z
+	public fun containsAll (Ljava/util/Collection;)Z
+	public static final fun empty ()Lelide/tool/MutableModulepath;
+	public static final fun from (Ljava/util/Collection;)Lelide/tool/MutableModulepath;
+	public fun get (I)Lelide/tool/Argument;
+	public fun get-WZ4Q5Ns (I)Lelide/tool/JvmMultiPathEntry;
+	public synthetic fun get-WZ4Q5Ns (I)Lelide/tool/MultiPath$Entry;
+	public fun getEntries ()Ljava/util/Set;
+	public fun getPaths ()Ljava/util/List;
+	public fun getRole ()Lelide/tool/JvmMultiPath;
+	public synthetic fun getRole ()Ljava/lang/Enum;
+	public fun getSize ()I
+	public fun isEmpty ()Z
+	public fun iterator ()Ljava/util/Iterator;
+	public static final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/MutableModulepath;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Lelide/tool/MultiPath;)Lelide/tool/MultiPath;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Ljava/nio/file/Path;)Lelide/tool/MultiPath;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Ljava/util/Collection;)Lelide/tool/MultiPath;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
+	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MutableMultiPathContainer;
+	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public fun remove (Lelide/tool/MultiPath$Entry;)Z
+	public final fun remove (Ljava/lang/Object;)Z
+	public fun removeAll (Ljava/util/Collection;)Z
+	public fun retainAll (Ljava/util/Collection;)Z
+	public fun set (ILjava/nio/file/Path;)Z
+	public final fun size ()I
+	public fun toArray ()[Ljava/lang/Object;
+	public fun toArray ([Ljava/lang/Object;)[Ljava/lang/Object;
+	public synthetic fun toMutable ()Lelide/tool/MultiPath$MutableMultiPath;
+	public fun toMutable ()Lelide/tool/MultiPath$MutableMultiPathContainer;
+}
+
+public final class elide/tool/MutableModulepath$Companion {
+	public final fun empty ()Lelide/tool/MutableModulepath;
+	public final fun from (Ljava/util/Collection;)Lelide/tool/MutableModulepath;
+	public final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/MutableModulepath;
+}
+
+public abstract interface class elide/tool/Outputs {
+	public static final field Companion Lelide/tool/Outputs$Companion;
+}
+
+public final class elide/tool/Outputs$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tool/Outputs$Disk : elide/tool/Outputs {
+}
+
+public abstract interface class elide/tool/Outputs$Disk$Directory : elide/tool/Outputs$Disk {
+}
+
+public abstract interface class elide/tool/Outputs$Disk$File : elide/tool/Outputs$Disk {
+}
+
+public abstract interface class elide/tool/Outputs$Memory : elide/tool/Outputs {
+}
+
+public abstract interface class elide/tool/Tool {
+	public static final field Companion Lelide/tool/Tool$Companion;
+	public static fun describe (Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$CommandLineTool;
+	public static fun describe (Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$CommandLineTool;
+	public abstract fun getDescription ()Ljava/lang/String;
+	public abstract fun getDocs ()Ljava/net/URI;
+	public abstract fun getLabel ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getVersion ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tool/Tool$CommandLineTool : elide/tool/Tool {
+	public abstract fun extend (Lelide/tool/Arguments;Lelide/tool/Environment;)Lelide/tool/Tool$CommandLineTool;
+	public static synthetic fun extend$default (Lelide/tool/Tool$CommandLineTool;Lelide/tool/Arguments;Lelide/tool/Environment;ILjava/lang/Object;)Lelide/tool/Tool$CommandLineTool;
+	public abstract fun getArgs ()Lelide/tool/Arguments;
+	public abstract fun getEnvironment ()Lelide/tool/Environment;
+	public abstract fun help ()Ljava/lang/StringBuilder;
+	public abstract fun using (Lelide/tool/Inputs;Lelide/tool/Outputs;)Lelide/tool/Tool$CommandLineTool;
+}
+
+public final class elide/tool/Tool$Companion {
+	public final fun describe (Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$CommandLineTool;
+	public final fun describe (Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$CommandLineTool;
+	public static synthetic fun describe$default (Lelide/tool/Tool$Companion;Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;ILjava/lang/Object;)Lelide/tool/Tool$CommandLineTool;
+	public static synthetic fun describe$default (Lelide/tool/Tool$Companion;Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;ILjava/lang/Object;)Lelide/tool/Tool$CommandLineTool;
+}
+
+public final class elide/tool/Tool$ComplexCliTool : elide/tool/Tool$CommandLineTool, elide/tool/Tool$KnownInputs, elide/tool/Tool$KnownOutputs {
+	public fun extend (Lelide/tool/Arguments;Lelide/tool/Environment;)Lelide/tool/Tool$CommandLineTool;
+	public fun getArgs ()Lelide/tool/Arguments;
+	public fun getDescription ()Ljava/lang/String;
+	public fun getDocs ()Ljava/net/URI;
+	public fun getEnvironment ()Lelide/tool/Environment;
+	public fun getInputs ()Lelide/tool/Inputs;
+	public fun getLabel ()Ljava/lang/String;
+	public fun getName ()Ljava/lang/String;
+	public fun getOutputs ()Lelide/tool/Outputs;
+	public fun getVersion ()Ljava/lang/String;
+	public fun help ()Ljava/lang/StringBuilder;
+	public fun using (Lelide/tool/Inputs;Lelide/tool/Outputs;)Lelide/tool/Tool$CommandLineTool;
+}
+
+public abstract interface class elide/tool/Tool$EmbeddedTool : elide/tool/Tool {
+	public abstract fun getInfo ()Lelide/tool/Tool$CommandLineTool;
+	public abstract fun supported ()Z
+}
+
+public abstract interface class elide/tool/Tool$KnownInputs : elide/tool/Tool {
+	public abstract fun getInputs ()Lelide/tool/Inputs;
+}
+
+public abstract interface class elide/tool/Tool$KnownOutputs : elide/tool/Tool {
+	public abstract fun getOutputs ()Lelide/tool/Outputs;
+}
+
+public abstract interface class elide/tool/Tool$Result {
+	public abstract fun getSuccess ()Z
+}
+
+public final class elide/tool/Tool$Result$Success : elide/tool/Tool$Result {
+	public static final field INSTANCE Lelide/tool/Tool$Result$Success;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getSuccess ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/Tool$Result$UnspecifiedFailure : elide/tool/Tool$Result {
+	public static final field INSTANCE Lelide/tool/Tool$Result$UnspecifiedFailure;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getSuccess ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/Tool$SimpleCliTool : java/lang/Record, elide/tool/Tool$CommandLineTool {
+	public fun args ()Lelide/tool/Arguments;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/net/URI;
+	public final fun component3 ()Lelide/tool/Arguments;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Lelide/tool/Environment;
+	public final fun copy (Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$SimpleCliTool;
+	public static synthetic fun copy$default (Lelide/tool/Tool$SimpleCliTool;Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;ILjava/lang/Object;)Lelide/tool/Tool$SimpleCliTool;
+	public fun description ()Ljava/lang/String;
+	public fun docs ()Ljava/net/URI;
+	public fun environment ()Lelide/tool/Environment;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun extend (Lelide/tool/Arguments;Lelide/tool/Environment;)Lelide/tool/Tool$CommandLineTool;
+	public synthetic fun getArgs ()Lelide/tool/Arguments;
+	public synthetic fun getDescription ()Ljava/lang/String;
+	public synthetic fun getDocs ()Ljava/net/URI;
+	public synthetic fun getEnvironment ()Lelide/tool/Environment;
+	public synthetic fun getLabel ()Ljava/lang/String;
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun help ()Ljava/lang/StringBuilder;
+	public fun label ()Ljava/lang/String;
+	public fun name ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public fun using (Lelide/tool/Inputs;Lelide/tool/Outputs;)Lelide/tool/Tool$CommandLineTool;
+	public fun version ()Ljava/lang/String;
 }
 

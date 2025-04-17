@@ -1,0 +1,98 @@
+/// Describes Kotlin configurations for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.kotlin
+
+import "Jvm.pkl" as jvm
+
+/// Kotlin language targets.
+typealias KotlinLanguageTargets = "latest" | "stable" | "auto" | "1.9" | "2.0" | "2.1" | "2.2"
+
+/// Kotlin language levels.
+typealias KotlinLanguageLevel = KotlinLanguageTargets
+
+/// Kotlin API levels.
+typealias KotlinApiLevel = KotlinLanguageTargets
+
+/// Modes for the JVM target validation mode option when compiling for JVM.
+typealias JvmTargetValidationMode = "WARNING" | "ERROR" | "IGNORE"
+
+/// Specifies options which relate to the Kotlin compiler.
+abstract class KotlinCompilerOptions {
+  /// Opt-ins to add to Kotlin compiler invocations.
+  optIn: Listing<String> = new {}
+
+  /// Whether to enable the compiler's progressive mode.
+  progressiveMode: Boolean = false
+
+  /// Whether to enable extra K2 warnings and checks.
+  extraWarnings: Boolean = false
+
+  /// Report an error if there are any warnings.
+  allWarningsAsErrors: Boolean = false
+
+  /// Don't generate any warnings.
+  suppressWarnings: Boolean = false
+
+  /// Enable verbose logging output.
+  verbose: Boolean = false
+
+  /// Arbitrary arguments to pass to the Kotlin compiler.
+  freeCompilerArgs: Listing<String> = new {}
+
+  /// Explicitly set an API version for Kotlin Compiler invocations; this should typically be left at the default, which
+  /// allows Elide to align API version options.
+  apiVersion: KotlinApiLevel = "auto"
+
+  /// Explicitly set a language version for Kotlin Compiler invocations; this should typically be left at the default,
+  /// which allows Elide to align language version options.
+  languageVersion: KotlinLanguageLevel = "auto"
+}
+
+/// Configures the Kotlin compiler when targeting JVM.
+class KotlinCompilerJvmOptions extends KotlinCompilerOptions {
+  /// Generate metadata for Java 1.8 reflection on method parameters.
+  javaParameters: Boolean = false
+
+  /// Explicitly set a JVM target; typically this should be left at the default, which allows Elide to align JVM target
+  /// options with Java, as applicable.
+  jvmTarget: jvm.JvmTarget = "auto"
+
+  /// Don't automatically include the Java runtime on the classpath.
+  noJdk: Boolean = false
+
+  /// Validation of JVM target compatibility between Kotlin and Java.
+  jvmTargetValidationMode: JvmTargetValidationMode
+}
+
+/// Specifies Kotlin-related features and options within Elide.
+class KotlinFeatureOptions {
+  /// Whether to enable classpath/modulepath injection features.
+  injection: Boolean = true
+
+  /// Whether to enable KotlinX dependencies automatically on the classpath.
+  kotlinx: Boolean = true
+
+  /// Enable or disable KotlinX serialization support.
+  serialization: Boolean = kotlinx
+
+  /// Enable or disable KotlinX Coroutines support.
+  coroutines: Boolean = kotlinx
+
+  /// Whether to automatically calculate classpaths for Kotlin projects.
+  autoClasspath: Boolean = true
+}
+
+/// Specifies settings which apply to Kotlin projects.
+class KotlinSettings {
+  /// Set the uniform Kotlin API level. Defaults to auto-detecting the best API level to use.
+  apiLevel: KotlinApiLevel = "auto"
+
+  /// Set the uniform Kotlin language target. Defaults to auto-detecting the best language target to use.
+  languageLevel: KotlinLanguageLevel = "auto"
+
+  /// Adjust settings for the Kotlin compiler.
+  compilerOptions: KotlinCompilerJvmOptions = new {}
+
+  /// Manage Elide settings which relate to Kotlin.
+  features: KotlinFeatureOptions = new {}
+}

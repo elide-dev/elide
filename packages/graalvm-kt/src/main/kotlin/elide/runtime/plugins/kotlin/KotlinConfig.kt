@@ -13,6 +13,8 @@
 
 package elide.runtime.plugins.kotlin
 
+import java.nio.file.Path
+import java.util.LinkedList
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.plugins.AbstractLanguageConfig
 
@@ -26,7 +28,7 @@ import elide.runtime.plugins.AbstractLanguageConfig
    * after the application finishes executing. A reasonable platform-specific default value will be used if this
    * property is not explicitly set.
    */
-  public var guestClasspathRoots: MutableList<String> = mutableListOf(defaultClasspathRoot())
+  public var guestClasspathRoots: MutableList<Path> = LinkedList()
 
   /**
    * Sets the guest-side JAVA_HOME to use, if known.
@@ -37,9 +39,4 @@ import elide.runtime.plugins.AbstractLanguageConfig
    * Sets the guest-side KOTLIN_HOME to use, if known.
    */
   public var guestKotlinHome: String? = null
-
-  private companion object {
-    /** Resolve a platform-specific temporary directory used to extract guest classpath entries. */
-    private fun defaultClasspathRoot(): String = "${System.getProperty("java.io.tmpdir")}/elide-runtime-kt/classpath"
-  }
 }

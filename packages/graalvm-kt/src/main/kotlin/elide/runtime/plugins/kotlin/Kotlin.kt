@@ -58,7 +58,7 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
     private fun resolveOrExtractGuestClasspath(config: KotlinConfig, manifest: LanguagePluginManifest): List<String> {
       return runCatching {
         val entries = manifest.resources[GUEST_CLASSPATH_KEY] ?: return emptyList()
-        val roots = config.guestClasspathRoots.map { Path(it) }
+        val roots = config.guestClasspathRoots
 
         entries.map { entry ->
           val output = roots.firstNotNullOfOrNull {

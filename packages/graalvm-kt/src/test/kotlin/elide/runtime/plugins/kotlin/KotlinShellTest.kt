@@ -22,7 +22,7 @@ import elide.testing.annotations.Test
   /** Acquire a [PolyglotEngine] configured with the [Kotlin] plugin. */
   private fun configureEngine() = PolyglotEngine {
     configure(Kotlin) {
-      guestClasspathRoots.add(tempClasspathRoot.absolutePath)
+      guestClasspathRoots.add(tempClasspathRoot.toPath())
     }
   }
 

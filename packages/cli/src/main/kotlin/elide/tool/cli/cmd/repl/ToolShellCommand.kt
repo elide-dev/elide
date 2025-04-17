@@ -64,6 +64,8 @@ import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.math.max
+import kotlin.streams.asSequence
+import kotlin.streams.asStream
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.LogLevel
@@ -1403,6 +1405,18 @@ private typealias ContextAccessor = () -> PolyglotContext
     else -> if (languages.contains(JS)) JS else languages.first()
   }
 
+  // Return the suite of JAR bases we should use for a guest classpath.
+  private fun initialGuestClasspathJars(langHomeResources: Path): Sequence<Path> {
+    return sequenceOf(
+      langHomeResources.resolve("elide-kotlin.jar"),
+      langHomeResources.resolve("elide-kotlin-runtime.jar"),
+      langHomeResources.resolve("kotlinx-coroutines-core-jvm.jar"),
+      langHomeResources.resolve("kotlin-stdlib.jar"),
+      langHomeResources.resolve("kotlin-reflect.jar"),
+      langHomeResources.resolve("kotlin-script-runtime.jar"),
+    )
+  }
+
   override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet<GuestLanguage>) {
     // grab project configurations, if available
     val project = activeProject.value
@@ -1524,10 +1538,6 @@ private typealias ContextAccessor = () -> PolyglotContext
             System.setProperty("java.home", javaHome)
           }
 
-          val classpathDir = workdir.cacheDirectory()
-            .resolve("elide-kotlin-runtime")
-            .absolutePath
-
           val langResources = gvmResources.resolve("kotlin")
             .resolve(KotlinLanguage.VERSION)
             .resolve("lib")
@@ -1537,27 +1547,27 @@ private typealias ContextAccessor = () -> PolyglotContext
             .resolve("kotlin")
             .resolve(KotlinLanguage.VERSION)
             .resolve("lib")
-          val elideKotlinRuntime = langHomeResources
-            .resolve("elide-kotlin-runtime.jar")
-          val elideKotlinStdlib = langHomeResources
-            .resolve("kotlin-stdlib.jar")
-          val elideKotlinReflect = langHomeResources
-            .resolve("kotlin-reflect.jar")
-          val extras = LinkedList<String>()
+
+          val pathsFromLangResources = initialGuestClasspathJars(langResources)
+          val pathsFromHomeResources = initialGuestClasspathJars(langHomeResources)
+
           val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
-          if (extraHome != null) {
-            val extraHomePath = Path(extraHome)
-            extras.add(extraHomePath.absolutePathString())
-            extras.add(extraHomePath.resolve("elide-kotlin-runtime.jar").absolutePathString())
+          val fullClasspath: Sequence<Path> = (
+            when (extraHome) {
+              null -> emptySequence()
+              else -> initialGuestClasspathJars(Path(extraHome))
+            }
+          ).plus(
+            pathsFromLangResources
+          ).plus(
+            pathsFromHomeResources
+          ).distinct().asStream().parallel().filter {
+            Files.exists(it)
+          }.toList().asSequence()
+
+          logging.debug {
+            "Guest classpath: ${fullClasspath.joinToString(":")}"
           }
-          val fullClasspath = (if (extras.isNotEmpty()) extras else mutableListOf()).plus(listOf(
-            classpathDir,
-            langResources.absolutePathString(),
-            langHomeResources.absolutePathString(),
-            elideKotlinRuntime.absolutePathString(),
-            elideKotlinStdlib.absolutePathString(),
-            elideKotlinReflect.absolutePathString(),
-          ))
 
           configure(elide.runtime.plugins.jvm.Jvm) {
             logging.debug("Configuring JVM")
@@ -1571,7 +1581,6 @@ private typealias ContextAccessor = () -> PolyglotContext
             }
             when (lang) {
               KOTLIN -> configure(elide.runtime.plugins.kotlin.Kotlin) {
-                logging.debug("Configuring Kotlin with classpath root $classpathDir")
                 guestClasspathRoots.addAll(fullClasspath)
                 javaHome?.let { guestJavaHome = it }
                 extraHome?.let { guestKotlinHome = it }

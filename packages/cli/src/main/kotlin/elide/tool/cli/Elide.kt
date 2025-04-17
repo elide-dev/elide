@@ -46,6 +46,8 @@ import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.cmd.tool.javac.JavaCompiler
+import elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
@@ -69,13 +71,23 @@ internal val applicationContextBuilder = ApplicationContext
   .bootstrapEnvironment(false)
   .banner(false)
 
+internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
+        "   ______     __         __     _____     ______%n" +
+        " /\\  ___\\   /\\ \\       /\\ \\   /\\  __-.  /\\  ___\\%n" +
+        " \\ \\  __\\   \\ \\ \\____  \\ \\ \\  \\ \\ \\/\\ \\ \\ \\  __\\%n" +
+        "  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\____-  \\ \\_____\\%n" +
+        "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n" +
+        " @|bold,fg(magenta) " + ELIDE_TOOL_VERSION + "|@%n")
+
 /** Entrypoint for the main Elide command-line tool. */
 @Command(
   name = Elide.TOOL_NAME,
   description = ["", "Manage, configure, and run polyglot applications with Elide"],
-  mixinStandardHelpOptions = true,
+  mixinStandardHelpOptions = false,
   version = [ELIDE_TOOL_VERSION],
   scope = ScopeType.INHERIT,
+  headerHeading = ELIDE_HEADER,
+  synopsisHeading = "",
   subcommands = [
     ToolInfoCommand::class,
     ToolInvokeCommand::class,
@@ -84,16 +96,9 @@ internal val applicationContextBuilder = ApplicationContext
     ToolPklCommand::class,
     ToolDiscordCommand::class,
     ToolProjectCommand::class,
+    KotlinCompiler.KotlinCliTool::class,
+    JavaCompiler.JavacCliTool::class,
   ],
-  headerHeading = ("@|bold,fg(magenta)%n" +
-          "   ______     __         __     _____     ______%n" +
-          " /\\  ___\\   /\\ \\       /\\ \\   /\\  __-.  /\\  ___\\%n" +
-          " \\ \\  __\\   \\ \\ \\____  \\ \\ \\  \\ \\ \\/\\ \\ \\ \\  __\\%n" +
-          "  \\ \\_____\\  \\ \\_____\\  \\ \\_\\  \\ \\____-  \\ \\_____\\%n" +
-          "   \\/_____/   \\/_____/   \\/_/   \\/____/   \\/_____/|@%n%n" +
-          " @|bold,fg(magenta) " + ELIDE_TOOL_VERSION + "|@%n%n"
-          ),
-  synopsisHeading = "",
   customSynopsis = [
     "",
     " Usage:  ",
@@ -107,6 +112,7 @@ internal val applicationContextBuilder = ApplicationContext
     "    or:  elide @|bold,fg(cyan) run|repl|@ --js [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) run|repl|@ --language=[@|bold,fg(green) JS|@] [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) run|repl|@ --languages=[@|bold,fg(green) JS|@,@|bold,fg(green) PYTHON|@,...] [OPTIONS] [FILE] [ARG...]",
+    "    or:  elide @|bold,fg(cyan) javac|kotlinc|...|@ [OPTIONS] [SOURCES...]",
   ],
 )
 @Suppress("MemberVisibilityCanBePrivate")
@@ -369,6 +375,18 @@ internal val applicationContextBuilder = ApplicationContext
   @Inject internal lateinit var beanContext: BeanContext
 
   @CommandLine.Option(
+    names = ["--version"],
+    description = ["Print the version of the Elide CLI and exit."],
+  )
+  internal var version: Boolean = false
+
+  @CommandLine.Option(
+    names = ["--help", "-h"],
+    description = ["Print usage and exit."],
+  )
+  internal var help: Boolean = false
+
+  @CommandLine.Option(
     names = ["--pitch"],
     hidden = true,
   )
@@ -419,6 +437,8 @@ internal val applicationContextBuilder = ApplicationContext
 
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
     return when {
+      version -> CommandResult.success().also { println(ELIDE_TOOL_VERSION) }
+      help -> CommandResult.success().also { cliBuilder.usage(Statics.out) }
       pitch -> CommandResult.success().also { openElidePitch() }
       playground -> CommandResult.success().also { openElidePlayground() }
       else -> if (srcfile == "discord" || Statics.args.firstOrNull() == "discord") {

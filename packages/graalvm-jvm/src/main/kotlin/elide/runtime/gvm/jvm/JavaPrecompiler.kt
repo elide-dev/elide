@@ -19,11 +19,15 @@ import java.nio.file.Files
 import java.util.Locale
 import javax.tools.*
 import elide.annotations.API
+import elide.runtime.diag.DiagnosticInfo
 import elide.runtime.diag.DiagnosticsContainer
 import elide.runtime.diag.DiagnosticsReceiver
 import elide.runtime.diag.DiagnosticsSuite
+import elide.runtime.diag.Severity
+import elide.runtime.diag.SourceLocation
 import elide.runtime.precompiler.Precompiler
 import elide.runtime.precompiler.Precompiler.*
+import elide.runtime.diag.Diagnostic as ElideDiagnostic
 
 // Precompiler agent which is capable of translating Java source code to JVM bytecode.
 @API public object JavaPrecompiler : BytecodePrecompiler<JavaCompilerConfig> {
@@ -60,13 +64,15 @@ import elide.runtime.precompiler.Precompiler.*
     return ByteBuffer.wrap(outbytes)
   }
 
-// Receives diagnostics reported by `javac`, then translates and reports them according to Elide's record structure.
+  /**
+   * Receives diagnostics reported by `javac`, then translates and reports them according to Elide's record structure.
+   */
   private class DiagnosticsAgent(
     private val container: DiagnosticsContainer = DiagnosticsContainer.create()
   ) : DiagnosticListener<JavaFileObject>,
     DiagnosticsSuite by container,
     DiagnosticsReceiver by container {
-// Proxy close calls to the underlying container.
+    /** Proxy close calls to the underlying container. */
     override fun close(): Unit = container.close()
 
     override fun report(diagnostic: Diagnostic<out JavaFileObject>?) {
@@ -79,3 +85,25 @@ import elide.runtime.precompiler.Precompiler.*
     override fun get(): JavaPrecompiler = JavaPrecompiler
   }
 }
+
+/**
+ * Create a [DiagnosticInfo] object from a Java compiler message.
+ *
+ * @param diag The diagnostic message to convert.
+ */
+public fun ElideDiagnostic.Companion.fromJavacDiagnostic(locale: Locale, diag: Diagnostic<*>): DiagnosticInfo =
+  object : DiagnosticInfo {
+    override val position: SourceLocation? get() = SourceLocation(
+      line = diag.lineNumber.toUInt(),
+      column = diag.columnNumber.toUInt(),
+    )
+
+    // @TODO source reference
+    override val message: String get() = diag.getMessage(locale)
+    override val severity: Severity get() = when (diag.kind) {
+      Diagnostic.Kind.ERROR -> Severity.ERROR
+      Diagnostic.Kind.MANDATORY_WARNING,
+      Diagnostic.Kind.WARNING -> Severity.WARN
+      else -> Severity.INFO
+    }
+  }

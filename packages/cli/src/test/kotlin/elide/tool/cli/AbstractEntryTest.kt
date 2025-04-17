@@ -28,8 +28,7 @@ abstract class AbstractEntryTest {
   @Inject lateinit var tool: Elide
 
   protected fun assertToolExitsWithCode(expected: Int, vararg args: String) {
-    fun block(): Int =
-      PicocliRunner.execute(Elide::class.java, *args)
+    fun block(): Int = Elide.exec(args.toList().toTypedArray())
 
     // capture stdout and stderr
     val stubbedOut = ByteArrayOutputStream()

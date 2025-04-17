@@ -213,7 +213,19 @@ private enum class ToolAction (
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "tool",
-  aliases = ["lint", "fmt", "check", "install", "i", "update", "oro", "ruff", "uv", "venv", "pip"],
+  aliases = [
+    "lint",
+    "fmt",
+    "check",
+    "install",
+    "i",
+    "update",
+    "oro",
+    "ruff",
+    "uv",
+    "venv",
+    "pip",
+  ],
   description = ["%nRun polyglot linters on your code"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import kotlinx.coroutines.test.runTest
 import kotlin.io.path.Path
-import kotlin.io.path.absolutePathString
 import kotlin.test.Ignore
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -49,7 +48,7 @@ class KotlinScriptingTest {
     val engine = PolyglotEngine {
       configure(Kotlin) {
         guestClasspathRoots.add(requireNotNull(System.getenv("ELIDE_KOTLIN_HOME")).let {
-          Path(it).absolutePathString()
+          Path(it)
         })
         val langHomeResources = Path(System.getProperty("user.home"))
           .resolve("elide")
@@ -58,7 +57,7 @@ class KotlinScriptingTest {
           .resolve(KotlinLanguage.VERSION)
           .resolve("lib")
 
-        guestClasspathRoots.add(langHomeResources.absolutePathString())
+        guestClasspathRoots.add(langHomeResources)
       }
     }
     val ctx = engine.acquire {

@@ -56,8 +56,14 @@ val javacFlags = listOf(
   "--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
 )
 
+// builds embedded classpath
 val embeddedKotlinResources: Configuration by configurations.creating {
   isCanBeResolved = true
+}
+
+// exported to other projects
+val embeddedKotlin: Configuration by configurations.creating {
+  isCanBeConsumed = true
 }
 
 val embeddedKotlinRuntime = layout.projectDirectory.file(
@@ -178,6 +184,12 @@ tasks.processResources {
 
   from(intermediateResources.get().dir("lib")) {
     into(ktRuntimeTarget)
+  }
+}
+
+artifacts {
+  add(embeddedKotlin.name, prepKotlinResources) {
+    builtBy(prepKotlinResources)
   }
 }
 

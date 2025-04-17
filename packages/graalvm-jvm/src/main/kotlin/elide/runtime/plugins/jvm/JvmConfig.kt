@@ -14,6 +14,7 @@
 package elide.runtime.plugins.jvm
 
 import java.nio.file.Path
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.pathString
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
@@ -52,6 +53,11 @@ import elide.runtime.plugins.AbstractLanguageConfig
   /** Add new entries to the guest classpath used by the engine. */
   public fun classpath(paths: Iterable<String>) {
     classpathEntries.addAll(paths)
+  }
+
+  /** Add new entries to the guest classpath used by the engine. */
+  public fun classpath(paths: Sequence<Path>) {
+    classpathEntries.addAll(paths.map { it.absolutePathString() })
   }
 
   /** Apply init-time settings to a new [context]. */

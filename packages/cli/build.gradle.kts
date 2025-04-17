@@ -377,7 +377,7 @@ buildConfig {
 val pklDependencies: Configuration by configurations.creating
 val cliJitOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
 val cliNativeOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
-val embeddedKotlinResources: Configuration by configurations.creating { isCanBeResolved = true }
+val embeddedKotlin: Configuration by configurations.creating { isCanBeResolved = true }
 val classpathExtras: Configuration by configurations.creating {
   extendsFrom(configurations.runtimeClasspath.get())
 }
@@ -386,27 +386,6 @@ val jvmOnly: Configuration by configurations.creating {
   isCanBeConsumed = false
   isCanBeResolved = true
 }
-
-val stdlibJar = provider {
-  embeddedKotlinResources.filter {
-    it.name.contains("kotlin") && it.name.contains("stdlib")
-  }
-}
-val reflectJar = provider {
-  embeddedKotlinResources.filter {
-    it.name.contains("kotlin") && it.name.contains("reflect")
-  }
-}
-val scriptRuntimeJar = provider {
-  embeddedKotlinResources.filter {
-    it.name.contains("kotlin") && it.name.contains("script-runtime")
-  }
-}
-val kotlinResourceFiles = mapOf(
-  "kotlin-stdlib.jar" to stdlibJar,
-  "kotlin-reflect.jar" to reflectJar,
-  "kotlin-script-runtime.jar" to scriptRuntimeJar,
-)
 
 dependencies {
   aotApplication(libs.graalvm.svm)
@@ -428,10 +407,7 @@ dependencies {
   implementation(libs.snakeyaml)
   implementation(mn.micronaut.json.core)
 
-  embeddedKotlinResources(libs.kotlin.stdlib)
-  embeddedKotlinResources(libs.kotlin.reflect)
-  embeddedKotlinResources(libs.kotlin.scripting.runtime)
-  embeddedKotlinResources(libs.kotlin.scripting.jvm)
+  embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 
   // Native-image transitive compile dependencies
   implementation(libs.jakarta.validation)
@@ -1972,6 +1948,15 @@ fun Jar.applyJarSettings() {
   }
 }
 
+val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
+val intermediateKotlinResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
+val kotlinHomePath: String = kotlinHomeRoot.get().asFile.absolutePath
+
+val prepKotlinResources by tasks.registering(Copy::class) {
+  from(embeddedKotlin)
+  destinationDir = intermediateKotlinResources.get().dir("lib").asFile
+}
+
 tasks {
   nativeCompile {
     doFirst {
@@ -1987,30 +1972,6 @@ tasks {
       val args = nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs)
       logger.lifecycle("Native Image args (release):\n${args.joinToString("\n")}")
     }
-  }
-
-  val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
-  val intermediateResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
-  val kotlinHomePath: String = kotlinHomeRoot.get().asFile.absolutePath
-
-  val prepKotlinResources by registering(Copy::class) {
-    from(embeddedKotlinResources) {
-      exclude {
-        // don't include the jetbrains annotations
-        it.name.contains("annotations")
-      }
-      rename {
-        // remove version tag from each jar
-        val name = it.split(".").first().split("-")
-          .dropLast(1).joinToString("-")
-        if (name.isEmpty()) {
-          it
-        } else {
-          "$name.jar"
-        }
-      }
-    }
-    destinationDir = intermediateResources.get().dir("lib").asFile
   }
 
   processResources {
@@ -2355,6 +2316,24 @@ fun spawnNativeLibCopy(receiver: BuildNativeImageTask): Copy {
   }.get()
 }
 
+fun spawnEmbeddedKotlinCopy(receiver: BuildNativeImageTask): Copy {
+  val outDir = layout.buildDirectory.dir("native/${receiver.name}")
+    .get()
+    .asFile
+    .resolve("resources")
+    .resolve("kotlin")
+    .resolve(libs.versions.kotlin.sdk.get())
+    .absolutePath
+  return tasks.register("${receiver.name}CopyEmbeddedKotlin", Copy::class) {
+    dependsOn(
+      prepKotlinResources,
+      ":packages:graalvm-kt:prepKotlinResources"
+    )
+    from(intermediateKotlinResources)
+    into(outDir)
+  }.get()
+}
+
 fun Task.configureFinalizer(receiver: BuildNativeImageTask) {
   group = "build"
   description = "Finalize Native Image resources for task '${receiver.name}'"
@@ -2368,6 +2347,9 @@ fun BuildNativeImageTask.createFinalizer() {
   }
   if (!enableStaticJni) {
     finalizations.add(spawnNativeLibCopy(this))
+  }
+  if (enableKotlin) {
+    finalizations.add(spawnEmbeddedKotlinCopy(this))
   }
   if (finalizations.isNotEmpty()) {
     val finalizer = tasks.register("${name}Finalize") {

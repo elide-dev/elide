@@ -10,15 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.gvm.internals.intrinsics.js.webstreams
+package elide.runtime.intrinsics.js.stream
 
-import elide.runtime.gvm.api.Intrinsic
-import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.js.JsPromise
+import elide.vm.annotations.Polyglot
 
-/** Implementation of readable streams (via the Web Streams standard). */
-@Intrinsic(global = "ReadableStream") internal class ReadableStreamIntrinsic : AbstractJsIntrinsic() {
-  override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    // not yet implemented
-  }
+public interface WritableStreamDefaultWriter {
+  @get:Polyglot public val closed: JsPromise<Unit>
+  @get:Polyglot public val ready: JsPromise<Unit>
+  @get:Polyglot public val desiredSize: Double?
+
+  @Polyglot public fun write(chunk: Any? = null): JsPromise<Unit>
+  @Polyglot public fun releaseLock()
+  @Polyglot public fun abort(reason: Any? = null): JsPromise<Unit>
+  @Polyglot public fun close()
 }

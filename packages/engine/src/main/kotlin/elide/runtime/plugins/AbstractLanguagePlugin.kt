@@ -373,7 +373,7 @@ public fun defaultPolyglotContext(): Context = defaultContext
           context.evaluate(
             this,
             script.bufferedReader().use { it.readText() },
-            name = source.path.split("/").last(),
+            name = source.path.substringAfterLast('/'),
             internals = true,
             cached = true,
           )

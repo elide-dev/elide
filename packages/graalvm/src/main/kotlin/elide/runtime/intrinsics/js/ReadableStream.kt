@@ -12,20 +12,86 @@
  */
 package elide.runtime.intrinsics.js
 
+import org.graalvm.polyglot.HostAccess
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
 import elide.annotations.API
-import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamImpl
+import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
+import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.Default
+import elide.runtime.intrinsics.js.stream.QueueingStrategy
+import elide.runtime.intrinsics.js.stream.ReadableStreamReader
+import elide.runtime.intrinsics.js.stream.ReadableStreamSource
+import elide.vm.annotations.Polyglot
 
 /**
  * # Web Streams: Readable Stream.
  *
- * Models the `ReadableStream` interface, defined by the WhatWG Streams Standard (https://streams.spec.whatwg.org/).
+ * Models the `ReadableStream` interface, defined by the [WhatWG Streams Standard](https://streams.spec.whatwg.org/).
  * Readable streams implement streams of arbitrary data which can be consumed by an interested developer, and form part
  * of the wider Web Streams API.
  */
-@API public interface ReadableStream {
+@API @HostAccess.Implementable public interface ReadableStream : Stream {
+  /**
+   * Encapsulates the result of a read; [done] indicates whether the [chunk] is the final value that will be available
+   * from the source.
+   */
+  public data class ReadResult(val chunk: Any?, val done: Boolean)
+
+  /** Defines the type of streams implemented by the standard. */
+  public enum class Type {
+    /**
+     * The default stream type, which uses a `ReadableStreamDefaultController` and `ReadableStreamDefaultReader`
+     * instances.
+     */
+    Default,
+
+    /**
+     * A stream optimized for byte operations, using `ReadableStreamBYOBController and `ReadableStreamBYOBReader`
+     * types, which allow consumers to provide their own buffers for sources to write the data in.
+     */
+    BYOB,
+  }
+
+  /**
+   * When used as part of the reader options in [ReadableStream.getReader], the returned reader instance will match
+   * this setting. Note that using [BYOB] mode on a default stream will result in an error (but [Default] is always
+   * allowed).
+   */
+  public enum class ReaderMode {
+    /** Requests a default reader, which moves elements from the stream as they are. Available for all stream types. */
+    Default,
+
+    /**
+     * Requests a BYOB reader, which allows passing a custom buffer for the data to be written into. Available only for
+     * BYOB streams.
+     */
+    BYOB,
+  }
+
+  /** Whether the stream is currently [locked](https://streams.spec.whatwg.org/#lock) to a [reader]. */
+  @get:Polyglot public val locked: Boolean
+
+  /** Cancel the stream with an optional reason, releasing the underlying source. */
+  @Polyglot public fun cancel(reason: Any? = null): JsPromise<Unit>
+
+  /**
+   * Obtain a new [ReadableStreamReader] instance and lock the stream to it, preventing any new readers from being
+   * acquired until it is released.
+   *
+   * If the stream is already [locked], an error will be thrown.
+   */
+  @Polyglot public fun getReader(options: Any? = null): ReadableStreamReader
+
+  @Polyglot public fun pipeThrough(transform: TransformStream, options: Any? = null): ReadableStream
+
+  @Polyglot public fun pipeTo(destination: WritableStream, options: Any? = null): JsPromise<Unit>
+
+  @Polyglot public fun tee(): Array<ReadableStream>
+
   /**
    * ## Readable Stream: Factory.
    *
@@ -35,57 +101,79 @@ import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrin
    *
    * @param Impl Implementation of [ReadableStream] which is created by this factory.
    */
-  public interface Factory<Impl> where Impl: ReadableStream {
+  public interface Factory<Impl> : ProxyInstantiable where Impl : ReadableStream {
     /**
-     * TBD.
+     * Constructor for a custom [ReadableStream], which implements the provided [source] and [queueingStrategy], if
+     * provided.
+     *
+     * @param source Source for the [ReadableStream].
+     * @param queueingStrategy Optional [QueueingStrategy] for the [ReadableStream].
+     * @return A new [ReadableStream] instance.
+     */
+    @Polyglot public fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream
+
+    /**
+     * Constructor for a custom [ReadableStream], which implements the provided [source].
+     *
+     * @param source Source for the [ReadableStream].
+     * @return A new [ReadableStream] instance.
+     */
+    @Polyglot public fun create(source: ReadableStreamSource): ReadableStream = create(source, null)
+
+    /**
+     * Create an empty [ReadableStream] instance of shape [Impl].
+     *
+     * @return New [ReadableStream] instance.
      */
     public fun empty(): Impl
 
     /**
-     * TBD.
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [InputStream].
+     *
+     * @param input [InputStream] to wrap.
+     * @return New [ReadableStream] instance wrapping the given [InputStream].
      */
     public fun wrap(input: InputStream): Impl
 
     /**
-     * TBD.
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [Reader].
+     *
+     * @param reader [Reader] to wrap.
+     * @return New [ReadableStream] instance wrapping the given [Reader].
      */
     public fun wrap(reader: Reader): Impl
 
     /**
-     * TBD.
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [ByteArray].
+     *
+     * @param bytes [ByteArray] to wrap.
+     * @return New [ReadableStream] instance wrapping the given [ByteArray].
      */
     public fun wrap(bytes: ByteArray): Impl
 
     /**
-     * TBD.
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [ByteBuffer].
+     *
+     * @param buffer [ByteBuffer] to wrap.
+     * @return New [ReadableStream] instance wrapping the given [ByteBuffer].
      */
     public fun wrap(buffer: ByteBuffer): Impl
   }
 
-  public companion object DefaultFactory : Factory<ReadableStream> {
-    /**
-     * TBD.
-     */
-    override fun empty(): ReadableStream = ReadableStreamIntrinsic.empty()
+  /** Default constructors/factory methods for [ReadableStream] instances. */
+  public companion object DefaultFactory : ProxyInstantiable, Factory<ReadableStream> {
+    override fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream {
+      return ReadableStreamImpl(source, queueingStrategy ?: QueueingStrategy.Default)
+    }
 
-    /**
-     * TBD.
-     */
-    override fun wrap(input: InputStream): ReadableStream = ReadableStreamIntrinsic.wrap(input)
+    override fun newInstance(vararg arguments: Value?): Any? {
+      TODO("Not yet implemented")
+    }
 
-    /**
-     * TBD.
-     */
-    override fun wrap(reader: Reader): ReadableStream = ReadableStreamIntrinsic.wrap(reader)
-
-    /**
-     * TBD.
-     */
-    override fun wrap(bytes: ByteArray): ReadableStream = ReadableStreamIntrinsic.wrap(bytes)
-
-    /**
-     * TBD.
-     */
-    override fun wrap(buffer: ByteBuffer): ReadableStream = ReadableStreamIntrinsic.wrap(buffer)
+    override fun empty(): ReadableStream = TODO("Not yet implemented")
+    override fun wrap(input: InputStream): ReadableStream = TODO("Not yet implemented")
+    override fun wrap(reader: Reader): ReadableStream = TODO("Not yet implemented")
+    override fun wrap(bytes: ByteArray): ReadableStream = TODO("Not yet implemented")
+    override fun wrap(buffer: ByteBuffer): ReadableStream = TODO("Not yet implemented")
   }
 }

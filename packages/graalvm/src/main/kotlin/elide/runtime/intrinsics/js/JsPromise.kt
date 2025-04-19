@@ -124,7 +124,7 @@ public interface JsPromise<out T> : ProxyObject {
     }
 
     /** Create a new promise encapsulating the result of launching an async operation on this guest executor. */
-    @JvmStatic public fun <T> GuestExecutor.of(fn: () -> T): JsPromise<T> = wrap(submit(fn))
+    @JvmStatic public fun <T> GuestExecutor.spawn(fn: () -> T): JsPromise<T> = wrap(submit(fn))
 
     /** Create a new promise wrapping the given supplier's getter. */
     @JvmStatic public fun <T> GuestExecutor.of(supplier: Supplier<T>): JsPromise<T> = wrap(submit(supplier::get))

@@ -60,10 +60,14 @@ private val javac = Tool.describe(
   name = JAVAC,
   label = "Java Compiler",
   version = System.getProperty("java.version"),
-  docs = URI.create("https://kotl.in/cli"),
+  docs = URI.create("https://docs.oracle.com/javase/8/docs/technotes/guides/javac/index.html"),
   description = JAVAC_DESCRIPTION,
   helpText = """
-  Usage: elide javac <options> <source files>
+  Usage: elide javac <elide options> -- <options> <source files>
+
+  where possible elide options include:
+    (None at this time.)
+
   where possible options include:
 
   @<filename>                  Read options and filenames from file

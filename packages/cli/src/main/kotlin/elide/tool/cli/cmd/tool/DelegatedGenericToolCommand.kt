@@ -11,27 +11,21 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool
+package elide.tool.cli.cmd.tool
 
-import kotlinx.serialization.Serializable
+import elide.tool.Tool
 
 /**
- * # Program Inputs
+ * ## Delegated Tool Command (Generic)
+ *
+ * Implements generic support for tools which use the JDK's built-in [java.util.spi.ToolProvider] interface; such tools
+ * provide a [java.util.spi.ToolProvider.run] method.
+ *
+ * @param T Tool adapter implementation
  */
-@Serializable
-public sealed interface Inputs {
-  /**
-   * ## Inputs: None.
-   */
-  public interface None : Inputs
+abstract class DelegatedGenericToolCommand<T> (
+  info: Tool.CommandLineTool,
+  configurator: ToolCommandConfigurator<T>? = null,
+): DelegatedToolCommand<T>(info, configurator) where T: AbstractTool {
 
-  /**
-   * ## Inputs: Values.
-   */
-  public interface Values : Inputs
-
-  /**
-   * ## Inputs: Files.
-   */
-  public interface Files : Inputs
 }

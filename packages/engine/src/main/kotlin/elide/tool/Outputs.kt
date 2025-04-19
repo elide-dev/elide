@@ -21,6 +21,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 public sealed interface Outputs {
   /**
+   * ## Outputs: None.
+   */
+  public interface None : Outputs
+
+  /**
    * ## Outputs: In-memory.
    */
   public sealed interface Memory : Outputs

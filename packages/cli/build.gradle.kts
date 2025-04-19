@@ -230,6 +230,8 @@ val jvmCompileArgs = listOfNotNull(
   "--add-modules=jdk.unsupported",
   "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
   "--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
+  "--add-exports=jdk.jartool/sun.tools.jar=ALL-UNNAMED",
+  "--add-exports=jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED",
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
@@ -900,6 +902,16 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   // pkl needs this
   "org.msgpack.core.buffer.DirectBufferAccess",
 
+  // --- JDK Tooling -----
+
+  "elide.tool.cli.cmd.tool.jar.JarTool",
+  "elide.tool.cli.cmd.tool.javadoc.JavadocTool",
+  "jdk.tools.jlink.internal.Main",
+  "jdk.tools.jlink.internal.Utils",
+  "jdk.tools.jlink.internal.Main\$JlinkToolProvider",
+  "jdk.tools.jlink.internal.plugins.LegalNoticeFilePlugin",
+  "jdk.jpackage.internal.JPackageToolProvider",
+
   // --- JNA -----
 
   "com.sun.jna.Structure${'$'}FFIType",
@@ -1127,7 +1139,7 @@ val commonNativeArgs = listOfNotNull(
   "--install-exit-handlers",
   // @TODO breaks with old configs, and new configs can't use the agent.
   // "--exact-reachability-metadata",
-  "--enable-url-protocols=http,https,jar",
+  "--enable-url-protocols=http,https,jar,resource",
   "--color=always",
   "--initialize-at-build-time",
   "--link-at-build-time=elide",

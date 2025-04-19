@@ -127,7 +127,11 @@ sealed interface CommandContext : CoroutineScope {
    * @param out String builder to emit.
    */
   fun output(out: StringBuilder) {
-    println(out.toString())
+    out.toString().let {
+      if (it.isNotEmpty() && it.isNotBlank()) {
+        println(it)
+      }
+    }
     System.out.flush()
   }
 

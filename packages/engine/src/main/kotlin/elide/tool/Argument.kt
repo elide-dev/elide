@@ -51,6 +51,8 @@ public sealed interface Argument : Arguments {
    * Argument with a key and a value.
    */
   @JvmInline public value class KeyValueArg internal constructor(private val pair: Pair<String, String>) : Argument {
+    public val name: String get() = pair.first
+    public val value: String get() = pair.second
     override fun ArgumentContext.asArgumentString(): String = "${pair.first}${kvToken}${pair.second}"
     override fun asArgumentSequence(): Sequence<Argument> = sequenceOf(this)
   }

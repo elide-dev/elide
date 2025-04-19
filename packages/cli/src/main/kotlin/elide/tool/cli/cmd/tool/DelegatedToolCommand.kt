@@ -167,6 +167,11 @@ abstract class DelegatedToolCommand<T> (
               errExitCode = exc.exitCode
               exc.message?.let { exitMessage = it }
             }
+            else -> {
+              logging.error("Failed to call tool: ${info.name}", exc)
+              errExitCode = 1
+              exitMessage = it.message ?: "Unknown error"
+            }
           }
         }.getOrElse {
           err(exitMessage, exitCode = errExitCode)

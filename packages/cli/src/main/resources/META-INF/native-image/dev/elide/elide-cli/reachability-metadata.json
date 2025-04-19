@@ -1,6 +1,18 @@
 {
   "reflection": [
     {
+      "type": "jdk.javadoc.doclet.StandardDoclet",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "org.jetbrains.kotlin.fir.extensions.FirAnalysisHandlerExtension[]",
       "unsafeAllocated": true
     },
@@ -27,6 +39,66 @@
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jar.JarTool",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jar.JarTool$JarCliTool",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jar.$JarTool$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jar.$JarTool$JarCliTool$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.javadoc.JavadocTool",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.javadoc.JavadocTool$JavadocCliTool",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.javadoc.$JavadocTool$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.javadoc.$JavadocTool$JavadocCliTool$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "elide.tool.cli.cmd.tool.DelegatedToolCommand",
@@ -6232,6 +6304,25 @@
   ],
   "resources": [
     {
+      "glob": "resources/releases/element-list-*.txt"
+    },
+    {
+      "module": "jdk.javadoc",
+      "glob": "resources/releases/element-list-*.txt"
+    },
+    {
+      "module": "jdk.javadoc",
+      "glob": "jdk/javadoc/internal/doclets/formats/html/resources/fonts/dejavu.css"
+    },
+    {
+      "module": "jdk.javadoc",
+      "glob": "jdk/javadoc/internal/doclets/formats/html/resources/**"
+    },
+    {
+      "module": "jdk.javadoc",
+      "glob": "jdk/javadoc/internal/doclets/formats/html/resources/legal/jquery.md"
+    },
+    {
       "glob": "org/jetbrains/kotlin/cli/jvm/compiler/KotlinCoreEnvironment$Companion.class"
     },
     {
@@ -6444,6 +6535,41 @@
     {
       "name": "ElideTool",
       "locales": [
+        "en-US"
+      ]
+    },
+    {
+      "name": "jdk.javadoc.internal.tool.resources.javadoc",
+      "locales": [
+        "en",
+        "en-US"
+      ]
+    },
+    {
+      "name": "com.sun.tools.javac.resources.compiler",
+      "locales": [
+        "en",
+        "en-US"
+      ]
+    },
+    {
+      "name": "jdk.javadoc.internal.doclets.toolkit.resources.doclets",
+      "locales": [
+        "en",
+        "en-US"
+      ]
+    },
+    {
+      "name": "jdk.javadoc.internal.doclint.resources.doclint",
+      "locales": [
+        "en",
+        "en-US"
+      ]
+    },
+    {
+      "name": "jdk.javadoc.internal.doclets.formats.html.resources.standard",
+      "locales": [
+        "en",
         "en-US"
       ]
     }

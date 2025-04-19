@@ -46,7 +46,9 @@ import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.cmd.tool.jar.JarTool
 import elide.tool.cli.cmd.tool.javac.JavaCompiler
+import elide.tool.cli.cmd.tool.javadoc.JavadocTool
 import elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
@@ -98,6 +100,8 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     ToolProjectCommand::class,
     KotlinCompiler.KotlinCliTool::class,
     JavaCompiler.JavacCliTool::class,
+    JarTool.JarCliTool::class,
+    JavadocTool.JavadocCliTool::class,
   ],
   customSynopsis = [
     "",
@@ -112,7 +116,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     "    or:  elide @|bold,fg(cyan) run|repl|@ --js [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) run|repl|@ --language=[@|bold,fg(green) JS|@] [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) run|repl|@ --languages=[@|bold,fg(green) JS|@,@|bold,fg(green) PYTHON|@,...] [OPTIONS] [FILE] [ARG...]",
-    "    or:  elide @|bold,fg(cyan) javac|kotlinc|...|@ [OPTIONS] [SOURCES...]",
+    "    or:  elide @|bold,fg(cyan) javac|kotlinc|jar|javadoc|...|@ [OPTIONS] [SOURCES...]",
   ],
 )
 @Suppress("MemberVisibilityCanBePrivate")

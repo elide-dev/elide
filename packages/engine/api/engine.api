@@ -1324,6 +1324,8 @@ public final class elide/tool/Argument$KeyValueArg : elide/tool/Argument {
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public static final fun getName-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public static final fun getValue-impl (Lkotlin/Pair;)Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Lkotlin/Pair;)I
 	public fun toString ()Ljava/lang/String;
@@ -1797,6 +1799,9 @@ public final class elide/tool/Inputs$Companion {
 }
 
 public abstract interface class elide/tool/Inputs$Files : elide/tool/Inputs {
+}
+
+public abstract interface class elide/tool/Inputs$None : elide/tool/Inputs {
 }
 
 public abstract interface class elide/tool/Inputs$Values : elide/tool/Inputs {
@@ -2486,6 +2491,9 @@ public abstract interface class elide/tool/Outputs$Disk$File : elide/tool/Output
 }
 
 public abstract interface class elide/tool/Outputs$Memory : elide/tool/Outputs {
+}
+
+public abstract interface class elide/tool/Outputs$None : elide/tool/Outputs {
 }
 
 public abstract interface class elide/tool/Tool {

@@ -19,7 +19,7 @@ import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
 import elide.annotations.API
-import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableDefaultStream
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamImpl
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.Default
 import elide.runtime.intrinsics.js.stream.QueueingStrategy
@@ -30,7 +30,7 @@ import elide.vm.annotations.Polyglot
 /**
  * # Web Streams: Readable Stream.
  *
- * Models the `ReadableStream` interface, defined by the WhatWG Streams Standard (https://streams.spec.whatwg.org/).
+ * Models the `ReadableStream` interface, defined by the [WhatWG Streams Standard](https://streams.spec.whatwg.org/).
  * Readable streams implement streams of arbitrary data which can be consumed by an interested developer, and form part
  * of the wider Web Streams API.
  */
@@ -163,10 +163,7 @@ import elide.vm.annotations.Polyglot
   /** Default constructors/factory methods for [ReadableStream] instances. */
   public companion object DefaultFactory : ProxyInstantiable, Factory<ReadableStream> {
     override fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream {
-      return when (source.type) {
-        Type.Default -> ReadableDefaultStream(source, queueingStrategy ?: QueueingStrategy.Default)
-        Type.BYOB -> TODO("BYOB streams are not yet implemented")
-      }
+      return ReadableStreamImpl(source, queueingStrategy ?: QueueingStrategy.Default)
     }
 
     override fun newInstance(vararg arguments: Value?): Any? {

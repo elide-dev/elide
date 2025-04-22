@@ -1,0 +1,6 @@
+/// Describes project operations settings.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.ops
+
+/// Infrastructure settings and configurations.
+class Operations {}

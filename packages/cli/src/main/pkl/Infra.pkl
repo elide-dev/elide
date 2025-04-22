@@ -1,0 +1,6 @@
+/// Describes project infrastructure configurations.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.infra
+
+/// Infrastructure settings and configurations.
+class InfraSettings {}

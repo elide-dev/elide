@@ -17,11 +17,14 @@ import ch.qos.logback.classic.Level
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import org.slf4j.LoggerFactory
+import picocli.CommandLine
 import picocli.CommandLine.Option
 import picocli.CommandLine.ScopeType
 import java.util.*
 import kotlin.properties.Delegates
 import elide.tool.cli.Statics
+
+private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
 
 /**
  * # Options: Common
@@ -42,7 +45,6 @@ import elide.tool.cli.Statics
   @set:Option(
     names = ["-v", "--verbose"],
     description = ["Activate verbose logging. Wins over `--quiet` when both are passed."],
-    scope = ScopeType.INHERIT,
     defaultValue = "false",
   )
   var verbose: Boolean by Delegates.observable(false) { _, _, active ->
@@ -56,7 +58,6 @@ import elide.tool.cli.Statics
   @set:Option(
     names = ["-q", "--quiet"],
     description = ["Squelch most logging"],
-    scope = ScopeType.INHERIT,
     defaultValue = "false",
   )
   var quiet: Boolean by Delegates.observable(false) { _, _, active ->
@@ -69,7 +70,6 @@ import elide.tool.cli.Statics
   @set:Option(
     names = ["--debug"],
     description = ["Activate debugging features and extra logging"],
-    scope = ScopeType.INHERIT,
     defaultValue = "false",
   )
   var debug: Boolean by Delegates.observable(false) { _, _, active ->
@@ -85,25 +85,51 @@ import elide.tool.cli.Statics
     negatable = true,
     description = ["Whether to colorize and animate output."],
     defaultValue = "true",
-    scope = ScopeType.INHERIT,
   )
   var pretty: Boolean = true
+
+  /** Sets the default exit timeout for this run. */
+  @Option(
+    names = ["--timeout"],
+    description = ["Timeout to apply when exiting (in seconds)."],
+    defaultValue = "$DEFAULT_TIMEOUT_SECONDS",
+  )
+  var timeoutSeconds: Int = DEFAULT_TIMEOUT_SECONDS
 
   /** System options to apply. */
   @Option(
     names = ["-D", "--define"],
     mapFallbackValue = Option.NULL_VALUE,
-    scope = ScopeType.INHERIT,
     hidden = true,
   )
-  lateinit var systemProperties: Map<String, Optional<String>>
+  var systemProperties: Map<String, Optional<String>> = emptyMap()
 
   /** Internal runtime options to apply. */
   @Option(
     names = ["-XX"],
     mapFallbackValue = Option.NULL_VALUE,
-    scope = ScopeType.INHERIT,
     hidden = true,
   )
-  lateinit var internalOptions: Map<String, Optional<String>>
+  var internalOptions: Map<String, Optional<String>> = emptyMap()
+
+  /** Specifies an explicit path to an Elide project to use. */
+  @Option(
+    names = ["-p", "--project"],
+    description = ["Path to the project to build"],
+    paramLabel = "<path>",
+  )
+  var projectPath: String? = null
+
+  internal fun merge(other: CommonOptions?): CommonOptions {
+    val options = CommonOptions()
+    options.verbose = this.verbose || other?.verbose == true
+    options.quiet = this.quiet || other?.quiet == true
+    options.debug = this.debug || other?.debug == true
+    options.pretty = this.pretty && (other?.pretty ?: true)
+    options.timeoutSeconds = this.timeoutSeconds + (other?.timeoutSeconds ?: 0)
+    options.systemProperties = this.systemProperties + (other?.systemProperties ?: emptyMap())
+    options.internalOptions = this.internalOptions + (other?.internalOptions ?: emptyMap())
+    options.projectPath = this.projectPath ?: other?.projectPath
+    return options
+  }
 }

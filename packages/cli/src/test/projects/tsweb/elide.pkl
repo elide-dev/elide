@@ -1,0 +1,57 @@
+amends "../../../main/pkl/Project.pkl"
+
+import "../../../main/pkl/Task.pkl" as task
+import "../../../main/pkl/JavaScript.pkl" as js
+import "../../../main/pkl/Cloudflare.pkl" as cloudflare
+
+name = "elide-test-tsweb"
+description = "Example web project using Elide and TypeScript."
+
+local browser = "src/browser.tsx"
+local server = "src/server.tsx"
+
+entrypoint {
+  browser
+  server
+}
+
+dependencies {
+  npm {
+    packages {
+      "react@18"
+      "react-dom@18"
+    }
+    devPackages {
+      "wrangler"
+    }
+  }
+}
+
+dev {
+  source {
+    platform = "github"
+    project = "elide-dev/elide"
+    subpath = "samples/tsweb"
+  }
+}
+
+artifacts {
+  ["browser"] = js.browser(browser)
+  ["worker"] = (cloudflare.worker(server)) {
+    worker {
+      name = "my-cool-worker"
+
+      kv {
+        ["BINDING"] {
+          id = "abc123"
+        }
+      }
+    }
+  }
+}
+
+tasks {
+  ["deploy"] = new task.Exec {
+    command = "wrangler publish"
+  }
+}

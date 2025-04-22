@@ -1,0 +1,63 @@
+amends "../../../main/pkl/Project.pkl"
+
+import "../../../main/pkl/JavaScript.pkl" as js
+import "../../../main/pkl/Jvm.pkl" as jar
+import "../../../main/pkl/Task.pkl" as task
+
+name = "elide-test-ktweb"
+description = "Example web project using Elide with Kotlin and TypeScript."
+
+local main = "src/main/kotlin/main.kt"
+local frontend = "src/main/typescript/main.mts"
+
+entrypoint {
+  main
+  frontend
+}
+
+dependencies {
+  maven {
+    packages {
+      // KotlinX HTML (https://github.com/Kotlin/kotlinx.html)
+      "org.jetbrains.kotlinx:kotlinx-html:0.12.0"
+    }
+  }
+  npm {
+    packages {
+      "react@18"
+      "react-dom@18"
+    }
+  }
+}
+
+sources {
+  ["main"] = "src/main/kotlin/**/*.kt"
+  ["browser"] = "src/main/typescript/**/*.{ts,mts}"
+  ["test"] = "src/test/kotlin/**/*.kt"
+}
+
+artifacts {
+  ["browser"] = js.browser(frontend)
+  ["main"] = jar.app(main) |> jar.withArtifact("browser", "/web/app.min.js")
+}
+
+defaultTasks {
+  build {
+    dependsOn {
+      "browser"
+      "main"
+    }
+  }
+}
+
+tasks {
+  ["deploy"] = new task.Exec {
+    command = "npm"
+    args {
+      "deploy"; "--prod"
+    }
+    dependsOn {
+      "build"
+    }
+  }
+}

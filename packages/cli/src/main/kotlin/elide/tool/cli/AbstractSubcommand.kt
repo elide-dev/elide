@@ -21,6 +21,7 @@ import lukfor.progress.tasks.ITaskRunnable
 import lukfor.progress.tasks.Task
 import lukfor.progress.tasks.TaskFailureStrategy.IGNORE_FAILURES
 import org.graalvm.polyglot.Language
+import picocli.CommandLine
 import picocli.CommandLine.Mixin
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
@@ -326,10 +327,13 @@ import org.graalvm.polyglot.Engine as VMEngine
   private val sharedResources: MutableList<AutoCloseable> = LinkedList()
 
   // Common options shared by all commands.
-  @Mixin internal var commons: CommonOptions = CommonOptions()
+  @Mixin private var commons: CommonOptions = CommonOptions()
 
   // Command specification from Picocli.
   @Spec internal var commandSpec: CommandSpec? = null
+
+  // Parent command for all invocations.
+  @CommandLine.ParentCommand internal var elideCli: Elide? = null
 
   /** A thread-local [PolyglotContext] instance acquired from the [engine]. */
   private val contextHandle: ThreadLocal<PolyglotContext> = ThreadLocal()
@@ -367,6 +371,12 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   /** Pretty output flag status. */
   val pretty: Boolean get() = commons.pretty
+
+  private val mergedOptions by lazy {
+    commons.merge(elideCli?.commons)
+  }
+
+  internal fun commons(): CommonOptions = mergedOptions
 
   internal fun enableInteractive() {
     interactive = true

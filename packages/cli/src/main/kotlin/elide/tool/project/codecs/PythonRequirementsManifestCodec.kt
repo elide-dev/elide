@@ -7,9 +7,11 @@ import jakarta.inject.Singleton
 import kotlin.io.path.Path
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
-import elide.tool.project.ProjectEcosystem
-import elide.tool.project.manifest.ElidePackageManifest
-import elide.tool.project.manifest.PythonRequirementsManifest
+import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.codecs.ManifestCodec
+import elide.tooling.project.codecs.PackageManifestCodec
+import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.PythonRequirementsManifest
 
 @Singleton @ManifestCodec(ProjectEcosystem.PythonRequirements)
 class PythonRequirementsManifestCodec : PackageManifestCodec<PythonRequirementsManifest> {

@@ -53,6 +53,8 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.Phaser
+import java.util.concurrent.ThreadFactory
+import java.util.concurrent.TimeoutException
 import java.util.function.Supplier
 import java.util.stream.Stream
 import javax.tools.ToolProvider
@@ -61,11 +63,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
+import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.math.max
-import kotlin.streams.asSequence
 import kotlin.streams.asStream
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.LogLevel
@@ -90,8 +95,16 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.runtime.precompiler.Precompiler
+import elide.tool.Environment
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
+import elide.tool.cli.cmd.builder.emitCommand
+import elide.tool.cli.cmd.runner.DebugConfig
+import elide.tool.cli.cmd.runner.DelegatedRunner.Companion.delegatedRunner
+import elide.tool.cli.cmd.runner.EnvironmentConfig
+import elide.tool.cli.cmd.runner.InspectorConfig
+import elide.tool.cli.cmd.runner.LanguageSelector
+import elide.tool.cli.cmd.runner.ShellRunnable
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
 import elide.tool.cli.options.AccessControlOptions
@@ -102,10 +115,20 @@ import elide.tool.cli.options.EngineKotlinOptions
 import elide.tool.cli.options.EnginePythonOptions
 import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.err.ErrPrinter
+import elide.tool.exec.SubprocessRunner.delegateTask
+import elide.tool.exec.SubprocessRunner.stringToTask
+import elide.tool.exec.SubprocessRunner.subprocess
+import elide.tool.exec.allProjectPaths
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
-import elide.tool.project.ElideProject
+import elide.tool.project.PackageManifestService
 import elide.tool.project.ProjectManager
+import elide.tooling.project.ElideProject
+import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.NodePackageManifest
+import elide.tooling.project.manifest.PackageManifest
+import elide.tooling.runner.ProcessRunner
 
 /**
  * Type alias for an accessor method which allows an optional builder amendment.
@@ -142,6 +165,7 @@ private typealias ContextAccessor = () -> PolyglotContext
 @Introspected
 @Singleton internal class ToolShellCommand @Inject constructor(
   private val projectManager: ProjectManager,
+  private val manifests: PackageManifestService,
   private val workdir: WorkdirManager,
   private val guestExec: GuestExecutorProvider,
 ) : AbstractSubcommand<ToolState, CommandContext>() {
@@ -236,6 +260,8 @@ private typealias ContextAccessor = () -> PolyglotContext
       if (ENABLE_JVM && (language.kotlin || (alias != null && ktAliases.contains(alias)))) add(KOTLIN)
     }
   }
+
+  private lateinit var threadFactory: ThreadFactory
 
   // Last-seen statement executed by the VM.
   private val allSeenStatements = LinkedList<String>()
@@ -1700,10 +1726,95 @@ private typealias ContextAccessor = () -> PolyglotContext
       },
     )
 
-    // if no entrypoint was specified, attempt to use the one in the project manifest
-    if (runnable == null) {
-      projectResolution.join()
-      runnable = activeProject.value?.manifest?.entrypoint
+    // if no entrypoint was specified, attempt to use the one in the project manifest, or try resolving the runnable as
+    // a script name in either `elide.pkl` or a foreign manifest.
+    when (val tgt = runnable) {
+      null -> {
+        projectResolution.join()
+
+        // @TODO ability to select an entrypoint
+        runnable = activeProject.value?.manifest?.entrypoint?.first()
+      }
+
+      // if we have a runnable that is a simple string, maybe it's mapped to a script name?
+      else -> if (tgt.isNotEmpty() && '.' !in tgt) {
+        projectResolution.join()
+        (when (val project = activeProject.value) {
+          // `null` triggers foreign manifest fallback behavior
+          null -> null
+
+          // check for a script mapped in `elide.pkl` or fall back to foreign manifests
+          else -> if (tgt !in project.manifest.scripts) null else {
+            // in this case, we have a `runnable` script name, as in `elide check` with `["check"] = "..."` mapped in
+            // the project configuration. this is a corner-case where we should short-circuit file resolution and simply
+            // delegate to this method instead.
+            requireNotNull(project.manifest.scripts[tgt]) to project.manifest
+          }
+        } ?: manifests.resolveToTask(
+          tgt,
+          allSupportedLangs,
+        ))?.let { (found, manifest) ->
+          // we have found a script to run, as a string; this either originates from the first branch above, which pulls
+          // from `elide.pkl`, or from the foreign manifest fallback, which pulls from things like `package.json`.
+          logging.debug { "Running '$tgt' from manifest '$manifest'" }
+          when (manifest) {
+            // if the task originates from an elide package manifest, we don't need a delegated runner.
+            is ElidePackageManifest -> null
+
+            // based on the manifest it came from, try to resolve a delegated runner.
+            else -> delegatedRunner(manifest.ecosystem)
+          }.let { delegate ->
+            return when (delegate) {
+              // with no delegated runner, we are now free to spawn the task and delegate to it as the command.
+              null -> stringToTask(found).let { task ->
+                emitCommand(task)
+                delegateTask(task)
+              }
+
+              // allow the delegated runner to transform the arguments, as needed; then, spawn the task and delegate to
+              // it as normal.
+              else -> stringToTask(found).apply {
+                args = delegate.transform(args)
+                env = delegate.transform(env)
+              }.let { task ->
+                emitCommand(task)
+                delegateTask(task)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // maybe it's just a project binary, but not mapped as a script?
+    val binReturn = runnable?.let { maybeBinary ->
+      allProjectPaths.map { it.resolve(maybeBinary) }.firstOrNull {
+        Files.exists(it) && Files.isExecutable(it)
+      }?.let { resolvedBinary ->
+        val runnableArgs = Statics.args.drop(1)
+        val binpath = resolvedBinary.absolute()
+
+        delegateTask(subprocess(binpath) {
+          // delegate streams by default
+          streams = ProcessRunner.StdStreams.Defaults
+
+          // by default, the system env is in use
+          env = Environment.HostEnv
+
+          // activate shell support
+          options = ProcessRunner.ProcessOptions(shell = ProcessRunner.ProcessShell.Active)
+
+          // copy in the provided arguments
+          runnableArgs.takeIf { it.isNotEmpty() }?.let { arguments ->
+            args.addAllStrings(arguments)
+          }
+        })
+      }
+    }
+    when (binReturn) {
+      // if null, we proceed
+      null -> {}
+      else -> return binReturn
     }
 
     try {
@@ -1804,8 +1915,49 @@ private typealias ContextAccessor = () -> PolyglotContext
           // wait for all tasks to arrive
           logging.debug("Waiting for long-lived tasks to arrive")
           phaser.value.arriveAndAwaitAdvance()
-          logging.debug("Exiting")
+          logging.debug("Exiting server context")
         }
+        engine().unwrap().let { engine ->
+          val terminationPeriod = (commons().timeoutSeconds).seconds
+          logging.debug { "Preparing to shut down execution (termination period: $terminationPeriod)" }
+
+          try {
+            logging.trace { "Triggering graceful engine shutdown" }
+            engine.close()
+          } catch (exc: IllegalStateException) {
+            logging.trace { "Shutdown produced ISE: probably still executing (message: '${exc.message}')" }
+
+            try {
+              logging.trace { "Awaiting termination for guest execution" }
+              val startedAwaiting = System.currentTimeMillis()
+              guestExec.executor().awaitTermination(terminationPeriod.toJavaDuration())
+              logging.trace { "Guest executor terminated, re-closing engine" }
+
+              runCatching {
+                engine.close()
+              }.onFailure {
+                // only sleep for any remaining time in timeout
+                val remaining = terminationPeriod - (System.currentTimeMillis() - startedAwaiting).milliseconds
+                Thread.sleep(remaining.inWholeMilliseconds)
+                logging.trace { "Shutdown trace period exceeded; shutting down forcefully" }
+                engine.close(/* cancelIfExecuting = */ true)
+                logging.trace { "Engine forcefully terminated" }
+              }.onSuccess {
+                logging.trace { "Engine shut down on second call" }
+              }
+            } catch (_: TimeoutException) {
+              logging.trace { "Shutdown trace period exceeded; shutting down forcefully" }
+
+              // we have exceeded our timeout; so, forcefully cancel execution, at the executor first, and then via the
+              // guest execution engine.
+              guestExec.executor().shutdownNow()
+              logging.trace { "Guest executor forcefully terminated" }
+              engine.close(/* cancelIfExecuting = */ true)
+              logging.trace { "Guest engine forcefully terminated" }
+            }
+          }
+        }
+        logging.trace { "Exiting with successful code" }
         return success()
       }
     } catch (err: AbstractToolError.Known) {
@@ -1834,4 +1986,23 @@ private typealias ContextAccessor = () -> PolyglotContext
       }
     }
   }
+}
+
+private fun PackageManifestService.resolveToTask(
+  taskName: String,
+  langs: Set<GuestLanguage>,
+): Pair<String, PackageManifest>? {
+  val selfDir = Path(System.getProperty("user.dir"))
+
+  // try npm
+  val npmPath = resolve(selfDir, ProjectEcosystem.Node)
+  if (Files.exists(npmPath) && Files.isRegularFile(npmPath) && Files.isReadable(npmPath)) {
+    val parsed = Files.newInputStream(npmPath).use { parse(it, ProjectEcosystem.Node) } as NodePackageManifest
+    parsed.scripts?.let { packageScripts ->
+      if (taskName in packageScripts) {
+        return requireNotNull(packageScripts[taskName]) to parsed
+      }
+    }
+  }
+  return null
 }

@@ -45,6 +45,46 @@ public sealed interface Environment : EnvironmentMap {
   public fun toMutable(): MutableEnvironment
 
   /**
+   * Extend this environment with the [other] environment.
+   *
+   * @param other Environment to extend this environment with.
+   * @return Environment combining this and the [other] environment.
+   */
+  public fun extend(other: Environment): Environment = from(
+    toMutable().plus(other.entries.map { it.key to it.value })
+  )
+
+  /**
+   * Extend this environment with the [other] environment.
+   *
+   * @param other Environment to extend this environment with.
+   * @return Environment combining this and the [other] environment.
+   */
+  public fun extend(other: Map<String, String>): Environment = from(
+    toMutable().plus(other)
+  )
+
+  /**
+   * Extend this environment with the [other] environment.
+   *
+   * @param other Environment to extend this environment with.
+   * @return Environment combining this and the [other] environment.
+   */
+  public fun extend(other: Iterable<Pair<String, String>>): Environment = from(
+    toMutable().plus(other)
+  )
+
+  /**
+   * Extend this environment with the [other] environment.
+   *
+   * @param other Environment to extend this environment with.
+   * @return Environment combining this and the [other] environment.
+   */
+  public fun extend(vararg other: Pair<String, String>): Environment = from(
+    toMutable().plus(other)
+  )
+
+  /**
    * ## Empty Environment
    *
    * An empty environment profile which is immutable and can never contain values; as a result, it is expressed

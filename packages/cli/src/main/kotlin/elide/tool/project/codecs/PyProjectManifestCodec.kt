@@ -13,9 +13,11 @@ import kotlinx.serialization.encodeToString
 import kotlin.io.path.Path
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
-import elide.tool.project.ProjectEcosystem
-import elide.tool.project.manifest.ElidePackageManifest
-import elide.tool.project.manifest.PyProjectManifest
+import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.codecs.ManifestCodec
+import elide.tooling.project.codecs.PackageManifestCodec
+import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.PyProjectManifest
 
 @Singleton @ManifestCodec(ProjectEcosystem.Python)
 class PyProjectManifestCodec : PackageManifestCodec<PyProjectManifest> {

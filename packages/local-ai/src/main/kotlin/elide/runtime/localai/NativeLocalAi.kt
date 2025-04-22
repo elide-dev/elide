@@ -24,6 +24,7 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 import kotlin.random.Random
+import elide.exec.Execution
 import elide.runtime.core.lib.NativeLibraries
 
 /**
@@ -143,6 +144,7 @@ public object NativeLocalAi : AutoCloseable {
    */
   @JvmStatic public fun load() {
     if (!ImageInfo.inImageCode()) {
+      Execution.ensureLoaded()
       NativeLibraries.resolve(LIB_LOCALAI) {
         libsLoaded = it
       }

@@ -1,0 +1,9 @@
+/// Base Elide types for multi-module projects.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.workspace
+
+/// Describes a module which is part of a workspace.
+class WorkspaceModule {
+  name: String?
+  path: String
+}

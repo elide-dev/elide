@@ -1,0 +1,18 @@
+/// Describes the structure of HuggingFace dependencies.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.huggingface
+
+/// Describes a HuggingFace AI model dependency.
+class HuggingFace {
+  /// Repository holding the model.
+  repository: String
+
+  /// Model name.
+  model: String
+}
+
+/// Configuration for HuggingFace AI model dependencies.
+class HuggingFaceDependencies {
+  /// Models to download and use.
+  models: Listing<HuggingFace> = new {}
+}

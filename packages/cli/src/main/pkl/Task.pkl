@@ -1,0 +1,78 @@
+/// Describes build tasks in generic form.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.tasks
+
+/// Typealias for a task name.
+typealias TaskName = String
+
+/// Argument for a command-line call.
+typealias Argument = String
+
+/// Environment variable name.
+typealias EnvironmentVariable = String
+
+/// Value associated with an environment variable.
+typealias EnvironmentValue = String
+
+/// Structural specification of a task dependency.
+class TaskDependencySpec {
+  name: TaskName
+}
+
+/// Type which specifies a task dependency.
+typealias TaskDependency = TaskDependencySpec | TaskName
+
+/// Shorthand for a task dependency.
+const function dependsOn(_name: TaskName) = new TaskDependencySpec {
+  name = _name
+}
+
+/// Base class defining the concept of a project task.
+abstract class Task {
+  /// Tasks which this task depends on.
+  dependsOn: Listing<TaskDependency> = new {}
+}
+
+/// Options which apply to exec tasks.
+class ExecOptions {
+
+}
+
+/// Built-in task roles (known tasks).
+typealias BuiltinTaskRole = "build" | "test" | "lint" | "clean" | "check"
+
+/// Known built-in task.
+class Builtin extends Task {
+  /// Role of this built-in task definition.
+  role: BuiltinTaskRole;
+}
+
+/// Execution of a command-line call as a task.
+class Exec extends Task {
+  /// Command to execute.
+  command: String?
+
+  /// Binary name; if set, this will be used to find the command in the PATH.
+  binary: String?
+
+  /// Shell to use for execution of this command.
+  shell: String = "bash"
+
+  /// Arguments to pass to the command.
+  args: Listing<Argument> = new {}
+
+  /// Environment variables to set for this command.
+  env: Mapping<EnvironmentVariable, EnvironmentValue> = new {}
+
+  /// Options for this command.
+  options: ExecOptions = new {}
+}
+
+/// Default task stubs, which allow customization of built-in/implied tasks.
+class DefaultTasks {
+  /// Default build task.
+  build: Builtin = new { role = "build" }
+}
+
+/// Tasks container definition.
+typealias Tasks = Mapping<TaskName, Task>

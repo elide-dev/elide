@@ -1,5 +1,8 @@
 .venv/
 .DS_Store
+.dev/
+.dev/dependencies
+.dev/artifacts
 .idea/
 !tools/conventions/src/main/kotlin/dev/elide/build
 build/

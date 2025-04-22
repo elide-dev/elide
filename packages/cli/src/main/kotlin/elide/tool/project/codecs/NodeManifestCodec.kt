@@ -11,10 +11,11 @@ import kotlinx.serialization.json.encodeToStream
 import kotlin.io.path.Path
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
-import elide.tool.project.codecs.PackageManifestCodec
-import elide.tool.project.ProjectEcosystem.Node
-import elide.tool.project.manifest.ElidePackageManifest
-import elide.tool.project.manifest.NodePackageManifest
+import elide.tooling.project.codecs.PackageManifestCodec
+import elide.tooling.project.ProjectEcosystem.Node
+import elide.tooling.project.codecs.ManifestCodec
+import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.NodePackageManifest
 
 @Singleton @ManifestCodec(Node) class NodeManifestCodec : PackageManifestCodec<NodePackageManifest> {
   override fun defaultPath(): Path = Path("$DEFAULT_NAME.$DEFAULT_EXTENSION")
@@ -37,7 +38,7 @@ import elide.tool.project.manifest.NodePackageManifest
       name = source.name,
       version = source.version,
       description = source.description,
-      main = source.entrypoint,
+      main = source.entrypoint?.first(),
       scripts = source.scripts,
       dependencies = source.dependencies.npm.packages.associate { it.name to it.version },
       devDependencies = source.dependencies.npm.devPackages.associate { it.name to it.version },
@@ -49,7 +50,7 @@ import elide.tool.project.manifest.NodePackageManifest
       name = source.name,
       version = source.version,
       description = source.description,
-      entrypoint = source.main,
+      entrypoint = source.main?.let { listOf(it) },
       scripts = source.scripts.orEmpty(),
       dependencies = ElidePackageManifest.DependencyResolution(
         npm = ElidePackageManifest.NpmDependencies(

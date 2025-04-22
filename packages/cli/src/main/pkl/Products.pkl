@@ -1,0 +1,12 @@
+/// Describes project final product configurations.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.product
+
+/// Product name typealias.
+typealias ProductName = String(Regex(#"^[a-z][a-z0-9.]{1,31}$"#))
+
+/// Base type for all products.
+abstract class Product {}
+
+/// Holds product configurations for a given project.
+typealias Products = Mapping<ProductName, Product>

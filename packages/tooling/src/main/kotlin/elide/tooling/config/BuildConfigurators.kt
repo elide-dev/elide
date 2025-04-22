@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
+package elide.tooling.config
+
+import java.nio.file.Path
+import java.util.ServiceLoader
+import elide.tooling.config.BuildConfigurator.BuildConfiguration
+import elide.tooling.project.ElideConfiguredProject
+import elide.tooling.project.manifest.ElidePackageManifest
+
+public object BuildConfigurators {
+  @JvmStatic public fun collect(): Sequence<BuildConfigurator> {
+    return ServiceLoader.load<BuildConfigurator>(BuildConfigurator::class.java).asSequence()
+  }
+
+  @JvmStatic
+  public fun contribute(project: ElideConfiguredProject, from: Sequence<BuildConfigurator>, to: BuildConfiguration) {
+    val layout = object : BuildConfigurator.ProjectDirectories {
+      override val projectRoot: Path get() = to.projectRoot
+    }
+    val state = object : BuildConfigurator.ElideBuildState {
+      override val project: ElideConfiguredProject get() = project
+      override val console: BuildConfigurator.BuildConsoleController get() = TODO("Not yet implemented")
+      override val events: BuildConfigurator.BuildEventController get() = TODO("Not yet implemented")
+      override val manifest: ElidePackageManifest get() = project.manifest
+      override val layout: BuildConfigurator.ProjectDirectories get() = layout
+    }
+    from.forEach {
+      it.contribute(state, to)
+    }
+  }
+
+  @JvmStatic public fun contribute(project: ElideConfiguredProject, to: BuildConfiguration) {
+    contribute(project, collect(), to)
+  }
+}

@@ -54,17 +54,7 @@ use std::ffi::{OsStr, c_void};
 use std::sync::OnceLock;
 
 #[cfg(feature = "orogene")]
-use tokio::runtime::Runtime;
-
-#[cfg(feature = "orogene")]
 use orogene::Orogene;
-
-#[cfg(feature = "ruff")]
-use ruff::args::Args;
-#[cfg(feature = "ruff")]
-use ruff::{ExitStatus, run};
-#[cfg(feature = "uv")]
-use uv::main as uv_main;
 
 #[cfg(feature = "biome")]
 use crate::tools::BIOME_INFO;
@@ -77,6 +67,13 @@ use crate::tools::RUFF_INFO;
 #[cfg(feature = "uv")]
 use crate::tools::UV_INFO;
 use crate::tools::{API_VERSION, LIB_VERSION, ToolInfo};
+use exec::async_engine_safe;
+#[cfg(feature = "ruff")]
+use ruff::args::Args;
+#[cfg(feature = "ruff")]
+use ruff::{ExitStatus, run};
+#[cfg(feature = "uv")]
+use uv::main as uv_main;
 
 mod tools;
 
@@ -131,20 +128,6 @@ fn tool_map() -> &'static HashMap<&'static str, &'static ToolInfo> {
   })
 }
 
-#[cfg(any(feature = "orogene", feature = "uv"))]
-static RUNTIME: OnceLock<Runtime> = OnceLock::new();
-
-/// Obtain the active Tokio runtime; if one is not already initialized, a new one will be created.
-#[cfg(any(feature = "orogene", feature = "uv"))]
-fn obtain_runtime() -> &'static Runtime {
-  RUNTIME.get_or_init(|| {
-    tokio::runtime::Builder::new_multi_thread()
-      .enable_all()
-      .build()
-      .expect("Failed building the Runtime")
-  })
-}
-
 #[cfg(feature = "ruff")]
 fn run_ruff_entry(args: Vec<std::ffi::OsString>) -> ExitStatus {
   let args = Args::parse_from(args);
@@ -171,7 +154,7 @@ pub fn run_oro_with_args(args: Vec<std::ffi::OsString>) -> Result<()> {
   let again = Orogene::augment_args(cmd);
 
   // Execute the future, blocking the current thread until completion
-  let runtime = obtain_runtime();
+  let runtime = async_engine_safe().expect("failed to resolve async runtime");
   let _guard = runtime.enter();
   runtime.block_on(Orogene::init_and_run(again, args))
 }

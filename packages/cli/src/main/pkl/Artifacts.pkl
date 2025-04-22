@@ -1,0 +1,18 @@
+/// Describes project infrastructure configurations.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.artifacts
+
+/// Artifact name typealias.
+typealias ArtifactName = String
+
+/// Base type for all artifacts.
+abstract class Artifact {
+  /// Other artifacts to include within this JAR.
+  artifacts: Listing<ArtifactName> = new {}
+
+  /// Other artifacts this artifact depends on.
+  dependsOn: Listing<ArtifactName> = new {}
+}
+
+/// Holds artifact configurations for a given project.
+typealias Artifacts = Mapping<ArtifactName, Artifact>

@@ -34,17 +34,39 @@ public sealed interface MutableArguments : Arguments, Arguments.Suite {
    */
   public fun build(): Arguments
 
+  /**
+   *
+   */
+  public fun add(element: Argument): Boolean
+
+  /**
+   *
+   */
+  public fun add(element: String): Boolean = add(Argument.of(element))
+
+  /**
+   *
+   */
+  public fun addAll(elements: Collection<Argument>): Boolean
+
+  /**
+   *
+   */
+  public fun addAllStrings(elements: Collection<String>): Boolean = addAll(elements.map { Argument.of(it) })
+
   @JvmInline public value class MutableArgumentList(
     private val held: MutableList<Argument>,
   ) : MutableArguments, MutableList<Argument> by held {
     override fun asArgumentSequence(): Sequence<Argument> = held.asSequence()
     override fun get(index: Int): Argument = held[index]
     override fun build(): Arguments = Arguments.of(held.asSequence())
+    override fun add(element: Argument): Boolean = held.add(element)
+    override fun addAll(elements: Collection<Argument>): Boolean = held.addAll(elements)
   }
 
-  @JvmInline public value class PersistentArgumentList(
-    private val held: PersistentList<Argument>,
-  ) : MutableArguments, PersistentList<Argument> by held {
+  public class PersistentArgumentList(
+    private var held: PersistentList<Argument>,
+  ) : MutableArguments {
     override fun asArgumentSequence(): Sequence<Argument> = held.asSequence()
     override fun get(index: Int): Argument = held[index]
     override fun build(): Arguments = Arguments.of(held.asSequence())
@@ -53,6 +75,10 @@ public sealed interface MutableArguments : Arguments, Arguments.Suite {
     override fun isEmpty(): Boolean = held.isEmpty()
     override fun iterator(): MutableIterator<Argument> = held.toMutableList().iterator()
     override val size: Int get() = held.size
+    override fun add(element: Argument): Boolean = true.also { held = held.add(element) }
+    override fun addAll(elements: Collection<Argument>): Boolean = true.also {
+      held = held.addAll(elements)
+    }
   }
 
   /** Factories for creating or obtaining mutable argument sets. */

@@ -3,12 +3,14 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ComplexCondition:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$(base != null &amp;&amp; (base.parentFile == null || base.absolutePath == "/")) || files.isEmpty()</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>ForbiddenComment:DelegatedToolCommand.kt$DelegatedToolCommand$// @TODO: delegated error handling</ID>
     <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet&lt;GuestLanguage>)</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
     <ID>MagicNumber:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$15</ID>
+    <ID>MagicNumber:SubprocessRunner.kt$100</ID>
     <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$1000L</ID>
     <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$120</ID>
     <ID>MagicNumber:ToolShellCommand.kt$ToolShellCommand$40</ID>

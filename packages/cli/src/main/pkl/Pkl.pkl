@@ -1,0 +1,9 @@
+/// Describes Pkl configurations for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.pkl
+
+/// Configures project-level Pkl dependencies.
+class PklDependencies {}
+
+/// Configures Pkl language features and settings.
+class PklSettings {}

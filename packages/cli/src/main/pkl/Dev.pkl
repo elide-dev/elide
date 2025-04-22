@@ -1,0 +1,38 @@
+/// Project development settings and configurations.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.dev
+
+import "ci/ContinuousIntegration.pkl" as ci
+
+/// Source platform where the project is hosted.
+typealias SourcePlatform = "github" | "gitlab" | "bitbucket" | "git" | String
+
+/// Base class for project source information.
+abstract class ProjectSourceInfo
+
+/// GitHub project source information.
+class Github extends ProjectSourceInfo {
+  /// Repository for this project.
+  repo: String
+}
+
+/// Project source configuration.
+class ProjectSourceSpec {
+  /// Platform which holds this project's source.
+  platform: SourcePlatform?
+
+  /// Project name or path.
+  project: String?
+
+  /// Subpath for this project, as applicable.
+  subpath: String?
+}
+
+/// Development settings for the project.
+class DevSettings {
+  /// Source info for the project.
+  source: ProjectSourceSpec?
+
+  /// CI configuration for this project.
+  ci: ci.ContinuousIntegration?
+}

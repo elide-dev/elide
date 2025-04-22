@@ -1,0 +1,17 @@
+/// Abstract classes for Continuous Integration features.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.ci
+
+/// Configuration for a CI provider; overridden by implementations.
+abstract class CI
+
+/// CI providers understood by Elide.
+typealias CiProvider = "gha" | "gitlab" | "circleci" | "travis" | "auto"
+
+/// CI settings for this project.
+typealias ContinuousIntegration = CI
+
+/// CD settings for this project.
+class ContinuousDeployment {
+  // Nothing yet.
+}

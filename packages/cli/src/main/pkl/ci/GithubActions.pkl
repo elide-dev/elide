@@ -1,0 +1,121 @@
+/// Project development settings and configuration for GitHub Actions.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.gha
+
+import "../Base.pkl" as _common
+import "ContinuousIntegration.pkl" as _ci
+
+/// Name of a GitHub Actions workflow.
+typealias WorkflowName = String
+
+/// Network egress policies for GHA workflows.
+typealias WorkflowEgressPolicy = "audit" | "deny"
+
+/// An allowed network endpoint.
+typealias AllowedEndpoint = Uri | _common.DomainName | String
+
+/// Allowed network endpoints for GHA workflows.
+typealias AllowedEndpoints = Listing<AllowedEndpoint>
+
+/// Defines (in abstract terms) a vitual workflow-level step.
+abstract class WorkflowStep {
+  /// Name of the step.
+  name: String
+}
+
+/// Step configuration for Git checkout.
+class GithubCheckoutStep extends WorkflowStep {
+  name = "Setup: Checkout"
+
+  /// The fetch depth to apply.
+  fetchDepth: Int32 = 0
+
+  /// Whether to fetch submodules.
+  submodules: Boolean = true
+
+  /// Whether to persist credentials.
+  persistCredentials: Boolean = false
+}
+
+/// Permission modes for GHA workflows.
+typealias PermissionMode = "read" | "write" | "none"
+
+/// Github permissions block.
+class GithubPermissions {
+  contents: PermissionMode?
+}
+
+/// Security settings for GHA workflows.
+class GithubWorkflowSecurity {
+  /// Disable sudo access within the CI workflow.
+  disableSudo: Boolean = true
+
+  /// Network egress policy for the workflow.
+  egressPolicy: WorkflowEgressPolicy = "audit"
+
+  /// Network endpoints to allow when `deny` mode is set for `egressPolicy`.
+  allowedEndpoints: AllowedEndpoints = new {}
+}
+
+/// Name of a job within a workflow.
+typealias JobName = String
+
+/// Jobs container for a workflow.
+typealias GithubWorkflowJobs = Mapping<JobName, Job>
+
+/// Describes a GitHub Actions workflow.
+class GithubWorkflow {
+  /// Security settings.
+  security: GithubWorkflowSecurity = new {}
+
+  /// GHA permissions at the workflow level.
+  permissions: GithubPermissions = new {}
+
+  /// Checkout step settings.
+  checkout: GithubCheckoutStep = new {}
+
+  /// Jobs to include in this workflow.
+  jobs: GithubWorkflowJobs = new {}
+}
+
+/// Base type for a job step.
+class JobStep {
+  /// Name of this step.
+  name: String?
+
+  /// What to run for this step.
+  run: String
+}
+
+/// Step configuration for a job.
+typealias JobSteps = Listing<JobStep>
+
+/// Describes a job within a GitHub Actions workflow.
+class Job {
+  /// Name for the job.
+  name: String
+
+  /// What kind of machine this job runs on.
+  runsOn: String
+
+  /// Whether to skip errors for this job.
+  continueOnError: Boolean?
+
+  /// GHA permissions at the workflow level.
+  permissions: GithubPermissions = new {}
+
+  /// Steps defined for this job.
+  steps: JobSteps = new {}
+}
+
+/// Defines workflows.
+typealias GithubWorkflows = Mapping<WorkflowName, GithubWorkflow>
+
+/// Configuration block for GitHub Actions.
+class GithubActions extends _ci.CI {
+  /// Workflow definitions.
+  workflows: GithubWorkflows = new {}
+}
+
+/// Default suite of configurations for GitHub Actions.
+actions: GithubActions = new {}

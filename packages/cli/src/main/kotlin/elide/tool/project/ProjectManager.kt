@@ -13,6 +13,8 @@
 
 package elide.tool.project
 
+import elide.tooling.project.ElideProject
+
 internal interface ProjectManager {
-  suspend fun resolveProject(): ElideProject?
+  suspend fun resolveProject(pathOverride: String? = null): ElideProject?
 }

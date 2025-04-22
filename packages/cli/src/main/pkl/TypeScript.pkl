@@ -1,0 +1,6 @@
+/// Describes TypeScript configurations for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.typescript
+
+/// Configures TypeScript language features and settings.
+class TypeScriptSettings {}

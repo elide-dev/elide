@@ -175,7 +175,7 @@ kotlinx-wrappers-web = "1.0.0-pre.754"
 kotlinxWrappers = "pre.754"
 kover = "0.9.1"
 kover-plugin = "0.9.1"
-ksp = "2.1.20-2.0.1-SNAPSHOT"
+ksp = "2.1.20-2.0.0"
 ktlint = "1.1.1"
 ktoml = "0.6.0"
 larray = "0.2.1"
@@ -185,6 +185,9 @@ lmaxDisruptorProxy = "3.1.1"
 logback = "1.5.18"
 lz4 = "1.3.0"
 magicProgress = "0.3.2"
+maven-core = "3.9.9"
+maven-lib = "1.9.22"
+maven-wagon = "3.5.3"
 mermaidDokka = "0.6.0"
 micronaut = "4.8.10"
 micronaut-aot = "2.7.0"
@@ -492,6 +495,7 @@ hoplite-toml = { group = "com.sksamuel.hoplite", name = "hoplite-toml", version.
 hoplite-yaml = { group = "com.sksamuel.hoplite", name = "hoplite-yaml", version.ref = "hoplite" }
 inquirer = { group = "com.github.kotlin-inquirer", name = "kotlin-inquirer", version.ref = "inquirer" }
 j4rs = { group = "io.github.astonbitecode", name = "j4rs", version.ref = "j4rs" }
+jacoco-agent = { group = "org.jacoco", name = "org.jacoco.agent", version.ref = "jacoco" }
 jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
 jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
 jackson-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jsr310" }
@@ -567,6 +571,7 @@ kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", vers
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin-sdk" }
 kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu", version.ref = "atomicfu" }
+kotlinx-atomicfu-jvm = { group = "org.jetbrains.kotlinx", name = "atomicfu-jvm", version.ref = "atomicfu" }
 kotlinx-atomicfu-linux-x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-linuxx64", version.ref = "atomicfu" }
 kotlinx-atomicfu-macos-x64 = { group = "org.jetbrains.kotlinx", name = "atomicfu-macosx64", version.ref = "atomicfu" }
 kotlinx-benchmark-runtime = { group = "org.jetbrains.kotlinx", name = "kotlinx-benchmark-runtime", version.ref = "kotlinx-benchmark" }
@@ -592,7 +597,9 @@ kotlinx-html-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-js", v
 kotlinx-html-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-jvm", version.ref = "kotlinx-html" }
 kotlinx-html-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-html-wasm", version.ref = "kotlinx-html" }
 kotlinx-io = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core", version.ref = "kotlinx-io" }
+kotlinx-io-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-core-jvm", version.ref = "kotlinx-io" }
 kotlinx-io-bytestring = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-bytestring", version.ref = "kotlinx-io" }
+kotlinx-io-bytestring-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-io-bytestring-jvm", version.ref = "kotlinx-io" }
 kotlinx-knit = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
 kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinx-metadata-jvm" }
 kotlinx-nodejs = { group = "org.jetbrains.kotlinx", name = "kotlinx-nodejs", version.ref = "kotlinx-nodejs" }
@@ -615,6 +622,7 @@ kotlinx-wrappers-bom = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin
 kotlinx-wrappers-browser = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-browser", version.ref = "kotlinx-wrappers-browser" }
 kotlinx-wrappers-cesium = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-cesium", version.ref = "kotlinx-wrappers-cesium" }
 kotlinx-wrappers-css = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css", version.ref = "kotlinx-wrappers-css" }
+kotlinx-wrappers-css-jvm = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-css-jvm", version.ref = "kotlinx-wrappers-css" }
 kotlinx-wrappers-cssType = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-csstype", version.ref = "kotlinx-wrappers-css" }
 kotlinx-wrappers-emotion = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-emotion", version.ref = "kotlinx-wrappers-emotion" }
 kotlinx-wrappers-history = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-history", version.ref = "kotlinx-wrappers-history" }
@@ -646,6 +654,7 @@ kotlinx-wrappers-typescript = { group = "org.jetbrains.kotlin-wrappers", name = 
 kotlinx-wrappers-web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-web", version.ref = "kotlinx-wrappers-web" }
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
+ksp-cmdline = { group = "com.google.devtools.ksp", name = "symbol-processing-cmdline", version.ref = "ksp" }
 ktoml = { group = "com.akuleshov7", name = "ktoml-core", version.ref = "ktoml" }
 larray-buffer = { group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
 larray-core = { group = "org.xerial.larray", name = "larray", version.ref = "larray" }
@@ -656,8 +665,19 @@ lmax-disruptor-proxy = { group = "com.lmax", name = "disruptor-proxy", version.r
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
+maven-core = { group = "org.apache.maven", name = "maven-core", version.ref = "maven-core" }
+maven-resolver = { group = "org.apache.maven", name = "maven-resolver-provider", version.ref = "maven-core" }
+maven-wagon-http = { group = "org.apache.maven.wagon", name = "wagon-http", version.ref = "maven-wagon" }
+maven-resolver-connector-basic = { group = "org.apache.maven.resolver", name = "maven-resolver-connector-basic", version.ref = "maven-lib" }
+maven-resolver-transport-file = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-file", version.ref = "maven-lib" }
+maven-resolver-transport-http = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-http", version.ref = "maven-lib" }
+maven-resolver-transport-wagon = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-wagon", version.ref = "maven-lib" }
+maven-resolver-impl = { group = "org.apache.maven.resolver", name = "maven-resolver-impl", version.ref = "maven-lib" }
+maven-resolver-api = { group = "org.apache.maven.resolver", name = "maven-resolver-api", version.ref = "maven-lib" }
 magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
 mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
+mordant-coroutines = { group = "com.github.ajalt.mordant", name = "mordant-coroutines", version.ref = "mordant" }
+mordant-markdown = { group = "com.github.ajalt.mordant", name = "mordant-markdown", version.ref = "mordant" }
 mosaic = { group = "com.jakewharton.mosaic", name = "mosaic-runtime", version.ref = "mosaic" }
 msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack" }
 netty-bom = { group = "io.netty", name = "netty-bom", version.ref = "netty" }
@@ -896,3 +916,20 @@ graalvm-ruby = ["graalvm-ruby-annotations", "graalvm-ruby-language", "graalvm-ru
 graalvm-js = ["graalvm-js-language", "graalvm-polyglot-js-community"]
 
 graalvm-js-isolate = ["graalvm-js-isolate", "graalvm-polyglot-js-isolate"]
+
+maven-resolver = [
+  "maven-resolver",
+  "maven-wagon-http",
+  "maven-resolver-api",
+  "maven-resolver-impl",
+  "maven-resolver-connector-basic",
+  "maven-resolver-transport-file",
+  "maven-resolver-transport-wagon",
+  "maven-resolver-transport-http",
+]
+
+mordant = [
+  "mordant",
+  "mordant-coroutines",
+  "mordant-markdown",
+]

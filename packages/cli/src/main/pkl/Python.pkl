@@ -1,0 +1,21 @@
+/// Describes Python configurations for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.javascript
+
+/// Describes a Pip package dependency.
+class PipPackageSpec {
+  /// The name of the package.
+  name: String
+}
+
+/// Configuration for Python dependency resolution using Pip.
+class PipDependencies {
+  /// A list of Pip packages to be resolved for this project.
+  packages: Listing<PipPackageSpec> = new {}
+
+  /// A list of optional Pip packages to be resolved by consumers of this project
+  optionalPackages: Mapping<String, Listing<PipPackageSpec>> = new {}
+}
+
+/// Configures Python language features and settings.
+class PythonSettings {}

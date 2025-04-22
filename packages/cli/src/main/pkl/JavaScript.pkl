@@ -1,0 +1,76 @@
+/// Describes JavaScript configurations for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.javascript
+
+import "Base.pkl" as common
+import "Artifacts.pkl" as artifacts
+import "Sources.pkl" as sources
+
+/// Union type for string package references originating from NPM.
+typealias NpmPackageString = String
+
+/// Defines an ECMA standard level to support.
+typealias EcmaStandard = UInt8(isBetween(2015, 2025)) | "stable" | "latest"
+
+/// JavaScript runner to use.
+typealias JsRunner = "auto" | "node" | "deno" | "bun" | common.BinName
+
+/// JavaScript package manager to use.
+typealias JsPackageManager = "auto" | "npm" | "yarn" | "pnpm" | JsRunner
+
+/// The default ECMAScript standard version.
+const defaultEcmaStandard: EcmaStandard = "stable"
+
+/// Describes an NPM package dependency.
+class NpmPackageSpec {
+  /// The name of the package.
+  name: String
+
+  /// The requested version, including any additional syntax for version ranges (e.g. '^1.5.0').
+  version: String?
+}
+
+/// Union type for all NPM package references.
+typealias NpmPackage = NpmPackageSpec | NpmPackageString
+
+/// Describes an NPM repository to include when resolving dependencies.
+class NpmRepositorySpec {
+  /// URL where this repository can be accessed.
+  url: common.RepositoryUrl?
+}
+
+/// Configuration for JavaScript dependency resolution using NPM.
+class NpmDependencies {
+  /// A list of NPM package dependencies to be resolved for this project.
+  packages: Listing<NpmPackage> = new {}
+
+  /// A list of NPM package dependencies used only in development environments.
+  devPackages: Listing<NpmPackage> = new {}
+
+  /// A list of NPM package repositories to consult when resolving dependencies.
+  repositories: Mapping<String, NpmRepositorySpec> = new {}
+}
+
+/// Defines an artifact which is built for JavaScript execution in a browser context.
+class BrowserJs extends artifacts.Artifact {
+  sources: Listing<sources.SourceSetName> = new {}
+}
+
+/// Create a browser JS artifact from a named source set.
+function browser(sourceSetName: String) = new BrowserJs {
+  sources {
+    sourceSetName
+  }
+}
+
+/// Configures JavaScript language features and settings.
+class JavaScriptSettings {
+  /// The target ECMAScript standard to support.
+  ecma: EcmaStandard = defaultEcmaStandard
+
+  /// The package manager to use; defaults to auto-selection, which prefers Elide itself.
+  packageManager: JsPackageManager = "auto"
+
+  /// The runner to use for this project.
+  runner: JsRunner = "auto"
+}

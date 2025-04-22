@@ -2,11 +2,190 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.jvm
 
+import "Base.pkl" as common
+import "Artifacts.pkl" as artifacts
+import "Sources.pkl" as sources
+
 /// JVM target levels as integers.
-typealias JvmTargetLevel = "latest" | "stable" | "auto" | Int8(isBetween(8, 29))
+typealias JvmTargetLevel = "latest" | "stable" | "auto" | Float(1.8) | Float(1.9) | Int8(isBetween(8, 29))
 
 /// JVM target levels as enumeration.
 typealias JvmTarget = JvmTargetLevel
+
+/// Maven group string.
+typealias MavenGroup = String
+
+/// Maven module string.
+typealias MavenModule = String
+
+/// Matches against Maven coordinate strings.
+typealias MavenCoordinate = String(matches(
+    Regex(#"^[a-zA-Z0-9_\-.]+(\.[a-zA-Z0-9_\-.]+)*:[a-zA-Z0-9_\-.]+(\:[a-zA-Z0-9_\-.]+)?$"#)
+))
+
+/// Known standard JAR manifest keys.
+typealias StandardManifestKey = "Implementation-Title" | "Implementation-Version" | "Implementation-Vendor" |
+    "Implementation-URL" | "Implementation-Description" | "Implementation-Build-Id" |
+    "Implementation-Build-Time" | "Implementation-Build-Host" | "Implementation-Build-User" |
+    "Class-Path" | "Main-Class" | "Bundle-SymbolicName" | "Bundle-Version"
+
+/// Key within a JAR manifest.
+typealias JarManifestKey = StandardManifestKey | String
+
+/// Value within a JAR manifest.
+typealias JarManifestValue = String
+
+/// Whether to default to using compression for JARs.
+const defaultUseJarCompression = true
+
+/// Options which apply to JARs.
+class JarOptions {
+  /// Whether to apply compression.
+  compress: Boolean = defaultUseJarCompression
+
+  /// Whether to add default manifest properties.
+  defaultManifestProperties: Boolean = true
+}
+
+/// Abstract definition of a JAR resource.
+abstract class JarResource {
+  /// File path to mount this resource at within the JAR.
+  path: common.FilePath
+}
+
+/// Defines one or more JAR resources from files.
+class FilesJarResource extends JarResource {
+  /// Path to the file to embed as a JAR resource.
+  files: common.FilePath
+}
+
+/// Defines one or more JAR resources from an artifact.
+class ArtifactJarResource extends JarResource {
+  /// Artifact to depend on and embed.
+  artifact: artifacts.ArtifactName
+}
+
+/// Describes a JAR output artifact.
+class Jar extends artifacts.Artifact {
+  /// Filename for the resulting JAR.
+  name: common.FileName
+
+  /// Which source set to build this JAR from.
+  sources: Listing<sources.SourceSetName> = new {
+    default {
+      "main"
+    }
+  }
+
+  /// Which resources to add to the JAR.
+  resources: Listing<common.FilePath | JarResource> = new {}
+
+  /// Keys and values to include in the JAR's manifest.
+  manifest: Mapping<JarManifestKey, JarManifestValue> = new {}
+
+  /// Options for the JAR.
+  options: JarOptions = new {}
+}
+
+/// Describes a Maven package dependency.
+class MavenPackageSpec {
+  /// Group for the package.
+  group: MavenGroup?
+
+  /// Name for the package.
+  name: MavenModule?
+
+  /// Version or symbolic version for the package.
+  version: common.PackageVersion?
+
+  /// Full Maven coordinate for the package; if specified, this is preferred to the group and name.
+  coordinate: MavenCoordinate?
+
+  /// Name of a custom repository to pull this dependency from.
+  repository: common.RepositoryName?
+}
+
+/// Describes a Maven repository to include when resolving dependencies.
+class MavenRepositorySpec {
+  /// URL where this repository can be accessed.
+  url: common.RepositoryUrl?
+
+  /// File path to a local repository.
+  path: common.FilePath?
+}
+
+/// Defines a Gradle catalog and settings.
+class GradleCatalogSpec {
+  /// Path to the Gradle dependency catalog.
+  path: common.FilePath
+}
+
+/// Describes a Gradle catalog, which can be specified strucuturally, or as a simple path.
+typealias GradleCatalog = GradleCatalogSpec | common.FilePath
+
+/// Maven packages can be specified structurally, or as coordinate strings, Gradle-style coordinate strings, or purls.
+typealias MavenPackageDependency = MavenPackageSpec | MavenCoordinate | common.Purl
+
+/// Specifies a simple Maven repository endpoint or structural definition.
+typealias MavenRepository = MavenRepositorySpec | common.RepositoryUrl
+
+/// Configuration for Maven dependency resolution.
+class MavenDependencies {
+  /// A list of Maven package dependencies to be resolved for this project.
+  packages: Listing<MavenPackageDependency> = new {}
+
+  /// A list of Gradle dependency catalogs to be resolved for this project.
+  catalogs: Listing<GradleCatalog> = new {}
+
+  /// A suite of extra Maven repositories.
+  repositories: Mapping<String, MavenRepository> = new {}
+
+  /// Whethr to enable default repositories like Maven Central. Defaults to `true`.
+  enableDefaultRepositories: Boolean = true
+}
+
+/// Create a JAR artifact from the `main` project source set.
+function jar(jarName: String) = new Jar {
+  name = "\(jarName.replaceAll(".jar", "")).jar"
+}
+
+/// Add a source set to a JAR artifact.
+function jarSources(sourceSetName: sources.SourceSetName) = new Mixin<Jar> {
+  sources {
+    sourceSetName
+  }
+}
+
+/// Add a resource to a JAR artifact.
+function jarResources(_file: common.FilePath, at: common.FilePath) = new Mixin<Jar> {
+  resources {
+    new FilesJarResource {
+      files = _file
+      path = at
+    }
+  }
+}
+
+/// Embed an artifact within a JAR.
+function withArtifact(artifactName: artifacts.ArtifactName, at: common.FilePath) = new Mixin<Jar> {
+  artifacts {
+    artifactName
+  }
+  resources {
+    new ArtifactJarResource {
+      artifact = artifactName
+      path = at
+    }
+  }
+}
+
+/// Create a JAR artifact from the `main` project source set.
+function app(entrypoint: common.FilePath | String) = new Jar {
+  name = "main.jar"
+  manifest {
+    ["Main-Class"] = entrypoint
+  }
+}
 
 /// Specifies settings which apply to JVM targets.
 class JvmSettings {

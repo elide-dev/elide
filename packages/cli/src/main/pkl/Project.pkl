@@ -2,8 +2,101 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.project
 
-import "Jvm.pkl" as jvm
-import "Kotlin.pkl" as kotlin
+import "Base.pkl" as _common
+import "Dev.pkl" as _dev
+import "Sources.pkl" as _srcs
+import "Infra.pkl" as _infra
+import "Ops.pkl" as _ops
+import "Artifacts.pkl" as _artifacts
+import "Products.pkl" as _products
+import "Task.pkl" as _tasks
+import "Workspace.pkl" as _workspace
+
+import "Jvm.pkl" as _jvm
+import "Java.pkl" as _java
+import "Kotlin.pkl" as _kotlin
+import "Python.pkl" as _python
+import "Ruby.pkl" as _ruby
+import "JavaScript.pkl" as _js
+import "TypeScript.pkl" as _ts
+import "HuggingFace.pkl" as _huggingface
+import "Pkl.pkl" as _pkl
+
+/// Name of a script within the project's configuration.
+typealias ScriptName = String
+
+/// Entrypoint definition.
+typealias Entrypoint = Listing<_common.FilePath>
+
+/// Workspaces are specified as string paths or as fully-typed module objects.
+typealias Workspace = String | _workspace.WorkspaceModule
+
+/// Class which models a full Elide project configuration; this structure is identical to the structure of the owning
+/// module at `elide.project`.
+class ElideProject {
+  /// A name for the project.
+  name: String?
+
+  /// Version of the project.
+  version: String?
+
+  /// Optional description for the project, displayed when published as a package.
+  description: String?
+
+  /// Relative path to the source file evaluated by the runtime on startup.
+  entrypoint: Entrypoint?
+
+  /// Script mappings; each entry is a name and a script to run.
+  scripts: Mapping<ScriptName, _common.ShellCommand | _common.FilePath | String> = new {}
+
+  /// Dependency resolution configuration.
+  dependencies: Dependencies = new {}
+
+  /// Workspaces that are part of this project.
+  workspaces: Listing<Workspace> = new {}
+
+  /// Configure JVM runtime settings.
+  jvm: _jvm.JvmSettings?
+
+  /// Configure Java language settings.
+  java: _java.JavaSettings?
+
+  /// Configure Kotlin language settings.
+  kotlin: _kotlin.KotlinSettings?
+
+  /// Configure JavaScript language settings.
+  javascript: _js.JavaScriptSettings?
+
+  /// Configure TypeScript language settings.
+  typescript: _ts.TypeScriptSettings?
+
+  /// Configure Python language settings.
+  python: _python.PythonSettings?
+
+  /// Configure Ruby language settings.
+  ruby: _ruby.RubySettings?
+
+  /// Configure Pkl language settings.
+  pkl: _pkl.PklSettings?
+
+  /// Top-level project sources definition.
+  sources: _srcs.Sources
+
+  /// Development settings for this project.
+  dev: _dev.DevSettings
+
+  /// Artifacts to be produced by this project.
+  artifacts: _artifacts.Artifacts
+
+  /// Final product configurations for this project.
+  products: _products.Products
+
+  /// Infrastructure settings for this project.
+  infra: _infra.InfraSettings?
+
+  /// Project operational settings.,
+  ops: _ops.Operations?
+}
 
 /// A name for the project.
 name: String?
@@ -15,151 +108,37 @@ version: String?
 description: String?
 
 /// Relative path to the source file evaluated by the runtime on startup.
-entrypoint: String?
+entrypoint: Entrypoint?
 
 /// Script mappings; each entry is a name and a script to run.
-scripts: Mapping<String, String> = new {}
+scripts: Mapping<ScriptName, _common.ShellCommand | _common.FilePath | String> = new {}
+
+/// Workspaces that are part of this project.
+workspaces: Listing<Workspace> = new {}
 
 //
 // ------ Dependencies ----------------------------------------------------------------------------------------------
 //
 
-/// Specifies a package version string, which can be `latest`, or a specific semver, or a version range.
-typealias PackageVersion = "latest" | String
-
-/// Typealias for a dependency repository name.
-typealias RepositoryName = String
-
-/// Typealias for a dependency repository URL.
-typealias RepositoryUrl = Uri
-
-/// Describes an NPM package dependency.
-class NpmPackageSpec {
-  /// The name of the package.
-  name: String
-
-  /// The requested version, including any additional syntax for version ranges (e.g. '^1.5.0').
-  version: String?
-}
-
-/// Describes an NPM repository to include when resolving dependencies.
-class NpmRepositorySpec {
-  /// Name of this custom NPM repository.
-  name: RepositoryName
-
-  /// Base URL for this NPM repository.
-  url: RepositoryUrl
-}
-
-/// Configuration for JavaScript dependency resolution using NPM.
-class NpmDependencies {
-  /// A list of NPM package dependencies to be resolved for this project.
-  packages: Listing<NpmPackageSpec> = new {}
-
-  /// A list of NPM package dependencies used only in development environments.
-  devPackages: Listing<NpmPackageSpec> = new {}
-}
-
-/// Describes a Maven package dependency.
-class MavenPackageSpec {
-  /// Group for the package.
-  group: String?
-
-  /// Name for the package.
-  name: String?
-
-  /// Version or symbolic version for the package.
-  version: PackageVersion
-
-  /// Full Maven coordinate for the package; if specified, this is preferred to the group and name.
-  coordinate: String?
-
-  /// Name of a custom repository to pull this dependency from.
-  repository: RepositoryName?
-}
-
-/// Describes a Maven repository to include when resolving dependencies.
-class MavenRepositorySpec {
-  /// URL where this repository can be accessed.
-  url: RepositoryUrl?
-
-  /// File path to a local repository.
-  path: String?
-}
-
-/// Configuration for Maven dependency resolution.
-class MavenDependencies {
-  /// A list of Maven package dependencies to be resolved for this project.
-  packages: Listing<MavenPackageSpec> = new {}
-
-  /// A suite of extra Maven repositories.
-  repositories: Mapping<String, MavenRepositorySpec> = new {}
-}
-
-/// Describes a Pip package dependency.
-class PipPackageSpec {
-  /// The name of the package.
-  name: String
-}
-
-/// Configuration for Python dependency resolution using Pip.
-class PipDependencies {
-  /// A list of Pip packages to be resolved for this project.
-  packages: Listing<PipPackageSpec> = new {}
-
-  /// A list of optional Pip packages to be resolved by consumers of this project
-  optionalPackages: Mapping<String, Listing<PipPackageSpec>> = new {}
-}
-
-/// Describes a Gem dependency.
-class GemSpec {
-  /// The name of the gem.
-  name: String
-
-  /// The version spec of the gem.
-  version: String?
-}
-
-/// Configuration for Ruby dependency resolution using Gems.
-class GemDependencies {
-  /// A list of gems to be resolved for this project.
-  packages: Listing<GemSpec> = new {}
-
-  /// A list of gems to be resolved for this project in development mode only.
-  devPackages: Listing<GemSpec> = new {}
-}
-
-/// Describes a HuggingFace AI model dependency.
-class HuggingFace {
-  /// Repository holding the model.
-  repository: String
-
-  /// Model name.
-  model: String
-}
-
-/// Configuration for HuggingFace AI model dependencies.
-class HuggingFaceDependencies {
-  /// Models to download and use.
-  models: Listing<HuggingFace> = new {}
-}
-
 /// Dependency resolution configuration.
 class Dependencies {
   /// Configure JVM dependencies using Maven.
-  maven: MavenDependencies = new {}
+  maven: _jvm.MavenDependencies = new {}
 
   /// Configure JavaScript dependencies using NPM.
-  npm: NpmDependencies = new {}
+  npm: _js.NpmDependencies = new {}
 
   /// Configure Python dependencies using Pip.
-  pip: PipDependencies = new {}
+  pip: _python.PipDependencies = new {}
 
   /// Configure Ruby dependencies using Gems.
-  gems: GemDependencies = new {}
+  gems: _ruby.GemDependencies = new {}
+
+  /// Configures Pkl dependencies.
+  pkl: _pkl.PklDependencies = new {}
 
   /// Configure HuggingFace AI model dependencies.
-  huggingface: HuggingFaceDependencies = new {}
+  huggingface: _huggingface.HuggingFaceDependencies = new {}
 }
 
 /// Dependency resolution configuration.
@@ -170,7 +149,57 @@ dependencies: Dependencies = new {}
 //
 
 /// Configure JVM runtime settings.
-jvm: jvm.JvmSettings
+jvm: _jvm.JvmSettings?
+
+/// Configure Java language settings.
+java: _java.JavaSettings?
 
 /// Configure Kotlin language settings.
-kotlin: kotlin.KotlinSettings
+kotlin: _kotlin.KotlinSettings?
+
+/// Configure JavaScript language settings.
+javascript: _js.JavaScriptSettings?
+
+/// Configure TypeScript language settings.
+typescript: _ts.TypeScriptSettings?
+
+/// Configure Python language settings.
+python: _python.PythonSettings?
+
+/// Configure Ruby language settings.
+ruby: _ruby.RubySettings?
+
+/// Configure Pkl language settings.
+pkl: _pkl.PklSettings?
+
+//
+// ------ Structure -------------------------------------------------------------------------------------------------
+//
+
+/// Top-level project sources definition.
+sources: _srcs.Sources = new {}
+
+/// Development settings for this project.
+dev: _dev.DevSettings = new {}
+
+/// Artifacts to be produced by this project.
+artifacts: _artifacts.Artifacts = new {}
+
+/// Final product configurations for this project.
+products: _products.Products = new {}
+
+/// Infrastructure settings for this project.
+infra: _infra.InfraSettings = new {}
+
+/// Project operational settings.,
+ops: _ops.Operations = new {}
+
+//
+// ------ Execution -------------------------------------------------------------------------------------------------
+//
+
+/// Default tasks which are supported by all builds.
+defaultTasks: _tasks.DefaultTasks = new {}
+
+/// Main tasks container for this project.
+tasks: _tasks.Tasks = new {}

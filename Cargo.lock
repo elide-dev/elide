@@ -7534,6 +7534,7 @@ dependencies = [
  "bumpalo",
  "clap",
  "console-subscriber",
+ "exec",
  "java_native",
  "jni",
  "jni-sys",

@@ -18,7 +18,11 @@ import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.plugins.env.EnvConfig
 import elide.tool.io.WorkdirManager
-import elide.tool.project.manifest.ElidePackageManifest
+import elide.tooling.project.ElideProject
+import elide.tooling.project.ElideProjectInfo
+import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.ProjectEnvironment
+import elide.tooling.project.manifest.ElidePackageManifest
 
 /** Default implementation of [ProjectManager]. */
 @Singleton internal class DefaultProjectManager @Inject constructor(
@@ -66,8 +70,12 @@ import elide.tool.project.manifest.ElidePackageManifest
     }
   }
 
-  override suspend fun resolveProject(): ElideProject? {
-    val root = workdir.projectRoot()?.toPath()?.takeIf { it.isDirectory() } ?: return null
+  override suspend fun resolveProject(pathOverride: String?): ElideProject? {
+    val rootBase = when (pathOverride) {
+      null -> workdir.projectRoot()?.toPath()
+      else -> Path.of(pathOverride)
+    }
+    val root = rootBase?.takeIf { it.isDirectory() } ?: return null
     val env = readDotEnv(root)
 
     // prefer an Elide manifest if present
@@ -86,7 +94,7 @@ import elide.tool.project.manifest.ElidePackageManifest
       elideManifest = manifests.merge(candidates.asIterable())
     }
 
-    return ElideProject(
+    return ElideProjectInfo(
       root = root,
       env = env,
       manifest = elideManifest,

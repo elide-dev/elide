@@ -1,0 +1,22 @@
+/// Describes Cloudflare configurations and provides related utility methods.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.cloudflare
+
+import "Artifacts.pkl" as artifacts
+
+/// Cloudflare Worker artifact definition.
+class CloudflareWorker extends artifacts.Artifact {
+  entry: String
+  worker: Dynamic?
+}
+
+class KVDefinition {
+  id: String
+}
+
+kv: KVDefinition
+
+/// Configure a Cloudflare Worker artifact.
+function worker(_entry: String) = new CloudflareWorker {
+ entry = _entry
+}

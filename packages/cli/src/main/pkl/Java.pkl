@@ -1,0 +1,6 @@
+/// Describes Java configurations for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.java
+
+/// Configures Java language features and settings.
+class JavaSettings {}

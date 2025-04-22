@@ -61,11 +61,17 @@ class KotlinCompilerJvmOptions extends KotlinCompilerOptions {
   noJdk: Boolean = false
 
   /// Validation of JVM target compatibility between Kotlin and Java.
-  jvmTargetValidationMode: JvmTargetValidationMode
+  jvmTargetValidationMode: JvmTargetValidationMode = "ERROR"
 }
 
 /// Specifies Kotlin-related features and options within Elide.
 class KotlinFeatureOptions {
+  /// Enable or disable annotation processing with kapt.
+  kapt: Boolean = false
+
+  /// Enable or disable annotation processing with KSP.
+  ksp: Boolean = false
+
   /// Whether to enable classpath/modulepath injection features.
   injection: Boolean = true
 

@@ -12,6 +12,7 @@
  */
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.io.path.absolutePathString
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -56,15 +57,18 @@ val javacFlags = listOf(
   "--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
 )
 
-// builds embedded classpath
-val embeddedKotlinResources: Configuration by configurations.creating {
-  isCanBeResolved = true
+fun Configuration.embeddedConfiguration() {
+  isCanBeConsumed = true
+
+  resolutionStrategy {
+    failOnDynamicVersions()
+    failOnNonReproducibleResolution()
+  }
 }
 
 // exported to other projects
-val embeddedKotlin: Configuration by configurations.creating {
-  isCanBeConsumed = true
-}
+val embeddedKotlin: Configuration by configurations.creating { embeddedConfiguration() }
+val embeddedJava: Configuration by configurations.creating { embeddedConfiguration() }
 
 val embeddedKotlinRuntime = layout.projectDirectory.file(
   "src/main/resources/META-INF/elide/embedded/runtime/kt/elide-kotlin-runtime.jar"
@@ -88,12 +92,36 @@ dependencies {
   api(files(embeddedKotlinRuntime))
   compileOnly(libs.graalvm.svm)
 
-  embeddedKotlinResources(libs.kotlin.stdlib)
-  embeddedKotlinResources(libs.kotlin.reflect)
-  embeddedKotlinResources(libs.kotlin.scripting.runtime)
-  embeddedKotlinResources(libs.kotlin.scripting.jvm)
-  embeddedKotlinResources(libs.kotlinx.coroutines.core.jvm)
-  embeddedKotlinResources(files(embeddedKotlinRuntime))
+  embeddedKotlin(libs.kotlin.stdlib)
+  embeddedKotlin(libs.kotlin.reflect)
+  embeddedKotlin(libs.kotlin.test.junit5)
+  embeddedKotlin(libs.kotlin.scripting.runtime)
+  embeddedKotlin(libs.kotlin.scripting.jvm)
+  embeddedKotlin(libs.kotlinx.atomicfu.jvm)
+  embeddedKotlin(libs.kotlinx.io.jvm)
+  embeddedKotlin(libs.kotlinx.io.bytestring.jvm)
+  embeddedKotlin(libs.kotlinx.coroutines.core.jvm)
+  embeddedKotlin(libs.kotlinx.coroutines.jdk9)
+  embeddedKotlin(libs.kotlinx.coroutines.slf4j)
+  embeddedKotlin(libs.kotlinx.serialization.core.jvm)
+  embeddedKotlin(libs.kotlinx.serialization.json.jvm)
+  embeddedKotlin(libs.kotlinx.html.jvm)
+  embeddedKotlin(libs.kotlinx.wrappers.css.jvm)
+  embeddedKotlin(libs.ksp)
+  embeddedKotlin(libs.ksp.api)
+  embeddedKotlin(libs.ksp.cmdline)
+  embeddedKotlin(mn.micronaut.inject.kotlin)
+  embeddedKotlin(files(embeddedKotlinRuntime))
+
+  embeddedJava(libs.jacoco.agent)
+  embeddedJava(libs.junit.jupiter.api)
+  embeddedJava(libs.junit.jupiter.params)
+  embeddedJava(libs.junit.jupiter.engine)
+  embeddedJava(libs.junit.platform.commons)
+  embeddedJava(libs.junit.platform.console)
+  embeddedJava(libs.slf4j)
+  embeddedJava(mn.micronaut.inject.java)
+  embeddedJava(mn.micronaut.test.junit5)
 
   // Testing
   testImplementation(projects.packages.test)
@@ -102,17 +130,17 @@ dependencies {
 }
 
 val stdlibJar = provider {
-  embeddedKotlinResources.filter {
+  embeddedKotlin.filter {
     it.name.contains("kotlin") && it.name.contains("stdlib")
   }
 }
 val reflectJar = provider {
-  embeddedKotlinResources.filter {
+  embeddedKotlin.filter {
     it.name.contains("kotlin") && it.name.contains("reflect")
   }
 }
 val scriptRuntimeJar = provider {
-  embeddedKotlinResources.filter {
+  embeddedKotlin.filter {
     it.name.contains("kotlin") && it.name.contains("script-runtime")
   }
 }
@@ -147,15 +175,12 @@ val defs = provider {
 
 val archiveName = "kotlin-resources.zip"
 val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
+val resourcesManifest = kotlinHomeRoot.map { it.file("embedded-classpath.txt") }
 val intermediateResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
 val intermediateResourcesZip = layout.buildDirectory.file(archiveName)
 
 val prepKotlinResources by tasks.registering(Copy::class) {
-  from(embeddedKotlinResources) {
-    exclude {
-      // don't include the jetbrains annotations
-      it.name.contains("annotations")
-    }
+  from(embeddedKotlin + embeddedJava) {
     rename {
       // remove version tag from each jar
       val name = it.split(".").first().split("-")
@@ -168,6 +193,7 @@ val prepKotlinResources by tasks.registering(Copy::class) {
     }
   }
   destinationDir = intermediateResources.get().dir("lib").asFile
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 val ktRuntimeTarget = "META-INF/elide/embedded/runtime/kt"
@@ -179,8 +205,48 @@ val buildKotlinResourcesArchive by tasks.registering(Zip::class) {
   from(intermediateResources.get().asFile)
 }
 
+val buildResourcesManifest by tasks.registering {
+  inputs.files(embeddedJava + embeddedKotlin)
+  outputs.file(resourcesManifest)
+  doNotTrackState("too small to be worthy of caching")
+
+  val renderedManifest = StringBuilder().apply {
+    listOf(embeddedJava, embeddedKotlin).flatMap {
+      it.resolvedConfiguration.resolvedArtifacts
+    }.forEach { artifact ->
+      val name = artifact.file.name.split(".").first().split("-")
+        .dropLast(1).joinToString("-")
+      val renamed = if (name.isEmpty()) {
+        artifact.file.name
+      } else {
+        "$name.jar"
+      }
+      append(artifact.moduleVersion.id.group)
+      append(':')
+      append(artifact.moduleVersion.id.name)
+      append(':')
+      append(artifact.moduleVersion.id.version)
+      artifact.classifier?.ifEmpty { null }?.let {
+        append(':')
+        append(artifact.classifier)
+      }
+      append('/')
+      append(renamed)
+      append('\n')
+    }
+  }
+
+  val manifestPath = resourcesManifest.get().asFile.toPath().absolutePathString()
+
+  actions.add {
+    File(manifestPath).writeText(
+      renderedManifest.toString()
+    )
+  }
+}
+
 tasks.processResources {
-  dependsOn(prepKotlinResources, buildKotlinResourcesArchive)
+  dependsOn(prepKotlinResources, buildKotlinResourcesArchive, buildResourcesManifest)
 
   from(intermediateResources.get().dir("lib")) {
     into(ktRuntimeTarget)

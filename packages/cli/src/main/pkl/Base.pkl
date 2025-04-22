@@ -1,0 +1,49 @@
+/// Base Elide types shared by all modules.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.base
+
+/// Semver-style version string.
+typealias SemanticVersion = String(matches(
+    Regex(#"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"#)
+))
+
+/// Semver-style version range string.
+typealias SemanticVersionRange = String(matches(
+    Regex(#"^(\^|~|>|>=|<|<=)?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?(?:-(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*))?$"#)
+))
+
+/// Special symbolic version string.
+typealias SymbolicVersion = "latest" | "stable" | "snapshot"
+
+/// Specifies a package version string, which can be `latest`, or a specific semver, or a version range.
+typealias PackageVersion = SymbolicVersion | SemanticVersionRange | SemanticVersion | String
+
+/// Typealias for a dependency repository name.
+typealias RepositoryName = String
+
+/// Typealias for a dependency repository URL.
+typealias RepositoryUrl = Uri
+
+/// Expects a file path.
+typealias FilePath = String
+
+/// Expects a shell command.
+typealias ShellCommand = String
+
+/// Expects a domain name.
+typealias DomainName = String(matches(
+    Regex(#"^(?:(?:[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.)+[a-zA-Z]{2,}|localhost)$"#)
+))
+
+/// Expects a file name.
+typealias FileName = String(matches(
+  Regex(#"^[^\\/:*?"<>|\r\n]+$"#)
+))
+
+/// Expects a binary name.
+typealias BinName = String
+
+/// Defines a universal Package URL (purl) string format.
+typealias Purl = String(matches(
+  Regex(#"^pkg:[a-zA-Z][a-zA-Z0-9+.-]*\/[a-zA-Z0-9._-]+(?:@[a-zA-Z0-9._-]+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$"#)
+))

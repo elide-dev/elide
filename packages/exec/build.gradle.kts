@@ -1,3 +1,5 @@
+import elide.internal.conventions.kotlin.KotlinTarget
+
 /*
  * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
@@ -11,48 +13,42 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import elide.internal.conventions.kotlin.*
-
 plugins {
   alias(libs.plugins.elide.conventions)
-  kotlin("multiplatform")
+  kotlin("jvm")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
 }
 
 elide {
-  publishing {
-    id = "exec"
-    name = "Elide Executor"
-    description = "Pure Kotlin execution coordination logic for Elide."
-  }
-
   kotlin {
     atomicFu = true
-    target = KotlinTarget.Default
+    target = KotlinTarget.JVM
     explicitApi = true
+    customKotlinCompilerArgs += listOf("-Xcontext-receivers")
+  }
+  checks {
+    diktat = false
   }
 }
 
 dependencies {
-  common {
-    implementation(libs.kotlinx.atomicfu)
-    api(libs.filament)
-    api(projects.packages.core)
-    api(projects.packages.base)
-  }
-
-  commonTest {
-    implementation(kotlin("test"))
-  }
-
-  jvm {
-    api(kotlin("stdlib-jdk8"))
-    api(libs.jetbrains.annotations)
-  }
+  implementation(libs.kotlinx.atomicfu)
+  api(libs.kotlinx.coroutines.core)
+  api(libs.kotlin.stdlib.jdk8)
+  api(libs.filament)
+  api(projects.packages.core)
+  api(projects.packages.base)
+  api(libs.jetbrains.annotations)
+  api(libs.kotlinx.coroutines.core)
+  api(libs.kotlinx.coroutines.jdk8)
+  api(libs.kotlinx.coroutines.guava)
+  implementation(libs.guava)
+  testImplementation(libs.kotlin.test.junit5)
+  testImplementation(libs.kotlinx.coroutines.test)
 }
 
-tasks.named("jvmTest", Test::class) {
+tasks.named("test", Test::class) {
   systemProperty("java.library.path", StringBuilder().apply {
     append(rootProject.layout.projectDirectory.dir("target/debug").asFile.path)
     append(File.pathSeparator)

@@ -1,5 +1,20 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
 package elide.tool.cli.cmd.project
 
+import com.github.ajalt.mordant.markdown.Markdown
+import com.github.ajalt.mordant.terminal.Terminal
 import io.micronaut.core.annotation.Introspected
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -12,8 +27,8 @@ import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
 import elide.tool.project.PackageManifestService
-import elide.tool.project.ProjectEcosystem
 import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectEcosystem
 
 @Command(
   name = "project",
@@ -25,6 +40,7 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
   enum class Target(val targetName: String, val ecosystem: ProjectEcosystem, val description: String) {
     NODE("node", ProjectEcosystem.Node, "Node.js package.json"),
     REQUIREMENTS("requirements", ProjectEcosystem.PythonRequirements, "Python requirements.txt"),
+    MAVEN("maven", ProjectEcosystem.MavenPom, "Maven pom.xml"),
   }
 
   @Inject private lateinit var projectManager: ProjectManager
@@ -62,7 +78,7 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
     if (listTargets) {
       output {
         appendLine("Supported export targets:")
-        Target.entries.forEach { target -> appendLine("- ${target.targetName} ${target.description}") }
+        Target.entries.forEach { target -> appendLine("- ${target.targetName}: ${target.description}") }
       }
 
       return success()
@@ -106,6 +122,46 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     // only exporting manifests is currently supported
-    return export()
+    return when {
+      export || listTargets -> export()
+
+      // print project info if no subcommand is provided
+      else -> projectManager.resolveProject(commons().projectPath).let { project ->
+        when (project) {
+          null -> err("No project").also {
+            if (!commons().quiet) output {
+              append("No current project, use --project to specify a project path.")
+            }
+          }
+          else -> success().also {
+            if (!commons().quiet) {
+              Terminal().let { terminal ->
+                if (terminal.terminalInfo.outputInteractive) {
+                  Markdown("""
+                    # Project: ${project.manifest.name}
+                    ${if (project.manifest.description != null) "\n" else ""}
+                    ${project.manifest.description ?: ""}
+                    ${if (project.manifest.description != null) "\n" else ""}
+                    -----
+
+                    - Version: ${project.manifest.version ?: "(None specified.)"}
+                    - Root: ${project.root}
+                  """.trimIndent()).render(
+                    terminal,
+                  )
+                } else output {
+                  append("""
+                    Project: ${project.manifest.name}
+                    --------------------------------------
+                    - Version: ${project.manifest.version ?: "(None specified.)"}
+                    - Description: ${project.manifest.description ?: "(None available.)"}
+                  """.trimIndent())
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

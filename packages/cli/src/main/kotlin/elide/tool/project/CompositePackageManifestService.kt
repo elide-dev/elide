@@ -5,9 +5,10 @@ import java.io.OutputStream
 import java.nio.file.Path
 import jakarta.inject.Singleton
 import kotlin.io.path.inputStream
-import elide.tool.project.codecs.ManifestCodec
-import elide.tool.project.codecs.PackageManifestCodec
-import elide.tool.project.manifest.*
+import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.codecs.ManifestCodec
+import elide.tooling.project.codecs.PackageManifestCodec
+import elide.tooling.project.manifest.*
 
 @Singleton
 class CompositePackageManifestService(
@@ -35,6 +36,7 @@ class CompositePackageManifestService(
     ProjectEcosystem.Python -> pyProjectCodec
     ProjectEcosystem.PythonRequirements -> pythonRequirementsCodec
     ProjectEcosystem.Ruby -> error("Ruby environments are not supported yet")
+    ProjectEcosystem.MavenPom -> error("Maven POMs are not supported yet")
   } as PackageManifestCodec<PackageManifest>
 
   @Suppress("UNCHECKED_CAST")

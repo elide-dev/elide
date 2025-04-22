@@ -1,0 +1,24 @@
+/// Describes settings and dependencies relating to Ruby.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.ruby
+
+/// Describes a Gem dependency.
+class GemSpec {
+  /// The name of the gem.
+  name: String
+
+  /// The version spec of the gem.
+  version: String?
+}
+
+/// Configuration for Ruby dependency resolution using Gems.
+class GemDependencies {
+  /// A list of gems to be resolved for this project.
+  packages: Listing<GemSpec> = new {}
+
+  /// A list of gems to be resolved for this project in development mode only.
+  devPackages: Listing<GemSpec> = new {}
+}
+
+/// Configures Ruby language features and settings.
+class RubySettings {}

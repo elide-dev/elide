@@ -1,0 +1,30 @@
+/// Describes the structure of project source code and related options.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.sources
+
+/// Types of source sets.
+typealias SourceSetType = "main" | "test" | "integration" | "example" | "docs" | "infra" | "other"
+
+/// Specifies the location of source files.
+abstract class SourcesSpec {}
+
+/// Describes a single named group, or set, of source code files.
+class SourceSetSpec {
+  /// The type of source set.
+  type: SourceSetType = "main"
+
+  /// Specifies the sources.
+  sources: SourcesSpec
+
+  /// Flipped to `true` if this is a default or synthetic source set.
+  synthetic: Boolean = false
+}
+
+/// Source set names are simple strings.
+typealias SourceSetName = SourceSetType | String
+
+/// Source set definition or simple glob.
+typealias SourceSet = SourceSetSpec | String
+
+/// Top-level container for project source code configurations.
+typealias Sources = Mapping<SourceSetName, SourceSet>

@@ -46,11 +46,7 @@ public object RuntimeContext {
 
   // Main virtual executor for general I/O-bound tasks.
   private val virtual: ExecutorService by lazy {
-    Executors.newThreadPerTaskExecutor(object : ThreadFactory {
-      override fun newThread(r: Runnable): Thread {
-        return Thread.ofVirtual().start(r)
-      }
-    })
+    Executors.newThreadPerTaskExecutor(Thread.ofVirtual().factory())
   }
 
   // Coroutine dispatcher view into the default engine executor.

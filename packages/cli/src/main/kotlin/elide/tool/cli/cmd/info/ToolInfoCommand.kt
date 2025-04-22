@@ -73,8 +73,11 @@ import elide.tool.project.ProjectManager
         else -> {
           appendLine("")
           appendLine("Environment:")
-          env.vars.forEach {
-            appendLine("- ${it.key} = ${it.value}")
+          when (env.vars.isEmpty()) {
+            true -> appendLine("  (None).")
+            else -> env.vars.forEach {
+              appendLine("- ${it.key} = ${it.value}")
+            }
           }
         }
       }

@@ -21,8 +21,8 @@ import kotlin.io.path.Path
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
-import elide.tool.project.manifest.ElidePackageManifest
-import elide.tool.project.manifest.NodePackageManifest
+import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.NodePackageManifest
 
 @MicronautTest class NodeManifestCodecTest {
   @Inject lateinit var codec: NodeManifestCodec
@@ -111,7 +111,7 @@ import elide.tool.project.manifest.NodePackageManifest
       name = "elide-js-sample",
       version = "1.0.0",
       description = "A sample Elide app",
-      entrypoint = "index.js",
+      entrypoint = listOf("index.js"),
       scripts = mapOf("start" to "elide index.js"),
       dependencies = ElidePackageManifest.DependencyResolution(
         npm = ElidePackageManifest.NpmDependencies(

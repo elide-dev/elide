@@ -3,8 +3,9 @@ package elide.tool.project
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
-import elide.tool.project.manifest.ElidePackageManifest
-import elide.tool.project.manifest.PackageManifest
+import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.PackageManifest
 
 interface PackageManifestService {
   fun resolve(root: Path, ecosystem: ProjectEcosystem = ProjectEcosystem.Elide): Path

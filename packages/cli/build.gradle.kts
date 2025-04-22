@@ -403,6 +403,7 @@ dependencies {
   implementation(libs.snakeyaml)
   implementation(mn.micronaut.json.core)
   implementation(libs.kotlin.compiler.embedded)
+  implementation(libs.bundles.mordant)
 
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 
@@ -458,6 +459,9 @@ dependencies {
   } else {
     implementation(libs.netty.tcnative)
   }
+
+  // Tooling
+  implementation(projects.packages.tooling)
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
@@ -860,6 +864,11 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tool.Environment",
   "elide.tool.Environment\$HostEnv",
   "elide.tool.Environment\$Companion",
+  "elide.tool.cli.cmd.tool.jar.JarToolKt",
+  "elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerKt",
+  "elide.tool.cli.cmd.tool.javac.JavaCompilerKt",
+  "elide.tool.cli.cmd.tool.javadoc.JavadocToolKt",
+  "org.apache.http.impl.auth.NTLMEngineImpl",
 
   // @TODO switch to built-in brotli
   "org.apache.commons.compress.compressors.brotli.BrotliCompressorInputStream",
@@ -1961,6 +1970,7 @@ fun Jar.applyJarSettings() {
 
 val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
 val intermediateKotlinResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
+val pklSources = layout.projectDirectory.dir("src/main/pkl")
 
 // note: the traditional KOTLIN_HOME path does not end with `lib`, so it should point to the versioned kotlin root here,
 // even though elide's own paths include `lib`.
@@ -1972,6 +1982,7 @@ val kotlinHomePath: String = kotlinHomeRoot.get()
 val prepKotlinResources by tasks.registering(Copy::class) {
   from(embeddedKotlin)
   destinationDir = intermediateKotlinResources.get().dir("lib").asFile
+  duplicatesStrategy = EXCLUDE
 }
 
 tasks {
@@ -2006,6 +2017,10 @@ tasks {
     //   include("umbrella.dll")
     //   into("META-INF/native/")
     // }
+
+    from(pklSources) {
+      into("META-INF/elide/pkl/")
+    }
   }
 
   jar {

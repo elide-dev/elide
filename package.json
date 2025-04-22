@@ -58,14 +58,14 @@
     "node-fetch": "3.3.2"
   },
   "scripts": {
-    "build": "make build",
-    "test": "make test",
+    "nodepath": "echo $PATH",
     "fmt:check": "cp -fv ./config/biome.jsonc . && pnpm biome format --check . ; rm -f biome.jsonc",
     "fmt": "cp -fv ./config/biome.jsonc . && pnpm biome format . --write ; rm -f biome.jsonc",
     "upgrade-node": "yarn upgrade-interactive",
     "upgrade-gradle": "gradle-upgrade-interactive",
     "prettier": "prettier",
     "husky": "husky",
+    "npmtest": "echo npm task",
     "lint": "prettier --write . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java",
     "lint:check": "prettier --check  . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java"
   },

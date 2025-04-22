@@ -11,15 +11,14 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+use exec::async_engine;
 use java_native::jni;
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JValue};
 use jni::sys::{jboolean, jint, jlong};
-use lazy_static::lazy_static;
 use llama_cpp_2::model::params::LlamaModelParams;
 use std::num::NonZeroU32;
 use std::pin::pin;
-use tokio::runtime::{Builder, Runtime};
 
 #[cfg(feature = "unsafe")]
 use {jni::signature::Primitive::Void, jni::signature::ReturnType};
@@ -28,10 +27,6 @@ use crate::{
   DEBUG_LOGS, DEFAULT_CONTEXT_WINDOW, DEFAULT_LENGTH, DEFAULT_SEED, DEFAULT_THREAD_BATCH,
   DEFAULT_THREADS, Model, do_infer, prep_model,
 };
-
-lazy_static! {
-  static ref INF_ENGINE: Runtime = Builder::new_multi_thread().enable_all().build().unwrap();
-}
 
 #[cfg(not(feature = "nonblocking"))]
 #[jni("elide.runtime.localai.NativeLocalAi")]
@@ -64,7 +59,7 @@ pub fn inferAsync<'a>(
   // resolve params
   let model_params = {
     #[cfg(any(feature = "cuda", feature = "vulkan"))]
-    if !(disable_gpu == JNI_TRUE) {
+    if !(disable_gpu == jni::sys::JNI_TRUE) {
       LlamaModelParams::default().with_n_gpu_layers(gpu_layers_j)
     } else {
       LlamaModelParams::default()
@@ -236,7 +231,7 @@ pub fn inferAsync<'a>(
   if DEBUG_LOGS {
     eprintln!("firing inf engine task");
   }
-  INF_ENGINE.block_on(async {
+  async_engine().block_on(async {
     if DEBUG_LOGS {
       eprintln!("INF: resolving model");
     }

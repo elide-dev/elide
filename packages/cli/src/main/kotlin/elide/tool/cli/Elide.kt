@@ -39,6 +39,8 @@ import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.runtime.gvm.internals.ProcessManager
 import elide.runtime.gvm.internals.intrinsics.ElideIntrinsic
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
+import elide.tool.cli.cmd.builder.ToolBuildCommand
+import elide.tool.cli.cmd.builder.ToolWhichCommand
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
@@ -50,6 +52,7 @@ import elide.tool.cli.cmd.tool.jar.JarTool
 import elide.tool.cli.cmd.tool.javac.JavaCompiler
 import elide.tool.cli.cmd.tool.javadoc.JavadocTool
 import elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler
+import elide.tool.cli.options.CommonOptions
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
@@ -98,6 +101,8 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     ToolPklCommand::class,
     ToolDiscordCommand::class,
     ToolProjectCommand::class,
+    ToolBuildCommand::class,
+    ToolWhichCommand::class,
     KotlinCompiler.KotlinCliTool::class,
     JavaCompiler.JavacCliTool::class,
     JarTool.JarCliTool::class,
@@ -105,9 +110,8 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   ],
   customSynopsis = [
     "",
-    " Usage:  ",
+    " Usage:  elide @|bold,fg(yellow) srcfile.<js|ts|jsx|tsx|py|kts...>|@ [ARGS]",
     "    or:  elide @|bold,fg(cyan) info|help|discord|bug...|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(yellow) srcfile.<js|ts|jsx|tsx|py...>|@ [OPTIONS]",
     "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
     "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [FILE] [ARG...]",
@@ -117,6 +121,16 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     "    or:  elide @|bold,fg(cyan) run|repl|@ --language=[@|bold,fg(green) JS|@] [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) run|repl|@ --languages=[@|bold,fg(green) JS|@,@|bold,fg(green) PYTHON|@,...] [OPTIONS] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) javac|kotlinc|jar|javadoc|...|@ [OPTIONS] [SOURCES...]",
+    "",
+    " Toolchain:",
+    "    elide @|bold,fg(cyan) javac|@ -- [JAVAC_OPTIONS] [SOURCES...]",
+    "    elide @|bold,fg(cyan) kotlinc|@ -- [KOTLINC_OPTIONS] [SOURCES...]",
+    "    elide @|bold,fg(cyan) jar|javadoc|@ -- [TOOL_OPTIONS] [FILES...]",
+    "",
+    " Projects:",
+    "    elide @|bold,fg(cyan) project|@ [...]",
+    "    elide @|bold,fg(cyan) build|@ [...]",
+    "    elide @|bold,fg(cyan) test|check|lint|@ [...]",
   ],
 )
 @Suppress("MemberVisibilityCanBePrivate")
@@ -390,6 +404,9 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   )
   internal var help: Boolean = false
 
+  @CommandLine.Mixin()
+  internal var commons: CommonOptions = CommonOptions()
+
   @CommandLine.Option(
     names = ["--pitch"],
     hidden = true,
@@ -441,8 +458,8 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
 
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
     return when {
-      version -> CommandResult.success().also { println(ELIDE_TOOL_VERSION) }
-      help -> CommandResult.success().also { cliBuilder.usage(Statics.out) }
+      version && (srcfile == null || srcfile!!.isEmpty()) -> CommandResult.success().also { println(ELIDE_TOOL_VERSION) }
+      help && (srcfile == null || srcfile!!.isEmpty()) -> CommandResult.success().also { cliBuilder.usage(Statics.out) }
       pitch -> CommandResult.success().also { openElidePitch() }
       playground -> CommandResult.success().also { openElidePlayground() }
       else -> if (srcfile == "discord" || Statics.args.firstOrNull() == "discord") {

@@ -87,7 +87,7 @@ public object Constants {
     const val KOTLIN_SDK_PIN = "2.1.20"
 
     /** Constant: pinned version of Kotlin Coroutines. */
-    const val COROUTINES = "1.10.1"
+    const val COROUTINES = "1.10.2"
 
     /** Constant: pinned version of AtomicFU. */
     const val ATOMICFU = "0.27.0"
@@ -144,7 +144,7 @@ public object Constants {
     const val NETTY = "4.1.118.Final"
 
     /** Guava version. */
-    const val GUAVA = "33.4.6-jre"
+    const val GUAVA = "33.4.8-jre"
 
     /** gRPC version. */
     const val GRPC = "1.62.2"
@@ -153,7 +153,7 @@ public object Constants {
     const val JLINE = "3.28.0"
 
     /** Okio version. */
-    const val OKIO = "3.10.2"
+    const val OKIO = "3.11.0"
 
     /** GraalVM version. */
     const val GRAALVM = "24.2.1"

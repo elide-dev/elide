@@ -16,7 +16,6 @@
 package elide.tooling.jvm
 
 import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import elide.exec.Task.Companion.fn
 import elide.runtime.Logging

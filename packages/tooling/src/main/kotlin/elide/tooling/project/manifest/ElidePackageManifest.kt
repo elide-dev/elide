@@ -78,6 +78,20 @@ public data class ElidePackageManifest(
     val url: String,
   ) : DependencyEcosystemConfig.RepositorySpec
 
+  @JvmRecord @Serializable public data class GradleCatalog(
+    val name: String? = null,
+    val path: String,
+  ) : Comparable<GradleCatalog> {
+    public companion object {
+      @JvmStatic public fun parse(str: String): GradleCatalog = GradleCatalog(
+        name = str.substringBefore("."),
+        path = str,
+      )
+    }
+
+    override fun compareTo(other: GradleCatalog): Int = path.compareTo(other.path)
+  }
+
   @JvmRecord @Serializable public data class MavenPackage(
     val group: String? = null,
     val name: String? = null,
@@ -156,6 +170,8 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class MavenDependencies(
     val packages: List<MavenPackage> = emptyList(),
+    val testPackages: List<MavenPackage> = emptyList(),
+    val catalogs: List<GradleCatalog> = emptyList(),
     val repositories: Map<String, MavenRepository> = emptyMap(),
     val enableDefaultRepositories: Boolean = true,
   ) : DependencyEcosystemConfig

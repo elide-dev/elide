@@ -146,6 +146,11 @@ class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
         Conversion.of(PClassInfo.String, ElidePackageManifest.SourceSet::class.java, StrConverter {
           ElidePackageManifest.SourceSet.parse(it)
         })
+      ).addConversion(
+        // convert string to gradle catalog spec
+        Conversion.of(PClassInfo.String, ElidePackageManifest.GradleCatalog::class.java, StrConverter {
+          ElidePackageManifest.GradleCatalog.parse(it)
+        })
       )
       .build()
   }

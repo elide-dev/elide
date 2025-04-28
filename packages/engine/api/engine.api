@@ -1557,6 +1557,21 @@ public final class elide/tool/Classpath$Companion {
 	public final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/Classpath;
 }
 
+public abstract interface class elide/tool/ClasspathProvider {
+	public abstract fun classpath (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tool/ClasspathSpec : java/util/function/Predicate {
+	public fun getName ()Ljava/lang/String;
+	public fun getUsage ()Lelide/tool/MultiPathUsage;
+	public fun test (Lelide/tool/ClasspathSpec;)Z
+	public synthetic fun test (Ljava/lang/Object;)Z
+}
+
+public abstract interface class elide/tool/ClasspathsProvider {
+	public abstract fun classpathProvider (Lelide/tool/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public abstract interface class elide/tool/Environment : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
 	public static final field Companion Lelide/tool/Environment$Companion;
 	public static fun empty ()Lelide/tool/Environment$EmptyEnvironment;
@@ -2020,6 +2035,48 @@ public abstract interface class elide/tool/MultiPath$MutableMultiPathContainer :
 	public fun toMutable ()Lelide/tool/MultiPath$MutableMultiPathContainer;
 }
 
+public abstract interface class elide/tool/MultiPathUsage : java/lang/Comparable {
+	public fun compareTo (Lelide/tool/MultiPathUsage;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun getApiSensitive ()Z
+	public fun getInternalOnly ()Z
+	public abstract fun getOrder-pVg5ArA ()I
+	public fun getRuntimeOnly ()Z
+	public fun getTestOnly ()Z
+}
+
+public final class elide/tool/MultiPathUsage$Compile : elide/tool/MultiPathUsage {
+	public static final field INSTANCE Lelide/tool/MultiPathUsage$Compile;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getOrder-pVg5ArA ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/MultiPathUsage$Runtime : elide/tool/MultiPathUsage {
+	public static final field INSTANCE Lelide/tool/MultiPathUsage$Runtime;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getOrder-pVg5ArA ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/MultiPathUsage$TestCompile : elide/tool/MultiPathUsage {
+	public static final field INSTANCE Lelide/tool/MultiPathUsage$TestCompile;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getOrder-pVg5ArA ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tool/MultiPathUsage$TestRuntime : elide/tool/MultiPathUsage {
+	public static final field INSTANCE Lelide/tool/MultiPathUsage$TestRuntime;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getOrder-pVg5ArA ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class elide/tool/MutableArguments : elide/tool/Arguments, elide/tool/Arguments$Suite {
 	public static final field Companion Lelide/tool/MutableArguments$Companion;
 	public abstract fun add (Lelide/tool/Argument;)Z
@@ -2423,8 +2480,8 @@ public abstract interface class elide/tool/Outputs$None : elide/tool/Outputs {
 
 public abstract interface class elide/tool/Tool {
 	public static final field Companion Lelide/tool/Tool$Companion;
-	public static fun describe (Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$CommandLineTool;
-	public static fun describe (Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$CommandLineTool;
+	public static fun describe (Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;Z)Lelide/tool/Tool$CommandLineTool;
+	public static fun describe (Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;Z)Lelide/tool/Tool$CommandLineTool;
 	public abstract fun getDescription ()Ljava/lang/String;
 	public abstract fun getDocs ()Ljava/net/URI;
 	public abstract fun getLabel ()Ljava/lang/String;
@@ -2442,10 +2499,11 @@ public abstract interface class elide/tool/Tool$CommandLineTool : elide/tool/Too
 }
 
 public final class elide/tool/Tool$Companion {
-	public final fun describe (Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$CommandLineTool;
-	public final fun describe (Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;)Lelide/tool/Tool$CommandLineTool;
-	public static synthetic fun describe$default (Lelide/tool/Tool$Companion;Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;ILjava/lang/Object;)Lelide/tool/Tool$CommandLineTool;
-	public static synthetic fun describe$default (Lelide/tool/Tool$Companion;Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;ILjava/lang/Object;)Lelide/tool/Tool$CommandLineTool;
+	public final fun describe (Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;Z)Lelide/tool/Tool$CommandLineTool;
+	public final fun describe (Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;Z)Lelide/tool/Tool$CommandLineTool;
+	public static synthetic fun describe$default (Lelide/tool/Tool$Companion;Ljava/lang/String;Lelide/tool/Inputs;Lelide/tool/Outputs;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;ZILjava/lang/Object;)Lelide/tool/Tool$CommandLineTool;
+	public static synthetic fun describe$default (Lelide/tool/Tool$Companion;Ljava/lang/String;Ljava/net/URI;Lelide/tool/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tool/Environment;Ljava/lang/String;ZILjava/lang/Object;)Lelide/tool/Tool$CommandLineTool;
+	public final fun getGlobalToolRegistry ()Ljava/util/concurrent/ConcurrentSkipListMap;
 }
 
 public final class elide/tool/Tool$ComplexCliTool : elide/tool/Tool$CommandLineTool, elide/tool/Tool$KnownInputs, elide/tool/Tool$KnownOutputs {

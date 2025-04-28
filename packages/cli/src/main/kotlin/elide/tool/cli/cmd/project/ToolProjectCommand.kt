@@ -19,6 +19,7 @@ import io.micronaut.core.annotation.Introspected
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import jakarta.inject.Singleton
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.outputStream
 import elide.annotations.Inject
@@ -145,7 +146,7 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
                     -----
 
                     - Version: ${project.manifest.version ?: "(None specified.)"}
-                    - Root: ${project.root}
+                    - Root: ${project.root.absolutePathString()}
                   """.trimIndent()).render(
                     terminal,
                   )
@@ -155,6 +156,7 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
                     --------------------------------------
                     - Version: ${project.manifest.version ?: "(None specified.)"}
                     - Description: ${project.manifest.description ?: "(None available.)"}
+                    - Root: ${project.root.absolutePathString()}
                   """.trimIndent())
                 }
               }

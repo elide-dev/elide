@@ -55,12 +55,17 @@ import kotlinx.coroutines.async
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.nameWithoutExtension
 import elide.runtime.Logging
+import elide.tool.Classpath
+import elide.tool.ClasspathProvider
+import elide.tool.ClasspathSpec
+import elide.tool.ClasspathsProvider
+import elide.tool.MultiPathUsage
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.project.manifest.ElidePackageManifest
 
 // Calculate the resolved Maven coordinate to use for a given dependency.
-private suspend fun ElidePackageManifest.MavenPackage.resolvedCoordinate(): String {
+private fun ElidePackageManifest.MavenPackage.resolvedCoordinate(): String {
   return coordinate // @TODO resolve special versions
 }
 
@@ -69,13 +74,45 @@ private fun ElideBuildState.localMaven(): Path {
   return layout.dependencies.resolve("m2")
 }
 
+public class MavenResolverErrors internal constructor (public val errors: List<Throwable>) : RuntimeException(
+  "Failed to resolve Maven dependencies; encountered ${errors.size} error(s). The first is shown.",
+  errors.firstOrNull(),
+)
+
 /**
  * ## Maven Resolver
  */
-public class MavenAetherResolver internal constructor () : DependencyResolver.MavenResolver, AutoCloseable {
+public class MavenAetherResolver internal constructor () :
+  DependencyResolver.MavenResolver,
+  AutoCloseable,
+  ClasspathsProvider {
+  @JvmRecord private data class SourceSetSuite(
+    val name: String,
+    val type: MultiPathUsage,
+  ) : Comparable<SourceSetSuite> {
+    override fun compareTo(other: SourceSetSuite): Int {
+      return name.compareTo(other.name)
+    }
+  }
+
   @JvmRecord private data class MavenDependencyResult(
     val result: DependencyResult,
   )
+
+  private sealed interface ResolvedArtifact {
+    val artifact: Artifact
+    val files: List<File>
+  }
+
+  @JvmRecord private data class ResolvedJarArtifact private constructor (
+    override val artifact: Artifact,
+  ) : ResolvedArtifact {
+    override val files: List<File> get() = listOf(artifact.file)
+
+    companion object {
+      @JvmStatic fun of(artifact: Artifact): ResolvedJarArtifact = ResolvedJarArtifact(artifact)
+    }
+  }
 
   // Whether this resolver has initialized yet.
   private val initialized = atomic(false)
@@ -108,13 +145,25 @@ public class MavenAetherResolver internal constructor () : DependencyResolver.Ma
   private val repositories = ConcurrentSkipListMap<String, ElidePackageManifest.MavenRepository>()
 
   // Registry of all witnessed Maven dependencies.
-  private val registry = ConcurrentSkipListSet<ElidePackageManifest.MavenPackage>()
+  private val registry = ConcurrentSkipListMap<String, ElidePackageManifest.MavenPackage>()
+
+  // Registry of Maven dependencies by suite type.
+  private val registryByType = ConcurrentSkipListMap<SourceSetSuite, MutableList<ElidePackageManifest.MavenPackage>>()
+
+  // Suites of Maven dependencies.
+  private val suites = ConcurrentSkipListSet<SourceSetSuite>()
 
   // Maps packages to their originating projects.
   private val registryPackageMap = ConcurrentSkipListMap<ElidePackageManifest.MavenPackage, ElidePackageManifest>()
 
   // Maps packages to their originating projects.
   private val dependencyResults = ConcurrentLinkedQueue<MavenDependencyResult>()
+
+  // Whether this resolver has totally finished resolving yet.
+  private val resolved = atomic(false)
+
+  // Artifacts held for each Maven package.
+  private val packageArtifacts = ConcurrentSkipListMap<ElidePackageManifest.MavenPackage, ResolvedArtifact>()
 
   // Reader which checks in local project deps before resolving.
   private inner class ElideWorkspaceReader(private val state: ElideBuildState) : WorkspaceReader {
@@ -232,7 +281,7 @@ public class MavenAetherResolver internal constructor () : DependencyResolver.Ma
   }
 
   // Prepares repositories and dependencies at seal-time.
-  private suspend fun configureMavenResolver() {
+  private fun configureMavenResolver() {
     if (repositories.isEmpty()) {
       // no repositories = no maven
       logging.debug { "No Maven repositories added; skipping Maven resolver configuration" }
@@ -255,7 +304,7 @@ public class MavenAetherResolver internal constructor () : DependencyResolver.Ma
     }
 
     logging.debug { "Configuring Maven packages" }
-    val packages = registry.map {
+    val packages = registry.values.map {
       logging.trace { "- Adding Maven package: ${it.coordinate}" }
       val artifact = DefaultArtifact(it.resolvedCoordinate())
       Dependency(artifact, null)
@@ -273,6 +322,38 @@ public class MavenAetherResolver internal constructor () : DependencyResolver.Ma
     }
   }
 
+  private fun registerPackages(
+    name: String,
+    manifest: ElidePackageManifest,
+    usage: MultiPathUsage,
+    packages: Iterable<ElidePackageManifest.MavenPackage>,
+  ) {
+    val suite = SourceSetSuite(
+      type = usage,
+      name = name,
+    )
+    suites.add(suite)
+
+    packages.forEach { pkg ->
+      if (pkg.coordinate !in registry) {
+        registry[pkg.coordinate] = pkg
+        registryByType.getOrDefault(suite, mutableListOf()).also {
+          it.add(pkg)
+          registryByType[suite] = it
+        }
+        registryPackageMap[pkg] = manifest
+        when (val repo = pkg.repository) {
+          // will resolve from default sources (central, et al)
+          null -> {}
+
+          else -> if (repo !in repositories) {
+            error("Unknown Maven repository: '$repo', for package '${pkg.coordinate}'")
+          }
+        }
+      }
+    }
+  }
+
   // Register packages and repositories for the provided manifest.
   internal fun registerPackagesFromManifest(state: ElideBuildState) {
     synchronized(this) {
@@ -286,28 +367,28 @@ public class MavenAetherResolver internal constructor () : DependencyResolver.Ma
     }
 
     val packages = state.manifest.dependencies.maven.packages
+    val testPackages = state.manifest.dependencies.maven.testPackages
     val repos = state.manifest.dependencies.maven.repositories
-    if (packages.isNotEmpty()) {
+
+    if (packages.isNotEmpty() || testPackages.isNotEmpty()) {
       repos.forEach { repo ->
         if (repo.key !in repositories) {
           repo.value.name = repo.key
           repositories[repo.key] = repo.value
         }
       }
-      packages.forEach { pkg ->
-        if (pkg !in registry) {
-          registry.add(pkg)
-          registryPackageMap[pkg] = state.manifest
-          when (val repo = pkg.repository) {
-            // will resolve from default sources (central, et al)
-            null -> {}
-
-            else -> if (repo !in repositories) {
-              error("Unknown Maven repository: '$repo', for package '${pkg.coordinate}'")
-            }
-          }
-        }
-      }
+      registerPackages(
+        "main",
+        state.manifest,
+        MultiPathUsage.Compile,
+        packages,
+      )
+      registerPackages(
+        "test",
+        state.manifest,
+        MultiPathUsage.TestCompile,
+        testPackages,
+      )
     }
   }
 
@@ -320,14 +401,89 @@ public class MavenAetherResolver internal constructor () : DependencyResolver.Ma
     logging.debug { "Maven resolver is now sealed" }
   }
 
+  @Suppress("TooGenericExceptionCaught")
   override suspend fun resolve(scope: CoroutineScope): Sequence<Job> = sequence {
+    check(initialized.value) { "Resolver must be initialized before resolving" }
+    check(sealed.value) { "Resolver must be sealed before resolving" }
     logging.debug { "Resolving Maven dependencies" }
+
     yield(scope.async {
       val dependencyRequest = DependencyRequest(graph, null)
       val dependencyResult = system.resolveDependencies(session, dependencyRequest)
       logging.debug { "Maven dependency resolution result: $dependencyResult" }
-      dependencyResults.add(MavenDependencyResult(dependencyResult))
+      var errors = mutableListOf<Throwable>()
+      try {
+        MavenDependencyResult(dependencyResult).also {
+          dependencyResults.add(it)
+          dependencyResult.artifactResults.stream().parallel().forEach { artifactResult ->
+            try {
+              if (artifactResult.artifact.extension == "jar") {
+                val coordinate = artifactResult.artifact.groupId + ":" +
+                  artifactResult.artifact.artifactId
+                val pkg = registry[coordinate] ?: registry.values.find {
+                  it.coordinate == coordinate || it.coordinate.startsWith(coordinate)
+                } ?: error(
+                  "Failed to resolve requested Maven package info from resulting coordinate: '$coordinate'." +
+                    "Current registry: ${registry.keys}"
+                )
+                if (pkg in packageArtifacts) {
+                  // do we already have this at the same version?
+                  val existing = requireNotNull(packageArtifacts[pkg])
+                  if (existing.artifact.file == artifactResult.artifact.file) {
+                    return@forEach // we already have this
+                  }
+                  error(
+                    "Duplicate Maven package artifact: '${pkg.coordinate}'. Packages are: " +
+                      "$pkg and $existing"
+                  )
+                } else {
+                  packageArtifacts[pkg] = ResolvedJarArtifact.of(artifactResult.artifact)
+                }
+              } else {
+                error(
+                  "Unrecognized JVM artifact type: '${artifactResult.artifact}'"
+                )
+              }
+            } catch (err: RuntimeException) {
+              logging.debug { "Failed to resolve Maven artifact: ${artifactResult.artifact}: $err" }
+              errors.add(err)
+            }
+          }
+        }
+      } finally {
+        resolved.value = true
+      }
+
+      if (errors.isNotEmpty()) {
+        logging.error("Failed to resolve Maven dependencies because of one or more errors. Throwing.")
+        throw MavenResolverErrors(errors)
+      }
     })
+  }
+
+  override suspend fun classpathProvider(spec: ClasspathSpec): ClasspathProvider? {
+    check(initialized.value) { "Resolver must be initialized before resolving" }
+    check(sealed.value) { "Resolver must be sealed before resolving" }
+    check(resolved.value) { "Resolver must be fully resolved before assembling a classpath" }
+    logging.debug { "Assembling classpath for spec: $spec" }
+
+    return suites.find {
+      spec.test(object : ClasspathSpec {
+        override val name: String? get() = it.name
+        override val usage: MultiPathUsage? get() = it.type
+      })
+    }?.let { suite ->
+      ClasspathProvider {
+        // assemble a class-path from all resolved artifacts for a given spec
+        Classpath.from((registryByType[suite] ?: emptyList()).flatMap { pkg ->
+          packageArtifacts[pkg]?.files?.map {
+            it.toPath()
+          } ?: emptyList()
+        })
+      }
+    } ?: error(
+      "No classpath provider found for spec: $spec"
+    )
   }
 
   override fun close() {

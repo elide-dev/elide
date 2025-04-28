@@ -15,6 +15,7 @@ package elide.tool
 
 import java.nio.file.Path
 import java.util.LinkedList
+import java.util.function.Predicate
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
@@ -577,6 +578,92 @@ public class Classpath private constructor (
       JvmMultiPathContainer.from(CLASSPATH, collection)
     )
   }
+}
+
+/**
+ * ## Classpath Provider
+ *
+ * Defers calculations to assemble a classpath until the classpath is needed. Expected to provide a fully assembled
+ * [Classpath] as a result.
+ */
+public fun interface ClasspathProvider {
+  /**
+   * Provide the [Classpath] associated with this object, or provide this object as a [Classpath].
+   *
+   * @return Classpath instance.
+   */
+  public suspend fun classpath(): Classpath
+}
+
+/**
+ * ## Multi-path Usage
+ *
+ * Describes usage types of a classpath or modulepath.
+ */
+public sealed interface MultiPathUsage : Comparable<MultiPathUsage> {
+  public val apiSensitive: Boolean get() = true
+  public val internalOnly: Boolean get() = false
+  public val runtimeOnly: Boolean get() = false
+  public val testOnly: Boolean get() = false
+  public val order: UInt
+
+  public data object Compile : MultiPathUsage {
+    override val order: UInt get() = 0u
+  }
+  public data object Runtime : MultiPathUsage {
+    override val order: UInt get() = 1u
+  }
+  public data object TestCompile : MultiPathUsage {
+    override val order: UInt get() = 2u
+  }
+  public data object TestRuntime : MultiPathUsage {
+    override val order: UInt get() = 3u
+  }
+
+  override fun compareTo(other: MultiPathUsage): Int {
+    return order.compareTo(other.order)
+  }
+}
+
+/**
+ * ## Classpath Spec
+ *
+ * Describes a classpath when requested from consumers; matching classpaths are returned for each specified optional
+ * property.
+ */
+public interface ClasspathSpec : Predicate<ClasspathSpec> {
+  /**
+   * Name of the classpath, if applicable.
+   */
+  public val name: String? get() = null
+
+  /**
+   * Usage type for the classpath.
+   */
+  public val usage: MultiPathUsage? get() = null
+
+  override fun test(t: ClasspathSpec): Boolean {
+    return when {
+      name != null && t.name != null && name != t.name -> false
+      usage != null && t.usage != null && usage != t.usage -> false
+      else -> true
+    }
+  }
+}
+
+/**
+ * ## Classpaths Provider
+ *
+ * Defers calculations to assemble a classpath until the classpath is needed. Expected to provide a fully assembled
+ * [Classpath] as a result of a request via a [ClasspathSpec].
+ */
+public fun interface ClasspathsProvider {
+  /**
+   * Provide the [Classpath] resolving from the provided [spec].
+   *
+   * @return Classpath provider instance.
+   */
+  public suspend fun classpathProvider(spec: ClasspathSpec): ClasspathProvider?
 }
 
 /**

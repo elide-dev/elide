@@ -937,12 +937,16 @@
           "name": "<init>",
           "parameterTypes": [
             "java.util.List",
+            "java.util.List",
+            "java.util.List",
             "java.util.Map"
           ]
         },
         {
           "name": "<init>",
           "parameterTypes": [
+            "java.util.List",
+            "java.util.List",
             "java.util.List",
             "java.util.Map",
             "boolean"

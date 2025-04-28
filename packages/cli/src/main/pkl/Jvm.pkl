@@ -134,6 +134,9 @@ class MavenDependencies {
   /// A list of Maven package dependencies to be resolved for this project.
   packages: Listing<MavenPackageDependency> = new {}
 
+  /// A list of Maven package dependencies to be resolved for this project.
+  testPackages: Listing<MavenPackageDependency> = new {}
+
   /// A list of Gradle dependency catalogs to be resolved for this project.
   catalogs: Listing<GradleCatalog> = new {}
 

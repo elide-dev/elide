@@ -158,35 +158,36 @@ internal class ToolBuildCommand : AbstractSubcommand<ToolState, CommandContext>(
         )
         progress.refresh()
 
+        // seal (finally configure) all dependency resolvers
+        val allResolvers = resolvers.await()
+
+        var completedResolvers = 0L
+        allResolvers.flatMap { resolver ->
+          depsTask.update {
+            context = "Resolving ${resolver.second.ecosystem.name} dependencies"
+          }
+          resolver.second.resolve(this).also {
+            it.forEach { task ->
+              task.invokeOnCompletion {
+                depsTask.update {
+                  completed = ++completedResolvers
+                }
+              }
+            }
+          }
+        }.joinAll()
+
+        depsTask.update {
+          context = "Dependencies ready"
+          completed = ++completedResolvers
+        }
+        progress.refresh()
+        delay(16.milliseconds)
+        progress.removeTask(depsTask.id)
+
         logging.debug { "Entering graph scope" }
         val execution = coroutineScope {
           launch(Dispatchers.Virtual) {
-            // seal (finally configure) all dependency resolvers
-            val allResolvers = resolvers.await()
-
-            var completedResolvers = 0L
-            allResolvers.flatMap { resolver ->
-              depsTask.update {
-                context = "Resolving ${resolver.second.ecosystem.name} dependencies"
-              }
-              resolver.second.resolve(this).also {
-                it.forEach { task ->
-                  task.invokeOnCompletion {
-                    depsTask.update {
-                      completed = ++completedResolvers
-                    }
-                  }
-                }
-              }
-            }.joinAll()
-
-            depsTask.update {
-              context = "Dependencies ready"
-              completed = ++completedResolvers
-            }
-
-            delay(16.milliseconds)
-            progress.removeTask(depsTask.id)
 
             // we are finished resolving dependencies
             topTask.advance(1L)
@@ -194,7 +195,7 @@ internal class ToolBuildCommand : AbstractSubcommand<ToolState, CommandContext>(
           }
 
           // seal the task graph now, and then execute it, delegating events to output
-          topTask.update { context = "Building project..." }
+          topTask.update { context = "Configuring build..." }
           kotlinx.coroutines.withContext(Dispatchers.Virtual) {
             graph.await().execute(buildConfig.actionScope) {
               logging.trace { "Binding graph events" }
@@ -205,6 +206,7 @@ internal class ToolBuildCommand : AbstractSubcommand<ToolState, CommandContext>(
 
               on(Configured) {
                 logging.debug { "Task graph configured in ${System.currentTimeMillis() - start}ms" }
+                topTask.update { context = "Building project..." }
                 progress.refresh(true)
               }
               on(TaskReady) {
@@ -222,7 +224,6 @@ internal class ToolBuildCommand : AbstractSubcommand<ToolState, CommandContext>(
                   mappedProgress[task.id] = it
                   taskStarts[task.id] = System.currentTimeMillis()
                 }
-                progress.refresh(true)
               }
               on(TaskFinished) {
                 val task = context as Task
@@ -238,7 +239,6 @@ internal class ToolBuildCommand : AbstractSubcommand<ToolState, CommandContext>(
                 }
                 mappedTasks.remove(task.id)
                 finishedTasks.add(progressTask ?: return@on)
-                progress.refresh(true)
               }
               on(ExecutionFinished) {
                 // remove all pending tasks
@@ -246,7 +246,6 @@ internal class ToolBuildCommand : AbstractSubcommand<ToolState, CommandContext>(
                 finishedTasks.forEach {
                   progress.removeTask(it.id)
                 }
-                progress.refresh(true)
               }
             }
           }

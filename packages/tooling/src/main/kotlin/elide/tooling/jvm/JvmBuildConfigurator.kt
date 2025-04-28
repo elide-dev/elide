@@ -19,6 +19,8 @@ import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 import elide.exec.Task.Companion.fn
 import elide.runtime.Logging
+import elide.tool.ClasspathSpec
+import elide.tool.MultiPathUsage
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
@@ -32,6 +34,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     @JvmStatic private val logging by lazy { Logging.of(JvmBuildConfigurator::class) }
   }
 
+  @Suppress("unused", "UnusedVariable")
   override fun contribute(state: ElideBuildState, config: BuildConfigurator.BuildConfiguration) {
     // interpret/load maven dependencies to resolver
     val resolver = if (state.manifest.dependencies.maven.packages.isEmpty()) {
@@ -71,6 +74,18 @@ internal class JvmBuildConfigurator : BuildConfigurator {
             // `compileJavaMain` for name `main`
             fn(name = "compileJava${it.name[0].uppercase()}${it.name.slice(1..it.name.lastIndex)}") {
               // would compile
+              val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
+                override val usage: MultiPathUsage = MultiPathUsage.Compile
+              })?.classpath()
+
+              val javacClassesOutput = state.layout.artifacts
+                .resolve("jvm") // `.dev/artifacts/jvm/...`
+                .resolve("classes") // `.../classes/...`
+                .resolve(it.name) // `.../classes/main/...`
+
+              logging.debug { "Kotlin main classpath: $compileClasspath" }
+              logging.debug { "Classes output root: $javacClassesOutput" }
+
               delay(5.seconds)
             }.describedBy {
               val pluralized = if (it.paths.size == 1) "source file" else "sources"
@@ -88,6 +103,18 @@ internal class JvmBuildConfigurator : BuildConfigurator {
               // `compileKotlinMain` for name `main`
               fn(name = "compileKotlin${it.name[0].uppercase()}${it.name.slice(1..it.name.lastIndex)}") {
                 // would compile
+                val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
+                  override val usage: MultiPathUsage = MultiPathUsage.Compile
+                })?.classpath()
+
+                val kotlincClassesOutput = state.layout.artifacts
+                  .resolve("jvm") // `.dev/artifacts/jvm/...`
+                  .resolve("classes") // `.../classes/...`
+                  .resolve(it.name) // `.../classes/main/...`
+
+                logging.debug { "Kotlin main classpath: $compileClasspath" }
+                logging.debug { "Classes output root: $kotlincClassesOutput" }
+
                 delay(5.seconds)
               }.describedBy {
                 val pluralized = if (it.paths.size == 1) "source file" else "sources"
@@ -110,6 +137,23 @@ internal class JvmBuildConfigurator : BuildConfigurator {
               // `compileJavaTest` for name `test`
               fn(name = "compileJava${it.name[0].uppercase()}${it.name.slice(1..it.name.lastIndex)}") {
                 // would compile
+                val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
+                  override val usage: MultiPathUsage = MultiPathUsage.TestCompile
+                })?.classpath()
+
+                val javacMainClassesOutput = state.layout.artifacts
+                  .resolve("jvm") // `.dev/artifacts/jvm/...`
+                  .resolve("classes") // `.../classes/...`
+                  .resolve("main") // `.../classes/main/...`
+
+                val javacClassesOutput = state.layout.artifacts
+                  .resolve("jvm") // `.dev/artifacts/jvm/...`
+                  .resolve("classes") // `.../classes/...`
+                  .resolve(it.name) // `.../classes/test/...`
+
+                logging.debug { "Java main classpath: $compileClasspath" }
+                logging.debug { "Java output root: $javacClassesOutput" }
+
                 delay(5.seconds)
               }.describedBy {
                 val pluralized = if (it.paths.size == 1) "source file" else "sources"
@@ -131,6 +175,23 @@ internal class JvmBuildConfigurator : BuildConfigurator {
               // `compileKotlinTest` for name `test`
               fn(name = "compileKotlin${it.name[0].uppercase()}${it.name.slice(1..it.name.lastIndex)}") {
                 // would compile
+                val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
+                  override val usage: MultiPathUsage = MultiPathUsage.TestCompile
+                })?.classpath()
+
+                val javacMainClassesOutput = state.layout.artifacts
+                  .resolve("jvm") // `.dev/artifacts/jvm/...`
+                  .resolve("classes") // `.../classes/...`
+                  .resolve("main") // `.../classes/main/...`
+
+                val kotlincClassesOutput = state.layout.artifacts
+                  .resolve("jvm") // `.dev/artifacts/jvm/...`
+                  .resolve("classes") // `.../classes/...`
+                  .resolve(it.name) // `.../classes/test/...`
+
+                logging.debug { "Kotlin test classpath: $compileClasspath" }
+                logging.debug { "Kotlin output root: $kotlincClassesOutput" }
+
                 delay(5.seconds)
               }.describedBy {
                 val pluralized = if (it.paths.size == 1) "source file" else "sources"

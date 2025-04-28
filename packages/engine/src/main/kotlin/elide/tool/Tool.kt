@@ -14,6 +14,8 @@
 package elide.tool
 
 import java.net.URI
+import java.util.concurrent.ConcurrentSkipListMap
+import kotlin.reflect.KClass
 
 /**
  * ## Abstract Tool
@@ -190,6 +192,23 @@ public sealed interface Tool {
 
   /** Factories for obtaining simple [Tool] instances. */
   @Suppress("LongParameterList") public companion object {
+    // All registered tools.
+    @PublishedApi internal val globalToolRegistry: ConcurrentSkipListMap<String, Tool> = ConcurrentSkipListMap()
+
+    /**
+     * Resolve a command-line tool by name; when this method is used, the tool must have been registered already by the
+     * time it is resolved.
+     *
+     * @param T Type of tool to resolve; a cast is performed.
+     * @param name Name of the tool to resolve.
+     */
+    @JvmStatic public inline fun <reified T : Tool> resolve(name: String, cls: KClass<T> = T::class): T {
+      val tool = globalToolRegistry[name]
+      if (tool == null) error("No registered tool by name: '$name'")
+      if (!cls.isInstance(tool)) error("Tool '$name' is not of type '${cls.simpleName}'")
+      return tool as T
+    }
+
     /**
      * Create a command-line tool from the provided inputs.
      *
@@ -201,6 +220,7 @@ public sealed interface Tool {
      * @param description Description to show for this tool.
      * @param environment Environment to provide or use for this command-line tool.
      * @param helpText Help text to show for this tool.
+     * @param registered Whether to globally register this tool description.
      * @return A new command-line tool.
      */
     @JvmStatic public fun describe(
@@ -212,6 +232,7 @@ public sealed interface Tool {
       description: String = Defaults.DEFAULT_DESCRIPTION,
       environment: Environment = Environment.empty(),
       helpText: String? = null,
+      registered: Boolean = true,
     ): CommandLineTool = SimpleCliTool(
       name = name,
       docs = docs,
@@ -236,6 +257,7 @@ public sealed interface Tool {
      * @param helpText Help text to show for this tool.
      * @param inputs Inputs to make available for this tool.
      * @param outputs Outputs to make available for this tool.
+     * @param registered Whether to globally register this tool description.
      * @return A new command-line tool.
      */
     @JvmStatic public fun describe(
@@ -249,6 +271,7 @@ public sealed interface Tool {
       description: String = Defaults.DEFAULT_DESCRIPTION,
       environment: Environment = Environment.empty(),
       helpText: String? = null,
+      registered: Boolean = true,
     ): CommandLineTool = ComplexCliTool(
       info = SimpleCliTool(
         name = name,

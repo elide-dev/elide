@@ -3281,9 +3281,88 @@
       ]
     },
     {
+      "type": "elide.tool.cli.ProjectAwareSubcommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.init.InitCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.init.$InitCommand$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.init.$InitCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.cmd.help.HelpCommand",
       "allDeclaredFields": true,
-      "allDeclaredMethods": true
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$HelpTopic",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$ProjectHelpCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$JvmHelpCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$PolyglotHelpCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$ServersHelpCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.$HelpCommand$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.$HelpCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "elide.tool.cli.cmd.info.$ToolInfoCommand$Definition",
@@ -3444,6 +3523,9 @@
     },
     {
       "type": "elide.tool.cli.cmd.tool.ToolInvokeCommand",
+      "allDeclaredFields": true,
+      "allDeclaredConstructor": true,
+      "allDeclaredMethods": true,
       "allDeclaredFields": true
     },
     {
@@ -3454,6 +3536,36 @@
     },
     {
       "type": "elide.tool.cli.cmd.builder.$ToolBuildCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.runner.ToolTestCommand",
+      "allDeclaredConstructor": true,
+      "allDeclaredMethods": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.runner.$ToolTestCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.checks.ToolCheckCommand",
+      "allDeclaredConstructor": true,
+      "allDeclaredMethods": true,
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.checks.$ToolCheckCommand$Introspection",
       "methods": [
         {
           "name": "<init>",
@@ -7347,6 +7459,15 @@
     }
   ],
   "resources": [
+    {
+      "glob": "META-INF/elide/help/*.md"
+    },
+    {
+      "glob": "META-INF/elide/help/**/*"
+    },
+    {
+      "glob": "META-INF/elide/projects/**/*"
+    },
     {
       "glob": "org/apache/maven/model/**/*"
     },

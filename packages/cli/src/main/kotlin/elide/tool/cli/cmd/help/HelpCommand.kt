@@ -13,22 +13,51 @@
 
 package elide.tool.cli.cmd.help
 
-import picocli.CommandLine.Command
-import picocli.CommandLine.Option
+import com.github.ajalt.mordant.markdown.Markdown
+import com.github.ajalt.mordant.terminal.Terminal
+import picocli.CommandLine
 import java.awt.Desktop
 import java.net.URI
+import java.nio.charset.StandardCharsets
+import java.util.concurrent.Callable
 import elide.annotations.Singleton
 import elide.tool.cli.*
 
 /** Find help or file a bug or PR against Elide. */
-@Command(
+@CommandLine.Command(
   name = "help",
-  aliases = ["bug", "issue"],
-  description = ["%nReport an issue or bug, find help for using Elide"],
+  aliases = ["docs", "bug", "issue", "feature"],
+  description = [
+    "Report an issue or bug, find help for using Elide. Can search Elide's documentation at this version, and can " +
+      "open links to GitHub.",
+    "",
+    "Examples:",
+    "  elide help projects",
+    "  elide feature \"I wish I could do X\"",
+    "  elide docs kotlin",
+    "",
+    "Topics:",
+    "  @|bold projects|@: Explains the concept of Elide projects",
+    "  @|bold jvm|@: How Java and Kotlin projects work on Elide",
+    "  @|bold polyglot|@: Polyglot apps and cross-language interop",
+    "  @|bold servers|@: How to run Elide apps in server mode",
+  ],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
   abbreviateSynopsis = true,
   usageHelpAutoWidth = true,
+  customSynopsis = [
+    "elide @|bold,fg(cyan) help|@ [TOPIC]",
+    "   or: elide @|bold,fg(cyan) issue|bug|feature|@ [OPTIONS] [TITLE]",
+    "   or: elide @|bold,fg(cyan) docs|@ [OPTIONS] [SEARCH]",
+    "",
+  ],
+  subcommands = [
+    HelpCommand.ProjectHelpCommand::class,
+    HelpCommand.JvmHelpCommand::class,
+    HelpCommand.PolyglotHelpCommand::class,
+    HelpCommand.ServersHelpCommand::class,
+  ],
 )
 @Singleton internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
@@ -55,8 +84,55 @@ import elide.tool.cli.*
     }
   }
 
+  internal abstract class HelpTopic (private val path: String): Callable<Unit> {
+    override fun call() {
+      val terminal = Terminal()
+      requireNotNull(this::class.java.getResourceAsStream("/META-INF/elide/help/$path")) {
+        "Failed to locate help topic at path '$path'"
+      }.bufferedReader(StandardCharsets.UTF_8).use { stream ->
+        terminal.println(Markdown(stream.readText()))
+      }
+    }
+  }
+
+  @CommandLine.Spec
+  internal lateinit var spec: CommandLine.Model.CommandSpec
+
+  /** Help topic for Elide projects. */
+  @CommandLine.Command(
+    name = "projects",
+    mixinStandardHelpOptions = false,
+    hidden = true,
+  )
+  internal class ProjectHelpCommand: HelpTopic(path = "projects.md")
+
+  /** Help topic for JVM projects. */
+  @CommandLine.Command(
+    name = "jvm",
+    aliases = ["java", "kotlin"],
+    mixinStandardHelpOptions = false,
+    hidden = true,
+  )
+  internal class JvmHelpCommand: HelpTopic(path = "jvm.md")
+
+  /** Help topic for polyglot info. */
+  @CommandLine.Command(
+    name = "polyglot",
+    mixinStandardHelpOptions = false,
+    hidden = true,
+  )
+  internal class PolyglotHelpCommand: HelpTopic(path = "polyglot.md")
+
+  /** Help topic for servers. */
+  @CommandLine.Command(
+    name = "servers",
+    mixinStandardHelpOptions = false,
+    hidden = true,
+  )
+  internal class ServersHelpCommand: HelpTopic(path = "servers.md")
+
   /** Whether to file a bug. */
-  @Option(
+  @CommandLine.Option(
     names = ["--bug"],
     description = ["Wizard to file a bug"],
     defaultValue = "false",
@@ -64,7 +140,7 @@ import elide.tool.cli.*
   var fileBug: Boolean = false
 
   /** Whether to file a feature request. */
-  @Option(
+  @CommandLine.Option(
     names = ["--feature"],
     description = ["Wizard to file a feature request"],
     defaultValue = "false",
@@ -72,7 +148,7 @@ import elide.tool.cli.*
   var fileFeatureRequest: Boolean = false
 
   /** Whether to open the bug report after preparing, or just print a URL. */
-  @Option(
+  @CommandLine.Option(
     names = ["--open"],
     negatable = true,
     description = ["Open the URL or print the URL"],
@@ -82,6 +158,11 @@ import elide.tool.cli.*
 
   @Suppress("DEPRECATION")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
+    if (spec.name() == "help") {
+      // render help manually
+      spec.commandLine().usage(System.out)
+      return success()
+    }
     assembleIssueUrl(if (fileBug) issueTemplateBugReport else issueTemplateFeature).let { issueUrl ->
       when (openUrl) {
         false -> output {

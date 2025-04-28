@@ -22,7 +22,7 @@ import elide.tool.cli.GuestLanguage
 /**
  * TBD.
  */
-@Introspected @ReflectiveAccess open class LanguagePositionals : OptionsMixin {
+@Introspected @ReflectiveAccess open class LanguagePositionals : OptionsMixin<LanguagePositionals> {
   @Suppress("EnumEntryName", "unused", "EnumNaming")
   enum class RunnerAlias (val language: GuestLanguage? = null, val action: Boolean = false) {
     js(GuestLanguage.JS),
@@ -49,4 +49,10 @@ import elide.tool.cli.GuestLanguage
     paramLabel = "CMD_OR_LANGUAGE",
   )
   internal lateinit var language: List<RunnerAlias>
+
+  override fun merge(other: LanguagePositionals?): LanguagePositionals {
+    val positionals = LanguagePositionals()
+    positionals.language = language.plus(other?.language ?: emptyList())
+    return positionals
+  }
 }

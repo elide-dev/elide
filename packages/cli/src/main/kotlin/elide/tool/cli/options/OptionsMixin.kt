@@ -19,4 +19,9 @@ package elide.tool.cli.options
  * Defines a set of build-time-declared command line options, which are grouped by relevance in a class and mixed into
  * commands downstream.
  */
-sealed interface OptionsMixin
+sealed interface OptionsMixin<T> where T: OptionsMixin<T> {
+  /** @return Merged options with the [other] instance. */
+  @Suppress("UNCHECKED_CAST") fun merge(other: T? = null): T {
+    return this as T // (self)
+  }
+}

@@ -1,4 +1,4 @@
-amends "elide:Project.pkl"
+amends "elide:project.pkl"
 
 name = "elide"
 version = "1.0.0-beta2"

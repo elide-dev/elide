@@ -23,9 +23,9 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.outputStream
 import elide.annotations.Inject
-import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
+import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
 import elide.tool.project.PackageManifestService
 import elide.tool.project.ProjectManager
@@ -33,11 +33,22 @@ import elide.tooling.project.ProjectEcosystem
 
 @Command(
   name = "project",
-  description = ["Manage Elide project manifests and other package declarations"],
   mixinStandardHelpOptions = true,
+  description = [
+    "Manage Elide projects, which are defined by @|bold elide.pkl|@ or",
+    "similar manifests like @|bold package.json|@ or @|bold pyproject.toml|@.",
+    "",
+    "For more information, run @|fg(magenta) elide help projects|@.",
+  ],
+  customSynopsis = [
+    "elide @|bold,fg(cyan) project|@",
+    "   or: elide @|bold,fg(cyan) project|@ [OPTIONS] [TASKS] [--] [ARGS]",
+    "   or: elide @|bold,fg(cyan) project|@ @|bold,fg(cyan) --export|@ [@|bold,fg(cyan) --target=...|@]",
+    "",
+  ]
 )
 @Introspected @Singleton
-internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext>() {
+internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   enum class Target(val targetName: String, val ecosystem: ProjectEcosystem, val description: String) {
     NODE("node", ProjectEcosystem.Node, "Node.js package.json"),
     REQUIREMENTS("requirements", ProjectEcosystem.PythonRequirements, "Python requirements.txt"),
@@ -127,39 +138,23 @@ internal class ToolProjectCommand : AbstractSubcommand<ToolState, CommandContext
       export || listTargets -> export()
 
       // print project info if no subcommand is provided
-      else -> projectManager.resolveProject(commons().projectPath).let { project ->
+      else -> projectManager.resolveProject(projectOptions().projectPath).let { project ->
         when (project) {
           null -> err("No project").also {
-            if (!commons().quiet) output {
+            if (!quiet) output {
               append("No current project, use --project to specify a project path.")
             }
           }
           else -> success().also {
-            if (!commons().quiet) {
-              Terminal().let { terminal ->
-                if (terminal.terminalInfo.outputInteractive) {
-                  Markdown("""
-                    # Project: ${project.manifest.name}
-                    ${if (project.manifest.description != null) "\n" else ""}
-                    ${project.manifest.description ?: ""}
-                    ${if (project.manifest.description != null) "\n" else ""}
-                    -----
-
-                    - Version: ${project.manifest.version ?: "(None specified.)"}
-                    - Root: ${project.root.absolutePathString()}
-                  """.trimIndent()).render(
-                    terminal,
-                  )
-                } else output {
-                  append("""
-                    Project: ${project.manifest.name}
-                    --------------------------------------
-                    - Version: ${project.manifest.version ?: "(None specified.)"}
-                    - Description: ${project.manifest.description ?: "(None available.)"}
-                    - Root: ${project.root.absolutePathString()}
-                  """.trimIndent())
-                }
-              }
+            if (!quiet) {
+              val descOrNone = project.manifest.description?.ifBlank { null }?.let { description ->
+                "\n$description\n"
+              } ?: ""
+              Terminal().println(Markdown("""
+                  # Project: ${project.manifest.name}$descOrNone
+                  - Version: ${project.manifest.version ?: "(None specified.)"}
+                  - Root: ${project.root.absolutePathString()}
+                """.trimIndent()))
             }
           }
         }

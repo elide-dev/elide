@@ -23,7 +23,6 @@ import elide.tool.Tool
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
-import elide.tool.cli.ELIDE_HEADER
 import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
 
@@ -85,11 +84,11 @@ abstract class DelegatedToolCommand<T> (
   open fun renderVersion(): StringBuilder = StringBuilder("${info.name} ${info.version}")
 
   /** @return Version string for this tool. */
-  open fun renderHelp(): StringBuilder = StringBuilder(
-    CommandLine.Help.Ansi.AUTO.string(ELIDE_HEADER).replace("%n", "\n")
-  ).append(
-    StringBuilder(CommandLine.Help.Ansi.AUTO.string(info.help().toString()))
-  )
+  open fun renderHelp(): StringBuilder = StringBuilder().apply {
+    append(
+      StringBuilder(CommandLine.Help.Ansi.AUTO.string(info.help().toString()))
+    )
+  }
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug { "Invoked delegated tool command; preparing tool state" }

@@ -22,7 +22,6 @@ import lukfor.progress.tasks.Task
 import lukfor.progress.tasks.TaskFailureStrategy.IGNORE_FAILURES
 import org.graalvm.polyglot.Language
 import picocli.CommandLine
-import picocli.CommandLine.Mixin
 import picocli.CommandLine.Model.CommandSpec
 import picocli.CommandLine.Spec
 import java.io.BufferedReader
@@ -327,7 +326,12 @@ import org.graalvm.polyglot.Engine as VMEngine
   private val sharedResources: MutableList<AutoCloseable> = LinkedList()
 
   // Common options shared by all commands.
-  @Mixin private var commons: CommonOptions = CommonOptions()
+  @CommandLine.ArgGroup(
+    heading = "%nCommon Options:%n",
+    exclusive = false,
+    order = 999, // always list last
+  )
+  private var commons: CommonOptions = CommonOptions()
 
   // Command specification from Picocli.
   @Spec internal var commandSpec: CommandSpec? = null
@@ -361,16 +365,16 @@ import org.graalvm.polyglot.Engine as VMEngine
   private var interactive = false
 
   /** Debug flag status. */
-  val debug: Boolean get() = commons.debug
+  val debug: Boolean get() = commons().debug
 
   /** Verbose output flag status. */
-  val verbose: Boolean get() = false  // @TODO(sgammon): fix mixin injection
+  val verbose: Boolean get() = commons().verbose
 
   /** Quiet output flag status. */
-  val quiet: Boolean get() = commons.quiet
+  val quiet: Boolean get() = commons().quiet
 
   /** Pretty output flag status. */
-  val pretty: Boolean get() = commons.pretty
+  val pretty: Boolean get() = commons().pretty
 
   private val mergedOptions by lazy {
     commons.merge(elideCli?.commons)

@@ -28,7 +28,6 @@ import elide.core.api.Symbolic
 import elide.runtime.Logger
 import elide.tool.cli.*
 import elide.tool.cli.cmd.tool.EmbeddedTool.*
-import elide.tool.cli.cmd.tool.ToolAction.FORMAT
 import elide.tool.cli.cmd.tool.ToolAction.INSTALL
 import elide.tool.io.RuntimeWorkdirManager
 import elide.tool.project.PackageManifestService
@@ -44,9 +43,6 @@ private const val UV_SYMBOL = "uv"
 private const val OROGENE_SYMBOL = "orogene"
 
 // Action constants.
-private const val LINT_ACTION = "lint"
-private const val FORMAT_ACTION = "format"
-private const val CHECK_ACTION = "check"
 private const val INSTALL_ACTION = "install"
 private const val UPDATE_ACTION = "update"
 
@@ -104,7 +100,6 @@ private val uvActions = sortedSetOf(
 
   companion object: Symbolic.SealedResolver<String, EmbeddedTool> {
     fun defaultFor(action: ToolAction): Sequence<EmbeddedTool> = when (action) {
-      FORMAT -> sequenceOf(RUFF, BIOME)
       INSTALL -> sequenceOf(OROGENE, UV)
       else -> sequenceOf(RUFF)
     }
@@ -191,12 +186,6 @@ private enum class ToolAction (
   override val symbol: String,
   private val aliases: Array<String> = emptyArray(),
 ): Symbolic<String> {
-  // Run formatters.
-  FORMAT(FORMAT_ACTION, arrayOf("fmt")),
-
-  // Run all checks.
-  CHECK(CHECK_ACTION, arrayOf(LINT_ACTION)),
-
   // Run installer.
   INSTALL(INSTALL_ACTION, arrayOf("i")),
 
@@ -214,9 +203,6 @@ private enum class ToolAction (
 @Command(
   name = "tool",
   aliases = [
-    "lint",
-    "fmt",
-    "check",
     "install",
     "i",
     "update",

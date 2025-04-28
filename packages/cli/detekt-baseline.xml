@@ -18,6 +18,7 @@
     <ID>MatchingDeclarationName:SanityTests.kt$SanitySelfTest : SelfTest</ID>
     <ID>PrintStackTrace:main.kt$err</ID>
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
+    <ID>ReturnCount:InitCommand.kt$InitCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: Array&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
     <ID>ReturnCount:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>SpreadOperator:ToolInvokeCommand.kt$ToolInvokeCommand$(*selectedTools.map { it to buildArgs(action, it) }.toTypedArray())</ID>
@@ -29,10 +30,18 @@
     <ID>TooGenericExceptionCaught:ToolInvokeCommand.kt$ToolInvokeCommand$err: Throwable</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val jsHint = "package.json"</ID>
     <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt$private const val pyHint = "requirements.txt"</ID>
+    <ID>UnusedParameter:InitCommand.kt$InitCommand$template: RenderableTemplate</ID>
+    <ID>UnusedPrivateClass:InitCommand.kt$InitCommand$PreparedProject</ID>
+    <ID>UnusedPrivateClass:InitCommand.kt$InitCommand$ProjectTemplate</ID>
+    <ID>UnusedPrivateMember:InitCommand.kt$InitCommand$private fun loadInstalledTemplates(): List&lt;RenderableTemplate></ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
+    <ID>UnusedPrivateProperty:ToolCheckCommand.kt$ToolCheckCommand$// Terminal to use. private val terminal by lazy { Terminal() }</ID>
+    <ID>UnusedPrivateProperty:ToolCheckCommand.kt$ToolCheckCommand$@Inject private lateinit var projectManager: ProjectManager</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Uv. private val uvActions = sortedSetOf( "pip", "tool", "toolchain", "venv", "cache", "self", "version", "help", )</ID>
+    <ID>UnusedPrivateProperty:ToolTestCommand.kt$ToolTestCommand$// Terminal to use. private val terminal by lazy { Terminal() }</ID>
+    <ID>UnusedPrivateProperty:ToolTestCommand.kt$ToolTestCommand$@Inject private lateinit var projectManager: ProjectManager</ID>
     <ID>VariableNaming:InspectorConfig.kt$InspectorConfig$/** Specifies whether the inspector should suspend for internal (facade) sources. */ @Option( names = ["--inspect:internal"], description = ["Specifies whether the inspector should suspend for internal (facade) sources"], defaultValue = "false", hidden = false, ) internal var `internal`: Boolean = false</ID>
   </CurrentIssues>
 </SmellBaseline>

@@ -73,9 +73,10 @@ private val kotlinc = Tool.describe(
   version = KotlinLanguage.VERSION,
   docs = URI.create("https://kotl.in/cli"),
   description = KOTLIN_COMPILER_DESCRIPTION,
+  registered = true,
   helpText = """
   Usage: elide $KOTLINC <elide options> -- <kotlinc options> <kotlin source files>
-  Kotlin version: ${KotlinLanguage.VERSION}
+  Kotlin: v${KotlinLanguage.VERSION}
 
   where possible elide options include:
     (None at this time.)
@@ -118,7 +119,7 @@ private val kotlinc = Tool.describe(
 
   For details, see https://kotl.in/cli
   For usage within Elide, see https://docs.elide.dev
-  """
+"""
 )
 
 /**

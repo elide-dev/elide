@@ -41,13 +41,16 @@ import elide.runtime.gvm.internals.intrinsics.ElideIntrinsic
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.builder.ToolBuildCommand
 import elide.tool.cli.cmd.builder.ToolWhichCommand
+import elide.tool.cli.cmd.checks.ToolCheckCommand
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
+import elide.tool.cli.cmd.init.InitCommand
 import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.cmd.runner.ToolTestCommand
 import elide.tool.cli.cmd.tool.jar.JarTool
 import elide.tool.cli.cmd.tool.javac.JavaCompiler
 import elide.tool.cli.cmd.tool.javadoc.JavadocTool
@@ -87,50 +90,56 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
 /** Entrypoint for the main Elide command-line tool. */
 @Command(
   name = Elide.TOOL_NAME,
-  description = ["", "Manage, configure, and run polyglot applications with Elide"],
   mixinStandardHelpOptions = false,
   version = [ELIDE_TOOL_VERSION],
-  scope = ScopeType.INHERIT,
+  scope = ScopeType.LOCAL,
   headerHeading = ELIDE_HEADER,
+  sortOptions = true,
+  showEndOfOptionsDelimiterInUsageHelp = true,
+  showAtFileInUsageHelp = true,
   synopsisHeading = "",
   subcommands = [
-    ToolInfoCommand::class,
-    ToolInvokeCommand::class,
-    HelpCommand::class,
     ToolShellCommand::class,
-    ToolPklCommand::class,
-    ToolDiscordCommand::class,
-    ToolProjectCommand::class,
     ToolBuildCommand::class,
+    ToolTestCommand::class,
+    ToolCheckCommand::class,
+    ToolProjectCommand::class,
+    InitCommand::class,
+    ToolInfoCommand::class,
+    HelpCommand::class,
+    ToolInvokeCommand::class,
     ToolWhichCommand::class,
     KotlinCompiler.KotlinCliTool::class,
     JavaCompiler.JavacCliTool::class,
     JarTool.JarCliTool::class,
     JavadocTool.JavadocCliTool::class,
+    ToolPklCommand::class,
+    ToolDiscordCommand::class,
   ],
   customSynopsis = [
     "",
-    " Usage:  elide @|bold,fg(yellow) srcfile.<js|ts|jsx|tsx|py|kts...>|@ [ARGS]",
+    " Usage:  elide @|bold,fg(yellow) srcfile.<js|ts|jsx|tsx|py|kts...>|@ [OPTIONS] [--] [ARG...]",
+    "    or:  elide @|bold,fg(yellow) <script>|@ [OPTIONS] [--] [ARG...]",
+    "    or:  elide @|bold,fg(cyan) build|test|check|project|@ [OPTIONS] [TASKS...]",
     "    or:  elide @|bold,fg(cyan) info|help|discord|bug...|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] [FILE] [ARG...]",
-    "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
-    "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [FILE] [ARG...]",
-    "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE]",
-    "    or:  elide @|bold,fg(cyan) run|repl|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) run|repl|@ --js [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) run|repl|@ --language=[@|bold,fg(green) JS|@] [OPTIONS] [FILE] [ARG...]",
-    "    or:  elide @|bold,fg(cyan) run|repl|@ --languages=[@|bold,fg(green) JS|@,@|bold,fg(green) PYTHON|@,...] [OPTIONS] [FILE] [ARG...]",
+    "    or:  elide @|bold,fg(cyan) js|node|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE] [FILE] [ARG...]",
+    "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE] [FILE] [ARG...]",
     "    or:  elide @|bold,fg(cyan) javac|kotlinc|jar|javadoc|...|@ [OPTIONS] [SOURCES...]",
     "",
-    " Toolchain:",
-    "    elide @|bold,fg(cyan) javac|@ -- [JAVAC_OPTIONS] [SOURCES...]",
-    "    elide @|bold,fg(cyan) kotlinc|@ -- [KOTLINC_OPTIONS] [SOURCES...]",
-    "    elide @|bold,fg(cyan) jar|javadoc|@ -- [TOOL_OPTIONS] [FILES...]",
+    "    where:",
+    "      @|bold,fg(yellow) srcfile.<js|ts|jsx|tsx|py|kts...>|@ is the source file to run.",
+    "      @|bold,fg(yellow) <script>|@ is the name of a script in (elide.pkl, package.json...)",
     "",
     " Projects:",
     "    elide @|bold,fg(cyan) project|@ [...]",
     "    elide @|bold,fg(cyan) build|@ [...]",
     "    elide @|bold,fg(cyan) test|check|lint|@ [...]",
+    "    elide @|bold,fg(cyan) which|@ [...]",
+    "",
+    " Toolchain:",
+    "    elide @|bold,fg(cyan) javac|@ -- [JAVAC_OPTIONS] [SOURCES...]",
+    "    elide @|bold,fg(cyan) kotlinc|@ -- [KOTLINC_OPTIONS] [SOURCES...]",
+    "    elide @|bold,fg(cyan) jar|javadoc|@ -- [TOOL_OPTIONS] [FILES...]",
   ],
 )
 @Suppress("MemberVisibilityCanBePrivate")
@@ -423,7 +432,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   @Parameters(
     index = "0",
     description = ["Source file to run."],
-    scope = ScopeType.INHERIT,
+    scope = ScopeType.LOCAL,
     arity = "0..1",
     paramLabel = "FILE",
   )
@@ -433,7 +442,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   @Parameters(
     index = "1",
     description = ["Arguments to pass"],
-    scope = ScopeType.INHERIT,
+    scope = ScopeType.LOCAL,
     arity = "0..*",
     paramLabel = "ARG",
   )

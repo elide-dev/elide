@@ -17,15 +17,15 @@ import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
 import io.micronaut.core.annotation.Introspected
 import org.pkl.cli.commands.*
-import picocli.CommandLine.Command
+import picocli.CommandLine
 import elide.tool.cli.*
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.ToolState
 
 /** Pass-through to the Pkl command-line tools. */
-@Command(
+@CommandLine.Command(
   name = "pkl",
-  description = ["%nRun the Pkl command-line tools"],
+  description = ["Run the Pkl command-line tools"],
   mixinStandardHelpOptions = false,
   synopsisHeading = "",
   customSynopsis = [],
@@ -33,8 +33,33 @@ import elide.tool.cli.ToolState
 )
 @Introspected
 class ToolPklCommand : AbstractSubcommand<ToolState, CommandContext>() {
+  @CommandLine.Option(
+    names = ["--help", "-h"],
+    help = true,
+    description = ["Show this help message and exit"],
+  )
+  var help: Boolean = false
+
   @Suppress("TooGenericExceptionCaught")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
+    if (help) {
+      output {
+        appendLine("Usage: elide pkl [OPTIONS] COMMAND [ARGS]...")
+        appendLine()
+        appendLine("Pkl is embedded in full within Elide's CLI. Use")
+        appendLine("Pkl's command-line tools, but enabled with Elide's")
+        appendLine("types, via `elide pkl ...`.")
+        appendLine()
+        appendLine("Available commands:")
+        appendLine("  eval       Evaluate a Pkl expression")
+        appendLine("  analyze    Analyze a Pkl package")
+        appendLine("  download   Download a Pkl package")
+        appendLine("  project    Manage Pkl projects")
+        appendLine("  repl       Start a Pkl REPL")
+        append("  test       Run tests for a Pkl package")
+      }
+      return success()
+    }
     val args = Statics.args.let { args ->
       args.drop(args.indexOf("pkl") + 1)
     }

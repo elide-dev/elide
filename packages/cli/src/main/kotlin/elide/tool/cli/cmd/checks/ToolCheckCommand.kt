@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -11,42 +11,37 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.discord
+package elide.tool.cli.cmd.checks
 
+import com.github.ajalt.mordant.terminal.Terminal
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
-import elide.annotations.Singleton
-import elide.tool.cli.AbstractSubcommand
+import jakarta.inject.Inject
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
+import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
-import elide.tool.cli.promptForLink
+import elide.tool.project.ProjectManager
 
-/** Opens the Discord invite redirect. */
 @Command(
-  name = "discord",
+  name = "check",
+  aliases = ["lint", "format", "fmt"],
+  description = ["Run configured checks or linters on the current project"],
   mixinStandardHelpOptions = true,
-  description = [
-    "Open or show a link to join the Elide Discord server.",
-  ],
-  customSynopsis = [
-    "elide @|bold,fg(cyan) discord|@",
-    "",
-  ]
 )
 @Introspected
-@Singleton internal open class ToolDiscordCommand : AbstractSubcommand<ToolState, CommandContext>() {
-  companion object {
-    private const val REDIRECT_TARGET = "https://elide.dev/discord"
-  }
+@ReflectiveAccess
+class ToolCheckCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
+  @Inject private lateinit var projectManager: ProjectManager
 
-  @Suppress("DEPRECATION")
+  // Terminal to use.
+  private val terminal by lazy { Terminal() }
+
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    promptForLink(
-      redirectTarget = REDIRECT_TARGET,
-      forThing = "Discord",
-      promptMessage = "Open link to join Discord",
-    )
+    output {
+      append("Check runner is not implemented yet.")
+    }
     return success()
   }
 }

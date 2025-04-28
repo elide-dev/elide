@@ -53,6 +53,10 @@ import elide.tool.project.ProjectManager
 
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
+    Elide.requestNatives(
+      server = true,
+      tooling = true,
+    )
     val version = Elide.version()
     val engine = Engine.create()
     val projectRoot = workdir.projectRoot()
@@ -101,7 +105,7 @@ import elide.tool.project.ProjectManager
       appendLine("- Tools: ${libraryGroupLoaded("tools").label()}")
       appendLine("- Transport: ${libraryGroupLoaded("transport").label()} (${transportEngine})")
       appendLine()
-      appendLine("Paths: ")
+      appendLine("Paths:")
       appendLine("- Project Root: ${projectRoot?.absolutePath}")
       appendLine("- Working Root: ${workingRoot.absolutePath}")
       appendLine("- Temporary Root: ${tempRoot.absolutePath}")

@@ -138,7 +138,7 @@ private typealias ContextAccessor = () -> PolyglotContext
 /** Interactive REPL entrypoint for Elide on the command-line. */
 @Command(
   name = "run",
-  description = ["%nRun a polyglot script, server, or interactive shell"],
+  description = ["Run a polyglot script, server, or interactive shell"],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
   abbreviateSynopsis = true,
@@ -151,15 +151,12 @@ private typealias ContextAccessor = () -> PolyglotContext
   ],
   customSynopsis = [
     "",
-    " Usage:  elide @|bold,fg(cyan) run|shell|serve|start|@ [OPTIONS] FILE",
-    "    or:  elide @|bold,fg(cyan) run|shell|serve|start|@ [OPTIONS] @|bold,fg(cyan) --stdin|@",
-    "    or:  elide @|bold,fg(cyan) run|shell|serve|start|@ [OPTIONS] [@|bold,fg(cyan) -c|@|@|bold,fg(cyan) --code|@ CODE]",
-    "    or:  elide @|bold,fg(cyan) run|shell|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) run|shell|@ --js [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) run|shell|@ --languages",
-    "    or:  elide @|bold,fg(cyan) run|shell|@ --language=[@|bold,fg(green) JS|@] [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS]",
-    "    or:  elide @|bold,fg(cyan) js|node|deno|@ [OPTIONS] FILE",
+    " Usage:  elide @|bold,fg(yellow) srcfile.<js|ts|jsx|tsx|py|kts...>|@ [OPTIONS] [--] [ARGS]",
+    "    or:  elide @|bold,fg(yellow) <script>|@ [OPTIONS] [--] [ARGS]",
+    "    or:  elide @|bold,fg(cyan) run|repl|serve|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE] " +
+            "[@|bold,fg(cyan) --stdin|@] [FILE] [ARGS]",
+    "    or:  elide @|bold,fg(cyan) js|node|python|...|@ [OPTIONS] [@|bold,fg(cyan) --code|@ CODE] [FILE] [ARGS]",
+    "",
   ],
 )
 @Introspected
@@ -196,7 +193,6 @@ private typealias ContextAccessor = () -> PolyglotContext
       "py" to "python",
       "python" to "python",
       "node" to "js",
-      "deno" to "js",
       "js" to "js",
       "javascript" to "js",
       "ruby" to "ruby",

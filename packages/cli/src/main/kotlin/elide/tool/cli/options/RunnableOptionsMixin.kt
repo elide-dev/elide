@@ -16,4 +16,4 @@ package elide.tool.cli.options
 /**
  * TBD.
  */
-sealed interface RunnableOptionsMixin : OptionsMixin
+sealed interface RunnableOptionsMixin : OptionsMixin<RunnableOptionsMixin>

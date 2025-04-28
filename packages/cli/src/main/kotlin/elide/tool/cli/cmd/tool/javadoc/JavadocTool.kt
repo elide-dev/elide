@@ -50,9 +50,10 @@ private val javadoc = Tool.describe(
   version = System.getProperty("java.version"),
   docs = URI.create("https://docs.oracle.com/javase/8/docs/technotes/guides/javadoc/index.html"),
   description = JAVADOCTOOL_DESCRIPTION,
+  registered = true,
   helpText = """
-    Usage:
-        elide javadoc <elide options> -- [options] [packagenames] [sourcefiles] [@files]
+    Usage: elide javadoc <elide options> -- [options] [packagenames] [sourcefiles] [@files]
+    Java: ${System.getProperty("java.version")}
 
     where possible elide options include:
       (None at this time.)
@@ -252,7 +253,7 @@ private val javadoc = Tool.describe(
     
     GNU-style options may use = instead of whitespace to separate the name of an
     option from its value
-  """.trimIndent()
+"""
 )
 
 // Argument names which require a value following, or separated by `=`.

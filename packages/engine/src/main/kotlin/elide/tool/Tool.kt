@@ -241,7 +241,7 @@ public sealed interface Tool {
       version = version,
       description = description,
       environment = environment,
-      helpText = helpText,
+      helpText = helpText?.trimIndent(),
     )
 
     /**
@@ -281,7 +281,7 @@ public sealed interface Tool {
         version = version,
         description = description,
         environment = environment,
-        helpText = helpText,
+        helpText = helpText?.trimIndent(),
       ),
       inputs = inputs,
       outputs = outputs,

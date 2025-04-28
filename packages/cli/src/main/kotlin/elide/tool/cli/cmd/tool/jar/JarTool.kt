@@ -25,7 +25,6 @@ import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.spi.ToolProvider
 import jakarta.inject.Singleton
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -59,8 +58,10 @@ private val jartool = Tool.describe(
   version = System.getProperty("java.version"),
   docs = URI.create("https://docs.oracle.com/javase/8/docs/technotes/guides/jar/index.html"),
   description = JARTOOL_DESCRIPTION,
+  registered = true,
   helpText = """
     Usage: elide jar <elide option...> -- [OPTION...] [ [--release VERSION] [-C dir] files] ...
+    Java: ${System.getProperty("java.version")}
 
     jar creates an archive for classes and resources, and can manipulate or
     restore individual classes or resources from an archive.
@@ -68,7 +69,7 @@ private val jartool = Tool.describe(
     where possible elide options include:
       (None at this time.)
 
-     Examples:
+    Examples:
      # Create an archive called classes.jar with two class files:
      elide jar --create --file classes.jar Foo.class Bar.class
 
@@ -90,11 +91,11 @@ private val jartool = Tool.describe(
     To shorten or simplify the jar command, you can specify arguments in a separate
     text file and pass it to the jar command with the at sign (@) as a prefix.
 
-     Examples:
+    Examples:
      # Read additional options and list of class files from the file classes.list
      jar --create --file my.jar @classes.list
 
-     Main operation mode:
+    Main operation mode:
 
       -c, --create               Create the archive. When the archive file name specified
                                  by -f or --file contains a path, missing parent directories
@@ -114,7 +115,7 @@ private val jartool = Tool.describe(
                                  jar archive is consistent across all different release
                                  versions.
 
-     Operation modifiers valid in any mode:
+    Operation modifiers valid in any mode:
     
       -C DIR                     Change to the specified directory and include the
                                  following file. When used in extract mode, extracts
@@ -125,7 +126,7 @@ private val jartool = Tool.describe(
                                  of the jar (i.e. META-INF/versions/VERSION/)
       -v, --verbose              Generate verbose output on standard output
 
-     Operation modifiers valid only in create and update mode:
+    Operation modifiers valid only in create and update mode:
 
       -e, --main-class=CLASSNAME The application entry point for stand-alone
                                  applications bundled into a modular, or executable,
@@ -142,14 +143,14 @@ private val jartool = Tool.describe(
       -p, --module-path          Location of module dependence for generating
                                  the hash
 
-     Operation modifiers valid only in create, update, and generate-index mode:
+    Operation modifiers valid only in create, update, and generate-index mode:
     
       -0, --no-compress          Store only; use no ZIP compression
           --date=TIMESTAMP       The timestamp in ISO-8601 extended offset date-time with
                                  optional time-zone format, to use for the timestamps of
                                  entries, e.g. "2022-02-12T12:30:00-05:00"
 
-     Operation modifiers valid only in extract mode:
+    Operation modifiers valid only in extract mode:
 
       -k, --keep-old-files       Do not overwrite existing files.
                                  If a Jar file entry with the same name exists in the target
@@ -159,21 +160,21 @@ private val jartool = Tool.describe(
                                  Also note that some file system can be case insensitive.
       --dir                    Directory into which the jar will be extracted
 
-     Other options:
+    Other options:
 
       -?, -h, --help[:compat]    Give this, or optionally the compatibility, help
           --help-extra           Give help on extra options
           --version              Print program version
 
-     An archive is a modular jar if a module descriptor, 'module-info.class', is
-     located in the root of the given directories, or the root of the jar archive
-     itself. The following operations are only valid when creating a modular jar,
-     or updating an existing non-modular jar: '--module-version',
-     '--hash-modules', and '--module-path'.
+    An archive is a modular jar if a module descriptor, 'module-info.class', is
+    located in the root of the given directories, or the root of the jar archive
+    itself. The following operations are only valid when creating a modular jar,
+    or updating an existing non-modular jar: '--module-version',
+    '--hash-modules', and '--module-path'.
 
-     Mandatory or optional arguments to long options are also mandatory or optional
-     for any corresponding short options.
-  """.trimIndent()
+    Mandatory or optional arguments to long options are also mandatory or optional
+    for any corresponding short options.
+"""
 )
 
 // Argument names which require a value following, or separated by `=`.

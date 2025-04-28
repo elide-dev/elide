@@ -25,15 +25,35 @@ import elide.tool.exec.whichAll
 
 @CommandLine.Command(
   name = "which",
-  description = ["Print the path to a tool binary"],
+  description = [
+    "Print the path to a tool binary",
+    "",
+    "Paths are resolved using the following sources, in order:",
+    "- Local binaries in @|bold .dev/bin|@",
+    "- Installed Node tools in @|bold node_modules/.bin|@",
+    "- Installed Python tools in @|bold .dev/venv/bin|@",
+    "- User binaries at @|bold ~/bin|@",
+    "- System PATH",
+    "",
+    "Passing @|bold -a|-all|@ will print all paths instead of the first found.",
+    "",
+    "Examples:",
+    "  elide which esbuild",
+    "  elide which -a ruff",
+  ],
   mixinStandardHelpOptions = true,
+  customSynopsis = [
+    "elide @|bold,fg(cyan) which|@ BIN",
+    "   or: elide @|bold,fg(cyan) which|@ [OPTIONS] BIN",
+    "",
+  ],
 )
 class ToolWhichCommand : AbstractSubcommand<ToolState, CommandContext>() {
   @CommandLine.Parameters(
     index = "0",
     arity = "0..1",
     description = ["Tool name to resolve"],
-    paramLabel = "TOOL",
+    paramLabel = "BIN",
     hideParamSyntax = true,
   )
   var tool: String? = null

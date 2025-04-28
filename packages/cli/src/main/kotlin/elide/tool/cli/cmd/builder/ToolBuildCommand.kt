@@ -29,7 +29,7 @@ import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import com.github.ajalt.mordant.widgets.progress.text
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
-import picocli.CommandLine.Command
+import picocli.CommandLine
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,9 +48,9 @@ import elide.exec.execute
 import elide.exec.on
 import elide.runtime.gvm.Virtual
 import elide.tool.asArgumentString
-import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
+import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
 import elide.tool.exec.SubprocessRunner
 import elide.tool.exec.SubprocessRunner.delegateTask
@@ -66,15 +66,52 @@ internal suspend fun CommandContext.emitCommand(task: SubprocessRunner.CommandLi
   }
 }
 
-@Command(
+@CommandLine.Command(
   name = "build",
-  description = ["Build the project, or run the `build` script"],
   mixinStandardHelpOptions = true,
+  description = [
+    "For this or a specified project, run the build, or a script mapped at the name " +
+      "'build' within @|bold elide.pkl|@, or project manifests like @|bold package.json|@.",
+    "",
+    "Running @|bold elide build|@ without arguments builds all tasks in the project's graph." +
+      "Running @|bold elide build <task...>|@ runs the specified task(s) and their dependencies.",
+    "",
+    "After the `--` token, any arguments passed via the command-line are considered arguments" +
+      " to the build. Such arguments are made available to executing tasks. Argument files are" +
+      " supported and may be passed as @|bold @<file>|@.",
+    "",
+    "Project structure and dependencies are managed via @|bold elide.pkl|@.",
+    "",
+    "For more information, run @|fg(magenta) elide help projects|@.",
+  ],
+  customSynopsis = [
+    "elide @|bold,fg(cyan) build|@",
+    "   or: elide @|bold,fg(cyan) build|@ [OPTIONS] [TASKS] [--] [ARGS]",
+    "   or: elide @|bold,fg(cyan) build|@ [@|bold,fg(cyan) -p|@/@|bold,fg(cyan) --project|@=<path>] [OPTIONS] " +
+      "[TASKS] [--] [ARGS]",
+    "",
+  ],
 )
 @Introspected
 @ReflectiveAccess
-internal class ToolBuildCommand : AbstractSubcommand<ToolState, CommandContext>() {
+internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   @Inject private lateinit var projectManager: ProjectManager
+
+  @CommandLine.Option(
+    names = ["-d", "--dry-run"],
+    description = ["Don't actually run any tasks"],
+  )
+  internal var dryRun: Boolean = false
+
+  /** Script file arguments. */
+  @CommandLine.Parameters(
+    index = "0",
+    description = ["Tasks or scripts to build or run"],
+    scope = CommandLine.ScopeType.LOCAL,
+    arity = "0..*",
+    paramLabel = "TASK",
+  )
+  internal var tasks: List<String>? = null
 
   // Terminal to use.
   private val terminal by lazy { Terminal() }
@@ -321,7 +358,7 @@ internal class ToolBuildCommand : AbstractSubcommand<ToolState, CommandContext>(
   }
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val project = projectManager.resolveProject(commons().projectPath) ?: return CommandResult.err(
+    val project = projectManager.resolveProject(projectOptions().projectPath) ?: return CommandResult.err(
       message = "No valid Elide project found, nothing to build"
     )
 

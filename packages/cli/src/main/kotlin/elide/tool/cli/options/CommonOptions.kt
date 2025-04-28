@@ -17,9 +17,7 @@ import ch.qos.logback.classic.Level
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import org.slf4j.LoggerFactory
-import picocli.CommandLine
 import picocli.CommandLine.Option
-import picocli.CommandLine.ScopeType
 import java.util.*
 import kotlin.properties.Delegates
 import elide.tool.cli.Statics
@@ -32,7 +30,7 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
  * Defines common command line options shared by all CLI sub-commands; these are basic flags which control output and
  * input, execution, logging, and other basic CLI facilities.
  */
-@Introspected @ReflectiveAccess class CommonOptions : OptionsMixin {
+@Introspected @ReflectiveAccess class CommonOptions : OptionsMixin<CommonOptions> {
   private val logging by lazy {
     Statics.logging
   }
@@ -92,6 +90,7 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
   @Option(
     names = ["--timeout"],
     description = ["Timeout to apply when exiting (in seconds)."],
+    paramLabel = "secs",
     defaultValue = "$DEFAULT_TIMEOUT_SECONDS",
   )
   var timeoutSeconds: Int = DEFAULT_TIMEOUT_SECONDS
@@ -112,15 +111,7 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
   )
   var internalOptions: Map<String, Optional<String>> = emptyMap()
 
-  /** Specifies an explicit path to an Elide project to use. */
-  @Option(
-    names = ["-p", "--project"],
-    description = ["Path to the project to build"],
-    paramLabel = "<path>",
-  )
-  var projectPath: String? = null
-
-  internal fun merge(other: CommonOptions?): CommonOptions {
+  override fun merge(other: CommonOptions?): CommonOptions {
     val options = CommonOptions()
     options.verbose = this.verbose || other?.verbose == true
     options.quiet = this.quiet || other?.quiet == true
@@ -129,7 +120,6 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
     options.timeoutSeconds = this.timeoutSeconds + (other?.timeoutSeconds ?: 0)
     options.systemProperties = this.systemProperties + (other?.systemProperties ?: emptyMap())
     options.internalOptions = this.internalOptions + (other?.internalOptions ?: emptyMap())
-    options.projectPath = this.projectPath ?: other?.projectPath
     return options
   }
 }

@@ -62,8 +62,10 @@ private val javac = Tool.describe(
   version = System.getProperty("java.version"),
   docs = URI.create("https://docs.oracle.com/javase/8/docs/technotes/guides/javac/index.html"),
   description = JAVAC_DESCRIPTION,
+  registered = true,
   helpText = """
   Usage: elide javac <elide options> -- <options> <source files>
+  Java: ${System.getProperty("java.version")}
 
   where possible elide options include:
     (None at this time.)
@@ -144,7 +146,7 @@ private val javac = Tool.describe(
   -verbose                     Output messages about what the compiler is doing
   --version, -version          Version information
   -Werror                      Terminate compilation if warnings occur
-  """
+"""
 )
 
 /**

@@ -51,10 +51,10 @@ import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.cmd.runner.ToolTestCommand
-import elide.tool.cli.cmd.tool.jar.JarTool
-import elide.tool.cli.cmd.tool.javac.JavaCompiler
-import elide.tool.cli.cmd.tool.javadoc.JavadocTool
-import elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler
+import elide.tool.cli.cmd.tool.jar.JarToolAdapter
+import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
+import elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter
+import elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapter
 import elide.tool.cli.options.CommonOptions
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
@@ -109,10 +109,10 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     HelpCommand::class,
     ToolInvokeCommand::class,
     ToolWhichCommand::class,
-    KotlinCompiler.KotlinCliTool::class,
-    JavaCompiler.JavacCliTool::class,
-    JarTool.JarCliTool::class,
-    JavadocTool.JavadocCliTool::class,
+    KotlinCompilerAdapter.KotlinCliTool::class,
+    JavaCompilerAdapter.JavacCliTool::class,
+    JarToolAdapter.JarCliTool::class,
+    JavadocToolAdapter.JavadocCliTool::class,
     ToolPklCommand::class,
     ToolDiscordCommand::class,
   ],

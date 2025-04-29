@@ -13,15 +13,13 @@
 
 @file:Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
 
-package elide.tool.cli.cmd.tool.javadoc
+package elide.tooling.jvm
 
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import jdk.javadoc.internal.tool.JavadocToolProvider
-import picocli.CommandLine
 import java.io.PrintWriter
 import java.net.URI
-import jakarta.inject.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.tool.Argument
@@ -32,19 +30,16 @@ import elide.tool.MutableArguments
 import elide.tool.Outputs
 import elide.tool.Tool
 import elide.tool.asArgumentString
-import elide.tool.cli.cmd.tool.AbstractGenericTool
-import elide.tool.cli.cmd.tool.AbstractTool
-import elide.tool.cli.cmd.tool.DelegatedToolCommand
-import elide.tool.cli.cmd.tool.javadoc.JavadocTool.JavadocInputs
+import elide.tooling.GenericTool
 
 // Name of the `javadoc` tool.
-private const val JAVADOC = "javadoc"
+public const val JAVADOC: String = "javadoc"
 
 // Description to show for `javadoc`.
-private const val JAVADOCTOOL_DESCRIPTION = "Renders Java code into documentation."
+public const val JAVADOCTOOL_DESCRIPTION: String = "Renders Java code into documentation."
 
 // Tool description.
-private val javadoc = Tool.describe(
+public val javadoc: Tool.CommandLineTool = Tool.describe(
   name = JAVADOC,
   label = "Javadoc",
   version = System.getProperty("java.version"),
@@ -256,76 +251,17 @@ private val javadoc = Tool.describe(
 """
 )
 
-// Argument names which require a value following, or separated by `=`.
-private val argNamesThatExpectValues = sortedSetOf(
-  // Javadoc Parameters
-  "--add-modules",
-  "-bootclasspath",
-  "--class-path", "-classpath", "-cp",
-  "-doclet",
-  "-docletpath",
-  "-encoding",
-  "-exclude",
-  "--expand-requires",
-  "-extdirs",
-  "--legal-notices",
-  "--limit-modules",
-  "--module",
-  "--module-path", "-p",
-  "--module-source-path",
-  "--release",
-  "--show-members",
-  "--show-module-contents",
-  "--show-packages",
-  "--show-types",
-  "--source", "-source",
-  "--source-path", "-sourcepath",
-  "-subpackages",
-  "--system",
-  "--upgrade-module-path",
-
-  // Doclet Parameters (Standard)
-  "--add-script",
-  "--add-stylesheet",
-  "-bottom",
-  "-charset",
-  "-d",
-  "-docencoding",
-  "-doctitle",
-  "-excludedocfilessubdir",
-  "-footer",
-  "-group",
-  "-header",
-  "-helpfile",
-  "-link",
-  "--link-modularity-mismatch",
-  "-linkoffline",
-  "--link-platform-properties",
-  "--main-stylesheet", "-stylesheetfile",
-  "-noqualifier",
-  "--override-methods",
-  "-overview",
-  "--since",
-  "--since-label",
-  "--snippet-path",
-  "-sourcetab",
-  "--spec-base-url",
-  "-taglet",
-  "-top",
-  "-windowtitle",
-)
-
 /**
  * # Javadoc Tool
  *
- * Implements an [AbstractTool] adapter to `javadoc`. Arguments are passed to the tool verbatim from the command-line.
+ * Implements a [GenericTool] adapter to `javadoc`. Arguments are passed to the tool verbatim from the command-line.
  */
-@ReflectiveAccess @Introspected class JavadocTool private constructor (
+@ReflectiveAccess @Introspected public class JavadocTool (
   args: Arguments,
   env: Environment,
   override val inputs: JavadocInputs,
   override val outputs: JavadocOutputs,
-): AbstractGenericTool<JavadocToolProvider, JavadocInputs, JavadocTool.JavadocOutputs>(info = javadoc.extend(
+) : GenericTool<JavadocToolProvider, JavadocTool.JavadocInputs, JavadocTool.JavadocOutputs>(info = javadoc.extend(
   args,
   env,
 ).using(
@@ -348,11 +284,11 @@ private val argNamesThatExpectValues = sortedSetOf(
    *
    * Implements understanding of inputs for `javadoc`.
    */
-  sealed interface JavadocInputs: Inputs.Files {
+  public sealed interface JavadocInputs : Inputs.Files {
     /**
      * Provided when no inputs are available.
      */
-    data object NoInputs: JavadocInputs
+    public data object NoInputs : JavadocInputs
   }
 
   /**
@@ -360,18 +296,18 @@ private val argNamesThatExpectValues = sortedSetOf(
    *
    * Implements understanding of javadoc tool outputs.
    */
-  sealed interface JavadocOutputs {
+  public sealed interface JavadocOutputs {
     /**
      * Flatten into an [Outputs] type.
      *
      * @return Outputs value.
      */
-    fun flatten(): Outputs
+    public fun flatten(): Outputs
 
     /**
      * Provided when no outputs are available.
      */
-    data object NoOutputs: JavadocOutputs, Outputs.None {
+    public data object NoOutputs : JavadocOutputs, Outputs.None {
       override fun flatten(): Outputs = this
     }
   }
@@ -399,29 +335,5 @@ private val argNamesThatExpectValues = sortedSetOf(
         "--legal-notices" to "none",
       )
     )
-  }
-
-  @CommandLine.Command(
-    name = JAVADOC,
-    description = [JAVADOCTOOL_DESCRIPTION],
-    mixinStandardHelpOptions = false,
-  )
-  @Singleton
-  @ReflectiveAccess
-  @Introspected
-  class JavadocCliTool: DelegatedToolCommand<JavadocTool>(javadoc) {
-    @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
-
-    override fun configure(args: Arguments, environment: Environment): JavadocTool = gatherArgs(
-      argNamesThatExpectValues,
-      args,
-    ).let { _ ->
-      JavadocTool(
-        args = args,
-        env = environment,
-        inputs = JavadocInputs.NoInputs,
-        outputs = JavadocOutputs.NoOutputs,
-      )
-    }
   }
 }

@@ -1,3 +1,57 @@
+public abstract class elide/tooling/AbstractTool : elide/tool/Tool$EmbeddedTool {
+	public static final field Companion Lelide/tooling/AbstractTool$Companion;
+	protected fun <init> (Lelide/tool/Tool$CommandLineTool;)V
+	public final fun delegateToTool (Ljava/nio/file/Path;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun embeddedToolError (Lelide/tool/Tool$CommandLineTool;Ljava/lang/String;ILjava/lang/Throwable;)Ljava/lang/Void;
+	public fun getDescription ()Ljava/lang/String;
+	public fun getDocs ()Ljava/net/URI;
+	public fun getInfo ()Lelide/tool/Tool$CommandLineTool;
+	public fun getLabel ()Ljava/lang/String;
+	public fun getLogging ()Lelide/runtime/Logger;
+	public fun getName ()Ljava/lang/String;
+	public fun getVersion ()Ljava/lang/String;
+	public abstract fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun supported ()Z
+}
+
+public final class elide/tooling/AbstractTool$Companion {
+	public final fun embeddedToolError (Lelide/tool/Tool$CommandLineTool;Ljava/lang/String;ILjava/lang/Throwable;)Ljava/lang/Void;
+	public static synthetic fun embeddedToolError$default (Lelide/tooling/AbstractTool$Companion;Lelide/tool/Tool$CommandLineTool;Ljava/lang/String;ILjava/lang/Throwable;ILjava/lang/Object;)Ljava/lang/Void;
+}
+
+public class elide/tooling/AbstractTool$EmbeddedToolError : java/lang/RuntimeException {
+	public fun <init> (Lelide/tool/Tool$CommandLineTool;ILjava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Lelide/tool/Tool$CommandLineTool;ILjava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getExitCode ()I
+	public final fun getTool ()Lelide/tool/Tool$CommandLineTool;
+}
+
+public abstract interface class elide/tooling/AbstractTool$EmbeddedToolState {
+	public abstract fun getResourcesPath ()Ljava/nio/file/Path;
+}
+
+public abstract class elide/tooling/GenericTool : elide/tooling/AbstractTool {
+	public static final field Companion Lelide/tooling/GenericTool$Companion;
+	public fun <init> (Lelide/tool/Tool$CommandLineTool;)V
+	public fun amendArgs (Lelide/tool/MutableArguments;)V
+	public abstract fun createTool ()Ljava/lang/Object;
+	public static final fun gatherArgs (Ljava/util/SortedSet;Lelide/tool/Arguments;)Lkotlin/Pair;
+	public abstract fun getInputs ()Ljava/lang/Object;
+	public abstract fun getOutputs ()Ljava/lang/Object;
+	public abstract fun getTaskDescription ()Ljava/lang/String;
+	public abstract fun getToolLogger ()Lelide/runtime/Logger;
+	public fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun resolveInputs ()Ljava/lang/Object;
+	public fun resolveOutputs (Ljava/io/StringWriter;Ljava/io/StringWriter;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun supported ()Z
+	public fun toolExec (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun toolRun (Ljava/io/PrintWriter;Ljava/io/PrintWriter;[Ljava/lang/String;)I
+}
+
+public final class elide/tooling/GenericTool$Companion {
+	public final fun gatherArgs (Ljava/util/SortedSet;Lelide/tool/Arguments;)Lkotlin/Pair;
+}
+
 public final class elide/tooling/config/BuildConfiguration {
 	public static final field INSTANCE Lelide/tooling/config/BuildConfiguration;
 	public static final fun configure (Lelide/tooling/project/ElideProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -164,6 +218,200 @@ public final class elide/tooling/js/resolver/NpmResolver : elide/tooling/deps/De
 	public fun seal (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class elide/tooling/jvm/JarTool : elide/tooling/GenericTool {
+	public static final field Companion Lelide/tooling/jvm/JarTool$Companion;
+	public fun <init> (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/jvm/JarTool$JarToolInputs;Lelide/tooling/jvm/JarTool$JarToolOutputs;)V
+	public fun amendArgs (Lelide/tool/MutableArguments;)V
+	public static final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/jvm/JarTool$JarToolInputs;Lelide/tooling/jvm/JarTool$JarToolOutputs;)Lelide/tooling/jvm/JarTool;
+	public synthetic fun createTool ()Ljava/lang/Object;
+	public fun createTool ()Lsun/tools/jar/JarToolProvider;
+	public fun getInputs ()Lelide/tooling/jvm/JarTool$JarToolInputs;
+	public synthetic fun getInputs ()Ljava/lang/Object;
+	public fun getOutputs ()Lelide/tooling/jvm/JarTool$JarToolOutputs;
+	public synthetic fun getOutputs ()Ljava/lang/Object;
+	public fun getTaskDescription ()Ljava/lang/String;
+	public fun getToolLogger ()Lelide/runtime/Logger;
+	public static final fun jarFiles (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JarTool$JarToolInputs;
+	public static final fun outputJar (Ljava/nio/file/Path;Ljava/nio/file/Path;)Lelide/tooling/jvm/JarTool$JarToolOutputs;
+	public fun toolRun (Ljava/io/PrintWriter;Ljava/io/PrintWriter;[Ljava/lang/String;)I
+}
+
+public final class elide/tooling/jvm/JarTool$Companion {
+	public final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/jvm/JarTool$JarToolInputs;Lelide/tooling/jvm/JarTool$JarToolOutputs;)Lelide/tooling/jvm/JarTool;
+	public final fun jarFiles (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JarTool$JarToolInputs;
+	public final fun outputJar (Ljava/nio/file/Path;Ljava/nio/file/Path;)Lelide/tooling/jvm/JarTool$JarToolOutputs;
+	public static synthetic fun outputJar$default (Lelide/tooling/jvm/JarTool$Companion;Ljava/nio/file/Path;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/tooling/jvm/JarTool$JarToolOutputs;
+}
+
+public abstract interface class elide/tooling/jvm/JarTool$JarToolInputs : elide/tool/Inputs$Files {
+}
+
+public final class elide/tooling/jvm/JarTool$JarToolInputs$InputFiles : elide/tooling/jvm/JarTool$JarToolInputs {
+	public static final synthetic fun box-impl (Lkotlinx/collections/immutable/PersistentList;)Lelide/tooling/jvm/JarTool$JarToolInputs$InputFiles;
+	public static fun constructor-impl (Lkotlinx/collections/immutable/PersistentList;)Lkotlinx/collections/immutable/PersistentList;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlinx/collections/immutable/PersistentList;Lkotlinx/collections/immutable/PersistentList;)Z
+	public final fun getFiles ()Lkotlinx/collections/immutable/PersistentList;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlinx/collections/immutable/PersistentList;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlinx/collections/immutable/PersistentList;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlinx/collections/immutable/PersistentList;
+}
+
+public final class elide/tooling/jvm/JarTool$JarToolInputs$NoInputs : elide/tooling/jvm/JarTool$JarToolInputs {
+	public static final field INSTANCE Lelide/tooling/jvm/JarTool$JarToolInputs$NoInputs;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/jvm/JarTool$JarToolOutputs {
+	public abstract fun flatten ()Lelide/tool/Outputs;
+}
+
+public final class elide/tooling/jvm/JarTool$JarToolOutputs$Jar : elide/tool/Outputs$Disk$File, elide/tooling/jvm/JarTool$JarToolOutputs {
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/tooling/jvm/JarTool$JarToolOutputs$Jar;
+	public static fun constructor-impl (Lkotlin/Pair;)Lkotlin/Pair;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public fun flatten ()Lelide/tool/Outputs;
+	public static fun flatten-impl (Lkotlin/Pair;)Lelide/tool/Outputs;
+	public static final fun getDirectory-impl (Lkotlin/Pair;)Ljava/nio/file/Path;
+	public static final fun getPath-impl (Lkotlin/Pair;)Ljava/nio/file/Path;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/tooling/jvm/JarTool$JarToolOutputs$NoOutputs : elide/tool/Outputs$None, elide/tooling/jvm/JarTool$JarToolOutputs {
+	public static final field INSTANCE Lelide/tooling/jvm/JarTool$JarToolOutputs$NoOutputs;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun flatten ()Lelide/tool/Outputs;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/jvm/JarToolKt {
+	public static final field JAR Ljava/lang/String;
+	public static final field JARTOOL_DESCRIPTION Ljava/lang/String;
+	public static final fun getJartool ()Lelide/tool/Tool$CommandLineTool;
+}
+
+public final class elide/tooling/jvm/JavaCompiler : elide/tooling/AbstractTool {
+	public static final field Companion Lelide/tooling/jvm/JavaCompiler$Companion;
+	public fun <init> (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;)V
+	public static final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;
+	public static final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;)Lelide/tooling/jvm/JavaCompiler;
+	public final fun getArgs ()Lelide/tool/Arguments;
+	public final fun getEnv ()Lelide/tool/Environment;
+	public final fun getInputs ()Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
+	public final fun getOutputs ()Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;
+	public fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun jvmStyleArgs (Lelide/tool/Tool$CommandLineTool;Lelide/tool/Arguments;)Lkotlin/Pair;
+	public static final fun resolveJavaToolchain (Lelide/tool/Tool$CommandLineTool;)Ljava/nio/file/Path;
+	public static final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
+	public fun supported ()Z
+}
+
+public final class elide/tooling/jvm/JavaCompiler$Companion {
+	public final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;
+	public final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;)Lelide/tooling/jvm/JavaCompiler;
+	public final fun jvmStyleArgs (Lelide/tool/Tool$CommandLineTool;Lelide/tool/Arguments;)Lkotlin/Pair;
+	public final fun resolveJavaToolchain (Lelide/tool/Tool$CommandLineTool;)Ljava/nio/file/Path;
+	public final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
+}
+
+public abstract interface class elide/tooling/jvm/JavaCompiler$JavaCompilerInputs : elide/tool/Inputs$Files {
+}
+
+public final class elide/tooling/jvm/JavaCompiler$JavaCompilerInputs$SourceFiles : elide/tooling/jvm/JavaCompiler$JavaCompilerInputs {
+	public static final synthetic fun box-impl (Lkotlinx/collections/immutable/PersistentList;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs$SourceFiles;
+	public static fun constructor-impl (Lkotlinx/collections/immutable/PersistentList;)Lkotlinx/collections/immutable/PersistentList;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlinx/collections/immutable/PersistentList;Lkotlinx/collections/immutable/PersistentList;)Z
+	public final fun getFiles ()Lkotlinx/collections/immutable/PersistentList;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlinx/collections/immutable/PersistentList;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlinx/collections/immutable/PersistentList;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlinx/collections/immutable/PersistentList;
+}
+
+public abstract interface class elide/tooling/jvm/JavaCompiler$JavaCompilerOutputs {
+	public abstract fun flatten ()Lelide/tool/Outputs;
+}
+
+public final class elide/tooling/jvm/JavaCompiler$JavaCompilerOutputs$Classes : elide/tool/Outputs$Disk$Directory, elide/tooling/jvm/JavaCompiler$JavaCompilerOutputs {
+	public static final synthetic fun box-impl (Ljava/nio/file/Path;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs$Classes;
+	public static fun constructor-impl (Ljava/nio/file/Path;)Ljava/nio/file/Path;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/nio/file/Path;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/nio/file/Path;Ljava/nio/file/Path;)Z
+	public fun flatten ()Lelide/tool/Outputs;
+	public static fun flatten-impl (Ljava/nio/file/Path;)Lelide/tool/Outputs;
+	public final fun getDirectory ()Ljava/nio/file/Path;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/nio/file/Path;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/nio/file/Path;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/nio/file/Path;
+}
+
+public final class elide/tooling/jvm/JavaCompilerKt {
+	public static final field JAVAC Ljava/lang/String;
+	public static final field JAVAC_DESCRIPTION Ljava/lang/String;
+	public static final fun getJavaIsSupported ()Z
+	public static final fun getJavac ()Lelide/tool/Tool$CommandLineTool;
+}
+
+public final class elide/tooling/jvm/JavadocTool : elide/tooling/GenericTool {
+	public fun <init> (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/jvm/JavadocTool$JavadocInputs;Lelide/tooling/jvm/JavadocTool$JavadocOutputs;)V
+	public fun amendArgs (Lelide/tool/MutableArguments;)V
+	public synthetic fun createTool ()Ljava/lang/Object;
+	public fun createTool ()Ljdk/javadoc/internal/tool/JavadocToolProvider;
+	public fun getInputs ()Lelide/tooling/jvm/JavadocTool$JavadocInputs;
+	public synthetic fun getInputs ()Ljava/lang/Object;
+	public fun getOutputs ()Lelide/tooling/jvm/JavadocTool$JavadocOutputs;
+	public synthetic fun getOutputs ()Ljava/lang/Object;
+	public fun getTaskDescription ()Ljava/lang/String;
+	public fun getToolLogger ()Lelide/runtime/Logger;
+	public fun toolRun (Ljava/io/PrintWriter;Ljava/io/PrintWriter;[Ljava/lang/String;)I
+}
+
+public abstract interface class elide/tooling/jvm/JavadocTool$JavadocInputs : elide/tool/Inputs$Files {
+}
+
+public final class elide/tooling/jvm/JavadocTool$JavadocInputs$NoInputs : elide/tooling/jvm/JavadocTool$JavadocInputs {
+	public static final field INSTANCE Lelide/tooling/jvm/JavadocTool$JavadocInputs$NoInputs;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/jvm/JavadocTool$JavadocOutputs {
+	public abstract fun flatten ()Lelide/tool/Outputs;
+}
+
+public final class elide/tooling/jvm/JavadocTool$JavadocOutputs$NoOutputs : elide/tool/Outputs$None, elide/tooling/jvm/JavadocTool$JavadocOutputs {
+	public static final field INSTANCE Lelide/tooling/jvm/JavadocTool$JavadocOutputs$NoOutputs;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun flatten ()Lelide/tool/Outputs;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/jvm/JavadocToolKt {
+	public static final field JAVADOC Ljava/lang/String;
+	public static final field JAVADOCTOOL_DESCRIPTION Ljava/lang/String;
+	public static final fun getJavadoc ()Lelide/tool/Tool$CommandLineTool;
+}
+
 public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/tool/ClasspathsProvider, elide/tooling/deps/DependencyResolver$MavenResolver, java/lang/AutoCloseable {
 	public static final field Companion Lelide/tooling/jvm/resolver/MavenAetherResolver$Companion;
 	public fun classpathProvider (Lelide/tool/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -177,6 +425,86 @@ public final class elide/tooling/jvm/resolver/MavenAetherResolver$Companion {
 
 public final class elide/tooling/jvm/resolver/MavenResolverErrors : java/lang/RuntimeException {
 	public final fun getErrors ()Ljava/util/List;
+}
+
+public final class elide/tooling/kotlin/KotlinCompiler : elide/tooling/AbstractTool {
+	public static final field Companion Lelide/tooling/kotlin/KotlinCompiler$Companion;
+	public fun <init> (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;)V
+	public static final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
+	public static final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;)Lelide/tooling/kotlin/KotlinCompiler;
+	public final fun getInputs ()Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;
+	public final fun getOutputs ()Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
+	public fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun outputJar (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
+	public static final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;
+	public fun supported ()Z
+}
+
+public final class elide/tooling/kotlin/KotlinCompiler$Companion {
+	public final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
+	public final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;)Lelide/tooling/kotlin/KotlinCompiler;
+	public final fun outputJar (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
+	public final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;
+}
+
+public abstract interface class elide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs : elide/tool/Inputs$Files {
+}
+
+public final class elide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs$SourceFiles : elide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs {
+	public static final synthetic fun box-impl (Lkotlinx/collections/immutable/PersistentList;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs$SourceFiles;
+	public static fun constructor-impl (Lkotlinx/collections/immutable/PersistentList;)Lkotlinx/collections/immutable/PersistentList;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlinx/collections/immutable/PersistentList;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlinx/collections/immutable/PersistentList;Lkotlinx/collections/immutable/PersistentList;)Z
+	public final fun getFiles ()Lkotlinx/collections/immutable/PersistentList;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlinx/collections/immutable/PersistentList;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlinx/collections/immutable/PersistentList;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlinx/collections/immutable/PersistentList;
+}
+
+public abstract interface class elide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs {
+	public abstract fun flatten ()Lelide/tool/Outputs;
+}
+
+public final class elide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs$Classes : elide/tool/Outputs$Disk$Directory, elide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs {
+	public static final synthetic fun box-impl (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs$Classes;
+	public static fun constructor-impl (Ljava/nio/file/Path;)Ljava/nio/file/Path;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/nio/file/Path;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/nio/file/Path;Ljava/nio/file/Path;)Z
+	public fun flatten ()Lelide/tool/Outputs;
+	public static fun flatten-impl (Ljava/nio/file/Path;)Lelide/tool/Outputs;
+	public final fun getDirectory ()Ljava/nio/file/Path;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/nio/file/Path;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/nio/file/Path;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/nio/file/Path;
+}
+
+public final class elide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs$Jar : elide/tool/Outputs$Disk$File, elide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs {
+	public static final synthetic fun box-impl (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs$Jar;
+	public static fun constructor-impl (Ljava/nio/file/Path;)Ljava/nio/file/Path;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/nio/file/Path;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/nio/file/Path;Ljava/nio/file/Path;)Z
+	public fun flatten ()Lelide/tool/Outputs;
+	public static fun flatten-impl (Ljava/nio/file/Path;)Lelide/tool/Outputs;
+	public final fun getPath ()Ljava/nio/file/Path;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/nio/file/Path;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/nio/file/Path;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/nio/file/Path;
+}
+
+public final class elide/tooling/kotlin/KotlinCompilerKt {
+	public static final field KOTLINC Ljava/lang/String;
+	public static final field KOTLIN_COMPILER_DESCRIPTION Ljava/lang/String;
+	public static final fun getKotlinIsSupported ()Z
+	public static final fun getKotlinc ()Lelide/tool/Tool$CommandLineTool;
 }
 
 public final class elide/tooling/project/DefaultProjectLoader : elide/tooling/project/ElideProjectLoader {

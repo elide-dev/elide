@@ -1,8 +1,7 @@
-amends "../../../main/pkl/Project.pkl"
-
-import "../../../main/pkl/JavaScript.pkl" as js
-import "../../../main/pkl/Jvm.pkl" as jar
-import "../../../main/pkl/Task.pkl" as task
+amends "elide:project.pkl"
+import "elide:JavaScript.pkl" as js
+import "elide:Jvm.pkl" as jar
+import "elide:Task.pkl" as task
 
 name = "elide-test-ktweb"
 description = "Example web project using Elide with Kotlin and TypeScript."

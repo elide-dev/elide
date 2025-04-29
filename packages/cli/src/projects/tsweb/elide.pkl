@@ -1,8 +1,7 @@
-amends "../../../main/pkl/Project.pkl"
-
-import "../../../main/pkl/Task.pkl" as task
-import "../../../main/pkl/JavaScript.pkl" as js
-import "../../../main/pkl/Cloudflare.pkl" as cloudflare
+amends "elide:project.pkl"
+import "elide:Task.pkl" as task
+import "elide:JavaScript.pkl" as js
+import "elide:Cloudflare.pkl" as cloudflare
 
 name = "elide-test-tsweb"
 description = "Example web project using Elide and TypeScript."

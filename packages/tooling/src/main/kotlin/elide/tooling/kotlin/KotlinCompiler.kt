@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.tool.kotlinc
+package elide.tooling.kotlin
 
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
@@ -24,8 +24,6 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.incremental.destinationAsFile
-import picocli.CommandLine
-import picocli.CommandLine.ScopeType
 import java.io.Closeable
 import java.net.URI
 import java.nio.file.Path
@@ -36,7 +34,6 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
-import kotlin.io.path.relativeTo
 import elide.runtime.Logging
 import elide.runtime.diag.Diagnostic
 import elide.runtime.diag.DiagnosticsContainer
@@ -50,24 +47,21 @@ import elide.tool.Environment
 import elide.tool.Inputs
 import elide.tool.Outputs
 import elide.tool.Tool
-import elide.tool.cli.CommandContext
-import elide.tool.cli.Statics
-import elide.tool.cli.cmd.tool.AbstractTool
-import elide.tool.cli.cmd.tool.DelegatedToolCommand
-import elide.tool.cli.cmd.tool.javac.JavaCompiler
+import elide.tooling.AbstractTool
+import elide.tooling.jvm.JavaCompiler
 
 // Name of the Kotlin Compiler.
-private const val KOTLINC = "kotlinc"
+public const val KOTLINC: String = "kotlinc"
 
 // Build-time Kotlin support flag.
-private val kotlinIsSupported = System.getProperty("elide.kotlin") == "true"
+public val kotlinIsSupported: Boolean = System.getProperty("elide.kotlin") == "true"
 
 // Description to show.
-private const val KOTLIN_COMPILER_DESCRIPTION =
+public const val KOTLIN_COMPILER_DESCRIPTION: String =
   "The Kotlin compiler ($KOTLINC) is a command-line tool that compiles Kotlin programs."
 
 // Tool description.
-private val kotlinc = Tool.describe(
+public val kotlinc: Tool.CommandLineTool = Tool.describe(
   name = KOTLINC,
   label = "Kotlin Compiler",
   version = KotlinLanguage.VERSION,
@@ -128,12 +122,12 @@ private val kotlinc = Tool.describe(
  * Implements an [AbstractTool] adapter to `kotlinc`, the Kotlin compiler. Arguments are passed to the compiler verbatim
  * from the command-line.
  */
-@ReflectiveAccess @Introspected class KotlinCompiler private constructor (
+@ReflectiveAccess @Introspected public class KotlinCompiler (
   args: Arguments,
   env: Environment,
-  private val inputs: KotlinCompilerInputs,
-  private val outputs: KotlinCompilerOutputs,
-): AbstractTool(info = kotlinc.extend(
+  public val inputs: KotlinCompilerInputs,
+  public val outputs: KotlinCompilerOutputs,
+) : AbstractTool(info = kotlinc.extend(
   args,
   env,
 ).using(
@@ -187,13 +181,13 @@ private val kotlinc = Tool.describe(
    *
    * Implements understanding of Kotlin source inputs for `kotlinc`.
    */
-  sealed interface KotlinCompilerInputs: Inputs.Files {
+  public sealed interface KotlinCompilerInputs : Inputs.Files {
     /**
      * Describes a sequence of source files to specify as Kotlin sources.
      */
-    @JvmInline value class SourceFiles internal constructor (
-      internal val files: PersistentList<Path>,
-    ): KotlinCompilerInputs
+    @JvmInline public value class SourceFiles(
+      public val files: PersistentList<Path>,
+    ) : KotlinCompilerInputs
   }
 
   /**
@@ -201,34 +195,34 @@ private val kotlinc = Tool.describe(
    *
    * Implements understanding of Kotlin compiler outputs -- JARs and class files.
    */
-  sealed interface KotlinCompilerOutputs {
+  public sealed interface KotlinCompilerOutputs {
     /**
      * Flatten into an [Outputs] type.
      *
      * @return Outputs value.
      */
-    fun flatten(): Outputs
+    public fun flatten(): Outputs
 
     /** Defines a simple single-file [path] to an expected JAR output. */
-    @JvmInline value class Jar(internal val path: Path): KotlinCompilerOutputs, Outputs.Disk.File {
+    @JvmInline public value class Jar(public val path: Path) : KotlinCompilerOutputs, Outputs.Disk.File {
       override fun flatten(): Outputs = this
     }
 
     /** Defines a [directory] path to build class output. */
-    @JvmInline value class Classes(internal val directory: Path): KotlinCompilerOutputs, Outputs.Disk.Directory {
+    @JvmInline public value class Classes(public val directory: Path) : KotlinCompilerOutputs, Outputs.Disk.Directory {
       override fun flatten(): Outputs = this
     }
   }
 
   /** Factories for configuring and obtaining instances of [KotlinCompiler]. */
-  companion object {
+  public companion object {
     /**
      * Create inputs for the Kotlin compiler which include the provided source paths.
      *
      * @param sequence Sequence of source paths to include.
      * @return Compiler inputs.
      */
-    @JvmStatic fun sources(sequence: Sequence<Path>): KotlinCompilerInputs = KotlinCompilerInputs.SourceFiles(
+    @JvmStatic public fun sources(sequence: Sequence<Path>): KotlinCompilerInputs = KotlinCompilerInputs.SourceFiles(
       sequence.toList().toPersistentList().also {
         if (it.isEmpty()) embeddedToolError(kotlinc, "No source files provided")
       }
@@ -240,7 +234,7 @@ private val kotlinc = Tool.describe(
      * @param at Expected path to the JAR output.
      * @return Compiler outputs.
      */
-    @JvmStatic fun outputJar(at: Path): KotlinCompilerOutputs = KotlinCompilerOutputs.Jar(at)
+    @JvmStatic public fun outputJar(at: Path): KotlinCompilerOutputs = KotlinCompilerOutputs.Jar(at)
 
     /**
      * Create outputs for the Kotlin compiler which specify a directory of classes.
@@ -248,7 +242,7 @@ private val kotlinc = Tool.describe(
      * @param at Expected path to the built class output.
      * @return Compiler outputs.
      */
-    @JvmStatic fun classesDir(at: Path): KotlinCompilerOutputs = KotlinCompilerOutputs.Classes(at)
+    @JvmStatic public fun classesDir(at: Path): KotlinCompilerOutputs = KotlinCompilerOutputs.Classes(at)
 
     /**
      * Create a Kotlin Compiler instance from the provided inputs.
@@ -258,7 +252,7 @@ private val kotlinc = Tool.describe(
      * @param outputs Outputs from the compiler.
      * @param env Environment for the compiler; defaults to the host environment.
      */
-    @JvmStatic fun create(
+    @JvmStatic public fun create(
       args: Arguments,
       env: Environment,
       inputs: KotlinCompilerInputs,
@@ -292,12 +286,12 @@ private val kotlinc = Tool.describe(
   }
 
   // Resolve the Kotlin home directory for the Kotlin compiler.
-  private fun resolveKotlinHome(): Path {
+  private fun resolveKotlinHome(state: EmbeddedToolState): Path {
     val homeEnvOverride = System.getenv("KOTLIN_HOME")
       ?.ifBlank { null }
       ?.let { Paths.get(it) }
 
-    val binRelativeHome = Statics.resourcesPath
+    val binRelativeHome = state.resourcesPath
       .resolve("kotlin")
       .resolve(KotlinLanguage.VERSION)
 
@@ -316,33 +310,15 @@ private val kotlinc = Tool.describe(
         embeddedToolError(
           kotlinc,
           "Kotlin home missing; please set `KOTLIN_HOME` or re-install Elide " +
-                  "(checked at '$it')."
+            "(checked at '$it')."
         )
       }
     }
   }
 
-  override suspend fun CommandContext.invoke(state: EmbeddedToolState): Tool.Result {
-    if (state.cmd.state.output.verbose) output {
-      append("""
-      Invoking `kotlinc` with:
-
-        -- Arguments:
-        ${info.args}
-
-        -- Inputs:
-        $inputs
-
-        -- Outputs:
-        $outputs
-
-        -- Environment:
-        ${info.environment}
-      """.trimIndent())
-    }
-
+  override suspend fun invoke(state: EmbeddedToolState): Tool.Result {
     val javaToolchainHome = JavaCompiler.resolveJavaToolchain(kotlinc)
-    val kotlinVersionRoot = resolveKotlinHome()
+    val kotlinVersionRoot = resolveKotlinHome(state)
     val closeables = LinkedList<Closeable>()
     val diagnostics = K2DiagnosticsListener()
     val kotlinMajorMinor = KOTLIN_VERSION.substringBeforeLast('.')
@@ -361,9 +337,6 @@ private val kotlinc = Tool.describe(
       )
     }
 
-    val compileStart = System.currentTimeMillis()
-    val compileEnd: Long
-
     @Suppress("TooGenericExceptionCaught")
     try {
       ktCompiler.exec(diagnostics, svcs, args)
@@ -374,60 +347,8 @@ private val kotlinc = Tool.describe(
         cause = rxe,
       )
     } finally {
-      compileEnd = System.currentTimeMillis()
       closeables.forEach { it.close() }
     }
-
-    val totalMs = compileEnd - compileStart
-    val srcsCount = (inputs as KotlinCompilerInputs.SourceFiles).files.size
-    val outputPath = when (outputs) {
-      is KotlinCompilerOutputs.Jar -> outputs.path
-      is KotlinCompilerOutputs.Classes -> outputs.directory
-    }
-    val outputRelativeToCwd = outputPath
-      .toAbsolutePath()
-      .relativeTo(Paths.get(System.getProperty("user.dir")))
-
-    output {
-      val sourceFiles = if (srcsCount > 1) "sources" else "source file"
-      append("[kotlinc] Compiled $srcsCount $sourceFiles in ${totalMs}ms → $outputRelativeToCwd")
-    }
     return Tool.Result.Success
-  }
-
-  @CommandLine.Command(
-    name = KOTLINC,
-    version = [KotlinLanguage.VERSION],
-    description = [KOTLIN_COMPILER_DESCRIPTION],
-    mixinStandardHelpOptions = false,
-    scope = ScopeType.LOCAL,
-    synopsisHeading = "",
-    customSynopsis = [],
-  )
-  @ReflectiveAccess
-  @Introspected
-  class KotlinCliTool: DelegatedToolCommand<KotlinCompiler>(kotlinc) {
-    @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
-
-    companion object {
-      // Gather options, inputs, and outputs for an invocation of the Kotlin compiler.
-      @JvmStatic private fun gatherArgs(args: Arguments): Pair<KotlinCompilerInputs, KotlinCompilerOutputs> {
-        return JavaCompiler.jvmStyleArgs(kotlinc, args).let { (sources, outSpec) ->
-          sources(sources) to when (outSpec.endsWith(".jar")) {
-            true -> outputJar(Paths.get(outSpec))
-            false -> classesDir(Paths.get(outSpec))
-          }
-        }
-      }
-    }
-
-    override fun configure(args: Arguments, environment: Environment): KotlinCompiler = gatherArgs(args).let { state ->
-      KotlinCompiler(
-        args = args,
-        env = environment,
-        inputs = state.first,
-        outputs = state.second,
-      )
-    }
   }
 }

@@ -13,46 +13,34 @@
 
 @file:Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
 
-package elide.tool.cli.cmd.tool.jar
+package elide.tooling.jvm
 
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
-import picocli.CommandLine
 import sun.tools.jar.JarToolProvider
 import java.io.PrintWriter
-import java.io.StringWriter
 import java.net.URI
-import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
-import jakarta.inject.Singleton
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import kotlin.io.path.relativeTo
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.tool.Argument
 import elide.tool.Arguments
 import elide.tool.Environment
 import elide.tool.Inputs
 import elide.tool.MutableArguments
 import elide.tool.Outputs
 import elide.tool.Tool
-import elide.tool.cli.CommandContext
-import elide.tool.cli.cmd.tool.AbstractGenericTool
-import elide.tool.cli.cmd.tool.AbstractTool
-import elide.tool.cli.cmd.tool.DelegatedToolCommand
-import elide.tool.cli.cmd.tool.jar.JarTool.JarToolInputs
-import elide.tool.cli.cmd.tool.jar.JarTool.JarToolOutputs
+import elide.tooling.GenericTool
 
 // Name of the `jar` tool.
-private const val JAR = "jar"
+public const val JAR: String = "jar"
 
 // Description to show for `jar`.
-private const val JARTOOL_DESCRIPTION = "Builds and manages Java Archive files (JARs)."
+public const val JARTOOL_DESCRIPTION: String = "Builds and manages Java Archive files (JARs)."
 
 // Tool description.
-private val jartool = Tool.describe(
+public val jartool: Tool.CommandLineTool = Tool.describe(
   name = JAR,
   label = "JAR Tool",
   version = System.getProperty("java.version"),
@@ -177,31 +165,17 @@ private val jartool = Tool.describe(
 """
 )
 
-// Argument names which require a value following, or separated by `=`.
-private val argNamesThatExpectValues = sortedSetOf(
-  "-f", "--file",
-  "-i", "--generate-index",
-  "--release",
-  "-e", "--main-class",
-  "-m", "--manifest",
-  "--module-version",
-  "--hash-modules",
-  "-p", "--module-path",
-  "--date",
-  "--dir",
-)
-
 /**
  * # JAR Tool
  *
- * Implements an [AbstractTool] adapter to `jar`. Arguments are passed to the tool verbatim from the command-line.
+ * Implements a [GenericTool] adapter to `jar`. Arguments are passed to the tool verbatim from the command-line.
  */
-@ReflectiveAccess @Introspected class JarTool private constructor (
+@ReflectiveAccess @Introspected public class JarTool (
   args: Arguments,
   env: Environment,
   override val inputs: JarToolInputs,
   override val outputs: JarToolOutputs,
-): AbstractGenericTool<JarToolProvider, JarToolInputs, JarToolOutputs>(info = jartool.extend(
+) : GenericTool<JarToolProvider, JarTool.JarToolInputs, JarTool.JarToolOutputs>(info = jartool.extend(
   args,
   env,
 ).using(
@@ -226,16 +200,16 @@ private val argNamesThatExpectValues = sortedSetOf(
    *
    * Implements understanding of inputs for `jar`.
    */
-  sealed interface JarToolInputs: Inputs.Files {
+  public sealed interface JarToolInputs : Inputs.Files {
     /**
      * Provided when no inputs are available.
      */
-    data object NoInputs: JarToolInputs
+    public data object NoInputs : JarToolInputs
 
     /**
      * Describes a sequence of input files to include in the JAR.
      */
-    @JvmInline value class InputFiles(internal val files: PersistentList<Path>): JarToolInputs
+    @JvmInline public value class InputFiles(public val files: PersistentList<Path>) : JarToolInputs
   }
 
   /**
@@ -243,11 +217,11 @@ private val argNamesThatExpectValues = sortedSetOf(
    *
    * Implements understanding of JAR tool outputs -- typically JARs.
    */
-  sealed interface JarToolOutputs {
+  public sealed interface JarToolOutputs {
     /**
      * Provided when no inputs are available.
      */
-    data object NoOutputs: JarToolOutputs, Outputs.None {
+    public data object NoOutputs : JarToolOutputs, Outputs.None {
       override fun flatten(): Outputs = this
     }
 
@@ -256,12 +230,12 @@ private val argNamesThatExpectValues = sortedSetOf(
      *
      * @return Outputs value.
      */
-    fun flatten(): Outputs
+    public fun flatten(): Outputs
 
     /** Defines a [path] to an output JAR. */
-    @JvmInline value class Jar(internal val location: Pair<Path?, Path>): JarToolOutputs, Outputs.Disk.File {
-      val path: Path get() = location.second
-      val directory: Path? get() = location.first
+    @JvmInline public value class Jar(internal val location: Pair<Path?, Path>) : JarToolOutputs, Outputs.Disk.File {
+      public val path: Path get() = location.second
+      public val directory: Path? get() = location.first
       override fun flatten(): Outputs = this
     }
   }
@@ -271,47 +245,15 @@ private val argNamesThatExpectValues = sortedSetOf(
     // Nothing at this time.
   }
 
-  override suspend fun CommandContext.resolveOutputs(out: StringWriter, err: StringWriter, ms: Int): JarToolOutputs {
-    val srcs = (inputs as JarToolInputs.InputFiles).files
-    val inputsCount = srcs.size
-    val plural = if (inputsCount > 1) "inputs" else "input file"
-    val outputPath: Path? = when (outputs) {
-      is JarToolOutputs.Jar -> outputs.path
-      is JarToolOutputs.NoOutputs -> null
-    }
-    val outputRelativeToCwd = outputPath
-      ?.toAbsolutePath()
-      ?.relativeTo(Paths.get(System.getProperty("user.dir")))
-
-    val regularOutput = out.toString()
-    val regularError = err.toString()
-
-    if (regularOutput.isNotEmpty()) {
-      output {
-        append(regularOutput)
-      }
-    }
-    if (regularError.isNotEmpty()) {
-      output {
-        append(regularError)
-      }
-    }
-    output {
-      val outputOrNothing = if (outputRelativeToCwd != null) " → $outputRelativeToCwd" else ""
-      append("[jar] Assembled $inputsCount $plural in ${ms}ms$outputOrNothing")
-    }
-    return outputs
-  }
-
   /** Factories for configuring and obtaining instances of [JarTool]. */
-  @Suppress("unused") companion object {
+  @Suppress("unused") public companion object {
     /**
      * Create inputs for the Jar tool.
      *
      * @param sequence Sequence of paths to include.
      * @return Jar tool inputs.
      */
-    @JvmStatic fun jarFiles(sequence: Sequence<Path>): JarToolInputs = JarToolInputs.InputFiles(
+    @JvmStatic public fun jarFiles(sequence: Sequence<Path>): JarToolInputs = JarToolInputs.InputFiles(
       sequence.toList().toPersistentList().also {
         if (it.isEmpty()) embeddedToolError(jartool, "No input files provided")
       }
@@ -324,7 +266,7 @@ private val argNamesThatExpectValues = sortedSetOf(
      * @param dir Optional directory to place the jar in.
      * @return Jar tool outputs.
      */
-    @JvmStatic fun outputJar(at: Path, dir: Path? = null): JarToolOutputs = JarToolOutputs.Jar(dir to at)
+    @JvmStatic public fun outputJar(at: Path, dir: Path? = null): JarToolOutputs = JarToolOutputs.Jar(dir to at)
 
     /**
      * Create a Jar tool instance from the provided inputs.
@@ -334,72 +276,13 @@ private val argNamesThatExpectValues = sortedSetOf(
      * @param outputs Outputs from the tool.
      * @param env Environment for the tool; defaults to the host environment.
      */
-    @JvmStatic fun create(
-      args: Arguments,
-      env: Environment,
-      inputs: JarToolInputs,
-      outputs: JarToolOutputs,
-    ): JarTool = JarTool(
-      args = args,
-      env = env,
-      inputs = inputs,
-      outputs = outputs,
-    )
-  }
-
-  @CommandLine.Command(
-    name = JAR,
-    description = [JARTOOL_DESCRIPTION],
-    mixinStandardHelpOptions = false,
-  )
-  @Singleton
-  @ReflectiveAccess
-  @Introspected
-  class JarCliTool: DelegatedToolCommand<JarTool>(jartool) {
-    @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
-
-    override fun configure(args: Arguments, environment: Environment): JarTool = gatherArgs(
-      argNamesThatExpectValues,
-      args,
-    ).let { (effective, likelyInputs) ->
-      // gather all inputs which should be paths; parse them.
-      val parsedInputs = likelyInputs.mapNotNull {
-        try {
-          Paths.get(it)
-        } catch (_: IllegalArgumentException) {
-          // skip: not a path
-          return@mapNotNull null
-        }.takeIf {
-          // only extant paths can be passed to jar tool, unless we are specifying an output, in which case the arg is
-          // prefixed or assigned with `=` and so is not present here.
-          Files.exists(it)
-        }
-      }.let {
-        when (it.size) {
-          0 -> JarToolInputs.NoInputs
-          else -> JarToolInputs.InputFiles(it.toPersistentList())
-        }
-      }
-
-      // resolve directory/jar output path args
-      val fileArg = effective.find {
-        it is Argument.KeyValueArg && (it.name == "-f" || it.name == "--file")
-      }?.let {
-        Paths.get((it as Argument.KeyValueArg).value)
-      }
-      val dirArg = effective.find {
-        it is Argument.KeyValueArg && (it.name == "--directory")
-      }?.let {
-        Paths.get((it as Argument.KeyValueArg).value)
-      }
-      JarTool(
+    @JvmStatic
+    public fun create(args: Arguments, env: Environment, inputs: JarToolInputs, outputs: JarToolOutputs): JarTool {
+      return JarTool(
         args = args,
-        env = environment,
-        inputs = parsedInputs,
-        outputs = when (val outfile = fileArg) {
-          null -> JarToolOutputs.NoOutputs
-          else -> JarToolOutputs.Jar(dirArg to outfile)
-        },
+        env = env,
+        inputs = inputs,
+        outputs = outputs,
       )
     }
   }

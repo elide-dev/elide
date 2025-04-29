@@ -864,10 +864,14 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tool.Environment",
   "elide.tool.Environment\$HostEnv",
   "elide.tool.Environment\$Companion",
-  "elide.tool.cli.cmd.tool.jar.JarToolKt",
-  "elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerKt",
-  "elide.tool.cli.cmd.tool.javac.JavaCompilerKt",
-  "elide.tool.cli.cmd.tool.javadoc.JavadocToolKt",
+  "elide.tool.cli.cmd.tool.jar.JarToolAdapterKt",
+  "elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapterKt",
+  "elide.tool.cli.cmd.tool.javac.JavaCompilerAdapterKt",
+  "elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapterKt",
+  "elide.tooling.jvm.JarToolKt",
+  "elide.tooling.kotlin.KotlinCompilerKt",
+  "elide.tooling.jvm.JavaCompilerKt",
+  "elide.tooling.jvm.JavadocToolKt",
   "org.apache.http.impl.auth.NTLMEngineImpl",
 
   // @TODO switch to built-in brotli

@@ -25,24 +25,24 @@ import elide.runtime.Logger
 import elide.runtime.Logging
 
 /** Internal static tools and utilities used across the Elide CLI. */
-internal object Statics {
-  val disableStreams = System.getProperty("elide.disableStreams") == "true"
+public object Statics {
+  public val disableStreams: Boolean = System.getProperty("elide.disableStreams") == "true"
   private val delegatedInStream = atomic<InputStream?>(null)
   private val delegatedOutStream = atomic<PrintStream?>(null)
   private val delegatedErrStream = atomic<PrintStream?>(null)
 
   /** Main tool logger. */
-  internal val logging: Logger by lazy {
+  public val logging: Logger by lazy {
     Logging.named("tool")
   }
 
   /** Server tool logger. */
-  internal val serverLogger: Logger by lazy {
+  public val serverLogger: Logger by lazy {
     Logging.named("tool:server")
   }
 
   /** Whether to disable color output and syntax highlighting. */
-  internal val noColor: Boolean by lazy {
+  public val noColor: Boolean by lazy {
     System.getenv("NO_COLOR") != null || args.let { args ->
       args.contains("--no-pretty") || args.contains("--no-color")
     }
@@ -52,12 +52,12 @@ internal object Statics {
   @Volatile private var initialArgs = emptyArray<String>()
 
   /** Invocation args. */
-  internal val args: Array<String> get() = initialArgs
+  public val args: Array<String> get() = initialArgs
 
-  internal val bin: String get() = execBinPath
-  internal val binPath: Path by lazy { Paths.get(bin).toAbsolutePath() }
-  internal val elideHome: Path by lazy { binPath.parent }
-  internal val resourcesPath: Path by lazy { elideHome.resolve("resources").toAbsolutePath() }
+  public val bin: String get() = execBinPath
+  public val binPath: Path by lazy { Paths.get(bin).toAbsolutePath() }
+  public val elideHome: Path by lazy { binPath.parent }
+  public val resourcesPath: Path by lazy { elideHome.resolve("resources").toAbsolutePath() }
 
   // Stream which drops all data.
   private val noOpStream by lazy {
@@ -66,28 +66,28 @@ internal object Statics {
     })
   }
 
-  val `in`: InputStream get() =
+  public val `in`: InputStream get() =
     delegatedInStream.value ?: System.`in`
 
-  @JvmField var out: PrintStream =
+  @JvmField public var out: PrintStream =
     when (disableStreams) {
       true -> noOpStream
       else -> delegatedOutStream.value ?: System.out
     }
 
-  @JvmField var err: PrintStream =
+  @JvmField public var err: PrintStream =
     when (disableStreams) {
       true -> noOpStream
       else -> delegatedErrStream.value ?: System.err
     }
 
-  internal fun mountArgs(bin: String, args: Array<String>) {
+  public fun mountArgs(bin: String, args: Array<String>) {
     check(initialArgs.isEmpty()) { "Args are not initialized yet!" }
     execBinPath = bin
     initialArgs = args
   }
 
-  internal fun assignStreams(out: PrintStream, err: PrintStream, `in`: InputStream) {
+  public fun assignStreams(out: PrintStream, err: PrintStream, `in`: InputStream) {
     if (disableStreams) return
     delegatedOutStream.value = out
     delegatedErrStream.value = err

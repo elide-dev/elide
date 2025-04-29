@@ -11,11 +11,10 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.tool.javac
+package elide.tooling.jvm
 
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
-import picocli.CommandLine
 import java.net.URI
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
@@ -25,11 +24,9 @@ import javax.tools.Diagnostic
 import javax.tools.DiagnosticListener
 import javax.tools.JavaFileObject
 import javax.tools.ToolProvider
-import jakarta.inject.Singleton
 import kotlinx.atomicfu.atomic
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
-import kotlin.io.path.relativeTo
 import elide.runtime.Logging
 import elide.runtime.diag.DiagnosticsContainer
 import elide.runtime.diag.DiagnosticsReceiver
@@ -41,22 +38,20 @@ import elide.tool.Inputs
 import elide.tool.MutableArguments
 import elide.tool.Outputs
 import elide.tool.Tool
-import elide.tool.cli.CommandContext
-import elide.tool.cli.cmd.tool.AbstractTool
-import elide.tool.cli.cmd.tool.DelegatedToolCommand
+import elide.tooling.AbstractTool
 import elide.runtime.diag.Diagnostic as ElideDiagnostic
 
 // Name of the `javac` tool.
-private const val JAVAC = "javac"
+public const val JAVAC: String = "javac"
 
 // Build-time Java support flag.
-private val javaIsSupported = System.getProperty("elide.jvm") == "true"
+public val javaIsSupported: Boolean = System.getProperty("elide.jvm") == "true"
 
 // Description to show for `javac`.
-private const val JAVAC_DESCRIPTION = "The Java compiler, supporting up to JDK 24."
+public const val JAVAC_DESCRIPTION: String = "The Java compiler, supporting up to JDK 24."
 
 // Tool description.
-private val javac = Tool.describe(
+public val javac: Tool.CommandLineTool = Tool.describe(
   name = JAVAC,
   label = "Java Compiler",
   version = System.getProperty("java.version"),
@@ -155,12 +150,12 @@ private val javac = Tool.describe(
  * Implements an [AbstractTool] adapter to `javac`, the Java compiler. Arguments are passed to the compiler verbatim
  * from the command-line.
  */
-@ReflectiveAccess @Introspected class JavaCompiler private constructor (
-  args: Arguments,
-  env: Environment,
-  private val inputs: JavaCompilerInputs,
-  private val outputs: JavaCompilerOutputs,
-): AbstractTool(info = javac.extend(
+@ReflectiveAccess @Introspected public class JavaCompiler (
+  public val args: Arguments,
+  public val env: Environment,
+  public val inputs: JavaCompilerInputs,
+  public val outputs: JavaCompilerOutputs,
+) : AbstractTool(info = javac.extend(
   args,
   env,
 ).using(
@@ -214,11 +209,11 @@ private val javac = Tool.describe(
    *
    * Implements understanding of Java source inputs for `javac`.
    */
-  sealed interface JavaCompilerInputs: Inputs.Files {
+  public sealed interface JavaCompilerInputs : Inputs.Files {
     /**
      * Describes a sequence of source files to specify as Java sources.
      */
-    @JvmInline value class SourceFiles(internal val files: PersistentList<Path>): JavaCompilerInputs
+    @JvmInline public value class SourceFiles(public val files: PersistentList<Path>) : JavaCompilerInputs
   }
 
   /**
@@ -226,16 +221,16 @@ private val javac = Tool.describe(
    *
    * Implements understanding of Java compiler outputs -- class files only.
    */
-  sealed interface JavaCompilerOutputs {
+  public sealed interface JavaCompilerOutputs {
     /**
      * Flatten into an [Outputs] type.
      *
      * @return Outputs value.
      */
-    fun flatten(): Outputs
+    public fun flatten(): Outputs
 
     /** Defines a [directory] path to build class output. */
-    @JvmInline value class Classes(internal val directory: Path): JavaCompilerOutputs, Outputs.Disk.Directory {
+    @JvmInline public value class Classes(public val directory: Path) : JavaCompilerOutputs, Outputs.Disk.Directory {
       override fun flatten(): Outputs = this
     }
   }
@@ -245,40 +240,13 @@ private val javac = Tool.describe(
     // Nothing at this time.
   }
 
-  override suspend fun CommandContext.invoke(state: EmbeddedToolState): Tool.Result {
+  override suspend fun invoke(state: EmbeddedToolState): Tool.Result {
     val javaToolchainHome = resolveJavaToolchain(javac)
     val locale = Locale.getDefault()
     val charset = StandardCharsets.UTF_8
     val args = MutableArguments.from(info.args).also { amendArgs(it) }
 
-    output {
-      """
-        Invoking `javac` with:
-  
-          Locale: $locale
-          Charset: $charset
-          Java Home: $javaToolchainHome
-  
-          -- Arguments:
-          $args
-  
-          -- Inputs:
-          $inputs
-  
-          -- Outputs:
-          $outputs
-  
-          -- Environment:
-          ${info.environment}
-      """.trimIndent().also {
-        javacLogger.debug(it)
-        if (state.cmd.state.output.verbose) {
-          append(it)
-        }
-      }
-    }
-
-    javacLogger.debug { "Initializing Java compiler support" }
+    javacLogger.debug { "Initializing Java compiler support (home: $javaToolchainHome)" }
     val compiler: javax.tools.JavaCompiler = systemCompiler
     javacLogger.debug { "Preparing compiler diagnostics (locale: $locale)" }
     val diagnosticsReceiver = JavaDiagnosticsReceiver(locale)
@@ -337,29 +305,20 @@ private val javac = Tool.describe(
 
     val totalMs = compileEnd - compileStart
     javacLogger.debug { "Java compile job completed in ${totalMs}ms" }
-    val outputPath = (outputs as JavaCompilerOutputs.Classes).directory
-    val outputRelativeToCwd = outputPath
-      .toAbsolutePath()
-      .relativeTo(Paths.get(System.getProperty("user.dir")))
-
-    output {
-      val sourceFiles = if (srcsCount > 1) "sources" else "source file"
-      append("[javac] Compiled $srcsCount $sourceFiles in ${totalMs}ms → $outputRelativeToCwd")
-    }
     return Tool.Result.Success
   }
 
   /** Factories for configuring and obtaining instances of [JavaCompiler]. */
-  companion object {
+  public companion object {
     // Resolve the Java toolchain for the Kotlin compiler.
-    @JvmStatic internal fun resolveJavaToolchain(tool: Tool.CommandLineTool): Path {
+    @JvmStatic public fun resolveJavaToolchain(tool: Tool.CommandLineTool): Path {
       return Paths.get(
-        (System.getenv("JAVA_HOME") ?: System.getProperty("java.home"))?.ifBlank { null } ?:
-        embeddedToolError(tool, "Java toolchain missing; please set `JAVA_HOME`")
+        (System.getenv("JAVA_HOME") ?: System.getProperty("java.home"))?.ifBlank { null }
+          ?: embeddedToolError(tool, "Java toolchain missing; please set `JAVA_HOME`")
       )
     }
 
-    @JvmStatic internal fun jvmStyleArgs(tool: Tool.CommandLineTool, args: Arguments): Pair<Sequence<Path>, String> {
+    @JvmStatic public fun jvmStyleArgs(tool: Tool.CommandLineTool, args: Arguments): Pair<Sequence<Path>, String> {
       val argsList = args.asArgumentList()
       val outSpecPositionMinusOne = argsList.indexOf("-d")
       if (outSpecPositionMinusOne < 0) {
@@ -381,7 +340,7 @@ private val javac = Tool.describe(
      * @param sequence Sequence of source paths to include.
      * @return Compiler inputs.
      */
-    @JvmStatic fun sources(sequence: Sequence<Path>): JavaCompilerInputs = JavaCompilerInputs.SourceFiles(
+    @JvmStatic public fun sources(sequence: Sequence<Path>): JavaCompilerInputs = JavaCompilerInputs.SourceFiles(
       sequence.toList().toPersistentList().also {
         if (it.isEmpty()) embeddedToolError(javac, "No source files provided")
       }
@@ -393,7 +352,7 @@ private val javac = Tool.describe(
      * @param at Expected path to the built class output.
      * @return Compiler outputs.
      */
-    @JvmStatic fun classesDir(at: Path): JavaCompilerOutputs = JavaCompilerOutputs.Classes(at)
+    @JvmStatic public fun classesDir(at: Path): JavaCompilerOutputs = JavaCompilerOutputs.Classes(at)
 
     /**
      * Create a Java Compiler instance from the provided inputs.
@@ -403,7 +362,7 @@ private val javac = Tool.describe(
      * @param outputs Outputs from the compiler.
      * @param env Environment for the compiler; defaults to the host environment.
      */
-    @JvmStatic fun create(
+    @JvmStatic public fun create(
       args: Arguments,
       env: Environment,
       inputs: JavaCompilerInputs,
@@ -414,35 +373,5 @@ private val javac = Tool.describe(
       inputs = inputs,
       outputs = outputs,
     )
-  }
-
-  @CommandLine.Command(
-    name = JAVAC,
-    description = [JAVAC_DESCRIPTION],
-    mixinStandardHelpOptions = false,
-  )
-  @Singleton
-  @ReflectiveAccess
-  @Introspected
-  class JavacCliTool: DelegatedToolCommand<JavaCompiler>(javac) {
-    @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
-
-    companion object {
-      // Gather options, inputs, and outputs for an invocation of the Java compiler.
-      @JvmStatic private fun gatherArgs(args: Arguments): Pair<JavaCompilerInputs, JavaCompilerOutputs> {
-        val (sources, outSpec) = jvmStyleArgs(javac, args)
-        val outputs = classesDir(Paths.get(outSpec))
-        return Pair(sources(sources.asSequence()), outputs)
-      }
-    }
-
-    override fun configure(args: Arguments, environment: Environment): JavaCompiler = gatherArgs(args).let { state ->
-      JavaCompiler(
-        args = args,
-        env = environment,
-        inputs = state.first,
-        outputs = state.second,
-      )
-    }
   }
 }

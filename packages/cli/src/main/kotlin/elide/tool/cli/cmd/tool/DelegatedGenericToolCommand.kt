@@ -13,7 +13,9 @@
 
 package elide.tool.cli.cmd.tool
 
+import elide.tool.cli.AbstractSubcommand
 import elide.tool.Tool
+import elide.tooling.AbstractTool
 
 /**
  * ## Delegated Tool Command (Generic)
@@ -23,9 +25,7 @@ import elide.tool.Tool
  *
  * @param T Tool adapter implementation
  */
-abstract class DelegatedGenericToolCommand<T> (
+abstract class DelegatedGenericToolCommand<T, C> (
   info: Tool.CommandLineTool,
   configurator: ToolCommandConfigurator<T>? = null,
-): DelegatedToolCommand<T>(info, configurator) where T: AbstractTool {
-
-}
+): DelegatedToolCommand<T, C>(info, configurator) where T: AbstractTool, C: AbstractSubcommand<*, *>

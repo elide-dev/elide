@@ -1024,43 +1024,43 @@
       "unsafeAllocated": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler",
+      "type": "elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapter",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler$KotlinCliTool",
+      "type": "elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapter$KotlinCliTool",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javac.JavaCompiler",
+      "type": "elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javac.JavaCompiler$JavacCliTool",
+      "type": "elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter$JavacCliTool",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.jar.JarTool",
+      "type": "elide.tool.cli.cmd.tool.jar.JarToolAdapter",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.jar.JarTool$JarCliTool",
+      "type": "elide.tool.cli.cmd.tool.jar.JarToolAdapter$JarCliTool",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.jar.$JarTool$Introspection",
+      "type": "elide.tool.cli.cmd.tool.jar.$JarToolAdapter$Introspection",
       "methods": [
         {
           "name": "<init>",
@@ -1069,7 +1069,7 @@
       ]
     },
     {
-      "type": "elide.tool.cli.cmd.tool.jar.$JarTool$JarCliTool$Definition",
+      "type": "elide.tool.cli.cmd.tool.jar.$JarToolAdapter$JarCliTool$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -1078,19 +1078,19 @@
       ]
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javadoc.JavadocTool",
+      "type": "elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javadoc.JavadocTool$JavadocCliTool",
+      "type": "elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter$JavadocCliTool",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javadoc.$JavadocTool$Introspection",
+      "type": "elide.tool.cli.cmd.tool.javadoc.$JavadocToolAdapter$Introspection",
       "methods": [
         {
           "name": "<init>",
@@ -1099,7 +1099,7 @@
       ]
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javadoc.$JavadocTool$JavadocCliTool$Definition",
+      "type": "elide.tool.cli.cmd.tool.javadoc.$JavadocToolAdapter$JavadocCliTool$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -1112,7 +1112,7 @@
       "allDeclaredFields": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javac.$JavaCompiler$Introspection",
+      "type": "elide.tool.cli.cmd.tool.javac.$JavaCompilerAdapter$Introspection",
       "methods": [
         {
           "name": "<init>",
@@ -1121,7 +1121,7 @@
       ]
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javac.$JavaCompiler$JavacCliTool$Definition",
+      "type": "elide.tool.cli.cmd.tool.javac.$JavaCompilerAdapter$JavacCliTool$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -1130,7 +1130,7 @@
       ]
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javac.$JavaCompiler$JavacCliTool$Introspection",
+      "type": "elide.tool.cli.cmd.tool.javac.$JavaCompilerAdapter$JavacCliTool$Introspection",
       "methods": [
         {
           "name": "<init>",
@@ -1139,11 +1139,11 @@
       ]
     },
     {
-      "type": "elide.tool.cli.cmd.tool.javac.JavaCompiler$JavacCliTool",
+      "type": "elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter$JavacCliTool",
       "allDeclaredFields": true
     },
     {
-      "type": "elide.tool.cli.cmd.tool.kotlinc.$KotlinCompiler$Introspection",
+      "type": "elide.tool.cli.cmd.tool.kotlinc.$KotlinCompilerAdapter$Introspection",
       "methods": [
         {
           "name": "<init>",
@@ -1152,7 +1152,7 @@
       ]
     },
     {
-      "type": "elide.tool.cli.cmd.tool.kotlinc.$KotlinCompiler$KotlinCliTool$Introspection",
+      "type": "elide.tool.cli.cmd.tool.kotlinc.$KotlinCompilerAdapter$KotlinCliTool$Introspection",
       "methods": [
         {
           "name": "<init>",

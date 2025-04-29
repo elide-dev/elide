@@ -101,8 +101,8 @@
 <!--  <logger name="elide.tool.cli.cmd.tool.DelegatedToolCommand" level="debug" />-->
 <!--  <logger name="elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler" level="debug" />-->
 <!--  <logger name="elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler$KotlinCliTool" level="debug" />-->
-  <logger name="elide.tool.cli.cmd.tool.javac.JavaCompiler" level="warn" />
-  <logger name="elide.tool.cli.cmd.tool.javac.JavaCompiler$JavacCliTool" level="warn" />
+  <logger name="elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter" level="warn" />
+  <logger name="elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter$JavacCliTool" level="warn" />
   <logger name="elide.tooling.jvm.resolver.MavenAetherResolver" level="warn" />
   <logger name="elide.tool.cli.cmd.builder.ToolBuildCommand" level="warn" />
   <logger name="elide.tooling.jvm.JvmBuildConfigurator" level="warn" />

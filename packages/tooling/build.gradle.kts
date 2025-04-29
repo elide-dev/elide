@@ -41,6 +41,7 @@ dependencies {
   api(projects.packages.graalvmJava)
   api(projects.packages.graalvmKt)
   implementation(libs.ktoml)
+  implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.bundles.maven.resolver)

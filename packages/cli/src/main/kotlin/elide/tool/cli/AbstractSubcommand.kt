@@ -44,8 +44,15 @@ import elide.tool.cli.options.CommonOptions
 import elide.tool.cli.state.CommandState
 import elide.tool.err.DefaultErrorHandler
 import elide.tool.err.ErrorHandler
+import elide.tooling.AbstractTool
 import org.graalvm.polyglot.Engine as VMEngine
 
+fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputController) {
+  ctx.error(
+    "Failed to run '${tool.name}': $message",
+    if (ctx.settings.verbose) cause else null,
+  )
+}
 
 /**
  * # Sub-command
@@ -129,7 +136,7 @@ import org.graalvm.polyglot.Engine as VMEngine
 
   private val dispatcher: CoroutineDispatcher by lazy { threadedExecutor.asCoroutineDispatcher() }
 
-  private val logging: Logger by lazy {
+  internal val logging: Logger by lazy {
     Statics.logging
   }
 

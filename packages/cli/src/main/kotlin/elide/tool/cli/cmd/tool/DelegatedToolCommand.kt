@@ -25,6 +25,8 @@ import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
+import elide.tool.cli.render
+import elide.tooling.AbstractTool
 
 interface ToolCommandBuilder<T> where T: AbstractTool {
   /** Arguments to pass to the tool. */
@@ -49,10 +51,10 @@ private val defaultVersionIndicators = sortedSetOf("--version", "-version", "-v"
  *
  * @param T Tool adapter implementation
  */
-abstract class DelegatedToolCommand<T> (
+abstract class DelegatedToolCommand<T, C> (
   private val info: Tool.CommandLineTool,
   private val configurator: ToolCommandConfigurator<T>? = null,
-): AbstractSubcommand<ToolState, CommandContext>() where T: AbstractTool {
+): AbstractSubcommand<ToolState, CommandContext>() where T: AbstractTool, C: AbstractSubcommand<*, *> {
   abstract var spec: CommandLine.Model.CommandSpec
 
   @CommandLine.Option(
@@ -66,13 +68,22 @@ abstract class DelegatedToolCommand<T> (
   var showVersion: Boolean = false
 
   /**
-   * Prepares an instance of the tool adapter, using the provided [args] and [environment].
+   * Prepares an instance of the tool itself, using the provided [args] and [environment].
    *
    * @param args Arguments to pass to the tool.
    * @param environment Environment to set for the tool invocation.
    * @return A configured instance of the tool adapter.
    */
   abstract fun configure(args: Arguments, environment: Environment): T
+
+  /**
+   * Prepares an instance of the tool adapter, using the provided [args] and [environment].
+   *
+   * @param args Arguments to pass to the tool.
+   * @param environment Environment to set for the tool invocation.
+   * @return A configured instance of the tool adapter.
+   */
+  abstract fun create(args: Arguments, environment: Environment): C
 
   /** @return Arguments which should trigger help text to print. */
   open fun helpIndicators(): TreeSet<String> = defaultHelpIndicators
@@ -156,7 +167,7 @@ abstract class DelegatedToolCommand<T> (
           when (val result = configure(
             args = effectiveToolArgs.build(),
             environment = effectiveToolEnv.build(),
-          ).delegateToTool(this@invoke, state)) {
+          ).delegateToTool(Statics.resourcesPath)) {
             Tool.Result.Success -> success()
             else -> error("Failed to call tool: $result") // @TODO: delegated error handling
           }

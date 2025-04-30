@@ -45,16 +45,19 @@ public sealed interface Arguments {
    *
    * @return List of strings representing this argument, suitable for use in a command line.
    */
-  public fun asArgumentList(): List<String> = asArgumentStrings().toList()
+  public fun asArgumentList(context: ArgumentContext = ArgumentContext.Default): List<String> {
+    return asArgumentStrings(context).toList()
+  }
 
   /**
    * Format this object as a sequence of command-line arguments.
    *
    * @return Sequence of strings representing this argument, suitable for use in a command line.
    */
-  public fun asArgumentStrings(): Sequence<String> = asArgumentSequence()
-    .flatMap { it.asArgumentSequence() }
-    .map { it.asArgumentString() }
+  public fun asArgumentStrings(context: ArgumentContext = ArgumentContext.Default): Sequence<String> =
+    asArgumentSequence()
+      .flatMap { it.asArgumentSequence() }
+      .map { it.asArgumentString(context) }
 
   /**
    * Get the argument at the positional [index], or throw.

@@ -14,7 +14,7 @@
   <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
   <variable name="APPENDER" value="${log.file.root:-ASYNC_LAZY}" />
   <variable name="ROOT_LOGLEVEL" value="${elide.logging.root.level:-warn}" />
-  <serializeModel file="src/main/resources/logback.scmo" />
+  <serializeModel file="packages/cli/src/main/resources/logback.scmo" />
   <contextName>elide</contextName>
 
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator" />
@@ -99,13 +99,12 @@
 <!--  <logger name="elide.*" level="debug" />-->
 <!--  <logger name="elide.tool.cli.cmd.tool.AbstractTool" level="debug" />-->
 <!--  <logger name="elide.tool.cli.cmd.tool.DelegatedToolCommand" level="debug" />-->
-<!--  <logger name="elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler" level="debug" />-->
-<!--  <logger name="elide.tool.cli.cmd.tool.kotlinc.KotlinCompiler$KotlinCliTool" level="debug" />-->
-  <logger name="elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter" level="warn" />
-  <logger name="elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter$JavacCliTool" level="warn" />
+  <logger name="elide.tooling.kotlin.KotlinCompiler" level="warn" />
   <logger name="elide.tooling.jvm.resolver.MavenAetherResolver" level="warn" />
   <logger name="elide.tool.cli.cmd.builder.ToolBuildCommand" level="warn" />
   <logger name="elide.tooling.jvm.JvmBuildConfigurator" level="warn" />
+  <logger name="elide.tooling.AbstractTool" level="warn" />
+  <logger name="elide.exec.ActionScope" level="warn" />
 
   <!-- Server/Tool Logger -->
   <logger name="tool" additivity="false">

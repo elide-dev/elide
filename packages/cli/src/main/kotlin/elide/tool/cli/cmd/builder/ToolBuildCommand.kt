@@ -46,7 +46,6 @@ import elide.exec.TaskGraphEvent.*
 import elide.exec.TaskId
 import elide.exec.execute
 import elide.exec.on
-import elide.runtime.gvm.Virtual
 import elide.tool.asArgumentString
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
@@ -125,9 +124,11 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
         BuildConfigurators.contribute(project.load(), it)
       }
     }.onSuccess {
-      val done = System.currentTimeMillis()
-      val elapsed = done - start
-      output { append("Configured build in ${elapsed}ms") }
+      if (verbose) {
+        val done = System.currentTimeMillis()
+        val elapsed = done - start
+        output { append("Configured build in ${elapsed}ms") }
+      }
     }.onFailure {
       if (state()?.output?.verbose == true) {
         output { appendLine(it.stackTraceToString()) }
@@ -180,6 +181,11 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
           TaskGraph.build(buildConfig.taskGraph)
         }
 
+        val depsTask = progress.addTask(
+          taskLayout,
+          context = "Resolving dependencies...",
+        )
+
         // finalize configurations
         logging.debug { "Configuring dependency resolvers" }
         val resolvers = async {
@@ -189,30 +195,24 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
         }
 
         // launch task to resolve deps
-        val depsTask = progress.addTask(
-          taskLayout,
-          context = "Resolving dependencies...",
-        )
         progress.refresh()
 
         // seal (finally configure) all dependency resolvers
         val allResolvers = resolvers.await()
 
         var completedResolvers = 0L
-        allResolvers.flatMap { resolver ->
+        allResolvers.map { resolver ->
           depsTask.update {
             context = "Resolving ${resolver.second.ecosystem.name} dependencies"
           }
-          resolver.second.resolve(this).also {
-            it.forEach { task ->
-              task.invokeOnCompletion {
-                depsTask.update {
-                  completed = ++completedResolvers
-                }
+          resolver.second.resolve(this).toList().also { suite ->
+            suite.forEach {
+              depsTask.update {
+                completed = ++completedResolvers
               }
             }
           }
-        }.joinAll()
+        }.flatten().joinAll()
 
         depsTask.update {
           context = "Dependencies ready"
@@ -220,11 +220,10 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
         }
         progress.refresh()
         delay(16.milliseconds)
-        progress.removeTask(depsTask.id)
 
         logging.debug { "Entering graph scope" }
         val execution = coroutineScope {
-          launch(Dispatchers.Virtual) {
+          launch {
 
             // we are finished resolving dependencies
             topTask.advance(1L)
@@ -233,78 +232,59 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
           // seal the task graph now, and then execute it, delegating events to output
           topTask.update { context = "Configuring build..." }
-          kotlinx.coroutines.withContext(Dispatchers.Virtual) {
-            graph.await().execute(buildConfig.actionScope) {
-              logging.trace { "Binding graph events" }
-              val mappedTasks: MutableMap<TaskId, Task> = mutableMapOf()
-              val mappedProgress: MutableMap<TaskId, ProgressTask<String>> = mutableMapOf()
-              val taskStarts: MutableMap<TaskId, Long> = mutableMapOf()
-              val finishedTasks: MutableList<ProgressTask<*>> = mutableListOf()
 
-              on(Configured) {
-                logging.debug { "Task graph configured in ${System.currentTimeMillis() - start}ms" }
-                topTask.update { context = "Building project..." }
-                progress.refresh(true)
-              }
-              on(TaskReady) {
-                val task = context as Task
-                logging.trace { "[build] Task ready for execution: $task" }
-                mappedTasks[task.id] = task
-              }
-              on(TaskExecute) {
-                val task = context as Task
-                logging.debug { "[build] Task executing: $task" }
-                progress.addTask(
-                  taskLayout,
-                  context = task.describe(),
-                ).also {
-                  mappedProgress[task.id] = it
-                  taskStarts[task.id] = System.currentTimeMillis()
-                }
-              }
-              on(TaskFinished) {
-                val task = context as Task
-                logging.debug { "[build] Task finished: $task" }
-                val progressTask = mappedProgress.remove(task.id)
-                val startedAt = taskStarts.remove(task.id)
+          graph.await().execute(buildConfig.actionScope) {
+            logging.trace { "Binding graph events" }
+            val mappedTasks: MutableMap<TaskId, Task> = mutableMapOf()
+            val mappedProgress: MutableMap<TaskId, ProgressTask<String>> = mutableMapOf()
+            val taskStarts: MutableMap<TaskId, Long> = mutableMapOf()
+            val finishedTasks: MutableList<ProgressTask<*>> = mutableListOf()
 
-                progressTask?.let {
-                  if (startedAt != null) {
-                    it.update { context = "Completed in ${System.currentTimeMillis() - startedAt}ms" }
-                  }
-                  it.advance(1L)
-                }
-                mappedTasks.remove(task.id)
-                finishedTasks.add(progressTask ?: return@on)
+            on(Configured) {
+              logging.debug { "Task graph configured in ${System.currentTimeMillis() - start}ms" }
+              topTask.update { context = "Building project..." }
+              progress.refresh(true)
+            }
+            on(TaskReady) {
+              val task = context as Task
+              logging.trace { "[build] Task ready for execution: $task" }
+              mappedTasks[task.id] = task
+            }
+            on(TaskExecute) {
+              val task = context as Task
+              logging.debug { "[build] Task executing: $task" }
+              progress.addTask(
+                taskLayout,
+                context = task.describe(),
+              ).also {
+                mappedProgress[task.id] = it
+                taskStarts[task.id] = System.currentTimeMillis()
               }
-              on(ExecutionFinished) {
-                // remove all pending tasks
-                logging.debug { "[build] Execution finished for graph" }
-                finishedTasks.forEach {
-                  progress.removeTask(it.id)
+            }
+            on(TaskFinished) {
+              val task = context as Task
+              logging.debug { "[build] Task finished: $task" }
+              val progressTask = mappedProgress.remove(task.id)
+              val startedAt = taskStarts.remove(task.id)
+
+              progressTask?.let {
+                if (startedAt != null) {
+                  it.update { context = "Completed in ${System.currentTimeMillis() - startedAt}ms" }
                 }
+                it.advance(1L)
+              }
+              mappedTasks.remove(task.id)
+              finishedTasks.add(progressTask ?: return@on)
+            }
+            on(ExecutionFinished) {
+              // remove all pending tasks
+              logging.debug { "[build] Execution finished for graph" }
+              finishedTasks.forEach {
+                progress.removeTask(it.id)
               }
             }
           }
         }
-
-//        val compileTask = async {
-//          val startCompile = System.currentTimeMillis()
-//          progress.addTask(
-//            taskLayout,
-//            total = resolvers.size.toLong(),
-//            completed = 0,
-//            context = "Compiling sources...",
-//          ).let { compileTask ->
-//            delay(400.milliseconds)
-//
-//            val elapsedMs = System.currentTimeMillis() - startCompile
-//            compileTask.advance(1L)
-//            compileTask.update { context = "✅ Sources compiled in ${elapsedMs}ms" }
-//            topTask.advance(1L)
-//            compileTask.also { it.advance() }
-//          }
-//        }.await()
 
         // wait for graph to fully complete
         logging.debug { "[build] Awaiting graph completion" }
@@ -315,7 +295,7 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
         val totalMs = System.currentTimeMillis() - start
         currentMessage = "✅ Build succeeded in ${totalMs}ms"
-//        progress.removeTask(compileTask.id)
+        progress.removeTask(depsTask.id)
         progress.removeTask(topTask.id)
         progress.refresh(true)
         logging.debug { "[build] Finished with all build tasks; clearing and succeeding" }
@@ -323,36 +303,6 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
         progress.clear()
         output { appendLine(currentMessage) }
         success()
-
-//        coroutineScope {
-//          val progress = MultiProgressBarAnimation(terminal).animateInCoroutine()
-//          val overall = progress.addTask(overallLayout, total = 100)
-//          //val tasks = List(3) { progress.addTask(taskLayout, total = 1, completed = 1, context = 0) }
-//
-//          launch {
-//            progress.execute()
-//          }
-//
-
-//
-//          // resolve all dependencies
-//          logging.debug { "Resolving project dependencies" }
-//          val resolvers = buildConfig.resolvers.all().toList()
-//          val deps = progress.addTask(taskLayout, total = resolvers.size.toLong(), completed = 0, context = 0)
-//          resolvers.flatMap { resolver ->
-//            resolver.second.resolve(this).also {
-//              deps.advance()
-//            }
-//          }.joinAll()
-//
-//          //output { append("Dependencies ready.") }
-//          //output { append("Project '$name' is not implemented yet; tasks complete.") }
-//
-//          //val totalMs = System.currentTimeMillis() - start
-//          overall.advance(amount = overall.total ?: 100)
-//          // output { append("✅ Build succeeded in ${totalMs}ms") }
-//          success()
-//        }
       }
     }
   }
@@ -364,9 +314,11 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     // resolve project name and version; use folder name if no project name is specified.
     val projectName = project.manifest.name ?: project.root.name
-    when (val version = project.manifest.version) {
-      null -> output { append("Building '$projectName'...") }
-      else -> output { append("Building '$projectName' (v$version)...") }
+    if (verbose) {
+      when (val version = project.manifest.version) {
+        null -> output { append("Building '$projectName'...") }
+        else -> output { append("Building '$projectName' (v$version)...") }
+      }
     }
 
     // if the dev has specified a `build` script, prefer that. otherwise, try to run the automatic builder, which infers

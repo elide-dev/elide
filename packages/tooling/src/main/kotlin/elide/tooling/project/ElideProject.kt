@@ -27,6 +27,7 @@ import kotlin.io.path.extension
 import kotlin.streams.asSequence
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.plugins.env.EnvConfig.EnvVar
+import elide.tool.cli.Statics
 import elide.tooling.project.manifest.ElidePackageManifest
 
 /**
@@ -52,6 +53,11 @@ public interface ElideProjectLoader {
    * Factory for producing source sets.
    */
   public val sourceSetFactory: SourceSetFactory
+
+  /**
+   * Elide's binary resources path.
+   */
+  public val resourcesPath: Path
 }
 
 /** Information about an Elide project. */
@@ -84,6 +90,8 @@ public object DefaultProjectLoader : ElideProjectLoader {
       else -> "glob:$spec"
     }
   }
+
+  override val resourcesPath: Path get() = Statics.resourcesPath
 
   private fun pathMatcher(spec: String): PathMatcher {
     return FileSystems.getDefault().getPathMatcher(matchSpec(spec))
@@ -297,6 +305,9 @@ public interface SourceSets {
 public sealed interface ElideConfiguredProject : ElideProject {
   /** Source sets loaded for this project. */
   public val sourceSets: SourceSets
+
+  /** Static path to binary resources. */
+  public val resourcesPath: Path
 }
 
 // Create a source file path with a path and lang; if no lang is provided, best efforts are made to detect one.
@@ -345,6 +356,7 @@ private fun sourceSetFileFromPath(path: Path, lang: SourceSetLanguage? = null): 
     return ElideConfiguredProjectImpl(
       sourceSets = sourceSets,
       info = this,
+      resourcesPath = loader.resourcesPath,
     )
   }
 }
@@ -362,6 +374,7 @@ private fun sourceSetFileFromPath(path: Path, lang: SourceSetLanguage? = null): 
 // Internal implementation class of a [ElideLoadedProject].
 internal class ElideConfiguredProjectImpl(
   override val sourceSets: SourceSets,
+  override val resourcesPath: Path,
   private val info: ElideProjectInfo,
 ) : ElideProject by info, ElideConfiguredProject {
   override suspend fun load(loader: ElideProjectLoader): ElideConfiguredProject {
@@ -369,9 +382,11 @@ internal class ElideConfiguredProjectImpl(
   }
 
   companion object {
-    @JvmStatic fun configure(project: ElideProject, sourceSets: SourceSets): ElideConfiguredProject {
+    @JvmStatic
+    fun configure(project: ElideProject, sourceSets: SourceSets, resourcesPath: Path): ElideConfiguredProject {
       return ElideConfiguredProjectImpl(
         sourceSets = sourceSets,
+        resourcesPath = resourcesPath,
         info = project as? ElideProjectInfo ?: ElideProjectInfo(
           root = project.root,
           manifest = project.manifest,

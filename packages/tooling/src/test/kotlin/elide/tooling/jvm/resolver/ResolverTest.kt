@@ -28,7 +28,7 @@ import org.eclipse.aether.transport.file.FileTransporterFactory
 import org.eclipse.aether.transport.http.HttpTransporterFactory
 import org.eclipse.aether.transport.wagon.WagonTransporterFactory
 import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator
-import kotlin.test.Test
+import kotlin.test.*
 
 @Suppress("DEPRECATION")
 class ResolverTest {
@@ -46,7 +46,7 @@ class ResolverTest {
     val session = MavenRepositorySystemUtils.newSession()
 
     // Set local repository
-    val localRepo = LocalRepository("build/test-target/local-repo")
+    val localRepo = LocalRepository("build/test-target/local-repo1")
     session.localRepositoryManager = repoSystem.newLocalRepositoryManager(session, localRepo)
 
     // Define remote repositories
@@ -77,5 +77,68 @@ class ResolverTest {
     println(nlg.getDependencies(true).joinToString("\n"))
     println("\nClasspath:")
     println(nlg.classPath)
+  }
+
+  @Test fun testRecursiveResolverEndToEnd() {
+    // Create a new Maven repository system
+    val locator = MavenRepositorySystemUtils.newServiceLocator()
+    locator.addService(RepositoryConnectorFactory::class.java, BasicRepositoryConnectorFactory::class.java)
+    locator.addService(TransporterFactory::class.java, FileTransporterFactory::class.java)
+    locator.addService(TransporterFactory::class.java, WagonTransporterFactory::class.java)
+    locator.addService(TransporterFactory::class.java, HttpTransporterFactory::class.java)
+
+    val repoSystem = locator.getService(RepositorySystem::class.java)
+
+    // Create a session for managing repository interactions
+    val session = MavenRepositorySystemUtils.newSession()
+
+    // Set local repository
+    val localRepo = LocalRepository("build/test-target/local-repo2")
+    session.localRepositoryManager = repoSystem.newLocalRepositoryManager(session, localRepo)
+
+    // Define remote repositories
+    val mavenCentral = RemoteRepository.Builder(
+      "central",
+      "default",
+      "https://repo1.maven.org/maven2/"
+    ).build()
+
+    // 1 -- Resolution
+
+    // Define the artifact to resolve
+    val artifact = DefaultArtifact("com.google.guava:guava:33.4.8-jre")
+    val dependency = Dependency(artifact, null)
+
+    // Create collect request
+    val collectRequest = CollectRequest(listOf(dependency), emptyList(), listOf(mavenCentral))
+
+    // Resolve dependencies
+    val dependencyRequest = DependencyRequest(collectRequest, null)
+    val dependencyResult = repoSystem.resolveDependencies(session, dependencyRequest)
+
+    // Print resolved dependencies
+    val nlg = PreorderNodeListGenerator()
+    dependencyResult.root.accept(nlg)
+
+    println("Resolved dependencies:")
+    println(nlg.getDependencies(true).joinToString("\n"))
+    println("\nClasspath:")
+    println(nlg.classPath)
+
+    // 2 -- Collection
+
+    val dependencyRequest2 = DependencyRequest(dependencyResult.root, null)
+    dependencyRequest.setCollectRequest(collectRequest)
+
+    val result2 = repoSystem.resolveDependencies(session, dependencyRequest2)
+    val rootNode = result2.root
+    assertNotNull(rootNode)
+
+    val nlg2 = PreorderNodeListGenerator()
+    rootNode.accept(nlg2)
+    println("Resolved dependencies:")
+    println(nlg2.getDependencies(true).joinToString("\n"))
+    println("\nClasspath:")
+    println(nlg2.classPath)
   }
 }

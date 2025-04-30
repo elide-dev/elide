@@ -21,6 +21,8 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
+import elide.runtime.Logger
+import elide.runtime.Logging
 
 /**
  * # Action Scope
@@ -29,6 +31,7 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
   public val actionContext: Action.ActionContext
   public val taskScope: StructuredTaskScope<Any?>
   public val allTasks: Sequence<StructuredTaskScope.Subtask<*>>
+  public val logging: Logger
   public fun bind(execution: TaskGraphExecution.Listener)
   public fun currentExecution(): TaskGraphExecution.Listener
   public fun <R> register(subtask: StructuredTaskScope.Subtask<R>): StructuredTaskScope.Subtask<R>
@@ -37,6 +40,7 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
     override val actionContext: Action.ActionContext,
     override val coroutineContext: CoroutineContext,
     override val taskScope: StructuredTaskScope<Any?>,
+    override val logging: Logger,
   ) : ActionScope {
     // Bound execution scope, if any.
     private val boundScope = atomic<TaskGraphExecution.Listener?>(null)
@@ -116,7 +120,7 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
       coroutines: CoroutineContext,
       scope: StructuredTaskScope<Any?>,
     ): ActionScope {
-      return DefaultActionScope(actions, coroutines, scope)
+      return DefaultActionScope(actions, coroutines, scope, Logging.of(ActionScope::class))
     }
   }
 }

@@ -68,7 +68,8 @@ public interface BuildConfigurator : ProjectConfigurator {
     public val events: BuildEventController
     public val layout: ProjectDirectories
     public val manifest: ElidePackageManifest
+    public val resourcesPath: Path
   }
 
-  public fun contribute(state: ElideBuildState, config: BuildConfiguration)
+  public suspend fun contribute(state: ElideBuildState, config: BuildConfiguration)
 }

@@ -16,16 +16,9 @@
 package elide.tool
 
 /**
- * @return Argument string within the default argument context.
- */
-public inline fun Argument.asArgumentString(): String {
-  return ArgumentContext.Default.asArgumentString()
-}
-
-/**
  * @return Argument string within the provided argument [context].
  */
-public inline fun Argument.asArgumentString(context: ArgumentContext): String {
+public inline fun Argument.asArgumentString(context: ArgumentContext = ArgumentContext.Default): String {
   return context.asArgumentString()
 }
 

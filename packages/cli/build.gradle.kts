@@ -1008,6 +1008,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "org.jetbrains.kotlin.com.intellij.util.AbstractQuery",
   "org.jetbrains.kotlin.com.intellij.util.ConcurrentLongObjectHashMap",
   "org.jetbrains.kotlin.com.intellij.openapi.progress.impl.CoreProgressManager",
+  "org.jetbrains.kotlin.com.intellij.util.containers.ConcurrentIntObjectHashMap",
 
   // --- Netty -----
 
@@ -1590,8 +1591,8 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx12g",
 ) else listOf(
-  "-J-Xmx36g",
-  "--parallelism=30",
+  "-J-Xmx64g",
+  "--parallelism=32",
 ))
 
 val linuxGvmReleaseFlags = listOf<String>()

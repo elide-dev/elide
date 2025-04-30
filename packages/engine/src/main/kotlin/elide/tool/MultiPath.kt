@@ -166,7 +166,42 @@ public sealed interface MultiPath : Argument {
    * Base interface for mutable multi-path containers. This interface extends the base [MultiPath] interface, and adds
    * methods for mutating the container.
    */
-  public sealed interface MutableMultiPath : MultiPath, MutableCollection<Entry>
+  public sealed interface MutableMultiPath : MultiPath, MutableCollection<Entry> {
+    /**
+     * Prepend the provided [path] to the current container.
+     *
+     * @param path Path to prepend to the container.
+     */
+    public fun prepend(path: Path): Boolean
+
+    /**
+     * Prepend the provided [entry] to the current container.
+     *
+     * @param entry Entry to prepend to the container.
+     */
+    public fun prepend(entry: Entry): Boolean
+
+    /**
+     * Prepend the provided [suite] to the current container.
+     *
+     * @param suite Path suite to prepend to the container.
+     */
+    public fun prepend(suite: MultiPath): Boolean
+
+    /**
+     * Append the provided [path] to the current container.
+     *
+     * @param path Path to append to the container.
+     */
+    public fun add(path: Path): Boolean
+
+    /**
+     * Append the provided [suite] to the current container.
+     *
+     * @param suite Path suite to append to the container.
+     */
+    public fun add(suite: MultiPath): Boolean
+  }
 
   /**
    * ## Multi-Path Container
@@ -211,7 +246,7 @@ public sealed interface MultiPath : Argument {
      * @param path Path to add to the container.
      * @return True if the path was added, false if it was already present.
      */
-    public fun add(path: Path): Boolean
+    override fun add(path: Path): Boolean
 
     /**
      * Set the specified [index] to the provided [path].
@@ -268,7 +303,7 @@ public sealed interface MultiPath : Argument {
  * Type of multi-path expressed by a JVM path container.
  */
 public enum class JvmMultiPath (internal val shortFlag: String, internal val longFlag: String) {
-  CLASSPATH("-cp", "--class-path"),
+  CLASSPATH("-cp", "-classpath"),
   MODULEPATH("-mp", "--module-path");
 
   internal fun inferEntryType(path: Path): JvmMultiPathEntryType {
@@ -383,7 +418,14 @@ public sealed class AbstractJvmMultiPathContainer : MultiPathContainer<JvmMultiP
   }
 
   override fun toMutable(): MultiPath.MutableMultiPath {
-    TODO("Not yet implemented")
+    return when (role) {
+      CLASSPATH -> return MutableClasspath.from(
+        paths.map { it.path }.toList()
+      )
+      MODULEPATH -> return MutableModulepath.from(
+        paths.map { it.path }.toList()
+      )
+    }
   }
 
   // Internal factories used by `Classpath` and `Modulepath` wrapper types.
@@ -469,6 +511,75 @@ public sealed class AbstractJvmMultiPathContainer : MultiPathContainer<JvmMultiP
 
   override operator fun plus(path: Path): MutableJvmMultiPathContainer = apply {
     TODO("Not yet implemented")
+  }
+
+  override fun prepend(path: Path): Boolean {
+    val entry = JvmMultiPathEntry(
+      type = role.inferEntryType(path),
+      path = path,
+    )
+    if (path in entries) {
+      if (paths.first().path == path) {
+        // already at the front
+        return false
+      }
+      paths.remove(entry) // need to move it to the front
+    }
+    paths.add(0, entry)
+    return true
+  }
+
+  override fun prepend(entry: Entry): Boolean {
+    require(entry is JvmMultiPathEntry) { "Invalid entry type" }
+    if (entry.path in entries) {
+      if (paths.first() == entry) {
+        // already at the front
+        return false
+      }
+      paths.remove(entry) // need to move it to the front
+    }
+    paths.add(0, entry)
+    return true
+  }
+
+  override fun prepend(suite: MultiPath): Boolean {
+    var mutated = false
+
+    // we need to iterate in reverse to maintain order of other suite
+    for (entry in suite.asSequence().toList().reversed()) {
+      val entryObj = when (entry) {
+        is JvmMultiPathEntry -> entry
+      }
+      if (entryObj.path in entries) {
+        if (paths.first() == entryObj) {
+          // already at the front
+          continue
+        }
+        mutated = true
+        paths.remove(entryObj) // need to move it to the front
+      }
+      mutated = true
+      paths.add(0, entryObj)
+    }
+    return mutated
+  }
+
+  override fun add(suite: MultiPath): Boolean {
+    var mutated = false
+
+    // we need to iterate in reverse to maintain order of other suite
+    for (entry in suite.asSequence()) {
+      val entryObj = when (entry) {
+        is JvmMultiPathEntry -> entry
+      }
+      if (entryObj.path in entries) {
+        continue
+      }
+      mutated = true
+      paths.add(entryObj)
+      entries.add(entryObj.path)
+    }
+    return mutated
   }
 
   override fun add(path: Path): Boolean {

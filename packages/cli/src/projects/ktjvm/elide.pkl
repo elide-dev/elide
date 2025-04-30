@@ -20,3 +20,4 @@ sources {
   ["main"] = "src/main/kotlin/**/*.kt"
   ["test"] = "src/test/kotlin/**/*.kt"
 }
+

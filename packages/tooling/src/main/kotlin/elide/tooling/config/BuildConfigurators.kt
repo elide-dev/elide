@@ -25,7 +25,11 @@ public object BuildConfigurators {
   }
 
   @JvmStatic
-  public fun contribute(project: ElideConfiguredProject, from: Sequence<BuildConfigurator>, to: BuildConfiguration) {
+  public suspend fun contribute(
+    project: ElideConfiguredProject,
+    from: Sequence<BuildConfigurator>,
+    to: BuildConfiguration,
+  ) {
     val layout = object : BuildConfigurator.ProjectDirectories {
       override val projectRoot: Path get() = to.projectRoot
     }
@@ -35,13 +39,14 @@ public object BuildConfigurators {
       override val events: BuildConfigurator.BuildEventController get() = TODO("Not yet implemented")
       override val manifest: ElidePackageManifest get() = project.manifest
       override val layout: BuildConfigurator.ProjectDirectories get() = layout
+      override val resourcesPath: Path get() = project.resourcesPath
     }
     from.forEach {
       it.contribute(state, to)
     }
   }
 
-  @JvmStatic public fun contribute(project: ElideConfiguredProject, to: BuildConfiguration) {
+  @JvmStatic public suspend fun contribute(project: ElideConfiguredProject, to: BuildConfiguration) {
     contribute(project, collect(), to)
   }
 }

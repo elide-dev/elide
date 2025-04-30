@@ -75,6 +75,9 @@ class KotlinFeatureOptions {
   /// Whether to enable classpath/modulepath injection features.
   injection: Boolean = true
 
+  /// Whether to enable Kotlin's test support features.
+  testing: Boolean = true
+
   /// Whether to enable KotlinX dependencies automatically on the classpath.
   kotlinx: Boolean = true
 

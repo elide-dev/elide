@@ -187,7 +187,12 @@ fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {
   entryInitialized = true
 
   earlyLog("Setting static properties")
-  val binPath = ProcessHandle.current().info().command().orElse(null)
+  val binPath = when (ImageInfo.inImageRuntimeCode()) {
+    true -> ProcessHandle.current().info().command().orElse(null)
+    false -> requireNotNull(System.getProperty("elide.gvmResources")) {
+      "Failed to resolve `elide.resources` property"
+    }
+  }
   setStaticProperties(binPath)
   if (installStatics) {
     earlyLog("Installing statics")

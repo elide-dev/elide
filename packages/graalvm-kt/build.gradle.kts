@@ -74,6 +74,19 @@ val embeddedKotlinRuntime = layout.projectDirectory.file(
   "src/main/resources/META-INF/elide/embedded/runtime/kt/elide-kotlin-runtime.jar"
 ).asFile
 
+/*
+private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
+    private const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine"
+    private const val JUNIT_PLATFORM_ENGINE = "org.junit.platform:junit-platform-engine"
+    private const val JUNIT_PLATFORM_CONSOLE = "org.junit.platform:junit-platform-console"
+    private const val JUNIT_JUPITER_PARAMS = "org.junit.jupiter:junit-jupiter-params"
+    private const val KOTLIN_TEST = "org.jetbrains.kotlin:kotlin-test"
+    private const val KOTLIN_TEST_JUNIT5 = "org.jetbrains.kotlin:kotlin-test-junit5"
+    private const val KOTLINX_COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
+    private const val KOTLINX_COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
+
+ */
+
 dependencies {
   api(projects.packages.engine)
   api(libs.graalvm.truffle.api)
@@ -103,6 +116,7 @@ dependencies {
   embeddedKotlin(libs.kotlinx.coroutines.core.jvm)
   embeddedKotlin(libs.kotlinx.coroutines.jdk9)
   embeddedKotlin(libs.kotlinx.coroutines.slf4j)
+  embeddedKotlin(libs.kotlinx.coroutines.test)
   embeddedKotlin(libs.kotlinx.serialization.core.jvm)
   embeddedKotlin(libs.kotlinx.serialization.json.jvm)
   embeddedKotlin(libs.kotlinx.html.jvm)
@@ -111,6 +125,12 @@ dependencies {
   embeddedKotlin(libs.ksp.api)
   embeddedKotlin(libs.ksp.cmdline)
   embeddedKotlin(mn.micronaut.inject.kotlin)
+  embeddedKotlin(libs.junit.jupiter.api)
+  embeddedKotlin(libs.junit.jupiter.params)
+  embeddedKotlin(libs.junit.jupiter.engine)
+  embeddedKotlin(libs.junit.platform.commons)
+  embeddedKotlin(libs.junit.platform.console)
+  embeddedKotlin(libs.junit.platform.engine)
   embeddedKotlin(files(embeddedKotlinRuntime))
 
   embeddedJava(libs.jacoco.agent)

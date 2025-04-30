@@ -49,6 +49,7 @@ public object Statics {
   }
 
   @Volatile private var execBinPath: String = ""
+
   @Volatile private var initialArgs = emptyArray<String>()
 
   /** Invocation args. */

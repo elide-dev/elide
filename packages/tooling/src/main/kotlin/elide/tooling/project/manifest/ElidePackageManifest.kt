@@ -15,6 +15,8 @@ package elide.tooling.project.manifest
 
 import java.net.URI
 import kotlinx.serialization.Serializable
+import elide.tool.Argument
+import elide.tool.MutableArguments
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest.*
 
@@ -236,10 +238,33 @@ public data class ElidePackageManifest(
     val jvmTarget: JvmTarget? = null,
     val noJdk: Boolean = false,
     val jvmTargetValidationMode: JvmTargetValidationMode = JvmTargetValidationMode.ERROR,
-  )
+  ) {
+    /**
+     * Amend the provided [args] with Kotlin Compiler option arguments.
+     *
+     * @param args Mutable arguments to amend.
+     */
+    public fun amend(args: MutableArguments) {
+      // opt-ins
+      args.addAll(optIn.map { Argument.of("-Xopt-in" to it) })
+
+      // compiler options
+      if (progressiveMode) args.add(Argument.of("-progressive"))
+      if (extraWarnings) args.add(Argument.of("-Wextra"))
+      if (allWarningsAsErrors) args.add(Argument.of("-Werror"))
+      if (suppressWarnings) args.add(Argument.of("-nowarn"))
+      if (verbose) args.add(Argument.of("-verbose"))
+      if (apiVersion != "auto") args.add(Argument.of("-api-version" to apiVersion))
+      if (languageVersion != "auto") args.add(Argument.of("-language-version" to languageVersion))
+      if (freeCompilerArgs.isNotEmpty()) {
+        args.addAll(freeCompilerArgs.map { Argument.of(it) })
+      }
+    }
+  }
 
   @JvmRecord @Serializable public data class KotlinFeatureOptions(
     val injection: Boolean = true,
+    val testing: Boolean = true,
     val kotlinx: Boolean = true,
     val serialization: Boolean = kotlinx,
     val coroutines: Boolean = kotlinx,

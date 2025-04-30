@@ -25,6 +25,15 @@ import kotlinx.serialization.Transient
 import elide.exec.Action.ActionContext
 import elide.exec.TaskGraphEvent.*
 
+// Whether to emit debug logs for task execution.
+private const val TASK_DEBUG_LOG = false
+
+// Whether to force task execution to fail on-error.
+private const val TASK_DEBUG_FORCE_CRASH_ON_ERROR = false
+
+// Whether to force task execution to fail always.
+private const val TASK_DEBUG_FORCE_CRASH_ALWAYS = false
+
 /**
  * # Task
  */
@@ -122,29 +131,55 @@ public sealed interface Task : Satisfiable {
       this.description.set(descriptionProvider)
     }
 
+    private fun ActionScope.debugLog(msg: () -> String) {
+      if (TASK_DEBUG_LOG) {
+        logging.trace { "[build:graph] ${msg()}" }
+      }
+    }
+
     override fun describe(): String = description.get()?.invoke(this) ?: error("No description for task: $this")
     override val status: Status get() = taskStatus.status
     override fun transition(to: Status) {
       taskStatus.status = to
     }
     override suspend fun executeTask(scope: ActionScope): Job = scope.currentExecution().let { execution ->
+      scope.debugLog { "Launching job for task '$id'" }
+
       scope.launch {
+        scope.debugLog { "Emitting 'TaskExecute' for '$id'" }
         execution.dispatch(TaskExecute, this@DefaultTask)
 
         runCatching {
           when (action(scope)) {
-            Result.Nothing -> completeWith(Result.Nothing)
+            Result.Nothing -> if (TASK_DEBUG_FORCE_CRASH_ALWAYS) {
+              error("Task '$id' force-failed")
+            } else {
+              completeWith(Result.Nothing)
+            }
           }
         }.onSuccess {
+          scope.debugLog { "Task '$id' finished without error; emitting 'TaskCompleted'" }
           execution.dispatch(TaskCompleted, this@DefaultTask)
+          scope.debugLog { "Emitting 'TaskFinished' for '$id'" }
           execution.dispatch(TaskFinished, this@DefaultTask)
           transition(Status.SUCCESS)
         }.onFailure {
+          scope.debugLog { "Task '$id' finished exceptionally: $it" }
           err.set(it)
+          scope.debugLog { "Emitting 'TaskFailed' for '$id'" }
           execution.dispatch(TaskFailed, this@DefaultTask)
+          scope.debugLog { "Emitting 'TaskFinished' for '$id'" }
           execution.dispatch(TaskFinished, this@DefaultTask)
           transition(Status.FAIL)
+
+          if (TASK_DEBUG_FORCE_CRASH_ON_ERROR) {
+            // force failure if requested.
+            it.printStackTrace()
+            error("Task failed: $this")
+          }
         }
+      }.also {
+        scope.debugLog { "Job launched for task at ID '$id'" }
       }
     }
 

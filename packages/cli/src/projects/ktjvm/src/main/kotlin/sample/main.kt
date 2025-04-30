@@ -1,7 +1,9 @@
 package sample
 
+import com.google.common.base.Joiner
+
 fun render_greeting(): String {
-  return "Hello, World!"
+  return Joiner.on(", ").join("Hello", "World")
 }
 
 fun main() {

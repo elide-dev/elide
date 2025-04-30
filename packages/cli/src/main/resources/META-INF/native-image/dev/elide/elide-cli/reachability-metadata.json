@@ -1,6 +1,16 @@
 {
   "reflection": [
     {
+      "type": "org.jetbrains.kotlin.com.intellij.psi.augment.PsiAugmentProvider[]",
+      "unsafeAllocated": true
+    },
+    {
+      "type": "org.jetbrains.kotlin.com.intellij.psi.augment.PsiAugmentProvider"
+    },
+    {
+      "type": "org.jetbrains.kotlin.com.intellij.lang.jvm.facade.JvmElementProvider"
+    },
+    {
       "type": "kotlinx.coroutines.CancellableContinuationImpl",
       "fields": [
         {
@@ -880,55 +890,21 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinJvmCompilerOptions",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "java.util.List",
-            "java.lang.String",
-            "java.lang.String",
-            "boolean",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
-            "boolean",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTargetValidationMode"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinJvmCompilerOptions",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",

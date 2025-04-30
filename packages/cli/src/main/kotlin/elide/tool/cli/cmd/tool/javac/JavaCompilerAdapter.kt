@@ -30,8 +30,8 @@ import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
-import elide.tool.cli.cmd.tool.AbstractTool
 import elide.tool.cli.cmd.tool.DelegatedToolCommand
+import elide.tooling.AbstractTool
 import elide.tooling.jvm.JAVAC
 import elide.tooling.jvm.JAVAC_DESCRIPTION
 import elide.tooling.jvm.JavaCompiler

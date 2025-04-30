@@ -21,7 +21,6 @@ import org.eclipse.aether.DefaultRepositoryCache
 import org.eclipse.aether.RepositoryCache
 import org.eclipse.aether.RepositorySystem
 import org.eclipse.aether.RepositorySystemSession
-import org.eclipse.aether.SyncContext
 import org.eclipse.aether.artifact.Artifact
 import org.eclipse.aether.artifact.DefaultArtifact
 import org.eclipse.aether.collection.CollectRequest
@@ -30,8 +29,6 @@ import org.eclipse.aether.graph.Dependency
 import org.eclipse.aether.repository.LocalRepository
 import org.eclipse.aether.repository.RemoteRepository
 import org.eclipse.aether.repository.RepositoryPolicy
-import org.eclipse.aether.repository.WorkspaceReader
-import org.eclipse.aether.repository.WorkspaceRepository
 import org.eclipse.aether.resolution.DependencyRequest
 import org.eclipse.aether.resolution.DependencyResult
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory
@@ -41,9 +38,9 @@ import org.eclipse.aether.transfer.AbstractTransferListener
 import org.eclipse.aether.transport.file.FileTransporterFactory
 import org.eclipse.aether.transport.http.HttpTransporterFactory
 import org.eclipse.aether.transport.wagon.WagonTransporterFactory
+import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator
 import java.io.File
 import java.lang.AutoCloseable
-import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.ConcurrentSkipListMap
@@ -52,8 +49,8 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
-import kotlin.io.path.nameWithoutExtension
 import elide.runtime.Logging
 import elide.tool.Classpath
 import elide.tool.ClasspathProvider
@@ -63,9 +60,11 @@ import elide.tool.MultiPathUsage
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.ElidePackageManifest.MavenPackage
+import elide.tooling.project.manifest.ElidePackageManifest.MavenRepository
 
 // Calculate the resolved Maven coordinate to use for a given dependency.
-private fun ElidePackageManifest.MavenPackage.resolvedCoordinate(): String {
+private fun MavenPackage.resolvedCoordinate(): String {
   return coordinate // @TODO resolve special versions
 }
 
@@ -132,9 +131,6 @@ public class MavenAetherResolver internal constructor () :
   // Local dependency repository; available after init.
   private lateinit var local: LocalRepository
 
-  // Synchronization context for Maven operations; available after init.
-  private lateinit var sync: SyncContext
-
   // Whether this resolver has sealed to prevent further modification.
   private val sealed = atomic(false)
 
@@ -142,19 +138,19 @@ public class MavenAetherResolver internal constructor () :
   private lateinit var graph: CollectRequest
 
   // Registry of all witnessed Maven repositories.
-  private val repositories = ConcurrentSkipListMap<String, ElidePackageManifest.MavenRepository>()
+  private val repositories = ConcurrentSkipListMap<String, MavenRepository>()
 
   // Registry of all witnessed Maven dependencies.
-  private val registry = ConcurrentSkipListMap<String, ElidePackageManifest.MavenPackage>()
+  private val registry = ConcurrentSkipListMap<String, MavenPackage>()
 
   // Registry of Maven dependencies by suite type.
-  private val registryByType = ConcurrentSkipListMap<SourceSetSuite, MutableList<ElidePackageManifest.MavenPackage>>()
+  private val registryByType = ConcurrentSkipListMap<SourceSetSuite, MutableList<MavenPackage>>()
 
   // Suites of Maven dependencies.
   private val suites = ConcurrentSkipListSet<SourceSetSuite>()
 
   // Maps packages to their originating projects.
-  private val registryPackageMap = ConcurrentSkipListMap<ElidePackageManifest.MavenPackage, ElidePackageManifest>()
+  private val registryPackageMap = ConcurrentSkipListMap<MavenPackage, MutableList<ElidePackageManifest>>()
 
   // Maps packages to their originating projects.
   private val dependencyResults = ConcurrentLinkedQueue<MavenDependencyResult>()
@@ -163,55 +159,7 @@ public class MavenAetherResolver internal constructor () :
   private val resolved = atomic(false)
 
   // Artifacts held for each Maven package.
-  private val packageArtifacts = ConcurrentSkipListMap<ElidePackageManifest.MavenPackage, ResolvedArtifact>()
-
-  // Reader which checks in local project deps before resolving.
-  private inner class ElideWorkspaceReader(private val state: ElideBuildState) : WorkspaceReader {
-    private val workspaceRepo = WorkspaceRepository()
-
-    override fun getRepository(): WorkspaceRepository = workspaceRepo
-
-    private fun jarFileName(artifact: Artifact): String {
-      return "${artifact.artifactId}-${artifact.version}.jar"
-    }
-
-    private fun artifactBasePath(artifact: Artifact, version: String? = artifact.version): Path {
-      val base = state.localMaven()
-      var resolved = base
-
-      // `org/something/blah/`
-      artifact.groupId.split('.').asSequence().plus(
-        // `artifact/`
-        artifact.artifactId
-      ).let {
-        when (version) {
-          null -> it
-          else -> it.plus(version)
-        }
-      }.forEach {
-        resolved = resolved.resolve(it)
-      }
-      return resolved
-    }
-
-    override fun findArtifact(artifact: Artifact): File? {
-      return artifactBasePath(artifact).resolve(jarFileName(artifact)).takeIf { Files.exists(it) }?.toFile()
-    }
-
-    override fun findVersions(artifact: Artifact): List<String> {
-      return artifactBasePath(artifact, version = null).let { path ->
-        if (!Files.exists(path)) {
-          emptyList()
-        } else {
-          Files.list(path).filter { file ->
-            Files.isDirectory(file)
-          }.map { file ->
-            file.nameWithoutExtension
-          }.toList()
-        }
-      }
-    }
-  }
+  private val packageArtifacts = ConcurrentSkipListMap<MavenPackage, ResolvedArtifact>()
 
   // Listener for events which emit from the repository system.
   private class ElideLocalRepositoryListener(private val state: ElideBuildState) : AbstractRepositoryListener() {
@@ -250,7 +198,6 @@ public class MavenAetherResolver internal constructor () :
     repoSession.cache = repoCache
     repoSession.checksumPolicy = RepositoryPolicy.CHECKSUM_POLICY_FAIL
     repoSession.updatePolicy = RepositoryPolicy.UPDATE_POLICY_DAILY
-    repoSession.workspaceReader = ElideWorkspaceReader(state)
     repoSession.repositoryListener = ElideLocalRepositoryListener(state)
     repoSession.transferListener = ElideMavenTransferListener(state)
 
@@ -263,13 +210,9 @@ public class MavenAetherResolver internal constructor () :
           "Failed to initialize Maven repository system: Local repository manager is null"
         }
 
-      // Sync context shared across users
-      val syncSystem = repoSystem.newSyncContext(repoSession, true)
-
       locator = mvnLocator
       system = repoSystem
       session = repoSession
-      sync = syncSystem
       local = localRepo
       cache = repoCache
       initialized.value = true
@@ -326,7 +269,7 @@ public class MavenAetherResolver internal constructor () :
     name: String,
     manifest: ElidePackageManifest,
     usage: MultiPathUsage,
-    packages: Iterable<ElidePackageManifest.MavenPackage>,
+    packages: Iterable<MavenPackage>,
   ) {
     val suite = SourceSetSuite(
       type = usage,
@@ -337,18 +280,20 @@ public class MavenAetherResolver internal constructor () :
     packages.forEach { pkg ->
       if (pkg.coordinate !in registry) {
         registry[pkg.coordinate] = pkg
-        registryByType.getOrDefault(suite, mutableListOf()).also {
-          it.add(pkg)
-          registryByType[suite] = it
-        }
-        registryPackageMap[pkg] = manifest
-        when (val repo = pkg.repository) {
-          // will resolve from default sources (central, et al)
-          null -> {}
+      }
+      registryByType.getOrDefault(suite, mutableListOf()).also {
+        it.add(pkg)
+        registryByType[suite] = it
+      }
+      registryPackageMap.getOrDefault(pkg, mutableListOf()).also {
+        it.add(manifest)
+      }
+      when (val repo = pkg.repository) {
+        // will resolve from default sources (central, et al)
+        null -> {}
 
-          else -> if (repo !in repositories) {
-            error("Unknown Maven repository: '$repo', for package '${pkg.coordinate}'")
-          }
+        else -> if (repo !in repositories) {
+          error("Unknown Maven repository: '$repo', for package '${pkg.coordinate}'")
         }
       }
     }
@@ -402,63 +347,83 @@ public class MavenAetherResolver internal constructor () :
   }
 
   @Suppress("TooGenericExceptionCaught")
-  override suspend fun resolve(scope: CoroutineScope): Sequence<Job> = sequence {
+  private fun processDependencyResults(dependencyResult: DependencyResult, errors: MutableList<Throwable>) {
+    val depClasspathReq = DependencyRequest(dependencyResult.root, null)
+    depClasspathReq.setCollectRequest(graph)
+    val rootNode = system.resolveDependencies(session, depClasspathReq).root
+
+    val nlg = PreorderNodeListGenerator()
+    rootNode.accept(nlg)
+    val renderedDependencies = nlg.getDependencies(true)
+    val renderedClasspath = nlg.classPath
+    logging.trace { "Finalized dependencies: $renderedDependencies" }
+    logging.debug { "Resolved classpath: $renderedClasspath" }
+
+    renderedDependencies.forEach { dependency ->
+      try {
+        // @TODO cannot associate with source sets this early
+        val artifact = dependency.artifact
+        val coordinate = artifact.groupId + ":" + artifact.artifactId
+        val pkg = registry[coordinate] ?: registry.values.find {
+          it.coordinate == coordinate || it.coordinate.startsWith(coordinate)
+        }
+        if (pkg == null) {
+          val transitivePkg = MavenPackage(
+            group = artifact.groupId,
+            name = artifact.artifactId,
+            version = artifact.version,
+            coordinate = coordinate,
+          )
+          val resolved = ResolvedJarArtifact.of(artifact)
+          packageArtifacts[transitivePkg] = resolved
+          return@forEach
+        }
+        if (pkg in packageArtifacts) {
+          // do we already have this at the same version?
+          val existing = requireNotNull(packageArtifacts[pkg])
+          if (existing.artifact.file == artifact.file) {
+            return@forEach // we already have this
+          }
+          error(
+            "Duplicate Maven package artifact: '${pkg.coordinate}'. Packages are: " +
+              "$pkg and $existing"
+          )
+        } else {
+          packageArtifacts[pkg] = ResolvedJarArtifact.of(artifact)
+        }
+      } catch (err: Throwable) {
+        errors.add(err)
+      }
+    }
+  }
+
+  override suspend fun resolve(scope: CoroutineScope): Sequence<Job> {
     check(initialized.value) { "Resolver must be initialized before resolving" }
     check(sealed.value) { "Resolver must be sealed before resolving" }
+    check(!resolved.value) { "Resolver already resolved" }
     logging.debug { "Resolving Maven dependencies" }
 
-    yield(scope.async {
-      val dependencyRequest = DependencyRequest(graph, null)
-      val dependencyResult = system.resolveDependencies(session, dependencyRequest)
-      logging.debug { "Maven dependency resolution result: $dependencyResult" }
-      var errors = mutableListOf<Throwable>()
-      try {
-        MavenDependencyResult(dependencyResult).also {
-          dependencyResults.add(it)
-          dependencyResult.artifactResults.stream().parallel().forEach { artifactResult ->
-            try {
-              if (artifactResult.artifact.extension == "jar") {
-                val coordinate = artifactResult.artifact.groupId + ":" +
-                  artifactResult.artifact.artifactId
-                val pkg = registry[coordinate] ?: registry.values.find {
-                  it.coordinate == coordinate || it.coordinate.startsWith(coordinate)
-                } ?: error(
-                  "Failed to resolve requested Maven package info from resulting coordinate: '$coordinate'." +
-                    "Current registry: ${registry.keys}"
-                )
-                if (pkg in packageArtifacts) {
-                  // do we already have this at the same version?
-                  val existing = requireNotNull(packageArtifacts[pkg])
-                  if (existing.artifact.file == artifactResult.artifact.file) {
-                    return@forEach // we already have this
-                  }
-                  error(
-                    "Duplicate Maven package artifact: '${pkg.coordinate}'. Packages are: " +
-                      "$pkg and $existing"
-                  )
-                } else {
-                  packageArtifacts[pkg] = ResolvedJarArtifact.of(artifactResult.artifact)
-                }
-              } else {
-                error(
-                  "Unrecognized JVM artifact type: '${artifactResult.artifact}'"
-                )
-              }
-            } catch (err: RuntimeException) {
-              logging.debug { "Failed to resolve Maven artifact: ${artifactResult.artifact}: $err" }
-              errors.add(err)
-            }
+    return sequence {
+      yield(scope.async {
+        val dependencyRequest = DependencyRequest(graph, null)
+        val dependencyResult = system.resolveDependencies(session, dependencyRequest)
+        logging.debug { "Maven dependency resolution result: $dependencyResult" }
+        var errors = mutableListOf<Throwable>()
+        try {
+          MavenDependencyResult(dependencyResult).also {
+            dependencyResults.add(it)
+            processDependencyResults(dependencyResult, errors)
           }
+        } finally {
+          resolved.value = true
         }
-      } finally {
-        resolved.value = true
-      }
 
-      if (errors.isNotEmpty()) {
-        logging.error("Failed to resolve Maven dependencies because of one or more errors. Throwing.")
-        throw MavenResolverErrors(errors)
-      }
-    })
+        if (errors.isNotEmpty()) {
+          logging.error("Failed to resolve Maven dependencies because of one or more errors. Throwing.")
+          throw MavenResolverErrors(errors)
+        }
+      })
+    }
   }
 
   override suspend fun classpathProvider(spec: ClasspathSpec): ClasspathProvider? {
@@ -475,11 +440,13 @@ public class MavenAetherResolver internal constructor () :
     }?.let { suite ->
       ClasspathProvider {
         // assemble a class-path from all resolved artifacts for a given spec
-        Classpath.from((registryByType[suite] ?: emptyList()).flatMap { pkg ->
-          packageArtifacts[pkg]?.files?.map {
-            it.toPath()
-          } ?: emptyList()
-        })
+//        Classpath.from((registryByType[suite] ?: emptyList()).flatMap { pkg ->
+//          packageArtifacts[pkg]?.files?.map {
+//            it.toPath()
+//          } ?: emptyList()
+//        })
+        // @TODO don't return all artifacts, only those for the suite
+        Classpath.from(packageArtifacts.flatMap { it.value.files }.map { it.toPath().absolute() })
       }
     } ?: error(
       "No classpath provider found for spec: $spec"
@@ -487,18 +454,16 @@ public class MavenAetherResolver internal constructor () :
   }
 
   override fun close() {
-    if (initialized.value) {
-      sync.close()
-    }
+    // @TODO
   }
 
   public companion object {
     private const val DEFAULT_REPOSITORY_NAME = "central"
 
     // Maven Central repository.
-    private val MAVEN_CENTRAL = ElidePackageManifest.MavenRepository(
+    private val MAVEN_CENTRAL = MavenRepository(
       name = DEFAULT_REPOSITORY_NAME,
-      url = "https://repo.maven.apache.org/maven2",
+      url = "https://repo1.maven.org/maven2/",
       description = "Maven Central Repository",
     )
 

@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.incremental.destinationAsFile
 import java.io.Closeable
+import java.lang.IllegalArgumentException
 import java.net.URI
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -42,13 +43,18 @@ import elide.runtime.diag.DiagnosticsSuite
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.runtime.gvm.kotlin.KotlinPrecompiler.KOTLIN_VERSION
 import elide.runtime.gvm.kotlin.fromKotlincDiagnostic
+import elide.tool.ArgumentContext
 import elide.tool.Arguments
 import elide.tool.Environment
 import elide.tool.Inputs
 import elide.tool.Outputs
 import elide.tool.Tool
+import elide.tool.asArgumentString
 import elide.tooling.AbstractTool
 import elide.tooling.jvm.JavaCompiler
+
+// Internal debug logs.
+private const val KOTLINC_DEBUG_LOGGING = false
 
 // Name of the Kotlin Compiler.
 public const val KOTLINC: String = "kotlinc"
@@ -127,6 +133,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
   env: Environment,
   public val inputs: KotlinCompilerInputs,
   public val outputs: KotlinCompilerOutputs,
+  private val argsAmender: K2JVMCompilerArguments.() -> Unit = {},
 ) : AbstractTool(info = kotlinc.extend(
   args,
   env,
@@ -153,7 +160,10 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     override fun hasErrors(): Boolean = errorsSeen.value
 
     override fun report(severity: CompilerMessageSeverity, message: String, location: CompilerMessageSourceLocation?) {
-      val msg = "[kotlinc] ${severity.name.lowercase()}: $message"
+      val severityLabel = severity.name.lowercase().let {
+        if (it == "logging") "" else ": $it"
+      }
+      val msg = "[kotlinc]$severityLabel $message"
       when {
         severity.isError -> ktLogger.error(msg)
         severity.isWarning -> ktLogger.warn(msg)
@@ -257,11 +267,13 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       env: Environment,
       inputs: KotlinCompilerInputs,
       outputs: KotlinCompilerOutputs,
+      argsAmender: K2JVMCompilerArguments.() -> Unit = {},
     ): KotlinCompiler = KotlinCompiler(
       args = args,
       env = env,
       inputs = inputs,
       outputs = outputs,
+      argsAmender = argsAmender,
     )
   }
 
@@ -283,6 +295,9 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       is KotlinCompilerOutputs.Jar -> outputs.path.toFile()
       is KotlinCompilerOutputs.Classes -> outputs.directory.toFile()
     }
+
+    // allow caller to amend args.
+    argsAmender(this)
   }
 
   // Resolve the Kotlin home directory for the Kotlin compiler.
@@ -316,18 +331,80 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     }
   }
 
+  private fun debugLog(message: String) {
+    if (KOTLINC_DEBUG_LOGGING) {
+      ktLogger.debug("[kotlinc:debug] $message")
+    }
+  }
+
+  @Suppress("TooGenericExceptionCaught")
   override suspend fun invoke(state: EmbeddedToolState): Tool.Result {
+    debugLog("Preparing Kotlin Compiler invocation")
     val javaToolchainHome = JavaCompiler.resolveJavaToolchain(kotlinc)
+    debugLog("Java toolchain home: $javaToolchainHome")
     val kotlinVersionRoot = resolveKotlinHome(state)
+    debugLog("Kotlin home: $kotlinVersionRoot")
     val closeables = LinkedList<Closeable>()
     val diagnostics = K2DiagnosticsListener()
     val kotlinMajorMinor = KOTLIN_VERSION.substringBeforeLast('.')
+    debugLog("Kotlin version: $kotlinMajorMinor")
+
     val svcs = Services.EMPTY
-    val args = ktCompiler.createArguments().apply {
-      ktCompiler.parseArguments(
-        info.args.asArgumentList().toTypedArray(),
-        this,
-      )
+    debugLog("Compiler services: $svcs")
+
+    val renderCtx = ArgumentContext.of(
+      argSeparator = ' ',
+      kvToken = ' ',
+    )
+    debugLog("Arg render context ready for args: ${info.args}")
+    val argList = info.args.asArgumentSequence().toList()
+    debugLog("Arg list ready of size=${argList.size}")
+
+    val finalizedArgs: List<String> = argList.flatMapIndexed { index, it ->
+      debugLog("Flattening arg $index")
+      it.asArgumentSequence()
+    }.flatMapIndexed { index, it ->
+      debugLog("Rendering flattened arg $index")
+      try {
+        it.asArgumentString(renderCtx).split(' ').also {
+          debugLog("Rendered arg $index: $it")
+        }
+      } catch (err: Throwable) {
+        val msg = "Failed to render argument: ${err.message}"
+        debugLog(msg)
+        embeddedToolError(kotlinc, msg, cause = err)
+      }
+    }.also {
+      debugLog("Finished rendering args")
+    }.toList().also {
+      debugLog("Finalized args size=${it.size}")
+    }
+
+    debugLog("Creating Kotlin compiler arguments")
+    val ktArgs = try {
+      ktCompiler.createArguments().also {
+        debugLog("Creating arguments with finalized suite of size=${finalizedArgs.size}")
+      }
+    } catch (err: Throwable) {
+      val msg = "Failed to create kotlinc arguments: ${err.message}"
+      debugLog(msg)
+      embeddedToolError(kotlinc, msg, cause = err)
+    }
+    val args = ktArgs.apply {
+      if (finalizedArgs.isNotEmpty()) {
+        try {
+          debugLog("Parsing arguments")
+          ktCompiler.parseArguments(
+            finalizedArgs.toTypedArray(),
+            this,
+          )
+        } catch (ise: IllegalArgumentException) {
+          debugLog("Failed to parse arguments: ${ise.message}")
+          embeddedToolError(kotlinc, "Arguments failed to parse: ${ise.message}", cause = ise)
+        }
+      }
+
+      debugLog("Amending arguments")
       amendArgs(
         this,
         javaToolchainHome,
@@ -337,18 +414,24 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       )
     }
 
+    debugLog("Finalized Kotlin Compiler args: $args")
+
     @Suppress("TooGenericExceptionCaught")
     try {
+      debugLog("Firing Kotlin Compiler")
       ktCompiler.exec(diagnostics, svcs, args)
     } catch (rxe: RuntimeException) {
+      debugLog("Failed to execute Kotlin compiler: ${rxe.message}")
       embeddedToolError(
         kotlinc,
         "Kotlin compiler invocation failed: ${rxe.message}",
         cause = rxe,
       )
     } finally {
+      debugLog("Closing diagnostics listener")
       closeables.forEach { it.close() }
     }
+    debugLog("Kotlin compiler invocation complete")
     return Tool.Result.Success
   }
 }

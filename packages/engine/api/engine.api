@@ -1350,8 +1350,14 @@ public final class elide/tool/Argument$StringArg : elide/tool/Argument {
 }
 
 public abstract interface class elide/tool/ArgumentContext {
+	public static final field Companion Lelide/tool/ArgumentContext$Companion;
 	public abstract fun getArgSeparator ()C
 	public abstract fun getKvToken ()C
+	public static fun of (CC)Lelide/tool/ArgumentContext;
+}
+
+public final class elide/tool/ArgumentContext$Companion {
+	public final fun of (CC)Lelide/tool/ArgumentContext;
 }
 
 public final class elide/tool/ArgumentContext$Default : elide/tool/ArgumentContext {
@@ -1364,9 +1370,9 @@ public final class elide/tool/ArgumentContext$Default : elide/tool/ArgumentConte
 }
 
 public final class elide/tool/ArgumentExtensionsKt {
-	public static final fun asArgumentString (Lelide/tool/Argument;)Ljava/lang/String;
 	public static final fun asArgumentString (Lelide/tool/Argument;Lelide/tool/ArgumentContext;)Ljava/lang/String;
 	public static final fun asArgumentString (Lelide/tool/Arguments$Suite;Lelide/tool/ArgumentContext;)Ljava/lang/String;
+	public static synthetic fun asArgumentString$default (Lelide/tool/Argument;Lelide/tool/ArgumentContext;ILjava/lang/Object;)Ljava/lang/String;
 	public static synthetic fun asArgumentString$default (Lelide/tool/Arguments$Suite;Lelide/tool/ArgumentContext;ILjava/lang/Object;)Ljava/lang/String;
 	public static final fun toStringBuilder (Lelide/tool/Arguments$Suite;Lelide/tool/ArgumentContext;Ljava/lang/StringBuilder;)Ljava/lang/StringBuilder;
 	public static synthetic fun toStringBuilder$default (Lelide/tool/Arguments$Suite;Lelide/tool/ArgumentContext;Ljava/lang/StringBuilder;ILjava/lang/Object;)Ljava/lang/StringBuilder;
@@ -1374,9 +1380,11 @@ public final class elide/tool/ArgumentExtensionsKt {
 
 public abstract interface class elide/tool/Arguments {
 	public static final field Companion Lelide/tool/Arguments$Companion;
-	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentList (Lelide/tool/ArgumentContext;)Ljava/util/List;
+	public static synthetic fun asArgumentList$default (Lelide/tool/Arguments;Lelide/tool/ArgumentContext;ILjava/lang/Object;)Ljava/util/List;
 	public abstract fun asArgumentSequence ()Lkotlin/sequences/Sequence;
-	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asArgumentStrings (Lelide/tool/ArgumentContext;)Lkotlin/sequences/Sequence;
+	public static synthetic fun asArgumentStrings$default (Lelide/tool/Arguments;Lelide/tool/ArgumentContext;ILjava/lang/Object;)Lkotlin/sequences/Sequence;
 	public static fun empty ()Lelide/tool/Arguments$EmptyArguments;
 	public static fun from (Ljava/util/Collection;)Lelide/tool/Arguments$Suite;
 	public static fun from (Lkotlin/sequences/Sequence;)Lelide/tool/Arguments$Suite;
@@ -1507,10 +1515,10 @@ public final class elide/tool/Classpath : elide/tool/MultiPath$MultiPathContaine
 	public fun add (Lelide/tool/MultiPath$Entry;)Z
 	public synthetic fun add (Ljava/lang/Object;)Z
 	public fun addAll (Ljava/util/Collection;)Z
-	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentList (Lelide/tool/ArgumentContext;)Ljava/util/List;
 	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
 	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
-	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asArgumentStrings (Lelide/tool/ArgumentContext;)Lkotlin/sequences/Sequence;
 	public fun asList ()Ljava/util/List;
 	public fun asPathSequence ()Lkotlin/sequences/Sequence;
 	public fun asSequence ()Lkotlin/sequences/Sequence;
@@ -1918,10 +1926,10 @@ public final class elide/tool/Modulepath : elide/tool/MultiPath$MultiPathContain
 	public fun add (Lelide/tool/MultiPath$Entry;)Z
 	public synthetic fun add (Ljava/lang/Object;)Z
 	public fun addAll (Ljava/util/Collection;)Z
-	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentList (Lelide/tool/ArgumentContext;)Ljava/util/List;
 	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
 	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
-	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asArgumentStrings (Lelide/tool/ArgumentContext;)Lkotlin/sequences/Sequence;
 	public fun asList ()Ljava/util/List;
 	public fun asPathSequence ()Lkotlin/sequences/Sequence;
 	public fun asSequence ()Lkotlin/sequences/Sequence;
@@ -2020,6 +2028,11 @@ public final class elide/tool/MultiPath$MultiPathContainer$Companion {
 }
 
 public abstract interface class elide/tool/MultiPath$MutableMultiPath : elide/tool/MultiPath, java/util/Collection, kotlin/jvm/internal/markers/KMutableCollection {
+	public abstract fun add (Lelide/tool/MultiPath;)Z
+	public abstract fun add (Ljava/nio/file/Path;)Z
+	public abstract fun prepend (Lelide/tool/MultiPath$Entry;)Z
+	public abstract fun prepend (Lelide/tool/MultiPath;)Z
+	public abstract fun prepend (Ljava/nio/file/Path;)Z
 }
 
 public abstract interface class elide/tool/MultiPath$MutableMultiPathContainer : elide/tool/MultiPath$MultiPathContainer, elide/tool/MultiPath$MutableMultiPath {
@@ -2194,13 +2207,14 @@ public final class elide/tool/MutableClasspath : elide/tool/MultiPath$MutableMul
 	public static final field Companion Lelide/tool/MutableClasspath$Companion;
 	public synthetic fun <init> (Lelide/tool/MutableJvmMultiPathContainer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public fun add (Lelide/tool/MultiPath;)Z
 	public synthetic fun add (Ljava/lang/Object;)Z
 	public fun add (Ljava/nio/file/Path;)Z
 	public fun addAll (Ljava/util/Collection;)Z
-	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentList (Lelide/tool/ArgumentContext;)Ljava/util/List;
 	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
 	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
-	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asArgumentStrings (Lelide/tool/ArgumentContext;)Lkotlin/sequences/Sequence;
 	public fun asList ()Ljava/util/List;
 	public fun asPathSequence ()Lkotlin/sequences/Sequence;
 	public fun asSequence ()Lkotlin/sequences/Sequence;
@@ -2236,6 +2250,9 @@ public final class elide/tool/MutableClasspath : elide/tool/MultiPath$MutableMul
 	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
 	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MutableMultiPathContainer;
 	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public fun prepend (Lelide/tool/MultiPath$Entry;)Z
+	public fun prepend (Lelide/tool/MultiPath;)Z
+	public fun prepend (Ljava/nio/file/Path;)Z
 	public fun remove (Lelide/tool/MultiPath$Entry;)Z
 	public final fun remove (Ljava/lang/Object;)Z
 	public fun removeAll (Ljava/util/Collection;)Z
@@ -2335,6 +2352,7 @@ public final class elide/tool/MutableJvmMultiPathContainer : elide/tool/MultiPat
 	public fun <init> (Lelide/tool/JvmMultiPath;Ljava/util/List;Ljava/util/Set;)V
 	public synthetic fun <init> (Lelide/tool/JvmMultiPath;Ljava/util/List;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public fun add (Lelide/tool/MultiPath;)Z
 	public synthetic fun add (Ljava/lang/Object;)Z
 	public fun add (Ljava/nio/file/Path;)Z
 	public fun addAll (Ljava/util/Collection;)Z
@@ -2367,6 +2385,9 @@ public final class elide/tool/MutableJvmMultiPathContainer : elide/tool/MultiPat
 	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MutableMultiPathContainer;
 	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
 	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MutableJvmMultiPathContainer;
+	public fun prepend (Lelide/tool/MultiPath$Entry;)Z
+	public fun prepend (Lelide/tool/MultiPath;)Z
+	public fun prepend (Ljava/nio/file/Path;)Z
 	public fun remove (Lelide/tool/MultiPath$Entry;)Z
 	public final fun remove (Ljava/lang/Object;)Z
 	public fun removeAll (Ljava/util/Collection;)Z
@@ -2395,13 +2416,14 @@ public final class elide/tool/MutableModulepath : elide/tool/MultiPath$MutableMu
 	public static final field Companion Lelide/tool/MutableModulepath$Companion;
 	public synthetic fun <init> (Lelide/tool/MutableJvmMultiPathContainer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun add (Lelide/tool/MultiPath$Entry;)Z
+	public fun add (Lelide/tool/MultiPath;)Z
 	public synthetic fun add (Ljava/lang/Object;)Z
 	public fun add (Ljava/nio/file/Path;)Z
 	public fun addAll (Ljava/util/Collection;)Z
-	public fun asArgumentList ()Ljava/util/List;
+	public fun asArgumentList (Lelide/tool/ArgumentContext;)Ljava/util/List;
 	public fun asArgumentSequence ()Lkotlin/sequences/Sequence;
 	public fun asArgumentString (Lelide/tool/ArgumentContext;)Ljava/lang/String;
-	public fun asArgumentStrings ()Lkotlin/sequences/Sequence;
+	public fun asArgumentStrings (Lelide/tool/ArgumentContext;)Lkotlin/sequences/Sequence;
 	public fun asList ()Ljava/util/List;
 	public fun asPathSequence ()Lkotlin/sequences/Sequence;
 	public fun asSequence ()Lkotlin/sequences/Sequence;
@@ -2437,6 +2459,9 @@ public final class elide/tool/MutableModulepath : elide/tool/MultiPath$MutableMu
 	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MultiPathContainer;
 	public fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath$MutableMultiPathContainer;
 	public synthetic fun plus (Lkotlin/sequences/Sequence;)Lelide/tool/MultiPath;
+	public fun prepend (Lelide/tool/MultiPath$Entry;)Z
+	public fun prepend (Lelide/tool/MultiPath;)Z
+	public fun prepend (Ljava/nio/file/Path;)Z
 	public fun remove (Lelide/tool/MultiPath$Entry;)Z
 	public final fun remove (Ljava/lang/Object;)Z
 	public fun removeAll (Ljava/util/Collection;)Z

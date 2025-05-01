@@ -1,4 +1,5 @@
 codecov:
+  max_report_age: off
   require_ci_to_pass: true
   bot: "elidebot"
   notify:

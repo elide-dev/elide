@@ -310,7 +310,7 @@ java {
   if (enableJpms) modularity.inferModulePath = true
 
   toolchain {
-    languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
+    languageVersion.set(JavaLanguageVersion.of(selectedToolchain))
     vendor.set(jvmType)
   }
 }

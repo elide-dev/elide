@@ -13,6 +13,7 @@ public final class elide/tool/cli/Statics {
 	public final fun getNoColor ()Z
 	public final fun getResourcesPath ()Ljava/nio/file/Path;
 	public final fun getServerLogger ()Lelide/runtime/Logger;
+	public final fun getTerminal ()Lcom/github/ajalt/mordant/terminal/Terminal;
 	public final fun mountArgs (Ljava/lang/String;[Ljava/lang/String;)V
 }
 
@@ -70,12 +71,25 @@ public final class elide/tooling/GenericTool$Companion {
 	public final fun gatherArgs (Ljava/util/SortedSet;Lelide/tool/Arguments;)Lkotlin/Pair;
 }
 
+public final class elide/tooling/builder/BuildDriver {
+	public static final field INSTANCE Lelide/tooling/builder/BuildDriver;
+	public static final fun buildProject (Lkotlinx/coroutines/CoroutineScope;Lelide/tooling/project/ElideProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun buildProject$default (Lkotlinx/coroutines/CoroutineScope;Lelide/tooling/project/ElideProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun configure (Lelide/tooling/project/ElideProject;Lelide/tooling/config/BuildConfigurator$BuildSettings;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun configure$default (Lelide/tooling/project/ElideProject;Lelide/tooling/config/BuildConfigurator$BuildSettings;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun dependencies (Lkotlinx/coroutines/CoroutineScope;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;)Lkotlinx/coroutines/Deferred;
+	public static final fun dependencies (Lkotlinx/coroutines/CoroutineScope;Lelide/tooling/project/ElideProject;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun resolve (Lkotlinx/coroutines/CoroutineScope;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun resolve$default (Lkotlinx/coroutines/CoroutineScope;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Ljava/util/List;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
 public final class elide/tooling/config/BuildConfiguration {
 	public static final field INSTANCE Lelide/tooling/config/BuildConfiguration;
 	public static final fun configure (Lelide/tooling/project/ElideProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun configure (Lelide/tooling/project/ElideProject;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun create ()Lelide/tooling/config/BuildConfigurator$BuildConfiguration;
-	public static final fun create (Ljava/nio/file/Path;)Lelide/tooling/config/BuildConfigurator$BuildConfiguration;
+	public static final fun create (Ljava/nio/file/Path;Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;)Lelide/tooling/config/BuildConfigurator$BuildConfiguration;
+	public static synthetic fun create$default (Ljava/nio/file/Path;Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;ILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$BuildConfiguration;
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator : elide/tooling/config/ProjectConfigurator {
@@ -86,6 +100,7 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildConf
 	public abstract fun getActionScope ()Lelide/exec/ActionScope;
 	public abstract fun getProjectRoot ()Ljava/nio/file/Path;
 	public abstract fun getResolvers ()Lelide/tooling/registry/ResolverRegistry;
+	public abstract fun getSettings ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public abstract fun getTaskGraph ()Lcom/google/common/graph/ImmutableGraph$Builder;
 }
 
@@ -114,6 +129,13 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildEven
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildNotify {
 }
 
+public abstract interface class elide/tooling/config/BuildConfigurator$BuildSettings {
+	public abstract fun getCaching ()Z
+	public abstract fun getChecks ()Z
+	public abstract fun getDependencies ()Z
+	public abstract fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+}
+
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildTransfer : elide/tooling/config/BuildConfigurator$BuildNotify {
 }
 
@@ -132,6 +154,62 @@ public abstract interface class elide/tooling/config/BuildConfigurator$ElideBuil
 	public abstract fun getResourcesPath ()Ljava/nio/file/Path;
 }
 
+public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings : java/lang/Record, elide/tooling/config/BuildConfigurator$BuildSettings {
+	public static final field Companion Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings$Companion;
+	public fun <init> (ZZZ)V
+	public fun caching ()Z
+	public fun checks ()Z
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun copy (ZZZ)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;ZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public fun dependencies ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getCaching ()Z
+	public synthetic fun getChecks ()Z
+	public synthetic fun getDependencies ()Z
+	public fun hashCode ()I
+	public fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings : elide/tooling/config/BuildConfigurator$BuildSettings {
+	public fun <init> ()V
+	public fun <init> (ZZZ)V
+	public synthetic fun <init> (ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun build ()Lelide/tooling/config/BuildConfigurator$BuildSettings;
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun copy (ZZZ)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;ZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getCaching ()Z
+	public fun getChecks ()Z
+	public fun getDependencies ()Z
+	public fun hashCode ()I
+	public fun setCaching (Z)V
+	public fun setChecks (Z)V
+	public fun setDependencies (Z)V
+	public fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class elide/tooling/config/BuildConfigurator$ProjectDirectories {
 	public fun getArtifacts ()Ljava/nio/file/Path;
 	public fun getDependencies ()Ljava/nio/file/Path;
@@ -142,8 +220,10 @@ public abstract interface class elide/tooling/config/BuildConfigurator$ProjectDi
 public final class elide/tooling/config/BuildConfigurators {
 	public static final field INSTANCE Lelide/tooling/config/BuildConfigurators;
 	public static final fun collect ()Lkotlin/sequences/Sequence;
-	public static final fun contribute (Lelide/tooling/project/ElideConfiguredProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun contribute (Lelide/tooling/project/ElideConfiguredProject;Lkotlin/sequences/Sequence;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun contribute (Lelide/tooling/project/ElideConfiguredProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun contribute (Lelide/tooling/project/ElideConfiguredProject;Lkotlin/sequences/Sequence;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun contribute$default (Lelide/tooling/project/ElideConfiguredProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun contribute$default (Lelide/tooling/project/ElideConfiguredProject;Lkotlin/sequences/Sequence;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/tooling/config/ProjectConfigurator {
@@ -444,6 +524,49 @@ public final class elide/tooling/jvm/resolver/MavenAetherResolver$Companion {
 
 public final class elide/tooling/jvm/resolver/MavenResolverErrors : java/lang/RuntimeException {
 	public final fun getErrors ()Ljava/util/List;
+}
+
+public final class elide/tooling/jvm/resolver/RepositorySystemFactory {
+	public fun <init> ()V
+	public final fun mavenLocator ()Lorg/eclipse/aether/impl/DefaultServiceLocator;
+	public final fun remoteRepositoryManager (Lorg/eclipse/aether/impl/DefaultServiceLocator;)Lorg/eclipse/aether/impl/RemoteRepositoryManager;
+	public final fun repositorySystem (Lorg/eclipse/aether/impl/DefaultServiceLocator;)Lorg/eclipse/aether/internal/impl/DefaultRepositorySystem;
+	public final fun repositorySystemSession ()Lorg/eclipse/aether/DefaultRepositorySystemSession;
+}
+
+public final class elide/tooling/kotlin/Detekt : elide/tooling/AbstractTool {
+	public fun <init> (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/Detekt$DetektInputs;Lelide/tooling/kotlin/Detekt$DetektOutputs;)V
+	public final fun getInputs ()Lelide/tooling/kotlin/Detekt$DetektInputs;
+	public final fun getOutputs ()Lelide/tooling/kotlin/Detekt$DetektOutputs;
+	public fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tooling/kotlin/Detekt$DetektInputs : elide/tool/Inputs$Files {
+}
+
+public final class elide/tooling/kotlin/Detekt$DetektInputs$Empty : elide/tooling/kotlin/Detekt$DetektInputs {
+	public static final field INSTANCE Lelide/tooling/kotlin/Detekt$DetektInputs$Empty;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/kotlin/Detekt$DetektOutputs {
+	public abstract fun flatten ()Lelide/tool/Outputs;
+}
+
+public final class elide/tooling/kotlin/Detekt$DetektOutputs$Empty : elide/tool/Outputs$None, elide/tooling/kotlin/Detekt$DetektOutputs {
+	public static final field INSTANCE Lelide/tooling/kotlin/Detekt$DetektOutputs$Empty;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun flatten ()Lelide/tool/Outputs;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/kotlin/DetektKt {
+	public static final field DETEKT Ljava/lang/String;
+	public static final field DETEKT_DESCRIPTION Ljava/lang/String;
+	public static final fun getDetekt ()Lelide/tool/Tool$CommandLineTool;
 }
 
 public final class elide/tooling/kotlin/KotlinCompiler : elide/tooling/AbstractTool {
@@ -758,6 +881,7 @@ public abstract interface class elide/tooling/project/codecs/PackageManifestCode
 	public abstract fun defaultPath ()Ljava/nio/file/Path;
 	public abstract fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
 	public abstract fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parseAsFile (Ljava/nio/file/Path;)Lelide/tooling/project/manifest/PackageManifest;
 	public abstract fun supported (Ljava/nio/file/Path;)Z
 	public abstract fun toElidePackage (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public abstract fun write (Lelide/tooling/project/manifest/PackageManifest;Ljava/io/OutputStream;)V
@@ -1558,6 +1682,36 @@ public final class elide/tooling/project/manifest/ElidePackageManifestKt {
 	public static final fun merge (Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;
 	public static final fun merge (Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;)Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;
 	public static final fun merge (Lelide/tooling/project/manifest/ElidePackageManifest;Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
+}
+
+public final class elide/tooling/project/manifest/MavenPomManifest : java/lang/Record, elide/tooling/project/manifest/PackageManifest {
+	public static final field Companion Lelide/tooling/project/manifest/MavenPomManifest$Companion;
+	public fun <init> (Ljava/nio/file/Path;Lorg/apache/maven/model/Model;)V
+	public final fun component1 ()Ljava/nio/file/Path;
+	public final fun component2 ()Lorg/apache/maven/model/Model;
+	public final fun copy (Ljava/nio/file/Path;Lorg/apache/maven/model/Model;)Lelide/tooling/project/manifest/MavenPomManifest;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/MavenPomManifest;Ljava/nio/file/Path;Lorg/apache/maven/model/Model;ILjava/lang/Object;)Lelide/tooling/project/manifest/MavenPomManifest;
+	public fun ecosystem ()Lelide/tooling/project/ProjectEcosystem;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getEcosystem ()Lelide/tooling/project/ProjectEcosystem;
+	public fun hashCode ()I
+	public final fun model ()Lorg/apache/maven/model/Model;
+	public final fun path ()Ljava/nio/file/Path;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/manifest/MavenPomManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/MavenPomManifest$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/MavenPomManifest;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/MavenPomManifest;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/MavenPomManifest$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class elide/tooling/project/manifest/NodePackageManifest : java/lang/Record, elide/tooling/project/manifest/PackageManifest {

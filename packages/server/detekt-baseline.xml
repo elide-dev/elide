@@ -2,6 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>RethrowCaughtException:api.ext.kt$throw err</ID>
+    <ID>RethrowCaughtException:api.ext.kt:throw err</ID>
   </CurrentIssues>
 </SmellBaseline>

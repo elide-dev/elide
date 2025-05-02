@@ -2,6 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>TooGenericExceptionCaught:ElideRuby.kt$ElideRuby$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:ElideRuby.kt:ElideRuby$err: Throwable</ID>
   </CurrentIssues>
 </SmellBaseline>

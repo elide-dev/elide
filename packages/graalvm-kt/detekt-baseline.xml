@@ -2,6 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>TooGenericExceptionThrown:GuestKotlinEvaluator.kt$GuestKotlinEvaluator$throw RuntimeException("Exception during snippet evaluation", replResult.cause)</ID>
+    <ID>TooGenericExceptionThrown:GuestKotlinEvaluator.kt:GuestKotlinEvaluator$throw RuntimeException("Exception during snippet evaluation", replResult.cause)</ID>
   </CurrentIssues>
 </SmellBaseline>

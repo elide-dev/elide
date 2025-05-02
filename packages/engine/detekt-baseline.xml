@@ -2,8 +2,9 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>ForbiddenComment:AbstractLanguageConfig.kt$AbstractLanguageConfig$// @TODO: don't unconditionally mount all members</ID>
-    <ID>MatchingDeclarationName:GuestTestExecutor.kt$GuestTestExecutorFactory : GuestExecutorProvider</ID>
-    <ID>ReturnCount:Version.kt$Version$public override operator fun compareTo(other: Version): Int</ID>
+    <ID>ForbiddenComment:AbstractLanguageConfig.kt:AbstractLanguageConfig$// @TODO: don't unconditionally mount all members</ID>
+    <ID>NestedBlockDepth:AbstractStaticNativeLibraryFeature.kt:AbstractStaticNativeLibraryFeature$@Suppress("SpreadOperator", "ComplexCondition") override fun beforeAnalysis(access: Feature.BeforeAnalysisAccess)</ID>
+    <ID>NestedBlockDepth:AbstractStaticNativeLibraryFeature.kt:AbstractStaticNativeLibraryFeature$protected fun Feature.BeforeAnalysisAccess.unpackLibrary( jar: String, name: String, arch: String, vararg path: String, renameTo: ((String) -> String)? = null, cbk: (() -> Unit)? = null, ): List&lt;NativeLibraryFeature.UnpackedNative></ID>
+    <ID>ReturnCount:Version.kt:Version$public override operator fun compareTo(other: Version): Int</ID>
   </CurrentIssues>
 </SmellBaseline>

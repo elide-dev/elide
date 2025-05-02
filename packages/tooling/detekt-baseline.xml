@@ -2,6 +2,8 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>LongMethod:JvmBuildConfigurator.kt$JvmBuildConfigurator$@Suppress("unused", "UnusedVariable") override fun contribute(state: ElideBuildState, config: BuildConfigurator.BuildConfiguration)</ID>
+    <ID>ExplicitItLambdaMultipleParameters:KotlinCompiler.kt:KotlinCompiler${ index, it -> debugLog("Flattening arg $index") it.asArgumentSequence() }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:KotlinCompiler.kt:KotlinCompiler${ index, it -> debugLog("Rendering flattened arg $index") try { it.asArgumentString(renderCtx).split(' ').also { debugLog("Rendered arg $index: $it") } } catch (err: Throwable) { val msg = "Failed to render argument: ${err.message}" debugLog(msg) embeddedToolError(kotlinc, msg, cause = err) } }</ID>
+    <ID>NestedBlockDepth:JvmBuildConfigurator.kt:JvmBuildConfigurator$@Suppress("unused", "CyclomaticComplexMethod", "LongMethod") override suspend fun contribute(state: ElideBuildState, config: BuildConfigurator.BuildConfiguration)</ID>
   </CurrentIssues>
 </SmellBaseline>

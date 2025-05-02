@@ -53,7 +53,7 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
     reports.xml.required = true
     reports.sarif.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.sarif"))
     reports.xml.outputLocation.set(project.layout.buildDirectory.file("reports/detekt/detekt.xml"))
-    jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
+    jvmTarget = if (conventions.jvm.forceJvm17) "17" else "22"  // @TODO pull from property state
 
     detektMergeSarif.configure {
       input.from(this@detekt.reports.sarif.outputLocation)
@@ -63,7 +63,7 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
     }
   }
   project.tasks.withType(DetektCreateBaselineTask::class) detekt@{
-    jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
+    jvmTarget = if (conventions.jvm.forceJvm17) "17" else "22"  // @TODO pull from property state
   }
   project.tasks.withType(Detekt::class) detektReports@{
     finalizedBy(detektMergeSarif, detektMergeXml)
@@ -88,11 +88,11 @@ public class DetektConventionsPlugin : Plugin<Project> {
       if (target.pluginManager.hasPlugin(DETEKT_ID)) {
         target.tasks.withType(Detekt::class) {
           enabled = false
-          jvmTarget = "21"  // @TODO pull from property state
+          jvmTarget = "22"  // @TODO pull from property state
         }
         target.tasks.withType(DetektCreateBaselineTask::class) {
           enabled = false
-          jvmTarget = "21"  // @TODO pull from property state
+          jvmTarget = "22"  // @TODO pull from property state
         }
       }
     }

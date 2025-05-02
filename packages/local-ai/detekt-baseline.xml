@@ -1,7 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>UnusedPrivateMember:NativeLocalAi.kt$NativeLocalAi$@Suppress("LongParameterList") @JvmStatic @JvmName("inferAsync") private external fun inferAsync( operationId: Int, verbose: Boolean, gpuLayers: Int, disableGpu: Boolean, allowDownload: Boolean, path: String, prompt: String, huggingFaceRepo: String, huggingFaceName: String, huggingFaceToken: String, ctxSize: Int, threadCount: Int, threadBatchCount: Int, length: Int, )</ID>
-  </CurrentIssues>
+  <CurrentIssues/>
 </SmellBaseline>

@@ -18,6 +18,7 @@
   "MagicNumber",
 )
 
+import io.gitlab.arturbosch.detekt.Detekt
 import io.micronaut.gradle.MicronautRuntime
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.graalvm.buildtools.gradle.tasks.BuildNativeImageTask
@@ -26,6 +27,7 @@ import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
 import org.gradle.kotlin.dsl.provideDelegate
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_23
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
@@ -189,18 +191,21 @@ val exclusions = listOfNotNull(
 
 // Java Launcher (GraalVM at either EA or LTS)
 val edgeJvmTarget = 24
-val stableJvmTarget = 24
+val stableJvmTarget = 23
+val edgeJvmToolchain = 24
+val stableJvmToolchain = 24
 
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val stableJvm = JavaVersion.toVersion(stableJvmTarget)
 val selectedJvmTarget = if (enableEdge) edgeJvmTarget else stableJvmTarget
+val selectedToolchain = if (enableEdge) edgeJvmToolchain else stableJvmToolchain
 val selectedJvm = if (enableEdge) edgeJvm else stableJvm
 
 val jvmType: JvmVendorSpec =
   if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
 
 val gvmLauncher = javaToolchains.launcherFor {
-  languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
+  languageVersion.set(JavaLanguageVersion.of(selectedToolchain))
   vendor.set(jvmType)
 }
 
@@ -2406,6 +2411,10 @@ fun BuildNativeImageTask.createFinalizer() {
     finalizedBy(finalizations.map { it.name })
     finalizedBy(finalizer.name)
   }
+}
+
+project.tasks.withType(Detekt::class) {
+  jvmTarget = (selectedJvmTarget).toString()
 }
 
 tasks.withType<BuildNativeImageTask>().all {

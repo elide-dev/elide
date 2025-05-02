@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyDefaultConstructor:Base64.kt:Base64.Decoder$()</ID>
+    <ID>EmptyDefaultConstructor:Base64.kt:Base64.Encoder$()</ID>
+    <ID>MagicNumber:DefaultHex.kt:DefaultHex$0xFF</ID>
+    <ID>MaxLineLength:DefaultBase64.kt:DefaultBase64.Encoder$*</ID>
+    <ID>UnsafeCallOnNullableType:Base64.kt:Base64.Encoder$newline!!</ID>
+    <ID>UnsafeCallOnNullableType:DefaultBase64.kt:DefaultBase64.Encoder$newline!!</ID>
+  </CurrentIssues>
+</SmellBaseline>

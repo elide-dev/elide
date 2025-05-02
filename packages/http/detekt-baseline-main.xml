@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ExplicitItLambdaMultipleParameters:MicronautMutableHttpHeaders.kt:MicronautMutableHttpHeaders${ index, it -> if (index == 0) return@forEachIndexed backing.add(pair.name.nameNormalized, it) }</ID>
+    <ID>UnsafeCallOnNullableType:JavaNetMutableHttpHeaders.kt:JavaNetMutableHttpHeaders$backing[key]!!</ID>
+    <ID>UnsafeCallOnNullableType:JavaNetMutableHttpHeaders.kt:JavaNetMutableHttpHeaders$backing[pair.name.name]!!</ID>
+  </CurrentIssues>
+</SmellBaseline>

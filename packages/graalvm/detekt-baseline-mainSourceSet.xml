@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ForbiddenComment:ElideLLMModule.kt:ElideLLMImpl$// TODO: resolve this based on config</ID>
+    <ID>ForbiddenComment:EmbeddedGuestVFSImpl.kt:EmbeddedGuestVFSImpl.EmbeddedVFSFactory$// @TODO: cannot defer this because indexing happens as a side-effect</ID>
+    <ID>ForbiddenComment:HostVFS.kt:HostVFS$// @TODO: OS-specific? configurable?</ID>
+    <ID>ForbiddenComment:IntrinsicsResolver.kt:IntrinsicsResolver$// @TODO: disablement</ID>
+    <ID>ForbiddenComment:JavaScript.kt:JavaScript$// @TODO: breakage in graalvm with `en_US`</ID>
+    <ID>ForbiddenComment:JsEncoding.kt:TextDecoder$// @TODO: honor `DecodeOptions` from host?</ID>
+    <ID>ForbiddenComment:NettyHttpResponse.kt:NettyHttpResponse$// TODO: implement body stream</ID>
+    <ID>ForbiddenComment:NettyHttpResponse.kt:NettyHttpResponse$// TODO: implement bodyUsed</ID>
+    <ID>ForbiddenComment:NettyHttpResponse.kt:NettyHttpResponse$// TODO: implement headers</ID>
+    <ID>ForbiddenComment:NettyHttpResponse.kt:NettyHttpResponse$// TODO: support JSON objects and other types of content</ID>
+    <ID>ForbiddenComment:NettyRequestHandler.kt:// @TODO: write body</ID>
+    <ID>ForbiddenComment:NodeOperatingSystem.kt:NodeOperatingSystem.BaseOS$// @TODO: implement 5 and 15 minute averages</ID>
+    <ID>ForbiddenComment:NodeStream.kt:NodeStreamModule$// @TODO: Cannot register natively because some stream types are polyfilled</ID>
+    <ID>ForbiddenComment:NodeURL.kt:NodeURL$// TODO: Implement these methods.</ID>
+    <ID>ForbiddenComment:NodeZlib.kt:BrotliDecompressStream$// @TODO: flushing for readables</ID>
+    <ID>ForbiddenComment:NodeZlib.kt:InflateStream$// @TODO: flushing for readables</ID>
+    <ID>ForbiddenComment:NodeZlib.kt:NodeZlib$// @TODO: honor zlib options</ID>
+    <ID>ForbiddenComment:NodeZlib.kt:NodeZlib$// @TODO: not yet implemented</ID>
+    <ID>ForbiddenComment:NodeZlib.kt:UnzipStream$// @TODO: flushing for readables</ID>
+    <ID>ForbiddenComment:TypeError.kt:// @TODO: deprecate and replace with type mapping</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:JsIterator.kt:JsIterator&lt;T> : IteratorProxyIteratorProxyIterable</ID>
+    <ID>MagicNumber:DebugConfig.kt:DebugConfig.DebugAdapterConfig$4711</ID>
+    <ID>MagicNumber:DebugConfig.kt:DebugConfig.InspectorConfig$4200</ID>
+    <ID>MagicNumber:FetchResponse.kt:FetchResponse$200</ID>
+    <ID>MagicNumber:FetchResponse.kt:FetchResponse$299</ID>
+    <ID>MagicNumber:HttpServerConfig.kt:HttpServerConfig$65535</ID>
+    <ID>MagicNumber:URLIntrinsic.kt:URLIntrinsic.Companion$65535</ID>
+    <ID>MagicNumber:URLIntrinsic.kt:URLIntrinsic.ParsedURL.Companion$31</ID>
+    <ID>MaxLineLength:JsConcurrentMap.kt:JsConcurrentMap.Factory$*</ID>
+    <ID>MaxLineLength:JsMutableMultiMap.kt:JsMutableMultiMap.Factory$@JvmStatic override</ID>
+    <ID>NestedBlockDepth:EmbeddedGuestVFSImpl.kt:EmbeddedGuestVFSImpl.EmbeddedVFSFactory$@JvmStatic private fun metadataForTarball( inputs: Sequence&lt;ArchiveInputStream&lt;*>>, memoryFS: FileSystem, deferred: Boolean, registry: MutableMap&lt;String, VfsObjectInfo>, ): FilesystemInfo</ID>
+    <ID>NestedBlockDepth:EmbeddedGuestVFSImpl.kt:EmbeddedGuestVFSImpl.EmbeddedVFSFactory$@JvmStatic private fun metadataForTarballDirectory( bundle: Int, folder: ArchiveEntry, tarball: ArchiveInputStream&lt;*>, bufstream: BufferedInputStream, memoryFS: FileSystem, prefix: String, deferred: Boolean, registry: MutableMap&lt;String, VfsObjectInfo>, base: Long = 0L, ): Triple&lt;DirectoryRecordBuilder, ArchiveEntry, Long></ID>
+    <ID>NestedBlockDepth:HttpServerConfig.kt:HttpServerConfig$override fun putMember(key: String?, value: Value?): Unit</ID>
+    <ID>NestedBlockDepth:NodeStream.kt:AbstractReadable$private fun pump(untilHaltedOrExhausted: Boolean = true)</ID>
+    <ID>NestedBlockDepth:SqliteQueryRenderer.kt:SqliteQueryRenderer$private fun StringBuilder.renderValue( trigger: Char, renderedSoFar: Int, subject: String, position: Int, ctx: QueryTemplateContext?, ): Int</ID>
+    <ID>NestedBlockDepth:URLIntrinsic.kt:URLIntrinsic.ParsedURL$private fun copySpliceHash(fragment: String): ParsedURL</ID>
+    <ID>NestedBlockDepth:URLIntrinsic.kt:URLIntrinsic.ParsedURL$private fun copySpliceProtocol(protocol: String): ParsedURL</ID>
+    <ID>NestedBlockDepth:URLIntrinsic.kt:URLIntrinsic.ParsedURL$private fun copySpliceSearch(query: String): ParsedURL</ID>
+    <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt:URLSearchParamsIntrinsic$MutableURLSearchParams : AbstractMutableURLSearchParamsIMutableSearchParams</ID>
+    <ID>NestedClassesVisibility:URLSearchParamsIntrinsic.kt:URLSearchParamsIntrinsic$URLSearchParams : AbstractURLSearchParamsIURLSearchParams</ID>
+    <ID>RethrowCaughtException:AbstractGVMScript.kt:AbstractGVMScript$throw exc</ID>
+    <ID>SwallowedException:ElideLLMModule.kt:ElideLocalLLMImpl$err: ExecutionException</ID>
+    <ID>SwallowedException:URLIntrinsic.kt:URLIntrinsic.ParsedURL$e: java.net.URISyntaxException</ID>
+    <ID>SwallowedException:URLIntrinsic.kt:URLIntrinsic.ParsedURL$syntaxErr: java.net.URISyntaxException</ID>
+    <ID>ThrowsCount:AbortSignal.kt:AbortSignal$@Polyglot override fun throwIfAborted()</ID>
+    <ID>ThrowsCount:SqliteQueryRenderer.kt:SqliteQueryRenderer$private fun StringBuilder.renderValue( trigger: Char, renderedSoFar: Int, subject: String, position: Int, ctx: QueryTemplateContext?, ): Int</ID>
+    <ID>ThrowsCount:URLSearchParamsIntrinsic.kt:private fun IURLSearchParams.pluckMember(key: String): Any</ID>
+    <ID>ThrowsCount:WebCryptoIntrinsic.kt:WebCryptoIntrinsic$@Suppress("UNCHECKED_CAST") @Polyglot override fun getRandomValues(typedArray: Any)</ID>
+    <ID>TooGenericExceptionCaught:AbstractGVMScript.kt:AbstractGVMScript$exc: Exception</ID>
+    <ID>TooGenericExceptionCaught:JsIterator.kt:JsIterator.JsIteratorImpl$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:SqliteModule.kt:SqliteDatabaseProxy$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:SqliteModule.kt:SqliteDatabaseProxy.SQLiteTransactionImpl$err: Throwable</ID>
+    <ID>UnusedParameter:VfsPlugin.kt:Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
+  </CurrentIssues>
+</SmellBaseline>

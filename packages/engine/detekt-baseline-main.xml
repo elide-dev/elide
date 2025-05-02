@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>AbstractClassCanBeConcreteClass:AbstractLanguageConfig.kt:AbstractLanguageConfig$AbstractLanguageConfig</ID>
+    <ID>ForbiddenComment:AbstractLanguageConfig.kt:AbstractLanguageConfig$// @TODO: don't unconditionally mount all members</ID>
+    <ID>LongParameterList:AbstractStaticNativeLibraryFeature.kt:AbstractStaticNativeLibraryFeature$( jar: String, name: String, arch: String, vararg path: String, renameTo: ((String) -> String)? = null, cbk: (() -> Unit)? = null, )</ID>
+    <ID>LongParameterList:PolyglotContext.kt:( language: GuestLanguage, source: String, name: String? = null, internals: Boolean = false, interactive: Boolean = PolyglotDefaults.DEFAULT_INTERACTIVE, cached: Boolean = PolyglotDefaults.DEFAULT_CACHED, uri: URI? = null, )</ID>
+    <ID>NestedBlockDepth:AbstractStaticNativeLibraryFeature.kt:AbstractStaticNativeLibraryFeature$@Suppress("SpreadOperator", "ComplexCondition") override fun beforeAnalysis(access: Feature.BeforeAnalysisAccess)</ID>
+    <ID>NestedBlockDepth:AbstractStaticNativeLibraryFeature.kt:AbstractStaticNativeLibraryFeature$protected fun Feature.BeforeAnalysisAccess.unpackLibrary( jar: String, name: String, arch: String, vararg path: String, renameTo: ((String) -> String)? = null, cbk: (() -> Unit)? = null, ): List&lt;NativeLibraryFeature.UnpackedNative></ID>
+    <ID>ReturnCount:Version.kt:Version$public override operator fun compareTo(other: Version): Int</ID>
+    <ID>UnsafeCallOnNullableType:ModuleRegistry.kt:ModuleRegistry$factories[info]!!</ID>
+    <ID>UnsafeCallOnNullableType:ModuleRegistry.kt:ModuleRegistry$registered[info]!!</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>LongParameterList:Task.kt:Task.Companion$( name: String? = null, dependencies: Dependencies = Dependencies.None, inputs: Inputs = Inputs.None, outputs: Outputs = Outputs.None, status: Status = Status.QUEUED, id: TaskId? = null, action: suspend ActionContext.() -> Unit, )</ID>
+  </CurrentIssues>
+</SmellBaseline>

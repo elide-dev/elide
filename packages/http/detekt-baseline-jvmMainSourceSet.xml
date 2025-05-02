@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ExplicitItLambdaMultipleParameters:MicronautMutableHttpHeaders.kt:MicronautMutableHttpHeaders${ index, it -> if (index == 0) return@forEachIndexed backing.add(pair.name.nameNormalized, it) }</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>AbstractClassCanBeConcreteClass:PageController.kt:PageController$PageController</ID>
+    <ID>AbstractClassCanBeConcreteClass:PageWithProps.kt:PageWithProps$PageWithProps</ID>
+    <ID>AbstractClassCanBeInterface:BaseController.kt:BaseController$BaseController</ID>
+    <ID>RethrowCaughtException:api.ext.kt:throw err</ID>
+  </CurrentIssues>
+</SmellBaseline>

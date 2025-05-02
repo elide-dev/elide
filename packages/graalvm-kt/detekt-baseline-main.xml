@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>AbstractClassCanBeInterface:ElideKotlinScript.kt:ElideKotlinScript$ElideKotlinScript</ID>
+    <ID>TooGenericExceptionThrown:GuestKotlinEvaluator.kt:GuestKotlinEvaluator$throw RuntimeException("Exception during snippet evaluation", replResult.cause)</ID>
+  </CurrentIssues>
+</SmellBaseline>

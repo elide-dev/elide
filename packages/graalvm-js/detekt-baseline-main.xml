@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>UnsafeCallOnNullableType:ElideInteropModuleLoader.kt:ElideInteropModuleLoader$facade.value!!</ID>
+    <ID>UnusedPrivateFunction:ElideInteropModuleLoader.kt:ElideInteropModuleLoader$private fun resolveLang(source: Source): String?</ID>
+  </CurrentIssues>
+</SmellBaseline>

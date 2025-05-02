@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>AbstractClassCanBeInterface:AbstractDualTest.kt:AbstractDualTest.DualTestExecutionProxy$DualTestExecutionProxy</ID>
+    <ID>ArrayPrimitive:SQLiteQueryRendererTest.kt:SQLiteQueryRendererTest$arrayOf(1)</ID>
+    <ID>ForbiddenComment:NodePathTest.kt:NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
+    <ID>ForbiddenComment:NodePathTest.kt:NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
+    <ID>ForbiddenComment:NodePathTest.kt:NodePathTest$// @TODO: this will need normalization for non-unix test runs</ID>
+    <ID>LongParameterList:AbstractJsIntrinsicTest.kt:AbstractJsIntrinsicTest$( ctx: PolyglotContext, bind: Boolean, bindUtils: Boolean, bindPrimordials: Boolean, bindAssert: Boolean, bindConsole: Boolean, bindBase64: Boolean, bindBuffer: Boolean, op: JavaScript, )</ID>
+    <ID>LongParameterList:URLSearchParamsIntrinsicTest.kt:URLSearchParamsIntrinsicTest$( count: Int = 0, valueCount: Int = 0, keys: Set&lt;String>? = null, values: List&lt;Pair&lt;String, String>>? = null, mutable: Boolean = false, asHashMap: Boolean = true, asObject: Boolean = true, assertions: URLSearchParams.() -> Unit, )</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"equal,https://dl.elide.dev/test?abc=123&amp;def=456,https://dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"equal,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"equal,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"not-equal,https://github.com,https://github.com/elide-dev/v3,false,two URLs which differ in path should not be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"not-equal,https://google.com,https://google.com:443,false,two URLs with the same effective port should not be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal"</ID>
+    <ID>ReturnFromFinally:AbstractDualTest.kt:AbstractDualTest.TestResultContext$finally { if (!expectFail.get() &amp;&amp; exc.get() != null) { throw exc.get()!! } else if (expectFail.get() &amp;&amp; exc.get() == null) { throw AssertionError("Expected failure, but test passed.") } }</ID>
+    <ID>SwallowedException:WebCryptoIntrinsicTest.kt:WebCryptoIntrinsicTest$err: Throwable</ID>
+    <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt:AbstractDualTest.TestResultContext$throw AssertionError("Expected failure, but test passed.")</ID>
+    <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt:AbstractDualTest.TestResultContext$throw exc.get()!!</ID>
+    <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt:AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
+    <ID>UselessCallOnNotNull:URLComplianceTest.kt:URLComplianceTest$listOfNotNull( urlTest(case) { // nothing at this time } )</ID>
+    <ID>VarCouldBeVal:AbstractDualTest.kt:AbstractDualTest$/** Micronaut injection context. */ @Inject private lateinit var beanContext: BeanContext</ID>
+    <ID>VarCouldBeVal:CommonMinimumTest.kt:CommonMinimumTest$@Inject private lateinit var intrinsics: IntrinsicsManager</ID>
+    <ID>VarCouldBeVal:IntrinsicsManagerTest.kt:IntrinsicsManagerTest$@Inject private lateinit var intrinsics: Collection&lt;GuestIntrinsic></ID>
+    <ID>VarCouldBeVal:IntrinsicsManagerTest.kt:IntrinsicsManagerTest$@Inject private lateinit var manager: IntrinsicsManager</ID>
+    <ID>VarCouldBeVal:JsGlobalsTest.kt:JsGlobalsTest$@Inject private lateinit var intrinsics: IntrinsicsManager</ID>
+    <ID>VarCouldBeVal:JsTimersTest.kt:JsTimersTest$@Inject private lateinit var subject: JsTimersIntrinsic</ID>
+    <ID>VarCouldBeVal:NodeFsPromisesTest.kt:NodeFsPromisesTest$@Inject private lateinit var execProvider: GuestExecutorProvider</ID>
+    <ID>VarCouldBeVal:NodeFsPromisesTest.kt:NodeFsPromisesTest$@Inject private lateinit var path: NodePathsModule</ID>
+    <ID>VarCouldBeVal:NodeFsTest.kt:NodeFsTest$@Inject private lateinit var execProvider: GuestExecutorProvider</ID>
+    <ID>VarCouldBeVal:NodeFsTest.kt:NodeFsTest$@Inject private lateinit var path: NodePathsModule</ID>
+    <ID>VarCouldBeVal:NodeProcessTest.kt:NodeProcessTest$@Inject private lateinit var module: NodeProcessModule</ID>
+  </CurrentIssues>
+</SmellBaseline>

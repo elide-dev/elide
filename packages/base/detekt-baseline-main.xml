@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>AbstractClassCanBeConcreteClass:RedBlackTree.kt:RedBlackTree$RedBlackTree</ID>
+    <ID>IteratorNotThrowingNoSuchElementException:SortedSets.kt:EmptySortedSet$&lt;no name provided> : Iterator</ID>
+    <ID>MagicNumber:Hex.kt:Hex$0xFF</ID>
+    <ID>ReturnCount:RedBlackTree.kt:RedBlackTree$private tailrec fun rebalanceRemoved(node: Node&lt;K, V>)</ID>
+    <ID>ReturnCount:RedBlackTree.kt:RedBlackTree$protected fun removeNode(node: Node&lt;K, V>): Node&lt;K, V></ID>
+    <ID>UnsafeCallOnNullableType:Base64Impl.kt:Base64Kt.Encoder$newline!!</ID>
+    <ID>UnsafeCallOnNullableType:RedBlackTree.kt:RedBlackTree$parent.parent!!</ID>
+    <ID>UnsafeCallOnNullableType:RedBlackTree.kt:RedBlackTree$rightChild!!</ID>
+    <ID>UnsafeCallOnNullableType:RedBlackTree.kt:RedBlackTree$sibling.child(redDirection)!!</ID>
+  </CurrentIssues>
+</SmellBaseline>

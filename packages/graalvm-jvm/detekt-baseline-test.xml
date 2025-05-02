@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>VarCouldBeVal:JvmPluginTest.kt:JvmPluginTest$/** Temporary directory into which compiled class files will be placed for the guest vm to access. */ @TempDir private lateinit var tempClasspath: Path</ID>
+  </CurrentIssues>
+</SmellBaseline>

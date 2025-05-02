@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>AbstractClassCanBeConcreteClass:AbstractToolError.kt:AbstractToolError$AbstractToolError</ID>
+    <ID>AbstractClassCanBeConcreteClass:HelpCommand.kt:HelpCommand.HelpTopic$HelpTopic</ID>
+    <ID>AbstractClassCanBeInterface:AbstractTest.kt:AbstractTest$AbstractTest</ID>
+    <ID>EmptyFunctionBlock:BuildOutput.kt:BaseOutput${ }</ID>
+    <ID>EmptyFunctionBlock:BuildOutput.kt:BaseOutput.&lt;no name provided>${ }</ID>
+    <ID>ExplicitItLambdaMultipleParameters:SubprocessRunner.kt:{ idx, it -> idx to it }</ID>
+    <ID>ForbiddenComment:DelegatedToolCommand.kt:DelegatedToolCommand$// @TODO: delegated error handling</ID>
+    <ID>ImplicitDefaultLocale:NativeUtil.kt:NativeUtil$String.format( "Could not find prefix added to %s to get %s. When shading, only adding a " + "package prefix is supported", expected, maybeShaded, )</ID>
+    <ID>LongParameterList:NativeEngine.kt:NativeEngine$( group: String, staticName: String, base: String = DEFAULT_NATIVES_PATH, os: HostPlatform.OperatingSystem, extension: String? = libExtension(os), builder: StringBuilder.() -> Unit, )</ID>
+    <ID>LongParameterList:NativeEngine.kt:NativeEngine$( platform: HostPlatform, nativesProvider: () -> File, server: Boolean, tooling: Boolean, allCandidatePaths: Sequence&lt;Path>, loader: ClassLoader, )</ID>
+    <ID>LongParameterList:TestResult.kt:TestResult.Companion$( result: Result, test: Testable&lt;out TestContext>, start: Instant, testInfo: TestInfo, err: Throwable? = null, end: Instant, messages: Collection&lt;String> = emptyList(), output: StringBuilder? = null, errOutput: StringBuilder? = null, )</ID>
+    <ID>LongParameterList:TestResult.kt:TestResult.Companion$( testInfo: TestInfo, test: Testable&lt;*>, start: Instant, end: Instant = Clock.System.now(), err: Throwable? = null, messages: Collection&lt;String> = emptyList(), output: StringBuilder? = null, errOutput: StringBuilder? = null, )</ID>
+    <ID>LongParameterList:TestResult.kt:TestResult.Companion$( testInfo: TestInfo, test: Testable&lt;*>, start: Instant, end: Instant = Clock.System.now(), messages: Collection&lt;String> = emptyList(), output: StringBuilder? = null, errOutput: StringBuilder? = null, )</ID>
+    <ID>LongParameterList:TestResult.kt:TestResult.TestResultInfo.Companion$( result: Result, test: Testable&lt;out TestContext>, start: Instant, info: TestInfo, end: Instant, err: Throwable? = null, messages: Collection&lt;String> = emptyList(), output: StringBuilder? = null, errOutput: StringBuilder? = null, )</ID>
+    <ID>LongParameterList:TestResult.kt:TestResult.TestResultInfo.Companion$( result: Result, test: Testable&lt;out TestContext>, start: Instant, info: TestInfo, end: Instant, messages: Collection&lt;String> = emptyList(), output: StringBuilder? = null, errOutput: StringBuilder? = null, )</ID>
+    <ID>LongParameterList:ToolShellCommand.kt:ToolShellCommand$( exc: Throwable, message: String, advice: String? = null, internal: Boolean = false, stacktrace: Boolean = internal, withCause: Boolean = true, )</ID>
+    <ID>LongParameterList:ToolShellCommand.kt:ToolShellCommand$( label: String, langs: EnumSet&lt;GuestLanguage>, language: GuestLanguage, ctxAccessor: ContextAccessor, source: Source, execProvider: GuestExecutorProvider, )</ID>
+    <ID>LongParameterList:ToolShellCommand.kt:ToolShellCommand$( languages: EnumSet&lt;GuestLanguage>, primaryLanguage: GuestLanguage, ctxAccessor: ContextAccessor, origin: String, code: String, interactive: Boolean = false, literal: Boolean = false, )</ID>
+    <ID>LongParameterList:ToolShellCommand.kt:ToolShellCommand$( root: String, language: GuestLanguage, jnanorcFile: Path?, workDir: Supplier&lt;Path>, configPath: ConfigurationPath, op: LineReader.(SystemRegistryImpl) -> Unit, )</ID>
+    <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt:ToolShellCommand$while</ID>
+    <ID>MagicNumber:RuntimeWorkdirManager.kt:RuntimeWorkdirManager$15</ID>
+    <ID>MagicNumber:SubprocessRunner.kt:100</ID>
+    <ID>MagicNumber:ToolShellCommand.kt:ToolShellCommand$1000L</ID>
+    <ID>MagicNumber:ToolShellCommand.kt:ToolShellCommand$120</ID>
+    <ID>MagicNumber:ToolShellCommand.kt:ToolShellCommand$40</ID>
+    <ID>MagicNumber:ToolShellCommand.kt:ToolShellCommand$80</ID>
+    <ID>NestedBlockDepth:Elide.kt:Elide$override suspend fun CommandContext.invoke(state: CommandState): CommandResult</ID>
+    <ID>NestedBlockDepth:InitCommand.kt:InitCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>NestedBlockDepth:NativeEngine.kt:NativeEngine$@Suppress("TooGenericExceptionCaught") @JvmStatic private fun loadApplicableNatives( platform: HostPlatform, nativesProvider: () -> File, server: Boolean, tooling: Boolean, allCandidatePaths: Sequence&lt;Path>, loader: ClassLoader, )</ID>
+    <ID>NestedBlockDepth:ToolInfoCommand.kt:ToolInfoCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>NestedBlockDepth:ToolShellCommand.kt:ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>NestedBlockDepth:ToolShellCommand.kt:ToolShellCommand$private fun displayFormattedError( exc: Throwable, message: String, advice: String? = null, internal: Boolean = false, stacktrace: Boolean = internal, withCause: Boolean = true, )</ID>
+    <ID>NestedBlockDepth:main.kt:@Suppress("TooGenericExceptionCaught") private inline fun runInner(args: Array&lt;String>): Int</ID>
+    <ID>PrintStackTrace:main.kt:err</ID>
+    <ID>ReturnCount:ExecutionController.kt:ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
+    <ID>ReturnCount:InitCommand.kt:InitCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>ReturnCount:RuntimeWorkdirManager.kt:RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: Array&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
+    <ID>ReturnCount:ToolBuildCommand.kt:ToolBuildCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>ReturnCount:ToolShellCommand.kt:ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>ReturnFromFinally:main.kt:finally { Elide.close() }</ID>
+    <ID>SpreadOperator:ToolInvokeCommand.kt:ToolInvokeCommand$(*selectedTools.map { it to buildArgs(action, it) }.toTypedArray())</ID>
+    <ID>SwallowedException:PersistedError.kt:PersistedError.RuntimeInfo$err: Throwable</ID>
+    <ID>ThrowsCount:ToolShellCommand.kt:ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet&lt;GuestLanguage>)</ID>
+    <ID>TooGenericExceptionCaught:AbstractToolCommand.kt:AbstractToolCommand$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:CommandTestRunner.kt:CommandTestRunner$thr: Throwable</ID>
+    <ID>TooGenericExceptionCaught:PersistedError.kt:PersistedError.RuntimeInfo$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:TestContext.kt:TestContext.Companion$err: Throwable</ID>
+    <ID>TooGenericExceptionCaught:ToolInvokeCommand.kt:ToolInvokeCommand$err: Throwable</ID>
+    <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt:private const val jsHint = "package.json"</ID>
+    <ID>TopLevelPropertyNaming:ToolInvokeCommand.kt:private const val pyHint = "requirements.txt"</ID>
+    <ID>UnnecessaryApply:DefaultStructuredErrorRecorder.kt:DefaultStructuredErrorRecorder$apply { writeErrorToTempDir(workdirManager.flightRecorderDirectory().toFile()) }</ID>
+    <ID>UnnecessaryApply:ToolShellCommand.kt:ToolShellCommand$apply { op.invoke(this, systemRegistry) }</ID>
+    <ID>UnsafeCallOnNullableType:AbstractSubcommand.kt:AbstractSubcommand$engine.value!!</ID>
+    <ID>UnsafeCallOnNullableType:Elide.kt:Elide$srcfile!!</ID>
+    <ID>UnsafeCallOnNullableType:Elide.kt:Elide$this@Elide.args!!</ID>
+    <ID>UnsafeCallOnNullableType:InitCommand.kt:InitCommand$projectName!!</ID>
+    <ID>UnsafeCallOnNullableType:Lazy.kt:Lazy$supplier!!</ID>
+    <ID>UnsafeCallOnNullableType:ToolShellCommand.kt:ToolShellCommand$runnable!!</ID>
+    <ID>UnusedParameter:InitCommand.kt:InitCommand$template: RenderableTemplate</ID>
+    <ID>UnusedPrivateClass:InitCommand.kt:InitCommand$PreparedProject</ID>
+    <ID>UnusedPrivateClass:InitCommand.kt:InitCommand$ProjectTemplate</ID>
+    <ID>UnusedPrivateFunction:BuildOutput.kt:Animated$private fun transferLayout()</ID>
+    <ID>UnusedPrivateFunction:InitCommand.kt:InitCommand$private fun loadInstalledTemplates(): List&lt;RenderableTemplate></ID>
+    <ID>UnusedPrivateFunction:InitCommand.kt:InitCommand.Companion$@JvmStatic private fun MutableMap&lt;Path, ProjectFile>.addFile(path: String, contents: String)</ID>
+    <ID>UnusedPrivateProperty:AbstractToolCommand.kt:AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
+    <ID>UnusedPrivateProperty:BuildOutput.kt:Animated$// Main progress renderer. private val progress = layout.animateInCoroutine( terminal = terminal, )</ID>
+    <ID>UnusedPrivateProperty:BuildOutput.kt:Animated$// Top-level build task. private val topTask = taskLayout()</ID>
+    <ID>UnusedPrivateProperty:BuildOutput.kt:Animated$private val activeContext = atomic(ProgressContext())</ID>
+    <ID>UnusedPrivateProperty:ExecutionController.kt:ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
+    <ID>UnusedPrivateProperty:ToolInvokeCommand.kt:// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>
+    <ID>UnusedPrivateProperty:ToolInvokeCommand.kt:// Sub-commands for Uv. private val uvActions = sortedSetOf( "pip", "tool", "toolchain", "venv", "cache", "self", "version", "help", )</ID>
+    <ID>UnusedPrivateProperty:ToolShellCommand.kt:ToolShellCommand$private lateinit var threadFactory: ThreadFactory</ID>
+    <ID>UnusedPrivateProperty:ToolShellCommand.kt:ToolShellCommand.Companion$private val logging: Logger by lazy { Logging.of(ToolShellCommand::class) }</ID>
+    <ID>UnusedPrivateProperty:ToolTestCommand.kt:ToolTestCommand$@Inject private lateinit var projectManager: Provider&lt;ProjectManager></ID>
+    <ID>VarCouldBeVal:AbstractSubcommand.kt:AbstractSubcommand$// Common options shared by all commands. @CommandLine.ArgGroup( heading = "%nCommon Options:%n", exclusive = false, order = 999, // always list last ) private var commons: CommonOptions = CommonOptions()</ID>
+    <ID>VarCouldBeVal:NativeUtil.kt:NativeUtil$var `in`: InputStream? = null</ID>
+    <ID>VarCouldBeVal:ProjectAwareSubcommand.kt:ProjectAwareSubcommand$// Common options shared by all commands. @CommandLine.ArgGroup( heading = "%nProject Options:%n", exclusive = false, ) private var projectOptions: ProjectOptions = ProjectOptions()</ID>
+    <ID>VarCouldBeVal:ToolBuildCommand.kt:ToolBuildCommand$@Inject private lateinit var projectManagerProvider: Provider&lt;ProjectManager></ID>
+    <ID>VarCouldBeVal:ToolInfoCommand.kt:ToolInfoCommand$@Inject private lateinit var projectManagerProvider: Provider&lt;ProjectManager></ID>
+    <ID>VarCouldBeVal:ToolInfoCommand.kt:ToolInfoCommand$@Inject private lateinit var workdirProvider: Provider&lt;RuntimeWorkdirManager></ID>
+    <ID>VarCouldBeVal:ToolInvokeCommand.kt:ToolInvokeCommand$/** * List supported tools, and their versions, and exit. */ @Option( names = ["-l", "--list-tools"], description = ["List supported tools and exit; supports the format parameter"], ) private var listTools: Boolean = false</ID>
+    <ID>VarCouldBeVal:ToolInvokeCommand.kt:ToolInvokeCommand$/** * Paths to apply to the linter; optional. * * By default, all source files are scanned, modulo the current ignore configuration and file. */ @Parameters( index = "0", description = ["Tool options, or the path to the file or directory to lint"], arity = "0..N", ) private var argsAndPaths: List&lt;String> = emptyList()</ID>
+    <ID>VarCouldBeVal:ToolInvokeCommand.kt:ToolInvokeCommand$/** * Show a stacktrace in the event of a fatal error */ @Option( names = ["-s", "--stacktrace"], description = ["Show a stacktrace for fatal errors"], ) private var stacktrace: Boolean = false</ID>
+    <ID>VarCouldBeVal:ToolInvokeCommand.kt:ToolInvokeCommand$/** * Tools to run with the current linter invocation; optional. * * There is a special value, `auto`, which automatically selects the appropriate tools to use; otherwise, the suite of * tools is loaded and run as described (comma-separated or multiple argument forms are supported). */ @Option( names = ["-t", "--tool"], description = ["The linter tool(s) to use"], defaultValue = "auto", arity = "0..N", ) private var tools: List&lt;String> = emptyList()</ID>
+    <ID>VarCouldBeVal:ToolProjectCommand.kt:ToolProjectCommand$@Inject private lateinit var manifestsProvider: Provider&lt;PackageManifestService></ID>
+    <ID>VarCouldBeVal:ToolProjectCommand.kt:ToolProjectCommand$@Inject private lateinit var projectManagerProvider: Provider&lt;ProjectManager></ID>
+    <ID>VarCouldBeVal:ToolProjectCommand.kt:ToolProjectCommand$@Option( names = ["-f", "--overwrite"], description = ["Overwrite existing manifests when exporting"], ) private var overwrite: Boolean = false</ID>
+    <ID>VarCouldBeVal:ToolProjectCommand.kt:ToolProjectCommand$@Option( names = ["-l", "--list-targets"], description = ["List supported targets and exit"], ) private var listTargets: Boolean = false</ID>
+    <ID>VarCouldBeVal:ToolProjectCommand.kt:ToolProjectCommand$@Option( names = ["-t", "--target"], description = ["The target ecosystems to be exported"], defaultValue = "auto", arity = "0..N", ) private var targets: List&lt;String> = emptyList()</ID>
+    <ID>VarCouldBeVal:ToolProjectCommand.kt:ToolProjectCommand$@Suppress("unused") @Option( names = ["--export"], description = ["Export third-party manifests for the current Elide project"], ) private var export: Boolean = false</ID>
+    <ID>VarCouldBeVal:ToolShellCommand.kt:ToolShellCommand$private lateinit var threadFactory: ThreadFactory</ID>
+    <ID>VarCouldBeVal:ToolTestCommand.kt:ToolTestCommand$@Inject private lateinit var projectManager: Provider&lt;ProjectManager></ID>
+  </CurrentIssues>
+</SmellBaseline>

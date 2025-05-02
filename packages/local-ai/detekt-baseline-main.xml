@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>LongParameterList:Parameters.kt:Parameters.Companion$( verbose: Boolean = DEFAULT_VERBOSE, gpuLayers: UInt = DEFAULT_GPU_LAYERS, disableGpu: Boolean = DISABLE_GPU, contextSize: UInt = DEFAULT_CONTEXT_SIZE, allowDownload: Boolean = DEFAULT_ALLOW_DOWNLOAD, threadCount: UInt = DEFAULT_THREAD_COUNT, threadBatchCount: UInt = DEFAULT_THREAD_BATCH_COUNT, huggingFaceToken: String? = System.getenv("HUGGINGFACE_TOKEN"), )</ID>
+    <ID>UnusedPrivateFunction:NativeLocalAi.kt:NativeLocalAi$@Suppress("LongParameterList") @JvmStatic @JvmName("inferAsync") private external fun inferAsync( operationId: Int, verbose: Boolean, gpuLayers: Int, disableGpu: Boolean, allowDownload: Boolean, path: String, prompt: String, huggingFaceRepo: String, huggingFaceName: String, huggingFaceToken: String, ctxSize: Int, threadCount: Int, threadBatchCount: Int, length: Int, )</ID>
+  </CurrentIssues>
+</SmellBaseline>

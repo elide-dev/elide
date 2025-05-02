@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ForbiddenComment:NodePathTest.kt:NodePathTest$// @TODO: adopting `ProxyObject` means this object will no longer show up as a host object.</ID>
+    <ID>ForbiddenComment:NodePathTest.kt:NodePathTest$// @TODO: this was the first use of the `assert` module; the order of expected/actual args is probably wrong</ID>
+    <ID>ForbiddenComment:NodePathTest.kt:NodePathTest$// @TODO: this will need normalization for non-unix test runs</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"equal,https://dl.elide.dev/test?abc=123&amp;def=456,https://dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"equal,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,https://dl.elide.dev:123/test?abc=123&amp;def=456#hi,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"equal,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,https://user:pass@dl.elide.dev/test?abc=123&amp;def=456,true,URLs should be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"not-equal,https://github.com,https://github.com/elide-dev/v3,false,two URLs which differ in path should not be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"not-equal,https://google.com,https://google.com:443,false,two URLs with the same effective port should not be equal"</ID>
+    <ID>MaxLineLength:URLIntrinsicTest.kt:URLIntrinsicTest$"not-equal,https://google.com/,https://google.com:443,false,two URLs with the same effective path/port should be equal"</ID>
+    <ID>SwallowedException:WebCryptoIntrinsicTest.kt:WebCryptoIntrinsicTest$err: Throwable</ID>
+    <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt:AbstractDualTest.TestResultContext$throw AssertionError("Expected failure, but test passed.")</ID>
+    <ID>ThrowingExceptionFromFinally:AbstractDualTest.kt:AbstractDualTest.TestResultContext$throw exc.get()!!</ID>
+  </CurrentIssues>
+</SmellBaseline>

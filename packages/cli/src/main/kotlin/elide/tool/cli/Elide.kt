@@ -33,7 +33,6 @@ import java.util.*
 import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
-import elide.annotations.Singleton
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.runtime.gvm.internals.ProcessManager
@@ -51,6 +50,7 @@ import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.cmd.runner.ToolTestCommand
+import elide.tool.cli.cmd.tool.detekt.DetektAdapter
 import elide.tool.cli.cmd.tool.jar.JarToolAdapter
 import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
 import elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter
@@ -113,6 +113,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     JavaCompilerAdapter.JavacCliTool::class,
     JarToolAdapter.JarCliTool::class,
     JavadocToolAdapter.JavadocCliTool::class,
+    DetektAdapter.DetektCliTool::class,
     ToolPklCommand::class,
     ToolDiscordCommand::class,
   ],
@@ -144,7 +145,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
 )
 @Suppress("MemberVisibilityCanBePrivate")
 @Introspected
-@Context @Singleton class Elide : ToolCommandBase<CommandContext>() {
+@Context class Elide : ToolCommandBase<CommandContext>() {
   companion object {
     /** Name of the tool. */
     const val TOOL_NAME: String = "elide"

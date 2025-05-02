@@ -14,7 +14,8 @@
 package elide.tool.cli.cmd.help
 
 import com.github.ajalt.mordant.markdown.Markdown
-import com.github.ajalt.mordant.terminal.Terminal
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
 import java.awt.Desktop
 import java.net.URI
@@ -59,7 +60,10 @@ import elide.tool.cli.*
     HelpCommand.ServersHelpCommand::class,
   ],
 )
-@Singleton internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@Singleton
+@Introspected
+@ReflectiveAccess
+internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private const val issuesBase: String = "https://github.com/elide-dev/elide/issues/new"
     private const val issueTemplateFeature: String = "new_feature.yaml"
@@ -86,7 +90,7 @@ import elide.tool.cli.*
 
   internal abstract class HelpTopic (private val path: String): Callable<Unit> {
     override fun call() {
-      val terminal = Terminal()
+      val terminal = Statics.terminal
       requireNotNull(this::class.java.getResourceAsStream("/META-INF/elide/help/$path")) {
         "Failed to locate help topic at path '$path'"
       }.bufferedReader(StandardCharsets.UTF_8).use { stream ->

@@ -242,6 +242,7 @@ r8 = "1.4.45"
 react = "19.0.0"
 reactivestreams = "1.0.4"
 redacted-plugin = "1.9.0"
+sarif4k = "0.6.0"
 semver = "5.6.0"
 shadow-plugin = "8.1.1"
 sigstore = "1.3.0"
@@ -371,6 +372,32 @@ commons-pool = { group = "org.apache.commons", name = "commons-pool2", version.r
 confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", version.ref = "confundus" }
 consoleUi = { group = "de.codeshelf.consoleui", name = "consoleui", version.ref = "consoleui" }
 crossword = { group = "com.jakewharton.crossword", name = "crossword", version.ref = "crossword" }
+detekt-api = { group = "io.gitlab.arturbosch.detekt", name = "detekt-api", version.ref = "detekt" }
+detekt-compiler-plugin = { group = "io.github.detekt", name = "detekt-compiler-plugin", version.ref = "detekt" }
+detekt-cli = { group = "io.gitlab.arturbosch.detekt", name = "detekt-cli", version.ref = "detekt" }
+detekt-core = { group = "io.gitlab.arturbosch.detekt", name = "detekt-core", version.ref = "detekt" }
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
+detekt-metrics = { group = "io.gitlab.arturbosch.detekt", name = "detekt-metrics", version.ref = "detekt" }
+detekt-report-html = { group = "io.gitlab.arturbosch.detekt", name = "detekt-report-html", version.ref = "detekt" }
+detekt-report-md = { group = "io.gitlab.arturbosch.detekt", name = "detekt-report-md", version.ref = "detekt" }
+detekt-report-sarif = { group = "io.gitlab.arturbosch.detekt", name = "detekt-report-sarif", version.ref = "detekt" }
+detekt-report-txt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-report-txt", version.ref = "detekt" }
+detekt-report-xml = { group = "io.gitlab.arturbosch.detekt", name = "detekt-report-xml", version.ref = "detekt" }
+detekt-rules = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules", version.ref = "detekt" }
+detekt-rules-complexity = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-complexity", version.ref = "detekt" }
+detekt-rules-coroutines = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-coroutines", version.ref = "detekt" }
+detekt-rules-documentation = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-documentation", version.ref = "detekt" }
+detekt-rules-empty = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-empty", version.ref = "detekt" }
+detekt-rules-errorprone = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-errorprone", version.ref = "detekt" }
+detekt-rules-exceptions = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-exceptions", version.ref = "detekt" }
+detekt-rules-libraries = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-libraries", version.ref = "detekt" }
+detekt-rules-naming = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-naming", version.ref = "detekt" }
+detekt-rules-performance = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-performance", version.ref = "detekt" }
+detekt-rules-style = { group = "io.gitlab.arturbosch.detekt", name = "detekt-rules-style", version.ref = "detekt" }
+detekt-test = { group = "io.gitlab.arturbosch.detekt", name = "detekt-test", version.ref = "detekt" }
+detekt-test-utils = { group = "io.gitlab.arturbosch.detekt", name = "detekt-test-utils", version.ref = "detekt" }
+detekt-tooling = { group = "io.gitlab.arturbosch.detekt", name = "detekt-tooling", version.ref = "detekt" }
+detekt-utils = { group = "io.gitlab.arturbosch.detekt", name = "detekt-utils", version.ref = "detekt" }
 dekorate-kubernetes = { group = "io.dekorate", name = "kubernetes-annotations", version.ref = "dekorate" }
 dirs = { group = "com.github.elide-dev", name = "directories-jvm", version.ref = "dirs" }
 errorprone-annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorprone" }
@@ -667,6 +694,11 @@ logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "l
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
 maven-core = { group = "org.apache.maven", name = "maven-core", version.ref = "maven-core" }
+maven-model = { group = "org.apache.maven", name = "maven-model", version.ref = "maven-core" }
+maven-model-builder = { group = "org.apache.maven", name = "maven-model-builder", version.ref = "maven-core" }
+maven-settings = { group = "org.apache.maven", name = "maven-settings", version.ref = "maven-core" }
+maven-settings-builder = { group = "org.apache.maven", name = "maven-settings-builder", version.ref = "maven-core" }
+maven-toolchain-builder = { group = "org.apache.maven", name = "maven-toolchain-builder", version.ref = "maven-core" }
 maven-resolver = { group = "org.apache.maven", name = "maven-resolver-provider", version.ref = "maven-core" }
 maven-wagon-http = { group = "org.apache.maven.wagon", name = "wagon-http", version.ref = "maven-wagon" }
 maven-resolver-connector-basic = { group = "org.apache.maven.resolver", name = "maven-resolver-connector-basic", version.ref = "maven-lib" }
@@ -726,6 +758,7 @@ reactor-core = { group = "io.projectreactor", name = "reactor-core", version.ref
 reactor-netty = { group = "io.projectreactor.netty", name = "reactor-netty", version.ref = "projectreactor-netty" }
 reactor-netty-core = { group = "io.projectreactor.netty", name = "reactor-netty-core", version.ref = "projectreactor-netty" }
 reactor-netty-http = { group = "io.projectreactor.netty", name = "reactor-netty-http", version.ref = "projectreactor-netty" }
+sarif4k = { group = "io.github.detekt.sarif4k", name = "sarif4k", version.ref = "sarif4k" }
 semver = { group = "org.semver4j", name = "semver4j", version.ref = "semver" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-logging", version.ref = "slf4j" }
@@ -918,6 +951,14 @@ graalvm-js = ["graalvm-js-language", "graalvm-polyglot-js-community"]
 
 graalvm-js-isolate = ["graalvm-js-isolate", "graalvm-polyglot-js-isolate"]
 
+maven-model = [
+  "maven-core",
+  "maven-model",
+  "maven-model-builder",
+  "maven-settings",
+  "maven-settings-builder",
+]
+
 maven-resolver = [
   "maven-resolver",
   "maven-wagon-http",
@@ -933,4 +974,29 @@ mordant = [
   "mordant",
   "mordant-coroutines",
   "mordant-markdown",
+]
+
+detekt = [
+  "detekt-api",
+  "detekt-core",
+  "detekt-formatting",
+  "detekt-metrics",
+  "detekt-report-html",
+  "detekt-report-md",
+  "detekt-report-sarif",
+  "detekt-report-txt",
+  "detekt-report-xml",
+  "detekt-rules",
+  "detekt-rules-complexity",
+  "detekt-rules-coroutines",
+  "detekt-rules-documentation",
+  "detekt-rules-empty",
+  "detekt-rules-errorprone",
+  "detekt-rules-exceptions",
+  "detekt-rules-libraries",
+  "detekt-rules-naming",
+  "detekt-rules-performance",
+  "detekt-rules-style",
+  "detekt-tooling",
+  "detekt-utils",
 ]

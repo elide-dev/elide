@@ -20,12 +20,9 @@ import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
-import jakarta.inject.Provider
 import kotlinx.atomicfu.atomic
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
-import elide.annotations.Context
-import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.HostPlatform
@@ -34,7 +31,7 @@ import elide.tool.cli.Elide
 import elide.tool.io.WorkdirManager.WorkdirHandle
 
 /** Main implementation of the runtime working directory manager. */
-internal class RuntimeWorkdirManager : WorkdirManager {
+@Singleton internal class RuntimeWorkdirManager : WorkdirManager {
   internal object SingletonManager {
     @JvmStatic val singleton = atomic<RuntimeWorkdirManager?>(null)
 
@@ -87,11 +84,6 @@ internal class RuntimeWorkdirManager : WorkdirManager {
     @JvmStatic fun acquire(): RuntimeWorkdirManager {
       return SingletonManager.acquire()
     }
-  }
-
-  /** Provides an injection factory for resolving the singleton [RuntimeWorkdirManager]. */
-  @Factory class DefaultRuntimeWorkdirManagerProvider : Provider<RuntimeWorkdirManager> {
-    @Context @Singleton override fun get(): RuntimeWorkdirManager = acquire()
   }
 
   @Volatile private var active: Boolean = true

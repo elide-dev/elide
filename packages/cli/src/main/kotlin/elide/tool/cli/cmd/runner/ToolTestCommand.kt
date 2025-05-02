@@ -13,13 +13,13 @@
 
 package elide.tool.cli.cmd.runner
 
-import com.github.ajalt.mordant.terminal.Terminal
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import java.nio.file.Path
 import jakarta.inject.Inject
+import jakarta.inject.Provider
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
@@ -55,7 +55,7 @@ import elide.tool.project.ProjectManager
 @Introspected
 @ReflectiveAccess
 class ToolTestCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
-  @Inject private lateinit var projectManager: ProjectManager
+  @Inject private lateinit var projectManager: Provider<ProjectManager>
 
   class CoverageOptions {
     @CommandLine.Option(
@@ -102,9 +102,6 @@ class ToolTestCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
     paramLabel = "TASK",
   )
   internal var tasks: List<String>? = null
-
-  // Terminal to use.
-  private val terminal by lazy { Terminal() }
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     output {

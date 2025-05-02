@@ -13,6 +13,7 @@
 package elide.tool.project
 
 import java.nio.file.Path
+import jakarta.inject.Provider
 import kotlin.io.path.*
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -25,9 +26,10 @@ import elide.tooling.project.ProjectEnvironment
 import elide.tooling.project.manifest.ElidePackageManifest
 
 /** Default implementation of [ProjectManager]. */
-@Singleton internal class DefaultProjectManager @Inject constructor(
-  private val workdir: WorkdirManager,
-  private val manifests: PackageManifestService,
+@Singleton
+internal class DefaultProjectManager @Inject constructor(
+  private val workdir: Provider<WorkdirManager>,
+  private val manifests: Provider<PackageManifestService>,
 ) : ProjectManager {
   companion object {
     // Filename for `.env` files.
@@ -72,13 +74,14 @@ import elide.tooling.project.manifest.ElidePackageManifest
 
   override suspend fun resolveProject(pathOverride: String?): ElideProject? {
     val rootBase = when (pathOverride) {
-      null -> workdir.projectRoot()?.toPath()
+      null -> workdir.get().projectRoot()?.toPath()
       else -> Path.of(pathOverride)
     }
     val root = rootBase?.takeIf { it.isDirectory() } ?: return null
     val env = readDotEnv(root)
 
     // prefer an Elide manifest if present
+    val manifests = manifests.get()
     var elideManifest = manifests.resolve(root).takeIf { it.isRegularFile() }?.let { manifestFile ->
       manifestFile.inputStream().use { manifests.parse(it, ProjectEcosystem.Elide) }
     } as ElidePackageManifest?

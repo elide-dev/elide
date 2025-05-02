@@ -3,7 +3,6 @@ package elide.tool.project.codecs
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
-import jakarta.inject.Singleton
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
@@ -17,7 +16,7 @@ import elide.tooling.project.codecs.ManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.NodePackageManifest
 
-@Singleton @ManifestCodec(Node) class NodeManifestCodec : PackageManifestCodec<NodePackageManifest> {
+@ManifestCodec(Node) class NodeManifestCodec : PackageManifestCodec<NodePackageManifest> {
   override fun defaultPath(): Path = Path("$DEFAULT_NAME.$DEFAULT_EXTENSION")
   override fun supported(path: Path): Boolean {
     return path.nameWithoutExtension == DEFAULT_NAME && path.extension == DEFAULT_EXTENSION
@@ -72,6 +71,7 @@ import elide.tooling.project.manifest.NodePackageManifest
         prettyPrint = true
         allowComments = true
         allowTrailingComma = true
+        isLenient = true
       }
     }
   }

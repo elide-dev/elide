@@ -14,12 +14,13 @@
 package elide.tool.cli.cmd.info
 
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.Engine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
+import jakarta.inject.Provider
 import elide.annotations.Inject
-import elide.annotations.Singleton
 import elide.tool.cli.*
 import elide.tool.cli.cfg.ElideCLITool
 import elide.tool.engine.NativeEngine
@@ -33,13 +34,16 @@ import elide.tool.project.ProjectManager
   mixinStandardHelpOptions = true,
 )
 @Introspected
-@Singleton internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@ReflectiveAccess
+internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private fun Boolean.label(): String = if (this) "Yes" else "No"
   }
 
-  @Inject private lateinit var projectManager: ProjectManager
-  @Inject private lateinit var workdir: RuntimeWorkdirManager
+  @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
+  @Inject private lateinit var workdirProvider: Provider<RuntimeWorkdirManager>
+  private val projectManager: ProjectManager by lazy { projectManagerProvider.get() }
+  private val workdir: RuntimeWorkdirManager by lazy { workdirProvider.get() }
 
   // Check if the library group at the name `group` was loaded.
   private fun libraryGroupLoaded(group: String): Boolean = NativeEngine.didLoad(group)

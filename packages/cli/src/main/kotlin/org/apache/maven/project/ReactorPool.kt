@@ -10,10 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.tooling.project.codecs
 
-import elide.annotations.Singleton
-import elide.tooling.project.ProjectEcosystem
+package org.apache.maven.project
 
-@Singleton
-public annotation class ManifestCodec(val ecosystem: ProjectEcosystem)
+internal fun createMavenReactorPool(): ReactorModelPool {
+  return ReactorModelPool()
+}

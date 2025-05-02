@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("UnstableApiUsage")
 
 package elide.tooling.jvm
@@ -80,7 +79,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
   }
 
   private fun builtinKotlinJarPath(state: ElideBuildState, dependency: String): Path {
-    return state.resourcesPath
+    return System.getenv("KOTLIN_HOME")?.let { kotlinHomeByEnv ->
+      Path.of(kotlinHomeByEnv)
+        .resolve("lib")
+        .resolve(jarNameFor(dependency))
+    } ?: state.resourcesPath
       .resolve("kotlin")
       .resolve(KotlinLanguage.VERSION)
       .resolve("lib")
@@ -183,7 +186,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     } else {
       if (tests) "tests" else "sources"
     }
-    val suiteTag = if (srcSet.name == "main") "" else " (suite '${srcSet.name}')"
+    val suiteTag = if (srcSet.name == "main" || srcSet.name == "test") "" else " (suite '${srcSet.name}')"
     "Compiling ${srcSet.paths.size} Kotlin $pluralized$suiteTag"
   }.also { kotlinc ->
     config.taskGraph.apply {

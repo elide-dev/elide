@@ -3,7 +3,6 @@ package elide.tool.project.codecs
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
-import jakarta.inject.Singleton
 import kotlin.io.path.Path
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
@@ -13,7 +12,7 @@ import elide.tooling.project.codecs.PackageManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.PythonRequirementsManifest
 
-@Singleton @ManifestCodec(ProjectEcosystem.PythonRequirements)
+@ManifestCodec(ProjectEcosystem.PythonRequirements)
 class PythonRequirementsManifestCodec : PackageManifestCodec<PythonRequirementsManifest> {
   override fun defaultPath(): Path = Path("$DEFAULT_NAME.$DEFAULT_EXTENSION")
   override fun supported(path: Path): Boolean {

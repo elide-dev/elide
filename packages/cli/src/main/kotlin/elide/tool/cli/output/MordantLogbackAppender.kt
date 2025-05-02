@@ -16,14 +16,16 @@ package elide.tool.cli.output
 import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.AppenderBase
+import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.Context
 import ch.qos.logback.core.Layout
-import org.jline.reader.LineReader
+import com.github.ajalt.mordant.terminal.Terminal
+import org.slf4j.LoggerFactory
 
 /** Implements a Logback appender which proxies output to JLine. */
-internal class JLineLogbackAppender (
+internal class MordantLogbackAppender (
   ctx: Context,
-  private val reader: LineReader,
+  private val terminal: Terminal,
 ) : AppenderBase<ILoggingEvent>() {
   // Pattern layout.
   private val pattern: Layout<ILoggingEvent> = PatternLayout().apply {
@@ -46,6 +48,19 @@ internal class JLineLogbackAppender (
   }
 
   override fun append(eventObject: ILoggingEvent) {
-    reader.printAbove(pattern.doLayout(eventObject))
+    terminal.println(pattern.doLayout(eventObject))
   }
+}
+
+// Redirect logging calls to Mordant's terminal for output.
+internal fun Terminal.redirectLoggingToMordant() {
+  val rootLogger = LoggerFactory.getLogger(TOOL_LOGGER_NAME) as? ch.qos.logback.classic.Logger
+    ?: return
+  val current = rootLogger.getAppender(TOOL_LOGGER_APPENDER) as? ConsoleAppender<ILoggingEvent>
+    ?: return
+  val ctx = current.context
+  val appender = MordantLogbackAppender(ctx, this)
+  rootLogger.detachAndStopAllAppenders()
+  rootLogger.addAppender(appender)
+  appender.start()
 }

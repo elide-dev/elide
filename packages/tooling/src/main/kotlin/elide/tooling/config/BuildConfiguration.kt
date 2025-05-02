@@ -10,29 +10,33 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling.config
 
 import java.nio.file.Path
 import elide.exec.Action
 import elide.exec.TaskGraph
+import elide.tooling.config.BuildConfigurator.BuildConfiguration
+import elide.tooling.config.BuildConfigurator.MutableBuildSettings
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.ElideProject
 import elide.tooling.registry.ResolverRegistry
 
 public object BuildConfiguration {
-  @JvmStatic public fun create(): BuildConfigurator.BuildConfiguration = create(
+  @JvmStatic public fun create(): BuildConfiguration = create(
     Path.of(System.getProperty("user.dir")),
   )
 
-  @JvmStatic public fun create(root: Path): BuildConfigurator.BuildConfiguration = CompositeBuildConfiguration(
-    Action.scope(),
-    ResolverRegistry.create(),
-    TaskGraph.builder(),
-    root,
-  )
+  @JvmStatic
+  public fun create(root: Path, settings: MutableBuildSettings? = null): BuildConfiguration =
+    CompositeBuildConfiguration(
+      Action.scope(),
+      ResolverRegistry.create(),
+      TaskGraph.builder(),
+      root,
+      settings ?: MutableBuildSettings(),
+    )
 
-  @JvmStatic public suspend fun ElideProject.configure(with: BuildConfigurator.BuildConfiguration) {
+  @JvmStatic public suspend fun ElideProject.configure(with: BuildConfiguration) {
     when (this) {
       is ElideConfiguredProject -> this
       else -> load()
@@ -41,7 +45,7 @@ public object BuildConfiguration {
     }
   }
 
-  @JvmStatic public suspend fun ElideProject.configure(): BuildConfigurator.BuildConfiguration = create().also {
+  @JvmStatic public suspend fun ElideProject.configure(): BuildConfiguration = create().also {
     configure(it)
   }
 }

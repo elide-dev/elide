@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling.project.codecs
 
 import java.io.InputStream
@@ -25,6 +24,10 @@ public interface PackageManifestCodec<T : PackageManifest> {
   public fun supported(path: Path): Boolean
 
   public fun parse(source: InputStream): T
+
+  public fun parseAsFile(path: Path): T {
+    return parse(source = path.toFile().inputStream())
+  }
 
   public fun write(manifest: T, output: OutputStream)
 

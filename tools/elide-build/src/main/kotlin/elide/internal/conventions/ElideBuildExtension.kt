@@ -151,10 +151,10 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var javaFormat: Boolean = true
 
     /** Whether to enable Diktat support. */
-    public var diktat: Boolean = true
+    public var diktat: Boolean = false
 
     /** Whether to enable ktlint support. */
-    public var ktlint: Boolean = true
+    public var ktlint: Boolean = false
 
     /** Whether to enable Spotless support. */
     public var spotless: Boolean = true

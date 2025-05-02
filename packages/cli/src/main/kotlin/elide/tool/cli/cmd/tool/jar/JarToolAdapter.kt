@@ -21,7 +21,6 @@ import picocli.CommandLine
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import jakarta.inject.Singleton
 import kotlinx.collections.immutable.toPersistentList
 import kotlin.io.path.relativeTo
 import elide.tool.Argument
@@ -114,7 +113,6 @@ private val argNamesThatExpectValues = sortedSetOf(
     description = [JARTOOL_DESCRIPTION],
     mixinStandardHelpOptions = false,
   )
-  @Singleton
   @ReflectiveAccess
   @Introspected
   class JarCliTool: DelegatedToolCommand<JarTool, JarToolAdapter>(jartool) {

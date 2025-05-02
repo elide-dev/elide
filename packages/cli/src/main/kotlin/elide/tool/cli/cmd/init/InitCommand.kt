@@ -13,7 +13,6 @@
 
 package elide.tool.cli.cmd.init
 
-import com.github.ajalt.mordant.terminal.Terminal
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptConfirm
 import com.github.kinquirer.components.promptInput
@@ -23,12 +22,12 @@ import picocli.CommandLine
 import picocli.CommandLine.Command
 import java.nio.file.Files
 import java.nio.file.Path
-import jakarta.inject.Singleton
 import kotlinx.serialization.Serializable
 import kotlin.io.path.name
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
+import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
 
 /**
@@ -48,7 +47,6 @@ import elide.tool.cli.ToolState
 )
 @Introspected
 @ReflectiveAccess
-@Singleton
 internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   private companion object {
     @JvmStatic private fun MutableMap<Path, ProjectFile>.defaultFiles() {
@@ -130,8 +128,6 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     return staticTemplates.toList() // @TODO more from classpath
   }
 
-  private val terminal by lazy { Terminal() }
-
   @CommandLine.Option(
     names = ["--template", "-t"],
     paramLabel = "<name>",
@@ -181,6 +177,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     output {
       append("Using template: '${selectedTemplate.name}'")
     }
+    val terminal = Statics.terminal
     val selectedName = when {
       projectName == null && (interactive || terminal.terminalInfo.inputInteractive) -> KInquirer.promptInput(
         "What should the project be called?",

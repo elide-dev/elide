@@ -19,11 +19,10 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
+import jakarta.inject.Provider
 import kotlinx.coroutines.*
 import kotlin.io.path.pathString
-import kotlin.jvm.optionals.getOrNull
 import elide.annotations.Inject
-import elide.annotations.Singleton
 import elide.core.api.Symbolic
 import elide.runtime.Logger
 import elide.tool.cli.*
@@ -221,10 +220,14 @@ private enum class ToolAction (
 )
 @Introspected
 @Suppress("unused", "UnusedPrivateProperty")
-@Singleton internal class ToolInvokeCommand : AbstractSubcommand<ToolState, CommandContext>() {
-  @Inject lateinit var activeProject: Optional<ProjectManager>
-  @Inject lateinit var workdirManager: Optional<RuntimeWorkdirManager>
-  @Inject lateinit var manifests: PackageManifestService
+internal class ToolInvokeCommand : AbstractSubcommand<ToolState, CommandContext>() {
+  @Inject lateinit var activeProjectProvider: Provider<ProjectManager>
+  @Inject lateinit var workdirManagerProvider: Provider<RuntimeWorkdirManager>
+  @Inject lateinit var manifestsProvider: Provider<PackageManifestService>
+
+  private val activeProject: ProjectManager by lazy { activeProjectProvider.get() }
+  private val workdirManager: RuntimeWorkdirManager by lazy { workdirManagerProvider.get() }
+  private val manifests: PackageManifestService by lazy { manifestsProvider.get() }
 
   /**
    * Tools to run with the current linter invocation; optional.
@@ -271,7 +274,7 @@ private enum class ToolAction (
   private var argsAndPaths: List<String> = emptyList()
 
   private fun tempToolDir(): Path {
-    return workdirManager.get().tmpDirectory(create = true).toPath()
+    return workdirManager.tmpDirectory(create = true).toPath()
   }
 
   // Suspending call to run a single tool through the native interface.
@@ -380,7 +383,7 @@ private enum class ToolAction (
     }
 
     // resolve and parse project configuration from manifests
-    val project = activeProject.getOrNull()?.resolveProject()
+    val project = activeProject.resolveProject()
 
     // decode instruction alias and resolve it to an action
     val instruction = commandSpec?.commandLine()?.parent?.parseResult?.originalArgs()?.firstOrNull() ?: DEFAULT_ACTION

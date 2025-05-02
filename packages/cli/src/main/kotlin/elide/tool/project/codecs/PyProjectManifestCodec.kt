@@ -7,7 +7,6 @@ import com.akuleshov7.ktoml.TomlOutputConfig
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
-import jakarta.inject.Singleton
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlin.io.path.Path
@@ -19,7 +18,7 @@ import elide.tooling.project.codecs.PackageManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.PyProjectManifest
 
-@Singleton @ManifestCodec(ProjectEcosystem.Python)
+@ManifestCodec(ProjectEcosystem.Python)
 class PyProjectManifestCodec : PackageManifestCodec<PyProjectManifest> {
   override fun defaultPath(): Path = Path("$DEFAULT_NAME.$DEFAULT_EXTENSION")
   override fun supported(path: Path): Boolean {

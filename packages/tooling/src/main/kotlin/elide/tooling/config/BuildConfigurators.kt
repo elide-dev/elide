@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling.config
 
 import java.nio.file.Path
@@ -29,6 +28,7 @@ public object BuildConfigurators {
     project: ElideConfiguredProject,
     from: Sequence<BuildConfigurator>,
     to: BuildConfiguration,
+    extraConfigurator: BuildConfigurator? = null,
   ) {
     val layout = object : BuildConfigurator.ProjectDirectories {
       override val projectRoot: Path get() = to.projectRoot
@@ -41,12 +41,21 @@ public object BuildConfigurators {
       override val layout: BuildConfigurator.ProjectDirectories get() = layout
       override val resourcesPath: Path get() = project.resourcesPath
     }
-    from.forEach {
+    from.let {
+      when (extraConfigurator) {
+        null -> it
+        else -> it + sequenceOf(extraConfigurator)
+      }
+    }.forEach {
       it.contribute(state, to)
     }
   }
 
-  @JvmStatic public suspend fun contribute(project: ElideConfiguredProject, to: BuildConfiguration) {
-    contribute(project, collect(), to)
+  @JvmStatic public suspend fun contribute(
+    project: ElideConfiguredProject,
+    to: BuildConfiguration,
+    extraConfigurator: BuildConfigurator? = null,
+  ) {
+    contribute(project, collect(), to, extraConfigurator)
   }
 }

@@ -33,7 +33,6 @@ import java.util.*
 import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
-import elide.annotations.Singleton
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.runtime.gvm.internals.ProcessManager
@@ -144,7 +143,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
 )
 @Suppress("MemberVisibilityCanBePrivate")
 @Introspected
-@Context @Singleton class Elide : ToolCommandBase<CommandContext>() {
+@Context class Elide : ToolCommandBase<CommandContext>() {
   companion object {
     /** Name of the tool. */
     const val TOOL_NAME: String = "elide"

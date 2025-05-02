@@ -32,7 +32,6 @@ import java.io.OutputStream
 import java.net.URI
 import java.nio.file.Path
 import java.util.Optional
-import jakarta.inject.Singleton
 import kotlin.io.path.Path
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
@@ -42,7 +41,7 @@ import elide.tooling.project.manifest.ElidePackageManifest.JvmTarget
 import elide.tooling.project.codecs.ManifestCodec
 import elide.tooling.project.codecs.PackageManifestCodec
 
-@Singleton @ManifestCodec(ProjectEcosystem.Elide)
+@ManifestCodec(ProjectEcosystem.Elide)
 class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
   // Enables resolution of resources from the `elide:` protocol scheme.
   class ElidePklResourceReader: ResourceReader {

@@ -10,10 +10,17 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.tooling.project.codecs
+package elide.tooling.project.manifest
 
-import elide.annotations.Singleton
+import org.apache.maven.model.Model
+import java.nio.file.Path
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import elide.tooling.project.ProjectEcosystem
 
-@Singleton
-public annotation class ManifestCodec(val ecosystem: ProjectEcosystem)
+@JvmRecord @Serializable public data class MavenPomManifest(
+  public val path: Path,
+  @Contextual public val model: Model,
+) : PackageManifest {
+  override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.MavenPom
+}

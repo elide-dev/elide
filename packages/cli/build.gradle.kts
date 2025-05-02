@@ -462,6 +462,8 @@ dependencies {
 
   // Tooling
   implementation(projects.packages.tooling)
+  implementation(libs.bundles.maven.model)
+  implementation(libs.bundles.maven.resolver)
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
@@ -2078,6 +2080,14 @@ tasks {
     environment(
       "KOTLIN_HOME" to kotlinHomePath,
     )
+    System.getenv("TERM")?.also {
+      val mode = it.substringAfter('-', "16color")
+      environment("FORCE_COLOR" to mode)
+    }
+
+    System.getenv("COLORTERM")?.also {
+      environment("FORCE_COLOR" to it)
+    }
     systemProperty(
       "elide.nativeTransport.v2",
       enableNativeTransportV2.toString(),

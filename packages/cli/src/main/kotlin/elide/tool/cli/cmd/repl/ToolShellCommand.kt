@@ -14,6 +14,7 @@
 @file:Suppress(
   "UNUSED_PARAMETER",
   "MaxLineLength",
+  "LargeClass",
 )
 
 package elide.tool.cli.cmd.repl
@@ -21,6 +22,7 @@ package elide.tool.cli.cmd.repl
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.polyglot.PolyglotException
@@ -58,6 +60,7 @@ import java.util.concurrent.TimeoutException
 import java.util.function.Supplier
 import java.util.stream.Stream
 import javax.tools.ToolProvider
+import jakarta.inject.Provider
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,7 +75,6 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 import elide.annotations.Inject
-import elide.annotations.Singleton
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -114,6 +116,8 @@ import elide.tool.cli.options.EngineJvmOptions
 import elide.tool.cli.options.EngineKotlinOptions
 import elide.tool.cli.options.EnginePythonOptions
 import elide.tool.cli.output.JLineLogbackAppender
+import elide.tool.cli.output.TOOL_LOGGER_APPENDER
+import elide.tool.cli.output.TOOL_LOGGER_NAME
 import elide.tool.err.ErrPrinter
 import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
@@ -160,15 +164,14 @@ private typealias ContextAccessor = () -> PolyglotContext
   ],
 )
 @Introspected
-@Singleton internal class ToolShellCommand @Inject constructor(
-  private val projectManager: ProjectManager,
-  private val manifests: PackageManifestService,
-  private val workdir: WorkdirManager,
-  private val guestExec: GuestExecutorProvider,
+@ReflectiveAccess
+internal class ToolShellCommand @Inject constructor(
+  private val projectManagerProvider: Provider<ProjectManager>,
+  private val manifestsProvider: Provider<PackageManifestService>,
+  private val workdirProvider: Provider<WorkdirManager>,
+  private val guestExecProvider: Provider<GuestExecutorProvider>,
 ) : AbstractSubcommand<ToolState, CommandContext>() {
   internal companion object {
-    private const val TOOL_LOGGER_NAME: String = "tool"
-    private const val TOOL_LOGGER_APPENDER: String = "CONSOLE"
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
 
@@ -228,7 +231,22 @@ private typealias ContextAccessor = () -> PolyglotContext
 
     // Active project configuration.
     private val activeProject = atomic<ElideProject?>(null)
+  }
 
+  private val projectManager: ProjectManager by lazy {
+    projectManagerProvider.get()
+  }
+
+  private val manifests: PackageManifestService by lazy {
+    manifestsProvider.get()
+  }
+
+  private val workdir: WorkdirManager by lazy {
+    workdirProvider.get()
+  }
+
+  private val guestExec: GuestExecutorProvider by lazy {
+    guestExecProvider.get()
   }
 
   /** [SystemRegistryImpl] that filters for special REPL commands. */

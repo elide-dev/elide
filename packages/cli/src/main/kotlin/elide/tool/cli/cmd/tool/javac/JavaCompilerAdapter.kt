@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.Locale
-import jakarta.inject.Singleton
 import kotlin.io.path.relativeTo
 import elide.tool.Arguments
 import elide.tool.Environment
@@ -127,7 +126,6 @@ import elide.tooling.jvm.javac
     description = [JAVAC_DESCRIPTION],
     mixinStandardHelpOptions = false,
   )
-  @Singleton
   @ReflectiveAccess
   @Introspected
   class JavacCliTool: DelegatedToolCommand<JavaCompiler, JavaCompilerAdapter>(javac) {

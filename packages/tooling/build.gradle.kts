@@ -50,7 +50,8 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.bundles.maven.resolver)
-  implementation(libs.detekt.tooling) {
+
+  implementation(libs.bundles.detekt) {
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-compiler")
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-compiler-embeddable")
     exclude(group = "org.jline", module = "jline")

@@ -979,6 +979,7 @@ mordant = [
 detekt = [
   "detekt-api",
   "detekt-core",
+  "detekt-cli",
   # "detekt-formatting",
   "detekt-metrics",
   "detekt-report-html",

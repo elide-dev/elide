@@ -38,7 +38,7 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
   ignoreFailures = conventions.checks.ignoreFailures
   config.from(project.rootProject.files(detektConfig))
   buildUponDefaultConfig = true
-  basePath = project.rootProject.projectDir.absolutePath
+  basePath.set(project.rootProject.projectDir)
   enableCompilerPlugin.set(true)
 
   val detektMergeSarif = project.tasks.register("detektMergeSarif", ReportMergeTask::class.java) {
@@ -56,10 +56,10 @@ private fun DetektExtension.configureDetektForProject(conventions: ElideBuildExt
     jvmTarget = if (conventions.jvm.forceJvm17) "17" else "21"  // @TODO pull from property state
 
     detektMergeSarif.configure {
-      input.from(this@detekt.sarifReportFile)
+      input.from(this@detekt.reports.sarif.outputLocation)
     }
     detektMergeXml.configure {
-      input.from(this@detekt.xmlReportFile)
+      input.from(this@detekt.reports.xml.outputLocation)
     }
   }
   project.tasks.withType(DetektCreateBaselineTask::class) detekt@{

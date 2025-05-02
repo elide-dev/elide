@@ -565,10 +565,15 @@ internal class ToolShellCommand @Inject constructor(
       .jna(false)  // not supported on M1 (crashes)
       .color(pretty)
       .encoding(StandardCharsets.UTF_8).build().apply {
-        val executeThread = Thread.currentThread()
-        if (width == 0 || height == 0) {
-          size = Size(120, 40)  // hard coded terminal size when redirecting
+        try {
+          if (width == 0 || height == 0) {
+            size = Size(120, 40)  // hard coded terminal size when redirecting
+          }
+        } catch (err: NoSuchMethodError) {
+          // ignore: this is a classpath issue
+          logging.debug("Failed to set terminal size: $err")
         }
+        val executeThread = Thread.currentThread()
         handle(Terminal.Signal.INT) {
           executeThread.interrupt()
         }
@@ -578,11 +583,17 @@ internal class ToolShellCommand @Inject constructor(
 
   // Build a parser for use by the line reader.
   private fun buildParser(): Parser = DefaultParser().apply {
-    escapeChars = null
-    isEofOnUnclosedQuote = true
-    setRegexVariable(null)
-    setEofOnUnclosedBracket(DefaultParser.Bracket.CURLY, DefaultParser.Bracket.ROUND, DefaultParser.Bracket.SQUARE)
-    setRegexCommand("[:]{0,1}[a-zA-Z!]{1,}\\S*")  // change default regex to support shell commands
+    // @TODO causes errors because of a class conflict, presumably with the kotlin compiler?
+    try {
+      escapeChars = null
+      isEofOnUnclosedQuote = true
+      setRegexVariable(null)
+      setEofOnUnclosedBracket(DefaultParser.Bracket.CURLY, DefaultParser.Bracket.ROUND, DefaultParser.Bracket.SQUARE)
+      setRegexCommand("[:]{0,1}[a-zA-Z!]{1,}\\S*")  // change default regex to support shell commands
+    } catch (nsr: NoSuchMethodError) {
+      // ignore: this is a classpath issue
+      logging.debug("Failed to set parser escape characters: $nsr")
+    }
   }
 
   // Build a command history manager for use by the line reader.

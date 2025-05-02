@@ -48,7 +48,7 @@ crossword = "0.4.0"
 cyclonedx = "2.0.0"
 dekorate = "3.1.1"
 dependencyAnalysis = "2.8.0"
-detekt = "1.23.8"
+detekt = "main-SNAPSHOT"
 dirs = "bf76af41b9"
 diktat = "2.0.0"
 docker-plugin = "9.4.0"
@@ -104,7 +104,7 @@ jetty-npn = "8.1.2.v20120308"
 jgit = "7.2.0.202503040940-r"
 jib = "3.4.0"
 jimfs = "66161ebdf9"
-jline = "3.28.0"
+jline = "3.29.0"
 jmh-lib = "1.37"
 jmh-plugin = "0.7.3"
 jna = "5.17.0"
@@ -979,7 +979,7 @@ mordant = [
 detekt = [
   "detekt-api",
   "detekt-core",
-  "detekt-formatting",
+  # "detekt-formatting",
   "detekt-metrics",
   "detekt-report-html",
   "detekt-report-md",

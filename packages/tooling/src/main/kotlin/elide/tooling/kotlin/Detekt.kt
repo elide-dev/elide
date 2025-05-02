@@ -12,6 +12,7 @@
  */
 package elide.tooling.kotlin
 
+import io.github.detekt.tooling.api.DetektCli
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import java.net.URI
@@ -139,7 +140,7 @@ public val detekt: Tool.CommandLineTool = Tool.describe(
  * from the command-line.
  */
 @ReflectiveAccess @Introspected public class Detekt (
-  args: Arguments,
+  private val args: Arguments,
   env: Environment,
   public val inputs: DetektInputs,
   public val outputs: DetektOutputs,
@@ -173,6 +174,33 @@ public val detekt: Tool.CommandLineTool = Tool.describe(
   }
 
   override suspend fun invoke(state: EmbeddedToolState): Tool.Result {
-    TODO("Not yet implemented")
+    return runCatching {
+      DetektCli.load().run(
+        args.asArgumentList().toTypedArray(),
+        System.out,
+        System.err,
+      )
+    }.let {
+      when {
+        it.isSuccess -> Tool.Result.Success to it.getOrNull()
+        else -> Tool.Result.UnspecifiedFailure to it.getOrNull()
+      }
+    }.let { (defaultStatus, result) ->
+      when {
+        // if a terminal exception occurred, or an error was reported by detekt, treat it like a failure.
+        defaultStatus != Tool.Result.Success || result?.error != null -> {
+          val cause = result?.error
+          if (cause != null) {
+            logging.error("Failed to run Detekt, encountered error", cause)
+          } else {
+            logging.error("Failed to run Detekt; encountered unknown error")
+          }
+          Tool.Result.UnspecifiedFailure
+        }
+
+        // otherwise, fall back to our basic default status.
+        else -> defaultStatus
+      }
+    }
   }
 }

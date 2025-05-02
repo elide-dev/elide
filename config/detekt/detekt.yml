@@ -1,34 +1,9 @@
-build:
-  maxIssues: 0
-  excludeCorrectable: false
-  weights:
-  # complexity: 2
-  # LongParameterList: 1
-  # style: 1
-  # comments: 1
-
 config:
   validation: true
   warningsAsErrors: false
-  # when writing own rules with new properties, exclude the property path e.g.: 'my_rule_set,.*>.*>[my_property]'
-  excludes: ""
 
 processors:
   active: true
-  exclude:
-    - "DetektProgressListener"
-  # - 'KtFileCountProcessor'
-  # - 'PackageCountProcessor'
-  # - 'ClassCountProcessor'
-  # - 'FunctionCountProcessor'
-  # - 'PropertyCountProcessor'
-  # - 'ProjectComplexityProcessor'
-  # - 'ProjectCognitiveComplexityProcessor'
-  # - 'ProjectLLOCProcessor'
-  # - 'ProjectCLOCProcessor'
-  # - 'ProjectLOCProcessor'
-  # - 'ProjectSLOCProcessor'
-  # - 'LicenseHeaderLoaderExtension'
 
 console-reports:
   active: true
@@ -108,16 +83,13 @@ comments:
 complexity:
   active: true
   ComplexCondition:
-    active: true
-    threshold: 4
+    active: false
   ComplexInterface:
     active: false
-    threshold: 10
     includeStaticDeclarations: false
     includePrivateDeclarations: false
   CyclomaticComplexMethod:
-    active: true
-    threshold: 50
+    active: false
     ignoreSingleWhenExpression: false
     ignoreSimpleWhenEntries: false
     ignoreNestingFunctions: false
@@ -135,28 +107,21 @@ complexity:
     active: false
     ignoredLabels: []
   LargeClass:
-    active: true
-    threshold: 600
+    active: false
   LongMethod:
-    active: true
-    threshold: 150
+    active: false
   LongParameterList:
     active: true
-    functionThreshold: 10
-    constructorThreshold: 12
     ignoreDefaultParameters: false
     ignoreDataClasses: true
     ignoreAnnotatedParameter: []
   MethodOverloading:
     active: false
-    threshold: 6
   NamedArguments:
     active: false
-    threshold: 3
     ignoreArgumentsMatchingNames: false
   NestedBlockDepth:
     active: true
-    threshold: 12
   ReplaceSafeCallChainWithRun:
     active: false
   StringLiteralDuplication:
@@ -170,9 +135,7 @@ complexity:
         "**/jsTest/**",
         "**/iosTest/**",
       ]
-    threshold: 3
     ignoreAnnotation: true
-    excludeStringsWithLessThan5Characters: true
     ignoreStringsRegex: "$^"
   TooManyFunctions:
     active: false
@@ -185,11 +148,6 @@ complexity:
         "**/jsTest/**",
         "**/iosTest/**",
       ]
-    thresholdInFiles: 25
-    thresholdInClasses: 25
-    thresholdInInterfaces: 25
-    thresholdInObjects: 25
-    thresholdInEnums: 25
     ignoreDeprecated: false
     ignorePrivate: false
     ignoreOverridden: false
@@ -236,8 +194,6 @@ empty-blocks:
   EmptyIfBlock:
     active: true
   EmptyInitBlock:
-    active: true
-  EmptyKtFile:
     active: true
   EmptySecondaryConstructor:
     active: true
@@ -364,12 +320,6 @@ naming:
   ForbiddenClassName:
     active: false
     forbiddenName: []
-  FunctionMaxLength:
-    active: false
-    maximumFunctionNameLength: 30
-  FunctionMinLength:
-    active: false
-    minimumFunctionNameLength: 3
   FunctionNaming:
     active: false
     excludes:
@@ -395,7 +345,7 @@ naming:
     active: false
     parameterPattern: "[a-z][A-Za-z0-9]*|_"
   MatchingDeclarationName:
-    active: true
+    active: false
     mustBeFirst: true
   MemberNameEqualsClassName:
     active: true
@@ -662,8 +612,6 @@ style:
     excludePackageStatements: true
     excludeImportStatements: true
     excludeCommentStatements: false
-  MayBeConst:
-    active: true
   ModifierOrder:
     active: true
   MultilineLambdaItParameter:
@@ -688,8 +636,6 @@ style:
     active: false
   RedundantHigherOrderMapUsage:
     active: false
-  RedundantVisibilityModifierRule:
-    active: false
   ReturnCount:
     active: true
     max: 3
@@ -702,8 +648,6 @@ style:
     active: true
   SerialVersionUIDInSerializableClass:
     active: true
-  SpacingBetweenPackageAndImports:
-    active: false
   ThrowsCount:
     active: true
     max: 3
@@ -714,8 +658,6 @@ style:
     active: false
     acceptableLength: 4
     allowNonStandardGrouping: false
-  UnnecessaryAbstractClass:
-    active: true
   UnnecessaryAnnotationUseSiteTarget:
     active: false
   UnnecessaryApply:
@@ -730,15 +672,8 @@ style:
     active: false
   UnnecessaryParentheses:
     active: false
-  UntilInsteadOfRangeTo:
-    active: false
-  UnusedImports:
-    active: false
   UnusedPrivateClass:
     active: true
-  UnusedPrivateMember:
-    active: true
-    allowedNames: "(_|ignored|expected|serialVersionUID)"
   UseAnyOrNoneInsteadOfFind:
     active: false
   UseArrayLiteralsInAnnotations:

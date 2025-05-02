@@ -392,6 +392,11 @@ dependencies {
   ksp(mn.micronaut.inject.kotlin)
   classpathExtras(mn.micronaut.core.processor)
 
+  implementation(libs.jline.reader)
+  implementation(libs.jline.console)
+  implementation(libs.jline.terminal.core)
+  implementation(libs.jline.terminal.jni)
+
   api(libs.clikt)
   api(libs.picocli)
   api(libs.guava)
@@ -438,12 +443,6 @@ dependencies {
   implementation(libs.logback)
   runtimeOnly(mn.micronaut.runtime)
 
-  implementation(libs.jline.reader)
-  implementation(libs.jline.console)
-  implementation(libs.jline.terminal.core)
-  implementation(libs.jline.terminal.jni)
-  implementation(libs.jline.terminal.jna)
-
   if (enableFfm) {
     //implementation(libs.jline.terminal.ffm)
   }
@@ -462,8 +461,6 @@ dependencies {
 
   // Tooling
   implementation(projects.packages.tooling)
-  implementation(libs.bundles.detekt)
-  implementation(libs.detekt.cli)
   implementation(libs.bundles.maven.model)
   implementation(libs.bundles.maven.resolver)
 
@@ -535,6 +532,7 @@ dependencies {
   }
 
   // Tests
+  testImplementation(libs.jline.terminal.core)
   testImplementation(libs.kotlin.test.junit5)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlinx.coroutines.test)

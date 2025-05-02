@@ -147,10 +147,11 @@ abstract class DelegatedToolCommand<T, C> (
             break
           }
         }
-        if (startingPoint < 0) {
-          error("Tool command not found: ${info.name}")
+        val allToolArgs = if (startingPoint < 0) {
+          emptyList()
+        } else {
+          args.slice(startingPoint..args.lastIndex)
         }
-        val allToolArgs = args.slice(startingPoint..args.lastIndex)
         val effectiveToolArgs = Arguments.from(allToolArgs).toMutable()
         val effectiveToolEnv = Environment.host().toMutable()
 

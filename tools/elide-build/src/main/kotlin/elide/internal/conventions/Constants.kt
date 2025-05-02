@@ -150,7 +150,7 @@ public object Constants {
     const val GRPC = "1.62.2"
 
     /** JLine version. */
-    const val JLINE = "3.28.0"
+    const val JLINE = "3.29.0"
 
     /** Okio version. */
     const val OKIO = "3.11.0"

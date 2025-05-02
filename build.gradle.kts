@@ -106,6 +106,8 @@ buildscript {
         includeGroup("dev.elide")
         includeGroup("com.google.devtools.ksp")
         includeGroup("com.google.devtools.ksp.gradle.plugin")
+        includeGroup("io.gitlab.arturbosch.detekt")
+        includeGroup("io.gitlab.arturbosch.detekt.gradle.plugin")
       }
     }
     mavenCentral()
@@ -208,7 +210,7 @@ detekt {
   baseline = file("config/detekt/baseline.xml")
   buildUponDefaultConfig = true
   enableCompilerPlugin = true
-  basePath = projectDir.absolutePath
+  basePath = projectDir
 }
 
 // --- Spotless -------------------------------------------------------------------------------------------------------

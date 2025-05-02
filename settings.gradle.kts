@@ -17,6 +17,13 @@
 )
 
 pluginManagement {
+  resolutionStrategy {
+    eachPlugin {
+      if (requested.id.id == "io.gitlab.arturbosch.detekt") {
+        useModule("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${requested.version}")
+      }
+    }
+  }
   repositories {
     maven {
       name = "gvm-plugin-snapshots"
@@ -38,6 +45,8 @@ pluginManagement {
       url = uri("https://oss.sonatype.org/content/repositories/snapshots")
       content {
         includeGroup("com.google.devtools.ksp.gradle.plugin")
+        includeGroup("io.gitlab.arturbosch.detekt")
+        includeGroup("io.gitlab.arturbosch.detekt.gradle.plugin")
       }
     }
     gradlePluginPortal()
@@ -64,6 +73,9 @@ buildscript {
       url = uri("https://oss.sonatype.org/content/repositories/snapshots")
       content {
         includeGroup("com.google.devtools.ksp")
+        includeGroup("com.google.devtools.ksp.gradle.plugin")
+        includeGroup("io.gitlab.arturbosch.detekt")
+        includeGroup("io.gitlab.arturbosch.detekt.gradle.plugin")
       }
     }
   }
@@ -167,6 +179,8 @@ dependencyResolutionManagement {
       content {
         includeGroup("com.google.devtools.ksp")
         includeGroup("com.google.devtools.ksp.gradle.plugin")
+        includeGroup("io.gitlab.arturbosch.detekt")
+        includeGroup("io.gitlab.arturbosch.detekt.gradle.plugin")
       }
     }
     mavenCentral()

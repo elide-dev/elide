@@ -37,6 +37,10 @@ pluginManagement {
     maven {
       name = "oss-snapshots"
       url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+      content {
+        includeGroup("io.gitlab.arturbosch.detekt")
+        includeGroup("io.gitlab.arturbosch.detekt.gradle.plugin")
+      }
     }
     gradlePluginPortal()
     mavenCentral()
@@ -73,6 +77,7 @@ dependencyResolutionManagement {
       url = uri("https://oss.sonatype.org/content/repositories/snapshots")
       content {
         includeGroup("com.google.devtools.ksp")
+        includeGroup("io.gitlab.arturbosch.detekt")
       }
     }
     gradlePluginPortal()

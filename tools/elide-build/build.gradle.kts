@@ -42,6 +42,7 @@ repositories {
     content {
       includeGroup("com.google.devtools.ksp")
       includeGroup("com.google.devtools.ksp.gradle.plugin")
+      includeGroup("io.gitlab.arturbosch.detekt")
     }
   }
   gradlePluginPortal()

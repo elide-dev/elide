@@ -320,8 +320,8 @@ public abstract interface class elide/tooling/deps/PackageSpec {
 	public abstract fun getPurl ()Lcom/github/packageurl/PackageURL;
 	public abstract fun getString ()Ljava/lang/String;
 	public abstract fun getVersion ()Lelide/tooling/deps/PackageSpec$Version;
-	public static fun parse (Ljava/lang/String;Lelide/tooling/project/ElideProject;)Lelide/tooling/deps/PackageSpec;
-	public static fun tryParse (Ljava/lang/String;Lelide/tooling/project/ElideProject;)Lelide/tooling/deps/PackageSpec;
+	public static fun parse (Ljava/lang/String;Lelide/tooling/project/ElideProject;Lelide/tooling/deps/DependencyEcosystem;)Lelide/tooling/deps/PackageSpec;
+	public static fun tryParse (Ljava/lang/String;Lelide/tooling/project/ElideProject;Lelide/tooling/deps/DependencyEcosystem;)Lelide/tooling/deps/PackageSpec;
 }
 
 public final class elide/tooling/deps/PackageSpec$AmbiguousEcosystem : elide/tooling/deps/PackageSpec$ParseError {
@@ -336,15 +336,16 @@ public final class elide/tooling/deps/PackageSpec$Companion {
 	public static final field PREFIX_PIP Ljava/lang/String;
 	public static final field SNAPSHOT_VERSION Ljava/lang/String;
 	public static final field STABLE_VERSION Ljava/lang/String;
-	public final fun parse (Ljava/lang/String;Lelide/tooling/project/ElideProject;)Lelide/tooling/deps/PackageSpec;
-	public static synthetic fun parse$default (Lelide/tooling/deps/PackageSpec$Companion;Ljava/lang/String;Lelide/tooling/project/ElideProject;ILjava/lang/Object;)Lelide/tooling/deps/PackageSpec;
+	public final fun parse (Ljava/lang/String;Lelide/tooling/project/ElideProject;Lelide/tooling/deps/DependencyEcosystem;)Lelide/tooling/deps/PackageSpec;
+	public static synthetic fun parse$default (Lelide/tooling/deps/PackageSpec$Companion;Ljava/lang/String;Lelide/tooling/project/ElideProject;Lelide/tooling/deps/DependencyEcosystem;ILjava/lang/Object;)Lelide/tooling/deps/PackageSpec;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-	public final fun tryParse (Ljava/lang/String;Lelide/tooling/project/ElideProject;)Lelide/tooling/deps/PackageSpec;
-	public static synthetic fun tryParse$default (Lelide/tooling/deps/PackageSpec$Companion;Ljava/lang/String;Lelide/tooling/project/ElideProject;ILjava/lang/Object;)Lelide/tooling/deps/PackageSpec;
+	public final fun tryParse (Ljava/lang/String;Lelide/tooling/project/ElideProject;Lelide/tooling/deps/DependencyEcosystem;)Lelide/tooling/deps/PackageSpec;
+	public static synthetic fun tryParse$default (Lelide/tooling/deps/PackageSpec$Companion;Ljava/lang/String;Lelide/tooling/project/ElideProject;Lelide/tooling/deps/DependencyEcosystem;ILjava/lang/Object;)Lelide/tooling/deps/PackageSpec;
 }
 
 public final class elide/tooling/deps/PackageSpec$MavenPackageSpec : elide/tooling/deps/PackageSpec$SpecializedPackageSpec {
 	public static final field Companion Lelide/tooling/deps/PackageSpec$MavenPackageSpec$Companion;
+	public final fun getClassifier ()Ljava/lang/String;
 	public fun getFormatted ()Ljava/lang/String;
 	public final fun getGroupId ()Ljava/lang/String;
 	public fun getModule ()Ljava/lang/String;
@@ -479,7 +480,7 @@ public final class elide/tooling/deps/PackageSpec$SemverOperator$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
-public final class elide/tooling/deps/PackageSpec$SimpleSemverOperator : java/lang/Enum, elide/tooling/deps/PackageSpec$SemverOperator {
+public final class elide/tooling/deps/PackageSpec$SimpleSemverOperator : java/lang/Enum, elide/core/api/Symbolic, elide/tooling/deps/PackageSpec$SemverOperator {
 	public static final field Companion Lelide/tooling/deps/PackageSpec$SimpleSemverOperator$Companion;
 	public static final field EQUALS Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
 	public static final field GREATER_THAN Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
@@ -489,25 +490,33 @@ public final class elide/tooling/deps/PackageSpec$SimpleSemverOperator : java/la
 	public fun getEffective ()Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public fun getFormatted ()Ljava/lang/String;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
 	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
 	public static fun values ()[Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
 }
 
-public final class elide/tooling/deps/PackageSpec$SimpleSemverOperator$Companion {
+public final class elide/tooling/deps/PackageSpec$SimpleSemverOperator$Companion : elide/core/api/Symbolic$SealedResolver {
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public abstract class elide/tooling/deps/PackageSpec$SpecializedPackageSpec : elide/tooling/deps/PackageSpec {
 	public synthetic fun <init> (Lelide/tooling/deps/DependencyEcosystem;Lelide/tooling/deps/PackageSpec$Version;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getAmbiguous ()Z
 	public fun getEcosystem ()Lelide/tooling/deps/DependencyEcosystem;
 	public fun getPurl ()Lcom/github/packageurl/PackageURL;
 	public fun getString ()Ljava/lang/String;
 	public fun getVersion ()Lelide/tooling/deps/PackageSpec$Version;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract class elide/tooling/deps/PackageSpec$SpecializedPackageSpecParser {
 	public abstract fun parse (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SpecializedPackageSpec;
+	public fun parseVersion (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$Version;
 }
 
 public final class elide/tooling/deps/PackageSpec$SymbolicVersion : java/lang/Enum, elide/core/api/Symbolic, elide/tooling/deps/PackageSpec$Version {

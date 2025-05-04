@@ -115,7 +115,7 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
         because("pin kotlin stdlib")
       }
 
-      if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("compiler")) {
+      if (requested.group == "org.jetbrains.kotlin" && requested.name.contains("embedded")) {
         useVersion(Versions.KOTLIN_SDK_PIN)
         because("pin kotlin compiler")
       }

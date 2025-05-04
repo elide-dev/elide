@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
+import elide.exec.Tracing
 import elide.runtime.Logging
 import elide.tool.Arguments
 import elide.tool.Tool
@@ -44,6 +45,7 @@ internal class JsBuildConfigurator : BuildConfigurator {
   // Invoke the Orogene built-in tool with the given arguments.
   private suspend fun orogene(scope: CoroutineScope, args: Arguments): Deferred<Tool.Result> = withContext(IO) {
     scope.async {
+      Tracing.ensureLoaded()
       when (val exitCode = dev.elide.cli.bridge.CliNativeBridge.runOrogene(
         arrayOf("orogene", "apply").plus(args.asArgumentList())
       )) {

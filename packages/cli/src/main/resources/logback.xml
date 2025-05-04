@@ -105,6 +105,8 @@
   <logger name="elide.tooling.jvm.JvmBuildConfigurator" level="warn" />
   <logger name="elide.tooling.AbstractTool" level="warn" />
   <logger name="elide.exec.ActionScope" level="warn" />
+  <logger name="trace::nativeLog" level="trace" />
+  <logger name="orogene*" level="info" />
 
   <!-- Server/Tool Logger -->
   <logger name="tool" additivity="false">

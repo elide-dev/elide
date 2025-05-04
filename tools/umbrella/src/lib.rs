@@ -72,6 +72,7 @@ use exec::async_engine_safe;
 use ruff::args::Args;
 #[cfg(feature = "ruff")]
 use ruff::{ExitStatus, run};
+use tracing::instrument::WithSubscriber;
 #[cfg(feature = "uv")]
 use uv::main as uv_main;
 
@@ -156,7 +157,10 @@ pub fn run_oro_with_args(args: Vec<std::ffi::OsString>) -> Result<()> {
   // Execute the future, blocking the current thread until completion
   let runtime = async_engine_safe().expect("failed to resolve async runtime");
   let _guard = runtime.enter();
-  runtime.block_on(Orogene::init_and_run(again, args))
+  let sub = runtime.with_current_subscriber();
+  sub
+    .inner()
+    .block_on(Orogene::init_and_run(again, args).with_current_subscriber())
 }
 
 // -- Entrypoint Functions

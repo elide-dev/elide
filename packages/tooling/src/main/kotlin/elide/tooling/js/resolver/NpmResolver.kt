@@ -23,16 +23,24 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import elide.annotations.Inject
+import elide.runtime.Logging
 import elide.tool.Argument
 import elide.tool.Arguments
 import elide.tool.Tool
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.project.manifest.NodePackageManifest
+
+// Name of the `package.json` file.
+private const val PACKAGE_JSON = "package.json"
+
+// Name of the `package-lock.kdl` file.
+private const val PACKAGE_LOCK_KDL = "package-lock.kdl"
 
 /**
  * ## NPM Resolver
@@ -50,9 +58,12 @@ import elide.tooling.project.manifest.NodePackageManifest
  *
  *   1) The NPM dependency and cache roots are created at `.dev/{cache,dependencies}/npm`.
  *   2) The `package.json` is symbolically linked, or rendered and written, at `.dev/dependencies/npm/package.json`.
- *   3) Orogene is invoked with arguments which resemble the sample below; as a by-product, the `package-lock.kdl` file
+ *   3) The `package-lock.kdl` file, if it exists, is symbolically linked into the NPM package root.
+ *   4) Orogene is invoked with arguments which resemble the sample below; as a by-product, the `package-lock.kdl` file
  *       is written to the dependency root, as well as the populated `node_modules` folder.
- *   4) The `node_modules` folder is linked into the Elide project root to facilitate NPM and ESM resolution.
+ *   5) The `node_modules` folder is linked into the Elide project root to facilitate NPM and ESM resolution.
+ *   6) If the `package-lock.kdl` was NOT present, the new lockfile is copied to the project root, deleted from the NPM
+ *      package root, and symbolically linked from the project root, to match cached run behavior.
  *
  * ### Arguments for Orogene
  *
@@ -97,6 +108,10 @@ public class NpmResolver @Inject constructor (
   private val orogeneInvoker: suspend (CoroutineScope, Arguments) -> Deferred<Tool.Result>,
   private val manifestRenderer: suspend (NodePackageManifest, Path) -> Unit,
 ) : DependencyResolver.NpmResolver {
+  private companion object {
+    @JvmStatic private val logging by lazy { Logging.of(NpmResolver::class) }
+  }
+
   // Resolved project info.
   private lateinit var project: ElideBuildState
 
@@ -105,6 +120,9 @@ public class NpmResolver @Inject constructor (
 
   // Resolved package cache path.
   private lateinit var packageCache: Path
+
+  // Resolved existing package lock path (if present).
+  private var existingPackageLock: Path? = null
 
   // Resolved manifest info.
   private lateinit var npmManifest: NodePackageManifest
@@ -135,19 +153,33 @@ public class NpmResolver @Inject constructor (
 
   // Either symbolically link, or render and write, the `package.json` file, in the NPM package storage root.
   private suspend fun linkOrRenderPackageJson(): Path = withContext(IO) {
-    when (val existing = project.layout.projectRoot.resolve("package.json").takeIf { Files.exists(it) }) {
+    when (val existing = project.layout.projectRoot.resolve(PACKAGE_JSON).takeIf { Files.exists(it) }) {
       // with no extant `package.json` at the project root, render one on the fly from the project's elide manifest. we
       // can assume there is an elide manifest in all cases.
-      null -> packageRoot.resolve("package.json").also {
+      null -> packageRoot.resolve(PACKAGE_JSON).also {
         manifestRenderer(npmManifest, it)
       }
 
       // otherwise, since the user has their own manifest, symbolically link it to the module root.
-      else -> packageRoot.resolve("package.json").also {
+      else -> packageRoot.resolve(PACKAGE_JSON).also {
         if (!it.exists()) {
           Files.createSymbolicLink(
             it,
             existing.absolute(),
+          )
+        }
+      }
+    }
+  }
+
+  // If present in the project root, symbolically link `package-lock.kdl` into the NPM package root.
+  private suspend fun linkPackageLockIfPresent(): Path? = withContext(IO) {
+    project.layout.projectRoot.resolve(PACKAGE_LOCK_KDL).takeIf { Files.exists(it) }?.also { lockfile ->
+      packageRoot.resolve(PACKAGE_LOCK_KDL).also {
+        if (!it.exists()) {
+          Files.createSymbolicLink(
+            it,
+            lockfile.absolute(),
           )
         }
       }
@@ -174,6 +206,47 @@ public class NpmResolver @Inject constructor (
     }
   }
 
+  private suspend fun copyPackageLockIfNeeded(scope: CoroutineScope): Job = withContext(IO) {
+    scope.launch {
+      when (existingPackageLock) {
+        // if there was no lockfile when we started this process, one will now have been written by Orogene to the NPM
+        // package root. in this case, we need to copy it into the root project (so it can be tracked in source control)
+        // then delete the NPM package root copy, and establish a symbolic link instead; this converges branch behavior
+        // with the cached run behavior below, when a package lock is already present.
+        null -> project.layout.projectRoot.resolve(PACKAGE_LOCK_KDL).let { projectLockfilePath ->
+          val createdLockfile = project.layout.dependencies.resolve("npm").resolve(PACKAGE_LOCK_KDL)
+          if (!createdLockfile.exists()) {
+            logging.warn { "Orogene didn't create a lockfile, so we can't copy one into the project." }
+          } else try {
+            // copy the lockfile into the project root
+            Files.copy(
+              createdLockfile,
+              projectLockfilePath,
+            )
+
+            // delete the lockfile from the NPM package root
+            Files.delete(createdLockfile)
+
+            // create a symbolic link to the lockfile in the NPM package root
+            Files.createSymbolicLink(
+              createdLockfile,
+              projectLockfilePath.absolute(),
+            )
+          } catch (err: IOException) {
+            logging.error("Failed to copy package lock file into project root", err)
+          } catch (err: FileAlreadyExistsException) {
+            logging.debug("Package lock file already exists in project root, skipping copy", err)
+          }
+        }
+
+        // a package lock file already exists in the root project, so it was symbolically linked into the NPM package
+        // root when we started resolution. therefore, no followup is needed, as any writes to the package lock will
+        // propagate back through the symbolic link we established above.
+        else -> {}
+      }
+    }
+  }
+
   // Build a suite of Orogene arguments to invoke the installer.
   private fun buildOrogeneArguments(): Arguments = Arguments.empty().toMutable().apply {
     add(Argument.of("--root" to packageRoot.absolutePathString()))
@@ -194,6 +267,7 @@ public class NpmResolver @Inject constructor (
     npmManifest = manifestProvider.get()
     packageRoot = establishNodeDepsRoot()
     packageCache = establishNodeCacheRoot()
+    existingPackageLock = linkPackageLockIfPresent()
     linkOrRenderPackageJson()
     args = buildOrogeneArguments()
     initialized.value = true
@@ -204,6 +278,7 @@ public class NpmResolver @Inject constructor (
     return sequence {
       yield(launch { invokeOrogene(this) })
       yield(launch { linkNodeModules(this) })
+      yield(launch { copyPackageLockIfNeeded(this) })
     }
   }
 }

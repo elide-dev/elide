@@ -38,6 +38,8 @@ builder = { workspace = true }
 [dependencies]
 substrate = { workspace = true }
 trace = { workspace = true }
+tracing = { workspace = true }
+tracing-futures = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
 tokio = { workspace = true }

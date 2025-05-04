@@ -27,14 +27,24 @@ lazy_static! {
   static ref ASYNC_ENGINE: Arc<Mutex<Option<Runtime>>> = Arc::new(Mutex::new(None));
 }
 
+// Whether to emit simple debug logs.
+const ENGINE_DEBUG_LOG: bool = true;
+
 // Atomic flips when engine is initialized.
 static ENGINE_INITIALIZED: AtomicBool = AtomicBool::new(false);
+
+fn debug_log(msg: &str) {
+  if ENGINE_DEBUG_LOG {
+    eprintln!("[native:engine] {}", msg);
+  }
+}
 
 /// Initialize the shared async engine.
 fn init_engine() {
   if ENGINE_INITIALIZED.load(Ordering::SeqCst) {
     return;
   }
+  debug_log("initializing engine");
 
   let mut engine = ASYNC_ENGINE.lock().unwrap();
   if engine.is_none() {
@@ -60,7 +70,6 @@ fn shutdown_engine_graceful() {
 /// Bind methods and perform other lib-init tasks.
 #[on_load]
 pub fn did_load(_env: JNIEnv) -> jint {
-  init_engine();
   JNI_VERSION_21
 }
 
@@ -73,7 +82,7 @@ pub fn did_unload(_env: JNIEnv) {
 /// Initialize the native execution layer.
 #[jni("elide.exec.Execution")]
 pub fn initialize<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> jint {
-  init_engine();
+  // deferred until first use
   0
 }
 

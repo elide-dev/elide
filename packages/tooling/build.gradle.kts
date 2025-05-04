@@ -34,6 +34,11 @@ elide {
 }
 
 dependencies {
+  fun ExternalModuleDependency.pklExclusions() {
+    exclude("org.pkl-lang", "pkl-server")
+    exclude("org.pkl-lang", "pkl-config-java-all")
+  }
+
   ksp(mn.micronaut.inject.kotlin)
   api(libs.kotlin.stdlib.jdk8)
   api(libs.jetbrains.annotations)
@@ -45,9 +50,9 @@ dependencies {
   api(projects.packages.graalvmKt)
   api(libs.sarif4k)
   api(libs.bundles.maven.model)
-  api(libs.pkl.core)
-  api(libs.pkl.config.java)
-  api(libs.pkl.config.kotlin)
+  api(libs.pkl.core) { pklExclusions() }
+  api(libs.pkl.config.java) { pklExclusions() }
+  api(libs.pkl.config.kotlin) { pklExclusions() }
   implementation(libs.semver)
   implementation(libs.purl)
   implementation(libs.mordant)

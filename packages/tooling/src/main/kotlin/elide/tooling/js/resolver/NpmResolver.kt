@@ -250,8 +250,6 @@ public class NpmResolver @Inject constructor (
   // Build a suite of Orogene arguments to invoke the installer.
   private fun buildOrogeneArguments(): Arguments = Arguments.empty().toMutable().apply {
     add(Argument.of("--root" to packageRoot.absolutePathString()))
-    add(Argument.of("--json"))
-    add(Argument.of("--no-progress"))
     add(Argument.of("--no-emoji"))
     add(Argument.of("--no-first-time"))
     add(Argument.of("--no-telemetry"))

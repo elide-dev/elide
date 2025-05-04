@@ -212,7 +212,33 @@ import elide.tooling.deps.DependencyEcosystem.*
 
     // Given the detected or preferred ecosystem, parse the provided spec string.
     @JvmStatic fun parseForEcosystem(ecosystem: DependencyEcosystem, subject: String): PackageSpec {
-      return requireNotNull(parsers[ecosystem]) { "No parser for ecosystem: $ecosystem" }.parse(subject)
+      return requireNotNull(parsers[ecosystem]) { "No parser for ecosystem: $ecosystem" }
+        .parse(when (val prefix = parsePrefix(subject)) {
+          null -> subject
+          else -> subject.removePrefix(prefix.dependencyPrefix)
+        })
+    }
+
+    // Parse a version specifier, falling back to ecosystem-specific version parsing as appropriate.
+    @JvmStatic fun parseVersion(factory: SpecializedPackageSpecParser<*>, version: String): Version = when (version) {
+      // symbol versions
+      LATEST_VERSION -> SymbolicVersion.LATEST
+      STABLE_VERSION -> SymbolicVersion.STABLE
+      SNAPSHOT_VERSION -> SymbolicVersion.SNAPSHOT
+
+      // fallback
+      else -> runCatching {
+        // semver parse
+        if (!SEMVER_REGEX.matches(version)) null else {
+          SemanticVersion(Semver(version))
+        }
+      }.getOrNull() ?: runCatching {
+        // it could still be an ecosystem-specific version
+        factory.parseVersion(version)
+      }.getOrNull() ?: VersionString(
+        // otherwise, treat it as an opaque string
+        version,
+      )
     }
   }
 
@@ -236,16 +262,23 @@ import elide.tooling.deps.DependencyEcosystem.*
     /** Symbolic string representing the 'pip' ecosystem. */
     public const val PREFIX_PIP: String = "pip"
 
+    // Regex to use for matching a semantic version string.
+    private val SEMVER_REGEX by lazy { Regex("""^(\d+)\.(\d+)\.(\d+)(?:-([a-zA-Z0-9.-]+))?(\+([a-zA-Z0-9.-]+))?$""") }
+
     /**
      * Attempt to parse a package spec from the provided [subject] string, and with the provided [project] as context
      * (optionally); if no package spec can safely be parsed, `null` is returned.
      *
      * @param subject String to parse as a package spec.
      * @param project Optional project context to use when parsing the package spec.
+     * @param ecosystem Optional known ecosystem.
      * @return Package spec, or null if the string could not be parsed.
      */
-    @JvmStatic public fun tryParse(subject: String, project: ElideProject? = null): PackageSpec? =
-      runCatching { parse(subject, project) }.getOrNull()
+    @JvmStatic public fun tryParse(
+      subject: String,
+      project: ElideProject? = null,
+      ecosystem: DependencyEcosystem? = null,
+    ): PackageSpec? = runCatching { parse(subject, project, ecosystem) }.getOrNull()
 
     /**
      * Parse a package spec from the provided [subject] string, and with the provided [project] as context (optionally);
@@ -253,15 +286,26 @@ import elide.tooling.deps.DependencyEcosystem.*
      *
      * @param subject String to parse as a package spec.
      * @param project Optional project context to use when parsing the package spec.
+     * @param ecosystem Optional known ecosystem.
      * @return Package spec.
      * @throws ParseError If the provided string cannot be parsed without fatal ambiguity (for example, an ecosystem
      *   cannot be determined). Specific error types can be matched against to determine the reason for failure.
      */
     @Throws(ParseError::class)
-    @JvmStatic public fun parse(subject: String, project: ElideProject? = null): PackageSpec = Parser.parseForEcosystem(
-      Parser.detectEcosystem(subject, project) ?: throw AmbiguousEcosystem(),
-      subject,
-    )
+    @JvmStatic public fun parse(
+      subject: String,
+      project: ElideProject? = null,
+      ecosystem: DependencyEcosystem? = null,
+    ): PackageSpec {
+      // resolve the ecosystem first...
+      val effective = ecosystem ?: Parser.detectEcosystem(subject, project) ?: throw AmbiguousEcosystem()
+
+      // then parse, after removing any prefix
+      return Parser.parseForEcosystem(
+        effective,
+        subject.removePrefix(effective.dependencyPrefix),
+      )
+    }
   }
 
   // -- Package Spec: Versions
@@ -307,8 +351,11 @@ import elide.tooling.deps.DependencyEcosystem.*
     override val formatted: String get() = symbol
 
     public companion object: Symbolic.SealedResolver<String, SymbolicVersion> {
-      override fun resolve(symbol: String): SymbolicVersion {
-        TODO("Not yet implemented")
+      override fun resolve(symbol: String): SymbolicVersion = when (symbol) {
+        LATEST_VERSION -> LATEST
+        STABLE_VERSION -> STABLE
+        SNAPSHOT_VERSION -> SNAPSHOT
+        else -> throw unresolved(symbol)
       }
     }
   }
@@ -359,7 +406,8 @@ import elide.tooling.deps.DependencyEcosystem.*
    * Enumerates understood effective operators for semantic version ranges; this is used as a component within a package
    * spec that declares a range for its version.
    */
-  @Serializable public enum class SimpleSemverOperator (override val formatted: String) : SemverOperator {
+  @Serializable public enum class SimpleSemverOperator (override val formatted: String)
+    : SemverOperator, Symbolic<String> {
     /** Semver operator effecting `==`. */
     EQUALS("=="),
 
@@ -375,8 +423,21 @@ import elide.tooling.deps.DependencyEcosystem.*
     /** Semver operator effecting `<=`. */
     LESS_THAN_OR_EQUALS("<=");
 
+    override val symbol: String get() = formatted
+
     // Simple operators are always effective.
     override val effective: SimpleSemverOperator get() = this
+
+    public companion object: Symbolic.SealedResolver<String, SimpleSemverOperator> {
+      override fun resolve(symbol: String): SimpleSemverOperator = when (symbol) {
+        EQUALS.symbol -> EQUALS
+        GREATER_THAN.symbol -> GREATER_THAN
+        GREATER_THAN_OR_EQUALS.symbol -> GREATER_THAN_OR_EQUALS
+        LESS_THAN.symbol -> LESS_THAN
+        LESS_THAN_OR_EQUALS.symbol -> LESS_THAN_OR_EQUALS
+        else -> throw unresolved(symbol)
+      }
+    }
   }
 
   /**
@@ -416,6 +477,9 @@ import elide.tooling.deps.DependencyEcosystem.*
 
   /**
    * ### Specialized Package Spec Parser
+   *
+   * Describes the interface supported by [SpecializedPackageSpec] parsers; each specialized package spec must adhere to
+   * this base type via their companion object.
    */
   public sealed class SpecializedPackageSpecParser<T> where T: SpecializedPackageSpec {
     /**
@@ -427,10 +491,22 @@ import elide.tooling.deps.DependencyEcosystem.*
      */
     @Throws(ParseError::class)
     public abstract fun parse(subject: String): T
+
+    /**
+     * Attempt to parse a version according to the semantics expressed by this package ecosystem; if none can be parsed
+     * safely, `null` is returned.
+     *
+     * @param subject Subject version string to parse.
+     * @return Parsed version value, or `null` if none could safely be parsed.
+     */
+    public open fun parseVersion(subject: String): Version? = null
   }
 
   /**
    * ### Specialized Package Spec
+   *
+   * Base type for specialized package spec implementations; such types implement type-safe access to ecosystem-specific
+   * parsed metadata, as well as a [SpecializedPackageSpecParser] on their companion object.
    */
   public sealed class SpecializedPackageSpec (
     override val ecosystem: DependencyEcosystem,
@@ -441,21 +517,76 @@ import elide.tooling.deps.DependencyEcosystem.*
 
     override val purl: PackageURL get() =
       PackageURL(ecosystem.purlType, namespace, module, version.formatted, null, null)
+
+    override fun equals(other: Any?): Boolean {
+      if (this === other) return true
+      if (other !is SpecializedPackageSpec) return false
+      if (ecosystem != other.ecosystem) return false
+      if (purl != other.purl) return false
+      return true
+    }
+
+    override fun hashCode(): Int {
+      var result = ecosystem.hashCode()
+      result = 31 * result + purl.hashCode()
+      return result
+    }
+
+    override fun toString(): String {
+      return "PackageSpec(ecosystem=$ecosystem, purl=$purl)"
+    }
   }
 
   /**
    * ### Maven Package Spec
+   *
+   * Implements a [SpecializedPackageSpec] for [Maven]; packages are supported in the following formats:
+   *
+   * - `groupId:artifactId`
+   * - `groupId:artifactId@version`
+   * - `groupId:artifactId:classifier`
+   * - `groupId:artifactId:classifier@version`
+   *
+   * @property groupId Maven group ID.
+   * @property name Maven artifact ID.
+   * @property classifier Maven artifact classifier, if any, otherwise, `null`.
    */
   public class MavenPackageSpec internal constructor (
     public val groupId: String,
     public val name: String,
+    public val classifier: String?,
     version: Version,
     string: String,
   ) : SpecializedPackageSpec(Maven, version, string) {
     // Parser for Maven package specs.
     public companion object: SpecializedPackageSpecParser<MavenPackageSpec>() {
+      // Parse Maven-style versions.
+      private fun parseMavenVersion(string: String): Version {
+        // @TODO("not yet implemented: Maven-style version parsing")
+        return Parser.parseVersion(Companion, string)
+      }
+
       override fun parse(subject: String): MavenPackageSpec {
-        TODO("Not yet implemented: parsing of maven package specifiers")
+        val split = subject.split(':')
+        val groupId = split.first()
+        val versionIfAny = subject.substringAfterLast('@')
+        val (name, classifier) = when (split.size) {
+          2 -> split[1].split('@').first() to null
+          3 -> split[1] to split[2].split('@').first()
+          else -> error("Invalid Maven package spec (too many or too few components): $subject")
+        }
+
+        val version = versionIfAny
+          .takeIf { it.isNotEmpty() && it.isNotBlank() }
+          ?.let { parseMavenVersion(it) }
+
+        return MavenPackageSpec(
+          groupId,
+          name,
+          classifier,
+          version ?: NoVersion,
+          subject,
+        )
       }
     }
 
@@ -474,6 +605,16 @@ import elide.tooling.deps.DependencyEcosystem.*
 
   /**
    * ### NPM Package Spec
+   *
+   * Implements a [SpecializedPackageSpec] for [NPM]; packages are supported in the following formats:
+   *
+   * - `packageName`
+   * - `@scope/packageName`
+   * - `packageName@version`
+   * - `@scope/packageName@version`
+   *
+   * @property scope The parsed NPM package scope, if any; otherwise, `null`.
+   * @property name The parsed NPM package name.
    */
   public class NpmPackageSpec internal constructor (
     public val scope: String?,
@@ -483,8 +624,42 @@ import elide.tooling.deps.DependencyEcosystem.*
   ) : SpecializedPackageSpec(NPM, version, string) {
     // Parser for Maven package specs.
     public companion object: SpecializedPackageSpecParser<NpmPackageSpec>() {
+      // Parse NPM-style versions.
+      private fun parseNpmVersion(string: String): Version {
+        // @TODO("not yet implemented: NPM-style version parsing")
+        return Parser.parseVersion(Companion, string)
+      }
+
+      // Check for emptiness, blankness, and other conditions which should fail a scope or name string.
+      private fun checkNpmSpec(subject: String, scope: String?, name: String) {
+        check(name.isNotEmpty() && name.isNotBlank()) {
+          "NPM package spec name is empty or blank (parsed from: '$subject')"
+        }
+        scope?.let {
+          check(it.isNotEmpty() && it.isNotBlank()) {
+            "NPM package spec scope is empty or blank (parsed from: '$subject')"
+          }
+        }
+      }
+
       override fun parse(subject: String): NpmPackageSpec {
-        TODO("Not yet implemented: parsing of npm package specifiers")
+        val (scope, nameAndVersionMaybe) = if (subject.startsWith("@")) {
+          subject.substringBefore("/") to subject.substringAfter("/")
+        } else {
+          null to subject
+        }
+        val (name, version) = if (!nameAndVersionMaybe.contains('@')) (nameAndVersionMaybe to NoVersion) else {
+          val versionStr = nameAndVersionMaybe.substringAfter('@')
+          nameAndVersionMaybe.substringBefore('@') to parseNpmVersion(versionStr)
+        }
+        return NpmPackageSpec(
+          scope,
+          name,
+          version,
+          subject,
+        ).also {
+          checkNpmSpec(subject, scope, name)
+        }
       }
     }
 
@@ -506,6 +681,11 @@ import elide.tooling.deps.DependencyEcosystem.*
 
   /**
    * ## Pip Package Spec
+   *
+   * Implements a [SpecializedPackageSpec] for [PyPI]; packages are supported in the following formats:
+   *
+   * - `packageName`
+   * - `packageName==version`, where `==` is any Pip-supported operator
    */
   public class PipPackageSpec internal constructor (
     override val module: String,
@@ -514,8 +694,44 @@ import elide.tooling.deps.DependencyEcosystem.*
   ) : SpecializedPackageSpec(PyPI, version, string) {
     // Parser for Maven package specs.
     public companion object: SpecializedPackageSpecParser<PipPackageSpec>() {
+      // Parse pip-style versions.
+      private fun parsePipVersion(string: String): Version {
+        // @TODO("not yet implemented: Pip-style version parsing")
+        return Parser.parseVersion(Companion, string)
+      }
+
       override fun parse(subject: String): PipPackageSpec {
-        TODO("Not yet implemented: parsing of pip package specifiers")
+        // go until the first non-alphanumeric character
+        val module = subject.takeWhile { it in (('a'..'z') + ('A'..'Z') + ('0'..'9')) }
+        val versionIfPresent = subject.removePrefix(module)
+
+        val version = versionIfPresent
+          .filter { it in ('0'..'9') || it == '.' }
+          .takeIf { it.isNotBlank() && it.isNotEmpty() }
+          ?.let { parsePipVersion(it) }
+          ?: NoVersion
+
+        val operator: SemverOperator? = versionIfPresent
+          .takeWhile { it !in ('0'..'9') && it != '.' }
+          .takeIf { it.isNotBlank() && it.isNotEmpty() }
+          ?.let {
+            runCatching { SimpleSemverOperator.resolve(it) }.getOrNull()
+          }
+
+        val effectiveVersion = when (operator) {
+          null -> version
+          else -> if (version is SemanticVersion) {
+            SemanticVersionRange(operator to version)
+          } else error(
+            "Pip package spec version is not a semantic version: $version (parsed from: '$subject')",
+          )
+        }
+
+        return PipPackageSpec(
+          module = module,
+          version = effectiveVersion,
+          string = subject,
+        )
       }
     }
 
@@ -535,5 +751,13 @@ private val DependencyEcosystem.purlType get() = when (this) {
   NPM -> "npm"
   Maven -> "maven"
   PyPI -> "pypi"
+  else -> error("Unsupported ecosystem for PURL: $this")
+}
+
+// Resolve a Package URL type for the given ecosystem.
+private val DependencyEcosystem.dependencyPrefix get() = when (this) {
+  NPM -> PackageSpec.PREFIX_NPM + ":"
+  Maven -> PackageSpec.PREFIX_MAVEN + ":"
+  PyPI -> PackageSpec.PREFIX_PIP + ":"
   else -> error("Unsupported ecosystem for PURL: $this")
 }

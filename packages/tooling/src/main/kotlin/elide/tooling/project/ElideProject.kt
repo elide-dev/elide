@@ -231,20 +231,21 @@ public sealed interface SourceSetLanguage {
 /** Describes types of source sets. */
 public sealed interface SourceSetType : Comparable<SourceSetType> {
   /** The source set contains primary source code. */
-  public data object Sources : SourceSetType
+  public data object Sources : SourceSetType {
+    override fun compareTo(other: SourceSetType): Int {
+      return when (other) {
+        is Sources -> 0
+        is Tests -> -1
+      }
+    }
+  }
 
   /** The source set contains test source code. */
-  public data object Tests : SourceSetType
-
-  override fun compareTo(other: SourceSetType): Int {
-    return when (this) {
-      Sources -> return when (other) {
-        Sources -> 0
-        Tests -> -1
-      }
-      Tests -> return when (other) {
-        Sources -> 1
-        Tests -> 0
+  public data object Tests : SourceSetType {
+    override fun compareTo(other: SourceSetType): Int {
+      return when (other) {
+        is Sources -> 1
+        is Tests -> 0
       }
     }
   }

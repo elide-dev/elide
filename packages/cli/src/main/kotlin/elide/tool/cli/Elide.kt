@@ -41,6 +41,8 @@ import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.builder.ToolBuildCommand
 import elide.tool.cli.cmd.builder.ToolWhichCommand
 import elide.tool.cli.cmd.checks.ToolCheckCommand
+import elide.tool.cli.cmd.deps.AddCommand
+import elide.tool.cli.cmd.deps.InstallCommand
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
@@ -104,6 +106,8 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     ToolCheckCommand::class,
     ToolProjectCommand::class,
     InitCommand::class,
+    InstallCommand::class,
+    AddCommand::class,
     ToolInfoCommand::class,
     HelpCommand::class,
     ToolInvokeCommand::class,

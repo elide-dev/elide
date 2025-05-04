@@ -12,6 +12,7 @@
  */
 package elide.tooling.config
 
+import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import elide.exec.Action
 import elide.exec.TaskGraph
@@ -36,16 +37,16 @@ public object BuildConfiguration {
       settings ?: MutableBuildSettings(),
     )
 
-  @JvmStatic public suspend fun ElideProject.configure(with: BuildConfiguration) {
+  @JvmStatic public suspend fun ElideProject.configure(beanContext: BeanContext, with: BuildConfiguration) {
     when (this) {
       is ElideConfiguredProject -> this
       else -> load()
     }.let {
-      BuildConfigurators.contribute(it, with)
+      BuildConfigurators.contribute(beanContext, it, with)
     }
   }
 
-  @JvmStatic public suspend fun ElideProject.configure(): BuildConfiguration = create().also {
-    configure(it)
+  @JvmStatic public suspend fun ElideProject.configure(ctx: BeanContext): BuildConfiguration = create().also {
+    configure(ctx, it)
   }
 }

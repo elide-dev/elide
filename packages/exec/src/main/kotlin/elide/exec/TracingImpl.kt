@@ -11,15 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-use builder::{build_bindings, cargo_lib_metadata};
+package elide.exec
 
-fn main() {
-  // link against lib jvm
-  cargo_lib_metadata(None);
-  println!("cargo:rustc-link-lib=jvm");
-
-  // generate rust bindings
-  let bindings = bindgen::Builder::default().header("headers/elide-plugin.h");
-
-  build_bindings("libjvm", "libjvm.rs", bindings);
+// Default implementation of a `TraceChannel`.
+internal class DefaultTraceChannel : TraceChannel {
+  // Nothing yet.
 }

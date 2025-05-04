@@ -54,6 +54,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         // language=gitignore
         """
         .dev/
+        node_modules
         node_modules/
         """
       }

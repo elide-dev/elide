@@ -22,8 +22,24 @@ import elide.runtime.Logging
 
 /**
  * # Execution Engine
+ *
+ * Implements the JVM surface of the `exec` crate, which is responsible for managing a Tokio engine that is used for
+ * multithreaded and async execution within native contexts.
+ *
+ * The execution engine is also integrated with the `trace` crate, which provides trace subscribes that bridge back to
+ * JVM for event delivery.
+ *
+ * ## Usage
+ *
+ * Load the native `exec` library and initialize the layer by calling [ensureLoaded]; this method is idempotent and will
+ * throw if errors occur. After this point, native methods on [Execution] or [Tracing] can be used directly.
+ *
+ * @see Tracing Execution tracing support
  */
 public object Execution {
+  private const val SUBSTRATE_LIB_NAME = "substrate"
+  private const val EXEC_LIB_NAME = "exec"
+
   // Whether the native executor has initialized.
   private val initialized = atomic(false)
   private fun isInitialized(): Boolean = initialized.value
@@ -50,11 +66,11 @@ public object Execution {
   }
 
   // Load the native executor library.
-  private fun loadNative() {
+  private fun loadNative(name: String) {
     try {
-      System.loadLibrary("exec")
+      System.loadLibrary(name)
     } catch (err: UnsatisfiedLinkError) {
-      throw IllegalStateException("Failed to load 'libexec' native code", err)
+      throw IllegalStateException("Failed to load 'lib$name' native code", err)
     }
   }
 
@@ -68,7 +84,11 @@ public object Execution {
   public fun ensureLoaded() {
     if (!initialized.value) {
       synchronized(this) {
-        loadNative()
+        // exec depends on tracing, which needs to load first
+        Tracing.ensureLoaded()
+        loadNative(SUBSTRATE_LIB_NAME)
+        loadNative(EXEC_LIB_NAME)
+
         initialize().also {
           check(it == 0) { "Failed to initialize native executor layer: code $it" }
           initialized.compareAndSet(false, true)

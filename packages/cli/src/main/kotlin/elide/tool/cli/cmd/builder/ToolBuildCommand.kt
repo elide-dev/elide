@@ -18,6 +18,7 @@ package elide.tool.cli.cmd.builder
 
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
+import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
@@ -94,6 +95,7 @@ internal fun Duration.relative(): String {
 @Introspected
 @ReflectiveAccess
 internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
+  @Inject private lateinit var beanContext: BeanContext
   @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
   private val projectManager: ProjectManager get() = projectManagerProvider.get()
 
@@ -135,7 +137,7 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   )
   internal var showProgress: Boolean = true
 
-  /** Script file arguments. */
+  /** Names of specific build tasks to run. */
   @CommandLine.Parameters(
     index = "0",
     description = ["Tasks or scripts to build or run"],
@@ -170,7 +172,7 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   private suspend fun CommandContext.buildProject(project: ElideProject): CommandResult = coroutineScope {
     // configure the build
     prepareBuilderOutput(this@buildProject)
-    val config = BuildDriver.configure(project) { state, config ->
+    val config = BuildDriver.configure(beanContext, project) { state, config ->
       config.settings.caching = enableCaching
       config.settings.dependencies = enableDeps
       config.settings.checks = enableChecks

@@ -874,6 +874,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tooling.kotlin.KotlinCompilerKt",
   "elide.tooling.jvm.JavaCompilerKt",
   "elide.tooling.jvm.JavadocToolKt",
+  "elide.tooling.kotlin.DetektKt",
   "org.apache.http.impl.auth.NTLMEngineImpl",
 
   // @TODO switch to built-in brotli

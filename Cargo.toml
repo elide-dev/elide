@@ -69,8 +69,9 @@ jni = { git = "https://github.com/elide-tools/jni-rs", rev = "52526ede7ff165632b
 builder = { path = "crates/builder" }
 diag = { path = "crates/diag" }
 substrate = { path = "crates/substrate" }
-umbrella = { path = "tools/umbrella" }
+trace = { path = "crates/trace" }
 exec = { path = "crates/exec" }
+umbrella = { path = "tools/umbrella" }
 
 ## Dependencies
 lazy_static = { version = "1.5.0" }
@@ -94,8 +95,16 @@ orogene = { git = "https://github.com/elide-dev/orogene", rev = "024c67173c29ae2
 rustc_version = { version = "0.4.1" }
 rustix = { version = "1.0.2", features = ["process"] }
 serde = { version = "1.0.218", default-features = false }
-sysinfo = { version = "0.34.2" }
+sysinfo = { version = "0.35.0" }
+once_cell = { version = "1.21.3" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
+log = { version = "0.4.27" }
+tracing = { version = "0.1.41" }
+tracing-core = { version = "0.1.33" }
+tracing-log = { version = "0.2.0" }
+tracing-futures = { version = "0.2.5" }
+tracing-serde = { version = "0.2.0" }
+tracing-attributes = { version = "0.1.28" }
 tracing-subscriber = { version = "0.3.19" }
 tokio = { version = "1", default-features = false, features = [
   "fs",
@@ -114,7 +123,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "2a41b8a7c088787db76bdb04919d565ac2f2cf6b", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "56566c6927eaf25d72b3602f08337ef3bbe0e9b6", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -122,7 +131,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "2a41b8a7c088787db76bdb0
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "dc5b3762f38a8e47b53bec9cc3cefb71e4aef55c" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "96cfca1c8fe711d24215f9d1bb91cea7002aa087" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "1bdb22c13972b3a3dc9cb4ef31fbf37db051dd1c" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "fe4051b2e6bf74a33f67f60fdbd775a6568e96a3" }

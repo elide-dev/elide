@@ -18,6 +18,7 @@ import org.eclipse.aether.AbstractRepositoryListener
 import org.eclipse.aether.DefaultRepositoryCache
 import org.eclipse.aether.DefaultRepositorySystemSession
 import org.eclipse.aether.RepositoryCache
+import org.eclipse.aether.RepositoryEvent
 import org.eclipse.aether.RepositorySystem
 import org.eclipse.aether.artifact.Artifact
 import org.eclipse.aether.artifact.DefaultArtifact
@@ -29,6 +30,7 @@ import org.eclipse.aether.repository.RepositoryPolicy
 import org.eclipse.aether.resolution.DependencyRequest
 import org.eclipse.aether.resolution.DependencyResult
 import org.eclipse.aether.transfer.AbstractTransferListener
+import org.eclipse.aether.transfer.TransferEvent
 import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator
 import java.io.File
 import java.lang.AutoCloseable
@@ -43,6 +45,7 @@ import kotlinx.coroutines.async
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import elide.annotations.Inject
+import elide.annotations.Singleton
 import elide.runtime.Logging
 import elide.tool.Classpath
 import elide.tool.ClasspathProvider
@@ -72,6 +75,21 @@ public class MavenResolverErrors internal constructor (public val errors: List<T
 
 /**
  * ## Maven Resolver
+ *
+ * Provides a [DependencyResolver.MavenResolver] implemented with Maven's own Aether-based resolver; this is the default
+ * adapter for resolving Maven ecosystem dependencies.
+ *
+ * The resolver wires together a [RepositorySystem] and session from DI state, and configures each component to place
+ * dependencies into a local Maven repository structure at the path `.dev/dependencies/m2`.
+ *
+ * Transitive dependencies are resolve by default, and various aspects of the resolver's behavior can be customized. The
+ * resolver is aware of classpath usage types, and can assemble [ClasspathProvider] instances in order to make use of
+ * the resolved dependencies.
+ *
+ * ### Usage
+ *
+ * Usage of this resolver is possible directly, but it is recommended that developers use the `BuildDriver` interface
+ * instead, which will uniformly manage and resolve dependencies for a given Elide project.
  */
 public class MavenAetherResolver internal constructor () :
   DependencyResolver.MavenResolver,
@@ -151,13 +169,57 @@ public class MavenAetherResolver internal constructor () :
   private val packageArtifacts = ConcurrentSkipListMap<MavenPackage, ResolvedArtifact>()
 
   // Listener for events which emit from the repository system.
-  private class ElideLocalRepositoryListener(private val state: ElideBuildState) : AbstractRepositoryListener() {
-    // Nothing at this time.
+  private inner class ElideLocalRepositoryListener(private val state: ElideBuildState) : AbstractRepositoryListener() {
+    override fun metadataDownloading(event: RepositoryEvent?) {
+      super.metadataDownloading(event)
+    }
+
+    override fun metadataDownloaded(event: RepositoryEvent?) {
+      super.metadataDownloaded(event)
+    }
+
+    override fun artifactResolving(event: RepositoryEvent?) {
+      super.artifactResolving(event)
+    }
+
+    override fun artifactResolved(event: RepositoryEvent?) {
+      super.artifactResolved(event)
+    }
+
+    override fun artifactDownloading(event: RepositoryEvent?) {
+      super.artifactDownloading(event)
+    }
+
+    override fun artifactDownloaded(event: RepositoryEvent?) {
+      super.artifactDownloaded(event)
+    }
   }
 
   // Listener for transport progress.
-  private class ElideMavenTransferListener(private val state: ElideBuildState) : AbstractTransferListener() {
-    // Nothing at this time.
+  private inner class ElideMavenTransferListener(private val state: ElideBuildState) : AbstractTransferListener() {
+    override fun transferInitiated(event: TransferEvent?) {
+      super.transferInitiated(event)
+    }
+
+    override fun transferStarted(event: TransferEvent?) {
+      super.transferStarted(event)
+    }
+
+    override fun transferProgressed(event: TransferEvent?) {
+      super.transferProgressed(event)
+    }
+
+    override fun transferSucceeded(event: TransferEvent?) {
+      super.transferSucceeded(event)
+    }
+
+    override fun transferCorrupted(event: TransferEvent?) {
+      super.transferCorrupted(event)
+    }
+
+    override fun transferFailed(event: TransferEvent?) {
+      super.transferFailed(event)
+    }
   }
 
   // Initializes this resolver's internals at init-time.

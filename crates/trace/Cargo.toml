@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Elide Technologies, Inc.
+# Copyright (c) 2024 Elide Technologies, Inc.
 #
 # Licensed under the MIT license (the "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
 #
 
 [package]
-name = "exec"
+name = "trace"
 version = { workspace = true }
 edition = { workspace = true }
 rust-version = { workspace = true }
@@ -22,24 +22,23 @@ repository = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
 
-[features]
-default = ["multithread", "blocking"]
-unsafe = []
-blocking = []
-multithread = []
-debug = []
-
 [lib]
 crate-type = ["lib", "staticlib", "cdylib"]
 
-[build-dependencies]
-builder = { workspace = true }
-
 [dependencies]
 substrate = { workspace = true }
-trace = { workspace = true }
+log = { workspace = true }
+serde = { workspace = true }
+tracing = { workspace = true }
+tracing-log = { workspace = true }
+tracing-core = { workspace = true }
+tracing-futures = { workspace = true }
+tracing-serde = { workspace = true }
+tracing-attributes = { workspace = true }
+tracing-subscriber = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
-tokio = { workspace = true }
-tracing-subscriber = { workspace = true }
-lazy_static = { workspace = true }
+once_cell = { workspace = true }
+
+[build-dependencies]
+builder = { workspace = true }

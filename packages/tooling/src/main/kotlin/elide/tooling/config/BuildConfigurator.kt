@@ -14,6 +14,7 @@
 
 package elide.tooling.config
 
+import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import kotlinx.serialization.Serializable
 import elide.exec.ActionScope
@@ -91,11 +92,13 @@ public fun interface BuildConfigurator : ProjectConfigurator {
   public interface ProjectDirectories {
     public val projectRoot: Path
     public val devRoot: Path get() = projectRoot.resolve(".dev")
+    public val cache: Path get() = devRoot.resolve("cache")
     public val dependencies: Path get() = devRoot.resolve("dependencies")
     public val artifacts: Path get() = devRoot.resolve("artifacts")
   }
 
   public interface ElideBuildState {
+    public val beanContext: BeanContext
     public val project: ElideConfiguredProject
     public val console: BuildConsoleController
     public val events: BuildEventController

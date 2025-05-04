@@ -10,16 +10,3 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
-use builder::{build_bindings, cargo_lib_metadata};
-
-fn main() {
-  // link against lib jvm
-  cargo_lib_metadata(None);
-  println!("cargo:rustc-link-lib=jvm");
-
-  // generate rust bindings
-  let bindings = bindgen::Builder::default().header("headers/elide-plugin.h");
-
-  build_bindings("libjvm", "libjvm.rs", bindings);
-}

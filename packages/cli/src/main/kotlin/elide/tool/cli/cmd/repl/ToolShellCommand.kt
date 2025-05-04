@@ -21,6 +21,7 @@ package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
+import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
@@ -63,6 +64,7 @@ import javax.tools.ToolProvider
 import jakarta.inject.Provider
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
@@ -97,7 +99,10 @@ import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.runtime.precompiler.Precompiler
+import elide.tool.Classpath
+import elide.tool.ClasspathSpec
 import elide.tool.Environment
+import elide.tool.MultiPathUsage
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cmd.builder.emitCommand
@@ -127,6 +132,10 @@ import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.project.PackageManifestService
 import elide.tool.project.ProjectManager
+import elide.tooling.builder.BuildDriver
+import elide.tooling.builder.BuildDriver.dependencies
+import elide.tooling.builder.BuildDriver.resolve
+import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.project.ElideProject
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
@@ -166,11 +175,12 @@ private typealias ContextAccessor = () -> PolyglotContext
 @Introspected
 @ReflectiveAccess
 internal class ToolShellCommand @Inject constructor(
+  private val beanContext: BeanContext,
   private val projectManagerProvider: Provider<ProjectManager>,
   private val manifestsProvider: Provider<PackageManifestService>,
   private val workdirProvider: Provider<WorkdirManager>,
   private val guestExecProvider: Provider<GuestExecutorProvider>,
-) : AbstractSubcommand<ToolState, CommandContext>() {
+) : ProjectAwareSubcommand<ToolState, CommandContext>() {
   internal companion object {
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"
@@ -1457,6 +1467,37 @@ internal class ToolShellCommand @Inject constructor(
     )
   }
 
+  // Amend a base classpath with any additional resolved project dependencies.
+  private fun withProjectClasspath(project: ElideProject, base: Sequence<Path>): Sequence<Path> {
+    return when (project.manifest.dependencies.maven.hasPackages()) {
+      // the project doesn't specify any maven dependencies; return the base classpath
+      false -> base
+
+      // the project defines maven dependencies; assemble a classpath and return.
+      else -> sequence {
+        runBlocking {
+          val mavenResolver = BuildDriver.configure(beanContext, project).let {
+            resolve(it, dependencies(it).await()).also {
+              it.second.joinAll()
+            }.first.filterIsInstance<MavenAetherResolver>().first()
+          }
+          val runtimeClasspath = mavenResolver.classpathProvider(object: ClasspathSpec {
+            override val usage: MultiPathUsage get() = MultiPathUsage.Runtime
+          })?.classpath()
+
+          Classpath.empty().toMutable().apply {
+            base.forEach { add(it) }
+
+            // the user's classpath goes first
+            runtimeClasspath?.let { prepend(it) }
+          }.asSequence().map {
+            it.path
+          }
+        }
+      }
+    }
+  }
+
   override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet<GuestLanguage>) {
     // grab project configurations, if available
     val project = activeProject.value
@@ -1588,8 +1629,16 @@ internal class ToolShellCommand @Inject constructor(
             .resolve(KotlinLanguage.VERSION)
             .resolve("lib")
 
-          val pathsFromLangResources = initialGuestClasspathJars(langResources)
-          val pathsFromHomeResources = initialGuestClasspathJars(langHomeResources)
+          val pathsFromLangResources = if (Files.exists(langResources)) {
+            initialGuestClasspathJars(langResources)
+          } else {
+            emptySequence()
+          }
+          val pathsFromHomeResources = if (Files.exists(langHomeResources)) {
+            initialGuestClasspathJars(langHomeResources)
+          } else {
+            emptySequence()
+          }
 
           val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
           val fullClasspath: Sequence<Path> = (
@@ -1603,7 +1652,15 @@ internal class ToolShellCommand @Inject constructor(
             pathsFromHomeResources
           ).distinct().asStream().parallel().filter {
             Files.exists(it)
-          }.toList().asSequence()
+          }.toList().asSequence().let {
+            when (project) {
+              // with no active project, just return the initial classpath
+              null -> it
+
+              // otherwise, assemble a classpath from the base and any project deps
+              else -> withProjectClasspath(project, it)
+            }
+          }
 
           logging.debug {
             "Guest classpath: ${fullClasspath.joinToString(":")}"
@@ -1689,7 +1746,11 @@ internal class ToolShellCommand @Inject constructor(
     Elide.requestNatives(server = true, tooling = false)
 
     // resolve project configuration (async)
-    val projectResolution = launch { activeProject.value = runCatching { projectManager.resolveProject() }.getOrNull() }
+    val projectResolution = launch {
+      activeProject.value = runCatching {
+        projectManager.resolveProject(projectOptions().projectPath)
+      }.getOrNull()
+    }
 
     // begin resolving language support
     val supported = determineSupportedLanguages()

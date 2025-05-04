@@ -18,10 +18,12 @@ plugins {
   kotlin("jvm")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
+  alias(libs.plugins.ksp)
 }
 
 elide {
   kotlin {
+    ksp = true
     atomicFu = true
     target = KotlinTarget.JVM
     explicitApi = true
@@ -32,6 +34,7 @@ elide {
 }
 
 dependencies {
+  ksp(mn.micronaut.inject.kotlin)
   api(libs.kotlin.stdlib.jdk8)
   api(libs.jetbrains.annotations)
   api(projects.packages.exec)

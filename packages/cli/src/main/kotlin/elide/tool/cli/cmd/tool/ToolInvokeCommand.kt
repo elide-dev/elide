@@ -202,8 +202,6 @@ private enum class ToolAction (
 @Command(
   name = "tool",
   aliases = [
-    "install",
-    "i",
     "update",
     "oro",
     "ruff",

@@ -51,3 +51,4 @@ blink.log
 project/docs/apidocs
 packages/cli/README.md.br
 README.md.br
+node_modules

@@ -12,6 +12,7 @@
  */
 package elide.tooling.config
 
+import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import java.util.ServiceLoader
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
@@ -25,6 +26,7 @@ public object BuildConfigurators {
 
   @JvmStatic
   public suspend fun contribute(
+    beanContext: BeanContext,
     project: ElideConfiguredProject,
     from: Sequence<BuildConfigurator>,
     to: BuildConfiguration,
@@ -34,6 +36,7 @@ public object BuildConfigurators {
       override val projectRoot: Path get() = to.projectRoot
     }
     val state = object : BuildConfigurator.ElideBuildState {
+      override val beanContext: BeanContext get() = beanContext
       override val project: ElideConfiguredProject get() = project
       override val console: BuildConfigurator.BuildConsoleController get() = TODO("Not yet implemented")
       override val events: BuildConfigurator.BuildEventController get() = TODO("Not yet implemented")
@@ -52,10 +55,11 @@ public object BuildConfigurators {
   }
 
   @JvmStatic public suspend fun contribute(
+    beanContext: BeanContext,
     project: ElideConfiguredProject,
     to: BuildConfiguration,
     extraConfigurator: BuildConfigurator? = null,
   ) {
-    contribute(project, collect(), to, extraConfigurator)
+    contribute(beanContext, project, collect(), to, extraConfigurator)
   }
 }

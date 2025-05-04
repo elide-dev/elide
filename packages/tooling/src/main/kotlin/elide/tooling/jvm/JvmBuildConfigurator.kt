@@ -45,6 +45,9 @@ private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
   return "$name${srcSet.name[0].uppercase()}${srcSet.name.slice(1..srcSet.name.lastIndex)}"
 }
 
+/**
+ * ## JVM Build Configurator
+ */
 internal class JvmBuildConfigurator : BuildConfigurator {
   private companion object {
     private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
@@ -202,14 +205,14 @@ internal class JvmBuildConfigurator : BuildConfigurator {
   @Suppress("unused", "CyclomaticComplexMethod", "LongMethod")
   override suspend fun contribute(state: ElideBuildState, config: BuildConfigurator.BuildConfiguration) {
     // interpret/load maven dependencies to resolver
-    val resolver = if (state.manifest.dependencies.maven.packages.isEmpty()) {
+    val resolver = if (!state.manifest.dependencies.maven.hasPackages()) {
       null
     } else {
       logging.debug { "Maven dependencies detected; preparing Maven resolver" }
       when (
         val existing = config.resolvers[DependencyResolver.MavenResolver::class]
       ) {
-        null -> MavenAetherResolver().apply {
+        null -> state.beanContext.getBean(MavenAetherResolver::class.java).apply {
           // configure repositories and packages for a resolver from scratch.
           registerPackagesFromManifest(state)
         }

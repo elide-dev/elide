@@ -12,6 +12,7 @@
  */
 package elide.tooling.builder
 
+import io.micronaut.context.BeanContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
@@ -77,17 +78,21 @@ public object BuildDriver {
    * dependencies are resolved by this method.
    *
    * @receiver The [CoroutineScope] to run the build in.
+   * @param beanContext The [BeanContext] to use for dependency injection.
    * @param project The [ElideProject] to configure.
+   * @param settings Optional [BuildConfigurator.BuildSettings] to use for configuration.
+   * @param extraConfigurator An optional [BuildConfigurator] to use for additional configuration.
    * @return A [ConfiguredBuild] instance, which can be used to resolve dependencies and execute tasks.
    */
   @JvmStatic
   public suspend fun configure(
+    beanContext: BeanContext,
     project: ElideProject,
     settings: BuildConfigurator.BuildSettings? = null,
     extraConfigurator: BuildConfigurator? = null,
   ): ConfiguredBuild {
     return BuildConfiguration.create(project.root, settings?.toMutable()).also {
-      BuildConfigurators.contribute(project.load(), it, extraConfigurator = extraConfigurator)
+      BuildConfigurators.contribute(beanContext, project.load(), it, extraConfigurator = extraConfigurator)
     }
   }
 
@@ -109,25 +114,6 @@ public object BuildDriver {
         launch { it.seal() }
       }
     }
-  }
-
-  /**
-   * ### Materialize Dependencies (Project)
-   *
-   * Given an [ElideProject], skip all other steps and only materialize or otherwise resolve all dependencies for the
-   * configured form of the project, across all ecosystems and packages specified by the project. At this time, this
-   * includes all suites of dependencies (i.e. test- or dev-scoped dependencies).
-   *
-   * Essentially, this method is sugar for `dependencies(configure(project))`, meant for circumstances where the
-   * configured form of the build is not useful or needed.
-   *
-   * @receiver The [CoroutineScope] to run the build in.
-   * @param project The [ElideProject] to materialize dependencies for.
-   * @return A [Deferred] list of [DependencyResolver] instances, which can be used to resolve dependencies.
-   */
-  @JvmStatic
-  public suspend fun CoroutineScope.dependencies(project: ElideProject): Deferred<List<DependencyResolver>> {
-    return dependencies(configure(project))
   }
 
   /**
@@ -205,10 +191,11 @@ public object BuildDriver {
    */
   @JvmStatic
   public suspend fun CoroutineScope.buildProject(
+    beanContext: BeanContext,
     project: ElideProject,
     config: ConfiguredBuild? = null,
     binder: ExecutionBinder? = null,
-  ): BuildListener = configureBuildProject(project, config, binder).also { listener ->
+  ): BuildListener = configureBuildProject(beanContext, project, config, binder).also { listener ->
     coroutineScope {
       launch { listener.await() }
     }
@@ -217,11 +204,12 @@ public object BuildDriver {
   // Internally build a project with given configurations or resolvers.
   @JvmStatic
   internal suspend fun CoroutineScope.configureBuildProject(
+    beanContext: BeanContext,
     project: ElideProject,
     config: ConfiguredBuild? = null,
     binder: ExecutionBinder? = null,
   ): BuildListener {
-    val buildConfig = config ?: configure(project)
+    val buildConfig = config ?: configure(beanContext, project)
     val graph = async { TaskGraph.build(buildConfig.taskGraph) }
     val deps = dependencies(buildConfig).await()
     val (_, jobs) = resolve(buildConfig, deps)

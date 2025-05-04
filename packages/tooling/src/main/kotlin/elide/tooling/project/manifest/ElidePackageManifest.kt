@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling.project.manifest
 
 import java.net.URI
@@ -29,6 +28,8 @@ public data class ElidePackageManifest(
   val workspaces: List<String> = emptyList(),
   val scripts: Map<String, String> = emptyMap(),
   val dependencies: DependencyResolution = DependencyResolution(),
+  val javascript: JavaScriptSettings? = null,
+  val typescript: TypeScriptSettings? = null,
   val jvm: JvmSettings? = null,
   val kotlin: KotlinSettings? = null,
   val python: PythonSettings? = null,
@@ -57,7 +58,9 @@ public data class ElidePackageManifest(
     val packages: List<NpmPackage> = emptyList(),
     val devPackages: List<NpmPackage> = emptyList(),
     val repositories: Map<String, NpmRepository> = emptyMap(),
-  ) : DependencyEcosystemConfig
+  ) : DependencyEcosystemConfig {
+    public fun hasPackages(): Boolean = packages.isNotEmpty() || devPackages.isNotEmpty()
+  }
 
   @JvmRecord @Serializable public data class NpmPackage(
     val name: String,
@@ -176,7 +179,9 @@ public data class ElidePackageManifest(
     val catalogs: List<GradleCatalog> = emptyList(),
     val repositories: Map<String, MavenRepository> = emptyMap(),
     val enableDefaultRepositories: Boolean = true,
-  ) : DependencyEcosystemConfig
+  ) : DependencyEcosystemConfig {
+    public fun hasPackages(): Boolean = packages.isNotEmpty() || testPackages.isNotEmpty()
+  }
 
   @JvmRecord @Serializable public data class PipDependencies(
     val packages: List<PipPackage> = emptyList(),
@@ -206,13 +211,20 @@ public data class ElidePackageManifest(
   @Serializable
   public sealed interface JvmTarget {
     @JvmInline @Serializable public value class NumericJvmTarget(public val number: UInt) : JvmTarget
-
     @JvmInline @Serializable public value class StringJvmTarget(public val name: String) : JvmTarget
   }
 
   @JvmRecord @Serializable public data class JvmSettings(
     val target: JvmTarget? = null,
     val javaHome: String? = null,
+  )
+
+  @JvmRecord @Serializable public data class JavaScriptSettings(
+    val debug: Boolean = false,
+  )
+
+  @JvmRecord @Serializable public data class TypeScriptSettings(
+    val debug: Boolean = false,
   )
 
   @Serializable @Suppress("UNUSED") public enum class JvmTargetValidationMode {

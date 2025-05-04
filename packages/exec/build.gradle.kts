@@ -1,5 +1,3 @@
-import elide.internal.conventions.kotlin.KotlinTarget
-
 /*
  * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
@@ -12,6 +10,9 @@ import elide.internal.conventions.kotlin.KotlinTarget
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.toolchain.host.TargetInfo
 
 plugins {
   alias(libs.plugins.elide.conventions)
@@ -46,13 +47,17 @@ dependencies {
   implementation(libs.guava)
   testImplementation(libs.kotlin.test.junit5)
   testImplementation(libs.kotlinx.coroutines.test)
+  testRuntimeOnly(mn.logback.classic)
+  testRuntimeOnly(mn.logback.core)
 }
+
+val elideTarget = TargetInfo.current(project)
 
 tasks.named("test", Test::class) {
   systemProperty("java.library.path", StringBuilder().apply {
-    append(rootProject.layout.projectDirectory.dir("target/debug").asFile.path)
+    append(rootProject.layout.projectDirectory.dir("target/${elideTarget.triple}/debug").asFile.path)
     append(File.pathSeparator)
-    append(rootProject.layout.projectDirectory.dir("target/release").asFile.path)
+    append(rootProject.layout.projectDirectory.dir("target/${elideTarget.triple}/release").asFile.path)
     System.getProperty("java.library.path", "").let {
       if (it.isNotEmpty()) {
         append(File.pathSeparator)

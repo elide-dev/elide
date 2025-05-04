@@ -10,16 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+use crate::ringbuf::{register_handlers, shutdown_consumer_thread, start_consumer_thread};
 use java_native::jni;
 use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use jni::sys::jint;
 use log::{Level, debug, error, info, trace, warn};
-
-use crate::ringbuf::{
-  register_log_handler, register_tracing_subscriber, shutdown_consumer_thread,
-  start_consumer_thread,
-};
 
 /// Import preludes for easy use of `trace` and `tracing`.
 pub mod prelude;
@@ -57,8 +53,7 @@ pub fn name_for_level(level: Level) -> &'static str {
 #[jni("elide.exec.Tracing")]
 pub fn initialize<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> jint {
   start_consumer_thread();
-  register_tracing_subscriber();
-  register_log_handler();
+  register_handlers();
   0
 }
 
@@ -81,22 +76,21 @@ pub fn nativeLog<'a>(
     Ok(str) => str.to_str().to_string(),
     Err(_) => return 1,
   };
-  let msgStr: String = env
-    .get_string(&msg)
-    .expect("failed to obtain message string")
-    .to_str()
-    .to_string();
+  let msgStr: String = match env.get_string(&msg) {
+    Ok(str) => str.to_str().to_string(),
+    Err(_) => return 1,
+  };
   let knownLevel = level_for_name(levelStr.as_str());
   let level = match knownLevel {
     Some(level) => level,
     None => return 2,
   };
   match level {
-    Level::Info => info!("{}", msgStr),
-    Level::Debug => debug!("{}", msgStr),
-    Level::Trace => trace!("{}", msgStr),
-    Level::Warn => warn!("{}", msgStr),
-    Level::Error => error!("{}", msgStr),
+    Level::Info => info!("[native:info] {}", msgStr),
+    Level::Debug => debug!("[native:debug] {}", msgStr),
+    Level::Trace => trace!("[native:trace] {}", msgStr),
+    Level::Warn => warn!("[native:warn] {}", msgStr),
+    Level::Error => error!("[native:error] {}", msgStr),
   }
   0
 }

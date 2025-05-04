@@ -13,71 +13,130 @@
 package elide.exec
 
 import org.slf4j.event.Level
+import java.util.concurrent.ConcurrentLinkedQueue
+import elide.runtime.Logging
 
 /**
  * # Native Tracing
+ *
+ * Defines types and methods which are used as up-calls from JNI; as such, these must remain static, and any changes to
+ * visible symbols must propagate to JNI code.
  */
 public object TraceNative {
+  private const val RECENT_CAPACITY = 20
+  private val recentTraces = ConcurrentLinkedQueue<TraceRecord>()
+  private val recentLogs = ConcurrentLinkedQueue<LogRecord>()
+
   /**
    * ## Log Record
+   *
+   * Describes a log record object; this is an intermediate type created by the native log layer, and then consumed by
+   * the JVM layer upon log delivery.
    */
-  public data class LogRecord(
-    var severity: String? = null,
-    var file: String? = null,
-    var line: Int? = null,
-    var message: String? = null,
+  @JvmRecord public data class LogRecord(
+    val target: String? = null,
+    val severity: String? = null,
+    val file: String? = null,
+    val line: Int? = null,
+    val message: String? = null,
+    val thread: String? = null,
   )
 
   /**
    * ## Trace Record
+   *
+   * Describes a trace record object; this is an intermediate type created by the native tracing layer, and then
+   * consumed by the JVM layer upon trace delivery.
    */
-  public data class TraceRecord(
-    var severity: String? = null,
-    var message: String? = null,
+  @JvmRecord public data class TraceRecord(
+    val severity: String? = null,
+    val message: String? = null,
   )
 
+  // Internal access to recently-delivered logs.
+  internal fun allRecentLogs(): Sequence<LogRecord> {
+    val copy = recentLogs.toList()
+    return copy.asSequence()
+  }
+
+  // Internal access to recently-delivered traces.
+  internal fun allRecentTraces(): Sequence<TraceRecord> {
+    val copy = recentTraces.toList()
+    return copy.asSequence()
+  }
+
+  // JNI up-call to determine if a logger is enabled by name.
   @JvmStatic
   @JvmName("lookupLoggerEnabled") public fun lookupLoggerEnabled(name: String): Boolean {
-    return try {
-      val logger = org.slf4j.LoggerFactory.getLogger(name)
-      logger.isEnabledForLevel(Level.ERROR)
-    } catch (e: Exception) {
-      false
-    }
+    return org.slf4j.LoggerFactory.getLogger(name).isEnabledForLevel(Level.ERROR)
   }
 
-  // Object delivery.
+  // Object JNI up-call delivery for logs.
   @JvmStatic
   @JvmName("deliverNativeLog") public fun deliverNativeLog(record: LogRecord): Boolean {
-    return true //
+    if (recentLogs.size >= RECENT_CAPACITY) {
+      recentLogs.remove()
+    }
+    recentLogs.add(record)
+
+    val logger = record.target?.let { Logging.named(it) } ?: Logging.root()
+    val severity = when (record.severity) {
+      "TRACE" -> Level.TRACE
+      "DEBUG" -> Level.DEBUG
+      "INFO" -> Level.INFO
+      "WARN" -> Level.WARN
+      "ERROR" -> Level.ERROR
+      else -> Level.ERROR  // default
+    }
+    if (logger.isEnabledForLevel(severity)) {
+      logger.makeLoggingEventBuilder(severity).apply {
+        record.message?.let { setMessage(it) }
+        record.thread?.let { addKeyValue("thread", it) }
+      }.log()
+    }
+    return true
   }
 
-  // Primitive delivery.
-  // (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+  // Primitive JNI up-call delivery for logs.
+  // (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z
   @JvmStatic
   @JvmName("deliverNativeLog") public fun deliverNativeLog(
     level: String?,
     target: String?,
     message: String?,
     thread: String?,
-  ): Boolean {
-    return true //
-  }
+  ): Boolean = deliverNativeLog(LogRecord(
+    severity = level,
+    file = null,
+    line = null,
+    message = message,
+    target = target,
+    thread = thread,
+  ))
 
-  // Object delivery.
+  // Object JNI up-call delivery for tracing.
   @JvmStatic
   @JvmName("deliverNativeTrace") public fun deliverNativeTrace(record: TraceRecord): Boolean {
+    if (recentTraces.size >= RECENT_CAPACITY) {
+      recentTraces.remove()
+    }
+    recentTraces.add(record)
+
+    System.err.println("Received native trace !! $record")
+    System.err.flush()
     return true //
   }
 
-  // Primitive delivery.
-  // (JLjava/lang/String;Ljava/lang/String;)V
+  // Primitive JNI up-call delivery for tracing.
+  // (JLjava/lang/String;Ljava/lang/String;)Z
   @JvmStatic
   @JvmName("deliverNativeTrace") public fun deliverNativeTrace(
-    timestamp: Long?,
+    timestamp: Long,
     level: String?,
     message: String?,
   ): Boolean {
+    System.err.println("Received native trace !! [timestamp=$timestamp], [level=$level], [message=$message]")
+    System.err.flush()
     return true //
   }
 

@@ -13,10 +13,12 @@
 
 use crate::channel::VmTraceChannel;
 use jni::objects::{JObject, JValue};
+use jni::signature::Primitive::Boolean;
+use jni::signature::ReturnType;
 use jni::sys::jlong;
 use once_cell::sync::Lazy;
 use std::collections::VecDeque;
-use std::sync::{Arc, Condvar, Mutex};
+use std::sync::{Arc, Condvar, LazyLock, Mutex};
 use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 use substrate::vm::active_java_vm;
@@ -25,14 +27,17 @@ use tracing_core::{Event, Field, Subscriber};
 use tracing_subscriber::Layer;
 use tracing_subscriber::layer::{Context, SubscriberExt};
 
-const USE_JVM_LOG_INTEGRATION: bool = false;
+const DEBUG_LOGS: bool = false;
+const TRACE_LOGS: bool = false;
+const USE_JVM_LOG_INTEGRATION: bool = true;
+const USE_PRELOADED_METHODS: bool = false;
+const MAX_LOG_LEVEL: log::LevelFilter = log::LevelFilter::Info;
 const TRACE_UTILS_CLASS: &str = "elide/exec/TraceNative";
 const DELIVER_LOG_METHOD: &str = "deliverNativeLog";
 const DELIVER_LOG_SIG: &str =
-  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V";
+  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z";
 const DELIVER_TRACE_METHOD: &str = "deliverNativeTrace";
-const DELIVER_TRACE_SIG: &str =
-  "(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V";
+const DELIVER_TRACE_SIG: &str = "(JLjava/lang/String;Ljava/lang/String;)Z";
 
 // Flips to false when the consumer should exit on the next iteration.
 static SHOULD_KEEP_DELIVERING: Lazy<Arc<Mutex<bool>>> = Lazy::new(|| Arc::new(Mutex::new(true)));
@@ -132,6 +137,20 @@ impl ElideTracingLayer {
   }
 }
 
+// High-res debug logs util function to use before logging has initialized.
+fn trace_log(msg: &str) {
+  if DEBUG_LOGS && TRACE_LOGS {
+    eprintln!("[native:trace] {}", msg);
+  }
+}
+
+// Simple debug log fn to use before logging has initialized.
+fn debug_log(msg: &str) {
+  if DEBUG_LOGS {
+    eprintln!("[native:trace] {}", msg);
+  }
+}
+
 // Implements a tracing subscriber as an installable layer.
 impl<S> Layer<S> for ElideTracingLayer
 where
@@ -200,6 +219,7 @@ pub(crate) fn deliver_log(record: &log::Record) {
   if !USE_JVM_LOG_INTEGRATION {
     return;
   }
+  debug_log("delivering native log");
   let (state_ref, condvar_ref) = &*BUFFER_STATE;
   let mut state = state_ref.lock().unwrap();
   let condvar = Arc::clone(condvar_ref);
@@ -221,6 +241,7 @@ pub(crate) fn deliver_trace(event: &Event<'_>) {
   if !USE_JVM_LOG_INTEGRATION {
     return;
   }
+  debug_log("delivering native trace");
   let (state_ref, condvar_ref) = &*BUFFER_STATE;
   let mut state = state_ref.lock().unwrap();
   let condvar = Arc::clone(condvar_ref);
@@ -250,6 +271,8 @@ pub(crate) fn shutdown_consumer_thread() {
   if !USE_JVM_LOG_INTEGRATION {
     return;
   }
+
+  debug_log("shutting down log consumer");
   {
     let mut should_deliver = SHOULD_KEEP_DELIVERING.lock().unwrap();
     *should_deliver = false;
@@ -262,21 +285,27 @@ pub(crate) fn shutdown_consumer_thread() {
   condvar.notify_all();
 }
 
-/// Install the tracing subscriber.
-pub(crate) fn register_tracing_subscriber() {
-  let subscriber = VmTraceChannel::new().with(ElideTracingLayer::new());
+// Main log subscriber.
+static MAIN_SUBSCRIBER: LazyLock<VmTraceChannel> = LazyLock::new(|| VmTraceChannel::new());
 
-  match tracing::subscriber::set_global_default(subscriber) {
-    Ok(_) => {}
+/// Install the tracing and log subscriber.
+pub(crate) fn register_handlers() {
+  debug_log("registering trace subscriber");
+  let logger = &*MAIN_SUBSCRIBER;
+  let tracer = VmTraceChannel::new().with(ElideTracingLayer::new());
+
+  match tracing::subscriber::set_global_default(tracer) {
+    Ok(_) => {
+      debug_log("registering log handler");
+      let boxed: Box<(dyn log::Log + 'static)> = Box::new(logger);
+      log::set_boxed_logger(boxed)
+        .map(|()| log::set_max_level(MAX_LOG_LEVEL))
+        .expect("failed to set logger");
+    }
     Err(err) => {
       eprintln!("failed to initialize native tracing subscriber: {}", err)
     }
   }
-}
-
-/// Install the log handler for bridging to JVM.
-pub(crate) fn register_log_handler() {
-  // nothing yet
 }
 
 /// Start the event buffer consumer thread; this will begin consuming events, and delivering them to the active JVM.
@@ -284,6 +313,7 @@ pub(crate) fn start_consumer_thread() {
   if !USE_JVM_LOG_INTEGRATION {
     return;
   }
+  debug_log("starting consumer thread");
   let (state_ref, condvar_ref) = &*BUFFER_STATE;
   let state = Arc::clone(state_ref);
   let condvar = Arc::clone(condvar_ref);
@@ -304,6 +334,7 @@ pub(crate) fn start_consumer_thread() {
     };
 
     // Find the receiver class
+    debug_log("locating trace native receiver");
     let receiver_class = env.find_class(TRACE_UTILS_CLASS).unwrap_or_else(|_| {
       panic!(
         "failed to locate event receiver class `{}`",
@@ -312,34 +343,43 @@ pub(crate) fn start_consumer_thread() {
     });
 
     // Cache method IDs for better performance
-    let _log_delivery = env
+    debug_log("plucking log delivery method");
+    let log_delivery = env
       .get_static_method_id(&receiver_class, DELIVER_LOG_METHOD, DELIVER_LOG_SIG)
       .expect("failed to resolve log delivery method");
 
-    let _trace_delivery = env
+    debug_log("plucking trace delivery method");
+    let trace_delivery = env
       .get_static_method_id(&receiver_class, DELIVER_TRACE_METHOD, DELIVER_TRACE_SIG)
       .expect("failed to resolve trace delivery method");
 
     loop {
       // check exit flag
+      trace_log("(consumer) tick");
       if !*keep_delivering.lock().unwrap() {
+        debug_log("instructed to halt; breaking consumer loop");
         break;
       }
+      trace_log("(consumer) no halt");
       let mut guard = state.lock().unwrap();
       while guard.buffer.is_empty() && !guard.shutdown {
+        trace_log("(consumer) wait - empty");
         guard = condvar.wait(guard).unwrap();
       }
       if guard.shutdown && guard.buffer.is_empty() {
+        trace_log("(consumer) exit - empty + shutdown");
         break;
       }
 
       // drain events
+      debug_log("draining events");
       let logs = guard.buffer.drain_logs();
       let traces = guard.buffer.drain_traces();
       drop(guard);
 
       // deliver logs
       for event in logs {
+        trace_log("draining log event");
         let j_level = env
           .new_string(&event.level)
           .unwrap_or_else(|_| JObject::null().into());
@@ -353,25 +393,44 @@ pub(crate) fn start_consumer_thread() {
           .new_string(&event.thread_name)
           .unwrap_or_else(|_| JObject::null().into());
 
-        let log_result = env.call_static_method(
-          &receiver_class,
-          DELIVER_LOG_METHOD,
-          DELIVER_LOG_SIG,
-          &[
-            JValue::Object(j_level.as_ref()),
-            JValue::Object(j_target.as_ref()),
-            JValue::Object(j_message.as_ref()),
-            JValue::Object(j_thread.as_ref()),
-          ],
-        );
+        let log_result = if USE_PRELOADED_METHODS {
+          unsafe {
+            env.call_static_method_unchecked(
+              &receiver_class,
+              log_delivery,
+              ReturnType::Primitive(Boolean),
+              &[
+                JValue::Object(j_level.as_ref()).as_jni(),
+                JValue::Object(j_target.as_ref()).as_jni(),
+                JValue::Object(j_message.as_ref()).as_jni(),
+                JValue::Object(j_thread.as_ref()).as_jni(),
+              ],
+            )
+          }
+        } else {
+          env.call_static_method(
+            &receiver_class,
+            DELIVER_LOG_METHOD,
+            DELIVER_LOG_SIG,
+            &[
+              JValue::Object(j_level.as_ref()),
+              JValue::Object(j_target.as_ref()),
+              JValue::Object(j_message.as_ref()),
+              JValue::Object(j_thread.as_ref()),
+            ],
+          )
+        };
 
         if let Err(e) = log_result {
           eprintln!("Failed to deliver log to JVM: {:?}", e);
+        } else {
+          debug_log("log event delivered");
         }
       }
 
       // deliver traces
       for trace in traces {
+        trace_log("draining trace event");
         let j_level = env
           .new_string(&trace.level)
           .unwrap_or_else(|_| JObject::null().into());
@@ -380,40 +439,39 @@ pub(crate) fn start_consumer_thread() {
           .unwrap_or_else(|_| JObject::null().into());
         let j_timestamp = trace.timestamp as jlong;
 
-        let trace_result = env.call_static_method(
-          &receiver_class,
-          DELIVER_TRACE_METHOD,
-          DELIVER_TRACE_SIG,
-          &[
-            JValue::Long(j_timestamp),
-            JValue::Object(j_level.as_ref()),
-            JValue::Object(j_message.as_ref()),
-          ],
-        );
+        let trace_result = if USE_PRELOADED_METHODS {
+          unsafe {
+            env.call_static_method_unchecked(
+              &receiver_class,
+              trace_delivery,
+              ReturnType::Primitive(Boolean),
+              &[
+                JValue::Long(j_timestamp).as_jni(),
+                JValue::Object(j_level.as_ref()).as_jni(),
+                JValue::Object(j_message.as_ref()).as_jni(),
+              ],
+            )
+          }
+        } else {
+          env.call_static_method(
+            &receiver_class,
+            DELIVER_TRACE_METHOD,
+            DELIVER_TRACE_SIG,
+            &[
+              JValue::Long(j_timestamp),
+              JValue::Object(j_level.as_ref()),
+              JValue::Object(j_message.as_ref()),
+            ],
+          )
+        };
 
         if let Err(e) = trace_result {
           eprintln!("Failed to deliver trace to JVM: {:?}", e);
+        } else {
+          debug_log("trace event delivered");
         }
       }
     }
+    debug_log("consumer thread exiting");
   });
 }
-
-/*
-jvm log flush:
-
-    let jvm = active_java_vm();
-    let mut env = jvm
-      .attach_current_thread()
-      .expect("failed to attach to JVM");
-    let utils_cls = env
-      .find_class(TRACE_UTILS_CLASS)
-      .expect("failed to locate native trace utils");
-
-    env
-      .call_static_method(utils_cls, FLUSH_LOGS_METHOD, "()Z", &[])
-      .expect("Failed to call lookupLoggerEnabled")
-      .z()
-      .expect("Failed to get boolean result from lookupLoggerEnabled");
-
-*/

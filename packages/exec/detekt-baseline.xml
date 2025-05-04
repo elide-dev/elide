@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>FunctionOnlyReturningConstant:TraceNative.kt$TraceNative$@JvmStatic @JvmName("deliverNativeLog") public fun deliverNativeLog( level: String?, target: String?, message: String?, thread: String?, ): Boolean</ID>
+    <ID>FunctionOnlyReturningConstant:TraceNative.kt$TraceNative$@JvmStatic @JvmName("deliverNativeLog") public fun deliverNativeLog(record: LogRecord): Boolean</ID>
+    <ID>FunctionOnlyReturningConstant:TraceNative.kt$TraceNative$@JvmStatic @JvmName("deliverNativeTrace") public fun deliverNativeTrace( timestamp: Long?, level: String?, message: String?, ): Boolean</ID>
+    <ID>FunctionOnlyReturningConstant:TraceNative.kt$TraceNative$@JvmStatic @JvmName("deliverNativeTrace") public fun deliverNativeTrace(record: TraceRecord): Boolean</ID>
+    <ID>FunctionOnlyReturningConstant:TraceNative.kt$TraceNative$@JvmStatic @JvmName("flushNativeLoggers") public fun flushNativeLoggers(): Boolean</ID>
+    <ID>MatchingDeclarationName:TracingImpl.kt$DefaultTraceChannel : TraceChannel</ID>
+    <ID>SwallowedException:TraceNative.kt$TraceNative$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:TraceNative.kt$TraceNative$e: Exception</ID>
+    <ID>UnusedParameter:TraceNative.kt$TraceNative$level: String?</ID>
+    <ID>UnusedParameter:TraceNative.kt$TraceNative$message: String?</ID>
+    <ID>UnusedParameter:TraceNative.kt$TraceNative$record: LogRecord</ID>
+    <ID>UnusedParameter:TraceNative.kt$TraceNative$record: TraceRecord</ID>
+    <ID>UnusedParameter:TraceNative.kt$TraceNative$target: String?</ID>
+    <ID>UnusedParameter:TraceNative.kt$TraceNative$thread: String?</ID>
+    <ID>UnusedParameter:TraceNative.kt$TraceNative$timestamp: Long?</ID>
+  </CurrentIssues>
+</SmellBaseline>

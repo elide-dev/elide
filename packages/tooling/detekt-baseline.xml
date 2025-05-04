@@ -1,7 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>LongMethod:JvmBuildConfigurator.kt$JvmBuildConfigurator$@Suppress("unused", "UnusedVariable") override fun contribute(state: ElideBuildState, config: BuildConfigurator.BuildConfiguration)</ID>
-  </CurrentIssues>
+  <CurrentIssues/>
 </SmellBaseline>

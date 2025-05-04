@@ -115,6 +115,7 @@ jsr310 = "2.9.8"
 junit-jupiter = "5.12.0"
 junit-platform = "1.11.4"
 junixsocket = "2.8.3"
+purl = "1.5.0"
 kapshot = "0.2.0"
 koin = "3.4.3"
 koin-ksp = "1.2.2"
@@ -715,6 +716,7 @@ picocli = { group = "info.picocli", name = "picocli", version.ref = "picocli" }
 picocli-codegen = { group = "info.picocli", name = "picocli-codegen", version.ref = "picocli" }
 picocli-jansi-graalvm = { group = "info.picocli", name = "picocli-jansi-graalvm", version.ref = "picocli-jansi-graalvm" }
 picocli-jline3 = { group = "info.picocli", name = "picocli-shell-jline3", version.ref = "picocli" }
+purl = { group = "com.github.package-url", name = "packageurl-java", version.ref = "purl" }
 pkl-cli = { group = "org.pkl-lang", name = "pkl-cli", version.ref = "pkl" }
 pkl-codegen-java = { group = "org.pkl-lang", name = "pkl-codegen-java", version.ref = "pkl" }
 pkl-commons-cli = { group = "org.pkl-lang", name = "pkl-commons-cli", version.ref = "pkl" }

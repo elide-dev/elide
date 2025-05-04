@@ -24,11 +24,11 @@ import kotlin.io.path.exists
 import elide.runtime.Logging
 import elide.tool.Arguments
 import elide.tool.Tool
-import elide.tool.project.codecs.NodeManifestCodec
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.js.resolver.NpmResolver
+import elide.tooling.project.codecs.NodeManifestCodec
 import elide.tooling.project.manifest.NodePackageManifest
 
 /**

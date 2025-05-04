@@ -10,10 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("INACCESSIBLE_TYPE")
 
-package elide.tool.project.codecs
+package elide.tooling.project.codecs
 
 import org.apache.maven.model.building.DefaultModelBuilderFactory
 import org.apache.maven.model.building.DefaultModelBuildingRequest
@@ -38,18 +37,16 @@ import jakarta.inject.Provider
 import kotlin.io.path.Path
 import kotlin.io.path.name
 import elide.tooling.project.ProjectEcosystem.MavenPom
-import elide.tooling.project.codecs.ManifestCodec
-import elide.tooling.project.codecs.PackageManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.MavenPomManifest
 
-@ManifestCodec(MavenPom) class MavenPomManifestCodec (
+@ManifestCodec(MavenPom) public class MavenPomManifestCodec (
   private val repoSystemProvider: Provider<RepositorySystem>,
   private val repoSessionProvider: Provider<RepositorySystemSession>,
   private val remoteRepositoryManagerProvider: Provider<RemoteRepositoryManager>,
   private val repositoriesProvider: Provider<List<RemoteRepository>>,
 ) : PackageManifestCodec<MavenPomManifest> {
-  class MavenModelProblems (val problems: List<ModelProblem>): IOException()
+  public class MavenModelProblems (public val problems: List<ModelProblem>): IOException()
 
   private val repoSystem: RepositorySystem by lazy { repoSystemProvider.get() }
   private val repoSession: RepositorySystemSession by lazy { repoSessionProvider.get() }
@@ -110,7 +107,7 @@ import elide.tooling.project.manifest.MavenPomManifest
     }
   }
 
-  companion object {
+  private companion object {
     const val DEFAULT_EXTENSION = "xml"
     const val DEFAULT_NAME = "pom"
   }

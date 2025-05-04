@@ -1,3 +1,17 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+@file:Suppress("MnInjectionPoints")
+
 package elide.tool.project
 
 import java.io.InputStream
@@ -23,6 +37,8 @@ class CompositePackageManifestService @Inject constructor (
   private val pythonRequirementsCodecProvider: Provider<PackageManifestCodec<PythonRequirementsManifest>>,
   @ManifestCodec(ProjectEcosystem.MavenPom)
   private val mavenPomCodecProvider: Provider<PackageManifestCodec<MavenPomManifest>>,
+  @ManifestCodec(ProjectEcosystem.GradleCatalog)
+  private val gradleCatalogCodecProvider: Provider<PackageManifestCodec<GradleCatalogManifest>>,
 ) : PackageManifestService {
 
   private val elideCodec by lazy { elideCodecProvider.get() }
@@ -30,6 +46,7 @@ class CompositePackageManifestService @Inject constructor (
   private val pyProjectCodec by lazy { pyProjectCodecProvider.get() }
   private val pythonRequirementsCodec by lazy { pythonRequirementsCodecProvider.get() }
   private val mavenPomCodec by lazy { mavenPomCodecProvider.get() }
+  private val gradleCatalogCodec by lazy { gradleCatalogCodecProvider.get() }
 
   private val allCodecs by lazy {
     sequenceOf(
@@ -38,6 +55,7 @@ class CompositePackageManifestService @Inject constructor (
       pyProjectCodec,
       pythonRequirementsCodec,
       mavenPomCodec,
+      gradleCatalogCodec,
     )
   }
 
@@ -47,8 +65,9 @@ class CompositePackageManifestService @Inject constructor (
     ProjectEcosystem.Node -> nodeCodec
     ProjectEcosystem.Python -> pyProjectCodec
     ProjectEcosystem.PythonRequirements -> pythonRequirementsCodec
+    ProjectEcosystem.MavenPom -> mavenPomCodec
+    ProjectEcosystem.GradleCatalog -> gradleCatalogCodec
     ProjectEcosystem.Ruby -> error("Ruby environments are not supported yet")
-    ProjectEcosystem.MavenPom -> error("Maven POMs are not supported yet")
   } as PackageManifestCodec<PackageManifest>
 
   @Suppress("UNCHECKED_CAST")
@@ -58,6 +77,7 @@ class CompositePackageManifestService @Inject constructor (
     is PyProjectManifest -> pyProjectCodec
     is PythonRequirementsManifest -> pythonRequirementsCodec
     is MavenPomManifest -> mavenPomCodec
+    is GradleCatalogManifest -> gradleCatalogCodec
   } as PackageManifestCodec<PackageManifest>
 
   override fun resolve(root: Path, ecosystem: ProjectEcosystem): Path {

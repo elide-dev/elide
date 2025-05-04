@@ -181,6 +181,7 @@ public data class ElidePackageManifest(
     val enableDefaultRepositories: Boolean = true,
   ) : DependencyEcosystemConfig {
     public fun hasPackages(): Boolean = packages.isNotEmpty() || testPackages.isNotEmpty()
+    public fun allPackages(): Sequence<MavenPackage> = (packages.asSequence() + testPackages.asSequence()).distinct()
   }
 
   @JvmRecord @Serializable public data class PipDependencies(

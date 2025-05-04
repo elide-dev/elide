@@ -10,8 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
-package elide.tool.project.codecs
+package elide.tooling.project.codecs
 
 import org.pkl.config.java.ConfigEvaluatorBuilder
 import org.pkl.config.java.mapper.Conversion
@@ -38,13 +37,11 @@ import kotlin.io.path.nameWithoutExtension
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.JvmTarget
-import elide.tooling.project.codecs.ManifestCodec
-import elide.tooling.project.codecs.PackageManifestCodec
 
 @ManifestCodec(ProjectEcosystem.Elide)
-class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
+public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
   // Enables resolution of resources from the `elide:` protocol scheme.
-  class ElidePklResourceReader: ResourceReader {
+  public class ElidePklResourceReader: ResourceReader {
     override fun getUriScheme(): String = "elide"
     override fun isGlobbable(): Boolean = true
     override fun hasHierarchicalUris(): Boolean = true
@@ -54,7 +51,7 @@ class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
     }
   }
 
-  class ElideBuiltinModuleKey (private val uri: URI): ModuleKey, ResolvedModuleKey {
+  public class ElideBuiltinModuleKey (private val uri: URI): ModuleKey, ResolvedModuleKey {
     private companion object {
       private const val PKL_BUILTIN_PREFIX = "/META-INF/elide/pkl/"
     }
@@ -86,7 +83,7 @@ class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
   }
 
   // Enables module loading for the `elide:` protocol scheme.
-  class ElidePklModuleKeyFactory: ModuleKeyFactory {
+  public class ElidePklModuleKeyFactory: ModuleKeyFactory {
     override fun create(uri: URI): Optional<ModuleKey> {
       if (uri.scheme == "elide") {
         return ElideBuiltinModuleKey(uri).let { Optional.of(it) }
@@ -194,7 +191,7 @@ class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
   override fun fromElidePackage(source: ElidePackageManifest): ElidePackageManifest = source.copy()
   override fun toElidePackage(source: ElidePackageManifest): ElidePackageManifest = source.copy()
 
-  companion object {
+  private companion object {
     const val DEFAULT_EXTENSION = "pkl"
     const val DEFAULT_NAME = "elide"
   }

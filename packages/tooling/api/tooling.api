@@ -304,6 +304,270 @@ public abstract interface class elide/tooling/deps/DependencyResolver$PyPiResolv
 	public fun getEcosystem ()Lelide/tooling/deps/DependencyEcosystem;
 }
 
+public abstract interface class elide/tooling/deps/PackageSpec {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$Companion;
+	public static final field LATEST_VERSION Ljava/lang/String;
+	public static final field PREFIX_MAVEN Ljava/lang/String;
+	public static final field PREFIX_NPM Ljava/lang/String;
+	public static final field PREFIX_PIP Ljava/lang/String;
+	public static final field SNAPSHOT_VERSION Ljava/lang/String;
+	public static final field STABLE_VERSION Ljava/lang/String;
+	public abstract fun getAmbiguous ()Z
+	public abstract fun getEcosystem ()Lelide/tooling/deps/DependencyEcosystem;
+	public abstract fun getFormatted ()Ljava/lang/String;
+	public abstract fun getModule ()Ljava/lang/String;
+	public abstract fun getNamespace ()Ljava/lang/String;
+	public abstract fun getPurl ()Lcom/github/packageurl/PackageURL;
+	public abstract fun getString ()Ljava/lang/String;
+	public abstract fun getVersion ()Lelide/tooling/deps/PackageSpec$Version;
+	public static fun parse (Ljava/lang/String;Lelide/tooling/project/ElideProject;)Lelide/tooling/deps/PackageSpec;
+	public static fun tryParse (Ljava/lang/String;Lelide/tooling/project/ElideProject;)Lelide/tooling/deps/PackageSpec;
+}
+
+public final class elide/tooling/deps/PackageSpec$AmbiguousEcosystem : elide/tooling/deps/PackageSpec$ParseError {
+	public fun <init> ()V
+	public final fun getCandidates ()Ljava/util/List;
+}
+
+public final class elide/tooling/deps/PackageSpec$Companion {
+	public static final field LATEST_VERSION Ljava/lang/String;
+	public static final field PREFIX_MAVEN Ljava/lang/String;
+	public static final field PREFIX_NPM Ljava/lang/String;
+	public static final field PREFIX_PIP Ljava/lang/String;
+	public static final field SNAPSHOT_VERSION Ljava/lang/String;
+	public static final field STABLE_VERSION Ljava/lang/String;
+	public final fun parse (Ljava/lang/String;Lelide/tooling/project/ElideProject;)Lelide/tooling/deps/PackageSpec;
+	public static synthetic fun parse$default (Lelide/tooling/deps/PackageSpec$Companion;Ljava/lang/String;Lelide/tooling/project/ElideProject;ILjava/lang/Object;)Lelide/tooling/deps/PackageSpec;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public final fun tryParse (Ljava/lang/String;Lelide/tooling/project/ElideProject;)Lelide/tooling/deps/PackageSpec;
+	public static synthetic fun tryParse$default (Lelide/tooling/deps/PackageSpec$Companion;Ljava/lang/String;Lelide/tooling/project/ElideProject;ILjava/lang/Object;)Lelide/tooling/deps/PackageSpec;
+}
+
+public final class elide/tooling/deps/PackageSpec$MavenPackageSpec : elide/tooling/deps/PackageSpec$SpecializedPackageSpec {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$MavenPackageSpec$Companion;
+	public fun getFormatted ()Ljava/lang/String;
+	public final fun getGroupId ()Ljava/lang/String;
+	public fun getModule ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun getNamespace ()Ljava/lang/String;
+}
+
+public final class elide/tooling/deps/PackageSpec$MavenPackageSpec$Companion : elide/tooling/deps/PackageSpec$SpecializedPackageSpecParser {
+	public fun parse (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$MavenPackageSpec;
+	public synthetic fun parse (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SpecializedPackageSpec;
+}
+
+public final class elide/tooling/deps/PackageSpec$NoVersion : elide/tooling/deps/PackageSpec$Version {
+	public static final field INSTANCE Lelide/tooling/deps/PackageSpec$NoVersion;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getFormatted ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/deps/PackageSpec$NpmPackageSpec : elide/tooling/deps/PackageSpec$SpecializedPackageSpec {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$NpmPackageSpec$Companion;
+	public fun getFormatted ()Ljava/lang/String;
+	public fun getModule ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public fun getNamespace ()Ljava/lang/String;
+	public final fun getScope ()Ljava/lang/String;
+}
+
+public final class elide/tooling/deps/PackageSpec$NpmPackageSpec$Companion : elide/tooling/deps/PackageSpec$SpecializedPackageSpecParser {
+	public fun parse (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$NpmPackageSpec;
+	public synthetic fun parse (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SpecializedPackageSpec;
+}
+
+public final class elide/tooling/deps/PackageSpec$NpmSemverOperator : java/lang/Enum, elide/tooling/deps/PackageSpec$SemverOperator {
+	public static final field CARET Lelide/tooling/deps/PackageSpec$NpmSemverOperator;
+	public static final field Companion Lelide/tooling/deps/PackageSpec$NpmSemverOperator$Companion;
+	public static final field TILDE Lelide/tooling/deps/PackageSpec$NpmSemverOperator;
+	public fun getEffective ()Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getFormatted ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$NpmSemverOperator;
+	public static fun values ()[Lelide/tooling/deps/PackageSpec$NpmSemverOperator;
+}
+
+public final class elide/tooling/deps/PackageSpec$NpmSemverOperator$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class elide/tooling/deps/PackageSpec$ParseError : java/lang/Exception {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class elide/tooling/deps/PackageSpec$PipPackageSpec : elide/tooling/deps/PackageSpec$SpecializedPackageSpec {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$PipPackageSpec$Companion;
+	public fun getFormatted ()Ljava/lang/String;
+	public fun getModule ()Ljava/lang/String;
+	public fun getNamespace ()Ljava/lang/String;
+}
+
+public final class elide/tooling/deps/PackageSpec$PipPackageSpec$Companion : elide/tooling/deps/PackageSpec$SpecializedPackageSpecParser {
+	public fun parse (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$PipPackageSpec;
+	public synthetic fun parse (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SpecializedPackageSpec;
+}
+
+public final class elide/tooling/deps/PackageSpec$SemanticVersion : elide/tooling/deps/PackageSpec$Version {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$SemanticVersion$Companion;
+	public static final synthetic fun box-impl (Lorg/semver4j/Semver;)Lelide/tooling/deps/PackageSpec$SemanticVersion;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lorg/semver4j/Semver;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lorg/semver4j/Semver;Lorg/semver4j/Semver;)Z
+	public fun getFormatted ()Ljava/lang/String;
+	public static fun getFormatted-impl (Lorg/semver4j/Semver;)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lorg/semver4j/Semver;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lorg/semver4j/Semver;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lorg/semver4j/Semver;
+}
+
+public final class elide/tooling/deps/PackageSpec$SemanticVersion$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/deps/PackageSpec$SemanticVersion$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize-feEs_2A (Lkotlinx/serialization/encoding/Decoder;)Lorg/semver4j/Semver;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize-lvB3Mmw (Lkotlinx/serialization/encoding/Encoder;Lorg/semver4j/Semver;)V
+}
+
+public final class elide/tooling/deps/PackageSpec$SemanticVersion$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/deps/PackageSpec$SemanticVersionRange : elide/tooling/deps/PackageSpec$Version {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$SemanticVersionRange$Companion;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/tooling/deps/PackageSpec$SemanticVersionRange;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public fun getFormatted ()Ljava/lang/String;
+	public static fun getFormatted-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/tooling/deps/PackageSpec$SemanticVersionRange$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/deps/PackageSpec$SemanticVersionRange$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize-2QLoWv0 (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize-wgC37mI (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+}
+
+public final class elide/tooling/deps/PackageSpec$SemanticVersionRange$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/deps/PackageSpec$SemverOperator {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$SemverOperator$Companion;
+	public abstract fun getEffective ()Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public abstract fun getFormatted ()Ljava/lang/String;
+}
+
+public final class elide/tooling/deps/PackageSpec$SemverOperator$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/deps/PackageSpec$SimpleSemverOperator : java/lang/Enum, elide/tooling/deps/PackageSpec$SemverOperator {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$SimpleSemverOperator$Companion;
+	public static final field EQUALS Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public static final field GREATER_THAN Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public static final field GREATER_THAN_OR_EQUALS Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public static final field LESS_THAN Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public static final field LESS_THAN_OR_EQUALS Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public fun getEffective ()Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getFormatted ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+	public static fun values ()[Lelide/tooling/deps/PackageSpec$SimpleSemverOperator;
+}
+
+public final class elide/tooling/deps/PackageSpec$SimpleSemverOperator$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class elide/tooling/deps/PackageSpec$SpecializedPackageSpec : elide/tooling/deps/PackageSpec {
+	public synthetic fun <init> (Lelide/tooling/deps/DependencyEcosystem;Lelide/tooling/deps/PackageSpec$Version;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getAmbiguous ()Z
+	public fun getEcosystem ()Lelide/tooling/deps/DependencyEcosystem;
+	public fun getPurl ()Lcom/github/packageurl/PackageURL;
+	public fun getString ()Ljava/lang/String;
+	public fun getVersion ()Lelide/tooling/deps/PackageSpec$Version;
+}
+
+public abstract class elide/tooling/deps/PackageSpec$SpecializedPackageSpecParser {
+	public abstract fun parse (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SpecializedPackageSpec;
+}
+
+public final class elide/tooling/deps/PackageSpec$SymbolicVersion : java/lang/Enum, elide/core/api/Symbolic, elide/tooling/deps/PackageSpec$Version {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$SymbolicVersion$Companion;
+	public static final field LATEST Lelide/tooling/deps/PackageSpec$SymbolicVersion;
+	public static final field SNAPSHOT Lelide/tooling/deps/PackageSpec$SymbolicVersion;
+	public static final field STABLE Lelide/tooling/deps/PackageSpec$SymbolicVersion;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun getFormatted ()Ljava/lang/String;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SymbolicVersion;
+	public static fun values ()[Lelide/tooling/deps/PackageSpec$SymbolicVersion;
+}
+
+public final class elide/tooling/deps/PackageSpec$SymbolicVersion$Companion : elide/core/api/Symbolic$SealedResolver {
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$SymbolicVersion;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/deps/PackageSpec$Version {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$Version$Companion;
+	public abstract fun getFormatted ()Ljava/lang/String;
+}
+
+public final class elide/tooling/deps/PackageSpec$Version$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/deps/PackageSpec$VersionString : elide/tooling/deps/PackageSpec$Version {
+	public static final field Companion Lelide/tooling/deps/PackageSpec$VersionString$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/deps/PackageSpec$VersionString;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun getFormatted ()Ljava/lang/String;
+	public static fun getFormatted-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final fun getVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/tooling/deps/PackageSpec$VersionString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/deps/PackageSpec$VersionString$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize-mf9Hjcw (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize-bukAN28 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+}
+
+public final class elide/tooling/deps/PackageSpec$VersionString$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public synthetic class elide/tooling/js/resolver/$NpmResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V

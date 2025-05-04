@@ -1,5 +1,3 @@
-import elide.internal.conventions.kotlin.KotlinTarget
-
 /*
  * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
@@ -12,6 +10,8 @@ import elide.internal.conventions.kotlin.KotlinTarget
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
+import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
   alias(libs.plugins.elide.conventions)
@@ -48,6 +48,8 @@ dependencies {
   api(libs.pkl.core)
   api(libs.pkl.config.java)
   api(libs.pkl.config.kotlin)
+  implementation(libs.semver)
+  implementation(libs.purl)
   implementation(libs.mordant)
   implementation(libs.mordant.coroutines)
   implementation(libs.mordant.markdown)

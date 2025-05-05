@@ -101,7 +101,7 @@ jobs:
           java-version: "24"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Initialize CodeQL"
-        uses: github/codeql-action/init@28deaeda66b76a05916b6923827895f2b14ab387 # v3.28.16
+        uses: github/codeql-action/init@60168efe1c415ce0f5521ea06d5c2062adbeed1b # v3.28.17
         with:
           config-file: ./.github/codeql/codeql-config.yml
           languages: ${{ matrix.language }}
@@ -126,5 +126,5 @@ jobs:
             -x nativeCompile
             -x nativeOptimizedCompile
       - name: "Analysis: CodeQL"
-        uses: github/codeql-action/analyze@28deaeda66b76a05916b6923827895f2b14ab387 # v3.28.16
+        uses: github/codeql-action/analyze@60168efe1c415ce0f5521ea06d5c2062adbeed1b # v3.28.17
         continue-on-error: true

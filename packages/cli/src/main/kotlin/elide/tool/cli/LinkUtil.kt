@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Suppress("DEPRECATION")
-internal suspend fun CommandContext.promptForLink(
+internal fun CommandContext.promptForLink(
   redirectTarget: String,
   forThing: String,
   promptMessage: String = "Open link",
@@ -32,7 +32,7 @@ internal suspend fun CommandContext.promptForLink(
     "Open the link for $forThing? 'No' will print it in the console",
     default = false,
   )
-  if (openLink) withContext(Dispatchers.IO) {
+  if (openLink) {
     val os = System.getProperty("os.name", "unknown").lowercase()
     when {
       os.contains("windows") -> {

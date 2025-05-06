@@ -12,6 +12,7 @@
  */
 package elide.exec
 
+import org.graalvm.nativeimage.ImageInfo
 import kotlinx.atomicfu.atomic
 
 /**
@@ -39,10 +40,12 @@ public object Tracing {
 
   // Load the native trace library.
   private fun loadNative() {
-    try {
-      System.loadLibrary(LIB_NAME)
-    } catch (err: UnsatisfiedLinkError) {
-      throw IllegalStateException("Failed to load 'lib$LIB_NAME' native code", err)
+    if (!ImageInfo.inImageCode()) {
+      try {
+        System.loadLibrary(LIB_NAME)
+      } catch (err: UnsatisfiedLinkError) {
+        throw IllegalStateException("Failed to load 'lib$LIB_NAME' native code", err)
+      }
     }
   }
 
@@ -55,19 +58,17 @@ public object Tracing {
    */
   public fun ensureLoaded() {
     if (!initialized.value) {
-      synchronized(this) {
-        loadNative()
-        initialize().also {
-          check(it == 0) { "Failed to initialize native trace layer: code $it" }
-          initialized.compareAndSet(false, true)
-        }
-        // add a shutdown hook to clean up the tracing layer; this also flushes any final events
-        Runtime.getRuntime().addShutdownHook(Thread {
-          flush()
-          shutdown()
-          initialized.compareAndSet(true, false)
-        })
+      loadNative()
+      initialize().also {
+        check(it == 0) { "Failed to initialize native trace layer: code $it" }
+        initialized.compareAndSet(false, true)
       }
+      // add a shutdown hook to clean up the tracing layer; this also flushes any final events
+      Runtime.getRuntime().addShutdownHook(Thread {
+        flush()
+        shutdown()
+        initialized.compareAndSet(true, false)
+      })
     }
   }
 

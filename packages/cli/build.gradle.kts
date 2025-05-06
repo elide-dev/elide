@@ -722,6 +722,7 @@ val enabledFeatures = listOfNotNull(
   "elide.runtime.feature.engine.NativeConsoleFeature",
   "elide.runtime.feature.js.FetchFeature",
   "elide.tool.feature.LocalInferenceFeature",
+  "elide.runtime.feature.engine.NativeTraceFeature",
   onlyIf(enablePython, "elide.runtime.feature.python.PythonFeature"),
   onlyIf(enableNativeTransportV2, "elide.runtime.feature.engine.NativeTransportFeature"),
   onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),
@@ -876,6 +877,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tooling.jvm.JavadocToolKt",
   "elide.tooling.kotlin.DetektKt",
   "org.apache.http.impl.auth.NTLMEngineImpl",
+  "elide.exec.Tracing",
 
   // @TODO switch to built-in brotli
   "org.apache.commons.compress.compressors.brotli.BrotliCompressorInputStream",
@@ -1514,6 +1516,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libposix.a",
   "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
+  "-H:NativeLinkerOption=$nativesPath/libtrace.a",
   "-H:NativeLinkerOption=-lm",
   "-H:NativeLinkerOption=-lstdc++",
 ).plus(if (oracleGvm) listOf(
@@ -1546,6 +1549,8 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=$nativesPath/libumbrella.a",
     "-H:NativeLinkerOption=$nativesPath/libjs.a",
     "-H:NativeLinkerOption=$nativesPath/libposix.a",
+    "-H:NativeLinkerOption=$nativesPath/libtrace.a",
+    "-H:NativeLinkerOption=$nativesPath/libexec.a",
     "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
     "-H:NativeLinkerOption=$nativesPath/libterminal.a",
     "-H:NativeLinkerOption=-lm",

@@ -11,33 +11,36 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-use crate::channel::VmTraceChannel;
 use jni::objects::{JObject, JValue};
 use jni::signature::Primitive::Boolean;
 use jni::signature::ReturnType;
-use jni::sys::jlong;
+use jni::sys::{jint, jlong};
+use log::Level;
 use once_cell::sync::Lazy;
 use std::collections::VecDeque;
-use std::sync::{Arc, Condvar, LazyLock, Mutex};
+use std::sync::{Arc, Condvar, Mutex};
 use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 use substrate::vm::active_java_vm;
 use tracing_core::field::Visit;
-use tracing_core::{Event, Field, Subscriber};
+use tracing_core::span::{Attributes, Id};
+use tracing_core::{Event, Field, LevelFilter, Metadata, Subscriber};
 use tracing_subscriber::Layer;
 use tracing_subscriber::layer::{Context, SubscriberExt};
+use tracing_subscriber::util::SubscriberInitExt;
 
 const DEBUG_LOGS: bool = false;
 const TRACE_LOGS: bool = false;
 const USE_JVM_LOG_INTEGRATION: bool = true;
-const USE_PRELOADED_METHODS: bool = false;
+const USE_PRELOADED_METHODS: bool = true;
 const MAX_LOG_LEVEL: log::LevelFilter = log::LevelFilter::Info;
+const MAX_EVENT_LEVEL: log::Level = log::Level::Info;
 const TRACE_UTILS_CLASS: &str = "elide/exec/TraceNative";
 const DELIVER_LOG_METHOD: &str = "deliverNativeLog";
 const DELIVER_LOG_SIG: &str =
   "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z";
 const DELIVER_TRACE_METHOD: &str = "deliverNativeTrace";
-const DELIVER_TRACE_SIG: &str = "(JLjava/lang/String;Ljava/lang/String;)Z";
+const DELIVER_TRACE_SIG: &str = "(JJIILjava/lang/String;)Z";
 
 // Flips to false when the consumer should exit on the next iteration.
 static SHOULD_KEEP_DELIVERING: Lazy<Arc<Mutex<bool>>> = Lazy::new(|| Arc::new(Mutex::new(true)));
@@ -51,12 +54,48 @@ struct LogEvent {
   thread_name: String,
 }
 
+/// Indicates the type of trace event.
+#[derive(Debug, Clone, Default)]
+enum TraceEventType {
+  #[default]
+  Event = 0,
+  Enter = 1,
+  Exit = 2,
+}
+
 /// In-memory structure for buffered trace events.
-#[derive(Debug)]
+#[derive(Debug, Clone, Default)]
 struct TraceEvent {
   timestamp: u64,
-  level: String,
-  message: String,
+  kind: TraceEventType,
+  id: Option<u64>,
+  level: Option<Level>,
+  message: Option<String>,
+}
+
+/// Converts a tracing level to a log level.
+fn trace_level_to_log_level(level: &tracing_core::metadata::Level) -> Level {
+  match *level {
+    tracing_core::metadata::Level::TRACE => Level::Trace,
+    tracing_core::metadata::Level::DEBUG => Level::Debug,
+    tracing_core::metadata::Level::INFO => Level::Info,
+    tracing_core::metadata::Level::WARN => Level::Warn,
+    tracing_core::metadata::Level::ERROR => Level::Error,
+  }
+}
+
+/// Return an integer code indicating the severity level.
+fn code_for_level(level: Option<Level>) -> jint {
+  match level {
+    Some(value) => match value {
+      Level::Error => 1,
+      Level::Warn => 2,
+      Level::Info => 3,
+      Level::Debug => 4,
+      Level::Trace => 5,
+    },
+    None => 0,
+  }
 }
 
 /// Container which holds buffers for log and trace events, as well as methods to deliver them.
@@ -76,6 +115,7 @@ impl VmEventBuffer {
   }
 
   fn push_log(&mut self, event: LogEvent) {
+    debug_log(format!("pushing log event: {:?}", event).as_str());
     if self.logs.len() == self.capacity {
       // if buffer is full, remove oldest element
       self.logs.pop_front();
@@ -84,6 +124,15 @@ impl VmEventBuffer {
   }
 
   fn push_trace(&mut self, event: TraceEvent) {
+    let level = event.level;
+    if level.is_some() {
+      let level = level.unwrap();
+      if level > MAX_EVENT_LEVEL {
+        trace_log(format!("skipping event (not severe enough): {:?}", event).as_str());
+        return;
+      }
+    }
+    debug_log(format!("pushing trace event: {:?}", event).as_str());
     if self.traces.len() == self.capacity {
       // if buffer is full, remove oldest element
       self.traces.pop_front();
@@ -122,7 +171,7 @@ struct VmEventBufferState {
 static BUFFER_STATE: Lazy<(Arc<Mutex<VmEventBufferState>>, Arc<Condvar>)> = Lazy::new(|| {
   (
     Arc::new(Mutex::new(VmEventBufferState {
-      buffer: VmEventBuffer::new(1000),
+      buffer: VmEventBuffer::new(200),
       shutdown: false,
     })),
     Arc::new(Condvar::new()),
@@ -138,17 +187,26 @@ impl ElideTracingLayer {
 }
 
 // High-res debug logs util function to use before logging has initialized.
-fn trace_log(msg: &str) {
+pub(crate) fn trace_log(msg: &str) {
   if DEBUG_LOGS && TRACE_LOGS {
     eprintln!("[native:trace] {}", msg);
   }
 }
 
 // Simple debug log fn to use before logging has initialized.
-fn debug_log(msg: &str) {
+pub(crate) fn debug_log(msg: &str) {
   if DEBUG_LOGS {
     eprintln!("[native:trace] {}", msg);
   }
+}
+
+fn deliver_trace_event(event: TraceEvent) {
+  // deliver event
+  let (state_ref, condvar_ref) = &*BUFFER_STATE;
+  let mut state = state_ref.lock().unwrap();
+  let condvar = Arc::clone(condvar_ref);
+  state.buffer.push_trace(event);
+  condvar.notify_one();
 }
 
 // Implements a tracing subscriber as an installable layer.
@@ -156,8 +214,20 @@ impl<S> Layer<S> for ElideTracingLayer
 where
   S: Subscriber,
 {
+  fn enabled(&self, metadata: &Metadata<'_>, ctx: Context<'_, S>) -> bool {
+    true
+  }
+
+  fn on_new_span(&self, _attrs: &Attributes<'_>, id: &Id, _ctx: Context<'_, S>) {
+    trace_log(format!("layer: new span (id={})", id.into_u64()).as_str());
+  }
+
+  fn event_enabled(&self, _event: &Event<'_>, _ctx: Context<'_, S>) -> bool {
+    true
+  }
+
   fn on_event(&self, event: &Event<'_>, _ctx: Context<'_, S>) {
-    // Extract fields from the event
+    trace_log("layer: tracing event");
     let mut visitor = EventVisitor::default();
     event.record(&mut visitor);
 
@@ -167,18 +237,24 @@ where
       .unwrap_or_default()
       .as_millis() as u64;
 
-    let trace_event = TraceEvent {
-      timestamp,
-      level: metadata.level().to_string(),
-      message: visitor.message.unwrap_or_default(),
-    };
-
     // deliver event
-    let (state_ref, condvar_ref) = &*BUFFER_STATE;
-    let mut state = state_ref.lock().unwrap();
-    let condvar = Arc::clone(condvar_ref);
-    state.buffer.push_trace(trace_event);
-    condvar.notify_one();
+    deliver_trace_event(TraceEvent {
+      timestamp,
+      id: None,
+      kind: TraceEventType::Event,
+      level: Some(trace_level_to_log_level(metadata.level())),
+      message: Some(visitor.message.unwrap_or_default()),
+    });
+  }
+
+  fn on_enter(&self, id: &Id, _ctx: Context<'_, S>) {
+    trace_log("layer: tracing enter");
+    deliver_trace_enter(id.into_u64());
+  }
+
+  fn on_exit(&self, id: &Id, _ctx: Context<'_, S>) {
+    trace_log("layer: tracing exit");
+    deliver_trace_exit(id.into_u64());
   }
 }
 
@@ -236,6 +312,56 @@ pub(crate) fn deliver_log(record: &log::Record) {
   condvar.notify_one();
 }
 
+/// Acquire the shared buffer state and deliver a trace record of type 'enter'.
+pub(crate) fn deliver_trace_enter(id: u64) {
+  if !USE_JVM_LOG_INTEGRATION {
+    return;
+  }
+  debug_log("delivering native trace enter");
+  let (state_ref, condvar_ref) = &*BUFFER_STATE;
+  let mut state = state_ref.lock().unwrap();
+  let condvar = Arc::clone(condvar_ref);
+  let timestamp = SystemTime::now()
+    .duration_since(UNIX_EPOCH)
+    .unwrap_or_default()
+    .as_millis() as u64;
+
+  state.buffer.push_trace(TraceEvent {
+    timestamp,
+    id: Some(id),
+    kind: TraceEventType::Enter,
+    level: None,
+    message: None,
+  });
+
+  condvar.notify_one();
+}
+
+/// Acquire the shared buffer state and deliver a trace record of type 'exit'.
+pub(crate) fn deliver_trace_exit(id: u64) {
+  if !USE_JVM_LOG_INTEGRATION {
+    return;
+  }
+  debug_log("delivering native trace exit");
+  let (state_ref, condvar_ref) = &*BUFFER_STATE;
+  let mut state = state_ref.lock().unwrap();
+  let condvar = Arc::clone(condvar_ref);
+  let timestamp = SystemTime::now()
+    .duration_since(UNIX_EPOCH)
+    .unwrap_or_default()
+    .as_millis() as u64;
+
+  state.buffer.push_trace(TraceEvent {
+    timestamp,
+    id: Some(id),
+    kind: TraceEventType::Exit,
+    level: None,
+    message: None,
+  });
+
+  condvar.notify_one();
+}
+
 /// Acquire the shared buffer state and deliver a trace record.
 pub(crate) fn deliver_trace(event: &Event<'_>) {
   if !USE_JVM_LOG_INTEGRATION {
@@ -247,9 +373,6 @@ pub(crate) fn deliver_trace(event: &Event<'_>) {
   let condvar = Arc::clone(condvar_ref);
   let metadata = event.metadata();
   let level = metadata.level();
-  let level_str = level.to_string();
-  // let message = metadata.message();
-  let message_str = "sample".to_string();
   let timestamp = SystemTime::now()
     .duration_since(UNIX_EPOCH)
     .unwrap_or_default()
@@ -258,8 +381,10 @@ pub(crate) fn deliver_trace(event: &Event<'_>) {
   // init trace event, then push it to the buffer
   state.buffer.push_trace(TraceEvent {
     timestamp,
-    level: level_str,
-    message: message_str,
+    id: None,
+    kind: TraceEventType::Event,
+    level: Some(trace_level_to_log_level(level)),
+    message: None,
   });
 
   // notify the consumer that it has work
@@ -286,26 +411,37 @@ pub(crate) fn shutdown_consumer_thread() {
 }
 
 // Main log subscriber.
-static MAIN_SUBSCRIBER: LazyLock<VmTraceChannel> = LazyLock::new(|| VmTraceChannel::new());
+// static MAIN_SUBSCRIBER: LazyLock<VmTraceChannel> = LazyLock::new(VmTraceChannel::new);
+
+// Flag indicating initialization has already occurred for logging/tracing handlers.
+static INITIALIZED: Lazy<Mutex<bool>> = Lazy::new(|| Mutex::new(false));
 
 /// Install the tracing and log subscriber.
 pub(crate) fn register_handlers() {
-  debug_log("registering trace subscriber");
-  let logger = &*MAIN_SUBSCRIBER;
-  let tracer = VmTraceChannel::new().with(ElideTracingLayer::new());
-
-  match tracing::subscriber::set_global_default(tracer) {
-    Ok(_) => {
-      debug_log("registering log handler");
-      let boxed: Box<(dyn log::Log + 'static)> = Box::new(logger);
-      log::set_boxed_logger(boxed)
-        .map(|()| log::set_max_level(MAX_LOG_LEVEL))
-        .expect("failed to set logger");
-    }
-    Err(err) => {
-      eprintln!("failed to initialize native tracing subscriber: {}", err)
-    }
+  // don't register repeatedly
+  let mut initialized = INITIALIZED.lock().unwrap();
+  if *initialized {
+    debug_log("handlers already registered; skipping");
+    return;
   }
+  *initialized = true;
+
+  debug_log("building trace subscriber registry");
+  let builder = tracing_subscriber::registry();
+
+  debug_log("registering trace subscriber");
+  builder
+    .with(
+      tracing_subscriber::fmt::layer()
+        .without_time()
+        .with_target(true)
+        .with_filter(LevelFilter::from_level(tracing_core::Level::TRACE)),
+    )
+    .with(ElideTracingLayer::new())
+    .try_init()
+    .expect("failed to register elide's tracing layer");
+
+  tracing::trace!("tracing initialized")
 }
 
 /// Start the event buffer consumer thread; this will begin consuming events, and delivering them to the active JVM.
@@ -431,14 +567,23 @@ pub(crate) fn start_consumer_thread() {
       // deliver traces
       for trace in traces {
         trace_log("draining trace event");
-        let j_level = env
-          .new_string(&trace.level)
-          .unwrap_or_else(|_| JObject::null().into());
-        let j_message = env
-          .new_string(&trace.message)
-          .unwrap_or_else(|_| JObject::null().into());
+        let j_level = code_for_level(trace.level);
+
+        let j_message = match trace.message {
+          Some(msg) => env
+            .new_string(&msg)
+            .unwrap_or_else(|_| JObject::null().into()),
+
+          _ => JObject::null().into(),
+        };
+
+        let j_id = match trace.id {
+          Some(trace_id) => trace_id as jlong,
+          None => 0,
+        };
         let j_timestamp = trace.timestamp as jlong;
 
+        let j_type: jint = trace.kind as jint;
         let trace_result = if USE_PRELOADED_METHODS {
           unsafe {
             env.call_static_method_unchecked(
@@ -447,7 +592,9 @@ pub(crate) fn start_consumer_thread() {
               ReturnType::Primitive(Boolean),
               &[
                 JValue::Long(j_timestamp).as_jni(),
-                JValue::Object(j_level.as_ref()).as_jni(),
+                JValue::Long(j_id).as_jni(),
+                JValue::Int(j_type).as_jni(),
+                JValue::Int(j_level).as_jni(),
                 JValue::Object(j_message.as_ref()).as_jni(),
               ],
             )
@@ -459,7 +606,9 @@ pub(crate) fn start_consumer_thread() {
             DELIVER_TRACE_SIG,
             &[
               JValue::Long(j_timestamp),
-              JValue::Object(j_level.as_ref()),
+              JValue::Long(j_id),
+              JValue::Int(j_type),
+              JValue::Int(j_level),
               JValue::Object(j_message.as_ref()),
             ],
           )

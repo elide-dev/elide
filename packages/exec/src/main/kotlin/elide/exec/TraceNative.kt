@@ -49,9 +49,22 @@ public object TraceNative {
    * consumed by the JVM layer upon trace delivery.
    */
   @JvmRecord public data class TraceRecord(
-    val severity: String? = null,
-    val message: String? = null,
-  )
+    public val timestamp: Long,
+    public val id: Long,
+    public val typeId: Int,
+    public val level: Int,
+    public val message: String?,
+  ) {
+    // Log-level severity for this trace record.
+    public val severity: Level get() = when (level) {
+      1 -> Level.ERROR
+      2 -> Level.WARN
+      3 -> Level.INFO
+      4 -> Level.DEBUG
+      5 -> Level.TRACE
+      else -> Level.ERROR  // default
+    }
+  }
 
   // Internal access to recently-delivered logs.
   internal fun allRecentLogs(): Sequence<LogRecord> {
@@ -121,23 +134,29 @@ public object TraceNative {
       recentTraces.remove()
     }
     recentTraces.add(record)
-
-    System.err.println("Received native trace !! $record")
-    System.err.flush()
+    Logging.root().warn("Received native trace ------- $record")
     return true //
   }
 
   // Primitive JNI up-call delivery for tracing.
-  // (JLjava/lang/String;Ljava/lang/String;)Z
+  // (JJIILjava/lang/String;)Z
   @JvmStatic
   @JvmName("deliverNativeTrace") public fun deliverNativeTrace(
     timestamp: Long,
-    level: String?,
+    id: Long,
+    typeId: Int,
+    level: Int,
     message: String?,
   ): Boolean {
-    System.err.println("Received native trace !! [timestamp=$timestamp], [level=$level], [message=$message]")
-    System.err.flush()
-    return true //
+    Logging.root().warn("Received native trace ------ " +
+                               "[timestamp=$timestamp] [id=$id] [type=$typeId] [level=$level] [message=$message]")
+    return deliverNativeTrace(TraceRecord(
+      timestamp = timestamp,
+      id = id,
+      typeId = typeId,
+      level = level,
+      message = message,
+    )) //
   }
 
   @JvmStatic

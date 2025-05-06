@@ -62,6 +62,8 @@ bumpalo = { workspace = true, optional = true }
 tikv-jemallocator = { workspace = true, optional = true }
 tokio = { workspace = true, optional = true }
 typeshare = { workspace = true }
+tracing = { workspace = true }
+tracing-futures = { workspace = true }
 
 ## Orogene
 orogene = { workspace = true, optional = true }

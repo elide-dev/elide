@@ -52,8 +52,9 @@ pub fn name_for_level(level: Level) -> &'static str {
 /// Initialize the native tracing layer.
 #[jni("elide.exec.Tracing")]
 pub fn initialize<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> jint {
-  start_consumer_thread();
+  ringbuf::debug_log("initializing tracing");
   register_handlers();
+  //start_consumer_thread();
   0
 }
 

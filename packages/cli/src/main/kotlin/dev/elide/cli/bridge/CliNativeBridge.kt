@@ -17,6 +17,7 @@ package dev.elide.cli.bridge
 
 import org.graalvm.nativeimage.ImageInfo
 import elide.exec.Execution
+import elide.exec.Tracing
 
 /**
  * # Native Bridge
@@ -33,6 +34,7 @@ object CliNativeBridge {
   /** Initialize the native layer. */
   @Synchronized public fun initialize() {
     if (!initialized && !ImageInfo.inImageCode()) {
+      Tracing.ensureLoaded()
       Execution.ensureLoaded()
       System.loadLibrary(NATIVE_LIB_NAME)
       initialized = true

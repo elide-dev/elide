@@ -464,7 +464,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     promptForLink(
       forThing = "the Elide playground",
       promptMessage = "Open the Elide Playground in a codespace?",
-      redirectTarget = PITCH_LINK,
+      redirectTarget = PLAYGROUND_LINK,
     )
   }
 

@@ -483,9 +483,7 @@ public class MavenAetherResolver internal constructor () :
         // @TODO don't return all artifacts, only those for the suite
         Classpath.from(packageArtifacts.flatMap { it.value.files }.map { it.toPath().absolute() })
       }
-    } ?: error(
-      "No classpath provider found for spec: $spec"
-    )
+    }
   }
 
   override fun close() {

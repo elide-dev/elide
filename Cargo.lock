@@ -499,9 +499,9 @@ dependencies = [
 
 [[package]]
 name = "backtrace"
-version = "0.3.74"
+version = "0.3.75"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d82cb332cdfaed17ae235a638438ac4d4839913cc2af585c3c6746e8f8bee1a"
+checksum = "6806a6321ec58106fea15becdad98371e28d92ccbc7c8f1b3b6dd724fe8f1002"
 dependencies = [
  "addr2line",
  "cfg-if",
@@ -965,9 +965,9 @@ dependencies = [
 
 [[package]]
 name = "clap_complete"
-version = "4.5.49"
+version = "4.5.50"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07ae023020f3bbb76bfd6c7b9dd3f903b40f60e4dc60696c303457c5c01e6cbe"
+checksum = "c91d3baa3bcd889d60e6ef28874126a0b384fd225ab83aa6d8a801c519194ce1"
 dependencies = [
  "clap",
 ]
@@ -1090,7 +1090,7 @@ checksum = "595aae20e65c3be792d05818e8c63025294ac3cb7e200f11459063a352a6ef80"
 dependencies = [
  "pathdiff",
  "serde",
- "winnow 0.7.9",
+ "winnow 0.7.10",
 ]
 
 [[package]]
@@ -2130,9 +2130,9 @@ checksum = "fbf6a919d6cf397374f7dfeeea91d974c7c0a7221d0d0f4f20d859d329e53fcc"
 
 [[package]]
 name = "hermit-abi"
-version = "0.5.0"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fbd780fe5cc30f81464441920d82ac8740e2e46b29a6fad543ddd075229ce37e"
+checksum = "f154ce46856750ed433c8649605bf7ed2de3bc35fd9d2a9f30cddd873c80cb08"
 
 [[package]]
 name = "hex"
@@ -2338,7 +2338,7 @@ dependencies = [
  "tokio",
  "tokio-rustls",
  "tower-service",
- "webpki-roots",
+ "webpki-roots 0.26.11",
 ]
 
 [[package]]
@@ -2706,7 +2706,7 @@ version = "0.4.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e04d7f318608d35d4b61ddd75cbdaee86b023ebe2bd5a66ee0915f0bf93095a9"
 dependencies = [
- "hermit-abi 0.5.0",
+ "hermit-abi 0.5.1",
  "libc",
  "windows-sys 0.59.0",
 ]
@@ -2923,9 +2923,9 @@ dependencies = [
 
 [[package]]
 name = "kqueue"
-version = "1.1.0"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cf0c5a3f977f1cebd92cf05ebb14e1c941c642fb57c9a7d4302455b33ba326f"
+checksum = "eac30106d7dce88daf4a3fcb4879ea939476d5074a9b7ddd0fb97fa4bed5596a"
 dependencies = [
  "kqueue-sys",
  "libc",
@@ -3392,7 +3392,7 @@ dependencies = [
 [[package]]
 name = "nassun"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "async-compression",
  "async-process",
@@ -3478,7 +3478,7 @@ dependencies = [
 [[package]]
 name = "node-maintainer"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "async-std",
  "colored",
@@ -3818,7 +3818,7 @@ dependencies = [
 [[package]]
 name = "oro-client"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3844,7 +3844,7 @@ dependencies = [
 [[package]]
 name = "oro-common"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "derive_builder",
  "indexmap 2.9.0",
@@ -3862,7 +3862,7 @@ dependencies = [
 [[package]]
 name = "oro-config"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "clap",
  "config",
@@ -3875,7 +3875,7 @@ dependencies = [
 [[package]]
 name = "oro-npm-account"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "async-std",
  "base64 0.22.1",
@@ -3893,7 +3893,7 @@ dependencies = [
 [[package]]
 name = "oro-package-spec"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "bytecount",
  "miette 7.6.0",
@@ -3907,7 +3907,7 @@ dependencies = [
 [[package]]
 name = "oro-pretty-json"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "serde_json",
 ]
@@ -3915,7 +3915,7 @@ dependencies = [
 [[package]]
 name = "oro-script"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "dunce",
  "miette 7.6.0",
@@ -3931,7 +3931,7 @@ dependencies = [
 [[package]]
 name = "oro-shim-bin"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "once_cell",
  "pathdiff",
@@ -3941,7 +3941,7 @@ dependencies = [
 [[package]]
 name = "orogene"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=024c67173c29ae2de79c4e5e113064bb79a2259a#024c67173c29ae2de79c4e5e113064bb79a2259a"
+source = "git+https://github.com/elide-dev/orogene?rev=b588243194126dda6899041317ef765c9e383827#b588243194126dda6899041317ef765c9e383827"
 dependencies = [
  "async-std",
  "async-trait",
@@ -5247,7 +5247,7 @@ dependencies = [
  "wasm-bindgen-futures",
  "wasm-streams",
  "web-sys",
- "webpki-roots",
+ "webpki-roots 0.26.11",
  "windows-registry 0.4.0",
 ]
 
@@ -6962,9 +6962,9 @@ source = "git+https://github.com/astral-sh/tl.git?rev=6e25b2ee2513d75385101a8ff9
 
 [[package]]
 name = "tokio"
-version = "1.44.2"
+version = "1.45.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6b88822cbe49de4185e3a4cbf8321dd487cf5fe0c5c65695fef6346371e9c48"
+checksum = "2513ca694ef9ede0fb23fe71a4ee4107cb102b9dc1930f6d0fd77aae068ae165"
 dependencies = [
  "backtrace",
  "bytes 1.10.1",
@@ -7090,7 +7090,7 @@ dependencies = [
  "serde_spanned",
  "toml_datetime",
  "toml_write",
- "winnow 0.7.9",
+ "winnow 0.7.10",
 ]
 
 [[package]]
@@ -7588,7 +7588,7 @@ dependencies = [
  "serde_json",
  "socks",
  "url",
- "webpki-roots",
+ "webpki-roots 0.26.11",
 ]
 
 [[package]]
@@ -9194,9 +9194,18 @@ dependencies = [
 
 [[package]]
 name = "webpki-roots"
-version = "0.26.10"
+version = "0.26.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37493cadf42a2a939ed404698ded7fb378bf301b5011f973361779a3a74f8c93"
+checksum = "521bc38abb08001b01866da9f51eb7c5d647a19260e00054a8c7fd5f9e57f7a9"
+dependencies = [
+ "webpki-roots 1.0.0",
+]
+
+[[package]]
+name = "webpki-roots"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2853738d1cc4f2da3a225c18ec6c3721abb31961096e9dbf5ab35fa88b19cfdb"
 dependencies = [
  "rustls-pki-types",
 ]
@@ -9685,9 +9694,9 @@ dependencies = [
 
 [[package]]
 name = "winnow"
-version = "0.7.9"
+version = "0.7.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d9fb597c990f03753e08d3c29efbfcf2019a003b4bf4ba19225c158e1549f0f3"
+checksum = "c06928c8748d81b05c9be96aad92e1b6ff01833332f281e8cfca3be4b35fc9ec"
 dependencies = [
  "memchr",
 ]

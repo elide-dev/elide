@@ -91,13 +91,9 @@ jni-sys = { version = "0.4.0" }
 libloading = { version = "0.8.6" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
-orogene = { git = "https://github.com/elide-dev/orogene", rev = "024c67173c29ae2de79c4e5e113064bb79a2259a", default-features = false, features = [
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "b588243194126dda6899041317ef765c9e383827", default-features = false, features = [
   "mimalloc",
 ] }
-#orogene = { path = "/home/sam/workspace/orogene", default-features = false, features = [
-#  # "tracing",
-#  "mimalloc",
-#] }
 rustc_version = { version = "0.4.1" }
 rustix = { version = "1.0.2", features = ["process"] }
 serde = { version = "1.0.218", default-features = false }

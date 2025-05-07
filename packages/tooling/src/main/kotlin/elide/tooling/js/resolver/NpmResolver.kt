@@ -251,6 +251,7 @@ public class NpmResolver @Inject constructor (
   private fun buildOrogeneArguments(): Arguments = Arguments.empty().toMutable().apply {
     add(Argument.of("--root" to packageRoot.absolutePathString()))
     add(Argument.of("--no-emoji"))
+    add(Argument.of("--no-progress"))
     add(Argument.of("--no-first-time"))
     add(Argument.of("--no-telemetry"))
   }.build()

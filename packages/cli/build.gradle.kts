@@ -1517,6 +1517,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
   "-H:NativeLinkerOption=$nativesPath/libtrace.a",
+  "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
   "-H:NativeLinkerOption=-lm",
   "-H:NativeLinkerOption=-lstdc++",
 ).plus(if (oracleGvm) listOf(
@@ -1553,6 +1554,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=$nativesPath/libexec.a",
     "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
     "-H:NativeLinkerOption=$nativesPath/libterminal.a",
+    "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
     "-H:NativeLinkerOption=-lm",
     "-H:NativeLinkerOption=-lgomp",
     "-H:ExcludeResources=.*dylib",
@@ -2101,6 +2103,11 @@ tasks {
     jvmDefs.map {
       systemProperty(it.key, it.value)
     }
+    // override: kotlin resources may not be built natively yet
+    systemProperty(
+      "elide.kotlinResources",
+      kotlinHomeRoot.get().asFile.resolve(libs.versions.kotlin.sdk.get()).absolutePath,
+    )
     systemProperty(
       "org.graalvm.language.ruby.home",
       layout.buildDirectory.dir("native/$nativeTargetType/resources/ruby/ruby-home").get().asFile.path.toString(),

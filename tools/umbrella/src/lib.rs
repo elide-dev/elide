@@ -67,18 +67,31 @@ use crate::tools::RUFF_INFO;
 #[cfg(feature = "uv")]
 use crate::tools::UV_INFO;
 use crate::tools::{API_VERSION, LIB_VERSION, ToolInfo};
-use exec::async_engine_safe;
 #[cfg(feature = "ruff")]
 use ruff::args::Args;
 #[cfg(feature = "ruff")]
 use ruff::{ExitStatus, run};
-use tracing::instrument::WithSubscriber;
+use tokio::runtime::Runtime;
 #[cfg(feature = "uv")]
 use uv::main as uv_main;
 
 mod tools;
 
 const DIAG_PORT: u16 = 5555;
+
+#[cfg(any(feature = "orogene", feature = "uv"))]
+static RUNTIME: OnceLock<Runtime> = OnceLock::new();
+
+/// Obtain the active Tokio runtime; if one is not already initialized, a new one will be created.
+#[cfg(any(feature = "orogene", feature = "uv"))]
+fn obtain_runtime() -> &'static Runtime {
+  RUNTIME.get_or_init(|| {
+    tokio::runtime::Builder::new_multi_thread()
+      .enable_all()
+      .build()
+      .expect("Failed building the Runtime")
+  })
+}
 
 #[cfg(feature = "diag")]
 fn initialize_console_diag() {
@@ -151,16 +164,33 @@ fn run_ruff_entry(args: Vec<std::ffi::OsString>) -> ExitStatus {
 
 #[cfg(feature = "orogene")]
 pub fn run_oro_with_args(args: Vec<std::ffi::OsString>) -> Result<()> {
+  // let cmd = clap::Command::new("orogene");
+  // let again = Orogene::augment_args(cmd);
+
+  // Execute the future, blocking the current thread until completion
+  // let runtime = async_engine_safe().expect("failed to resolve async runtime");
+  // let _guard = runtime.enter();
+  // let sub = runtime.with_current_subscriber();
+  // sub
+  //   .inner()
+  //   .block_on(Orogene::init_and_run(again, args).with_current_subscriber())
+  // Ok(())
+
+  // let cmd = clap::Command::new("orogene");
+  // let again = Orogene::augment_args(cmd);
+  //
+  // // Execute the future, blocking the current thread until completion
+  // let runtime = async_engine_safe().expect("failed to resolve async runtime");
+  // let _guard = runtime.enter();
+  // runtime.block_on(Orogene::init_and_run(again, args))
+
   let cmd = clap::Command::new("orogene");
   let again = Orogene::augment_args(cmd);
 
   // Execute the future, blocking the current thread until completion
-  let runtime = async_engine_safe().expect("failed to resolve async runtime");
+  let runtime = obtain_runtime();
   let _guard = runtime.enter();
-  let sub = runtime.with_current_subscriber();
-  sub
-    .inner()
-    .block_on(Orogene::init_and_run(again, args).with_current_subscriber())
+  runtime.block_on(Orogene::init_and_run(again, args))
 }
 
 // -- Entrypoint Functions

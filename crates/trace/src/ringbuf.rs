@@ -25,6 +25,7 @@ use substrate::vm::active_java_vm;
 use tracing_core::field::Visit;
 use tracing_core::span::{Attributes, Id};
 use tracing_core::{Event, Field, LevelFilter, Metadata, Subscriber};
+use tracing_log::NormalizeEvent;
 use tracing_subscriber::Layer;
 use tracing_subscriber::layer::{Context, SubscriberExt};
 use tracing_subscriber::util::SubscriberInitExt;
@@ -33,14 +34,15 @@ const DEBUG_LOGS: bool = false;
 const TRACE_LOGS: bool = false;
 const USE_JVM_LOG_INTEGRATION: bool = true;
 const USE_PRELOADED_METHODS: bool = true;
-const MAX_LOG_LEVEL: log::LevelFilter = log::LevelFilter::Info;
-const MAX_EVENT_LEVEL: log::Level = log::Level::Info;
 const TRACE_UTILS_CLASS: &str = "elide/exec/TraceNative";
 const DELIVER_LOG_METHOD: &str = "deliverNativeLog";
 const DELIVER_LOG_SIG: &str =
   "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z";
 const DELIVER_TRACE_METHOD: &str = "deliverNativeTrace";
-const DELIVER_TRACE_SIG: &str = "(JJIILjava/lang/String;)Z";
+const DELIVER_TRACE_SIG: &str = "(JJIILjava/lang/String;Ljava/lang/String;)Z";
+
+// Max level filter to apply.
+static MAX_LEVEL_FILTER: LevelFilter = LevelFilter::INFO;
 
 // Flips to false when the consumer should exit on the next iteration.
 static SHOULD_KEEP_DELIVERING: Lazy<Arc<Mutex<bool>>> = Lazy::new(|| Arc::new(Mutex::new(true)));
@@ -70,6 +72,7 @@ struct TraceEvent {
   kind: TraceEventType,
   id: Option<u64>,
   level: Option<Level>,
+  target: Option<String>,
   message: Option<String>,
 }
 
@@ -115,26 +118,16 @@ impl VmEventBuffer {
   }
 
   fn push_log(&mut self, event: LogEvent) {
-    debug_log(format!("pushing log event: {:?}", event).as_str());
+    trace_log(format!("pushing log event: {:?}", event).as_str());
     if self.logs.len() == self.capacity {
-      // if buffer is full, remove oldest element
       self.logs.pop_front();
     }
     self.logs.push_back(event);
   }
 
   fn push_trace(&mut self, event: TraceEvent) {
-    let level = event.level;
-    if level.is_some() {
-      let level = level.unwrap();
-      if level > MAX_EVENT_LEVEL {
-        trace_log(format!("skipping event (not severe enough): {:?}", event).as_str());
-        return;
-      }
-    }
-    debug_log(format!("pushing trace event: {:?}", event).as_str());
+    trace_log(format!("pushing trace event: {:?}", event).as_str());
     if self.traces.len() == self.capacity {
-      // if buffer is full, remove oldest element
       self.traces.pop_front();
     }
     self.traces.push_back(event);
@@ -214,7 +207,7 @@ impl<S> Layer<S> for ElideTracingLayer
 where
   S: Subscriber,
 {
-  fn enabled(&self, metadata: &Metadata<'_>, ctx: Context<'_, S>) -> bool {
+  fn enabled(&self, _metadata: &Metadata<'_>, _ctx: Context<'_, S>) -> bool {
     true
   }
 
@@ -236,6 +229,11 @@ where
       .duration_since(UNIX_EPOCH)
       .unwrap_or_default()
       .as_millis() as u64;
+    let target = if event.is_log() {
+      Some(event.metadata().target().to_string())
+    } else {
+      None
+    };
 
     // deliver event
     deliver_trace_event(TraceEvent {
@@ -243,6 +241,7 @@ where
       id: None,
       kind: TraceEventType::Event,
       level: Some(trace_level_to_log_level(metadata.level())),
+      target,
       message: Some(visitor.message.unwrap_or_default()),
     });
   }
@@ -332,6 +331,7 @@ pub(crate) fn deliver_trace_enter(id: u64) {
     kind: TraceEventType::Enter,
     level: None,
     message: None,
+    target: None,
   });
 
   condvar.notify_one();
@@ -357,37 +357,9 @@ pub(crate) fn deliver_trace_exit(id: u64) {
     kind: TraceEventType::Exit,
     level: None,
     message: None,
+    target: None,
   });
 
-  condvar.notify_one();
-}
-
-/// Acquire the shared buffer state and deliver a trace record.
-pub(crate) fn deliver_trace(event: &Event<'_>) {
-  if !USE_JVM_LOG_INTEGRATION {
-    return;
-  }
-  debug_log("delivering native trace");
-  let (state_ref, condvar_ref) = &*BUFFER_STATE;
-  let mut state = state_ref.lock().unwrap();
-  let condvar = Arc::clone(condvar_ref);
-  let metadata = event.metadata();
-  let level = metadata.level();
-  let timestamp = SystemTime::now()
-    .duration_since(UNIX_EPOCH)
-    .unwrap_or_default()
-    .as_millis() as u64;
-
-  // init trace event, then push it to the buffer
-  state.buffer.push_trace(TraceEvent {
-    timestamp,
-    id: None,
-    kind: TraceEventType::Event,
-    level: Some(trace_level_to_log_level(level)),
-    message: None,
-  });
-
-  // notify the consumer that it has work
   condvar.notify_one();
 }
 
@@ -410,9 +382,6 @@ pub(crate) fn shutdown_consumer_thread() {
   condvar.notify_all();
 }
 
-// Main log subscriber.
-// static MAIN_SUBSCRIBER: LazyLock<VmTraceChannel> = LazyLock::new(VmTraceChannel::new);
-
 // Flag indicating initialization has already occurred for logging/tracing handlers.
 static INITIALIZED: Lazy<Mutex<bool>> = Lazy::new(|| Mutex::new(false));
 
@@ -431,13 +400,7 @@ pub(crate) fn register_handlers() {
 
   debug_log("registering trace subscriber");
   builder
-    .with(
-      tracing_subscriber::fmt::layer()
-        .without_time()
-        .with_target(true)
-        .with_filter(LevelFilter::from_level(tracing_core::Level::TRACE)),
-    )
-    .with(ElideTracingLayer::new())
+    .with(ElideTracingLayer::new().with_filter(MAX_LEVEL_FILTER))
     .try_init()
     .expect("failed to register elide's tracing layer");
 
@@ -453,7 +416,6 @@ pub(crate) fn start_consumer_thread() {
   let (state_ref, condvar_ref) = &*BUFFER_STATE;
   let state = Arc::clone(state_ref);
   let condvar = Arc::clone(condvar_ref);
-  let keep_delivering = Arc::clone(&SHOULD_KEEP_DELIVERING);
 
   // Spawn only one thread to handle the consumer loop
   thread::spawn(move || {
@@ -492,6 +454,7 @@ pub(crate) fn start_consumer_thread() {
     loop {
       // check exit flag
       trace_log("(consumer) tick");
+      let keep_delivering = SHOULD_KEEP_DELIVERING.clone();
       if !*keep_delivering.lock().unwrap() {
         debug_log("instructed to halt; breaking consumer loop");
         break;
@@ -567,7 +530,19 @@ pub(crate) fn start_consumer_thread() {
       // deliver traces
       for trace in traces {
         trace_log("draining trace event");
+        let j_id = match trace.id {
+          Some(trace_id) => trace_id as jlong,
+          None => 0,
+        };
+        let j_timestamp = trace.timestamp as jlong;
+        let j_type: jint = trace.kind as jint;
         let j_level = code_for_level(trace.level);
+        let j_target = match trace.target {
+          Some(target) => env
+            .new_string(&target)
+            .unwrap_or_else(|_| JObject::null().into()),
+          None => JObject::null().into(),
+        };
 
         let j_message = match trace.message {
           Some(msg) => env
@@ -577,13 +552,6 @@ pub(crate) fn start_consumer_thread() {
           _ => JObject::null().into(),
         };
 
-        let j_id = match trace.id {
-          Some(trace_id) => trace_id as jlong,
-          None => 0,
-        };
-        let j_timestamp = trace.timestamp as jlong;
-
-        let j_type: jint = trace.kind as jint;
         let trace_result = if USE_PRELOADED_METHODS {
           unsafe {
             env.call_static_method_unchecked(
@@ -595,6 +563,7 @@ pub(crate) fn start_consumer_thread() {
                 JValue::Long(j_id).as_jni(),
                 JValue::Int(j_type).as_jni(),
                 JValue::Int(j_level).as_jni(),
+                JValue::Object(j_target.as_ref()).as_jni(),
                 JValue::Object(j_message.as_ref()).as_jni(),
               ],
             )
@@ -609,6 +578,7 @@ pub(crate) fn start_consumer_thread() {
               JValue::Long(j_id),
               JValue::Int(j_type),
               JValue::Int(j_level),
+              JValue::Object(j_target.as_ref()),
               JValue::Object(j_message.as_ref()),
             ],
           )

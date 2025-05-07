@@ -48,18 +48,6 @@ pub struct VmTraceChannel {
   pub tracing: bool,
 }
 
-impl VmTraceChannel {
-  pub(crate) fn new() -> VmTraceChannel {
-    VmTraceChannel {
-      id: 0,
-      current: CurrentSpanPerThread::new(),
-      span_id_tip: AtomicUsize::new(1),
-      logging: true,
-      tracing: true,
-    }
-  }
-}
-
 /// Implements logging facilities for VM channels.
 impl Log for VmTraceChannel {
   fn enabled(&self, _metadata: &log::Metadata) -> bool {
@@ -94,7 +82,7 @@ impl CurrentSpanPerThread {
   pub fn new() -> Self {
     thread_local! {
       static CURRENT: RefCell<Vec<Id>> = const { RefCell::new(Vec::new()) };
-    };
+    }
     Self { current: &CURRENT }
   }
 

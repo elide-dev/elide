@@ -25,9 +25,11 @@ pub fn has_java_vm() -> bool {
 /// Initialize the active Java VM with the provided VM instance.
 pub fn init_java_vm(vm: JavaVM) {
   // don't let the static overwrite
-  JAVA_VM
-    .set(vm)
-    .expect("failed to set java vm: already initialized");
+  if !has_java_vm() {
+    JAVA_VM
+      .set(vm)
+      .expect("failed to set java vm: already initialized");
+  }
 }
 
 /// Retrieve the Java VM without checking presence.

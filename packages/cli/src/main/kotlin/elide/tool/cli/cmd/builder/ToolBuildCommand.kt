@@ -207,7 +207,6 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
       on(TaskCompleted) {
         val task = context as Task
         val scope = requireNotNull(taskMap[task.id])
-        scope.verbose { "Finished ${task.id}" }
         scope.success()
       }
       on(TaskProgress) {

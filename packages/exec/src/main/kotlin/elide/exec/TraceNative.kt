@@ -53,7 +53,8 @@ public object TraceNative {
     public val id: Long,
     public val typeId: Int,
     public val level: Int,
-    public val message: String?,
+    public val message: String? = null,
+    public val target: String? = null,
   ) {
     // Log-level severity for this trace record.
     public val severity: Level get() = when (level) {
@@ -134,8 +135,23 @@ public object TraceNative {
       recentTraces.remove()
     }
     recentTraces.add(record)
-    Logging.root().warn("Received native trace ------- $record")
-    return true //
+
+    when (val message = record.message?.ifEmpty { null }?.ifBlank { null }) {
+      null -> {}  // do nothing
+      else -> when (val loggerTarget = record.target) {
+        null -> Logging.root()
+        else -> Logging.named(loggerTarget)
+      }.let { logger ->
+        when (record.severity) {
+          Level.TRACE -> logger.trace(message)
+          Level.DEBUG -> logger.debug(message)
+          Level.WARN -> logger.warn(message)
+          Level.INFO -> logger.info(message)
+          Level.ERROR -> logger.error(message)
+        }
+      }
+    }
+    return true
   }
 
   // Primitive JNI up-call delivery for tracing.
@@ -146,21 +162,19 @@ public object TraceNative {
     id: Long,
     typeId: Int,
     level: Int,
+    target: String?,
     message: String?,
-  ): Boolean {
-    Logging.root().warn("Received native trace ------ " +
-                               "[timestamp=$timestamp] [id=$id] [type=$typeId] [level=$level] [message=$message]")
-    return deliverNativeTrace(TraceRecord(
-      timestamp = timestamp,
-      id = id,
-      typeId = typeId,
-      level = level,
-      message = message,
-    )) //
-  }
+  ): Boolean = deliverNativeTrace(TraceRecord(
+    timestamp = timestamp,
+    id = id,
+    typeId = typeId,
+    level = level,
+    target = target,
+    message = message,
+  ))
 
   @JvmStatic
   @JvmName("flushNativeLoggers") public fun flushNativeLoggers(): Boolean {
-    return true //
+    return true
   }
 }

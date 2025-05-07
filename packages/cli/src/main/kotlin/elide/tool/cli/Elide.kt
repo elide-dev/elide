@@ -451,7 +451,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   )
   internal var args: List<String>? = null
 
-  private suspend fun CommandContext.openElidePitch() {
+  private fun CommandContext.openElidePitch() {
     promptForLink(
       forThing = "the Elide pitch",
       promptMessage = "Open Elide's pitch?",
@@ -460,7 +460,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     )
   }
 
-  private suspend fun CommandContext.openElidePlayground() {
+  private fun CommandContext.openElidePlayground() {
     promptForLink(
       forThing = "the Elide playground",
       promptMessage = "Open the Elide Playground in a codespace?",

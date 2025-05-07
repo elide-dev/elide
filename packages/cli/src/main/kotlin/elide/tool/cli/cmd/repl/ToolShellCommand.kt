@@ -72,6 +72,7 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.math.max
+import kotlin.streams.asSequence
 import kotlin.streams.asStream
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -315,6 +316,15 @@ internal class ToolShellCommand @Inject constructor(
     defaultValue = "false",
   )
   internal var languages: Boolean = false
+
+  /** Enables installation before run. */
+  @Option(
+    names = ["--install"],
+    description = ["Install dependencies before running"],
+    negatable = true,
+    defaultValue = "true",
+  )
+  internal var doInstall: Boolean = true
 
   /** Specifies that `stdin` should be used to read the script. */
   @Option(
@@ -1468,32 +1478,32 @@ internal class ToolShellCommand @Inject constructor(
   }
 
   // Amend a base classpath with any additional resolved project dependencies.
-  private fun withProjectClasspath(project: ElideProject, base: Sequence<Path>): Sequence<Path> {
+  private fun withProjectClasspath(project: ElideProject, base: Sequence<Path>): List<Path> {
     return when (project.manifest.dependencies.maven.hasPackages()) {
       // the project doesn't specify any maven dependencies; return the base classpath
-      false -> base
+      false -> base.toList()
 
       // the project defines maven dependencies; assemble a classpath and return.
-      else -> sequence {
-        runBlocking {
+      else -> runBlocking {
+        val runtimeClasspath = if (!doInstall) null else {
           val mavenResolver = BuildDriver.configure(beanContext, project).let {
             resolve(it, dependencies(it).await()).also {
               it.second.joinAll()
             }.first.filterIsInstance<MavenAetherResolver>().first()
           }
-          val runtimeClasspath = mavenResolver.classpathProvider(object: ClasspathSpec {
+          mavenResolver.classpathProvider(object: ClasspathSpec {
             override val usage: MultiPathUsage get() = MultiPathUsage.Runtime
           })?.classpath()
-
-          Classpath.empty().toMutable().apply {
-            base.forEach { add(it) }
-
-            // the user's classpath goes first
-            runtimeClasspath?.let { prepend(it) }
-          }.asSequence().map {
-            it.path
-          }
         }
+
+        Classpath.empty().toMutable().apply {
+          base.forEach { add(it) }
+
+          // the user's classpath goes first
+          runtimeClasspath?.let { prepend(it) }
+        }.map {
+          it.path
+        }.toList()
       }
     }
   }
@@ -1619,9 +1629,16 @@ internal class ToolShellCommand @Inject constructor(
             System.setProperty("java.home", javaHome)
           }
 
-          val langResources = gvmResources.resolve("kotlin")
+          val langResourcesRelative = gvmResources.resolve("kotlin")
             .resolve(KotlinLanguage.VERSION)
             .resolve("lib")
+
+          val kotlinSpecificResources = System.getProperty("elide.kotlinResources")
+            ?.let { Path(it) }
+            ?.let { it.resolve("lib") }
+
+          val langResources = kotlinSpecificResources ?: langResourcesRelative
+
           val langHomeResources = Path(System.getProperty("user.home"))
             .resolve("elide")
             .resolve("resources")
@@ -1641,10 +1658,10 @@ internal class ToolShellCommand @Inject constructor(
           }
 
           val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
-          val fullClasspath: Sequence<Path> = (
+          val fullClasspath: List<Path> = (
             when (extraHome) {
               null -> emptySequence()
-              else -> initialGuestClasspathJars(Path(extraHome))
+              else -> initialGuestClasspathJars(Path(extraHome).resolve("lib"))
             }
           ).plus(
             pathsFromLangResources
@@ -1652,13 +1669,13 @@ internal class ToolShellCommand @Inject constructor(
             pathsFromHomeResources
           ).distinct().asStream().parallel().filter {
             Files.exists(it)
-          }.toList().asSequence().let {
+          }.let {
             when (project) {
               // with no active project, just return the initial classpath
-              null -> it
+              null -> it.toList()
 
               // otherwise, assemble a classpath from the base and any project deps
-              else -> withProjectClasspath(project, it)
+              else -> withProjectClasspath(project, it.asSequence())
             }
           }
 
@@ -1670,7 +1687,7 @@ internal class ToolShellCommand @Inject constructor(
             logging.debug("Configuring JVM")
             resourcesPath = gvmResources
             multithreading = !langs.contains(JS)
-            classpath(fullClasspath)
+            classpath(fullClasspath.map { it.absolutePathString() })
             javaHome?.let { guestJavaHome = it }
           }.also {
             configure(elide.runtime.plugins.java.Java) {
@@ -1743,7 +1760,7 @@ internal class ToolShellCommand @Inject constructor(
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
-    Elide.requestNatives(server = true, tooling = false)
+    Elide.requestNatives(server = true, tooling = doInstall)
 
     // resolve project configuration (async)
     val projectResolution = launch {

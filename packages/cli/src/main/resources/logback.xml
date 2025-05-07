@@ -13,7 +13,7 @@
 <configuration debug="false">
   <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
   <variable name="APPENDER" value="${log.file.root:-ASYNC_LAZY}" />
-  <variable name="ROOT_LOGLEVEL" value="${elide.logging.root.level:-warn}" />
+  <variable name="ROOT_LOGLEVEL" value="${elide.logging.root.level:-info}" />
   <serializeModel file="packages/cli/src/main/resources/logback.scmo" />
   <contextName>elide</contextName>
 
@@ -39,7 +39,7 @@
     <target>System.out</target>
     <immediateFlush>true</immediateFlush>
     <encoder>
-      <pattern>%msg%n</pattern>
+      <pattern>%magenta(elide) %msg%n</pattern>
     </encoder>
   </appender>
 
@@ -105,8 +105,7 @@
   <logger name="elide.tooling.jvm.JvmBuildConfigurator" level="warn" />
   <logger name="elide.tooling.AbstractTool" level="warn" />
   <logger name="elide.exec.ActionScope" level="warn" />
-  <logger name="trace::nativeLog" level="trace" />
-  <logger name="orogene*" level="info" />
+  <logger name="io.micronaut.context.env.DefaultEnvironment" level="off" />
 
   <!-- Server/Tool Logger -->
   <logger name="tool" additivity="false">

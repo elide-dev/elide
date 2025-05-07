@@ -96,6 +96,7 @@ import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.runtime.gvm.kotlin.KotlinPrecompiler
 import elide.runtime.gvm.kotlin.KotlinScriptCallable
 import elide.runtime.intrinsics.server.http.HttpServerAgent
+import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
@@ -162,6 +163,7 @@ private typealias ContextAccessor = () -> PolyglotContext
     "r",
     "serve",
     "repl",
+    "test",
   ],
   customSynopsis = [
     "",
@@ -999,17 +1001,17 @@ internal class ToolShellCommand @Inject constructor(
   }
 
   // Handle an error which occurred within guest code.
-  private fun processUserCodeError(language: GuestLanguage, exc: PolyglotException): Throwable? {
+  private fun processUserCodeError(language: GuestLanguage, exc: PolyglotException, msg: String? = null): Throwable? {
     when {
       exc.isSyntaxError -> displayFormattedError(
         exc,
-        exc.message ?: "Syntax error",
+        msg ?: exc.message ?: "Syntax error",
         "Check ${language.label} syntax",
       )
 
       exc.isIncompleteSource -> displayFormattedError(
         exc,
-        exc.message ?: "Syntax error",
+        msg ?: exc.message ?: "Syntax error",
         "${language.label} syntax is incomplete",
       )
 
@@ -1018,13 +1020,13 @@ internal class ToolShellCommand @Inject constructor(
           // guest error thrown from host-side logic
           is GuestError -> displayFormattedError(
             exc,
-            exc.message ?: "An error was thrown",
+            msg ?: exc.message ?: "An error was thrown",
             stacktrace = !isInteractive(),
           )
 
           else -> displayFormattedError(
             exc.asHostException(),
-            exc.asHostException().message ?: "A runtime error was thrown",
+            msg ?: exc.asHostException().message ?: "A runtime error was thrown",
             advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
             stacktrace = true,
             internal = true,
@@ -1040,7 +1042,7 @@ internal class ToolShellCommand @Inject constructor(
 
       exc.isGuestException -> displayFormattedError(
         exc,
-        exc.message ?: "An error was thrown",
+        msg ?: exc.message ?: "An error was thrown",
         stacktrace = !isInteractive(),
       )
 
@@ -1052,7 +1054,7 @@ internal class ToolShellCommand @Inject constructor(
 
       exc.isInternalError -> displayFormattedError(
         exc,
-        exc.message ?: "An error was thrown",
+        msg ?: exc.message ?: "An error was thrown",
         internal = true,
       )
 
@@ -1294,12 +1296,26 @@ internal class ToolShellCommand @Inject constructor(
     }
   }
 
+  private val commandSpecifiesTest: Boolean by lazy {
+    Statics.args.let {
+      it.contains("test") || it.contains("tests")
+    }
+  }
+
   // Detect whether we are running in `serve` mode (with alias `start`).
   private fun serveMode(): Boolean = (
           commandSpecifiesServer ||
                   executeServe ||
                   actionHint?.lowercase()?.trim().let {
                     it != null && it == "serve" || it == "start"
+                  }
+          )
+
+  // Detect whether we are running in `test` mode (with alias `test` or `tests`).
+  private fun testMode(): Boolean = (
+          commandSpecifiesTest ||
+                  actionHint?.lowercase()?.trim().let {
+                    it != null && it == "test" || it == "tests"
                   }
           )
 
@@ -1322,6 +1338,74 @@ internal class ToolShellCommand @Inject constructor(
       serverRunning.value = true
     } catch (exc: PolyglotException) {
       processUserCodeError(language, exc)?.let { throw it }
+    }
+  }
+
+  @Suppress("TooGenericExceptionCaught")
+  private fun execWrapped(
+    label: String,
+    ctxAccessor: ContextAccessor,
+    source: Source,
+  ) {
+    // parse the source
+    val ctx = ctxAccessor.invoke()
+    val parsed = try {
+      ctx.parse(source)
+    } catch (exc: Exception) {
+      logging.error("Failed to parse user script $label", exc)
+      throw exc
+    }
+
+    // check that it is executable
+    if (!parsed.canExecute()) {
+      logging.error("Failed to execute user script $label: not executable")
+      return
+    } else {
+      logging.trace("Script is executable. Here goes nothing")
+    }
+
+    // execute the script
+    parsed.execute()
+  }
+
+  // Read an executable script, and then execute registered tests.
+  private fun readRunTests(
+    label: String,
+    langs: EnumSet<GuestLanguage>,
+    language: GuestLanguage,
+    ctxAccessor: ContextAccessor,
+    source: Source,
+    execProvider: GuestExecutorProvider,
+  ) {
+    var didPrepare = false
+    try {
+      // enter VM context
+      logging.trace("Entered VM for test run (language: ${language.id}). Consuming script from: '$label'")
+      execWrapped(label, ctxAccessor, source)
+      didPrepare = true
+      val testRegistry = beanContext.getBean(TestingRegistrar::class.java)
+      val allTests = testRegistry.freeze().grouped().toList()
+      if (allTests.isEmpty()) {
+        logging.info("No tests to run.")
+        return
+      }
+
+      // start up the test runner and run all tests
+      logging.info { "Would run ${allTests.size} tests" }
+      allTests.forEach {
+        logging.info { "- scope=(${it.first.simpleName}) test=(${it.second.qualifiedName})" }
+      }
+      return
+
+    } catch (exc: PolyglotException) {
+      val phase = if (didPrepare) "running" else "preparing"
+
+      val msg = "Failure while $phase tests: ${exc.message}"
+      throw (processUserCodeError(
+        language,
+        exc,
+        msg = msg,
+      ) ?: exc)
     }
   }
 
@@ -1362,71 +1446,67 @@ internal class ToolShellCommand @Inject constructor(
     ctxAccessor: ContextAccessor,
     source: Source,
   ) {
-    if (serveMode()) readStartServer(
-      label,
-      languages,
-      primaryLanguage,
-      ctxAccessor,
-      source,
-      guestExec,
-    ) else try {
-      // enter VM context
-      logging.trace("Entered VM for script execution ('${primaryLanguage.id}'). Consuming script from: '$label'")
+    when {
+      // in server mode, read the sources and then expect to start a server.
+      serveMode() -> readStartServer(
+        label,
+        languages,
+        primaryLanguage,
+        ctxAccessor,
+        source,
+        guestExec,
+      )
 
-      // parse the source
-      val ctx = ctxAccessor.invoke()
-      val parsed = try {
-        ctx.parse(source)
-      } catch (exc: Exception) {
-        logging.error("Failed to parse user script $label", exc)
-        throw exc
-      }
+      // in test mode, read the sources with test APIs/registration/execution enabled.
+      testMode() -> readRunTests(
+        label,
+        languages,
+        primaryLanguage,
+        ctxAccessor,
+        source,
+        guestExec,
+      )
 
-      // check that it is executable
-      if (!parsed.canExecute()) {
-        logging.error("Failed to execute user script $label: not executable")
-        return
-      } else {
-        logging.trace("Script is executable. Here goes nothing")
+      // otherwise, it's a normal test run.
+      else -> try {
+        // enter VM context
+        logging.trace("Entered VM for script execution ('${primaryLanguage.id}'). Consuming script from: '$label'")
+        execWrapped(label, ctxAccessor, source)
+      } catch (exc: PolyglotException) {
+        logging.debug("Caught polyglot exception: $exc")
+        if (logging.isEnabled(LogLevel.DEBUG)) {
+          logging.debug(
+            StringBuilder().apply {
+              append("Error Info: ")
+              append("message{${exc.message}} ")
+              append("source{${exc.sourceLocation}} ")
+              append("isGuestException{${exc.isGuestException}} ")
+              append("isHostException{${exc.isHostException}} ")
+              append("isCancelled{${exc.isCancelled}} ")
+              append("isInterrupted{${exc.isInterrupted}} ")
+              append("isResourceExhausted{${exc.isResourceExhausted}} ")
+              append("isSyntaxError{${exc.isSyntaxError}} ")
+              append("isIncompleteSource{${exc.isIncompleteSource}} ")
+              append("isInternalError{${exc.isInternalError}} ")
+              append("cause{${exc.cause}}")
+              val guestObj = exc.guestObject
+              if (guestObj != null) {
+                append(" // Guest Object: ")
+                append("isHostObject{${guestObj.isHostObject}} ")
+                append("isNull{${guestObj.isNull}} ")
+                append("isException{${guestObj.isException}} ")
+                append("isString{${guestObj.isString}}")
+              }
+            }.toString(),
+          )
+        }
+        when (val throwable = processUserCodeError(primaryLanguage, exc)) {
+          null -> {}
+          else -> throw throwable
+        }
+      } catch (exc: Throwable) {
+        logging.debug("Caught (and re-throwing) exception: $exc")
       }
-
-      // execute the script
-      parsed.execute()
-
-    } catch (exc: PolyglotException) {
-      logging.debug("Caught polyglot exception: $exc")
-      if (logging.isEnabled(LogLevel.DEBUG)) {
-        logging.debug(
-          StringBuilder().apply {
-            append("Error Info: ")
-            append("message{${exc.message}} ")
-            append("source{${exc.sourceLocation}} ")
-            append("isGuestException{${exc.isGuestException}} ")
-            append("isHostException{${exc.isHostException}} ")
-            append("isCancelled{${exc.isCancelled}} ")
-            append("isInterrupted{${exc.isInterrupted}} ")
-            append("isResourceExhausted{${exc.isResourceExhausted}} ")
-            append("isSyntaxError{${exc.isSyntaxError}} ")
-            append("isIncompleteSource{${exc.isIncompleteSource}} ")
-            append("isInternalError{${exc.isInternalError}} ")
-            append("cause{${exc.cause}}")
-            val guestObj = exc.guestObject
-            if (guestObj != null) {
-              append(" // Guest Object: ")
-              append("isHostObject{${guestObj.isHostObject}} ")
-              append("isNull{${guestObj.isNull}} ")
-              append("isException{${guestObj.isException}} ")
-              append("isString{${guestObj.isString}}")
-            }
-          }.toString(),
-        )
-      }
-      when (val throwable = processUserCodeError(primaryLanguage, exc)) {
-        null -> {}
-        else -> throw throwable
-      }
-    } catch (exc: Throwable) {
-      logging.debug("Caught (and re-throwing) exception: $exc")
     }
   }
 
@@ -1491,7 +1571,10 @@ internal class ToolShellCommand @Inject constructor(
             }.first.filterIsInstance<MavenAetherResolver>().first()
           }
           mavenResolver.classpathProvider(object: ClasspathSpec {
-            override val usage: MultiPathUsage get() = MultiPathUsage.Runtime
+            override val usage: MultiPathUsage get() = when (testMode()) {
+              true -> MultiPathUsage.TestRuntime
+              false -> MultiPathUsage.Runtime
+            }
           })?.classpath()
         }
 

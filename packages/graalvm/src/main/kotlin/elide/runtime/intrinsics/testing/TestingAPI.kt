@@ -22,8 +22,15 @@ import elide.vm.annotations.Polyglot
  */
 @API @ReflectiveAccess public interface TestingAPI {
   public sealed interface TestGraphNode {
+    public val simpleName: String
+    public val qualifiedName: String
+
     public interface Suite : TestGraphNode
-    public interface Test : TestGraphNode
+
+    public interface Test : TestGraphNode {
+      public val block: Value
+    }
+
     public interface Assertion : TestGraphNode
   }
 
@@ -35,7 +42,7 @@ import elide.vm.annotations.Polyglot
   /**
    * ## Suite
    */
-  @Polyglot public fun suite(label: Value?, block: Value): TestGraphNode.Suite
+  @Polyglot public fun suite(label: String?, block: Value): TestGraphNode.Suite
 
   /**
    * ## Describe
@@ -45,17 +52,23 @@ import elide.vm.annotations.Polyglot
   /**
    * ## Describe
    */
-  @Polyglot public fun describe(label: Value?, block: Value): TestGraphNode.Suite = suite(label, block)
+  @Polyglot public fun describe(label: String?, block: Value): TestGraphNode.Suite = suite(label, block)
 
   /**
    * ## Test
    */
-  @Polyglot public fun test(value: Value): TestGraphNode.Test = test(label = null, value)
+  @Polyglot public fun test(value: Value): TestGraphNode.Test = test(label = null, value, scope = null)
 
   /**
    * ## Test
    */
-  @Polyglot public fun test(label: Value?, block: Value): TestGraphNode.Test
+  @Polyglot public fun test(value: Value, scope: TestGraphNode.Suite): TestGraphNode.Test =
+    test(label = null, value, scope = scope)
+
+  /**
+   * ## Test
+   */
+  @Polyglot public fun test(label: String?, block: Value, scope: TestGraphNode.Suite?): TestGraphNode.Test
 
   /**
    * ## Expectation

@@ -42,6 +42,7 @@ import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.IntrinsicsResolver
 import elide.runtime.intrinsics.ai.ElideLLMModule
 import elide.runtime.intrinsics.js.err.ValueErrorIntrinsic
+import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.javascript.MessageChannelBuiltin
 import elide.runtime.javascript.NavigatorBuiltin
 import elide.runtime.javascript.QueueMicrotaskCallable
@@ -86,19 +87,23 @@ import elide.runtime.plugins.env.EnvConfig
   guestExec: GuestExecutor,
   envConfigProvider: Optional<EnvConfig?>,
   vfsInitializerListener: VfsInitializerListener,
+  testRegistrar: TestingRegistrar,
 ) : IntrinsicsResolver {
   init {
     exec = guestExec
     envConfigSupplier = Provider { envConfigProvider.orElse(null) }
     listener = vfsInitializerListener
+    registrar = testRegistrar
   }
 
   public companion object {
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var exec: GuestExecutor
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var envConfigSupplier: Provider<EnvConfig?>
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var listener: VfsInitializerListener
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var registrar: TestingRegistrar
     @JvmStatic private val execProvider = GuestExecutorProvider { exec }
     @JvmStatic private val vfsListenerProvider = Provider { listener }
+    @JvmStatic private val registrarProvider = Provider { registrar }
     @JvmStatic private val assert = NodeAssertModule()
     @JvmStatic private val assertStrict = NodeAssertStrictModule()
     @JvmStatic private val diag = NodeDiagnosticsChannelModule()
@@ -116,7 +121,6 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val timers = JsTimersIntrinsic()
     @JvmStatic private val buffer = NodeBufferModule()
     @JvmStatic private val querystring = NodeQuerystringModule()
-    @JvmStatic private val testing = ElideTestingModule()
     @JvmStatic private val http = NodeHttpModule()
     @JvmStatic private val https = NodeHttpsModule()
     @JvmStatic private val http2 = NodeHttp2Module()
@@ -147,9 +151,10 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val process = NodeProcessModule(Provider { envConfigSupplier.get() })
     @JvmStatic private val structuredClone = StructuredCloneBuiltin()
     @JvmStatic private val valueError = ValueErrorIntrinsic()
-    @JvmStatic private val elideBuiltin = ElideIntrinsic()
+    @JvmStatic private val elideTesting = ElideTestingModule(registrarProvider)
     @JvmStatic private val elideSqlite = ElideSqliteModule()
     @JvmStatic private val elideLlm = ElideLLMModule(execProvider)
+    @JvmStatic private val elideBuiltin = ElideIntrinsic()
 
     // All built-ins and intrinsics.
     @JvmStatic private val all = arrayOf(
@@ -174,7 +179,6 @@ import elide.runtime.plugins.env.EnvConfig
       os,
       buffer,
       querystring,
-      testing,
       http,
       https,
       http2,
@@ -203,6 +207,7 @@ import elide.runtime.plugins.env.EnvConfig
       structuredClone,
       elideBuiltin,
       elideSqlite,
+      elideTesting,
       elideLlm,
     )
   }

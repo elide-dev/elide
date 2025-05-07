@@ -51,7 +51,6 @@ import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
-import elide.tool.cli.cmd.runner.ToolTestCommand
 import elide.tool.cli.cmd.tool.jar.JarToolAdapter
 import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
 import elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter
@@ -102,7 +101,6 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   subcommands = [
     ToolShellCommand::class,
     ToolBuildCommand::class,
-    ToolTestCommand::class,
     ToolCheckCommand::class,
     ToolProjectCommand::class,
     InitCommand::class,
@@ -180,15 +178,15 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
         return MicronautFactory(applicationContext).create<K>(cls)
       }
     }).apply {
-      setResourceBundle(bundle)
-      setExitCodeExceptionMapper(errHandler)
-      setCommandName(TOOL_NAME)
-      setAbbreviatedOptionsAllowed(true)
-      setAbbreviatedSubcommandsAllowed(true)
-      setCaseInsensitiveEnumValuesAllowed(true)
-      setEndOfOptionsDelimiter("--")
-      setPosixClusteredShortOptionsAllowed(true)
-      setUsageHelpAutoWidth(true)
+      resourceBundle = bundle
+      exitCodeExceptionMapper = errHandler
+      commandName = TOOL_NAME
+      isAbbreviatedOptionsAllowed = true
+      isAbbreviatedSubcommandsAllowed = true
+      isCaseInsensitiveEnumValuesAllowed = true
+      endOfOptionsDelimiter = "--"
+      isPosixClusteredShortOptionsAllowed = true
+      isUsageHelpAutoWidth = true
     }
 
     // Whether native libraries have loaded.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -45,6 +45,14 @@ import elide.runtime.core.PolyglotContext
 
   /** Path to native libraries and resources. */
   public var resourcesPath: Path? = null
+
+  /**
+   * Toggle support for testing features.
+   *
+   * When testing features are active, tests can be detected efficiently by annotating with JUnit, Elide, or Kotlin test
+   * annotation types; in other languages, this enables built-in assertion and test registration functions.
+   */
+  public open var testing: Boolean = false
 
   /**
    * Configure intrinsic bindings for this language. These bindings will be available as top-level symbols in every

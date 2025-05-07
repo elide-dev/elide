@@ -2,6 +2,9 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.sources
 
+/// Path or glob for a source file.
+typealias SourceGlobOrPath = String
+
 /// Types of source sets.
 typealias SourceSetType = "main" | "test" | "integration" | "example" | "docs" | "infra" | "other"
 
@@ -13,18 +16,21 @@ class SourceSetSpec {
   /// The type of source set.
   type: SourceSetType = "main"
 
-  /// Specifies the sources.
-  sources: SourcesSpec
-
   /// Flipped to `true` if this is a default or synthetic source set.
   synthetic: Boolean = false
+
+  /// Paths of source files to enclose.
+  paths: Listing<SourceGlobOrPath> = new {}
+
+  /// Typed source-set specification. Overrides other properties, as applicable, if present.
+  sources: SourcesSpec?
 }
 
 /// Source set names are simple strings.
 typealias SourceSetName = SourceSetType | String
 
 /// Source set definition or simple glob.
-typealias SourceSet = SourceSetSpec | String
+typealias SourceSet = SourceSetSpec | SourceGlobOrPath
 
 /// Top-level container for project source code configurations.
 typealias Sources = Mapping<SourceSetName, SourceSet>

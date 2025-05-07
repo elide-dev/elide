@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.plugins.kotlin.shell
 
 import com.oracle.truffle.api.CompilerDirectives
@@ -23,7 +22,6 @@ import kotlin.script.experimental.api.ResultWithDiagnostics
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
 import kotlin.script.experimental.api.ScriptDiagnostic
 import kotlin.script.experimental.api.ScriptEvaluationConfiguration
-import kotlin.script.experimental.api.compilerOptions
 import kotlin.script.experimental.api.displayName
 import kotlin.script.experimental.api.hostConfiguration
 import kotlin.script.experimental.api.valueOrNull
@@ -94,8 +92,6 @@ private fun ScriptDiagnostic.toDiagnostic(): Diagnostic = DiagnosticInfo.mutable
       jvm {
         displayName("Elide Kotlin")
         hostConfiguration(hostConfig)
-        // this[CLIConfigurationKeys.PATH_TO_KOTLIN_COMPILER_JAR] = null
-        compilerOptions
       }
     }
   }

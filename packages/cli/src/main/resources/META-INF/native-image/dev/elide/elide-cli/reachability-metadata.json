@@ -786,67 +786,9 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
-            "java.util.Map"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
-            "java.util.Map"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",

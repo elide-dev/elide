@@ -14,13 +14,14 @@
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe)]
 
 use java_native::{jni, on_load, on_unload};
-use jni::JNIEnv;
 use jni::objects::JClass;
 use jni::sys::{JNI_VERSION_21, jint};
+use jni::{JNIEnv, JavaVM};
 use lazy_static::lazy_static;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
+use substrate::init_vm;
 use tokio::runtime::{Builder, Runtime};
 
 lazy_static! {
@@ -69,7 +70,8 @@ fn shutdown_engine_graceful() {
 
 /// Bind methods and perform other lib-init tasks.
 #[on_load]
-pub fn did_load(_env: JNIEnv) -> jint {
+pub fn did_load(vm: JavaVM) -> jint {
+  init_vm(vm);
   JNI_VERSION_21
 }
 

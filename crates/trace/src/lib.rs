@@ -16,6 +16,7 @@ use jni::JNIEnv;
 use jni::objects::{JClass, JString};
 use jni::sys::jint;
 use log::{Level, debug, error, info, trace, warn};
+use substrate::init_vm;
 
 /// Import preludes for easy use of `trace` and `tracing`.
 pub mod prelude;
@@ -51,10 +52,11 @@ pub fn name_for_level(level: Level) -> &'static str {
 
 /// Initialize the native tracing layer.
 #[jni("elide.exec.Tracing")]
-pub fn initialize<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> jint {
+pub fn initialize<'a>(env: JNIEnv<'a>, _class: JClass<'a>) -> jint {
   ringbuf::debug_log("initializing tracing");
+  init_vm(env.get_java_vm().expect("unable to obtain java vm"));
   register_handlers();
-  //start_consumer_thread();
+  start_consumer_thread();
   0
 }
 

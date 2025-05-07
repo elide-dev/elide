@@ -19,24 +19,14 @@
 )]
 #![forbid(dead_code)]
 
-use java_native::{on_load, on_unload};
 use jni::JavaVM;
-use jni_sys::{JNI_VERSION_21, jint};
 
 /// Methods to manage VM state.
 pub mod vm;
 
-/// JNI on-load hook; responsible for setting the active VM.
-#[on_load]
-pub fn on_load(vm: JavaVM) -> jint {
+/// Initialize the VM if needed.
+pub fn init_vm(vm: JavaVM) {
   vm::init_java_vm(vm);
-  JNI_VERSION_21
-}
-
-/// JNI on-unload hook; responsible for clearing the active VM on shutdown or unload.
-#[on_unload]
-pub fn on_unload() {
-  vm::clear_vm_state();
 }
 
 include!(concat!(env!("OUT_DIR"), "/libjvm.rs"));

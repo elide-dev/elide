@@ -20,6 +20,7 @@ import "Ruby.pkl" as _ruby
 import "JavaScript.pkl" as _js
 import "TypeScript.pkl" as _ts
 import "HuggingFace.pkl" as _huggingface
+import "Testing.pkl" as _testing
 import "Pkl.pkl" as _pkl
 
 /// Name of a script within the project's configuration.
@@ -96,6 +97,9 @@ class ElideProject {
 
   /// Project operational settings.,
   ops: _ops.Operations?
+
+  /// Settings and configuration for project tests.
+  tests: _testing.Testing?
 }
 
 /// A name for the project.
@@ -193,6 +197,9 @@ infra: _infra.InfraSettings = new {}
 
 /// Project operational settings.,
 ops: _ops.Operations = new {}
+
+/// Settings and configuration for project tests.
+tests: _testing.Testing?
 
 //
 // ------ Execution -------------------------------------------------------------------------------------------------

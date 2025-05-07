@@ -1,3 +1,6 @@
+// Enable this for local type-hints without LSP support.
+//amends "./packages/cli/src/main/pkl/project.pkl"
+
 amends "elide:project.pkl"
 
 name = "elide"
@@ -21,6 +24,12 @@ jvm {
 kotlin {
   apiLevel = "1.9"
   languageLevel = "1.9"
+}
+
+tests {
+  coverage {
+    enabled = true
+  }
 }
 
 dependencies {

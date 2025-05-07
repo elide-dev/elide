@@ -1660,6 +1660,7 @@ internal class ToolShellCommand @Inject constructor(
           logging.debug("Configuring JS VM")
           resourcesPath = gvmResources
           executable = cmd
+          testing = testMode()
           executableList = listOf(cmd).plus(args)
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
           jsSettings.apply(this)
@@ -1690,6 +1691,7 @@ internal class ToolShellCommand @Inject constructor(
           installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
           resourcesPath = gvmResources
           executable = cmd
+          testing = testMode()
           executableList = listOf(cmd).plus(args)
           pySettings.apply(this)
         }
@@ -1769,6 +1771,7 @@ internal class ToolShellCommand @Inject constructor(
             logging.debug("Configuring JVM")
             resourcesPath = gvmResources
             multithreading = !langs.contains(JS)
+            testing = testMode()
             classpath(fullClasspath.map { it.absolutePathString() })
             javaHome?.let { guestJavaHome = it }
           }.also {

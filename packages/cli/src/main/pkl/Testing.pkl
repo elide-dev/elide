@@ -1,0 +1,85 @@
+/// Describes types involved in structuring and running tests and test suites.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.testing
+
+/// Types supported for specifying coverage.
+typealias CoverageState = Boolean | CoverageSettings
+
+/// Formats for coverage reports.
+typealias CoverageReportFormat = "text" | "json" | "xml" | "html" | "lcov"
+
+/// Abstract type specifying a coverage report.
+abstract class CoverageReport {
+  /// Name for this report; typically the format name by default.
+  name: String = format
+
+  /// Format emitted by this report type.
+  format: CoverageReportFormat
+}
+
+/// Coverage reports which emit their results to disk, either as files or a tree of directories and files.
+abstract class DiskCoverageReport {
+  /// Output directory for this coverage report.
+  directory: String = ".dev/reports/coverage"
+}
+
+/// Coverage report in HTML format.
+class HtmlCoverageReport extends DiskCoverageReport {
+  format = "html"
+}
+
+/// Coverage report in XML format.
+class XmlCoverageReport extends DiskCoverageReport {
+  format = "xml"
+}
+
+/// Coverage report in LCOV format.
+class LcovCoverageReport extends DiskCoverageReport {
+  format = "lcov"
+}
+
+/// Coverage report in JSON format.
+class JsonCoverageReport extends DiskCoverageReport {
+  format = "json"
+}
+
+/// Coverage report in plain text format.
+class TextCoverageReport extends DiskCoverageReport {
+  format = "text"
+}
+
+/// Unified coverage report settings with blocks for each type.
+class CoverageReportSettings {
+  /// Whether to enable default reporting behavior (this includes printing results to the console).
+  defaults: Boolean = true
+
+  /// HTML report.
+  html: HtmlCoverageReport?
+
+  /// XML report.
+  xml: XmlCoverageReport?
+
+  /// LCOV report.
+  lcov: LcovCoverageReport?
+
+  /// JSON report.
+  json: JsonCoverageReport?
+
+  /// Text report.
+  text: TextCoverageReport?
+}
+
+/// Structured settings for configuring test coverage.
+class CoverageSettings {
+  /// Whether coverage is active.
+  enabled: Boolean = true
+
+  /// Coverage report generation settings.
+  reports: CoverageReportSettings = new {}
+}
+
+/// DSL root type where test settings and configuration are mounted.
+class Testing {
+  /// Settings which govern coverage support. Boolean activates or de-activats.
+  coverage: CoverageState = new CoverageSettings {}
+}

@@ -319,12 +319,11 @@ internal class ToolShellCommand @Inject constructor(
 
   /** Enables installation before run. */
   @Option(
-    names = ["--install"],
+    names = ["--no-install"],
     description = ["Install dependencies before running"],
-    negatable = true,
-    defaultValue = "true",
+    defaultValue = "false",
   )
-  internal var doInstall: Boolean = true
+  internal var skipInstall: Boolean = false
 
   /** Specifies that `stdin` should be used to read the script. */
   @Option(
@@ -1485,7 +1484,7 @@ internal class ToolShellCommand @Inject constructor(
 
       // the project defines maven dependencies; assemble a classpath and return.
       else -> runBlocking {
-        val runtimeClasspath = if (!doInstall) null else {
+        val runtimeClasspath = if (skipInstall) null else {
           val mavenResolver = BuildDriver.configure(beanContext, project).let {
             resolve(it, dependencies(it).await()).also {
               it.second.joinAll()
@@ -1760,7 +1759,7 @@ internal class ToolShellCommand @Inject constructor(
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
-    Elide.requestNatives(server = true, tooling = doInstall)
+    Elide.requestNatives(server = true, tooling = !skipInstall)
 
     // resolve project configuration (async)
     val projectResolution = launch {

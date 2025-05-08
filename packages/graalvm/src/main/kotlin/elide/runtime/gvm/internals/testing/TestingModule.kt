@@ -122,7 +122,7 @@ internal class ElideTestingModule @Inject constructor (
 
   override fun register(test: RegisteredTest, scope: RegisteredScope): Unit = withMutable {
     scopes.add(scope)
-    register(test)
+    registry[test.qualifiedName] = test
     byScope.computeIfAbsent(scope) { ConcurrentSkipListSet<RegisteredTest>() }.also {
       byScope[scope]!!.add(test)
     }

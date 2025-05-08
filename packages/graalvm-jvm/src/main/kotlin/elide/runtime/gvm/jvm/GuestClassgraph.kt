@@ -141,7 +141,6 @@ public object GuestClassgraph {
     // Classgraph instance managed by this builder.
     @Suppress("SpreadOperator")
     override val classgraph: ClassGraph = ClassGraph().apply {
-      verbose(true)
       overrideClasspath(classpath.asList().map { it.path })
       enableMultiReleaseVersions()
       enableURLScheme("file")

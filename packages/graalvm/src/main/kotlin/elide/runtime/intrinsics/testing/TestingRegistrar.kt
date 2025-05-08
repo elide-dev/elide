@@ -10,9 +10,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:OptIn(DelicateElideApi::class)
+
 package elide.runtime.intrinsics.testing
 
 import java.lang.AutoCloseable
+import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
 import elide.runtime.interop.ReadOnlyProxyObject
 
@@ -134,6 +138,19 @@ public interface TestingRegistrar {
       return qualifiedName + (label?.let { " > $it" } ?: "")
     }
 
+    /**
+     * Return a generated qualified test name based on this scope and any parent scopes.
+     *
+     * @param label Optional label to append to the qualified name.
+     * @return Qualified name for the test.
+     */
+    public fun qualifiedNameFor(label: String?): String? {
+      if (qualifiedName.isNotEmpty() && label?.isNotEmpty() == true) {
+        return qualifiedName + label.let { " > $it" }
+      }
+      return null
+    }
+
     override fun compareTo(other: T): Int {
       return qualifiedName.compareTo(other.qualifiedName)
     }
@@ -209,7 +226,7 @@ public interface TestingRegistrar {
      * Factory which provides an instance of [TestEntrypoint], which can be used to execute the test and obtain a
      * [TestResult].
      */
-    public val entryFactory: () -> TestEntrypoint
+    public val entryFactory: (PolyglotContext) -> TestEntrypoint
   }
 
   /**
@@ -224,7 +241,7 @@ public interface TestingRegistrar {
      * Obtains the [PolyglotValue] defining this test; this is typically the [TestEntrypoint], but unwrapped. Guest
      * values for tests may or may not be available at registration time.
      */
-    public val guestValueFactory: () -> PolyglotValue
+    public val guestValueFactory: (PolyglotContext) -> PolyglotValue
   }
 
   /** Simple named test scope. */
@@ -237,11 +254,9 @@ public interface TestingRegistrar {
   @JvmRecord public data class TestInfo internal constructor (
     override val simpleName: String,
     override val qualifiedName: String,
-    override val entryFactory: () -> TestEntrypoint,
-    override val guestValueFactory: () -> PolyglotValue,
-  ): RegisteredGuestTest {
-    override val block: PolyglotValue get() = guestValueFactory.invoke()
-  }
+    override val entryFactory: (PolyglotContext) -> TestEntrypoint,
+    override val guestValueFactory: (PolyglotContext) -> PolyglotValue,
+  ): RegisteredGuestTest
 
   /** Factories for creating [TestingRegistrar] accoutrement objects. */
   public companion object {
@@ -296,6 +311,25 @@ public interface TestingRegistrar {
       qualifiedName = scope?.qualifiedNameFor(block, label) ?: qualifiedNameForBlock(block, label),
       entryFactory = { defaultEntryFactory(block) },
       guestValueFactory = { block },
+    )
+
+    /**
+     * Creates a forward-declared registered test record, which can be resolved later from a polyglot context.
+     *
+     * @param label Label for this specific test.
+     * @param qualified Qualified name for this test.
+     * @param blockFactory Factory which produces this test's entrypoint, given a polyglot context.
+     * @return Test info for the test; suitable for registration.
+     */
+    @JvmStatic public fun deferred(
+      label: String,
+      qualified: String,
+      blockFactory: (ctx: PolyglotContext) -> PolyglotValue,
+    ): TestInfo = TestInfo(
+      simpleName = label,
+      qualifiedName = qualified,
+      entryFactory = { defaultEntryFactory(blockFactory.invoke(it)) },
+      guestValueFactory = { blockFactory.invoke(it) },
     )
   }
 }

@@ -12,15 +12,11 @@
  */
 package elide.tooling.config
 
-import java.nio.file.Path
-import elide.exec.ActionScope
-import elide.runtime.intrinsics.testing.TestingRegistrar
-import elide.tooling.registry.ResolverRegistry
+import kotlinx.coroutines.test.runTest
+import elide.testing.annotations.Test
 
-// Test configuration state; materialized as all contributors complete.
-internal class CompositeTestConfiguration (
-  override val actionScope: ActionScope,
-  override val resolvers: ResolverRegistry,
-  override val projectRoot: Path,
-  override val settings: TestConfigurator.MutableTestSettings,
-) : TestConfigurator.TestConfiguration
+class TestDriverTest {
+  @Test fun configureTests() = runTest {
+
+  }
+}

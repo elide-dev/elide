@@ -1132,6 +1132,26 @@ public final class elide/tooling/kotlin/KotlinCompilerKt {
 	public static final fun getKotlinc ()Lelide/tool/Tool$CommandLineTool;
 }
 
+public synthetic class elide/tooling/project/$CompositePackageManifestService$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/tooling/project/CompositePackageManifestService : elide/tooling/project/PackageManifestService {
+	public fun <init> (Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;)V
+	public fun encode (Lelide/tooling/project/manifest/PackageManifest;Ljava/io/OutputStream;)V
+	public fun export (Lelide/tooling/project/manifest/ElidePackageManifest;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun merge (Ljava/lang/Iterable;)Lelide/tooling/project/manifest/ElidePackageManifest;
+	public fun parse (Ljava/io/InputStream;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parse (Ljava/nio/file/Path;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun resolve (Ljava/nio/file/Path;Lelide/tooling/project/ProjectEcosystem;)Ljava/nio/file/Path;
+}
+
 public final class elide/tooling/project/DefaultProjectLoader : elide/tooling/project/ElideProjectLoader {
 	public static final field INSTANCE Lelide/tooling/project/DefaultProjectLoader;
 	public fun getResourcesPath ()Ljava/nio/file/Path;
@@ -1189,6 +1209,16 @@ public final class elide/tooling/project/ElideProjectInfo$Companion {
 public abstract interface class elide/tooling/project/ElideProjectLoader {
 	public abstract fun getResourcesPath ()Ljava/nio/file/Path;
 	public abstract fun getSourceSetFactory ()Lelide/tooling/project/SourceSetFactory;
+}
+
+public abstract interface class elide/tooling/project/PackageManifestService {
+	public abstract fun encode (Lelide/tooling/project/manifest/PackageManifest;Ljava/io/OutputStream;)V
+	public abstract fun export (Lelide/tooling/project/manifest/ElidePackageManifest;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;
+	public abstract fun merge (Ljava/lang/Iterable;)Lelide/tooling/project/manifest/ElidePackageManifest;
+	public abstract fun parse (Ljava/io/InputStream;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;
+	public abstract fun parse (Ljava/nio/file/Path;)Lelide/tooling/project/manifest/PackageManifest;
+	public abstract fun resolve (Ljava/nio/file/Path;Lelide/tooling/project/ProjectEcosystem;)Ljava/nio/file/Path;
+	public static synthetic fun resolve$default (Lelide/tooling/project/PackageManifestService;Ljava/nio/file/Path;Lelide/tooling/project/ProjectEcosystem;ILjava/lang/Object;)Ljava/nio/file/Path;
 }
 
 public final class elide/tooling/project/ProjectEcosystem : java/lang/Enum {

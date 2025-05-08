@@ -21,6 +21,7 @@ import elide.runtime.plugins.env.EnvConfig
 import elide.tool.io.WorkdirManager
 import elide.tooling.project.ElideProject
 import elide.tooling.project.ElideProjectInfo
+import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.ProjectEnvironment
 import elide.tooling.project.manifest.ElidePackageManifest

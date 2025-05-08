@@ -18,12 +18,14 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import io.github.classgraph.ClassGraph
 import io.github.classgraph.ScanResult
+import java.nio.file.Path
 import java.util.TreeSet
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.io.path.absolutePathString
 import elide.runtime.gvm.jvm.GuestClassgraph.ClassgraphBuilderApi
 import elide.tool.Classpath
 
@@ -123,7 +125,11 @@ public object GuestClassgraph {
   }
 
   // Builder which manages the preparation of a `classgraph` instance.
-  private class ClassgraphBuilder (classpath: Classpath, packages: Iterable<String> = emptyList()) :
+  private class ClassgraphBuilder (
+    private val rootPath: Path,
+    classpath: Classpath,
+    packages: Iterable<String> = emptyList(),
+  ) :
     ClassgraphBuilderApi {
     private val acceptPackages: MutableSet<String> = TreeSet<String>().also {
       it.addAll(packages)
@@ -141,7 +147,7 @@ public object GuestClassgraph {
     // Classgraph instance managed by this builder.
     @Suppress("SpreadOperator")
     override val classgraph: ClassGraph = ClassGraph().apply {
-      overrideClasspath(classpath.asList().map { it.path })
+      verbose(System.getProperty("elide.classgraph.debug") == "true")
       enableMultiReleaseVersions()
       enableURLScheme("file")
       enableURLScheme("jar")
@@ -153,6 +159,12 @@ public object GuestClassgraph {
       acceptPackages.takeIf { it.isNotEmpty() }?.let {
         acceptPackages(*it.toTypedArray())
       }
+      overrideClasspath(classpath.asList().map {
+        when (it.path.isAbsolute) {
+          true -> it.path
+          false -> rootPath.resolve(it.path).absolutePathString()
+        }
+      })
     }
 
     // Perform scanning; this concludes our use of the builder.
@@ -184,12 +196,16 @@ public object GuestClassgraph {
    * @param withConfigurator Optional configurator to apply to the classgraph builder.
    * @return Assembled/materialized classgraph.
    */
-  public suspend fun buildFrom(classpath: Classpath, withConfigurator: ClassgraphConfigurator? = null): Classgraph {
-    return when (classpath.isEmpty()) {
-      true -> Empty
-      false -> MaterializedClassgraph(classpath, ClassgraphBuilder(classpath).apply {
-        withConfigurator?.invoke(this)
-      }.scan())
-    }
+  public suspend fun buildFrom(
+    classpath: Classpath,
+    root: Path? = null,
+    withConfigurator: ClassgraphConfigurator? = null,
+  ): Classgraph = when (classpath.isEmpty()) {
+    true -> Empty
+    false -> MaterializedClassgraph(classpath, ClassgraphBuilder(
+      root ?: Path.of(System.getProperty("user.dir")
+      ), classpath).apply {
+      withConfigurator?.invoke(this)
+    }.scan())
   }
 }

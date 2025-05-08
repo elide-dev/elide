@@ -28,7 +28,7 @@ import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
-import elide.tool.project.PackageManifestService
+import elide.tooling.project.PackageManifestService
 import elide.tool.project.ProjectManager
 import elide.tooling.project.ProjectEcosystem
 

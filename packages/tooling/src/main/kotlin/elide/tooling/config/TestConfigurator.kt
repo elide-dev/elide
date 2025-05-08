@@ -86,6 +86,22 @@ public interface TestConfigurator : ProjectConfigurator {
   public sealed interface TestEvent : TestNotify
 
   /**
+   * ## Test Notification: Status
+   *
+   * Describes an event which is emitted when test results are available for a test suite or test case.
+   */
+  public sealed interface TestStatus : TestNotify
+
+  /** Delivered when a test passes, or all tests in a suite pass. */
+  public data object TestPass : TestStatus
+
+  /** Delivered when a test fails, or a suite is failed. */
+  public data object TestFail : TestStatus
+
+  /** Delivered when a test is skipped, or a suite is skipped. */
+  public data object TestSkip : TestStatus
+
+  /**
    * ## Test Notification: Work
    *
    * Describes an event which involves execution work (for instance, test execution itself) for an Elide project.
@@ -102,9 +118,34 @@ public interface TestConfigurator : ProjectConfigurator {
   /**
    * ## Test Event Controller
    *
-   * Controller for formulating and enqueueing test events from callsites.
+   * Controller for formulating and enqueueing test events from callsites; internal test process objects (configurators
+   * and runners) call into the controller to emit events. The controller is expected to keep track of interested
+   * parties and deliver events to them as applicable.
    */
-  public interface TestEventController {}
+  public interface TestEventController {
+    /**
+     * Emit event.
+     *
+     * Deliver a testing event to the event controller; this method is expected to be called often by various test
+     * events, and may be called from non-main threads.
+     *
+     * In a thread-safe and non-blocking manner, the method must consider the provided [event] for delivery, ultimately
+     * delivering it to any interested subscribers according to their expected semantics (including thread state).
+     *
+     * Event delivery happens for various types of events, all based on the [TestNotify] type hierarchy.
+     *
+     * @param event Event to deliver.
+     * @param context Context related to this event; if no context applies, the test runner or configurator is provided.
+     */
+    public fun <E: TestNotify, T: Any> emit(event: E, context: T)
+
+    /** "Inert" event controller which does nothing. */
+    public data object Inert : TestEventController {
+      override fun <E : TestNotify, T : Any> emit(event: E, context: T) {
+        // no-op
+      }
+    }
+  }
 
   /**
    * ## Test Settings

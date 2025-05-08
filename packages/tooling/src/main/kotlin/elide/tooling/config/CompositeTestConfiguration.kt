@@ -12,9 +12,16 @@
  */
 package elide.tooling.config
 
-/**
- * # Project Configurator
- *
- * Base of a sealed hierarchy of types which contribute to Elide project configuration at runtime.
- */
-public sealed interface ProjectConfigurator
+import java.nio.file.Path
+import elide.exec.ActionScope
+import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.tooling.registry.ResolverRegistry
+
+// Test configuration state; materialized as all contributors complete.
+internal class CompositeTestConfiguration (
+  override val actionScope: ActionScope,
+  override val resolvers: ResolverRegistry,
+  override val projectRoot: Path,
+  override val settings: TestConfigurator.MutableTestSettings,
+  override val registrar: TestingRegistrar,
+) : TestConfigurator.TestConfiguration

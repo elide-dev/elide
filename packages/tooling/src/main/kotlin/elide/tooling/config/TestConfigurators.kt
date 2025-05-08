@@ -15,48 +15,48 @@ package elide.tooling.config
 import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import java.util.ServiceLoader
-import elide.tooling.config.BuildConfigurator.BuildConfiguration
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.manifest.ElidePackageManifest
 
 /**
- * ## Build Configurators
+ * ## Test Configurators
  *
- * Deals with the discovery, instantiation, and "contribution" dispatch of [BuildConfigurator]-compliant instances from
+ * Deals with the discovery, instantiation, and "contribution" dispatch of [TestConfigurator]-compliant instances from
  * the JVM service-loader protocol.
  *
  * Configurators are expected to be instantiable without parameters. Once created, configurators have a chance to
- * "contribute" to build configuration through their [BuildConfigurator.contribute] method.
+ * "contribute" to test through their [TestConfigurator.contribute] method.
  *
- * Build configurators impose no ordering semantics, and are expected to be executed in parallel during the preparatory
- * ("configuration") stage of a build. Thus, configurators should be idempotent, thread-safe, and independent of each
- * other.
+ * Test configurators impose no ordering semantics, and are expected to be executed in parallel during the preparatory
+ * ("configuration") stage of a build and/or test run. Thus, configurators should be idempotent, thread-safe, and
+ * independent of each other.
  *
- * @see BuildConfigurator protocol for build configuration
- * @see TestConfigurator similar protocol for test configurators
- * @see TestConfigurators service driver for test configuration
+ * Test configurators are guaranteed to be executed before relevant [BuildConfigurators].
+ *
+ * @see TestConfigurator protocol for test configurators
+ * @see BuildConfigurator similar protocol for build configuration
+ * @see BuildConfigurators service driver for build configuration
  */
-public object BuildConfigurators {
-  @JvmStatic public fun collect(): Sequence<BuildConfigurator> {
-    return ServiceLoader.load<BuildConfigurator>(BuildConfigurator::class.java).asSequence()
+public object TestConfigurators {
+  @JvmStatic public fun collect(): Sequence<TestConfigurator> {
+    return ServiceLoader.load<TestConfigurator>(TestConfigurator::class.java).asSequence()
   }
 
   @JvmStatic
   public suspend fun contribute(
     beanContext: BeanContext,
     project: ElideConfiguredProject,
-    from: Sequence<BuildConfigurator>,
-    to: BuildConfiguration,
-    extraConfigurator: BuildConfigurator? = null,
+    from: Sequence<TestConfigurator>,
+    to: TestConfigurator.TestConfiguration,
+    extraConfigurator: TestConfigurator? = null,
   ) {
     val layout = object : BuildConfigurator.ProjectDirectories {
       override val projectRoot: Path get() = to.projectRoot
     }
-    val state = object : BuildConfigurator.ElideBuildState {
+    val state = object : TestConfigurator.ElideTestState {
       override val beanContext: BeanContext get() = beanContext
       override val project: ElideConfiguredProject get() = project
-      override val console: BuildConfigurator.BuildConsoleController get() = TODO("Not yet implemented")
-      override val events: BuildConfigurator.BuildEventController get() = TODO("Not yet implemented")
+      override val events: TestConfigurator.TestEventController get() = TODO("Not yet implemented")
       override val manifest: ElidePackageManifest get() = project.manifest
       override val layout: BuildConfigurator.ProjectDirectories get() = layout
       override val resourcesPath: Path get() = project.resourcesPath
@@ -74,8 +74,8 @@ public object BuildConfigurators {
   @JvmStatic public suspend fun contribute(
     beanContext: BeanContext,
     project: ElideConfiguredProject,
-    to: BuildConfiguration,
-    extraConfigurator: BuildConfigurator? = null,
+    to: TestConfigurator.TestConfiguration,
+    extraConfigurator: TestConfigurator? = null,
   ) {
     contribute(beanContext, project, collect(), to, extraConfigurator)
   }

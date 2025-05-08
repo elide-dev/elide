@@ -33,13 +33,17 @@ public interface TestConfigurator : ProjectConfigurator {
    * ## Test Configuration
    *
    * API and structure provided to [TestConfigurator] instances.
+   *
+   * @property actionScope Project execution scope under which tests will be configured, discovered, and run.
+   * @property resolvers Dependency resolvers assembled for this project's build.
+   * @property projectRoot Root path to the project under configuration.
+   * @property settings Mutable test settings, adjustable by configurators.
    */
   public interface TestConfiguration {
     public val actionScope: ActionScope
     public val resolvers: ResolverRegistry
     public val projectRoot: Path
     public val settings: MutableTestSettings
-    public val registrar: TestingRegistrar
   }
 
   /**
@@ -47,6 +51,14 @@ public interface TestConfigurator : ProjectConfigurator {
    *
    * Describes resources, gathered state, and other contextual information intended for [TestConfigurator] instances at
    * runtime.
+   *
+   * @property beanContext Active Micronaut bean context.
+   * @property project Configured Elide project under test.
+   * @property events Event controller for test execution eventing.
+   * @property layout Project directories for the configured project.
+   * @property manifest Package manifest for the configured project.
+   * @property resourcesPath Path to the resources directory to use (for Elide itself).
+   * @property registrar Testing registrar to use during test discovery.
    */
   public interface ElideTestState {
     public val beanContext: BeanContext
@@ -55,38 +67,77 @@ public interface TestConfigurator : ProjectConfigurator {
     public val layout: ProjectDirectories
     public val manifest: ElidePackageManifest
     public val resourcesPath: Path
+    public val registrar: TestingRegistrar
   }
 
   /**
    * ## Test Notification
+   *
+   * Root of a hierarchy of types used to deliver events about project testing. See [TestEvent], [TestWork],
+   * [TestWorker], and child types.
    */
   public sealed interface TestNotify
 
   /**
    * ## Test Notification: Event
+   *
+   * Describes a generic event which relates to test execution for an Elide project.
    */
   public sealed interface TestEvent : TestNotify
 
   /**
-   * ## Test Notification: Worker
+   * ## Test Notification: Work
+   *
+   * Describes an event which involves execution work (for instance, test execution itself) for an Elide project.
    */
   public sealed interface TestWork : TestEvent
+
+  /**
+   * ## Test Notification: Worker
+   *
+   * Describes an event where a test worker was launched, terminated, or otherwise interacted with.
+   */
   public interface TestWorker : TestNotify
 
   /**
    * ## Test Event Controller
+   *
+   * Controller for formulating and enqueueing test events from callsites.
    */
   public interface TestEventController {}
 
   /**
    * ## Test Settings
+   *
+   * API which provides settings access and control for test facilities within an Elide project.
+   *
+   * @property enableCoverage Whether coverage services are enabled.
+   * @property enableDiscovery Whether discovery services are enabled.
    */
-  public interface TestSettings {}
+  public interface TestSettings {
+    public val enableCoverage: Boolean
+    public val enableDiscovery: Boolean
+  }
+
+  /**
+   * ## Test Settings (Immutable)
+   *
+   * API which provides read-only settings access for test facilities within an Elide project.
+   */
+  @JvmRecord public data class ImmutableTestSettings (
+    override val enableCoverage: Boolean = true,
+    override val enableDiscovery: Boolean = true,
+  ): TestSettings
 
   /**
    * ## Test Settings (Mutable)
+   *
+   * API which provides mutable settings access and control for test facilities within an Elide project.
    */
-  public interface MutableTestSettings: TestSettings {}
+  public data class MutableTestSettings (
+    override var enableCoverage: Boolean = true,
+    override var enableDiscovery: Boolean = true,
+  ): TestSettings
 
   /**
    * Contribute test configuration.

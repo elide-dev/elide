@@ -737,17 +737,23 @@ public sealed interface MultiPathUsage : Comparable<MultiPathUsage> {
   public val testOnly: Boolean get() = false
   public val order: UInt
 
+  public fun expand(): List<MultiPathUsage> = listOf(this).plus(includes()).distinct()
+  public fun includes(): List<MultiPathUsage> = listOf(this)
+
   public data object Compile : MultiPathUsage {
     override val order: UInt get() = 0u
   }
   public data object Runtime : MultiPathUsage {
     override val order: UInt get() = 1u
+    override fun includes(): List<MultiPathUsage> = listOf(Compile)
   }
   public data object TestCompile : MultiPathUsage {
     override val order: UInt get() = 2u
+    override fun includes(): List<MultiPathUsage> = listOf(Compile)
   }
   public data object TestRuntime : MultiPathUsage {
     override val order: UInt get() = 3u
+    override fun includes(): List<MultiPathUsage> = listOf(Compile, Runtime)
   }
 
   override fun compareTo(other: MultiPathUsage): Int {

@@ -15,6 +15,7 @@ package elide.tooling.config
 import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import java.util.ServiceLoader
+import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.manifest.ElidePackageManifest
 
@@ -46,6 +47,7 @@ public object TestConfigurators {
   public suspend fun contribute(
     beanContext: BeanContext,
     project: ElideConfiguredProject,
+    registrar: TestingRegistrar,
     from: Sequence<TestConfigurator>,
     to: TestConfigurator.TestConfiguration,
     extraConfigurator: TestConfigurator? = null,
@@ -60,6 +62,7 @@ public object TestConfigurators {
       override val manifest: ElidePackageManifest get() = project.manifest
       override val layout: BuildConfigurator.ProjectDirectories get() = layout
       override val resourcesPath: Path get() = project.resourcesPath
+      override val registrar: TestingRegistrar get() = registrar
     }
     from.let {
       when (extraConfigurator) {
@@ -74,9 +77,10 @@ public object TestConfigurators {
   @JvmStatic public suspend fun contribute(
     beanContext: BeanContext,
     project: ElideConfiguredProject,
+    registrar: TestingRegistrar,
     to: TestConfigurator.TestConfiguration,
     extraConfigurator: TestConfigurator? = null,
   ) {
-    contribute(beanContext, project, collect(), to, extraConfigurator)
+    contribute(beanContext, project, registrar, collect(), to, extraConfigurator)
   }
 }

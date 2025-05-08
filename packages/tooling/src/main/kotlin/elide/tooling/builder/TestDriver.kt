@@ -13,10 +13,16 @@
 package elide.tooling.builder
 
 import io.micronaut.context.BeanContext
+import java.nio.file.Path
 import kotlinx.coroutines.CoroutineScope
+import elide.exec.Action
+import elide.exec.ActionScope
 import elide.exec.ExecutionBinder
 import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.tooling.config.TestConfigurator.*
+import elide.tooling.config.TestConfigurators
 import elide.tooling.project.ElideProject
+import elide.tooling.registry.ResolverRegistry
 
 /**
  * # Test Driver
@@ -40,12 +46,38 @@ import elide.tooling.project.ElideProject
  */
 public object TestDriver {
   @JvmStatic
+  public suspend fun CoroutineScope.configureTests(
+    beanContext: BeanContext,
+    project: ElideProject,
+    registrar: TestingRegistrar? = null,
+    binder: ExecutionBinder? = null,
+    resolvers: ResolverRegistry? = null,
+    scope: ActionScope? = null,
+  ): TestConfiguration {
+    val effectiveRegistrar = registrar ?: requireNotNull(beanContext.getBean(TestingRegistrar::class.java)) {
+      "Failed to resolve testing registrar from DI context"
+    }
+    val effectiveScope = scope ?: Action.scope()
+    val effectiveResolvers = resolvers ?: ResolverRegistry.create()
+    val settings = MutableTestSettings()
+
+    return object: TestConfiguration {
+      override val actionScope: ActionScope get() = effectiveScope
+      override val resolvers: ResolverRegistry get() = effectiveResolvers
+      override val projectRoot: Path get() = project.root
+      override val settings: MutableTestSettings get() = settings
+    }.also {
+      TestConfigurators.contribute(beanContext, project.load(), effectiveRegistrar, it)
+    }
+  }
+
+  @JvmStatic
   public suspend fun CoroutineScope.discoverTests(
     beanContext: BeanContext,
     project: ElideProject,
     registrar: TestingRegistrar? = null,
     binder: ExecutionBinder? = null,
   ) {
-
+    configureTests(beanContext, project, registrar, binder)
   }
 }

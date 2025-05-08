@@ -2057,11 +2057,13 @@ public abstract interface class elide/tool/MultiPath$MutableMultiPathContainer :
 public abstract interface class elide/tool/MultiPathUsage : java/lang/Comparable {
 	public fun compareTo (Lelide/tool/MultiPathUsage;)I
 	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun expand ()Ljava/util/List;
 	public fun getApiSensitive ()Z
 	public fun getInternalOnly ()Z
 	public abstract fun getOrder-pVg5ArA ()I
 	public fun getRuntimeOnly ()Z
 	public fun getTestOnly ()Z
+	public fun includes ()Ljava/util/List;
 }
 
 public final class elide/tool/MultiPathUsage$Compile : elide/tool/MultiPathUsage {
@@ -2077,6 +2079,7 @@ public final class elide/tool/MultiPathUsage$Runtime : elide/tool/MultiPathUsage
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getOrder-pVg5ArA ()I
 	public fun hashCode ()I
+	public fun includes ()Ljava/util/List;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -2085,6 +2088,7 @@ public final class elide/tool/MultiPathUsage$TestCompile : elide/tool/MultiPathU
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getOrder-pVg5ArA ()I
 	public fun hashCode ()I
+	public fun includes ()Ljava/util/List;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -2093,6 +2097,7 @@ public final class elide/tool/MultiPathUsage$TestRuntime : elide/tool/MultiPathU
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getOrder-pVg5ArA ()I
 	public fun hashCode ()I
+	public fun includes ()Ljava/util/List;
 	public fun toString ()Ljava/lang/String;
 }
 

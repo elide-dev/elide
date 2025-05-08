@@ -64,6 +64,7 @@ import javax.tools.ToolProvider
 import jakarta.inject.Provider
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -137,6 +138,8 @@ import elide.tool.project.ProjectManager
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
+import elide.tooling.builder.TestDriver
+import elide.tooling.builder.TestDriver.discoverTests
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.project.ElideProject
 import elide.tooling.project.ProjectEcosystem
@@ -1379,6 +1382,7 @@ internal class ToolShellCommand @Inject constructor(
   ) {
     // enter VM context
     var didPrepare = false
+    val project = activeProject.value
     val ctx = ctxAccessor.invoke()
     ctx.enter()
 
@@ -1391,6 +1395,13 @@ internal class ToolShellCommand @Inject constructor(
       }
 
       // invoke all test contributors (handles registration for non-source tests)
+      if (project != null) {
+        runBlocking {
+          coroutineScope {
+            discoverTests(beanContext, project)
+          }
+        }
+      }
 
       // continue to configure and plan test run
       didPrepare = true
@@ -1404,7 +1415,7 @@ internal class ToolShellCommand @Inject constructor(
       // start up the test runner and run all eligible/matched tests
       logging.info { "Would run ${allTests.size} tests" }
       allTests.forEach {
-        logging.info { "- scope=(${it.first.simpleName}) test=(${it.second.qualifiedName})" }
+        logging.info { "- scope=(${it.first.qualifiedName}) test=(${it.second.qualifiedName})" }
       }
       return
 
@@ -1923,7 +1934,22 @@ internal class ToolShellCommand @Inject constructor(
         projectResolution.join()
 
         // @TODO ability to select an entrypoint
-        runnable = activeProject.value?.manifest?.entrypoint?.first()
+
+        // make sure we don't write this in test mode, which gathers tests instead of running
+        if (!testMode()) {
+          runnable = activeProject.value?.manifest?.entrypoint?.first()?.let {
+            // resolve against the current directory before assigning
+            val path = Path.of(it)
+
+            if (path.isAbsolute) {
+              // absolute paths go right through
+              it
+            } else {
+              // otherwise, resolve against the project, not cwd by default
+              activeProject.value!!.root.resolve(path).absolutePathString()
+            }
+          }
+        }
       }
 
       // if we have a runnable that is a simple string, maybe it's mapped to a script name?
@@ -2051,7 +2077,16 @@ internal class ToolShellCommand @Inject constructor(
                 it,
               )
             } else when {
-              testMode() -> TODO("Plain `elide test` is not supported yet.")
+              // trigger a test-run with no sources; this also triggers, by side effect, test discovery.
+              testMode() -> readRunTests(
+                "tests",
+                langs,
+                primaryLang(null),
+                it,
+                emptyList(),
+                guestExec,
+              )
+
               else -> logging.error("To run a server, pass a file, or code via stdin or `-c`")
             }
 

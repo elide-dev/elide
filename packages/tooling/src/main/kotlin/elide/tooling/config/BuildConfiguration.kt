@@ -22,6 +22,11 @@ import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.ElideProject
 import elide.tooling.registry.ResolverRegistry
 
+/**
+ * # Build Configuration
+ *
+ * Static utilities which assist in the construction of build configuration objects and related types.
+ */
 public object BuildConfiguration {
   @JvmStatic public fun create(): BuildConfiguration = create(
     Path.of(System.getProperty("user.dir")),

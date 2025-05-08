@@ -26,11 +26,7 @@ import elide.vm.annotations.Polyglot
     public val qualifiedName: String
 
     public interface Suite : TestGraphNode
-
-    public interface Test : TestGraphNode {
-      public val block: Value
-    }
-
+    public interface Test : TestGraphNode
     public interface Assertion : TestGraphNode
   }
 

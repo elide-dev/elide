@@ -50,7 +50,7 @@ public object TestDriver {
     beanContext: BeanContext,
     project: ElideProject,
     registrar: TestingRegistrar? = null,
-    binder: ExecutionBinder? = null,
+    binder: ExecutionBinder? = null,  // @TODO test binder
     resolvers: ResolverRegistry? = null,
     scope: ActionScope? = null,
   ): TestConfiguration {

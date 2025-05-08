@@ -308,14 +308,47 @@ public abstract interface class elide/tooling/config/TestConfigurator$TestEvent 
 }
 
 public abstract interface class elide/tooling/config/TestConfigurator$TestEventController {
+	public abstract fun emit (Lelide/tooling/config/TestConfigurator$TestNotify;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/config/TestConfigurator$TestEventController$Inert : elide/tooling/config/TestConfigurator$TestEventController {
+	public static final field INSTANCE Lelide/tooling/config/TestConfigurator$TestEventController$Inert;
+	public fun emit (Lelide/tooling/config/TestConfigurator$TestNotify;Ljava/lang/Object;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/TestConfigurator$TestFail : elide/tooling/config/TestConfigurator$TestStatus {
+	public static final field INSTANCE Lelide/tooling/config/TestConfigurator$TestFail;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class elide/tooling/config/TestConfigurator$TestNotify {
 }
 
+public final class elide/tooling/config/TestConfigurator$TestPass : elide/tooling/config/TestConfigurator$TestStatus {
+	public static final field INSTANCE Lelide/tooling/config/TestConfigurator$TestPass;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class elide/tooling/config/TestConfigurator$TestSettings {
 	public abstract fun getEnableCoverage ()Z
 	public abstract fun getEnableDiscovery ()Z
+}
+
+public final class elide/tooling/config/TestConfigurator$TestSkip : elide/tooling/config/TestConfigurator$TestStatus {
+	public static final field INSTANCE Lelide/tooling/config/TestConfigurator$TestSkip;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/config/TestConfigurator$TestStatus : elide/tooling/config/TestConfigurator$TestNotify {
 }
 
 public abstract interface class elide/tooling/config/TestConfigurator$TestWork : elide/tooling/config/TestConfigurator$TestEvent {
@@ -331,6 +364,174 @@ public final class elide/tooling/config/TestConfigurators {
 	public static final fun contribute (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lelide/runtime/intrinsics/testing/TestingRegistrar;Lkotlin/sequences/Sequence;Lelide/tooling/config/TestConfigurator$TestConfiguration;Lelide/tooling/config/TestConfigurator;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun contribute$default (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lelide/runtime/intrinsics/testing/TestingRegistrar;Lelide/tooling/config/TestConfigurator$TestConfiguration;Lelide/tooling/config/TestConfigurator;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static synthetic fun contribute$default (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lelide/runtime/intrinsics/testing/TestingRegistrar;Lkotlin/sequences/Sequence;Lelide/tooling/config/TestConfigurator$TestConfiguration;Lelide/tooling/config/TestConfigurator;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport {
+	public static final field Companion Lelide/tooling/coverage/CoverageJsonReport$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lelide/tooling/coverage/CoverageJsonReport;
+	public static synthetic fun copy$default (Lelide/tooling/coverage/CoverageJsonReport;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/coverage/CoverageJsonReport;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntries ()Ljava/util/List;
+	public fun hashCode ()I
+	public static final fun parse (Ljava/io/InputStream;)Lelide/tooling/coverage/CoverageJsonReport;
+	public static final fun parse (Ljava/lang/String;)Lelide/tooling/coverage/CoverageJsonReport;
+	public final fun toJson ()Ljava/lang/String;
+	public final fun toJson (Ljava/io/OutputStream;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$Companion {
+	public final fun parse (Ljava/io/InputStream;)Lelide/tooling/coverage/CoverageJsonReport;
+	public final fun parse (Ljava/lang/String;)Lelide/tooling/coverage/CoverageJsonReport;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza {
+	public static final field Companion Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;
+	public static synthetic fun copy$default (Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getPath ()Ljava/lang/String;
+	public final fun getRoots ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageRoot {
+	public static final field Companion Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot$Companion;
+	public fun <init> (Ljava/lang/String;ZLjava/lang/Integer;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;ZLjava/lang/Integer;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/Integer;
+	public final fun component4 ()Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
+	public final fun component5 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;ZLjava/lang/Integer;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;Ljava/util/List;)Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;
+	public static synthetic fun copy$default (Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;Ljava/lang/String;ZLjava/lang/Integer;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCount ()Ljava/lang/Integer;
+	public final fun getCovered ()Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getSections ()Ljava/util/List;
+	public final fun getSourceSection ()Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageRoot$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageRoot$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageSection {
+	public static final field Companion Lelide/tooling/coverage/CoverageJsonReport$CoverageSection$Companion;
+	public fun <init> (ZLjava/lang/Integer;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;)V
+	public synthetic fun <init> (ZLjava/lang/Integer;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
+	public final fun copy (ZLjava/lang/Integer;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;
+	public static synthetic fun copy$default (Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;ZLjava/lang/Integer;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;ILjava/lang/Object;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCount ()Ljava/lang/Integer;
+	public final fun getCovered ()Z
+	public final fun getSourceSection ()Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageSection$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$CoverageSection$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageSection$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageSourceSection {
+	public static final field Companion Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection$Companion;
+	public fun <init> (Ljava/lang/String;IIIIIII)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()I
+	public final fun component6 ()I
+	public final fun component7 ()I
+	public final fun component8 ()I
+	public final fun copy (Ljava/lang/String;IIIIIII)Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
+	public static synthetic fun copy$default (Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;Ljava/lang/String;IIIIIIIILjava/lang/Object;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCharEndIndex ()I
+	public final fun getCharIndex ()I
+	public final fun getCharLength ()I
+	public final fun getCharacters ()Ljava/lang/String;
+	public final fun getEndColumn ()I
+	public final fun getEndLine ()I
+	public final fun getStartColumn ()I
+	public final fun getStartLine ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageSourceSection$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/coverage/CoverageJsonReport$CoverageSourceSection$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public abstract interface class elide/tooling/deps/DependencyEcosystem {
@@ -3634,6 +3835,121 @@ public final class elide/tooling/registry/ResolverRegistry$Companion {
 	public final fun create ()Lelide/tooling/registry/ResolverRegistry;
 }
 
+public abstract class elide/tooling/runner/AbstractTestRunner : elide/tooling/runner/TestRunner, java/lang/AutoCloseable {
+	public fun <init> (Lelide/tooling/runner/TestRunner$Config;Ljava/util/concurrent/Executor;Lelide/tooling/config/TestConfigurator$TestEventController;Lkotlin/jvm/functions/Function0;Lkotlin/time/TimeSource;)V
+	public synthetic fun <init> (Lelide/tooling/runner/TestRunner$Config;Ljava/util/concurrent/Executor;Lelide/tooling/config/TestConfigurator$TestEventController;Lkotlin/jvm/functions/Function0;Lkotlin/time/TimeSource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun accept (Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun awaitSettled (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun close ()V
+	protected final fun fail (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/testing/TestResult;
+	public static synthetic fun fail$default (Lelide/tooling/runner/AbstractTestRunner;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestResult;
+	public fun getConfig ()Lelide/tooling/runner/TestRunner$Config;
+	public fun getEvents ()Lelide/tooling/config/TestConfigurator$TestEventController;
+	public fun getExecutor ()Ljava/util/concurrent/Executor;
+	protected final fun pass ()Lelide/runtime/intrinsics/testing/TestResult;
+	protected fun resolve (Lelide/runtime/core/PolyglotContext;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;)Lelide/runtime/intrinsics/testing/TestEntrypoint;
+	protected abstract fun runTest (Lkotlinx/coroutines/CoroutineScope;Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)Lkotlinx/coroutines/Deferred;
+	protected fun runnable (Lelide/runtime/core/PolyglotContext;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;)Lelide/runtime/intrinsics/testing/Reason;
+	protected final fun skip (Lelide/runtime/intrinsics/testing/Reason;)Lelide/runtime/intrinsics/testing/TestResult;
+	protected final fun testExec (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
+	protected final fun testFailed (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Ljava/lang/Throwable;)V
+	protected final fun testSeen (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
+	protected final fun testSkipped (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/Reason;)V
+	protected final fun testSucceeded (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
+}
+
+public final class elide/tooling/runner/AbstractTestRunner$TestCaseResult : java/lang/Record {
+	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestResult;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun case ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
+	public final fun component1 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public final fun component2 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
+	public final fun component3 ()Lelide/runtime/intrinsics/testing/TestResult;
+	public final fun component4-UwyO8pc ()J
+	public final fun copy-Wn2Vu4Y (Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestResult;J)Lelide/tooling/runner/AbstractTestRunner$TestCaseResult;
+	public static synthetic fun copy-Wn2Vu4Y$default (Lelide/tooling/runner/AbstractTestRunner$TestCaseResult;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestResult;JILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestCaseResult;
+	public final fun duration ()J
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun result ()Lelide/runtime/intrinsics/testing/TestResult;
+	public final fun scope ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public fun toString ()Ljava/lang/String;
+}
+
+protected final class elide/tooling/runner/AbstractTestRunner$TestExecutionResult : java/lang/Record {
+	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestResult;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
+	public final fun component2 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public final fun component3 ()Lelide/runtime/intrinsics/testing/TestResult;
+	public final fun component4-UwyO8pc ()J
+	public final fun copy-Wn2Vu4Y (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestResult;J)Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;
+	public static synthetic fun copy-Wn2Vu4Y$default (Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestResult;JILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun result ()Lelide/runtime/intrinsics/testing/TestResult;
+	public final fun scope ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public final fun test ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
+	public final fun timing ()J
+	public fun toString ()Ljava/lang/String;
+}
+
+protected final class elide/tooling/runner/AbstractTestRunner$TestRunRequest : java/lang/Record {
+	public fun <init> (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/core/PolyglotContext;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
+	public final fun component2 ()Lelide/runtime/intrinsics/testing/TestEntrypoint;
+	public final fun component3 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public final fun component4 ()Lelide/runtime/core/PolyglotContext;
+	public final fun context ()Lelide/runtime/core/PolyglotContext;
+	public final fun copy (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/core/PolyglotContext;)Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;
+	public static synthetic fun copy$default (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/core/PolyglotContext;ILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;
+	public final fun entry ()Lelide/runtime/intrinsics/testing/TestEntrypoint;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun scope ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public final fun test ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/runner/AbstractTestRunner$TestRunResult : java/lang/Record {
+	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestResult;ILelide/tooling/runner/AbstractTestRunner$TestStats;Ljava/util/List;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestResult;ILelide/tooling/runner/AbstractTestRunner$TestStats;Ljava/util/List;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/runtime/intrinsics/testing/TestResult;
+	public final fun component2-pVg5ArA ()I
+	public final fun component3 ()Lelide/tooling/runner/AbstractTestRunner$TestStats;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Z
+	public final fun copy-roUYKiI (Lelide/runtime/intrinsics/testing/TestResult;ILelide/tooling/runner/AbstractTestRunner$TestStats;Ljava/util/List;Z)Lelide/tooling/runner/AbstractTestRunner$TestRunResult;
+	public static synthetic fun copy-roUYKiI$default (Lelide/tooling/runner/AbstractTestRunner$TestRunResult;Lelide/runtime/intrinsics/testing/TestResult;ILelide/tooling/runner/AbstractTestRunner$TestStats;Ljava/util/List;ZILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestRunResult;
+	public final fun earlyExit ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun exitCode ()I
+	public fun hashCode ()I
+	public final fun result ()Lelide/runtime/intrinsics/testing/TestResult;
+	public final fun results ()Ljava/util/List;
+	public final fun stats ()Lelide/tooling/runner/AbstractTestRunner$TestStats;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/runner/AbstractTestRunner$TestStats : java/lang/Record {
+	public synthetic fun <init> (IIIIIJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-pVg5ArA ()I
+	public final fun component2-pVg5ArA ()I
+	public final fun component3-pVg5ArA ()I
+	public final fun component4-pVg5ArA ()I
+	public final fun component5-pVg5ArA ()I
+	public final fun component6-UwyO8pc ()J
+	public final fun copy-NqIEkfQ (IIIIIJ)Lelide/tooling/runner/AbstractTestRunner$TestStats;
+	public static synthetic fun copy-NqIEkfQ$default (Lelide/tooling/runner/AbstractTestRunner$TestStats;IIIIIJILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestStats;
+	public final fun duration ()J
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun executions ()I
+	public final fun fails ()I
+	public fun hashCode ()I
+	public final fun passes ()I
+	public final fun skips ()I
+	public final fun tests ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/tooling/runner/ProcessRunner {
 	public static final field INSTANCE Lelide/tooling/runner/ProcessRunner;
 	public static final fun build (Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/ProcessRunner$ProcessTaskBuilder;
@@ -3791,5 +4107,151 @@ public final class elide/tooling/runner/ProcessRunner$StdStreams$Defaults : elid
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/runner/SerialTestRunner : elide/tooling/runner/AbstractTestRunner {
+}
+
+public final class elide/tooling/runner/SerialTestRunner$Builder : elide/tooling/runner/TestRunner$Builder {
+	public fun build (Lelide/tooling/config/TestConfigurator$TestEventController;)Lelide/tooling/runner/SerialTestRunner;
+	public synthetic fun build (Lelide/tooling/config/TestConfigurator$TestEventController;)Lelide/tooling/runner/TestRunner;
+	public fun getConfig ()Lelide/tooling/runner/TestRunner$MutableConfig;
+	public fun getContextProvider ()Lkotlin/jvm/functions/Function0;
+	public fun getExecutor ()Ljava/util/concurrent/Executor;
+	public fun setExecutor (Ljava/util/concurrent/Executor;)V
+}
+
+public abstract interface class elide/tooling/runner/TestRunner : java/lang/AutoCloseable {
+	public static final field Companion Lelide/tooling/runner/TestRunner$Companion;
+	public abstract fun accept (Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun accept$default (Lelide/tooling/runner/TestRunner;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun awaitSettled (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getConfig ()Lelide/tooling/runner/TestRunner$Config;
+	public abstract fun getEvents ()Lelide/tooling/config/TestConfigurator$TestEventController;
+	public abstract fun getExecutor ()Ljava/util/concurrent/Executor;
+	public static fun serial (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
+	public static fun serialBuilder (Lkotlin/jvm/functions/Function0;)Lelide/tooling/runner/SerialTestRunner$Builder;
+	public static fun threaded (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
+	public static fun threadedBuilder (Lkotlin/jvm/functions/Function0;)Lelide/tooling/runner/ThreadedTestRunner$Builder;
+}
+
+public abstract interface class elide/tooling/runner/TestRunner$Builder {
+	public abstract fun build (Lelide/tooling/config/TestConfigurator$TestEventController;)Lelide/tooling/runner/TestRunner;
+	public static synthetic fun build$default (Lelide/tooling/runner/TestRunner$Builder;Lelide/tooling/config/TestConfigurator$TestEventController;ILjava/lang/Object;)Lelide/tooling/runner/TestRunner;
+	public abstract fun getConfig ()Lelide/tooling/runner/TestRunner$MutableConfig;
+	public abstract fun getContextProvider ()Lkotlin/jvm/functions/Function0;
+	public abstract fun getExecutor ()Ljava/util/concurrent/Executor;
+	public abstract fun setExecutor (Ljava/util/concurrent/Executor;)V
+}
+
+public final class elide/tooling/runner/TestRunner$Companion {
+	public final fun serial (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
+	public final fun serialBuilder (Lkotlin/jvm/functions/Function0;)Lelide/tooling/runner/SerialTestRunner$Builder;
+	public final fun threaded (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
+	public final fun threadedBuilder (Lkotlin/jvm/functions/Function0;)Lelide/tooling/runner/ThreadedTestRunner$Builder;
+}
+
+public abstract interface class elide/tooling/runner/TestRunner$Config {
+	public abstract fun getActionScope ()Lelide/exec/ActionScope;
+	public abstract fun getDebug ()Z
+	public abstract fun getDry ()Z
+	public abstract fun getFailFast ()Z
+	public abstract fun getParallelism ()I
+	public abstract fun getProject ()Lelide/tooling/project/ElideProject;
+	public abstract fun getProjectRoot ()Ljava/nio/file/Path;
+	public abstract fun getQuiet ()Z
+	public abstract fun getResourcesPath ()Ljava/nio/file/Path;
+	public abstract fun getTestPredicate ()Ljava/util/function/Predicate;
+	public abstract fun getVerbose ()Z
+}
+
+public final class elide/tooling/runner/TestRunner$ConfigDefaults {
+	public static final field DEBUG Z
+	public static final field DRY Z
+	public static final field FAIL_FAST Z
+	public static final field INSTANCE Lelide/tooling/runner/TestRunner$ConfigDefaults;
+	public static final field QUIET Z
+	public static final field VERBOSE Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/runner/TestRunner$ImmutableConfig : java/lang/Record, elide/tooling/runner/TestRunner$Config {
+	public fun actionScope ()Lelide/exec/ActionScope;
+	public final fun component1 ()Z
+	public final fun component10 ()Ljava/nio/file/Path;
+	public final fun component11 ()I
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Z
+	public final fun component6 ()Lelide/exec/ActionScope;
+	public final fun component7 ()Lelide/tooling/project/ElideProject;
+	public final fun component8 ()Ljava/util/function/Predicate;
+	public final fun component9 ()Ljava/nio/file/Path;
+	public final fun copy (ZZZZZLelide/exec/ActionScope;Lelide/tooling/project/ElideProject;Ljava/util/function/Predicate;Ljava/nio/file/Path;Ljava/nio/file/Path;I)Lelide/tooling/runner/TestRunner$ImmutableConfig;
+	public static synthetic fun copy$default (Lelide/tooling/runner/TestRunner$ImmutableConfig;ZZZZZLelide/exec/ActionScope;Lelide/tooling/project/ElideProject;Ljava/util/function/Predicate;Ljava/nio/file/Path;Ljava/nio/file/Path;IILjava/lang/Object;)Lelide/tooling/runner/TestRunner$ImmutableConfig;
+	public fun debug ()Z
+	public fun dry ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun failFast ()Z
+	public synthetic fun getActionScope ()Lelide/exec/ActionScope;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getDry ()Z
+	public synthetic fun getFailFast ()Z
+	public synthetic fun getParallelism ()I
+	public synthetic fun getProject ()Lelide/tooling/project/ElideProject;
+	public synthetic fun getProjectRoot ()Ljava/nio/file/Path;
+	public synthetic fun getQuiet ()Z
+	public synthetic fun getResourcesPath ()Ljava/nio/file/Path;
+	public synthetic fun getTestPredicate ()Ljava/util/function/Predicate;
+	public synthetic fun getVerbose ()Z
+	public fun hashCode ()I
+	public fun parallelism ()I
+	public fun project ()Lelide/tooling/project/ElideProject;
+	public fun projectRoot ()Ljava/nio/file/Path;
+	public fun quiet ()Z
+	public fun resourcesPath ()Ljava/nio/file/Path;
+	public fun testPredicate ()Ljava/util/function/Predicate;
+	public fun toString ()Ljava/lang/String;
+	public fun verbose ()Z
+}
+
+public final class elide/tooling/runner/TestRunner$MutableConfig : elide/tooling/runner/TestRunner$Config {
+	public final fun build ()Lelide/tooling/runner/TestRunner$ImmutableConfig;
+	public fun getActionScope ()Lelide/exec/ActionScope;
+	public fun getDebug ()Z
+	public fun getDry ()Z
+	public fun getFailFast ()Z
+	public fun getParallelism ()I
+	public fun getProject ()Lelide/tooling/project/ElideProject;
+	public fun getProjectRoot ()Ljava/nio/file/Path;
+	public fun getQuiet ()Z
+	public fun getResourcesPath ()Ljava/nio/file/Path;
+	public fun getTestPredicate ()Ljava/util/function/Predicate;
+	public fun getVerbose ()Z
+	public fun setActionScope (Lelide/exec/ActionScope;)V
+	public fun setDebug (Z)V
+	public fun setDry (Z)V
+	public fun setFailFast (Z)V
+	public fun setProject (Lelide/tooling/project/ElideProject;)V
+	public fun setProjectRoot (Ljava/nio/file/Path;)V
+	public fun setQuiet (Z)V
+	public fun setResourcesPath (Ljava/nio/file/Path;)V
+	public fun setTestPredicate (Ljava/util/function/Predicate;)V
+	public fun setVerbose (Z)V
+}
+
+public final class elide/tooling/runner/ThreadedTestRunner : elide/tooling/runner/AbstractTestRunner {
+}
+
+public final class elide/tooling/runner/ThreadedTestRunner$Builder : elide/tooling/runner/TestRunner$Builder {
+	public synthetic fun build (Lelide/tooling/config/TestConfigurator$TestEventController;)Lelide/tooling/runner/TestRunner;
+	public fun build (Lelide/tooling/config/TestConfigurator$TestEventController;)Lelide/tooling/runner/ThreadedTestRunner;
+	public fun getConfig ()Lelide/tooling/runner/TestRunner$MutableConfig;
+	public fun getContextProvider ()Lkotlin/jvm/functions/Function0;
+	public fun getExecutor ()Ljava/util/concurrent/Executor;
+	public fun setExecutor (Ljava/util/concurrent/Executor;)V
 }
 

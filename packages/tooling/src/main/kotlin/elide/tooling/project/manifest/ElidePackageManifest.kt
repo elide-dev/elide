@@ -36,6 +36,7 @@ public data class ElidePackageManifest(
   val ruby: RubySettings? = null,
   val pkl: PklSettings? = null,
   val sources: Map<String, SourceSet> = emptyMap(),
+  val tests: TestingSettings? = null,
 ) : PackageManifest {
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.Elide
 
@@ -301,6 +302,14 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class PklSettings(
     val debug: Boolean = false,
+  )
+
+  @JvmRecord @Serializable public data class CoverageSettings(
+    val enabled: Boolean = false,
+  )
+
+  @JvmRecord @Serializable public data class TestingSettings(
+    val coverage: CoverageSettings = CoverageSettings(),
   )
 }
 

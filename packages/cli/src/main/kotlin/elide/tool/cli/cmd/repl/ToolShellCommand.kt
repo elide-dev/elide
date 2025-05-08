@@ -98,6 +98,7 @@ import elide.runtime.gvm.kotlin.KotlinPrecompiler
 import elide.runtime.gvm.kotlin.KotlinScriptCallable
 import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.runtime.plugins.Coverage
 import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
@@ -313,6 +314,15 @@ internal class ToolShellCommand @Inject constructor(
     get() = Supplier {
       registeredVfsListeners.toList()
     }
+
+  /** Activates coverage in test mode. */
+  @Option(
+    names = ["--coverage"],
+    description = ["Enable or disable coverage during `elide test`"],
+    negatable = true,
+    defaultValue = "true",
+  )
+  internal var enableCoverage: Boolean = true
 
   /** Specifies the guest language to run. */
   @Option(
@@ -1385,7 +1395,6 @@ internal class ToolShellCommand @Inject constructor(
     val project = activeProject.value
     val ctx = ctxAccessor.invoke()
     ctx.enter()
-
     try {
       logging.trace("Entered VM for test run (language: ${language.id}). Consuming script from: '$label'")
 
@@ -1675,6 +1684,21 @@ internal class ToolShellCommand @Inject constructor(
       else -> requireNotNull(System.getProperty("elide.gvmResources")) {
         "Failed to resolve GraalVM resources path: please set `elide.gvmResources`"
       }.let { Path(it) }
+    }
+
+    // configure test-mode plugins like coverage
+    if (testMode()) configure(Coverage) {
+      val projectCoverageSettings = activeProject.value?.manifest?.tests?.coverage
+      enabled = enableCoverage || projectCoverageSettings?.enabled == true
+      activeProject.value?.let {
+        outputDirectory = it.root
+          .resolve(".dev")
+          .resolve("coverage").also {
+            if (!it.exists()) {
+              Files.createDirectories(it)
+            }
+          }
+      }
     }
 
     langs.forEach { lang ->

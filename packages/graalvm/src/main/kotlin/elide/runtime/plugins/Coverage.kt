@@ -22,7 +22,7 @@ import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.plugin
 
 // Default coverage format to use.
-private const val DEFAULT_COVERAGE_FORMAT = "lcov"
+private const val DEFAULT_COVERAGE_FORMAT = "json"
 
 /**
  * Engine plugin providing coverage instrumentation and reporting.
@@ -38,7 +38,7 @@ private const val DEFAULT_COVERAGE_FORMAT = "lcov"
     enableOption("coverage")
     enableOption("coverage.Count")
 
-    // if file outputs are requested, we always generate lcov, as we can convert that into other formats.
+    // if file outputs are requested, we always generate a parseable type, as we can convert that into other formats.
     when (val out = config.outputDirectory) {
       // nothing to do (no output on-disk specified)
       null -> {}

@@ -17,6 +17,8 @@ package elide.tooling.jvm
 import io.github.classgraph.ClassInfo
 import io.github.classgraph.MethodInfo
 import java.util.stream.Stream
+import kotlin.io.path.absolute
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
@@ -78,11 +80,13 @@ internal class JvmTestConfigurator : TestConfigurator {
       .resolve("jvm") // `.dev/artifacts/jvm/...`
       .resolve("classes") // `.../classes/...`
       .resolve("main") // `.../classes/main/...`
+      .absolute()
 
     val javacTestClassesOutput = state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
       .resolve("classes") // `.../classes/...`
       .resolve("test") // `.../classes/test/...`
+      .absolute()
 
     if (javacMainClassesOutput.exists() && javacTestClassesOutput.exists()) {
       val resolver = config.resolvers[DependencyResolver.MavenResolver::class] as? MavenAetherResolver
@@ -97,7 +101,7 @@ internal class JvmTestConfigurator : TestConfigurator {
         ).plus(
           classpathProvider?.asList()?.map { it.path } ?: emptyList()
         )
-      )) {
+      ), root = config.projectRoot) {
         // we need to scan for full class and method info, so we can catch method and class tests.
         classgraph.enableClassInfo()
         classgraph.enableAnnotationInfo()

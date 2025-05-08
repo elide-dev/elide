@@ -12,7 +12,7 @@
  */
 @file:Suppress("MnInjectionPoints")
 
-package elide.tool.project
+package elide.tooling.project
 
 import java.io.InputStream
 import java.io.OutputStream
@@ -20,13 +20,19 @@ import java.nio.file.Path
 import jakarta.inject.Provider
 import elide.annotations.Inject
 import elide.annotations.Singleton
-import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.codecs.ManifestCodec
 import elide.tooling.project.codecs.PackageManifestCodec
-import elide.tooling.project.manifest.*
+import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.GradleCatalogManifest
+import elide.tooling.project.manifest.MavenPomManifest
+import elide.tooling.project.manifest.NodePackageManifest
+import elide.tooling.project.manifest.PackageManifest
+import elide.tooling.project.manifest.PyProjectManifest
+import elide.tooling.project.manifest.PythonRequirementsManifest
+import elide.tooling.project.manifest.merge
 
 @Singleton
-class CompositePackageManifestService @Inject constructor (
+public class CompositePackageManifestService @Inject constructor (
   @ManifestCodec(ProjectEcosystem.Elide)
   private val elideCodecProvider: Provider<PackageManifestCodec<ElidePackageManifest>>,
   @ManifestCodec(ProjectEcosystem.Node)

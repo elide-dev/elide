@@ -3811,6 +3811,12 @@
       "glob": "META-INF/services/elide.runtime.intrinsics.GuestIntrinsic"
     },
     {
+      "glob": "META-INF/services/elide.tooling.config.BuildConfigurator"
+    },
+    {
+      "glob": "META-INF/services/elide.tooling.config.TestConfigurator"
+    },
+    {
       "glob": "META-INF/services/io.micronaut.context.ApplicationContextConfigurer"
     },
     {

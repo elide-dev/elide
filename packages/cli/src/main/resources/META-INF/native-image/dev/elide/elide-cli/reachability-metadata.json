@@ -7,6 +7,74 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "sun.util.logging.resources.logging"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.AntClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.ClassGraphClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.CxfContainerClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.EquinoxClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.EquinoxContextFinderClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.FallbackClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.FelixClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.JBossClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.JPMSClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.OSGiDefaultClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.ParentLastDelegationOrderTestClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.PlexusClassWorldsClassRealmClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.QuarkusClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.SpringBootRestartClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.TomcatWebappClassLoaderBaseHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.URLClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.UnoOneJarClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.WeblogicClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.WebsphereLibertyClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.classloaderhandler.WebsphereTraditionalClassLoaderHandler"
+    },
+    {
+      "type": "nonapi.io.github.classgraph.scanspec.ScanSpec",
+      "allDeclaredFields": true
+>>>>>>> 0a2ec3172 (fix: project-relative classpath scanning)
+    },
+    {
       "type": "org.jetbrains.kotlin.com.intellij.psi.augment.PsiAugmentProvider[]",
       "unsafeAllocated": true
     },
@@ -217,6 +285,9 @@
     },
     {
       "type": "elide.tooling.jvm.JvmBuildConfigurator"
+    },
+    {
+      "type": "elide.tooling.jvm.JvmTestConfigurator"
     },
     {
       "type": "elide.tooling.jvm.resolver.MavenAetherResolver",
@@ -731,7 +802,7 @@
       "type": "java.util.Map"
     },
     {
-      "type": "elide.tool.project.$CompositePackageManifestService$Definition",
+      "type": "elide.tooling.project.$CompositePackageManifestService$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -3733,7 +3804,7 @@
       ]
     },
     {
-      "type": "elide.tool.project.$CompositePackageManifestService$Definition",
+      "type": "elide.tooling.project.$CompositePackageManifestService$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -7512,6 +7583,12 @@
       "glob": "META-INF/resources/engine/libtruffleattach/linux/amd64/sha256"
     },
     {
+      "glob": "META-INF/services/elide.tooling.config.BuildConfigurator"
+    },
+    {
+      "glob": "META-INF/services/elide.tooling.config.TestConfigurator"
+    },
+    {
       "glob": "META-INF/services/ch.qos.logback.classic.spi.Configurator"
     },
     {
@@ -7661,6 +7738,9 @@
     }
   ],
   "bundles": [
+    {
+      "name": "sun.util.logging.resources.logging"
+    },
     {
       "name": "ElideTool",
       "locales": [

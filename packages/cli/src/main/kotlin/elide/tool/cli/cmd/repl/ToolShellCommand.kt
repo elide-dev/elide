@@ -133,7 +133,7 @@ import elide.tool.exec.SubprocessRunner.subprocess
 import elide.tool.exec.allProjectPaths
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
-import elide.tool.project.PackageManifestService
+import elide.tooling.project.PackageManifestService
 import elide.tool.project.ProjectManager
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies

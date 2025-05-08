@@ -29,7 +29,7 @@ import elide.tool.cli.*
 import elide.tool.cli.cmd.tool.EmbeddedTool.*
 import elide.tool.cli.cmd.tool.ToolAction.INSTALL
 import elide.tool.io.RuntimeWorkdirManager
-import elide.tool.project.PackageManifestService
+import elide.tooling.project.PackageManifestService
 import elide.tool.project.ProjectManager
 import elide.tooling.project.ElideProject
 

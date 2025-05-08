@@ -53,6 +53,7 @@ dependencies {
   api(libs.pkl.core) { pklExclusions() }
   api(libs.pkl.config.java) { pklExclusions() }
   api(libs.pkl.config.kotlin) { pklExclusions() }
+  implementation(libs.classgraph)
   implementation(libs.semver)
   implementation(libs.purl)
   implementation(libs.mordant)

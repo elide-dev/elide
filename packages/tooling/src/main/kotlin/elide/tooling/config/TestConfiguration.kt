@@ -13,8 +13,7 @@
 package elide.tooling.config
 
 /**
- * # Project Configurator
  *
- * Base of a sealed hierarchy of types which contribute to Elide project configuration at runtime.
  */
-public sealed interface ProjectConfigurator
+public object TestConfiguration {
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -135,7 +135,9 @@ val optsOut: String = layout.buildDirectory.file("jlink.args")
 dependencies {
   api(projects.packages.engine)
   api(libs.graalvm.polyglot.java.community)
+  implementation(libs.classgraph)
   implementation(libs.kotlinx.coroutines.core)
+  implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.graalvm.espresso.hotswap)
   implementation(libs.graalvm.espresso.language)
   implementation(libs.graalvm.espresso.resources.jdk21)

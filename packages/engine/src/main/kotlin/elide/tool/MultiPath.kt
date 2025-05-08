@@ -12,6 +12,7 @@
  */
 package elide.tool
 
+import org.graalvm.nativeimage.ImageInfo
 import java.nio.file.Path
 import java.util.LinkedList
 import java.util.function.Predicate
@@ -24,6 +25,7 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.serialization.Serializable
 import kotlin.collections.plus
 import kotlin.io.path.absolutePathString
+import kotlin.reflect.KClass
 import elide.tool.JvmMultiPath.CLASSPATH
 import elide.tool.JvmMultiPath.MODULEPATH
 import elide.tool.MultiPath.Entry
@@ -686,6 +688,25 @@ public class Classpath private constructor (
     @JvmStatic public fun from(collection: Collection<Path>): Classpath = Classpath(
       JvmMultiPathContainer.from(CLASSPATH, collection)
     )
+
+    /** Create a [Classpath] from the current classpath; only usable on JVM. */
+    @JvmStatic public fun fromCurrent(): Classpath = require(!ImageInfo.inImageCode()) {
+      "Cannot build current-classpath info from native context"
+    }.let {
+      when (val classpath: String? = System.getProperty("java.class.path")?.ifBlank { null }) {
+        null -> empty()
+        else -> from(classpath.split(":").map { Path.of(it) })
+      }
+    }
+
+    /** Create a [Classpath] from the JAR hosting the given class. */
+    @JvmStatic public fun fromOriginOf(cls: KClass<*>): Classpath? = require(!ImageInfo.inImageCode()) {
+      "Cannot build current-classpath info from native context"
+    }.let {
+      cls.java.protectionDomain?.codeSource?.location?.let {
+        from(listOf(Path.of(it.toURI())))
+      }
+    }
   }
 }
 

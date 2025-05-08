@@ -46,7 +46,7 @@ import elide.tooling.config.BuildConfigurator.BuildConfiguration as ConfiguredBu
  *
  * // must already be in a coroutine scope, or establish one for the build
  * coroutineScope {
- *   BuildDriver.buildProject(project) {
+ *   BuildDriver.buildProject(beanContext, project) {
  *     // bind build events here
  *   }
  * }

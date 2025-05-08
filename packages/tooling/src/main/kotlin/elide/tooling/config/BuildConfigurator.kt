@@ -23,14 +23,47 @@ import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.registry.ResolverRegistry
 
+/**
+ * # Build Configurator
+ *
+ * Build configurators implement some independently-calculable suite of configuration functionality for Elide project
+ * builds; for example, a configurator may be responsible for configuring build caching, or for compiling sources for a
+ * given language.
+ *
+ * Build configurators are loaded via the JVM `ServiceLoader` mechanism, and are expected to be registered at build-time
+ * in a no-param instantiable form. When configuring user builds, state is provided to the configurator, and it has a
+ * chance to contribute build information, create graph tasks, and mount other configuration, such as dependency
+ * resolver implementations.
+ *
+ * Project builds take place before execution (running, testing, and so on). Tests and execution are configured via
+ * other means; see [TestConfigurator] for testing, and the CLI module for execution.
+ *
+ * @see BuildConfigurators build configurator loading and processing
+ * @see TestConfigurator similar protocol but for project test configuration
+ */
 public fun interface BuildConfigurator : ProjectConfigurator {
+  /**
+   * ## Build Settings
+   */
   public interface BuildSettings {
+    /** Whether to enable build caching. */
     public val caching: Boolean
+
+    /** Whether to enable dependencies (installation-aware). */
     public val dependencies: Boolean
+
+    /** Whether to enable check tasks, such as linters. */
     public val checks: Boolean
+
+    /** @return Mutable form of these build settings. */
     public fun toMutable(): MutableBuildSettings
   }
 
+  /**
+   * ## Build Settings (Immutable)
+   *
+   * Build settings expressed in immutable form.
+   */
   @Serializable @JvmRecord public data class ImmutableBuildSettings(
     override val caching: Boolean,
     override val dependencies: Boolean,
@@ -42,6 +75,11 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     )
   }
 
+  /**
+   * ## Build Settings (Mutable)
+   *
+   * Build settings expressed in mutable form.
+   */
   public data class MutableBuildSettings(
     override var caching: Boolean = true,
     override var dependencies: Boolean = true,
@@ -56,6 +94,11 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override fun toMutable(): MutableBuildSettings = this
   }
 
+  /**
+   * ## Build Configuration
+   *
+   * State API provided to [BuildConfigurator] instances.
+   */
   public interface BuildConfiguration {
     public val actionScope: ActionScope
     public val taskGraph: TaskGraphBuilder
@@ -91,6 +134,7 @@ public fun interface BuildConfigurator : ProjectConfigurator {
 
   public interface ProjectDirectories {
     public val projectRoot: Path
+    public val workspaceRoot: Path get() = projectRoot
     public val devRoot: Path get() = projectRoot.resolve(".dev")
     public val cache: Path get() = devRoot.resolve("cache")
     public val dependencies: Path get() = devRoot.resolve("dependencies")

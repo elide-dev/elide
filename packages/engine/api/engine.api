@@ -1532,6 +1532,8 @@ public final class elide/tool/Classpath : elide/tool/MultiPath$MultiPathContaine
 	public fun containsAll (Ljava/util/Collection;)Z
 	public static final fun empty ()Lelide/tool/Classpath;
 	public static final fun from (Ljava/util/Collection;)Lelide/tool/Classpath;
+	public static final fun fromCurrent ()Lelide/tool/Classpath;
+	public static final fun fromOriginOf (Lkotlin/reflect/KClass;)Lelide/tool/Classpath;
 	public fun get (I)Lelide/tool/Argument;
 	public fun get-WZ4Q5Ns (I)Lelide/tool/JvmMultiPathEntry;
 	public synthetic fun get-WZ4Q5Ns (I)Lelide/tool/MultiPath$Entry;
@@ -1564,6 +1566,8 @@ public final class elide/tool/Classpath : elide/tool/MultiPath$MultiPathContaine
 public final class elide/tool/Classpath$Companion {
 	public final fun empty ()Lelide/tool/Classpath;
 	public final fun from (Ljava/util/Collection;)Lelide/tool/Classpath;
+	public final fun fromCurrent ()Lelide/tool/Classpath;
+	public final fun fromOriginOf (Lkotlin/reflect/KClass;)Lelide/tool/Classpath;
 	public final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tool/Classpath;
 }
 

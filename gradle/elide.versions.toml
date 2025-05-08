@@ -35,6 +35,7 @@ byteunits = "0.9.1"
 caffeine = "3.2.0"
 capnproto = "0.1.18-elide"
 cite = "0.6.1"
+classgraph = "4.8.179"
 clikt = "5.0.3"
 commons-codec = "1.18.0"
 commons-compress = "1.27.1"
@@ -364,6 +365,7 @@ capnproto-compiler = { group = "org.capnproto", name = "compiler", version.ref =
 capnproto-runtime = { group = "org.capnproto", name = "runtime", version.ref = "capnproto" }
 capnproto-runtime-rpc = { group = "org.capnproto", name = "runtime-rpc", version.ref = "capnproto" }
 cbrotli = { group = "org.brotli", name = "dec", version.ref = "brotli" }
+classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "classgraph" }
 clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "clikt" }
 commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commons-codec" }
 commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }

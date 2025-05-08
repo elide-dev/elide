@@ -1374,14 +1374,25 @@ internal class ToolShellCommand @Inject constructor(
     langs: EnumSet<GuestLanguage>,
     language: GuestLanguage,
     ctxAccessor: ContextAccessor,
-    source: Source,
+    source: List<Source>,
     execProvider: GuestExecutorProvider,
   ) {
+    // enter VM context
     var didPrepare = false
+    val ctx = ctxAccessor.invoke()
+    ctx.enter()
+
     try {
-      // enter VM context
       logging.trace("Entered VM for test run (language: ${language.id}). Consuming script from: '$label'")
-      execWrapped(label, ctxAccessor, source)
+
+      // execute all matched or provided source files (interpreted lang tests)
+      source.forEach { entry ->
+        execWrapped(label, ctxAccessor, entry)
+      }
+
+      // invoke all test contributors (handles registration for non-source tests)
+
+      // continue to configure and plan test run
       didPrepare = true
       val testRegistry = beanContext.getBean(TestingRegistrar::class.java)
       val allTests = testRegistry.freeze().grouped().toList()
@@ -1390,7 +1401,7 @@ internal class ToolShellCommand @Inject constructor(
         return
       }
 
-      // start up the test runner and run all tests
+      // start up the test runner and run all eligible/matched tests
       logging.info { "Would run ${allTests.size} tests" }
       allTests.forEach {
         logging.info { "- scope=(${it.first.simpleName}) test=(${it.second.qualifiedName})" }
@@ -1406,6 +1417,8 @@ internal class ToolShellCommand @Inject constructor(
         exc,
         msg = msg,
       ) ?: exc)
+    } finally {
+      ctx.leave()
     }
   }
 
@@ -1463,7 +1476,7 @@ internal class ToolShellCommand @Inject constructor(
         languages,
         primaryLanguage,
         ctxAccessor,
-        source,
+        listOf(source),
         guestExec,
       )
 
@@ -2005,11 +2018,14 @@ internal class ToolShellCommand @Inject constructor(
             )
           }
 
+          val testOrServeMode = testMode() || serveMode()
           when (val scriptTargetOrCode = runnable) {
             // run in interactive mode
             null, "-" -> if (useStdin || runnable == "-") {
               // activate interactive behavior
-              enableInteractive()
+              if (!testOrServeMode) {
+                enableInteractive()
+              }
 
               // consume from stdin
               primaryLang(null).let { lang ->
@@ -2025,7 +2041,7 @@ internal class ToolShellCommand @Inject constructor(
                   )
                 }
               }
-            } else if (!serveMode()) {
+            } else if (!testOrServeMode) {
               logging.debug("Beginning interactive guest session")
               enableInteractive()
               beginInteractiveSession(
@@ -2034,8 +2050,9 @@ internal class ToolShellCommand @Inject constructor(
                 engine(),
                 it,
               )
-            } else {
-              logging.error("To run a server, pass a file, or code via stdin or `-c`")
+            } else when {
+              testMode() -> TODO("Plain `elide test` is not supported yet.")
+              else -> logging.error("To run a server, pass a file, or code via stdin or `-c`")
             }
 
             // run a script as a file, or perhaps a string literal

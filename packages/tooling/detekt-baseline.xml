@@ -1,5 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:TestDriver.kt$TestDriver${ }</ID>
+    <ID>UnusedParameter:TestDriver.kt$TestDriver$beanContext: BeanContext</ID>
+    <ID>UnusedParameter:TestDriver.kt$TestDriver$binder: ExecutionBinder? = null</ID>
+    <ID>UnusedParameter:TestDriver.kt$TestDriver$project: ElideProject</ID>
+    <ID>UnusedParameter:TestDriver.kt$TestDriver$registrar: TestingRegistrar? = null</ID>
+  </CurrentIssues>
 </SmellBaseline>

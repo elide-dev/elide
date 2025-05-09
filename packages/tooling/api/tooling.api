@@ -3838,12 +3838,12 @@ public final class elide/tooling/registry/ResolverRegistry$Companion {
 public abstract class elide/tooling/runner/AbstractTestRunner : elide/tooling/runner/TestRunner, java/lang/AutoCloseable {
 	public fun <init> (Lelide/tooling/runner/TestRunner$Config;Ljava/util/concurrent/Executor;Lelide/tooling/config/TestConfigurator$TestEventController;Lkotlin/jvm/functions/Function0;Lkotlin/time/TimeSource;)V
 	public synthetic fun <init> (Lelide/tooling/runner/TestRunner$Config;Ljava/util/concurrent/Executor;Lelide/tooling/config/TestConfigurator$TestEventController;Lkotlin/jvm/functions/Function0;Lkotlin/time/TimeSource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun accept (Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun awaitSettled (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun close ()V
 	protected final fun fail (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/testing/TestResult;
 	public static synthetic fun fail$default (Lelide/tooling/runner/AbstractTestRunner;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestResult;
 	public fun getConfig ()Lelide/tooling/runner/TestRunner$Config;
+	protected final fun getContextProvider ()Lkotlin/jvm/functions/Function0;
 	public fun getEvents ()Lelide/tooling/config/TestConfigurator$TestEventController;
 	public fun getExecutor ()Ljava/util/concurrent/Executor;
 	protected final fun pass ()Lelide/runtime/intrinsics/testing/TestResult;
@@ -3856,6 +3856,7 @@ public abstract class elide/tooling/runner/AbstractTestRunner : elide/tooling/ru
 	protected final fun testSeen (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
 	protected final fun testSkipped (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/Reason;)V
 	protected final fun testSucceeded (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
+	public fun tests (Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class elide/tooling/runner/AbstractTestRunner$TestCaseResult : java/lang/Record {
@@ -4123,14 +4124,14 @@ public final class elide/tooling/runner/SerialTestRunner$Builder : elide/tooling
 
 public abstract interface class elide/tooling/runner/TestRunner : java/lang/AutoCloseable {
 	public static final field Companion Lelide/tooling/runner/TestRunner$Companion;
-	public abstract fun accept (Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun accept$default (Lelide/tooling/runner/TestRunner;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun awaitSettled (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getConfig ()Lelide/tooling/runner/TestRunner$Config;
 	public abstract fun getEvents ()Lelide/tooling/config/TestConfigurator$TestEventController;
 	public abstract fun getExecutor ()Ljava/util/concurrent/Executor;
 	public static fun serial (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
 	public static fun serialBuilder (Lkotlin/jvm/functions/Function0;)Lelide/tooling/runner/SerialTestRunner$Builder;
+	public abstract fun tests (Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun tests$default (Lelide/tooling/runner/TestRunner;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static fun threaded (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
 	public static fun threadedBuilder (Lkotlin/jvm/functions/Function0;)Lelide/tooling/runner/ThreadedTestRunner$Builder;
 }
@@ -4146,8 +4147,10 @@ public abstract interface class elide/tooling/runner/TestRunner$Builder {
 
 public final class elide/tooling/runner/TestRunner$Companion {
 	public final fun serial (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
+	public static synthetic fun serial$default (Lelide/tooling/runner/TestRunner$Companion;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/tooling/runner/TestRunner;
 	public final fun serialBuilder (Lkotlin/jvm/functions/Function0;)Lelide/tooling/runner/SerialTestRunner$Builder;
 	public final fun threaded (Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
+	public static synthetic fun threaded$default (Lelide/tooling/runner/TestRunner$Companion;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/tooling/runner/TestRunner;
 	public final fun threadedBuilder (Lkotlin/jvm/functions/Function0;)Lelide/tooling/runner/ThreadedTestRunner$Builder;
 }
 

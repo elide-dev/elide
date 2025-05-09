@@ -24,6 +24,7 @@ import kotlinx.coroutines.guava.asDeferred
 import kotlin.time.measureTimedValue
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
+import elide.runtime.intrinsics.testing.TestResult
 import elide.tool.cli.Statics
 import elide.tooling.config.TestConfigurator.TestEventController
 
@@ -49,28 +50,35 @@ public class SerialTestRunner internal constructor (
     )
   }
 
-  override fun CoroutineScope.runTest(request: TestRunRequest): Deferred<TestExecutionResult> {
-    testSeen(request)
-    return measureTimedValue {
-      runCatching {
-        testExec(request)
-        request.entry.invoke()
-        pass()
-      }.onSuccess {
-        testSucceeded(request)
-      }.onFailure {
-        testFailed(request, it)
-      }.getOrElse {
-        fail(it)
+  override fun runTest(scope: CoroutineScope, request: TestRunRequest): Deferred<TestExecutionResult> {
+    val context = contextProvider()
+    context.enter()
+    return try {
+      measureTimedValue {
+        runCatching {
+          testExec(request)
+          request.entry.invoke()
+        }.getOrElse {
+          fail(it)
+        }
+      }.let { timed ->
+        // this is a serial runner, so we run it directly and then wrap in a pre-resolved `Deferred`.
+        Futures.immediateFuture(TestExecutionResult(
+          test = request.test,
+          scope = request.scope,
+          result = timed.value,
+          timing = timed.duration,
+        ).also {
+          when (val out = timed.value) {
+            is TestResult.Pass -> testSucceeded(request)
+            is TestResult.Skip -> testSkipped(request.test, out.reason)
+            is TestResult.Fail -> testFailed(request, out.cause)
+          }
+        }).asDeferred()
       }
-    }.let { timed ->
-      // this is a serial runner, so we run it directly and then wrap in a pre-resolved `Deferred`.
-      Futures.immediateFuture(TestExecutionResult(
-        test = request.test,
-        scope = request.scope,
-        result = timed.value,
-        timing = timed.duration,
-      )).asDeferred()
+    } finally {
+      context.leave()
+      testSeen(request)
     }
   }
 }

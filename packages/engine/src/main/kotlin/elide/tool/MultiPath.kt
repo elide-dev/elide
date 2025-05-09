@@ -781,8 +781,10 @@ public interface ClasspathSpec : Predicate<ClasspathSpec> {
   override fun test(t: ClasspathSpec): Boolean {
     return when {
       name != null && t.name != null && name != t.name -> false
-      usage != null && t.usage != null && usage != t.usage -> false
-      else -> true
+      else -> when (val usages = usage?.expand()) {
+        null -> true
+        else -> usages.contains(t.usage)
+      }
     }
   }
 }

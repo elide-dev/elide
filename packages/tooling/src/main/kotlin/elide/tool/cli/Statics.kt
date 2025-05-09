@@ -57,6 +57,7 @@ public object Statics {
   private val terminalTheme: Theme by lazy {
     Theme(from = Theme.Default) {
       // Nothing at this time.
+      // styles[""] = Theme.Default.styles
     }
   }
 

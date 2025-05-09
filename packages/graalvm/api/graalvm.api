@@ -1281,6 +1281,23 @@ public synthetic class elide/runtime/gvm/internals/testing/$TestingRegistrarImpl
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public abstract class elide/runtime/gvm/internals/testing/GuestAssertionStack : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$GuestAssertion {
+	public fun <init> (Lelide/runtime/intrinsics/js/node/AssertAPI;)V
+	public fun expect (Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Expectation;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	protected final fun getStack ()Ljava/util/List;
+	public fun isNotNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public fun isNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+}
+
+public final class elide/runtime/gvm/internals/testing/GuestValueAssertion : elide/runtime/gvm/internals/testing/GuestAssertionStack {
+	public fun <init> (Lelide/runtime/intrinsics/js/node/AssertAPI;Lorg/graalvm/polyglot/Value;)V
+	public fun getExpectations ()Ljava/util/Collection;
+	public fun getValue ()Lorg/graalvm/polyglot/Value;
+}
+
 public synthetic class elide/runtime/gvm/internals/vfs/$EmbeddedGuestVFSImpl$EmbeddedVFSConfigurationFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -6457,6 +6474,12 @@ public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteTransactor
 public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteType {
 }
 
+public synthetic class elide/runtime/intrinsics/testing/$TestingAPI$Expect$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public synthetic class elide/runtime/intrinsics/testing/$TestingAPI$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -6583,18 +6606,151 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingAPI {
 	public fun test (Lorg/graalvm/polyglot/Value;Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test;
 }
 
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$Expect$AsyncExpectation : elide/runtime/intrinsics/testing/TestingAPI$Expect$FunctionExpectation {
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$Expect$ComplexExpectation : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$ParameterizedAssertion {
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$DoesNotReject : elide/runtime/intrinsics/testing/TestingAPI$Expect$AsyncExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$DoesNotReject;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$DoesNotThrow : elide/runtime/intrinsics/testing/TestingAPI$Expect$FunctionExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$DoesNotThrow;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$Expect$FunctionExpectation : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$SimpleAssertion {
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$IsEqual : elide/runtime/intrinsics/testing/TestingAPI$Expect$ComplexExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$IsEqual;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lelide/runtime/intrinsics/js/node/AssertAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$IsFalse : elide/runtime/intrinsics/testing/TestingAPI$Expect$PrimitiveExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$IsFalse;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$IsNotEqual : elide/runtime/intrinsics/testing/TestingAPI$Expect$ComplexExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$IsNotEqual;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lelide/runtime/intrinsics/js/node/AssertAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$IsNotNull : elide/runtime/intrinsics/testing/TestingAPI$Expect$PrimitiveExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$IsNotNull;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$IsNull : elide/runtime/intrinsics/testing/TestingAPI$Expect$PrimitiveExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$IsNull;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$IsSame : elide/runtime/intrinsics/testing/TestingAPI$Expect$ComplexExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$IsSame;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lelide/runtime/intrinsics/js/node/AssertAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$IsTrue : elide/runtime/intrinsics/testing/TestingAPI$Expect$PrimitiveExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$IsTrue;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$Expect$PrimitiveExpectation : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$SimpleAssertion {
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$Rejects : elide/runtime/intrinsics/testing/TestingAPI$Expect$AsyncExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$Rejects;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/testing/TestingAPI$Expect$Throws : elide/runtime/intrinsics/testing/TestingAPI$Expect$FunctionExpectation {
+	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingAPI$Expect$Throws;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
-	public abstract fun getQualifiedName ()Ljava/lang/String;
-	public abstract fun getSimpleName ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Assertion : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
 }
 
-public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Assertion {
+	public abstract fun expect (Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Expectation;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public static synthetic fun expect$default (Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Expectation;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public abstract fun getExpectations ()Ljava/util/Collection;
+	public abstract fun isNotNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public abstract fun isNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 }
 
-public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Expectation : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Assertion {
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$GuestAssertion : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite {
+	public abstract fun getValue ()Lorg/graalvm/polyglot/Value;
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$ParameterizedAssertion : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Expectation {
+	public abstract fun satisfy (Lelide/runtime/intrinsics/js/node/AssertAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Z
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$SimpleAssertion : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Expectation {
+	public abstract fun satisfy (Lorg/graalvm/polyglot/Value;)Z
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$TestAddressable {
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$TestAddressable {
+}
+
+public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$TestAddressable : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode {
+	public abstract fun getQualifiedName ()Ljava/lang/String;
+	public abstract fun getSimpleName ()Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/testing/TestingRegistrar {
@@ -6607,7 +6763,7 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingRegistra
 	public static fun namedScope (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public static fun namedScope (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public static fun qualifiedNameForBlock (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Ljava/lang/String;
-	public static fun qualifiedNameToSimpleName (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Ljava/lang/String;
+	public static fun qualifiedNameToSimpleName (Ljava/lang/String;)Ljava/lang/String;
 	public abstract fun register (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredScope;)V
 	public abstract fun register (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;)V
 	public abstract fun register (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredScope;)V
@@ -6623,7 +6779,7 @@ public final class elide/runtime/intrinsics/testing/TestingRegistrar$Companion {
 	public final fun namedScope (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public static synthetic fun namedScope$default (Lelide/runtime/intrinsics/testing/TestingRegistrar$Companion;Lorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public final fun qualifiedNameForBlock (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Ljava/lang/String;
-	public final fun qualifiedNameToSimpleName (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Ljava/lang/String;
+	public final fun qualifiedNameToSimpleName (Ljava/lang/String;)Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/testing/TestingRegistrar$GlobalTestScope : elide/runtime/intrinsics/testing/TestingRegistrar$TestScope {

@@ -26,7 +26,6 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.guava.asDeferred
@@ -47,7 +46,7 @@ public abstract class AbstractTestRunner (
   override val config: TestRunner.Config,
   override val executor: Executor,
   override val events: TestEventController,
-  private val contextProvider: () -> PolyglotContext,
+  protected val contextProvider: () -> PolyglotContext,
   private val timeSource: TimeSource = TimeSource.Monotonic,
 ) : TestRunner, AutoCloseable {
   // Lock status for the runner; flipped on close.
@@ -147,9 +146,9 @@ public abstract class AbstractTestRunner (
   // Completion latch. Counted down once when all tests are seen/spawned; again when all tests settle to results.
   private val completion = CountDownLatch(2)
 
-  override suspend fun CoroutineScope.accept(flow: Flow<Pair<TestScope<*>, RegisteredTest>>, final: Boolean) {
+  override suspend fun tests(scope: CoroutineScope, flow: Flow<Pair<TestScope<*>, RegisteredTest>>, final: Boolean) {
     require(!locked.value) { "Test runner is shutting down and cannot accept more tests" }
-    flow.flowOn(coroutineContext).filter {
+    flow.filter {
       // filter discovered tests by runner predicate
       when (val predicate = config.testPredicate) {
         null -> true
@@ -164,7 +163,7 @@ public abstract class AbstractTestRunner (
       if (final) {
         completion.countDown()
       }
-    }.collect { (scope, test) ->
+    }.collect { (testScope, test) ->
       // obtain the context to use for this test, then use it to resolve the entrypoint
       val ctx = contextProvider.invoke()
       val entry = resolve(ctx, test)
@@ -172,21 +171,16 @@ public abstract class AbstractTestRunner (
       // evaluate the test's eligibility to run; if it can't run, it is skipped.
       when (val reason = runnable(ctx, test)) {
         // when no reason is provided to skip the test, we can proceed to run it.
-        null -> try {
-          ctx.enter()
-          runTest(TestRunRequest(
-            test = test,
-            entry = entry,
-            scope = scope,
-            context = ctx,
-          ))
-        } finally {
-          ctx.leave()
-        }
+        null -> runTest(scope, TestRunRequest(
+          test = test,
+          entry = entry,
+          scope = testScope,
+          context = ctx,
+        ))
 
         else -> Futures.immediateFuture(TestExecutionResult(
           test = test,
-          scope = scope,
+          scope = testScope,
           result = skip(reason),
           timing = Duration.ZERO,
         )).asDeferred().also {
@@ -338,5 +332,5 @@ public abstract class AbstractTestRunner (
    * @param request Information specifying the test to run and related context.
    * @return Deferred test execution result (an async job within the receiving scope).
    */
-  protected abstract fun CoroutineScope.runTest(request: TestRunRequest): Deferred<TestExecutionResult>
+  protected abstract fun runTest(scope: CoroutineScope, request: TestRunRequest): Deferred<TestExecutionResult>
 }

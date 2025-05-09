@@ -14,16 +14,21 @@
 
 package elide.tooling.jvm
 
+import com.oracle.truffle.espresso.impl.Klass
+import com.oracle.truffle.espresso.impl.Method
 import io.github.classgraph.ClassInfo
 import io.github.classgraph.MethodInfo
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.util.stream.Stream
 import kotlin.io.path.absolute
-import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.jvm.GuestClassgraph
 import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.runtime.plugins.jvm.Jvm
 import elide.tool.Classpath
 import elide.tool.ClasspathSpec
 import elide.tool.MultiPathUsage
@@ -59,6 +64,46 @@ internal class JvmTestConfigurator : TestConfigurator {
     }
   }
 
+  // Obtain an instance of the test class, so a test method can be invoked.
+  @Suppress("TooGenericExceptionCaught")
+  private fun instantiateTestClass(ctx: PolyglotContext, cls: ClassInfo): Pair<Klass, Any> {
+    // @TODO junit semantics
+    val guestCls = try {
+      ctx.bindings(Jvm).getMember(cls.name)
+    } catch (err: Throwable) {
+      logging.error("Failed to load test class '${cls.name}'", err)
+      throw err
+    } ?: error(
+      "Class not found: '${cls.name}'",
+    )
+    val instantiable = guestCls.`as`(ProxyInstantiable::class.java)
+
+    return try {
+      guestCls.`as`(Klass::class.java) to instantiable.newInstance()
+    } catch (err: Throwable) {
+      logging.error("Failed to instantiate test class '${cls.name}'", err)
+      throw err
+    }
+  }
+
+  // Resolve a test method on a test class, so it can be invoked.
+  private fun pluck(guestCls: Klass, method: MethodInfo): Method {
+    // @TODO methods with same-name but different sig? forbid registration of identical names?
+    return guestCls.declaredMethods.first { mth -> mth.name.toString() == method.name }
+  }
+
+  // Resolve a test method on a test class, so it can be invoked.
+  private fun wrapTestMethod(context: PolyglotContext, instance: Any, method: Method): PolyglotValue {
+    val ctx = context.unwrap()
+    val wrappedInstance = context.unwrap().asValue(instance)
+    val callable = wrappedInstance.getMember(method.name.toString())
+    require(callable.canExecute()) { "Failed to pluck executable instance method: $callable" }
+
+    return ctx.asValue(Runnable {
+      callable.executeVoid()
+    })
+  }
+
   // Match/register a candidate test method, if it matches criteria.
   private fun matchCandidateMethod(registry: TestingRegistrar, cls: ClassInfo, method: MethodInfo) {
     // if the method is annotated with any eligible known annotation, we register it and defer evaluation.
@@ -67,7 +112,16 @@ internal class JvmTestConfigurator : TestConfigurator {
         label = method.name,
         qualified = "${cls.name}.${method.name}",
       ) { context ->
-        TODO("resolve jvm test method")
+        instantiateTestClass(context, cls).let { (guestCls, instance) ->
+          wrapTestMethod(
+            context,
+            instance,
+            pluck(
+              guestCls,
+              method,
+            ),
+          )
+        }
       }, scope = TestingRegistrar.namedScope(
         cls.simpleName,
         cls.name,

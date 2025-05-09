@@ -65,6 +65,7 @@ import jakarta.inject.Provider
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -88,6 +89,7 @@ import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.extensions.attach
 import elide.runtime.exec.GuestExecutorProvider
+import elide.runtime.gvm.Engine
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
@@ -139,7 +141,6 @@ import elide.tool.project.ProjectManager
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
-import elide.tooling.builder.TestDriver
 import elide.tooling.builder.TestDriver.discoverTests
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.project.ElideProject
@@ -148,6 +149,7 @@ import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.NodePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 import elide.tooling.runner.ProcessRunner
+import elide.tooling.runner.TestRunner
 
 /**
  * Type alias for an accessor method which allows an optional builder amendment.
@@ -323,6 +325,15 @@ internal class ToolShellCommand @Inject constructor(
     defaultValue = "true",
   )
   internal var enableCoverage: Boolean = true
+
+  /** Activates coverage in test mode. */
+  @Option(
+    names = ["--experimental-threaded-testing"],
+    description = ["Test in threaded mode (experimental)"],
+    negatable = true,
+    defaultValue = "false",
+  )
+  internal var threadedTestMode: Boolean = false
 
   /** Specifies the guest language to run. */
   @Option(
@@ -561,7 +572,7 @@ internal class ToolShellCommand @Inject constructor(
   }
 
   // Execute a single chunk of code as a literal statement.
-  private fun executeSingleStatement(
+  private fun CommandContext.executeSingleStatement(
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
     ctxAccessor: ContextAccessor,
@@ -1382,7 +1393,7 @@ internal class ToolShellCommand @Inject constructor(
   }
 
   // Read an executable script, and then execute registered tests.
-  private fun readRunTests(
+  private fun CommandContext.readRunTests(
     label: String,
     langs: EnumSet<GuestLanguage>,
     language: GuestLanguage,
@@ -1393,14 +1404,18 @@ internal class ToolShellCommand @Inject constructor(
     // enter VM context
     var didPrepare = false
     val project = activeProject.value
-    val ctx = ctxAccessor.invoke()
-    ctx.enter()
     try {
       logging.trace("Entered VM for test run (language: ${language.id}). Consuming script from: '$label'")
 
       // execute all matched or provided source files (interpreted lang tests)
       source.forEach { entry ->
         execWrapped(label, ctxAccessor, entry)
+      }
+
+      // establish context; we do this to prime the engine before running tests.
+      val ctx = ctxAccessor()
+      if (logging.isDebugEnabled) {
+        logging.debug { "Using test context: '$ctx'" }
       }
 
       // invoke all test contributors (handles registration for non-source tests)
@@ -1426,6 +1441,22 @@ internal class ToolShellCommand @Inject constructor(
       allTests.forEach {
         logging.info { "- scope=(${it.first.qualifiedName}) test=(${it.second.qualifiedName})" }
       }
+      fun TestRunner.Builder<*>.prepRunner() {
+        executor = guestExec.executor()
+      }
+      val testRunner = when (threadedTestMode) {
+        false -> TestRunner.serial(ctxAccessor) { prepRunner() }
+        true -> TestRunner.threaded(ctxAccessor) { prepRunner() }
+      }
+      runBlocking(Dispatchers.Engine) {
+        val results = coroutineScope {
+          testRunner.tests(this, allTests.asFlow())
+          testRunner.awaitSettled()
+        }
+        output {
+          append("Test results: $results")
+        }
+      }
       return
 
     } catch (exc: PolyglotException) {
@@ -1437,8 +1468,6 @@ internal class ToolShellCommand @Inject constructor(
         exc,
         msg = msg,
       ) ?: exc)
-    } finally {
-      ctx.leave()
     }
   }
 
@@ -1472,7 +1501,7 @@ internal class ToolShellCommand @Inject constructor(
 
   // Read an executable script, and then execute the script; if it's a server, delegate to `readStartServer`.
   @Suppress("TooGenericExceptionCaught")
-  private fun executeSource(
+  private fun CommandContext.executeSource(
     label: String,
     languages: EnumSet<GuestLanguage>,
     primaryLanguage: GuestLanguage,
@@ -1586,7 +1615,14 @@ internal class ToolShellCommand @Inject constructor(
       langHomeResources.resolve("kotlin-stdlib.jar"),
       langHomeResources.resolve("kotlin-reflect.jar"),
       langHomeResources.resolve("kotlin-script-runtime.jar"),
-    )
+    ).plus(sequence {
+      if (testMode()) {
+        yield(langHomeResources.resolve("elide-test.jar"))
+        yield(langHomeResources.resolve("kotlin-test.jar"))
+        yield(langHomeResources.resolve("kotlin-test-junit5.jar"))
+        yield(langHomeResources.resolve("kotlinx-coroutines-test-jvm.jar"))
+      }
+    })
   }
 
   // Amend a base classpath with any additional resolved project dependencies.
@@ -1616,6 +1652,18 @@ internal class ToolShellCommand @Inject constructor(
 
           // the user's classpath goes first
           runtimeClasspath?.let { prepend(it) }
+
+          // before all other entries, the test classpath comes next, but only if we are in test mode
+          if (testMode()) {
+            // @TODO better artifacts well-known-path access; don't manually hard-code .dev
+            val classesRoot = project.root
+              .resolve(".dev")
+              .resolve("artifacts")
+              .resolve("jvm")
+              .resolve("classes")
+            classesRoot.resolve("main").takeIf { it.exists() }?.let { prepend(it) }
+            classesRoot.resolve("test").takeIf { it.exists() }?.let { prepend(it) }
+          }
         }.map {
           it.path
         }.toList()
@@ -1623,7 +1671,7 @@ internal class ToolShellCommand @Inject constructor(
     }
   }
 
-  override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet<GuestLanguage>) {
+  override fun PolyglotEngineConfiguration.configureEngine(langs: Set<GuestLanguage>) {
     // grab project configurations, if available
     val project = activeProject.value
     if (project != null) logging.debug("Resolved project info: {}", project)
@@ -1688,16 +1736,24 @@ internal class ToolShellCommand @Inject constructor(
 
     // configure test-mode plugins like coverage
     if (testMode()) configure(Coverage) {
+      // @TODO coverage support in jvm
+      val disableBecauseJvm = langs.any { it.id == "jvm" }
+      if (disableBecauseJvm) {
+        logging.debug { "Coverage is not supported on JVM yet, so it was disabled." }
+      }
       val projectCoverageSettings = activeProject.value?.manifest?.tests?.coverage
-      enabled = enableCoverage || projectCoverageSettings?.enabled == true
-      activeProject.value?.let {
-        outputDirectory = it.root
-          .resolve(".dev")
-          .resolve("coverage").also {
-            if (!it.exists()) {
-              Files.createDirectories(it)
+      val doEnable = (enableCoverage || projectCoverageSettings?.enabled == true) && !disableBecauseJvm
+      enabled = doEnable
+      if (doEnable) {
+        activeProject.value?.let {
+          outputDirectory = it.root
+            .resolve(".dev")
+            .resolve("coverage").also {
+              if (!it.exists()) {
+                Files.createDirectories(it)
+              }
             }
-          }
+        }
       }
     }
 
@@ -1891,6 +1947,26 @@ internal class ToolShellCommand @Inject constructor(
     }
   }
 
+  // Augment the suite of initialized languages based on project settings.
+  private fun langsActiveForProject(project: ElideProject): Set<GuestLanguage> = buildSet {
+    fun hasAnySourcesOf(vararg ext: String): Boolean {
+      return project.manifest.sources.values.flatMap { sourceSet ->
+        sourceSet.spec
+      }.any { sourcePath ->
+        ext.any { candidateExtension ->
+          // not yet implemented: glob resolution here @TODO
+          sourcePath.endsWith(candidateExtension)
+        }
+      }
+    }
+    if (project.manifest.jvm != null || project.manifest.dependencies.maven.hasPackages()) {
+      add(JVM)
+    }
+    if (project.manifest.kotlin != null || hasAnySourcesOf(".kt", ".kts")) {
+      add(KOTLIN)
+    }
+  }
+
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
     Elide.requestNatives(server = true, tooling = !skipInstall)
@@ -1950,6 +2026,14 @@ internal class ToolShellCommand @Inject constructor(
         it.onByDefault || (!executeLiteral && runnable != null && it.extensions.any { runnable!!.endsWith(it) })
       },
     )
+    val projectLangs = run {
+      projectResolution.join()
+      activeProject.value?.let { project ->
+        langsActiveForProject(project)
+      }
+    } ?: emptySet()
+
+    val effectiveInitLangs = onByDefaultLangs + projectLangs
 
     // if no entrypoint was specified, attempt to use the one in the project manifest, or try resolving the runnable as
     // a script name in either `elide.pkl` or a foreign manifest.
@@ -2058,8 +2142,8 @@ internal class ToolShellCommand @Inject constructor(
     }
 
     try {
-      resolveEngine(onByDefaultLangs).unwrap().use {
-        withDeferredContext(onByDefaultLangs) {
+      resolveEngine(effectiveInitLangs).unwrap().use {
+        withDeferredContext(effectiveInitLangs) {
           // warn about experimental status, as applicable
           if (verbose && experimentalLangs.isNotEmpty()) {
             logging.warn(

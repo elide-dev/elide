@@ -405,7 +405,7 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
    *
    * @return A new, exclusive [PolyglotEngine] instance.
    */
-  private fun createEngine(langs: EnumSet<GuestLanguage>): PolyglotEngine = PolyglotEngine {
+  private fun createEngine(langs: Set<GuestLanguage>): PolyglotEngine = PolyglotEngine {
     // allow subclasses to customize the engine
     configureEngine(langs)
   }
@@ -474,7 +474,7 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
     )
   }
 
-  @Synchronized protected fun resolveEngine(langs: EnumSet<GuestLanguage>): PolyglotEngine {
+  @Synchronized protected fun resolveEngine(langs: Set<GuestLanguage>): PolyglotEngine {
     return when (val ready = engine.value) {
       null -> createEngine(langs).also { engine.value = it }
       else -> ready
@@ -487,7 +487,7 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
    *
    * Subclasses should prefer [withContext] as it provides a limited scope in which the context can be used.
    */
-  protected fun resolvePolyglotContext(langs: EnumSet<GuestLanguage>): PolyglotContext {
+  protected fun resolvePolyglotContext(langs: Set<GuestLanguage>): PolyglotContext {
     logging.debug("Resolving context for current thread")
 
     // already initialized on the current thread
@@ -586,7 +586,7 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
    * The first invocation of this method will cause the [engine] to be initialized, triggering the
    * [configureEngine] event.
    */
-  protected open fun withDeferredContext(langs: EnumSet<GuestLanguage>, block: (() -> PolyglotContext) -> Unit) {
+  protected open fun withDeferredContext(langs: Set<GuestLanguage>, block: (() -> PolyglotContext) -> Unit) {
     block.invoke {
       resolvePolyglotContext(langs)
     }
@@ -699,7 +699,7 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
   protected open fun state(): State? = null
 
   /** Configure the [PolyglotEngine] that will be used to acquire contexts used by the [withContext] function. */
-  protected open fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet<GuestLanguage>): Unit = Unit
+  protected open fun PolyglotEngineConfiguration.configureEngine(langs: Set<GuestLanguage>): Unit = Unit
 
   protected abstract suspend fun CommandContext.invoke(state: ToolContext<State>): CommandResult
 }

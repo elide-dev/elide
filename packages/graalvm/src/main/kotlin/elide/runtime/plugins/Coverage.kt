@@ -35,6 +35,9 @@ private const val DEFAULT_COVERAGE_FORMAT = "json"
 ) {
   /** Apply debug [config] to a context [builder] during the [EngineLifecycleEvent.EngineCreated] event. */
   internal fun onEngineCreated(builder: PolyglotEngineBuilder) = builder.apply {
+    if (!config.enabled) {
+      return@apply
+    }
     enableOption("coverage")
     enableOption("coverage.Count")
 

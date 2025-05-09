@@ -1,3 +1,4 @@
+/// <reference path="../../packages/types/index.d.ts" />
 const { Database } = require("elide:sqlite")
 
 const db: Database = new Database()

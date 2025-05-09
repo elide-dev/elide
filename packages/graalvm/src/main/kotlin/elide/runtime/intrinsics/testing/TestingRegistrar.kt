@@ -266,7 +266,7 @@ public interface TestingRegistrar {
       return fullLabel
     }
 
-    @JvmStatic public fun qualifiedNameToSimpleName(block: PolyglotValue, qual: String): String {
+    @JvmStatic public fun qualifiedNameToSimpleName(qual: String): String {
       return qual.split(">").last().trim()
     }
 
@@ -278,7 +278,7 @@ public interface TestingRegistrar {
     /** @return Scope using the provided [block] and optional [label]. */
     @JvmStatic public fun namedScope(block: PolyglotValue, label: String? = null): NamedScope {
       return qualifiedNameForBlock(block, label).let { qual ->
-        NamedScope(simpleName = label ?: qualifiedNameToSimpleName(block, qual), qualifiedName = qual)
+        NamedScope(simpleName = label ?: qualifiedNameToSimpleName(qual), qualifiedName = qual)
       }
     }
 
@@ -286,6 +286,7 @@ public interface TestingRegistrar {
     @Suppress("TooGenericExceptionCaught")
     private fun defaultEntryFactory(block: PolyglotValue) = TestEntrypoint {
       try {
+        require(block.canExecute()) { "Block is not executable: $block" }
         block.executeVoid()
         TestResult.Pass
       } catch (err: Throwable) {
@@ -307,7 +308,7 @@ public interface TestingRegistrar {
       label: String? = null,
       scope: TestScope<*>? = null,
     ): TestInfo = TestInfo(
-      simpleName = label ?: qualifiedNameToSimpleName(block, qualifiedNameForBlock(block, label)),
+      simpleName = label ?: qualifiedNameToSimpleName(qualifiedNameForBlock(block, label)),
       qualifiedName = scope?.qualifiedNameFor(block, label) ?: qualifiedNameForBlock(block, label),
       entryFactory = { defaultEntryFactory(block) },
       guestValueFactory = { block },
@@ -328,8 +329,16 @@ public interface TestingRegistrar {
     ): TestInfo = TestInfo(
       simpleName = label,
       qualifiedName = qualified,
-      entryFactory = { defaultEntryFactory(blockFactory.invoke(it)) },
-      guestValueFactory = { blockFactory.invoke(it) },
+      entryFactory = {
+        defaultEntryFactory(blockFactory.invoke(it).also {
+          require(it.canExecute()) { "Block is not executable: $it" }
+        })
+      },
+      guestValueFactory = {
+        blockFactory.invoke(it).also {
+          require(it.canExecute()) { "Block is not executable: $it" }
+        }
+      },
     )
   }
 }

@@ -25,6 +25,7 @@ import kotlin.time.Duration
 import kotlin.time.measureTimedValue
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
+import elide.runtime.intrinsics.testing.TestResult
 import elide.tool.cli.Statics
 import elide.tooling.config.TestConfigurator.TestEventController
 
@@ -52,26 +53,34 @@ public class ThreadedTestRunner internal constructor (
     )
   }
 
-  override fun CoroutineScope.runTest(request: TestRunRequest): Deferred<TestExecutionResult> = async {
+  override fun runTest(scope: CoroutineScope, request: TestRunRequest): Deferred<TestExecutionResult> = scope.async {
     testSeen(request)
-    runCatching {
-      testExec(request)
-      measureTimedValue { request.entry.invoke() }.let {
-        it.duration to it.value
+    val context = contextProvider()
+    context.enter()
+    try {
+      runCatching {
+        testExec(request)
+        measureTimedValue { request.entry.invoke() }.let {
+          it.duration to it.value
+        }
+      }.getOrElse {
+        Duration.ZERO to fail(it)
+      }.let { (duration, value) ->
+        TestExecutionResult(
+          test = request.test,
+          scope = request.scope,
+          result = value,
+          timing = duration,
+        ).also {
+          when (val out = value) {
+            is TestResult.Pass -> testSucceeded(request)
+            is TestResult.Fail -> testFailed(request, out.cause)
+            is TestResult.Skip -> testSkipped(request.test, out.reason)
+          }
+        }
       }
-    }.onSuccess {
-      testSucceeded(request)
-    }.onFailure {
-      testFailed(request, it)
-    }.getOrElse {
-      Duration.ZERO to fail(it)
-    }.let { (duration, value) ->
-      TestExecutionResult(
-        test = request.test,
-        scope = request.scope,
-        result = value,
-        timing = duration,
-      )
+    } finally {
+      context.leave()
     }
   }
 }

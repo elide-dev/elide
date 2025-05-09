@@ -11,22 +11,25 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 @file:Suppress("DataClassPrivateConstructor", "MnInjectionPoints")
+@file:OptIn(DelicateElideApi::class)
 
 package elide.runtime.gvm.internals.testing
 
 import com.google.errorprone.annotations.ThreadSafe
-import io.netty.util.concurrent.Promise
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.LinkedList
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import jakarta.inject.Provider
 import kotlinx.atomicfu.atomic
+import kotlinx.collections.immutable.toImmutableList
 import elide.annotations.Factory
 import elide.annotations.Inject
 import elide.annotations.Singleton
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsError
@@ -35,10 +38,14 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.js.node.AssertAPI
 import elide.runtime.intrinsics.testing.TestingAPI
+import elide.runtime.intrinsics.testing.TestingAPI.Expect
 import elide.runtime.intrinsics.testing.TestingAPI.TestGraphNode.*
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.intrinsics.testing.TestingRegistrar.*
+import elide.runtime.node.asserts.NodeAssertModule
+import elide.runtime.node.asserts.assertionError
 import elide.vm.annotations.Polyglot
 
 // Constants.
@@ -75,6 +82,116 @@ internal class ElideTestingModule @Inject constructor (
   init {
     ModuleRegistry.deferred(ModuleInfo.of(TEST_MODULE_NAME)) { provide() }
   }
+}
+
+public abstract class GuestAssertionStack (
+  private val assertApi: AssertAPI,
+) : GuestAssertion {
+  protected val stack: MutableList<Pair<Expectation, String?>> = mutableListOf()
+
+  private fun runAssertion(block: () -> Boolean): Boolean {
+    // @TODO logging? instrumentation for assertions?
+    return block.invoke()
+  }
+
+  override fun expect(expectation: Expectation, message: String?): AssertionSuite = apply {
+    stack.add(expectation to message)
+  }
+
+  private fun collapse(assert: AssertAPI, other: Value? = null): AssertionSuite = apply {
+    val (last, msg) = stack.last()
+
+    when (when (last) {
+      is Expect.PrimitiveExpectation -> runAssertion { last.satisfy(value) }
+      is Expect.ComplexExpectation -> runAssertion { last.satisfy(assert, value, other) }
+      else -> error("Unable to enforce expectation: $last")
+    }) {
+      // the condition was satisfied
+      true -> {}
+
+      // the condition was not satisfied
+      false -> throw assertionError(msg ?: "assertion failed: '$last'")
+    }
+  }
+
+  private fun expectAndCollapse(
+    expect: Expectation,
+    assert: AssertAPI,
+    message: String? = null,
+    other: Value? = null,
+  ): AssertionSuite = apply {
+    expect(expect, message)
+    collapse(assert, other)
+  }
+
+  @Polyglot override fun isNull(message: String?): AssertionSuite = apply {
+    expectAndCollapse(
+      Expect.IsNull,
+      assertApi,
+      message,
+    )
+  }
+
+  @Polyglot override fun isNotNull(message: String?): AssertionSuite = apply {
+    expectAndCollapse(
+      Expect.IsNotNull,
+      assertApi,
+      message,
+    )
+  }
+
+  @Polyglot override fun toBe(other: Value?, message: String?): AssertionSuite = apply {
+    expectAndCollapse(
+      Expect.IsEqual,
+      assertApi,
+      message,
+      other,
+    )
+  }
+
+  @Polyglot override fun toBeTrue(message: String?): AssertionSuite = apply {
+    expectAndCollapse(
+      Expect.IsTrue,
+      assertApi,
+      message,
+    )
+  }
+
+  @Polyglot override fun toBeFalse(message: String?): AssertionSuite = apply {
+    expectAndCollapse(
+      Expect.IsFalse,
+      assertApi,
+      message,
+    )
+  }
+
+  override fun getMemberKeys(): Array<String> = arrayOf(
+    "isNull",
+    "isNotNull",
+    "toBe",
+    "toBeTrue",
+    "toBeFalse",
+  )
+
+  override fun getMember(key: String): Any? = when (key) {
+    "isNull" -> ProxyExecutable { isNull(it.firstOrNull()?.asString()) }
+    "isNotNull" -> ProxyExecutable { isNotNull(it.firstOrNull()?.asString()) }
+    "toBeTrue" -> ProxyExecutable { toBeTrue(it.firstOrNull()?.asString()) }
+    "toBeFalse" -> ProxyExecutable { toBeFalse(it.firstOrNull()?.asString()) }
+    "toBe" -> ProxyExecutable {
+      when (it.size) {
+        0 -> throw JsError.typeError("`toBe` requires at least one argument")
+        1 -> toBe(it.first(), null)
+        else -> toBe(it.first(), it[1].asString())
+      }
+    }
+    else -> null
+  }
+}
+
+public class GuestValueAssertion(assert: AssertAPI, private val wrapped: Value?): GuestAssertionStack(assert) {
+  override val value: Value? get() = wrapped
+  override val expectations: Collection<Expectation> get() = stack.toImmutableList().map { it.first }
 }
 
 // Implements a thread-safe testing registrar.
@@ -144,13 +261,14 @@ internal class ElideTestingModule @Inject constructor (
 // Implements Elide's guest-exposed testing APIs.
 internal class TestingImpl private constructor (
   private val registrar: Provider<TestingRegistrar>,
+  private val assertApi: AssertAPI,
 ) : TestingAPI, ReadOnlyProxyObject {
   companion object {
     private lateinit var SINGLETON: TestingImpl
 
     fun obtain(registrar: Provider<TestingRegistrar>): TestingAPI {
       if (!::SINGLETON.isInitialized) {
-        SINGLETON = TestingImpl(registrar)
+        SINGLETON = TestingImpl(registrar, NodeAssertModule().provide())
       }
       return SINGLETON
     }
@@ -161,7 +279,7 @@ internal class TestingImpl private constructor (
   private fun handleSuiteRegistrationResult(result: Value) {
     when {
       result.isNull -> {}
-      else -> runCatching { result.`as`<Promise<*>>(Promise::class.java) }.getOrNull()?.let { promise ->
+      else -> runCatching { result.`as`<Future<*>>(Future::class.java) }.getOrNull()?.let { promise ->
         try {
           promise.get(5, TimeUnit.SECONDS)
         } catch (e: Exception) {
@@ -198,7 +316,7 @@ internal class TestingImpl private constructor (
 
   // Creates and registers a test expectation; implements `expect`.
   @Polyglot override fun expect(value: Value?): Assertion {
-    TODO("Not yet implemented: `TestingAPI.expect`")
+    return GuestValueAssertion(assertApi, value ?: Value.asValue(null))
   }
 
   override fun getMemberKeys(): Array<String> = testModuleProps
@@ -231,6 +349,15 @@ internal class TestingImpl private constructor (
             else -> test(presumablyName.asString(), args[1], args[2].asProxyObject<RegisteredScope>())
           }
         }
+      }
+    }
+
+    EXPECT -> ProxyExecutable { args ->
+      when (args.size) {
+        0 -> throw JsError.typeError("`$key` requires at least one argument")
+
+        // `expect(value)`
+        else -> expect(args.first())
       }
     }
 

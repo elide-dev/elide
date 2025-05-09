@@ -75,11 +75,11 @@ public interface TestRunner : AutoCloseable {
    * @param final Indicates whether this is the final batch of detected tests; if `true`, the runner will begin
    *   concluding test execution once this batch completes.
    */
-  public suspend fun CoroutineScope.accept(flow: Flow<Pair<TestScope<*>, RegisteredTest>>, final: Boolean = true)
+  public suspend fun tests(scope: CoroutineScope, flow: Flow<Pair<TestScope<*>, RegisteredTest>>, final: Boolean = true)
 
   /**
    * Await delivery and settlement of all tests; this method will block until a final delivery of tests is received by
-   * [accept], and all tests conclude their execution (as applicable).
+   * [tests], and all tests conclude their execution (as applicable).
    *
    * In circumstances where an early exit arises (such as during `failFast` mode, when encountering a failed test), this
    * method will return before all tests have run; test stats must be inspected for more details.
@@ -220,13 +220,15 @@ public interface TestRunner : AutoCloseable {
 
     /** @return Serial test runner customized by [builder]. */
     @JvmStatic
-    public fun serial(context: () -> PolyglotContext, builder: SerialTestRunner.Builder.() -> Unit): TestRunner {
+    public fun serial(context: () -> PolyglotContext, builder: SerialTestRunner.Builder.() -> Unit = {}): TestRunner {
       return serialBuilder(context).apply { builder.invoke(this) }.build()
     }
 
     /** @return Threaded test runner customized by [builder]. */
-    @JvmStatic
-    public fun threaded(context: () -> PolyglotContext, builder: ThreadedTestRunner.Builder.() -> Unit): TestRunner {
+    @JvmStatic public fun threaded(
+      context: () -> PolyglotContext,
+      builder: ThreadedTestRunner.Builder.() -> Unit = {},
+    ): TestRunner {
       return threadedBuilder(context).apply { builder.invoke(this) }.build()
     }
   }

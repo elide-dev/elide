@@ -2,6 +2,7 @@
   {
     "type":"agent-extracted",
     "classes":[
+      { "nameInfo":"com/oracle/truffle/api/impl/generated/GeneratedModules", "hash":"uJYNLO45DH2uJIqg6hpLx3" }
     ]
   }
 ]

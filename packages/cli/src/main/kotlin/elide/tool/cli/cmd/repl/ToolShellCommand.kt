@@ -252,6 +252,18 @@ internal class ToolShellCommand @Inject constructor(
     private val activeProject = atomic<ElideProject?>(null)
   }
 
+  // Whether JVM support has initialized.
+  private val jvmInitialized = atomic(false)
+
+  // Full JVM classpath; calculated on first JVM init.
+  @Volatile private lateinit var fullClasspath: List<Path>
+
+  // Java Home to use; calculated on first JVM init.
+  @Volatile private var javaHome: String? = null
+
+  // Kotlin Home to use; calculated on first JVM/Kotlin init.
+  @Volatile private var extraKotlinHome: String? = null
+
   private val projectManager: ProjectManager by lazy {
     projectManagerProvider.get()
   }
@@ -1420,12 +1432,6 @@ internal class ToolShellCommand @Inject constructor(
         execWrapped(label, ctxAccessor, entry)
       }
 
-      // establish context; we do this to prime the engine before running tests.
-      val ctx = ctxAccessor()
-      if (logging.isDebugEnabled) {
-        logging.debug { "Using test context: '$ctx'" }
-      }
-
       // invoke all test contributors (handles registration for non-source tests)
       if (project != null) {
         runBlocking {
@@ -1445,9 +1451,11 @@ internal class ToolShellCommand @Inject constructor(
       }
 
       // start up the test runner and run all eligible/matched tests
-      logging.info { "Running ${allTests.size} tests" }
-      allTests.forEach {
-        logging.info { "- scope=(${it.first.qualifiedName}) test=(${it.second.qualifiedName})" }
+      if (verbose) {
+        logging.info { "Running ${allTests.size} tests" }
+        allTests.forEach {
+          logging.info { "- ${it.second.qualifiedName}" }
+        }
       }
       fun TestRunner.Builder<*>.prepRunner() {
         executor = guestExec.executor()
@@ -1679,6 +1687,93 @@ internal class ToolShellCommand @Inject constructor(
     }
   }
 
+  private fun PolyglotEngineConfiguration.doInitJvmSupport(
+    gvmResources: Path,
+    project: ElideProject?,
+    langs: Set<GuestLanguage>,
+  ) {
+    val javaHome: String? = System.getProperty("java.home")
+      ?.ifBlank { null }
+      ?.takeIf { it.isNotEmpty() }
+      ?: System.getenv("JAVA_HOME")
+        ?.ifBlank { null }
+        ?.takeIf { it.isNotEmpty() }
+
+    if (javaHome == null) {
+      logging.warn {
+        "JAVA_HOME is not set; JVM features may not work properly."
+      }
+    } else if (javaHome != System.getProperty("java.home")) {
+      System.setProperty("java.home", javaHome)
+    }
+
+    this@ToolShellCommand.javaHome = javaHome
+    val langResourcesRelative = gvmResources.resolve("kotlin")
+      .resolve(KotlinLanguage.VERSION)
+      .resolve("lib")
+
+    val kotlinSpecificResources = System.getProperty("elide.kotlinResources")
+      ?.let { Path(it) }?.resolve("lib")
+
+    val langResources = kotlinSpecificResources ?: langResourcesRelative
+
+    val langHomeResources = Path(System.getProperty("user.home"))
+      .resolve("elide")
+      .resolve("resources")
+      .resolve("kotlin")
+      .resolve(KotlinLanguage.VERSION)
+      .resolve("lib")
+
+    val pathsFromLangResources = if (Files.exists(langResources)) {
+      initialGuestClasspathJars(langResources)
+    } else {
+      emptySequence()
+    }
+    val pathsFromHomeResources = if (Files.exists(langHomeResources)) {
+      initialGuestClasspathJars(langHomeResources)
+    } else {
+      emptySequence()
+    }
+
+    val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
+    val fullClasspath: List<Path> = (
+            when (extraHome) {
+              null -> emptySequence()
+              else -> initialGuestClasspathJars(Path(extraHome).resolve("lib"))
+            }
+            ).plus(
+        pathsFromLangResources
+      ).plus(
+        pathsFromHomeResources
+      ).distinct().asStream().parallel().filter {
+        Files.exists(it)
+      }.let {
+        when (project) {
+          // with no active project, just return the initial classpath
+          null -> it.toList()
+
+          // otherwise, assemble a classpath from the base and any project deps
+          else -> withProjectClasspath(project, it.asSequence())
+        }
+      }
+    this@ToolShellCommand.extraKotlinHome = extraHome
+
+    logging.debug {
+      "Guest classpath: ${fullClasspath.joinToString(":")}"
+    }
+    this@ToolShellCommand.fullClasspath = fullClasspath
+
+    configure(elide.runtime.plugins.jvm.Jvm) {
+      logging.debug("Configuring JVM")
+      resourcesPath = gvmResources
+      enableSourceIntegration = testMode()  // we need coverage in test mode, which needs the source loader
+      multithreading = !langs.contains(JS)
+      testing = testMode()
+      classpath(fullClasspath.map { it.absolutePathString() })
+      javaHome?.let { guestJavaHome = it }
+    }
+  }
+
   override fun PolyglotEngineConfiguration.configureEngine(langs: Set<GuestLanguage>) {
     // grab project configurations, if available
     val project = activeProject.value
@@ -1813,97 +1908,22 @@ internal class ToolShellCommand @Inject constructor(
 
         // Secondary Engines: JVM
         JVM, KOTLIN, JAVA, SCALA, GROOVY -> {
-          val javaHome: String? = System.getProperty("java.home")
-            ?.ifBlank { null }
-            ?.takeIf { it.isNotEmpty() }
-            ?: System.getenv("JAVA_HOME")
-              ?.ifBlank { null }
-              ?.takeIf { it.isNotEmpty() }
-
-          if (javaHome == null) {
-            logging.warn {
-              "JAVA_HOME is not set; JVM features may not work properly."
-            }
-          } else if (javaHome != System.getProperty("java.home")) {
-            System.setProperty("java.home", javaHome)
+          if (!jvmInitialized.value) synchronized(this) {
+            jvmInitialized.compareAndSet(false, true)
+            doInitJvmSupport(gvmResources, project, langs)
           }
-
-          val langResourcesRelative = gvmResources.resolve("kotlin")
-            .resolve(KotlinLanguage.VERSION)
-            .resolve("lib")
-
-          val kotlinSpecificResources = System.getProperty("elide.kotlinResources")
-            ?.let { Path(it) }
-            ?.let { it.resolve("lib") }
-
-          val langResources = kotlinSpecificResources ?: langResourcesRelative
-
-          val langHomeResources = Path(System.getProperty("user.home"))
-            .resolve("elide")
-            .resolve("resources")
-            .resolve("kotlin")
-            .resolve(KotlinLanguage.VERSION)
-            .resolve("lib")
-
-          val pathsFromLangResources = if (Files.exists(langResources)) {
-            initialGuestClasspathJars(langResources)
-          } else {
-            emptySequence()
-          }
-          val pathsFromHomeResources = if (Files.exists(langHomeResources)) {
-            initialGuestClasspathJars(langHomeResources)
-          } else {
-            emptySequence()
-          }
-
-          val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
-          val fullClasspath: List<Path> = (
-            when (extraHome) {
-              null -> emptySequence()
-              else -> initialGuestClasspathJars(Path(extraHome).resolve("lib"))
-            }
-          ).plus(
-            pathsFromLangResources
-          ).plus(
-            pathsFromHomeResources
-          ).distinct().asStream().parallel().filter {
-            Files.exists(it)
-          }.let {
-            when (project) {
-              // with no active project, just return the initial classpath
-              null -> it.toList()
-
-              // otherwise, assemble a classpath from the base and any project deps
-              else -> withProjectClasspath(project, it.asSequence())
-            }
-          }
-
-          logging.debug {
-            "Guest classpath: ${fullClasspath.joinToString(":")}"
-          }
-
-          configure(elide.runtime.plugins.jvm.Jvm) {
-            logging.debug("Configuring JVM")
-            resourcesPath = gvmResources
-            enableSourceIntegration = testMode()  // we need coverage in test mode, which needs the source loader
-            multithreading = !langs.contains(JS)
-            testing = testMode()
-            classpath(fullClasspath.map { it.absolutePathString() })
-            javaHome?.let { guestJavaHome = it }
-          }.also {
-            configure(elide.runtime.plugins.java.Java) {
+          when (lang) {
+            JAVA -> configure(elide.runtime.plugins.java.Java) {
               logging.debug("Configuring Java")
             }
-            when (lang) {
-              KOTLIN -> configure(elide.runtime.plugins.kotlin.Kotlin) {
-                guestClasspathRoots.addAll(fullClasspath)
-                javaHome?.let { guestJavaHome = it }
-                extraHome?.let { guestKotlinHome = it }
-              }
-              GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
-              SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
-              else -> {}
+            KOTLIN -> configure(elide.runtime.plugins.kotlin.Kotlin) {
+              guestClasspathRoots.addAll(fullClasspath)
+              javaHome?.let { guestJavaHome = it }
+              extraKotlinHome?.let { guestKotlinHome = it }
             }
+            GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
+            SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
+            else -> {}
           }
         }
 

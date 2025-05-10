@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
+import kotlin.io.path.extension
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.GradleCatalogManifest
@@ -40,16 +41,15 @@ public class GradleCatalogCodec : PackageManifestCodec<GradleCatalogManifest> {
   )
 
   private fun libFromPackage(lib: ElidePackageManifest.MavenPackage): GradleCatalogManifest.CatalogLibraryDefinition {
-    return GradleCatalogManifest.CatalogLibrary(
+    return GradleCatalogManifest.CatalogLibraryGroupName(
       group = lib.group ?: lib.coordinate.substringBefore(':'),
       name = lib.name ?: lib.coordinate.substringAfter(':').substringBefore(':'),
       version = lib.version?.let { GradleCatalogManifest.VersionSpec(it) } ?: NoVersion,
-      coordinate = lib.coordinate,
     )
   }
 
-  override fun defaultPath(): Path = Path.of(DEFAULT_NAME)
-  override fun supported(path: Path): Boolean = true
+  override fun defaultPath(): Path = Path.of("gradle/$DEFAULT_NAME")
+  override fun supported(path: Path): Boolean = path.fileName.toString().endsWith(".versions.toml")
 
   override fun parse(source: InputStream): GradleCatalogManifest {
     return source.bufferedReader(StandardCharsets.UTF_8).use { reader ->

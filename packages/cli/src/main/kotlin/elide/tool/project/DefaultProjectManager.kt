@@ -41,6 +41,7 @@ internal class DefaultProjectManager @Inject constructor(
 
     private val supportedThirdPartyManifests = sequenceOf(
       ProjectEcosystem.Node,
+      ProjectEcosystem.MavenPom,
       ProjectEcosystem.PythonRequirements,
     )
 

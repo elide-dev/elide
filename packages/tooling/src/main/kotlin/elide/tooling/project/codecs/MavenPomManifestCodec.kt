@@ -26,7 +26,6 @@ import org.apache.maven.project.createMavenReactorPool
 import org.eclipse.aether.RepositorySystem
 import org.eclipse.aether.RepositorySystemSession
 import org.eclipse.aether.impl.RemoteRepositoryManager
-import org.eclipse.aether.repository.RemoteRepository
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -45,14 +44,12 @@ import elide.tooling.project.manifest.MavenPomManifest
   private val repoSystemProvider: Provider<RepositorySystem>,
   private val repoSessionProvider: Provider<RepositorySystemSession>,
   private val remoteRepositoryManagerProvider: Provider<RemoteRepositoryManager>,
-  private val repositoriesProvider: Provider<List<RemoteRepository>>,
 ) : PackageManifestCodec<MavenPomManifest> {
   public class MavenModelProblems (public val problems: List<ModelProblem>): IOException()
 
   private val repoSystem: RepositorySystem by lazy { repoSystemProvider.get() }
   private val repoSession: RepositorySystemSession by lazy { repoSessionProvider.get() }
   private val remoteRepositoryManager: RemoteRepositoryManager by lazy { remoteRepositoryManagerProvider.get() }
-  private val repositories: List<RemoteRepository> by lazy { repositoriesProvider.get() }
 
   override fun defaultPath(): Path = Path("$DEFAULT_NAME.$DEFAULT_EXTENSION")
 
@@ -76,7 +73,7 @@ import elide.tooling.project.manifest.MavenPomManifest
       null,
       repoSystem,
       remoteRepositoryManager,
-      repositories,
+      emptyList(),
       ProjectBuildingRequest.RepositoryMerging.POM_DOMINANT,
       createMavenReactorPool(),
     ))

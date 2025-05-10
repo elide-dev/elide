@@ -1,0 +1,10 @@
+[versions]
+guava = "33.4.8-jre"
+
+#[libraries]
+# TODO unsupported yet
+#guava = { module = "com.google.guava:guava" }
+#guava = { module = "com.google.guava:guava", version.ref = "guava" }
+
+#[bundles]
+#guava = ["guava"]

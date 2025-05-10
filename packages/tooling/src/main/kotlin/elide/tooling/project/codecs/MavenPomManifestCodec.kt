@@ -10,10 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("INACCESSIBLE_TYPE")
+@file:Suppress("INACCESSIBLE_TYPE", "MnInjectionPoints")
 
 package elide.tooling.project.codecs
 
+import org.apache.maven.model.Model
 import org.apache.maven.model.building.DefaultModelBuilderFactory
 import org.apache.maven.model.building.DefaultModelBuildingRequest
 import org.apache.maven.model.building.ModelBuildingRequest
@@ -94,11 +95,63 @@ import elide.tooling.project.manifest.MavenPomManifest
   }
 
   override fun fromElidePackage(source: ElidePackageManifest): MavenPomManifest {
-    TODO("Not yet implemented")
+    return MavenPomManifest(
+      model = Model().apply {
+        name = source.name
+        version = source.version
+        dependencies.addAll(source.dependencies.maven.packages.map {
+          org.apache.maven.model.Dependency().apply {
+            groupId = it.group
+            artifactId = it.name
+            version = it.version
+          }
+        })
+        dependencies.addAll(source.dependencies.maven.testPackages.map {
+          org.apache.maven.model.Dependency().apply {
+            groupId = it.group
+            artifactId = it.name
+            version = it.version
+            scope = "test"
+          }
+        })
+      }
+    )
   }
 
   override fun toElidePackage(source: MavenPomManifest): ElidePackageManifest {
-    TODO("Not yet implemented")
+    val deps = source.model.dependencies ?: emptyList()
+    val managed = source.model.dependencyManagement?.dependencies ?: emptyList()
+    val resolvedDeps = deps.map {
+      val group = it.groupId
+      val artifact = it.artifactId
+      val version = it.version ?: managed.find { candidate ->
+        candidate.groupId == it.groupId && candidate.artifactId == it.artifactId
+      }?.version
+
+      it.scope to ElidePackageManifest.MavenPackage(
+        group = group,
+        name = artifact,
+        version = version,
+        coordinate = buildString {
+          append(group)
+          append(':')
+          append(artifact)
+          version?.let {
+            append(':')
+            append(it)
+          }
+        },
+      )
+    }
+
+    return ElidePackageManifest(
+      dependencies = ElidePackageManifest.DependencyResolution(
+        maven = ElidePackageManifest.MavenDependencies(
+          packages = resolvedDeps.filter { it.first != "test" }.map { it.second },
+          testPackages = resolvedDeps.filter { it.first == "test" }.map { it.second },
+        )
+      )
+    )
   }
 
   override fun write(manifest: MavenPomManifest, output: OutputStream) {

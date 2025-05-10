@@ -1,0 +1,30 @@
+amends "elide:project.pkl"
+
+name = "elide-test-mavenjvm"
+description = "Example project using Elide with Java and a Maven POM."
+
+entrypoint {
+  "src/main/java/sample/Hello.java"
+}
+
+tests {
+  coverage {
+    paths {
+      "sample*"
+    }
+  }
+}
+
+dependencies {
+  maven {
+    packages {
+      // Guava
+      "com.google.guava:guava:33.4.8-jre"
+    }
+  }
+}
+
+sources {
+  ["main"] = "src/main/java/**/*.java"
+  ["test"] = "src/test/java/**/*.java"
+}

@@ -127,12 +127,12 @@ import elide.tooling.project.manifest.MavenPomManifest
         }, Dependency().apply {
           groupId = "org.junit.jupiter"
           artifactId = "junit-jupiter-engine"
-          version = "5.9.1"
+          version = "5.12.0"
           scope = "test"
         }, Dependency().apply {
           groupId = "org.junit.jupiter"
           artifactId = "junit-jupiter-api"
-          version = "5.9.1"
+          version = "5.12.0"
           scope = "test"
         })
       }

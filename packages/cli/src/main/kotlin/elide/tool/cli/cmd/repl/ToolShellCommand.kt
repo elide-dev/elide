@@ -335,9 +335,9 @@ internal class ToolShellCommand @Inject constructor(
     names = ["--coverage"],
     description = ["Enable or disable coverage during `elide test`"],
     negatable = true,
-    defaultValue = "true",
+    defaultValue = "false",
   )
-  internal var enableCoverage: Boolean = true
+  internal var enableCoverage: Boolean = false
 
   /** Activates coverage in test mode. */
   @Option(

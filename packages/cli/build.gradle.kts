@@ -1727,7 +1727,7 @@ graalvmNative {
     metadataCopy {
       inputTaskNames.addAll(listOf("run", "optimizedRun"))
       outputDirectories.add("src/main/resources/META-INF/native-image/dev/elide/elide-cli")
-      mergeWithExisting = false
+      mergeWithExisting = true
     }
   }
 

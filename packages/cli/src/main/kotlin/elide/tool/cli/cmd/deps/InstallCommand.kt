@@ -26,10 +26,10 @@ import elide.tool.cli.Elide
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
 import elide.tool.project.ProjectManager
-import elide.tooling.project.CompositePackageManifestService
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
+import elide.tooling.config.BuildConfigurator
 import elide.tooling.project.ElideProject
 
 @CommandLine.Command(
@@ -66,20 +66,9 @@ import elide.tooling.project.ElideProject
 internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   @Inject private lateinit var beanContext: BeanContext
   @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
-  @Inject private lateinit var compositeManifestResolver: Provider<CompositePackageManifestService>
-
-  /** Ecosystems for which dependencies should be installed. */
-  @CommandLine.Parameters(
-    index = "0",
-    description = ["Ecosystems to install dependencies for."],
-    scope = CommandLine.ScopeType.LOCAL,
-    arity = "0..*",
-    defaultValue = "(all)",
-    paramLabel = "ECOSYSTEM",
-  )
-  internal var ecosystems: List<String> = emptyList()
 
   // Install dependencies for an Elide project.
+  @Suppress("TooGenericExceptionCaught")
   private suspend fun CommandContext.installDepsForProject(project: ElideProject): CommandResult = coroutineScope {
     BuildDriver.configure(beanContext, project).let { config ->
       try {
@@ -91,17 +80,14 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
     }
   }
 
-  // Resolve and install dependencies from foreign manifests.
-  private suspend fun CommandContext.installForeignManifestDepsOnly(): CommandResult {
-    TODO("Foreign-manifest installation is not implemented yet")
-  }
-
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     // tools typically require native access; force early init
     Elide.requestNatives(server = false, tooling = true)
 
     return when (val project = projectManagerProvider.get().resolveProject(projectOptions().projectPath)) {
-      null -> installForeignManifestDepsOnly()
+      null -> success().also {
+        output { append("No resolvable project.") }
+      }
       else -> installDepsForProject(project)
     }
   }

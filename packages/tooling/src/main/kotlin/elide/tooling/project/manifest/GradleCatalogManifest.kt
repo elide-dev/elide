@@ -13,7 +13,11 @@
 package elide.tooling.project.manifest
 
 import java.nio.file.Path
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import elide.tooling.project.ProjectEcosystem
 
 // Type definitions for primitive types used by the catalog manifest record.
@@ -44,11 +48,11 @@ public typealias CatalogBundlesMap = Map<String, GradleCatalogManifest.CatalogBu
  * @property bundles Bundle mappings present in the manifest.
  */
 @Serializable @JvmRecord public data class GradleCatalogManifest(
-  public val path: Path,
-  public val versions: CatalogVersionsMap,
-  public val plugins: CatalogPluginsMap,
-  public val libraries: CatalogLibrariesMap,
-  public val bundles: CatalogBundlesMap,
+  public val path: Path? = null,
+  public val versions: CatalogVersionsMap = emptyMap(),
+  public val plugins: CatalogPluginsMap = emptyMap(),
+  public val libraries: CatalogLibrariesMap = emptyMap(),
+  public val bundles: CatalogBundlesMap = emptyMap(),
 ) : PackageManifest {
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.GradleCatalog
 
@@ -111,14 +115,25 @@ public typealias CatalogBundlesMap = Map<String, GradleCatalogManifest.CatalogBu
     public val libraries: List<CatalogLibraryId>
   }
 
-  // Implementation of a library mapping.
-  @JvmRecord @Serializable public data class CatalogLibrary internal constructor (
-    override val group: String = "",
-    override val name: String = "",
-    override val module: String = "$group:$name",
-    override val coordinate: String = "$group:$name",
+  // Implementation of a library mapping as a `module` reference.
+  @JvmRecord @Serializable public data class CatalogLibraryModule internal constructor (
+    override val module: String,
     override val version: CatalogVersionSpec = NoVersion,
-  ) : CatalogLibraryDefinition
+  ) : CatalogLibraryDefinition {
+    override val group: String get() = module.substringBefore(":")
+    override val name: String get() = module.substringAfter(":")
+    override val coordinate: String get() = "$group:$name"
+  }
+
+  // Implementation of a library mapping as a `group`/`name` reference.
+  @JvmRecord @Serializable public data class CatalogLibraryGroupName internal constructor (
+    override val group: String,
+    override val name: String,
+    override val version: CatalogVersionSpec = NoVersion,
+  ) : CatalogLibraryDefinition {
+    override val module: String get() = "$group:$name"
+    override val coordinate: String get() = "$group:$name"
+  }
 
   // Implementation of a plugin mapping.
   @JvmRecord @Serializable public data class CatalogPlugin internal constructor (

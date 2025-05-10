@@ -57,7 +57,8 @@ public object Statics {
   /** Terminal theme access. */
   private val terminalTheme: Theme by lazy {
     Theme(from = Theme.Default) {
-      styles["markdown.link.destination"] = TextStyles.underline.style
+      styles["markdown.code.span"] = TextStyles.bold.style
+      styles["markdown.link"] = TextStyles.underline.style
     }
   }
 

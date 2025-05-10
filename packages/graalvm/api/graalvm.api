@@ -1290,6 +1290,9 @@ public abstract class elide/runtime/gvm/internals/testing/GuestAssertionStack : 
 	protected final fun getStack ()Ljava/util/List;
 	public fun isNotNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public fun isNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public fun toBe (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public fun toBeFalse (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public fun toBeTrue (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 }
 
 public final class elide/runtime/gvm/internals/testing/GuestValueAssertion : elide/runtime/gvm/internals/testing/GuestAssertionStack {
@@ -6725,6 +6728,9 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$Test
 	public abstract fun getExpectations ()Ljava/util/Collection;
 	public abstract fun isNotNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public abstract fun isNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public abstract fun toBe (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public abstract fun toBeFalse (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public abstract fun toBeTrue (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 }
 
 public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Expectation : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Assertion {

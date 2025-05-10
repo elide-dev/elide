@@ -27,21 +27,23 @@ import elide.testing.annotations.TestCase
 @TestCase class ElideSmokeTests : AbstractEntryTest() {
   @JvmRecord private data class TestInvocation(
     val file: Path,
+    val baseArgs: List<String>,
     val extraArgs: List<String> = emptyList(),
   ) {
-    fun args(): List<String> = listOf(
-      "run",
-      "--verbose",
-      "--host:allow-env",
-      "--env:dotenv",
-    ) + extraArgs + listOf(
+    fun args(): List<String> = baseArgs + extraArgs + listOf(
       file.absolutePathString(),
     )
   }
 
   private companion object {
-    @JvmStatic private fun testFile(file: String): TestInvocation = TestInvocation(
-      file = testScriptsPath.resolve(file)
+    @JvmStatic private fun testFile(file: String, args: List<String>? = null): TestInvocation = TestInvocation(
+      file = testScriptsPath.resolve(file),
+      baseArgs = args ?: listOf(
+        "run",
+        "--verbose",
+        "--host:allow-env",
+        "--env:dotenv",
+      ),
     )
 
     // All tests to run.
@@ -83,6 +85,7 @@ import elide.testing.annotations.TestCase
       testFile("stdlib.cjs"),
       testFile("stdlib.mjs"),
       testFile("py_json.py"),
+      testFile("sample.test.mts", listOf("test")),
     )
 
     private val knownBroken = sortedSetOf<String>(

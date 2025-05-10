@@ -31,6 +31,7 @@ import elide.tool.cli.ToolState
 import elide.tooling.project.PackageManifestService
 import elide.tool.project.ProjectManager
 import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.manifest.ElidePackageManifest
 
 @Command(
   name = "project",
@@ -137,6 +138,58 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
     return if (failed) err() else success()
   }
 
+  // Render dependencies to markdown so they can be rendered in the terminal.
+  private fun renderDependenciesToMd(manifest: ElidePackageManifest): String = buildString {
+    appendLine("## Dependencies")
+    if (manifest.dependencies.maven.hasPackages()) {
+      appendLine("- Maven:")
+      if (manifest.dependencies.maven.packages.isNotEmpty()) {
+        appendLine("  - Compile & Runtime:")
+        manifest.dependencies.maven.packages.forEach { dep ->
+          appendLine("    - ${dep.coordinate}")
+        }
+      }
+      if (manifest.dependencies.maven.testPackages.isNotEmpty()) {
+        appendLine("  - Test-only:")
+        manifest.dependencies.maven.testPackages.forEach { dep ->
+          appendLine("    - ${dep.coordinate}")
+        }
+      }
+    }
+    if (manifest.dependencies.npm.hasPackages()) {
+      appendLine("- NPM:")
+      if (manifest.dependencies.npm.packages.isNotEmpty()) {
+        appendLine("  - Packages:")
+        manifest.dependencies.npm.packages.forEach { dep ->
+          appendLine("    - ${dep.name}@${dep.version}")
+        }
+      }
+      if (manifest.dependencies.npm.devPackages.isNotEmpty()) {
+        appendLine("  - Dev-only:")
+        manifest.dependencies.npm.devPackages.forEach { dep ->
+          appendLine("    - ${dep.name}@${dep.version}")
+        }
+      }
+    }
+    if (manifest.dependencies.pip.hasPackages()) {
+      appendLine("- PyPI:")
+      manifest.dependencies.pip.packages.forEach { dep ->
+        appendLine("  - ${dep.name}")
+      }
+      manifest.dependencies.pip.optionalPackages.entries.flatMap {
+        it.value
+      }.forEach { dep ->
+        appendLine("  - ${dep.name} (optional)")
+      }
+    }
+  }
+
+  // Render declared scripts to markdown so they can be rendered in the terminal.
+  private fun renderScriptsToMd(manifest: ElidePackageManifest): String = buildString {
+    appendLine("## Scripts")
+    appendLine("(None yet.)")
+  }
+
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     // only exporting manifests is currently supported
     return when {
@@ -153,16 +206,23 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
           else -> success().also {
             if (!quiet) {
               val descOrNone = project.manifest.description?.ifBlank { null }?.let { description ->
-                "\n$description\n"
+                "$description\n"
               } ?: ""
 
+              // basic project info
               Statics.terminal.println(Markdown("""
                   # ${project.manifest.name}
                   $descOrNone
-
                   - Version: ${project.manifest.version ?: "(None specified.)"}
                   - Root: ${project.root.absolutePathString()}
+                  - Workspace: (Same as root)
                 """.trimIndent()))
+
+              // next up, scripts
+              Statics.terminal.println(Markdown(renderScriptsToMd(project.manifest)))
+
+              // dependencies up next
+              Statics.terminal.println(Markdown(renderDependenciesToMd(project.manifest)))
             }
           }
         }

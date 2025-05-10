@@ -188,7 +188,12 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class PipDependencies(
     val packages: List<PipPackage> = emptyList(),
     val optionalPackages: Map<String, List<PipPackage>> = emptyMap(),
-  ) : DependencyEcosystemConfig
+  ) : DependencyEcosystemConfig {
+    public fun hasPackages(): Boolean = packages.isNotEmpty() || optionalPackages.isNotEmpty()
+    public fun allPackages(): Sequence<PipPackage> {
+      return (packages.asSequence() + optionalPackages.values.flatten().asSequence()).distinct()
+    }
+  }
 
   @JvmRecord @Serializable public data class PipPackage(
     val name: String,

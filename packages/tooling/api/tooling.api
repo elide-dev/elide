@@ -1851,14 +1851,16 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$Companion
 public final class elide/tooling/project/manifest/ElidePackageManifest$CoverageSettings : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings$Companion;
 	public fun <init> ()V
-	public fun <init> (Z)V
-	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLjava/util/List;)V
+	public synthetic fun <init> (ZLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
-	public final fun copy (Z)Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;ZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (ZLjava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;ZLjava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;
 	public final fun enabled ()Z
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
+	public final fun paths ()Ljava/util/List;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -2478,11 +2480,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$PipDepend
 	public fun <init> ()V
 	public fun <init> (Ljava/util/List;Ljava/util/Map;)V
 	public synthetic fun <init> (Ljava/util/List;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun allPackages ()Lkotlin/sequences/Sequence;
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Ljava/util/Map;
 	public final fun copy (Ljava/util/List;Ljava/util/Map;)Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;
 	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun hasPackages ()Z
 	public fun hashCode ()I
 	public final fun optionalPackages ()Ljava/util/Map;
 	public final fun packages ()Ljava/util/List;

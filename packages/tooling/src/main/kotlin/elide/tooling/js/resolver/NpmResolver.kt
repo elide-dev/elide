@@ -133,6 +133,9 @@ public class NpmResolver @Inject constructor (
   // Whether this resolver has initialized yet.
   private val initialized = atomic(false)
 
+  // Whether this resolver has resolved yet.
+  private val resolved = atomic(false)
+
   // Create the NPM dependency cache root, if needed.
   private suspend fun establishNodeCacheRoot(): Path = withContext(IO) {
     project.layout.cache.resolve("npm").also {
@@ -269,11 +272,14 @@ public class NpmResolver @Inject constructor (
     existingPackageLock = linkPackageLockIfPresent()
     linkOrRenderPackageJson()
     args = buildOrogeneArguments()
-    initialized.value = true
+    initialized.compareAndSet(false, true)
   }
 
   override suspend fun resolve(scope: CoroutineScope): Sequence<Job> = with(scope) {
     require(initialized.value) { "NPM resolver is not initialized" }
+    require(!resolved.value) { "NPM resolver has already resolved" }
+    resolved.compareAndSet(false, true)
+
     return sequence {
       yield(launch { invokeOrogene(this) })
       yield(launch { linkNodeModules(this) })

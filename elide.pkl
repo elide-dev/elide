@@ -26,12 +26,6 @@ kotlin {
   languageLevel = "1.9"
 }
 
-tests {
-  coverage {
-    enabled = true
-  }
-}
-
 dependencies {
   maven {
     catalogs {

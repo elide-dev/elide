@@ -22,5 +22,7 @@ import elide.runtime.core.DelicateElideApi
  */
 @DelicateElideApi public class CoverageConfig {
   public var enabled: Boolean = true
+  public var format: String? = null
+  public var filterFile: String? = null
   public var outputDirectory: Path? = null
 }

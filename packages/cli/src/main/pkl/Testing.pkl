@@ -6,7 +6,7 @@ module elide.testing
 typealias CoverageState = Boolean | CoverageSettings
 
 /// Formats for coverage reports.
-typealias CoverageReportFormat = "text" | "json" | "xml" | "html" | "lcov"
+typealias CoverageReportFormat = "text" | "histogram" | "json" | "lcov"
 
 /// Abstract type specifying a coverage report.
 abstract class CoverageReport {
@@ -76,6 +76,9 @@ class CoverageSettings {
 
   /// Coverage report generation settings.
   reports: CoverageReportSettings = new {}
+
+  /// Paths to include in coverage.
+  paths: Listing<String> = new {}
 }
 
 /// DSL root type where test settings and configuration are mounted.

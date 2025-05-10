@@ -18,6 +18,7 @@ import elide.runtime.core.EngineLifecycleEvent
 import elide.runtime.core.EnginePlugin
 import elide.runtime.core.PolyglotEngineBuilder
 import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.core.extensions.disableOption
 import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.plugin
 
@@ -40,14 +41,21 @@ private const val DEFAULT_COVERAGE_FORMAT = "json"
     }
     enableOption("coverage")
     enableOption("coverage.Count")
+    disableOption("coverage.StrictLines")
+    disableOption("coverage.TrackInternal")
+
+    val outFmt = config.format ?: DEFAULT_COVERAGE_FORMAT
+    config.filterFile?.let { option("coverage.FilterFile", it) }
 
     // if file outputs are requested, we always generate a parseable type, as we can convert that into other formats.
     when (val out = config.outputDirectory) {
       // nothing to do (no output on-disk specified)
       null -> {}
       else -> {
-        option("coverage.Output", DEFAULT_COVERAGE_FORMAT)
-        option("coverage.OutputFile", out.resolve("coverage.$DEFAULT_COVERAGE_FORMAT").absolutePathString())
+        option("coverage.Output", outFmt)
+        if (outFmt in sortedSetOf("json", "lcov")) {
+          option("coverage.OutputFile", out.resolve("coverage.$outFmt").absolutePathString())
+        }
       }
     }
   }

@@ -311,6 +311,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class CoverageSettings(
     val enabled: Boolean = false,
+    val paths: List<String> = emptyList(),
   )
 
   @JvmRecord @Serializable public data class TestingSettings(

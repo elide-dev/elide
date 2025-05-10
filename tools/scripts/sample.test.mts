@@ -2,8 +2,6 @@
 import { describe, test, expect } from "elide:test"
 import * as sample from "./sample.mts"
 
-console.log("running sample tests")
-
 test("basic test", () => {
   expect(1).toBe(1)
   expect(true).toBeTrue()

@@ -124,6 +124,24 @@ public interface TestConfigurator : ProjectConfigurator {
    */
   public interface TestEventController {
     /**
+     * ### Binder
+     *
+     * Context receiver which allows fluid binding to the test event controller's emitted events.
+     */
+    public interface Binder {
+      /**
+       * Bind an event handler to a method.
+       *
+       * @param T Type of event to bind to.
+       * @param X Type of context to bind to; default-bound to [Any].
+       * @param event Event type to bind to.
+       * @param contextType Type for the context value that will be bound.
+       * @param handler Handler method to dispatch.
+       */
+      public fun <T: Any, X: Any> bind(event: TestNotify, contextType: Class<T>, handler: suspend T.(X) -> Unit): Binder
+    }
+
+    /**
      * Emit event.
      *
      * Deliver a testing event to the event controller; this method is expected to be called often by various test
@@ -137,11 +155,11 @@ public interface TestConfigurator : ProjectConfigurator {
      * @param event Event to deliver.
      * @param context Context related to this event; if no context applies, the test runner or configurator is provided.
      */
-    public fun <E: TestNotify, T: Any> emit(event: E, context: T)
+    public suspend fun <E: TestNotify, T: Any> emit(event: E, context: T)
 
     /** "Inert" event controller which does nothing. */
     public data object Inert : TestEventController {
-      override fun <E : TestNotify, T : Any> emit(event: E, context: T) {
+      override suspend fun <E : TestNotify, T : Any> emit(event: E, context: T) {
         // no-op
       }
     }
@@ -191,3 +209,20 @@ public interface TestConfigurator : ProjectConfigurator {
    */
   public suspend fun contribute(state: ElideTestState, config: TestConfiguration)
 }
+
+/**
+ * Shorthand to bind a test event handler to the event controller.
+ *
+ * @param T Type of event to bind to.
+ * @param X Type of context to bind to; default-bound to [Any].
+ * @param event Event type to bind to.
+ * @param handler Handler method to dispatch.
+ */
+public inline fun <X: Any, reified T: TestConfigurator.TestNotify> TestConfigurator.TestEventController.Binder.on(
+  event: T,
+  noinline handler: suspend T.(X) -> Unit,
+): TestConfigurator.TestEventController.Binder = bind(
+  event = event,
+  contextType = T::class.java,
+  handler = handler,
+)

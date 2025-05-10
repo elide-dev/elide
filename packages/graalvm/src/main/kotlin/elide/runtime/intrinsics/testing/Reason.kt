@@ -20,16 +20,34 @@ package elide.runtime.intrinsics.testing
  */
 public sealed interface Reason {
   /**
+   * Produce a string message explaining the reason.
+   *
+   * @return Formatted string message explaining the reason.
+   */
+  public fun message(): String
+
+  /**
    * ### Reason: Message.
    *
    * Encloses a string message as reasoning.
    */
-  @JvmInline public value class ReasonMessage(public val message: String) : Reason
+  @JvmInline public value class ReasonMessage(public val message: String) : Reason {
+    override fun message(): String = message
+  }
 
   /**
    * ### Reason: Violated Assumptions.
    *
    * Encloses one or more [ViolatedAssumption] exceptions describing what assumptions were violated.
    */
-  @JvmInline public value class ViolatedAssumptions(public val list: List<ViolatedAssumption>) : Reason
+  @JvmInline public value class ViolatedAssumptions(public val list: List<ViolatedAssumption>) : Reason {
+    override fun message(): String = buildString {
+      append("${list.size} violated assumptions")
+      val joined = list.joinToString(", ") { it.reasonMessage() }
+      if (joined.isNotEmpty()) {
+        append(": ")
+        append(joined)
+      }
+    }
+  }
 }

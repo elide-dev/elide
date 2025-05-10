@@ -18,4 +18,8 @@ package elide.runtime.intrinsics.testing
  * Describes a condition where an assumption was violated while processing a test, or while registering a test; when
  * this occurs, the test is disabled within a given run. Reasoning is included for assumption violations.
  */
-public class ViolatedAssumption(message: String?, cause: Throwable? = null): RuntimeException(message, cause)
+public class ViolatedAssumption(message: String?, cause: Throwable? = null): RuntimeException(message, cause) {
+  public fun reasonMessage(): String {
+    return message ?: cause?.message ?: "No reason provided (type: ${this::class.java.simpleName})"
+  }
+}

@@ -21,6 +21,9 @@ package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
@@ -56,7 +59,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.Phaser
-import java.util.concurrent.ThreadFactory
 import java.util.concurrent.TimeoutException
 import java.util.function.Supplier
 import java.util.stream.Stream
@@ -81,8 +83,6 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 import elide.annotations.Inject
 import elide.runtime.LogLevel
-import elide.runtime.Logger
-import elide.runtime.Logging
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
@@ -99,7 +99,10 @@ import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.runtime.gvm.kotlin.KotlinPrecompiler
 import elide.runtime.gvm.kotlin.KotlinScriptCallable
 import elide.runtime.intrinsics.server.http.HttpServerAgent
+import elide.runtime.intrinsics.testing.Reason
+import elide.runtime.intrinsics.testing.TestResult
 import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.runtime.intrinsics.testing.TestingRegistrar.*
 import elide.runtime.plugins.Coverage
 import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
 import elide.runtime.plugins.vfs.VfsListener
@@ -142,6 +145,8 @@ import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
 import elide.tooling.builder.TestDriver.discoverTests
+import elide.tooling.config.TestConfigurator.*
+import elide.tooling.config.on
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.project.ElideProject
 import elide.tooling.project.ProjectEcosystem
@@ -199,10 +204,6 @@ internal class ToolShellCommand @Inject constructor(
     private val ENABLE_RUBY = System.getProperty("elide.lang.ruby") == "true"
     private val ENABLE_PYTHON = System.getProperty("elide.lang.python") == "true"
     private val ENABLE_TYPESCRIPT = System.getProperty("elide.lang.typescript") == "true"
-
-    private val logging: Logger by lazy {
-      Logging.of(ToolShellCommand::class)
-    }
 
     private val tsAliases = setOf("ts", "typescript")
     private val pyAliases = setOf("py", "python")
@@ -305,8 +306,6 @@ internal class ToolShellCommand @Inject constructor(
       if (ENABLE_JVM && (language.kotlin || (alias != null && ktAliases.contains(alias)))) add(KOTLIN)
     }
   }
-
-  private lateinit var threadFactory: ThreadFactory
 
   // Last-seen statement executed by the VM.
   private val allSeenStatements = LinkedList<String>()
@@ -1368,7 +1367,6 @@ internal class ToolShellCommand @Inject constructor(
     label: String,
     langs: EnumSet<GuestLanguage>,
     language: GuestLanguage,
-    ctxAccessor: ContextAccessor,
     source: Source,
     execProvider: GuestExecutorProvider,
   ) {
@@ -1410,6 +1408,21 @@ internal class ToolShellCommand @Inject constructor(
 
     // execute the script
     parsed.execute()
+  }
+
+  // Format a string with colorized output, maybe (i.e. if pretty-mode is enabled, and we have a compatible terminal).
+  private fun formatMaybe(string: String, fmt: TextStyle, emit: Boolean = true): String {
+    return (if (!pretty) string else fmt.invoke(string)).also {
+      if (emit) logging.info(fmt.invoke(string))
+    }
+  }
+
+  private fun formatTestStatus(testStatus: TestResult, message: String): String {
+    return when (testStatus) {
+      is TestResult.Pass -> formatMaybe(message, TextColors.green + TextStyles.bold, false)
+      is TestResult.Fail -> formatMaybe(message, TextColors.red + TextStyles.bold, false)
+      else -> formatMaybe(message, TextColors.yellow + TextStyles.bold, false)
+    }
   }
 
   // Read an executable script, and then execute registered tests.
@@ -1458,11 +1471,45 @@ internal class ToolShellCommand @Inject constructor(
         }
       }
       fun TestRunner.Builder<*>.prepRunner() {
-        executor = guestExec.executor()
+        executor = execProvider.executor()
       }
       val testRunner = when (threadedTestMode) {
-        false -> TestRunner.serial(ctxAccessor) { prepRunner() }
-        true -> TestRunner.threaded(ctxAccessor) { prepRunner() }
+        false -> TestRunner.serialBuilder(ctxAccessor)
+        true -> TestRunner.threadedBuilder(ctxAccessor)
+      }.apply {
+        prepRunner()
+      }.build {
+        //
+        // --- bind events for test runner ---
+        //
+        on(TestPass) { test: RegisteredTest ->
+          output {
+            append("✔  ${test.qualifiedName}")
+          }
+        }
+        on<Pair<RegisteredTest, Reason>, TestSkip>(TestSkip) { (test: RegisteredTest, reason: Reason) ->
+          output {
+            append(formatMaybe(
+              "⊝  ${test.qualifiedName} (${reason.message()})",
+              TextColors.yellow + TextStyles.dim,
+              false,
+            ))
+          }
+        }
+        on<Pair<RegisteredTest, Throwable?>, TestFail>(TestFail) { (test: RegisteredTest, err: Throwable?) ->
+          val msg = when {
+            err?.message != null -> err.message
+            err != null -> err::class.java.name
+            else -> "Unknown error"
+          }
+          output {
+            append(formatMaybe(
+              "✗  ${test.qualifiedName} ($msg)",
+              TextStyles.bold + TextColors.red,
+              false,
+            ))
+          }
+        }
       }
       runBlocking(Dispatchers.Engine) {
         val results = coroutineScope {
@@ -1470,7 +1517,23 @@ internal class ToolShellCommand @Inject constructor(
           testRunner.awaitSettled()
         }
         output {
-          append("Test results: $results")
+          if (debug) {
+            append("Test results: $results")
+          }
+          val status = when (results.result) {
+            is TestResult.Pass -> "PASS"
+            is TestResult.Fail -> "FAIL"
+            else -> "UNKNOWN"
+          }
+          appendLine()
+          appendLine("${results.stats.passes} pass")
+          appendLine("${results.stats.skips} skip")
+          appendLine("${results.stats.fails} fail")
+          appendLine()
+          appendLine(formatTestStatus(
+            results.result,
+            "$status - ${results.stats.tests} tests in ${results.stats.duration}",
+          ))
         }
       }
       return
@@ -1530,7 +1593,6 @@ internal class ToolShellCommand @Inject constructor(
         label,
         languages,
         primaryLanguage,
-        ctxAccessor,
         source,
         guestExec,
       )

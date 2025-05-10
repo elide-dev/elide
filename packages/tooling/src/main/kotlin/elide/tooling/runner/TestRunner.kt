@@ -17,16 +17,21 @@ package elide.tooling.runner
 
 import java.lang.AutoCloseable
 import java.nio.file.Path
+import java.util.LinkedList
+import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.Executor
 import java.util.function.Predicate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
 import elide.exec.ActionScope
+import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.intrinsics.testing.TestingRegistrar.RegisteredTest
 import elide.runtime.intrinsics.testing.TestingRegistrar.TestScope
-import elide.tooling.config.TestConfigurator.TestEventController
+import elide.tooling.config.TestConfigurator
+import elide.tooling.config.TestConfigurator.*
 import elide.tooling.project.ElideProject
 import elide.tooling.runner.AbstractTestRunner.TestRunResult
 
@@ -137,6 +142,39 @@ public interface TestRunner : AutoCloseable {
 
     /** @return Built and configured [TestRunner] instance of [T]. */
     public fun build(controller: TestEventController? = null): T
+
+    /** @return Built and configured [TestRunner] instance of [T]. */
+    public fun build(binder: TestEventController.Binder.() -> Unit): T {
+      val eventBindings = HashMap<TestNotify, LinkedList<suspend TestNotify.(Any?) -> Unit>>()
+      val controller = object: TestEventController {
+        @Suppress("TooGenericExceptionCaught")
+        override suspend fun <E : TestNotify, T : Any> emit(event: E, context: T) {
+          val bindings = eventBindings[event]
+          if (bindings?.isNotEmpty() == true) {
+            bindings.forEach {
+              try {
+                @Suppress("UNCHECKED_CAST")
+                (it as suspend E.(T) -> Unit).invoke(event, context)
+              } catch (e: Exception) {
+                Logging.root().debug("Exception during test callback", e)
+              }
+            }
+          }
+        }
+      }
+      val target = object: TestEventController.Binder {
+        override fun <T : Any, X : Any, > bind(
+          event: TestNotify,
+          contextType: Class<T>,
+          handler: suspend T.(X) -> Unit
+        ): TestEventController.Binder = apply {
+          @Suppress("UNCHECKED_CAST")
+          eventBindings.computeIfAbsent(event) { LinkedList() }.add(handler as (suspend TestNotify.(Any?) -> Unit))
+        }
+      }
+      target.binder()
+      return build(controller)
+    }
   }
 
   /** Default configuration for the test runner. */

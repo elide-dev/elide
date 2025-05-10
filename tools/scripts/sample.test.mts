@@ -7,6 +7,7 @@ console.log("running sample tests")
 test("basic test", () => {
   expect(1).toBe(1)
   expect(true).toBeTrue()
+  expect(false).not.toBeTrue()
 })
 
 describe("sample mod", () => {

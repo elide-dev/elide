@@ -33,11 +33,22 @@ elide {
   }
 }
 
+val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
+
+val patchedLibs = files(
+  gvmJarsRoot.file("truffle-coverage.jar"),
+)
+
+val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }
+
 dependencies {
   fun ExternalModuleDependency.pklExclusions() {
     exclude("org.pkl-lang", "pkl-server")
     exclude("org.pkl-lang", "pkl-config-java-all")
   }
+
+  api(patchedLibs)
+  patchedDependencies(patchedLibs)
 
   ksp(mn.micronaut.inject.kotlin)
   api(libs.kotlin.stdlib.jdk8)
@@ -53,6 +64,14 @@ dependencies {
   api(libs.pkl.core) { pklExclusions() }
   api(libs.pkl.config.java) { pklExclusions() }
   api(libs.pkl.config.kotlin) { pklExclusions() }
+
+  implementation(libs.graalvm.tools.dap)
+  implementation(libs.graalvm.tools.chromeinspector)
+  implementation(libs.graalvm.tools.profiler)
+
+  // excluded: patched
+  // implementation(libs.graalvm.tools.coverage)
+
   implementation(libs.classgraph)
   implementation(libs.semver)
   implementation(libs.purl)

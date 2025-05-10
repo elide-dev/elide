@@ -504,7 +504,9 @@ dependencies {
   implementation(libs.graalvm.tools.dap)
   implementation(libs.graalvm.tools.chromeinspector)
   implementation(libs.graalvm.tools.profiler)
-  implementation(libs.graalvm.tools.coverage)
+
+  // TODO: patched
+  // implementation(libs.graalvm.tools.coverage)
 
   // KotlinX
   implementation(libs.kotlinx.serialization.core)

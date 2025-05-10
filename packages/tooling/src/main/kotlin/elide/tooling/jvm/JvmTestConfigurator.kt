@@ -76,10 +76,8 @@ internal class JvmTestConfigurator : TestConfigurator {
     } ?: error(
       "Class not found: '${cls.name}'",
     )
-    val instantiable = guestCls.`as`(ProxyInstantiable::class.java)
-
     return try {
-      guestCls.`as`(Klass::class.java) to instantiable.newInstance()
+      guestCls.`as`(Klass::class.java) to guestCls.newInstance()
     } catch (err: Throwable) {
       logging.error("Failed to instantiate test class '${cls.name}'", err)
       throw err

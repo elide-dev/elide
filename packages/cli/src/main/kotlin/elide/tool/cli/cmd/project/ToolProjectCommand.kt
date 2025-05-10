@@ -134,7 +134,7 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
       }
     }
 
-    return if (failed) CommandResult.err() else CommandResult.success()
+    return if (failed) err() else success()
   }
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
@@ -157,7 +157,9 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
               } ?: ""
 
               Statics.terminal.println(Markdown("""
-                  # Project: ${project.manifest.name}$descOrNone
+                  # ${project.manifest.name}
+                  $descOrNone
+
                   - Version: ${project.manifest.version ?: "(None specified.)"}
                   - Root: ${project.root.absolutePathString()}
                 """.trimIndent()))

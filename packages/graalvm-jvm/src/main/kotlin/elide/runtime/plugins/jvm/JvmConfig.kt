@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.plugins.jvm
 
 import java.nio.file.Path
@@ -28,6 +27,11 @@ import elide.runtime.plugins.AbstractLanguageConfig
 @DelicateElideApi public class JvmConfig internal constructor() : AbstractLanguageConfig() {
   /** Collection of classpath entries passed to Espresso. */
   private val classpathEntries: MutableList<String> = mutableListOf()
+
+  /**
+   * Whether to enable the host source loader; this must be enabled e.g. when coverage is active.
+   */
+  public var enableSourceIntegration: Boolean = false
 
   /**
    * Toggle support for multiple threads in the guest context.

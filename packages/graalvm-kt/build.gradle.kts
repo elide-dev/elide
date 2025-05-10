@@ -74,26 +74,26 @@ val embeddedKotlinRuntime = layout.projectDirectory.file(
   "src/main/resources/META-INF/elide/embedded/runtime/kt/elide-kotlin-runtime.jar"
 ).asFile
 
-/*
-private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
-    private const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine"
-    private const val JUNIT_PLATFORM_ENGINE = "org.junit.platform:junit-platform-engine"
-    private const val JUNIT_PLATFORM_CONSOLE = "org.junit.platform:junit-platform-console"
-    private const val JUNIT_JUPITER_PARAMS = "org.junit.jupiter:junit-jupiter-params"
-    private const val KOTLIN_TEST = "org.jetbrains.kotlin:kotlin-test"
-    private const val KOTLIN_TEST_JUNIT5 = "org.jetbrains.kotlin:kotlin-test-junit5"
-    private const val KOTLINX_COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
-    private const val KOTLINX_COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
+val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
- */
+val patchedLibs = files(
+  gvmJarsRoot.file("espresso.jar"),
+  gvmJarsRoot.file("truffle-api.jar"),
+)
+
+val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }
 
 dependencies {
   api(projects.packages.engine)
   api(libs.graalvm.truffle.api)
   api(libs.graalvm.espresso.polyglot)
-  api(libs.graalvm.espresso.language)
   annotationProcessor(libs.graalvm.truffle.processor)
   implementation(projects.packages.graalvmJvm)
+
+  // note: patched for use of host-source-loader
+  // api(libs.graalvm.espresso.language)
+  api(patchedLibs)
+  patchedDependencies(patchedLibs)
 
   implementation(libs.kotlinx.atomicfu)
   implementation(libs.kotlin.scripting.jvm)

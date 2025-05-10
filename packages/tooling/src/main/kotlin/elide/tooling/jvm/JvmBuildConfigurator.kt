@@ -36,6 +36,7 @@ import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.jvm.resolver.MavenAetherResolver
+import elide.tooling.jvm.resolver.RepositorySystemFactory
 import elide.tooling.kotlin.KotlinCompiler
 import elide.tooling.project.SourceSet
 import elide.tooling.project.SourceSetLanguage.Java
@@ -218,7 +219,9 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           config,
           state.events,
           state.beanContext.getBean(RepositorySystem::class.java),
-          state.beanContext.getBean(DefaultRepositorySystemSession ::class.java),
+          RepositorySystemFactory().repositorySystemSession().apply {
+            setOffline(config.settings.dry)
+          },
         ).apply {
           // configure repositories and packages for a resolver from scratch.
           registerPackagesFromManifest(state)

@@ -119,18 +119,22 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildEven
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildEventController {
-	public abstract fun onError (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onEventBegin (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onEventEnd (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onProgress (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onProgress (Lelide/tooling/config/BuildConfigurator$BuildTransfer;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onProgress (Lelide/tooling/config/BuildConfigurator$BuildWorker;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onTransferEnd (Lelide/tooling/config/BuildConfigurator$BuildTransfer;)V
-	public abstract fun onTransferError (Lelide/tooling/config/BuildConfigurator$BuildTransfer;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onTransferStart (Lelide/tooling/config/BuildConfigurator$BuildTransfer;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onWorkerEnd (Lelide/tooling/config/BuildConfigurator$BuildWorker;)V
-	public abstract fun onWorkerError (Lelide/tooling/config/BuildConfigurator$BuildWorker;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
-	public abstract fun onWorkerStart (Lelide/tooling/config/BuildConfigurator$BuildWorker;Ljava/lang/String;)V
+	public abstract fun emit (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+}
+
+public abstract interface class elide/tooling/config/BuildConfigurator$BuildEventListener {
+	public fun onError (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onEventBegin (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onEventEnd (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onProgress (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onProgress (Lelide/tooling/config/BuildConfigurator$BuildTransfer;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onProgress (Lelide/tooling/config/BuildConfigurator$BuildWorker;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onTransferEnd (Lelide/tooling/config/BuildConfigurator$BuildTransfer;)V
+	public fun onTransferError (Lelide/tooling/config/BuildConfigurator$BuildTransfer;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onTransferStart (Lelide/tooling/config/BuildConfigurator$BuildTransfer;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onWorkerEnd (Lelide/tooling/config/BuildConfigurator$BuildWorker;)V
+	public fun onWorkerError (Lelide/tooling/config/BuildConfigurator$BuildWorker;Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public fun onWorkerStart (Lelide/tooling/config/BuildConfigurator$BuildWorker;Ljava/lang/String;)V
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildNotify {
@@ -140,6 +144,7 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildSett
 	public abstract fun getCaching ()Z
 	public abstract fun getChecks ()Z
 	public abstract fun getDependencies ()Z
+	public abstract fun getDry ()Z
 	public abstract fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 }
 
@@ -154,6 +159,7 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildWork
 
 public abstract interface class elide/tooling/config/BuildConfigurator$ElideBuildState {
 	public abstract fun getBeanContext ()Lio/micronaut/context/BeanContext;
+	public abstract fun getConfig ()Lelide/tooling/config/BuildConfigurator$BuildConfiguration;
 	public abstract fun getConsole ()Lelide/tooling/config/BuildConfigurator$BuildConsoleController;
 	public abstract fun getEvents ()Lelide/tooling/config/BuildConfigurator$BuildEventController;
 	public abstract fun getLayout ()Lelide/tooling/config/BuildConfigurator$ProjectDirectories;
@@ -164,19 +170,22 @@ public abstract interface class elide/tooling/config/BuildConfigurator$ElideBuil
 
 public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings : java/lang/Record, elide/tooling/config/BuildConfigurator$BuildSettings {
 	public static final field Companion Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings$Companion;
-	public fun <init> (ZZZ)V
+	public fun <init> (ZZZZ)V
 	public fun caching ()Z
 	public fun checks ()Z
 	public final fun component1 ()Z
 	public final fun component2 ()Z
 	public final fun component3 ()Z
-	public final fun copy (ZZZ)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
-	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;ZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public final fun component4 ()Z
+	public final fun copy (ZZZZ)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;ZZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
 	public fun dependencies ()Z
+	public fun dry ()Z
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getCaching ()Z
 	public synthetic fun getChecks ()Z
 	public synthetic fun getDependencies ()Z
+	public synthetic fun getDry ()Z
 	public fun hashCode ()I
 	public fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun toString ()Ljava/lang/String;
@@ -198,22 +207,25 @@ public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings
 
 public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings : elide/tooling/config/BuildConfigurator$BuildSettings {
 	public fun <init> ()V
-	public fun <init> (ZZZ)V
-	public synthetic fun <init> (ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZZ)V
+	public synthetic fun <init> (ZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun build ()Lelide/tooling/config/BuildConfigurator$BuildSettings;
 	public final fun component1 ()Z
 	public final fun component2 ()Z
 	public final fun component3 ()Z
-	public final fun copy (ZZZ)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
-	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;ZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public final fun component4 ()Z
+	public final fun copy (ZZZZ)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;ZZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getCaching ()Z
 	public fun getChecks ()Z
 	public fun getDependencies ()Z
+	public fun getDry ()Z
 	public fun hashCode ()I
 	public fun setCaching (Z)V
 	public fun setChecks (Z)V
 	public fun setDependencies (Z)V
+	public fun setDry (Z)V
 	public fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun toString ()Ljava/lang/String;
 }
@@ -1120,17 +1132,6 @@ public final class elide/tooling/jvm/JavadocToolKt {
 	public static final field JAVADOC Ljava/lang/String;
 	public static final field JAVADOCTOOL_DESCRIPTION Ljava/lang/String;
 	public static final fun getJavadoc ()Lelide/tool/Tool$CommandLineTool;
-}
-
-public synthetic class elide/tooling/jvm/resolver/$MavenAetherResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
-	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
-	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
-	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
 public synthetic class elide/tooling/jvm/resolver/$RepositorySystemFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

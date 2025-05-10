@@ -44,7 +44,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
-import elide.annotations.Inject
 import elide.runtime.Logging
 import elide.tool.Classpath
 import elide.tool.ClasspathProvider

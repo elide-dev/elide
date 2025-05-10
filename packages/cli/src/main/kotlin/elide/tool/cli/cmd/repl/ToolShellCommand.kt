@@ -145,6 +145,7 @@ import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
 import elide.tooling.builder.TestDriver.discoverTests
+import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.TestConfigurator.*
 import elide.tooling.config.on
 import elide.tooling.deps.DependencyResolver
@@ -1725,11 +1726,11 @@ internal class ToolShellCommand @Inject constructor(
       // the project defines maven dependencies; assemble a classpath and return.
       else -> runBlocking {
         val runtimeClasspath = if (skipInstall) null else {
-          val mavenResolver = BuildDriver.configure(beanContext, project).let {
-            // dependency resolution should be active
-            it.settings.dependencies = true
-            it.settings.dry = true
-
+          val buildSettings = BuildConfigurator.MutableBuildSettings().apply {
+            dry = true
+            dependencies = true
+          }
+          val mavenResolver = BuildDriver.configure(beanContext, project, buildSettings).let {
             resolve(it, dependencies(it).await()).also {
               it.second.joinAll()
             }.first.filterIsInstance<MavenAetherResolver>().first()

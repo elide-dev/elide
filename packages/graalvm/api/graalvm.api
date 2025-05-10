@@ -1282,14 +1282,17 @@ public synthetic class elide/runtime/gvm/internals/testing/$TestingRegistrarImpl
 }
 
 public abstract class elide/runtime/gvm/internals/testing/GuestAssertionStack : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$GuestAssertion {
-	public fun <init> (Lelide/runtime/intrinsics/js/node/AssertAPI;)V
+	public fun <init> (Lelide/runtime/intrinsics/js/node/AssertAPI;Z)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/js/node/AssertAPI;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun expect (Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Expectation;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	protected final fun getAssertApi ()Lelide/runtime/intrinsics/js/node/AssertAPI;
 	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
 	protected final fun getStack ()Ljava/util/List;
 	public fun isNotNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public fun isNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public fun notToBe (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public fun toBe (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public fun toBeFalse (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public fun toBeTrue (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
@@ -6527,6 +6530,7 @@ public final class elide/runtime/intrinsics/testing/AssumptionState$Valid : elid
 }
 
 public abstract interface class elide/runtime/intrinsics/testing/Reason {
+	public abstract fun message ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/testing/Reason$ReasonMessage : elide/runtime/intrinsics/testing/Reason {
@@ -6538,6 +6542,8 @@ public final class elide/runtime/intrinsics/testing/Reason$ReasonMessage : elide
 	public final fun getMessage ()Ljava/lang/String;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun message ()Ljava/lang/String;
+	public static fun message-impl (Ljava/lang/String;)Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
@@ -6552,6 +6558,8 @@ public final class elide/runtime/intrinsics/testing/Reason$ViolatedAssumptions :
 	public final fun getList ()Ljava/util/List;
 	public fun hashCode ()I
 	public static fun hashCode-impl (Ljava/util/List;)I
+	public fun message ()Ljava/lang/String;
+	public static fun message-impl (Ljava/util/List;)Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 	public static fun toString-impl (Ljava/util/List;)Ljava/lang/String;
 	public final synthetic fun unbox-impl ()Ljava/util/List;
@@ -6728,6 +6736,7 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingAPI$Test
 	public abstract fun getExpectations ()Ljava/util/Collection;
 	public abstract fun isNotNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public abstract fun isNull (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
+	public abstract fun notToBe (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public abstract fun toBe (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public abstract fun toBeFalse (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
 	public abstract fun toBeTrue (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$AssertionSuite;
@@ -6866,6 +6875,7 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingRegistra
 public final class elide/runtime/intrinsics/testing/ViolatedAssumption : java/lang/RuntimeException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun reasonMessage ()Ljava/lang/String;
 }
 
 public synthetic class elide/runtime/javascript/$MessageChannelBuiltin$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

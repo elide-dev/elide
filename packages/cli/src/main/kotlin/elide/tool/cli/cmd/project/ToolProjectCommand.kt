@@ -14,6 +14,7 @@
 package elide.tool.cli.cmd.project
 
 import com.github.ajalt.mordant.markdown.Markdown
+import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
@@ -187,7 +188,17 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
   // Render declared scripts to markdown so they can be rendered in the terminal.
   private fun renderScriptsToMd(manifest: ElidePackageManifest): String = buildString {
     appendLine("## Scripts")
-    appendLine("(None yet.)")
+    appendLine("Run scripts with `elide run <script>`.")
+    if (manifest.scripts.isNotEmpty()) {
+      appendLine()
+      manifest.scripts.forEach {
+        val dimmed = TextStyles.dim(it.value)
+        appendLine("- `${it.key}`: $dimmed")
+      }
+    } else {
+      appendLine()
+      appendLine("(None yet.)")
+    }
   }
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
@@ -200,7 +211,7 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
         when (project) {
           null -> err("No project").also {
             if (!quiet) output {
-              append("No current project, use --project to specify a project path.")
+              append("No current project, use `--project`/`-p` to specify a project path.")
             }
           }
           else -> success().also {

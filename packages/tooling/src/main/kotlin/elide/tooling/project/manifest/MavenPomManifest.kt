@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 import elide.tooling.project.ProjectEcosystem
 
 @JvmRecord @Serializable public data class MavenPomManifest(
-  public val path: Path,
+  public val path: Path? = null,
   @Contextual public val model: Model,
 ) : PackageManifest {
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.MavenPom

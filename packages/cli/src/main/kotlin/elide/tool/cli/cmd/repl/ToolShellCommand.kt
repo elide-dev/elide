@@ -147,6 +147,7 @@ import elide.tooling.builder.BuildDriver.resolve
 import elide.tooling.builder.TestDriver.discoverTests
 import elide.tooling.config.TestConfigurator.*
 import elide.tooling.config.on
+import elide.tooling.deps.DependencyResolver
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.project.ElideProject
 import elide.tooling.project.ProjectEcosystem
@@ -1526,13 +1527,25 @@ internal class ToolShellCommand @Inject constructor(
             else -> "UNKNOWN"
           }
           appendLine()
-          appendLine("${results.stats.passes} pass")
-          appendLine("${results.stats.skips} skip")
-          appendLine("${results.stats.fails} fail")
+          appendLine(formatMaybe("${results.stats.passes} pass", TextColors.green + TextStyles.bold, false))
+          appendLine("${results.stats.skips} skip".let {
+            if (results.stats.skips > 0u) {
+              formatMaybe(it, TextColors.yellow + TextStyles.bold, false)
+            } else {
+              formatMaybe(it, TextStyles.dim.style, false)
+            }
+          })
+          appendLine("${results.stats.fails} fail".let {
+            if (results.stats.fails > 0u) {
+              formatMaybe(it, TextColors.red + TextStyles.bold, false)
+            } else {
+              formatMaybe(it, TextStyles.dim.style, false)
+            }
+          })
           appendLine()
           appendLine(formatTestStatus(
             results.result,
-            "$status - ${results.stats.tests} tests in ${results.stats.duration}",
+            "$status · ${results.stats.tests} tests in ${results.stats.duration}",
           ))
         }
       }
@@ -1713,6 +1726,10 @@ internal class ToolShellCommand @Inject constructor(
       else -> runBlocking {
         val runtimeClasspath = if (skipInstall) null else {
           val mavenResolver = BuildDriver.configure(beanContext, project).let {
+            // dependency resolution should be active
+            it.settings.dependencies = true
+            it.settings.dry = true
+
             resolve(it, dependencies(it).await()).also {
               it.second.joinAll()
             }.first.filterIsInstance<MavenAetherResolver>().first()

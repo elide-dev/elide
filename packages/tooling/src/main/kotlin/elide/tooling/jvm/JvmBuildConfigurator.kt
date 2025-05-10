@@ -14,6 +14,8 @@
 
 package elide.tooling.jvm
 
+import org.eclipse.aether.DefaultRepositorySystemSession
+import org.eclipse.aether.RepositorySystem
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.incremental.classpathAsList
 import java.nio.file.Path
@@ -212,7 +214,12 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       when (
         val existing = config.resolvers[DependencyResolver.MavenResolver::class]
       ) {
-        null -> state.beanContext.getBean(MavenAetherResolver::class.java).apply {
+        null -> MavenAetherResolver(
+          config,
+          state.events,
+          state.beanContext.getBean(RepositorySystem::class.java),
+          state.beanContext.getBean(DefaultRepositorySystemSession ::class.java),
+        ).apply {
           // configure repositories and packages for a resolver from scratch.
           registerPackagesFromManifest(state)
         }

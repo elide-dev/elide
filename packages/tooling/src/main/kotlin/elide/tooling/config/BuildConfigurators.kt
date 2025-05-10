@@ -49,6 +49,11 @@ public object BuildConfigurators {
     to: BuildConfiguration,
     extraConfigurator: BuildConfigurator? = null,
   ) {
+    val eventController = object : BuildConfigurator.BuildEventController {
+      override fun emit(event: BuildConfigurator.BuildEvent) {
+        // nothing yet
+      }
+    }
     val layout = object : BuildConfigurator.ProjectDirectories {
       override val projectRoot: Path get() = to.projectRoot
     }
@@ -56,10 +61,11 @@ public object BuildConfigurators {
       override val beanContext: BeanContext get() = beanContext
       override val project: ElideConfiguredProject get() = project
       override val console: BuildConfigurator.BuildConsoleController get() = TODO("Not yet implemented")
-      override val events: BuildConfigurator.BuildEventController get() = TODO("Not yet implemented")
+      override val events: BuildConfigurator.BuildEventController get() = eventController
       override val manifest: ElidePackageManifest get() = project.manifest
       override val layout: BuildConfigurator.ProjectDirectories get() = layout
       override val resourcesPath: Path get() = project.resourcesPath
+      override val config: BuildConfiguration get() = to
     }
     from.let {
       when (extraConfigurator) {

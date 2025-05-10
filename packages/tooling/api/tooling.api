@@ -1714,7 +1714,7 @@ public abstract interface annotation class elide/tooling/project/codecs/Manifest
 public final class elide/tooling/project/codecs/MavenPomManifestCodec : elide/tooling/project/codecs/PackageManifestCodec {
 	public static final field DEFAULT_EXTENSION Ljava/lang/String;
 	public static final field DEFAULT_NAME Ljava/lang/String;
-	public fun <init> (Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;)V
+	public fun <init> (Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;)V
 	public fun defaultPath ()Ljava/nio/file/Path;
 	public fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/MavenPomManifest;
 	public synthetic fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
@@ -2717,7 +2717,9 @@ public final class elide/tooling/project/manifest/ElidePackageManifestKt {
 
 public final class elide/tooling/project/manifest/GradleCatalogManifest : java/lang/Record, elide/tooling/project/manifest/PackageManifest {
 	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$Companion;
+	public fun <init> ()V
 	public fun <init> (Ljava/nio/file/Path;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/nio/file/Path;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun bundles ()Ljava/util/Map;
 	public final fun component1 ()Ljava/nio/file/Path;
 	public final fun component2 ()Ljava/util/Map;
@@ -2783,17 +2785,27 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogB
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary : java/lang/Record, elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition {
-	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary$Companion;
-	public fun <init> ()V
+public abstract interface class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition : elide/tooling/project/manifest/GradleCatalogManifest$SymbolicCatalogEntry {
+	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition$Companion;
+	public abstract fun getCoordinate ()Ljava/lang/String;
+	public abstract fun getGroup ()Ljava/lang/String;
+	public abstract fun getModule ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getVersion ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
+}
+
+public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName : java/lang/Record, elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition {
+	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName$Companion;
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Ljava/lang/String;
-	public final fun component5 ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
+	public final fun component3 ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
 	public fun coordinate ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getCoordinate ()Ljava/lang/String;
 	public synthetic fun getGroup ()Ljava/lang/String;
@@ -2808,30 +2820,52 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogL
 	public fun version ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
-	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary$$serializer;
+public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName$$serializer;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
 	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary;)V
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibrary$Companion {
+public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
-public abstract interface class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition : elide/tooling/project/manifest/GradleCatalogManifest$SymbolicCatalogEntry {
-	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition$Companion;
-	public abstract fun getCoordinate ()Ljava/lang/String;
-	public abstract fun getGroup ()Ljava/lang/String;
-	public abstract fun getModule ()Ljava/lang/String;
-	public abstract fun getName ()Ljava/lang/String;
-	public abstract fun getVersion ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
+public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule : java/lang/Record, elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition {
+	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule$Companion;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
+	public fun coordinate ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getCoordinate ()Ljava/lang/String;
+	public synthetic fun getGroup ()Ljava/lang/String;
+	public synthetic fun getModule ()Ljava/lang/String;
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getVersion ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
+	public fun group ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun module ()Ljava/lang/String;
+	public fun name ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public fun version ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryDefinition$Companion {
+public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -2954,6 +2988,7 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$VersionS
 public final class elide/tooling/project/manifest/MavenPomManifest : java/lang/Record, elide/tooling/project/manifest/PackageManifest {
 	public static final field Companion Lelide/tooling/project/manifest/MavenPomManifest$Companion;
 	public fun <init> (Ljava/nio/file/Path;Lorg/apache/maven/model/Model;)V
+	public synthetic fun <init> (Ljava/nio/file/Path;Lorg/apache/maven/model/Model;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/nio/file/Path;
 	public final fun component2 ()Lorg/apache/maven/model/Model;
 	public final fun copy (Ljava/nio/file/Path;Lorg/apache/maven/model/Model;)Lelide/tooling/project/manifest/MavenPomManifest;

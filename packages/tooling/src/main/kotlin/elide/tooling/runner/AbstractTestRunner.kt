@@ -243,19 +243,19 @@ public abstract class AbstractTestRunner (
   }
 
   // Internal event and accounting handler for a test which succeeded.
-  @Suppress("UNUSED_PARAMETER") protected fun testSucceeded(req: TestRunRequest) {
+  @Suppress("UNUSED_PARAMETER") protected suspend fun testSucceeded(req: TestRunRequest) {
     passes.update { it + 1u }
     events.emit(TestConfigurator.TestPass, req.test)
   }
 
   // Internal event and accounting handler for a test which failed.
-  @Suppress("UNUSED_PARAMETER") protected fun testFailed(req: TestRunRequest, err: Throwable?) {
+  @Suppress("UNUSED_PARAMETER") protected suspend fun testFailed(req: TestRunRequest, err: Throwable?) {
     fails.update { it + 1u }
     events.emit(TestConfigurator.TestFail, req.test to err)
   }
 
   // Internal event and accounting handler for a test which was skipped.
-  @Suppress("UNUSED_PARAMETER") protected fun testSkipped(test: RegisteredTest, reason: Reason) {
+  @Suppress("UNUSED_PARAMETER") protected suspend fun testSkipped(test: RegisteredTest, reason: Reason) {
     skips.update { it + 1u }
     events.emit(TestConfigurator.TestSkip, test to reason)
   }

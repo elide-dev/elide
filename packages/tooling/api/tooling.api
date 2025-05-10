@@ -308,12 +308,16 @@ public abstract interface class elide/tooling/config/TestConfigurator$TestEvent 
 }
 
 public abstract interface class elide/tooling/config/TestConfigurator$TestEventController {
-	public abstract fun emit (Lelide/tooling/config/TestConfigurator$TestNotify;Ljava/lang/Object;)V
+	public abstract fun emit (Lelide/tooling/config/TestConfigurator$TestNotify;Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tooling/config/TestConfigurator$TestEventController$Binder {
+	public abstract fun bind (Lelide/tooling/config/TestConfigurator$TestNotify;Ljava/lang/Class;Lkotlin/jvm/functions/Function3;)Lelide/tooling/config/TestConfigurator$TestEventController$Binder;
 }
 
 public final class elide/tooling/config/TestConfigurator$TestEventController$Inert : elide/tooling/config/TestConfigurator$TestEventController {
 	public static final field INSTANCE Lelide/tooling/config/TestConfigurator$TestEventController$Inert;
-	public fun emit (Lelide/tooling/config/TestConfigurator$TestNotify;Ljava/lang/Object;)V
+	public fun emit (Lelide/tooling/config/TestConfigurator$TestNotify;Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -3856,10 +3860,10 @@ public abstract class elide/tooling/runner/AbstractTestRunner : elide/tooling/ru
 	protected fun runnable (Lelide/runtime/core/PolyglotContext;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;)Lelide/runtime/intrinsics/testing/Reason;
 	protected final fun skip (Lelide/runtime/intrinsics/testing/Reason;)Lelide/runtime/intrinsics/testing/TestResult;
 	protected final fun testExec (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
-	protected final fun testFailed (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Ljava/lang/Throwable;)V
+	protected final fun testFailed (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	protected final fun testSeen (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
-	protected final fun testSkipped (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/Reason;)V
-	protected final fun testSucceeded (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
+	protected final fun testSkipped (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/Reason;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun testSucceeded (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun tests (Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
@@ -4142,6 +4146,7 @@ public abstract interface class elide/tooling/runner/TestRunner : java/lang/Auto
 
 public abstract interface class elide/tooling/runner/TestRunner$Builder {
 	public abstract fun build (Lelide/tooling/config/TestConfigurator$TestEventController;)Lelide/tooling/runner/TestRunner;
+	public fun build (Lkotlin/jvm/functions/Function1;)Lelide/tooling/runner/TestRunner;
 	public static synthetic fun build$default (Lelide/tooling/runner/TestRunner$Builder;Lelide/tooling/config/TestConfigurator$TestEventController;ILjava/lang/Object;)Lelide/tooling/runner/TestRunner;
 	public abstract fun getConfig ()Lelide/tooling/runner/TestRunner$MutableConfig;
 	public abstract fun getContextProvider ()Lkotlin/jvm/functions/Function0;

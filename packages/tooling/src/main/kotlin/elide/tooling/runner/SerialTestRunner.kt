@@ -14,13 +14,12 @@
 
 package elide.tooling.runner
 
-import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.MoreExecutors
 import java.nio.file.Path
 import java.util.concurrent.Executor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.guava.asDeferred
+import kotlinx.coroutines.async
 import kotlin.time.measureTimedValue
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
@@ -62,19 +61,20 @@ public class SerialTestRunner internal constructor (
           fail(it)
         }
       }.let { timed ->
-        // this is a serial runner, so we run it directly and then wrap in a pre-resolved `Deferred`.
-        Futures.immediateFuture(TestExecutionResult(
-          test = request.test,
-          scope = request.scope,
-          result = timed.value,
-          timing = timed.duration,
-        ).also {
-          when (val out = timed.value) {
-            is TestResult.Pass -> testSucceeded(request)
-            is TestResult.Skip -> testSkipped(request.test, out.reason)
-            is TestResult.Fail -> testFailed(request, out.cause)
+        scope.async {
+          TestExecutionResult(
+            test = request.test,
+            scope = request.scope,
+            result = timed.value,
+            timing = timed.duration,
+          ).also { result ->
+            when (val out = result.result) {
+              is TestResult.Pass -> testSucceeded(request)
+              is TestResult.Skip -> testSkipped(request.test, out.reason)
+              is TestResult.Fail -> testFailed(request, out.cause)
+            }
           }
-        }).asDeferred()
+        }
       }
     } finally {
       context.leave()

@@ -65,14 +65,22 @@ private val testModuleProps = arrayOf(
   EXPECT,
 )
 
+// Constants for assertion method/property names.
+private const val NOT = "not"
+private const val IS_NULL = "isNull"
+private const val IS_NOT_NULL = "isNotNull"
+private const val TO_BE = "toBe"
+private const val TO_BE_TRUE = "toBeTrue"
+private const val TO_BE_FALSE = "toBeFalse"
+
 // Assertion methods.
 private val testAssertionMethodsAndProps = arrayOf(
-  "not",
-  "isNull",
-  "isNotNull",
-  "toBe",
-  "toBeTrue",
-  "toBeFalse",
+  NOT,
+  IS_NULL,
+  IS_NOT_NULL,
+  TO_BE,
+  TO_BE_TRUE,
+  TO_BE_FALSE,
 )
 
 // Installs the Elide test runner and API bindings.
@@ -192,11 +200,11 @@ public abstract class GuestAssertionStack (
   override fun getMemberKeys(): Array<String> = testAssertionMethodsAndProps
 
   override fun getMember(key: String): Any? = when (key) {
-    "isNull" -> ProxyExecutable { isNull(it.firstOrNull()?.asString()) }
-    "isNotNull" -> ProxyExecutable { isNotNull(it.firstOrNull()?.asString()) }
-    "toBeTrue" -> ProxyExecutable { toBeTrue(it.firstOrNull()?.asString()) }
-    "toBeFalse" -> ProxyExecutable { toBeFalse(it.firstOrNull()?.asString()) }
-    "toBe" -> ProxyExecutable {
+    IS_NULL -> ProxyExecutable { isNull(it.firstOrNull()?.asString()) }
+    IS_NOT_NULL -> ProxyExecutable { isNotNull(it.firstOrNull()?.asString()) }
+    TO_BE_TRUE -> ProxyExecutable { toBeTrue(it.firstOrNull()?.asString()) }
+    TO_BE_FALSE -> ProxyExecutable { toBeFalse(it.firstOrNull()?.asString()) }
+    TO_BE -> ProxyExecutable {
       when (it.size) {
         0 -> throw JsError.typeError("`toBe` requires at least one argument")
         1 -> toBe(it.first(), null)
@@ -205,15 +213,15 @@ public abstract class GuestAssertionStack (
     }
 
     // inverted form
-    "not" -> object: ReadOnlyProxyObject {
+    NOT -> object: ReadOnlyProxyObject {
       override fun getMemberKeys(): Array<String> = testAssertionMethodsAndProps
       override fun getMember(inner: String): Any? = when (inner) {
-        "not" -> this@GuestAssertionStack.getMember(inner)
-        "isNull" -> ProxyExecutable { isNotNull(it.firstOrNull()?.asString()) }
-        "isNotNull" -> ProxyExecutable { isNull(it.firstOrNull()?.asString()) }
-        "toBeTrue" -> ProxyExecutable { toBeFalse(it.firstOrNull()?.asString()) }
-        "toBeFalse" -> ProxyExecutable { toBeTrue(it.firstOrNull()?.asString()) }
-        "toBe" -> ProxyExecutable {
+        NOT -> this@GuestAssertionStack.getMember(inner)
+        IS_NULL -> ProxyExecutable { isNotNull(it.firstOrNull()?.asString()) }
+        IS_NOT_NULL -> ProxyExecutable { isNull(it.firstOrNull()?.asString()) }
+        TO_BE_TRUE -> ProxyExecutable { toBeFalse(it.firstOrNull()?.asString()) }
+        TO_BE_FALSE -> ProxyExecutable { toBeTrue(it.firstOrNull()?.asString()) }
+        TO_BE -> ProxyExecutable {
           when (it.size) {
             0 -> throw JsError.typeError("`toBe` requires at least one argument")
             1 -> notToBe(it.first(), null)

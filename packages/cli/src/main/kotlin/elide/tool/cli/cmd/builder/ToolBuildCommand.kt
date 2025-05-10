@@ -16,51 +16,53 @@
 
 package elide.tool.cli.cmd.builder
 
-import com.github.ajalt.mordant.animation.coroutines.animateInCoroutine
-import com.github.ajalt.mordant.animation.progress.MultiProgressBarAnimation
-import com.github.ajalt.mordant.animation.progress.ProgressTask
-import com.github.ajalt.mordant.animation.progress.addTask
-import com.github.ajalt.mordant.animation.progress.advance
-import com.github.ajalt.mordant.rendering.TextAlign
-import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.widgets.progress.progressBar
-import com.github.ajalt.mordant.widgets.progress.progressBarContextLayout
-import com.github.ajalt.mordant.widgets.progress.progressBarLayout
-import com.github.ajalt.mordant.widgets.progress.text
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
+import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
+import java.util.concurrent.ConcurrentSkipListMap
 import jakarta.inject.Inject
+import jakarta.inject.Provider
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 import kotlin.io.path.name
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
+import kotlin.time.measureTimedValue
 import elide.exec.Task
 import elide.exec.TaskGraph
 import elide.exec.TaskGraphEvent.*
 import elide.exec.TaskId
 import elide.exec.execute
 import elide.exec.on
-import elide.tool.asArgumentString
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
+import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
-import elide.tool.exec.SubprocessRunner
+import elide.tool.cli.output.redirectLoggingToMordant
 import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
 import elide.tool.project.ProjectManager
+import elide.tooling.builder.BuildDriver
+import elide.tooling.builder.BuildDriver.dependencies
+import elide.tooling.builder.BuildDriver.resolve
 import elide.tooling.project.ElideProject
-import elide.tooling.config.BuildConfiguration
-import elide.tooling.config.BuildConfigurators
 
-internal suspend fun CommandContext.emitCommand(task: SubprocessRunner.CommandLineProcessTaskBuilder) {
-  output {
-    appendLine("$ ${task.executable.name} ${task.args.asArgumentString()}")
+internal fun Duration.relative(): String {
+  toComponents { h, m, s, _ ->
+    return when {
+      s == 0 -> "${inWholeMilliseconds}ms"
+      h > 0 -> "${h}h${m}m${s}s"
+      s > 0 -> "${s}s${inWholeMilliseconds.minus(s.seconds.inWholeMilliseconds)}ms"
+      m > 0 -> "${m}m${s}s"
+      else -> toString()
+    }
   }
 }
 
@@ -93,15 +95,49 @@ internal suspend fun CommandContext.emitCommand(task: SubprocessRunner.CommandLi
 @Introspected
 @ReflectiveAccess
 internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
-  @Inject private lateinit var projectManager: ProjectManager
+  @Inject private lateinit var beanContext: BeanContext
+  @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
+  private val projectManager: ProjectManager get() = projectManagerProvider.get()
 
   @CommandLine.Option(
-    names = ["-d", "--dry-run"],
+    names = ["-d", "--dry"],
     description = ["Don't actually run any tasks"],
   )
   internal var dryRun: Boolean = false
 
-  /** Script file arguments. */
+  @CommandLine.Option(
+    names = ["--cache"],
+    negatable = true,
+    defaultValue = "true",
+    description = ["Enable or disable build + dependency caching."],
+  )
+  internal var enableCaching: Boolean = true
+
+  @CommandLine.Option(
+    names = ["--dependencies"],
+    negatable = true,
+    defaultValue = "true",
+    description = ["Enable or disable dependency management."],
+  )
+  internal var enableDeps: Boolean = true
+
+  @CommandLine.Option(
+    names = ["--check"],
+    negatable = true,
+    defaultValue = "true",
+    description = ["Enable or disable checks during build."],
+  )
+  internal var enableChecks: Boolean = true
+
+  @CommandLine.Option(
+    names = ["--progress"],
+    negatable = true,
+    defaultValue = "true",
+    description = ["Show progress indicators and animations; activated by default where supported"],
+  )
+  internal var showProgress: Boolean = true
+
+  /** Names of specific build tasks to run. */
   @CommandLine.Parameters(
     index = "0",
     description = ["Tasks or scripts to build or run"],
@@ -111,198 +147,101 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   )
   internal var tasks: List<String>? = null
 
-  // Terminal to use.
-  private val terminal by lazy { Terminal() }
+  // Terminal build error, if any.
+  private val buildErr = atomic<CommandResult?>(null)
+
+  // Progress controller to use.
+  private lateinit var buildOutput: BuildOutput
+
+  private fun prepareBuilderOutput(scope: CommandContext) = Statics.terminal.let { terminal ->
+    if (showProgress && terminal.terminalInfo.interactive) {
+      terminal.redirectLoggingToMordant()
+      buildOutput = BuildOutput.animated(scope, terminal)
+    } else {
+      buildOutput = BuildOutput.serial(scope, terminal, pretty)
+    }
+  }
+
+  private suspend inline fun <T> timedStep(message: String, block: () -> T): T {
+    return TimeSource.Monotonic.measureTimedValue { block() }.also {
+      buildOutput.status { message }
+    }.value
+  }
 
   // Top-level "auto-build" entrypoint.
-  private suspend fun CommandContext.buildAsProject(name: String, project: ElideProject): CommandResult {
+  private suspend fun CommandContext.buildProject(project: ElideProject): CommandResult = coroutineScope {
     // configure the build
-    val start = System.currentTimeMillis()
-    val config = runCatching {
-      BuildConfiguration.create(project.root).also {
-        BuildConfigurators.contribute(project.load(), it)
-      }
-    }.onSuccess {
-      if (verbose) {
-        val done = System.currentTimeMillis()
-        val elapsed = done - start
-        output { append("Configured build in ${elapsed}ms") }
-      }
-    }.onFailure {
-      if (state()?.output?.verbose == true) {
-        output { appendLine(it.stackTraceToString()) }
-      }
+    prepareBuilderOutput(this@buildProject)
+    val config = BuildDriver.configure(beanContext, project) { state, config ->
+      config.settings.caching = enableCaching
+      config.settings.dependencies = enableDeps
+      config.settings.checks = enableChecks
     }
-    return when (config.isFailure) {
-      true -> err().also {
-        output {
-          when (val exc = config.exceptionOrNull()) {
-            null -> append("Failed to configure project '$name': Unknown error")
-            else -> {
-              exc.printStackTrace()
-              append("Failed to configure project '$name': ${exc::class.java.simpleName}(${exc.message})")
-            }
-          }
-        }
+    val taskMap = ConcurrentSkipListMap<TaskId, BuildOutput.TaskOutput>()
+    timedStep("Dependencies ready") {
+      val deps = dependencies(config).await()
+      val (_, jobs) = resolve(config, deps)
+      jobs.joinAll()
+    }
+
+    if (dryRun) {
+      buildOutput.status { "Skipping build (dry-run mode active)" }
+      success()
+    } else TaskGraph.build(config.taskGraph).execute(config.actionScope) {
+      on(Configured) {
+        buildOutput.debug { "Graph configured: $context" }
       }
-      false -> config.getOrThrow().let { buildConfig ->
-        logging.debug { "Resolved build configuration: $buildConfig" }
-
-        val progress = MultiProgressBarAnimation(
-          terminal = terminal,
-          clearWhenFinished = true,
-        ).animateInCoroutine()
-
-        // prepare layout
-        var currentMessage = "Building '$name'..."
-        val overallLayout = progressBarLayout(alignColumns = false) {
-          text { currentMessage }
-          progressBar(width = 20, completeStyle = terminal.theme.success)
+      on(TaskReady) {
+        val task = context as Task
+        taskMap[task.id] = when (task) {
+          else -> buildOutput.taskScope(task)
         }
-        val taskLayout = progressBarContextLayout<String> {
-          text(fps = animationFps, align = TextAlign.LEFT) { "〉 $context" }
-        }
-
-        val overall = progress.addTask(overallLayout)
-
-        // Top-level build task
-        val topTask = progress.addTask(
-          taskLayout,
-          completed = 0,
-          total = 3,
-          context = "Preparing project...",
-        )
-
-        // begin layout animation
-        launch { progress.execute() }
-
-        val graph = async {
-          TaskGraph.build(buildConfig.taskGraph)
-        }
-
-        val depsTask = progress.addTask(
-          taskLayout,
-          context = "Resolving dependencies...",
-        )
-
-        // finalize configurations
-        logging.debug { "Configuring dependency resolvers" }
-        val resolvers = async {
-          buildConfig.resolvers.all().toList().also {
-            it.forEach { it.second.seal() }
-          }
-        }
-
-        // launch task to resolve deps
-        progress.refresh()
-
-        // seal (finally configure) all dependency resolvers
-        val allResolvers = resolvers.await()
-
-        var completedResolvers = 0L
-        allResolvers.map { resolver ->
-          depsTask.update {
-            context = "Resolving ${resolver.second.ecosystem.name} dependencies"
-          }
-          resolver.second.resolve(this).toList().also { suite ->
-            suite.forEach {
-              depsTask.update {
-                completed = ++completedResolvers
-              }
-            }
-          }
-        }.flatten().joinAll()
-
-        depsTask.update {
-          context = "Dependencies ready"
-          completed = ++completedResolvers
-        }
-        progress.refresh()
-        delay(16.milliseconds)
-
-        logging.debug { "Entering graph scope" }
-        val execution = coroutineScope {
-          launch {
-
-            // we are finished resolving dependencies
-            topTask.advance(1L)
-            depsTask.also { it.advance() }
-          }
-
-          // seal the task graph now, and then execute it, delegating events to output
-          topTask.update { context = "Configuring build..." }
-
-          graph.await().execute(buildConfig.actionScope) {
-            logging.trace { "Binding graph events" }
-            val mappedTasks: MutableMap<TaskId, Task> = mutableMapOf()
-            val mappedProgress: MutableMap<TaskId, ProgressTask<String>> = mutableMapOf()
-            val taskStarts: MutableMap<TaskId, Long> = mutableMapOf()
-            val finishedTasks: MutableList<ProgressTask<*>> = mutableListOf()
-
-            on(Configured) {
-              logging.debug { "Task graph configured in ${System.currentTimeMillis() - start}ms" }
-              topTask.update { context = "Building project..." }
-              progress.refresh(true)
-            }
-            on(TaskReady) {
-              val task = context as Task
-              logging.trace { "[build] Task ready for execution: $task" }
-              mappedTasks[task.id] = task
-            }
-            on(TaskExecute) {
-              val task = context as Task
-              logging.debug { "[build] Task executing: $task" }
-              progress.addTask(
-                taskLayout,
-                context = task.describe(),
-              ).also {
-                mappedProgress[task.id] = it
-                taskStarts[task.id] = System.currentTimeMillis()
-              }
-            }
-            on(TaskFinished) {
-              val task = context as Task
-              logging.debug { "[build] Task finished: $task" }
-              val progressTask = mappedProgress.remove(task.id)
-              val startedAt = taskStarts.remove(task.id)
-
-              progressTask?.let {
-                if (startedAt != null) {
-                  it.update { context = "Completed in ${System.currentTimeMillis() - startedAt}ms" }
-                }
-                it.advance(1L)
-              }
-              mappedTasks.remove(task.id)
-              finishedTasks.add(progressTask ?: return@on)
-            }
-            on(ExecutionFinished) {
-              // remove all pending tasks
-              logging.debug { "[build] Execution finished for graph" }
-              finishedTasks.forEach {
-                progress.removeTask(it.id)
-              }
-            }
-          }
-        }
-
-        // wait for graph to fully complete
-        logging.debug { "[build] Awaiting graph completion" }
-        execution.await()
-        logging.debug { "[build] Graph completed; drawing finishing UI" }
-        topTask.advance(topTask.total ?: 1L)
-        overall.advance()
-
-        val totalMs = System.currentTimeMillis() - start
-        currentMessage = "✅ Build succeeded in ${totalMs}ms"
-        progress.removeTask(depsTask.id)
-        progress.removeTask(topTask.id)
-        progress.refresh(true)
-        logging.debug { "[build] Finished with all build tasks; clearing and succeeding" }
-
-        progress.clear()
-        output { appendLine(currentMessage) }
-        success()
+        buildOutput.debug { "Task ready for execution: $context" }
       }
+      on(TaskExecute) {
+        val task = context as Task
+        val scope = requireNotNull(taskMap[task.id])
+        scope.status { task.describe() }
+        scope.success()
+      }
+      on(TaskCompleted) {
+        val task = context as Task
+        val scope = requireNotNull(taskMap[task.id])
+        scope.verbose { "Finished ${task.id}" }
+        scope.success()
+      }
+      on(TaskProgress) {
+        // nothing to do yet
+      }
+      on(TaskFailed) {
+        val task = context as Task
+        val scope = requireNotNull(taskMap[task.id])
+        scope.verbose { "Failed '${task.id}'" }
+        scope.failure()
+      }
+      on(ExecutionFailed) {
+        buildOutput.status { "Graph failed: $context" }
+        buildOutput.status("Build failed")
+        buildOutput.status {
+          when (isPretty) {
+            true -> TextStyles.bold(TextColors.red("✗ Build failed"))
+            false -> "Build failed"
+          }
+        }
+        buildOutput.failure()
+      }
+      on(ExecutionFinished) {
+        buildOutput.debug { "Graph completed: $context" }
+        buildOutput.status {
+          when (isPretty) {
+            true -> TextStyles.bold(TextColors.green("✓ Build successful"))
+            false -> "Build successful"
+          }
+        }
+        buildOutput.success()
+      }
+    }.await().let {
+      buildErr.value ?: success()
     }
   }
 
@@ -313,25 +252,31 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     // resolve project name and version; use folder name if no project name is specified.
     val projectName = project.manifest.name ?: project.root.name
-    if (verbose) {
-      when (val version = project.manifest.version) {
-        null -> output { append("Building '$projectName'...") }
-        else -> output { append("Building '$projectName' (v$version)...") }
-      }
+    when (val version = project.manifest.version) {
+      null -> output { append("Building $projectName") }
+      else -> output { append("Building $projectName (v$version)...") }
     }
 
     // if the dev has specified a `build` script, prefer that. otherwise, try to run the automatic builder, which infers
     // build steps based on project configuration.
     return when (val buildScript = project.manifest.scripts["build"]) {
       // with no build step, we pass the configuration to the automatic builder.
-      null -> buildAsProject(projectName, project)
+      null -> buildProject(project)
 
       // with a build step, we consume the specified script string and delegate to it in full.
       else -> stringToTask(buildScript).let { task ->
         // emit to stdout
-        emitCommand(task)
+        buildOutput.emitCommand(task)
 
         // in this case, we fully delegate this command's progress to the spawned task.
+        if (dryRun) {
+          if (verbose) {
+            output {
+              append("Skipping command (dry-run mode is active).")
+            }
+          }
+          return success()
+        }
         return delegateTask(task)
       }
     }

@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
 import java.nio.file.Path
-import jakarta.inject.Singleton
 import elide.tool.Arguments
 import elide.tool.Environment
 import elide.tool.Tool
@@ -117,7 +116,6 @@ private val argNamesThatExpectValues = sortedSetOf(
     description = [JAVADOCTOOL_DESCRIPTION],
     mixinStandardHelpOptions = false,
   )
-  @Singleton
   @ReflectiveAccess
   @Introspected
   class JavadocCliTool: DelegatedToolCommand<JavadocTool, JavadocToolAdapter>(javadoc) {

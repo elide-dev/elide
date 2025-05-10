@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling.jvm
 
 import io.micronaut.core.annotation.Introspected
@@ -155,6 +154,7 @@ public val javac: Tool.CommandLineTool = Tool.describe(
   public val env: Environment,
   public val inputs: JavaCompilerInputs,
   public val outputs: JavaCompilerOutputs,
+  public val processors: List<AnnotationProcessor> = emptyList(),
 ) : AbstractTool(info = javac.extend(
   args,
   env,

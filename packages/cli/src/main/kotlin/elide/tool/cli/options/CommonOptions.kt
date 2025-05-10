@@ -21,6 +21,7 @@ import picocli.CommandLine.Option
 import java.util.*
 import kotlin.properties.Delegates
 import elide.tool.cli.Statics
+import elide.tool.cli.output.TOOL_LOGGER_NAME
 
 private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
 
@@ -47,8 +48,10 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
   )
   var verbose: Boolean by Delegates.observable(false) { _, _, active ->
     if (active) {
-      setLoggingLevel(Level.INFO)
-      logging.info("Verbose logging enabled.")
+      if (!LoggerFactory.getLogger(TOOL_LOGGER_NAME).isInfoEnabled) {
+        setLoggingLevel(Level.INFO)
+        logging.info("Verbose logging enabled.")
+      }
     }
   }
 

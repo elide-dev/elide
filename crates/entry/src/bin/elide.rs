@@ -19,12 +19,12 @@
   dead_code
 )]
 
-use gvmcapi::ELIDE_PLUGIN_API_VERSION;
 use std::env;
 use std::env::current_exe;
 use std::ffi::OsString;
 use std::os::raw::c_int;
 use std::process::exit;
+use substrate::ELIDE_PLUGIN_API_VERSION;
 use umbrella::run_oro_with_args;
 
 #[cfg(any(

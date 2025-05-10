@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tool
 
 import java.nio.file.Path
@@ -419,10 +418,10 @@ public sealed class AbstractJvmMultiPathContainer : MultiPathContainer<JvmMultiP
 
   override fun toMutable(): MultiPath.MutableMultiPath {
     return when (role) {
-      CLASSPATH -> return MutableClasspath.from(
+      CLASSPATH -> MutableClasspath.from(
         paths.map { it.path }.toList()
       )
-      MODULEPATH -> return MutableModulepath.from(
+      MODULEPATH -> MutableModulepath.from(
         paths.map { it.path }.toList()
       )
     }
@@ -555,7 +554,6 @@ public sealed class AbstractJvmMultiPathContainer : MultiPathContainer<JvmMultiP
           // already at the front
           continue
         }
-        mutated = true
         paths.remove(entryObj) // need to move it to the front
       }
       mutated = true

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("DataClassPrivateConstructor")
 @file:OptIn(DelicateElideApi::class)
 
@@ -231,20 +230,21 @@ public sealed interface SourceSetLanguage {
 /** Describes types of source sets. */
 public sealed interface SourceSetType : Comparable<SourceSetType> {
   /** The source set contains primary source code. */
-  public data object Sources : SourceSetType
+  public data object Sources : SourceSetType {
+    override fun compareTo(other: SourceSetType): Int {
+      return when (other) {
+        is Sources -> 0
+        is Tests -> -1
+      }
+    }
+  }
 
   /** The source set contains test source code. */
-  public data object Tests : SourceSetType
-
-  override fun compareTo(other: SourceSetType): Int {
-    return when (this) {
-      Sources -> return when (other) {
-        Sources -> 0
-        Tests -> -1
-      }
-      Tests -> return when (other) {
-        Sources -> 1
-        Tests -> 0
+  public data object Tests : SourceSetType {
+    override fun compareTo(other: SourceSetType): Int {
+      return when (other) {
+        is Sources -> 1
+        is Tests -> 0
       }
     }
   }

@@ -16,7 +16,7 @@
     "extends": ["@commitlint/config-conventional"]
   },
   "dependencies": {
-    "browserslist": "4.24.4",
+    "browserslist": "4.24.5",
     "cssnano": "7.0.6",
     "esbuild": "0.25.3",
     "google-protobuf": "3.21.4",
@@ -36,9 +36,9 @@
     "@mitata/counters": "0.0.8",
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
-    "@types/node": "22.15.2",
-    "bun": "1.2.10",
-    "bun-types": "1.2.10",
+    "@types/node": "22.15.3",
+    "bun": "1.2.11",
+    "bun-types": "1.2.11",
     "commitlint": "19.8.0",
     "esbuild": "0.25.0",
     "eslint": "9.25.1",

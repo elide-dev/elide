@@ -36,9 +36,10 @@ crate-type = ["lib", "staticlib", "cdylib"]
 builder = { workspace = true }
 
 [dependencies]
+substrate = { workspace = true }
+trace = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
-substrate = { workspace = true }
 tokio = { workspace = true }
 tracing-subscriber = { workspace = true }
 lazy_static = { workspace = true }

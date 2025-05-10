@@ -45,7 +45,6 @@ internal class JLineLogbackAppender (
     super.stop()
   }
 
-  /** @inheritDoc */
   override fun append(eventObject: ILoggingEvent) {
     reader.printAbove(pattern.doLayout(eventObject))
   }

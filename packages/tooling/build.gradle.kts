@@ -18,10 +18,12 @@ plugins {
   kotlin("jvm")
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
+  alias(libs.plugins.ksp)
 }
 
 elide {
   kotlin {
+    ksp = true
     atomicFu = true
     target = KotlinTarget.JVM
     explicitApi = true
@@ -32,6 +34,7 @@ elide {
 }
 
 dependencies {
+  ksp(mn.micronaut.inject.kotlin)
   api(libs.kotlin.stdlib.jdk8)
   api(libs.jetbrains.annotations)
   api(projects.packages.exec)
@@ -40,6 +43,14 @@ dependencies {
   api(projects.packages.graalvmJvm)
   api(projects.packages.graalvmJava)
   api(projects.packages.graalvmKt)
+  api(libs.sarif4k)
+  api(libs.bundles.maven.model)
+  api(libs.pkl.core)
+  api(libs.pkl.config.java)
+  api(libs.pkl.config.kotlin)
+  implementation(libs.mordant)
+  implementation(libs.mordant.coroutines)
+  implementation(libs.mordant.markdown)
   implementation(libs.ktoml)
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlinx.serialization.core)

@@ -220,14 +220,9 @@
     },
     {
       "type": "elide.tooling.jvm.resolver.MavenAetherResolver",
-      "fields": [
-        {
-          "name": "initialized$volatile"
-        },
-        {
-          "name": "sealed$volatile"
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "org.apache.maven.model.Build",
@@ -802,6 +797,8 @@
             "java.util.List",
             "java.util.Map",
             "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
+            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
@@ -819,6 +816,8 @@
             "java.util.List",
             "java.util.Map",
             "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
+            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
@@ -837,6 +836,8 @@
             "java.util.List",
             "java.util.Map",
             "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
+            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
@@ -875,6 +876,18 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GemPackage"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
@@ -1092,6 +1105,19 @@
     {
       "type": "elide.tool.cli.cmd.tool.DelegatedToolCommand",
       "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.deps.InstallCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.deps.AddCommand",
+      "allDeclaredFields": true,
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tool.cli.cmd.tool.javac.$JavaCompilerAdapter$Introspection",
@@ -7790,6 +7816,45 @@
     }
   ],
   "jni": [
+    {
+      "type": "elide.exec.TraceNative",
+      "methods": [
+        {
+          "name": "lookupLoggerEnabled",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "deliverNativeLog",
+          "parameterTypes": [
+            "elide.exec.TraceNative$LogRecord"
+          ]
+        },
+        {
+          "name": "deliverNativeLog",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "deliverNativeTrace",
+          "parameterTypes": [
+            "elide.exec.TraceNative$TraceRecord"
+          ]
+        },
+        {
+          "name": "deliverNativeTrace",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
     {
       "type": "[B"
     },

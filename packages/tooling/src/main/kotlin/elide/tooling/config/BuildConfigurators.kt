@@ -10,9 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling.config
 
+import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import java.util.ServiceLoader
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
@@ -26,14 +26,17 @@ public object BuildConfigurators {
 
   @JvmStatic
   public suspend fun contribute(
+    beanContext: BeanContext,
     project: ElideConfiguredProject,
     from: Sequence<BuildConfigurator>,
     to: BuildConfiguration,
+    extraConfigurator: BuildConfigurator? = null,
   ) {
     val layout = object : BuildConfigurator.ProjectDirectories {
       override val projectRoot: Path get() = to.projectRoot
     }
     val state = object : BuildConfigurator.ElideBuildState {
+      override val beanContext: BeanContext get() = beanContext
       override val project: ElideConfiguredProject get() = project
       override val console: BuildConfigurator.BuildConsoleController get() = TODO("Not yet implemented")
       override val events: BuildConfigurator.BuildEventController get() = TODO("Not yet implemented")
@@ -41,12 +44,22 @@ public object BuildConfigurators {
       override val layout: BuildConfigurator.ProjectDirectories get() = layout
       override val resourcesPath: Path get() = project.resourcesPath
     }
-    from.forEach {
+    from.let {
+      when (extraConfigurator) {
+        null -> it
+        else -> it + sequenceOf(extraConfigurator)
+      }
+    }.forEach {
       it.contribute(state, to)
     }
   }
 
-  @JvmStatic public suspend fun contribute(project: ElideConfiguredProject, to: BuildConfiguration) {
-    contribute(project, collect(), to)
+  @JvmStatic public suspend fun contribute(
+    beanContext: BeanContext,
+    project: ElideConfiguredProject,
+    to: BuildConfiguration,
+    extraConfigurator: BuildConfigurator? = null,
+  ) {
+    contribute(beanContext, project, collect(), to, extraConfigurator)
   }
 }

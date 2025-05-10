@@ -14,11 +14,11 @@
 package elide.tool.cli.cmd.project
 
 import com.github.ajalt.mordant.markdown.Markdown
-import com.github.ajalt.mordant.terminal.Terminal
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
-import jakarta.inject.Singleton
+import jakarta.inject.Provider
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.outputStream
@@ -26,6 +26,7 @@ import elide.annotations.Inject
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
+import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.project.PackageManifestService
 import elide.tool.project.ProjectManager
@@ -47,7 +48,8 @@ import elide.tooling.project.ProjectEcosystem
     "",
   ]
 )
-@Introspected @Singleton
+@Introspected
+@ReflectiveAccess
 internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   enum class Target(val targetName: String, val ecosystem: ProjectEcosystem, val description: String) {
     NODE("node", ProjectEcosystem.Node, "Node.js package.json"),
@@ -55,9 +57,12 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
     MAVEN("maven", ProjectEcosystem.MavenPom, "Maven pom.xml"),
   }
 
-  @Inject private lateinit var projectManager: ProjectManager
+  @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
 
-  @Inject private lateinit var manifests: PackageManifestService
+  @Inject private lateinit var manifestsProvider: Provider<PackageManifestService>
+
+  private val projectManager: ProjectManager by lazy { projectManagerProvider.get() }
+  private val manifests: PackageManifestService by lazy { manifestsProvider.get() }
 
   @Suppress("unused")
   @Option(
@@ -150,7 +155,8 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
               val descOrNone = project.manifest.description?.ifBlank { null }?.let { description ->
                 "\n$description\n"
               } ?: ""
-              Terminal().println(Markdown("""
+
+              Statics.terminal.println(Markdown("""
                   # Project: ${project.manifest.name}$descOrNone
                   - Version: ${project.manifest.version ?: "(None specified.)"}
                   - Root: ${project.root.absolutePathString()}

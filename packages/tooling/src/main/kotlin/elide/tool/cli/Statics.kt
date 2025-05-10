@@ -14,6 +14,7 @@
 
 package elide.tool.cli
 
+import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
 import java.io.InputStream
@@ -56,8 +57,7 @@ public object Statics {
   /** Terminal theme access. */
   private val terminalTheme: Theme by lazy {
     Theme(from = Theme.Default) {
-      // Nothing at this time.
-      // styles[""] = Theme.Default.styles
+      styles["markdown.link.destination"] = TextStyles.underline.style
     }
   }
 

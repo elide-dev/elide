@@ -59,6 +59,7 @@ private const val ASYNC_TIMEOUT = 30L
       @Polyglot public fun isNull(message: String?): AssertionSuite
       @Polyglot public fun isNotNull(message: String?): AssertionSuite
       @Polyglot public fun toBe(other: Value?, message: String?): AssertionSuite
+      @Polyglot public fun notToBe(other: Value?, message: String?): AssertionSuite
       @Polyglot public fun toBeTrue(message: String?): AssertionSuite
       @Polyglot public fun toBeFalse(message: String?): AssertionSuite
     }

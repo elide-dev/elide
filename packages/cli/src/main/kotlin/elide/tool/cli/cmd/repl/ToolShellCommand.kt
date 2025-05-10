@@ -322,9 +322,9 @@ internal class ToolShellCommand @Inject constructor(
     names = ["--coverage"],
     description = ["Enable or disable coverage during `elide test`"],
     negatable = true,
-    defaultValue = "true",
+    defaultValue = "false",
   )
-  internal var enableCoverage: Boolean = true
+  internal var enableCoverage: Boolean = false
 
   /** Activates coverage in test mode. */
   @Option(
@@ -1736,13 +1736,8 @@ internal class ToolShellCommand @Inject constructor(
 
     // configure test-mode plugins like coverage
     if (testMode()) configure(Coverage) {
-      // @TODO coverage support in jvm
-      val disableBecauseJvm = langs.any { it.id == "jvm" }
-      if (disableBecauseJvm) {
-        logging.debug { "Coverage is not supported on JVM yet, so it was disabled." }
-      }
       val projectCoverageSettings = activeProject.value?.manifest?.tests?.coverage
-      val doEnable = (enableCoverage || projectCoverageSettings?.enabled == true) && !disableBecauseJvm
+      val doEnable = (enableCoverage || projectCoverageSettings?.enabled == true)
       enabled = doEnable
       if (doEnable) {
         activeProject.value?.let {
@@ -1874,6 +1869,7 @@ internal class ToolShellCommand @Inject constructor(
           configure(elide.runtime.plugins.jvm.Jvm) {
             logging.debug("Configuring JVM")
             resourcesPath = gvmResources
+            enableSourceIntegration = testMode()  // we need coverage in test mode, which needs the source loader
             multithreading = !langs.contains(JS)
             testing = testMode()
             classpath(fullClasspath.map { it.absolutePathString() })

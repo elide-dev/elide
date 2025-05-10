@@ -21,6 +21,15 @@ plugins {
   alias(libs.plugins.elide.conventions)
 }
 
+val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
+
+val patchedLibs = files(
+  gvmJarsRoot.file("espresso.jar"),
+  gvmJarsRoot.file("truffle-api.jar"),
+)
+
+val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }
+
 elide {
   publishing {
     id = "graalvm-jvm"
@@ -139,10 +148,15 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.kotlinx.coroutines.jdk9)
   implementation(libs.graalvm.espresso.hotswap)
-  implementation(libs.graalvm.espresso.language)
-  implementation(libs.graalvm.espresso.resources.jdk21)
   implementation(libs.graalvm.truffle.nfi.libffi)
   implementation(libs.graalvm.espresso.polyglot)
+  implementation(libs.graalvm.espresso.resources.jdk21)
+
+  // patched for use of host source loader
+  // implementation(libs.graalvm.espresso.language)
+  //
+  api(patchedLibs)
+  patchedDependencies(patchedLibs)
 
   // Testing
   testImplementation(projects.packages.test)

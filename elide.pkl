@@ -26,6 +26,10 @@ kotlin {
   languageLevel = "1.9"
 }
 
+scripts {
+  ["quicktest"] = "elide test ./tools/scripts/sample.test.mts"
+}
+
 dependencies {
   maven {
     catalogs {

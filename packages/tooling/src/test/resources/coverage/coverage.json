@@ -1,1 +1,171 @@
-[{"path":"/home/sam/workspace/elide/tools/scripts/sample.test.mts","name":"sample.test.mts","roots":[{"covered":true,"name":":module:eval","count":1,"source_section":{"characters":"import{describe,test,expect}from\"elide:test\";console.log(`running sample tests`);test(`basic test`,()=>{expect(1).toBe(1);expect(true).toBeTrue()});describe(`sample suite`,()=>{test(`sample test`,()=>{expect(`hello`).toBe(`hello`)})});","start_column":1,"char_length":235,"start_line":1,"char_index":0,"char_end_index":235,"end_line":1,"end_column":235},"sections":[{"covered":true,"count":1,"source_section":{"characters":"test(`basic test`,()=>{expect(1).toBe(1);expect(true).toBeTrue()})","start_column":82,"char_length":66,"start_line":1,"char_index":81,"char_end_index":147,"end_line":1,"end_column":147}},{"covered":true,"count":1,"source_section":{"characters":"describe(`sample suite`,()=>{test(`sample test`,()=>{expect(`hello`).toBe(`hello`)})})","start_column":149,"char_length":86,"start_line":1,"char_index":148,"char_end_index":234,"end_line":1,"end_column":234}},{"covered":true,"count":1,"source_section":{"characters":"console.log(`running sample tests`)","start_column":46,"char_length":35,"start_line":1,"char_index":45,"char_end_index":80,"end_line":1,"end_column":80}}]},{"covered":false,"name":":=>","count":0,"source_section":{"characters":"()=>{expect(1).toBe(1);expect(true).toBeTrue()}","start_column":100,"char_length":47,"start_line":1,"char_index":99,"char_end_index":146,"end_line":1,"end_column":146},"sections":[{"covered":false,"source_section":{"characters":"expect(1).toBe(1)","start_column":105,"char_length":17,"start_line":1,"char_index":104,"char_end_index":121,"end_line":1,"end_column":121}},{"covered":false,"source_section":{"characters":"expect(true).toBeTrue()","start_column":123,"char_length":23,"start_line":1,"char_index":122,"char_end_index":145,"end_line":1,"end_column":145}}]},{"covered":false,"name":":=>","count":0,"source_section":{"characters":"()=>{expect(`hello`).toBe(`hello`)}","start_column":197,"char_length":35,"start_line":1,"char_index":196,"char_end_index":231,"end_line":1,"end_column":231},"sections":[{"covered":false,"source_section":{"characters":"expect(`hello`).toBe(`hello`)","start_column":202,"char_length":29,"start_line":1,"char_index":201,"char_end_index":230,"end_line":1,"end_column":230}}]},{"covered":true,"name":":=>","count":1,"source_section":{"characters":"()=>{test(`sample test`,()=>{expect(`hello`).toBe(`hello`)})}","start_column":173,"char_length":61,"start_line":1,"char_index":172,"char_end_index":233,"end_line":1,"end_column":233},"sections":[{"covered":true,"count":1,"source_section":{"characters":"test(`sample test`,()=>{expect(`hello`).toBe(`hello`)})","start_column":178,"char_length":55,"start_line":1,"char_index":177,"char_end_index":232,"end_line":1,"end_column":232}}]}]}]
+[
+  {
+    "path": "/home/sam/workspace/elide/tools/scripts/sample.test.mts",
+    "name": "sample.test.mts",
+    "roots": [
+      {
+        "covered": true,
+        "name": ":module:eval",
+        "count": 1,
+        "source_section": {
+          "characters": "import{describe,test,expect}from\"elide:test\";console.log(`running sample tests`);test(`basic test`,()=>{expect(1).toBe(1);expect(true).toBeTrue()});describe(`sample suite`,()=>{test(`sample test`,()=>{expect(`hello`).toBe(`hello`)})});",
+          "start_column": 1,
+          "char_length": 235,
+          "start_line": 1,
+          "char_index": 0,
+          "char_end_index": 235,
+          "end_line": 1,
+          "end_column": 235
+        },
+        "sections": [
+          {
+            "covered": true,
+            "count": 1,
+            "source_section": {
+              "characters": "test(`basic test`,()=>{expect(1).toBe(1);expect(true).toBeTrue()})",
+              "start_column": 82,
+              "char_length": 66,
+              "start_line": 1,
+              "char_index": 81,
+              "char_end_index": 147,
+              "end_line": 1,
+              "end_column": 147
+            }
+          },
+          {
+            "covered": true,
+            "count": 1,
+            "source_section": {
+              "characters": "describe(`sample suite`,()=>{test(`sample test`,()=>{expect(`hello`).toBe(`hello`)})})",
+              "start_column": 149,
+              "char_length": 86,
+              "start_line": 1,
+              "char_index": 148,
+              "char_end_index": 234,
+              "end_line": 1,
+              "end_column": 234
+            }
+          },
+          {
+            "covered": true,
+            "count": 1,
+            "source_section": {
+              "characters": "console.log(`running sample tests`)",
+              "start_column": 46,
+              "char_length": 35,
+              "start_line": 1,
+              "char_index": 45,
+              "char_end_index": 80,
+              "end_line": 1,
+              "end_column": 80
+            }
+          }
+        ]
+      },
+      {
+        "covered": false,
+        "name": ":=>",
+        "count": 0,
+        "source_section": {
+          "characters": "()=>{expect(1).toBe(1);expect(true).toBeTrue()}",
+          "start_column": 100,
+          "char_length": 47,
+          "start_line": 1,
+          "char_index": 99,
+          "char_end_index": 146,
+          "end_line": 1,
+          "end_column": 146
+        },
+        "sections": [
+          {
+            "covered": false,
+            "source_section": {
+              "characters": "expect(1).toBe(1)",
+              "start_column": 105,
+              "char_length": 17,
+              "start_line": 1,
+              "char_index": 104,
+              "char_end_index": 121,
+              "end_line": 1,
+              "end_column": 121
+            }
+          },
+          {
+            "covered": false,
+            "source_section": {
+              "characters": "expect(true).toBeTrue()",
+              "start_column": 123,
+              "char_length": 23,
+              "start_line": 1,
+              "char_index": 122,
+              "char_end_index": 145,
+              "end_line": 1,
+              "end_column": 145
+            }
+          }
+        ]
+      },
+      {
+        "covered": false,
+        "name": ":=>",
+        "count": 0,
+        "source_section": {
+          "characters": "()=>{expect(`hello`).toBe(`hello`)}",
+          "start_column": 197,
+          "char_length": 35,
+          "start_line": 1,
+          "char_index": 196,
+          "char_end_index": 231,
+          "end_line": 1,
+          "end_column": 231
+        },
+        "sections": [
+          {
+            "covered": false,
+            "source_section": {
+              "characters": "expect(`hello`).toBe(`hello`)",
+              "start_column": 202,
+              "char_length": 29,
+              "start_line": 1,
+              "char_index": 201,
+              "char_end_index": 230,
+              "end_line": 1,
+              "end_column": 230
+            }
+          }
+        ]
+      },
+      {
+        "covered": true,
+        "name": ":=>",
+        "count": 1,
+        "source_section": {
+          "characters": "()=>{test(`sample test`,()=>{expect(`hello`).toBe(`hello`)})}",
+          "start_column": 173,
+          "char_length": 61,
+          "start_line": 1,
+          "char_index": 172,
+          "char_end_index": 233,
+          "end_line": 1,
+          "end_column": 233
+        },
+        "sections": [
+          {
+            "covered": true,
+            "count": 1,
+            "source_section": {
+              "characters": "test(`sample test`,()=>{expect(`hello`).toBe(`hello`)})",
+              "start_column": 178,
+              "char_length": 55,
+              "start_line": 1,
+              "char_index": 177,
+              "char_end_index": 232,
+              "end_line": 1,
+              "end_column": 232
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

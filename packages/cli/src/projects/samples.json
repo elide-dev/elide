@@ -5,10 +5,7 @@
       "name": "ktjvm",
       "description": "Kotlin/JVM project with Elide",
       "languages": ["Kotlin"],
-      "files": [
-        "src/main/kotlin/sample/main.kt",
-        "src/test/kotlin/sample/testGreeting.kt"
-      ]
+      "files": ["src/main/kotlin/sample/main.kt", "src/test/kotlin/sample/testGreeting.kt"]
     },
     {
       "name": "ktweb",

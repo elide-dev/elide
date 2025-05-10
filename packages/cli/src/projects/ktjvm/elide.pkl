@@ -7,6 +7,14 @@ entrypoint {
   "src/main/kotlin/main.kt"
 }
 
+tests {
+  coverage {
+    paths {
+      "sample*"
+    }
+  }
+}
+
 dependencies {
   maven {
     packages {

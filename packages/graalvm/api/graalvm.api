@@ -8885,8 +8885,12 @@ public final class elide/runtime/plugins/Coverage$Plugin : elide/runtime/core/En
 public final class elide/runtime/plugins/CoverageConfig {
 	public fun <init> ()V
 	public final fun getEnabled ()Z
+	public final fun getFilterFile ()Ljava/lang/String;
+	public final fun getFormat ()Ljava/lang/String;
 	public final fun getOutputDirectory ()Ljava/nio/file/Path;
 	public final fun setEnabled (Z)V
+	public final fun setFilterFile (Ljava/lang/String;)V
+	public final fun setFormat (Ljava/lang/String;)V
 	public final fun setOutputDirectory (Ljava/nio/file/Path;)V
 }
 

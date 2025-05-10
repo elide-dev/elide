@@ -322,9 +322,17 @@ internal class ToolShellCommand @Inject constructor(
     names = ["--coverage"],
     description = ["Enable or disable coverage during `elide test`"],
     negatable = true,
-    defaultValue = "false",
+    defaultValue = "true",
   )
-  internal var enableCoverage: Boolean = false
+  internal var enableCoverage: Boolean = true
+
+  /** Activates coverage in test mode. */
+  @Option(
+    names = ["--coverage-format"],
+    description = ["Coverage format to emit; defaults to 'json'"],
+    defaultValue = "json",
+  )
+  internal var coverageFormat: String = "json"
 
   /** Activates coverage in test mode. */
   @Option(
@@ -1437,7 +1445,7 @@ internal class ToolShellCommand @Inject constructor(
       }
 
       // start up the test runner and run all eligible/matched tests
-      logging.info { "Would run ${allTests.size} tests" }
+      logging.info { "Running ${allTests.size} tests" }
       allTests.forEach {
         logging.info { "- scope=(${it.first.qualifiedName}) test=(${it.second.qualifiedName})" }
       }
@@ -1739,6 +1747,14 @@ internal class ToolShellCommand @Inject constructor(
       val projectCoverageSettings = activeProject.value?.manifest?.tests?.coverage
       val doEnable = (enableCoverage || projectCoverageSettings?.enabled == true)
       enabled = doEnable
+      format = coverageFormat
+
+      projectCoverageSettings?.paths?.let {
+        if (it.isNotEmpty()) {
+          filterFile = it.joinToString(",")
+        }
+      }
+
       if (doEnable) {
         activeProject.value?.let {
           outputDirectory = it.root

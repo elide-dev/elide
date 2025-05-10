@@ -4482,15 +4482,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",

@@ -208,7 +208,7 @@ public abstract class GuestAssertionStack (
     "not" -> object: ReadOnlyProxyObject {
       override fun getMemberKeys(): Array<String> = testAssertionMethodsAndProps
       override fun getMember(inner: String): Any? = when (inner) {
-        "not" -> getMember(inner)
+        "not" -> this@GuestAssertionStack.getMember(inner)
         "isNull" -> ProxyExecutable { isNotNull(it.firstOrNull()?.asString()) }
         "isNotNull" -> ProxyExecutable { isNull(it.firstOrNull()?.asString()) }
         "toBeTrue" -> ProxyExecutable { toBeFalse(it.firstOrNull()?.asString()) }

@@ -12,6 +12,7 @@
  */
 package elide.tooling.js.resolver
 
+import com.google.common.util.concurrent.Futures
 import java.nio.file.FileAlreadyExistsException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -21,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.guava.asDeferred
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
@@ -32,6 +34,7 @@ import elide.runtime.Logging
 import elide.tool.Argument
 import elide.tool.Arguments
 import elide.tool.Tool
+import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.project.manifest.NodePackageManifest
@@ -112,6 +115,12 @@ public class NpmResolver @Inject constructor (
     @JvmStatic private val logging by lazy { Logging.of(NpmResolver::class) }
   }
 
+  // Resolved build info.
+  private val buildInfo: ElideBuildState by lazy { buildInfoProvider.get() }
+
+  // Event delivery controller.
+  private val events: BuildConfigurator.BuildEventController by lazy { buildInfo.events }
+
   // Resolved project info.
   private lateinit var project: ElideBuildState
 
@@ -191,7 +200,11 @@ public class NpmResolver @Inject constructor (
 
   // Invoke Orogene to perform installation.
   private suspend fun invokeOrogene(scope: CoroutineScope): Deferred<Tool.Result> {
-    return orogeneInvoker(scope, args)
+    return if (buildInfo.config.settings.dry) {
+      Futures.immediateFuture(Tool.Result.Success).asDeferred()
+    } else {
+      orogeneInvoker(scope, args)
+    }
   }
 
   private suspend fun linkNodeModules(scope: CoroutineScope): Job = withContext(IO) {
@@ -281,9 +294,11 @@ public class NpmResolver @Inject constructor (
     resolved.compareAndSet(false, true)
 
     return sequence {
-      yield(launch { invokeOrogene(this) })
-      yield(launch { linkNodeModules(this) })
-      yield(launch { copyPackageLockIfNeeded(this) })
+      if (!buildInfo.config.settings.dry) {
+        yield(launch { invokeOrogene(this) })
+        yield(launch { linkNodeModules(this) })
+        yield(launch { copyPackageLockIfNeeded(this) })
+      }
     }
   }
 }

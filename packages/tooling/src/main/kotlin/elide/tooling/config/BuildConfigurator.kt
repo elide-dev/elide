@@ -49,6 +49,9 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     /** Whether to enable build caching. */
     public val caching: Boolean
 
+    /** Whether to perform a dry run (skipping all actual actions). */
+    public val dry: Boolean
+
     /** Whether to enable dependencies (installation-aware). */
     public val dependencies: Boolean
 
@@ -67,11 +70,14 @@ public fun interface BuildConfigurator : ProjectConfigurator {
   @Serializable @JvmRecord public data class ImmutableBuildSettings(
     override val caching: Boolean,
     override val dependencies: Boolean,
+    override val dry: Boolean,
     override val checks: Boolean,
   ) : BuildSettings {
     override fun toMutable(): MutableBuildSettings = MutableBuildSettings(
       caching = caching,
       dependencies = dependencies,
+      dry = dry,
+      checks = checks,
     )
   }
 
@@ -83,12 +89,14 @@ public fun interface BuildConfigurator : ProjectConfigurator {
   public data class MutableBuildSettings(
     override var caching: Boolean = true,
     override var dependencies: Boolean = true,
+    override var dry: Boolean = false,
     override var checks: Boolean = true,
   ) : BuildSettings {
     public fun build(): BuildSettings = ImmutableBuildSettings(
       caching = caching,
       dependencies = dependencies,
       checks = checks,
+      dry = dry,
     )
 
     override fun toMutable(): MutableBuildSettings = this
@@ -117,19 +125,23 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     public fun onCurrentWork(work: BuildWork)
   }
 
+  public interface BuildEventListener {
+    public fun onEventBegin(event: BuildEvent) {}
+    public fun onEventEnd(event: BuildEvent) {}
+    public fun onWorkerStart(id: BuildWorker, task: String) {}
+    public fun onTransferStart(transfer: BuildTransfer, event: BuildEvent) {}
+    public fun onProgress(event: BuildEvent) {}
+    public fun onProgress(worker: BuildWorker, event: BuildEvent) {}
+    public fun onProgress(transfer: BuildTransfer, event: BuildEvent) {}
+    public fun onWorkerEnd(id: BuildWorker) {}
+    public fun onTransferEnd(transfer: BuildTransfer) {}
+    public fun onError(event: BuildEvent) {}
+    public fun onWorkerError(worker: BuildWorker, event: BuildEvent) {}
+    public fun onTransferError(transfer: BuildTransfer, event: BuildEvent) {}
+  }
+
   public interface BuildEventController {
-    public fun onEventBegin(event: BuildEvent)
-    public fun onEventEnd(event: BuildEvent)
-    public fun onWorkerStart(id: BuildWorker, task: String)
-    public fun onTransferStart(transfer: BuildTransfer, event: BuildEvent)
-    public fun onProgress(event: BuildEvent)
-    public fun onProgress(worker: BuildWorker, event: BuildEvent)
-    public fun onProgress(transfer: BuildTransfer, event: BuildEvent)
-    public fun onWorkerEnd(id: BuildWorker)
-    public fun onTransferEnd(transfer: BuildTransfer)
-    public fun onError(event: BuildEvent)
-    public fun onWorkerError(worker: BuildWorker, event: BuildEvent)
-    public fun onTransferError(transfer: BuildTransfer, event: BuildEvent)
+    public fun emit(event: BuildEvent)
   }
 
   public interface ProjectDirectories {
@@ -149,6 +161,7 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     public val layout: ProjectDirectories
     public val manifest: ElidePackageManifest
     public val resourcesPath: Path
+    public val config: BuildConfiguration
   }
 
   public suspend fun contribute(state: ElideBuildState, config: BuildConfiguration)

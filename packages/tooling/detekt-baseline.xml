@@ -3,5 +3,7 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>UnusedParameter:TestDriver.kt$TestDriver$binder: ExecutionBinder? = null</ID>
+    <ID>UnusedPrivateProperty:MavenAetherResolver.kt$MavenAetherResolver$private val config: BuildConfigurator.BuildConfiguration</ID>
+    <ID>UnusedPrivateProperty:MavenAetherResolver.kt$MavenAetherResolver$private val events: BuildConfigurator.BuildEventController</ID>
   </CurrentIssues>
 </SmellBaseline>

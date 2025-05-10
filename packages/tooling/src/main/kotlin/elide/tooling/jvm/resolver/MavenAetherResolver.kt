@@ -51,6 +51,7 @@ import elide.tool.ClasspathProvider
 import elide.tool.ClasspathSpec
 import elide.tool.ClasspathsProvider
 import elide.tool.MultiPathUsage
+import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.project.manifest.ElidePackageManifest
@@ -90,10 +91,14 @@ public class MavenResolverErrors internal constructor (public val errors: List<T
  * Usage of this resolver is possible directly, but it is recommended that developers use the `BuildDriver` interface
  * instead, which will uniformly manage and resolve dependencies for a given Elide project.
  */
-public class MavenAetherResolver internal constructor () :
-  DependencyResolver.MavenResolver,
-  AutoCloseable,
-  ClasspathsProvider {
+public class MavenAetherResolver internal constructor (
+  private val config: BuildConfigurator.BuildConfiguration,
+  private val events: BuildConfigurator.BuildEventController,
+  private val system: RepositorySystem,
+  private val session: DefaultRepositorySystemSession,
+) : DependencyResolver.MavenResolver,
+    AutoCloseable,
+    ClasspathsProvider {
   @JvmRecord private data class SourceSetSuite(
     val name: String,
     val type: MultiPathUsage,
@@ -124,12 +129,6 @@ public class MavenAetherResolver internal constructor () :
 
   // Whether this resolver has initialized yet.
   private val initialized = atomic(false)
-
-  // Repository system; available by injection.
-  @Inject private lateinit var system: RepositorySystem
-
-  // Repository system session; available by injection.
-  @Inject private lateinit var session: DefaultRepositorySystemSession
 
   // Repository cache; available after init.
   private lateinit var cache: RepositoryCache

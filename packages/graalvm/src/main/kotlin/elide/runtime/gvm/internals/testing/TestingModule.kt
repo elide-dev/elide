@@ -65,6 +65,16 @@ private val testModuleProps = arrayOf(
   EXPECT,
 )
 
+// Assertion methods.
+private val testAssertionMethodsAndProps = arrayOf(
+  "not",
+  "isNull",
+  "isNotNull",
+  "toBe",
+  "toBeTrue",
+  "toBeFalse",
+)
+
 // Installs the Elide test runner and API bindings.
 @Intrinsic
 @Factory
@@ -85,9 +95,13 @@ internal class ElideTestingModule @Inject constructor (
 }
 
 public abstract class GuestAssertionStack (
-  private val assertApi: AssertAPI,
+  protected val assertApi: AssertAPI,
+  invert: Boolean = false,
 ) : GuestAssertion {
   protected val stack: MutableList<Pair<Expectation, String?>> = mutableListOf()
+  private val inverted = atomic(invert)
+
+  internal abstract fun copy(invert: Boolean = false): GuestAssertionStack
 
   private fun runAssertion(block: () -> Boolean): Boolean {
     // @TODO logging? instrumentation for assertions?
@@ -100,12 +114,13 @@ public abstract class GuestAssertionStack (
 
   private fun collapse(assert: AssertAPI, other: Value? = null): AssertionSuite = apply {
     val (last, msg) = stack.last()
-
-    when (when (last) {
+    val result = when (last) {
       is Expect.PrimitiveExpectation -> runAssertion { last.satisfy(value) }
       is Expect.ComplexExpectation -> runAssertion { last.satisfy(assert, value, other) }
       else -> error("Unable to enforce expectation: $last")
-    }) {
+    }
+
+    when (if (inverted.value) !result else result) {
       // the condition was satisfied
       true -> {}
 
@@ -149,6 +164,15 @@ public abstract class GuestAssertionStack (
     )
   }
 
+  @Polyglot override fun notToBe(other: Value?, message: String?): AssertionSuite = apply {
+    expectAndCollapse(
+      Expect.IsNotEqual,
+      assertApi,
+      message,
+      other,
+    )
+  }
+
   @Polyglot override fun toBeTrue(message: String?): AssertionSuite = apply {
     expectAndCollapse(
       Expect.IsTrue,
@@ -165,13 +189,7 @@ public abstract class GuestAssertionStack (
     )
   }
 
-  override fun getMemberKeys(): Array<String> = arrayOf(
-    "isNull",
-    "isNotNull",
-    "toBe",
-    "toBeTrue",
-    "toBeFalse",
-  )
+  override fun getMemberKeys(): Array<String> = testAssertionMethodsAndProps
 
   override fun getMember(key: String): Any? = when (key) {
     "isNull" -> ProxyExecutable { isNull(it.firstOrNull()?.asString()) }
@@ -185,6 +203,26 @@ public abstract class GuestAssertionStack (
         else -> toBe(it.first(), it[1].asString())
       }
     }
+
+    // inverted form
+    "not" -> object: ReadOnlyProxyObject {
+      override fun getMemberKeys(): Array<String> = testAssertionMethodsAndProps
+      override fun getMember(inner: String): Any? = when (inner) {
+        "not" -> getMember(inner)
+        "isNull" -> ProxyExecutable { isNotNull(it.firstOrNull()?.asString()) }
+        "isNotNull" -> ProxyExecutable { isNull(it.firstOrNull()?.asString()) }
+        "toBeTrue" -> ProxyExecutable { toBeFalse(it.firstOrNull()?.asString()) }
+        "toBeFalse" -> ProxyExecutable { toBeTrue(it.firstOrNull()?.asString()) }
+        "toBe" -> ProxyExecutable {
+          when (it.size) {
+            0 -> throw JsError.typeError("`toBe` requires at least one argument")
+            1 -> notToBe(it.first(), null)
+            else -> notToBe(it.first(), it[1].asString())
+          }
+        }
+        else -> null
+      }
+    }
     else -> null
   }
 }
@@ -192,6 +230,13 @@ public abstract class GuestAssertionStack (
 public class GuestValueAssertion(assert: AssertAPI, private val wrapped: Value?): GuestAssertionStack(assert) {
   override val value: Value? get() = wrapped
   override val expectations: Collection<Expectation> get() = stack.toImmutableList().map { it.first }
+
+  override fun copy(invert: Boolean): GuestAssertionStack {
+    return GuestValueAssertion(
+      assertApi,
+      wrapped,
+    )
+  }
 }
 
 // Implements a thread-safe testing registrar.

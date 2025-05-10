@@ -14,8 +14,8 @@
 package elide.tool.cli.cmd.discord
 
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
-import elide.annotations.Singleton
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
@@ -35,7 +35,8 @@ import elide.tool.cli.promptForLink
   ]
 )
 @Introspected
-@Singleton internal open class ToolDiscordCommand : AbstractSubcommand<ToolState, CommandContext>() {
+@ReflectiveAccess
+internal open class ToolDiscordCommand : AbstractSubcommand<ToolState, CommandContext>() {
   companion object {
     private const val REDIRECT_TARGET = "https://elide.dev/discord"
   }

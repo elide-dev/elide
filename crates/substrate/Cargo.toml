@@ -23,14 +23,13 @@ authors = { workspace = true }
 license = { workspace = true }
 
 [lib]
-name = "gvmcapi"
-crate-type = ["lib"]
+crate-type = ["lib", "cdylib", "staticlib"]
 
 [dependencies]
-# java_native = { workspace = true }
-# jni = { workspace = true, default-features = false }
-# jni-sys = { workspace = true }
-# libloading = { workspace = true }
+java_native = { workspace = true }
+jni = { workspace = true, default-features = false }
+jni-sys = { workspace = true }
+once_cell = { workspace = true }
 
 [build-dependencies]
 builder = { workspace = true }

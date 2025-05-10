@@ -10,6 +10,7 @@ import com.github.ajalt.mordant.rendering.Whitespace.NORMAL
 import com.github.ajalt.mordant.terminal.Terminal
 import org.graalvm.polyglot.PolyglotException
 import java.util.function.Supplier
+import elide.tool.cli.Statics
 
 /**
  * Internal utility for formatting exceptions nicely.
@@ -49,7 +50,7 @@ object ErrPrinter {
     val enableColor: Boolean = true,
     val shortenPackages: Boolean = true,
     val maxLength: Int = DEFAULT_MAX_WIDTH,
-    val terminal: Supplier<Terminal> = Supplier { Terminal() },
+    val terminal: Supplier<Terminal> = Supplier { Statics.terminal },
   ) {
     // Whether color output should be used.
     internal val useColor: Boolean get() = enableColor && ENABLE_COLOR_SUPPORT

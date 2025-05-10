@@ -16,6 +16,7 @@ package elide.tool.cli.cmd.pkl
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import org.pkl.cli.commands.*
 import picocli.CommandLine
 import elide.tool.cli.*
@@ -32,6 +33,7 @@ import elide.tool.cli.ToolState
   header = [],
 )
 @Introspected
+@ReflectiveAccess
 class ToolPklCommand : AbstractSubcommand<ToolState, CommandContext>() {
   @CommandLine.Option(
     names = ["--help", "-h"],

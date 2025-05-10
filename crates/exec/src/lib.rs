@@ -77,7 +77,7 @@ pub fn initialize<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> jint {
   0
 }
 
-/// Initialize the native execution layer.
+/// Shutdown the native execution layer.
 #[jni("elide.exec.Execution")]
 pub fn shutdown<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> jint {
   shutdown_engine_graceful();
@@ -86,6 +86,7 @@ pub fn shutdown<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> jint {
 
 /// Return a reference to the current async engine.
 pub fn async_engine() -> Runtime {
+  init_engine();
   let mut engine = ASYNC_ENGINE.lock().unwrap();
   if let Some(runtime) = engine.take() {
     return runtime;
@@ -95,6 +96,7 @@ pub fn async_engine() -> Runtime {
 
 /// Return a reference to the current async engine.
 pub fn async_engine_safe() -> Option<Runtime> {
+  init_engine();
   let mut engine = ASYNC_ENGINE.lock().unwrap();
   engine.take()
 }

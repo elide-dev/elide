@@ -13,6 +13,8 @@
 
 package elide.tool.cli.cmd.builder
 
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
@@ -48,6 +50,8 @@ import elide.tool.exec.whichAll
     "",
   ],
 )
+@Introspected
+@ReflectiveAccess
 class ToolWhichCommand : AbstractSubcommand<ToolState, CommandContext>() {
   @CommandLine.Parameters(
     index = "0",

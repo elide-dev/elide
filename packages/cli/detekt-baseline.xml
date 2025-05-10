@@ -3,9 +3,11 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ComplexCondition:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$(base != null &amp;&amp; (base.parentFile == null || base.absolutePath == "/")) || files.isEmpty()</ID>
+    <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet&lt;GuestLanguage>)</ID>
     <ID>CyclomaticComplexMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>EmptyFunctionBlock:BuildOutput.kt$BaseOutput${ }</ID>
+    <ID>EmptyFunctionBlock:BuildOutput.kt$BaseOutput.&lt;no name provided>${ }</ID>
     <ID>ForbiddenComment:DelegatedToolCommand.kt$DelegatedToolCommand$// @TODO: delegated error handling</ID>
-    <ID>LargeClass:ToolShellCommand.kt$ToolShellCommand : AbstractSubcommand</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: EnumSet&lt;GuestLanguage>)</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
@@ -20,11 +22,13 @@
     <ID>ReturnCount:ExecutionController.kt$ExecutionController$private fun toHost(polyglotException: PolyglotException): Throwable</ID>
     <ID>ReturnCount:InitCommand.kt$InitCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>ReturnCount:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$private fun nearestDirectoryWithAnyOfTheseFiles( files: Array&lt;String>, base: File? = null, depth: Int? = null, ): File?</ID>
+    <ID>ReturnCount:ToolBuildCommand.kt$ToolBuildCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>ReturnCount:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>SpreadOperator:ToolInvokeCommand.kt$ToolInvokeCommand$(*selectedTools.map { it to buildArgs(action, it) }.toTypedArray())</ID>
     <ID>SwallowedException:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:AbstractToolCommand.kt$AbstractToolCommand$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:CommandTestRunner.kt$CommandTestRunner$thr: Throwable</ID>
+    <ID>TooGenericExceptionCaught:InstallCommand.kt$InstallCommand$e: Exception</ID>
     <ID>TooGenericExceptionCaught:PersistedError.kt$PersistedError.RuntimeInfo$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:TestContext.kt$TestContext.Companion$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:ToolInvokeCommand.kt$ToolInvokeCommand$err: Throwable</ID>
@@ -33,15 +37,18 @@
     <ID>UnusedParameter:InitCommand.kt$InitCommand$template: RenderableTemplate</ID>
     <ID>UnusedPrivateClass:InitCommand.kt$InitCommand$PreparedProject</ID>
     <ID>UnusedPrivateClass:InitCommand.kt$InitCommand$ProjectTemplate</ID>
+    <ID>UnusedPrivateMember:BuildOutput.kt$Animated$private fun transferLayout()</ID>
     <ID>UnusedPrivateMember:InitCommand.kt$InitCommand$private fun loadInstalledTemplates(): List&lt;RenderableTemplate></ID>
     <ID>UnusedPrivateProperty:AbstractToolCommand.kt$AbstractToolCommand$// Initialization state. private val initialized: AtomicBoolean = AtomicBoolean(false)</ID>
+    <ID>UnusedPrivateProperty:AddCommand.kt$AddCommand$@Inject private lateinit var projectManagerProvider: Provider&lt;ProjectManager></ID>
+    <ID>UnusedPrivateProperty:BuildOutput.kt$Animated$// Main progress renderer. private val progress = layout.animateInCoroutine( terminal = terminal, )</ID>
+    <ID>UnusedPrivateProperty:BuildOutput.kt$Animated$// Top-level build task. private val topTask = taskLayout()</ID>
+    <ID>UnusedPrivateProperty:BuildOutput.kt$Animated$private val activeContext = atomic(ProgressContext())</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
-    <ID>UnusedPrivateProperty:ToolCheckCommand.kt$ToolCheckCommand$// Terminal to use. private val terminal by lazy { Terminal() }</ID>
-    <ID>UnusedPrivateProperty:ToolCheckCommand.kt$ToolCheckCommand$@Inject private lateinit var projectManager: ProjectManager</ID>
+    <ID>UnusedPrivateProperty:InstallCommand.kt$InstallCommand$@Inject private lateinit var compositeManifestResolver: Provider&lt;CompositePackageManifestService></ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Uv. private val uvActions = sortedSetOf( "pip", "tool", "toolchain", "venv", "cache", "self", "version", "help", )</ID>
-    <ID>UnusedPrivateProperty:ToolTestCommand.kt$ToolTestCommand$// Terminal to use. private val terminal by lazy { Terminal() }</ID>
-    <ID>UnusedPrivateProperty:ToolTestCommand.kt$ToolTestCommand$@Inject private lateinit var projectManager: ProjectManager</ID>
+    <ID>UnusedPrivateProperty:ToolTestCommand.kt$ToolTestCommand$@Inject private lateinit var projectManager: Provider&lt;ProjectManager></ID>
     <ID>VariableNaming:InspectorConfig.kt$InspectorConfig$/** Specifies whether the inspector should suspend for internal (facade) sources. */ @Option( names = ["--inspect:internal"], description = ["Specifies whether the inspector should suspend for internal (facade) sources"], defaultValue = "false", hidden = false, ) internal var `internal`: Boolean = false</ID>
   </CurrentIssues>
 </SmellBaseline>

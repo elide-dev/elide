@@ -22,6 +22,7 @@ import kotlin.io.path.Path
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import elide.tooling.project.codecs.PythonRequirementsManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.PythonRequirementsManifest
 

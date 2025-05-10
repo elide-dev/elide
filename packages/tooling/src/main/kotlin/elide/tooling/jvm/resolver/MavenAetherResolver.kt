@@ -10,34 +10,27 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("DEPRECATION")
 
 package elide.tooling.jvm.resolver
 
-import org.apache.maven.repository.internal.MavenRepositorySystemUtils
 import org.eclipse.aether.AbstractRepositoryListener
 import org.eclipse.aether.DefaultRepositoryCache
+import org.eclipse.aether.DefaultRepositorySystemSession
 import org.eclipse.aether.RepositoryCache
+import org.eclipse.aether.RepositoryEvent
 import org.eclipse.aether.RepositorySystem
-import org.eclipse.aether.RepositorySystemSession
 import org.eclipse.aether.artifact.Artifact
 import org.eclipse.aether.artifact.DefaultArtifact
 import org.eclipse.aether.collection.CollectRequest
-import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory
 import org.eclipse.aether.graph.Dependency
 import org.eclipse.aether.repository.LocalRepository
 import org.eclipse.aether.repository.RemoteRepository
 import org.eclipse.aether.repository.RepositoryPolicy
 import org.eclipse.aether.resolution.DependencyRequest
 import org.eclipse.aether.resolution.DependencyResult
-import org.eclipse.aether.spi.connector.RepositoryConnectorFactory
-import org.eclipse.aether.spi.connector.transport.TransporterFactory
-import org.eclipse.aether.spi.locator.ServiceLocator
 import org.eclipse.aether.transfer.AbstractTransferListener
-import org.eclipse.aether.transport.file.FileTransporterFactory
-import org.eclipse.aether.transport.http.HttpTransporterFactory
-import org.eclipse.aether.transport.wagon.WagonTransporterFactory
+import org.eclipse.aether.transfer.TransferEvent
 import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator
 import java.io.File
 import java.lang.AutoCloseable
@@ -51,6 +44,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
+import elide.annotations.Inject
+import elide.annotations.Singleton
 import elide.runtime.Logging
 import elide.tool.Classpath
 import elide.tool.ClasspathProvider
@@ -80,6 +75,21 @@ public class MavenResolverErrors internal constructor (public val errors: List<T
 
 /**
  * ## Maven Resolver
+ *
+ * Provides a [DependencyResolver.MavenResolver] implemented with Maven's own Aether-based resolver; this is the default
+ * adapter for resolving Maven ecosystem dependencies.
+ *
+ * The resolver wires together a [RepositorySystem] and session from DI state, and configures each component to place
+ * dependencies into a local Maven repository structure at the path `.dev/dependencies/m2`.
+ *
+ * Transitive dependencies are resolve by default, and various aspects of the resolver's behavior can be customized. The
+ * resolver is aware of classpath usage types, and can assemble [ClasspathProvider] instances in order to make use of
+ * the resolved dependencies.
+ *
+ * ### Usage
+ *
+ * Usage of this resolver is possible directly, but it is recommended that developers use the `BuildDriver` interface
+ * instead, which will uniformly manage and resolve dependencies for a given Elide project.
  */
 public class MavenAetherResolver internal constructor () :
   DependencyResolver.MavenResolver,
@@ -116,14 +126,11 @@ public class MavenAetherResolver internal constructor () :
   // Whether this resolver has initialized yet.
   private val initialized = atomic(false)
 
-  // Initialized Aether service locator.
-  private lateinit var locator: ServiceLocator
+  // Repository system; available by injection.
+  @Inject private lateinit var system: RepositorySystem
 
-  // Repository system; available after init.
-  private lateinit var system: RepositorySystem
-
-  // Repository system session; available after init.
-  private lateinit var session: RepositorySystemSession
+  // Repository system session; available by injection.
+  @Inject private lateinit var session: DefaultRepositorySystemSession
 
   // Repository cache; available after init.
   private lateinit var cache: RepositoryCache
@@ -162,34 +169,65 @@ public class MavenAetherResolver internal constructor () :
   private val packageArtifacts = ConcurrentSkipListMap<MavenPackage, ResolvedArtifact>()
 
   // Listener for events which emit from the repository system.
-  private class ElideLocalRepositoryListener(private val state: ElideBuildState) : AbstractRepositoryListener() {
-    // Nothing at this time.
+  private inner class ElideLocalRepositoryListener(private val state: ElideBuildState) : AbstractRepositoryListener() {
+    override fun metadataDownloading(event: RepositoryEvent?) {
+      super.metadataDownloading(event)
+    }
+
+    override fun metadataDownloaded(event: RepositoryEvent?) {
+      super.metadataDownloaded(event)
+    }
+
+    override fun artifactResolving(event: RepositoryEvent?) {
+      super.artifactResolving(event)
+    }
+
+    override fun artifactResolved(event: RepositoryEvent?) {
+      super.artifactResolved(event)
+    }
+
+    override fun artifactDownloading(event: RepositoryEvent?) {
+      super.artifactDownloading(event)
+    }
+
+    override fun artifactDownloaded(event: RepositoryEvent?) {
+      super.artifactDownloaded(event)
+    }
   }
 
   // Listener for transport progress.
-  private class ElideMavenTransferListener(private val state: ElideBuildState) : AbstractTransferListener() {
-    // Nothing at this time.
+  private inner class ElideMavenTransferListener(private val state: ElideBuildState) : AbstractTransferListener() {
+    override fun transferInitiated(event: TransferEvent?) {
+      super.transferInitiated(event)
+    }
+
+    override fun transferStarted(event: TransferEvent?) {
+      super.transferStarted(event)
+    }
+
+    override fun transferProgressed(event: TransferEvent?) {
+      super.transferProgressed(event)
+    }
+
+    override fun transferSucceeded(event: TransferEvent?) {
+      super.transferSucceeded(event)
+    }
+
+    override fun transferCorrupted(event: TransferEvent?) {
+      super.transferCorrupted(event)
+    }
+
+    override fun transferFailed(event: TransferEvent?) {
+      super.transferFailed(event)
+    }
   }
 
   // Initializes this resolver's internals at init-time.
   @Suppress("TooGenericExceptionCaught", "PrintStackTrace")
   private fun prepareMavenResolver(state: ElideBuildState) {
-    // Create a new Maven repository system
-    logging.debug { "Initializing Maven resolver" }
-    val mvnLocator = MavenRepositorySystemUtils.newServiceLocator()
-    mvnLocator.addService(RepositoryConnectorFactory::class.java, BasicRepositoryConnectorFactory::class.java)
-    mvnLocator.addService(TransporterFactory::class.java, FileTransporterFactory::class.java)
-    mvnLocator.addService(TransporterFactory::class.java, WagonTransporterFactory::class.java)
-    mvnLocator.addService(TransporterFactory::class.java, HttpTransporterFactory::class.java)
-
-    logging.trace { "Creating repo system" }
-    val repoSystem = requireNotNull(mvnLocator.getService(RepositorySystem::class.java)) {
-      "Failed to initialize Maven repository system: Repository system is null"
-    }
-
     // Create a session for managing repository interactions
     logging.trace { "Creating repo session" }
-    val repoSession = requireNotNull(MavenRepositorySystemUtils.newSession()) {
+    val repoSession = requireNotNull(session) {
       "Failed to initialize Maven repository system: Repository session is null"
     }
 
@@ -206,13 +244,10 @@ public class MavenAetherResolver internal constructor () :
       logging.trace { "Creating local repo manager" }
       val localRepo = LocalRepository(state.localMaven().absolutePathString())
       repoSession.localRepositoryManager =
-        requireNotNull(repoSystem.newLocalRepositoryManager(repoSession, localRepo)) {
+        requireNotNull(system.newLocalRepositoryManager(repoSession, localRepo)) {
           "Failed to initialize Maven repository system: Local repository manager is null"
         }
 
-      locator = mvnLocator
-      system = repoSystem
-      session = repoSession
       local = localRepo
       cache = repoCache
       initialized.value = true
@@ -437,7 +472,7 @@ public class MavenAetherResolver internal constructor () :
         override val name: String? get() = it.name
         override val usage: MultiPathUsage? get() = it.type
       })
-    }?.let { suite ->
+    }?.let { _ ->
       ClasspathProvider {
         // assemble a class-path from all resolved artifacts for a given spec
 //        Classpath.from((registryByType[suite] ?: emptyList()).flatMap { pkg ->

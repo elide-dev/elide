@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.exec
 
 import java.util.concurrent.ConcurrentSkipListMap
@@ -21,7 +20,7 @@ import kotlinx.coroutines.Deferred
 /**
  * Responder function for events emitted by the graph.
  */
-public typealias TaskGraphResponder = suspend EventResponderContext<out Event>.() -> Unit
+public typealias TaskGraphResponder = suspend EventResponderContext<Any, out Event>.() -> Unit
 
 /**
  * ID of a listener so it can later be un-listened.
@@ -41,7 +40,7 @@ public typealias ResponderWithId = Pair<ListenerId, TaskGraphResponder>
 /**
  * Context in which an event responder function is dispatched.
  */
-public interface EventResponderContext<E : Event> {
+public interface EventResponderContext<T, E : Event> {
   /**
    * Event under consideration.
    */
@@ -50,7 +49,7 @@ public interface EventResponderContext<E : Event> {
   /**
    * Extra context for this event.
    */
-  public val context: Any?
+  public val context: T
 }
 
 /**
@@ -65,7 +64,12 @@ public interface TaskGraphExecution {
   /**
    * Await completion of this execution.
    */
-  public suspend fun await()
+  public suspend fun await(): Listener
+
+  /**
+   * @return All tasks.
+   */
+  public fun tasks(): List<Task>
 
   /**
    * Affix an event listener for the provided [event].
@@ -97,6 +101,11 @@ public interface TaskGraphExecution {
     // Listeners for each event type.
     private val listenerMap: MutableMap<Event, MutableList<ResponderWithId>> = ConcurrentSkipListMap()
 
+    override fun tasks(): List<Task> {
+      require(graph.isComplete()) { "Cannot poll for all tasks until graph is complete" }
+      return graph.poll().toList()
+    }
+
     override fun <E : Event> bind(event: E, listener: TaskGraphResponder): ListenerId {
       val listeners = listenerMap.getOrDefault(event, ArrayList<ResponderWithId>())
       val id = System.identityHashCode(listener)
@@ -113,10 +122,10 @@ public interface TaskGraphExecution {
     }
 
     // Dispatch `event` to the current listeners with provided `context`.
-    internal suspend fun <E : Event> dispatch(event: E, context: Any? = null) {
+    internal suspend fun <E : Event> dispatch(event: E, context: Any) {
       // nothing at this time
-      val ctx = object : EventResponderContext<E> {
-        override val context: Any? get() = context
+      val ctx = object : EventResponderContext<Any, E> {
+        override val context: Any get() = context
         override val event: E get() = event
       }
       listenerMap[event]?.forEach {
@@ -124,7 +133,7 @@ public interface TaskGraphExecution {
       }
     }
 
-    override suspend fun await() {
+    override suspend fun await(): Listener = apply {
       rootJob.await()
       latch.await()
       val executed = scope.allTasks.toList()
@@ -138,12 +147,12 @@ public interface TaskGraphExecution {
       }
 
       when (anyDidFail) {
-        true -> dispatch(TaskGraphEvent.ExecutionFailed)
-        else -> dispatch(TaskGraphEvent.ExecutionCompleted)
+        true -> dispatch(TaskGraphEvent.ExecutionFailed, graph)
+        else -> dispatch(TaskGraphEvent.ExecutionCompleted, graph)
       }
 
       // @TODO failure handling
-      dispatch(TaskGraphEvent.ExecutionFinished)
+      dispatch(TaskGraphEvent.ExecutionFinished, graph)
     }
   }
 }
@@ -151,10 +160,10 @@ public interface TaskGraphExecution {
 @Suppress("UNCHECKED_CAST")
 public inline fun <reified E : Event> TaskGraphExecution.Listener.on(
   event: E,
-  crossinline responder: suspend EventResponderContext<E>.() -> Unit,
+  crossinline responder: suspend EventResponderContext<Any, E>.() -> Unit,
 ) {
   bind(event) {
-    (this as EventResponderContext<E>)
+    (this as EventResponderContext<Any, E>)
     responder.invoke(this)
   }
 }

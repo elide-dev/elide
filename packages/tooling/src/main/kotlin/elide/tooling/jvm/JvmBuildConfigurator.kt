@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress("UnstableApiUsage")
 
 package elide.tooling.jvm
@@ -46,6 +45,9 @@ private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
   return "$name${srcSet.name[0].uppercase()}${srcSet.name.slice(1..srcSet.name.lastIndex)}"
 }
 
+/**
+ * ## JVM Build Configurator
+ */
 internal class JvmBuildConfigurator : BuildConfigurator {
   private companion object {
     private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
@@ -80,7 +82,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
   }
 
   private fun builtinKotlinJarPath(state: ElideBuildState, dependency: String): Path {
-    return state.resourcesPath
+    return System.getenv("KOTLIN_HOME")?.let { kotlinHomeByEnv ->
+      Path.of(kotlinHomeByEnv)
+        .resolve("lib")
+        .resolve(jarNameFor(dependency))
+    } ?: state.resourcesPath
       .resolve("kotlin")
       .resolve(KotlinLanguage.VERSION)
       .resolve("lib")
@@ -183,7 +189,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     } else {
       if (tests) "tests" else "sources"
     }
-    val suiteTag = if (srcSet.name == "main") "" else " (suite '${srcSet.name}')"
+    val suiteTag = if (srcSet.name == "main" || srcSet.name == "test") "" else " (suite '${srcSet.name}')"
     "Compiling ${srcSet.paths.size} Kotlin $pluralized$suiteTag"
   }.also { kotlinc ->
     config.taskGraph.apply {
@@ -199,14 +205,14 @@ internal class JvmBuildConfigurator : BuildConfigurator {
   @Suppress("unused", "CyclomaticComplexMethod", "LongMethod")
   override suspend fun contribute(state: ElideBuildState, config: BuildConfigurator.BuildConfiguration) {
     // interpret/load maven dependencies to resolver
-    val resolver = if (state.manifest.dependencies.maven.packages.isEmpty()) {
+    val resolver = if (!state.manifest.dependencies.maven.hasPackages()) {
       null
     } else {
       logging.debug { "Maven dependencies detected; preparing Maven resolver" }
       when (
         val existing = config.resolvers[DependencyResolver.MavenResolver::class]
       ) {
-        null -> MavenAetherResolver().apply {
+        null -> state.beanContext.getBean(MavenAetherResolver::class.java).apply {
           // configure repositories and packages for a resolver from scratch.
           registerPackagesFromManifest(state)
         }

@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tool
 
 import java.net.URI
@@ -242,7 +241,11 @@ public sealed interface Tool {
       description = description,
       environment = environment,
       helpText = helpText?.trimIndent(),
-    )
+    ).also {
+      if (registered) {
+        globalToolRegistry[name] = it
+      }
+    }
 
     /**
      * Create a command-line tool from the provided inputs; this variant is aware of tool inputs and outputs.
@@ -285,6 +288,10 @@ public sealed interface Tool {
       ),
       inputs = inputs,
       outputs = outputs,
-    )
+    ).also {
+      if (registered) {
+        globalToolRegistry[name] = it
+      }
+    }
   }
 }

@@ -16,6 +16,16 @@
       "name": "tsweb",
       "description": "TypeScript web server with Elide",
       "languages": ["TypeScript"]
+    },
+    {
+      "name": "java",
+      "description": "Pure-Java project with Elide",
+      "languages": ["Java"]
+    },
+    {
+      "name": "mavenjvm",
+      "description": "Maven/Java project with Elide",
+      "languages": ["Java"]
     }
   ]
 }

@@ -16,13 +16,19 @@ package elide.tool.cli.cmd.init
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptConfirm
 import com.github.kinquirer.components.promptInput
+import com.github.kinquirer.components.promptListObject
+import com.github.kinquirer.core.Choice
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.zip.ZipInputStream
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import kotlin.io.path.name
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
@@ -58,14 +64,28 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         node_modules/
         """
       }
+      addFile("README.md") {
+        """
+          # New project
+          This is a new Elide project. To get started, run:
+
+          ```bash
+          elide build
+          ```
+
+          This will compile the project and install dependencies. Then, run:
+
+          ```bash
+          elide test
+          ```
+
+          To run the project's default tests.
+        """.trimIndent()
+      }
     }
 
     @JvmStatic private fun MutableMap<Path, ProjectFile>.addFile(path: Path, contents: String) {
-      put(path, ProjectFile(path, contents))
-    }
-
-    @JvmStatic private fun MutableMap<Path, ProjectFile>.addFile(path: String, contents: String) {
-      addFile(Path.of(path), contents)
+      put(path, ProjectFile(path) { contents })
     }
 
     @JvmStatic private fun MutableMap<Path, ProjectFile>.addFile(path: String, contents: () -> String) {
@@ -78,18 +98,9 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
   }
 
   /** Models a file within a new project or a project template. */
-  @Serializable @JvmRecord private data class ProjectFile(
+  @JvmRecord private data class ProjectFile(
     val path: Path,
-    val contents: String,
-  )
-
-  /** Models a rendered project init template. */
-  @Serializable @JvmRecord private data class PreparedProject(
-    val name: String,
-    val root: Path,
-    val template: String?,
-    val parameters: Map<String, String>,
-    val tree: Map<Path, ProjectFile>,
+    val contents: () -> String,
   )
 
   private sealed interface RenderableTemplateInfo {
@@ -107,12 +118,42 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     override val name: String,
     override val description: String,
     override val languages: Set<String>,
+    val files: List<String>,
   ): RenderableTemplateInfo
 
   /** Models a project template loaded into actual file contents. */
-  @Serializable @JvmRecord private data class ProjectTemplate(
+  private data class ProjectTemplate(
     val info: ProjectTemplateInfo,
     val files: Map<Path, ProjectFile>,
+  ): RenderableTemplate, RenderableTemplateInfo by info {
+    override val tree: Map<Path, ProjectFile> get() = files.map {
+      it.key to ProjectFile(
+        path = it.key,
+        contents = {
+          (InitCommand::class.java.getResourceAsStream("/META-INF/elide/samples/${info.name}.zip")
+            ?: error("Failed to locate embedded resource: ${it.key}")
+          ).use { stream ->
+            ZipInputStream(stream).use { zipIn ->
+              // find the specific entry and return as a string
+              var entry = zipIn.nextEntry
+              while (entry != null) {
+                if (entry.name == it.key.toString()) {
+                  return@use zipIn.readAllBytes().decodeToString()
+                }
+                entry = zipIn.nextEntry
+              }
+              error("Failed to locate embedded resource: ${it.key}")
+            }
+          }
+        }
+      )
+    }.toMap()
+  }
+
+  /** Outer config structure for built-in project templates. */
+  @Serializable @JvmRecord private data class ProjectTemplates(
+    val version: Int = 1,
+    val projects: List<ProjectTemplateInfo> = emptyList(),
   )
 
   /** Template: default, empty project. Creates an `elide.pkl`, `.gitignore`, and `README.md`. */
@@ -125,17 +166,34 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     }
   }
 
+  @OptIn(ExperimentalSerializationApi::class)
   private fun loadInstalledTemplates(): List<RenderableTemplate> {
-    return staticTemplates.toList() // @TODO more from classpath
+    val suite = (InitCommand::class.java.getResourceAsStream("/META-INF/elide/samples/samples.json") ?: error(
+      "Failed to locate `samples.json` embedded resource; this is a bug in Elide"
+    )).use {
+      Json.decodeFromStream<ProjectTemplates>(it)
+    }
+    return staticTemplates
+      .toList()
+      .plus(suite.projects.map {
+        ProjectTemplate(
+          info = it,
+          files = it.files.associate { projectFile ->
+            val path = Path.of(projectFile)
+            path to ProjectFile(
+              path = path,
+              contents = {
+                (InitCommand::class.java.getResourceAsStream("/META-INF/elide/samples/${it.name}/$projectFile")
+                  ?: error("Failed to locate embedded resource: $projectFile")
+                ).use { stream ->
+                  stream.readAllBytes().decodeToString()
+                }
+              }
+            )
+          }
+        )
+      })
   }
-
-  @CommandLine.Option(
-    names = ["--template", "-t"],
-    paramLabel = "<name>",
-    defaultValue = "empty",
-    description = ["Project template to use; pass --list-templates to see available templates."],
-  )
-  var template: String? = "empty"
 
   @CommandLine.Option(
     names = ["--name", "-n"],
@@ -159,31 +217,71 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
   )
   var force: Boolean = false
 
+  @CommandLine.Parameters(
+    index = "0",
+    description = ["Project template to use; pass --list-templates to see available templates."],
+    arity = "0..1",
+  )
+  var template: String? = null
+
+  @CommandLine.Parameters(
+    index = "1",
+    description = ["Path where this project should be created. Defaults to cwd."],
+    arity = "1",
+  )
+  var path: String? = null
+
   private fun renderManifest(template: RenderableTemplate, name: String): StringBuilder = StringBuilder().apply {
-    appendLine("amends \"elide:project.pkl\"")
-    appendLine()
-    appendLine("name = \"$name\"")
-    appendLine()
-    appendLine("scripts {}")
-    appendLine("dependencies {}")
+    when (val existing = template.tree[Path.of("elide.pkl")]) {
+      null -> {
+        appendLine("amends \"elide:project.pkl\"")
+        appendLine()
+        appendLine("name = \"$name\"")
+        appendLine()
+        appendLine("scripts {}")
+        appendLine("dependencies {}")
+      }
+      else -> append(existing.contents())
+    }
   }
 
+  @Suppress("ReturnCount")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val targetPath = (projectOptions().projectPath ?: System.getProperty("user.dir"))
+    val targetPath = (path ?: projectOptions().projectPath ?: System.getProperty("user.dir"))
         .let { Path.of(it) }
-    val selectedTemplate = when {
-      template == null || template == "empty" -> EmptyProject
-      else -> error("No such template: '$template'")
+    val selectedTemplate = when (template) {
+        null -> KInquirer.promptListObject(
+          "Which template would you like to use?",
+          choices = loadInstalledTemplates().map {
+            Choice(it.name, it)
+          }
+        ).let { choice ->
+          loadInstalledTemplates().find {
+            it == choice
+          } ?: error(
+            "No such template: '$choice'. Available templates: ${loadInstalledTemplates().joinToString { it.name }}"
+          )
+        }
+        "empty" -> EmptyProject
+        else -> loadInstalledTemplates().find {
+          it.name == template
+        } ?: error(
+          "No such template: '$template'. Available templates: ${loadInstalledTemplates().joinToString { it.name }}"
+        )
     }
     output {
       append("Using template: '${selectedTemplate.name}'")
     }
     val terminal = Statics.terminal
     val selectedName = when {
-      projectName == null && (interactive || terminal.terminalInfo.inputInteractive) -> KInquirer.promptInput(
+      // allow the user to select a name, and prompt for a name if we can
+      projectName == null && (interactive && terminal.terminalInfo.interactive) -> KInquirer.promptInput(
         "What should the project be called?",
         default = projectName ?: targetPath.last().name,
       )
+
+      // if we don't have an interactive terminal, use the folder name by default
+      projectName == null -> targetPath.last().name
 
       projectName != null && projectName!!.isNotEmpty() -> projectName!!
       else -> targetPath.last().name
@@ -193,7 +291,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     }
     if (!force) {
       when (Files.exists(targetPath)) {
-        true -> if (interactive) {
+        true -> if (interactive && terminal.terminalInfo.interactive) {
           KInquirer.promptConfirm(
             "Project path already exists. Do you want to continue?",
             default = false,
@@ -231,7 +329,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         append("Adding '${file.path}'")
       }
       Files.createDirectories(targetFile.parent)
-      Files.writeString(targetFile, file.contents)
+      Files.writeString(targetFile, file.contents())
     }
     output {
       append("✅ New project created.")

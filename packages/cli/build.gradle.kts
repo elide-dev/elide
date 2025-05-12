@@ -2019,12 +2019,46 @@ tasks {
     }
   }
 
+  val sampleConfigJson = layout.projectDirectory.file("src/projects/samples.json")
+
+  val allSamples = layout.projectDirectory.dir("src/projects")
+    .asFile
+    .listFiles()
+    .filter { it.isDirectory() }
+    .map { it.toPath() to it.name }
+
+  val builtSamples = layout.buildDirectory.dir("packed-samples")
+
+  val allSamplePackTasks = allSamples.map { (path, sample) ->
+    register("packSample${sample[0].uppercase()}${sample.substring(1)}", Zip::class) {
+      archiveBaseName = sample
+      archiveVersion = ""
+      destinationDirectory = builtSamples
+      from(path)
+    }
+  }
+
+  val packSamples by registering {
+    group = "build"
+    description = "Package all sample projects embedded with Elide"
+    dependsOn(allSamplePackTasks)
+  }
+
   processResources {
     dependsOn(
       ":packages:graalvm:buildRustNativesForHost",
       prepKotlinResources,
+      packSamples,
+      allSamplePackTasks,
     )
     filterResources()
+
+    from(builtSamples) {
+      into("META-INF/elide/samples/")
+    }
+    from(sampleConfigJson) {
+      into("META-INF/elide/samples/")
+    }
 
     // add `[lib]umbrella.{so,dylib,jnilib,dll}` to the jar
     // from(targetPath) {

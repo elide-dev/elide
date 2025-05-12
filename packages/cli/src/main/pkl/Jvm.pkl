@@ -143,8 +143,11 @@ class MavenDependencies {
   /// A suite of extra Maven repositories.
   repositories: Mapping<String, MavenRepository> = new {}
 
-  /// Whethr to enable default repositories like Maven Central. Defaults to `true`.
+  /// Whether to enable default repositories like Maven Central. Defaults to `true`.
   enableDefaultRepositories: Boolean = true
+
+  /// Foreign manifest(s) to import (for example, POM files).
+  from: String | Listing<common.FilePath> = new {}
 }
 
 /// Create a JAR artifact from the `main` project source set.

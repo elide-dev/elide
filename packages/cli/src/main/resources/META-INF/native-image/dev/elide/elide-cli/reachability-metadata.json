@@ -877,29 +877,15 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$NpmDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$PipDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GemPackage"
@@ -930,15 +916,9 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
-            "java.lang.String"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget"
@@ -966,27 +946,9 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenPackage"
@@ -996,38 +958,18 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NpmDependencies",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NpmPackage"
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PipDependencies",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.Map"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PipPackage"
@@ -4486,17 +4428,9 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$NpmDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$PipDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies",
@@ -4604,27 +4538,9 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenPackage"
@@ -4660,15 +4576,9 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PipDependencies",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.Map"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PipPackage"

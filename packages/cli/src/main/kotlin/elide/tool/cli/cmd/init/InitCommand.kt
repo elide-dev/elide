@@ -107,6 +107,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     val name: String
     val description: String
     val languages: Set<String>
+    val noManifest: Boolean
   }
 
   private sealed interface RenderableTemplate: RenderableTemplateInfo {
@@ -117,8 +118,9 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
   @Serializable @JvmRecord private data class ProjectTemplateInfo(
     override val name: String,
     override val description: String,
-    override val languages: Set<String>,
-    val files: List<String>,
+    override val languages: Set<String> = emptySet(),
+    override val noManifest: Boolean = false,
+    val files: List<String> = emptyList(),
   ): RenderableTemplateInfo
 
   /** Models a project template loaded into actual file contents. */
@@ -161,6 +163,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     override val name: String get() = "empty"
     override val languages: Set<String> get() = setOf()
     override val description: String get() = "Default empty project"
+    override val noManifest: Boolean get() = false
     override val tree: Map<Path, ProjectFile> get() = buildMap {
       defaultFiles()
     }
@@ -227,7 +230,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
   @CommandLine.Parameters(
     index = "1",
     description = ["Path where this project should be created. Defaults to cwd."],
-    arity = "1",
+    arity = "0..1",
   )
   var path: String? = null
 

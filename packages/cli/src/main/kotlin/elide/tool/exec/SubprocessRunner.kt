@@ -35,6 +35,7 @@ import kotlin.sequences.sortedBy
 import elide.tool.Environment
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
+import elide.tool.cli.Statics
 import elide.tooling.runner.ProcessRunner
 import elide.tooling.runner.ProcessRunner.ProcessStatus
 import elide.tooling.runner.ProcessRunner.ProcessTaskInfo
@@ -64,10 +65,12 @@ object SubprocessRunner {
     val argsArr = argsStr.split(' ')
     val argsTrimmed = argsArr.asSequence().map { it.trim() }.filter { it.isNotEmpty() && it.isNotBlank() }
     val toolpath = Path.of(toolname)
-    val resolvedToolpath = if (toolname.startsWith(".")) {
-      Path.of(System.getProperty("user.dir")).resolve(toolpath)
-    } else {
-      toolpath
+    val resolvedToolpath = when {
+      // use an identical path to elide so that versions always match.
+      // @TODO in jvm mode, this falls through and calls into native elide
+      toolname == "elide" && ImageInfo.inImageCode() -> Statics.binPath
+      toolname.startsWith(".") -> Path.of(System.getProperty("user.dir")).resolve(toolpath)
+      else -> toolpath
     }
     suspend fun resolvedTool(): Path {
       return if (Files.exists(resolvedToolpath)) {

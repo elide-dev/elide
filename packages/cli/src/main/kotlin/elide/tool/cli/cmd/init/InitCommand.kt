@@ -29,12 +29,15 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
+import elide.tool.exec.SubprocessRunner.delegateTask
+import elide.tool.exec.SubprocessRunner.stringToTask
 
 /**
  * Initialize a new project.
@@ -108,6 +111,9 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     val description: String
     val languages: Set<String>
     val noManifest: Boolean
+    val hasTests: Boolean
+    val hasBuild: Boolean
+    val hasDependencies: Boolean
   }
 
   private sealed interface RenderableTemplate: RenderableTemplateInfo {
@@ -120,6 +126,9 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     override val description: String,
     override val languages: Set<String> = emptySet(),
     override val noManifest: Boolean = false,
+    override val hasDependencies: Boolean = true,
+    override val hasTests: Boolean = true,
+    override val hasBuild: Boolean = true,
     val files: List<String> = emptyList(),
   ): RenderableTemplateInfo
 
@@ -164,6 +173,9 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     override val languages: Set<String> get() = setOf()
     override val description: String get() = "Default empty project"
     override val noManifest: Boolean get() = false
+    override val hasDependencies: Boolean get() = true
+    override val hasTests: Boolean get() = true
+    override val hasBuild: Boolean get() = true
     override val tree: Map<Path, ProjectFile> get() = buildMap {
       defaultFiles()
     }
@@ -216,9 +228,34 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
   @CommandLine.Option(
     names = ["--force"],
     defaultValue = "false",
+    negatable = true,
     description = ["Whether to overwrite existing files."],
   )
   var force: Boolean = false
+
+  @CommandLine.Option(
+    names = ["--install"],
+    defaultValue = "true",
+    negatable = true,
+    description = ["Whether to run `elide install` in the new project."],
+  )
+  var install: Boolean = true
+
+  @CommandLine.Option(
+    names = ["--build"],
+    defaultValue = "true",
+    negatable = true,
+    description = ["Whether to run `elide build` in the new project."],
+  )
+  var build: Boolean = true
+
+  @CommandLine.Option(
+    names = ["--test"],
+    defaultValue = "true",
+    negatable = true,
+    description = ["Whether to run `elide test` in the new project."],
+  )
+  var test: Boolean = true
 
   @CommandLine.Parameters(
     index = "0",
@@ -248,7 +285,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     }
   }
 
-  @Suppress("ReturnCount")
+  @Suppress("ReturnCount", "CyclomaticComplexMethod")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val targetPath = (path ?: projectOptions().projectPath ?: System.getProperty("user.dir"))
         .let { Path.of(it) }
@@ -260,7 +297,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
           }
         ).let { choice ->
           loadInstalledTemplates().find {
-            it == choice
+            it.name == choice.name
           } ?: error(
             "No such template: '$choice'. Available templates: ${loadInstalledTemplates().joinToString { it.name }}"
           )
@@ -334,8 +371,70 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
       Files.createDirectories(targetFile.parent)
       Files.writeString(targetFile, file.contents())
     }
+    if (!install && !build && !test) {
+      output {
+        append("✅ New project created.")
+      }
+      return success()
+    }
+    val absoluteProjectPath = targetPath.absolutePathString()
+
+    // run an `elide install` in the new project
+    if (install && selectedTemplate.hasDependencies) {
+      val doInstall = if (interactive && terminal.terminalInfo.interactive) {
+        KInquirer.promptConfirm("Install dependencies?", default = true)
+      } else true
+
+      if (doInstall) {
+        output { appendLine() }
+        delegateTask(stringToTask("elide install -p $absoluteProjectPath")).let {
+          when (it) {
+            is CommandResult.Success -> {}
+            is CommandResult.Error -> {
+              return err("Failed to install dependencies: $it")
+            }
+          }
+        }
+      }
+    }
+    if (build && selectedTemplate.hasBuild) {
+      val doBuild = if (interactive && terminal.terminalInfo.interactive) {
+        KInquirer.promptConfirm("Build the new project?", default = true)
+      } else true
+
+      if (doBuild) {
+        output { appendLine() }
+        // run an `elide build` in the new project
+        delegateTask(stringToTask("elide build -p $absoluteProjectPath")).let {
+          when (it) {
+            is CommandResult.Success -> {}
+            is CommandResult.Error -> {
+              return err("Failed to build new project: $it")
+            }
+          }
+        }
+      }
+    }
+    if (test && selectedTemplate.hasTests) {
+      val doTest = if (interactive && terminal.terminalInfo.interactive) {
+        KInquirer.promptConfirm("Run new project's tests?", default = true)
+      } else true
+
+      if (doTest) {
+        output { appendLine() }
+        // run an `elide test` in the new project
+        delegateTask(stringToTask("elide test -p $absoluteProjectPath --install")).let {
+          when (it) {
+            is CommandResult.Success -> {}
+            is CommandResult.Error -> {
+              return err("Failed to test new project: $it")
+            }
+          }
+        }
+      }
+    }
     output {
-      append("✅ New project created.")
+      append("✅ New project ready.")
     }
     return success()
   }

@@ -47,8 +47,8 @@ dependencies {
   implementation(libs.guava)
   testImplementation(libs.kotlin.test.junit5)
   testImplementation(libs.kotlinx.coroutines.test)
-  testRuntimeOnly(mn.logback.classic)
-  testRuntimeOnly(mn.logback.core)
+  testRuntimeOnly(libs.logback.core)
+  testRuntimeOnly(libs.logback)
 }
 
 val elideTarget = TargetInfo.current(project)

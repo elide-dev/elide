@@ -147,7 +147,7 @@ class MavenDependencies {
   enableDefaultRepositories: Boolean = true
 
   /// Foreign manifest(s) to import (for example, POM files).
-  from: String | Listing<common.FilePath> = new {}
+  from: String | Listing<common.FilePath> = new Listing<common.FilePath> {}
 }
 
 /// Create a JAR artifact from the `main` project source set.

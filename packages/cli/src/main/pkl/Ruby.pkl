@@ -2,6 +2,8 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.ruby
 
+import "Base.pkl" as common
+
 /// Describes a Gem dependency.
 class GemSpec {
   /// The name of the gem.
@@ -18,6 +20,9 @@ class GemDependencies {
 
   /// A list of gems to be resolved for this project in development mode only.
   devPackages: Listing<GemSpec> = new {}
+
+  /// Foreign manifest(s) to import (for example, Gemfile(s)).
+  from: String | Listing<common.FilePath> = new Listing<common.FilePath> {}
 }
 
 /// Configures Ruby language features and settings.

@@ -147,6 +147,11 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         Conversion.of(PClassInfo.String, ElidePackageManifest.GradleCatalog::class.java, StrConverter {
           ElidePackageManifest.GradleCatalog.parse(it)
         })
+      ).addConversion(
+        // convert string to list of file paths
+        Conversion.of(PClassInfo.String, List::class.java, StrConverter {
+          listOf(it)
+        })
       )
       .build()
   }

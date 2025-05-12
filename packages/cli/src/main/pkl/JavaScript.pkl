@@ -51,7 +51,7 @@ class NpmDependencies {
   repositories: Mapping<String, NpmRepositorySpec> = new {}
 
   /// Foreign manifest(s) to import (for example, `package.json` files).
-  from: String | Listing<common.FilePath> = new {}
+  from: String | Listing<common.FilePath> = new Listing<common.FilePath> {}
 }
 
 /// Defines an artifact which is built for JavaScript execution in a browser context.

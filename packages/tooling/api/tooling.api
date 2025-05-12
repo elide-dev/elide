@@ -1929,14 +1929,16 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$Dependenc
 public final class elide/tooling/project/manifest/ElidePackageManifest$GemDependencies : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$DependencyEcosystemConfig {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies$Companion;
 	public fun <init> ()V
-	public fun <init> (Ljava/util/List;Ljava/util/List;)V
-	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Ljava/util/List;
-	public final fun copy (Ljava/util/List;Ljava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;
 	public final fun devPackages ()Ljava/util/List;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun from ()Ljava/util/List;
 	public fun hashCode ()I
 	public final fun packages ()Ljava/util/List;
 	public fun toString ()Ljava/lang/String;
@@ -2281,8 +2283,8 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinSet
 public final class elide/tooling/project/manifest/ElidePackageManifest$MavenDependencies : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$DependencyEcosystemConfig {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies$Companion;
 	public fun <init> ()V
-	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Z)V
-	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun allPackages ()Lkotlin/sequences/Sequence;
 	public final fun catalogs ()Ljava/util/List;
 	public final fun component1 ()Ljava/util/List;
@@ -2290,10 +2292,12 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenDepe
 	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Ljava/util/Map;
 	public final fun component5 ()Z
-	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Z)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
+	public final fun component6 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
 	public final fun enableDefaultRepositories ()Z
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun from ()Ljava/util/List;
 	public final fun hasPackages ()Z
 	public fun hashCode ()I
 	public final fun packages ()Ljava/util/List;
@@ -2392,15 +2396,17 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenRepo
 public final class elide/tooling/project/manifest/ElidePackageManifest$NpmDependencies : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$DependencyEcosystemConfig {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies$Companion;
 	public fun <init> ()V
-	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/Map;)V
-	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Ljava/util/List;
 	public final fun component3 ()Ljava/util/Map;
-	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/Map;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;
 	public final fun devPackages ()Ljava/util/List;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun from ()Ljava/util/List;
 	public final fun hasPackages ()Z
 	public fun hashCode ()I
 	public final fun packages ()Ljava/util/List;

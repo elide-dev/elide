@@ -49,6 +49,9 @@ class NpmDependencies {
 
   /// A list of NPM package repositories to consult when resolving dependencies.
   repositories: Mapping<String, NpmRepositorySpec> = new {}
+
+  /// Foreign manifest(s) to import (for example, `package.json` files).
+  from: String | Listing<common.FilePath> = new {}
 }
 
 /// Defines an artifact which is built for JavaScript execution in a browser context.

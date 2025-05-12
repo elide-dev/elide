@@ -59,6 +59,7 @@ public data class ElidePackageManifest(
     val packages: List<NpmPackage> = emptyList(),
     val devPackages: List<NpmPackage> = emptyList(),
     val repositories: Map<String, NpmRepository> = emptyMap(),
+    val from: List<String> = emptyList(),
   ) : DependencyEcosystemConfig {
     public fun hasPackages(): Boolean = packages.isNotEmpty() || devPackages.isNotEmpty()
   }
@@ -180,6 +181,7 @@ public data class ElidePackageManifest(
     val catalogs: List<GradleCatalog> = emptyList(),
     val repositories: Map<String, MavenRepository> = emptyMap(),
     val enableDefaultRepositories: Boolean = true,
+    val from: List<String> = emptyList(),
   ) : DependencyEcosystemConfig {
     public fun hasPackages(): Boolean = packages.isNotEmpty() || testPackages.isNotEmpty()
     public fun allPackages(): Sequence<MavenPackage> = (packages.asSequence() + testPackages.asSequence()).distinct()
@@ -202,6 +204,7 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class GemDependencies(
     val packages: List<GemPackage> = emptyList(),
     val devPackages: List<GemPackage> = emptyList(),
+    val from: List<String> = emptyList(),
   ) : DependencyEcosystemConfig
 
   @JvmRecord @Serializable public data class GemPackage(

@@ -2,6 +2,8 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.javascript
 
+import "Base.pkl" as common
+
 /// Describes a Pip package dependency.
 class PipPackageSpec {
   /// The name of the package.
@@ -15,6 +17,9 @@ class PipDependencies {
 
   /// A list of optional Pip packages to be resolved by consumers of this project
   optionalPackages: Mapping<String, Listing<PipPackageSpec>> = new {}
+
+  /// Foreign manifest(s) to import (for example, requirements files).
+  from: String | Listing<common.FilePath> = new {}
 }
 
 /// Configures Python language features and settings.

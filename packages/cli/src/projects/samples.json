@@ -5,27 +5,19 @@
       "name": "ktjvm",
       "description": "Kotlin/JVM project with Elide",
       "languages": ["Kotlin"],
-      "files": ["src/main/kotlin/sample/main.kt", "src/test/kotlin/sample/testGreeting.kt"]
-    },
-    {
-      "name": "ktweb",
-      "description": "Kotlin/JVM web server with Elide",
-      "languages": ["Kotlin"]
-    },
-    {
-      "name": "tsweb",
-      "description": "TypeScript web server with Elide",
-      "languages": ["TypeScript"]
+      "files": ["elide.pkl", "src/main/kotlin/sample/main.kt", "src/test/kotlin/sample/testGreeting.kt"]
     },
     {
       "name": "java",
       "description": "Pure-Java project with Elide",
-      "languages": ["Java"]
+      "languages": ["Java"],
+      "files": ["elide.pkl", "src/main/java/sample/Hello.java", "src/main/test/sample/HelloTest.java"]
     },
     {
       "name": "mavenjvm",
       "description": "Maven/Java project with Elide",
-      "languages": ["Java"]
+      "languages": ["Java"],
+      "files": ["pom.xml", "src/main/java/sample/Hello.java", "src/main/test/sample/HelloTest.java"]
     }
   ]
 }

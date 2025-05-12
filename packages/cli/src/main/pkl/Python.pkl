@@ -19,7 +19,7 @@ class PipDependencies {
   optionalPackages: Mapping<String, Listing<PipPackageSpec>> = new {}
 
   /// Foreign manifest(s) to import (for example, requirements files).
-  from: String | Listing<common.FilePath> = new {}
+  from: String | Listing<common.FilePath> = new Listing<common.FilePath> {}
 }
 
 /// Configures Python language features and settings.

@@ -1,0 +1,14 @@
+/// Describes lockfile settings.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.lockfile
+
+typealias LockfileFormat = "json" | "binary" | "auto"
+
+/// Settings which govern Elide's lockfile.
+class LockfileSettings {
+  /// Whether to use Elide's lockfile; defaults to `true`.
+  enabled: Boolean = true
+
+  /// Format to use for the lockfile; defaults to `auto`.
+  format: LockfileFormat = "auto"
+}

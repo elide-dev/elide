@@ -876,6 +876,12 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -1095,7 +1101,6 @@
     },
     {
       "type": "elide.tool.cli.cmd.deps.AddCommand",
-      "allDeclaredFields": true,
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
@@ -8759,6 +8764,9 @@
     },
     {
       "glob": "META-INF/services/elide.tooling.config.TestConfigurator"
+    },
+    {
+      "glob": "META-INF/services/elide.tooling.lockfile.LockfileContributor"
     },
     {
       "glob": "META-INF/services/io.micronaut.context.ApplicationContextConfigurer"

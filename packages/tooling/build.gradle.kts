@@ -82,6 +82,7 @@ dependencies {
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.kotlinx.serialization.protobuf)
   implementation(libs.bundles.maven.resolver)
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)

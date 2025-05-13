@@ -10,15 +10,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.exec
+package elide.tooling.lockfile
+
+import java.nio.file.Path
 
 /**
- * # Event
+ * # Lockfile Loader
  *
- * Sealed interface which describes the possible event hierarchy for task graph execution.
+ * Defines a simple interface for implementations that are capable of loading an Elide lockfile.
  */
-public sealed interface Event : Comparable<Event> {
-  override fun compareTo(other: Event): Int {
-    return this::class.java.simpleName.compareTo(other::class.java.simpleName)
-  }
+public fun interface LockfileLoader {
+  /**
+   * Load any present or active lockfile.
+   */
+  public suspend fun loadLockfile(root: Path): InterpretedLockfile?
 }

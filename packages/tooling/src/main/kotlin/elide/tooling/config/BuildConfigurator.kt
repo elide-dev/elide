@@ -116,10 +116,62 @@ public fun interface BuildConfigurator : ProjectConfigurator {
   }
 
   public sealed interface BuildNotify
-  public interface BuildEvent : BuildNotify
+  public sealed interface BuildEvent : BuildNotify
   public interface BuildWork : BuildEvent
   public interface BuildWorker : BuildNotify
   public interface BuildTransfer : BuildNotify
+
+  public sealed interface TransferEvent : BuildEvent
+  public data object TransferInitiated : TransferEvent
+  public data object TransferStart : TransferEvent
+  public data object TransferProgress : TransferEvent
+  public data object TransferSucceeded : TransferEvent
+  public data object TransferCorrupted : TransferEvent
+  public data object TransferFailed : TransferEvent
+
+  public sealed interface RepositoryEvent : BuildEvent
+  public data object MetadataDownloading : TransferEvent
+  public data object MetadataDownloaded : TransferEvent
+  public data object ArtifactResolving : TransferEvent
+  public data object ArtifactResolved : TransferEvent
+  public data object ArtifactDownloading : TransferEvent
+  public data object ArtifactDownloaded : TransferEvent
+
+  public enum class TransferStatus {
+    INITIATED,
+    STARTED,
+    PROGRESSED,
+    CORRUPTED,
+    SUCCEEDED,
+    FAILED
+  }
+
+  public enum class WorkStatus {
+    INITIATED,
+    STARTED,
+    PROGRESSED,
+    SUCCEEDED,
+    FAILED,
+    UNKNOWN,
+  }
+
+  @JvmRecord public data class TransferState(
+    public val name: String? = null,
+    public val size: Long? = null,
+    public val bytesDone: Long? = null,
+    public val repositoryId: String? = null,
+    public val repositoryUrl: String? = null,
+    public val status: TransferStatus = TransferStatus.INITIATED,
+  )
+
+  @JvmRecord public data class TaskState(
+    public val name: String? = null,
+    public val label: String? = null,
+    public val total: Long? = null,
+    public val done: Long? = null,
+    public val status: WorkStatus = WorkStatus.INITIATED,
+    public val context: Any? = null,
+  )
 
   public interface BuildConsoleController {
     public fun onCurrentWork(work: BuildWork)
@@ -142,6 +194,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
 
   public interface BuildEventController {
     public fun emit(event: BuildEvent)
+    public fun <T> emit(event: BuildEvent, ctx: T? = null)
+    public fun <E: BuildEvent, X> bind(event: E, cbk: E.(X) -> Unit)
   }
 
   public interface ProjectDirectories {

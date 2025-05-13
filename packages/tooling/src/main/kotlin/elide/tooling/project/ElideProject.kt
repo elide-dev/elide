@@ -27,6 +27,10 @@ import kotlin.streams.asSequence
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.plugins.env.EnvConfig.EnvVar
 import elide.tool.cli.Statics
+import elide.tooling.lockfile.ElideLockfile
+import elide.tooling.lockfile.InterpretedLockfile
+import elide.tooling.lockfile.LockfileLoader
+import elide.tooling.lockfile.loadLockfileSafe
 import elide.tooling.project.manifest.ElidePackageManifest
 
 /**
@@ -57,6 +61,11 @@ public interface ElideProjectLoader {
    * Elide's binary resources path.
    */
   public val resourcesPath: Path
+
+  /**
+   * Lockfile provider.
+   */
+  public val lockfileLoader: LockfileLoader
 }
 
 /** Information about an Elide project. */
@@ -94,6 +103,10 @@ public object DefaultProjectLoader : ElideProjectLoader {
 
   private fun pathMatcher(spec: String): PathMatcher {
     return FileSystems.getDefault().getPathMatcher(matchSpec(spec))
+  }
+
+  override val lockfileLoader: LockfileLoader get() = LockfileLoader { root ->
+    loadLockfileSafe(root, ElideLockfile.latest())
   }
 
   override val sourceSetFactory: SourceSetFactory get() = object : SourceSetFactory {
@@ -308,6 +321,9 @@ public sealed interface ElideConfiguredProject : ElideProject {
 
   /** Static path to binary resources. */
   public val resourcesPath: Path
+
+  /** Active lockfile instance for this project. */
+  public val activeLockfile: InterpretedLockfile?
 }
 
 // Create a source file path with a path and lang; if no lang is provided, best efforts are made to detect one.
@@ -357,6 +373,7 @@ private fun sourceSetFileFromPath(path: Path, lang: SourceSetLanguage? = null): 
       sourceSets = sourceSets,
       info = this,
       resourcesPath = loader.resourcesPath,
+      activeLockfile = loader.lockfileLoader.loadLockfile(root),
     )
   }
 }
@@ -375,6 +392,7 @@ private fun sourceSetFileFromPath(path: Path, lang: SourceSetLanguage? = null): 
 internal class ElideConfiguredProjectImpl(
   override val sourceSets: SourceSets,
   override val resourcesPath: Path,
+  override val activeLockfile: InterpretedLockfile?,
   private val info: ElideProjectInfo,
 ) : ElideProject by info, ElideConfiguredProject {
   override suspend fun load(loader: ElideProjectLoader): ElideConfiguredProject {
@@ -383,10 +401,16 @@ internal class ElideConfiguredProjectImpl(
 
   companion object {
     @JvmStatic
-    fun configure(project: ElideProject, sourceSets: SourceSets, resourcesPath: Path): ElideConfiguredProject {
+    fun configure(
+      project: ElideProject,
+      lockfile: InterpretedLockfile?,
+      sourceSets: SourceSets,
+      resourcesPath: Path,
+    ): ElideConfiguredProject {
       return ElideConfiguredProjectImpl(
         sourceSets = sourceSets,
         resourcesPath = resourcesPath,
+        activeLockfile = lockfile,
         info = project as? ElideProjectInfo ?: ElideProjectInfo(
           root = project.root,
           manifest = project.manifest,

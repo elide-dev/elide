@@ -31,10 +31,12 @@ import org.eclipse.aether.resolution.DependencyRequest
 import org.eclipse.aether.resolution.DependencyResult
 import org.eclipse.aether.transfer.AbstractTransferListener
 import org.eclipse.aether.transfer.TransferEvent
+import org.eclipse.aether.transfer.TransferEvent.EventType
 import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator
 import java.io.File
 import java.lang.AutoCloseable
 import java.nio.file.Path
+import java.security.MessageDigest
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
@@ -44,15 +46,18 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.relativeTo
 import elide.runtime.Logging
 import elide.tool.Classpath
 import elide.tool.ClasspathProvider
 import elide.tool.ClasspathSpec
 import elide.tool.ClasspathsProvider
 import elide.tool.MultiPathUsage
-import elide.tooling.config.BuildConfigurator
-import elide.tooling.config.BuildConfigurator.ElideBuildState
+import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.deps.DependencyResolver
+import elide.tooling.lockfile.ElideLockfile
+import elide.tooling.lockfile.Fingerprints
+import elide.tooling.project.ElideProject
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.MavenPackage
 import elide.tooling.project.manifest.ElidePackageManifest.MavenRepository
@@ -91,8 +96,8 @@ public class MavenResolverErrors internal constructor (public val errors: List<T
  * instead, which will uniformly manage and resolve dependencies for a given Elide project.
  */
 public class MavenAetherResolver internal constructor (
-  private val config: BuildConfigurator.BuildConfiguration,
-  private val events: BuildConfigurator.BuildEventController,
+  @Suppress("unused") private val config: BuildConfiguration,
+  private val events: BuildEventController,
   private val system: RepositorySystem,
   private val session: DefaultRepositorySystemSession,
 ) : DependencyResolver.MavenResolver,
@@ -166,56 +171,102 @@ public class MavenAetherResolver internal constructor (
   private val packageArtifacts = ConcurrentSkipListMap<MavenPackage, ResolvedArtifact>()
 
   // Listener for events which emit from the repository system.
-  private inner class ElideLocalRepositoryListener(private val state: ElideBuildState) : AbstractRepositoryListener() {
-    override fun metadataDownloading(event: RepositoryEvent?) {
-      super.metadataDownloading(event)
+  private inner class ElideLocalRepositoryListener : AbstractRepositoryListener() {
+    private fun toWorkStatus(event: RepositoryEvent): WorkStatus = when (event.type) {
+      RepositoryEvent.EventType.ARTIFACT_DESCRIPTOR_INVALID,
+      RepositoryEvent.EventType.ARTIFACT_DESCRIPTOR_MISSING,
+      RepositoryEvent.EventType.METADATA_INVALID -> WorkStatus.FAILED
+      RepositoryEvent.EventType.ARTIFACT_RESOLVING -> WorkStatus.STARTED
+      RepositoryEvent.EventType.ARTIFACT_RESOLVED -> WorkStatus.SUCCEEDED
+      RepositoryEvent.EventType.METADATA_RESOLVING -> WorkStatus.STARTED
+      RepositoryEvent.EventType.METADATA_RESOLVED -> WorkStatus.SUCCEEDED
+      RepositoryEvent.EventType.ARTIFACT_DOWNLOADING -> WorkStatus.STARTED
+      RepositoryEvent.EventType.ARTIFACT_DOWNLOADED -> WorkStatus.SUCCEEDED
+      RepositoryEvent.EventType.METADATA_DOWNLOADING -> WorkStatus.STARTED
+      RepositoryEvent.EventType.METADATA_DOWNLOADED -> WorkStatus.SUCCEEDED
+      RepositoryEvent.EventType.ARTIFACT_INSTALLING -> WorkStatus.STARTED
+      RepositoryEvent.EventType.ARTIFACT_INSTALLED -> WorkStatus.SUCCEEDED
+      RepositoryEvent.EventType.METADATA_INSTALLING -> WorkStatus.STARTED
+      RepositoryEvent.EventType.METADATA_INSTALLED -> WorkStatus.SUCCEEDED
+      else -> WorkStatus.UNKNOWN
     }
 
-    override fun metadataDownloaded(event: RepositoryEvent?) {
-      super.metadataDownloaded(event)
+    private fun wrapRepositoryEvent(event: RepositoryEvent): TaskState = TaskState(
+      name = event.type.name,
+      status = toWorkStatus(event),
+      context = event,
+    )
+
+    override fun metadataDownloading(event: RepositoryEvent) {
+      events.emit(MetadataDownloading, wrapRepositoryEvent(event))
     }
 
-    override fun artifactResolving(event: RepositoryEvent?) {
-      super.artifactResolving(event)
+    override fun metadataDownloaded(event: RepositoryEvent) {
+      events.emit(MetadataDownloaded, wrapRepositoryEvent(event))
     }
 
-    override fun artifactResolved(event: RepositoryEvent?) {
-      super.artifactResolved(event)
+    override fun artifactResolving(event: RepositoryEvent) {
+      events.emit(ArtifactResolving, wrapRepositoryEvent(event))
     }
 
-    override fun artifactDownloading(event: RepositoryEvent?) {
-      super.artifactDownloading(event)
+    override fun artifactResolved(event: RepositoryEvent) {
+      events.emit(ArtifactResolved, wrapRepositoryEvent(event))
     }
 
-    override fun artifactDownloaded(event: RepositoryEvent?) {
-      super.artifactDownloaded(event)
+    override fun artifactDownloading(event: RepositoryEvent) {
+      events.emit(ArtifactDownloading, wrapRepositoryEvent(event))
+    }
+
+    override fun artifactDownloaded(event: RepositoryEvent) {
+      events.emit(ArtifactDownloaded, wrapRepositoryEvent(event))
     }
   }
 
   // Listener for transport progress.
-  private inner class ElideMavenTransferListener(private val state: ElideBuildState) : AbstractTransferListener() {
-    override fun transferInitiated(event: TransferEvent?) {
-      super.transferInitiated(event)
+  private inner class ElideMavenTransferListener : AbstractTransferListener() {
+    private fun toTransferStatue(event: TransferEvent): TransferStatus = when (event.type) {
+      EventType.INITIATED -> TransferStatus.INITIATED
+      EventType.STARTED -> TransferStatus.STARTED
+      EventType.PROGRESSED -> TransferStatus.PROGRESSED
+      EventType.SUCCEEDED -> TransferStatus.SUCCEEDED
+      EventType.CORRUPTED -> TransferStatus.CORRUPTED
+      EventType.FAILED -> TransferStatus.FAILED
+      else -> TransferStatus.CORRUPTED
     }
 
-    override fun transferStarted(event: TransferEvent?) {
-      super.transferStarted(event)
+    private fun wrapTransferEvent(event: TransferEvent): TransferState {
+      return TransferState(
+        name = event.resource.resourceName,
+        size = event.resource.contentLength,
+        repositoryId = event.resource.repositoryId,
+        repositoryUrl = event.resource.repositoryUrl,
+        bytesDone = event.transferredBytes,
+        status = toTransferStatue(event),
+      )
     }
 
-    override fun transferProgressed(event: TransferEvent?) {
-      super.transferProgressed(event)
+    override fun transferInitiated(event: TransferEvent) {
+      events.emit(TransferInitiated, wrapTransferEvent(event))
     }
 
-    override fun transferSucceeded(event: TransferEvent?) {
-      super.transferSucceeded(event)
+    override fun transferStarted(event: TransferEvent) {
+      events.emit(TransferStart, wrapTransferEvent(event))
     }
 
-    override fun transferCorrupted(event: TransferEvent?) {
-      super.transferCorrupted(event)
+    override fun transferProgressed(event: TransferEvent) {
+      events.emit(TransferProgress, wrapTransferEvent(event))
     }
 
-    override fun transferFailed(event: TransferEvent?) {
-      super.transferFailed(event)
+    override fun transferSucceeded(event: TransferEvent) {
+      events.emit(TransferSucceeded, wrapTransferEvent(event))
+    }
+
+    override fun transferCorrupted(event: TransferEvent) {
+      events.emit(TransferCorrupted, wrapTransferEvent(event))
+    }
+
+    override fun transferFailed(event: TransferEvent) {
+      events.emit(TransferFailed, wrapTransferEvent(event))
     }
   }
 
@@ -233,8 +284,8 @@ public class MavenAetherResolver internal constructor (
     repoSession.cache = repoCache
     repoSession.checksumPolicy = RepositoryPolicy.CHECKSUM_POLICY_FAIL
     repoSession.updatePolicy = RepositoryPolicy.UPDATE_POLICY_DAILY
-    repoSession.repositoryListener = ElideLocalRepositoryListener(state)
-    repoSession.transferListener = ElideMavenTransferListener(state)
+    repoSession.repositoryListener = ElideLocalRepositoryListener()
+    repoSession.transferListener = ElideMavenTransferListener()
 
     // Set local repository
     try {
@@ -320,7 +371,7 @@ public class MavenAetherResolver internal constructor (
       registryPackageMap.getOrDefault(pkg, mutableListOf()).also {
         it.add(manifest)
       }
-      when (val repo = pkg.repository) {
+      when (val repo = pkg.repository.ifBlank { null }) {
         // will resolve from default sources (central, et al)
         null -> {}
 
@@ -458,18 +509,21 @@ public class MavenAetherResolver internal constructor (
     }
   }
 
-  override suspend fun classpathProvider(spec: ClasspathSpec): ClasspathProvider? {
+  override suspend fun classpathProvider(spec: ClasspathSpec?): ClasspathProvider? {
     check(initialized.value) { "Resolver must be initialized before resolving" }
     check(sealed.value) { "Resolver must be sealed before resolving" }
     check(resolved.value) { "Resolver must be fully resolved before assembling a classpath" }
     logging.debug { "Assembling classpath for spec: $spec" }
 
-    return suites.find {
-      spec.test(object : ClasspathSpec {
-        override val name: String? get() = it.name
-        override val usage: MultiPathUsage? get() = it.type
-      })
-    }?.let { _ ->
+    return when (spec) {
+      null -> null
+      else -> suites.find {
+        spec.test(object : ClasspathSpec {
+          override val name: String? get() = it.name
+          override val usage: MultiPathUsage? get() = it.type
+        })
+      }
+    }.let { _ ->
       ClasspathProvider {
         // assemble a class-path from all resolved artifacts for a given spec
 //        Classpath.from((registryByType[suite] ?: emptyList()).flatMap { pkg ->
@@ -480,6 +534,34 @@ public class MavenAetherResolver internal constructor (
         // @TODO don't return all artifacts, only those for the suite
         Classpath.from(packageArtifacts.flatMap { it.value.files }.map { it.toPath().absolute() })
       }
+    }
+  }
+
+  override suspend fun contribute(root: Path, project: ElideProject?): ElideLockfile.Stanza? {
+    check(initialized.value) { "Resolver must be initialized before resolving" }
+    check(sealed.value) { "Resolver must be sealed before resolving" }
+    check(resolved.value) { "Resolver must be fully resolved before assembling a classpath" }
+    logging.debug { "Contributing Maven dependencies to lockfile" }
+    val digest = MessageDigest.getInstance("SHA-1").let { digester ->
+      registry.forEach { pkg ->
+        digester.update(pkg.value.coordinate.toByteArray())
+      }
+      digester.digest()
+    }
+
+    return when (packageArtifacts.isEmpty()) {
+      true -> null
+      else -> ElideLockfile.StanzaData(
+        identifier = "maven",
+        fingerprint = Fingerprints.forBytes(digest),
+        contributedBy = "Maven integration",
+        inputs = setOf(),
+        state = ElideLockfile.State.MavenLockfile(
+          classpath = classpathProvider(null)?.classpath()?.asList()?.map {
+            it.path.relativeTo(root).toString()
+          } ?: emptyList(),
+        ),
+      )
     }
   }
 

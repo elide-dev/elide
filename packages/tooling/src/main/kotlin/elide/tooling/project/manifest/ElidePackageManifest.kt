@@ -37,8 +37,11 @@ public data class ElidePackageManifest(
   val pkl: PklSettings? = null,
   val sources: Map<String, SourceSet> = emptyMap(),
   val tests: TestingSettings? = null,
+  val lockfile: LockfileSettings? = null,
 ) : PackageManifest {
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.Elide
+
+
 
   @JvmRecord @Serializable public data class SourceSet(
     val spec: List<String>,
@@ -100,10 +103,10 @@ public data class ElidePackageManifest(
   }
 
   @JvmRecord @Serializable public data class MavenPackage(
-    val group: String? = null,
-    val name: String? = null,
-    val version: String? = null,
-    val repository: String? = null,
+    val group: String = "",
+    val name: String = "",
+    val version: String = "",
+    val repository: String = "",
     val coordinate: String,
   ) : DependencyEcosystemConfig.PackageSpec, Comparable<MavenPackage> {
     public companion object {
@@ -114,14 +117,14 @@ public data class ElidePackageManifest(
             group = str.substringBefore(':'),
             name = str.substringAfter(':'),
             coordinate = str,
-            repository = if ('@' in str) str.substringAfterLast('@') else null,
+            repository = if ('@' in str) str.substringAfterLast('@') else "",
           )
           2 -> MavenPackage(
             group = str.substringBefore(':'),
             name = str.substringAfter(':').substringBefore(':'),
             version = str.substringAfterLast(':'),
             coordinate = str,
-            repository = if ('@' in str) str.substringAfterLast('@') else null,
+            repository = if ('@' in str) str.substringAfterLast('@') else "",
           )
           else -> error("Too many separators in Maven coordinate: '$str'")
         }
@@ -146,11 +149,11 @@ public data class ElidePackageManifest(
     }
 
     override fun hashCode(): Int {
-      var result = group?.hashCode() ?: 0
-      result = 31 * result + (name?.hashCode() ?: 0)
-      result = 31 * result + (version?.hashCode() ?: 0)
+      var result = group.ifBlank { null }?.hashCode() ?: 0
+      result = 31 * result + (name.ifBlank { null }?.hashCode() ?: 0)
+      result = 31 * result + (version.ifBlank { null }?.hashCode() ?: 0)
       result = 31 * result + coordinate.hashCode()
-      result = 31 * result + (repository?.hashCode() ?: 0)
+      result = 31 * result + (repository.ifBlank { null }?.hashCode() ?: 0)
       return result
     }
   }
@@ -220,8 +223,8 @@ public data class ElidePackageManifest(
 
   @Serializable
   public sealed interface JvmTarget {
-    @JvmInline @Serializable public value class NumericJvmTarget(public val number: UInt) : JvmTarget
-    @JvmInline @Serializable public value class StringJvmTarget(public val name: String) : JvmTarget
+    @JvmRecord @Serializable public data class NumericJvmTarget(public val number: UInt) : JvmTarget
+    @JvmRecord @Serializable public data class StringJvmTarget(public val name: String) : JvmTarget
   }
 
   @JvmRecord @Serializable public data class JvmSettings(
@@ -240,7 +243,7 @@ public data class ElidePackageManifest(
   @Serializable @Suppress("UNUSED") public enum class JvmTargetValidationMode {
     WARNING,
     ERROR,
-    IGNORE
+    IGNORE,
   }
 
   @JvmRecord @Serializable public data class KotlinJvmCompilerOptions(
@@ -319,6 +322,11 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class TestingSettings(
     val coverage: CoverageSettings = CoverageSettings(),
+  )
+
+  @JvmRecord @Serializable public data class LockfileSettings(
+    val enabled: Boolean = true,
+    val format: String = "auto",
   )
 }
 

@@ -12,87 +12,21 @@
  */
 package elide.exec
 
-/**
- *
- */
 public sealed interface TaskGraphEvent : Event {
-  /**
-   *
-   */
   public sealed interface GraphEvent : TaskGraphEvent
-
-  /**
-   *
-   */
   public sealed interface TaskEvent : TaskGraphEvent
-
-  /**
-   *
-   */
   public sealed interface TaskEventWithContext<T> : TaskGraphEvent
-
-  /**
-   *
-   */
   public data object Configured : GraphEvent
-
-  /**
-   *
-   */
   public data object ExecutionStart : GraphEvent
-
-  /**
-   *
-   */
   public data object TaskReady : TaskEventWithContext<Task>
-
-  /**
-   *
-   */
   public data object TaskExecute : TaskEventWithContext<Task>
-
-  /**
-   *
-   */
   public data object TaskFork : TaskEventWithContext<Task>
-
-  /**
-   *
-   */
   public data object TaskExecuteFinished : TaskEventWithContext<Task>
-
-  /**
-   *
-   */
   public data object TaskProgress : TaskEventWithContext<Task>
-
-  /**
-   *
-   */
   public data object TaskFailed : TaskEventWithContext<Task>
-
-  /**
-   *
-   */
   public data object TaskCompleted : TaskEventWithContext<Task>
-
-  /**
-   *
-   */
   public data object TaskFinished : TaskEventWithContext<Task>
-
-  /**
-   *
-   */
   public data object ExecutionFailed : GraphEvent
-
-  /**
-   *
-   */
   public data object ExecutionCompleted : GraphEvent
-
-  /**
-   *
-   */
   public data object ExecutionFinished : GraphEvent
 }

@@ -17,19 +17,30 @@ import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
+import java.nio.file.Path
 import jakarta.inject.Inject
 import jakarta.inject.Provider
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.joinAll
+import kotlin.io.path.createDirectories
+import kotlin.io.path.outputStream
+import kotlin.time.measureTimedValue
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.Elide
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
 import elide.tool.project.ProjectManager
-import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
-import elide.tooling.config.BuildConfigurator
+import elide.tooling.config.BuildConfiguration
+import elide.tooling.config.BuildConfigurators
+import elide.tooling.deps.DependencyResolver
+import elide.tooling.lockfile.ElideLockfile
+import elide.tooling.lockfile.InterpretedLockfile
+import elide.tooling.lockfile.LockfileDefinition
+import elide.tooling.lockfile.Lockfiles
 import elide.tooling.project.ElideProject
 
 @CommandLine.Command(
@@ -67,15 +78,93 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
   @Inject private lateinit var beanContext: BeanContext
   @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
 
+  private companion object {
+    private val DEFAULT_LOCKFILE_FORMAT = ElideLockfile.Format.BINARY
+  }
+
   // Install dependencies for an Elide project.
   @Suppress("TooGenericExceptionCaught")
   private suspend fun CommandContext.installDepsForProject(project: ElideProject): CommandResult = coroutineScope {
-    BuildDriver.configure(beanContext, project).let { config ->
+    BuildConfiguration.create(project.root).let { config ->
+      val opts = projectOptions()
+      val loadedProject = project.load()
+      BuildConfigurators.contribute(beanContext, loadedProject, config)
+
       try {
-        resolve(config, dependencies(config).await())
+        val deps = dependencies(config)
+        val (resolvers, jobs) = resolve(config, deps.await())
+        jobs.joinAll()
+
+        if (opts.useLockfile) {
+          val anticipatedOp = measureTimedValue {
+            buildAnticipatedLockfile(project, resolvers)
+          }
+          val anticipated = anticipatedOp.value
+          val duration = anticipatedOp.duration
+          val existing = loadedProject.activeLockfile
+          if (
+            existing != null &&
+            anticipated.fingerprint.asBytes().compareTo(existing.lockfile.fingerprint.asBytes()) != 0
+          ) {
+            // if the lockfile does not match what's already on disk, we typically need to update it; the exception is
+            // frozen mode. if active, we should error instead.
+            if (opts.frozenLockfile) {
+              return@coroutineScope err("Lockfile is frozen, but needs update")
+            }
+            writeLockfile(existing.updateTo(duration = duration) { anticipated })
+          } else if (existing == null) {
+            // we have no existing lockfile, so just write the one we have build.
+            val outFmt = DEFAULT_LOCKFILE_FORMAT
+            writeLockfile(
+              path = project.root.resolve(".dev").resolve(outFmt.filename).also {
+                it.parent?.createDirectories()
+              },
+              fmt = outFmt,
+              lockfile = anticipated,
+              version = ElideLockfile.latest(),
+            )
+          }
+        }
         success()
       } catch (e: Exception) {
         err("Failed to install dependencies: ${e.message}")
+      }
+    }
+  }
+
+  private suspend fun CommandContext.buildAnticipatedLockfile(
+    project: ElideProject,
+    resolvers: List<DependencyResolver>,
+  ): ElideLockfile = Lockfiles.create(
+    project.root,
+    project = project,
+    resolvers = resolvers,
+  )
+
+  private suspend fun CommandContext.writeLockfile(lockfile: InterpretedLockfile) {
+    writeLockfile(
+      lockfile.root.resolve(".dev").resolve(lockfile.format.filename).also {
+        it.parent?.createDirectories()
+      },
+      lockfile.format,
+      lockfile.lockfile,
+      lockfile.definition,
+    )
+  }
+
+  private suspend fun CommandContext.writeLockfile(
+    path: Path,
+    fmt: ElideLockfile.Format,
+    lockfile: ElideLockfile,
+    version: LockfileDefinition<*>,
+  ) {
+    kotlinx.coroutines.withContext(IO) {
+      path.outputStream().buffered().use { stream ->
+        version.writeTo(
+          fmt,
+          lockfile,
+          stream,
+        )
       }
     }
   }

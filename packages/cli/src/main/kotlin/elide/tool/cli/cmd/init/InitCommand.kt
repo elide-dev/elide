@@ -63,6 +63,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         // language=gitignore
         """
         .dev/
+        !.dev/elide.lock*
         node_modules
         node_modules/
         """

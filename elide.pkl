@@ -4,7 +4,7 @@
 amends "elide:project.pkl"
 
 name = "elide"
-version = "1.0.0-beta2"
+version = "1.0.0-beta3-rc2"
 description = "Polyglot runtime and toolchain"
 
 local reactVersion = "18.3.1"
@@ -27,7 +27,7 @@ kotlin {
 }
 
 scripts {
-  ["quicktest"] = "elide test ./tools/scripts/sample.test.mts"
+  ["quicktest"] = "elide test --coverage --coverage-format=histogram ./tools/scripts/sample.test.mts"
 }
 
 dependencies {

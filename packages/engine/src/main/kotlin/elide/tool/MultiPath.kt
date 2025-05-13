@@ -799,6 +799,8 @@ public fun interface ClasspathsProvider {
   /**
    * Provide the [Classpath] resolving from the provided [spec].
    *
+   * @param spec Specifies the filter to apply; if not provided (`null`), all visible paths are returned as one
+   *   classpath provider.
    * @return Classpath provider instance.
    */
   public suspend fun classpathProvider(spec: ClasspathSpec?): ClasspathProvider?

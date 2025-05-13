@@ -108,37 +108,17 @@ internal object ElideLockfileV1 : LockfileDefinition<ElideLockfileV1.LockfileV1>
     }
   }
 
-//  private val module by lazy {
-//    SerializersModule {
-//      polymorphicDefaultSerializer(Fingerprint::class) { _ ->
-//        FingerprintCodecSerializer
-//      }
-//      polymorphicDefaultDeserializer(Fingerprint::class) { _ ->
-//        FingerprintCodecDeserializer
-//      }
-//      polymorphic(
-//        State::class,
-//        MavenLockfile::class,
-//        MavenLockfile.serializer(),
-//      )
-//    }
-//  }
-
   // Create a JSON format instance.
   private fun jsonFormat(): Json = Json {
     prettyPrint = true
     decodeEnumsCaseInsensitive = true
     isLenient = true
     ignoreUnknownKeys = true
-//    useArrayPolymorphism = true
-//    serializersModule = module
-//    classDiscriminatorMode = ClassDiscriminatorMode.POLYMORPHIC
   }
 
   // Create a protocol-buffers format instance.
   private fun protoFormat(): ProtoBuf = ProtoBuf {
     encodeDefaults = false
-//    serializersModule = module
   }
 
   @Suppress("TooGenericExceptionCaught")
@@ -147,12 +127,10 @@ internal object ElideLockfileV1 : LockfileDefinition<ElideLockfileV1.LockfileV1>
       try {
         when (format) {
           Format.JSON -> {
-            val json = jsonFormat()
-            json.decodeFromString(stream.bufferedReader().use { it.readText() })
+            jsonFormat().decodeFromString(stream.bufferedReader().use { it.readText() })
           }
           Format.BINARY -> {
-            val proto = protoFormat()
-            proto.decodeFromByteArray(LockfileV1.serializer(), stream.readAllBytes())
+            protoFormat().decodeFromByteArray(LockfileV1.serializer(), stream.readAllBytes())
           }
           else -> error("Unsupported format: $format")
         }
@@ -178,12 +156,10 @@ internal object ElideLockfileV1 : LockfileDefinition<ElideLockfileV1.LockfileV1>
       try {
         when (format) {
           Format.JSON -> {
-            val json = jsonFormat()
-            stream.write(json.encodeToString(LockfileV1.serializer(), lockfile).encodeToByteArray())
+            stream.write(jsonFormat().encodeToString(LockfileV1.serializer(), lockfile).encodeToByteArray())
           }
           Format.BINARY -> {
-            val proto = protoFormat()
-            stream.write(proto.encodeToByteArray(LockfileV1.serializer(), lockfile))
+            stream.write(protoFormat().encodeToByteArray(LockfileV1.serializer(), lockfile))
           }
           else -> error("Unsupported format: $format")
         }

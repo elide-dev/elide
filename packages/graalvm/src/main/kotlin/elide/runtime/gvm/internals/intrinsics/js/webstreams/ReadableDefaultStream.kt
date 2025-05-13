@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import com.google.common.util.concurrent.AtomicDouble
@@ -65,7 +77,7 @@ internal class ReadableDefaultStream(
   }
 
   /** Finalize this stream, setting its state to "closed", and releasing the locked [reader]. */
-  private fun finalize() {
+  private fun cleanup() {
     streamState.set(STREAM_CLOSED)
     lockedReader.getAndSet(null)?.close()
   }
@@ -87,7 +99,7 @@ internal class ReadableDefaultStream(
           // resolve directly using a cached chunk, this may finish closing the stream, so other pending
           // reads will be aborted, and new reads will fail
           if (chunkQueue.isEmpty() && sourceState.compareAndSet(SOURCE_CLOSING, SOURCE_CLOSED)) {
-            finalize()
+            cleanup()
           }
 
           queueSize.addAndGet(-cached.size)
@@ -147,7 +159,7 @@ internal class ReadableDefaultStream(
       throw TypeError.create("Failed to close: stream is not readable")
 
     // only fully close if there are no undelivered chunks
-    if (chunkQueue.isEmpty()) finalize()
+    if (chunkQueue.isEmpty()) cleanup()
   }
 
   override fun release() {

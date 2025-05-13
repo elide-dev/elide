@@ -49,6 +49,7 @@ pluginManagement {
 }
 
 plugins {
+  id("build.less") version ("1.0.0-rc2")
   id("com.autonomousapps.build-health") version ("2.10.1")
   id("com.gradle.enterprise") version ("3.16.2")
   id("org.gradle.toolchains.foojay-resolver-convention") version ("0.9.0")
@@ -274,6 +275,12 @@ if (gradle.startParameter.taskNames.size == 1 && gradle.startParameter.taskNames
 } else {
   buildCache {
     local.isEnabled = true
+  }
+}
+
+buildless {
+  remoteCache {
+    enabled = false
   }
 }
 

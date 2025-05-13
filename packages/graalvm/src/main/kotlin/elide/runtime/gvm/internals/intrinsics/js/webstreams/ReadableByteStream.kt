@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import org.graalvm.polyglot.Value
@@ -304,7 +316,7 @@ internal class ReadableByteStream(
 
   /** Called whenever the [queueSize] decreases, e.g. allowing the stream to consider whether pulling is needed. */
   private fun handleDrain() {
-    if (queueSize.get() == 0L && sourceState.get() == SOURCE_CLOSING) finalize()
+    if (queueSize.get() == 0L && sourceState.get() == SOURCE_CLOSING) cleanup()
     else maybePull()
   }
 
@@ -312,7 +324,7 @@ internal class ReadableByteStream(
    *  Finalize this stream, setting its state to "closed", and releasing the locked [reader]. Pending descriptors in
    *  the [pullQueue] will be discarded, and pending reads in the [readQueue] will be completed with a `null` value.
    */
-  private fun finalize() {
+  private fun cleanup() {
     queueLock.withLock {
       while (pullQueue.isNotEmpty()) {
         val head = pullQueue.poll()
@@ -363,6 +375,7 @@ internal class ReadableByteStream(
    * This method is meant to be used by the [RequestDelegate] implementation to notify the stream about a response
    * from the source.
    */
+  @Suppress("ThrowsCount")
   private fun respondWithView(view: Value) {
     queueLock.withLock {
       val head = checkNotNull(pullQueue.peek())
@@ -471,6 +484,7 @@ internal class ReadableByteStream(
    * Read at least [min] bytes into the given [view], drawing from buffered chunks in the stream's queue, or enqueueing
    * the read internally if not enough data is available.
    */
+  @Suppress("ReturnCount")
   internal fun readOrEnqueue(view: Value, min: Long): JsPromise<ReadResult> {
     val state = streamState.get()
 
@@ -662,7 +676,7 @@ internal class ReadableByteStream(
       throw TypeError.create("Failed to close: stream is not readable")
 
     // only fully close if there are no undelivered chunks
-    if (queueSize.get() == 0L) finalize()
+    if (queueSize.get() == 0L) cleanup()
   }
 
   override fun release() {

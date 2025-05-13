@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import org.graalvm.polyglot.Value
@@ -57,13 +69,12 @@ internal abstract class ReadableStreamBase : ReadableStream {
    * should always call this method exactly once immediately after construction.
    */
   protected fun setupSource(source: ReadableStreamSource, controller: ReadableStreamController) {
-    try {
-      source.start(controller)
-      sourceState.compareAndSet(SOURCE_UNINITIALIZED, SOURCE_READY)
-      maybePull()
-    } catch (reason: Throwable) {
-      error(reason)
-    }
+    runCatching { source.start(controller) }
+      .onFailure(::error)
+      .onSuccess {
+        sourceState.compareAndSet(SOURCE_UNINITIALIZED, SOURCE_READY)
+        maybePull()
+      }
   }
 
   /** Whether the stream should pull from the underlying source, given its current state and the size of the queue. */

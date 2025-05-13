@@ -103,6 +103,34 @@ public abstract interface class elide/tooling/config/BuildConfigurator : elide/t
 	public abstract fun contribute (Lelide/tooling/config/BuildConfigurator$ElideBuildState;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class elide/tooling/config/BuildConfigurator$ArtifactDownloaded : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ArtifactDownloaded;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$ArtifactDownloading : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ArtifactDownloading;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$ArtifactResolved : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ArtifactResolved;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$ArtifactResolving : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ArtifactResolving;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildConfiguration {
 	public abstract fun getActionScope ()Lelide/exec/ActionScope;
 	public abstract fun getProjectRoot ()Ljava/nio/file/Path;
@@ -119,7 +147,10 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildEven
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildEventController {
+	public abstract fun bind (Lelide/tooling/config/BuildConfigurator$BuildEvent;Lkotlin/jvm/functions/Function2;)V
 	public abstract fun emit (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
+	public abstract fun emit (Lelide/tooling/config/BuildConfigurator$BuildEvent;Ljava/lang/Object;)V
+	public static synthetic fun emit$default (Lelide/tooling/config/BuildConfigurator$BuildEventController;Lelide/tooling/config/BuildConfigurator$BuildEvent;Ljava/lang/Object;ILjava/lang/Object;)V
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildEventListener {
@@ -205,6 +236,20 @@ public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class elide/tooling/config/BuildConfigurator$MetadataDownloaded : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$MetadataDownloaded;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$MetadataDownloading : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$MetadataDownloading;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings : elide/tooling/config/BuildConfigurator$BuildSettings {
 	public fun <init> ()V
 	public fun <init> (ZZZZ)V
@@ -237,6 +282,124 @@ public abstract interface class elide/tooling/config/BuildConfigurator$ProjectDi
 	public fun getDevRoot ()Ljava/nio/file/Path;
 	public abstract fun getProjectRoot ()Ljava/nio/file/Path;
 	public fun getWorkspaceRoot ()Ljava/nio/file/Path;
+}
+
+public abstract interface class elide/tooling/config/BuildConfigurator$RepositoryEvent : elide/tooling/config/BuildConfigurator$BuildEvent {
+}
+
+public final class elide/tooling/config/BuildConfigurator$TaskState : java/lang/Record {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Lelide/tooling/config/BuildConfigurator$WorkStatus;Ljava/lang/Object;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Lelide/tooling/config/BuildConfigurator$WorkStatus;Ljava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Long;
+	public final fun component4 ()Ljava/lang/Long;
+	public final fun component5 ()Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public final fun component6 ()Ljava/lang/Object;
+	public final fun context ()Ljava/lang/Object;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Lelide/tooling/config/BuildConfigurator$WorkStatus;Ljava/lang/Object;)Lelide/tooling/config/BuildConfigurator$TaskState;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$TaskState;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Lelide/tooling/config/BuildConfigurator$WorkStatus;Ljava/lang/Object;ILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$TaskState;
+	public final fun done ()Ljava/lang/Long;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun label ()Ljava/lang/String;
+	public final fun name ()Ljava/lang/String;
+	public final fun status ()Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public fun toString ()Ljava/lang/String;
+	public final fun total ()Ljava/lang/Long;
+}
+
+public final class elide/tooling/config/BuildConfigurator$TransferCorrupted : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$TransferCorrupted;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/config/BuildConfigurator$TransferEvent : elide/tooling/config/BuildConfigurator$BuildEvent {
+}
+
+public final class elide/tooling/config/BuildConfigurator$TransferFailed : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$TransferFailed;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$TransferInitiated : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$TransferInitiated;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$TransferProgress : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$TransferProgress;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$TransferStart : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$TransferStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$TransferState : java/lang/Record {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/config/BuildConfigurator$TransferStatus;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/config/BuildConfigurator$TransferStatus;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun bytesDone ()Ljava/lang/Long;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Long;
+	public final fun component3 ()Ljava/lang/Long;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/config/BuildConfigurator$TransferStatus;)Lelide/tooling/config/BuildConfigurator$TransferState;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$TransferState;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/config/BuildConfigurator$TransferStatus;ILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$TransferState;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public final fun repositoryId ()Ljava/lang/String;
+	public final fun repositoryUrl ()Ljava/lang/String;
+	public final fun size ()Ljava/lang/Long;
+	public final fun status ()Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$TransferStatus : java/lang/Enum {
+	public static final field CORRUPTED Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public static final field FAILED Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public static final field INITIATED Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public static final field PROGRESSED Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public static final field STARTED Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public static final field SUCCEEDED Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/config/BuildConfigurator$TransferStatus;
+	public static fun values ()[Lelide/tooling/config/BuildConfigurator$TransferStatus;
+}
+
+public final class elide/tooling/config/BuildConfigurator$TransferSucceeded : elide/tooling/config/BuildConfigurator$TransferEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$TransferSucceeded;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$WorkStatus : java/lang/Enum {
+	public static final field FAILED Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public static final field INITIATED Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public static final field PROGRESSED Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public static final field STARTED Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public static final field SUCCEEDED Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public static final field UNKNOWN Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/config/BuildConfigurator$WorkStatus;
+	public static fun values ()[Lelide/tooling/config/BuildConfigurator$WorkStatus;
 }
 
 public final class elide/tooling/config/BuildConfigurators {
@@ -602,7 +765,8 @@ public final class elide/tooling/deps/DependencyEcosystem$PyPI : elide/tooling/d
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract interface class elide/tooling/deps/DependencyResolver : java/lang/AutoCloseable {
+public abstract interface class elide/tooling/deps/DependencyResolver : elide/tooling/lockfile/LockfileContributor, java/lang/AutoCloseable {
+	public fun contribute (Ljava/nio/file/Path;Lelide/tooling/project/ElideProject;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getEcosystem ()Lelide/tooling/deps/DependencyEcosystem;
 	public abstract fun resolve (Lkotlinx/coroutines/CoroutineScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun seal (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -1188,6 +1352,7 @@ public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/tool/C
 	public static final field Companion Lelide/tooling/jvm/resolver/MavenAetherResolver$Companion;
 	public fun classpathProvider (Lelide/tool/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun close ()V
+	public fun contribute (Ljava/nio/file/Path;Lelide/tooling/project/ElideProject;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun resolve (Lkotlinx/coroutines/CoroutineScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun seal (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -1338,6 +1503,654 @@ public final class elide/tooling/kotlin/KotlinCompilerKt {
 	public static final fun getKotlinc ()Lelide/tool/Tool$CommandLineTool;
 }
 
+public abstract interface class elide/tooling/lockfile/ElideLockfile {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Companion;
+	public abstract fun getFingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public abstract fun getStanzas ()Ljava/util/Set;
+	public abstract fun getVersion ()Lelide/tooling/lockfile/ElideLockfile$Version;
+	public static fun latest ()Lelide/tooling/lockfile/LockfileDefinition;
+	public static fun supported ()Lkotlin/sequences/Sequence;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Companion {
+	public final fun latest ()Lelide/tooling/lockfile/LockfileDefinition;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public final fun supported ()Lkotlin/sequences/Sequence;
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$Fingerprint : java/lang/Comparable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Companion;
+	public abstract fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public fun compareTo (Lelide/tooling/lockfile/ElideLockfile$Fingerprint;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public static fun of (J)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static fun of (Lelide/core/crypto/HashAlgorithm;[BLelide/core/encoding/Encoding;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static fun of (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static fun of (Ljava/util/Collection;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static fun ofFileDigest (Ljava/io/File;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static fun ofFileState (Ljava/io/File;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes : java/lang/Record, elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes$Companion;
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public final fun component1 ()[B
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy ([BLjava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;
+	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;[BLjava/lang/String;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;
+	public final fun digest ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun getSerialVersionUID ()J
+	public fun hashCode ()I
+	public static final fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public fun toString ()Ljava/lang/String;
+	public final fun value ()[B
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Companion {
+	public final fun of (J)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun of (Lelide/core/crypto/HashAlgorithm;[BLelide/core/encoding/Encoding;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun of (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun of (Ljava/util/Collection;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static synthetic fun of$default (Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Companion;Lelide/core/crypto/HashAlgorithm;[BLelide/core/encoding/Encoding;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun ofFileDigest (Ljava/io/File;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun ofFileState (Ljava/io/File;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Compound : java/lang/Record, elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound$Companion;
+	public synthetic fun <init> (Ljava/util/Set;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public final fun component1 ()Ljava/util/Set;
+	public final fun constituents ()Ljava/util/Set;
+	public final fun copy (Ljava/util/Set;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound;
+	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound;Ljava/util/Set;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun getSerialVersionUID ()J
+	public fun hashCode ()I
+	public static final fun of (Ljava/util/Set;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Compound$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Compound$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of (Ljava/util/Set;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Digest : elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Digest$Companion;
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public static fun asBytes-impl (Lkotlin/Triple;)Lkotlinx/io/bytestring/ByteString;
+	public static final synthetic fun box-impl (Lkotlin/Triple;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Digest;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Triple;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Triple;Lkotlin/Triple;)Z
+	public final fun getPair ()Lkotlin/Triple;
+	public static final fun getSerialVersionUID ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Triple;)I
+	public static final fun of (Lelide/core/crypto/HashAlgorithm;Lelide/core/encoding/Encoding;[B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Triple;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Triple;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Digest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Digest$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize-sbpk-BE (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Triple;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize-jEHtoQk (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Triple;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Digest$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of (Lelide/core/crypto/HashAlgorithm;Lelide/core/encoding/Encoding;[B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest : elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest$Companion;
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public static fun asBytes-impl (Lkotlin/Pair;)Lkotlinx/io/bytestring/ByteString;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public final fun getPair ()Lkotlin/Pair;
+	public static final fun getSerialVersionUID ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public static final fun of (J[B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static final fun of (Ljava/io/File;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize-NlK8oVw (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize-BsX3X4A (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of (J[B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun of (Ljava/io/File;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileState : elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$FileState$Companion;
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public static fun asBytes-impl (Lkotlin/Pair;)Lkotlinx/io/bytestring/ByteString;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$FileState;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public final fun getPair ()Lkotlin/Pair;
+	public static final fun getSerialVersionUID ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public static final fun of (JJ)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static final fun of (Ljava/io/File;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileState$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$FileState$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize-60n-070 (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize-5L4d2UA (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileState$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of (JJ)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun of (Ljava/io/File;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$NoContent : elide/tooling/lockfile/ElideLockfile$Fingerprint {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$NoContent;
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric : elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric$Companion;
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public static fun asBytes-impl (J)Lkotlinx/io/bytestring/ByteString;
+	public static final synthetic fun box-impl (J)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (JLjava/lang/Object;)Z
+	public static final fun equals-impl0 (JJ)Z
+	public static final fun getSerialVersionUID ()J
+	public final fun getValue ()J
+	public fun hashCode ()I
+	public static fun hashCode-impl (J)I
+	public static final fun of (J)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (J)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()J
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize-_H3wXn4 (Lkotlinx/serialization/encoding/Decoder;)J
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize-w-TI7_E (Lkotlinx/serialization/encoding/Encoder;J)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of (J)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint : elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint$Companion;
+	public synthetic fun <init> ([BLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public static final fun getSerialVersionUID ()J
+	public static final fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue : elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue$Companion;
+	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
+	public static fun asBytes-impl (Ljava/lang/String;)Lkotlinx/io/bytestring/ByteString;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public static final fun getSerialVersionUID ()J
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public static final fun of (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize-XBAQx5U (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize-SQVv7II (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$Fingerprinted {
+	public abstract fun getFingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Format : java/lang/Enum {
+	public static final field AUTO Lelide/tooling/lockfile/ElideLockfile$Format;
+	public static final field BINARY Lelide/tooling/lockfile/ElideLockfile$Format;
+	public static final field JSON Lelide/tooling/lockfile/ElideLockfile$Format;
+	public final fun extensionFor (Ljava/lang/String;)Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getFilename ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Format;
+	public static fun values ()[Lelide/tooling/lockfile/ElideLockfile$Format;
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$InputMaterial : elide/tooling/lockfile/ElideLockfile$Fingerprinted, elide/tooling/lockfile/ElideLockfile$LockfileElement {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$InputMaterial$Companion;
+	public abstract fun getFingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public abstract fun getIdentifier ()Ljava/lang/String;
+	public abstract fun getRemarks ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest : java/lang/Record, elide/tooling/lockfile/ElideLockfile$InputMaterial$File, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest$Companion;
+	public synthetic fun <init> (Lelide/tooling/project/ProjectEcosystem;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/tooling/project/ProjectEcosystem;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun component4 ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public final fun copy (Lelide/tooling/project/ProjectEcosystem;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
+	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;Lelide/tooling/project/ProjectEcosystem;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
+	public final fun ecosystem ()Lelide/tooling/project/ProjectEcosystem;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun fingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public synthetic fun getFingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public synthetic fun getIdentifier ()Ljava/lang/String;
+	public synthetic fun getRelativePath ()Ljava/lang/String;
+	public synthetic fun getRemarks ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public static final fun getSerialVersionUID ()J
+	public fun hashCode ()I
+	public fun identifier ()Ljava/lang/String;
+	public static final fun of (Lelide/tooling/project/ProjectEcosystem;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
+	public fun relativePath ()Ljava/lang/String;
+	public fun remarks ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of (Lelide/tooling/project/ProjectEcosystem;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
+	public static synthetic fun of$default (Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest$Companion;Lelide/tooling/project/ProjectEcosystem;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$InputMaterial$File : elide/tooling/lockfile/ElideLockfile$InputMaterial {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$InputMaterial$File$Companion;
+	public abstract fun getRelativePath ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$File$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile : java/lang/Record, elide/tooling/lockfile/ElideLockfile$InputMaterial$File, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun component4 ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
+	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun fingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun generatedBy ()Ljava/lang/String;
+	public synthetic fun getFingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public synthetic fun getIdentifier ()Ljava/lang/String;
+	public synthetic fun getRelativePath ()Ljava/lang/String;
+	public synthetic fun getRemarks ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public static final fun getSerialVersionUID ()J
+	public fun hashCode ()I
+	public fun identifier ()Ljava/lang/String;
+	public static final fun of (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
+	public fun relativePath ()Ljava/lang/String;
+	public fun remarks ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun of (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
+	public static synthetic fun of$default (Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile$Companion;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$LockfileElement : java/lang/Comparable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$LockfileElement$Companion;
+	public fun compareTo (Lelide/tooling/lockfile/ElideLockfile$LockfileElement;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public abstract fun getIdentifier ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$LockfileElement$Companion {
+	public final fun serializer (Lkotlinx/serialization/KSerializer;)Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$LockfileException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$Remarks {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Remarks$Companion;
+	public abstract fun getMessage ()Ljava/lang/String;
+	public static fun text (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Remarks;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Remarks$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public final fun text (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Remarks;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Remarks$None : elide/tooling/lockfile/ElideLockfile$Remarks {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Remarks$None;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Remarks$Text : java/lang/Record, elide/tooling/lockfile/ElideLockfile$Remarks, java/io/Serializable {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Remarks$Text$Companion;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;
+	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getMessage ()Ljava/lang/String;
+	public static final fun getSerialVersionUID ()J
+	public fun hashCode ()I
+	public fun message ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Remarks$Text$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Remarks$Text$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Remarks$Text$Companion {
+	public final fun getSerialVersionUID ()J
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$Stanza : elide/tooling/lockfile/ElideLockfile$Fingerprinted, elide/tooling/lockfile/ElideLockfile$LockfileElement {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Stanza$Companion;
+	public abstract fun getContributedBy ()Ljava/lang/String;
+	public abstract fun getFingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public abstract fun getInputs ()Ljava/util/Set;
+	public abstract fun getRemarks ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public abstract fun getState ()Lelide/tooling/lockfile/ElideLockfile$State;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Stanza$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$StanzaData : java/lang/Record, elide/tooling/lockfile/ElideLockfile$Stanza {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$StanzaData$Companion;
+	public fun <init> (Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Ljava/lang/String;Ljava/util/Set;Lelide/tooling/lockfile/ElideLockfile$Remarks;Lelide/tooling/lockfile/ElideLockfile$State;)V
+	public synthetic fun <init> (Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Ljava/lang/String;Ljava/util/Set;Lelide/tooling/lockfile/ElideLockfile$Remarks;Lelide/tooling/lockfile/ElideLockfile$State;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/Set;
+	public final fun component5 ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public final fun component6 ()Lelide/tooling/lockfile/ElideLockfile$State;
+	public fun contributedBy ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Ljava/lang/String;Ljava/util/Set;Lelide/tooling/lockfile/ElideLockfile$Remarks;Lelide/tooling/lockfile/ElideLockfile$State;)Lelide/tooling/lockfile/ElideLockfile$StanzaData;
+	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$StanzaData;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Ljava/lang/String;Ljava/util/Set;Lelide/tooling/lockfile/ElideLockfile$Remarks;Lelide/tooling/lockfile/ElideLockfile$State;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$StanzaData;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun fingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public synthetic fun getContributedBy ()Ljava/lang/String;
+	public synthetic fun getFingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public synthetic fun getIdentifier ()Ljava/lang/String;
+	public synthetic fun getInputs ()Ljava/util/Set;
+	public synthetic fun getRemarks ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public synthetic fun getState ()Lelide/tooling/lockfile/ElideLockfile$State;
+	public fun hashCode ()I
+	public fun identifier ()Ljava/lang/String;
+	public fun inputs ()Ljava/util/Set;
+	public fun remarks ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
+	public fun state ()Lelide/tooling/lockfile/ElideLockfile$State;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$StanzaData$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$StanzaData$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$StanzaData;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$StanzaData;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$StanzaData$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$State {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$State$Companion;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$State$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$State$MavenLockfile : java/lang/Record, elide/tooling/lockfile/ElideLockfile$State {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$State$MavenLockfile$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public final fun copy (Ljava/util/List;)Lelide/tooling/lockfile/ElideLockfile$State$MavenLockfile;
+	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$State$MavenLockfile;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$State$MavenLockfile;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$State$MavenLockfile$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$State$MavenLockfile$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$State$MavenLockfile;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$State$MavenLockfile;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$State$MavenLockfile$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$State$NoState : elide/tooling/lockfile/ElideLockfile$State {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$State$NoState;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/lockfile/ElideLockfile$Version {
+	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Version$Companion;
+	public fun getCurrent ()Z
+	public fun getDefaultFilename ()Ljava/lang/String;
+	public fun getDefaultFormat ()Lelide/tooling/lockfile/ElideLockfile$Format;
+	public fun getDefaultPath ()Ljava/nio/file/Path;
+	public abstract fun getLabel ()Ljava/lang/String;
+	public abstract fun getOrdinal-pVg5ArA ()I
+	public fun getSupported ()Z
+}
+
+public final class elide/tooling/lockfile/ElideLockfile$Version$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/lockfile/Fingerprints {
+	public static final field INSTANCE Lelide/tooling/lockfile/Fingerprints;
+	public static final fun buildFrom (Ljava/util/List;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static final fun forBytes ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static final fun forFile (Ljava/nio/file/Path;Z)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static synthetic fun forFile$default (Ljava/nio/file/Path;ZILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public static final fun forProject (Lelide/tooling/project/ElideProject;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+}
+
+public abstract interface class elide/tooling/lockfile/InterpretedLockfile {
+	public abstract fun getDefinition ()Lelide/tooling/lockfile/LockfileDefinition;
+	public abstract fun getDuration-FghU774 ()Lkotlin/time/Duration;
+	public abstract fun getFormat ()Lelide/tooling/lockfile/ElideLockfile$Format;
+	public abstract fun getLockfile ()Lelide/tooling/lockfile/ElideLockfile;
+	public abstract fun getPath ()Ljava/nio/file/Path;
+	public abstract fun getRoot ()Ljava/nio/file/Path;
+	public abstract fun updateTo-dnQKTGw (Lkotlin/time/Duration;Lkotlin/jvm/functions/Function0;)Lelide/tooling/lockfile/InterpretedLockfile;
+	public static synthetic fun updateTo-dnQKTGw$default (Lelide/tooling/lockfile/InterpretedLockfile;Lkotlin/time/Duration;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Lelide/tooling/lockfile/InterpretedLockfile;
+}
+
+public abstract interface class elide/tooling/lockfile/LockfileContributor {
+	public abstract fun contribute (Ljava/nio/file/Path;Lelide/tooling/project/ElideProject;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/lockfile/LockfileContributors {
+	public static final field INSTANCE Lelide/tooling/lockfile/LockfileContributors;
+	public static final fun collect ()Lkotlin/sequences/Sequence;
+}
+
+public abstract interface class elide/tooling/lockfile/LockfileDefinition {
+	public abstract fun readFrom (Lelide/tooling/lockfile/ElideLockfile$Format;Ljava/io/InputStream;)Lelide/tooling/lockfile/ElideLockfile;
+	public abstract fun writeTo (Lelide/tooling/lockfile/ElideLockfile$Format;Lelide/tooling/lockfile/ElideLockfile;Ljava/io/OutputStream;)V
+}
+
+public final class elide/tooling/lockfile/LockfileFnsKt {
+	public static final fun loadLockfile (Lkotlinx/coroutines/CoroutineScope;Ljava/nio/file/Path;Lelide/tooling/lockfile/LockfileDefinition;)Lkotlinx/coroutines/Deferred;
+	public static synthetic fun loadLockfile$default (Lkotlinx/coroutines/CoroutineScope;Ljava/nio/file/Path;Lelide/tooling/lockfile/LockfileDefinition;ILjava/lang/Object;)Lkotlinx/coroutines/Deferred;
+	public static final fun loadLockfileSafe (Ljava/nio/file/Path;Lelide/tooling/lockfile/LockfileDefinition;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun loadLockfileSafe$default (Ljava/nio/file/Path;Lelide/tooling/lockfile/LockfileDefinition;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tooling/lockfile/LockfileLoader {
+	public abstract fun loadLockfile (Ljava/nio/file/Path;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/lockfile/Lockfiles {
+	public static final field INSTANCE Lelide/tooling/lockfile/Lockfiles;
+	public static final fun build ([Lelide/tooling/lockfile/ElideLockfile$Stanza;)Lelide/tooling/lockfile/ElideLockfile;
+	public static final fun create (Ljava/nio/file/Path;Lelide/tooling/project/ElideProject;Ljava/util/List;Lelide/tooling/lockfile/LockfileContributor;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun create$default (Ljava/nio/file/Path;Lelide/tooling/project/ElideProject;Ljava/util/List;Lelide/tooling/lockfile/LockfileContributor;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun read (Ljava/nio/file/Path;Lelide/tooling/lockfile/LockfileDefinition;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun read$default (Ljava/nio/file/Path;Lelide/tooling/lockfile/LockfileDefinition;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun write (Lelide/tooling/lockfile/ElideLockfile;Ljava/nio/file/Path;Lelide/tooling/lockfile/ElideLockfile$Format;Lelide/tooling/lockfile/LockfileDefinition;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public synthetic class elide/tooling/project/$CompositePackageManifestService$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1360,11 +2173,13 @@ public final class elide/tooling/project/CompositePackageManifestService : elide
 
 public final class elide/tooling/project/DefaultProjectLoader : elide/tooling/project/ElideProjectLoader {
 	public static final field INSTANCE Lelide/tooling/project/DefaultProjectLoader;
+	public fun getLockfileLoader ()Lelide/tooling/lockfile/LockfileLoader;
 	public fun getResourcesPath ()Ljava/nio/file/Path;
 	public fun getSourceSetFactory ()Lelide/tooling/project/SourceSetFactory;
 }
 
 public abstract interface class elide/tooling/project/ElideConfiguredProject : elide/tooling/project/ElideProject {
+	public abstract fun getActiveLockfile ()Lelide/tooling/lockfile/InterpretedLockfile;
 	public abstract fun getResourcesPath ()Ljava/nio/file/Path;
 	public abstract fun getSourceSets ()Lelide/tooling/project/SourceSets;
 }
@@ -1413,6 +2228,7 @@ public final class elide/tooling/project/ElideProjectInfo$Companion {
 }
 
 public abstract interface class elide/tooling/project/ElideProjectLoader {
+	public abstract fun getLockfileLoader ()Lelide/tooling/lockfile/LockfileLoader;
 	public abstract fun getResourcesPath ()Ljava/nio/file/Path;
 	public abstract fun getSourceSetFactory ()Lelide/tooling/project/SourceSetFactory;
 }
@@ -1796,8 +2612,8 @@ public final class elide/tooling/project/codecs/PythonRequirementsManifestCodec 
 public final class elide/tooling/project/manifest/ElidePackageManifest : java/lang/Record, elide/tooling/project/manifest/PackageManifest {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$Companion;
 	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component10 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;
 	public final fun component11 ()Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;
@@ -1806,6 +2622,7 @@ public final class elide/tooling/project/manifest/ElidePackageManifest : java/la
 	public final fun component14 ()Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;
 	public final fun component15 ()Ljava/util/Map;
 	public final fun component16 ()Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;
+	public final fun component17 ()Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/util/List;
@@ -1814,8 +2631,8 @@ public final class elide/tooling/project/manifest/ElidePackageManifest : java/la
 	public final fun component7 ()Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;
 	public final fun component8 ()Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;
 	public final fun component9 ()Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;)Lelide/tooling/project/manifest/ElidePackageManifest;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;)Lelide/tooling/project/manifest/ElidePackageManifest;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;Ljava/util/Map;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public final fun dependencies ()Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;
 	public final fun description ()Ljava/lang/String;
 	public fun ecosystem ()Lelide/tooling/project/ProjectEcosystem;
@@ -1826,6 +2643,7 @@ public final class elide/tooling/project/manifest/ElidePackageManifest : java/la
 	public final fun javascript ()Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;
 	public final fun jvm ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;
 	public final fun kotlin ()Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;
+	public final fun lockfile ()Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;
 	public final fun name ()Ljava/lang/String;
 	public final fun pkl ()Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;
 	public final fun python ()Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;
@@ -2083,58 +2901,52 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget : elide/tooling/project/manifest/ElidePackageManifest$JvmTarget {
+public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$JvmTarget {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget$Companion;
-	public static final synthetic fun box-impl (I)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;
-	public static fun constructor-impl (I)I
+	public synthetic fun <init> (ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-pVg5ArA ()I
+	public final fun copy-WZ4Q5Ns (I)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;
+	public static synthetic fun copy-WZ4Q5Ns$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;IILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (ILjava/lang/Object;)Z
-	public static final fun equals-impl0 (II)Z
-	public final fun getNumber-pVg5ArA ()I
 	public fun hashCode ()I
-	public static fun hashCode-impl (I)I
+	public final fun number ()I
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (I)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()I
 }
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget$$serializer;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-WK7WSmo (Lkotlinx/serialization/encoding/Decoder;)I
 	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-_NRrRhk (Lkotlinx/serialization/encoding/Encoder;I)V
 }
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget : elide/tooling/project/manifest/ElidePackageManifest$JvmTarget {
+public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$JvmTarget {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget$Companion;
-	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;
-	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;
 	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
-	public final fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
-	public static fun hashCode-impl (Ljava/lang/String;)I
+	public final fun name ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget$$serializer;
 	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-lTraDT8 (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
 	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-ZUjt9F4 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 }
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget$Companion {
@@ -2277,6 +3089,36 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinSet
 }
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$LockfileSettings : java/lang/Record {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings$Companion;
+	public fun <init> ()V
+	public fun <init> (ZLjava/lang/String;)V
+	public synthetic fun <init> (ZLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (ZLjava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;ZLjava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;
+	public final fun enabled ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun format ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$LockfileSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$LockfileSettings$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

@@ -10,18 +10,23 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling.deps
 
 import java.lang.AutoCloseable
+import java.nio.file.Path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import elide.tooling.lockfile.ElideLockfile
+import elide.tooling.lockfile.LockfileContributor
+import elide.tooling.project.ElideProject
 
 /**
  * ## Dependency Resolver
  */
-public sealed interface DependencyResolver : AutoCloseable {
+public sealed interface DependencyResolver : AutoCloseable, LockfileContributor {
   public val ecosystem: DependencyEcosystem
+
+  override suspend fun contribute(root: Path, project: ElideProject?): ElideLockfile.Stanza? = null
 
   public suspend fun seal()
 

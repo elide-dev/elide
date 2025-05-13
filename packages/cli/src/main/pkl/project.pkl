@@ -11,6 +11,7 @@ import "Artifacts.pkl" as _artifacts
 import "Products.pkl" as _products
 import "Task.pkl" as _tasks
 import "Workspace.pkl" as _workspace
+import "Lockfile.pkl" as _lockfile
 
 import "Jvm.pkl" as _jvm
 import "Java.pkl" as _java
@@ -100,6 +101,9 @@ class ElideProject {
 
   /// Settings and configuration for project tests.
   tests: _testing.Testing?
+
+  /// Settings which govern Elide's lockfile.
+  lockfile: _lockfile.LockfileSettings?
 }
 
 /// A name for the project.
@@ -200,6 +204,9 @@ ops: _ops.Operations = new {}
 
 /// Settings and configuration for project tests.
 tests: _testing.Testing?
+
+/// Settings which govern Elide's lockfile.
+lockfile: _lockfile.LockfileSettings = new {}
 
 //
 // ------ Execution -------------------------------------------------------------------------------------------------

@@ -128,7 +128,7 @@ import elide.tooling.project.manifest.MavenPomManifest
       it.scope to ElidePackageManifest.MavenPackage(
         group = group,
         name = artifact,
-        version = version,
+        version = version ?: "",
         coordinate = buildString {
           append(group)
           append(':')

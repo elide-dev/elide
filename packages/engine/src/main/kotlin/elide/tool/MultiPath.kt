@@ -801,7 +801,7 @@ public fun interface ClasspathsProvider {
    *
    * @return Classpath provider instance.
    */
-  public suspend fun classpathProvider(spec: ClasspathSpec): ClasspathProvider?
+  public suspend fun classpathProvider(spec: ClasspathSpec?): ClasspathProvider?
 }
 
 /**

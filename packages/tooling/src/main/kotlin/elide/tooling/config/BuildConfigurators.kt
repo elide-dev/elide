@@ -14,8 +14,11 @@ package elide.tooling.config
 
 import io.micronaut.context.BeanContext
 import java.nio.file.Path
+import java.util.LinkedList
 import java.util.ServiceLoader
+import java.util.concurrent.ConcurrentSkipListMap
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
+import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.manifest.ElidePackageManifest
 
@@ -49,21 +52,38 @@ public object BuildConfigurators {
     to: BuildConfiguration,
     extraConfigurator: BuildConfigurator? = null,
   ) {
-    val eventController = object : BuildConfigurator.BuildEventController {
-      override fun emit(event: BuildConfigurator.BuildEvent) {
-        // nothing yet
+    val eventBindings = ConcurrentSkipListMap<BuildEvent, MutableList<(BuildEvent, ctx: Any?) -> Unit>>()
+
+    val eventController = object : BuildEventController {
+      override fun emit(event: BuildEvent) {
+        eventBindings[event]?.forEach { cbk ->
+          cbk(event, null)
+        }
+      }
+
+      override fun <T> emit(event: BuildEvent, ctx: T?) {
+        eventBindings[event]?.forEach { cbk ->
+          cbk(event, ctx)
+        }
+      }
+
+      @Suppress("UNCHECKED_CAST")
+      override fun <E : BuildEvent, X> bind(event: E, cbk: E.(X) -> Unit) {
+        eventBindings.computeIfAbsent(event) { LinkedList() }.also {
+          it.add(cbk as (BuildEvent, Any?) -> Unit)
+        }
       }
     }
-    val layout = object : BuildConfigurator.ProjectDirectories {
+    val layout = object : ProjectDirectories {
       override val projectRoot: Path get() = to.projectRoot
     }
-    val state = object : BuildConfigurator.ElideBuildState {
+    val state = object : ElideBuildState {
       override val beanContext: BeanContext get() = beanContext
       override val project: ElideConfiguredProject get() = project
-      override val console: BuildConfigurator.BuildConsoleController get() = TODO("Not yet implemented")
-      override val events: BuildConfigurator.BuildEventController get() = eventController
+      override val console: BuildConsoleController get() = TODO("Not yet implemented")
+      override val events: BuildEventController get() = eventController
       override val manifest: ElidePackageManifest get() = project.manifest
-      override val layout: BuildConfigurator.ProjectDirectories get() = layout
+      override val layout: ProjectDirectories get() = layout
       override val resourcesPath: Path get() = project.resourcesPath
       override val config: BuildConfiguration get() = to
     }

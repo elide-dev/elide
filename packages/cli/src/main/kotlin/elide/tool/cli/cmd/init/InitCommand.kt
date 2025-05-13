@@ -63,6 +63,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         // language=gitignore
         """
         .dev/
+        !.dev/elide.lock*
         node_modules
         node_modules/
         """
@@ -289,24 +290,25 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val targetPath = (path ?: projectOptions().projectPath ?: System.getProperty("user.dir"))
         .let { Path.of(it) }
+    val allTemplates = loadInstalledTemplates()
     val selectedTemplate = when (template) {
         null -> KInquirer.promptListObject(
           "Which template would you like to use?",
-          choices = loadInstalledTemplates().map {
+          choices = allTemplates.map {
             Choice(it.name, it)
           }
         ).let { choice ->
-          loadInstalledTemplates().find {
+          allTemplates.find {
             it.name == choice.name
           } ?: error(
-            "No such template: '$choice'. Available templates: ${loadInstalledTemplates().joinToString { it.name }}"
+            "No such template: '$choice'. Available templates: ${allTemplates.joinToString { it.name }}"
           )
         }
         "empty" -> EmptyProject
-        else -> loadInstalledTemplates().find {
+        else -> allTemplates.find {
           it.name == template
         } ?: error(
-          "No such template: '$template'. Available templates: ${loadInstalledTemplates().joinToString { it.name }}"
+          "No such template: '$template'. Available templates: ${allTemplates.joinToString { it.name }}"
         )
     }
     output {

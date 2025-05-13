@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import kotlin.io.path.extension
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.GradleCatalogManifest
@@ -36,7 +35,7 @@ public class GradleCatalogCodec : PackageManifestCodec<GradleCatalogManifest> {
   ): ElidePackageManifest.MavenPackage = ElidePackageManifest.MavenPackage(
     group = lib.group,
     name = lib.name,
-    version = lib.version.provideVersion(manifest.versions),
+    version = lib.version.provideVersion(manifest.versions) ?: "",
     coordinate = lib.coordinate,
   )
 

@@ -98,8 +98,8 @@ sealed interface CommandContext : CoroutineScope {
    * @param exitCode Exit code for the error.
    * @return Error command execution result.
    */
-  fun err(message: String? = "An unknown error occurred", exitCode: Int = -1): CommandResult =
-    CommandResult.err(exitCode, message)
+  fun err(message: String? = "An unknown error occurred", exitCode: Int = -1, exc: Throwable? = null): CommandResult =
+    CommandResult.err(exitCode, message, exc)
 
   // -- Configuration -- //
 

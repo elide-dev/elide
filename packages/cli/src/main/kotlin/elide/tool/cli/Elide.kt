@@ -15,6 +15,8 @@
 
 package elide.tool.cli
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
@@ -492,7 +494,26 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
           }
         }
         bean.call()
-        bean.commandResult.get()
+        bean.commandResult.get().also {
+          when (it) {
+            is CommandResult.Success -> {
+              if (verbose.get()) {
+                output {
+                  append((TextColors.green + TextStyles.bold)("Elide exited without error."))
+                }
+              }
+            }
+            is CommandResult.Error -> {
+              val exitMsg = it.message.ifBlank { null } ?: "Error; exiting with code '${it.exitCode}'"
+              logging.error(exitMsg)
+              if (!quiet.get()) {
+                output {
+                  append((TextColors.red + TextStyles.bold)(exitMsg))
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

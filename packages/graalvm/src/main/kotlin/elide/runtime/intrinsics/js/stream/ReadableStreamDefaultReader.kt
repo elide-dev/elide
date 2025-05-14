@@ -10,15 +10,17 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.gvm.internals.intrinsics.js.webstreams
+package elide.runtime.intrinsics.js.stream
 
-import elide.runtime.gvm.api.Intrinsic
-import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.intrinsics.js.ReadableStream.ReadResult
+import elide.vm.annotations.Polyglot
 
-/** Implementation of readable streams (via the Web Streams standard). */
-@Intrinsic(global = "ReadableStream") internal class ReadableStreamIntrinsic : AbstractJsIntrinsic() {
-  override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    // not yet implemented
-  }
+/**
+ * A reader used by streams in default mode, used to read arbitrary chunks of data. Default readers do not support
+ * BYOB operations.
+ */
+public interface ReadableStreamDefaultReader : ReadableStreamReader {
+    /** Read a chunk from the stream, returning a promise that is fulfilled with the result. */
+    @Polyglot public fun read(): JsPromise<ReadResult>
 }

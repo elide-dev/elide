@@ -10,15 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.gvm.internals.intrinsics.js.webstreams
+package elide.runtime.intrinsics.js.stream
 
-import elide.runtime.gvm.api.Intrinsic
-import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
-import elide.runtime.intrinsics.GuestIntrinsic
+import elide.vm.annotations.Polyglot
 
-/** Implementation of readable streams (via the Web Streams standard). */
-@Intrinsic(global = "ReadableStream") internal class ReadableStreamIntrinsic : AbstractJsIntrinsic() {
-  override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    // not yet implemented
-  }
+/**
+ * Interface for stream controller implementations, providing the shared methods specified in the
+ * [WHATWG standard](https://streams.spec.whatwg.org).
+ */
+public sealed interface ReadableStreamController {
+  /** Desired total size for the inbound queue, used for backpressure control. */
+  @get:Polyglot public val desiredSize: Double?
 }

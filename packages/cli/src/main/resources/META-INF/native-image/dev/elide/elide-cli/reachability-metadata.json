@@ -3520,6 +3520,30 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$LockfilesHelpCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$NodeApiHelpCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$TypescriptHelpCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.help.HelpCommand$ReactJsHelpCommand",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tool.cli.cmd.info.$ToolInfoCommand$Definition",
       "methods": [
         {

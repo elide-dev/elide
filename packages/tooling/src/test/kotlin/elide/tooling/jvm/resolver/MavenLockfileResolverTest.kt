@@ -35,7 +35,7 @@ class MavenLockfileResolverTest {
       loadLockfile(projectRoot).await()
     }
     val mavenLockfile = requireNotNull(
-      lockfile.lockfile.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
+      lockfile?.lockfile?.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
     )
     val resolver = MavenLockfileResolver.of(
       mavenLockfile,
@@ -54,7 +54,7 @@ class MavenLockfileResolverTest {
       loadLockfile(projectRoot).await()
     }
     val mavenLockfile = requireNotNull(
-      lockfile.lockfile.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
+      lockfile?.lockfile?.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
     )
     val resolver = MavenLockfileResolver.of(
       mavenLockfile,
@@ -77,7 +77,7 @@ class MavenLockfileResolverTest {
       loadLockfile(projectRoot).await()
     }
     val mavenLockfile = requireNotNull(
-      lockfile.lockfile.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
+      lockfile?.lockfile?.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
     )
     val resolver = MavenLockfileResolver.of(
       mavenLockfile,
@@ -100,7 +100,7 @@ class MavenLockfileResolverTest {
       loadLockfile(projectRoot).await()
     }
     val mavenLockfile = requireNotNull(
-      lockfile.lockfile.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
+      lockfile?.lockfile?.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
     )
     val resolver = MavenLockfileResolver.of(
       mavenLockfile,
@@ -123,7 +123,7 @@ class MavenLockfileResolverTest {
       loadLockfile(projectRoot).await()
     }
     val mavenLockfile = requireNotNull(
-      lockfile.lockfile.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
+      lockfile?.lockfile?.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)
     )
     val resolver = MavenLockfileResolver.of(
       mavenLockfile,

@@ -109,6 +109,7 @@ import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.runtime.precompiler.Precompiler
 import elide.tool.Classpath
+import elide.tool.ClasspathProvider
 import elide.tool.ClasspathSpec
 import elide.tool.Environment
 import elide.tool.MultiPathUsage
@@ -148,8 +149,13 @@ import elide.tooling.builder.TestDriver.discoverTests
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.TestConfigurator.*
 import elide.tooling.config.on
-import elide.tooling.deps.DependencyResolver
 import elide.tooling.jvm.resolver.MavenAetherResolver
+import elide.tooling.jvm.resolver.MavenLockfileResolver
+import elide.tooling.lockfile.ElideLockfile
+import elide.tooling.lockfile.InterpretedLockfile
+import elide.tooling.lockfile.LockfileStanza
+import elide.tooling.lockfile.loadLockfile
+import elide.tooling.lockfile.typedStanza
 import elide.tooling.project.ElideProject
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
@@ -253,6 +259,9 @@ internal class ToolShellCommand @Inject constructor(
 
     // Active project configuration.
     private val activeProject = atomic<ElideProject?>(null)
+
+    // Active project lockfile.
+    private val activeLockfile = atomic<InterpretedLockfile?>(null)
   }
 
   // Whether JVM support has initialized.
@@ -1430,7 +1439,6 @@ internal class ToolShellCommand @Inject constructor(
   // Read an executable script, and then execute registered tests.
   private fun CommandContext.readRunTests(
     label: String,
-    langs: EnumSet<GuestLanguage>,
     language: GuestLanguage,
     ctxAccessor: ContextAccessor,
     source: List<Source>,
@@ -1614,7 +1622,6 @@ internal class ToolShellCommand @Inject constructor(
       // in test mode, read the sources with test APIs/registration/execution enabled.
       testMode() -> readRunTests(
         label,
-        languages,
         primaryLanguage,
         ctxAccessor,
         listOf(source),
@@ -1717,15 +1724,33 @@ internal class ToolShellCommand @Inject constructor(
     })
   }
 
-  // Amend a base classpath with any additional resolved project dependencies.
-  private fun withProjectClasspath(project: ElideProject, base: Sequence<Path>): List<Path> {
-    return when (project.manifest.dependencies.maven.hasPackages()) {
-      // the project doesn't specify any maven dependencies; return the base classpath
-      false -> base.toList()
+  // Produce a classpaths-provider for the current project, or `null` if none is available.
+  private suspend fun withClasspathProvider(
+    project: ElideProject,
+    elideLockfile: ElideLockfile? = null,
+    base: Sequence<Path> = emptySequence(),
+  ): ClasspathProvider? {
+    // @TODO better artifacts well-known-path access; don't manually hard-code .dev
+    val classesRoot = project.root
+      .resolve(".dev")
+      .resolve("artifacts")
+      .resolve("jvm")
+      .resolve("classes")
 
-      // the project defines maven dependencies; assemble a classpath and return.
-      else -> runBlocking {
-        val runtimeClasspath = if (!performInstall) null else {
+    return when (val lockfile = elideLockfile) {
+      // if we don't have a lockfile, we can resolve paths, but it involves configuring (and potentially executing) a
+      // resolve/install/build cycle. in this case, `performInstall` is checked; if `false`, an error is thrown, telling
+      // the user to run `elide install` on their own or pass `--install` (same with build).
+      null -> when (project.manifest.dependencies.maven.hasPackages()) {
+        // the project has no classpath-style dependencies, so we have nothing to do anyway.
+        false -> null
+
+        // we have dependencies, and no lockfile from which to resolve them; we have no choice but to take the slow path
+        // and perform resolution/installation.
+        true -> if (!performInstall) error(
+          "Cannot run: Classpaths cannot be calculated without performing `elide install` and `elide build` first. " +
+            "Or, pass `--install` and/or `--build` and Elide will run these for you."
+        ) else {
           val buildSettings = BuildConfigurator.MutableBuildSettings().apply {
             dry = true
             dependencies = true
@@ -1735,34 +1760,74 @@ internal class ToolShellCommand @Inject constructor(
               it.second.joinAll()
             }.first.filterIsInstance<MavenAetherResolver>().first()
           }
-          mavenResolver.classpathProvider(object: ClasspathSpec {
+          val runtimeClasspath = mavenResolver.classpathProvider(object: ClasspathSpec {
             override val usage: MultiPathUsage get() = when (testMode()) {
               true -> MultiPathUsage.TestRuntime
               false -> MultiPathUsage.Runtime
             }
           })?.classpath()
-        }
 
-        Classpath.empty().toMutable().apply {
-          base.forEach { add(it) }
+          ClasspathProvider {
+            Classpath.from(buildList {
+              // before all other entries, the test classpath, but only if we are in test mode
+              if (testMode()) {
+                classesRoot.resolve("test").takeIf { it.exists() }?.let { add(it.absolute()) }
+              }
+              classesRoot.resolve("main").takeIf { it.exists() }?.let { add(it.absolute()) }
 
-          // the user's classpath goes first
-          runtimeClasspath?.let { prepend(it) }
+              // the user's classpath goes first
+              runtimeClasspath?.let { addAll(it.toList().map { it.path }) }
 
-          // before all other entries, the test classpath comes next, but only if we are in test mode
-          if (testMode()) {
-            // @TODO better artifacts well-known-path access; don't manually hard-code .dev
-            val classesRoot = project.root
-              .resolve(".dev")
-              .resolve("artifacts")
-              .resolve("jvm")
-              .resolve("classes")
-            classesRoot.resolve("main").takeIf { it.exists() }?.let { prepend(it) }
-            classesRoot.resolve("test").takeIf { it.exists() }?.let { prepend(it) }
+              // then base dependencies
+              addAll(base)
+            })
           }
-        }.map {
+        }
+      }
+
+      // if we have an active lockfile, we can draw classpaths from that
+      else -> lockfile.typedStanza<ElideLockfile.MavenLockfile>(LockfileStanza.MAVEN)?.let { stanza ->
+        MavenLockfileResolver.of(stanza, project.root).let { resolver ->
+          when (testMode()) {
+            true -> ClasspathSpec.TestRuntime
+            false -> ClasspathSpec.Runtime
+          }.let { spec ->
+            ClasspathProvider {
+              Classpath.from(buildList {
+                // before all other entries, the test classpath, but only if we are in test mode
+                if (testMode()) {
+                  classesRoot.resolve("test").takeIf { it.exists() }?.let { add(it.absolute()) }
+                }
+                classesRoot.resolve("main").takeIf { it.exists() }?.let { add(it.absolute()) }
+
+                // the user's classpath goes first
+                resolver.classpathProvider(spec)?.classpath()?.asList()?.map {
+                  it.path.absolute()
+                }?.forEach {
+                  add(it)
+                }
+
+                // then base dependencies
+                addAll(base)
+              })
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Amend a base classpath with any additional resolved project dependencies.
+  private fun withProjectClasspath(project: ElideProject, lockfile: ElideLockfile?, base: Sequence<Path>): List<Path> {
+    return when (project.manifest.dependencies.maven.hasPackages()) {
+      // the project doesn't specify any maven dependencies; return the base classpath
+      false -> base.toList()
+
+      // the project defines maven dependencies; assemble a classpath and return.
+      else -> runBlocking {
+        withClasspathProvider(project, lockfile, base)?.classpath()?.toList()?.map {
           it.path
-        }.toList()
+        } ?: emptyList()
       }
     }
   }
@@ -1770,6 +1835,7 @@ internal class ToolShellCommand @Inject constructor(
   private fun PolyglotEngineConfiguration.doInitJvmSupport(
     gvmResources: Path,
     project: ElideProject?,
+    lockfile: ElideLockfile?,
     langs: Set<GuestLanguage>,
   ) {
     val javaHome: String? = System.getProperty("java.home")
@@ -1817,14 +1883,12 @@ internal class ToolShellCommand @Inject constructor(
 
     val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
     val fullClasspath: List<Path> = (
-            when (extraHome) {
-              null -> emptySequence()
-              else -> initialGuestClasspathJars(Path(extraHome).resolve("lib"))
-            }
-            ).plus(
-        pathsFromLangResources
+        when (extraHome) {
+          null -> emptySequence()
+          else -> initialGuestClasspathJars(Path(extraHome).resolve("lib"))
+        }
       ).plus(
-        pathsFromHomeResources
+        pathsFromLangResources.ifEmpty { pathsFromHomeResources }
       ).distinct().asStream().parallel().filter {
         Files.exists(it)
       }.let {
@@ -1833,12 +1897,12 @@ internal class ToolShellCommand @Inject constructor(
           null -> it.toList()
 
           // otherwise, assemble a classpath from the base and any project deps
-          else -> withProjectClasspath(project, it.asSequence())
+          else -> withProjectClasspath(project, lockfile, it.asSequence())
         }
       }
     this@ToolShellCommand.extraKotlinHome = extraHome
 
-    logging.debug {
+    if (verbose) Statics.logging.info {
       "Guest classpath: ${fullClasspath.joinToString(":")}"
     }
     this@ToolShellCommand.fullClasspath = fullClasspath
@@ -1858,6 +1922,8 @@ internal class ToolShellCommand @Inject constructor(
     // grab project configurations, if available
     val project = activeProject.value
     if (project != null) logging.debug("Resolved project info: {}", project)
+    val lockfile = activeLockfile.value
+    if (project != null) logging.debug("Resolved project lockfile: {}", lockfile)
 
     // conditionally apply debugging settings
     if (debug) debugger.apply(this)
@@ -1990,7 +2056,7 @@ internal class ToolShellCommand @Inject constructor(
         JVM, KOTLIN, JAVA, SCALA, GROOVY -> {
           if (!jvmInitialized.value) synchronized(this) {
             jvmInitialized.compareAndSet(false, true)
-            doInitJvmSupport(gvmResources, project, langs)
+            doInitJvmSupport(gvmResources, project, lockfile?.lockfile, langs)
           }
           when (lang) {
             JAVA -> configure(elide.runtime.plugins.java.Java) {
@@ -2082,12 +2148,24 @@ internal class ToolShellCommand @Inject constructor(
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
     Elide.requestNatives(server = true, tooling = performInstall)
+    val projectOptions = projectOptions()
+    val projectPathStr = projectOptions.projectPath
+    val projectPath = projectPathStr?.let { Path.of(it) } ?: Path.of(System.getProperty("user.dir"))
 
     // resolve project configuration (async)
     val projectResolution = launch {
-      activeProject.value = runCatching {
-        projectManager.resolveProject(projectOptions().projectPath)
-      }.getOrNull()
+      runCatching {
+        projectManager.resolveProject(projectPathStr)
+      }.getOrNull()?.let {
+        activeProject.value = it
+      }
+    }
+    val lockfileResolution = launch {
+      runCatching {
+        loadLockfile(projectPath)
+      }.getOrNull()?.let {
+        activeLockfile.value = it.await()
+      }
     }
 
     // begin resolving language support
@@ -2254,6 +2332,9 @@ internal class ToolShellCommand @Inject constructor(
     }
 
     try {
+      projectResolution.join()
+      lockfileResolution.join()
+
       resolveEngine(effectiveInitLangs).unwrap().use {
         withDeferredContext(effectiveInitLangs) {
           // warn about experimental status, as applicable
@@ -2300,7 +2381,6 @@ internal class ToolShellCommand @Inject constructor(
               // trigger a test-run with no sources; this also triggers, by side effect, test discovery.
               testMode() -> readRunTests(
                 "tests",
-                langs,
                 primaryLang(null),
                 it,
                 emptyList(),

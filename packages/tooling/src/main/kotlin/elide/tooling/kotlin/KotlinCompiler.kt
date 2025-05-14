@@ -13,6 +13,8 @@
 
 package elide.tooling.kotlin
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
@@ -160,10 +162,19 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     override fun hasErrors(): Boolean = errorsSeen.value
 
     override fun report(severity: CompilerMessageSeverity, message: String, location: CompilerMessageSourceLocation?) {
-      val severityLabel = severity.name.lowercase().let {
-        if (it == "logging") "" else ": $it"
+      val (messageHighlighted, severityHighlighted) = when (severity) {
+        EXCEPTION,
+        ERROR -> TextStyles.bold + TextColors.red
+        CompilerMessageSeverity.STRONG_WARNING -> TextStyles.bold + TextColors.brightYellow
+        CompilerMessageSeverity.WARNING -> TextColors.yellow + TextStyles.bold
+        CompilerMessageSeverity.INFO -> TextColors.cyan + TextStyles.bold
+        CompilerMessageSeverity.LOGGING,
+        CompilerMessageSeverity.OUTPUT -> TextStyles.dim + TextColors.gray
+      }.let {
+        it(message) to it(severity.name.lowercase())
       }
-      val msg = "[kotlinc]$severityLabel $message"
+      val kotlincTag = TextStyles.dim("[kotlinc:${severityHighlighted}]")
+      val msg = "$kotlincTag $messageHighlighted"
       when {
         severity.isError -> ktLogger.error(msg)
         severity.isWarning -> ktLogger.warn(msg)

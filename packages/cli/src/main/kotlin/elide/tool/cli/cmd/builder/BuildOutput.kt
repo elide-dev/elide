@@ -23,6 +23,7 @@ import com.github.ajalt.mordant.widgets.progress.progressBarContextLayout
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.invoke
 import kotlin.io.path.name
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
@@ -30,9 +31,14 @@ import kotlin.time.TimeSource
 import elide.exec.Task
 import elide.exec.TaskId
 import elide.runtime.Logger
+import elide.runtime.Logging
 import elide.tool.asArgumentString
 import elide.tool.cli.CommandContext
 import elide.tool.exec.SubprocessRunner
+
+private val buildLogger by lazy {
+  Logging.named("tool:build")
+}
 
 internal interface BuildOutputApi: Logger {
   val isPretty: Boolean
@@ -111,14 +117,10 @@ private abstract class BaseOutput (
     emitCommand("$ ${task.executable.name} ${task.args.asArgumentString()}")
   }
 
-  override suspend fun verbose(message: String) = ctx.output {
-    ctx.logging.info(renderMessage(message))
-  }
+  override suspend fun verbose(message: String) = buildLogger.info(renderMessage(message))
 
-  override suspend fun verbose(messageProducer: BuildOutputApi.() -> String) = ctx.output {
-    ctx.logging.info {
-      renderMessage(messageProducer.invoke(this@BaseOutput))
-    }
+  override suspend fun verbose(messageProducer: BuildOutputApi.() -> String) {
+    buildLogger.info { renderMessage(messageProducer.invoke(this@BaseOutput)) }
   }
 
   override suspend fun status(message: String, pretty: String?) {
@@ -205,7 +207,7 @@ private class Animated (
   override suspend fun emitVerbose(rendered: String) = if (verbose) {
     terminal.println(rendered)
   } else {
-    ctx.logging.info(rendered)
+    buildLogger.info(rendered)
   }
 
   override suspend fun taskScope(task: Task): BuildOutput.TaskOutput {
@@ -225,6 +227,6 @@ private class Serial (
   override suspend fun emitCommand(rendered: String) = ctx.output { append(rendered) }
   override suspend fun emitStatus(rendered: String) = ctx.output { append(rendered) }
   override suspend fun emitVerbose(rendered: String) {
-    if (verbose) ctx.output { append(rendered) } else ctx.logging.info(rendered)
+    if (verbose) ctx.output { append(rendered) } else buildLogger.info(rendered)
   }
 }

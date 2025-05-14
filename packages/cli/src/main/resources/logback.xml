@@ -37,7 +37,7 @@
 
   <appender name="CONSOLE_ERR" class="ch.qos.logback.core.ConsoleAppender">
     <target>System.err</target>
-    <immediateFlush>false</immediateFlush>
+    <immediateFlush>true</immediateFlush>
     <encoder>
       <pattern>%magenta(elide) %msg%n</pattern>
     </encoder>
@@ -59,13 +59,55 @@
     </encoder>
   </appender>
 
+  <appender name="BUILD_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.err</target>
+    <withJansi>true</withJansi>
+    <encoder>
+      <pattern>%magenta(elide) %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <appender name="RICH_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <withJansi>true</withJansi>
     <target>System.err</target>
-    <immediateFlush>false</immediateFlush>
+    <immediateFlush>true</immediateFlush>
     <encoder>
       <pattern>%magenta(elide) %-4relative %white(%-12d{HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %msg%n</pattern>
     </encoder>
+  </appender>
+
+  <appender name="BUILD_CONSOLE_LAZY" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>codesource</key>
+      <defaultValue>user</defaultValue>
+    </discriminator>
+    <sift>
+      <appender name="BUILD_CONSOLE_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>20</discardingThreshold>
+        <appender-ref ref="BUILD_CONSOLE" />
+        <queueSize>32</queueSize>
+        <includeCallerData>false</includeCallerData>
+        <neverBlock>true</neverBlock>
+        <immediateFlush>true</immediateFlush>
+      </appender>
+    </sift>
+  </appender>
+
+  <appender name="CONSOLE_STDOUT_PLAIN_LAZY" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <discriminator>
+      <key>codesource</key>
+      <defaultValue>user</defaultValue>
+    </discriminator>
+    <sift>
+      <appender name="CONSOLE_STDOUT_PLAIN_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>20</discardingThreshold>
+        <appender-ref ref="CONSOLE_STDOUT_PLAIN" />
+        <queueSize>32</queueSize>
+        <includeCallerData>false</includeCallerData>
+        <neverBlock>true</neverBlock>
+        <immediateFlush>true</immediateFlush>
+      </appender>
+    </sift>
   </appender>
 
   <appender name="ASYNC_LAZY" class="ch.qos.logback.classic.sift.SiftingAppender">
@@ -80,6 +122,7 @@
         <queueSize>256</queueSize>
         <includeCallerData>false</includeCallerData>
         <neverBlock>true</neverBlock>
+        <immediateFlush>true</immediateFlush>
       </appender>
     </sift>
   </appender>
@@ -107,13 +150,20 @@
 <!--  <logger name="elide.*" level="debug" />-->
 <!--  <logger name="elide.tool.cli.cmd.tool.AbstractTool" level="debug" />-->
 <!--  <logger name="elide.tool.cli.cmd.tool.DelegatedToolCommand" level="debug" />-->
-  <logger name="elide.tooling.kotlin.KotlinCompiler" level="warn" />
   <logger name="elide.tooling.jvm.resolver.MavenAetherResolver" level="warn" />
   <logger name="elide.tool.cli.cmd.builder.ToolBuildCommand" level="warn" />
   <logger name="elide.tooling.jvm.JvmBuildConfigurator" level="warn" />
   <logger name="elide.tooling.AbstractTool" level="warn" />
   <logger name="elide.exec.ActionScope" level="warn" />
   <logger name="io.micronaut.context.env.DefaultEnvironment" level="off" />
+
+  <logger name="elide.tooling.kotlin.KotlinCompiler" level="warn" additivity="false">
+    <appender-ref ref="BUILD_CONSOLE" />
+  </logger>
+
+  <logger name="tool:build" level="warn" additivity="false">
+    <appender-ref ref="BUILD_CONSOLE" />
+  </logger>
 
   <!-- Server/Tool Logger -->
   <logger name="tool" additivity="false">

@@ -203,7 +203,32 @@ public class NpmResolver @Inject constructor (
     return if (buildInfo.config.settings.dry) {
       Futures.immediateFuture(Tool.Result.Success).asDeferred()
     } else {
-      orogeneInvoker(scope, args)
+      events.emit(BuildConfigurator.ResolutionStart, BuildConfigurator.TaskState(
+        name = "npm",
+        label = "Resolving NPM dependencies",
+        total = 3L,
+        done = 0L,
+        status = BuildConfigurator.WorkStatus.STARTED,
+      ))
+      runCatching {
+        orogeneInvoker(scope, args)
+      }.onSuccess {
+        events.emit(BuildConfigurator.ResolutionProgress, BuildConfigurator.TaskState(
+          name = "npm",
+          label = "Resolved NPM dependencies",
+          total = 3L,
+          done = 2L,
+          status = BuildConfigurator.WorkStatus.PROGRESSED,
+        ))
+      }.onFailure {
+        events.emit(BuildConfigurator.ResolutionFailed, BuildConfigurator.TaskState(
+          name = "npm",
+          label = "Failed to resolve NPM dependencies",
+          total = 3L,
+          done = 2L,
+          status = BuildConfigurator.WorkStatus.FAILED,
+        ))
+      }.getOrThrow()
     }
   }
 

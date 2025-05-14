@@ -16,7 +16,9 @@ import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import java.util.LinkedList
 import java.util.ServiceLoader
-import java.util.concurrent.ConcurrentSkipListMap
+import java.util.concurrent.Executors
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.runBlocking
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
 import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.project.ElideConfiguredProject
@@ -51,29 +53,44 @@ public object BuildConfigurators {
     from: Sequence<BuildConfigurator>,
     to: BuildConfiguration,
     extraConfigurator: BuildConfigurator? = null,
+    binder: BuildEventController.() -> Unit = {},
   ) {
-    val eventBindings = ConcurrentSkipListMap<BuildEvent, MutableList<(BuildEvent, ctx: Any?) -> Unit>>()
+    val eventBindings = HashMap<BuildEvent, MutableList<suspend (BuildEvent, ctx: Any?) -> Unit>>()
+    val dispatcherFactory = Thread.ofVirtual().factory()
+    val dispatcher = Executors.newThreadPerTaskExecutor(dispatcherFactory)
+    val dispatcherContext = dispatcher.asCoroutineDispatcher()
 
     val eventController = object : BuildEventController {
       override fun emit(event: BuildEvent) {
-        eventBindings[event]?.forEach { cbk ->
-          cbk(event, null)
+        dispatcher.execute {
+          runBlocking(dispatcherContext) {
+            eventBindings[event]?.forEach { cbk ->
+              cbk(event, null)
+            }
+          }
         }
       }
 
       override fun <T> emit(event: BuildEvent, ctx: T?) {
-        eventBindings[event]?.forEach { cbk ->
-          cbk(event, ctx)
+        dispatcher.execute {
+          runBlocking(dispatcherContext) {
+            eventBindings[event]?.forEach { cbk ->
+              cbk(event, ctx)
+            }
+          }
         }
       }
 
       @Suppress("UNCHECKED_CAST")
-      override fun <E : BuildEvent, X> bind(event: E, cbk: E.(X) -> Unit) {
+      override fun <E : BuildEvent, X> bind(event: E, cbk: suspend E.(X) -> Unit) {
         eventBindings.computeIfAbsent(event) { LinkedList() }.also {
-          it.add(cbk as (BuildEvent, Any?) -> Unit)
+          it.add(cbk as suspend (BuildEvent, Any?) -> Unit)
         }
       }
     }
+    // bind events
+    binder.invoke(eventController)
+
     val layout = object : ProjectDirectories {
       override val projectRoot: Path get() = to.projectRoot
     }
@@ -102,7 +119,20 @@ public object BuildConfigurators {
     project: ElideConfiguredProject,
     to: BuildConfiguration,
     extraConfigurator: BuildConfigurator? = null,
+    binder: BuildEventController.() -> Unit = {},
   ) {
-    contribute(beanContext, project, collect(), to, extraConfigurator)
+    contribute(beanContext, project, collect(), to, extraConfigurator, binder)
   }
+}
+
+/**
+ * Subscribe to a build event [T] using context shape [X].
+ *
+ * @param T Type of event to subscribe to
+ * @param X Type of context to pass to the callback
+ * @param ev Event to subscribe to
+ * @param cbk Callback to invoke when the event is emitted
+ */
+public inline fun <X: Any, reified T: BuildEvent> BuildEventController.on(ev: T, noinline cbk: suspend T.(X) -> Unit) {
+  bind(ev, cbk)
 }

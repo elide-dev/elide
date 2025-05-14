@@ -62,12 +62,12 @@ internal data class InterpretedLockfileImpl(
 public fun CoroutineScope.loadLockfile(
   root: Path? = null,
   def: LockfileDefinition<*> = ElideLockfile.latest(),
-): Deferred<InterpretedLockfile> = async(IO) {
+): Deferred<InterpretedLockfile?> = async(IO) {
   val rootPath = root ?: Path.of(System.getProperty("user.dir"))
   val lockfilePath = lockfileNames
     .map { rootPath.resolve(".dev").resolve(it) }
     .firstOrNull { it.exists() }
-    ?: throw NoSuchFileException(rootPath.toFile())
+    ?: return@async null
 
   measureTimedValue { Lockfiles.read(lockfilePath, def) }.let { timed ->
     val (format, lockfile) = timed.value
@@ -96,12 +96,8 @@ public fun CoroutineScope.loadLockfile(
 public suspend fun loadLockfileSafe(
   root: Path? = null,
   def: LockfileDefinition<*> = ElideLockfile.latest(),
-): InterpretedLockfile? = try {
-  coroutineScope {
-    loadLockfile(root, def).await()
-  }
-} catch (_: NoSuchFileException) {
-  null
+): InterpretedLockfile? =   coroutineScope {
+  loadLockfile(root, def).await()
 }
 
 /** Lockfile stanza constants. */

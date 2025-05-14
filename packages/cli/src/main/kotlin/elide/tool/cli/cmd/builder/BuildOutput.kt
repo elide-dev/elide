@@ -48,12 +48,17 @@ internal interface BuildOutputApi: Logger {
 
 internal interface BuildOutput : BuildOutputApi {
   companion object {
-    @JvmStatic fun serial(ctx: CommandContext, terminal: Terminal, pretty: Boolean = true): BuildOutput {
-      return Serial(pretty, ctx, terminal)
+    @JvmStatic fun serial(
+      ctx: CommandContext,
+      terminal: Terminal,
+      pretty: Boolean = true,
+      verbose: Boolean = false,
+    ): BuildOutput {
+      return Serial(pretty, verbose, ctx, terminal)
     }
 
-    @JvmStatic fun animated(ctx: CommandContext, terminal: Terminal): BuildOutput {
-      return Animated(ctx, terminal)
+    @JvmStatic fun animated(ctx: CommandContext, terminal: Terminal, verbose: Boolean = false): BuildOutput {
+      return Animated(ctx, terminal, verbose)
     }
   }
 
@@ -161,7 +166,11 @@ private abstract class BaseOutput (
   }
 }
 
-private class Animated (ctx: CommandContext, terminal: Terminal) : BaseOutput(true, ctx, terminal) {
+private class Animated (
+  ctx: CommandContext,
+  terminal: Terminal,
+  private val verbose: Boolean,
+) : BaseOutput(true, ctx, terminal) {
   private inner class ProgressContext {}
   private inner class TransferContext {}
 
@@ -193,7 +202,11 @@ private class Animated (ctx: CommandContext, terminal: Terminal) : BaseOutput(tr
 
   override suspend fun emitCommand(rendered: String) = ctx.output { terminal.println(rendered) }
   override suspend fun emitStatus(rendered: String) = ctx.output { terminal.println(rendered) }
-  override suspend fun emitVerbose(rendered: String) = ctx.logging.info(rendered)
+  override suspend fun emitVerbose(rendered: String) = if (verbose) {
+    terminal.println(rendered)
+  } else {
+    ctx.logging.info(rendered)
+  }
 
   override suspend fun taskScope(task: Task): BuildOutput.TaskOutput {
     // context = activeContext.value
@@ -201,10 +214,17 @@ private class Animated (ctx: CommandContext, terminal: Terminal) : BaseOutput(tr
   }
 }
 
-private class Serial (pretty: Boolean, ctx: CommandContext, terminal: Terminal) : BaseOutput(pretty, ctx, terminal) {
+private class Serial (
+  pretty: Boolean,
+  private val verbose: Boolean,
+  ctx: CommandContext,
+  terminal: Terminal,
+) : BaseOutput(pretty, ctx, terminal) {
   override val isAnimated: Boolean get() = false
 
   override suspend fun emitCommand(rendered: String) = ctx.output { append(rendered) }
   override suspend fun emitStatus(rendered: String) = ctx.output { append(rendered) }
-  override suspend fun emitVerbose(rendered: String) = ctx.logging.info(rendered)
+  override suspend fun emitVerbose(rendered: String) {
+    if (verbose) ctx.output { append(rendered) } else ctx.logging.info(rendered)
+  }
 }

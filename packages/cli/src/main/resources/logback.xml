@@ -35,11 +35,19 @@
     </encoder>
   </appender>
 
-  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+  <appender name="CONSOLE_ERR" class="ch.qos.logback.core.ConsoleAppender">
+    <target>System.err</target>
+    <immediateFlush>false</immediateFlush>
+    <encoder>
+      <pattern>%magenta(elide) %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="CONSOLE_STDOUT_PLAIN" class="ch.qos.logback.core.ConsoleAppender">
     <target>System.out</target>
     <immediateFlush>true</immediateFlush>
     <encoder>
-      <pattern>%magenta(elide) %msg%n</pattern>
+      <pattern>%msg%n</pattern>
     </encoder>
   </appender>
 
@@ -116,10 +124,12 @@
   </logger>
 
   <!-- JS Console -->
-  <logger name="gvm:js.console" level="trace" />
+  <logger name="gvm:js.console" level="trace" additivity="false">
+    <appender-ref ref="CONSOLE_STDOUT_PLAIN" />
+  </logger>
 
   <!-- Root Logger -->
   <root level="${ROOT_LOGLEVEL}">
-    <appender-ref ref="CONSOLE" />
+    <appender-ref ref="CONSOLE_ERR" />
   </root>
 </configuration>

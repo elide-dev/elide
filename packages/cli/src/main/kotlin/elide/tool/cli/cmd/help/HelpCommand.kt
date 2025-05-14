@@ -38,10 +38,13 @@ import elide.tool.cli.*
     "  elide docs kotlin",
     "",
     "Topics:",
-    "  @|bold projects|@: Explains the concept of Elide projects",
     "  @|bold jvm|@: How Java and Kotlin projects work on Elide",
+    "  @|bold lockfiles|@: How Elide's lockfiles work",
+    "  @|bold nodeapi|@: Elide's support for the Node API",
+    "  @|bold projects|@: Explains the concept of Elide projects",
     "  @|bold polyglot|@: Polyglot apps and cross-language interop",
     "  @|bold servers|@: How to run Elide apps in server mode",
+    "  @|bold typescript|@: Using TypeScript and TSX",
   ],
   mixinStandardHelpOptions = true,
   showDefaultValues = true,
@@ -58,6 +61,10 @@ import elide.tool.cli.*
     HelpCommand.JvmHelpCommand::class,
     HelpCommand.PolyglotHelpCommand::class,
     HelpCommand.ServersHelpCommand::class,
+    HelpCommand.LockfilesHelpCommand::class,
+    HelpCommand.NodeApiHelpCommand::class,
+    HelpCommand.TypescriptHelpCommand::class,
+    HelpCommand.ReactJsHelpCommand::class,
   ],
 )
 @Singleton
@@ -108,6 +115,8 @@ internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
     mixinStandardHelpOptions = false,
     hidden = true,
   )
+  @Introspected
+  @ReflectiveAccess
   internal class ProjectHelpCommand: HelpTopic(path = "projects.md")
 
   /** Help topic for JVM projects. */
@@ -117,6 +126,8 @@ internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
     mixinStandardHelpOptions = false,
     hidden = true,
   )
+  @Introspected
+  @ReflectiveAccess
   internal class JvmHelpCommand: HelpTopic(path = "jvm.md")
 
   /** Help topic for polyglot info. */
@@ -125,6 +136,8 @@ internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
     mixinStandardHelpOptions = false,
     hidden = true,
   )
+  @Introspected
+  @ReflectiveAccess
   internal class PolyglotHelpCommand: HelpTopic(path = "polyglot.md")
 
   /** Help topic for servers. */
@@ -133,7 +146,52 @@ internal class HelpCommand : AbstractSubcommand<ToolState, CommandContext>() {
     mixinStandardHelpOptions = false,
     hidden = true,
   )
+  @Introspected
+  @ReflectiveAccess
   internal class ServersHelpCommand: HelpTopic(path = "servers.md")
+
+  /** Help topic for lockfiles. */
+  @CommandLine.Command(
+    name = "lockfiles",
+    mixinStandardHelpOptions = false,
+    hidden = true,
+  )
+  @Introspected
+  @ReflectiveAccess
+  internal class LockfilesHelpCommand: HelpTopic(path = "lockfiles.md")
+
+  /** Help topic for the Node API. */
+  @CommandLine.Command(
+    name = "nodeapi",
+    aliases = ["node"],
+    mixinStandardHelpOptions = false,
+    hidden = true,
+  )
+  @Introspected
+  @ReflectiveAccess
+  internal class NodeApiHelpCommand: HelpTopic(path = "nodeapi.md")
+
+  /** Help topic for TypeScript support. */
+  @CommandLine.Command(
+    name = "typescript",
+    aliases = ["tsx"],
+    mixinStandardHelpOptions = false,
+    hidden = true,
+  )
+  @Introspected
+  @ReflectiveAccess
+  internal class TypescriptHelpCommand: HelpTopic(path = "typescript.md")
+
+  /** Help topic for React support. */
+  @CommandLine.Command(
+    name = "react",
+    aliases = ["react", "jsx"],
+    mixinStandardHelpOptions = false,
+    hidden = true,
+  )
+  @Introspected
+  @ReflectiveAccess
+  internal class ReactJsHelpCommand: HelpTopic(path = "react.md")
 
   /** Whether to file a bug. */
   @CommandLine.Option(

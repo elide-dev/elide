@@ -505,11 +505,13 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
             }
             is CommandResult.Error -> {
               val exitMsg = it.message.ifBlank { null } ?: "Error; exiting with code '${it.exitCode}'"
-              logging.error(exitMsg)
+              logging.debug(exitMsg)
               if (!quiet.get()) {
                 output {
                   append((TextColors.red + TextStyles.bold)(exitMsg))
                 }
+              } else {
+                logging.error(exitMsg)
               }
             }
           }

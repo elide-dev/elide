@@ -14,7 +14,6 @@
 package elide.tool.cli
 
 import com.github.ajalt.mordant.rendering.TextColors
-import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
@@ -558,7 +557,7 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
           }
           is CommandResult.Error -> {
             val exitMsg = it.message.ifBlank { null } ?: "Error in subcommand; exiting with code '${it.exitCode}'"
-            logging.error(exitMsg)
+            logging.debug(exitMsg)
             if (!quiet) {
               if (verbose || debug) {
                 val cause = it.cause
@@ -571,6 +570,8 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
               output {
                 append((TextColors.red + TextStyles.bold)(exitMsg))
               }
+            } else {
+              logging.error(exitMsg)
             }
           }
         }

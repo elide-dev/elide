@@ -490,6 +490,14 @@ public class MavenAetherResolver internal constructor (
     check(!resolved.value) { "Resolver already resolved" }
     logging.debug { "Resolving Maven dependencies" }
 
+    events.emit(ResolutionStart, TaskState(
+      name = "maven",
+      label = "Resolving Maven dependencies",
+      total = 4,
+      done = 1,
+      status = WorkStatus.STARTED,
+    ))
+
     return sequence {
       yield(scope.async {
         val dependencyRequest = DependencyRequest(graph, null)
@@ -504,6 +512,13 @@ public class MavenAetherResolver internal constructor (
         } finally {
           resolved.value = true
         }
+        events.emit(ResolutionFinished, TaskState(
+          name = "maven",
+          label = "Resolved Maven dependencies",
+          total = 4,
+          done = 4,
+          status = WorkStatus.SUCCEEDED,
+        ))
 
         if (errors.isNotEmpty()) {
           logging.error("Failed to resolve Maven dependencies because of one or more errors. Throwing.")

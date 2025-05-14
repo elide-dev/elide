@@ -32,6 +32,7 @@ import picocli.CommandLine.Help
 import picocli.CommandLine.Parameters
 import picocli.CommandLine.ScopeType
 import java.util.*
+import kotlin.time.TimeSource
 import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
@@ -469,6 +470,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   }
 
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
+    val start = TimeSource.Monotonic.markNow()
     return when {
       version && (srcfile == null || srcfile!!.isEmpty()) -> CommandResult.success().also { println(ELIDE_TOOL_VERSION) }
       help && (srcfile == null || srcfile!!.isEmpty()) -> CommandResult.success().also { cliBuilder.usage(Statics.out) }
@@ -497,9 +499,10 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
         bean.commandResult.get().also {
           when (it) {
             is CommandResult.Success -> {
+              val done = start.elapsedNow()
               if (verbose.get()) {
                 output {
-                  append((TextColors.green + TextStyles.bold)("Elide exited without error."))
+                  append((TextColors.green + TextStyles.bold)("Elide exited without error in $done."))
                 }
               }
             }

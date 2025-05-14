@@ -1,0 +1,30 @@
+amends "elide:project.pkl"
+
+name = "elide-test-ktjvm"
+description = "Example project using Elide with Kotlin/JVM."
+
+entrypoint {
+  "src/main/kotlin/main.kt"
+}
+
+tests {
+  coverage {
+    paths {
+      "sample*"
+    }
+  }
+}
+
+dependencies {
+  maven {
+    packages {
+      // Guava
+      "com.google.guava:guava:33.4.8-jre"
+    }
+  }
+}
+
+sources {
+  ["main"] = "src/main/kotlin/**/*.kt"
+  ["test"] = "src/test/kotlin/**/*.kt"
+}

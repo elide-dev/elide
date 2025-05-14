@@ -50,7 +50,6 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.relativeTo
 import elide.runtime.Logging
-import elide.struct.TreeMap
 import elide.tool.Classpath
 import elide.tool.ClasspathProvider
 import elide.tool.ClasspathSpec
@@ -154,7 +153,7 @@ public class MavenAetherResolver internal constructor (
   private val repositories = ConcurrentSkipListMap<String, MavenRepository>()
 
   // Registry of all witnessed Maven dependencies.
-  private val registry = ConcurrentSkipListMap<String, MavenPackage>()
+  private val registry = ConcurrentSkipListMap<String, Pair<MavenPackage, MultiPathUsage>>()
 
   // Registry of Maven dependencies by suite type.
   private val registryByType = ConcurrentSkipListMap<SourceSetSuite, MutableList<MavenPackage>>()
@@ -334,10 +333,10 @@ public class MavenAetherResolver internal constructor (
     }
 
     logging.debug { "Configuring Maven packages" }
-    val packages = registry.values.map {
-      logging.trace { "- Adding Maven package: ${it.coordinate}" }
-      val artifact = DefaultArtifact(it.resolvedCoordinate())
-      Dependency(artifact, null)
+    val packages = registry.values.map { (pkg, usage) ->
+      logging.trace { "- Adding Maven package: ${pkg.coordinate}" }
+      val artifact = DefaultArtifact(pkg.resolvedCoordinate())
+      Dependency(artifact, usage.scope)
     }.also {
       logging.debug { "Configured ${it.size} Maven packages" }
     }
@@ -366,7 +365,7 @@ public class MavenAetherResolver internal constructor (
 
     packages.forEach { pkg ->
       if (pkg.coordinate !in registry) {
-        registry[pkg.coordinate] = pkg
+        registry[pkg.coordinate] = pkg to usage
       }
       registryByType.getOrDefault(suite, mutableListOf()).also {
         it.add(pkg)
@@ -451,9 +450,10 @@ public class MavenAetherResolver internal constructor (
         // @TODO cannot associate with source sets this early
         val artifact = dependency.artifact
         val coordinate = artifact.groupId + ":" + artifact.artifactId
-        val pkg = registry[coordinate] ?: registry.values.find {
-          it.coordinate == coordinate || it.coordinate.startsWith(coordinate)
-        }
+        val pkg = registry[coordinate]?.first ?: registry.values.find { (pkg, _) ->
+          pkg.coordinate == coordinate || pkg.coordinate.startsWith(coordinate)
+        }?.first
+
         if (pkg == null) {
           val transitivePkg = MavenPackage(
             group = artifact.groupId,
@@ -542,13 +542,14 @@ public class MavenAetherResolver internal constructor (
   }
 
   override suspend fun contribute(root: Path, project: ElideProject?): ElideLockfile.Stanza? {
+    val abs = root.absolute()
     check(initialized.value) { "Resolver must be initialized before resolving" }
     check(sealed.value) { "Resolver must be sealed before resolving" }
     check(resolved.value) { "Resolver must be fully resolved before assembling a classpath" }
     logging.debug { "Contributing Maven dependencies to lockfile" }
     val digest = MessageDigest.getInstance("SHA-1").let { digester ->
       registry.forEach { pkg ->
-        digester.update(pkg.value.coordinate.toByteArray())
+        digester.update(pkg.value.first.coordinate.toByteArray())
       }
       digester.digest()
     }
@@ -560,46 +561,44 @@ public class MavenAetherResolver internal constructor (
       return id
     }
 
-    val localIdMap = TreeMap<MavenPackage, UInt>()
-    val allHeld = registry.mapNotNull {
-      val coordinate = it.key
-      val pkg = it.value
-
-      when (val artifact = packageArtifacts[pkg]) {
-        null -> null.also {
-          logging.warn { "Package has no matching artifact: $pkg" }
-        }
-        else -> artifact.artifact.file.toPath().let { filePath ->
-          idAssigner().let { assigned ->
-            localIdMap[pkg] = assigned
-            ElideLockfile.MavenArtifact(
-              coordinate = coordinate,
-              artifact = filePath.relativeTo(root.resolve(".dev").resolve("dependencies")).toString(),
-              fingerprint = Fingerprints.forFile(filePath),
-              id = assigned,
-            )
-          }
+    val localIdMap = HashMap<MavenPackage, UInt>()
+    val allHeld = packageArtifacts.mapNotNull {
+      val coordinate = it.key.coordinate
+      val pkg = it.key
+      val artifact = it.value
+      artifact.artifact.file.toPath().let { filePath ->
+        idAssigner().let { assigned ->
+          localIdMap[pkg] = assigned
+          ElideLockfile.MavenArtifact(
+            coordinate = coordinate,
+            artifact = filePath.relativeTo(abs.resolve(".dev").resolve("dependencies")).toString(),
+            fingerprint = Fingerprints.forFile(filePath),
+            id = assigned,
+          )
         }
       }
     }
 
-    val usageMap = TreeMap<UInt, SortedSet<MultiPathUsage>>()
-    registryByType.flatMap { pair ->
-      val suite = pair.key
-      pair.value.map { entry ->
-        suite to entry
-      }
-    }.forEach { entry ->
-      val assigned = requireNotNull(localIdMap[entry.second]) {
-        "Failed to locate local ID for lockfile payload: ${entry.second}"
+    val usageMap = HashMap<UInt, SortedSet<MultiPathUsage>>()
+    allHeld.map { artifact ->
+      val pkg = registry[artifact.coordinate]?.first
+      val usages = if (pkg == null) listOf(MultiPathUsage.Compile) else {
+        registryByType.filter {
+          pkg in it.value
+        }.flatMap {
+          it.key.type.expand()
+        }
+      }.toSortedSet()
+
+      val assigned = requireNotNull(pkg?.let { localIdMap[it] } ?: artifact.id) {
+        "Failed to locate local ID for lockfile payload: $pkg"
       }
       usageMap.computeIfAbsent(assigned) {
         TreeSet()
       }.also {
-        it.add(entry.first.type)
+        it.addAll(usages)
       }
     }
-
     return when (packageArtifacts.isEmpty()) {
       true -> null
       else -> ElideLockfile.StanzaData(

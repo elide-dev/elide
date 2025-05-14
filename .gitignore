@@ -1,8 +1,14 @@
 .venv/
 .DS_Store
-.dev/
+.dev/cache
 .dev/dependencies
+.dev/coverage
 .dev/artifacts
+*/.dev/artifacts
+*/.dev/coverage
+*/.dev/dependencies
+*/.dev/cache
+!.dev/elide.lock*
 .idea/
 !tools/conventions/src/main/kotlin/dev/elide/build
 build/

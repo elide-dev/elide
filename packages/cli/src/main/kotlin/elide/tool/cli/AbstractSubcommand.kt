@@ -13,6 +13,9 @@
 
 package elide.tool.cli
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import lukfor.progress.TaskServiceBuilder
@@ -544,7 +547,34 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
     @Suppress("UNCHECKED_CAST")
     initializeToolResources(toolState as State) {
       // finally, call the sub-command entrypoint
-      ctx.invoke(this)
+      ctx.invoke(this).also {
+        when (it) {
+          is CommandResult.Success -> {
+            if (verbose) {
+              output {
+                append((TextColors.green + TextStyles.bold)("Elide subcommand exited without error."))
+              }
+            }
+          }
+          is CommandResult.Error -> {
+            val exitMsg = it.message.ifBlank { null } ?: "Error in subcommand; exiting with code '${it.exitCode}'"
+            logging.error(exitMsg)
+            if (!quiet) {
+              if (verbose || debug) {
+                val cause = it.cause
+                if (cause != null) {
+                  output {
+                    append(cause.stackTraceToString())
+                  }
+                }
+              }
+              output {
+                append((TextColors.red + TextStyles.bold)(exitMsg))
+              }
+            }
+          }
+        }
+      }
     }
   }
 

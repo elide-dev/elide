@@ -103,6 +103,20 @@ public abstract interface class elide/tooling/config/BuildConfigurator : elide/t
 	public abstract fun contribute (Lelide/tooling/config/BuildConfigurator$ElideBuildState;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class elide/tooling/config/BuildConfigurator$AcquisitionFinished : elide/tooling/config/BuildConfigurator$BuildEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$AcquisitionFinished;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$AcquisitionStart : elide/tooling/config/BuildConfigurator$BuildEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$AcquisitionStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/tooling/config/BuildConfigurator$ArtifactDownloaded : elide/tooling/config/BuildConfigurator$TransferEvent {
 	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ArtifactDownloaded;
 	public fun equals (Ljava/lang/Object;)Z
@@ -147,7 +161,7 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildEven
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildEventController {
-	public abstract fun bind (Lelide/tooling/config/BuildConfigurator$BuildEvent;Lkotlin/jvm/functions/Function2;)V
+	public abstract fun bind (Lelide/tooling/config/BuildConfigurator$BuildEvent;Lkotlin/jvm/functions/Function3;)V
 	public abstract fun emit (Lelide/tooling/config/BuildConfigurator$BuildEvent;)V
 	public abstract fun emit (Lelide/tooling/config/BuildConfigurator$BuildEvent;Ljava/lang/Object;)V
 	public static synthetic fun emit$default (Lelide/tooling/config/BuildConfigurator$BuildEventController;Lelide/tooling/config/BuildConfigurator$BuildEvent;Ljava/lang/Object;ILjava/lang/Object;)V
@@ -287,6 +301,34 @@ public abstract interface class elide/tooling/config/BuildConfigurator$ProjectDi
 public abstract interface class elide/tooling/config/BuildConfigurator$RepositoryEvent : elide/tooling/config/BuildConfigurator$BuildEvent {
 }
 
+public final class elide/tooling/config/BuildConfigurator$ResolutionFailed : elide/tooling/config/BuildConfigurator$BuildEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ResolutionFailed;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$ResolutionFinished : elide/tooling/config/BuildConfigurator$BuildEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ResolutionFinished;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$ResolutionProgress : elide/tooling/config/BuildConfigurator$BuildEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ResolutionProgress;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/config/BuildConfigurator$ResolutionStart : elide/tooling/config/BuildConfigurator$BuildEvent {
+	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ResolutionStart;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/tooling/config/BuildConfigurator$TaskState : java/lang/Record {
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/Long;Lelide/tooling/config/BuildConfigurator$WorkStatus;Ljava/lang/Object;)V
@@ -405,10 +447,10 @@ public final class elide/tooling/config/BuildConfigurator$WorkStatus : java/lang
 public final class elide/tooling/config/BuildConfigurators {
 	public static final field INSTANCE Lelide/tooling/config/BuildConfigurators;
 	public static final fun collect ()Lkotlin/sequences/Sequence;
-	public static final fun contribute (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun contribute (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lkotlin/sequences/Sequence;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun contribute$default (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static synthetic fun contribute$default (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lkotlin/sequences/Sequence;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun contribute (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun contribute (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lkotlin/sequences/Sequence;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun contribute$default (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun contribute$default (Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideConfiguredProject;Lkotlin/sequences/Sequence;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lelide/tooling/config/BuildConfigurator;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/tooling/config/ProjectConfigurator {

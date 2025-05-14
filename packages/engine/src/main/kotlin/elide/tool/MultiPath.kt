@@ -768,6 +768,24 @@ public sealed interface MultiPathUsage : Comparable<MultiPathUsage> {
  * property.
  */
 public interface ClasspathSpec : Predicate<ClasspathSpec> {
+  public companion object {
+    public val Compile: ClasspathSpec = object : ClasspathSpec {
+      override val usage: MultiPathUsage get() = MultiPathUsage.Compile
+    }
+
+    public val Runtime: ClasspathSpec = object : ClasspathSpec {
+      override val usage: MultiPathUsage get() = MultiPathUsage.Runtime
+    }
+
+    public val TestCompile: ClasspathSpec = object : ClasspathSpec {
+      override val usage: MultiPathUsage get() = MultiPathUsage.TestCompile
+    }
+
+    public val TestRuntime: ClasspathSpec = object : ClasspathSpec {
+      override val usage: MultiPathUsage get() = MultiPathUsage.TestRuntime
+    }
+  }
+
   /**
    * Name of the classpath, if applicable.
    */

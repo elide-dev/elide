@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:OptIn(ExperimentalEncodingApi::class)
+@file:OptIn(ExperimentalEncodingApi::class, ExperimentalSerializationApi::class)
 
 package elide.tooling.lockfile
 
@@ -26,6 +26,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 import elide.core.crypto.HashAlgorithm
 import elide.core.encoding.Encoding
 import elide.tooling.project.ProjectEcosystem
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.protobuf.ProtoNumber
 import java.io.Serializable as JSerializable
 
 // Default digest algorithm.
@@ -261,7 +269,7 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
      * Understands a file asset via a digest and size pair.
      */
     @Serializable @JvmInline @SerialName("filedigest") public value class FileDigest private constructor (
-      public val pair: Pair<Long, ByteArray>,
+      public val pair: Pair<Long, Int>,
     ) : Fingerprint, JSerializable {
       public companion object {
         // Serial version UID.
@@ -269,7 +277,7 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
 
         /** @return Fingerprint for the provided [size] and [digest]. */
         @JvmStatic public fun of(size: Long, digest: ByteArray): Fingerprint = FileDigest(
-          size to digest
+          size to Base64.encode(digest).hashCode()
         )
 
         /** @return Fingerprint for the provided [file]. */
@@ -283,8 +291,17 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
         }
       }
 
+      @Suppress("MagicNumber")
       override fun asBytes(): ByteString {
-        return ByteString(pair.second)
+        return ByteString(ByteArray(4) { idx ->
+            when (idx) {
+                0 -> (pair.first shr 56).toByte()
+                1 -> (pair.first shr 48).toByte()
+                2 -> (pair.first shr 40).toByte()
+                3 -> (pair.first shr 32).toByte()
+                else -> error("Invalid index")
+            }
+        })
       }
     }
 
@@ -295,11 +312,13 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
      * example, within a lockfile stanza).
      */
     @Serializable @JvmRecord @SerialName("bytes") public data class Bytes private constructor (
-      @Transient public val value: ByteArray,
-      public val digest: String = MessageDigest.getInstance(BYTES_HASH_ALGORITHM).let { digester ->
-        digester.update(value)
-        Base64.encode(digester.digest())
-      }
+      @ProtoNumber(1) public val value: ByteArray,
+      @kotlinx.serialization.Transient @Transient public val digest: String =
+        MessageDigest.getInstance(BYTES_HASH_ALGORITHM).let { digester ->
+          digester.update(value)
+          Base64.encode(digester.digest())
+        },
+      @ProtoNumber(2) public val hash: Int = digest.hashCode(),
     ) : Fingerprint, JSerializable {
       public companion object {
         // Serial version UID.
@@ -384,8 +403,19 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
      * Wraps one or more other [Fingerprint] values; aggregates each value via the [asBytes] function, and indicates a
      * stable hash code.
      */
-    @Serializable @JvmRecord @SerialName("compound") public data class Compound private constructor (
-      @Transient public val constituents: Set<Fingerprint>,
+    @Serializable(with = CompoundFingerprintSerializer::class)
+    @JvmRecord @SerialName("compound") public data class Compound private constructor (
+      @kotlinx.serialization.Transient @Transient public val constituents: Set<Fingerprint> = emptySet(),
+      @ProtoNumber(1) public val hash: Int = constituents.map {
+        it.asBytes().toByteArray()
+      }.let { byteArrays ->
+        MessageDigest.getInstance(BYTES_HASH_ALGORITHM).let { digester ->
+          byteArrays.forEach { byteGroup ->
+            digester.update(byteGroup)
+          }
+          Base64.encode(digester.digest()).hashCode()
+        }
+      },
     ) : Fingerprint, JSerializable {
       public companion object {
         // Serial version UID.
@@ -393,12 +423,27 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
 
         /** @return Fingerprint for the provided [other] values. */
         @JvmStatic public fun of(other: Set<Fingerprint>): Fingerprint = Compound(other)
+
+        /** @return Fingerprint from the provided pre-calculated hash, with no constituent visibility. */
+        @JvmStatic public fun of(code: Int): Compound = Compound(emptySet(), code)
       }
 
       override fun asBytes(): ByteString {
-        val all = constituents.map { it.asBytes().toByteArray() }
-        val combinedAllBytes = all.reduce { acc, bytes -> acc + bytes }
-        return ByteString(combinedAllBytes)
+        return ByteString(hash.toByte())
+      }
+    }
+
+    // Serializes compound fingerprints in a simple expression of data, instead of their constituent parts.
+    private object CompoundFingerprintSerializer: KSerializer<Compound> {
+      override val descriptor: SerialDescriptor
+        get() = PrimitiveSerialDescriptor("compound", PrimitiveKind.INT)
+
+      override fun deserialize(decoder: Decoder): Compound {
+        return Compound.of(decoder.decodeInt())
+      }
+
+      override fun serialize(encoder: Encoder, value: Compound) {
+        encoder.encodeInt(value.hash)
       }
     }
 
@@ -474,10 +519,10 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
      */
     @SerialName("dependencyManifest")
     @JvmRecord @Serializable public data class DependencyManifest private constructor (
-      public val ecosystem: ProjectEcosystem,
-      override val identifier: String,
-      override val fingerprint: Fingerprint,
-      override val remarks: Remarks = Remarks.None,
+      @ProtoNumber(1) public val ecosystem: ProjectEcosystem,
+      @ProtoNumber(2) override val identifier: String,
+      @ProtoNumber(3) override val fingerprint: Fingerprint,
+      @ProtoNumber(4) override val remarks: Remarks = Remarks.None,
     ) : File, JSerializable {
       public companion object {
         // Serial version UID.
@@ -545,11 +590,12 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
    */
   @Serializable public sealed interface Remarks {
     /** Remarks as a string message. */
-    public val message: String
+    @ProtoNumber(1) public val message: String
 
     /** Object form of no-remarks. */
+    @SerialName("NoRemarks")
     @Serializable public data object None: Remarks {
-      override val message: String get() = ""
+      @ProtoNumber(1) override val message: String get() = ""
     }
 
     /**
@@ -561,7 +607,7 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
      */
     @SerialName("text")
     @JvmRecord @Serializable public data class Text internal constructor (
-      override val message: String,
+      @ProtoNumber(1) override val message: String,
     ) : Remarks, JSerializable {
       public companion object {
         // Serial version UID.
@@ -585,15 +631,57 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
    */
   @Serializable public sealed interface State {
     @Serializable @SerialName("NoState") public data object NoState : State
+  }
 
-    /**
-     * ## Maven Lockfile (State)
-     *
-     * Maven-specific lockfile state structure; used by Maven build contributor.
-     */
-    @Serializable @JvmRecord @SerialName("MavenLockfile") public data class MavenLockfile(
-      private val classpath: List<String>,
-    ) : State
+  /**
+   * ## Maven Lockfile (State)
+   *
+   * Maven-specific lockfile state structure; used by Maven build contributor.
+   */
+  @Serializable @JvmRecord @SerialName("MavenLockfile") public data class MavenLockfile(
+    @ProtoNumber(1) public val classpath: List<MavenArtifact>,
+    @ProtoNumber(2) public val usage: List<MavenUsage>,
+  ) : State, JSerializable {
+    public companion object {
+      // Serial version UID.
+      @JvmStatic public val serialVersionUID: Long = 1L
+    }
+  }
+
+  /** Maven classpath artifact entry. */
+  @Serializable @JvmRecord @SerialName("MavenArtifact") public data class MavenArtifact(
+    @ProtoNumber(1) public val id: UInt,
+    @ProtoNumber(2) public val coordinate: String,
+    @ProtoNumber(3) public val artifact: String,
+    @ProtoNumber(4) public val fingerprint: Fingerprint,
+  ) : JSerializable, Comparable<MavenArtifact> {
+    public companion object {
+      // Serial version UID.
+      @JvmStatic public val serialVersionUID: Long = 1L
+    }
+
+    override fun compareTo(other: MavenArtifact): Int {
+      return id.compareTo(other.id)
+    }
+  }
+
+  /** Maven classpath usage type. */
+  @Serializable public enum class MavenUsageType : JSerializable {
+    COMPILE,
+    RUNTIME,
+    TEST,
+    TEST_RUNTIME,
+  }
+
+  /** Holds Maven usage types/mappings for dependencies; needed for classpath assembly. */
+  @Serializable @JvmRecord @SerialName("MavenUsage") public data class MavenUsage(
+    @ProtoNumber(1) public val id: UInt,
+    @ProtoNumber(2) public val types: Set<MavenUsageType>,
+  ) : JSerializable {
+    public companion object {
+      // Serial version UID.
+      @JvmStatic public val serialVersionUID: Long = 1L
+    }
   }
 
   /**
@@ -632,13 +720,13 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
   ) : Stanza
 
   /** Structural version of this lockfile. */
-  @SerialName("version") public val version: Version
+  @ProtoNumber(1) @SerialName("version") public val version: Version
 
   /** Top-level fingerprint. */
-  @SerialName("fingerprint") public val fingerprint: Fingerprint
+  @ProtoNumber(2) @SerialName("fingerprint") public val fingerprint: Fingerprint
 
   /** Stanzas constituent to this lockfile. */
-  @SerialName("stanzas") public val stanzas: Set<Stanza>
+  @ProtoNumber(3) @SerialName("stanzas") public val stanzas: Set<Stanza>
 
   /** Accessors and factories which ultimately produce [ElideLockfile] instances. */
   public companion object {

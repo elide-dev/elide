@@ -1576,10 +1576,18 @@ public abstract interface class elide/tool/ClasspathProvider {
 }
 
 public abstract interface class elide/tool/ClasspathSpec : java/util/function/Predicate {
+	public static final field Companion Lelide/tool/ClasspathSpec$Companion;
 	public fun getName ()Ljava/lang/String;
 	public fun getUsage ()Lelide/tool/MultiPathUsage;
 	public fun test (Lelide/tool/ClasspathSpec;)Z
 	public synthetic fun test (Ljava/lang/Object;)Z
+}
+
+public final class elide/tool/ClasspathSpec$Companion {
+	public final fun getCompile ()Lelide/tool/ClasspathSpec;
+	public final fun getRuntime ()Lelide/tool/ClasspathSpec;
+	public final fun getTestCompile ()Lelide/tool/ClasspathSpec;
+	public final fun getTestRuntime ()Lelide/tool/ClasspathSpec;
 }
 
 public abstract interface class elide/tool/ClasspathsProvider {

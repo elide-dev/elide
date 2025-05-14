@@ -127,7 +127,7 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
         }
         success()
       } catch (e: Exception) {
-        err("Failed to install dependencies: ${e.message}")
+        err("Failed to install dependencies: ${e::class.java.simpleName} ${e.message ?: "(No message)"}", exc = e)
       }
     }
   }

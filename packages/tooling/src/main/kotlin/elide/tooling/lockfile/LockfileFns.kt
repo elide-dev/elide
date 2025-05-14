@@ -103,3 +103,27 @@ public suspend fun loadLockfileSafe(
 } catch (_: NoSuchFileException) {
   null
 }
+
+/** Lockfile stanza constants. */
+public data object LockfileStanza {
+  /** Name of the Maven stanza. */
+  public const val MAVEN: String = "maven"
+}
+
+/**
+ * Obtain a typed stanza instance from a decoded lockfile; this accepts the unique [id] of the instance, and is type-
+ * parameterized ([T]) to the expected type.
+ *
+ * If a matching stanza is found, its state is queried and asserted to the expected type. If no matching stanza is found
+ * or the type assertion fails, `null` is returned.
+ *
+ * @param id Unique identifier of the stanza to retrieve.
+ * @param T Expected type of the stanza to retrieve.
+ */
+public inline fun <reified T: ElideLockfile.State> ElideLockfile.typedStanza(id: String): T? {
+  return stanzas.firstOrNull {
+    it.identifier == id
+  }?.let {
+    (it as? ElideLockfile.StanzaData)?.state as? T
+  }
+}

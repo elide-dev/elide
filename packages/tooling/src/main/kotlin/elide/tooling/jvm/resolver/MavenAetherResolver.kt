@@ -37,6 +37,8 @@ import java.io.File
 import java.lang.AutoCloseable
 import java.nio.file.Path
 import java.security.MessageDigest
+import java.util.SortedSet
+import java.util.TreeSet
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
@@ -48,6 +50,7 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.relativeTo
 import elide.runtime.Logging
+import elide.struct.TreeMap
 import elide.tool.Classpath
 import elide.tool.ClasspathProvider
 import elide.tool.ClasspathSpec
@@ -57,6 +60,7 @@ import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.lockfile.ElideLockfile
 import elide.tooling.lockfile.Fingerprints
+import elide.tooling.lockfile.LockfileStanza
 import elide.tooling.project.ElideProject
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.MavenPackage
@@ -549,17 +553,75 @@ public class MavenAetherResolver internal constructor (
       digester.digest()
     }
 
+    var nextId = 0u
+    fun idAssigner(): UInt {
+      val id = nextId
+      nextId++
+      return id
+    }
+
+    val localIdMap = TreeMap<MavenPackage, UInt>()
+    val allHeld = registry.mapNotNull {
+      val coordinate = it.key
+      val pkg = it.value
+
+      when (val artifact = packageArtifacts[pkg]) {
+        null -> null.also {
+          logging.warn { "Package has no matching artifact: $pkg" }
+        }
+        else -> artifact.artifact.file.toPath().let { filePath ->
+          idAssigner().let { assigned ->
+            localIdMap[pkg] = assigned
+            ElideLockfile.MavenArtifact(
+              coordinate = coordinate,
+              artifact = filePath.relativeTo(root.resolve(".dev").resolve("dependencies")).toString(),
+              fingerprint = Fingerprints.forFile(filePath),
+              id = assigned,
+            )
+          }
+        }
+      }
+    }
+
+    val usageMap = TreeMap<UInt, SortedSet<MultiPathUsage>>()
+    registryByType.flatMap { pair ->
+      val suite = pair.key
+      pair.value.map { entry ->
+        suite to entry
+      }
+    }.forEach { entry ->
+      val assigned = requireNotNull(localIdMap[entry.second]) {
+        "Failed to locate local ID for lockfile payload: ${entry.second}"
+      }
+      usageMap.computeIfAbsent(assigned) {
+        TreeSet()
+      }.also {
+        it.add(entry.first.type)
+      }
+    }
+
     return when (packageArtifacts.isEmpty()) {
       true -> null
       else -> ElideLockfile.StanzaData(
-        identifier = "maven",
+        identifier = LockfileStanza.MAVEN,
         fingerprint = Fingerprints.forBytes(digest),
         contributedBy = "Maven integration",
         inputs = setOf(),
-        state = ElideLockfile.State.MavenLockfile(
-          classpath = classpathProvider(null)?.classpath()?.asList()?.map {
-            it.path.relativeTo(root).toString()
-          } ?: emptyList(),
+        state = ElideLockfile.MavenLockfile(
+          classpath = allHeld,
+          usage = usageMap.map { entry ->
+            ElideLockfile.MavenUsage(
+              id = entry.key,
+              types = entry.value.map { usageType ->
+                when (usageType) {
+                  MultiPathUsage.Compile -> ElideLockfile.MavenUsageType.COMPILE
+                  MultiPathUsage.TestCompile -> ElideLockfile.MavenUsageType.TEST
+                  MultiPathUsage.Runtime -> ElideLockfile.MavenUsageType.RUNTIME
+                  MultiPathUsage.TestRuntime -> ElideLockfile.MavenUsageType.TEST_RUNTIME
+                }
+              }.toSortedSet(),
+            )
+          }
         ),
       )
     }

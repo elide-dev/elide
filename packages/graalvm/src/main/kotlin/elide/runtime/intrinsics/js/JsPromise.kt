@@ -184,3 +184,38 @@ public inline fun <reified T> JsPromise<T>.asDeferred(): Deferred<T> {
 
   return deferred
 }
+
+/**
+ * A type-safe wrapper that enables the use of a promise-like guest [value], aloowing its use as a regular [JsPromise]
+ * transparently.
+ */
+@JvmInline public value class GuestJsPromise<T>(public val value: Value) : JsPromise<T> {
+  override val isDone: Boolean get() = false
+
+  override fun then(onFulfilled: Value, onCatch: Value?): JsPromise<T> {
+    return GuestJsPromise(value.invokeMember(THEN_MEMBER, onFulfilled, onCatch))
+  }
+
+  override fun then(onFulfilled: (T) -> Unit, onCatch: ((Any?) -> Unit)?): JsPromise<T> {
+    return GuestJsPromise(value.invokeMember(THEN_MEMBER, onFulfilled, onCatch))
+  }
+
+  override fun catch(onRejected: (Any?) -> Unit): JsPromise<T> {
+    return GuestJsPromise(value.invokeMember(CATCH_MEMBER, onRejected))
+  }
+
+  override fun catch(onRejected: Value): JsPromise<T> {
+    return GuestJsPromise(value.invokeMember(CATCH_MEMBER, onRejected))
+  }
+
+  public companion object {
+    private const val THEN_MEMBER = "then"
+    private const val CATCH_MEMBER = "catch"
+
+    /** Wrap a promise-like guest [value] into a [GuestJsPromise], allowing its use a type-safe [JsPromise]. */
+    public fun <T> from(value: Value): GuestJsPromise<T> {
+      require(value.canInvokeMember(THEN_MEMBER)) { "The provided value is not a promise" }
+      return GuestJsPromise(value)
+    }
+  }
+}

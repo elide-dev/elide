@@ -12,8 +12,11 @@
  */
 package elide.runtime.intrinsics.js.stream
 
+import org.graalvm.polyglot.Value
+import elide.runtime.intrinsics.js.GuestJsPromise
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
+import elide.runtime.intrinsics.js.ReadableStream.Type
 
 /**
  * Represents an abstract source of data for a [ReadableStream] as specified by the
@@ -36,4 +39,44 @@ public interface ReadableStreamSource {
 
   /** Called when the stream is cancelled by a consumer to release the source. */
   public fun cancel(reason: Any? = null): JsPromise<Unit> = JsPromise.Companion.resolved(Unit)
+
+  /** A placeholder, no-op source that can be used as a default value. */
+  public object Empty : ReadableStreamSource
+}
+
+/**
+ * A wrapper around a guest [value] that allows its use as a [ReadableStreamSource]. All methods delegate to invoking
+ * the corresponding member; if the member is not present, the method does nothing.
+ */
+@JvmInline public value class GuestReadableStreamSource(public val value: Value) : ReadableStreamSource {
+  override val autoAllocateChunkSize: Long
+    get() = if (value.hasMember(ALLOCATE_SIZE_MEMBER)) value.getMember(ALLOCATE_SIZE_MEMBER).asLong()
+    else super.autoAllocateChunkSize
+
+  override val type: Type
+    get() = if (value.hasMember(TYPE_MEMBER)) Type.fromGuestValue(value.getMember(TYPE_MEMBER).asString())
+    else super.type
+
+  override fun start(controller: ReadableStreamController) {
+    if (!value.hasMember(START_MEMBER)) return
+    value.invokeMember(START_MEMBER, controller)
+  }
+
+  override fun pull(controller: ReadableStreamController): JsPromise<Unit> {
+    if (!value.hasMember(PULL_MEMBER)) JsPromise.resolved(Unit)
+    return GuestJsPromise.from(value.invokeMember(PULL_MEMBER, controller))
+  }
+
+  override fun cancel(reason: Any?): JsPromise<Unit> {
+    if (!value.hasMember(CANCEL_MEMBER)) return JsPromise.resolved(Unit)
+    return GuestJsPromise.from(value.invokeMember(CANCEL_MEMBER, reason))
+  }
+
+  private companion object {
+    private const val ALLOCATE_SIZE_MEMBER = "autoAllocateChunkSize"
+    private const val TYPE_MEMBER = "type"
+    private const val START_MEMBER = "start"
+    private const val PULL_MEMBER = "pull"
+    private const val CANCEL_MEMBER = "cancel"
+  }
 }

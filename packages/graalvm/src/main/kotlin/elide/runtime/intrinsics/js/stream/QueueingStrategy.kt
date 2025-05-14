@@ -12,6 +12,10 @@
  */
 package elide.runtime.intrinsics.js.stream
 
+import org.graalvm.polyglot.Value
+import elide.runtime.intrinsics.js.err.TypeError
+import elide.runtime.intrinsics.js.stream.QueueingStrategy.Default.highWaterMark
+
 /**
  * A strategy used by stream controllers to manage backpressure from compatible sources.
  *
@@ -32,5 +36,29 @@ public interface QueueingStrategy {
   public object Default : QueueingStrategy {
     override fun highWaterMark(): Double = 0.0
     override fun size(chunk: Any?): Double = 1.0
+  }
+}
+
+/**
+ * A wrapper around a guest [value] that allows its use as a [QueueingStrategy]. All methods delegate to invoking
+ * the corresponding member.
+ */
+@JvmInline public value class GuestQueueingStrategy private constructor(public val value: Value) : QueueingStrategy {
+  override fun highWaterMark(): Double = value.invokeMember(HIGH_WATER_MARK_MEMBER).asDouble()
+  override fun size(chunk: Any?): Double = value.invokeMember(SIZE_MEMBER).asDouble()
+
+  public companion object {
+    private const val HIGH_WATER_MARK_MEMBER = "highWaterMark"
+    private const val SIZE_MEMBER = "size"
+
+    public fun from(value: Value): GuestQueueingStrategy {
+      if (!value.canInvokeMember(HIGH_WATER_MARK_MEMBER))
+        throw TypeError.create("Value $value is not a valid queueing strategy: no 'highWaterMark' method found")
+
+      if (!value.canInvokeMember(SIZE_MEMBER))
+        throw TypeError.create("Value $value is not a valid queueing strategy: no 'size' method found")
+
+      return GuestQueueingStrategy(value)
+    }
   }
 }

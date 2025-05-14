@@ -23,9 +23,7 @@ import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableByteStream
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableDefaultStream
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.Default
-import elide.runtime.intrinsics.js.stream.QueueingStrategy
-import elide.runtime.intrinsics.js.stream.ReadableStreamReader
-import elide.runtime.intrinsics.js.stream.ReadableStreamSource
+import elide.runtime.intrinsics.js.stream.*
 import elide.vm.annotations.Polyglot
 
 /**
@@ -57,7 +55,19 @@ import elide.vm.annotations.Polyglot
      * A stream optimized for byte operations, using `ReadableStreamBYOBController and `ReadableStreamBYOBReader`
      * types, which allow consumers to provide their own buffers for sources to write the data in.
      */
-    BYOB,
+    BYOB;
+
+    public companion object {
+      /**
+       * Select a stream/source [Type] from the given string [value]. This is intended to be used on values returned
+       * by [ReadableStreamSource.type]. The [Default] type will be used in every case except when [value] is the
+       * string "bytes"s.
+       */
+      public fun fromGuestValue(value: String): Type {
+        return if (value == "bytes") BYOB
+        else Default
+      }
+    }
   }
 
   /**
@@ -174,7 +184,10 @@ import elide.vm.annotations.Polyglot
     }
 
     override fun newInstance(vararg arguments: Value?): Any? {
-      TODO("Not yet implemented")
+      val source = arguments.getOrNull(0)?.let(::GuestReadableStreamSource) ?: ReadableStreamSource.Empty
+      val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from) ?: QueueingStrategy.Default
+
+      return create(source, strategy)
     }
 
     override fun empty(): ReadableStream = TODO("Not yet implemented")

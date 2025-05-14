@@ -13,6 +13,8 @@
 
 package elide.tool.cli.cmd.deps
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
@@ -25,17 +27,23 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlin.io.path.createDirectories
 import kotlin.io.path.outputStream
+import kotlin.time.TimeSource
 import kotlin.time.measureTimedValue
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.Elide
 import elide.tool.cli.ProjectAwareSubcommand
+import elide.tool.cli.Statics
 import elide.tool.cli.ToolState
+import elide.tool.cli.cmd.builder.BuildOutput
+import elide.tool.cli.output.redirectLoggingToMordant
 import elide.tool.project.ProjectManager
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
 import elide.tooling.config.BuildConfiguration
+import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.config.BuildConfigurators
+import elide.tooling.config.on
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.lockfile.ElideLockfile
 import elide.tooling.lockfile.InterpretedLockfile
@@ -75,25 +83,73 @@ import elide.tooling.project.ElideProject
 @Introspected
 @ReflectiveAccess
 internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
+  private companion object {
+    private val DEFAULT_LOCKFILE_FORMAT = ElideLockfile.Format.BINARY
+  }
+
   @Inject private lateinit var beanContext: BeanContext
   @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
 
-  private companion object {
-    private val DEFAULT_LOCKFILE_FORMAT = ElideLockfile.Format.BINARY
+  @CommandLine.Option(
+    names = ["--progress"],
+    negatable = true,
+    defaultValue = "true",
+    description = ["Show progress indicators and animations; activated by default where supported"],
+  )
+  internal var showProgress: Boolean = true
+
+  @CommandLine.Option(
+    names = ["--lockfile-format"],
+    defaultValue = "BINARY",
+    description = ["Force a different lockfile format to be written"],
+  )
+  internal var lockfileFormat: ElideLockfile.Format = DEFAULT_LOCKFILE_FORMAT
+
+  // Progress controller to use.
+  private lateinit var buildOutput: BuildOutput
+
+  private fun prepareBuilderOutput(scope: CommandContext) = Statics.terminal.let { terminal ->
+    if (showProgress && terminal.terminalInfo.interactive) {
+      terminal.redirectLoggingToMordant()
+      buildOutput = BuildOutput.animated(scope, terminal, verbose)
+    } else {
+      buildOutput = BuildOutput.serial(scope, terminal, pretty, verbose)
+    }
   }
 
   // Install dependencies for an Elide project.
   @Suppress("TooGenericExceptionCaught")
   private suspend fun CommandContext.installDepsForProject(project: ElideProject): CommandResult = coroutineScope {
+    prepareBuilderOutput(this@installDepsForProject)
+    val start = TimeSource.Monotonic.markNow()
+    buildOutput.status { "Configuring project" }
+
     BuildConfiguration.create(project.root).let { config ->
       val opts = projectOptions()
       val loadedProject = project.load()
-      BuildConfigurators.contribute(beanContext, loadedProject, config)
+      BuildConfigurators.contribute(beanContext, loadedProject, config, binder = {
+        on<TaskState, MetadataDownloaded>(MetadataDownloaded) { ctx ->
+          // on-metadata-downloaded
+          buildOutput.debug { "Metadata downloaded '${ctx.label}'" }
+        }
+        on<TaskState, ArtifactDownloaded>(ArtifactDownloaded) { ctx ->
+          // on-artifact-downloaded
+          buildOutput.debug { "Artifact downloaded '${ctx.label}'" }
+        }
+        on<TaskState, ResolutionStart>(ResolutionStart) {
+          buildOutput.debug { requireNotNull(it.label) }
+        }
+        on<TaskState, ResolutionFinished>(ResolutionFinished) {
+          buildOutput.status { requireNotNull(it.label) }
+        }
+      })
 
       try {
+        buildOutput.status { "Resolving dependencies" }
         val deps = dependencies(config)
         val (resolvers, jobs) = resolve(config, deps.await())
         jobs.joinAll()
+        buildOutput.status { "Dependencies ready" }
 
         if (opts.useLockfile) {
           val anticipatedOp = measureTimedValue {
@@ -106,6 +162,8 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
             existing != null &&
             anticipated.fingerprint.asBytes().compareTo(existing.lockfile.fingerprint.asBytes()) != 0
           ) {
+            buildOutput.status { "Rebuilding lockfile" }
+
             // if the lockfile does not match what's already on disk, we typically need to update it; the exception is
             // frozen mode. if active, we should error instead.
             if (opts.frozenLockfile) {
@@ -114,7 +172,8 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
             writeLockfile(existing.updateTo(duration = duration) { anticipated })
           } else if (existing == null) {
             // we have no existing lockfile, so just write the one we have build.
-            val outFmt = DEFAULT_LOCKFILE_FORMAT
+            buildOutput.status { "Writing fresh lockfile" }
+            val outFmt = lockfileFormat
             writeLockfile(
               path = project.root.resolve(".dev").resolve(outFmt.filename).also {
                 it.parent?.createDirectories()
@@ -123,7 +182,14 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
               lockfile = anticipated,
               version = ElideLockfile.latest(),
             )
+          } else {
+            buildOutput.status { "Lockfile is up-to-date" }
           }
+        }
+        if (!quiet) output {
+          val now = start.elapsedNow()
+          val successMsg = (TextStyles.bold + TextColors.green)("Dependencies ready in $now")
+          append("✅ $successMsg")
         }
         success()
       } catch (e: Exception) {

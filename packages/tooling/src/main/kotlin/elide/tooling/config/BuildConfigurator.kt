@@ -129,6 +129,13 @@ public fun interface BuildConfigurator : ProjectConfigurator {
   public data object TransferCorrupted : TransferEvent
   public data object TransferFailed : TransferEvent
 
+  public data object ResolutionStart : BuildEvent
+  public data object ResolutionProgress : BuildEvent
+  public data object ResolutionFailed : BuildEvent
+  public data object ResolutionFinished : BuildEvent
+  public data object AcquisitionStart : BuildEvent
+  public data object AcquisitionFinished : BuildEvent
+
   public sealed interface RepositoryEvent : BuildEvent
   public data object MetadataDownloading : TransferEvent
   public data object MetadataDownloaded : TransferEvent
@@ -195,7 +202,7 @@ public fun interface BuildConfigurator : ProjectConfigurator {
   public interface BuildEventController {
     public fun emit(event: BuildEvent)
     public fun <T> emit(event: BuildEvent, ctx: T? = null)
-    public fun <E: BuildEvent, X> bind(event: E, cbk: E.(X) -> Unit)
+    public fun <E: BuildEvent, X> bind(event: E, cbk: suspend E.(X) -> Unit)
   }
 
   public interface ProjectDirectories {

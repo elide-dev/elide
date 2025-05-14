@@ -156,9 +156,9 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   private fun prepareBuilderOutput(scope: CommandContext) = Statics.terminal.let { terminal ->
     if (showProgress && terminal.terminalInfo.interactive) {
       terminal.redirectLoggingToMordant()
-      buildOutput = BuildOutput.animated(scope, terminal)
+      buildOutput = BuildOutput.animated(scope, terminal, verbose)
     } else {
-      buildOutput = BuildOutput.serial(scope, terminal, pretty)
+      buildOutput = BuildOutput.serial(scope, terminal, pretty, verbose)
     }
   }
 
@@ -172,6 +172,7 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   private suspend fun CommandContext.buildProject(project: ElideProject): CommandResult = coroutineScope {
     // configure the build
     prepareBuilderOutput(this@buildProject)
+    buildOutput.status { "Configuring project" }
     val config = BuildDriver.configure(beanContext, project) { state, config ->
       config.settings.caching = enableCaching
       config.settings.dependencies = enableDeps
@@ -244,6 +245,7 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
     }
   }
 
+  @Suppress("ReturnCount")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val project = projectManager.resolveProject(projectOptions().projectPath) ?: return CommandResult.err(
       message = "No valid Elide project found, nothing to build"

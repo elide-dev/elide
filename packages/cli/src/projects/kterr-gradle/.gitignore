@@ -1,0 +1,10 @@
+.dev/artifacts
+.dev/cache
+.dev/dependencies
+.dev/coverage
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

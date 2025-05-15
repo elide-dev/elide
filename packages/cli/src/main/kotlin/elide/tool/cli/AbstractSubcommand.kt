@@ -562,20 +562,24 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
           is CommandResult.Error -> {
             val exitMsg = it.message.ifBlank { null } ?: "Error in subcommand; exiting with code '${it.exitCode}'"
             logging.debug(exitMsg)
-            if (!quiet) {
-              if (verbose || debug) {
-                val cause = it.cause
-                if (cause != null) {
-                  output {
-                    append(cause.stackTraceToString())
+
+            // `silent` errors have already been emitted to output
+            if (!it.silent) {
+              if (!quiet) {
+                if (verbose || debug) {
+                  val cause = it.cause
+                  if (cause != null) {
+                    output {
+                      append(cause.stackTraceToString())
+                    }
                   }
                 }
+                output {
+                  append((TextColors.red + TextStyles.bold)(exitMsg))
+                }
+              } else {
+                logging.error(exitMsg)
               }
-              output {
-                append((TextColors.red + TextStyles.bold)(exitMsg))
-              }
-            } else {
-              logging.error(exitMsg)
             }
           }
         }

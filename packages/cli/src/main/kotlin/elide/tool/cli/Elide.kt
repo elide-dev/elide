@@ -59,6 +59,7 @@ import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
 import elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter
 import elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapter
 import elide.tool.cli.options.CommonOptions
+import elide.tool.cli.options.ProjectOptions
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
@@ -420,6 +421,9 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   @CommandLine.Mixin()
   internal var commons: CommonOptions = CommonOptions()
 
+  @CommandLine.Mixin()
+  internal var projectOptions: ProjectOptions = ProjectOptions()
+
   @CommandLine.Option(
     names = ["--pitch"],
     hidden = true,
@@ -507,14 +511,17 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
               }
             }
             is CommandResult.Error -> {
-              val exitMsg = it.message.ifBlank { null } ?: "Error; exiting with code '${it.exitCode}'"
-              logging.debug(exitMsg)
-              if (!quiet.get()) {
-                output {
-                  append((TextColors.red + TextStyles.bold)(exitMsg))
+              // `silent` errors have already been emitted to output
+              if (!it.silent) {
+                val exitMsg = it.message.ifBlank { null } ?: "Error; exiting with code '${it.exitCode}'"
+                logging.debug(exitMsg)
+                if (!quiet.get()) {
+                  output {
+                    append((TextColors.red + TextStyles.bold)(exitMsg))
+                  }
+                } else {
+                  logging.error(exitMsg)
                 }
-              } else {
-                logging.error(exitMsg)
               }
             }
           }

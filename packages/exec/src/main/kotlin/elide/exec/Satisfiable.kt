@@ -19,6 +19,7 @@ import kotlinx.coroutines.Job
 private val satisfiedStatuses = EnumSet.of(
   Status.SUCCESS,
   Status.READY,
+  Status.FAIL,
 )
 
 /**

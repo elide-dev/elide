@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KClass
 import elide.exec.Action.ActionContext
 import elide.exec.Task.Companion.fn
 import com.google.common.graph.Graph as GuavaGraph
@@ -68,36 +69,27 @@ public annotation class TaskDsl
  * @param block Code to run when this task is invoked; this block will be executed in the context of an [ActionContext].
  */
 context(TaskGraphBuilder, ActionScope)
-@TaskDsl public inline fun task(
+@TaskDsl public inline fun <reified T: Any> task(
   name: String? = null,
   id: TaskId? = null,
-  crossinline block: suspend ActionContext.() -> Unit,
+  type: KClass<T> = T::class,
+  crossinline block: suspend ActionContext.() -> T,
 ): Task {
-  val task = fn(name = name, id = id) { actionContext.block() }
+  val task = fn(name = name, id = id) {
+    runCatching {
+      val result = actionContext.block()
+      when (type) {
+        Result::class -> result
+        else -> Result.Something(result)
+      }
+    }.exceptionOrNull().let {
+      when (it) {
+        null -> Result.Nothing
+        else -> Result.ThrowableFailure(it)
+      }
+    }
+  }
   addNode(task)
-  return task
-}
-
-/**
- * Creates a new task within a mutable task graph.
- *
- * This is a DSL function which is designed to be used while filling a mutable task graph; the utility spawns an
- * arbitrary [Action] which executes the provided [block].
- *
- * By default, these simple tasks have no inputs, outputs, or dependencies.
- *
- * @param name Name to use for the task, if any; defaults to `null`, which creates an anonymous task.
- * @param id Optional explicit task ID to use for this task; defaults to `null`, which generates one.
- * @param block Code to run when this task is invoked; this block will be executed in the context of an [ActionContext].
- */
-context(TaskGraph.Mutable, ActionScope)
-@TaskDsl public inline fun task(
-  name: String? = null,
-  id: TaskId? = null,
-  crossinline block: suspend ActionContext.() -> Unit,
-): Task {
-  val task = fn(name = name, id = id) { actionContext.block() }
-  add(task)
   return task
 }
 
@@ -131,6 +123,11 @@ public sealed interface TaskGraph : Graph<TaskId, RootTask, Task> {
    * Poll for tasks which are eligible for execution.
    */
   public fun poll(): Sequence<Task>
+
+  /**
+   * Returns `true` if no task triggered build failure.
+   */
+  public fun isOk(): Boolean
 
   /**
    * Returns `true` if all tasks have terminally completed.
@@ -187,6 +184,7 @@ public sealed interface TaskGraph : Graph<TaskId, RootTask, Task> {
     override fun get(id: TaskId): Task = graph.third[id] ?: throw NoSuchElementException(id.toString())
     override fun findByName(id: TaskId): Task? = graph.third[id]
     override fun isComplete(): Boolean = graph.second.nodes().all { it.isSatisfied }
+    override fun isOk(): Boolean = graph.second.nodes().all { it.status != Status.FAIL }
 
     private fun taskIsReady(task: Task): Boolean {
       return when (task.status) {
@@ -202,7 +200,11 @@ public sealed interface TaskGraph : Graph<TaskId, RootTask, Task> {
           if (!precursorsReady) {
             return false // waiting for inputs or dependencies to resolve
           }
-
+          val anyPrecursorsFailed = deps.status == Status.FAIL
+          if (anyPrecursorsFailed) {
+            task.transition(Status.FAIL)
+            return false
+          }
           return when (graph.second.degree(task)) {
             0 -> true // precursors are ready and there are no task dependencies
             else -> graph.second.successors(task).all { it.isSatisfied }
@@ -230,7 +232,7 @@ public sealed interface TaskGraph : Graph<TaskId, RootTask, Task> {
             else -> emitAll(seq.asFlow())
           }
         }
-      } while (!isComplete())
+      } while (!isComplete() && isOk())
     }
 
     override fun flowFor(taskId: TaskId): Flow<Task?> = createFlow {
@@ -242,11 +244,18 @@ public sealed interface TaskGraph : Graph<TaskId, RootTask, Task> {
         val inputs = target.inputs
         val deps = target.dependencies
         val precursorsReady = inputs.isSatisfied && deps.isSatisfied
+        val anyPrecursorsFailed = deps.status == Status.FAIL
         val depTasks = graph.second.successors(target)
         val depTasksReady = depTasks.all { it.isSatisfied }
 
         when {
           precursorsReady && depTasksReady -> ready = true
+          anyPrecursorsFailed -> {
+            // propagate failures
+            target.transition(Status.FAIL)
+            ready = false
+          }
+
           else -> {
             // emit all dependency tasks
             for (depTask in depTasks) {
@@ -305,6 +314,7 @@ public sealed interface TaskGraph : Graph<TaskId, RootTask, Task> {
     override fun findByName(id: TaskId): Task? = idMap[id]
     override fun toMutable(): Mutable = this
     override fun isComplete(): Boolean = graph.nodes().all { it.isSatisfied }
+    override fun isOk(): Boolean = graph.nodes().all { it.isSatisfied && it.status != Status.FAIL }
 
     override fun poll(): Sequence<Task> {
       TODO("Not yet implemented: mutable task graph poll")

@@ -136,23 +136,6 @@ public interface TaskGraphExecution {
     override suspend fun await(): Listener = apply {
       rootJob.await()
       latch.await()
-      val executed = scope.allTasks.toList()
-      val anyDidFail = executed.any {
-        try {
-          it.get()
-          false
-        } catch (_: Throwable) {
-          true
-        }
-      }
-
-      when (anyDidFail) {
-        true -> dispatch(TaskGraphEvent.ExecutionFailed, graph)
-        else -> dispatch(TaskGraphEvent.ExecutionCompleted, graph)
-      }
-
-      // @TODO failure handling
-      dispatch(TaskGraphEvent.ExecutionFinished, graph)
     }
   }
 }

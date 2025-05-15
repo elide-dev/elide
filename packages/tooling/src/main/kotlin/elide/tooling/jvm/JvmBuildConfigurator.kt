@@ -14,7 +14,6 @@
 
 package elide.tooling.jvm
 
-import org.eclipse.aether.DefaultRepositorySystemSession
 import org.eclipse.aether.RepositorySystem
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.incremental.classpathAsList
@@ -23,6 +22,7 @@ import kotlin.io.path.absolute
 import elide.exec.ActionScope
 import elide.exec.Task
 import elide.exec.Task.Companion.fn
+import elide.exec.taskDependencies
 import elide.runtime.Logging
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.tool.Arguments
@@ -31,6 +31,7 @@ import elide.tool.ClasspathSpec
 import elide.tool.Environment
 import elide.tool.MultiPathUsage
 import elide.tool.Tool
+import elide.tool.asExecResult
 import elide.tooling.AbstractTool
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
@@ -106,7 +107,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     tests: Boolean = false,
     dependencies: List<Task> = emptyList(),
     argsAmender: K2JVMCompilerArguments.() -> Unit = {},
-  ) = fn(name) {
+  ) = fn(name, taskDependencies(dependencies)) {
     val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
       override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestCompile else MultiPathUsage.Compile
     })?.classpath()
@@ -116,6 +117,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       .resolve("classes") // `.../classes/...`
       .resolve(srcSet.name) // `.../classes/main/...`
 
+    logging.debug { "Kotlin task dependencies: $dependencies" }
     logging.debug { "Kotlin main classpath: $compileClasspath" }
     logging.debug { "Classes output root: $kotlincClassesOutput" }
 
@@ -167,9 +169,10 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     val env = Environment.host()
     val inputs = KotlinCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
     val outputs = KotlinCompiler.classesDir(kotlincClassesOutput)
-    val compiler = KotlinCompiler.create(args, env, inputs, outputs) {
+    val compiler = KotlinCompiler.create(args, env, inputs, outputs, projectRoot = state.project.root) {
       // add classpath and let caller amend args as needed
       classpathAsList = finalizedClasspath.paths.map { it.path.toFile() }
+      incrementalCompilation = true
       argsAmender(this)
     }
 
@@ -182,10 +185,10 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           logging.debug { "Kotlin compilation finished without error" }
         }
         else -> {
-          logging.error { "Kotlin compilation failed" }
+          logging.debug { "Kotlin compilation failed" }
         }
       }
-    }
+    }.asExecResult()
   }.describedBy {
     val pluralized = if (srcSet.paths.size == 1) {
       if (tests) "test file" else "source file"
@@ -293,6 +296,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
                     logging.error { "Java compilation failed" }
                   }
                 }
+                result.asExecResult()
                 // @TODO error triggering
               }.describedBy {
                 val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
@@ -381,6 +385,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
                     logging.error { "Java test compilation failed" }
                   }
                 }
+                result.asExecResult()
               }.describedBy {
                 val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
                 "Compiling ${srcSet.paths.size} Java test $pluralized"

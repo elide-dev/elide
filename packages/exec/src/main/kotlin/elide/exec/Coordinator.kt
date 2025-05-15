@@ -65,6 +65,12 @@ public interface Coordinator {
             }
           } while (!graph.isComplete())
 
+          if (!graph.isOk()) {
+            execution.dispatch(ExecutionFailed, graph)
+          } else {
+            execution.dispatch(ExecutionCompleted, graph)
+          }
+          execution.dispatch(ExecutionFinished, graph)
           latch.countDown()
         }
       }

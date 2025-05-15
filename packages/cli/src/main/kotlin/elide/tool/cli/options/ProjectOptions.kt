@@ -3,6 +3,7 @@ package elide.tool.cli.options
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Option
+import java.nio.file.Path
 
 /**
  * # Options: Projects
@@ -17,7 +18,7 @@ import picocli.CommandLine.Option
     description = ["Path to the project to build"],
     paramLabel = "<path>",
   )
-  var projectPath: String? = null
+  private var projectPath: String? = null
 
   /** Specifies an explicit path to an Elide project to use. */
   @Option(
@@ -34,6 +35,10 @@ import picocli.CommandLine.Option
     negatable = true,
   )
   var frozenLockfile: Boolean = false
+
+  fun projectPath(): Path {
+    return projectPath?.let { Path.of(it) } ?: Path.of(System.getProperty("user.dir"))
+  }
 
   override fun merge(other: ProjectOptions?): ProjectOptions {
     val options = ProjectOptions()

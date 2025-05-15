@@ -10,9 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling.kotlin
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
@@ -35,6 +36,7 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
+import kotlin.io.path.relativeTo
 import elide.runtime.Logging
 import elide.runtime.diag.Diagnostic
 import elide.runtime.diag.DiagnosticsContainer
@@ -50,6 +52,7 @@ import elide.tool.Inputs
 import elide.tool.Outputs
 import elide.tool.Tool
 import elide.tool.asArgumentString
+import elide.tool.cli.Statics
 import elide.tooling.AbstractTool
 import elide.tooling.jvm.JavaCompiler
 
@@ -134,6 +137,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
   public val inputs: KotlinCompilerInputs,
   public val outputs: KotlinCompilerOutputs,
   private val argsAmender: K2JVMCompilerArguments.() -> Unit = {},
+  private val projectRoot: Path,
 ) : AbstractTool(info = kotlinc.extend(
   args,
   env,
@@ -160,14 +164,23 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     override fun hasErrors(): Boolean = errorsSeen.value
 
     override fun report(severity: CompilerMessageSeverity, message: String, location: CompilerMessageSourceLocation?) {
-      val severityLabel = severity.name.lowercase().let {
-        if (it == "logging") "" else ": $it"
+      val severityColor = when (severity) {
+        EXCEPTION, ERROR -> TextColors.red
+        CompilerMessageSeverity.STRONG_WARNING -> TextColors.brightYellow
+        CompilerMessageSeverity.WARNING -> TextColors.yellow
+        CompilerMessageSeverity.INFO -> TextColors.cyan
+        CompilerMessageSeverity.LOGGING,
+        CompilerMessageSeverity.OUTPUT -> TextColors.gray
       }
-      val msg = "[kotlinc]$severityLabel $message"
-      when {
-        severity.isError -> ktLogger.error(msg)
-        severity.isWarning -> ktLogger.warn(msg)
-        else -> ktLogger.info(msg)
+      val (messageHighlighted, severityHighlighted) = when (severity) {
+        EXCEPTION, ERROR -> TextStyles.bold + severityColor
+        CompilerMessageSeverity.STRONG_WARNING -> TextStyles.bold + severityColor
+        CompilerMessageSeverity.WARNING -> TextStyles.bold + severityColor
+        CompilerMessageSeverity.INFO -> TextStyles.bold + severityColor
+        CompilerMessageSeverity.LOGGING,
+        CompilerMessageSeverity.OUTPUT -> TextStyles.dim + severityColor
+      }.let {
+        it(message) to it(severity.name.lowercase())
       }
       if (severity == ERROR || severity == EXCEPTION) {
         errorsSeen.value = true
@@ -175,6 +188,60 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       container.report(
         Diagnostic.fromKotlincDiagnostic(severity, message, location)
       )
+
+      val msgBuilder = StringBuilder()
+      val kotlincTag = TextStyles.dim("[kotlinc:${severityHighlighted}]")
+      when {
+        severity.isError || severity.isWarning -> if (location == null) {
+          logging.debug { "No location given for kotlinc error." }
+          StringBuilder("$kotlincTag $messageHighlighted")
+        } else msgBuilder.apply {
+          val severityMessage = when (severity) {
+            ERROR, EXCEPTION -> "Compiler error"
+            CompilerMessageSeverity.STRONG_WARNING -> "Strong warning"
+            CompilerMessageSeverity.WARNING -> "Warning"
+            CompilerMessageSeverity.INFO -> "Info"
+            CompilerMessageSeverity.LOGGING -> "Logging"
+            else -> "Compiler output"
+          }.let {
+            severityColor(it)
+          }
+          val msg = "$kotlincTag $severityMessage"
+          msgBuilder.appendLine()
+          msgBuilder.appendLine(msg)
+          msgBuilder.appendLine()
+
+          // if we have a location for this issue, we can load the source code and render a smarter error.
+          val file = location.path.ifBlank { null }?.let { Paths.get(it) }
+          val maxLineNumberSize = location.lineEnd.toString().length
+          val relativeFile = file?.relativeTo(Path.of(System.getProperty("user.dir")))
+          val ctx = location.line to location.column
+          val lineSrc = location.lineContent
+          val relativeFileAsLink = relativeFile?.let {
+            val relativized = runCatching { it.relativeTo(projectRoot) }.onFailure {
+              logging.debug { "Failed to relativize file: $it" }
+            }.getOrDefault(it)
+
+            (TextStyles.hyperlink(it.toString()) + TextStyles.underline)(relativized.toString())
+          }
+          appendLine("   ${TextStyles.dim("at")}: ${relativeFileAsLink ?: "<no file>"}:${ctx.first}:${ctx.second}")
+          if (lineSrc != null) {
+            val leftpad = " ".repeat((location.columnEnd - location.column) + 2)
+            val spaceIndentSize = lineSrc.takeWhile { it == ' ' }.length
+            val spaceIndent = " ".repeat(spaceIndentSize)
+            appendLine("  ${(ctx.first - 1).toString().padStart(maxLineNumberSize, ' ')} ⋮ ${spaceIndent}...")
+            appendLine("  ${(ctx.first).toString().padStart(maxLineNumberSize, ' ')} ⋮ $lineSrc")
+            appendLine("${leftpad}${severityColor("↑")}")
+            appendLine("${leftpad}${messageHighlighted}")
+          }
+        }
+
+        // don't print unconditionally at lower severities
+        else -> null
+      }?.also { builder ->
+        ktLogger.debug(builder.toString())
+        Statics.terminal.println(builder.toString())
+      }
     }
   }
 
@@ -267,12 +334,14 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       env: Environment,
       inputs: KotlinCompilerInputs,
       outputs: KotlinCompilerOutputs,
+      projectRoot: Path = Paths.get(System.getProperty("user.dir")),
       argsAmender: K2JVMCompilerArguments.() -> Unit = {},
     ): KotlinCompiler = KotlinCompiler(
       args = args,
       env = env,
       inputs = inputs,
       outputs = outputs,
+      projectRoot = projectRoot,
       argsAmender = argsAmender,
     )
   }
@@ -430,6 +499,12 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     } finally {
       debugLog("Closing diagnostics listener")
       closeables.forEach { it.close() }
+    }
+
+    // if we've witnessed errors, or in other words if we have diagnostics above severity ERROR, we should fail.
+    if (diagnostics.hasErrors()) {
+      debugLog("Kotlin compiler invocation failed with errors")
+      return Tool.Result.UnspecifiedFailure
     }
     debugLog("Kotlin compiler invocation complete")
     return Tool.Result.Success

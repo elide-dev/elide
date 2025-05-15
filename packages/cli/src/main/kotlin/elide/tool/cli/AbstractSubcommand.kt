@@ -13,6 +13,8 @@
 
 package elide.tool.cli
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
 import lukfor.progress.TaskServiceBuilder
@@ -35,6 +37,7 @@ import java.util.concurrent.ThreadFactory
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.TimeSource
 import elide.runtime.Logger
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
@@ -534,6 +537,8 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
    * be overridden by sub-commands to customize initialization.
    */
   override suspend fun Context.invoke(state: CommandState): CommandResult = use {
+    val start = TimeSource.Monotonic.markNow()
+
     // allow the subclass to register its own shared resources
     sharedResources.addAll(initialize())
 
@@ -544,7 +549,41 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
     @Suppress("UNCHECKED_CAST")
     initializeToolResources(toolState as State) {
       // finally, call the sub-command entrypoint
-      ctx.invoke(this)
+      ctx.invoke(this).also {
+        when (it) {
+          is CommandResult.Success -> {
+            val done = start.elapsedNow()
+            if (verbose) {
+              output {
+                append((TextColors.green + TextStyles.bold)("Elide subcommand exited without error in $done."))
+              }
+            }
+          }
+          is CommandResult.Error -> {
+            val exitMsg = it.message.ifBlank { null } ?: "Error in subcommand; exiting with code '${it.exitCode}'"
+            logging.debug(exitMsg)
+
+            // `silent` errors have already been emitted to output
+            if (!it.silent) {
+              if (!quiet) {
+                if (verbose || debug) {
+                  val cause = it.cause
+                  if (cause != null) {
+                    output {
+                      append(cause.stackTraceToString())
+                    }
+                  }
+                }
+                output {
+                  append((TextColors.red + TextStyles.bold)(exitMsg))
+                }
+              } else {
+                logging.error(exitMsg)
+              }
+            }
+          }
+        }
+      }
     }
   }
 

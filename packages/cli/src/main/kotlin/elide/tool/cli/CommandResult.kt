@@ -38,12 +38,16 @@ sealed interface CommandResult {
      *
      * @param exitCode Exit code to use.
      * @param message Message to show (optional).
+     * @param exc Exception to show (optional).
+     * @param silent Whether to suppress the error message.
      * @return Command result indicating the provided error.
      */
     fun err(
       exitCode: Int = DEFAULT_ERROR_EXIT_CODE,
       message: String? = null,
-    ): CommandResult = Error.of(exitCode, message)
+      exc: Throwable? = null,
+      silent: Boolean = false,
+    ): CommandResult = Error.of(exitCode, message, exc, silent)
   }
 
   /** Whether the command exited with a non-error state. */
@@ -68,7 +72,12 @@ sealed interface CommandResult {
    *   ([DEFAULT_ERROR_EXIT_CODE]).
    * @param message Message to communicate for this error; if none is provided, defaults to [DEFAULT_ERROR_MESSAGE].
    */
-  data class Error internal constructor (override val exitCode: Int, val message: String) : CommandResult {
+  data class Error internal constructor (
+    override val exitCode: Int,
+    val message: String,
+    val cause: Throwable? = null,
+    val silent: Boolean = false,
+  ) : CommandResult {
     override val ok: Boolean get() = false
 
     internal companion object {
@@ -76,7 +85,9 @@ sealed interface CommandResult {
       @JvmStatic fun of(
         exitCode: Int = DEFAULT_ERROR_EXIT_CODE,
         message: String? = null,
-      ): CommandResult = Error(exitCode, message ?: DEFAULT_ERROR_MESSAGE)
+        exc: Throwable? = null,
+        silent: Boolean = false,
+      ): CommandResult = Error(exitCode, message ?: DEFAULT_ERROR_MESSAGE, exc, silent)
     }
   }
 }

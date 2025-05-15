@@ -16,6 +16,7 @@ package elide.tooling.lockfile
 
 import java.io.InputStream
 import java.io.OutputStream
+import java.security.MessageDigest
 import kotlinx.io.bytestring.encode
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -39,6 +40,13 @@ import elide.tooling.lockfile.ElideLockfile.*
 
 // Label/tag for this version.
 private const val LOCKFILE_V1 = "v1"
+
+private enum class FingerprintExpressionMode {
+  STRING,
+  NUMERIC,
+}
+
+private val fingerprintMode = FingerprintExpressionMode.NUMERIC
 
 // Implements Elide's lockfile format at version 1.
 internal object ElideLockfileV1 : LockfileDefinition<ElideLockfileV1.LockfileV1> {
@@ -80,7 +88,10 @@ internal object ElideLockfileV1 : LockfileDefinition<ElideLockfileV1.LockfileV1>
 
   private val fingerprintDescriptor by lazy {
     buildClassSerialDescriptor("fingerprint") {
-      element("data", String.serializer().descriptor)
+      when (fingerprintMode) {
+        FingerprintExpressionMode.STRING -> element("data", String.serializer().descriptor)
+        FingerprintExpressionMode.NUMERIC -> element("hash", Int.serializer().descriptor)
+      }
     }
   }
 
@@ -88,8 +99,18 @@ internal object ElideLockfileV1 : LockfileDefinition<ElideLockfileV1.LockfileV1>
     override val descriptor: SerialDescriptor get() = fingerprintDescriptor
 
     override fun serialize(encoder: Encoder, value: Fingerprint) {
-      encoder.encodeStructure(fingerprintDescriptor) {
-        encodeStringElement(descriptor, 0, Base64.encode(value.asBytes()))
+      when (fingerprintMode) {
+        FingerprintExpressionMode.STRING -> encoder.encodeStructure(fingerprintDescriptor) {
+          encodeStringElement(descriptor, 0, Base64.encode(value.asBytes()))
+        }
+        FingerprintExpressionMode.NUMERIC -> encoder.encodeStructure(fingerprintDescriptor) {
+          encodeIntElement(descriptor, 0, value.asBytes().let { subject ->
+            MessageDigest.getInstance("SHA-1").let { digester ->
+              digester.update(subject.toByteArray())
+              Base64.encode(digester.digest()).hashCode()
+            }
+          })
+        }
       }
     }
   }
@@ -100,8 +121,15 @@ internal object ElideLockfileV1 : LockfileDefinition<ElideLockfileV1.LockfileV1>
     override fun deserialize(decoder: Decoder): Fingerprint {
       return Fingerprint.RawFingerprint.of(
         decoder.decodeStructure(fingerprintDescriptor) {
-          decodeStringElement(descriptor, 0).let { fingerprint ->
-            Base64.decode(fingerprint)
+          when (fingerprintMode) {
+            FingerprintExpressionMode.STRING -> decodeStringElement(descriptor, 0).let { fingerprint ->
+              Base64.decode(fingerprint)
+            }
+            FingerprintExpressionMode.NUMERIC -> decodeIntElement(descriptor, 0).let { fingerprint ->
+              ByteArray(4) { idx ->
+                (fingerprint shr (idx * 8)).toByte()
+              }
+            }
           }
         }
       )

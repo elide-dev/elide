@@ -141,7 +141,7 @@ import elide.tooling.kotlin.kotlinc
 
     override fun configure(args: Arguments, environment: Environment): KotlinCompiler {
       return gatherArgs(args).let { state ->
-        KotlinCompiler(
+        KotlinCompiler.create(
           args = args,
           env = environment,
           inputs = state.first,

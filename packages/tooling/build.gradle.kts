@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import kotlin.io.path.absolutePathString
 import elide.internal.conventions.kotlin.KotlinTarget
 
 plugins {
@@ -87,4 +88,8 @@ dependencies {
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlin.test.junit5)
+}
+
+tasks.test {
+  systemProperty("elide.root", rootProject.layout.projectDirectory.asFile.toPath().absolutePathString())
 }

@@ -37,6 +37,8 @@ import java.io.File
 import java.lang.AutoCloseable
 import java.nio.file.Path
 import java.security.MessageDigest
+import java.util.SortedSet
+import java.util.TreeSet
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.ConcurrentSkipListSet
@@ -57,6 +59,7 @@ import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.lockfile.ElideLockfile
 import elide.tooling.lockfile.Fingerprints
+import elide.tooling.lockfile.LockfileStanza
 import elide.tooling.project.ElideProject
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.MavenPackage
@@ -150,7 +153,7 @@ public class MavenAetherResolver internal constructor (
   private val repositories = ConcurrentSkipListMap<String, MavenRepository>()
 
   // Registry of all witnessed Maven dependencies.
-  private val registry = ConcurrentSkipListMap<String, MavenPackage>()
+  private val registry = ConcurrentSkipListMap<String, Pair<MavenPackage, MultiPathUsage>>()
 
   // Registry of Maven dependencies by suite type.
   private val registryByType = ConcurrentSkipListMap<SourceSetSuite, MutableList<MavenPackage>>()
@@ -330,10 +333,10 @@ public class MavenAetherResolver internal constructor (
     }
 
     logging.debug { "Configuring Maven packages" }
-    val packages = registry.values.map {
-      logging.trace { "- Adding Maven package: ${it.coordinate}" }
-      val artifact = DefaultArtifact(it.resolvedCoordinate())
-      Dependency(artifact, null)
+    val packages = registry.values.map { (pkg, usage) ->
+      logging.trace { "- Adding Maven package: ${pkg.coordinate}" }
+      val artifact = DefaultArtifact(pkg.resolvedCoordinate())
+      Dependency(artifact, usage.scope)
     }.also {
       logging.debug { "Configured ${it.size} Maven packages" }
     }
@@ -362,7 +365,7 @@ public class MavenAetherResolver internal constructor (
 
     packages.forEach { pkg ->
       if (pkg.coordinate !in registry) {
-        registry[pkg.coordinate] = pkg
+        registry[pkg.coordinate] = pkg to usage
       }
       registryByType.getOrDefault(suite, mutableListOf()).also {
         it.add(pkg)
@@ -447,9 +450,10 @@ public class MavenAetherResolver internal constructor (
         // @TODO cannot associate with source sets this early
         val artifact = dependency.artifact
         val coordinate = artifact.groupId + ":" + artifact.artifactId
-        val pkg = registry[coordinate] ?: registry.values.find {
-          it.coordinate == coordinate || it.coordinate.startsWith(coordinate)
-        }
+        val pkg = registry[coordinate]?.first ?: registry.values.find { (pkg, _) ->
+          pkg.coordinate == coordinate || pkg.coordinate.startsWith(coordinate)
+        }?.first
+
         if (pkg == null) {
           val transitivePkg = MavenPackage(
             group = artifact.groupId,
@@ -486,6 +490,14 @@ public class MavenAetherResolver internal constructor (
     check(!resolved.value) { "Resolver already resolved" }
     logging.debug { "Resolving Maven dependencies" }
 
+    events.emit(ResolutionStart, TaskState(
+      name = "maven",
+      label = "Resolving Maven dependencies",
+      total = 4,
+      done = 1,
+      status = WorkStatus.STARTED,
+    ))
+
     return sequence {
       yield(scope.async {
         val dependencyRequest = DependencyRequest(graph, null)
@@ -500,6 +512,13 @@ public class MavenAetherResolver internal constructor (
         } finally {
           resolved.value = true
         }
+        events.emit(ResolutionFinished, TaskState(
+          name = "maven",
+          label = "Resolved Maven dependencies",
+          total = 4,
+          done = 4,
+          status = WorkStatus.SUCCEEDED,
+        ))
 
         if (errors.isNotEmpty()) {
           logging.error("Failed to resolve Maven dependencies because of one or more errors. Throwing.")
@@ -538,28 +557,85 @@ public class MavenAetherResolver internal constructor (
   }
 
   override suspend fun contribute(root: Path, project: ElideProject?): ElideLockfile.Stanza? {
+    val abs = root.absolute()
     check(initialized.value) { "Resolver must be initialized before resolving" }
     check(sealed.value) { "Resolver must be sealed before resolving" }
     check(resolved.value) { "Resolver must be fully resolved before assembling a classpath" }
     logging.debug { "Contributing Maven dependencies to lockfile" }
     val digest = MessageDigest.getInstance("SHA-1").let { digester ->
       registry.forEach { pkg ->
-        digester.update(pkg.value.coordinate.toByteArray())
+        digester.update(pkg.value.first.coordinate.toByteArray())
       }
       digester.digest()
     }
 
+    var nextId = 0u
+    fun idAssigner(): UInt {
+      val id = nextId
+      nextId++
+      return id
+    }
+
+    val localIdMap = HashMap<MavenPackage, UInt>()
+    val allHeld = packageArtifacts.mapNotNull {
+      val coordinate = it.key.coordinate
+      val pkg = it.key
+      val artifact = it.value
+      artifact.artifact.file.toPath().let { filePath ->
+        idAssigner().let { assigned ->
+          localIdMap[pkg] = assigned
+          ElideLockfile.MavenArtifact(
+            coordinate = coordinate,
+            artifact = filePath.relativeTo(abs.resolve(".dev").resolve("dependencies")).toString(),
+            fingerprint = Fingerprints.forFile(filePath),
+            id = assigned,
+          )
+        }
+      }
+    }
+
+    val usageMap = HashMap<UInt, SortedSet<MultiPathUsage>>()
+    allHeld.map { artifact ->
+      val pkg = registry[artifact.coordinate]?.first
+      val usages = if (pkg == null) listOf(MultiPathUsage.Compile) else {
+        registryByType.filter {
+          pkg in it.value
+        }.flatMap {
+          it.key.type.expand()
+        }
+      }.toSortedSet()
+
+      val assigned = requireNotNull(pkg?.let { localIdMap[it] } ?: artifact.id) {
+        "Failed to locate local ID for lockfile payload: $pkg"
+      }
+      usageMap.computeIfAbsent(assigned) {
+        TreeSet()
+      }.also {
+        it.addAll(usages)
+      }
+    }
     return when (packageArtifacts.isEmpty()) {
       true -> null
       else -> ElideLockfile.StanzaData(
-        identifier = "maven",
+        identifier = LockfileStanza.MAVEN,
         fingerprint = Fingerprints.forBytes(digest),
         contributedBy = "Maven integration",
         inputs = setOf(),
-        state = ElideLockfile.State.MavenLockfile(
-          classpath = classpathProvider(null)?.classpath()?.asList()?.map {
-            it.path.relativeTo(root).toString()
-          } ?: emptyList(),
+        state = ElideLockfile.MavenLockfile(
+          classpath = allHeld,
+          usage = usageMap.map { entry ->
+            ElideLockfile.MavenUsage(
+              id = entry.key,
+              types = entry.value.map { usageType ->
+                when (usageType) {
+                  MultiPathUsage.Compile -> ElideLockfile.MavenUsageType.COMPILE
+                  MultiPathUsage.TestCompile -> ElideLockfile.MavenUsageType.TEST
+                  MultiPathUsage.Runtime -> ElideLockfile.MavenUsageType.RUNTIME
+                  MultiPathUsage.TestRuntime -> ElideLockfile.MavenUsageType.TEST_RUNTIME
+                }
+              }.toSortedSet(),
+            )
+          }
         ),
       )
     }

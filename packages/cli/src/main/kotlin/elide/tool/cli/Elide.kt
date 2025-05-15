@@ -15,6 +15,8 @@
 
 package elide.tool.cli
 
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.ApplicationContextBuilder
@@ -30,6 +32,7 @@ import picocli.CommandLine.Help
 import picocli.CommandLine.Parameters
 import picocli.CommandLine.ScopeType
 import java.util.*
+import kotlin.time.TimeSource
 import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
@@ -56,6 +59,7 @@ import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
 import elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter
 import elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapter
 import elide.tool.cli.options.CommonOptions
+import elide.tool.cli.options.ProjectOptions
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
@@ -417,6 +421,9 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   @CommandLine.Mixin()
   internal var commons: CommonOptions = CommonOptions()
 
+  @CommandLine.Mixin()
+  internal var projectOptions: ProjectOptions = ProjectOptions()
+
   @CommandLine.Option(
     names = ["--pitch"],
     hidden = true,
@@ -467,6 +474,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   }
 
   override suspend fun CommandContext.invoke(state: CommandState): CommandResult {
+    val start = TimeSource.Monotonic.markNow()
     return when {
       version && (srcfile == null || srcfile!!.isEmpty()) -> CommandResult.success().also { println(ELIDE_TOOL_VERSION) }
       help && (srcfile == null || srcfile!!.isEmpty()) -> CommandResult.success().also { cliBuilder.usage(Statics.out) }
@@ -492,7 +500,32 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
           }
         }
         bean.call()
-        bean.commandResult.get()
+        bean.commandResult.get().also {
+          when (it) {
+            is CommandResult.Success -> {
+              val done = start.elapsedNow()
+              if (verbose.get()) {
+                output {
+                  append((TextColors.green + TextStyles.bold)("Elide exited without error in $done."))
+                }
+              }
+            }
+            is CommandResult.Error -> {
+              // `silent` errors have already been emitted to output
+              if (!it.silent) {
+                val exitMsg = it.message.ifBlank { null } ?: "Error; exiting with code '${it.exitCode}'"
+                logging.debug(exitMsg)
+                if (!quiet.get()) {
+                  output {
+                    append((TextColors.red + TextStyles.bold)(exitMsg))
+                  }
+                } else {
+                  logging.error(exitMsg)
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

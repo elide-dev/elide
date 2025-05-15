@@ -144,7 +144,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         contents = {
           (InitCommand::class.java.getResourceAsStream("/META-INF/elide/samples/${info.name}.zip")
             ?: error("Failed to locate embedded resource: ${it.key}")
-          ).use { stream ->
+          ).let { stream ->
             ZipInputStream(stream).use { zipIn ->
               // find the specific entry and return as a string
               var entry = zipIn.nextEntry
@@ -288,8 +288,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   @Suppress("ReturnCount", "CyclomaticComplexMethod")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val targetPath = (path ?: projectOptions().projectPath ?: System.getProperty("user.dir"))
-        .let { Path.of(it) }
+    val targetPath = (path?.let { Path.of(it) } ?: projectOptions().projectPath())
     val allTemplates = loadInstalledTemplates()
     val selectedTemplate = when (template) {
         null -> KInquirer.promptListObject(

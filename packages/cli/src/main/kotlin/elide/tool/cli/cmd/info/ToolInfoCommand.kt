@@ -35,7 +35,7 @@ import elide.tool.project.ProjectManager
 )
 @Introspected
 @ReflectiveAccess
-internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>() {
+internal class ToolInfoCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   companion object {
     private fun Boolean.label(): String = if (this) "Yes" else "No"
   }
@@ -68,7 +68,7 @@ internal class ToolInfoCommand : AbstractSubcommand<ToolState, CommandContext>()
     val tempRoot = workdir.tmpDirectory()
     val caches = workdir.cacheDirectory()
     val natives = workdir.nativesDirectory()
-    val project = projectManager.resolveProject()
+    val project = projectManager.resolveProject(projectOptions().projectPath())
     val operatingMode = if (ImageInfo.inImageCode()) "Native" else "JVM"
 
     val projectBlock = if (project == null) StringBuilder("") else StringBuilder().apply {

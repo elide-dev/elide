@@ -29,4 +29,25 @@ public sealed interface Result {
   public data object Nothing : Result {
     override val isSuccess: Boolean get() = true
   }
+
+  /**
+   * A successful result which yields a value of some kind.
+   */
+  public class Something<V: Any>(public val value: V) : Result {
+    override val isSuccess: Boolean get() = true
+  }
+
+  /**
+   * A failed result which yields a [Throwable].
+   */
+  public class ThrowableFailure<E: Throwable>(public val err: E) : Result {
+    override val isSuccess: Boolean get() = false
+  }
+
+  /**
+   * A failed result which yields nothing.
+   */
+  public data object UnspecifiedFailure : Result {
+    override val isSuccess: Boolean get() = false
+  }
 }

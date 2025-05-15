@@ -13,8 +13,9 @@
 
 package elide.tool.project
 
+import java.nio.file.Path
 import elide.tooling.project.ElideProject
 
 internal interface ProjectManager {
-  suspend fun resolveProject(pathOverride: String? = null): ElideProject?
+  suspend fun resolveProject(pathOverride: Path? = null): ElideProject?
 }

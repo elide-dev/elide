@@ -14,6 +14,7 @@
 package elide.exec
 
 import java.util.concurrent.StructuredTaskScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
@@ -131,11 +132,10 @@ public sealed interface Action {
      * @param job The co-routine job to wrap
      * @return An [ActionFn] wrapping the provided block
      */
-    @JvmStatic public fun of(job: Job): Action = SuspendFn @JvmSerializableLambda { ctx, _ ->
+    @JvmStatic public fun of(job: Deferred<Result>): Action = SuspendFn @JvmSerializableLambda { ctx, _ ->
       withContext(ctx.coroutineContext) {
-        job.join()
+        job.await()
       }
-      Result.Nothing
     }
   }
 }

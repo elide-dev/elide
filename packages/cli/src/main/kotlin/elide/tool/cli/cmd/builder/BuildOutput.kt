@@ -117,10 +117,10 @@ private abstract class BaseOutput (
     emitCommand("$ ${task.executable.name} ${task.args.asArgumentString()}")
   }
 
-  override suspend fun verbose(message: String) = buildLogger.info(renderMessage(message))
+  override suspend fun verbose(message: String) = buildLogger.debug(renderMessage(message))
 
   override suspend fun verbose(messageProducer: BuildOutputApi.() -> String) {
-    buildLogger.info { renderMessage(messageProducer.invoke(this@BaseOutput)) }
+    buildLogger.debug { renderMessage(messageProducer.invoke(this@BaseOutput)) }
   }
 
   override suspend fun status(message: String, pretty: String?) {

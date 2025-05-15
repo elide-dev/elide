@@ -218,7 +218,7 @@ private enum class ToolAction (
 )
 @Introspected
 @Suppress("unused", "UnusedPrivateProperty")
-internal class ToolInvokeCommand : AbstractSubcommand<ToolState, CommandContext>() {
+internal class ToolInvokeCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   @Inject lateinit var activeProjectProvider: Provider<ProjectManager>
   @Inject lateinit var workdirManagerProvider: Provider<RuntimeWorkdirManager>
   @Inject lateinit var manifestsProvider: Provider<PackageManifestService>
@@ -381,7 +381,7 @@ internal class ToolInvokeCommand : AbstractSubcommand<ToolState, CommandContext>
     }
 
     // resolve and parse project configuration from manifests
-    val project = activeProject.resolveProject()
+    val project = activeProject.resolveProject(projectOptions().projectPath())
 
     // decode instruction alias and resolve it to an action
     val instruction = commandSpec?.commandLine()?.parent?.parseResult?.originalArgs()?.firstOrNull() ?: DEFAULT_ACTION

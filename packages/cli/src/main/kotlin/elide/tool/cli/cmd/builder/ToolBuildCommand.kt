@@ -172,8 +172,9 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   private suspend fun CommandContext.buildProject(project: ElideProject): CommandResult = coroutineScope {
     // configure the build
     prepareBuilderOutput(this@buildProject)
+    var sawFailures = false
     buildOutput.status { "Configuring project" }
-    val config = BuildDriver.configure(beanContext, project) { state, config ->
+    val config = BuildDriver.configure(beanContext, project) { _, config ->
       config.settings.caching = enableCaching
       config.settings.dependencies = enableDeps
       config.settings.checks = enableChecks
@@ -194,9 +195,7 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
       }
       on(TaskReady) {
         val task = context as Task
-        taskMap[task.id] = when (task) {
-          else -> buildOutput.taskScope(task)
-        }
+        taskMap[task.id] = buildOutput.taskScope(task)
         buildOutput.debug { "Task ready for execution: $context" }
       }
       on(TaskExecute) {
@@ -210,18 +209,16 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
         val scope = requireNotNull(taskMap[task.id])
         scope.success()
       }
-      on(TaskProgress) {
-        // nothing to do yet
-      }
       on(TaskFailed) {
         val task = context as Task
         val scope = requireNotNull(taskMap[task.id])
         scope.verbose { "Failed '${task.id}'" }
         scope.failure()
+        sawFailures = true
       }
       on(ExecutionFailed) {
-        buildOutput.status { "Graph failed: $context" }
-        buildOutput.status("Build failed")
+        sawFailures = true
+        buildOutput.debug { "Graph failed: $context" }
         buildOutput.status {
           when (isPretty) {
             true -> TextStyles.bold(TextColors.red("✗ Build failed"))
@@ -230,7 +227,7 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
         }
         buildOutput.failure()
       }
-      on(ExecutionFinished) {
+      on(ExecutionCompleted) {
         buildOutput.debug { "Graph completed: $context" }
         buildOutput.status {
           when (isPretty) {
@@ -241,13 +238,16 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
         buildOutput.success()
       }
     }.await().let {
-      buildErr.value ?: success()
+      buildErr.value ?: when (sawFailures) {
+        true -> err("Build failed", silent = true)
+        false -> success()
+      }
     }
   }
 
   @Suppress("ReturnCount")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val project = projectManager.resolveProject(projectOptions().projectPath) ?: return CommandResult.err(
+    val project = projectManager.resolveProject(projectOptions().projectPath()) ?: return CommandResult.err(
       message = "No valid Elide project found, nothing to build"
     )
 

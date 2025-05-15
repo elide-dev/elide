@@ -2149,13 +2149,12 @@ internal class ToolShellCommand @Inject constructor(
     logging.debug("Shell/run command invoked")
     Elide.requestNatives(server = true, tooling = performInstall)
     val projectOptions = projectOptions()
-    val projectPathStr = projectOptions.projectPath
-    val projectPath = projectPathStr?.let { Path.of(it) } ?: Path.of(System.getProperty("user.dir"))
+    val projectPath = projectOptions.projectPath()
 
     // resolve project configuration (async)
     val projectResolution = launch {
       runCatching {
-        projectManager.resolveProject(projectPathStr)
+        projectManager.resolveProject(projectPath)
       }.getOrNull()?.let {
         activeProject.value = it
       }

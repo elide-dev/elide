@@ -38,13 +38,16 @@ sealed interface CommandResult {
      *
      * @param exitCode Exit code to use.
      * @param message Message to show (optional).
+     * @param exc Exception to show (optional).
+     * @param silent Whether to suppress the error message.
      * @return Command result indicating the provided error.
      */
     fun err(
       exitCode: Int = DEFAULT_ERROR_EXIT_CODE,
       message: String? = null,
       exc: Throwable? = null,
-    ): CommandResult = Error.of(exitCode, message, exc)
+      silent: Boolean = false,
+    ): CommandResult = Error.of(exitCode, message, exc, silent)
   }
 
   /** Whether the command exited with a non-error state. */
@@ -73,6 +76,7 @@ sealed interface CommandResult {
     override val exitCode: Int,
     val message: String,
     val cause: Throwable? = null,
+    val silent: Boolean = false,
   ) : CommandResult {
     override val ok: Boolean get() = false
 
@@ -82,7 +86,8 @@ sealed interface CommandResult {
         exitCode: Int = DEFAULT_ERROR_EXIT_CODE,
         message: String? = null,
         exc: Throwable? = null,
-      ): CommandResult = Error(exitCode, message ?: DEFAULT_ERROR_MESSAGE, exc)
+        silent: Boolean = false,
+      ): CommandResult = Error(exitCode, message ?: DEFAULT_ERROR_MESSAGE, exc, silent)
     }
   }
 }

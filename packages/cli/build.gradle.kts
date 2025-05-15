@@ -2103,7 +2103,14 @@ tasks {
   }
 
   named("run", JavaExec::class).configure {
-    workingDir = rootProject.layout.projectDirectory.asFile
+    val defaultWd = rootProject.layout.projectDirectory.asFile
+    val runWd = (findProperty("elide.cwd") as? String)?.let {
+      Path.of(it).toFile()
+    } ?: (findProperty("elide.project") as? String)?.let {
+      layout.projectDirectory.dir("src/projects/$it").asFile
+    } ?: defaultWd
+
+    workingDir = runWd
     if (enableToolchains) javaLauncher = gvmLauncher
 
     jvmDefs.forEach {

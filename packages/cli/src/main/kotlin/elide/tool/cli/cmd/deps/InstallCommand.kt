@@ -239,7 +239,7 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
     // tools typically require native access; force early init
     Elide.requestNatives(server = false, tooling = true)
 
-    return when (val project = projectManagerProvider.get().resolveProject(projectOptions().projectPath)) {
+    return when (val project = projectManagerProvider.get().resolveProject(projectOptions().projectPath())) {
       null -> success().also {
         output { append("No resolvable project.") }
       }

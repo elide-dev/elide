@@ -103,7 +103,7 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
       return success()
     }
 
-    val project = projectManager.resolveProject()
+    val project = projectManager.resolveProject(projectOptions().projectPath())
     if (project == null) return CommandResult.err(message = "No valid Elide project found, nothing to export")
 
     val exportTargets = targets.mapNotNull { Target.entries.find { target -> target.targetName == it } }
@@ -207,7 +207,7 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
       export || listTargets -> export()
 
       // print project info if no subcommand is provided
-      else -> projectManager.resolveProject(projectOptions().projectPath).let { project ->
+      else -> projectManager.resolveProject(projectOptions().projectPath()).let { project ->
         when (project) {
           null -> err("No project").also {
             if (!quiet) output {

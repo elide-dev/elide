@@ -74,10 +74,10 @@ internal class DefaultProjectManager @Inject constructor(
     }
   }
 
-  override suspend fun resolveProject(pathOverride: String?): ElideProject? {
+  override suspend fun resolveProject(pathOverride: Path?): ElideProject? {
     val rootBase = when (pathOverride) {
       null -> workdir.get().projectRoot()?.toPath()
-      else -> Path.of(pathOverride)
+      else -> pathOverride
     }
     val root = rootBase?.takeIf { it.isDirectory() } ?: return null
     val env = readDotEnv(root)

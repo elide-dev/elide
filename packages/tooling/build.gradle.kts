@@ -79,6 +79,7 @@ dependencies {
   implementation(libs.mordant)
   implementation(libs.mordant.coroutines)
   implementation(libs.mordant.markdown)
+  implementation(libs.highlights)
   implementation(libs.ktoml)
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlinx.serialization.core)

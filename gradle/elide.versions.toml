@@ -84,6 +84,7 @@ h2 = "2.3.232"
 hamcrest-core = "2.2"
 hamcrest-junit = "2.0.0.0"
 hibernate = "5.6.11.Final"
+highlights = "1.0.0"
 hikari = "4.0.3"
 hoplite = "2.9.0"
 inquirer = "0.1.0"
@@ -489,6 +490,7 @@ hibernate-graalvm = { group = "org.hibernate", name = "hibernate-graalvm", versi
 hibernate-hikaricp = { group = "org.hibernate", name = "hibernate-hikaricp", version.ref = "hibernate" }
 hibernate-java8 = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
 hibernate-search = { group = "org.hibernate", name = "hibernate-java8", version.ref = "hibernate" }
+highlights = { group = "dev.snipme", name = "highlights", version.ref = "highlights" }
 hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
 hoplite-arrow = { group = "com.sksamuel.hoplite", name = "hoplite-arrow", version.ref = "hoplite" }
 hoplite-core = { group = "com.sksamuel.hoplite", name = "hoplite-core", version.ref = "hoplite" }

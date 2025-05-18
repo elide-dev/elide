@@ -117,6 +117,7 @@ private val argNamesThatExpectValues = sortedSetOf(
   @Introspected
   class JarCliTool: DelegatedToolCommand<JarTool, JarToolAdapter>(jartool) {
     @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
+    @CommandLine.Parameters @Suppress("unused") lateinit var allParams: List<String>
 
     override fun configure(args: Arguments, environment: Environment): JarTool = gatherArgs(
       argNamesThatExpectValues,

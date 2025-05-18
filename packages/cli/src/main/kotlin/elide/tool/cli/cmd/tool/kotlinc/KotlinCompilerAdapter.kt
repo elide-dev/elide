@@ -126,6 +126,7 @@ import elide.tooling.kotlin.kotlinc
   @Introspected
   class KotlinCliTool: DelegatedToolCommand<KotlinCompiler, KotlinCompilerAdapter>(kotlinc) {
     @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
+    @CommandLine.Parameters @Suppress("unused") lateinit var allParams: List<String>
 
     companion object {
       // Gather options, inputs, and outputs for an invocation of the Kotlin compiler.

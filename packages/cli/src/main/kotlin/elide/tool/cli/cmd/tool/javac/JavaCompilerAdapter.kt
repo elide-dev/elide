@@ -90,7 +90,7 @@ import elide.tooling.jvm.javac
 
     @Suppress("TooGenericExceptionCaught")
     val result: Tool.Result = try {
-      compiler.invoke(object: elide.tooling.AbstractTool.EmbeddedToolState {
+      compiler.invoke(object: AbstractTool.EmbeddedToolState {
         override val resourcesPath: Path get() = Statics.resourcesPath
       })
       Tool.Result.Success
@@ -130,6 +130,7 @@ import elide.tooling.jvm.javac
   @Introspected
   class JavacCliTool: DelegatedToolCommand<JavaCompiler, JavaCompilerAdapter>(javac) {
     @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
+    @CommandLine.Parameters @Suppress("unused") lateinit var allParams: List<String>
 
     companion object {
       // Gather options, inputs, and outputs for an invocation of the Java compiler.

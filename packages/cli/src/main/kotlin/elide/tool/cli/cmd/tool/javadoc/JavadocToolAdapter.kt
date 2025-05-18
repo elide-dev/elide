@@ -103,7 +103,7 @@ private val argNamesThatExpectValues = sortedSetOf(
   private val jdoc: JavadocTool,
 ): ProjectAwareSubcommand<ToolState, CommandContext>() {
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    return when (jdoc.invoke(object: elide.tooling.AbstractTool.EmbeddedToolState {
+    return when (jdoc.invoke(object: AbstractTool.EmbeddedToolState {
       override val resourcesPath: Path get() = Statics.resourcesPath
     })) {
       is Tool.Result.Success -> success()
@@ -120,6 +120,7 @@ private val argNamesThatExpectValues = sortedSetOf(
   @Introspected
   class JavadocCliTool: DelegatedToolCommand<JavadocTool, JavadocToolAdapter>(javadoc) {
     @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
+    @CommandLine.Parameters @Suppress("unused") lateinit var allParams: List<String>
 
     override fun configure(args: Arguments, environment: Environment): JavadocTool = gatherArgs(
       argNamesThatExpectValues,

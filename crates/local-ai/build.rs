@@ -18,7 +18,10 @@ fn main() {
 
   match target_os() {
     OperatingSystem::Linux => {
-      println!("cargo:rustc-link-lib=dylib=gomp");
+      // if we are building against gnu libc, we link gomp
+      if cfg!(target_env = "gnu") {
+        println!("cargo:rustc-link-lib=dylib=gomp");
+      }
       println!("cargo:rustc-link-lib=dylib=m");
       println!("cargo:rustc-link-lib=dylib=z");
     }

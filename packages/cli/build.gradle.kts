@@ -1339,7 +1339,8 @@ val experimentalFlags = listOf(
 // C compiler flags to be included on Linux only.
 val linuxOnlyCFlags: List<String> = listOf(
   "-fstack-clash-protection",
-  "-fopenmp",
+).plus(
+  listOf("-fopenmp").onlyIf(!enableStatic)
 )
 
 // C compiler flags which are always included.
@@ -1374,7 +1375,7 @@ val releaseCFlags: List<String> = listOf(
   "-fPIE",
   "-flto",
 ).plus(
-  listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang && !HostManager.hostIsMac)
+  listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang && !HostManager.hostIsMac && !enableStatic)
 ).plus(
   // Add protection flags for release.
   when (targetArch) {

@@ -2635,3 +2635,7 @@ public final class elide/tool/Tool$SimpleCliTool : java/lang/Record, elide/tool/
 	public fun version ()Ljava/lang/String;
 }
 
+public final class elide/tool/ToolKt {
+	public static final fun asExecResult (Lelide/tool/Tool$Result;)Lelide/exec/Result;
+}
+

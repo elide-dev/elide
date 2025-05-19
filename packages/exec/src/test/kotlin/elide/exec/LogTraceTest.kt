@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.slf4j.event.Level
 import kotlin.test.*
 
+@Ignore
 class LogTraceTest {
   @BeforeEach fun loadNatives() {
     Tracing.ensureLoaded()

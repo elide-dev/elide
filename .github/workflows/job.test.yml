@@ -410,7 +410,7 @@ jobs:
             tools/reports/build/reports/**/*.xml
             tools/reports/build/test-results/**/*.xml
       - name: "Report: Codecov (Main)"
-        uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/reports/kover/merged/xml/report.xml
@@ -420,7 +420,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
       - name: "Report: Codecov (Native)"
-        uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./target/coverage-report.lcov

@@ -6478,14 +6478,8 @@
     {
       "type": "org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments",
       "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "setDestination",
-          "parameterTypes": [
-            "java.lang.String"
-          ]
-        }
-      ]
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "org.jetbrains.kotlin.cli.common.extensions.ScriptEvaluationExtension"

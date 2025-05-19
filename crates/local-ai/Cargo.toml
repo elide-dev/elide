@@ -50,7 +50,14 @@ hf-hub = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
 exec = { workspace = true }
-llama-cpp-2 = { workspace = true }
 tokio = { workspace = true, optional = true }
 tracing-subscriber = { workspace = true }
 lazy_static = { workspace = true }
+
+[target.'cfg(target_env = "gnu")'.dependencies.llama-cpp-2]
+workspace = true
+default-features = true
+
+[target.'cfg(target_env = "musl")'.dependencies.llama-cpp-2]
+workspace = true
+default-features = false

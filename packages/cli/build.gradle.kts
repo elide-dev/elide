@@ -1558,7 +1558,6 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=$nativesPath/libterminal.a",
     "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
     "-H:NativeLinkerOption=-lm",
-    "-H:NativeLinkerOption=-lgomp",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",
     "-H:ExcludeResources=.*dll",
@@ -1585,6 +1584,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
       "-H:NativeLinkerOption=-lssl",
       "-H:NativeLinkerOption=-lcrypto",
       "-H:NativeLinkerOption=-lstdc++",
+      "-H:NativeLinkerOption=-lgomp",
     ).onlyIf(!enableStatic)
   ),
 ).plus(

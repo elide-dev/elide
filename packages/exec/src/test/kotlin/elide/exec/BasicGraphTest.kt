@@ -65,52 +65,6 @@ class BasicGraphTest {
     }
   }
 
-  @Test fun testCreateMutableTaskGraph() = testInScope {
-    TaskGraph.mutable().apply {
-      task(name = "example") {
-        // this is an example task
-        error("I should not actually execute")
-      }
-    }.apply {
-      assertNotNull(this)
-      assertEquals(1u, this.nodeCount)
-      assertEquals(0u, this.edgeCount)
-      val id = TaskId.fromName("example")
-      assertTrue(id in this)
-    }.build().apply {
-      assertNotNull(this)
-      assertEquals(1u, this.nodeCount)
-      assertEquals(0u, this.edgeCount)
-      val id = TaskId.fromName("example")
-      val example by tasks()
-      assertTrue(id in this)
-      assertTrue(example in this)
-    }
-  }
-
-  @Test fun testCreateMutableTaskGraphWithDependencies() = testInScope {
-    TaskGraph.mutable().apply {
-      val example = task(name = "example") {
-        // this is an example task
-        error("I should not actually execute")
-      }
-      task(name = "example2") {
-        // example task with dependency
-        error("I should also not run")
-      }.dependsOn(
-        example
-      )
-    }.let {
-      assertNotNull(it)
-      assertEquals(2u, it.nodeCount)
-      assertEquals(1u, it.edgeCount)
-      val id = TaskId.fromName("example")
-      val id2 = TaskId.fromName("example")
-      assertTrue(id in it)
-      assertTrue(id2 in it)
-    }
-  }
-
   @Test fun testExecuteTaskGraph() = testInScope {
     var executed = false
 

@@ -12,13 +12,20 @@
  */
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.security.MessageDigest
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.io.path.absolutePathString
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
+import java.util.Base64
 
 plugins {
   kotlin("jvm")
+  kotlin("plugin.serialization")
   alias(libs.plugins.micronaut.graalvm)
   alias(libs.plugins.elide.conventions)
 }
@@ -102,6 +109,7 @@ dependencies {
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlin.scripting.dependencies)
   implementation(libs.kotlin.scripting.dependencies.maven)
+  implementation(libs.kotlinx.serialization.json.jvm)
   api(files(embeddedKotlinRuntime))
   compileOnly(libs.graalvm.svm)
 
@@ -198,28 +206,139 @@ val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
 val resourcesManifest = kotlinHomeRoot.map { it.file("embedded-classpath.txt") }
 val intermediateResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
 val intermediateResourcesZip = layout.buildDirectory.file(archiveName)
+val dependencyRegex = Regex("files-[0-9.]{3}/(.*)/(?:.*)/(.*)")
+val kotlinResourceIndex = intermediateResources.map { it.file("kotlin-resources.json") }
+
+@Serializable
+sealed interface KotlinResource {
+  val artifact: String
+  val coordinate: String
+  val sha256: String
+}
+
+@Serializable
+data class KotlinDependencyResource(
+  override val coordinate: String,
+  override val artifact: String,
+  override val sha256: String,
+) : KotlinResource
+
+@Serializable
+data class KotlinBuiltinResource(
+  override val artifact: String,
+  override val sha256: String,
+) : KotlinResource {
+  override val coordinate: String get() = "elide:${artifact.replace(".jar", "")}"
+}
+
+@Serializable
+data class KotlinResourceIndex(
+  val resources: List<KotlinResource>,
+) {
+  operator fun plus(other: KotlinResourceIndex): KotlinResourceIndex {
+    return KotlinResourceIndex(
+      resources = (this.resources + other.resources).distinct().sortedBy { it.coordinate },
+    )
+  }
+
+  fun toPlainObject(): Map<String, List<Map<String, String>>> {
+    return resources.map { resource ->
+      mapOf(
+        "artifact" to resource.artifact,
+        "coordinate" to resource.coordinate,
+        "sha256" to resource.sha256,
+      )
+    }.let {
+      mapOf(
+        "resources" to it,
+      )
+    }
+  }
+}
+
+fun indexedDeps(cfg: Configuration): KotlinResourceIndex {
+  return cfg.resolve().map { dep ->
+    val matched = dependencyRegex.find(dep.absolutePath)
+    // original:
+    // files-2.1/io.micronaut/micronaut-inject-kotlin/4.8.11/.../micronaut-inject-kotlin-4.8.11.jar
+    // extracts as:
+    // Group 1: io.micronaut/micronaut-inject-kotlin/4.8.11
+    // Group 2: micronaut-inject-kotlin-4.8.11.jar
+    val coordinatePath = matched?.groups?.get(1)?.value
+    val artifact = matched?.groups?.get(2)?.value
+    val fingerprint = MessageDigest.getInstance("SHA-256").let {
+      val bytes = dep.absoluteFile.readBytes()
+      it.update(bytes)
+      it.digest()
+    }
+    val b64 = Base64.getEncoder().encodeToString(fingerprint)
+
+    when {
+      coordinatePath == null || artifact == null -> {
+        KotlinBuiltinResource(
+          artifact = dep.name,
+          sha256 = b64,
+        )
+      }
+      else -> {
+        val coordinate = coordinatePath.split("/").joinToString(":")
+        KotlinDependencyResource(
+          coordinate = coordinate,
+          artifact = artifact,
+          sha256 = b64,
+        )
+      }
+    }
+  }.sortedBy { it.coordinate }.let {
+    KotlinResourceIndex(
+      resources = it,
+    )
+  }
+}
+
+@OptIn(ExperimentalSerializationApi::class) val indexKotlinResources by tasks.registering {
+  dependsOn("prepKotlinResources")
+
+  indexedDeps(embeddedKotlin).plus(indexedDeps(embeddedJava)).let { index ->
+    kotlinResourceIndex.get().asFile.parentFile.mkdirs()
+    kotlinResourceIndex.get().asFile.writeText(
+      Json {
+        prettyPrint = true
+        prettyPrintIndent = "  "
+      }.encodeToString(
+        index.toPlainObject()
+      )
+    )
+  }
+  outputs.file(kotlinResourceIndex)
+}
 
 val prepKotlinResources by tasks.registering(Copy::class) {
   from(embeddedKotlin + embeddedJava) {
     rename {
-      // remove version tag from each jar
-      val name = it.split(".").first().split("-")
-        .dropLast(1).joinToString("-")
-      if (name.isEmpty()) {
-        it
+      if (it.startsWith("kotlin-stdlib") || it.startsWith("kotlin-reflect") || it.startsWith("kotlin-script-runtime")) {
+        // remove version tag from each jar
+        val name = it.split(".").first().split("-")
+          .dropLast(1).joinToString("-")
+        if (name.isEmpty()) {
+          it
+        } else {
+          "$name.jar"
+        }
       } else {
-        "$name.jar"
+        it
       }
     }
   }
   destinationDir = intermediateResources.get().dir("lib").asFile
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  finalizedBy("indexKotlinResources")
 }
 
 val ktRuntimeTarget = "META-INF/elide/embedded/runtime/kt"
 val ktRuntimeRoot = layout.projectDirectory.dir("src/main/resources/$ktRuntimeTarget")
 val buildKotlinResourcesArchive by tasks.registering(Zip::class) {
-  dependsOn(prepKotlinResources)
+  dependsOn(prepKotlinResources, indexKotlinResources)
   archiveFileName = archiveName
   destinationDirectory = intermediateResourcesZip.get().asFile.parentFile
   from(intermediateResources.get().asFile)
@@ -266,11 +385,15 @@ val buildResourcesManifest by tasks.registering {
 }
 
 tasks.processResources {
-  dependsOn(prepKotlinResources, buildKotlinResourcesArchive, buildResourcesManifest)
+  dependsOn(prepKotlinResources, buildKotlinResourcesArchive, buildResourcesManifest, indexKotlinResources)
 
+  from(kotlinResourceIndex) {
+    into(ktRuntimeTarget)
+  }
   from(intermediateResources.get().dir("lib")) {
     into(ktRuntimeTarget)
   }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 artifacts {

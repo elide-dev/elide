@@ -2439,12 +2439,23 @@ fun spawnEmbeddedKotlinCopy(receiver: BuildNativeImageTask): Copy {
     .resolve("kotlin")
     .resolve(libs.versions.kotlin.sdk.get())
     .absolutePath
+
   return tasks.register("${receiver.name}CopyEmbeddedKotlin", Copy::class) {
     dependsOn(
       prepKotlinResources,
       ":packages:graalvm-kt:prepKotlinResources"
     )
-    from(intermediateKotlinResources)
+    from(intermediateKotlinResources) {
+      rename {
+        // we need to strip versions from kotlin stdlib and reflect
+        if (it.startsWith("kotlin-stdlib") || it.startsWith("kotlin-reflect")) {
+          // trim version string
+          val token = it.substringAfter("kotlin-").substringBefore("-")
+          val version = it.substringAfter("kotlin-$token-").substringBefore("-")
+          it.replace("kotlin-$token-$version", "kotlin-$token")
+        } else it
+      }
+    }
     into(outDir)
   }.get()
 }

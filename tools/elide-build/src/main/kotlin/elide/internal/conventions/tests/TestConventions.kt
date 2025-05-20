@@ -164,5 +164,6 @@ internal fun Project.configureTestLogger() {
     showSimpleNames = true
 
     slowThreshold = Constants.Tests.SLOW_TEST_THRESHOLD
+    showStandardStreams = testVerbose && testLogs
   }
 }

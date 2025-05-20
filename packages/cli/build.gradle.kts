@@ -32,6 +32,7 @@ import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.LinkedList
+import java.util.TreeSet
 import kotlin.collections.listOf
 import kotlin.text.split
 import elide.internal.conventions.kotlin.KotlinTarget
@@ -2009,7 +2010,20 @@ val kotlinHomePath: String = kotlinHomeRoot.get()
   .absolutePath
 
 val prepKotlinResources by tasks.registering(Copy::class) {
-  from(embeddedKotlin)
+  from(embeddedKotlin) {
+    rename {
+      // we need to strip versions from kotlin stdlib and reflect
+      val isStdlib = it.startsWith("kotlin-stdlib")
+      val isReflect = it.startsWith("kotlin-reflect")
+      val isScriptRuntime = it.startsWith("kotlin-script-runtime")
+      when {
+        isStdlib -> "kotlin-stdlib.jar"
+        isReflect -> "kotlin-reflect.jar"
+        isScriptRuntime -> "kotlin-script-runtime.jar"
+        else -> it
+      }
+    }
+  }
   destinationDir = intermediateKotlinResources.get().dir("lib").asFile
   duplicatesStrategy = EXCLUDE
 }
@@ -2440,6 +2454,7 @@ fun spawnEmbeddedKotlinCopy(receiver: BuildNativeImageTask): Copy {
     .resolve(libs.versions.kotlin.sdk.get())
     .absolutePath
 
+  val runningSet = TreeSet<String>()
   return tasks.register("${receiver.name}CopyEmbeddedKotlin", Copy::class) {
     dependsOn(
       prepKotlinResources,
@@ -2447,13 +2462,20 @@ fun spawnEmbeddedKotlinCopy(receiver: BuildNativeImageTask): Copy {
     )
     from(intermediateKotlinResources) {
       rename {
-        // we need to strip versions from kotlin stdlib and reflect
-        if (it.startsWith("kotlin-stdlib") || it.startsWith("kotlin-reflect")) {
-          // trim version string
-          val token = it.substringAfter("kotlin-").substringBefore("-")
-          val version = it.substringAfter("kotlin-$token-").substringBefore("-")
-          it.replace("kotlin-$token-$version", "kotlin-$token")
-        } else it
+        if (it in runningSet) {
+          error("Already saw: $it")
+        } else {
+          // we need to strip versions from kotlin stdlib and reflect
+          val isStdlib = it.startsWith("kotlin-stdlib")
+          val isReflect = it.startsWith("kotlin-reflect")
+          val isScriptRuntime = it.startsWith("kotlin-script-runtime")
+          when {
+            isStdlib -> "kotlin-stdlib.jar"
+            isReflect -> "kotlin-reflect.jar"
+            isScriptRuntime -> "kotlin-script-runtime.jar"
+            else -> it
+          }
+        }
       }
     }
     into(outDir)

@@ -22,6 +22,7 @@ import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
 import java.util.Base64
+import java.util.TreeSet
 
 plugins {
   kotlin("jvm")
@@ -257,7 +258,14 @@ data class KotlinResourceIndex(
 }
 
 fun indexedDeps(cfg: Configuration): KotlinResourceIndex {
+  val seenDeps = TreeSet<String>()
+  val seenHashes = TreeSet<String>()
   return cfg.resolve().map { dep ->
+    if (dep.absolutePath in seenDeps) {
+      error("Path ${dep.absolutePath} already seen")
+    } else {
+      seenDeps.add(dep.absolutePath)
+    }
     val matched = dependencyRegex.find(dep.absolutePath)
     // original:
     // files-2.1/io.micronaut/micronaut-inject-kotlin/4.8.11/.../micronaut-inject-kotlin-4.8.11.jar
@@ -272,6 +280,11 @@ fun indexedDeps(cfg: Configuration): KotlinResourceIndex {
       it.digest()
     }
     val b64 = Base64.getEncoder().encodeToString(fingerprint)
+    if (b64 in seenHashes) {
+      error("Hash $b64 already seen")
+    } else {
+      seenHashes.add(b64)
+    }
 
     when {
       coordinatePath == null || artifact == null -> {

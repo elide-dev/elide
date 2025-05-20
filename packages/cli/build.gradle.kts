@@ -725,6 +725,7 @@ val enabledFeatures = listOfNotNull(
   "elide.runtime.feature.js.FetchFeature",
   "elide.tool.feature.LocalInferenceFeature",
   "elide.runtime.feature.engine.NativeTraceFeature",
+  "elide.tool.feature.DisallowedHostJvmFeature",
   onlyIf(enablePython, "elide.runtime.feature.python.PythonFeature"),
   onlyIf(enableNativeTransportV2, "elide.runtime.feature.engine.NativeTransportFeature"),
   onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),
@@ -842,6 +843,7 @@ val initializeAtBuildtime: List<String> = listOf(
   "org.jetbrains.kotlin.com.intellij.util.containers.IntKeyWeakValueHashMap\$MyReference",
   "org.eclipse.aether.repository.RemoteRepository",
   "org.eclipse.aether.repository.RepositoryPolicy",
+  "jdk.internal.jrtfs.JrtFileSystemProvider",
 ).onlyIf(enableKotlin))
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -1092,6 +1094,15 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   "elide.runtime.intrinsics.server.http.netty.IOUringTransport",
   "elide.runtime.gvm.internals.node.process.NodeProcess${'$'}NodeProcessModuleImpl",
+
+  // --- Elide Kotlin -----
+
+  "elide.runtime.gvm.kotlin.KotlinPrecompiler",
+  "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
+  "jdk.internal.jrtfs",
+  "elide.runtime.gvm.kotlin.scripting.ScriptWithMavenDepsConfiguration",
+  "org.eclipse.sisu.wire.ParameterKeys",
+  "nonapi.io.github.classgraph.classpath.SystemJarFinder",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()

@@ -1832,19 +1832,25 @@ internal class ToolShellCommand @Inject constructor(
     }
   }
 
+  private fun getJavaHomeAtRuntime(): String? {
+    require(!ImageInfo.inImageBuildtimeCode()) {
+      "Cannot locate Java Home in build-time code"
+    }
+    return System.getProperty("java.home")
+      ?.ifBlank { null }
+      ?.takeIf { it.isNotEmpty() }
+      ?: System.getenv("JAVA_HOME")
+        ?.ifBlank { null }
+        ?.takeIf { it.isNotEmpty() }
+  }
+
   private fun PolyglotEngineConfiguration.doInitJvmSupport(
     gvmResources: Path,
     project: ElideProject?,
     lockfile: ElideLockfile?,
     langs: Set<GuestLanguage>,
   ) {
-    val javaHome: String? = System.getProperty("java.home")
-      ?.ifBlank { null }
-      ?.takeIf { it.isNotEmpty() }
-      ?: System.getenv("JAVA_HOME")
-        ?.ifBlank { null }
-        ?.takeIf { it.isNotEmpty() }
-
+    val javaHome: String? = getJavaHomeAtRuntime()
     if (javaHome == null) {
       logging.warn {
         "JAVA_HOME is not set; JVM features may not work properly."

@@ -32,6 +32,7 @@ public final class elide/runtime/gvm/kotlin/KotlinJarBundleInfo : elide/runtime/
 }
 
 public final class elide/runtime/gvm/kotlin/KotlinLanguage : com/oracle/truffle/api/TruffleLanguage {
+	public static final field COROUTINES_VERSION Ljava/lang/String;
 	public static final field Companion Lelide/runtime/gvm/kotlin/KotlinLanguage$Companion;
 	public static final field ID Ljava/lang/String;
 	public static final field VERSION Ljava/lang/String;
@@ -73,6 +74,105 @@ public final class elide/runtime/gvm/kotlin/KotlinScriptCallable : elide/runtime
 
 public final class elide/runtime/gvm/kotlin/feature/KotlinResourceProvider : com/oracle/truffle/api/provider/InternalResourceProvider {
 	public fun <init> ()V
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinBuiltinResource : elide/runtime/gvm/kotlin/resources/KotlinResource {
+	public static final field Companion Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getArtifact ()Ljava/lang/String;
+	public fun getCoordinate ()Ljava/lang/String;
+	public fun getSha256 ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinBuiltinResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinBuiltinResource$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinDependencyResource : elide/runtime/gvm/kotlin/resources/KotlinResource {
+	public static final field Companion Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getArtifact ()Ljava/lang/String;
+	public fun getCoordinate ()Ljava/lang/String;
+	public fun getSha256 ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinDependencyResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinDependencyResource$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/runtime/gvm/kotlin/resources/KotlinResource {
+	public static final field Companion Lelide/runtime/gvm/kotlin/resources/KotlinResource$Companion;
+	public abstract fun getArtifact ()Ljava/lang/String;
+	public abstract fun getCoordinate ()Ljava/lang/String;
+	public abstract fun getSha256 ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinResource$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinResourceIndex {
+	public static final field Companion Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;Ljava/util/List;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getResources ()Ljava/util/List;
+	public fun hashCode ()I
+	public static final fun load ()Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;
+	public final fun plus (Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;)Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinResourceIndex$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/gvm/kotlin/resources/KotlinResourceIndex$Companion {
+	public final fun load ()Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public abstract class elide/runtime/gvm/kotlin/scripting/ElideKotlinScript {

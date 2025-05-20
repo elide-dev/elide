@@ -1707,19 +1707,23 @@ internal class ToolShellCommand @Inject constructor(
 
   // Return the suite of JAR bases we should use for a guest classpath.
   private fun initialGuestClasspathJars(langHomeResources: Path): Sequence<Path> {
+    // @TODO: use manifest to resolve versions
+    val kotlinVersion = KotlinLanguage.VERSION
+    val coroutinesVersion = KotlinLanguage.COROUTINES_VERSION
+
     return sequenceOf(
       langHomeResources.resolve("elide-kotlin.jar"),
       langHomeResources.resolve("elide-kotlin-runtime.jar"),
-      langHomeResources.resolve("kotlinx-coroutines-core-jvm.jar"),
+      langHomeResources.resolve("kotlinx-coroutines-core-jvm-$coroutinesVersion.jar"),
       langHomeResources.resolve("kotlin-stdlib.jar"),
       langHomeResources.resolve("kotlin-reflect.jar"),
       langHomeResources.resolve("kotlin-script-runtime.jar"),
     ).plus(sequence {
       if (testMode()) {
         yield(langHomeResources.resolve("elide-test.jar"))
-        yield(langHomeResources.resolve("kotlin-test.jar"))
-        yield(langHomeResources.resolve("kotlin-test-junit5.jar"))
-        yield(langHomeResources.resolve("kotlinx-coroutines-test-jvm.jar"))
+        yield(langHomeResources.resolve("kotlin-test-$kotlinVersion.jar"))
+        yield(langHomeResources.resolve("kotlin-test-junit5-$kotlinVersion.jar"))
+        yield(langHomeResources.resolve("kotlinx-coroutines-test-jvm-$coroutinesVersion.jar"))
       }
     })
   }

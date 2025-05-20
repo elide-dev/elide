@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.kotlin
 
 import org.graalvm.polyglot.Source
@@ -64,6 +63,7 @@ public fun Diagnostic.Companion.fromKotlincDiagnostic(
     EXCEPTION,
     ERROR -> Severity.ERROR
     WARNING,
+    FIXED_WARNING,
     STRONG_WARNING -> Severity.WARN
     INFO,
     LOGGING,
@@ -74,7 +74,7 @@ public fun Diagnostic.Companion.fromKotlincDiagnostic(
 // Implements a precompiler which compiles Kotlin to Java bytecode.
 public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinRunnable> {
   // Embedded Kotlin version.
-  public const val KOTLIN_VERSION: String = "2.1.20"
+  public const val KOTLIN_VERSION: String = "2.2.0-RC"
 
   private val kotlinVerbose by lazy {
     System.getProperty("elide.kotlin.verbose") == "true"

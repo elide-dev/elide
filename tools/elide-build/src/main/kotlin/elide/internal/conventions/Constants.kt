@@ -84,7 +84,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.1.20"
+    const val KOTLIN_SDK_PIN = "2.2.0-RC"
 
     /** Constant: pinned version of Kotlin Coroutines. */
     const val COROUTINES = "1.10.2"
@@ -216,7 +216,7 @@ public object Constants {
     private const val MAJOR_VERSION = "1.0.0"
 
     /** Major library version tag. */
-    private const val VERSION_TAG = "beta3-rc2"
+    private const val VERSION_TAG = "beta3-rc3"
 
     /** Version string for the library. */
     public const val VERSION: String = "$MAJOR_VERSION-$VERSION_TAG"

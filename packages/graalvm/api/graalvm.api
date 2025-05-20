@@ -2338,7 +2338,7 @@ public final class elide/runtime/gvm/js/JsProxy {
 
 public final class elide/runtime/gvm/js/JsProxy$MutableObjectProxy : org/graalvm/polyglot/proxy/ProxyObject {
 	public static final synthetic fun box-impl (Ljava/util/Map;)Lelide/runtime/gvm/js/JsProxy$MutableObjectProxy;
-	public static synthetic fun constructor-impl$graalvm$default (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)Ljava/util/Map;
+	public static synthetic fun constructor-impl$default (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)Ljava/util/Map;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/util/Map;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/util/Map;Ljava/util/Map;)Z
@@ -2360,7 +2360,7 @@ public final class elide/runtime/gvm/js/JsProxy$MutableObjectProxy : org/graalvm
 public final class elide/runtime/gvm/js/JsProxy$MutableObjectProxy$Builder {
 	public static final synthetic fun box-impl (Ljava/util/Map;)Lelide/runtime/gvm/js/JsProxy$MutableObjectProxy$Builder;
 	public static final fun build-mLch8EM (Ljava/util/Map;)Ljava/util/Map;
-	public static synthetic fun constructor-impl$graalvm$default (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)Ljava/util/Map;
+	public static synthetic fun constructor-impl$default (Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)Ljava/util/Map;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/util/Map;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Ljava/util/Map;Ljava/util/Map;)Z
@@ -2394,7 +2394,7 @@ public final class elide/runtime/gvm/js/JsSymbol : elide/runtime/intrinsics/Symb
 	public fun compareTo (Lelide/runtime/intrinsics/Symbol;)I
 	public synthetic fun compareTo (Ljava/lang/Object;)I
 	public static fun compareTo-impl (Lkotlin/Pair;Lelide/runtime/intrinsics/Symbol;)I
-	public static synthetic fun constructor-impl$graalvm$default (Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)Lkotlin/Pair;
+	public static synthetic fun constructor-impl$default (Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)Lkotlin/Pair;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
 	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z

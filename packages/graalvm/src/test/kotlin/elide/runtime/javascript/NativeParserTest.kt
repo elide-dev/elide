@@ -16,7 +16,7 @@ package elide.runtime.javascript
 
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.assertDoesNotThrow
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import kotlin.test.*
 import elide.runtime.lang.javascript.JavaScriptCompilerConfig
 import elide.runtime.lang.javascript.JavaScriptPrecompiler
@@ -36,17 +36,19 @@ class NativeParserTest {
   }
 
   // lowering javascript should just return the javascript
-  @Test fun `parse javascript`() = runTest {
+  @Test fun `parse javascript`() {
     // language=JavaScript
     val code = """console.log(5);"""
     val lowered = assertNotNull(assertDoesNotThrow {
-      JavaScriptPrecompiler.precompile(
-        PrecompileSourceRequest(
-          source = PrecompileSourceInfo("example.mjs"),
-          config = JavaScriptCompilerConfig.DEFAULT,
-        ),
-        code,
-      )
+      runBlocking {
+        JavaScriptPrecompiler.precompile(
+          PrecompileSourceRequest(
+            source = PrecompileSourceInfo("example.mjs"),
+            config = JavaScriptCompilerConfig.DEFAULT,
+          ),
+          code,
+        )
+      }
     })
     // drop spaces for comparison
     val cleanup: (String) -> String = { str ->
@@ -59,7 +61,7 @@ class NativeParserTest {
     )
   }
 
-  @Test fun `parse and lower typescript`() = runTest {
+  @Test fun `parse and lower typescript`() {
     // language=TypeScript
     val code = """
       function xyz(param: number): string {
@@ -68,13 +70,15 @@ class NativeParserTest {
       const x: string = xyz(42);
     """
     val lowered = assertNotNull(assertDoesNotThrow {
-      JavaScriptPrecompiler.precompile(
-        PrecompileSourceRequest(
-          source = PrecompileSourceInfo("hello-world.ts"),
-          config = JavaScriptCompilerConfig.DEFAULT,
-        ),
-        code,
-      )
+      runBlocking {
+        JavaScriptPrecompiler.precompile(
+          PrecompileSourceRequest(
+            source = PrecompileSourceInfo("hello-world.ts"),
+            config = JavaScriptCompilerConfig.DEFAULT,
+          ),
+          code,
+        )
+      }
     })
     assertContains(
       lowered,
@@ -88,37 +92,41 @@ class NativeParserTest {
     assertFalse("string" in lowered)
   }
 
-  @Test fun `parse and lower jsx`() = runTest {
+  @Test fun `parse and lower jsx`() {
     // language=JSX
     val code = """console.log(<h1>Hello, world!</h1>);"""
     val lowered = assertNotNull(assertDoesNotThrow {
-      JavaScriptPrecompiler.precompile(
-        PrecompileSourceRequest(
-          source = PrecompileSourceInfo("example.jsx"),
-          config = JavaScriptCompilerConfig.DEFAULT.copy(
-            jsx = true,
+      runBlocking {
+        JavaScriptPrecompiler.precompile(
+          PrecompileSourceRequest(
+            source = PrecompileSourceInfo("example.jsx"),
+            config = JavaScriptCompilerConfig.DEFAULT.copy(
+              jsx = true,
+            ),
           ),
-        ),
-        code,
-      )
+          code,
+        )
+      }
     })
     assertNotEquals(code, lowered)
   }
 
-  @Test fun `parse and lower tsx`() = runTest {
+  @Test fun `parse and lower tsx`() {
     // language=TSX
     val code = """const x: string = "hi"; console.log(<h1>Hello, {x}!</h1>);"""
     val lowered = assertNotNull(assertDoesNotThrow {
-      JavaScriptPrecompiler.precompile(
-        PrecompileSourceRequest(
-          source = PrecompileSourceInfo("example.tsx"),
-          config = JavaScriptCompilerConfig.DEFAULT.copy(
-            typescript = true,
-            jsx = true,
+      runBlocking {
+        JavaScriptPrecompiler.precompile(
+          PrecompileSourceRequest(
+            source = PrecompileSourceInfo("example.tsx"),
+            config = JavaScriptCompilerConfig.DEFAULT.copy(
+              typescript = true,
+              jsx = true,
+            ),
           ),
-        ),
-        code,
-      )
+          code,
+        )
+      }
     })
     assertNotEquals(code, lowered)
   }

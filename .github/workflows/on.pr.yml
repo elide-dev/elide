@@ -76,7 +76,7 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: "Triage: PR Changes"
         id: filter
-        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        uses: step-security/paths-filter@27924be12bc7fa48eac88958847638304d58f386 # v3.0.4
         with:
           filters: |
             base: &base

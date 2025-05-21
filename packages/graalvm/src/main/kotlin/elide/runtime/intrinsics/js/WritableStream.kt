@@ -38,5 +38,5 @@ import elide.vm.annotations.Polyglot
 
   @Polyglot public fun getWriter(): WritableStreamDefaultWriter
   @Polyglot public fun abort(reason: Any? = null): JsPromise<Unit>
-  @Polyglot public fun close()
+  @Polyglot public fun close(): JsPromise<Unit>
 }

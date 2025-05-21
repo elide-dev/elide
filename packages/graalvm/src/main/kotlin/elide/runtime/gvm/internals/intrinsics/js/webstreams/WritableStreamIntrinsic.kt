@@ -10,24 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.js.stream
+package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
-import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.gvm.api.Intrinsic
+import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.intrinsics.GuestIntrinsic
 
-public interface WritableStreamSink {
-  public val type: Any
-
-  public fun start(controller: WritableStreamDefaultController) {}
-
-  public fun write(chunk: Any? = null, controller: WritableStreamDefaultController): JsPromise<Unit> {
-    return JsPromise.resolved(Unit)
-  }
-
-  public fun close(): JsPromise<Unit> {
-    return JsPromise.resolved(Unit)
-  }
-
-  public fun abort(reason: Any? = null): JsPromise<Unit> {
-    return JsPromise.resolved(Unit)
+/** Implementation of writable streams (via the Web Streams standard). */
+@Intrinsic(global = "WritableStream") internal class WritableStreamIntrinsic : AbstractJsIntrinsic() {
+  override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
+    // not yet implemented
   }
 }

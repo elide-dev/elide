@@ -23,5 +23,5 @@ public interface WritableStreamDefaultWriter {
   @Polyglot public fun write(chunk: Any? = null): JsPromise<Unit>
   @Polyglot public fun releaseLock()
   @Polyglot public fun abort(reason: Any? = null): JsPromise<Unit>
-  @Polyglot public fun close()
+  @Polyglot public fun close(): JsPromise<Unit>
 }

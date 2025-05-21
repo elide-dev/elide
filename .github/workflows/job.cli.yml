@@ -199,7 +199,7 @@ jobs:
           java-version: "24"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Bun"
-        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
         with:
           bun-version-file: config/bun-version
       - name: "Setup: PNPM"
@@ -353,7 +353,7 @@ jobs:
         with:
           node-version: 23
       - name: "Setup: Bun"
-        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
         with:
           bun-version-file: config/bun-version
       - name: "Setup: PNPM"

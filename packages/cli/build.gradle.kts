@@ -844,7 +844,6 @@ val initializeAtBuildtime: List<String> = listOf(
   "org.jetbrains.kotlin.com.intellij.util.containers.IntKeyWeakValueHashMap\$MyReference",
   "org.eclipse.aether.repository.RemoteRepository",
   "org.eclipse.aether.repository.RepositoryPolicy",
-  "jdk.internal.jrtfs.JrtFileSystemProvider",
 ).onlyIf(enableKotlin))
 
 val initializeAtBuildTimeTest: List<String> = listOf(
@@ -1100,7 +1099,6 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   "elide.runtime.gvm.kotlin.KotlinPrecompiler",
   "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
-  "jdk.internal.jrtfs",
   "elide.runtime.gvm.kotlin.scripting.ScriptWithMavenDepsConfiguration",
   "org.eclipse.sisu.wire.ParameterKeys",
   "nonapi.io.github.classgraph.classpath.SystemJarFinder",

@@ -59,29 +59,59 @@ jobs:
     name: "API Check"
     runs-on: ubuntu-latest
     continue-on-error: true
+    permissions:
+      contents: read
     steps:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
+            140.82.112.3:22
+            140.82.112.4:22
+            140.82.113.3:22
+            140.82.114.4:22
+            140.82.116.3:22
+            140.82.116.4:22
+            api.foojay.io:443
             api.github.com:443
-            objects.githubusercontent.com:443
+            bun.sh:443
             d3ob9fqp587by1.cloudfront.net:443
-            download.oracle.com:443
-            maven.elide.dev:443
-            github.com:443
+            dl.google.com:443
             dl.less.build:443
+            download.oracle.com:443
+            downloads.gradle.org:443
+            elide-snapshots.storage-download.googleapis.com:443
+            gha.elide.zip:443
+            github.com:22
+            github.com:443
             gradle.less.build:443
             gradle.pkg.st:443
+            ha.pool.sks-keyservers.net:11371
+            ha.pool.sks-keyservers.net:443
+            jcenter.bintray.com:443
+            jitpack.io:443
             jpms.pkg.st:443
+            keys.openpgp.org:11371
+            keys.openpgp.org:443
+            keyserver.ubuntu.com:11371
+            keyserver.ubuntu.com:443
+            maven.elide.dev:443
             maven.pkg.jetbrains.space:443
             maven.pkg.st:443
             nodejs.org:443
+            objects.githubusercontent.com:443
+            oss.sonatype.org:443
+            pgp.mit.edu:11371
+            pgp.mit.edu:443
+            plugins-artifacts.gradle.org:443
+            plugins.gradle.org:443
+            raw.githubusercontent.com:443
             registry.npmjs.org:443
-            dl.google.com:443
             repo.maven.apache.org:443
+            scans-in.gradle.com:443
+            services.gradle.org:443
       - name: "Setup: Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:

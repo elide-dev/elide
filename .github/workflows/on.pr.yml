@@ -78,46 +78,7 @@ jobs:
         id: filter
         uses: step-security/paths-filter@27924be12bc7fa48eac88958847638304d58f386 # v3.0.4
         with:
-          filters: |
-            base: &base
-              - ".version"
-              - ".release"
-              - ".github/workflows/*.*"
-            devcontainer: &ci
-              - *base
-              - ".devcontainer/*.*"
-              - ".devcontainer/**/*.*"
-            model: &model
-              - *base
-              - "proto/**/*.*"
-            packages: &packages
-              - *base
-              - *model
-              - "packages"
-              - "packages/*"
-              - "packages/**/*.*"
-            tools: &tools
-              - *base
-              - "tools"
-              - "tools/*"
-              - "tools/**/*.*"
-            images: &images
-              - *base
-              - "tools/images/*"
-              - "tools/images/*.*"
-              - "tools/images/**/*.*"
-            srcs: &srcs
-              - *base
-              - *model
-              - *packages
-              - *tools
-            natives: &natives
-              - *base
-              - "crates"
-              - "crates/*"
-              - "crates/**/*.*"
-              - "third_party/Makefile"
-              - "third_party/*/**/*.*"
+          filters: .github/triage.yml
 
   ##
   ## Job: Multi-platform Build

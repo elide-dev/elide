@@ -40,4 +40,4 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: "Check: Gradle Wrapper"
-        uses: gradle/actions/wrapper-validation@v4
+        uses: gradle/actions/wrapper-validation@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0

@@ -194,7 +194,7 @@ jobs:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
-          disable-sudo: false
+          disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
             agent.less.build:443
@@ -328,12 +328,10 @@ jobs:
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "10.6.2"
-      - name: "Fix: Pkl Config"
-        run: mv elide.pkl elide.inert
       - name: "Setup: Elide"
         uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
         with:
-          version: "1.0.0-beta2"
+          version: "1.0.0-beta3-rc3"
       - name: "Setup: uv"
         uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
       - name: "Setup: Dependencies"
@@ -347,9 +345,8 @@ jobs:
           echo PATH=$PATH >> $GITHUB_ENV
           echo "Installing dependencies..."
           elide install
-          mv elide.inert elide.pkl
       - name: "Setup: Gradle"
-        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0
+        uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}
         env:

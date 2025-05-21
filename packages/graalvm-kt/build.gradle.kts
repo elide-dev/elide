@@ -109,7 +109,9 @@ dependencies {
   implementation(libs.kotlin.scripting.compiler.embeddable)
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlin.scripting.dependencies)
-  implementation(libs.kotlin.scripting.dependencies.maven)
+  implementation(libs.kotlin.scripting.dependencies.maven) {
+    exclude(group = "com.google.inject", module = "guice")
+  }
   implementation(libs.kotlinx.serialization.json.jvm)
   api(files(embeddedKotlinRuntime))
   compileOnly(libs.graalvm.svm)

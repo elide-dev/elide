@@ -10,11 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.kotlin
 
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.*
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -45,7 +45,7 @@ class KotlinPrecompilerTest {
     assertNotNull(svc)
   }
 
-  @Test fun `precompile kotlin`() = runTest {
+  @Test fun `precompile kotlin`() {
     // language=kotlin
     val src = """
       fun main() {
@@ -55,15 +55,17 @@ class KotlinPrecompilerTest {
 
     val (diag, result) = assertNotNull(
       assertDoesNotThrow {
-        KotlinPrecompiler.precompileSafe(
-          PrecompileSourceRequest(
-            source = PrecompileSourceInfo(
-              name = "Example.kt",
+        runBlocking {
+          KotlinPrecompiler.precompileSafe(
+            PrecompileSourceRequest(
+              source = PrecompileSourceInfo(
+                name = "Example.kt",
+              ),
+              config = KotlinCompilerConfig.DEFAULT,
             ),
-            config = KotlinCompilerConfig.DEFAULT,
-          ),
-          src,
-        )
+            src,
+          )
+        }
       }
     )
     assertNotNull(diag)
@@ -71,7 +73,7 @@ class KotlinPrecompilerTest {
     assertTrue(result.name.isNotEmpty())
   }
 
-  @Test fun `precompile kotlin script`() = runTest {
+  @Test fun `precompile kotlin script`() {
     // language=kotlin
     val src = """
       fun fn() {
@@ -82,15 +84,17 @@ class KotlinPrecompilerTest {
 
     val (diag, result) = assertNotNull(
       assertDoesNotThrow {
-        KotlinPrecompiler.precompileSafe(
-          PrecompileSourceRequest(
-            source = PrecompileSourceInfo(
-              name = "Example.kts",
+        runBlocking {
+          KotlinPrecompiler.precompileSafe(
+            PrecompileSourceRequest(
+              source = PrecompileSourceInfo(
+                name = "Example.kts",
+              ),
+              config = KotlinCompilerConfig.DEFAULT,
             ),
-            config = KotlinCompilerConfig.DEFAULT,
-          ),
-          src,
-        )
+            src,
+          )
+        }
       }
     )
     assertNotNull(diag)

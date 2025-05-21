@@ -168,6 +168,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
         EXCEPTION, ERROR -> TextColors.red
         CompilerMessageSeverity.STRONG_WARNING -> TextColors.brightYellow
         CompilerMessageSeverity.WARNING -> TextColors.yellow
+        CompilerMessageSeverity.FIXED_WARNING -> TextColors.gray
         CompilerMessageSeverity.INFO -> TextColors.cyan
         CompilerMessageSeverity.LOGGING,
         CompilerMessageSeverity.OUTPUT -> TextColors.gray
@@ -176,6 +177,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
         EXCEPTION, ERROR -> TextStyles.bold + severityColor
         CompilerMessageSeverity.STRONG_WARNING -> TextStyles.bold + severityColor
         CompilerMessageSeverity.WARNING -> TextStyles.bold + severityColor
+        CompilerMessageSeverity.FIXED_WARNING -> TextStyles.bold + severityColor
         CompilerMessageSeverity.INFO -> TextStyles.bold + severityColor
         CompilerMessageSeverity.LOGGING,
         CompilerMessageSeverity.OUTPUT -> TextStyles.dim + severityColor

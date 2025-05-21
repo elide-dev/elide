@@ -113,11 +113,6 @@ internal fun Project.configureKotlinMultiplatform(
       generateTypeScriptDefinitions()
       useEsModules()
 
-      compilations.all {
-        kotlinOptions.sourceMap = true
-        kotlinOptions.moduleKind = "umd"
-      }
-
       tasks.withType(KotlinJsCompile::class.java).configureEach {
         compilerOptions {
           useEsClasses.set(true)

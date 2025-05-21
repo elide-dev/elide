@@ -10,11 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.gvm.jvm
 
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.ServiceLoader
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlin.test.assertContains
 import kotlin.test.assertNotNull
@@ -44,7 +44,7 @@ class JavaPrecompilerTest {
     assertNotNull(svc)
   }
 
-  @Test fun `precompile java`() = runTest {
+  @Test fun `precompile java`() {
     // language=Java
     val src = """
       package example;
@@ -58,15 +58,17 @@ class JavaPrecompilerTest {
 
     val bytes = assertNotNull(
       assertDoesNotThrow {
-        JavaPrecompiler.precompile(
-          PrecompileSourceRequest(
-            source = PrecompileSourceInfo(
-              name = "Example.java",
+        runBlocking {
+          JavaPrecompiler.precompile(
+            PrecompileSourceRequest(
+              source = PrecompileSourceInfo(
+                name = "Example.java",
+              ),
+              config = JavaCompilerConfig.DEFAULT,
             ),
-            config = JavaCompilerConfig.DEFAULT,
-          ),
-          src,
-        )
+            src,
+          )
+        }
       }
     )
     assertTrue(bytes.array().isNotEmpty())

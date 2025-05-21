@@ -79,7 +79,7 @@ public final class elide/ssr/StreamResponse$Success : elide/ssr/StreamResponse {
 public abstract interface annotation class elide/ssr/annotations/Props : java/lang/annotation/Annotation {
 }
 
-public synthetic class elide/ssr/annotations/Props$Impl : elide/ssr/annotations/Props {
+public final synthetic class elide/ssr/annotations/Props$Impl : elide/ssr/annotations/Props {
 	public fun <init> ()V
 }
 

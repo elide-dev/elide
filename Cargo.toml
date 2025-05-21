@@ -23,7 +23,7 @@ exclude = ["crates/build", "crates/transport", "third_party", "runtime", "crates
 [workspace.package]
 license = "MIT"
 edition = "2024"
-rust-version = "1.86.0"
+rust-version = "1.87.0"
 version = "1.0.0-beta2"
 authors = ["Elide Technologies, Inc."]
 homepage = "https://elide.dev"
@@ -125,7 +125,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "9eedb584c53659c928cc334dce6c4ffb0afad8c6", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "c331eceb3790d068be7b880d50075a58fbd7ab97", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -133,7 +133,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "9eedb584c53659c928cc334
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "6df588bb0078ee0e760e04ea48eeac3d6075ccf8" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "a47b9fd74681889114afc3b1a0cdbffeeeb85f68" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "f549dfe39d5248a65fa5d1c6a0c2dfec9667869a" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "d098118e37be9437345d527c29a5aeea91b676a6" }

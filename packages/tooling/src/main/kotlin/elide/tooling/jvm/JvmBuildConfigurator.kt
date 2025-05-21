@@ -54,6 +54,9 @@ private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
  */
 internal class JvmBuildConfigurator : BuildConfigurator {
   private companion object {
+    private const val EMBEDDED_JUNIT_VERSION = "5.12.0"
+    private const val EMBEDDED_JUNIT_PLATFORM_VERSION = "1.12.0"
+    private const val EMBEDDED_COROUTINES_VERSION = KotlinLanguage.COROUTINES_VERSION
     private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
     private const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine"
     private const val JUNIT_PLATFORM_ENGINE = "org.junit.platform:junit-platform-engine"
@@ -66,35 +69,36 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     private const val KOTLINX_COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
 
     private val testCoordinates = arrayOf(
-      JUNIT_JUPITER_API,
-      JUNIT_JUPITER_ENGINE,
-      JUNIT_PLATFORM_ENGINE,
-      JUNIT_PLATFORM_COMMONS,
-      JUNIT_PLATFORM_CONSOLE,
-      JUNIT_JUPITER_PARAMS,
-      KOTLIN_TEST,
-      KOTLIN_TEST_JUNIT5,
+      JUNIT_JUPITER_API to EMBEDDED_JUNIT_VERSION,
+      JUNIT_JUPITER_PARAMS to EMBEDDED_JUNIT_VERSION,
+      JUNIT_JUPITER_ENGINE to EMBEDDED_JUNIT_VERSION,
+      JUNIT_PLATFORM_ENGINE to EMBEDDED_JUNIT_PLATFORM_VERSION,
+      JUNIT_PLATFORM_COMMONS to EMBEDDED_JUNIT_PLATFORM_VERSION,
+      JUNIT_PLATFORM_CONSOLE to EMBEDDED_JUNIT_PLATFORM_VERSION,
+      KOTLIN_TEST to KotlinLanguage.VERSION,
+      KOTLIN_TEST_JUNIT5 to KotlinLanguage.VERSION,
+      KOTLINX_COROUTINES_TEST to EMBEDDED_COROUTINES_VERSION,
     )
 
     @JvmStatic private val logging by lazy { Logging.of(JvmBuildConfigurator::class) }
   }
 
-  private fun jarNameFor(coordinate: String): String {
+  private fun jarNameFor(coordinate: String, version: String): String {
     val parts = coordinate.split(":")
     require(parts.size == 2) { "Invalid built-in coordinate: $coordinate" }
-    return "${parts[1]}.jar"
+    return "${parts[1]}-$version.jar"
   }
 
-  private fun builtinKotlinJarPath(state: ElideBuildState, dependency: String): Path {
+  private fun builtinKotlinJarPath(state: ElideBuildState, dependency: String, version: String): Path {
     return System.getenv("KOTLIN_HOME")?.let { kotlinHomeByEnv ->
       Path.of(kotlinHomeByEnv)
         .resolve("lib")
-        .resolve(jarNameFor(dependency))
+        .resolve(jarNameFor(dependency, version))
     } ?: state.resourcesPath
       .resolve("kotlin")
       .resolve(KotlinLanguage.VERSION)
       .resolve("lib")
-      .resolve(jarNameFor(dependency))
+      .resolve(jarNameFor(dependency, version))
   }
 
   private fun ActionScope.kotlinc(
@@ -126,23 +130,23 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     if (state.manifest.kotlin?.features?.kotlinx != false) {
       if (state.manifest.kotlin?.features?.coroutines != false) {
         // add `org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm`
-        staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES))
+        staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES, EMBEDDED_COROUTINES_VERSION))
       }
     }
     if (tests) {
       if (state.manifest.kotlin?.features?.testing != false) {
         // junit5, kotlin testing
-        testCoordinates.forEach { testLib ->
-          staticDeps.add(builtinKotlinJarPath(state, testLib))
+        testCoordinates.forEach { (testLib, version) ->
+          staticDeps.add(builtinKotlinJarPath(state, testLib, version))
         }
       }
       if (state.manifest.kotlin?.features?.kotlinx != false) {
         if (state.manifest.kotlin?.features?.coroutines != false) {
           // add `org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm`
-          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES))
+          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES, EMBEDDED_COROUTINES_VERSION))
 
           // add `org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm`
-          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES_TEST))
+          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES_TEST, EMBEDDED_COROUTINES_VERSION))
         }
       }
     }

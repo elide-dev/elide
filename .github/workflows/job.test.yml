@@ -163,7 +163,7 @@ jobs:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
-          disable-sudo: false
+          disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
             agent.less.build:443
@@ -308,12 +308,10 @@ jobs:
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "10.6.2"
-      - name: "Fix: Pkl Config"
-        run: mv elide.pkl elide.inert
       - name: "Setup: Elide"
         uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
         with:
-          version: "1.0.0-beta2"
+          version: "1.0.0-beta3-rc3"
       - name: "Setup: uv"
         uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
       - name: "Setup: Dependencies"
@@ -327,14 +325,13 @@ jobs:
           echo PATH=$PATH >> $GITHUB_ENV
           echo "Installing dependencies..."
           elide install
-          mv elide.inert elide.pkl
       - name: "Setup: Artifacts"
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         continue-on-error: true
         with:
           merge-multiple: true
       - name: "Setup: Gradle"
-        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0
+        uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -461,7 +458,7 @@ jobs:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
-          disable-sudo: false
+          disable-sudo: true
           egress-policy: audit
           allowed-endpoints: >
             agent.less.build:443
@@ -504,23 +501,6 @@ jobs:
             services.gradle.org:443
             sonarcloud.io:443
             storage.googleapis.com:443
-      - name: "Setup: Apt Dependencies"
-        run: sudo apt-get install -y libtool-bin build-essential libc6-dev
-      - name: "Setup: LLVM 19"
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 19 all
-          export LLVM_PATH=/usr/lib/llvm-19
-          export PATH="$LLVM_PATH/bin:$PATH"
-          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
-          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
-          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
-          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
-          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
-          echo PATH=$PATH >> $GITHUB_ENV
-      - name: "Setup: Clear Tooling Cache"
-        run: rm -rf /opt/hostedtoolcache
       - name: "Setup: Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -604,7 +584,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Setup: Gradle"
-        uses: gradle/actions/setup-gradle@94baf225fe0a508e581a564467443d0e2379123b # v4.3.0
+        uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}

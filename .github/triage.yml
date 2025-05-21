@@ -1,0 +1,46 @@
+base: &base
+  - ".version"
+  - ".release"
+  - ".github/workflows/*.*"
+
+devcontainer: &ci
+  - *base
+  - ".devcontainer/*.*"
+  - ".devcontainer/**/*.*"
+
+model: &model
+  - *base
+  - "proto/**/*.*"
+
+packages: &packages
+  - *base
+  - *model
+  - "packages"
+  - "packages/*"
+  - "packages/**/*.*"
+
+tools: &tools
+  - *base
+  - "tools"
+  - "tools/*"
+  - "tools/**/*.*"
+
+images: &images
+  - *base
+  - "tools/images/*"
+  - "tools/images/*.*"
+  - "tools/images/**/*.*"
+
+srcs: &srcs
+  - *base
+  - *model
+  - *packages
+  - *tools
+
+natives: &natives
+  - *base
+  - "crates"
+  - "crates/*"
+  - "crates/**/*.*"
+  - "third_party/Makefile"
+  - "third_party/*/**/*.*"

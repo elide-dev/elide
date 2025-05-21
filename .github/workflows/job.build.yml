@@ -68,7 +68,7 @@ name: Framework
       runner:
         description: "Runner"
         type: string
-        default: ubuntu-latest
+        default: ubuntu-latest-16-cores
 
   workflow_call:
     inputs:
@@ -111,7 +111,7 @@ name: Framework
       runner_large:
         description: "Runner (Large)"
         type: string
-        default: ubuntu-latest-8-cores
+        default: ubuntu-latest-16-cores
       runner_large_macos:
         description: "Runner (Large, macOS)"
         type: string

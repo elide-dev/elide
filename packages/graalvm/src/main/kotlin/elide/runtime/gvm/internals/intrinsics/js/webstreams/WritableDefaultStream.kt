@@ -28,7 +28,7 @@ internal class WritableDefaultStream(
   /** Underlying sink this stream writes to. */
   private val sink: WritableStreamSink,
   /** Queueing strategy used to control backpressure. */
-  private val strategy: QueueingStrategy,
+  private val strategy: QueueingStrategy = QueueingStrategy.DefaultWriteStrategy,
 ) : WritableStream {
   /** Inline wrapper for the stream providing the controller API by delegation. */
   @JvmInline private value class ControllerToken(val stream: WritableDefaultStream) : WritableStreamDefaultController {
@@ -125,7 +125,7 @@ internal class WritableDefaultStream(
   private val controller = ControllerToken(this)
 
   /** Reference to a writer currently locked to this stream, if any. */
-  private val lockedWriter = AtomicReference<WriterToken>()
+  private val lockedWriter = AtomicReference<WritableStreamDefaultWriterToken>()
 
   /** Compute whether the stream currently needs to apply backpressure, according to its [desiredSize]. */
   private val needsBackpressure: Boolean get() = desiredSize()?.let { it <= 0 } == true
@@ -462,7 +462,7 @@ internal class WritableDefaultStream(
   }
 
   /** Clear and release the current [lockedWriter]. */
-  internal fun releaseWriter(writer: WriterToken) {
+  internal fun releaseWriter(writer: WritableStreamDefaultWriterToken) {
     check(lockedWriter.compareAndSet(writer, null))
     val reason = TypeError.create("Writer has been released")
     writer.ensureReadyPromiseRejected(reason)
@@ -470,7 +470,7 @@ internal class WritableDefaultStream(
   }
 
   @Polyglot override fun getWriter(): WritableStreamDefaultWriter {
-    val writer = WriterToken(this)
+    val writer = WritableStreamDefaultWriterToken(this)
 
     if (!lockedWriter.compareAndSet(null, writer))
       throw TypeError.create("Stream is already locked to a writer")

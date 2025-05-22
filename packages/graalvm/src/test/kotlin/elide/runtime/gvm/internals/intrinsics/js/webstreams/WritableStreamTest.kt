@@ -50,7 +50,7 @@ import elide.testing.annotations.TestCase
     val sinkChannel = Channel<Any?>(capacity = Channel.UNLIMITED)
     val channelSink = channelSink(sinkChannel)
 
-    val stream = WritableDefaultStream(channelSink, QueueingStrategy.Default)
+    val stream = WritableDefaultStream(channelSink, QueueingStrategy.DefaultReadStrategy)
     val writer = stream.getWriter()
 
     val writes = List(5) {

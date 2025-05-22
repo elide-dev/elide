@@ -24,7 +24,9 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViewType.Uint8Array
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViews
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
@@ -38,6 +40,8 @@ import elide.testing.annotations.TestCase
 
 @OptIn(DelicateElideApi::class)
 @TestCase internal class ReadableStreamTest : AbstractJsIntrinsicTest<ReadableStreamIntrinsic>() {
+  @Inject lateinit var executionProvider: GuestExecutorProvider
+
   private fun options(vararg pairs: Pair<String, Any>): Value {
     return asValue(ProxyObject.fromMap(mapOf(*pairs)))
   }
@@ -81,7 +85,7 @@ import elide.testing.annotations.TestCase
 
   @Test fun `should save chunks in queue when no pending reads`() = runTest {
     val source = pushSource { it.enqueue(asValue(1)) }
-    val stream = ReadableDefaultStream(source, QueueingStrategy.Default)
+    val stream = ReadableDefaultStream(source, QueueingStrategy.DefaultReadStrategy, executionProvider.executor())
 
     val read = stream.useReader { reader -> reader.awaitRead() }
     assertEquals(1, (read.value as Value).asInt(), "expected chunk to have enqueued value")
@@ -100,7 +104,7 @@ import elide.testing.annotations.TestCase
     }
 
     // cast is needed on the host to access the APIs (for now, will be easier later)
-    val stream = ReadableDefaultStream(source, QueueingStrategy.Default)
+    val stream = ReadableDefaultStream(source, QueueingStrategy.DefaultReadStrategy, executionProvider.executor())
     val reader = stream.getReader() as ReadableStreamDefaultReader
 
     // read from the stream sequentially until a chunk marked as 'done' is found
@@ -138,7 +142,7 @@ import elide.testing.annotations.TestCase
         controller.enqueue(ArrayBufferViews.newView(Uint8Array, firstChunk))
       }
 
-      val stream = ReadableStream.create(source, QueueingStrategy.Default)
+      val stream = ReadableStream.create(source, QueueingStrategy.DefaultReadStrategy)
       val reader = stream.getReader(options("mode" to "byob")) as ReadableStreamBYOBReader
 
       val viewBuffer = ByteBuffer.allocate(12)

@@ -19,6 +19,7 @@ import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
 import elide.annotations.API
+import elide.runtime.exec.GuestExecution
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableByteStream
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableDefaultStream
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
@@ -39,7 +40,7 @@ import elide.vm.annotations.Polyglot
    * from the source.
    */
   public data class ReadResult(
-    @Polyglot val value: Any?,
+    @Polyglot val value: Value?,
     @Polyglot val done: Boolean,
   )
 
@@ -98,11 +99,11 @@ import elide.vm.annotations.Polyglot
    *
    * If the stream is already [locked], an error will be thrown.
    */
-  @Polyglot public fun getReader(options: Any? = null): ReadableStreamReader
+  @Polyglot public fun getReader(options: Value? = null): ReadableStreamReader
 
-  @Polyglot public fun pipeThrough(transform: TransformStream, options: Any? = null): ReadableStream
+  @Polyglot public fun pipeThrough(transform: TransformStream, options: Value? = null): ReadableStream
 
-  @Polyglot public fun pipeTo(destination: WritableStream, options: Any? = null): JsPromise<Unit>
+  @Polyglot public fun pipeTo(destination: WritableStream, options: Value? = null): JsPromise<Unit>
 
   @Polyglot public fun tee(): Array<ReadableStream>
 
@@ -176,16 +177,19 @@ import elide.vm.annotations.Polyglot
 
   /** Default constructors/factory methods for [ReadableStream] instances. */
   public companion object DefaultFactory : ProxyInstantiable, Factory<ReadableStream> {
+    // TODO(@darvld): replace with proper local guest executor API once available
+    private val streamExecutor = GuestExecution.workStealing()
+
     override fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream {
       return when (source.type) {
-        Type.Default -> ReadableDefaultStream(source, queueingStrategy ?: QueueingStrategy.Default)
-        Type.BYOB -> ReadableByteStream(source, queueingStrategy ?: QueueingStrategy.Default)
+        Type.Default -> ReadableDefaultStream(source, queueingStrategy ?: QueueingStrategy.DefaultReadStrategy, streamExecutor)
+        Type.BYOB -> ReadableByteStream(source, queueingStrategy ?: QueueingStrategy.DefaultReadStrategy, streamExecutor)
       }
     }
 
     override fun newInstance(vararg arguments: Value?): Any? {
       val source = arguments.getOrNull(0)?.let(::GuestReadableStreamSource) ?: ReadableStreamSource.Empty
-      val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from) ?: QueueingStrategy.Default
+      val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from) ?: QueueingStrategy.DefaultReadStrategy
 
       return create(source, strategy)
     }

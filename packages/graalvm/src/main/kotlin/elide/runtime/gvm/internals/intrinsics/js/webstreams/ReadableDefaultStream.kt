@@ -16,11 +16,10 @@ import com.google.common.util.concurrent.AtomicDouble
 import org.graalvm.polyglot.Value
 import java.util.*
 import kotlinx.atomicfu.locks.withLock
+import elide.runtime.exec.GuestExecutor
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.ReadableStream.ReadResult
-import elide.runtime.intrinsics.js.TransformStream
-import elide.runtime.intrinsics.js.WritableStream
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.stream.QueueingStrategy
 import elide.runtime.intrinsics.js.stream.ReadableStreamReader
@@ -37,9 +36,10 @@ internal class ReadableDefaultStream(
   private val source: ReadableStreamSource,
   /** Queueing strategy used to manage backpressure. */
   private val strategy: QueueingStrategy,
+  override val executor: GuestExecutor
 ) : ReadableStreamBase() {
   /** Simple chunk type allowing an arbitrary untyped value to be enqueued with a computed size. */
-  private data class SizedChunk(val chunk: Any?, val size: Double)
+  private data class SizedChunk(val chunk: Value?, val size: Double)
 
   /**
    * Incoming chunk queue, used to store undelivered data enqueued by the stream's [source]. Note that, if there are
@@ -168,11 +168,11 @@ internal class ReadableDefaultStream(
     if (chunkQueue.isEmpty()) cleanup()
   }
 
-  override fun release() {
+  override fun releaseReader() {
     lockedReader.getAndSet(null)
   }
 
-  @Polyglot override fun getReader(options: Any?): ReadableStreamReader {
+  @Polyglot override fun getReader(options: Value?): ReadableStreamReader {
     // creating the reader prematurely is not an issue: if it can't be used, we're throwing anyway
     val reader = ReadableStreamDefaultReaderToken(this)
     if (!lockedReader.compareAndSet(null, reader)) throw TypeError.create("Stream is already locked to a reader")
@@ -200,17 +200,5 @@ internal class ReadableDefaultStream(
         }
       }
     }
-  }
-
-  @Polyglot override fun pipeThrough(transform: TransformStream, options: Any?): ReadableStream {
-    TODO("Not yet implemented")
-  }
-
-  @Polyglot override fun pipeTo(destination: WritableStream, options: Any?): JsPromise<Unit> {
-    TODO("Not yet implemented")
-  }
-
-  @Polyglot override fun tee(): Array<ReadableStream> {
-    TODO("Not yet implemented")
   }
 }

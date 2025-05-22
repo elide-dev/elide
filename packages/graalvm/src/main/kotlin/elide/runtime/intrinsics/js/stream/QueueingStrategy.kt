@@ -14,7 +14,7 @@ package elide.runtime.intrinsics.js.stream
 
 import org.graalvm.polyglot.Value
 import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.stream.QueueingStrategy.Default.highWaterMark
+import elide.runtime.intrinsics.js.stream.QueueingStrategy.DefaultReadStrategy.highWaterMark
 
 /**
  * A strategy used by stream controllers to manage backpressure from compatible sources.
@@ -32,9 +32,21 @@ public interface QueueingStrategy {
   /** Calculate the size of an arbitrary chunk of data. */
   public fun size(chunk: Any?): Double
 
-  /** The default queuing strategy, using a [highWaterMark] of `0.0` and measuring every chunk with size `1.0`. */
-  public object Default : QueueingStrategy {
+  /**
+   * The default queuing strategy for readable streams, using a [highWaterMark] of `0.0` and measuring every chunk with
+   * size `1.0`.
+   */
+  public object DefaultReadStrategy : QueueingStrategy {
     override fun highWaterMark(): Double = 0.0
+    override fun size(chunk: Any?): Double = 1.0
+  }
+
+  /**
+   * The default queuing strategy for writable streams, using a [highWaterMark] of `1.0` and measuring every chunk with
+   * size `1.0`.
+   */
+  public object DefaultWriteStrategy : QueueingStrategy {
+    override fun highWaterMark(): Double = 1.0
     override fun size(chunk: Any?): Double = 1.0
   }
 }

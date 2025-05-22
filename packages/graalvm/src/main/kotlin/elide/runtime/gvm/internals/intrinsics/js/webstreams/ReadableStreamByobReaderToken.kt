@@ -48,7 +48,7 @@ internal class ReadableStreamByobReaderToken(
   @Polyglot override fun releaseLock() {
     ensureOpen()
     closed.reject(TypeError.create("Reader lock was released"))
-    stream.release()
+    stream.releaseReader()
   }
 
   @Polyglot override fun cancel() {

@@ -5,7 +5,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
+import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.asDeferred
@@ -17,6 +19,8 @@ import elide.testing.annotations.TestCase
 
 @OptIn(DelicateElideApi::class)
 @TestCase internal class TransformStreamTest : AbstractJsIntrinsicTest<TransformStreamIntrinsic>() {
+  @Inject lateinit var executionProvider: GuestExecutorProvider
+
   override fun provide(): TransformStreamIntrinsic {
     return TransformStreamIntrinsic()
   }
@@ -45,7 +49,8 @@ import elide.testing.annotations.TestCase
       JsPromise.resolved(Unit)
     }
 
-    val stream = TransformDefaultStream(transformer)
+
+    val stream = TransformDefaultStream(transformer, executionProvider.executor())
     val readable = stream.readable
     val writable = stream.writable
 

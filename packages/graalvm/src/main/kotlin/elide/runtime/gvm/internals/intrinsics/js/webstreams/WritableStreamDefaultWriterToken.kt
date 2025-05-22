@@ -3,6 +3,8 @@ package elide.runtime.gvm.internals.intrinsics.js.webstreams
 import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream.Companion.WRITABLE_STREAM_CLOSED
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream.Companion.WRITABLE_STREAM_ERRORED
 import elide.runtime.intrinsics.js.CompletableJsPromise
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.TypeError
@@ -13,7 +15,9 @@ import elide.vm.annotations.Polyglot
  * A light implementation of a writable stream writer that delegates most of the logic to the [stream] instance owning
  * it.
  */
-internal class WriterToken(private val stream: WritableDefaultStream) : WritableStreamDefaultWriter {
+internal class WritableStreamDefaultWriterToken(
+  private val stream: WritableDefaultStream
+) : WritableStreamDefaultWriter {
   /** Whether this writer is detached, i.e. released by the [stream] and no longer valid. */
   private val detached = AtomicBoolean()
 
@@ -57,6 +61,17 @@ internal class WriterToken(private val stream: WritableDefaultStream) : Writable
     val closePromise = ready
     if (!closePromise.isDone) closePromise.reject(reason)
     else mutableClosePromise.getAndSet(JsPromise<Unit>().also { it.reject(reason) })
+  }
+
+  internal fun closeWithErrorPropagation(): JsPromise<Unit> {
+    check(!detached.get())
+    val streamState = stream.streamState
+
+    return when {
+      stream.closeQueuedOrInflight || streamState == WRITABLE_STREAM_CLOSED -> JsPromise.resolved(Unit)
+      streamState == WRITABLE_STREAM_ERRORED -> JsPromise.rejected(stream.errorCause)
+      else -> close()
+    }
   }
 
   @Polyglot override fun write(chunk: Value): JsPromise<Unit> {

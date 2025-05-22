@@ -3,6 +3,7 @@ package elide.runtime.gvm.internals.intrinsics.js.webstreams
 import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import elide.runtime.exec.GuestExecutor
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamBase.Companion.READABLE_STREAM_ERRORED
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream.Companion.WRITABLE_STREAM_ERRORED
 import elide.runtime.intrinsics.js.CompletableJsPromise
@@ -14,8 +15,9 @@ import elide.vm.annotations.Polyglot
 
 internal class TransformDefaultStream(
   val transformer: TransformStreamTransformer,
-  writableStrategy: QueueingStrategy = QueueingStrategy.Default,
-  readableStrategy: QueueingStrategy = QueueingStrategy.Default,
+  executor: GuestExecutor,
+  writableStrategy: QueueingStrategy = QueueingStrategy.DefaultReadStrategy,
+  readableStrategy: QueueingStrategy = QueueingStrategy.DefaultReadStrategy,
 ) : TransformStream {
 
   @JvmInline private value class DelegatingSource(private val stream: TransformDefaultStream) : ReadableStreamSource {
@@ -148,8 +150,9 @@ internal class TransformDefaultStream(
   private val controller = TransformStreamDefaultControllerToken(this)
 
   @get:Polyglot override val readable: ReadableDefaultStream = ReadableDefaultStream(
-    source = DelegatingSource(this),
-    strategy = readableStrategy,
+      source = DelegatingSource(this),
+      strategy = readableStrategy,
+      executor
   )
 
   @get:Polyglot override val writable: WritableDefaultStream = WritableDefaultStream(

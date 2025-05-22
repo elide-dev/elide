@@ -17,12 +17,13 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
-import elide.runtime.intrinsics.js.CompletableJsPromise
-import elide.runtime.intrinsics.js.JsPromise
-import elide.runtime.intrinsics.js.ReadableStream
+import elide.runtime.exec.GuestExecutor
+import elide.runtime.intrinsics.js.*
 import elide.runtime.intrinsics.js.ReadableStream.ReadResult
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.stream.ReadableStreamController
 import elide.runtime.intrinsics.js.stream.ReadableStreamSource
+import elide.vm.annotations.Polyglot
 
 /**
  * Base class for [ReadableStream] implementations, containing shared definitions for internal queue types as well as
@@ -30,6 +31,9 @@ import elide.runtime.intrinsics.js.stream.ReadableStreamSource
  * state of the stream itself.
  */
 internal abstract class ReadableStreamBase : ReadableStream {
+  /** Executor used to schedule stream operations. */
+  protected abstract val executor: GuestExecutor
+
   /**
    * A reentrant lock used to synchronize update or transfer operations between the stream's internal queues, as well
    * as changes to the queue size.
@@ -135,7 +139,32 @@ internal abstract class ReadableStreamBase : ReadableStream {
   internal abstract fun close()
 
   /** Release the current reader, if any, allowing a new reader to be locked to the stream. */
-  internal abstract fun release()
+  internal abstract fun releaseReader()
+
+  @Polyglot override fun pipeThrough(transform: TransformStream, options: Value?): ReadableStream {
+    pipeTo(transform.writable, options)
+    return transform.readable
+  }
+
+  @Polyglot override fun pipeTo(destination: WritableStream, options: Value?): JsPromise<Unit> {
+    if (locked) throw TypeError.create("Source stream is locked, cannot pipe")
+    if (destination.locked) throw TypeError.create("Destination is locked, cannot pipe")
+
+    // unpack options
+    val signal = options?.getMember("signal")?.takeIf { it.isHostObject }?.asHostObject<AbortSignal>()
+    val preventClose = options?.getMember("preventClose")?.takeIf { it.isBoolean }?.asBoolean() ?: false
+    val preventAbort = options?.getMember("preventAbort")?.takeIf { it.isBoolean }?.asBoolean() ?: false
+    val preventCancel = options?.getMember("preventCancel")?.takeIf { it.isBoolean }?.asBoolean() ?: false
+
+    check(destination is WritableDefaultStream)
+    return StreamPipe.pipe(executor, this, destination, preventClose, preventAbort, preventCancel, signal)
+  }
+
+  @Polyglot override fun tee(): Array<ReadableStream> {
+
+
+    TODO("Not yet implemented")
+  }
 
   internal companion object {
     // stream state

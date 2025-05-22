@@ -18,6 +18,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.withLock
+import elide.runtime.exec.GuestExecutor
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferValue
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViewType
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViewType.Uint8Array
@@ -27,8 +28,6 @@ import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableByteStream.P
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.ReadableStream.ReadResult
-import elide.runtime.intrinsics.js.TransformStream
-import elide.runtime.intrinsics.js.WritableStream
 import elide.runtime.intrinsics.js.err.RangeError
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.stream.*
@@ -44,6 +43,7 @@ internal class ReadableByteStream(
   private val source: ReadableStreamSource,
   /** Queueing strategy used to manage backpressure. */
   private val strategy: QueueingStrategy,
+  override val executor: GuestExecutor
 ) : ReadableStreamBase() {
   /**
    * A chunk wrapping a [buffer] to be written into by the stream's source; only the region of [buffer] between
@@ -679,7 +679,7 @@ internal class ReadableByteStream(
     if (queueSize.get() == 0L) cleanup()
   }
 
-  override fun release() {
+  override fun releaseReader() {
     lockedReader.getAndSet(null)
   }
 
@@ -700,8 +700,8 @@ internal class ReadableByteStream(
     }
   }
 
-  @Polyglot override fun getReader(options: Any?): ReadableStreamReader {
-    val mode = (options as? Value)?.takeIf { it.hasMember("mode") }?.let { opts ->
+  @Polyglot override fun getReader(options: Value?): ReadableStreamReader {
+    val mode = options?.takeIf { it.hasMember("mode") }?.let { opts ->
       opts.getMember("mode").takeIf { it.isString }?.asString()
     }
 
@@ -717,17 +717,5 @@ internal class ReadableByteStream(
     }
 
     return reader
-  }
-
-  @Polyglot override fun pipeThrough(transform: TransformStream, options: Any?): ReadableStream {
-    TODO("Not yet implemented")
-  }
-
-  @Polyglot override fun pipeTo(destination: WritableStream, options: Any?): JsPromise<Unit> {
-    TODO("Not yet implemented")
-  }
-
-  @Polyglot override fun tee(): Array<ReadableStream> {
-    TODO("Not yet implemented")
   }
 }

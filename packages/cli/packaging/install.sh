@@ -114,16 +114,6 @@ if [[ "$@" == *"os"* ]]; then
   debug "User specified a specific OS: $OS"
 fi
 COMPRESSION_TOOL="gzip"
-if [ -x "$(command -v bzip2)" ]; then
-  debug "Found compression: bzip2"
-  COMPRESSION_TOOL="bzip2"
-  COMPRESSION="bz2"
-fi
-if [ -x "$(command -v zstd)" ]; then
-  debug "Found compression: zstd"
-  COMPRESSION_TOOL="zstd"
-  COMPRESSION="zst"
-fi
 if [ -x "$(command -v xz)" ]; then
   debug "Found compression: xz"
   COMPRESSION_TOOL="xz"

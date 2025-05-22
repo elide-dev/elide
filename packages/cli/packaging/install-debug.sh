@@ -200,16 +200,6 @@ fi
 # default to downloading gzip variant, but consume XZ or Brotli variant if the tools are locally available to decompress
 # the resulting archive. XZ and Brotli do not ship with mac, but developers often have these tools.
 COMPRESSION_TOOL="gzip"
-if [ -x "$(command -v bzip2)" ]; then
-  debug "Found compression: bzip2"
-  COMPRESSION_TOOL="bzip2"
-  COMPRESSION="bz2"
-fi
-if [ -x "$(command -v zstd)" ]; then
-  debug "Found compression: zstd"
-  COMPRESSION_TOOL="zstd"
-  COMPRESSION="zst"
-fi
 if [ -x "$(command -v xz)" ]; then
   debug "Found compression: xz"
   COMPRESSION_TOOL="xz"

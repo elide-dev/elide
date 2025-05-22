@@ -56,13 +56,15 @@ internal abstract class ReadableStreamBase : ReadableStream {
   protected open val lockedReader = AtomicReference<ReadableStreamReaderTokenBase>()
 
   /** Current state of the stream, safe for concurrent access and modification. */
-  protected val streamState = AtomicInteger(STREAM_READABLE)
+  protected val streamState = AtomicInteger(READABLE_STREAM_READABLE)
+  internal val state: Int get() = streamState.get()
 
   /** Current state of the stream's source, semantically equivalent to the WHATWG spec controller's state. */
   protected val sourceState = AtomicInteger(SOURCE_UNINITIALIZED)
 
   /** Optional reason for the stream's errored state. */
   protected val errorCause = AtomicReference<Any>()
+  internal val storedError: Any? get() = errorCause.get()
 
   /**
    * Initialize the underlying [source] of the stream, using a [controller] to expose its driving APIs. Subclasses
@@ -84,7 +86,7 @@ internal abstract class ReadableStreamBase : ReadableStream {
     val reader = lockedReader.get()
 
     return when {
-      streamState != STREAM_READABLE -> false
+      streamState != READABLE_STREAM_READABLE -> false
       sourceState >= SOURCE_CLOSING -> false
       sourceState <= SOURCE_UNINITIALIZED -> false
       reader != null && readQueue.isNotEmpty() -> true
@@ -137,9 +139,9 @@ internal abstract class ReadableStreamBase : ReadableStream {
 
   internal companion object {
     // stream state
-    internal const val STREAM_READABLE = 0
-    internal const val STREAM_CLOSED = 1
-    internal const val STREAM_ERRORED = 2
+    internal const val READABLE_STREAM_READABLE = 0
+    internal const val READABLE_STREAM_CLOSED = 1
+    internal const val READABLE_STREAM_ERRORED = 2
 
     // source (controller) state
     internal const val SOURCE_UNINITIALIZED = 0

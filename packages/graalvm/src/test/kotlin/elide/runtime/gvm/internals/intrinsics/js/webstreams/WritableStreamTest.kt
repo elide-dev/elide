@@ -1,5 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
+import org.graalvm.polyglot.Value
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.test.runTest
@@ -29,7 +30,7 @@ import elide.testing.annotations.TestCase
     // reserved
     override val type: Any get() = Unit
 
-    override fun write(chunk: Any?, controller: WritableStreamDefaultController): JsPromise<Unit> {
+    override fun write(chunk: Value, controller: WritableStreamDefaultController): JsPromise<Unit> {
       assert(channel.trySend(chunk).isSuccess) { "Failed to consume chunk $chunk" }
       return JsPromise.resolved(Unit)
     }
@@ -53,11 +54,11 @@ import elide.testing.annotations.TestCase
     val writer = stream.getWriter()
 
     val writes = List(5) {
-      writer.write(it).catch { reason -> fail("Write promise was rejected: $reason") }
+      writer.write(Value.asValue(it)).catch { reason -> fail("Write promise was rejected: $reason") }
     }
 
     repeat(writes.size) { i ->
-      assertEquals(expected = i, actual = sinkChannel.tryReceive().getOrThrow())
+      assertEquals(expected = i, actual = (sinkChannel.tryReceive().getOrThrow() as Value).asInt())
       assert(writes[i].isDone)
     }
   }

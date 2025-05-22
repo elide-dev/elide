@@ -1,6 +1,7 @@
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import com.google.common.util.concurrent.AtomicDouble
+import org.graalvm.polyglot.Value
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -35,7 +36,7 @@ internal class WritableDefaultStream(
       get() = stream.abortController.signal
 
     override fun error(e: Any?) {
-      if (stream.state.get() != STREAM_WRITABLE) return
+      if (stream.state.get() != WRITABLE_STREAM_WRITABLE) return
       stream.startErroring(e)
     }
   }
@@ -46,7 +47,7 @@ internal class WritableDefaultStream(
    */
   private sealed interface QueueElement {
     /** A sized data chunk that should be written to the underlying [sink]. */
-    data class Chunk(val chunk: Any?, val size: Double) : QueueElement
+    data class Chunk(val chunk: Value, val size: Double) : QueueElement
 
     /** A sentinel value used to indicate the end of the stream; no more values will be enqueued after this token. */
     data object CloseToken : QueueElement
@@ -94,10 +95,12 @@ internal class WritableDefaultStream(
   private val initialized = AtomicBoolean(false)
 
   /** Current state of the stream. */
-  private val state = AtomicInteger(STREAM_WRITABLE)
+  private val state = AtomicInteger(WRITABLE_STREAM_WRITABLE)
+  internal val streamState: Int get() = state.get()
 
   /** An optional stored cause for the stream's error state. */
   private val storedError = AtomicReference<Any?>(null)
+  internal val errorCause: Any? get() = storedError.get()
 
   /** A queue holding the promises corresponding to pending write operations in the [writeQueue]. */
   private val writeRequests = ConcurrentLinkedQueue<CompletableJsPromise<Unit>>()
@@ -154,8 +157,8 @@ internal class WritableDefaultStream(
 
   /** Compute the desired [writeQueueSize] for the stream, depending on its [state] and [strategy]. */
   internal fun desiredSize(): Double? = when (state.get()) {
-    STREAM_ERRORED, STREAM_ERRORING -> null
-    STREAM_CLOSED -> 0.0
+    WRITABLE_STREAM_ERRORED, WRITABLE_STREAM_ERRORING -> null
+    WRITABLE_STREAM_CLOSED -> 0.0
     else -> strategy.highWaterMark() - writeQueueSize.get()
   }
 
@@ -167,17 +170,17 @@ internal class WritableDefaultStream(
    * This method is intended for use by [WritableStreamDefaultWriter] implementations when a producer requests to write
    * a chunk.
    */
-  internal fun writeChunk(chunk: Any?): JsPromise<Unit> {
+  internal fun writeChunk(chunk: Value): JsPromise<Unit> {
     val size = strategy.size(chunk)
     val currentState = state.get()
 
     return when {
-      currentState == STREAM_ERRORED -> JsPromise.rejected(storedError.get())
-      currentState == STREAM_CLOSED || closeQueuedOrInflight -> {
+      currentState == WRITABLE_STREAM_ERRORED -> JsPromise.rejected(storedError.get())
+      currentState == WRITABLE_STREAM_CLOSED || closeQueuedOrInflight -> {
         JsPromise.rejected(TypeError.create("Stream is closing or closed"))
       }
 
-      currentState == STREAM_ERRORING -> JsPromise.rejected(storedError.get())
+      currentState == WRITABLE_STREAM_ERRORING -> JsPromise.rejected(storedError.get())
 
       else -> {
         val promise = JsPromise<Unit>()
@@ -188,6 +191,11 @@ internal class WritableDefaultStream(
         promise
       }
     }
+  }
+
+  internal fun errorIfNeeded(cause: Any?) {
+    if (state.get() != WRITABLE_STREAM_WRITABLE) return
+    startErroring(cause)
   }
 
   /** Enqueue an [element] to the [writeQueue] and increment the [writeQueueSize] accordingly. */
@@ -205,9 +213,9 @@ internal class WritableDefaultStream(
    * Finalize an immediate [write][writeChunk] operation, enqueuing the [chunk] with the given [size], updating the
    * stream's backpressure, and advancing the write queue.
    */
-  private fun commitWrite(chunk: Any?, size: Double) {
+  private fun commitWrite(chunk: Value, size: Double) {
     enqueueWithSize(Chunk(chunk, size))
-    if (!closeQueuedOrInflight && state.get() == STREAM_WRITABLE) updateBackpressure(needsBackpressure)
+    if (!closeQueuedOrInflight && state.get() == WRITABLE_STREAM_WRITABLE) updateBackpressure(needsBackpressure)
     advanceQueueIfNeeded()
   }
 
@@ -218,7 +226,7 @@ internal class WritableDefaultStream(
   private fun advanceQueueIfNeeded() {
     if (!initialized.get() || pendingWrite.get() != null) return
 
-    if (state.get() == STREAM_ERRORING) {
+    if (state.get() == WRITABLE_STREAM_ERRORING) {
       finishErroring()
       return
     }
@@ -247,10 +255,10 @@ internal class WritableDefaultStream(
             finishInFlightWrite()
 
             val currentState = state.get()
-            check(currentState == STREAM_WRITABLE || currentState == STREAM_ERRORING)
+            check(currentState == WRITABLE_STREAM_WRITABLE || currentState == WRITABLE_STREAM_ERRORING)
 
             dequeue()
-            if (!closeQueuedOrInflight && currentState == STREAM_WRITABLE) updateBackpressure(needsBackpressure)
+            if (!closeQueuedOrInflight && currentState == WRITABLE_STREAM_WRITABLE) updateBackpressure(needsBackpressure)
 
             advanceQueueIfNeeded()
           },
@@ -271,12 +279,12 @@ internal class WritableDefaultStream(
     checkNotNull(pendingClose.getAndSet(null)).resolve(Unit)
 
     val currentState = state.get()
-    if (currentState == STREAM_ERRORING) {
+    if (currentState == WRITABLE_STREAM_ERRORING) {
       storedError.set(null)
       pendingAbort.getAndSet(null)?.promise?.resolve(Unit)
     }
 
-    state.set(STREAM_CLOSED)
+    state.set(WRITABLE_STREAM_CLOSED)
     lockedWriter.get()?.closed?.resolve(Unit)
 
     check(pendingAbort.get() == null)
@@ -313,7 +321,7 @@ internal class WritableDefaultStream(
    * accordingly.
    */
   private fun updateBackpressure(value: Boolean) {
-    check(state.get() == STREAM_WRITABLE)
+    check(state.get() == WRITABLE_STREAM_WRITABLE)
     check(!closeQueuedOrInflight)
 
     lockedWriter.get()?.takeIf { value != backpressureApplied.get() }?.let {
@@ -327,18 +335,18 @@ internal class WritableDefaultStream(
   /** Handle a failure during a stream operation, and either [startErroring] or [finishErroring]. */
   private fun dealWithRejection(reason: Any?) {
     val currentState = state.get()
-    if (currentState == STREAM_WRITABLE) {
+    if (currentState == WRITABLE_STREAM_WRITABLE) {
       startErroring(reason)
       return
     }
 
-    check(currentState == STREAM_ERRORING)
+    check(currentState == WRITABLE_STREAM_ERRORING)
     finishErroring()
   }
 
   /** Begin closing the stream with an error state using the given [reason]. */
   private fun startErroring(reason: Any?) {
-    check(state.compareAndSet(STREAM_WRITABLE, STREAM_ERRORING))
+    check(state.compareAndSet(WRITABLE_STREAM_WRITABLE, WRITABLE_STREAM_ERRORING))
     check(storedError.compareAndSet(null, reason))
 
     lockedWriter.get()?.ensureReadyPromiseRejected(reason)
@@ -347,7 +355,7 @@ internal class WritableDefaultStream(
 
   /** Finalize a stream closure caused by an error. */
   private fun finishErroring() {
-    check(state.compareAndSet(STREAM_ERRORING, STREAM_ERRORED))
+    check(state.compareAndSet(WRITABLE_STREAM_ERRORING, WRITABLE_STREAM_ERRORED))
     check(!pendingInflight)
 
     writeQueueSize.set(0.0)
@@ -399,21 +407,25 @@ internal class WritableDefaultStream(
   /** Abruptly close the stream using an error with the given [reason]. */
   internal fun abortStream(reason: Any?): JsPromise<Unit> {
     var currentState = state.get()
-    if (currentState == STREAM_CLOSED || currentState == STREAM_ERRORED) return JsPromise.resolved(Unit)
+    if (currentState == WRITABLE_STREAM_CLOSED || currentState == WRITABLE_STREAM_ERRORED) return JsPromise.resolved(
+      Unit,
+    )
 
     abortController.abort(reason)
 
     // note: the condition is not guaranteed since aborting the controller may result in a state change
     // see https://streams.spec.whatwg.org/#writable-stream-abort
     currentState = state.get()
-    if (currentState == STREAM_CLOSED || currentState == STREAM_ERRORED) return JsPromise.resolved(Unit)
+    if (currentState == WRITABLE_STREAM_CLOSED || currentState == WRITABLE_STREAM_ERRORED) return JsPromise.resolved(
+      Unit,
+    )
 
     pendingAbort.get()?.let {
       return it.promise
     }
 
-    val finalReason = if (currentState != STREAM_ERRORING) reason else null
-    val alreadyErroring = currentState == STREAM_ERRORING
+    val finalReason = if (currentState != WRITABLE_STREAM_ERRORING) reason else null
+    val alreadyErroring = currentState == WRITABLE_STREAM_ERRORING
 
     val abortPromise = JsPromise<Unit>()
     pendingAbort.set(
@@ -431,7 +443,7 @@ internal class WritableDefaultStream(
   /** Close the stream normally if applicable. */
   internal fun closeStream(): JsPromise<Unit> {
     val currentState = state.get()
-    if (currentState == STREAM_CLOSED || currentState == STREAM_ERRORED)
+    if (currentState == WRITABLE_STREAM_CLOSED || currentState == WRITABLE_STREAM_ERRORED)
       return JsPromise.rejected(TypeError.create("Stream is already closed or errored"))
 
     check(!closeQueuedOrInflight)
@@ -439,7 +451,8 @@ internal class WritableDefaultStream(
     val closePromise = JsPromise<Unit>()
     closeRequest.set(closePromise)
 
-    lockedWriter.get()?.takeIf { backpressureApplied.get() && currentState == STREAM_WRITABLE }?.ready?.resolve(Unit)
+    lockedWriter.get()
+      ?.takeIf { backpressureApplied.get() && currentState == WRITABLE_STREAM_WRITABLE }?.ready?.resolve(Unit)
 
     // signal closure via the queue
     enqueueWithSize(CloseToken)
@@ -463,19 +476,19 @@ internal class WritableDefaultStream(
       throw TypeError.create("Stream is already locked to a writer")
 
     when (state.get()) {
-      STREAM_WRITABLE -> {
+      WRITABLE_STREAM_WRITABLE -> {
         if (!closeQueuedOrInflight && backpressureApplied.get()) writer.refreshReadyPromise()
         else writer.refreshClosePromise(JsPromise<Unit>().also { it.resolve(Unit) })
 
         writer.refreshClosePromise()
       }
 
-      STREAM_CLOSED -> {
+      WRITABLE_STREAM_CLOSED -> {
         writer.refreshReadyPromise(JsPromise<Unit>().also { it.resolve(Unit) })
         writer.refreshClosePromise(JsPromise<Unit>().also { it.resolve(Unit) })
       }
 
-      STREAM_ERRORING -> {
+      WRITABLE_STREAM_ERRORING -> {
         writer.refreshReadyPromise(JsPromise<Unit>().also { it.reject(storedError.get()) })
         writer.refreshClosePromise()
       }
@@ -502,9 +515,9 @@ internal class WritableDefaultStream(
   }
 
   internal companion object {
-    private const val STREAM_WRITABLE = 0
-    private const val STREAM_CLOSED = 1
-    private const val STREAM_ERRORING = 2
-    private const val STREAM_ERRORED = 3
+    internal const val WRITABLE_STREAM_WRITABLE: Int = 0
+    internal const val WRITABLE_STREAM_CLOSED: Int = 1
+    internal const val WRITABLE_STREAM_ERRORING: Int = 2
+    internal const val WRITABLE_STREAM_ERRORED: Int = 3
   }
 }

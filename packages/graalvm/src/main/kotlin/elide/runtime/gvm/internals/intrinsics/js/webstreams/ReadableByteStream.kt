@@ -235,7 +235,7 @@ internal class ReadableByteStream(
     assert(readQueue.isNotEmpty())
 
     val state = streamState.get()
-    if (state == STREAM_CLOSED) check(descriptor.filled % descriptor.elementSize == 0L)
+    if (state == READABLE_STREAM_CLOSED) check(descriptor.filled % descriptor.elementSize == 0L)
 
     // create a new buffer view to be delivered in a read requests with the appropriate element size
     val view = ArrayBufferViews.newView(
@@ -245,7 +245,7 @@ internal class ReadableByteStream(
       length = descriptor.filled,
     )
 
-    readQueue.poll().resolve(ReadResult(view, done = state == STREAM_CLOSED))
+    readQueue.poll().resolve(ReadResult(view, done = state == READABLE_STREAM_CLOSED))
   }
 
   /**
@@ -342,7 +342,7 @@ internal class ReadableByteStream(
       }
     }
 
-    streamState.set(STREAM_CLOSED)
+    streamState.set(READABLE_STREAM_CLOSED)
     sourceState.set(SOURCE_CLOSED)
     lockedReader.getAndSet(null)?.close()
   }
@@ -356,10 +356,10 @@ internal class ReadableByteStream(
       val head = checkNotNull(pullQueue.peek())
       val state = streamState.get()
 
-      if (state == STREAM_CLOSED) {
+      if (state == READABLE_STREAM_CLOSED) {
         if (bytesWritten != 0L) throw TypeError.create("")
       } else {
-        check(state == STREAM_READABLE)
+        check(state == READABLE_STREAM_READABLE)
         if (bytesWritten == 0L) throw TypeError.create("")
         if (head.filled + bytesWritten > head.length) throw RangeError.create("")
       }
@@ -385,10 +385,10 @@ internal class ReadableByteStream(
       val byteOffset = ArrayBufferViews.getOffset(view)
       val arrayBuffer = ArrayBufferViews.getBackingBuffer(view)
 
-      if (state == STREAM_CLOSED) {
+      if (state == READABLE_STREAM_CLOSED) {
         if (byteLength != 0L) throw TypeError.create("")
       } else {
-        check(state == STREAM_READABLE)
+        check(state == READABLE_STREAM_READABLE)
         if (byteLength == 0L) throw TypeError.create("")
       }
 
@@ -414,7 +414,7 @@ internal class ReadableByteStream(
     val head = checkNotNull(pullQueue.peek())
 
     when (streamState.get()) {
-      STREAM_CLOSED -> {
+      READABLE_STREAM_CLOSED -> {
         check(head.filled % head.elementSize == 0L)
         if (head.readerType == None) pullQueue.poll()
 
@@ -489,7 +489,7 @@ internal class ReadableByteStream(
     val state = streamState.get()
 
     // disallow reading from an errored stream
-    if (state == STREAM_ERRORED) return JsPromise.rejected(errorCause.get())
+    if (state == READABLE_STREAM_ERRORED) return JsPromise.rejected(errorCause.get())
 
     // make a new pull request using this view and the read options
     val elementSize = ArrayBufferViews.getElementSize(view)
@@ -521,7 +521,7 @@ internal class ReadableByteStream(
       }
 
       // if the stream is closed, respond with an empty view
-      if (state == STREAM_CLOSED) return JsPromise.resolved(
+      if (state == READABLE_STREAM_CLOSED) return JsPromise.resolved(
         ReadResult(
           value = ArrayBufferViews.newView(arrayType, ByteBuffer.allocate(0), 0, 0),
           done = true,
@@ -565,15 +565,15 @@ internal class ReadableByteStream(
   }
 
   override fun desiredSize(): Double? = when (streamState.get()) {
-    STREAM_READABLE -> strategy.highWaterMark() - queueSize.get()
-    STREAM_CLOSED -> 0.0
+    READABLE_STREAM_READABLE -> strategy.highWaterMark() - queueSize.get()
+    READABLE_STREAM_CLOSED -> 0.0
     else -> null
   }
 
   override fun readOrEnqueue(): JsPromise<ReadResult> {
     return when (streamState.get()) {
-      STREAM_CLOSED -> JsPromise.resolved(ReadResult(null, done = true))
-      STREAM_ERRORED -> JsPromise.rejected(errorCause.get())
+      READABLE_STREAM_CLOSED -> JsPromise.resolved(ReadResult(null, done = true))
+      READABLE_STREAM_ERRORED -> JsPromise.rejected(errorCause.get())
       else -> {
         val readHandle = queueLock.withLock {
           // if there is a queued chunk, use it
@@ -655,7 +655,7 @@ internal class ReadableByteStream(
   }
 
   override fun error(reason: Any?) {
-    if (!streamState.compareAndSet(STREAM_READABLE, STREAM_ERRORED)) return
+    if (!streamState.compareAndSet(READABLE_STREAM_READABLE, READABLE_STREAM_ERRORED)) return
     errorCause.set(reason)
 
     invalidateRequest()
@@ -672,7 +672,7 @@ internal class ReadableByteStream(
     if (sourceState.getAndSet(SOURCE_CLOSING) >= SOURCE_CLOSING)
       throw TypeError.create("Stream is already closing or closed")
 
-    if (streamState.get() != STREAM_READABLE)
+    if (streamState.get() != READABLE_STREAM_READABLE)
       throw TypeError.create("Failed to close: stream is not readable")
 
     // only fully close if there are no undelivered chunks
@@ -685,8 +685,8 @@ internal class ReadableByteStream(
 
   @Polyglot override fun cancel(reason: Any?): JsPromise<Unit> {
     return when (streamState.get()) {
-      STREAM_CLOSED -> JsPromise.resolved(Unit)
-      STREAM_ERRORED -> JsPromise.rejected(TypeError.create(errorCause.get().toString()))
+      READABLE_STREAM_CLOSED -> JsPromise.resolved(Unit)
+      READABLE_STREAM_ERRORED -> JsPromise.rejected(TypeError.create(errorCause.get().toString()))
       else -> {
         close()
 
@@ -712,8 +712,8 @@ internal class ReadableByteStream(
 
     // if the stream is not readable, close the reader before returning it
     when (streamState.get()) {
-      STREAM_ERRORED -> reader.error(errorCause.get())
-      STREAM_CLOSED -> reader.close()
+      READABLE_STREAM_ERRORED -> reader.error(errorCause.get())
+      READABLE_STREAM_CLOSED -> reader.close()
     }
 
     return reader

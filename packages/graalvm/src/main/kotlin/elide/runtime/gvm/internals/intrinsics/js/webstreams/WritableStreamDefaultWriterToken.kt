@@ -1,5 +1,6 @@
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
+import org.graalvm.polyglot.Value
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.intrinsics.js.CompletableJsPromise
@@ -58,7 +59,7 @@ internal class WriterToken(private val stream: WritableDefaultStream) : Writable
     else mutableClosePromise.getAndSet(JsPromise<Unit>().also { it.reject(reason) })
   }
 
-  @Polyglot override fun write(chunk: Any?): JsPromise<Unit> {
+  @Polyglot override fun write(chunk: Value): JsPromise<Unit> {
     return if (detached.get()) JsPromise.rejected(TypeError.create("Writer has been released"))
     else stream.writeChunk(chunk)
   }

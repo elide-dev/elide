@@ -12,15 +12,21 @@
  */
 package elide.runtime.intrinsics.js.stream
 
+import org.graalvm.polyglot.Value
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
 
 public interface TransformStreamTransformer {
-  public val readableType: ReadableStream.Type
-  public val writableType: Any
+  public val readableType: ReadableStream.Type get() = ReadableStream.Type.Default
+  public val writableType: Any get() = Unit
 
-  public fun start(controller: TransformStreamDefaultController)
-  public fun flush(controller: TransformStreamDefaultController): JsPromise<Unit>
-  public fun transform(chunk: Any? = null, controller: TransformStreamDefaultController): JsPromise<Unit>
-  public fun cancel(reason: Any? = null): JsPromise<Unit>
+  public fun start(controller: TransformStreamDefaultController): JsPromise<Unit> = JsPromise.resolved(Unit)
+  public fun flush(controller: TransformStreamDefaultController): JsPromise<Unit> = JsPromise.resolved(Unit)
+
+  public fun transform(chunk: Value, controller: TransformStreamDefaultController): JsPromise<Unit> {
+    controller.enqueue(chunk)
+    return JsPromise.resolved(Unit)
+  }
+
+  public fun cancel(reason: Any? = null): JsPromise<Unit> = JsPromise.resolved(Unit)
 }

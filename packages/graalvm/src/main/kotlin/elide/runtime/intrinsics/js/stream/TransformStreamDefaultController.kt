@@ -12,12 +12,13 @@
  */
 package elide.runtime.intrinsics.js.stream
 
+import org.graalvm.polyglot.Value
 import elide.vm.annotations.Polyglot
 
 public interface TransformStreamDefaultController {
   @get:Polyglot public val desiredSize: Double?
 
-  @Polyglot public fun enqueue(chunk: Any? = null)
-  @Polyglot public fun error(reason: Any? = null)
+  @Polyglot public fun enqueue(chunk: Value)
+  @Polyglot public fun error(reason: Value)
   @Polyglot public fun terminate()
 }

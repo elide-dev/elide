@@ -78,19 +78,25 @@ internal class ReadableDefaultStream(
 
   /** Finalize this stream, setting its state to "closed", and releasing the locked [reader]. */
   private fun cleanup() {
-    streamState.set(STREAM_CLOSED)
+    streamState.set(READABLE_STREAM_CLOSED)
     lockedReader.getAndSet(null)?.close()
   }
 
+  internal fun hasBackpressure(): Boolean = !shouldPull()
+
+  internal fun canCloseOrEnqueue(): Boolean {
+    return streamState.get() == READABLE_STREAM_READABLE && sourceState.get() < SOURCE_CLOSING
+  }
+
   override fun desiredSize(): Double? = when (streamState.get()) {
-    STREAM_READABLE -> strategy.highWaterMark() - queueSize.get()
-    STREAM_CLOSED -> 0.0
+    READABLE_STREAM_READABLE -> strategy.highWaterMark() - queueSize.get()
+    READABLE_STREAM_CLOSED -> 0.0
     else -> null
   }
 
   override fun readOrEnqueue(): JsPromise<ReadResult> = when (streamState.get()) {
-    STREAM_CLOSED -> JsPromise.resolved(ReadResult(null, done = true))
-    STREAM_ERRORED -> JsPromise.rejected(errorCause.get())
+    READABLE_STREAM_CLOSED -> JsPromise.resolved(ReadResult(null, done = true))
+    READABLE_STREAM_ERRORED -> JsPromise.rejected(errorCause.get())
     else -> {
       val result = queueLock.withLock {
         val cached = chunkQueue.poll()
@@ -103,7 +109,7 @@ internal class ReadableDefaultStream(
           }
 
           queueSize.addAndGet(-cached.size)
-          JsPromise.resolved(ReadResult(cached.chunk, done = streamState.get() != STREAM_READABLE))
+          JsPromise.resolved(ReadResult(cached.chunk, done = streamState.get() != READABLE_STREAM_READABLE))
         } else {
           // create a new promise for the read and enqueue it
           JsPromise<ReadResult>().also(readQueue::offer)
@@ -119,7 +125,7 @@ internal class ReadableDefaultStream(
 
   override fun fulfillOrEnqueue(chunk: Value) {
     // disallow writes when closing or errored
-    if (streamState.get() != STREAM_READABLE || sourceState.get() >= SOURCE_CLOSING)
+    if (streamState.get() != READABLE_STREAM_READABLE || sourceState.get() >= SOURCE_CLOSING)
       throw TypeError.create("Stream is not readable")
 
     queueLock.withLock {
@@ -139,7 +145,7 @@ internal class ReadableDefaultStream(
   }
 
   override fun error(reason: Any?) {
-    if (!streamState.compareAndSet(STREAM_READABLE, STREAM_ERRORED)) return
+    if (!streamState.compareAndSet(READABLE_STREAM_READABLE, READABLE_STREAM_ERRORED)) return
     errorCause.set(reason)
 
     lockedReader.getAndSet(null)?.error(reason)
@@ -155,7 +161,7 @@ internal class ReadableDefaultStream(
     if (sourceState.getAndSet(SOURCE_CLOSING) >= SOURCE_CLOSING)
       throw TypeError.create("Stream is already closing or closed")
 
-    if (streamState.get() != STREAM_READABLE)
+    if (streamState.get() != READABLE_STREAM_READABLE)
       throw TypeError.create("Failed to close: stream is not readable")
 
     // only fully close if there are no undelivered chunks
@@ -173,8 +179,8 @@ internal class ReadableDefaultStream(
 
     // if the stream is not readable, close the reader before returning it
     when (streamState.get()) {
-      STREAM_ERRORED -> reader.error(errorCause.get())
-      STREAM_CLOSED -> reader.close()
+      READABLE_STREAM_ERRORED -> reader.error(errorCause.get())
+      READABLE_STREAM_CLOSED -> reader.close()
     }
 
     return reader
@@ -182,8 +188,8 @@ internal class ReadableDefaultStream(
 
   @Polyglot override fun cancel(reason: Any?): JsPromise<Unit> {
     return when (streamState.get()) {
-      STREAM_CLOSED -> JsPromise.resolved(Unit)
-      STREAM_ERRORED -> JsPromise.rejected(TypeError.create(errorCause.get().toString()))
+      READABLE_STREAM_CLOSED -> JsPromise.resolved(Unit)
+      READABLE_STREAM_ERRORED -> JsPromise.rejected(TypeError.create(errorCause.get().toString()))
       else -> {
         close()
 

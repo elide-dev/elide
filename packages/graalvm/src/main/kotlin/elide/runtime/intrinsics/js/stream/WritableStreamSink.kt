@@ -12,14 +12,15 @@
  */
 package elide.runtime.intrinsics.js.stream
 
+import org.graalvm.polyglot.Value
 import elide.runtime.intrinsics.js.JsPromise
 
 public interface WritableStreamSink {
-  public val type: Any
+  public val type: Any get() = Unit
 
   public fun start(controller: WritableStreamDefaultController) {}
 
-  public fun write(chunk: Any? = null, controller: WritableStreamDefaultController): JsPromise<Unit> {
+  public fun write(chunk: Value, controller: WritableStreamDefaultController): JsPromise<Unit> {
     return JsPromise.resolved(Unit)
   }
 

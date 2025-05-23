@@ -25,6 +25,15 @@ import elide.runtime.feature.FrameworkFeature
   private val disallowedSubstrings: Array<String>
   private val disallowedByteSubstrings: Map<ByteArray, Charset>
 
+  // Specific strings which are never allowed in the heap.
+  private val unconditionalBanlist by lazy {
+    val javaHome = System.getProperty("java.home")
+
+    arrayOf(
+      "$javaHome/lib/modules",
+    ).toSortedSet()
+  }
+
   // Specific strings allowed in the heap.
   private val allowlist by lazy {
     val javaHome = System.getProperty("java.home")
@@ -57,7 +66,28 @@ import elide.runtime.feature.FrameworkFeature
       System.getenv("JAVA_HOME"),
       System.getenv("GRAALVM_HOME"),
     )
-    disallowedByteSubstrings = emptyMap()
+
+    val encodings = setOf(
+      Charset.forName("UTF-8"),
+      Charset.forName("UTF-16"),
+      Charset.forName(System.getProperty("sun.jnu.encoding")),
+    )
+    disallowedByteSubstrings = disallowedSubstrings.mapNotNull { substring ->
+      val bytes = substring.toByteArray()
+      val charset = encodings.firstOrNull { encoding ->
+        try {
+          substring.toByteArray(encoding)
+          true
+        } catch (_: Exception) {
+          false
+        }
+      }
+      if (charset != null) {
+        bytes to charset
+      } else {
+        null
+      }
+    }.associate { it }
   }
 
   // Build a sorted set of all tokens which are disallowed in the heap.
@@ -74,10 +104,15 @@ import elide.runtime.feature.FrameworkFeature
     if (disallowedSubstrings.isNotEmpty()) {
       for (disallowedSubstring in disallowedSubstrings) {
         if (str.contains(disallowedSubstring)) {
-          if (allowlist.contains(str)) {
-            // This is an allowlisted string, so we can skip it.
-            return
+          if (!unconditionalBanlist.contains(str)) {
+            if (allowlist.contains(str)) {
+              // This is an allowlisted string, so we can skip it.
+              return
+            }
           }
+
+          // This is an unconditional banlisted string, or a matching string with no presence in the allowlist, so we
+          // should immediately throw.
           val lineSeparator = System.lineSeparator()
           throw UnsupportedFeatureException(
             "Detected a string in the image heap which is disallowed." +

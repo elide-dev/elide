@@ -306,6 +306,7 @@ jobs:
         with:
           toolchain: stable
           cache: true # handled by sccache
+          cache-key: "elide-rust-v1-{{ hashFiles('Cargo.lock') }}"
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
       - name: "Setup: Rust Caching"
@@ -323,7 +324,7 @@ jobs:
       - name: "Setup: Bun"
         uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
         with:
-          bun-version-file: config/bun-version
+          bun-version: "1.2.14"
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:

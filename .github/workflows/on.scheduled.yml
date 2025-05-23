@@ -156,6 +156,7 @@ jobs:
           toolchain: stable
           components: clippy,rustfmt
           rustflags: ""
+          cache-key: "elide-rust-v1-{{ hashFiles('Cargo.lock') }}"
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
       - name: "Setup: Rust Caching"

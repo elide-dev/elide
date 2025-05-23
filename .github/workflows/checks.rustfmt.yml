@@ -45,5 +45,6 @@ jobs:
           toolchain: stable
           components: clippy,rustfmt
           rustflags: "-Dwarnings"
+          cache-key: "elide-rust-v1-{{ hashFiles('Cargo.lock') }}"
       - name: "Checks: Rust Formatting"
         run: cargo fmt -- --check

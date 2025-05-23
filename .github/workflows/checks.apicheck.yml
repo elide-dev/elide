@@ -124,7 +124,7 @@ jobs:
       - name: "Setup: Bun"
         uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
         with:
-          bun-version-file: config/bun-version
+          bun-version: "1.2.14"
       - name: "Setup: Elide"
         uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
         with:

@@ -21,8 +21,6 @@ import com.oracle.svm.core.annotate.TargetClass;
 public final class RuntimeSystemImage {
   @Substitute
   private static String findHome() {
-    System.out.println("`SystemImage.findHome`: dispatched");
-    System.out.println("`SystemImage.findHome`: java.home = " + System.getProperty("java.home"));
     return System.getProperty("java.home");
   }
 }

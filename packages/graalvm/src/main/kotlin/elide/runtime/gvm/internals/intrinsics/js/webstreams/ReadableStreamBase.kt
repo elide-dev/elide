@@ -120,7 +120,7 @@ internal abstract class ReadableStreamBase : ReadableStream {
   internal abstract fun desiredSize(): Double?
 
   /** Fulfill a new read from available chunks, or enqueue a new read request and return the promise handle for it. */
-  internal abstract fun readOrEnqueue(): JsPromise<ReadResult>
+  internal abstract fun readOrEnqueue(request: CompletableJsPromise<ReadResult>? = null): JsPromise<ReadResult>
 
   /** Fulfill a pending read using a chunk, or add the chunk to the queue for future use. */
   internal abstract fun fulfillOrEnqueue(chunk: Value)
@@ -158,12 +158,6 @@ internal abstract class ReadableStreamBase : ReadableStream {
 
     check(destination is WritableDefaultStream)
     return StreamPipe.pipe(executor, this, destination, preventClose, preventAbort, preventCancel, signal)
-  }
-
-  @Polyglot override fun tee(): Array<ReadableStream> {
-
-
-    TODO("Not yet implemented")
   }
 
   internal companion object {

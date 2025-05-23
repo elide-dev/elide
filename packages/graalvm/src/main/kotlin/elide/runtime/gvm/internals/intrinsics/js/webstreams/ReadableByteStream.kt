@@ -15,6 +15,7 @@ package elide.runtime.gvm.internals.intrinsics.js.webstreams
 import org.graalvm.polyglot.Value
 import java.nio.ByteBuffer
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.withLock
@@ -25,6 +26,7 @@ import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViewType.Uint8Array
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViews
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableByteStream.PullDescriptor.ReaderType
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableByteStream.PullDescriptor.ReaderType.None
+import elide.runtime.intrinsics.js.CompletableJsPromise
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.ReadableStream.ReadResult
@@ -458,6 +460,21 @@ internal class ReadableByteStream(
     maybePull()
   }
 
+  private fun getReaderInternal(byob: Boolean): ReadableStreamReader {
+    val reader = if (byob) ReadableStreamByobReaderToken(this)
+    else ReadableStreamDefaultReaderToken(this)
+
+    if (!lockedReader.compareAndSet(null, reader)) throw TypeError.create("Stream is already locked to a reader")
+
+    // if the stream is not readable, close the reader before returning it
+    when (streamState.get()) {
+      READABLE_STREAM_ERRORED -> reader.error(errorCause.get())
+      READABLE_STREAM_CLOSED -> reader.close()
+    }
+
+    return reader
+  }
+
   /** Return the request wrapping the head of this stream's pull queue, if it is not empty. */
   internal fun getRequest(): ReadableStreamBYOBRequest? {
     request.get()?.let { return it }
@@ -485,11 +502,16 @@ internal class ReadableByteStream(
    * the read internally if not enough data is available.
    */
   @Suppress("ReturnCount")
-  internal fun readOrEnqueue(view: Value, min: Long): JsPromise<ReadResult> {
+  internal fun readOrEnqueue(
+    view: Value,
+    min: Long,
+    request: CompletableJsPromise<ReadResult>? = null
+  ): JsPromise<ReadResult> {
     val state = streamState.get()
 
     // disallow reading from an errored stream
-    if (state == READABLE_STREAM_ERRORED) return JsPromise.rejected(errorCause.get())
+    if (state == READABLE_STREAM_ERRORED)
+      return request?.apply { reject(errorCause.get()) } ?: JsPromise.rejected(errorCause.get())
 
     // make a new pull request using this view and the read options
     val elementSize = ArrayBufferViews.getElementSize(view)
@@ -497,7 +519,7 @@ internal class ReadableByteStream(
     val byteLength = ArrayBufferViews.getLength(view)
 
     val minimumFill = min * elementSize
-    check(minimumFill >= 0 && minimumFill <= byteLength)
+    check(minimumFill in 0..byteLength)
     check(minimumFill % elementSize == 0L)
 
     val arrayBuffer = ArrayBufferViews.getBackingBuffer(view)
@@ -517,43 +539,41 @@ internal class ReadableByteStream(
       // if there are pull requests backed up, we can't fulfill the new one immediately
       if (pullQueue.isNotEmpty()) {
         pullQueue.offer(pull)
-        return JsPromise<ReadResult>().also { readQueue.add(it) }
+        return (request ?: JsPromise()).also { readQueue.add(it) }
       }
 
       // if the stream is closed, respond with an empty view
-      if (state == READABLE_STREAM_CLOSED) return JsPromise.resolved(
-        ReadResult(
+      if (state == READABLE_STREAM_CLOSED) {
+        val result = ReadResult(
           value = ArrayBufferViews.newView(arrayType, ByteBuffer.allocate(0), 0, 0),
           done = true,
-        ),
-      )
+        )
+        return request?.apply { resolve(result) } ?: JsPromise.resolved(result)
+      }
 
       // if there are available chunks, attempt to fulfill the new request
       if (queueSize.get() > 0) {
         if (fulfillPullWithQueue(pull)) {
           handleDrain()
           // create a new buffer view to be delivered in a read requests with the appropriate element size
-          val resultView = ArrayBufferViews.newView(
-            type = pull.viewType,
-            buffer = pull.buffer,
-            offset = pull.offset,
-            length = pull.filled,
+          val result = ReadResult(
+            value = ArrayBufferViews.newView(pull.viewType, pull.buffer, pull.offset, pull.filled),
+            done = false,
           )
-
-          return JsPromise.resolved(ReadResult(resultView, done = false))
+          return request?.apply { resolve(result) } ?: JsPromise.resolved(result)
         }
 
         // we couldn't fulfill the request, and no new chunks will arrive, so we error
         if (sourceState.get() >= SOURCE_CLOSING) {
           val reason = TypeError.create("")
           error(reason)
-          return JsPromise.rejected(reason)
+          return request?.apply { reject(reason) } ?: JsPromise.rejected(reason)
         }
       }
 
       // if we reach here, the request is partially filled at best, enqueue it
       pullQueue.offer(pull)
-      JsPromise<ReadResult>().also { readQueue.add(it) }
+      (request ?: JsPromise()).also { readQueue.add(it) }
     }
 
     maybePull()
@@ -570,7 +590,7 @@ internal class ReadableByteStream(
     else -> null
   }
 
-  override fun readOrEnqueue(): JsPromise<ReadResult> {
+  override fun readOrEnqueue(request: CompletableJsPromise<ReadResult>?): JsPromise<ReadResult> {
     return when (streamState.get()) {
       READABLE_STREAM_CLOSED -> JsPromise.resolved(ReadResult(null, done = true))
       READABLE_STREAM_ERRORED -> JsPromise.rejected(errorCause.get())
@@ -705,17 +725,186 @@ internal class ReadableByteStream(
       opts.getMember("mode").takeIf { it.isString }?.asString()
     }
 
-    val reader = if (mode == "byob") ReadableStreamByobReaderToken(this)
-    else ReadableStreamDefaultReaderToken(this)
+    return getReaderInternal(mode == "byob")
+  }
 
-    if (!lockedReader.compareAndSet(null, reader)) throw TypeError.create("Stream is already locked to a reader")
+  @Polyglot override fun tee(): Array<ReadableStream> {
+    val reader = AtomicReference<ReadableStreamReader>(getReader())
 
-    // if the stream is not readable, close the reader before returning it
-    when (streamState.get()) {
-      READABLE_STREAM_ERRORED -> reader.error(errorCause.get())
-      READABLE_STREAM_CLOSED -> reader.close()
+    val reading = AtomicBoolean(false)
+    val readAgain1 = AtomicBoolean(false)
+    val readAgain2 = AtomicBoolean(false)
+    val canceled1 = AtomicBoolean(false)
+    val canceled2 = AtomicBoolean(false)
+    val reason1 = AtomicReference<Any?>(null)
+    val reason2 = AtomicReference<Any?>(null)
+    val branch1 = AtomicReference<ReadableByteStream>(null)
+    val branch2 = AtomicReference<ReadableByteStream>(null)
+
+    val cancelPromise = JsPromise<Unit>()
+
+    fun ReadableStreamReader.forwardReaderError() = closed.catch { cause ->
+      if (this != reader.get()) return@catch
+      branch1.get().error(cause)
+      branch2.get().error(cause)
+      if (!canceled1.get() || !canceled2.get()) cancelPromise.resolve(Unit)
     }
 
-    return reader
+    fun pullWithDefaultReader(pull: (Boolean) -> Unit) {
+      (reader.get() as? ReadableStreamByobReaderToken)?.let { byobReader ->
+        check(readQueue.isEmpty())
+        byobReader.releaseLock()
+        reader.set(getReader().also { it.forwardReaderError() })
+      }
+
+      val readRequest = JsPromise<ReadResult>()
+      readRequest.then(
+        onFulfilled = {
+          if (!it.done) {
+            checkNotNull(it.value)
+            readAgain1.set(false)
+            readAgain2.set(false)
+
+            val chunk2 = if (!canceled1.get() && !canceled2.get()) cloneBuffer(it.value)
+            else it.value
+
+            if (!canceled1.get()) branch1.get().fulfillOrEnqueue(it.value)
+            if (!canceled2.get()) branch2.get().fulfillOrEnqueue(chunk2)
+
+            reading.set(false)
+            if (readAgain1.get()) pull(false)
+            else if (readAgain2.get()) pull(true)
+          } else {
+            reading.set(false)
+            if (!canceled1.get()) branch1.get().close()
+            if (!canceled2.get()) branch2.get().close()
+
+            if (branch1.get().pullQueue.isNotEmpty()) branch1.get().respondWithSize(0)
+            if (branch2.get().pullQueue.isNotEmpty()) branch2.get().respondWithSize(0)
+
+            if (!canceled1.get() || !canceled2.get()) cancelPromise.resolve(Unit)
+          }
+        },
+        onCatch = { reading.set(false) },
+      )
+
+      readOrEnqueue(readRequest)
+    }
+
+    fun pullWithByobReader(view: Value, forBranch2: Boolean, pull: (Boolean) -> Unit) {
+      (reader.get() as? ReadableStreamDefaultReader)?.let { defaultReader ->
+        check(readQueue.isEmpty())
+        defaultReader.releaseLock()
+        reader.set(getReaderInternal(true).also { it.forwardReaderError() })
+      }
+
+      val byobBranch = if (forBranch2) branch2.get() else branch1.get()
+      val otherBranch = if (forBranch2) branch1.get() else branch2.get()
+
+      val readRequest = JsPromise<ReadResult>()
+      readRequest.then(
+        onFulfilled = {
+          if (!it.done) {
+            checkNotNull(it.value)
+
+            readAgain1.set(false)
+            readAgain2.set(false)
+
+            val byobCancelled = if (forBranch2) canceled2.get() else canceled1.get()
+            val otherCancelled = if (forBranch2) canceled1.get() else canceled2.get()
+
+            if (!otherCancelled) {
+              val clonedChunk = cloneBuffer(it.value)
+              if (!byobCancelled) byobBranch.respondWithView(it.value)
+              otherBranch.fulfillOrEnqueue(clonedChunk)
+            } else if (!byobCancelled) {
+              byobBranch.respondWithView(it.value)
+            }
+
+            reading.set(false)
+            if (readAgain1.get()) pull(false)
+            else if (readAgain2.get()) pull(true)
+          } else {
+            reading.set(false)
+
+            val byobCancelled = if (forBranch2) canceled2.get() else canceled1.get()
+            val otherCancelled = if (forBranch2) canceled1.get() else canceled2.get()
+
+            if (!byobCancelled) byobBranch.close()
+            if (!otherCancelled) otherBranch.close()
+
+            if (it.value != null) {
+              check(it.value.bufferSize == 0L)
+              if (!byobCancelled) byobBranch.respondWithView(it.value)
+              if (!otherCancelled && otherBranch.pullQueue.isNotEmpty()) otherBranch.respondWithSize(0)
+            }
+
+            if (!byobCancelled || !otherCancelled) cancelPromise.resolve(Unit)
+          }
+        },
+        onCatch = { reading.set(false) },
+      )
+
+      readOrEnqueue(view, 1, readRequest)
+    }
+
+    fun pullBranch(forBranch2: Boolean): JsPromise<Unit> {
+      if (reading.getAndSet(true)) {
+        (if (forBranch2) readAgain2 else readAgain1).set(true)
+        return JsPromise.resolved(Unit)
+      }
+
+      val request = (if (forBranch2) branch2 else branch1).get().request.get()
+      if (request == null) pullWithDefaultReader(::pullBranch)
+      else pullWithByobReader(checkNotNull(request.view), forBranch2, ::pullBranch)
+
+      return JsPromise.resolved(Unit)
+    }
+
+    fun cancelBranch(reason: Any?, forBranch2: Boolean): JsPromise<Unit> {
+      (if (forBranch2) canceled2 else canceled1).set(true)
+      (if (forBranch2) reason2 else reason1).set(reason)
+
+      val otherCancelled = if (forBranch2) canceled1.get() else canceled2.get()
+      if (otherCancelled) {
+        val compositeReason = arrayOf(reason1.get(), reason2.get())
+        cancel(compositeReason).then(
+          onFulfilled = { cancelPromise.resolve(Unit) },
+          onCatch = { cancelPromise.reject(it) },
+        )
+      }
+
+      return cancelPromise
+    }
+
+    val source1 = object : ReadableStreamSource {
+      override val type: ReadableStream.Type get() = ReadableStream.Type.BYOB
+      override fun pull(controller: ReadableStreamController): JsPromise<Unit> = pullBranch(forBranch2 = false)
+      override fun cancel(reason: Any?): JsPromise<Unit> = cancelBranch(reason, forBranch2 = false)
+    }
+
+    val source2 = object : ReadableStreamSource {
+      override val type: ReadableStream.Type get() = ReadableStream.Type.BYOB
+      override fun pull(controller: ReadableStreamController): JsPromise<Unit> = pullBranch(forBranch2 = true)
+      override fun cancel(reason: Any?): JsPromise<Unit> = cancelBranch(reason, forBranch2 = true)
+    }
+
+    branch1.set(ReadableByteStream(source1, QueueingStrategy.DefaultReadStrategy, executor))
+    branch2.set(ReadableByteStream(source2, QueueingStrategy.DefaultReadStrategy, executor))
+    reader.get().forwardReaderError()
+
+    return arrayOf(branch1.get(), branch2.get())
+  }
+
+  private fun cloneBuffer(view: Value): Value {
+    val buffer = ArrayBufferViews.getBackingBuffer(view)
+    val copy = ByteArray(buffer.bufferSize.toInt())
+
+    return ArrayBufferViews.newView(
+      type = Uint8Array,
+      buffer = ByteBuffer.wrap(copy),
+      offset = ArrayBufferViews.getOffset(view),
+      length = ArrayBufferViews.getLength(view),
+    )
   }
 }

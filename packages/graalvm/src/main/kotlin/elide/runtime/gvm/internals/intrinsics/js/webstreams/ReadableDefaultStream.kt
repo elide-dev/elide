@@ -15,13 +15,17 @@ package elide.runtime.gvm.internals.intrinsics.js.webstreams
 import com.google.common.util.concurrent.AtomicDouble
 import org.graalvm.polyglot.Value
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.atomicfu.locks.withLock
 import elide.runtime.exec.GuestExecutor
+import elide.runtime.intrinsics.js.CompletableJsPromise
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.ReadableStream.ReadResult
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.stream.QueueingStrategy
+import elide.runtime.intrinsics.js.stream.ReadableStreamController
 import elide.runtime.intrinsics.js.stream.ReadableStreamReader
 import elide.runtime.intrinsics.js.stream.ReadableStreamSource
 import elide.vm.annotations.Polyglot
@@ -80,6 +84,9 @@ internal class ReadableDefaultStream(
   private fun cleanup() {
     streamState.set(READABLE_STREAM_CLOSED)
     lockedReader.getAndSet(null)?.close()
+    queueLock.withLock {
+      while (readQueue.isNotEmpty()) readQueue.poll()?.resolve(ReadResult(null, done = true))
+    }
   }
 
   internal fun hasBackpressure(): Boolean = !shouldPull()
@@ -94,32 +101,42 @@ internal class ReadableDefaultStream(
     else -> null
   }
 
-  override fun readOrEnqueue(): JsPromise<ReadResult> = when (streamState.get()) {
-    READABLE_STREAM_CLOSED -> JsPromise.resolved(ReadResult(null, done = true))
-    READABLE_STREAM_ERRORED -> JsPromise.rejected(errorCause.get())
-    else -> {
-      val result = queueLock.withLock {
-        val cached = chunkQueue.poll()
-
-        if (cached != null) {
-          // resolve directly using a cached chunk, this may finish closing the stream, so other pending
-          // reads will be aborted, and new reads will fail
-          if (chunkQueue.isEmpty() && sourceState.compareAndSet(SOURCE_CLOSING, SOURCE_CLOSED)) {
-            cleanup()
-          }
-
-          queueSize.addAndGet(-cached.size)
-          JsPromise.resolved(ReadResult(cached.chunk, done = streamState.get() != READABLE_STREAM_READABLE))
-        } else {
-          // create a new promise for the read and enqueue it
-          JsPromise<ReadResult>().also(readQueue::offer)
-        }
+  override fun readOrEnqueue(request: CompletableJsPromise<ReadResult>?): JsPromise<ReadResult> {
+    return when (streamState.get()) {
+      READABLE_STREAM_CLOSED -> {
+        val result = ReadResult(null, done = true)
+        request?.apply { resolve(result) } ?: JsPromise.resolved(result)
       }
 
-      // queue might be empty, pull if needed
-      maybePull()
+      READABLE_STREAM_ERRORED -> {
+        request?.apply { reject(errorCause.get()) } ?: JsPromise.rejected(errorCause.get())
+      }
 
-      result
+      else -> {
+        val result = queueLock.withLock {
+          val cached = chunkQueue.poll()
+
+          if (cached != null) {
+            // resolve directly using a cached chunk, this may finish closing the stream, so other pending
+            // reads will be aborted, and new reads will fail
+            if (chunkQueue.isEmpty() && sourceState.compareAndSet(SOURCE_CLOSING, SOURCE_CLOSED)) {
+              cleanup()
+            }
+
+            queueSize.addAndGet(-cached.size)
+            val result = ReadResult(cached.chunk, done = streamState.get() != READABLE_STREAM_READABLE)
+            request?.apply { resolve(result) } ?: JsPromise.resolved(result)
+          } else {
+            // create a new promise for the read and enqueue it
+            (request ?: JsPromise()).also(readQueue::offer)
+          }
+        }
+
+        // queue might be empty, pull if needed
+        maybePull()
+
+        result
+      }
     }
   }
 
@@ -200,5 +217,106 @@ internal class ReadableDefaultStream(
         }
       }
     }
+  }
+
+  @Polyglot override fun tee(): Array<ReadableStream> {
+    val reader = getReader()
+
+    val reading = AtomicBoolean(false)
+    val readAgain = AtomicBoolean(false)
+    val canceled1 = AtomicBoolean(false)
+    val canceled2 = AtomicBoolean(false)
+    val reason1 = AtomicReference<Any?>(null)
+    val reason2 = AtomicReference<Any?>(null)
+
+    val branch1 = AtomicReference<ReadableDefaultStream>()
+    val branch2 = AtomicReference<ReadableDefaultStream>()
+
+    val cancelPromise = JsPromise<Unit>()
+
+    fun pull(): JsPromise<Unit> {
+      if (reading.getAndSet(true)) {
+        readAgain.set(true)
+        return JsPromise.resolved(Unit)
+      }
+
+      val readRequest = JsPromise<ReadResult>()
+      readRequest.then(
+        onFulfilled = {
+          if (!it.done) {
+            check(it.value != null)
+            readAgain.set(false)
+
+            if (!canceled1.get()) branch1.get().fulfillOrEnqueue(it.value)
+            if (!canceled2.get()) branch2.get().fulfillOrEnqueue(it.value)
+
+            reading.set(false)
+            if (readAgain.get()) pull()
+          } else {
+            reading.set(false)
+            if (!canceled1.get()) branch1.get().close()
+            if (!canceled2.get()) branch2.get().close()
+            if (!canceled1.get() || !canceled2.get()) cancelPromise.resolve(Unit)
+          }
+        },
+        onCatch = {
+          reading.set(false)
+        },
+      )
+
+      readOrEnqueue(readRequest)
+      return JsPromise.resolved(Unit)
+    }
+
+    fun cancel1(reason: Any?): JsPromise<Unit> {
+      canceled1.set(true)
+      reason1.set(reason)
+
+      if (canceled2.get()) {
+        val compositeReason = arrayOf(reason, reason2.get())
+        cancel(compositeReason).then(
+          onFulfilled = { cancelPromise.resolve(Unit) },
+          onCatch = { cancelPromise.reject(it) },
+        )
+      }
+
+      return cancelPromise
+    }
+
+    fun cancel2(reason: Any?): JsPromise<Unit> {
+      canceled2.set(true)
+      reason2.set(reason)
+
+      if (canceled1.get()) {
+        val compositeReason = arrayOf(reason1.get(), reason)
+        cancel(compositeReason).then(
+          onFulfilled = { cancelPromise.resolve(Unit) },
+          onCatch = { cancelPromise.reject(it) },
+        )
+      }
+
+      return cancelPromise
+    }
+
+    val source1 = object : ReadableStreamSource {
+      override fun pull(controller: ReadableStreamController): JsPromise<Unit> = pull()
+      override fun cancel(reason: Any?): JsPromise<Unit> = cancel1(reason)
+    }
+
+    val source2 = object : ReadableStreamSource {
+      override fun pull(controller: ReadableStreamController): JsPromise<Unit> = pull()
+      override fun cancel(reason: Any?): JsPromise<Unit> = cancel2(reason)
+    }
+
+    branch1.set(ReadableDefaultStream(source1, QueueingStrategy.DefaultReadStrategy, executor))
+    branch2.set(ReadableDefaultStream(source2, QueueingStrategy.DefaultReadStrategy, executor))
+
+    reader.closed.catch {
+      branch1.get().error(it)
+      branch2.get().error(it)
+      if (!canceled1.get() || !canceled2.get()) cancelPromise.resolve(Unit)
+    }
+
+    return arrayOf(branch1.get(), branch2.get())
   }
 }

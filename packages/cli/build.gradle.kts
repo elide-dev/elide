@@ -1102,6 +1102,13 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.runtime.gvm.kotlin.scripting.ScriptWithMavenDepsConfiguration",
   "org.eclipse.sisu.wire.ParameterKeys",
   "nonapi.io.github.classgraph.classpath.SystemJarFinder",
+  "org.jetbrains.kotlin.cli.jvm.modules.CoreJrtFileSystem",
+  "org.jetbrains.kotlin.cli.jvm.modules.CoreJrtFileSystem${'$'}Companion",
+  "org.jetbrains.kotlin.cli.jvm.modules.CliJavaModuleFinder",
+  "org.jetbrains.kotlin.cli.jvm.modules.CliJavaModuleFinder${'$'}Companion",
+  "jdk.internal.jrtfs.SystemImage",
+  "jdk.internal.jimage.BasicImageReader",
+  "jdk.internal.jimage.ImageReader${'$'}SharedImageReader",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()

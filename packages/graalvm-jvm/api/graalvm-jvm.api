@@ -153,3 +153,7 @@ public final class elide/runtime/plugins/jvm/interop/GuestValueMappersKt {
 	public static final fun asStringOrNull (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 }
 
+public final class jdk/internal/jrtfs/RuntimeSystemImage {
+	public fun <init> ()V
+}
+

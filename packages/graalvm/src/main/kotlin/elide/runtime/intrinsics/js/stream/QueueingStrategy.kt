@@ -15,6 +15,8 @@ package elide.runtime.intrinsics.js.stream
 import org.graalvm.polyglot.Value
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.stream.QueueingStrategy.DefaultReadStrategy.highWaterMark
+import elide.runtime.intrinsics.js.stream.QueueingStrategy.DefaultWriteStrategy.highWaterMark
+import elide.vm.annotations.Polyglot
 
 /**
  * A strategy used by stream controllers to manage backpressure from compatible sources.
@@ -27,18 +29,18 @@ public interface QueueingStrategy {
    * A high threshold targeted by the controller; once this threshold is reached, no new values will be requested from
    * the source.
    */
-  public fun highWaterMark(): Double
+  @Polyglot public fun highWaterMark(): Double
 
   /** Calculate the size of an arbitrary chunk of data. */
-  public fun size(chunk: Any?): Double
+  @Polyglot public fun size(chunk: Value?): Double
 
   /**
    * The default queuing strategy for readable streams, using a [highWaterMark] of `0.0` and measuring every chunk with
    * size `1.0`.
    */
   public object DefaultReadStrategy : QueueingStrategy {
-    override fun highWaterMark(): Double = 0.0
-    override fun size(chunk: Any?): Double = 1.0
+    @Polyglot override fun highWaterMark(): Double = 0.0
+    @Polyglot override fun size(chunk: Value?): Double = 1.0
   }
 
   /**
@@ -46,8 +48,8 @@ public interface QueueingStrategy {
    * size `1.0`.
    */
   public object DefaultWriteStrategy : QueueingStrategy {
-    override fun highWaterMark(): Double = 1.0
-    override fun size(chunk: Any?): Double = 1.0
+    @Polyglot override fun highWaterMark(): Double = 1.0
+    @Polyglot override fun size(chunk: Value?): Double = 1.0
   }
 }
 
@@ -56,8 +58,8 @@ public interface QueueingStrategy {
  * the corresponding member.
  */
 @JvmInline public value class GuestQueueingStrategy private constructor(public val value: Value) : QueueingStrategy {
-  override fun highWaterMark(): Double = value.invokeMember(HIGH_WATER_MARK_MEMBER).asDouble()
-  override fun size(chunk: Any?): Double = value.invokeMember(SIZE_MEMBER).asDouble()
+  @Polyglot override fun highWaterMark(): Double = value.invokeMember(HIGH_WATER_MARK_MEMBER).asDouble()
+  @Polyglot override fun size(chunk: Value?): Double = value.invokeMember(SIZE_MEMBER).asDouble()
 
   public companion object {
     private const val HIGH_WATER_MARK_MEMBER = "highWaterMark"
@@ -73,4 +75,37 @@ public interface QueueingStrategy {
       return GuestQueueingStrategy(value)
     }
   }
+}
+
+@JvmInline public value class ByteLengthQueueingStrategy(private val highWaterMark: Double) : QueueingStrategy {
+  @Polyglot public constructor(options: Value) : this(
+    options.takeIf { it.hasMember("highWaterMark") }
+      ?.getMember("highWaterMark")
+      ?.takeIf { it.isNumber && it.fitsInDouble() }
+      ?.asDouble()
+      ?: throw TypeError.create("A highWaterMark value must be supplied when creating this strategy"),
+  )
+
+  @Polyglot override fun highWaterMark(): Double = highWaterMark
+  @Polyglot override fun size(chunk: Value?): Double {
+    if (chunk == null) throw TypeError.create("Cannot measure a null chunk")
+    return chunk.takeIf { it.hasMember("byteLength") }
+      ?.getMember("byteLength")
+      ?.takeIf { it.isNumber && it.fitsInDouble() }
+      ?.asDouble()
+      ?: throw TypeError.create("Chunk has no 'byteLength' property")
+  }
+}
+
+@JvmInline public value class CountQueueingStrategy(private val highWaterMark: Double) : QueueingStrategy {
+  @Polyglot public constructor(options: Value) : this(
+    options.takeIf { it.hasMember("highWaterMark") }
+      ?.getMember("highWaterMark")
+      ?.takeIf { it.isNumber && it.fitsInDouble() }
+      ?.asDouble()
+      ?: throw TypeError.create("A highWaterMark value must be supplied when creating this strategy"),
+  )
+
+  @Polyglot override fun highWaterMark(): Double = highWaterMark
+  @Polyglot override fun size(chunk: Value?): Double = 1.0
 }

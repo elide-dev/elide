@@ -728,6 +728,7 @@ internal class ReadableByteStream(
     return getReaderInternal(mode == "byob")
   }
 
+  @Suppress("CyclomaticComplexMethod")
   @Polyglot override fun tee(): Array<ReadableStream> {
     val reader = AtomicReference<ReadableStreamReader>(getReader())
 

@@ -270,7 +270,8 @@ internal class WritableDefaultStream(
             check(currentState == WRITABLE_STREAM_WRITABLE || currentState == WRITABLE_STREAM_ERRORING)
 
             dequeue()
-            if (!closeQueuedOrInflight && currentState == WRITABLE_STREAM_WRITABLE) updateBackpressure(needsBackpressure)
+            if (!closeQueuedOrInflight && currentState == WRITABLE_STREAM_WRITABLE)
+              updateBackpressure(needsBackpressure)
 
             advanceQueueIfNeeded()
           },
@@ -417,6 +418,7 @@ internal class WritableDefaultStream(
   }
 
   /** Abruptly close the stream using an error with the given [reason]. */
+  @Suppress("ReturnCount")
   internal fun abortStream(reason: Any?): JsPromise<Unit> {
     var currentState = state.get()
     if (currentState == WRITABLE_STREAM_CLOSED || currentState == WRITABLE_STREAM_ERRORED) return JsPromise.resolved(

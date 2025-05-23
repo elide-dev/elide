@@ -20,8 +20,7 @@ import java.io.Reader
 import java.nio.ByteBuffer
 import elide.annotations.API
 import elide.runtime.exec.GuestExecution
-import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableByteStream
-import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableDefaultStream
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.*
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.Default
 import elide.runtime.intrinsics.js.stream.*
@@ -182,22 +181,31 @@ import elide.vm.annotations.Polyglot
 
     override fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream {
       return when (source.type) {
-        Type.Default -> ReadableDefaultStream(source, queueingStrategy ?: QueueingStrategy.DefaultReadStrategy, streamExecutor)
-        Type.BYOB -> ReadableByteStream(source, queueingStrategy ?: QueueingStrategy.DefaultReadStrategy, streamExecutor)
+        Type.Default -> ReadableDefaultStream(
+          source,
+          queueingStrategy ?: QueueingStrategy.DefaultReadStrategy,
+          streamExecutor,
+        )
+
+        Type.BYOB -> ReadableByteStream(
+          source,
+          queueingStrategy ?: QueueingStrategy.DefaultReadStrategy,
+          streamExecutor,
+        )
       }
     }
 
-    override fun newInstance(vararg arguments: Value?): Any? {
+    override fun newInstance(vararg arguments: Value?): Any {
       val source = arguments.getOrNull(0)?.let(::GuestReadableStreamSource) ?: ReadableStreamSource.Empty
       val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from) ?: QueueingStrategy.DefaultReadStrategy
 
       return create(source, strategy)
     }
 
-    override fun empty(): ReadableStream = TODO("Not yet implemented")
-    override fun wrap(input: InputStream): ReadableStream = TODO("Not yet implemented")
-    override fun wrap(reader: Reader): ReadableStream = TODO("Not yet implemented")
-    override fun wrap(bytes: ByteArray): ReadableStream = TODO("Not yet implemented")
-    override fun wrap(buffer: ByteBuffer): ReadableStream = TODO("Not yet implemented")
+    override fun empty(): ReadableStream = create(ReadableStreamEmptySource)
+    override fun wrap(input: InputStream): ReadableStream = create(ReadableStreamInputStreamSource(input))
+    override fun wrap(reader: Reader): ReadableStream = create(ReadableStreamReaderSource(reader))
+    override fun wrap(bytes: ByteArray): ReadableStream = wrap(ByteBuffer.wrap(bytes))
+    override fun wrap(buffer: ByteBuffer): ReadableStream = create(ReadableStreamBufferSource(buffer))
   }
 }

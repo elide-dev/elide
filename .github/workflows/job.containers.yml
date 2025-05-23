@@ -111,7 +111,7 @@ name: Containers
       runner_large:
         description: "Runner (Large)"
         type: string
-        default: ubuntu-latest-8-cores
+        default: ubuntu-cipool
       runner_large_macos:
         description: "Runner (Large, macOS)"
         type: string
@@ -150,7 +150,7 @@ jobs:
   ##
   docker-jvm:
     name: "Container: JVM"
-    runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-latest-8-cores' }}
+    runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-cipool' }}
     if: inputs.containers
     #    if: |
     #      (
@@ -261,7 +261,7 @@ jobs:
 
   docker-native:
     name: "Container: Native"
-    runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-latest-8-cores' }}
+    runs-on: ${{ inputs.runner_large || inputs.runner || 'ubuntu-cipool' }}
     continue-on-error: true
     if: inputs.containers && inputs.native
     #    if: |

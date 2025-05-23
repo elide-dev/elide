@@ -101,7 +101,7 @@ name: Tests
       runner_large:
         description: "Runner (Large)"
         type: string
-        default: ubuntu-latest-8-cores
+        default: ubuntu-cipool
       runner_large_macos:
         description: "Runner (Large, macOS)"
         type: string
@@ -461,7 +461,7 @@ jobs:
   ##
   tests-native:
     name: "Tests: Native"
-    runs-on: ${{ inputs.runner_large || 'ubuntu-latest-8-cores' }}
+    runs-on: ${{ inputs.runner_large || 'ubuntu-cipool' }}
     if: inputs.native
     steps:
       - name: "Setup: Harden Runner"

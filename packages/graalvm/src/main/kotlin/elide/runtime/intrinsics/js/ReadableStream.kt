@@ -16,12 +16,14 @@ import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyIterable
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
 import elide.annotations.API
 import elide.runtime.exec.GuestExecution
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.*
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.Default
 import elide.runtime.intrinsics.js.stream.*
@@ -34,7 +36,7 @@ import elide.vm.annotations.Polyglot
  * Readable streams implement streams of arbitrary data which can be consumed by an interested developer, and form part
  * of the wider Web Streams API.
  */
-@API @HostAccess.Implementable public interface ReadableStream : Stream, ProxyIterable {
+@API @HostAccess.Implementable public interface ReadableStream : Stream, ProxyIterable, ProxyObject {
   /**
    * Encapsulates the result of a read; [done] indicates whether the [value] is the final value that will be available
    * from the source.

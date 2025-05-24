@@ -13,65 +13,181 @@
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
+import kotlin.test.assertFails
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.intrinsics.js.JsPromise
-import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.stream.QueueingStrategy
-import elide.runtime.intrinsics.js.stream.WritableStreamDefaultController
+import elide.runtime.intrinsics.js.WritableStream
+import elide.runtime.intrinsics.js.asDeferred
+import elide.runtime.intrinsics.js.stream.WritableStreamDefaultWriter
 import elide.runtime.intrinsics.js.stream.WritableStreamSink
 import elide.testing.annotations.TestCase
+import elide.runtime.plugins.js.JavaScript as JS
 
 @OptIn(DelicateElideApi::class)
 @TestCase internal class WritableStreamTest : AbstractJsIntrinsicTest<WritableStreamIntrinsic>() {
-  override fun provide(): WritableStreamIntrinsic {
-    return WritableStreamIntrinsic()
-  }
+  /** Intrinsic installer. */
+  @Inject lateinit var intrinsic: WritableStreamIntrinsic
 
+  override fun provide(): WritableStreamIntrinsic = intrinsic
   override fun testInjectable() {
-    // noop
+    assertNotNull(intrinsic)
   }
 
-  private fun channelSink(channel: SendChannel<Any?>): WritableStreamSink = object : WritableStreamSink {
-    // reserved
-    override val type: Any get() = Unit
-
-    override fun write(chunk: Value, controller: WritableStreamDefaultController): JsPromise<Unit> {
-      assert(channel.trySend(chunk).isSuccess) { "Failed to consume chunk $chunk" }
-      return JsPromise.resolved(Unit)
+  @Test fun `should allow creating writable streams`() = runTest {
+    // host-side construction
+    assertDoesNotThrow("expected stream to be created from host call") {
+      WritableStream.create(WritableStreamSink.DiscardingSink)
     }
 
-    override fun close(): JsPromise<Unit> {
-      channel.close()
-      return JsPromise.resolved(Unit)
-    }
+    // guest-side construction
+    executeGuest {
+      bindings(JS).putMember("TestSink", WritableStreamSink.DiscardingSink)
+      "new WritableStream(TestSink)"
+    }.thenAssert {
+      it.doesNotFail()
 
-    override fun abort(reason: Any?): JsPromise<Unit> {
-      channel.close(TypeError.create(reason.toString()))
-      return JsPromise.resolved(Unit)
+      val stream = assertNotNull(it.returnValue())
+      assertDoesNotThrow("expected a writable stream instance") { stream.asProxyObject<WritableDefaultStream>() }
     }
   }
 
-  @Test fun `should handle write`() = runTest {
-    val sinkChannel = Channel<Any?>(capacity = Channel.UNLIMITED)
-    val channelSink = channelSink(sinkChannel)
+  @Test fun `should manage writer acquisition`() = runTest {
+    executeGuest { "(stream) => new WritableStreamDefaultWriter(stream)" }.thenAssert { test ->
+      val stream = WritableStream.create(WritableStreamSink.DiscardingSink)
+      val guestCall = assertNotNull(test.returnValue()).also { assert(it.canExecute()) }
 
-    val stream = WritableDefaultStream(channelSink, QueueingStrategy.DefaultReadStrategy)
+      // direct construction
+      val directWriter = assertDoesNotThrow("expected direct writer constructor to succeed") {
+        guestCall.execute(stream).asProxyObject<WritableStreamDefaultWriter>()
+      }
+
+      // illegal construction due to lock
+      assertFails("expected writer constructor to fail using locked stream") {
+        guestCall.execute(stream)
+      }
+
+      // legal construction after release
+      directWriter.releaseLock()
+      assertDoesNotThrow("expected writer constructor to succeed with released stream") {
+        guestCall.execute(stream).asProxyObject<WritableStreamDefaultWriter>()
+      }
+    }
+
+    executeGuest { "(stream) => stream.getWriter()" }.thenAssert { test ->
+      val stream = WritableStream.create(WritableStreamSink.DiscardingSink)
+      val guestCall = assertNotNull(test.returnValue()).also { assert(it.canExecute()) }
+
+      // indirect acquisition
+      val acquiredWriter = assertDoesNotThrow("expected writer acquisition to succeed") {
+        guestCall.execute(stream).asProxyObject<WritableStreamDefaultWriter>()
+      }
+
+      // illegal acquisition due to lock
+      assertFails("expected writer acquisition to fail using locked stream") {
+        guestCall.execute(stream)
+      }
+
+      // legal acquisition after release
+      acquiredWriter.releaseLock()
+      assertDoesNotThrow("expected writer acquisition to succeed with released stream") {
+        guestCall.execute(stream).asProxyObject<WritableStreamDefaultWriter>()
+      }
+    }
+  }
+
+  @Test fun `should write to host sink`() = runTest {
+    val sink = ChannelSink()
+    val stream = WritableStream.create(sink)
+
+    // write from host
+    val hostWriter = stream.getWriter()
+    hostWriter.write(Value.asValue("host"))
+    hostWriter.releaseLock()
+
+    assertEquals(
+      expected = "host",
+      actual = sink.receive().asString(),
+    )
+
+    // write from guest
+    executeGuest {
+      bindings(JS).putMember("TestStream", stream)
+      """
+      const writer = TestStream.getWriter();
+      writer.write('guest');
+      writer.releaseLock();
+      """.trimIndent()
+    }.doesNotFail()
+
+    assertEquals(
+      expected = "guest",
+      actual = sink.receive().asString(),
+    )
+  }
+
+  @Test fun `should write to guest sink`() = runTest {
+    val channel = Channel<Value>(Channel.UNLIMITED)
+    val sendAdapter = ProxyExecutable { channel.trySend(it.single()) }
+
+    executeGuest {
+      bindings(JS).putMember("SendAdapter", sendAdapter)
+
+      """
+      const stream = new WritableStream({ write: async (chunk) => SendAdapter(chunk) });
+      const writer = stream.getWriter();
+      writer.write('guest');
+      """.trimIndent()
+    }.doesNotFail()
+
+    assertEquals(
+      expected = "guest",
+      actual = channel.receive().asString(),
+    )
+  }
+
+  @Test fun `should communicate backpressure`() = runTest {
+    val sink = ChannelSink(capacity = Channel.RENDEZVOUS)
+    val stream = WritableStream.create(sink)
     val writer = stream.getWriter()
 
-    val writes = List(5) {
-      writer.write(Value.asValue(it)).catch { reason -> fail("Write promise was rejected: $reason") }
+    var backpressureSet = false
+    val backpressureMonitor = launch {
+      while (isActive) {
+        backpressureSet = true
+        writer.ready.asDeferred().await()
+        backpressureSet = false
+        // allow test code to affect backpressure
+        yield()
+      }
     }
 
-    repeat(writes.size) { i ->
-      assertEquals(expected = i, actual = (sinkChannel.tryReceive().getOrThrow() as Value).asInt())
-      assert(writes[i].isDone)
-    }
+    // sink is empty, the first read should stay in-flight until we read from the sink;
+    // backpressure should be set to 'true', refreshing the promise and suspending the counter
+    val writePromise = writer.write(Value.asValue("value"))
+
+    yield() // by yielding here we allow the counter to prove us wrong
+    assert(backpressureSet)
+
+    // clear the sink, backpressure should be back to 'false', settling the promise
+    assertEquals("value", sink.receive().asString())
+
+    // wait for the write to finish, the additional yield is required to ensure
+    // that the counter is allowed to run
+    writePromise.asDeferred().await()
+    yield()
+
+    assertFalse(backpressureSet)
+    backpressureMonitor.cancel()
   }
 }
+

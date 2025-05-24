@@ -14,6 +14,7 @@ package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import com.google.common.util.concurrent.AtomicDouble
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -21,6 +22,7 @@ import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.gvm.internals.intrinsics.js.abort.AbortController
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream.QueueElement.Chunk
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream.QueueElement.CloseToken
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.AbortSignal
 import elide.runtime.intrinsics.js.CompletableJsPromise
 import elide.runtime.intrinsics.js.JsPromise
@@ -41,15 +43,30 @@ internal class WritableDefaultStream(
   private val sink: WritableStreamSink,
   /** Queueing strategy used to control backpressure. */
   private val strategy: QueueingStrategy = QueueingStrategy.DefaultWriteStrategy,
-) : WritableStream {
+) : WritableStream, ReadOnlyProxyObject {
   /** Inline wrapper for the stream providing the controller API by delegation. */
-  @JvmInline private value class ControllerToken(val stream: WritableDefaultStream) : WritableStreamDefaultController {
+  @JvmInline private value class ControllerToken(
+    val stream: WritableDefaultStream
+  ) : WritableStreamDefaultController, ReadOnlyProxyObject {
     override val signal: AbortSignal
       get() = stream.abortController.signal
 
     override fun error(e: Any?) {
       if (stream.state.get() != WRITABLE_STREAM_WRITABLE) return
       stream.startErroring(e)
+    }
+
+    override fun getMemberKeys(): Array<String> = MEMBERS
+    override fun getMember(key: String?): Any? = when (key) {
+      MEMBER_SIGNAL -> signal
+      MEMBER_ERROR -> ProxyExecutable { error(it.firstOrNull()) }
+      else -> null
+    }
+
+    private companion object {
+      private const val MEMBER_SIGNAL = "signal"
+      private const val MEMBER_ERROR = "error"
+      private val MEMBERS = arrayOf(MEMBER_SIGNAL, MEMBER_ERROR)
     }
   }
 
@@ -528,10 +545,25 @@ internal class WritableDefaultStream(
     else closeStream()
   }
 
+  override fun getMemberKeys(): Array<String> = MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    MEMBER_CLOSE -> ProxyExecutable { close() }
+    MEMBER_ABORT -> ProxyExecutable { abort(it.firstOrNull()) }
+    MEMBER_GET_WRITER -> ProxyExecutable { getWriter() }
+    MEMBER_LOCKED -> locked
+    else -> null
+  }
+
   internal companion object {
     internal const val WRITABLE_STREAM_WRITABLE: Int = 0
     internal const val WRITABLE_STREAM_CLOSED: Int = 1
     internal const val WRITABLE_STREAM_ERRORING: Int = 2
     internal const val WRITABLE_STREAM_ERRORED: Int = 3
+
+    private const val MEMBER_CLOSE = "close"
+    private const val MEMBER_ABORT = "abort"
+    private const val MEMBER_GET_WRITER = "getWriter"
+    private const val MEMBER_LOCKED = "locked"
+    private val MEMBERS = arrayOf(MEMBER_CLOSE, MEMBER_ABORT, MEMBER_GET_WRITER, MEMBER_LOCKED)
   }
 }

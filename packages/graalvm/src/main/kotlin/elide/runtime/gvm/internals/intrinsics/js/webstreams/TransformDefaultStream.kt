@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.exec.GuestExecutor
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamBase.Companion.READABLE_STREAM_ERRORED
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream.Companion.WRITABLE_STREAM_ERRORED
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.CompletableJsPromise
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.TransformStream
@@ -30,8 +31,7 @@ internal class TransformDefaultStream(
   executor: GuestExecutor,
   writableStrategy: QueueingStrategy = QueueingStrategy.DefaultReadStrategy,
   readableStrategy: QueueingStrategy = QueueingStrategy.DefaultReadStrategy,
-) : TransformStream {
-
+) : TransformStream, ReadOnlyProxyObject {
   @JvmInline private value class DelegatingSource(private val stream: TransformDefaultStream) : ReadableStreamSource {
     override fun pull(controller: ReadableStreamController): JsPromise<Unit> {
       check(stream.backpressure.get())
@@ -161,13 +161,13 @@ internal class TransformDefaultStream(
 
   private val controller = TransformStreamDefaultControllerToken(this)
 
-  @get:Polyglot override val readable: ReadableDefaultStream = ReadableDefaultStream(
-      source = DelegatingSource(this),
-      strategy = readableStrategy,
-      executor
+  @Polyglot override val readable: ReadableDefaultStream = ReadableDefaultStream(
+    source = DelegatingSource(this),
+    strategy = readableStrategy,
+    executor,
   )
 
-  @get:Polyglot override val writable: WritableDefaultStream = WritableDefaultStream(
+  @Polyglot override val writable: WritableDefaultStream = WritableDefaultStream(
     sink = DelegatingSink(this),
     strategy = writableStrategy,
   )
@@ -203,5 +203,18 @@ internal class TransformDefaultStream(
     backpressurePromise.getAndSet(promise)?.resolve(Unit)
 
     return promise
+  }
+
+  override fun getMemberKeys(): Array<String> = MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    MEMBER_READABLE -> readable
+    MEMBER_WRITABLE -> writable
+    else -> null
+  }
+
+  private companion object {
+    private const val MEMBER_READABLE = "readable"
+    private const val MEMBER_WRITABLE = "writable"
+    private val MEMBERS = arrayOf(MEMBER_READABLE, MEMBER_WRITABLE)
   }
 }

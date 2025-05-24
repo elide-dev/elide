@@ -12,15 +12,17 @@
  */
 package elide.runtime.intrinsics.js.stream
 
-import elide.runtime.intrinsics.js.CompletableJsPromise
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 
 /**
  * Interface for stream reader implementations, providing the shared methods specified in the
  * [WHATWG standard](https://streams.spec.whatwg.org/#generic-reader-mixin).
  */
-public sealed interface ReadableStreamReader {
+public sealed interface ReadableStreamReader : ReadOnlyProxyObject {
   /** A promised that completes when the reader is closed, and rejects when the reader errors. */
   @get:Polyglot public val closed: JsPromise<Unit>
 
@@ -32,4 +34,28 @@ public sealed interface ReadableStreamReader {
 
   /** Cancel the stream for this reader. */
   @Polyglot public fun cancel()
+
+  override fun getMemberKeys(): Array<String> = MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    MEMBER_CLOSED -> closed
+    MEMBER_RELEASE_LOCK -> ProxyExecutable { releaseLock() }
+    MEMBER_CANCEL -> ProxyExecutable { cancel() }
+    MEMBER_READ -> when (this) {
+      is ReadableStreamDefaultReader -> ProxyExecutable { read() }
+      is ReadableStreamBYOBReader -> ProxyExecutable {
+        val view = it.firstOrNull() ?: throw TypeError.create("A view must be specified when reading")
+        read(view, it.getOrNull(1))
+      }
+    }
+
+    else -> null
+  }
+
+  private companion object {
+    private const val MEMBER_CLOSED = "closed"
+    private const val MEMBER_CANCEL = "cancel"
+    private const val MEMBER_RELEASE_LOCK = "releaseLock"
+    private const val MEMBER_READ = "read"
+    private val MEMBERS = arrayOf(MEMBER_CLOSED, MEMBER_CANCEL, MEMBER_RELEASE_LOCK, MEMBER_READ)
+  }
 }

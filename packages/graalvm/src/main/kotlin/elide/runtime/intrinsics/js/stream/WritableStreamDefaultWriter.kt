@@ -14,12 +14,13 @@ package elide.runtime.intrinsics.js.stream
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.JsPromise
-import elide.runtime.intrinsics.js.WritableStream
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 
-public interface WritableStreamDefaultWriter {
+public interface WritableStreamDefaultWriter : ReadOnlyProxyObject {
   @get:Polyglot public val closed: JsPromise<Unit>
   @get:Polyglot public val ready: JsPromise<Unit>
   @get:Polyglot public val desiredSize: Double?
@@ -32,8 +33,8 @@ public interface WritableStreamDefaultWriter {
   public companion object : ProxyInstantiable {
     override fun newInstance(vararg arguments: Value?): Any {
       val stream = arguments.firstOrNull() ?: throw TypeError.create("A stream is required to create a writer")
-      val unwrappedStream = runCatching { stream.asHostObject<WritableStream>() }.getOrElse {
-        throw TypeError.create("Value $stream is not a valid writable stream")
+      val unwrappedStream = runCatching { stream.asProxyObject<WritableDefaultStream>() }.getOrElse {
+        throw TypeError.create("Value $stream is not a valid writable stream", it)
       }
 
       return unwrappedStream.getWriter()

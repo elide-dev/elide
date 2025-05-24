@@ -13,191 +13,386 @@
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.Value.asValue
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
-import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.nio.ByteBuffer
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
+import kotlinx.coroutines.yield
+import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViewType.Uint8Array
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViews
 import elide.runtime.gvm.internals.js.AbstractJsIntrinsicTest
-import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
-import elide.runtime.intrinsics.js.ReadableStream.Type
+import elide.runtime.intrinsics.js.TransformStream
+import elide.runtime.intrinsics.js.WritableStream
 import elide.runtime.intrinsics.js.asDeferred
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.stream.*
-import elide.runtime.plugins.js.javascript
-import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
+import elide.runtime.plugins.js.JavaScript as JS
 
 @OptIn(DelicateElideApi::class)
 @TestCase internal class ReadableStreamTest : AbstractJsIntrinsicTest<ReadableStreamIntrinsic>() {
-  @Inject lateinit var executionProvider: GuestExecutorProvider
+  @Inject lateinit var intrinsic: ReadableStreamIntrinsic
 
-  private fun options(vararg pairs: Pair<String, Any>): Value {
-    return asValue(ProxyObject.fromMap(mapOf(*pairs)))
-  }
-
-  override fun provide(): ReadableStreamIntrinsic {
-    return ReadableStreamIntrinsic()
-  }
-
+  override fun provide(): ReadableStreamIntrinsic = intrinsic
   override fun testInjectable() {
-    // noop
+    assertNotNull(intrinsic)
   }
 
-  private inline fun pushSource(crossinline onPull: (ReadableStreamDefaultController) -> Unit): ReadableStreamSource {
-    return object : ReadableStreamSource {
-      override fun pull(controller: ReadableStreamController): JsPromise<Unit> {
-        onPull(controller as ReadableStreamDefaultController)
-        return JsPromise.resolved(Unit)
+  @Test fun `should allow creating readable streams`() = runTest {
+    val defaultSource = object : ReadableStreamSource {
+      override val type: ReadableStream.Type = ReadableStream.Type.Default
+    }
+
+    val byobSource = object : ReadableStreamSource {
+      override val type: ReadableStream.Type = ReadableStream.Type.BYOB
+    }
+
+    // host-side construction (default)
+    assertDoesNotThrow("expected default stream to be created from host call") {
+      ReadableStream.create(defaultSource)
+    }.also { stream -> assertIs<ReadableDefaultStream>(stream) }
+
+    // host-side construction (byob)
+    assertDoesNotThrow("expected byte stream to be created from host call") {
+      ReadableStream.create(byobSource)
+    }.also { stream -> assertIs<ReadableByteStream>(stream) }
+
+    // guest-side construction (default)
+    executeGuest {
+      bindings(JS).putMember("TestSource", defaultSource)
+      "new ReadableStream(TestSource)"
+    }.thenAssert {
+      it.doesNotFail()
+
+      val stream = assertNotNull(it.returnValue())
+      assertDoesNotThrow("expected a default readable stream") { stream.asProxyObject<ReadableDefaultStream>() }
+    }
+
+    // guest-side construction (byob)
+    executeGuest {
+      bindings(JS).putMember("TestSource", byobSource)
+      "new ReadableStream(TestSource)"
+    }.thenAssert {
+      it.doesNotFail()
+
+      val stream = assertNotNull(it.returnValue())
+      assertDoesNotThrow("expected a readable byte stream") { stream.asProxyObject<ReadableByteStream>() }
+    }
+  }
+
+  @Test fun `should manage default reader acquisition`() = runTest {
+    // default source
+    executeGuest { "(stream) => new ReadableStreamDefaultReader(stream)" }.thenAssert { test ->
+      val stream = ReadableStream.create(ReadableStreamSource.Empty)
+      val guestCall = assertNotNull(test.returnValue()).also { assert(it.canExecute()) }
+
+      // direct construction
+      val directReader = assertDoesNotThrow("expected direct reader constructor to succeed") {
+        guestCall.execute(stream).asProxyObject<ReadableStreamDefaultReader>()
+      }
+
+      // illegal construction due to lock
+      assertFails("expected reader constructor to fail using locked stream") {
+        guestCall.execute(stream)
+      }
+
+      // legal construction after release
+      directReader.releaseLock()
+      assertDoesNotThrow("expected reader constructor to succeed with released stream") {
+        guestCall.execute(stream).asProxyObject<ReadableStreamDefaultReader>()
+      }
+    }
+
+    executeGuest { "(stream) => stream.getReader()" }.thenAssert { test ->
+      val stream = ReadableStream.create(ReadableStreamSource.Empty)
+      val guestCall = assertNotNull(test.returnValue()).also { assert(it.canExecute()) }
+
+      // indirect acquisition
+      val acquiredReader = assertDoesNotThrow("expected reader acquisition to succeed") {
+        guestCall.execute(stream).asProxyObject<ReadableStreamDefaultReader>()
+      }
+
+      // illegal acquisition due to lock
+      assertFails("expected reader acquisition to fail using locked stream") {
+        guestCall.execute(stream)
+      }
+
+      // legal acquisition after release
+      acquiredReader.releaseLock()
+      assertDoesNotThrow("expected reader acquisition to succeed with released stream") {
+        guestCall.execute(stream).asProxyObject<ReadableStreamDefaultReader>()
       }
     }
   }
 
-  private inline fun byteSource(crossinline onPull: (ReadableByteStreamController) -> Unit): ReadableStreamSource {
-    return object : ReadableStreamSource {
-      override val type: Type = Type.BYOB
-      override fun pull(controller: ReadableStreamController): JsPromise<Unit> {
-        onPull(controller as ReadableByteStreamController)
-        return JsPromise.resolved(Unit)
+  @Test fun `should manage byob reader acquisition`() = runTest {
+    val byobSource = object : ReadableStreamSource {
+      override val type: ReadableStream.Type get() = ReadableStream.Type.BYOB
+    }
+
+    executeGuest { "(stream) => new ReadableStreamBYOBReader(stream, { mode: 'byob' })" }.thenAssert { test ->
+      val stream = ReadableStream.create(byobSource)
+      val guestCall = assertNotNull(test.returnValue()).also { assert(it.canExecute()) }
+
+      // direct construction
+      val directReader = assertDoesNotThrow("expected direct reader constructor to succeed") {
+        guestCall.execute(stream).asProxyObject<ReadableStreamBYOBReader>()
+      }
+
+      // illegal construction due to lock
+      assertFails("expected reader constructor to fail using locked stream") {
+        guestCall.execute(stream)
+      }
+
+      // legal construction after release
+      directReader.releaseLock()
+      assertDoesNotThrow("expected reader constructor to succeed with released stream") {
+        guestCall.execute(stream).asProxyObject<ReadableStreamBYOBReader>()
+      }
+    }
+
+    executeGuest { "(stream) => stream.getReader({ mode: 'byob' })" }.thenAssert { test ->
+      val stream = ReadableStream.create(byobSource)
+      val guestCall = assertNotNull(test.returnValue()).also { assert(it.canExecute()) }
+
+      // indirect acquisition
+      val acquiredReader = assertDoesNotThrow("expected reader acquisition to succeed") {
+        guestCall.execute(stream).asProxyObject<ReadableStreamBYOBReader>()
+      }
+
+      // illegal acquisition due to lock
+      assertFails("expected reader acquisition to fail using locked stream") {
+        guestCall.execute(stream)
+      }
+
+      // legal acquisition after release
+      acquiredReader.releaseLock()
+      assertDoesNotThrow("expected reader acquisition to succeed with released stream") {
+        guestCall.execute(stream).asProxyObject<ReadableStreamBYOBReader>()
       }
     }
   }
 
-  private inline fun <R> ReadableStream.useReader(block: (ReadableStreamDefaultReader) -> R): R {
-    val reader = getReader() as ReadableStreamDefaultReader
-    return runCatching { block(reader) }
-      .also { reader.releaseLock() }
-      .getOrThrow()
+  @Test fun `should read from default host source`() = runTest {
+    val source = ChannelSource()
+    val stream = ReadableStream.create(source)
+
+    source.send(Value.asValue(42))
+    val reader = stream.getReader() as ReadableStreamDefaultReader
+    val result = reader.read().asDeferred().await()
+    assertEquals(42, result.value?.asInt())
+    assertFalse(result.done)
   }
 
-  private fun ReadableStreamDefaultReader.readAsync(): Deferred<ReadableStream.ReadResult> = read().asDeferred()
-  private suspend fun ReadableStreamDefaultReader.awaitRead(): ReadableStream.ReadResult = readAsync().await()
+  @Test fun `should read from default guest source`() = runTest {
+    val result = CompletableDeferred<Value?>()
+    val channel = Channel<Value>(Channel.UNLIMITED)
 
-  @Test fun `should save chunks in queue when no pending reads`() = runTest {
-    val source = pushSource { it.enqueue(asValue(1)) }
-    val stream = ReadableDefaultStream(source, QueueingStrategy.DefaultReadStrategy, executionProvider.executor())
+    val readAdapter = ProxyExecutable { channel.tryReceive().getOrThrow() }
+    channel.send(Value.asValue("guest"))
 
-    val read = stream.useReader { reader -> reader.awaitRead() }
-    assertEquals(1, (read.value as Value).asInt(), "expected chunk to have enqueued value")
-    assertFalse(read.done, "expected chunk not to be the last")
-  }
+    executeGuest {
+      bindings(JS).putMember("ReadAdapter", readAdapter)
 
-  @Test fun `should handle data from host push source`() = runTest {
-    // simple host source (guest support TBD)
-    val source = pushSource { controller ->
-      // push-only, no backpressure control (for simplicity), last chunk should be marked
-      // as final and close the stream when read
-      controller.enqueue(asValue(1))
-      controller.enqueue(asValue(2))
-      controller.enqueue(asValue(3))
-      controller.close()
+      """
+      new ReadableStream({ pull: async (controller) => controller.enqueue(ReadAdapter()) })
+      """.trimIndent()
+    }.thenAssert { test ->
+      val stream = assertNotNull(test.returnValue()).asProxyObject<ReadableStream>()
+      val reader = stream.getReader() as ReadableStreamDefaultReader
+
+      reader.read().then(
+        onFulfilled = { result.complete(it.value) },
+        onCatch = { result.completeExceptionally(TypeError.create(it.toString())) },
+      )
     }
 
-    // cast is needed on the host to access the APIs (for now, will be easier later)
-    val stream = ReadableDefaultStream(source, QueueingStrategy.DefaultReadStrategy, executionProvider.executor())
+    assertEquals(
+      expected = "guest",
+      actual = result.await()?.asString(),
+    )
+  }
+
+  @Test fun `should observe backpressure`() = runTest {
+    val source = ChannelSource(capacity = Channel.RENDEZVOUS)
+    val strategy = CountQueueingStrategy(1.0)
+
+    var sent = 0
+    val counter = launch {
+      while (isActive) {
+        source.send(Value.asValue(sent))
+        sent++
+      }
+    }
+
+    // after allowing the producer to run, it should suspend due to a
+    // lack of consumers, since this is a pull source, not a push one
+    yield()
+    assertEquals(0, sent)
+
+    val stream = ReadableStream.create(source, strategy)
     val reader = stream.getReader() as ReadableStreamDefaultReader
 
-    // read from the stream sequentially until a chunk marked as 'done' is found
-    val chunks = flow {
-      do {
-        val chunk = reader.read().asDeferred().await(); emit(chunk)
-      } while (!chunk.done)
-    }.toList()
+    // upon creation, the stream should pull one value from the source,
+    // and we'll see it come out the other side through the reader
+    yield() // allow the source to read from the channel
+    yield() // allow the counter to tick
+    assertEquals(1, sent)
 
-    // inspect results
-    assertEquals(3, chunks.size, "expected 3 values")
-    repeat(chunks.size) { assertEquals(it + 1, (chunks[it].value as Value).asInt()) }
+    assertEquals(
+      expected = 0,
+      actual = reader.read().asDeferred().await().value?.asInt(),
+    )
+
+    // after the value is read, the stream will pull again to reach the
+    // high watermark specified by the queueing strategy
+    yield() // allow the source to read from the channel
+    yield() // allow the counter to tick
+    assertEquals(2, sent)
+    counter.cancel()
   }
 
-  @Test fun `should handle BYOB sources`() = runTest {
-    val read = withContext {
-      enter()
+  @Test fun `should read from byob host source`() = runTest {
+    // ensure there is a "current" context in the test thread; this is needed to create
+    // the typed array instances when interacting with the BYOB stream
+    val context = engine.acquire()
+    context.enter()
 
-      val source = byteSource { controller ->
-        // direct write
-        val request = controller.byobRequest
-        if (request != null) {
-          val view = checkNotNull(request.view) { "expected view to not be null" }
+    val source = ChannelByteSource()
+    val stream = ReadableStream.create(source)
 
-          val viewBuffer = ArrayBufferViews.getBackingBuffer(view)
-          val viewOffset = ArrayBufferViews.getOffset(view)
+    // default mode
+    assertDoesNotThrow {
+      val helloBytes = "Hello".encodeToByteArray()
+      source.send(helloBytes)
 
-          repeat(5) { viewBuffer.writeBufferByte(viewOffset + it, it.toByte()) }
-          request.respond(5)
-        }
+      val reader = stream.getReader() as ReadableStreamDefaultReader
+      val result = assertNotNull(reader.read().asDeferred().await().value)
 
-        // indirect write (enqueue)
-        val firstChunk = ByteBuffer.allocate(5)
-        repeat(5) { firstChunk.put(it, (5 + it).toByte()) }
-        controller.enqueue(ArrayBufferViews.newView(Uint8Array, firstChunk))
-      }
+      val resultBytes = ByteArray(helloBytes.size)
+      ArrayBufferViews.getBackingBuffer(result).readBuffer(0, resultBytes, 0, resultBytes.size)
 
-      val stream = ReadableStream.create(source, QueueingStrategy.DefaultReadStrategy)
-      val reader = stream.getReader(options("mode" to "byob")) as ReadableStreamBYOBReader
+      assertEquals("Hello", resultBytes.decodeToString())
+      reader.releaseLock()
+    }
 
-      val viewBuffer = ByteBuffer.allocate(12)
-      val view = ArrayBufferViews.newView(Uint8Array, viewBuffer, offset = 2, length = 10)
+    // byob mode (full chunk)
+    assertDoesNotThrow {
+      val helloBytes = "Hello".encodeToByteArray()
+      source.send(helloBytes)
 
-      reader.read(view, options("min" to 10))
-    }.asDeferred().await()
+      val options = ProxyObject.fromMap(mapOf("mode" to "byob"))
+      val reader = stream.getReader(Value.asValue(options)) as ReadableStreamBYOBReader
 
-    val result = read.value
-    assertIs<Value>(result, "expected result to be a polyglot value")
+      val resultBytes = ByteArray(helloBytes.size)
+      assertNotEquals("Hello", resultBytes.decodeToString())
 
-    val buffer = assertDoesNotThrow { ArrayBufferViews.getBackingBuffer(result) }
-    val bytes = ByteArray(12)
-    buffer.readBuffer(0, bytes, 0, 12)
+      val resultView = ArrayBufferViews.newView(Uint8Array, ByteBuffer.wrap(resultBytes))
+      assertNotNull(reader.read(resultView).asDeferred().await().value)
 
-    repeat(2) { assertEquals(0, bytes[it], "expected first two bytes to be 0") }
-    repeat(10) { assertEquals(it.toByte(), bytes[2 + it], "expected byte at ${2 + it} to be $it") }
+      assertEquals("Hello", resultBytes.decodeToString())
+      reader.releaseLock()
+    }
+
+    // byob mode (stitched chunks)
+    assertDoesNotThrow {
+      val helloBytes = "Hello".encodeToByteArray()
+      source.send(helloBytes)
+      source.send(helloBytes)
+
+      val options = ProxyObject.fromMap(mapOf("mode" to "byob"))
+      val reader = stream.getReader(Value.asValue(options)) as ReadableStreamBYOBReader
+
+      val stitchedBytes = ByteArray(helloBytes.size * 2)
+      assertNotEquals("HelloHello", stitchedBytes.decodeToString())
+
+      val resultView = ArrayBufferViews.newView(Uint8Array, ByteBuffer.wrap(stitchedBytes))
+      val readOptions = ProxyObject.fromMap(mapOf("min" to stitchedBytes.size))
+      assertNotNull(reader.read(resultView, Value.asValue(readOptions)).asDeferred().await().value)
+
+      assertEquals("HelloHello", stitchedBytes.decodeToString())
+      reader.releaseLock()
+    }
+
+    // byob mode (split chunk)
+    assertDoesNotThrow {
+      val helloBytes = "Hello".encodeToByteArray()
+      source.send(helloBytes + helloBytes)
+
+      val options = ProxyObject.fromMap(mapOf("mode" to "byob"))
+      val readOptions = ProxyObject.fromMap(mapOf("min" to helloBytes.size))
+      val reader = stream.getReader(Value.asValue(options)) as ReadableStreamBYOBReader
+
+      val firstHelloBytes = ByteArray(helloBytes.size)
+      assertNotEquals("Hello", firstHelloBytes.decodeToString())
+
+      val firstResultView = ArrayBufferViews.newView(Uint8Array, ByteBuffer.wrap(firstHelloBytes))
+      assertNotNull(reader.read(firstResultView, Value.asValue(readOptions)).asDeferred().await().value)
+      assertEquals("Hello", firstHelloBytes.decodeToString())
+
+      val secondHelloBytes = ByteArray(helloBytes.size)
+      assertNotEquals("Hello", secondHelloBytes.decodeToString())
+
+      val resultView = ArrayBufferViews.newView(Uint8Array, ByteBuffer.wrap(secondHelloBytes))
+      assertNotNull(reader.read(resultView, Value.asValue(readOptions)).asDeferred().await().value)
+      assertEquals("Hello", secondHelloBytes.decodeToString())
+
+      reader.releaseLock()
+    }
+
+    // remember to explicitly leave the context! if you don't, other tests may break;
+    // once the Elide testing APIs are refactored, we can remove the need for this
+    context.leave()
   }
 
-  @Test fun `should allow iterator interop`(): Unit = runBlocking {
-    val promise = withContext {
-      val source = pushSource { controller ->
-        // push-only, no backpressure control (for simplicity), last chunk should be marked
-        // as final and close the stream when read
-        controller.enqueue(asValue(1))
-        controller.enqueue(asValue(2))
-        controller.enqueue(asValue(3))
-        controller.close()
-      }
+  @Test fun `should forward values to tee branches`() = runTest {
+    val source = ChannelSource()
+    val stream = ReadableStream.create(source)
 
-      val stream = ReadableStream.create(source, QueueingStrategy.DefaultReadStrategy)
+    val (branchA, branchB) = stream.tee()
 
-      //language=javascript
-      val func = javascript(
-        """
-        const values = [];
-        async (stream) => {
-          for await (const chunk of stream) {
-            values.push(chunk);
-          }
-          
-          return values;
-        }
-        """,
-      )
+    source.send(Value.asValue(1))
+    assertEquals(1, (branchA.getReader() as ReadableStreamDefaultReader).read().asDeferred().await().value?.asInt())
+    assertEquals(1, (branchB.getReader() as ReadableStreamDefaultReader).read().asDeferred().await().value?.asInt())
+  }
 
-      JsPromise.wrap(func.execute(stream), unwrapFulfilled = { it })
-    }
+  @Test fun `should pipe stream to output`() = runTest {
+    val source = ChannelSource()
+    val stream = ReadableStream.create(source)
 
-    val result = checkNotNull(promise.asDeferred().await())
-    assertEquals(3, result.arraySize, "expected 3 values")
-    repeat(3) {
-      assertEquals(it + 1, result.getArrayElement(it.toLong()).asInt())
-    }
+    val sink = ChannelSink()
+    val output = WritableStream.create(sink)
+
+    stream.pipeTo(output)
+
+    source.send(Value.asValue(42))
+    assertEquals(42, sink.receive().asInt())
+  }
+
+  @Test fun `should pipe stream through transform`() = runTest {
+    val source = ChannelSource()
+    val stream = ReadableStream.create(source)
+
+    val transform = TransformStream.create(TransformStreamTransformer.Identity)
+    stream.pipeThrough(transform)
+
+    source.send(Value.asValue(42))
+    val reader = transform.readable.getReader() as ReadableStreamDefaultReader
+
+    assertEquals(
+      expected = 42,
+      actual = reader.read().asDeferred().await().value?.asInt(),
+    )
   }
 }
+

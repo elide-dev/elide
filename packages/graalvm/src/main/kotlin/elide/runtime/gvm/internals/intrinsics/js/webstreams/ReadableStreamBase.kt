@@ -13,11 +13,14 @@
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
 import elide.runtime.exec.GuestExecutor
+import elide.runtime.gvm.internals.intrinsics.js.abort.AbortSignal
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.*
 import elide.runtime.intrinsics.js.ReadableStream.ReadResult
 import elide.runtime.intrinsics.js.err.TypeError
@@ -30,7 +33,7 @@ import elide.vm.annotations.Polyglot
  * methods used by other components. This contract allows readers and controllers to be decoupled from the internal
  * state of the stream itself.
  */
-internal abstract class ReadableStreamBase : ReadableStream {
+internal abstract class ReadableStreamBase : ReadableStream, ReadOnlyProxyObject {
   /** Executor used to schedule stream operations. */
   protected abstract val executor: GuestExecutor
 
@@ -106,7 +109,7 @@ internal abstract class ReadableStreamBase : ReadableStream {
 
     source.pull(controller).then(
       onFulfilled = {
-        if (sourceState.compareAndSet(SOURCE_PULL_AGAIN, SOURCE_PULLING)) maybePull()
+        if (sourceState.compareAndSet(SOURCE_PULL_AGAIN, SOURCE_READY)) maybePull()
         else sourceState.compareAndSet(SOURCE_PULLING, SOURCE_READY)
       },
       onCatch = ::error,
@@ -151,7 +154,7 @@ internal abstract class ReadableStreamBase : ReadableStream {
     if (destination.locked) throw TypeError.create("Destination is locked, cannot pipe")
 
     // unpack options
-    val signal = options?.getMember("signal")?.takeIf { it.isHostObject }?.asHostObject<AbortSignal>()
+    val signal = options?.getMember("signal")?.takeIf { it.isProxyObject }?.asProxyObject<AbortSignal>()
     val preventClose = options?.getMember("preventClose")?.takeIf { it.isBoolean }?.asBoolean() ?: false
     val preventAbort = options?.getMember("preventAbort")?.takeIf { it.isBoolean }?.asBoolean() ?: false
     val preventCancel = options?.getMember("preventCancel")?.takeIf { it.isBoolean }?.asBoolean() ?: false
@@ -187,6 +190,31 @@ internal abstract class ReadableStreamBase : ReadableStream {
     }
   }
 
+  override fun getMemberKeys(): Array<String> = MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    MEMBER_LOCKED -> locked
+    MEMBER_CANCEL -> ProxyExecutable { cancel(it.firstOrNull()) }
+    MEMBER_GET_READER -> ProxyExecutable { getReader(it.firstOrNull()) }
+    MEMBER_TEE -> ProxyExecutable { tee() }
+    MEMBER_PIPE_TO -> ProxyExecutable { args ->
+      val destination = args.firstOrNull() ?: throw TypeError.create("A pipe destination must be specified")
+      val destinationStream = runCatching { destination.asProxyObject<WritableStream>() }
+        .getOrElse { throw TypeError.create("The specified destination stream is not a writable stream", it) }
+
+      pipeTo(destinationStream, args.getOrNull(1))
+    }
+
+    MEMBER_PIPE_THROUGH -> ProxyExecutable { args ->
+      val transform = args.firstOrNull() ?: throw TypeError.create("A transform stream must be specified")
+      val transformStream = runCatching { transform.asProxyObject<TransformStream>() }
+        .getOrElse { throw TypeError.create("The specified destination stream is not a transform stream", it) }
+
+      pipeThrough(transformStream, args.getOrNull(1))
+    }
+
+    else -> null
+  }
+
   internal companion object {
     // stream state
     internal const val READABLE_STREAM_READABLE = 0
@@ -200,6 +228,22 @@ internal abstract class ReadableStreamBase : ReadableStream {
     internal const val SOURCE_PULL_AGAIN = 3
     internal const val SOURCE_CLOSING = 4
     internal const val SOURCE_CLOSED = 5
+
+    private const val MEMBER_LOCKED = "locked"
+    private const val MEMBER_CANCEL = "cancel"
+    private const val MEMBER_GET_READER = "getReader"
+    private const val MEMBER_TEE = "tee"
+    private const val MEMBER_PIPE_TO = "pipeTo"
+    private const val MEMBER_PIPE_THROUGH = "pipeThrough"
+
+    private val MEMBERS = arrayOf(
+      MEMBER_LOCKED,
+      MEMBER_CANCEL,
+      MEMBER_GET_READER,
+      MEMBER_TEE,
+      MEMBER_PIPE_TO,
+      MEMBER_PIPE_THROUGH,
+    )
   }
 }
 

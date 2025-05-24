@@ -13,10 +13,12 @@
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream.Companion.WRITABLE_STREAM_CLOSED
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream.Companion.WRITABLE_STREAM_ERRORED
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.CompletableJsPromise
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.err.TypeError
@@ -34,10 +36,10 @@ internal class WritableStreamDefaultWriterToken(
   private val detached = AtomicBoolean()
 
   /** A promise used to communicate changes in backpressure to data producers. */
-  private val mutableReadyPromise = AtomicReference<CompletableJsPromise<Unit>>()
+  private val mutableReadyPromise = AtomicReference(JsPromise<Unit>().also { it.resolve(Unit) })
 
   /** A promise used to signal the closing of the stream to data producers. */
-  private val mutableClosePromise = AtomicReference<CompletableJsPromise<Unit>>()
+  private val mutableClosePromise = AtomicReference(JsPromise<Unit>())
 
   @get:Polyglot override val ready: CompletableJsPromise<Unit> get() = mutableReadyPromise.get()
   @get:Polyglot override val closed: CompletableJsPromise<Unit> get() = mutableClosePromise.get()
@@ -56,8 +58,8 @@ internal class WritableStreamDefaultWriterToken(
   }
 
   /**
-   * Ensures that the writer's [ready] promise is rejected, by replacing it with a new rejected promise if it the
-   * current already.instance is already settled, or rejecting it if it is pending.
+   * Ensures that the writer's [ready] promise is rejected, by replacing it with a new rejected promise if the current
+   * ready promise is already settled, or rejecting it if it is pending.
    */
   internal fun ensureReadyPromiseRejected(reason: Any?) {
     val readyPromise = ready
@@ -66,8 +68,8 @@ internal class WritableStreamDefaultWriterToken(
   }
 
   /**
-   * Ensures that the writer's [closed] promise is rejected, by replacing it with a new rejected promise if it the
-   * current already.instance is already settled, or rejecting it if it is pending.
+   * Ensures that the writer's [closed] promise is rejected, by replacing it with a new rejected promise if the current
+   * promise is already settled, or rejecting it if it is pending.
    */
   internal fun ensureClosedPromiseRejected(reason: Any?) {
     val closePromise = ready
@@ -105,5 +107,37 @@ internal class WritableStreamDefaultWriterToken(
     detached.get() -> JsPromise.rejected(TypeError.create("Writer has been released"))
     stream.closeQueuedOrInflight -> JsPromise.rejected(TypeError.create("Stream is already closing"))
     else -> stream.closeStream()
+  }
+
+  override fun getMemberKeys(): Array<String> = MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    MEMBER_READY -> ready
+    MEMBER_CLOSED -> closed
+    MEMBER_DESIRED_SIZE -> desiredSize
+    MEMBER_CLOSE -> ProxyExecutable { close() }
+    MEMBER_ABORT -> ProxyExecutable { abort(it.firstOrNull()) }
+    MEMBER_WRITE -> ProxyExecutable { write(it.firstOrNull() ?: throw TypeError.create("Chunk must not be null")) }
+    MEMBER_RELEASE_LOCK -> ProxyExecutable { releaseLock() }
+    else -> null
+  }
+
+  private companion object {
+    private const val MEMBER_WRITE = "write"
+    private const val MEMBER_RELEASE_LOCK = "releaseLock"
+    private const val MEMBER_ABORT = "abort"
+    private const val MEMBER_CLOSE = "close"
+    private const val MEMBER_READY = "ready"
+    private const val MEMBER_CLOSED = "closed"
+    private const val MEMBER_DESIRED_SIZE = "desiredSize"
+
+    private val MEMBERS = arrayOf(
+      MEMBER_READY,
+      MEMBER_CLOSED,
+      MEMBER_DESIRED_SIZE,
+      MEMBER_CLOSE,
+      MEMBER_ABORT,
+      MEMBER_WRITE,
+      MEMBER_RELEASE_LOCK,
+    )
   }
 }

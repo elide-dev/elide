@@ -14,6 +14,7 @@ package elide.runtime.intrinsics.js
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream
 import elide.runtime.intrinsics.js.stream.*
@@ -25,7 +26,7 @@ import elide.vm.annotations.Polyglot
  * Specifies the interface provided by, and expected from, writable [Stream] implementations, which comply with the Web
  * Streams standard.
  */
-@API public interface WritableStream : Stream {
+@API public interface WritableStream : Stream, ProxyObject {
   /**
    * ## Writable Stream: Factory.
    *
@@ -35,7 +36,16 @@ import elide.vm.annotations.Polyglot
    *
    * @param Impl Implementation of [WritableStream] which is created by this factory.
    */
-  public interface Factory<Impl> where Impl : WritableStream
+  public interface Factory<Impl> where Impl : WritableStream {
+    /**
+     * Constructor for a custom [WritableStream], which uses the provided [sink] and [queueingStrategy], if provided.
+     *
+     * @param sink Underlying sink for the [WritableStream].
+     * @param queueingStrategy Optional [QueueingStrategy] for the [WritableStream].
+     * @return A new [WritableStream] instance.
+     */
+    @Polyglot public fun create(sink: WritableStreamSink, queueingStrategy: QueueingStrategy? = null): Impl
+  }
 
   @get:Polyglot public val locked: Boolean
 
@@ -44,11 +54,15 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun close(): JsPromise<Unit>
 
   public companion object : Factory<WritableStream>, ProxyInstantiable {
+    override fun create(sink: WritableStreamSink, queueingStrategy: QueueingStrategy?): WritableStream {
+      return WritableDefaultStream(sink, queueingStrategy ?: QueueingStrategy.DefaultWriteStrategy)
+    }
+
     override fun newInstance(vararg arguments: Value?): Any {
       val sink = arguments.getOrNull(0)?.let(::GuestWritableStreamSink)
       val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from)
 
-      return WritableDefaultStream(sink ?: WritableStreamSink.Empty, strategy ?: QueueingStrategy.DefaultWriteStrategy)
+      return create(sink ?: WritableStreamSink.DiscardingSink, strategy)
     }
   }
 }

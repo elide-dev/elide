@@ -32,28 +32,29 @@ public interface WritableStreamSink {
     return JsPromise.resolved(Unit)
   }
 
-  public object Empty : WritableStreamSink
+  /** A no-op sink that simply ignores all writes. */
+  public object DiscardingSink : WritableStreamSink
 }
 
 @JvmInline public value class GuestWritableStreamSink(public val value: Value) : WritableStreamSink {
   override fun start(controller: WritableStreamDefaultController) {
     if (!value.hasMember(START_MEMBER)) JsPromise.resolved(Unit)
-    value.invokeMember(START_MEMBER, controller)
+    else value.invokeMember(START_MEMBER, controller)
   }
 
   override fun write(chunk: Value, controller: WritableStreamDefaultController): JsPromise<Unit> {
-    if (!value.hasMember(WRITE_MEMBER)) JsPromise.resolved(Unit)
-    return JsPromise.wrap(value.invokeMember(WRITE_MEMBER, controller), unwrapFulfilled = { })
+    return if (!value.hasMember(WRITE_MEMBER)) JsPromise.resolved(Unit)
+    else JsPromise.wrap(value.invokeMember(WRITE_MEMBER, chunk, controller), unwrapFulfilled = { })
   }
 
   override fun close(): JsPromise<Unit> {
-    if (!value.hasMember(CLOSE_MEMBER)) JsPromise.resolved(Unit)
-    return JsPromise.wrap(value.invokeMember(CLOSE_MEMBER), unwrapFulfilled = { })
+    return if (!value.hasMember(CLOSE_MEMBER)) JsPromise.resolved(Unit)
+    else JsPromise.wrap(value.invokeMember(CLOSE_MEMBER), unwrapFulfilled = { })
   }
 
   override fun abort(reason: Any?): JsPromise<Unit> {
-    if (!value.hasMember(ABORT_MEMBER)) JsPromise.resolved(Unit)
-    return JsPromise.wrap(value.invokeMember(ABORT_MEMBER, reason), unwrapFulfilled = { })
+    return if (!value.hasMember(ABORT_MEMBER)) JsPromise.resolved(Unit)
+    else JsPromise.wrap(value.invokeMember(ABORT_MEMBER, reason), unwrapFulfilled = { })
   }
 
   private companion object {

@@ -12,6 +12,7 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
+import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
@@ -21,7 +22,7 @@ import elide.runtime.intrinsics.js.TransformStream
 import elide.runtime.intrinsics.js.WritableStream
 
 /** Implementation of transform streams (via the Web Streams standard). */
-@Intrinsic(global = "TransformStream") internal class TransformStreamIntrinsic : AbstractJsIntrinsic() {
+@Intrinsic(global = "TransformStream") @Singleton internal class TransformStreamIntrinsic : AbstractJsIntrinsic() {
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     bindings[TRANSFORM_STREAM_SYMBOL.asPublicJsSymbol()] = TransformStream

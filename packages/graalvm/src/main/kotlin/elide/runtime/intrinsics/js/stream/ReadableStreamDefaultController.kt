@@ -13,10 +13,12 @@
 package elide.runtime.intrinsics.js.stream
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.vm.annotations.Polyglot
 
 /** A controller used by streams with a 'default' source, allowing arbitrary chunks to be enqueued. */
-public interface ReadableStreamDefaultController : ReadableStreamController {
+public interface ReadableStreamDefaultController : ReadableStreamController, ReadOnlyProxyObject {
   /**
    * Close the controller and the associated stream. If there are undelivered chunks, the stream will not be closed
    * until they are claimed.
@@ -34,4 +36,21 @@ public interface ReadableStreamDefaultController : ReadableStreamController {
    * chunk will be delivered directly without using the queue.
    */
   @Polyglot public fun enqueue(chunk: Value? = null)
+
+  override fun getMemberKeys(): Array<String> = MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    MEMBER_DESIRED_SIZE -> desiredSize
+    MEMBER_CLOSE -> ProxyExecutable { close() }
+    MEMBER_ERROR -> ProxyExecutable { error(it.firstOrNull()) }
+    MEMBER_ENQUEUE -> ProxyExecutable { enqueue(it.firstOrNull()) }
+    else -> null
+  }
+
+  private companion object {
+    private const val MEMBER_CLOSE = "closed"
+    private const val MEMBER_ERROR = "error"
+    private const val MEMBER_ENQUEUE = "enqueue"
+    private const val MEMBER_DESIRED_SIZE = "desiredSize"
+    private val MEMBERS = arrayOf(MEMBER_CLOSE, MEMBER_ERROR, MEMBER_ENQUEUE, MEMBER_DESIRED_SIZE)
+  }
 }

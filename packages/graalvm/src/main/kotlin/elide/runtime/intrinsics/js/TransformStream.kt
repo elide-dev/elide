@@ -14,9 +14,11 @@ package elide.runtime.intrinsics.js
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
 import elide.runtime.exec.GuestExecution
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.TransformDefaultStream
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.stream.GuestQueueingStrategy
 import elide.runtime.intrinsics.js.stream.GuestTransformStreamTransformer
 import elide.runtime.intrinsics.js.stream.QueueingStrategy
@@ -29,7 +31,7 @@ import elide.vm.annotations.Polyglot
  * Specifies the interface provided by, and expected from, transforming or mutating [Stream] implementations, which
  * comply with the Web Streams standard.
  */
-@API public interface TransformStream : Stream {
+@API public interface TransformStream : Stream, ProxyObject {
   /**
    * ## Transform Stream: Factory.
    *
@@ -39,7 +41,13 @@ import elide.vm.annotations.Polyglot
    *
    * @param Impl Implementation of [TransformStream] which is created by this factory.
    */
-  public interface Factory<Impl> where Impl : TransformStream
+  public interface Factory<Impl> where Impl : TransformStream {
+    public fun create(
+      transformer: TransformStreamTransformer,
+      writableStrategy: QueueingStrategy? = null,
+      readableStrategy: QueueingStrategy? = null,
+    ): Impl
+  }
 
   @get:Polyglot public val readable: ReadableStream
   @get:Polyglot public val writable: WritableStream
@@ -47,17 +55,25 @@ import elide.vm.annotations.Polyglot
   public companion object : Factory<TransformStream>, ProxyInstantiable {
     private val streamExecutor = GuestExecution.workStealing()
 
+    override fun create(
+      transformer: TransformStreamTransformer,
+      writableStrategy: QueueingStrategy?,
+      readableStrategy: QueueingStrategy?
+    ): TransformStream {
+      return TransformDefaultStream(
+        transformer = transformer,
+        executor = streamExecutor,
+        writableStrategy = writableStrategy ?: QueueingStrategy.DefaultWriteStrategy,
+        readableStrategy = readableStrategy ?: QueueingStrategy.DefaultReadStrategy,
+      )
+    }
+
     override fun newInstance(vararg arguments: Value?): Any {
       val transformer = arguments.getOrNull(0)?.let(::GuestTransformStreamTransformer)
       val writableStrategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from)
       val readableStrategy = arguments.getOrNull(2)?.let(GuestQueueingStrategy::from)
 
-      return TransformDefaultStream(
-        transformer = transformer ?: TransformStreamTransformer.Identity,
-        executor = streamExecutor,
-        writableStrategy = writableStrategy ?: QueueingStrategy.DefaultWriteStrategy,
-        readableStrategy = readableStrategy ?: QueueingStrategy.DefaultReadStrategy,
-      )
+      return create(transformer ?: TransformStreamTransformer.Identity, writableStrategy, readableStrategy)
     }
   }
 }

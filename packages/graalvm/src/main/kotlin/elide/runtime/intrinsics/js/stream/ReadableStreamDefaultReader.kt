@@ -31,7 +31,7 @@ public interface ReadableStreamDefaultReader : ReadableStreamReader {
   public companion object : ProxyInstantiable {
     override fun newInstance(vararg arguments: Value?): Any {
       val stream = arguments.firstOrNull() ?: throw TypeError.create("A stream is required to create a reader")
-      val unwrappedStream = runCatching { stream.asHostObject<ReadableStream>() }.getOrElse {
+      val unwrappedStream = runCatching { stream.asProxyObject<ReadableStream>() }.getOrElse {
         throw TypeError.create("Value $stream is not a valid readable stream")
       }
 

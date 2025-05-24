@@ -14,6 +14,7 @@
 
 package elide.runtime.gvm.internals.js
 
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject

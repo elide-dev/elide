@@ -12,6 +12,7 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
+import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
@@ -24,7 +25,7 @@ import elide.runtime.intrinsics.js.stream.ReadableStreamBYOBReader
 import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
 
 /** Implementation of readable streams (via the Web Streams standard). */
-@Intrinsic(global = "ReadableStream") internal class ReadableStreamIntrinsic : AbstractJsIntrinsic() {
+@Intrinsic(global = "ReadableStream") @Singleton internal class ReadableStreamIntrinsic : AbstractJsIntrinsic() {
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     bindings[READABLE_STREAM_SYMBOL.asPublicJsSymbol()] = ReadableStream

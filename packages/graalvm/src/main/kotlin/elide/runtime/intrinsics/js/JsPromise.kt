@@ -144,7 +144,7 @@ public interface JsPromise<out T> : ProxyObject {
       unwrapFulfilled: (Value?) -> T,
       unwrapRejected: (Value?) -> Any? = { it },
     ): JsPromise<T>? {
-      return if (value.isHostObject) runCatching { value.asHostObject<JsPromise<T>>() }.getOrNull()
+      return if (value.isProxyObject) runCatching { value.asProxyObject<JsPromise<T>>() }.getOrNull()
       else if (!value.canInvokeMember(THEN_SYMBOL)) null
       else object : JsPromise<T> {
         override val isDone: Boolean get() = false

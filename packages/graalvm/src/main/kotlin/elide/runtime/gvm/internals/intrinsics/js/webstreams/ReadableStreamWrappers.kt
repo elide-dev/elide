@@ -12,6 +12,7 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
+import org.graalvm.polyglot.Value
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
@@ -20,6 +21,7 @@ import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViewType
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViews
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.stream.ReadableByteStreamController
 import elide.runtime.intrinsics.js.stream.ReadableStreamController
 import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultController
@@ -109,5 +111,38 @@ internal class ReadableStreamBufferSource(private val wrapped: ByteBuffer) : Rea
 
     if (remaining.get() == 0) controller.close()
     return super.pull(controller)
+  }
+}
+
+internal class ReadableStreamAsyncIteratorSource(private val wrapped: Value) : ReadableStreamSource {
+  override fun pull(controller: ReadableStreamController): JsPromise<Unit> {
+    check(controller is ReadableStreamDefaultController)
+    val nextPromise = JsPromise<Unit>()
+
+    val next = runCatching { wrapped.invokeMember("next") }.getOrElse {
+      return JsPromise.rejected(it)
+    }
+
+
+    (JsPromise.wrapOrNull(next, { it }) ?: JsPromise.resolved(next)).then(
+      onFulfilled = {
+        if (!it.hasMembers()) throw TypeError.create("Iterator returned a non-object value")
+        if (it.getMember("done").asBoolean()) controller.close()
+        else controller.enqueue(it.getMember("value"))
+        nextPromise.resolve(Unit)
+      },
+      onCatch = nextPromise::reject,
+    )
+    return nextPromise
+  }
+
+  override fun cancel(reason: Any?): JsPromise<Unit> {
+    val iterator = wrapped.getMember("iterator")
+
+    runCatching { iterator.invokeMember("return") }.getOrElse {
+      return JsPromise.rejected(it)
+    }
+
+    return JsPromise.resolved(Unit)
   }
 }

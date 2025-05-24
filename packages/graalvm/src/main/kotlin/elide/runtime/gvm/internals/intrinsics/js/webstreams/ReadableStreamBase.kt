@@ -160,6 +160,33 @@ internal abstract class ReadableStreamBase : ReadableStream {
     return StreamPipe.pipe(executor, this, destination, preventClose, preventAbort, preventCancel, signal)
   }
 
+  override fun getIterator(): Any? {
+    val reader = getReader()
+    return object : JsIterator<JsPromise<Value?>> {
+      override fun next(): JsIterator.JsIteratorResult<JsPromise<Value?>> {
+        val promise = JsPromise<Value?>()
+        readOrEnqueue().then(
+          onFulfilled = {
+            promise.resolve(it.value)
+            if (it.done) releaseReader()
+          },
+          onCatch = {
+            releaseReader()
+            promise.reject(it)
+          },
+        )
+        return JsIterator.JsIteratorResult.of(promise, false)
+      }
+
+      override fun hasNext(): Boolean = !reader.closed.isDone
+
+      override fun `return`(value: JsPromise<Value?>): JsIterator.JsIteratorResult<JsPromise<Value?>> {
+        releaseReader()
+        return JsIterator.JsIteratorResult.of(null, true)
+      }
+    }
+  }
+
   internal companion object {
     // stream state
     internal const val READABLE_STREAM_READABLE = 0

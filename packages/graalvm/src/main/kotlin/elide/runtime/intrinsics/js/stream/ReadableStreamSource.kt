@@ -13,7 +13,6 @@
 package elide.runtime.intrinsics.js.stream
 
 import org.graalvm.polyglot.Value
-import elide.runtime.intrinsics.js.GuestJsPromise
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.ReadableStream.Type
@@ -64,12 +63,12 @@ public interface ReadableStreamSource {
 
   override fun pull(controller: ReadableStreamController): JsPromise<Unit> {
     if (!value.hasMember(PULL_MEMBER)) JsPromise.resolved(Unit)
-    return GuestJsPromise.from(value.invokeMember(PULL_MEMBER, controller))
+    return JsPromise.wrap(value.invokeMember(PULL_MEMBER, controller), unwrapFulfilled = { })
   }
 
   override fun cancel(reason: Any?): JsPromise<Unit> {
     if (!value.hasMember(CANCEL_MEMBER)) return JsPromise.resolved(Unit)
-    return GuestJsPromise.from(value.invokeMember(CANCEL_MEMBER, reason))
+    return JsPromise.wrap(value.invokeMember(CANCEL_MEMBER, reason), unwrapFulfilled = { })
   }
 
   private companion object {

@@ -15,6 +15,7 @@ package elide.runtime.intrinsics.js
 import org.graalvm.polyglot.HostAccess
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
+import org.graalvm.polyglot.proxy.ProxyIterable
 import java.io.InputStream
 import java.io.Reader
 import java.nio.ByteBuffer
@@ -33,7 +34,7 @@ import elide.vm.annotations.Polyglot
  * Readable streams implement streams of arbitrary data which can be consumed by an interested developer, and form part
  * of the wider Web Streams API.
  */
-@API @HostAccess.Implementable public interface ReadableStream : Stream {
+@API @HostAccess.Implementable public interface ReadableStream : Stream, ProxyIterable {
   /**
    * Encapsulates the result of a read; [done] indicates whether the [value] is the final value that will be available
    * from the source.
@@ -178,6 +179,10 @@ import elide.vm.annotations.Polyglot
   public companion object DefaultFactory : ProxyInstantiable, Factory<ReadableStream> {
     // TODO(@darvld): replace with proper local guest executor API once available
     private val streamExecutor = GuestExecution.workStealing()
+
+    @Polyglot public fun from(asyncIterable: Value): ReadableStream {
+      return create(ReadableStreamAsyncIteratorSource(asyncIterable.iterator))
+    }
 
     override fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream {
       return when (source.type) {

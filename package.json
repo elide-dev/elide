@@ -13,7 +13,9 @@
     "last 3 safari versions"
   ],
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "dependencies": {
     "browserslist": "4.24.5",
@@ -23,7 +25,7 @@
     "jszip": "3.10.1",
     "lz-string": "1.5.0",
     "postcss": "8.5.3",
-    "preact": "10.26.6",
+    "preact": "10.26.7",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "typescript": "5.8.3"
@@ -36,9 +38,9 @@
     "@mitata/counters": "0.0.8",
     "@prettier/plugin-xml": "3.4.1",
     "@types/google-protobuf": "3.15.12",
-    "@types/node": "22.15.20",
-    "bun": "1.2.13",
-    "bun-types": "1.2.13",
+    "@types/node": "22.15.21",
+    "bun": "1.2.14",
+    "bun-types": "1.2.14",
     "commitlint": "19.8.1",
     "esbuild": "0.25.0",
     "eslint": "9.27.0",
@@ -70,6 +72,11 @@
     "lint:check": "prettier --check  . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java"
   },
   "prettier": {
-    "plugins": ["@prettier/plugin-xml", "prettier-plugin-toml", "prettier-plugin-sh", "prettier-plugin-properties"]
+    "plugins": [
+      "@prettier/plugin-xml",
+      "prettier-plugin-toml",
+      "prettier-plugin-sh",
+      "prettier-plugin-properties"
+    ]
   }
 }

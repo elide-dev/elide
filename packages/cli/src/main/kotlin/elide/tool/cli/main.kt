@@ -61,7 +61,9 @@ private fun createApplicationContext(args: Array<String>) = applicationContextBu
 private fun sorryIHaveToFactory(args: Array<String>): CommandLine =
   createApplicationContext(args)
   .start()
-  .use { CommandLine(Elide::class.java, MicronautFactory(it)) }
+  .use {
+    CommandLine(Elide::class.java, MicronautFactory(it))
+  }
 
 // Run the Clikt or regular entrypoint.
 @Suppress("TooGenericExceptionCaught")

@@ -211,6 +211,7 @@ include(
   ":packages:sqlite",
   ":packages:ssr",
   ":packages:terminal",
+  ":packages:telemetry",
   ":packages:test",
   ":packages:tooling",
   ":tools:reports",

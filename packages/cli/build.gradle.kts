@@ -400,6 +400,7 @@ dependencies {
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
   implementation(projects.packages.localAi)
+  implementation(projects.packages.telemetry)
   implementation(libs.dirs)
   implementation(libs.snakeyaml)
   implementation(mn.micronaut.json.core)

@@ -22,10 +22,14 @@ import elide.runtime.telemetry.CrashEvent
 import elide.runtime.telemetry.Event
 import elide.runtime.telemetry.RunEvent
 import elide.runtime.telemetry.RunEvent.ExecutionMode
+import elide.runtime.telemetry.manager.TelemetryManager
 
 @Singleton
 @Context
-class TelemetryTriggers @Inject constructor (private val publisher: ApplicationEventPublisher<Event>) {
+class TelemetryTriggers @Inject constructor (
+  private val telemetryManager: TelemetryManager,
+  private val publisher: ApplicationEventPublisher<Event>,
+) {
   fun sendRunEvent(mode: ExecutionMode, exitCode: Int, duration: Duration) {
     publisher.publishEvent(RunEvent.create(mode, exitCode, duration))
   }
@@ -33,4 +37,6 @@ class TelemetryTriggers @Inject constructor (private val publisher: ApplicationE
   fun sendCrashEvent(exitCode: Int = 1, message: String? = null) {
     publisher.publishEvent(CrashEvent.create(exitCode, message))
   }
+
+  fun manager(): TelemetryManager = telemetryManager
 }

@@ -45,6 +45,7 @@ import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.telemetry.RunEvent
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.options.CommonOptions
+import elide.tool.cli.options.TelemetryOptions
 import elide.tool.cli.state.CommandState
 import elide.tool.err.DefaultErrorHandler
 import elide.tool.err.ErrorHandler
@@ -337,6 +338,14 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
   // Triggers for telemetry.
   @Inject internal lateinit var telemetry: TelemetryTriggers
 
+  // Telemetry options which apply to all commands.
+  @CommandLine.ArgGroup(
+    heading = "%nTelemetry Options:%n",
+    exclusive = false,
+    order = 998,
+  )
+  private var telemetryOptions: TelemetryOptions = TelemetryOptions()
+
   // Common options shared by all commands.
   @CommandLine.ArgGroup(
     heading = "%nCommon Options:%n",
@@ -556,6 +565,11 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
    */
   override suspend fun Context.invoke(state: CommandState): CommandResult = use {
     val start = TimeSource.Monotonic.markNow()
+
+    // if the user has disabled telemetry in any way, we need to neuter it early
+    if (telemetryOptions.shouldDisable()) {
+      telemetry.manager().disableTelemetry()
+    }
 
     // allow the subclass to register its own shared resources
     sharedResources.addAll(initialize())

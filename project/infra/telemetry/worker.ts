@@ -12,7 +12,7 @@ const MAX_ATTEMPTS = 3
 const DEBUG = true
 
 // Whether to record events to Analytics Engine.
-const RECORD_EVENTS = false
+const RECORD_EVENTS = true
 
 // Version header.
 const ELIDE_VERSION_HEADER = "x-elide-version"

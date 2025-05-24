@@ -1043,9 +1043,12 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.handler.codec.http2.Http2ConnectionHandler",
   "io.netty.handler.codec.http2.DefaultHttp2FrameWriter",
   "io.netty.handler.ssl.ReferenceCountedOpenSslEngine",
+  "io.netty.incubator.channel.uring.IOUring",
   "io.netty.incubator.channel.uring.IOUringEventLoopGroup",
   "io.netty.incubator.channel.uring.Native",
+  "io.netty.incubator.channel.uring.LinuxSocket",
   "io.netty.handler.codec.http.HttpObjectEncoder",
+  "io.netty.handler.pcap.PcapWriteHandler${'$'}WildcardAddressHolder",
 
   // --- Netty: Native Crypto -----
 

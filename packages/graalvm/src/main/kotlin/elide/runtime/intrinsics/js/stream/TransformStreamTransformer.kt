@@ -14,10 +14,10 @@ package elide.runtime.intrinsics.js.stream
 
 import org.graalvm.polyglot.Value
 import elide.runtime.intrinsics.js.JsPromise
-import elide.runtime.intrinsics.js.ReadableStream
+import elide.runtime.intrinsics.js.ReadableStream.Type
 
 public interface TransformStreamTransformer {
-  public val readableType: ReadableStream.Type get() = ReadableStream.Type.Default
+  public val readableType: Type get() = Type.Default
   public val writableType: Any get() = Unit
 
   public fun start(controller: TransformStreamDefaultController): JsPromise<Unit> = JsPromise.resolved(Unit)
@@ -29,4 +29,50 @@ public interface TransformStreamTransformer {
   }
 
   public fun cancel(reason: Any? = null): JsPromise<Unit> = JsPromise.resolved(Unit)
+
+  public object Identity : TransformStreamTransformer {
+    override fun transform(chunk: Value, controller: TransformStreamDefaultController): JsPromise<Unit> {
+      controller.enqueue(chunk)
+      return JsPromise.resolved(Unit)
+    }
+  }
+}
+
+@JvmInline public value class GuestTransformStreamTransformer(public val value: Value) : TransformStreamTransformer {
+  override val readableType: Type
+    get() {
+      return if (value.hasMember(READABLE_TYPE_MEMBER)) {
+        Type.fromGuestValue(value.getMember(READABLE_TYPE_MEMBER).asString())
+      } else {
+        super.readableType
+      }
+    }
+
+  override fun start(controller: TransformStreamDefaultController): JsPromise<Unit> {
+    if (!value.hasMember(START_MEMBER)) return super.start(controller)
+    return JsPromise.wrap(value.invokeMember(START_MEMBER, controller), unwrapFulfilled = { })
+  }
+
+  override fun transform(chunk: Value, controller: TransformStreamDefaultController): JsPromise<Unit> {
+    if (!value.hasMember(TRANSFORM_MEMBER)) return JsPromise.resolved(Unit)
+    return JsPromise.wrap(value.invokeMember(TRANSFORM_MEMBER, chunk, controller), unwrapFulfilled = { })
+  }
+
+  override fun flush(controller: TransformStreamDefaultController): JsPromise<Unit> {
+    if (!value.hasMember(FLUSH_MEMBER)) return JsPromise.resolved(Unit)
+    return JsPromise.wrap(value.invokeMember(FLUSH_MEMBER, controller), unwrapFulfilled = { })
+  }
+
+  override fun cancel(reason: Any?): JsPromise<Unit> {
+    if (!value.hasMember(CANCEL_MEMBER)) return JsPromise.resolved(Unit)
+    return JsPromise.wrap(value.invokeMember(CANCEL_MEMBER, reason), unwrapFulfilled = { })
+  }
+
+  private companion object {
+    private const val READABLE_TYPE_MEMBER = "readableType"
+    private const val START_MEMBER = "start"
+    private const val TRANSFORM_MEMBER = "transform"
+    private const val CANCEL_MEMBER = "cancel"
+    private const val FLUSH_MEMBER = "flush"
+  }
 }

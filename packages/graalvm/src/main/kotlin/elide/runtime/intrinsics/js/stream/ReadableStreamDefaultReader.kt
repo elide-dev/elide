@@ -12,8 +12,12 @@
  */
 package elide.runtime.intrinsics.js.stream
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.ReadableStream.ReadResult
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 
 /**
@@ -21,6 +25,17 @@ import elide.vm.annotations.Polyglot
  * BYOB operations.
  */
 public interface ReadableStreamDefaultReader : ReadableStreamReader {
-    /** Read a chunk from the stream, returning a promise that is fulfilled with the result. */
-    @Polyglot public fun read(): JsPromise<ReadResult>
+  /** Read a chunk from the stream, returning a promise that is fulfilled with the result. */
+  @Polyglot public fun read(): JsPromise<ReadResult>
+
+  public companion object : ProxyInstantiable {
+    override fun newInstance(vararg arguments: Value?): Any {
+      val stream = arguments.firstOrNull() ?: throw TypeError.create("A stream is required to create a reader")
+      val unwrappedStream = runCatching { stream.asHostObject<ReadableStream>() }.getOrElse {
+        throw TypeError.create("Value $stream is not a valid readable stream")
+      }
+
+      return unwrappedStream.getReader()
+    }
+  }
 }

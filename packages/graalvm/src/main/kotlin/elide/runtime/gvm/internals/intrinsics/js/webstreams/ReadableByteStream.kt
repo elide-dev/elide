@@ -460,7 +460,7 @@ internal class ReadableByteStream(
     maybePull()
   }
 
-  private fun getReaderInternal(byob: Boolean): ReadableStreamReader {
+  internal fun getReaderInternal(byob: Boolean): ReadableStreamReader {
     val reader = if (byob) ReadableStreamByobReaderToken(this)
     else ReadableStreamDefaultReaderToken(this)
 
@@ -608,7 +608,7 @@ internal class ReadableByteStream(
           // if there is an auto-allocate policy in effect, use it to create a pull request for this read
           if (source.autoAllocateChunkSize > 0) {
             val buffer = ByteBuffer.allocate(source.autoAllocateChunkSize.toInt())
-            val request = PullDescriptor(
+            val descriptor = PullDescriptor(
               buffer = Value.asValue(buffer),
               offset = 0,
               length = buffer.limit().toLong(),
@@ -618,7 +618,7 @@ internal class ReadableByteStream(
               viewType = Uint8Array,
             )
 
-            pullQueue.offer(request)
+            pullQueue.offer(descriptor)
           }
 
           // create the read promise and enqueue it

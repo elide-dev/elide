@@ -12,7 +12,15 @@
  */
 package elide.runtime.intrinsics.js
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import elide.annotations.API
+import elide.runtime.exec.GuestExecution
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.TransformDefaultStream
+import elide.runtime.intrinsics.js.stream.GuestQueueingStrategy
+import elide.runtime.intrinsics.js.stream.GuestTransformStreamTransformer
+import elide.runtime.intrinsics.js.stream.QueueingStrategy
+import elide.runtime.intrinsics.js.stream.TransformStreamTransformer
 import elide.vm.annotations.Polyglot
 
 /**
@@ -31,8 +39,25 @@ import elide.vm.annotations.Polyglot
    *
    * @param Impl Implementation of [TransformStream] which is created by this factory.
    */
-  public interface Factory<Impl> where Impl : TransformStream {}
+  public interface Factory<Impl> where Impl : TransformStream
 
   @get:Polyglot public val readable: ReadableStream
   @get:Polyglot public val writable: WritableStream
+
+  public companion object : Factory<TransformStream>, ProxyInstantiable {
+    private val streamExecutor = GuestExecution.workStealing()
+
+    override fun newInstance(vararg arguments: Value?): Any {
+      val transformer = arguments.getOrNull(0)?.let(::GuestTransformStreamTransformer)
+      val writableStrategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from)
+      val readableStrategy = arguments.getOrNull(2)?.let(GuestQueueingStrategy::from)
+
+      return TransformDefaultStream(
+        transformer = transformer ?: TransformStreamTransformer.Identity,
+        executor = streamExecutor,
+        writableStrategy = writableStrategy ?: QueueingStrategy.DefaultWriteStrategy,
+        readableStrategy = readableStrategy ?: QueueingStrategy.DefaultReadStrategy,
+      )
+    }
+  }
 }

@@ -12,13 +12,24 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.webstreams
 
+import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
+import elide.runtime.intrinsics.js.WritableStream
+import elide.runtime.intrinsics.js.stream.WritableStreamDefaultWriter
 
 /** Implementation of writable streams (via the Web Streams standard). */
 @Intrinsic(global = "WritableStream") internal class WritableStreamIntrinsic : AbstractJsIntrinsic() {
+  @OptIn(DelicateElideApi::class)
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    // not yet implemented
+    bindings[WRITABLE_STREAM_SYMBOL.asPublicJsSymbol()] = WritableStream
+    bindings[WRITER_SYMBOL.asPublicJsSymbol()] = WritableStreamDefaultWriter
+  }
+
+  private companion object {
+    private const val WRITABLE_STREAM_SYMBOL = "WritableStream"
+    private const val WRITER_SYMBOL = "WritableStreamDefaultWriter"
   }
 }

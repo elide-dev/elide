@@ -23,6 +23,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import elide.runtime.exec.GuestExecutor
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 
 /** Exception thrown when a non-throwable reason is used to reject a promise. */
@@ -128,6 +129,50 @@ public interface JsPromise<out T> : ProxyObject {
 
     /** Create a new promise wrapping the given supplier's getter. */
     @JvmStatic public fun <T> GuestExecutor.of(supplier: Supplier<T>): JsPromise<T> = wrap(submit(supplier::get))
+
+    @JvmStatic public fun <T> wrap(
+      value: Value,
+      unwrapFulfilled: (Value?) -> T,
+      unwrapRejected: (Value?) -> Any? = { it },
+    ): JsPromise<T> {
+      return wrapOrNull(value, unwrapFulfilled, unwrapRejected)
+        ?: throw TypeError.create("Value $value is not a valid promise-like")
+    }
+
+    @JvmStatic public fun <T> wrapOrNull(
+      value: Value,
+      unwrapFulfilled: (Value?) -> T,
+      unwrapRejected: (Value?) -> Any? = { it },
+    ): JsPromise<T>? {
+      return if (value.isHostObject) runCatching { value.asHostObject<JsPromise<T>>() }.getOrNull()
+      else if (!value.canInvokeMember(THEN_SYMBOL)) null
+      else object : JsPromise<T> {
+        override val isDone: Boolean get() = false
+
+        override fun then(onFulfilled: (T) -> Unit, onCatch: ((Any?) -> Unit)?): JsPromise<T> {
+          return then(
+            Value.asValue(ProxyExecutable { onFulfilled(unwrapFulfilled(it.firstOrNull())) }),
+            Value.asValue(ProxyExecutable { onCatch?.invoke(unwrapRejected(it.firstOrNull())) }),
+          )
+        }
+
+        override fun then(onFulfilled: Value, onCatch: Value?): JsPromise<T> {
+          return wrap(
+            value.invokeMember(THEN_SYMBOL, onFulfilled, onCatch),
+            unwrapFulfilled,
+            unwrapRejected,
+          )
+        }
+
+        override fun catch(onRejected: (Any?) -> Unit): JsPromise<T> {
+          return catch(Value.asValue(ProxyExecutable { onRejected.invoke(unwrapRejected(it.firstOrNull())) }))
+        }
+
+        override fun catch(onRejected: Value): JsPromise<T> {
+          return wrap(value.invokeMember(CATCH_SYMBOL, onRejected), unwrapFulfilled, unwrapRejected)
+        }
+      }
+    }
   }
 }
 
@@ -183,39 +228,4 @@ public inline fun <reified T> JsPromise<T>.asDeferred(): Deferred<T> {
   if (this is CompletableJsPromise) deferred.invokeOnCompletion(::reject)
 
   return deferred
-}
-
-/**
- * A type-safe wrapper that enables the use of a promise-like guest [value], aloowing its use as a regular [JsPromise]
- * transparently.
- */
-@JvmInline public value class GuestJsPromise<T>(public val value: Value) : JsPromise<T> {
-  override val isDone: Boolean get() = false
-
-  override fun then(onFulfilled: Value, onCatch: Value?): JsPromise<T> {
-    return GuestJsPromise(value.invokeMember(THEN_MEMBER, onFulfilled, onCatch))
-  }
-
-  override fun then(onFulfilled: (T) -> Unit, onCatch: ((Any?) -> Unit)?): JsPromise<T> {
-    return GuestJsPromise(value.invokeMember(THEN_MEMBER, onFulfilled, onCatch))
-  }
-
-  override fun catch(onRejected: (Any?) -> Unit): JsPromise<T> {
-    return GuestJsPromise(value.invokeMember(CATCH_MEMBER, onRejected))
-  }
-
-  override fun catch(onRejected: Value): JsPromise<T> {
-    return GuestJsPromise(value.invokeMember(CATCH_MEMBER, onRejected))
-  }
-
-  public companion object {
-    private const val THEN_MEMBER = "then"
-    private const val CATCH_MEMBER = "catch"
-
-    /** Wrap a promise-like guest [value] into a [GuestJsPromise], allowing its use a type-safe [JsPromise]. */
-    public fun <T> from(value: Value): GuestJsPromise<T> {
-      require(value.canInvokeMember(THEN_MEMBER)) { "The provided value is not a promise" }
-      return GuestJsPromise(value)
-    }
-  }
 }

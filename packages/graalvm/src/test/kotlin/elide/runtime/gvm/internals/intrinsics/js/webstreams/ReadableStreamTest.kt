@@ -21,6 +21,7 @@ import java.nio.ByteBuffer
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -35,6 +36,7 @@ import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.ReadableStream.Type
 import elide.runtime.intrinsics.js.asDeferred
 import elide.runtime.intrinsics.js.stream.*
+import elide.runtime.plugins.js.javascript
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
@@ -160,5 +162,42 @@ import elide.testing.annotations.TestCase
 
     repeat(2) { assertEquals(0, bytes[it], "expected first two bytes to be 0") }
     repeat(10) { assertEquals(it.toByte(), bytes[2 + it], "expected byte at ${2 + it} to be $it") }
+  }
+
+  @Test fun `should allow iterator interop`(): Unit = runBlocking {
+    val promise = withContext {
+      val source = pushSource { controller ->
+        // push-only, no backpressure control (for simplicity), last chunk should be marked
+        // as final and close the stream when read
+        controller.enqueue(asValue(1))
+        controller.enqueue(asValue(2))
+        controller.enqueue(asValue(3))
+        controller.close()
+      }
+
+      val stream = ReadableStream.create(source, QueueingStrategy.DefaultReadStrategy)
+
+      //language=javascript
+      val func = javascript(
+        """
+        const values = [];
+        async (stream) => {
+          for await (const chunk of stream) {
+            values.push(chunk);
+          }
+          
+          return values;
+        }
+        """,
+      )
+
+      JsPromise.wrap(func.execute(stream), unwrapFulfilled = { it })
+    }
+
+    val result = checkNotNull(promise.asDeferred().await())
+    assertEquals(3, result.arraySize, "expected 3 values")
+    repeat(3) {
+      assertEquals(it + 1, result.getArrayElement(it.toLong()).asInt())
+    }
   }
 }

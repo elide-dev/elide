@@ -27,6 +27,9 @@ elide {
     ksp = true
     explicitApi = true
   }
+  checks {
+    spotless = false
+  }
 }
 
 val elideVersion: String = libs.versions.elide.bin.get()

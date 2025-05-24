@@ -1,16 +1,14 @@
 public final class elide/runtime/telemetry/CrashEvent : elide/runtime/telemetry/Event {
 	public static final field Companion Lelide/runtime/telemetry/CrashEvent$Companion;
 	public fun <init> ()V
-	public final fun component1 ()Lelide/runtime/telemetry/EventType;
-	public final fun component2 ()Ljava/lang/Integer;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Lelide/runtime/telemetry/EventType;Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/telemetry/CrashEvent;
-	public static synthetic fun copy$default (Lelide/runtime/telemetry/CrashEvent;Lelide/runtime/telemetry/EventType;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/telemetry/CrashEvent;
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/telemetry/CrashEvent;
+	public static synthetic fun copy$default (Lelide/runtime/telemetry/CrashEvent;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/telemetry/CrashEvent;
 	public static final fun create (Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/telemetry/CrashEvent;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getExitCode ()Ljava/lang/Integer;
 	public final fun getMessage ()Ljava/lang/String;
-	public fun getType ()Lelide/runtime/telemetry/EventType;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -33,7 +31,6 @@ public final class elide/runtime/telemetry/CrashEvent$Companion {
 
 public abstract interface class elide/runtime/telemetry/Event {
 	public static final field Companion Lelide/runtime/telemetry/Event$Companion;
-	public abstract fun getType ()Lelide/runtime/telemetry/EventType;
 }
 
 public final class elide/runtime/telemetry/Event$Companion {
@@ -133,18 +130,16 @@ public final class elide/runtime/telemetry/EventType$Companion : elide/core/api/
 public final class elide/runtime/telemetry/RunEvent : elide/runtime/telemetry/Event {
 	public static final field Companion Lelide/runtime/telemetry/RunEvent$Companion;
 	public fun <init> ()V
-	public final fun component1 ()Lelide/runtime/telemetry/EventType;
-	public final fun component2 ()Ljava/lang/Integer;
-	public final fun component3 ()Ljava/lang/Long;
-	public final fun component4 ()Lelide/runtime/telemetry/RunEvent$ExecutionMode;
-	public final fun copy (Lelide/runtime/telemetry/EventType;Ljava/lang/Integer;Ljava/lang/Long;Lelide/runtime/telemetry/RunEvent$ExecutionMode;)Lelide/runtime/telemetry/RunEvent;
-	public static synthetic fun copy$default (Lelide/runtime/telemetry/RunEvent;Lelide/runtime/telemetry/EventType;Ljava/lang/Integer;Ljava/lang/Long;Lelide/runtime/telemetry/RunEvent$ExecutionMode;ILjava/lang/Object;)Lelide/runtime/telemetry/RunEvent;
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/Long;
+	public final fun component3 ()Lelide/runtime/telemetry/RunEvent$ExecutionMode;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/Long;Lelide/runtime/telemetry/RunEvent$ExecutionMode;)Lelide/runtime/telemetry/RunEvent;
+	public static synthetic fun copy$default (Lelide/runtime/telemetry/RunEvent;Ljava/lang/Integer;Ljava/lang/Long;Lelide/runtime/telemetry/RunEvent$ExecutionMode;ILjava/lang/Object;)Lelide/runtime/telemetry/RunEvent;
 	public static final fun create-moChb0s (Lelide/runtime/telemetry/RunEvent$ExecutionMode;ILkotlin/time/Duration;)Lelide/runtime/telemetry/RunEvent;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDuration ()Ljava/lang/Long;
 	public final fun getExitCode ()Ljava/lang/Integer;
 	public final fun getMode ()Lelide/runtime/telemetry/RunEvent$ExecutionMode;
-	public fun getType ()Lelide/runtime/telemetry/EventType;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

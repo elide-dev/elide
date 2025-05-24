@@ -116,12 +116,28 @@ public final class elide/runtime/plugins/jvm/JvmConfig : elide/runtime/plugins/A
 	public final fun classpath (Ljava/lang/Iterable;)V
 	public final fun classpath (Lkotlin/sequences/Sequence;)V
 	public final fun classpath ([Ljava/lang/String;)V
+	public final fun getEnableHotSwap ()Z
+	public final fun getEnableManagement ()Z
+	public final fun getEnableNative ()Z
 	public final fun getEnableSourceIntegration ()Z
+	public final fun getEnableTruffleRegex ()Z
 	public final fun getGuestJavaHome ()Ljava/lang/String;
+	public final fun getJvmTarget ()Ljava/lang/String;
+	public final fun getMaxTotalNativeBufferSize ()Ljava/lang/String;
 	public final fun getMultithreading ()Z
+	public final fun getNativeBackend ()Ljava/lang/String;
+	public final fun getNativeModules ()Ljava/util/List;
+	public final fun setEnableHotSwap (Z)V
+	public final fun setEnableManagement (Z)V
+	public final fun setEnableNative (Z)V
 	public final fun setEnableSourceIntegration (Z)V
+	public final fun setEnableTruffleRegex (Z)V
 	public final fun setGuestJavaHome (Ljava/lang/String;)V
+	public final fun setJvmTarget (Ljava/lang/String;)V
+	public final fun setMaxTotalNativeBufferSize (Ljava/lang/String;)V
 	public final fun setMultithreading (Z)V
+	public final fun setNativeBackend (Ljava/lang/String;)V
+	public final fun setNativeModules (Ljava/util/List;)V
 }
 
 public final class elide/runtime/plugins/jvm/JvmConfigKt {

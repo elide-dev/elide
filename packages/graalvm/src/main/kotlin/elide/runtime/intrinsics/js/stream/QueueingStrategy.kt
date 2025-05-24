@@ -13,6 +13,7 @@
 package elide.runtime.intrinsics.js.stream
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.stream.QueueingStrategy.DefaultReadStrategy.highWaterMark
 import elide.runtime.intrinsics.js.stream.QueueingStrategy.DefaultWriteStrategy.highWaterMark
@@ -78,8 +79,8 @@ public interface QueueingStrategy {
 }
 
 @JvmInline public value class ByteLengthQueueingStrategy(private val highWaterMark: Double) : QueueingStrategy {
-  @Polyglot public constructor(options: Value) : this(
-    options.takeIf { it.hasMember("highWaterMark") }
+  @Polyglot public constructor(options: Value?) : this(
+    options?.takeIf { it.hasMember("highWaterMark") }
       ?.getMember("highWaterMark")
       ?.takeIf { it.isNumber && it.fitsInDouble() }
       ?.asDouble()
@@ -95,11 +96,15 @@ public interface QueueingStrategy {
       ?.asDouble()
       ?: throw TypeError.create("Chunk has no 'byteLength' property")
   }
+
+  public companion object : ProxyInstantiable {
+    override fun newInstance(vararg arguments: Value?): Any = ByteLengthQueueingStrategy(arguments.firstOrNull())
+  }
 }
 
 @JvmInline public value class CountQueueingStrategy(private val highWaterMark: Double) : QueueingStrategy {
-  @Polyglot public constructor(options: Value) : this(
-    options.takeIf { it.hasMember("highWaterMark") }
+  @Polyglot public constructor(options: Value?) : this(
+    options?.takeIf { it.hasMember("highWaterMark") }
       ?.getMember("highWaterMark")
       ?.takeIf { it.isNumber && it.fitsInDouble() }
       ?.asDouble()
@@ -108,4 +113,8 @@ public interface QueueingStrategy {
 
   @Polyglot override fun highWaterMark(): Double = highWaterMark
   @Polyglot override fun size(chunk: Value?): Double = 1.0
+
+  public companion object : ProxyInstantiable {
+    override fun newInstance(vararg arguments: Value?): Any = CountQueueingStrategy(arguments.firstOrNull())
+  }
 }

@@ -177,7 +177,6 @@ import elide.vm.annotations.Polyglot
 
   /** Default constructors/factory methods for [ReadableStream] instances. */
   public companion object DefaultFactory : ProxyInstantiable, Factory<ReadableStream> {
-    // TODO(@darvld): replace with proper local guest executor API once available
     private val streamExecutor = GuestExecution.workStealing()
 
     @Polyglot public fun from(asyncIterable: Value): ReadableStream {

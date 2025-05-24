@@ -460,7 +460,7 @@ internal class ReadableByteStream(
     maybePull()
   }
 
-  private fun getReaderInternal(byob: Boolean): ReadableStreamReader {
+  internal fun getReaderInternal(byob: Boolean): ReadableStreamReader {
     val reader = if (byob) ReadableStreamByobReaderToken(this)
     else ReadableStreamDefaultReaderToken(this)
 

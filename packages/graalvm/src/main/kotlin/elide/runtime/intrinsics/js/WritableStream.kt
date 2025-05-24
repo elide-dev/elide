@@ -12,8 +12,11 @@
  */
 package elide.runtime.intrinsics.js
 
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import elide.annotations.API
-import elide.runtime.intrinsics.js.stream.WritableStreamDefaultWriter
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableDefaultStream
+import elide.runtime.intrinsics.js.stream.*
 import elide.vm.annotations.Polyglot
 
 /**
@@ -32,11 +35,20 @@ import elide.vm.annotations.Polyglot
    *
    * @param Impl Implementation of [WritableStream] which is created by this factory.
    */
-  public interface Factory<Impl> where Impl : WritableStream {}
+  public interface Factory<Impl> where Impl : WritableStream
 
   @get:Polyglot public val locked: Boolean
 
   @Polyglot public fun getWriter(): WritableStreamDefaultWriter
   @Polyglot public fun abort(reason: Any? = null): JsPromise<Unit>
   @Polyglot public fun close(): JsPromise<Unit>
+
+  public companion object : Factory<WritableStream>, ProxyInstantiable {
+    override fun newInstance(vararg arguments: Value?): Any {
+      val sink = arguments.getOrNull(0)?.let(::GuestWritableStreamSink)
+      val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from)
+
+      return WritableDefaultStream(sink ?: WritableStreamSink.Empty, strategy ?: QueueingStrategy.DefaultWriteStrategy)
+    }
+  }
 }

@@ -31,4 +31,35 @@ public interface WritableStreamSink {
   public fun abort(reason: Any? = null): JsPromise<Unit> {
     return JsPromise.resolved(Unit)
   }
+
+  public object Empty : WritableStreamSink
+}
+
+@JvmInline public value class GuestWritableStreamSink(public val value: Value) : WritableStreamSink {
+  override fun start(controller: WritableStreamDefaultController) {
+    if (!value.hasMember(START_MEMBER)) JsPromise.resolved(Unit)
+    value.invokeMember(START_MEMBER, controller)
+  }
+
+  override fun write(chunk: Value, controller: WritableStreamDefaultController): JsPromise<Unit> {
+    if (!value.hasMember(WRITE_MEMBER)) JsPromise.resolved(Unit)
+    return JsPromise.wrap(value.invokeMember(WRITE_MEMBER, controller), unwrapFulfilled = { })
+  }
+
+  override fun close(): JsPromise<Unit> {
+    if (!value.hasMember(CLOSE_MEMBER)) JsPromise.resolved(Unit)
+    return JsPromise.wrap(value.invokeMember(CLOSE_MEMBER), unwrapFulfilled = { })
+  }
+
+  override fun abort(reason: Any?): JsPromise<Unit> {
+    if (!value.hasMember(ABORT_MEMBER)) JsPromise.resolved(Unit)
+    return JsPromise.wrap(value.invokeMember(ABORT_MEMBER, reason), unwrapFulfilled = { })
+  }
+
+  private companion object {
+    private const val START_MEMBER = "start"
+    private const val WRITE_MEMBER = "write"
+    private const val CLOSE_MEMBER = "close"
+    private const val ABORT_MEMBER = "abort"
+  }
 }

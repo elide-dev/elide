@@ -20,7 +20,9 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotContextBuilder
+import elide.runtime.core.extensions.disableOption
 import elide.runtime.core.extensions.disableOptions
+import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOption
 import elide.runtime.gvm.jvm.JvmSourceLoader
@@ -50,16 +52,55 @@ import elide.runtime.plugins.AbstractLanguagePlugin
     builder.enableOptions(
       "java.BytecodeLevelInlining",
       "java.CHA",
-      "java.HotSwapAPI",
       "java.InlineMethodHandle",
       "java.Polyglot",
+      "java.BuiltInPolyglotCollections",
       "java.SoftExit",
       "java.SplitMethodHandles",
     )
+    builder.option(
+      "java.NativeBackend",
+      config.nativeBackend,
+    )
+    if (config.maxTotalNativeBufferSize != null) {
+      builder.option(
+        "java.MaxDirectMemorySize",
+        config.maxTotalNativeBufferSize.toString(),
+      )
+    }
+    if (config.enableHotSwap) {
+      builder.enableOption(
+        "java.HotSwapAPI",
+      )
+    }
     if (config.enableSourceIntegration) {
       builder.option(
         "java.HostSourceLoader",
         JvmSourceLoader::class.java.name,
+      )
+    }
+    if (config.enableNative) {
+      builder.option(
+        "java.EnableNativeAccess",
+        (config.nativeModules.ifEmpty { null } ?: listOf("ALL-UNNAMED")).joinToString(","),
+      )
+    }
+    if (config.enableTruffleRegex) {
+      builder.enableOption(
+        "java.UseTRegex"
+      )
+    } else {
+      builder.disableOption(
+        "java.UseTRegex"
+      )
+    }
+    if (config.enableManagement) {
+      builder.enableOption(
+        "java.EnableManagement"
+      )
+    } else {
+      builder.disableOption(
+        "java.EnableManagement"
       )
     }
 

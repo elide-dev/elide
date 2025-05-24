@@ -69,13 +69,13 @@ internal class JvmTestConfigurator : TestConfigurator {
   private fun instantiateTestClass(ctx: PolyglotContext, cls: ClassInfo): Pair<Klass, Any> {
     // @TODO junit semantics
     val guestCls = try {
-      ctx.bindings(Jvm).getMember(cls.name)
+      requireNotNull(requireNotNull(ctx.bindings(Jvm)) { "Failed to resolve JVM bindings" }.getMember(cls.name)) {
+        "Test case class not found: '${cls.name}'"
+      }
     } catch (err: Throwable) {
       logging.error("Failed to load test class '${cls.name}'", err)
       throw err
-    } ?: error(
-      "Class not found: '${cls.name}'",
-    )
+    }
     return try {
       guestCls.`as`(Klass::class.java) to guestCls.newInstance()
     } catch (err: Throwable) {

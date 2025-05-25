@@ -15,10 +15,11 @@
 
 # shellcheck disable=SC2034
 # shellcheck disable=SC2129
+# shellcheck disable=SC2199
 
 # Elide Installer
 # ---------------
-# Version: 0.17
+# Version: 0.18
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to
@@ -28,6 +29,9 @@
 # to this script.
 #
 # Options:
+#   --installer-format=<format>  The archive format to download (default: auto, options: tgz, txz, zip)
+#   --preserve-installer         Don't delete the installer archive after installation.
+#   --install-digest=<digest>    The expected digest of the installer archive.
 #   --install-dir=<path>         Install to a custom directory
 #   --install-rev=<version>      Install a specific version of Elide
 #   --arch=<arch>                Install for a specific architecture (optional, overrides detection)
@@ -42,6 +46,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.18 2025-05-24  Sam Gammon  Adds installer fingerprinting, preserve archive flag, removes bz2
 #   0.17 2025-03-16  Sam Gammon  Release at 1.0.0-beta1
 #   0.16 2025-03-14  Sam Gammon  Added --gha flag for 1.0.0-beta1 release
 #   0.15 2025-01-26  Sam Gammon  Issuance of alpha12 release
@@ -64,7 +69,7 @@ set -e
 set +x
 
 TOOL_REVISION="1.0.0-beta2"
-INSTALLER_VERSION="v0.17"
+INSTALLER_VERSION="v0.18"
 
 TOOL="cli"
 VERSION="v1"
@@ -135,6 +140,9 @@ if [[ "$@" == *"help"* ]]; then
   echo -e "  curl https://dl.elide.dev/cli/v1/snapshot/install.sh | bash [options]"
   echo -e ""
   echo -e "Options:"
+  echo -e "  ${YELLOW}--installer-format${NC}=<format>  The archive format to download (default: auto, options: tgz, txz, zip)"
+  echo -e "  ${YELLOW}--preserve-installer${NC}         Don't delete the installer archive after installation."
+  echo -e "  ${YELLOW}--install-digest${NC}=<digest>    The expected digest of the installer archive"
   echo -e "  ${YELLOW}--install-dir${NC}=<path>     Install to a custom directory"
   echo -e "  ${YELLOW}--install-rev${NC}=<version>  Install a specific version of Elide"
   echo -e "  ${YELLOW}--${NC}[${YELLOW}no${NC}]${YELLOW}-path${NC}              Whether to add the install directory to the PATH"
@@ -200,12 +208,47 @@ fi
 # default to downloading gzip variant, but consume XZ or Brotli variant if the tools are locally available to decompress
 # the resulting archive. XZ and Brotli do not ship with mac, but developers often have these tools.
 COMPRESSION_TOOL="gzip"
-if [ -x "$(command -v xz)" ]; then
-  debug "Found compression: xz"
-  COMPRESSION_TOOL="xz"
-  COMPRESSION="txz"
+COMPRESSION="tgz"
+
+# if the user specifies an explicit installer format, we should use that. otherwise, we should detect the best one to
+# use based on the tools available on the system.
+if [[ "$@" == *"installer-format"* ]]; then
+  COMPRESSION=$(echo "$@" | grep -o -E "installer-format=? ?([^ ]+)" | cut -d' ' -f2 | cut -d'=' -f2)
+  debug "User specified a specific installer format: $COMPRESSION"
+  if [ "$COMPRESSION" = "tgz" ]; then
+    COMPRESSION_TOOL="gzip"
+  elif [ "$COMPRESSION" = "zip" ]; then
+    COMPRESSION_TOOL="unzip"
+    COMPRESSION="zip"
+  elif [ "$COMPRESSION" = "txz" ]; then
+    COMPRESSION_TOOL="xz"
+    COMPRESSION="txz"
+  else
+    error 1 "Unsupported installer format: $COMPRESSION. Supported formats are: tgz, txz, zip."
+  fi
+else
+  debug "No installer format specified, using default with detection: $COMPRESSION_TOOL"
+  if [ -x "$(command -v xz)" ]; then
+    debug "Found compression: xz"
+    COMPRESSION_TOOL="xz"
+    COMPRESSION="txz"
+  fi
 fi
 debug "Using compression tool: $COMPRESSION_TOOL (extension $COMPRESSION)"
+
+## should we verify an installer digest?
+INSTALLER_DIGEST=""
+if [[ "$@" == *"install-digest"* ]]; then
+  INSTALLER_DIGEST=$(echo "$@" | grep -o -E "install-digest=? ?([^ ]+)" | cut -d' ' -f2 | cut -d'=' -f2)
+  debug "User specified an installer digest: $INSTALLER_DIGEST"
+fi
+
+## should we preserve the installer?
+PRESERVE_INSTALLER=false
+if [[ "$@" == *"preserve-installer"* ]]; then
+  debug "User requested to preserve the installer archive."
+  PRESERVE_INSTALLER=true
+fi
 
 ## resolve install directory
 PARAM_INSTALL_DIR=$(echo "$@" | grep -o -E "install-dir=? ?([^ ]+)" | cut -d' ' -f2 | cut -d'=' -f2 || $INSTALL_DIR)
@@ -284,16 +327,41 @@ fi
 
 debug "Decompressing with command: $COMPRESSION_TOOL $DECOMPRESS_ARGS"
 
-## okay, it's time to download the binary and decompress it as we go.
+## okay, it's time to download the binary and decompress it as we go. we also need to write the archive content to disk,
+## so we can verify the digest.
 
 # shellcheck disable=SC2086
 mkdir -p "$INSTALL_DIR" \
   && curl $CURL_ARGS \
     -H "User-Agent: elide-installer/$INSTALLER_VERSION" \
     -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT \
+  | tee elide.$COMPRESSION \
   | $COMPRESSION_TOOL $DECOMPRESS_ARGS \
-    | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f --strip-components=1 - \
+  | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f --strip-components=1 - \
   && chmod +x "$INSTALL_DIR/$BINARY"
+
+# if we have a digest for the installer, it is expected to be a sha256, and we should verify it.
+if [ "$INSTALLER_DIGEST" != "" ]; then
+  debug "Verifying installer digest: $INSTALLER_DIGEST"
+  ACTUAL_DIGEST=$(sha256sum elide.$COMPRESSION | cut -d' ' -f1)
+  if [ "$ACTUAL_DIGEST" != "$INSTALLER_DIGEST" ]; then
+    error 1 "Installer digest mismatch! Expected: $INSTALLER_DIGEST, got: $ACTUAL_DIGEST"
+  else
+    debug "Installer digest verified successfully."
+    say "Installer digest verified OK: $ACTUAL_DIGEST"
+    echo "$INSTALLER_DIGEST elide.$COMPRESSION" > elide.$COMPRESSION.sha256
+  fi
+else
+  debug "No installer digest provided, skipping verification."
+fi
+
+# if we have been instructed to preserve the installer, we should not delete it.
+if [ "$PRESERVE_INSTALLER" = false ]; then
+  debug "Deleting installer archive."
+  rm -f elide.$COMPRESSION elide.$COMPRESSION.sha256
+else
+  debug "Preserving installer archive at elide.$COMPRESSION"
+fi
 
 set +x
 

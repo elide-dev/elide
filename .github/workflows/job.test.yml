@@ -140,7 +140,7 @@ permissions:
 env:
   CI: "true"
   RUST_BACKTRACE: full
-  ELIDE_VERSION: "1.0.0-beta3-rc4"
+  ELIDE_VERSION: "1.0.0-beta3"
   SCCACHE_DIRECT: "true"
   RUSTC_WRAPPER: "sccache"
 
@@ -312,7 +312,7 @@ jobs:
       - name: "Setup: Elide"
         uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
         with:
-          version: "1.0.0-beta3-rc4"
+          version: "1.0.0-beta3"
       - name: "Setup: uv"
         uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
       - name: "Setup: Dependencies"

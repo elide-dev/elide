@@ -19,11 +19,6 @@ name: Checks
     - cron: "0 0-23/6 * * *"
 
 env:
-  CC: clang-19
-  LD: clang-19
-  CXX: clang++-19
-  AR: llvm-ar-19
-  RANLIB: llvm-ranlib-19
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 permissions:
@@ -99,24 +94,6 @@ jobs:
       - name: "Pull: Base - Alpine (GitHub)"
         run: docker pull ghcr.io/elide-dev/base/alpine:latest
 
-      ## Image: Runtime (JVM11)
-      - name: "Pull: Runtime - JVM11 (DockerHub)"
-        run: docker pull elidetools/jvm11:latest
-      - name: "Pull: Runtime - JVM11 (GitHub)"
-        run: docker pull ghcr.io/elide-dev/runtime/jvm11:latest
-
-      ## Image: Runtime (JVM17)
-      - name: "Pull: Runtime - JVM17 (DockerHub)"
-        run: docker pull elidetools/jvm17:latest
-      - name: "Pull: Runtime - JVM17 (GitHub)"
-        run: docker pull ghcr.io/elide-dev/runtime/jvm17:latest
-
-      ## Image: Runtime (JVM19)
-      - name: "Pull: Runtime - JVM19 (DockerHub)"
-        run: docker pull elidetools/jvm19:latest
-      - name: "Pull: Runtime - JVM19 (GitHub)"
-        run: docker pull ghcr.io/elide-dev/runtime/jvm19:latest
-
       ## Image: Runtime (Native)
       - name: "Pull: Runtime - Native (DockerHub)"
         run: docker pull elidetools/native:latest
@@ -187,24 +164,12 @@ jobs:
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
-      - name: "Setup: LLVM 19"
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 19 all
-          export LLVM_PATH=/usr/lib/llvm-19
-          export PATH="$LLVM_PATH/bin:$PATH"
-          export LD_LIBRARY_PATH="$LLVM_PATH/lib:$LD_LIBRARY_PATH"
-          export LLVM_CONFIG="$LLVM_PATH/bin/llvm-config"
-          echo LLVM_PATH=$LLVM_PATH >> $GITHUB_ENV
-          echo LD_LIBRARY_PATH=$LD_LIBRARY_PATH >> $GITHUB_ENV
-          echo LLVM_CONFIG=$LLVM_CONFIG >> $GITHUB_ENV
-          echo PATH=$PATH >> $GITHUB_ENV
+      - name: "Setup: uv"
+        uses: astral-sh/setup-uv@6b9c6063abd6010835644d4c2e1bef4cf5cd0fca # v6.0.1
       - name: "Setup: Dependencies"
         run: |
           cargo install cargo-fuzz cargo-insta rustfilt
           pnpm install -g yarn@1.22.19
-          python -m pip install uv
           echo "Setting up venv..."
           uv venv
           echo "Installing dependencies via Pip..."

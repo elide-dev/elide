@@ -1,5 +1,5 @@
 ARG ELIDE_VERSION=1.0.0-beta3
-ARG ELIDE_DIGEST=a907d6750d9cfad1d81ad33ce436e0e19065a638b516f2b5d633a58843a89cbf
+ARG ELIDE_DIGEST=d125fb375d1f07587a28a2640e51e74613261268ce72a548f01f04efc56d2913
 
 FROM debian:unstable-slim@sha256:93700abbae646fd44d84e6e9fd85f024e6dd010e4acec250e48fc7d1b3690392 AS base
 
@@ -30,12 +30,13 @@ RUN apt-get update \
 USER dev
 
 RUN echo "Installing Elide..." \
+  && mkdir -p /tmp/elide-install \
+  && cd /tmp/elide-install \
   && curl -sSL elide.sh | bash -s - -- \
     --install-rev=1.0.0-beta3 \
-    --install-digest=a907d6750d9cfad1d81ad33ce436e0e19065a638b516f2b5d633a58843a89cbf \
-    --installer-format=txz \
-    --preserve-installer \
-  && rm -fv elide.txz elide.txz.sha256 \
+    --install-digest=d125fb375d1f07587a28a2640e51e74613261268ce72a548f01f04efc56d2913 \
+  && cd - \
+  && rm -rf /tmp/elide-install \
   && which elide \
   && elide --help \
   && elide info \

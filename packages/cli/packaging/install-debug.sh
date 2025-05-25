@@ -337,7 +337,7 @@ mkdir -p "$INSTALL_DIR" \
     -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT \
   | tee elide.$COMPRESSION \
   | $COMPRESSION_TOOL $DECOMPRESS_ARGS \
-  | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f --strip-components=1 - \
+  | tar $UNTAR_ARGS -C "$INSTALL_DIR" --strip-components=1 -f - \
   && chmod +x "$INSTALL_DIR/$BINARY"
 
 # if we have a digest for the installer, it is expected to be a sha256, and we should verify it.
@@ -348,7 +348,7 @@ if [ "$INSTALLER_DIGEST" != "" ]; then
     error 1 "Installer digest mismatch! Expected: $INSTALLER_DIGEST, got: $ACTUAL_DIGEST"
   else
     debug "Installer digest verified successfully."
-    say "Installer digest verified OK: $ACTUAL_DIGEST"
+    say "Digest OK: $ACTUAL_DIGEST"
     echo "$INSTALLER_DIGEST elide.$COMPRESSION" > elide.$COMPRESSION.sha256
   fi
 else

@@ -206,7 +206,7 @@ if [ "$ENABLE_DEBUG" = true ]; then
   set -x
 fi
 debug "Decompressing with command: $COMPRESSION_TOOL $DECOMPRESS_ARGS"
-mkdir -p "$INSTALL_DIR" && curl $CURL_ARGS -H "User-Agent: elide-installer/$INSTALLER_VERSION" -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT | tee elide.$COMPRESSION | $COMPRESSION_TOOL $DECOMPRESS_ARGS | tar $UNTAR_ARGS -C "$INSTALL_DIR" -f --strip-components=1 - && chmod +x "$INSTALL_DIR/$BINARY"
+mkdir -p "$INSTALL_DIR" && curl $CURL_ARGS -H "User-Agent: elide-installer/$INSTALLER_VERSION" -H "Elide-Host-ID: $HOST_ID" $DOWNLOAD_ENDPOINT | tee elide.$COMPRESSION | $COMPRESSION_TOOL $DECOMPRESS_ARGS | tar $UNTAR_ARGS -C "$INSTALL_DIR" --strip-components=1 -f - && chmod +x "$INSTALL_DIR/$BINARY"
 if [ "$INSTALLER_DIGEST" != "" ]; then
   debug "Verifying installer digest: $INSTALLER_DIGEST"
   ACTUAL_DIGEST=$(sha256sum elide.$COMPRESSION | cut -d' ' -f1)
@@ -214,7 +214,7 @@ if [ "$INSTALLER_DIGEST" != "" ]; then
     error 1 "Installer digest mismatch! Expected: $INSTALLER_DIGEST, got: $ACTUAL_DIGEST"
   else
     debug "Installer digest verified successfully."
-    say "Installer digest verified OK: $ACTUAL_DIGEST"
+    say "Digest OK: $ACTUAL_DIGEST"
     echo "$INSTALLER_DIGEST elide.$COMPRESSION" > elide.$COMPRESSION.sha256
   fi
 else

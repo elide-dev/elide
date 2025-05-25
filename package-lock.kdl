@@ -7,7 +7,7 @@ google-protobuf "3.21.4"
 jszip "3.10.1"
 lz-string "1.5.0"
 postcss "8.5.3"
-preact "10.26.6"
+preact "10.26.7"
 react "18.3.1"
 react-dom "18.3.1"
 typescript "5.8.3"
@@ -20,9 +20,9 @@ dev-dependencies{
 "@mitata/counters" "0.0.8"
 "@prettier/plugin-xml" "3.4.1"
 "@types/google-protobuf" "3.15.12"
-"@types/node" "22.15.20"
-bun "1.2.13"
-bun-types "1.2.13"
+"@types/node" "22.15.21"
+bun "1.2.14"
+bun-types "1.2.14"
 commitlint "19.8.1"
 esbuild "0.25.0"
 eslint "9.27.0"
@@ -670,59 +670,59 @@ resolved "https://registry.npmjs.org/@mitata/counters/-/counters-0.0.8.tgz"
 integrity "sha512-f11w0Y1ETFlarDP7CePj8Z+y8Gv5Ax4gMxWsEwrqh0kH/YIY030Ezx5SUJeQg0YPTZ2OHKGcLG1oGJbIqHzaJA=="
 }
 pkg "@oven/bun-darwin-aarch64"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-darwin-aarch64/-/bun-darwin-aarch64-1.2.13.tgz"
-integrity "sha512-AOU4O9jxRp2TXeqoEfOjEaUNZb3+SUPBN8TIEnUjpnyLWPoYJGCeNdQuCDcUkmF3MJEmEuJdyF1IeOITozpC6A=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-aarch64/-/bun-darwin-aarch64-1.2.14.tgz"
+integrity "sha512-pGRsFypDOrV5rdMoOklMrj/RoV1xQirxjN8sAJNNlrQe/rvUbKSebDjlS70cBuxidLZq3+15y/KRr3njmcWkJQ=="
 }
 pkg "@oven/bun-darwin-x64"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-darwin-x64/-/bun-darwin-x64-1.2.13.tgz"
-integrity "sha512-kJ2iOvxY8uz5/nu+8zIjKf4LmRIHBH9pJJM2q+tA47U04Tod6k6rtntDOI8SdmRe2M5c87RfbadWdxhpYHFIWQ=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-x64/-/bun-darwin-x64-1.2.14.tgz"
+integrity "sha512-GhbzN7qGRnbus0eaqVfxSEyQTTNdUXhkGNi4nFbj7gfVMLXQb5JNj/kmCRu7hX+TOTkF+hrB1FKXcb4A3B3kHg=="
 }
 pkg "@oven/bun-darwin-x64-baseline"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-darwin-x64-baseline/-/bun-darwin-x64-baseline-1.2.13.tgz"
-integrity "sha512-bZpIUOvx9np07AmH5MVXGYHWZ40m2vCpNV74fma6sCzBlssJclS2V3BZgO+lLvtUKSqnW3HAyJBGsRF34wPbNw=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-darwin-x64-baseline/-/bun-darwin-x64-baseline-1.2.14.tgz"
+integrity "sha512-pxGVEuQUYA7ibNO92OgUtTpjN73sqHafl2MZNUGhFTwJN2Qw4Neq9nGIDwmVL6LFU0sMapNeh4I7snR3UO2xIg=="
 }
 pkg "@oven/bun-linux-aarch64"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64/-/bun-linux-aarch64-1.2.13.tgz"
-integrity "sha512-hocSJmblX4CCjP1HpaM64I65erB+CONUCCwKzGGOfLGLobVi+vn/G56UaYWsje1y/Z7WlVaUSgKYVWl7EJ6T9g=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64/-/bun-linux-aarch64-1.2.14.tgz"
+integrity "sha512-7JQBOjJ/w3Zp5i6tv9Evduy4fUXaj6z6YZ/iIgkw1wBwmIQ5hTJAy4UGHaqTqyU6rgUWTpbsQ+GBY2rHXgou9A=="
 }
 pkg "@oven/bun-linux-aarch64-musl"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64-musl/-/bun-linux-aarch64-musl-1.2.13.tgz"
-integrity "sha512-P56m718KXeyu4Vq5fsESFktfu+0Us1jhu/ZzgHYFRYJcm/hjs6AUA/RJtUAifFy5PNAM5IJdrYl3xPsE8Wa+pg=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-linux-aarch64-musl/-/bun-linux-aarch64-musl-1.2.14.tgz"
+integrity "sha512-K0QQ3srd900Xnx4++QS0KlaOYqiNN0RNJ1AZq0r31t1JdDP+tjuD/imAcE08A6XDkOvl00KSUdMyU8lERRDblQ=="
 }
 pkg "@oven/bun-linux-x64"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-linux-x64/-/bun-linux-x64-1.2.13.tgz"
-integrity "sha512-pf8+Kn2GLrFKLcb8JSLM6Z147Af6L9GQODpnOHM4gvXQv6E/GwQg47/o+7f1XCfzib3fdzOTJlDPvvO1rnXOTA=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64/-/bun-linux-x64-1.2.14.tgz"
+integrity "sha512-2TXQzbhFnoW9PUUy5Ey7qAIeY2l0iqYAOZGFMAvTbtqE+WreHS0NC3DKoyALwrBHddkwS+VGUwr+Hcl4TMjNvg=="
 }
 pkg "@oven/bun-linux-x64-baseline"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-linux-x64-baseline/-/bun-linux-x64-baseline-1.2.13.tgz"
-integrity "sha512-9n1ai2ejEpxEMqpbHQMWFyvacq3MYsB7gh5mxRlFwhNFPCWu/Sv6gyrO+q2vkOYgcEIGhJb6dqJ6L9vBNaL61A=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-baseline/-/bun-linux-x64-baseline-1.2.14.tgz"
+integrity "sha512-ZViqobm73HvPQVhNG07kfnLyDpMSi7vLTzzVSrVHvFGSeZ79MzdtHauYVnv8ovqgJmrWfhES74O8QVCUW4P0ZQ=="
 }
 pkg "@oven/bun-linux-x64-musl"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl/-/bun-linux-x64-musl-1.2.13.tgz"
-integrity "sha512-w5Ob+GM3Ww4yRA6f1N845o6wEvuwHSmipFUGaRaVp4UELrFnIV9G3pmrlBbYHFnWhk13o8Q7H1/4ZphOkCRJmQ=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl/-/bun-linux-x64-musl-1.2.14.tgz"
+integrity "sha512-u9j7hjkGhLbrpvTANVdmC9jrkfUINfZ4WD/Dir7BrII0XnpoIJXkn+B/gmvgtJFKmtLPF9b/nFVojVNFQ1zFUA=="
 }
 pkg "@oven/bun-linux-x64-musl-baseline"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl-baseline/-/bun-linux-x64-musl-baseline-1.2.13.tgz"
-integrity "sha512-VI8hVdfqk0QmbAbyrsIdo2O95n3fkbt72E0h3Wu69cHD1iKJqRXG28R8QoHdehoLSJnKVzRTwsUzHp764nefWQ=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-linux-x64-musl-baseline/-/bun-linux-x64-musl-baseline-1.2.14.tgz"
+integrity "sha512-7Lb5/XqtGRtHv1TjlpS5863ZwsuFqZ8xIrCGrHcKyHpyih1mG9nsON7MEKctrWPzcPe1L/9y20y0z/72plzIYA=="
 }
 pkg "@oven/bun-windows-x64"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-windows-x64/-/bun-windows-x64-1.2.13.tgz"
-integrity "sha512-sArgbRmT7V3mUdNFaAdUcuJsuS+oeMDZLPWFSg0gtQZpRrURs9nPzEnZMmVCFo4+kPF9Tb5ujQT9uDySh6/qVg=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-windows-x64/-/bun-windows-x64-1.2.14.tgz"
+integrity "sha512-Zur1ecPTYOURe5USpC/EjbquHloAehoW2iWg4A2SMNg30MilykaL2l3MjZDuDgHWECmRFRyKQgMWkgozVL/6uw=="
 }
 pkg "@oven/bun-windows-x64-baseline"{
-version "1.2.13"
-resolved "https://registry.npmjs.org/@oven/bun-windows-x64-baseline/-/bun-windows-x64-baseline-1.2.13.tgz"
-integrity "sha512-Aiezu99fOUJJpzGuylOJryd6w9Syg2TBigHeXV2+RJsouBzvAnIEYIBA94ZspRq1ulD26Wmkk8Ae+jZ4edk9GA=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/@oven/bun-windows-x64-baseline/-/bun-windows-x64-baseline-1.2.14.tgz"
+integrity "sha512-4uXxPVTznUdQjsW9RBp6JybwhCZdt+mu4kJSpn1qWh6dCwDQhYvkCfako6x1FYW0+eZJEucwyyC36o1tbq2c+A=="
 }
 pkg "@prettier/plugin-xml"{
 version "3.4.1"
@@ -829,9 +829,9 @@ resolved "https://registry.npmjs.org/@types/ms/-/ms-2.1.0.tgz"
 integrity "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="
 }
 pkg "@types/node"{
-version "22.15.20"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.15.20.tgz"
-integrity "sha512-A6BohGFRGHAscJsTslDCA9JG7qSJr/DWUvrvY8yi9IgnGtMxCyat7vvQ//MFa0DnLsyuS3wYTpLdw4Hf+Q5JXw=="
+version "22.15.21"
+resolved "https://registry.npmjs.org/@types/node/-/node-22.15.21.tgz"
+integrity "sha512-EV/37Td6c+MgKAbkcLG6vqZ2zEYHD7bvSrzqqs2RIhbA6w3x+Dqz8MZM3sP6kGTeLrdoOgKZe+Xja7tUB2DNkQ=="
 dependencies{
 undici-types ">=6.21.0 <6.22.0-0"
     }
@@ -1026,37 +1026,29 @@ update-browserslist-db ">=1.1.3 <2.0.0-0"
     }
 }
 pkg bun{
-version "1.2.13"
-resolved "https://registry.npmjs.org/bun/-/bun-1.2.13.tgz"
-integrity "sha512-EhP1MhFbicqtaRSFCbEZdkcFco8Ov47cNJcB9QmKS8U4cojKHfLU+dQR14lCvLYmtBvGgwv/Lp+9SSver2OPzQ=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/bun/-/bun-1.2.14.tgz"
+integrity "sha512-xCd8eiUn5jju0+Noaz7aTWZFvrC8NbMjvcLDnk3gsa1UEaE3Gk4jMStZDsSzW97ynkb4d2ZYvwunstQxJhpZaA=="
 optional-dependencies{
-"@oven/bun-darwin-aarch64" "1.2.13"
-"@oven/bun-darwin-x64" "1.2.13"
-"@oven/bun-darwin-x64-baseline" "1.2.13"
-"@oven/bun-linux-aarch64" "1.2.13"
-"@oven/bun-linux-aarch64-musl" "1.2.13"
-"@oven/bun-linux-x64" "1.2.13"
-"@oven/bun-linux-x64-baseline" "1.2.13"
-"@oven/bun-linux-x64-musl" "1.2.13"
-"@oven/bun-linux-x64-musl-baseline" "1.2.13"
-"@oven/bun-windows-x64" "1.2.13"
-"@oven/bun-windows-x64-baseline" "1.2.13"
+"@oven/bun-darwin-aarch64" "1.2.14"
+"@oven/bun-darwin-x64" "1.2.14"
+"@oven/bun-darwin-x64-baseline" "1.2.14"
+"@oven/bun-linux-aarch64" "1.2.14"
+"@oven/bun-linux-aarch64-musl" "1.2.14"
+"@oven/bun-linux-x64" "1.2.14"
+"@oven/bun-linux-x64-baseline" "1.2.14"
+"@oven/bun-linux-x64-musl" "1.2.14"
+"@oven/bun-linux-x64-musl-baseline" "1.2.14"
+"@oven/bun-windows-x64" "1.2.14"
+"@oven/bun-windows-x64-baseline" "1.2.14"
     }
 }
 pkg bun-types{
-version "1.2.13"
-resolved "https://registry.npmjs.org/bun-types/-/bun-types-1.2.13.tgz"
-integrity "sha512-rRjA1T6n7wto4gxhAO/ErZEtOXyEZEmnIHQfl0Dt1QQSB4QV0iP6BZ9/YB5fZaHFQ2dwHFrmPaRQ9GGMX01k9Q=="
+version "1.2.14"
+resolved "https://registry.npmjs.org/bun-types/-/bun-types-1.2.14.tgz"
+integrity "sha512-Kuh4Ub28ucMRWeiUUWMHsT9Wcbr4H3kLIO72RZZElSDxSu7vpetRvxIUDUaW6QtaIeixIpm7OXtNnZPf82EzwA=="
 dependencies{
 "@types/node" ">=0.0.0"
-    }
-}
-pkg bun-types "@types/node"{
-version "22.15.17"
-resolved "https://registry.npmjs.org/@types/node/-/node-22.15.17.tgz"
-integrity "sha512-wIX2aSZL5FE+MR0JlvF87BNVrtFWf6AE6rxSE9X7OwnVvoyCQjpzSRJ+M87se/4QCkCiebQAqrJ0y6fwIyi7nw=="
-dependencies{
-undici-types ">=6.21.0 <6.22.0-0"
     }
 }
 pkg bytes{
@@ -3669,9 +3661,9 @@ resolved "https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser
 integrity "sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ=="
 }
 pkg preact{
-version "10.26.6"
-resolved "https://registry.npmjs.org/preact/-/preact-10.26.6.tgz"
-integrity "sha512-5SRRBinwpwkaD+OqlBDeITlRgvd8I8QlxHJw9AxSdMNV6O+LodN9nUyYGpSF7sadHjs6RzeFShMexC6DbtWr9g=="
+version "10.26.7"
+resolved "https://registry.npmjs.org/preact/-/preact-10.26.7.tgz"
+integrity "sha512-43xS+QYc1X1IPbw03faSgY6I6OYWcLrJRv3hU0+qMOfh/XCHcP0MX2CVjNARYR2cC/guu975sta4OcjlczxD7g=="
 }
 pkg prelude-ls{
 version "1.2.1"

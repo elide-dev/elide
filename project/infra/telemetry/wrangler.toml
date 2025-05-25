@@ -1,0 +1,26 @@
+name = "elide-telemetry"
+main = "worker.ts"
+compatibility_date = "2025-03-14"
+
+routes = [
+  { pattern = "telemetry.elide.dev", custom_domain = true },
+]
+
+analytics_engine_datasets = [
+  { binding = "ANALYTICS", dataset = "elide_runtime_v1" },
+]
+
+[observability.logs]
+enabled = true
+
+# elide-telemetry
+[[queues.producers]]
+queue = "elide-telemetry"
+binding = "QUEUE_TELEMETRY"
+
+[[queues.consumers]]
+queue = "elide-telemetry"
+max_batch_size = 100
+max_batch_timeout = 30
+max_retries = 10
+

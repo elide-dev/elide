@@ -56,7 +56,7 @@ name: CLI
       runner_large:
         description: "Runner (Large)"
         type: string
-        default: ubuntu-latest-8-cores
+        default: ubuntu-cipool
 
       ## Input: Runner (Large, macOS)
       runner_large_macos:
@@ -99,7 +99,7 @@ name: CLI
       runner_large:
         description: "Runner (Large)"
         type: string
-        default: ubuntu-latest-8-cores
+        default: ubuntu-cipool
       runner_large_macos:
         description: "Runner (Large, macOS)"
         type: string
@@ -201,7 +201,7 @@ jobs:
       - name: "Setup: Bun"
         uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
         with:
-          bun-version-file: config/bun-version
+          bun-version: "1.2.14"
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
@@ -355,7 +355,7 @@ jobs:
       - name: "Setup: Bun"
         uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
         with:
-          bun-version-file: config/bun-version
+          bun-version: "1.2.14"
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:

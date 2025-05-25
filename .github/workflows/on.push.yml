@@ -45,7 +45,7 @@ jobs:
       security-events: "write"
     with:
       provenance: true
-      runner: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
+      runner: ${{ vars.RUNNER_LARGE || 'ubuntu-cipool' }}
 
   ##
   ## Job: Multi-platform Test
@@ -61,7 +61,7 @@ jobs:
       packages: "read"
       pull-requests: "write"
     with:
-      runner: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
+      runner: ${{ vars.RUNNER_LARGE || 'ubuntu-cipool' }}
 
   ##
   ## Job: Checks for Models

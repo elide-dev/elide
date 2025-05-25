@@ -29,11 +29,11 @@ import picocli.CommandLine.Spec
 import java.io.BufferedReader
 import java.io.Closeable
 import java.io.InputStream
-import java.io.PrintStream
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.ThreadFactory
+import jakarta.inject.Inject
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -42,11 +42,14 @@ import elide.runtime.Logger
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.telemetry.RunEvent
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.options.CommonOptions
+import elide.tool.cli.options.TelemetryOptions
 import elide.tool.cli.state.CommandState
 import elide.tool.err.DefaultErrorHandler
 import elide.tool.err.ErrorHandler
+import elide.tool.listener.TelemetryTriggers
 import elide.tooling.AbstractTool
 import org.graalvm.polyglot.Engine as VMEngine
 
@@ -172,9 +175,6 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
   sealed interface OutputController : Logger {
     /** Current output settings. */
     val settings: ToolState.OutputSettings
-
-    /** Direct access to standard-out. */
-    val stdout: PrintStream get() = _stdout
 
     fun emit(text: CharSequence)
     fun line(text: CharSequence)
@@ -335,6 +335,17 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
   // Shared resources which should be closed at the conclusion of processing.
   private val sharedResources: MutableList<AutoCloseable> = LinkedList()
 
+  // Triggers for telemetry.
+  @Inject internal lateinit var telemetry: TelemetryTriggers
+
+  // Telemetry options which apply to all commands.
+  @CommandLine.ArgGroup(
+    heading = "%nTelemetry Options:%n",
+    exclusive = false,
+    order = 998,
+  )
+  private var telemetryOptions: TelemetryOptions = TelemetryOptions()
+
   // Common options shared by all commands.
   @CommandLine.ArgGroup(
     heading = "%nCommon Options:%n",
@@ -412,8 +423,6 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
     // allow subclasses to customize the engine
     configureEngine(langs)
   }
-
-  internal fun engineSafe(): PolyglotEngine? = engine.value
 
   internal fun engine(): PolyglotEngine = engine.value!!
 
@@ -521,6 +530,24 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
     }
   }
 
+  // Send a telemetry event if configured.
+  private fun sendRunEvent(start: TimeSource.Monotonic.ValueTimeMark) {
+    telemetry.sendRunEvent(
+      mode = RunEvent.ExecutionMode.Run,
+      duration = start.elapsedNow(),
+      exitCode = 0,
+    )
+  }
+
+  // Send an error telemetry event if configured.
+  private fun sendErrEvent(err: CommandResult.Error, start: TimeSource.Monotonic.ValueTimeMark) {
+    telemetry.sendRunEvent(
+      mode = RunEvent.ExecutionMode.Run,
+      duration = start.elapsedNow(),
+      exitCode = err.exitCode,
+    )
+  }
+
   /**
    * Run the target sub-command, managing state internally for resources which are expected to be shared, and which may
    * need to be closed at the conclusion of the command's execution lifecycle.
@@ -539,6 +566,11 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
   override suspend fun Context.invoke(state: CommandState): CommandResult = use {
     val start = TimeSource.Monotonic.markNow()
 
+    // if the user has disabled telemetry in any way, we need to neuter it early
+    if (telemetryOptions.shouldDisable()) {
+      telemetry.manager().disableTelemetry()
+    }
+
     // allow the subclass to register its own shared resources
     sharedResources.addAll(initialize())
 
@@ -552,6 +584,7 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
       ctx.invoke(this).also {
         when (it) {
           is CommandResult.Success -> {
+            sendRunEvent(start)
             val done = start.elapsedNow()
             if (verbose) {
               output {
@@ -560,6 +593,7 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
             }
           }
           is CommandResult.Error -> {
+            sendErrEvent(it, start)
             val exitMsg = it.message.ifBlank { null } ?: "Error in subcommand; exiting with code '${it.exitCode}'"
             logging.debug(exitMsg)
 

@@ -53,6 +53,7 @@ jobs:
           toolchain: stable
           components: clippy,rustfmt
           rustflags: "-Dwarnings"
+          cache-key: "elide-rust-v1-{{ hashFiles('Cargo.lock') }}"
       - name: "Setup: Rust Tooling"
         run: cargo install clippy-sarif sarif-fmt
       - name: "Checks: Clippy"

@@ -400,6 +400,7 @@ dependencies {
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
   implementation(projects.packages.localAi)
+  implementation(projects.packages.telemetry)
   implementation(libs.dirs)
   implementation(libs.snakeyaml)
   implementation(mn.micronaut.json.core)
@@ -748,7 +749,7 @@ val preinitializedContexts = if (!enablePreinit) emptyList() else listOfNotNull(
   "js",
   onlyIf(enablePreinitializeAll && enablePython, "python"),
   onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
-  onlyIf(enablePreinitializeAll && enableJvm && enableExperimental, "java"),
+  onlyIf(enablePreinitializeAll && enableJvm, "java"),
 )
 
 val macOsxPlatform = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform"
@@ -773,6 +774,11 @@ val experimentalLlvmEdgeArgs = listOfNotNull(
 })
 
 val preinitContextsList = preinitializedContexts.joinToString(",")
+
+val preinitClasslist = listOf(
+  "elide.runtime.plugins.kotlin.shell.DynamicClassLoader",
+  "elide.runtime.plugins.kotlin.shell.GuestClassLoader",
+)
 
 val entryApiHeader: File =
   rootProject.layout.projectDirectory.file("crates/entry/headers/elide-entry.h").asFile
@@ -1037,9 +1043,12 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.handler.codec.http2.Http2ConnectionHandler",
   "io.netty.handler.codec.http2.DefaultHttp2FrameWriter",
   "io.netty.handler.ssl.ReferenceCountedOpenSslEngine",
+  "io.netty.incubator.channel.uring.IOUring",
   "io.netty.incubator.channel.uring.IOUringEventLoopGroup",
   "io.netty.incubator.channel.uring.Native",
+  "io.netty.incubator.channel.uring.LinuxSocket",
   "io.netty.handler.codec.http.HttpObjectEncoder",
+  "io.netty.handler.pcap.PcapWriteHandler${'$'}WildcardAddressHolder",
 
   // --- Netty: Native Crypto -----
 
@@ -1286,6 +1295,7 @@ val commonNativeArgs = listOfNotNull(
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContexts=$preinitContextsList"),
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeContextsWithNative=true"),
   onlyIf(enablePreinit, "-Dpolyglot.image-build-time.PreinitializeAllowExperimentalOptions=true"),
+  onlyIf(enablePreinit && enableJvm, "-Dpolyglot.image-build-time.PreInitializationClasslist=$preinitClasslist"),
   onlyIf(enablePgoInstrumentation, "--pgo-instrument"),
   onlyIf(enablePgoSampling, "--pgo-sampling"),
   onlyIf(enableHeapReport, "-H:+BuildReportMappedCodeSizeBreakdown"),

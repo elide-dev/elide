@@ -64,8 +64,11 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
+          sparse-checkout: |
+            .github/triage.yml
+            .github/labeler.yml
       - name: "Triage: Branch Label"
         id: extract_branch
         shell: bash
@@ -96,7 +99,7 @@ jobs:
       packages: "read"
       pull-requests: "write"
     with:
-      runner: ${{ vars.RUNNER_DEFAULT || 'ubuntu-latest' }}
+      runner: ${{ vars.RUNNER_LARGE || 'ubuntu-cipool' }}
       native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:test-native') || contains(github.event.head_commit.message, 'ci:test-native') }}
 
   ##
@@ -112,21 +115,6 @@ jobs:
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
     permissions:
       contents: "read"
-
-  ##
-  ## Job: Checks for Models
-  ##
-  check-model:
-    name: "Checks"
-    uses: ./.github/workflows/checks.model.yml
-    needs: [triage]
-    if: fromJson(needs.triage.outputs.model)
-    secrets:
-      BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
-    permissions:
-      contents: "read"
-    with:
-      ignore_breaking: ${{ contains(github.event.pull_request.labels.*.name, 'ci:buf-breaking-ignore') }}
 
   ##
   ## Job: Checks for Formatting/Style

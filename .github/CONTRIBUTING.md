@@ -22,9 +22,12 @@ Once you have these installed, you can try the `Makefile`:
 
 ```
 $ make help
+
 Elide:
 api-check                      Check API/ABI compatibility with current changes.
 build                          Build the main library, and code-samples if SAMPLES=yes.
+cenv                           Show the C compiler environment.
+cflags                         Generate cflags for assigned target (pass COMPILER=clang for clang).
 check                          Build all targets, run all tests, run all checks.
 clean-cli                      Clean built CLI targets.
 clean-docs                     Clean documentation targets.
@@ -36,6 +39,7 @@ cli                            Build the Elide command-line tool (native target)
 dependency-packages            Print the suite of dependencies to install for this OS.
 distclean                      DANGER: Clean and remove any persistent caches. Drops changes.
 docs                           Generate docs for all library modules.
+env                            Show a summary of the build environment.
 fmt                            Run all formatter tools.
 forceclean                     DANGER: Clean, distclean, and clear untracked files.
 format                         Alias for `make fmt`.
@@ -43,17 +47,10 @@ gvm                            Build a custom copy of GraalVM for use locally.
 help                           Show this help text ('make help').
 image-base-alpine              Build base Alpine image.
 image-base                     Build base Ubuntu image.
-image-gvm17                    Build GVM17 builder image.
-image-gvm21                    Build GVM21 builder image.
-image-gvm22                    Build GVM22 builder image.
-image-jdk17                    Build JDK17 builder image.
-image-jdk21                    Build JDK21 builder image.
-image-jdk22                    Build JDK20 builder image.
+image-bash                     Build bash Ubuntu image.
+image-elide                    Build the Elide-only Ubuntu image.
 image-native-alpine            Build native Alpine base image.
 image-native                   Build native Ubuntu base image.
-image-runtime-jvm17            Build runtime GVM17 builder image.
-image-runtime-jvm21            Build runtime GVM21 builder image.
-image-runtime-jvm22            Build runtime GVM22 builder image.
 images                         Build all Docker images.
 info                           Show info about the current codebase and toolchain.
 model-update                   Update the proto model and re-build it.
@@ -67,6 +64,7 @@ release                        Perform a full release, including publishing to M
 relock-deps                    Update dependency locks and hashes across Yarn and Gradle.
 reports                        Generate reports for tests, coverage, etc.
 runtime-build                  Build the JS runtime facade and the builtin modules bundle
+runtime-clean                  Clean generated runtime artifacts.
 runtime-update                 Rebuild and copy the JS runtime facade
 runtime                        Build and update the JS runtime if needed.
 serve-docs                     Serve documentation locally.
@@ -155,7 +153,7 @@ Once you are satisfied with your work and want to submit it for review, mark it 
 
 The following tools are required for local development:
 
-- [Gradle 8.4](https://gradle.org/releases/) or newer, using the Gradle wrapper will automatically download the correct distribution the first time a task is executed.
+- [Gradle 8.14](https://gradle.org/releases/) or newer, using the Gradle wrapper will automatically download the correct distribution the first time a task is executed.
 - The latest [GraalVM JDK](https://www.graalvm.org/downloads/) distribution, the `native-image` component is required to build the native CLI distribution.
 
 When working on certain parts of the repository, such as the code samples, you may need to set the value for some properties in your local properties file at `~/.gradle/gradle.properties`:

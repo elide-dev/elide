@@ -42,6 +42,46 @@ import elide.runtime.plugins.AbstractLanguageConfig
   public var multithreading: Boolean = true
 
   /**
+   * Whether to enable native support in the guest JVM.
+   */
+  public var enableNative: Boolean = true
+
+  /**
+   * Maximum native buffer size for the guest JVM.
+   */
+  public var maxTotalNativeBufferSize: String? = "1G"
+
+  /**
+   * Native backend to use.
+   */
+  public var nativeBackend: String = "nfi-dlmopen"
+
+  /**
+   * Whether to enable Truffle regex engine support.
+   */
+  public var enableTruffleRegex: Boolean = true
+
+  /**
+   * Whether to enable JVM's management APIs; incurs an overhead.
+   */
+  public var enableManagement: Boolean = false
+
+  /**
+   * Whether to enable JVM's HotSwap support.
+   */
+  public var enableHotSwap: Boolean = false
+
+  /**
+   * JVM version to target.
+   */
+  public var jvmTarget: String = "21"
+
+  /**
+   * Module specifications enabled for native support in the guest JVM.
+   */
+  public var nativeModules: List<String> = listOf("ALL-UNNAMED")
+
+  /**
    * Set the path to JAVA_HOME that should be used, if known.
    */
   public var guestJavaHome: String? = null

@@ -115,7 +115,7 @@ jobs:
       - name: "Setup: Bun"
         uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
         with:
-          bun-version-file: config/bun-version
+          bun-version: "1.2.14"
       - name: "Setup: GraalVM (Java 24)"
         uses: graalvm/setup-graalvm@01ed653ac833fe80569f1ef9f25585ba2811baab # v1.3.3
         with:
@@ -138,6 +138,7 @@ jobs:
           toolchain: stable
           components: clippy,rustfmt
           rustflags: "-Dwarnings"
+          cache-key: "elide-rust-v1-{{ hashFiles('Cargo.lock') }}"
       - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
         continue-on-error: ${{ inputs.ignore_failures }}

@@ -17,13 +17,16 @@ const platformTagRegex = /^(linux|macos|windows)-(amd64|arm64)$/
 const LATEST = "latest"
 
 // Default-latest-version if none is resolvable.
-const DEFAULT_LATEST_VERSION = "1.0.0-alpha14"
+const DEFAULT_LATEST_VERSION = "1.0.0-beta3"
 
 // Base URL for GitHub downloads.
 const GITHUB_BASE = "https://github.com/elide-dev/elide/releases/download"
 
 // Cache control to return for downloads.
-const DOWNLOAD_CACHE_CONTROL = "public, max-age=900, s-maxage=3600"
+const DOWNLOAD_CACHE_CONTROL = "public, max-age=900, s-maxage=86400, immutable"
+
+// Cache control to return for downloads which are not immutable.
+const DOWNLOAD_CACHE_CONTROL_NONIMMUTABLE = "public, max-age=900, s-maxage=86400"
 
 /**
  * Decides which backend to use for serving an Elide binary.
@@ -177,6 +180,11 @@ function parsePlatformTag(tag: string): { os: OperatingSystem; arch: Architectur
     case "aarch64":
       arch = Architecture.arm64
       break
+    default:
+      // default to x86_64 if we cannot infer the architecture
+      console.warn(`Could not infer architecture from platform tag: ${portions[1]}`)
+      arch = Architecture.amd64
+      break
   }
   if (!os || !arch) {
     console.warn(`Failed to parse from platform tag: '${token}'`)
@@ -252,6 +260,8 @@ function selectFormat(url: URL, os?: OperatingSystem): ArchiveFormat {
   if (filename.endsWith(".tar.xz") || filename.endsWith(".txz")) {
     return ArchiveFormat.txz
   }
+  // default to tgz
+  return ArchiveFormat.tgz
 }
 
 // Extracts installation parameters from the parsed request URL, or throws.
@@ -281,6 +291,7 @@ async function extractParams(url: URL, request: Request): Promise<ElideInstallPa
     const { os, arch } = parsePlatformFormUa(userAgent)
     requestedOs = os
     requestedArch = arch
+    requestedPlatform = `${os}-${arch}`
   }
   return checkParams({
     backend,
@@ -330,7 +341,7 @@ async function serveDownloadFromGitHub(url: URL, request: Request, params: Elide
   console.log(`Serving redirect to GitHub download: '${sampleUrl}'`, { url, request })
   const headers = new Headers()
   headers.set("Location", sampleUrl)
-  headers.set("Cache-Control", DOWNLOAD_CACHE_CONTROL)
+  headers.set("Cache-Control", DOWNLOAD_CACHE_CONTROL_NONIMMUTABLE)
 
   return new Response(null, {
     status: 302, // Found
@@ -403,6 +414,18 @@ export default class extends WorkerEntrypoint<Env> {
     // 1. always parse the URL.
     const url = new URL(request.url)
 
+    // 2. try to match against the http cache.
+    // (not implemented yet)
+    const cache = await caches.open("default")
+    const cached = await cache.match(request.url)
+
+    // 3. if the http cache matched, serve it directly.
+    if (cached) {
+      console.log("Match cached response; returning", { url, request })
+      this.ctx.waitUntil(record(this.env, start, url, request, cached, true, true))
+      return cached
+    }
+
     // special case: if the pathname starts with `/cli/`, let it through, it is
     // a legacy download URL.
     if (url.pathname.startsWith("/cli/")) {
@@ -415,21 +438,18 @@ export default class extends WorkerEntrypoint<Env> {
       const headers = new Headers()
       obj.writeHttpMetadata(headers)
       headers.set("ETag", obj.httpEtag)
+      if (url.pathname.endsWith(".zip") || url.pathname.endsWith(".tgz") || url.pathname.endsWith(".txz")) {
+        headers.set("Cache-Control", DOWNLOAD_CACHE_CONTROL)
+      } else {
+        headers.set("Cache-Control", DOWNLOAD_CACHE_CONTROL_NONIMMUTABLE)
+      }
+      headers.set("Content-Disposition", `attachment; filename="${obj.key.split("/").pop()}"`)
       const resp = new Response(obj.body, { headers })
-      this.ctx.waitUntil(record(this.env, start, url, request, resp, true, false))
+      this.ctx.waitUntil(Promise.all([
+        record(this.env, start, url, request, resp, true, false),
+        cache.put(url, resp.clone())
+      ]))
       return resp
-    }
-
-    // 2. try to match against the http cache.
-    // (not implemented yet)
-    const cache = await caches.open("default")
-    const cached = await cache.match(request.url)
-
-    // 3. if the http cache matched, serve it directly.
-    if (cached) {
-      console.log("Match cached response; returning", { url, request })
-      this.ctx.waitUntil(record(this.env, start, url, request, cached, true, true))
-      return cached
     }
 
     try {

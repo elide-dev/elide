@@ -22,6 +22,7 @@ import io.micronaut.configuration.picocli.MicronautFactory
 import org.graalvm.nativeimage.ImageInfo
 import org.slf4j.bridge.SLF4JBridgeHandler
 import picocli.CommandLine
+import java.nio.file.Files
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -60,7 +61,9 @@ private fun createApplicationContext(args: Array<String>) = applicationContextBu
 private fun sorryIHaveToFactory(args: Array<String>): CommandLine =
   createApplicationContext(args)
   .start()
-  .use { CommandLine(Elide::class.java, MicronautFactory(it)) }
+  .use {
+    CommandLine(Elide::class.java, MicronautFactory(it))
+  }
 
 // Run the Clikt or regular entrypoint.
 @Suppress("TooGenericExceptionCaught")
@@ -188,7 +191,15 @@ fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {
 
   earlyLog("Setting static properties")
   val binPath = when (ImageInfo.inImageRuntimeCode()) {
-    true -> ProcessHandle.current().info().command().orElse(null)
+    true -> ProcessHandle.current().info().command().orElse(null).let { binPathMaybe ->
+      val asPath = Path(binPathMaybe)
+      if (Files.isSymbolicLink(asPath)) {
+        // resolve symbolic links to their absolute path
+        asPath.toRealPath().absolutePathString()
+      } else {
+        binPathMaybe
+      }
+    }
     false -> requireNotNull(System.getProperty("elide.gvmResources")) {
       "Failed to resolve `elide.resources` property"
     }

@@ -1,0 +1,222 @@
+public final class elide/runtime/telemetry/CrashEvent : elide/runtime/telemetry/Event {
+	public static final field Companion Lelide/runtime/telemetry/CrashEvent$Companion;
+	public fun <init> ()V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/telemetry/CrashEvent;
+	public static synthetic fun copy$default (Lelide/runtime/telemetry/CrashEvent;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/telemetry/CrashEvent;
+	public static final fun create (Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/telemetry/CrashEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExitCode ()Ljava/lang/Integer;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/telemetry/CrashEvent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/telemetry/CrashEvent$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/telemetry/CrashEvent;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/telemetry/CrashEvent;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/telemetry/CrashEvent$Companion {
+	public final fun create (Ljava/lang/Integer;Ljava/lang/String;)Lelide/runtime/telemetry/CrashEvent;
+	public static synthetic fun create$default (Lelide/runtime/telemetry/CrashEvent$Companion;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/telemetry/CrashEvent;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/runtime/telemetry/Event {
+	public static final field Companion Lelide/runtime/telemetry/Event$Companion;
+}
+
+public final class elide/runtime/telemetry/Event$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/telemetry/EventConstantsKt {
+	public static final field CRASH_EVENT_NAME Ljava/lang/String;
+	public static final field RUN_EVENT_NAME Ljava/lang/String;
+	public static final field RUN_MODE_RUN Ljava/lang/String;
+	public static final field RUN_MODE_SERVE Ljava/lang/String;
+	public static final field RUN_MODE_TEST Ljava/lang/String;
+}
+
+public final class elide/runtime/telemetry/EventMetadata {
+	public static final field Companion Lelide/runtime/telemetry/EventMetadata$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ZLelide/runtime/telemetry/EventTiming;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ZLelide/runtime/telemetry/EventTiming;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun component4 ()Lelide/runtime/telemetry/EventTiming;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;ZLelide/runtime/telemetry/EventTiming;)Lelide/runtime/telemetry/EventMetadata;
+	public static synthetic fun copy$default (Lelide/runtime/telemetry/EventMetadata;Ljava/lang/String;Ljava/lang/String;ZLelide/runtime/telemetry/EventTiming;ILjava/lang/Object;)Lelide/runtime/telemetry/EventMetadata;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDebug ()Z
+	public final fun getPlatform ()Ljava/lang/String;
+	public final fun getTiming ()Lelide/runtime/telemetry/EventTiming;
+	public final fun getVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/telemetry/EventMetadata$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/telemetry/EventMetadata$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/telemetry/EventMetadata;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/telemetry/EventMetadata;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/telemetry/EventMetadata$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/telemetry/EventTiming {
+	public static final field Companion Lelide/runtime/telemetry/EventTiming$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Long;)V
+	public synthetic fun <init> (Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Long;
+	public final fun component2 ()Ljava/lang/Long;
+	public final fun component3 ()Ljava/lang/Long;
+	public final fun copy (Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Long;)Lelide/runtime/telemetry/EventTiming;
+	public static synthetic fun copy$default (Lelide/runtime/telemetry/EventTiming;Ljava/lang/Long;Ljava/lang/Long;Ljava/lang/Long;ILjava/lang/Object;)Lelide/runtime/telemetry/EventTiming;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getProcessed ()Ljava/lang/Long;
+	public final fun getQueued ()Ljava/lang/Long;
+	public final fun getReceived ()Ljava/lang/Long;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/telemetry/EventTiming$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/telemetry/EventTiming$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/telemetry/EventTiming;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/telemetry/EventTiming;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/telemetry/EventTiming$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/telemetry/EventType : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field Companion Lelide/runtime/telemetry/EventType$Companion;
+	public static final field Crash Lelide/runtime/telemetry/EventType;
+	public static final field Run Lelide/runtime/telemetry/EventType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/telemetry/EventType;
+	public static fun values ()[Lelide/runtime/telemetry/EventType;
+}
+
+public final class elide/runtime/telemetry/EventType$Companion : elide/core/api/Symbolic$SealedResolver {
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/runtime/telemetry/EventType;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/telemetry/RunEvent : elide/runtime/telemetry/Event {
+	public static final field Companion Lelide/runtime/telemetry/RunEvent$Companion;
+	public fun <init> ()V
+	public final fun component1 ()Ljava/lang/Integer;
+	public final fun component2 ()Ljava/lang/Long;
+	public final fun component3 ()Lelide/runtime/telemetry/RunEvent$ExecutionMode;
+	public final fun copy (Ljava/lang/Integer;Ljava/lang/Long;Lelide/runtime/telemetry/RunEvent$ExecutionMode;)Lelide/runtime/telemetry/RunEvent;
+	public static synthetic fun copy$default (Lelide/runtime/telemetry/RunEvent;Ljava/lang/Integer;Ljava/lang/Long;Lelide/runtime/telemetry/RunEvent$ExecutionMode;ILjava/lang/Object;)Lelide/runtime/telemetry/RunEvent;
+	public static final fun create-moChb0s (Lelide/runtime/telemetry/RunEvent$ExecutionMode;ILkotlin/time/Duration;)Lelide/runtime/telemetry/RunEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDuration ()Ljava/lang/Long;
+	public final fun getExitCode ()Ljava/lang/Integer;
+	public final fun getMode ()Lelide/runtime/telemetry/RunEvent$ExecutionMode;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/telemetry/RunEvent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/runtime/telemetry/RunEvent$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/telemetry/RunEvent;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/telemetry/RunEvent;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/telemetry/RunEvent$Companion {
+	public final fun create-moChb0s (Lelide/runtime/telemetry/RunEvent$ExecutionMode;ILkotlin/time/Duration;)Lelide/runtime/telemetry/RunEvent;
+	public static synthetic fun create-moChb0s$default (Lelide/runtime/telemetry/RunEvent$Companion;Lelide/runtime/telemetry/RunEvent$ExecutionMode;ILkotlin/time/Duration;ILjava/lang/Object;)Lelide/runtime/telemetry/RunEvent;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/runtime/telemetry/RunEvent$ExecutionMode : java/lang/Enum {
+	public static final field Run Lelide/runtime/telemetry/RunEvent$ExecutionMode;
+	public static final field Serve Lelide/runtime/telemetry/RunEvent$ExecutionMode;
+	public static final field Test Lelide/runtime/telemetry/RunEvent$ExecutionMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/telemetry/RunEvent$ExecutionMode;
+	public static fun values ()[Lelide/runtime/telemetry/RunEvent$ExecutionMode;
+}
+
+public synthetic class elide/runtime/telemetry/client/$DefaultTelemetryClient$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public abstract interface class elide/runtime/telemetry/client/EventDelivery {
+	public abstract fun getSuccess ()Z
+}
+
+public final class elide/runtime/telemetry/client/EventDelivery$EventDelivered : elide/runtime/telemetry/client/EventDelivery {
+	public static final field INSTANCE Lelide/runtime/telemetry/client/EventDelivery$EventDelivered;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getSuccess ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/telemetry/client/EventDelivery$EventFailure : elide/runtime/telemetry/client/EventDelivery {
+	public static final field INSTANCE Lelide/runtime/telemetry/client/EventDelivery$EventFailure;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getSuccess ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/telemetry/client/TelemetryClient {
+	public abstract fun deliver (Lelide/runtime/telemetry/Event;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public synthetic class elide/runtime/telemetry/manager/$DefaultTelemetryManager$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public abstract interface class elide/runtime/telemetry/manager/TelemetryManager {
+	public abstract fun client ()Lelide/runtime/telemetry/client/TelemetryClient;
+	public abstract fun deliver (Lelide/runtime/telemetry/Event;)V
+	public abstract fun disableTelemetry ()V
+	public abstract fun enableTelemetry ()V
+}
+

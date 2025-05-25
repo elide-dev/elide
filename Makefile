@@ -855,7 +855,7 @@ serve-docs:  ## Serve documentation locally.
 		&& open http://localhost:8000 \
 		&& python3 -m http.server
 
-IMAGES ?= image-base image-base-alpine image-native image-native-alpine image-bash
+IMAGES ?= image-base image-base-alpine image-native image-native-alpine image-bash image-elide
 
 images: $(IMAGES)  ## Build all Docker images.
 	@echo "All Docker images built."
@@ -867,6 +867,10 @@ image-base:  ## Build base Ubuntu image.
 image-bash:  ## Build bash Ubuntu image.
 	@echo "Building image 'bash'..."
 	$(CMD)$(MAKE) -C tools/images/bash PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+image-elide:  ## Build the Elide-only Ubuntu image.
+	@echo "Building image 'elide'..."
+	$(CMD)$(MAKE) -C tools/images/elide PUSH=$(PUSH) REMOTE=$(REMOTE)
 
 image-base-alpine:  ## Build base Alpine image.
 	@echo "Building image 'base/alpine'..."

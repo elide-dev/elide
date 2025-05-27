@@ -24,7 +24,7 @@ import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.ReadableStream.ReadResult
 import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.stream.QueueingStrategy
+import elide.runtime.intrinsics.js.stream.QueuingStrategy
 import elide.runtime.intrinsics.js.stream.ReadableStreamController
 import elide.runtime.intrinsics.js.stream.ReadableStreamReader
 import elide.runtime.intrinsics.js.stream.ReadableStreamSource
@@ -39,7 +39,7 @@ internal class ReadableDefaultStream(
   /** Underlying source for this stream. */
   private val source: ReadableStreamSource,
   /** Queueing strategy used to manage backpressure. */
-  private val strategy: QueueingStrategy,
+  private val strategy: QueuingStrategy,
   override val executor: GuestExecutor
 ) : ReadableStreamBase() {
   /** Simple chunk type allowing an arbitrary untyped value to be enqueued with a computed size. */
@@ -308,8 +308,8 @@ internal class ReadableDefaultStream(
       override fun cancel(reason: Any?): JsPromise<Unit> = cancel2(reason)
     }
 
-    branch1.set(ReadableDefaultStream(source1, QueueingStrategy.DefaultReadStrategy, executor))
-    branch2.set(ReadableDefaultStream(source2, QueueingStrategy.DefaultReadStrategy, executor))
+    branch1.set(ReadableDefaultStream(source1, QueuingStrategy.DefaultReadStrategy, executor))
+    branch2.set(ReadableDefaultStream(source2, QueuingStrategy.DefaultReadStrategy, executor))
 
     reader.closed.catch {
       branch1.get().error(it)

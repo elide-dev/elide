@@ -225,7 +225,7 @@ import elide.runtime.plugins.js.JavaScript as JS
 
   @Test fun `should observe backpressure`() = runTest {
     val source = ChannelSource(capacity = Channel.RENDEZVOUS)
-    val strategy = CountQueueingStrategy(1.0)
+    val strategy = CountQueuingStrategy(1.0)
 
     var sent = 0
     val counter = launch {

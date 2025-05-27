@@ -38,13 +38,13 @@ import elide.vm.annotations.Polyglot
    */
   public interface Factory<Impl> where Impl : WritableStream {
     /**
-     * Constructor for a custom [WritableStream], which uses the provided [sink] and [queueingStrategy], if provided.
+     * Constructor for a custom [WritableStream], which uses the provided [sink] and [queuingStrategy], if provided.
      *
      * @param sink Underlying sink for the [WritableStream].
-     * @param queueingStrategy Optional [QueueingStrategy] for the [WritableStream].
+     * @param queuingStrategy Optional [QueuingStrategy] for the [WritableStream].
      * @return A new [WritableStream] instance.
      */
-    @Polyglot public fun create(sink: WritableStreamSink, queueingStrategy: QueueingStrategy? = null): Impl
+    @Polyglot public fun create(sink: WritableStreamSink, queuingStrategy: QueuingStrategy? = null): Impl
   }
 
   @get:Polyglot public val locked: Boolean
@@ -54,13 +54,13 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun close(): JsPromise<Unit>
 
   public companion object : Factory<WritableStream>, ProxyInstantiable {
-    override fun create(sink: WritableStreamSink, queueingStrategy: QueueingStrategy?): WritableStream {
-      return WritableDefaultStream(sink, queueingStrategy ?: QueueingStrategy.DefaultWriteStrategy)
+    override fun create(sink: WritableStreamSink, queuingStrategy: QueuingStrategy?): WritableStream {
+      return WritableDefaultStream(sink, queuingStrategy ?: QueuingStrategy.DefaultWriteStrategy)
     }
 
     override fun newInstance(vararg arguments: Value?): Any {
       val sink = arguments.getOrNull(0)?.let(::GuestWritableStreamSink)
-      val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from)
+      val strategy = arguments.getOrNull(1)?.let(GuestQueuingStrategy::from)
 
       return create(sink ?: WritableStreamSink.DiscardingSink, strategy)
     }

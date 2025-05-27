@@ -29,8 +29,8 @@ import elide.vm.annotations.Polyglot
 internal class TransformDefaultStream(
   val transformer: TransformStreamTransformer,
   executor: GuestExecutor,
-  writableStrategy: QueueingStrategy = QueueingStrategy.DefaultReadStrategy,
-  readableStrategy: QueueingStrategy = QueueingStrategy.DefaultReadStrategy,
+  writableStrategy: QueuingStrategy = QueuingStrategy.DefaultReadStrategy,
+  readableStrategy: QueuingStrategy = QueuingStrategy.DefaultReadStrategy,
 ) : TransformStream, ReadOnlyProxyObject {
   @JvmInline private value class DelegatingSource(private val stream: TransformDefaultStream) : ReadableStreamSource {
     override fun pull(controller: ReadableStreamController): JsPromise<Unit> {

@@ -19,18 +19,18 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.ReadableStream
-import elide.runtime.intrinsics.js.stream.ByteLengthQueueingStrategy
-import elide.runtime.intrinsics.js.stream.CountQueueingStrategy
+import elide.runtime.intrinsics.js.stream.ByteLengthQueuingStrategy
+import elide.runtime.intrinsics.js.stream.CountQueuingStrategy
 import elide.runtime.intrinsics.js.stream.ReadableStreamBYOBReader
 import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
 
 /** Implementation of readable streams (via the Web Streams standard). */
-@Intrinsic(global = "ReadableStream") @Singleton internal class ReadableStreamIntrinsic : AbstractJsIntrinsic() {
+@Intrinsic(internal = false) @Singleton internal class ReadableStreamIntrinsic : AbstractJsIntrinsic() {
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     bindings[READABLE_STREAM_SYMBOL.asPublicJsSymbol()] = ReadableStream
-    bindings[BYTE_LENGTH_STRATEGY_SYMBOL.asPublicJsSymbol()] = ByteLengthQueueingStrategy
-    bindings[COUNT_STRATEGY_SYMBOL.asPublicJsSymbol()] = CountQueueingStrategy
+    bindings[BYTE_LENGTH_STRATEGY_SYMBOL.asPublicJsSymbol()] = ByteLengthQueuingStrategy
+    bindings[COUNT_STRATEGY_SYMBOL.asPublicJsSymbol()] = CountQueuingStrategy
     bindings[DEFAULT_READER_SYMBOL.asPublicJsSymbol()] = ReadableStreamDefaultReader
     bindings[BYOB_READER_SYMBOL.asPublicJsSymbol()] = ReadableStreamBYOBReader
   }

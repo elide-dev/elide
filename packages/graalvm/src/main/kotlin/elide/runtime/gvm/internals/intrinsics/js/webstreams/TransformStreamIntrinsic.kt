@@ -22,7 +22,7 @@ import elide.runtime.intrinsics.js.TransformStream
 import elide.runtime.intrinsics.js.WritableStream
 
 /** Implementation of transform streams (via the Web Streams standard). */
-@Intrinsic(global = "TransformStream") @Singleton internal class TransformStreamIntrinsic : AbstractJsIntrinsic() {
+@Intrinsic(internal = false) @Singleton internal class TransformStreamIntrinsic : AbstractJsIntrinsic() {
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     bindings[TRANSFORM_STREAM_SYMBOL.asPublicJsSymbol()] = TransformStream

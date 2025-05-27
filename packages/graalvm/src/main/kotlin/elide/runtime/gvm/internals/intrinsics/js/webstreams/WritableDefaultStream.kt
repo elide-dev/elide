@@ -28,7 +28,7 @@ import elide.runtime.intrinsics.js.CompletableJsPromise
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.WritableStream
 import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.stream.QueueingStrategy
+import elide.runtime.intrinsics.js.stream.QueuingStrategy
 import elide.runtime.intrinsics.js.stream.WritableStreamDefaultController
 import elide.runtime.intrinsics.js.stream.WritableStreamDefaultWriter
 import elide.runtime.intrinsics.js.stream.WritableStreamSink
@@ -42,7 +42,7 @@ internal class WritableDefaultStream(
   /** Underlying sink this stream writes to. */
   private val sink: WritableStreamSink,
   /** Queueing strategy used to control backpressure. */
-  private val strategy: QueueingStrategy = QueueingStrategy.DefaultWriteStrategy,
+  private val strategy: QueuingStrategy = QueuingStrategy.DefaultWriteStrategy,
 ) : WritableStream, ReadOnlyProxyObject {
   /** Inline wrapper for the stream providing the controller API by delegation. */
   @JvmInline private value class ControllerToken(

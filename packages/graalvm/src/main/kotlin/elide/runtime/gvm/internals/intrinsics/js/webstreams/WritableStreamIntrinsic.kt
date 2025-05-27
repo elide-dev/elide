@@ -22,7 +22,7 @@ import elide.runtime.intrinsics.js.WritableStream
 import elide.runtime.intrinsics.js.stream.WritableStreamDefaultWriter
 
 /** Implementation of writable streams (via the Web Streams standard). */
-@Intrinsic(global = "WritableStream") @Singleton internal class WritableStreamIntrinsic : AbstractJsIntrinsic() {
+@Intrinsic(internal = false) @Singleton internal class WritableStreamIntrinsic : AbstractJsIntrinsic() {
   @OptIn(DelicateElideApi::class)
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
     bindings[WRITABLE_STREAM_SYMBOL.asPublicJsSymbol()] = WritableStream

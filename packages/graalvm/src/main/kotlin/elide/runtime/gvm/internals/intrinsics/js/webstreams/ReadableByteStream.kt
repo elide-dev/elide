@@ -44,7 +44,7 @@ internal class ReadableByteStream(
   /** Underlying source for this stream. */
   private val source: ReadableStreamSource,
   /** Queueing strategy used to manage backpressure. */
-  private val strategy: QueueingStrategy,
+  private val strategy: QueuingStrategy,
   override val executor: GuestExecutor
 ) : ReadableStreamBase() {
   /**
@@ -890,8 +890,8 @@ internal class ReadableByteStream(
       override fun cancel(reason: Any?): JsPromise<Unit> = cancelBranch(reason, forBranch2 = true)
     }
 
-    branch1.set(ReadableByteStream(source1, QueueingStrategy.DefaultReadStrategy, executor))
-    branch2.set(ReadableByteStream(source2, QueueingStrategy.DefaultReadStrategy, executor))
+    branch1.set(ReadableByteStream(source1, QueuingStrategy.DefaultReadStrategy, executor))
+    branch2.set(ReadableByteStream(source2, QueuingStrategy.DefaultReadStrategy, executor))
     reader.get().forwardReaderError()
 
     return arrayOf(branch1.get(), branch2.get())

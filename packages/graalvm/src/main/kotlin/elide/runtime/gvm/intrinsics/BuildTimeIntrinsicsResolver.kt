@@ -35,6 +35,8 @@ import elide.runtime.gvm.internals.intrinsics.js.fetch.FetchIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.TransformStreamIntrinsic
+import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableStreamIntrinsic
 import elide.runtime.gvm.internals.js.JsTimersIntrinsic
 import elide.runtime.gvm.internals.sqlite.ElideSqliteModule
 import elide.runtime.gvm.internals.testing.ElideTestingModule
@@ -143,7 +145,6 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val zlib = NodeZlibModule()
     @JvmStatic private val webCrypto = WebCryptoIntrinsic()
     @JvmStatic private val inspector = NodeInspectorModule()
-    @JvmStatic private val readableStream = ReadableStreamIntrinsic()
     @JvmStatic private val childProcess = NodeChildProcessModule(fs, execProvider)
     @JvmStatic private val queueMicrotaskCallable = QueueMicrotaskCallable(execProvider)
     @JvmStatic private val messageChannel = MessageChannelBuiltin()
@@ -155,6 +156,9 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val elideSqlite = ElideSqliteModule()
     @JvmStatic private val elideLlm = ElideLLMModule(execProvider)
     @JvmStatic private val elideBuiltin = ElideIntrinsic()
+    @JvmStatic private val readableStream = ReadableStreamIntrinsic()
+    @JvmStatic private val writableStream = WritableStreamIntrinsic()
+    @JvmStatic private val transformStream = TransformStreamIntrinsic()
 
     // All built-ins and intrinsics.
     @JvmStatic private val all = arrayOf(
@@ -198,6 +202,8 @@ import elide.runtime.plugins.env.EnvConfig
       webCrypto,
       inspector,
       readableStream,
+      writableStream,
+      transformStream,
       childProcess,
       queueMicrotaskCallable,
       messageChannel,

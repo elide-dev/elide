@@ -15,8 +15,8 @@ package elide.runtime.intrinsics.js.stream
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
 import elide.runtime.intrinsics.js.err.TypeError
-import elide.runtime.intrinsics.js.stream.QueueingStrategy.DefaultReadStrategy.highWaterMark
-import elide.runtime.intrinsics.js.stream.QueueingStrategy.DefaultWriteStrategy.highWaterMark
+import elide.runtime.intrinsics.js.stream.QueuingStrategy.DefaultReadStrategy.highWaterMark
+import elide.runtime.intrinsics.js.stream.QueuingStrategy.DefaultWriteStrategy.highWaterMark
 import elide.vm.annotations.Polyglot
 
 /**
@@ -25,7 +25,7 @@ import elide.vm.annotations.Polyglot
  * This interface is meant to cover both host and guest strategies, providing a clean API for streams to use regardless
  * of the origin of the strategy.
  */
-public interface QueueingStrategy {
+public interface QueuingStrategy {
   /**
    * A high threshold targeted by the controller; once this threshold is reached, no new values will be requested from
    * the source.
@@ -39,7 +39,7 @@ public interface QueueingStrategy {
    * The default queuing strategy for readable streams, using a [highWaterMark] of `0.0` and measuring every chunk with
    * size `1.0`.
    */
-  public object DefaultReadStrategy : QueueingStrategy {
+  public object DefaultReadStrategy : QueuingStrategy {
     @Polyglot override fun highWaterMark(): Double = 0.0
     @Polyglot override fun size(chunk: Value?): Double = 1.0
   }
@@ -48,17 +48,17 @@ public interface QueueingStrategy {
    * The default queuing strategy for writable streams, using a [highWaterMark] of `1.0` and measuring every chunk with
    * size `1.0`.
    */
-  public object DefaultWriteStrategy : QueueingStrategy {
+  public object DefaultWriteStrategy : QueuingStrategy {
     @Polyglot override fun highWaterMark(): Double = 1.0
     @Polyglot override fun size(chunk: Value?): Double = 1.0
   }
 }
 
 /**
- * A wrapper around a guest [value] that allows its use as a [QueueingStrategy]. All methods delegate to invoking
+ * A wrapper around a guest [value] that allows its use as a [QueuingStrategy]. All methods delegate to invoking
  * the corresponding member.
  */
-@JvmInline public value class GuestQueueingStrategy private constructor(public val value: Value) : QueueingStrategy {
+@JvmInline public value class GuestQueuingStrategy private constructor(public val value: Value) : QueuingStrategy {
   @Polyglot override fun highWaterMark(): Double = value.invokeMember(HIGH_WATER_MARK_MEMBER).asDouble()
   @Polyglot override fun size(chunk: Value?): Double = value.invokeMember(SIZE_MEMBER).asDouble()
 
@@ -66,19 +66,19 @@ public interface QueueingStrategy {
     private const val HIGH_WATER_MARK_MEMBER = "highWaterMark"
     private const val SIZE_MEMBER = "size"
 
-    public fun from(value: Value): GuestQueueingStrategy {
+    public fun from(value: Value): GuestQueuingStrategy {
       if (!value.canInvokeMember(HIGH_WATER_MARK_MEMBER))
         throw TypeError.create("Value $value is not a valid queueing strategy: no 'highWaterMark' method found")
 
       if (!value.canInvokeMember(SIZE_MEMBER))
         throw TypeError.create("Value $value is not a valid queueing strategy: no 'size' method found")
 
-      return GuestQueueingStrategy(value)
+      return GuestQueuingStrategy(value)
     }
   }
 }
 
-@JvmInline public value class ByteLengthQueueingStrategy(private val highWaterMark: Double) : QueueingStrategy {
+@JvmInline public value class ByteLengthQueuingStrategy(private val highWaterMark: Double) : QueuingStrategy {
   @Polyglot public constructor(options: Value?) : this(
     options?.takeIf { it.hasMember("highWaterMark") }
       ?.getMember("highWaterMark")
@@ -98,11 +98,11 @@ public interface QueueingStrategy {
   }
 
   public companion object : ProxyInstantiable {
-    override fun newInstance(vararg arguments: Value?): Any = ByteLengthQueueingStrategy(arguments.firstOrNull())
+    override fun newInstance(vararg arguments: Value?): Any = ByteLengthQueuingStrategy(arguments.firstOrNull())
   }
 }
 
-@JvmInline public value class CountQueueingStrategy(private val highWaterMark: Double) : QueueingStrategy {
+@JvmInline public value class CountQueuingStrategy(private val highWaterMark: Double) : QueuingStrategy {
   @Polyglot public constructor(options: Value?) : this(
     options?.takeIf { it.hasMember("highWaterMark") }
       ?.getMember("highWaterMark")
@@ -115,6 +115,6 @@ public interface QueueingStrategy {
   @Polyglot override fun size(chunk: Value?): Double = 1.0
 
   public companion object : ProxyInstantiable {
-    override fun newInstance(vararg arguments: Value?): Any = CountQueueingStrategy(arguments.firstOrNull())
+    override fun newInstance(vararg arguments: Value?): Any = CountQueuingStrategy(arguments.firstOrNull())
   }
 }

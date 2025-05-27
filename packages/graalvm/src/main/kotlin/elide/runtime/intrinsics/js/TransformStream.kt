@@ -18,10 +18,9 @@ import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
 import elide.runtime.exec.GuestExecution
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.TransformDefaultStream
-import elide.runtime.interop.ReadOnlyProxyObject
-import elide.runtime.intrinsics.js.stream.GuestQueueingStrategy
+import elide.runtime.intrinsics.js.stream.GuestQueuingStrategy
 import elide.runtime.intrinsics.js.stream.GuestTransformStreamTransformer
-import elide.runtime.intrinsics.js.stream.QueueingStrategy
+import elide.runtime.intrinsics.js.stream.QueuingStrategy
 import elide.runtime.intrinsics.js.stream.TransformStreamTransformer
 import elide.vm.annotations.Polyglot
 
@@ -44,8 +43,8 @@ import elide.vm.annotations.Polyglot
   public interface Factory<Impl> where Impl : TransformStream {
     public fun create(
       transformer: TransformStreamTransformer,
-      writableStrategy: QueueingStrategy? = null,
-      readableStrategy: QueueingStrategy? = null,
+      writableStrategy: QueuingStrategy? = null,
+      readableStrategy: QueuingStrategy? = null,
     ): Impl
   }
 
@@ -57,21 +56,21 @@ import elide.vm.annotations.Polyglot
 
     override fun create(
       transformer: TransformStreamTransformer,
-      writableStrategy: QueueingStrategy?,
-      readableStrategy: QueueingStrategy?
+      writableStrategy: QueuingStrategy?,
+      readableStrategy: QueuingStrategy?
     ): TransformStream {
       return TransformDefaultStream(
         transformer = transformer,
         executor = streamExecutor,
-        writableStrategy = writableStrategy ?: QueueingStrategy.DefaultWriteStrategy,
-        readableStrategy = readableStrategy ?: QueueingStrategy.DefaultReadStrategy,
+        writableStrategy = writableStrategy ?: QueuingStrategy.DefaultWriteStrategy,
+        readableStrategy = readableStrategy ?: QueuingStrategy.DefaultReadStrategy,
       )
     }
 
     override fun newInstance(vararg arguments: Value?): Any {
       val transformer = arguments.getOrNull(0)?.let(::GuestTransformStreamTransformer)
-      val writableStrategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from)
-      val readableStrategy = arguments.getOrNull(2)?.let(GuestQueueingStrategy::from)
+      val writableStrategy = arguments.getOrNull(1)?.let(GuestQueuingStrategy::from)
+      val readableStrategy = arguments.getOrNull(2)?.let(GuestQueuingStrategy::from)
 
       return create(transformer ?: TransformStreamTransformer.Identity, writableStrategy, readableStrategy)
     }

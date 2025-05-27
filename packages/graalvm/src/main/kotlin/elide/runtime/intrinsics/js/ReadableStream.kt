@@ -23,7 +23,6 @@ import java.nio.ByteBuffer
 import elide.annotations.API
 import elide.runtime.exec.GuestExecution
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.*
-import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
 import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.Default
 import elide.runtime.intrinsics.js.stream.*
@@ -120,14 +119,14 @@ import elide.vm.annotations.Polyglot
    */
   public interface Factory<Impl> : ProxyInstantiable where Impl : ReadableStream {
     /**
-     * Constructor for a custom [ReadableStream], which implements the provided [source] and [queueingStrategy], if
+     * Constructor for a custom [ReadableStream], which implements the provided [source] and [queuingStrategy], if
      * provided.
      *
      * @param source Source for the [ReadableStream].
-     * @param queueingStrategy Optional [QueueingStrategy] for the [ReadableStream].
+     * @param queuingStrategy Optional [QueuingStrategy] for the [ReadableStream].
      * @return A new [ReadableStream] instance.
      */
-    @Polyglot public fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream
+    @Polyglot public fun create(source: ReadableStreamSource, queuingStrategy: QueuingStrategy?): ReadableStream
 
     /**
      * Constructor for a custom [ReadableStream], which implements the provided [source].
@@ -185,17 +184,17 @@ import elide.vm.annotations.Polyglot
       return create(ReadableStreamAsyncIteratorSource(asyncIterable.iterator))
     }
 
-    override fun create(source: ReadableStreamSource, queueingStrategy: QueueingStrategy?): ReadableStream {
+    override fun create(source: ReadableStreamSource, queuingStrategy: QueuingStrategy?): ReadableStream {
       return when (source.type) {
         Type.Default -> ReadableDefaultStream(
           source,
-          queueingStrategy ?: QueueingStrategy.DefaultReadStrategy,
+          queuingStrategy ?: QueuingStrategy.DefaultReadStrategy,
           streamExecutor,
         )
 
         Type.BYOB -> ReadableByteStream(
           source,
-          queueingStrategy ?: QueueingStrategy.DefaultReadStrategy,
+          queuingStrategy ?: QueuingStrategy.DefaultReadStrategy,
           streamExecutor,
         )
       }
@@ -203,7 +202,7 @@ import elide.vm.annotations.Polyglot
 
     override fun newInstance(vararg arguments: Value?): Any {
       val source = arguments.getOrNull(0)?.let(::GuestReadableStreamSource) ?: ReadableStreamSource.Empty
-      val strategy = arguments.getOrNull(1)?.let(GuestQueueingStrategy::from) ?: QueueingStrategy.DefaultReadStrategy
+      val strategy = arguments.getOrNull(1)?.let(GuestQueuingStrategy::from) ?: QueuingStrategy.DefaultReadStrategy
 
       return create(source, strategy)
     }

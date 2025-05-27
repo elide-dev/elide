@@ -87,11 +87,8 @@ private const val ENABLE_SUPPRESSIONS = true
     "Headers",
     "MessageChannel",
     "MessagePort",
-    "ReadableByteStreamController",
     "ReadableStream",
     "ReadableStreamBYOBReader",
-    "ReadableStreamBYOBRequest",
-    "ReadableStreamDefaultController",
     "ReadableStreamDefaultReader",
     "Request",
     "Response",
@@ -101,7 +98,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "TextEncoder",
     "TextEncoderStream",
     "TransformStream",
-    "TransformStreamDefaultController",
     "URL",
     "URLPattern",
     "URLSearchParams",
@@ -111,7 +107,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "WebAssembly.Module",
     "WebAssembly.Table",
     "WritableStream",
-    "WritableStreamDefaultController",
     "WritableStreamDefaultWriter"
   )
 

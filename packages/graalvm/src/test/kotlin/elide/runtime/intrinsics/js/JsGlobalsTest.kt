@@ -143,7 +143,7 @@ private const val ENABLE_SUPPRESSIONS = true
     "CloseEvent",
     "CompressionStream",
     "console",
-    "CountQueueingStrategy",
+    "CountQueuingStrategy",
     "Crypto",
     "crypto",
     "CryptoKey",
@@ -161,12 +161,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "PerformanceObserverEntryList",
     "performance",
     "process",
-    "ReadableByteStreamController",
-    "ReadableStream",
-    "ReadableStreamBYOBReader",
-    "ReadableStreamBYOBRequest",
-    "ReadableStreamDefaultController",
-    "ReadableStreamDefaultReader",
     "require",
     "setImmediate",
     "setInterval",
@@ -178,14 +172,9 @@ private const val ENABLE_SUPPRESSIONS = true
     "TextDecoderStream",
     "TextEncoder",
     "TextEncoderStream",
-    "TransformStream",
-    "TransformStreamDefaultController",
     "URL",
     "URLSearchParams",
     "WebSocket",
-    "WritableStream",
-    "WritableStreamDefaultController",
-    "WritableStreamDefaultWriter",
   )
 
   // Web streams standard types.
@@ -193,6 +182,11 @@ private const val ENABLE_SUPPRESSIONS = true
     "ReadableStream",
     "WritableStream",
     "TransformStream",
+    "ReadableStreamBYOBReader",
+    "ReadableStreamDefaultReader",
+    "WritableStreamDefaultWriter",
+    "CountQueuingStrategy",
+    "ByteLengthQueuingStrategy",
   )
 
   private val fetchGlobals = listOf(
@@ -216,7 +210,6 @@ private const val ENABLE_SUPPRESSIONS = true
     "InternalError",  // web-standard only, not present in non-browser runtimes
     "BroadcastChannel",  // not yet implemented
     "CloseEvent",  // not yet implemented
-    "CountQueueingStrategy",  // not yet implemented
     "CompressionStream",  // not yet implemented
     "DecompressionStream",  // not yet implemented
     "Crypto",  // not yet implemented
@@ -238,17 +231,9 @@ private const val ENABLE_SUPPRESSIONS = true
   )
 
   // Types which are expected to be provided by JS polyfills.
-  private val expectedPolyfills = streamGlobals.plus(sortedSetOf(
-    "ReadableByteStreamController",
-    "ReadableStreamBYOBReader",
-    "ReadableStreamBYOBRequest",
-    "ReadableStreamDefaultController",
-    "ReadableStreamDefaultReader",
-    "TransformStreamDefaultController",
-    "WritableStreamDefaultController",
-    "WritableStreamDefaultWriter",
+  private val expectedPolyfills = sortedSetOf(
     "fetch",  // last remaining fetch polyfill
-  )).toSortedSet()
+  )
 
   // Globals which are expected not to be found host-side.
   private val expectMissingHostGlobals = standardJsGlobals.plus(sortedSetOf(

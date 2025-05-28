@@ -10,151 +10,114 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("TooGenericExceptionCaught")
-
 package elide.runtime.gvm.internals.intrinsics.js
 
-import com.google.common.util.concurrent.Futures
-import com.google.common.util.concurrent.ListenableFuture
 import org.graalvm.polyglot.Value
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import kotlinx.coroutines.runBlocking
-import elide.runtime.exec.GuestExecutor
+import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl.Token.*
+import elide.runtime.intrinsics.js.CompletableJsPromise
 import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.intrinsics.js.PromiseRejectedException
 import elide.vm.annotations.Polyglot
 
-internal class JsPromiseImpl<T> private constructor (
-  private val ready: AtomicBoolean = AtomicBoolean(false),
-  private val latch: CountDownLatch = CountDownLatch(1),
-  private val producer: () -> T,
-  private val future: ListenableFuture<T>,
-  private val value: AtomicReference<T> = AtomicReference(),
-  private val err: AtomicReference<Throwable> = AtomicReference(),
-) : ListenableFuture<T> by future, JsPromise<T> {
-  // Whether the promise has started executing.
-  private val started: AtomicBoolean = AtomicBoolean(false)
+/**
+ * Implementation of a JavaScript Promise object that can be completed at will by host code.
+ *
+ * ### Semantics of Promise instances
+ *
+ * Promise objects should be viewed as 'slots' where future values will be stored, rather than a direct encapsulation
+ * of async code. The semantics of this implementation are closer to that of Kotlin's
+ * [CompletableDeferred][kotlinx.coroutines.CompletableDeferred], with the completable API only being available to the
+ * host, since the promise itself does not invoke or track the execution of any code, but is instaed used by other code
+ * to notify consumers about completion.
+ *
+ * ### Concurrency and guest callbacks
+ *
+ * Guest code may register callbacks on a promise from any thread, which can cause issues where a Promise attempts to
+ * invoke a callback on a guest context that is in use at the time of completion. This problem will be solved by the
+ * guest executor API, which will provide ways to pin the execution of code to a specific guest context.
+ */
+internal class JsPromiseImpl<T> private constructor(token: Token) : CompletableJsPromise<T> {
+  /** Construct a new unresolved promise. */
+  internal constructor() : this(Pending)
 
-  // Whether the promise has executed.
-  private val executed: AtomicBoolean = AtomicBoolean(false)
+  /** Represents a state of a promise object. */
+  private sealed interface Token {
+    /** The promise has not been resolved nor rejected. */
+    data object Pending : Token
 
-  // Whether the promise failed.
-  private val didThrow: AtomicBoolean = AtomicBoolean(false)
+    /** The promise has been resolved with a [value]. */
+    @JvmInline value class Resolved(val value: Any?) : Token
 
-  // Functions to call when the promise is resolved.
-  private val nextFns: MutableList<(T) -> Unit> = mutableListOf()
+    /** The promise has been rejected with the given [reason]. */
+    @JvmInline value class Rejected(val reason: Any?) : Token
+  }
 
-  // Functions to call if the promise fails.
-  private val catchFns: MutableList<(Throwable) -> Unit> = mutableListOf()
+  /** Thread-safe token representing the state of this promise. */
+  private val token = AtomicReference(token)
 
-  private fun invokeAwait() {
-    // short circuit: if already resolved, invoke next and continue
-    if (ready.get()) {
-      invokeThen()
-      return
-    }
+  /** Callbacks to be invoked on successful resolution. */
+  private val onResolve: MutableList<(T) -> Unit> = mutableListOf()
 
-    // run the fn
-    if (started.compareAndSet(false, true)) {
-      try {
-        value.set(producer.invoke())
-      } catch (e: Throwable) {
-        didThrow.set(true)
-        err.set(e)
-      } finally {
-        executed.set(true)
-        ready.set(true)
-        latch.countDown()
+  /** Callbacks to be invoked on promise rejection. */
+  private val onReject: MutableList<(Any?) -> Unit> = mutableListOf()
+
+  /** The promise is considered as 'closed' once the [token] is no longer [Pending]. */
+  override val isDone: Boolean get() = token.get() != Pending
+
+  @Suppress("UNCHECKED_CAST")
+  override fun then(onFulfilled: (T) -> Unit, onCatch: ((Any?) -> Unit)?): JsPromise<T> = apply {
+    when (val snap = token.get()) {
+      // cast should be safe because only host code can complete the promise, so it is subject to static type checks
+      is Resolved -> onFulfilled(snap.value as T)
+      is Rejected -> onCatch?.let { it(snap.reason) }
+      else -> {
+        onResolve.add(onFulfilled)
+        onCatch?.let { onReject.add(it) }
       }
-    } else {
-      // if the promise is already executing, wait for it to finish, preferring a latch...
-      latch.await()
-    }
-
-    // invoke followups
-    invokeThen()
-  }
-
-  private fun invokeThen() {
-    if (didThrow.get()) {
-      catchFns.forEach { it.invoke(err.get()) }
-    } else {
-      nextFns.forEach { it.invoke(value.get()) }
     }
   }
 
-  companion object {
-    @JvmStatic fun <T> wrap(promise: ListenableFuture<T>): JsPromise<T> = JsPromiseImpl(
-      producer = { promise.get() },
-      future = promise,
-    )
+  @Polyglot override fun then(onFulfilled: Value, onCatch: Value?): JsPromise<T> = then(
+    onFulfilled = { onFulfilled.execute(it) },
+    onCatch = {
+      // if a catch function was provided, defer to that. otherwise, throw.
+      when (onCatch) {
+        null -> throw (it as? Throwable ?: PromiseRejectedException(it))
+        else -> onCatch.execute(it)
+      }
+    },
+  )
 
-    @JvmStatic fun <T> GuestExecutor.spawn(promise: () -> T): JsPromise<T> = JsPromiseImpl(
-      producer = promise,
-      future = submit<T>(promise),
-    )
-
-    @JvmStatic fun <T> GuestExecutor.latched(latch: CountDownLatch, promise: () -> T): JsPromise<T> = JsPromiseImpl(
-      producer = promise,
-      latch = latch,
-      future = submit<T>(promise),
-    )
-
-    @JvmStatic fun <T> GuestExecutor.spawnSuspending(promise: suspend () -> T): JsPromise<T> = JsPromiseImpl(
-      producer = {
-        runBlocking { promise.invoke() }
-      },
-      future = submit<T> {
-        runBlocking(this) {
-          promise.invoke()
-        }
-      },
-    )
-
-    @JvmStatic fun <T> wrapping(value: ListenableFuture<T>): JsPromise<T> = JsPromiseImpl<T>(
-      ready = AtomicBoolean(true),
-      producer = { value.get() },
-      future = value,
-    )
-
-    @JvmStatic fun <T> resolved(value: T): JsPromise<T> = JsPromiseImpl(
-      ready = AtomicBoolean(true),
-      value = AtomicReference(value),
-      producer = { value },
-      future = Futures.immediateFuture(value),
-    )
-
-    @JvmStatic fun <T> rejected(err: Throwable): JsPromise<T> = JsPromiseImpl(
-      ready = AtomicBoolean(true),
-      err = AtomicReference(err),
-      producer = { throw err },
-      future = Futures.immediateFailedFuture(err),
-    )
-  }
-
-  override fun then(onFulfilled: (T) -> Unit, onCatch: ((Throwable) -> Unit)?): JsPromise<T> = apply {
-    nextFns.add(onFulfilled)
-    onCatch?.let { catchFns.add(it) }
-    invokeAwait()
-  }
-
-  @Polyglot override fun then(onFulfilled: Value, onCatch: Value?): JsPromise<T> = then({
-    onFulfilled.execute(it ?: value.get() ?: future.get())
-  }, {
-    // if a catch function was provided, defer to that. otherwise, throw.
-    when (onCatch) {
-      null -> throw it
-      else -> onCatch.execute(it)
+  override fun catch(onRejected: (Any?) -> Unit): JsPromise<T> = apply {
+    when (val snap = token.get()) {
+      Pending -> onReject.add(onRejected)
+      is Rejected -> onRejected(snap.reason)
+      is Resolved -> Unit // no-op
     }
-  })
-
-  override fun catch(onRejected: (Throwable) -> Unit): JsPromise<T> = apply {
-    catchFns.add(onRejected)
-    invokeAwait()
   }
 
   @Polyglot override fun catch(onRejected: Value): JsPromise<T> = catch { err ->
     onRejected.execute(err)
+  }
+
+  override fun resolve(value: T): Boolean {
+    if (!token.compareAndSet(Pending, Resolved(value))) return false
+    onResolve.forEach { it(value) }
+    return true
+  }
+
+  override fun reject(reason: Any?): Boolean {
+    if (!token.compareAndSet(Pending, Rejected(reason))) return false
+    onReject.forEach { it(reason) }
+    return true
+  }
+
+  companion object {
+    /** Create a new promise instance already resolved with the given [value]. */
+    @JvmStatic fun <T> resolved(value: T): JsPromise<T> = JsPromiseImpl(Resolved(value))
+
+    /** Create a new promise instance already rejected with the given [reason]. */
+    @JvmStatic fun <T> rejected(reason: Any? = null): JsPromise<T> = JsPromiseImpl(Rejected(reason))
   }
 }

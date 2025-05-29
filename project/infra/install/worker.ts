@@ -17,7 +17,7 @@ const platformTagRegex = /^(linux|macos|windows)-(amd64|arm64)$/
 const LATEST = "latest"
 
 // Default-latest-version if none is resolvable.
-const DEFAULT_LATEST_VERSION = "1.0.0-beta3"
+const DEFAULT_LATEST_VERSION = "1.0.0-beta4"
 
 // Base URL for GitHub downloads.
 const GITHUB_BASE = "https://github.com/elide-dev/elide/releases/download"

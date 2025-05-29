@@ -29,7 +29,7 @@
 </p>
 
 <p align="center">
-Latest: <code>1.0.0-beta3</code>
+Latest: <code>1.0.0-beta4</code>
 </p>
 <p align="center">
   Learn more at <a href="https://elide.dev">elide.dev</a> | <a href="https://docs.elide.dev">Docs, Guides, and Samples</a>
@@ -113,7 +113,7 @@ We provide a [setup action](https://github.com/marketplace/actions/setup-elide):
   uses: elide-dev/setup-elide@v2
   with:
     # any tag from the `elide-dev/releases` repo; omit for latest
-    version: 1.0.0-beta3
+    version: 1.0.0-beta4
 ```
 
 ### Using Elide via GitHub Codespaces

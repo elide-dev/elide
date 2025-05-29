@@ -134,16 +134,18 @@ import elide.tooling.jvm.javac
 
     companion object {
       // Gather options, inputs, and outputs for an invocation of the Java compiler.
-      @JvmStatic private fun gatherArgs(args: Arguments): Pair<JavaCompilerInputs, JavaCompilerOutputs> {
-        val (sources, outSpec) = jvmStyleArgs(javac, args)
+      @JvmStatic private fun gatherArgs(
+        args: Arguments,
+      ): Triple<JavaCompilerInputs, JavaCompilerOutputs, List<String>> {
+        val (sources, outSpec, allArgs) = jvmStyleArgs(javac, args)
         val outputs = classesDir(Paths.get(outSpec))
-        return Pair(sources(sources.asSequence()), outputs)
+        return Triple(sources(sources.asSequence()), outputs, allArgs)
       }
     }
 
     override fun configure(args: Arguments, environment: Environment): JavaCompiler = gatherArgs(args).let { state ->
       JavaCompiler(
-        args = args,
+        args = Arguments.from(state.third),
         env = environment,
         inputs = state.first,
         outputs = state.second,

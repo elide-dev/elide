@@ -1240,7 +1240,7 @@ public final class elide/tooling/jvm/JavaCompiler : elide/tooling/AbstractTool {
 	public final fun getOutputs ()Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;
 	public final fun getProcessors ()Ljava/util/List;
 	public fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun jvmStyleArgs (Lelide/tool/Tool$CommandLineTool;Lelide/tool/Arguments;)Lkotlin/Pair;
+	public static final fun jvmStyleArgs (Lelide/tool/Tool$CommandLineTool;Lelide/tool/Arguments;)Lkotlin/Triple;
 	public static final fun resolveJavaToolchain (Lelide/tool/Tool$CommandLineTool;)Ljava/nio/file/Path;
 	public static final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
 	public fun supported ()Z
@@ -1249,7 +1249,7 @@ public final class elide/tooling/jvm/JavaCompiler : elide/tooling/AbstractTool {
 public final class elide/tooling/jvm/JavaCompiler$Companion {
 	public final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;
 	public final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;Lelide/tooling/jvm/JavaCompiler$JavaCompilerOutputs;)Lelide/tooling/jvm/JavaCompiler;
-	public final fun jvmStyleArgs (Lelide/tool/Tool$CommandLineTool;Lelide/tool/Arguments;)Lkotlin/Pair;
+	public final fun jvmStyleArgs (Lelide/tool/Tool$CommandLineTool;Lelide/tool/Arguments;)Lkotlin/Triple;
 	public final fun resolveJavaToolchain (Lelide/tool/Tool$CommandLineTool;)Ljava/nio/file/Path;
 	public final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
 }

@@ -16,6 +16,7 @@ import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import java.net.URI
 import java.nio.charset.StandardCharsets
+import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.Locale
@@ -26,6 +27,12 @@ import javax.tools.ToolProvider
 import kotlinx.atomicfu.atomic
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import kotlin.io.path.absolute
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.exists
+import kotlin.io.path.inputStream
+import kotlin.io.path.isReadable
+import kotlin.io.path.isRegularFile
 import elide.runtime.Logging
 import elide.runtime.diag.DiagnosticsContainer
 import elide.runtime.diag.DiagnosticsReceiver
@@ -310,6 +317,8 @@ public val javac: Tool.CommandLineTool = Tool.describe(
 
   /** Factories for configuring and obtaining instances of [JavaCompiler]. */
   public companion object {
+    private val logging by lazy { Logging.of(JavaCompiler::class) }
+
     // Resolve the Java toolchain for the Kotlin compiler.
     @JvmStatic public fun resolveJavaToolchain(tool: Tool.CommandLineTool): Path {
       return Paths.get(
@@ -318,8 +327,51 @@ public val javac: Tool.CommandLineTool = Tool.describe(
       )
     }
 
-    @JvmStatic public fun jvmStyleArgs(tool: Tool.CommandLineTool, args: Arguments): Pair<Sequence<Path>, String> {
-      val argsList = args.asArgumentList()
+    private fun resolveFileArgInput(arg: String): List<String> {
+      return try {
+        Paths.get(arg.drop(1)).let { path ->
+          if (path.isAbsolute) path else Paths.get(System.getProperty("user.dir")).resolve(path)
+        }.absolute().also { path ->
+          when {
+            !path.exists() -> {
+              logging.warn("Path for @-file argument does not exist: {}", path.absolutePathString())
+            }
+            !path.isReadable() -> {
+              logging.warn("Path for @-file argument is not readable: {}", path.absolutePathString())
+            }
+            !path.isRegularFile() -> {
+              logging.warn("Path for @-file argument is not a regular file: {}", path.absolutePathString())
+            }
+          }
+        }.inputStream().bufferedReader(StandardCharsets.UTF_8).use { stream ->
+          stream.lines().toList().filter { it.isNotEmpty() && it.isNotBlank() }
+        }
+      } catch (err: InvalidPathException) {
+        logging.debug("Invalid path for @-file argument: {} (\"{}\")", err, arg)
+        return listOf(arg) // fallback as-is
+      }
+    }
+
+    @JvmStatic public fun jvmStyleArgs(
+      tool: Tool.CommandLineTool,
+      args: Arguments,
+    ): Triple<Sequence<Path>, String, List<String>> {
+      val argsList = args.asArgumentList().flatMap {
+        if (it.startsWith("@")) {
+          resolveFileArgInput(it)
+        } else {
+          listOf(it)
+        }
+      }.flatMap {
+        if (it.startsWith("-d") && " " in it) {
+          // If the argument is `-d` with a space, split it into two parts.
+          it.split(" ", limit = 2).let { parts ->
+            if (parts.size == 2) parts else listOf(it)
+          }
+        } else {
+          listOf(it)
+        }
+      }
       val outSpecPositionMinusOne = argsList.indexOf("-d")
       if (outSpecPositionMinusOne < 0) {
         embeddedToolError(tool, "Please provide `-d` to specify a directory to place output classes in.")
@@ -331,7 +383,7 @@ public val javac: Tool.CommandLineTool = Tool.describe(
       }.map {
         Paths.get(it)
       }
-      return sources.asSequence() to outSpec
+      return Triple(sources.asSequence(), outSpec, argsList)
     }
 
     /**

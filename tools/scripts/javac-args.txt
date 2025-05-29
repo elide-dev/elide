@@ -1,0 +1,2 @@
+-d build/classes-sample
+./tools/scripts/Hello.java

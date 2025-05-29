@@ -447,6 +447,31 @@
       ]
     },
     {
+      "type": "com.google.common.util.concurrent.AbstractFutureState",
+      "fields": [
+        {
+          "name": "listenersField"
+        },
+        {
+          "name": "valueField"
+        },
+        {
+          "name": "waitersField"
+        }
+      ]
+    },
+    {
+      "type": "com.google.common.util.concurrent.AbstractFutureState$Waiter",
+      "fields": [
+        {
+          "name": "next"
+        },
+        {
+          "name": "thread"
+        }
+      ]
+    },
+    {
       "type": "com.oracle.graal.python.PythonLanguageProvider"
     },
     {
@@ -467,7 +492,23 @@
       ]
     },
     {
+      "type": "com.oracle.truffle.api.utilities.CyclicAssumption",
+      "fields": [
+        {
+          "name": "assumption"
+        }
+      ]
+    },
+    {
       "type": "com.oracle.truffle.espresso.EspressoLanguageProvider"
+    },
+    {
+      "type": "com.oracle.truffle.espresso.analysis.hierarchy.SingleImplementor",
+      "fields": [
+        {
+          "name": "currentState"
+        }
+      ]
     },
     {
       "type": "com.oracle.truffle.espresso.jdwp.impl.JDWPInstrumentProvider"
@@ -479,10 +520,38 @@
       "type": "com.oracle.truffle.espresso.resources.runtime.EspressoRuntimeResourceProvider"
     },
     {
+      "type": "com.oracle.truffle.espresso.vm.VM$LongCASProbe",
+      "fields": [
+        {
+          "name": "foo"
+        }
+      ]
+    },
+    {
       "type": "com.oracle.truffle.js.lang.JavaScriptLanguageProvider"
     },
     {
       "type": "com.oracle.truffle.js.parser.GraalJSEvaluator"
+    },
+    {
+      "type": "com.oracle.truffle.js.runtime.builtins.JSFunctionData",
+      "fields": [
+        {
+          "name": "callTarget"
+        },
+        {
+          "name": "constructNewTarget"
+        },
+        {
+          "name": "constructTarget"
+        },
+        {
+          "name": "rootNode"
+        }
+      ]
+    },
+    {
+      "type": "com.oracle.truffle.llvm.nativemode.NativeConfigurationFactory"
     },
     {
       "type": "com.oracle.truffle.llvm.nativemode.resources.SulongNativeLibResourceProvider"
@@ -500,7 +569,43 @@
       "type": "com.oracle.truffle.nfi.backend.libffi.LibFFILanguageProvider"
     },
     {
+      "type": "com.oracle.truffle.nfi.backend.spi.util.ProfiledArrayBuilder$ArraySizeMemento",
+      "fields": [
+        {
+          "name": "assumption"
+        },
+        {
+          "name": "profiledInitialSize"
+        }
+      ]
+    },
+    {
+      "type": "com.oracle.truffle.object.CoreLayoutFactory"
+    },
+    {
       "type": "com.oracle.truffle.object.DynamicObjectLibraryImplGen$DynamicObjectLibraryProvider"
+    },
+    {
+      "type": "com.oracle.truffle.object.ShapeImpl",
+      "fields": [
+        {
+          "name": "leafAssumption"
+        },
+        {
+          "name": "sharedPropertyAssumptions"
+        },
+        {
+          "name": "transitionMap"
+        }
+      ]
+    },
+    {
+      "type": "com.oracle.truffle.object.TrieTransitionMap",
+      "fields": [
+        {
+          "name": "map"
+        }
+      ]
     },
     {
       "type": "com.oracle.truffle.polyglot.JDKSupportLibTruffleAttachResourceProvider"
@@ -585,6 +690,87 @@
     },
     {
       "type": "com.oracle.truffle.tools.profiler.impl.MemoryTracerInstrumentProvider"
+    },
+    {
+      "type": "com.sun.crypto.provider.AESCipher$General",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.ARCFOURCipher",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.ChaCha20Cipher$ChaCha20Poly1305",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.DESCipher",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.DESedeCipher",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.DHParameters",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.GaloisCounterMode$AESGCM",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.HmacCore$HmacSHA384",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.TlsMasterSecretGenerator",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "com.sun.management.GarbageCollectorMXBean"
@@ -2111,6 +2297,24 @@
       ]
     },
     {
+      "type": "elide.runtime.telemetry.client.$DefaultTelemetryClient$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.telemetry.manager.$DefaultTelemetryManager$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.$Elide$Definition",
       "methods": [
         {
@@ -2918,6 +3122,15 @@
       ]
     },
     {
+      "type": "elide.tool.cli.options.$TelemetryOptions$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.options.AbstractEngineOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true
@@ -2979,6 +3192,10 @@
     },
     {
       "type": "elide.tool.cli.options.ProjectOptions",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.options.TelemetryOptions",
       "allDeclaredFields": true
     },
     {
@@ -3046,6 +3263,24 @@
     },
     {
       "type": "elide.tool.io.$RuntimeWorkdirManager$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.listener.$TelemetryEventListener$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.listener.$TelemetryTriggers$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -3642,7 +3877,39 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tooling.runner.AbstractTestRunner",
+      "fields": [
+        {
+          "name": "executing$volatile"
+        },
+        {
+          "name": "executions$volatile"
+        },
+        {
+          "name": "fails$volatile"
+        },
+        {
+          "name": "locked$volatile"
+        },
+        {
+          "name": "passes$volatile"
+        },
+        {
+          "name": "skips$volatile"
+        },
+        {
+          "name": "startTime$volatile"
+        },
+        {
+          "name": "tests$volatile"
+        }
+      ]
+    },
+    {
       "type": "groovy.lang.Closure"
+    },
+    {
+      "type": "io.micrometer.context.ContextRegistry"
     },
     {
       "type": "io.micronaut.aop.internal.InterceptorRegistryBean",
@@ -3695,7 +3962,13 @@
       "type": "io.micronaut.context.env.PropertiesPropertySourceLoader"
     },
     {
-      "type": "io.micronaut.context.env.exp.RandomPropertyExpressionResolver"
+      "type": "io.micronaut.context.env.exp.RandomPropertyExpressionResolver",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "io.micronaut.context.env.yaml.YamlPropertySourceLoader"
@@ -3726,6 +3999,18 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "io.micronaut.core.async.publisher.CompletableFuturePublisher"
+    },
+    {
+      "type": "io.micronaut.core.async.publisher.Publishers$JustPublisher"
+    },
+    {
+      "type": "io.micronaut.core.async.publisher.Publishers$JustThrowPublisher"
+    },
+    {
+      "type": "io.micronaut.core.async.subscriber.Completable"
     },
     {
       "type": "io.micronaut.discovery.$DefaultCompositeDiscoveryClient$Definition",
@@ -3936,6 +4221,339 @@
     },
     {
       "type": "io.micronaut.http.body.$WritableBodyWriter$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$BeanConfiguration",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$DefaultHttpClientConfiguration$DefaultConnectionPoolConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$DefaultHttpClientConfiguration$DefaultHttp2ClientConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$DefaultHttpClientConfiguration$DefaultWebSocketCompressionConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$DefaultHttpClientConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$DefaultLoadBalancerResolver$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientCondition$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceConnectionPoolConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceHttp2ClientConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$DefaultKeyConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$DefaultKeyStoreConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$DefaultTrustStoreConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceSslClientConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientConfiguration$ServiceWebSocketCompressionConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientFactory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientFactory$HealthCheckStarter1$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.$ServiceHttpClientFactory$ServiceInstanceList0$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.bind.$DefaultHttpClientBinderRegistry$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.filter.$DefaultHttpClientFilterResolver$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.interceptor.$HttpClientIntroductionAdvice$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.interceptor.configuration.$DefaultClientVersioningConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.interceptor.configuration.$NamedClientVersioningConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.jdk.$DefaultJdkHttpClientRegistry$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.jdk.$DefaultJdkHttpClientRegistry$HttpClient0$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.jdk.$DefaultJdkHttpClientRegistry$RawHttpClient1$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.jdk.$JdkClientSslBuilder$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.jdk.cookie.$CompositeCookieDecoder$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.jdk.cookie.$DefaultCookieDecoder$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.jdk.cookie.$NettyCookieDecoder$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.loadbalance.$DiscoveryClientLoadBalancerFactory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.loadbalance.$ServiceInstanceListLoadBalancerFactory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.loadbalance.LoadBalancerConverters",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.netty.$DefaultNettyHttpClientRegistry$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.netty.$DefaultNettyHttpClientRegistry$HttpClient0$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.netty.NettyClientHttpRequestFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.client.netty.ssl.$NettyClientSslBuilder$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -4961,6 +5579,285 @@
       ]
     },
     {
+      "type": "io.micronaut.serde.config.$DefaultDeserializationConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.config.$DefaultSerdeConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.config.$DefaultSerializationConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.jackson.$JacksonJsonMapper$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.jackson.$SerdeJacksonConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$DefaultSerdeIntrospections$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$DefaultSerdeRegistry$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$InetAddressSerde6$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$InstantSerde7$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$LocalDateSerde8$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$LocalDateTimeSerde9$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$LocalTimeSerde10$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$OffsetDateTimeSerde11$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$ProvideDeserializer1$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$ProvideObjectArraySerde5$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$ProvideObjectDeserializer4$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$ProvideObjectSerializer3$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$ProvideSerde0$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$ProvideSerializer2$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$YearSerde12$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$LegacyBeansFactory$ZonedDateTimeSerde13$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$java_lang_StackTraceElement$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$java_lang_management_LockInfo$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.$java_lang_management_ThreadInfo$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.bind.$SerdeJsonBeanPropertyBinderExceptionHandler$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.config.$SerdeJsonConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.deserializers.$HealthResultDeserializer$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.deserializers.$HealthResultDeserializer$HealthResultDto$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.serde.support.serdes.$HealthStatusSerde$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.websocket.interceptor.$ClientWebSocketInterceptor$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "io.netty.channel.DefaultFileRegion"
     },
     {
@@ -5020,6 +5917,33 @@
           ]
         }
       ]
+    },
+    {
+      "type": "io.reactivex.Completable"
+    },
+    {
+      "type": "io.reactivex.Maybe"
+    },
+    {
+      "type": "io.reactivex.Observable"
+    },
+    {
+      "type": "io.reactivex.Single"
+    },
+    {
+      "type": "io.reactivex.rxjava3.core.Completable"
+    },
+    {
+      "type": "io.reactivex.rxjava3.core.Flowable"
+    },
+    {
+      "type": "io.reactivex.rxjava3.core.Maybe"
+    },
+    {
+      "type": "io.reactivex.rxjava3.core.Observable"
+    },
+    {
+      "type": "io.reactivex.rxjava3.core.Single"
     },
     {
       "type": "java.io.FileDescriptor"
@@ -5219,6 +6143,9 @@
       "type": "java.lang.annotation.Annotation"
     },
     {
+      "type": "java.lang.invoke.VarHandle"
+    },
+    {
       "type": "java.lang.management.BufferPoolMXBean"
     },
     {
@@ -5268,6 +6195,17 @@
     },
     {
       "type": "java.lang.management.ThreadInfo"
+    },
+    {
+      "type": "java.lang.reflect.AccessibleObject",
+      "methods": [
+        {
+          "name": "canAccess",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        }
+      ]
     },
     {
       "type": "java.math.BigDecimal"
@@ -5322,16 +6260,52 @@
       "type": "java.nio.file.Paths"
     },
     {
+      "type": "java.security.AccessController",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "doPrivileged",
+          "parameterTypes": [
+            "java.security.PrivilegedAction"
+          ]
+        }
+      ]
+    },
+    {
       "type": "java.security.AlgorithmParametersSpi"
     },
     {
       "type": "java.security.KeyStoreSpi"
     },
     {
+      "type": "java.security.MessageDigestSpi"
+    },
+    {
+      "type": "java.security.PrivilegedAction"
+    },
+    {
+      "type": "java.security.cert.PKIXRevocationChecker"
+    },
+    {
+      "type": "java.security.interfaces.DSAPrivateKey"
+    },
+    {
+      "type": "java.security.interfaces.DSAPublicKey"
+    },
+    {
+      "type": "java.security.interfaces.ECPrivateKey"
+    },
+    {
+      "type": "java.security.interfaces.ECPublicKey"
+    },
+    {
       "type": "java.security.interfaces.RSAPrivateKey"
     },
     {
       "type": "java.security.interfaces.RSAPublicKey"
+    },
+    {
+      "type": "java.security.spec.DSAParameterSpec"
     },
     {
       "type": "java.sql.Connection"
@@ -5766,6 +6740,22 @@
       ]
     },
     {
+      "type": "kotlinx.coroutines.AwaitAll",
+      "fields": [
+        {
+          "name": "notCompletedCount$volatile"
+        }
+      ]
+    },
+    {
+      "type": "kotlinx.coroutines.AwaitAll$AwaitAllNode",
+      "fields": [
+        {
+          "name": "_disposer$volatile"
+        }
+      ]
+    },
+    {
       "type": "kotlinx.coroutines.CancellableContinuationImpl",
       "fields": [
         {
@@ -5825,6 +6815,9 @@
           "name": "_rootCause$volatile"
         }
       ]
+    },
+    {
+      "type": "kotlinx.coroutines.flow.Flow"
     },
     {
       "type": "kotlinx.coroutines.internal.ConcurrentLinkedListNode",
@@ -5893,6 +6886,9 @@
           "name": "_size$volatile"
         }
       ]
+    },
+    {
+      "type": "kotlinx.coroutines.reactor.ReactorContext"
     },
     {
       "type": "kotlinx.coroutines.scheduling.CoroutineScheduler",
@@ -6112,6 +7108,888 @@
     },
     {
       "type": "org.apache.maven.repository.internal.VersionsMetadataGeneratorFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.COMPOSITE$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.CONTEXT$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.CompositeSignatures$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.DH$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.DSA$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.DSTU4145$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.Dilithium$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.EC$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.ECGOST$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.EXTERNAL$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.EdEC$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.ElGamal$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.Falcon$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.GM$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.GOST$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.IES$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.LMS$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.MLDSA$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.MLKEM$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.NTRU$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.RSA$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.SLHDSA$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.SPHINCSPlus$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.X509$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.Blake2b$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.Blake2s$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.Blake3$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.DSTU7564$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.GOST3411$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.Haraka$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.Keccak$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.MD2$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.MD4$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.MD5$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.RIPEMD128$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.RIPEMD160$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.RIPEMD256$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.RIPEMD320$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.SHA1$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.SHA224$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.SHA256$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.SHA3$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.SHA384$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.SHA512$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.SM3$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.Skein$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.Tiger$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.digest.Whirlpool$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.drbg.DRBG$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.keystore.BC$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.keystore.BCFKS$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.keystore.PKCS12$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.AES$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.ARC4$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.ARIA$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Blowfish$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.CAST5$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.CAST6$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Camellia$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.ChaCha$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.DES$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.DESede$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.DSTU7624$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.GOST28147$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.GOST3412_2015$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Grain128$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Grainv1$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.HC128$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.HC256$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.IDEA$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Noekeon$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.OpenSSLPBKDF$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.PBEPBKDF1$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.PBEPBKDF2$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.PBEPKCS12$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Poly1305$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.RC2$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.RC5$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.RC6$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Rijndael$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.SCRYPT$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.SEED$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.SM4$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Salsa20$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Serpent$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Shacal2$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.SipHash$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.SipHash128$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Skipjack$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.TEA$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.TLSKDF$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Threefish$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Twofish$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.VMPC$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.VMPCKSA3$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.XSalsa20$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.XTEA$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.symmetric.Zuc$Mappings",
       "methods": [
         {
           "name": "<init>",
@@ -7438,6 +9316,100 @@
       "allDeclaredFields": true
     },
     {
+      "type": "reactor.core.publisher.FlatMapTracker",
+      "fields": [
+        {
+          "name": "size"
+        }
+      ]
+    },
+    {
+      "type": "reactor.core.publisher.Flux"
+    },
+    {
+      "type": "reactor.core.publisher.FluxFlatMap$FlatMapInner",
+      "fields": [
+        {
+          "name": "s"
+        }
+      ]
+    },
+    {
+      "type": "reactor.core.publisher.FluxFlatMap$FlatMapMain",
+      "fields": [
+        {
+          "name": "error"
+        },
+        {
+          "name": "requested"
+        },
+        {
+          "name": "wip"
+        }
+      ]
+    },
+    {
+      "type": "reactor.core.publisher.Mono"
+    },
+    {
+      "type": "reactor.core.publisher.MonoCompletionStage$MonoCompletionStageSubscription",
+      "fields": [
+        {
+          "name": "requestedOnce"
+        }
+      ]
+    },
+    {
+      "type": "reactor.core.publisher.MonoNext$NextSubscriber",
+      "fields": [
+        {
+          "name": "wip"
+        }
+      ]
+    },
+    {
+      "type": "reactor.core.publisher.Operators$MultiSubscriptionSubscriber",
+      "fields": [
+        {
+          "name": "missedProduced"
+        },
+        {
+          "name": "missedRequested"
+        },
+        {
+          "name": "missedSubscription"
+        },
+        {
+          "name": "wip"
+        }
+      ]
+    },
+    {
+      "type": "reactor.core.publisher.Operators$ScalarSubscription",
+      "fields": [
+        {
+          "name": "once"
+        }
+      ]
+    },
+    {
+      "type": "reactor.core.publisher.StrictSubscriber",
+      "fields": [
+        {
+          "name": "error"
+        },
+        {
+          "name": "requested"
+        },
+        {
+          "name": "s"
+        },
+        {
+          "name": "wip"
+        }
+      ]
+    },
+    {
       "type": "sun.management.ClassLoadingImpl"
     },
     {
@@ -7580,7 +9552,90 @@
       ]
     },
     {
+      "type": "sun.security.pkcs12.PKCS12KeyStore",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.pkcs12.PKCS12KeyStore$DualFormatPKCS12",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.DSA$SHA224withDSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.DSA$SHA256withDSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.DSAKeyFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.DSAParameters",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.JavaKeyStore$DualFormatJKS",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.JavaKeyStore$JKS",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "sun.security.provider.NativePRNG",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.security.SecureRandomParameters"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.NativePRNG$NonBlocking",
       "methods": [
         {
           "name": "<init>",
@@ -7600,7 +9655,284 @@
       ]
     },
     {
+      "type": "sun.security.provider.SHA2$SHA224",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA2$SHA256",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA5$SHA384",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA5$SHA512",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.X509Factory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.certpath.PKIXCertPathValidator",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.PSSParameters",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.RSAKeyFactory$Legacy",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.RSAPSSSignature",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.RSASignature$SHA224withRSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.rsa.RSASignature$SHA256withRSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.KeyManagerFactoryImpl$SunX509",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.SSLContextImpl$TLSContext",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.TrustManagerFactoryImpl$PKIXFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.AuthorityInfoAccessExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.AuthorityKeyIdentifierExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.BasicConstraintsExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.CRLDistributionPointsExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.CertificatePoliciesExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.ExtendedKeyUsageExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.IssuerAlternativeNameExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.KeyUsageExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.NetscapeCertTypeExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.PrivateKeyUsageExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.SubjectAlternativeNameExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sun.security.x509.SubjectKeyIdentifierExtension",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Boolean",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
       "type": "sun.util.logging.resources.logging"
+    },
+    {
+      "type": {
+        "proxy": [
+          "java.security.PrivilegedAction"
+        ]
+      }
     },
     {
       "type": {
@@ -7657,6 +9989,12 @@
     },
     {
       "glob": "META-INF/elide/embedded/runtime/js/runtime.json.gz"
+    },
+    {
+      "glob": "META-INF/elide/embedded/runtime/jvm/runtime.json.gz"
+    },
+    {
+      "glob": "META-INF/elide/embedded/runtime/kt/runtime.json.gz"
     },
     {
       "glob": "META-INF/elide/embedded/runtime/python/runtime.json.gz"
@@ -7794,6 +10132,30 @@
       "glob": "META-INF/resources/engine/libtruffleattach/linux/amd64/sha256"
     },
     {
+      "glob": "META-INF/resources/include.sha256"
+    },
+    {
+      "glob": "META-INF/resources/java/espresso-libs/linux/amd64/sha256"
+    },
+    {
+      "glob": "META-INF/resources/java/espresso-runtime-jdk21/linux/amd64/sha256"
+    },
+    {
+      "glob": "META-INF/resources/libgraalpy.sha256"
+    },
+    {
+      "glob": "META-INF/resources/libpython.sha256"
+    },
+    {
+      "glob": "META-INF/resources/linux/amd64/native.sha256"
+    },
+    {
+      "glob": "META-INF/resources/nfi-native/libnfi/linux/amd64/sha256"
+    },
+    {
+      "glob": "META-INF/resources/ni.sha256"
+    },
+    {
       "glob": "META-INF/services/ch.qos.logback.classic.spi.Configurator"
     },
     {
@@ -7801,6 +10163,9 @@
     },
     {
       "glob": "META-INF/services/com.github.ajalt.mordant.terminal.TerminalInterfaceProvider"
+    },
+    {
+      "glob": "META-INF/services/com.oracle.graal.python.builtins.PythonBuiltins"
     },
     {
       "glob": "META-INF/services/com.oracle.truffle.api.TruffleRuntimeAccess"
@@ -7815,6 +10180,9 @@
       "glob": "META-INF/services/com.oracle.truffle.api.library.provider.DefaultExportProvider"
     },
     {
+      "glob": "META-INF/services/com.oracle.truffle.api.object.LayoutFactory"
+    },
+    {
       "glob": "META-INF/services/com.oracle.truffle.api.provider.InternalResourceProvider"
     },
     {
@@ -7822,6 +10190,9 @@
     },
     {
       "glob": "META-INF/services/com.oracle.truffle.js.runtime.Evaluator"
+    },
+    {
+      "glob": "META-INF/services/com.oracle.truffle.llvm.runtime.config.ConfigurationFactory"
     },
     {
       "glob": "META-INF/services/com.oracle.truffle.runtime.EngineCacheSupport"
@@ -7854,6 +10225,9 @@
       "glob": "META-INF/services/io.micronaut.context.ApplicationContextConfigurer"
     },
     {
+      "glob": "META-INF/services/io.micronaut.context.env.PropertyExpressionResolver"
+    },
+    {
       "glob": "META-INF/services/io.micronaut.core.beans.BeanIntrospectionReference"
     },
     {
@@ -7863,10 +10237,16 @@
       "glob": "META-INF/services/io.micronaut.core.optim.StaticOptimizations$Loader"
     },
     {
+      "glob": "META-INF/services/io.micronaut.http.HttpRequestFactory"
+    },
+    {
       "glob": "META-INF/services/java.lang.System$LoggerFinder"
     },
     {
       "glob": "META-INF/services/java.net.spi.InetAddressResolverProvider"
+    },
+    {
+      "glob": "META-INF/services/java.net.spi.URLStreamHandlerProvider"
     },
     {
       "glob": "META-INF/services/java.nio.channels.spi.SelectorProvider"
@@ -7888,6 +10268,9 @@
     },
     {
       "glob": "META-INF/services/kotlin.reflect.jvm.internal.impl.util.ModuleVisibilityHelper"
+    },
+    {
+      "glob": "META-INF/services/kotlinx.coroutines.reactive.ContextInjector"
     },
     {
       "glob": "META-INF/services/org.graalvm.home.HomeFinder"
@@ -7918,6 +10301,558 @@
     },
     {
       "glob": "META-INF/services/org.slf4j.spi.SLF4JServiceProvider"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/PythonBuiltins.class"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenABC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenCODECS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenCOLLECTIONS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenCOLLECTIONS_ABC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenCONTEXTLIB.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenCOPYREG.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenDATETIME.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ALIASES.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ASCII.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_BASE64_CODEC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_BIG5.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_BIG5HKSCS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_BZ2_CODEC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CHARMAP.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP037.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1006.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1026.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1125.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1140.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1250.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1251.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1252.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1253.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1254.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1255.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1256.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1257.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP1258.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP273.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP424.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP437.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP500.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP720.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP737.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP775.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP850.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP852.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP855.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP856.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP857.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP858.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP860.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP861.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP862.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP863.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP864.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP865.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP866.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP869.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP874.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP875.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP932.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP949.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_CP950.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_EUC_JISX0213.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_EUC_JIS_2004.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_EUC_JP.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_EUC_KR.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_GB18030.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_GB2312.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_GBK.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_HEX_CODEC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_HP_ROMAN8.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_HZ.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_IDNA.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO2022_JP.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO2022_JP_1.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO2022_JP_2.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO2022_JP_2004.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO2022_JP_3.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO2022_JP_EXT.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO2022_KR.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_1.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_10.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_11.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_13.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_14.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_15.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_16.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_2.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_3.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_4.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_5.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_6.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_7.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_8.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ISO8859_9.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_JOHAB.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_KOI8_R.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_KOI8_T.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_KOI8_U.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_KZ1048.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_LATIN_1.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_ARABIC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_CROATIAN.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_CYRILLIC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_FARSI.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_GREEK.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_ICELAND.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_LATIN2.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_ROMAN.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_ROMANIAN.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MAC_TURKISH.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_MBCS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_OEM.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_PALMOS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_PTCP154.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_PUNYCODE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_QUOPRI_CODEC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_RAW_UNICODE_ESCAPE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ROT_13.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_SHIFT_JIS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_SHIFT_JISX0213.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_SHIFT_JIS_2004.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_TIS_620.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UNDEFINED.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UNICODE_ESCAPE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_16.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_16_BE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_16_LE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_32.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_32_BE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_32_LE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_7.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_8.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UTF_8_SIG.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_UU_CODEC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENCODINGS_ZLIB_CODEC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenENUM.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenFROZEN_ONLY.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenFUNCTOOLS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGENERICPATH.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY_BUILTINS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY_JAVA.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY_PIP_HOOK.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY_UNICODEDATA.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__POLYGLOT.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__SRE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__SYSCONFIG.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__WEAKREF.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY___GRAALPYTHON__.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenHEAPQ.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenIMPORTLIB_MACHINERY.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenIMPORTLIB_UTIL.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenIMPORTLIB__BOOTSTRAP.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenIMPORTLIB__BOOTSTRAP_EXTERNAL.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenINSPECT.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenIO.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenKEYWORD.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenLOCALE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenNTPATH.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenOPERATOR.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenOS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenPOLYGLOT_ARROW.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenPOSIXPATH.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenRE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenREPRLIB.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenRE__CASEFIX.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenRE__COMPILER.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenRE__CONSTANTS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenRE__PARSER.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenRLCOMPLETER.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenRUNPY.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenSITE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenSRE_COMPILE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenSRE_CONSTANTS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenSRE_PARSE.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenSTAT.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenTYPES.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenWARNINGS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenZIPIMPORT.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_COLLECTIONS_ABC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_PY_ABC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_SITEBUILTINS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_SYSCONFIGDATA.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_WEAKREFSET.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__HELLO__.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__PHELLO__.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___HAM.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___HAM_EGGS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___SPAM.bin"
+    },
+    {
+      "glob": "graalpy_versions"
     },
     {
       "glob": "kotlin/annotation/annotation.kotlin_builtins"
@@ -7968,6 +10903,12 @@
       "glob": "org/apache/maven/model/pom-4.0.0.xml"
     },
     {
+      "glob": "org/graalvm/shadowed/com/ibm/icu/ICUConfig.properties"
+    },
+    {
+      "glob": "org/graalvm/shadowed/com/ibm/icu/impl/data/icudata/uprops.icu"
+    },
+    {
       "glob": "org/jetbrains/kotlin/cli/jvm/compiler/KotlinCoreEnvironment$Companion.class"
     },
     {
@@ -7981,6 +10922,22 @@
     },
     {
       "glob": "resources/releases/element-list-*.txt"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt76b/nfkc.nrm"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt76b/uprops.icu"
+    },
+    {
+      "module": "java.base",
+      "glob": "sun/net/idn/uidna.spp"
+    },
+    {
+      "module": "java.base",
+      "glob": "sun/net/www/content-types.properties"
     },
     {
       "module": "jdk.javadoc",

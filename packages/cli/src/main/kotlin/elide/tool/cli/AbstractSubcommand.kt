@@ -531,21 +531,31 @@ fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputControll
   }
 
   // Send a telemetry event if configured.
+  @Suppress("TooGenericExceptionCaught")
   private fun sendRunEvent(start: TimeSource.Monotonic.ValueTimeMark) {
-    telemetry.sendRunEvent(
-      mode = RunEvent.ExecutionMode.Run,
-      duration = start.elapsedNow(),
-      exitCode = 0,
-    )
+    try {
+      telemetry.sendRunEvent(
+        mode = RunEvent.ExecutionMode.Run,
+        duration = start.elapsedNow(),
+        exitCode = 0,
+      )
+    } catch (err: Throwable) {
+      logging.debug("Failed to send telemetry event: {}", err.message ?: "Unknown error")
+    }
   }
 
   // Send an error telemetry event if configured.
+  @Suppress("TooGenericExceptionCaught")
   private fun sendErrEvent(err: CommandResult.Error, start: TimeSource.Monotonic.ValueTimeMark) {
-    telemetry.sendRunEvent(
-      mode = RunEvent.ExecutionMode.Run,
-      duration = start.elapsedNow(),
-      exitCode = err.exitCode,
-    )
+    try {
+      telemetry.sendRunEvent(
+        mode = RunEvent.ExecutionMode.Run,
+        duration = start.elapsedNow(),
+        exitCode = err.exitCode,
+      )
+    } catch (err: Throwable) {
+      logging.debug("Failed to send telemetry error: {}", err.message ?: "Unknown error")
+    }
   }
 
   /**

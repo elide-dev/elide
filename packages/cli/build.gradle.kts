@@ -750,7 +750,7 @@ val preinitializedContexts = if (!enablePreinit) emptyList() else listOfNotNull(
   "js",
   onlyIf(enablePreinitializeAll && enablePython, "python"),
   onlyIf(enablePreinitializeAll && enableRuby, "ruby"),
-  onlyIf(enablePreinitializeAll && enableJvm, "java"),
+  onlyIf(enablePreinitializeAll && enableJvm && !HostManager.hostIsMac, "java"),
 )
 
 val macOsxPlatform = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform"

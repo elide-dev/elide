@@ -1,5 +1,5 @@
 ARG ELIDE_VERSION=1.0.0-beta5
-ARG ELIDE_DIGEST=d125fb375d1f07587a28a2640e51e74613261268ce72a548f01f04efc56d2913
+ARG ELIDE_DIGEST=506c6a7aec98c7ac8aea10e365ac0706d0eedb70e45158d009695348afe28dca
 
 FROM debian:unstable-slim@sha256:93700abbae646fd44d84e6e9fd85f024e6dd010e4acec250e48fc7d1b3690392 AS base
 
@@ -34,7 +34,7 @@ RUN echo "Installing Elide..." \
   && cd /tmp/elide-install \
   && curl -sSL elide.sh | bash -s - -- \
     --install-rev=1.0.0-beta5 \
-    --install-digest=d125fb375d1f07587a28a2640e51e74613261268ce72a548f01f04efc56d2913 \
+    --install-digest=506c6a7aec98c7ac8aea10e365ac0706d0eedb70e45158d009695348afe28dca \
   && cd - \
   && rm -rf /tmp/elide-install \
   && which elide \

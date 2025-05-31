@@ -269,7 +269,9 @@ public val javac: Tool.CommandLineTool = Tool.describe(
     }
     javacLogger.debug { "Resolving sources" }
     val units = fileManager.getJavaFileObjectsFromPaths(
-      (inputs as JavaCompilerInputs.SourceFiles).files
+      (inputs as JavaCompilerInputs.SourceFiles).files.filter {
+        it.exists() && it.isRegularFile()
+      }
     )
     val compileStart = System.currentTimeMillis()
     val compileEnd: Long
@@ -297,7 +299,7 @@ public val javac: Tool.CommandLineTool = Tool.describe(
         }
       }
     } catch (rxe: RuntimeException) {
-      javacLogger.debug { "Exception while compiling: $rxe" }
+      javacLogger.debug("Exception while compiling: $rxe", rxe)
 
       embeddedToolError(
         javac,

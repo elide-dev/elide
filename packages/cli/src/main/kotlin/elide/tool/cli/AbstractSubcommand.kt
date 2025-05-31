@@ -53,7 +53,9 @@ import elide.tool.listener.TelemetryTriggers
 import elide.tooling.AbstractTool
 import org.graalvm.polyglot.Engine as VMEngine
 
-fun AbstractTool.EmbeddedToolError.render(ctx: AbstractSubcommand.OutputController) {
+fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcommand.OutputController) {
+  logging.debug("Tool error: '$message' (type: '${this::class.simpleName}')", this)
+
   ctx.error(
     "Failed to run '${tool.name}': $message",
     if (ctx.settings.verbose) cause else null,

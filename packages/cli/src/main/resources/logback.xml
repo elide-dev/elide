@@ -106,6 +106,7 @@
   <logger name="elide.tooling.AbstractTool" level="warn" />
   <logger name="elide.exec.ActionScope" level="warn" />
   <logger name="io.micronaut.context.env.DefaultEnvironment" level="off" />
+  <logger name="elide.tooling.jvm.JavaCompiler" level="warn" />
 
   <!-- Server/Tool Logger -->
   <logger name="tool" additivity="false">

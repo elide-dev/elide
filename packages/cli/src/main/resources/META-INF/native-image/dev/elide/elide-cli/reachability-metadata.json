@@ -1147,6 +1147,42 @@
       ]
     },
     {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.webstreams.$TransformStreamIntrinsic$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.webstreams.$TransformStreamIntrinsic$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.webstreams.$WritableStreamIntrinsic$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.webstreams.$WritableStreamIntrinsic$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.runtime.gvm.internals.js.$JsTimerExecutorProviderImpl$Definition",
       "methods": [
         {
@@ -3378,6 +3414,14 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.jvm.JavaCompiler$JavaDiagnosticsReceiver",
+      "fields": [
+        {
+          "name": "errorsSeen$volatile"
         }
       ]
     },
@@ -10210,6 +10254,9 @@
       "glob": "META-INF/services/com.oracle.truffle.runtime.jfr.EventFactory$Provider"
     },
     {
+      "glob": "META-INF/services/com.sun.source.util.Plugin"
+    },
+    {
       "glob": "META-INF/services/elide.runtime.intrinsics.GuestIntrinsic"
     },
     {
@@ -10253,6 +10300,9 @@
     },
     {
       "glob": "META-INF/services/java.nio.file.spi.FileSystemProvider"
+    },
+    {
+      "glob": "META-INF/services/com.sun.tools.javac.platform.PlatformProvider"
     },
     {
       "glob": "META-INF/services/java.time.zone.ZoneRulesProvider"
@@ -10852,6 +10902,18 @@
       "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__PHELLO___SPAM.bin"
     },
     {
+      "glob": "com/sun/tools/javac/resources/compiler_en.properties"
+    },
+    {
+      "glob": "com/sun/tools/javac/resources/compiler_en_US.properties"
+    },
+    {
+      "glob": "com/sun/tools/javac/resources/javac_en.properties"
+    },
+    {
+      "glob": "com/sun/tools/javac/resources/javac_en_US.properties"
+    },
+    {
       "glob": "graalpy_versions"
     },
     {
@@ -10940,6 +11002,22 @@
       "glob": "sun/net/www/content-types.properties"
     },
     {
+      "module": "jdk.compiler",
+      "glob": "com/sun/tools/javac/resources/compiler_en.properties"
+    },
+    {
+      "module": "jdk.compiler",
+      "glob": "com/sun/tools/javac/resources/compiler_en_US.properties"
+    },
+    {
+      "module": "jdk.compiler",
+      "glob": "com/sun/tools/javac/resources/javac_en.properties"
+    },
+    {
+      "module": "jdk.compiler",
+      "glob": "com/sun/tools/javac/resources/javac_en_US.properties"
+    },
+    {
       "module": "jdk.javadoc",
       "glob": "jdk/javadoc/internal/doclets/formats/html/resources/**"
     },
@@ -10975,6 +11053,18 @@
       "name": "com.sun.tools.javac.resources.compiler",
       "locales": [
         "en",
+        "en-US"
+      ]
+    },
+    {
+      "name": "com.sun.tools.javac.resources.ct",
+      "locales": [
+        "en-US"
+      ]
+    },
+    {
+      "name": "com.sun.tools.javac.resources.javac",
+      "locales": [
         "en-US"
       ]
     },

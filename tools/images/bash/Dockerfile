@@ -1,4 +1,4 @@
-ARG ELIDE_VERSION=1.0.0-beta4
+ARG ELIDE_VERSION=1.0.0-beta5
 ARG ELIDE_DIGEST=d125fb375d1f07587a28a2640e51e74613261268ce72a548f01f04efc56d2913
 
 FROM debian:unstable-slim@sha256:93700abbae646fd44d84e6e9fd85f024e6dd010e4acec250e48fc7d1b3690392 AS base
@@ -6,7 +6,7 @@ FROM debian:unstable-slim@sha256:93700abbae646fd44d84e6e9fd85f024e6dd010e4acec25
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime with Bash"
 LABEL org.opencontainers.image.description="Elide runtime CLI as a container image, with Bash and several tools"
-LABEL org.opencontainers.image.version=1.0.0-beta4
+LABEL org.opencontainers.image.version=1.0.0-beta5
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=debian:unstable-slim
 LABEL org.opencontainers.image.base.digest=sha256:93700abbae646fd44d84e6e9fd85f024e6dd010e4acec250e48fc7d1b3690392
@@ -33,7 +33,7 @@ RUN echo "Installing Elide..." \
   && mkdir -p /tmp/elide-install \
   && cd /tmp/elide-install \
   && curl -sSL elide.sh | bash -s - -- \
-    --install-rev=1.0.0-beta4 \
+    --install-rev=1.0.0-beta5 \
     --install-digest=d125fb375d1f07587a28a2640e51e74613261268ce72a548f01f04efc56d2913 \
   && cd - \
   && rm -rf /tmp/elide-install \

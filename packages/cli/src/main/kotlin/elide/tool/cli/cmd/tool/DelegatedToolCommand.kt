@@ -173,7 +173,7 @@ abstract class DelegatedToolCommand<T, C> (
           }
         }.onFailure {
           when (val exc = it) {
-            is AbstractTool.EmbeddedToolError -> exc.render(outputController(state.state)).also {
+            is AbstractTool.EmbeddedToolError -> exc.render(logging, outputController(state.state)).also {
               errExitCode = exc.exitCode
               exc.message?.let { exitMessage = it }
             }

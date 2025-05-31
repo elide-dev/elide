@@ -728,6 +728,7 @@ val enabledFeatures = listOfNotNull(
   "elide.tool.feature.LocalInferenceFeature",
   "elide.runtime.feature.engine.NativeTraceFeature",
   "elide.tool.feature.DisallowedHostJvmFeature",
+  "elide.tool.feature.FileSystemsFeature",
   onlyIf(enablePython, "elide.runtime.feature.python.PythonFeature"),
   onlyIf(enableNativeTransportV2, "elide.runtime.feature.engine.NativeTransportFeature"),
   onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),
@@ -1118,6 +1119,10 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "jdk.internal.jrtfs.SystemImage",
   "jdk.internal.jimage.BasicImageReader",
   "jdk.internal.jimage.ImageReader${'$'}SharedImageReader",
+
+  // --- Java Compiler Accouterments -----
+
+  "com.sun.tools.javac.platform.JDKPlatformProvider",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()
@@ -1204,6 +1209,7 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
+  "-J--add-exports=jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
   "-H:+PreserveFramePointer",
   "-H:+ReportExceptionStackTraces",
@@ -1741,7 +1747,7 @@ graalvmNative {
     builtinCallerFilter = true
     builtinHeuristicFilter = true
     trackReflectionMetadata = true
-    enableExperimentalPredefinedClasses = true
+    enableExperimentalPredefinedClasses = false
     enableExperimentalUnsafeAllocationTracing = true
 
     enabled = (

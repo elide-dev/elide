@@ -10,25 +10,26 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
 @file:Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
 
-package elide.runtime.gvm.kotlin.feature
+package elide.tool.feature
 
 import com.oracle.svm.core.jdk.FileSystemProviderSupport
-import jdk.internal.jrtfs.JrtFileSystemProvider
+import jdk.nio.zipfs.ZipFileSystemProvider
 import org.graalvm.nativeimage.hosted.Feature
 import elide.runtime.feature.FrameworkFeature
 
 /**
- * ## Kotlin Compiler Feature
+ * ## File Systems Feature
  *
- * Configures the Native Image build to be aware of Kotlin language resources that must be installed alongside Elide at
- * runtime to support compilation of Kotlin source.
+ * Configures the Native Image build to support various file system providers which are required for the proper
+ * operation of the Elide binary.
  */
-@Suppress("unused") internal class KotlinCompilerFeature : FrameworkFeature {
-  override fun getDescription(): String = "Configures the Kotlin compiler"
+@Suppress("unused") internal class FileSystemsFeature : FrameworkFeature {
+  override fun getDescription(): String = "Configures filesystem support"
 
   override fun afterRegistration(access: Feature.AfterRegistrationAccess) {
-    FileSystemProviderSupport.register(JrtFileSystemProvider())
+    FileSystemProviderSupport.register(ZipFileSystemProvider())
   }
 }

@@ -58,10 +58,13 @@ import elide.runtime.plugins.AbstractLanguagePlugin
       "java.SoftExit",
       "java.SplitMethodHandles",
     )
-    builder.option(
-      "java.NativeBackend",
-      config.nativeBackend,
-    )
+    if (System.getProperty("os.name")?.lowercase()?.contains("mac") != true) {
+      // don't activate native backend options on macOS, since these are linux-specific for now
+      builder.option(
+        "java.NativeBackend",
+        config.nativeBackend,
+      )
+    }
     if (config.maxTotalNativeBufferSize != null) {
       builder.option(
         "java.MaxDirectMemorySize",

@@ -292,3 +292,6 @@ buildless {
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("GROOVY_COMPILATION_AVOIDANCE")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+val elidePluginVersion: String by settings
+apply(from = "https://gradle.elide.dev/$elidePluginVersion/elide.gradle.kts")

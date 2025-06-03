@@ -116,6 +116,22 @@ We provide a [setup action](https://github.com/marketplace/actions/setup-elide):
     version: 1.0.0-beta5
 ```
 
+### Using Elide from Gradle
+
+We provide an experimental [Gradle plugin](https://github.com/elide-dev/gradle) which can:
+
+- Accelerate `javac` compilations by up to 20x (drop-in!) with identical inputs and outputs
+- Accelerate downloading of Maven dependencies
+
+The plugin documentation explains how it works. By native-image compiling tools like `javac`, JIT warmup is skipped, potentially yielding significant performance gains for projects under 10,000 classes.
+
+[Installation in Gradle](https://github.com/elide-dev/gradle)
+```kotlin
+plugins {
+  alias(elideRuntime.plugins.elide)
+}
+```
+
 ### Using Elide via GitHub Codespaces
 
 We provide a [GitHub Codespace](https://github.com/features/codespaces) with Elide pre-installed. You can click below to try it out, right from your browser:

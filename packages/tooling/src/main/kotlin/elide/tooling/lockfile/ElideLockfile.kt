@@ -172,7 +172,7 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
      *
      * Fingerprint singleton which represents no content; this is used when fingerprinting absent data.
      */
-    public data object NoContent : Fingerprint {
+    @Serializable public data object NoContent : Fingerprint {
       override fun asBytes(): ByteString = ByteString()
     }
 
@@ -181,7 +181,7 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
      *
      * Holds raw fingerprint data; used only when reading a lockfile, when context isn't important.
      */
-    public class RawFingerprint private constructor (
+    @Serializable public class RawFingerprint private constructor (
       private val data: ByteArray,
     ): Fingerprint, JSerializable {
       public companion object {

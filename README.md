@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-<b>Elide is a fast polyglot runtime, combining support for JavaScript, TypeScript, and Python.</b>
+<b>Elide is a fast batteries-included runtime, combining support for Kotlin, JavaScript, TypeScript, and Python.</b>
 <br />
 <br />
 <i>elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge.</i>
@@ -25,7 +25,8 @@
   <a href="https://262.ecma-international.org/13.0/"><img src="https://img.shields.io/badge/-ECMA2024-blue.svg?logo=javascript&logoColor=white" /></a>
   <a href="https://typescriptlang.org"><img src="https://img.shields.io/badge/-TypeScript-blue.svg?logo=typescript&logoColor=white" /></a>
   <img alt="Python 3.11.x" src="https://img.shields.io/badge/Python%203.11.x-green?style=flat&logo=python&logoColor=white&color=blue">
-  <a href="https://pkl-lang.org"><img src="https://img.shields.io/badge/-Apple%20Pkl-blue.svg?logo=apple&logoColor=white" /></a>
+  <a href="https://pkl-lang.org"><img src="https://img.shields.io/badge/-Pkl-blue.svg?logo=apple&logoColor=white" /></a>
+  <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/-Kotlin-blue.svg?logo=kotlin&logoColor=white" /></a>
 </p>
 
 <p align="center">
@@ -44,7 +45,7 @@ Latest: <code>1.0.0-beta5</code>
 
 Elide is like Node or Python. Use it to run things:
 ```shell
-> elide ./my-code.{ts,js,py}
+> elide ./my-code.{ts,js,py,kts,kt}
 ```
 
 You can use Node APIs. You can even mix languages:
@@ -73,6 +74,41 @@ def greeting(name = "Elide"):
 > elide ./sample.mts
 Hello, Elide! The answer is 42
 ```
+
+
+### Kotlin as a first-class citizen
+
+Elide can run Kotlin with no prior build step, can build Java code identically to `javac`, and can build Kotlin code identically to `kotlinc`.
+
+![elide-projects](https://github.com/user-attachments/assets/489e1a69-d2b8-4242-82be-f7cfcd5ccbd1)
+
+- KotlinX is supported out of the box with no need to install dependencies
+- Build Kotlin to JVM bytecode, run tests, and install from Maven, all without verbose configuration
+
+### Pkl as a manifest format
+
+Elide uses [Apple's Pkl](https://pkl-lang.org) as a dialect for project manifests. This is like Elide's equivalent of `package.json` or `pom.xml`. Here's an example:
+
+```pkl
+amends "elide:project.pkl"
+
+name = "elide-test-ktjvm"
+description = "Example project using Elide with Kotlin/JVM."
+
+dependencies {
+  maven {
+    packages {
+      // Guava
+      "com.google.guava:guava:33.4.8-jre"
+    }
+  }
+}
+```
+
+This is the manifest used above :point_up: in the _Kotlin as a first-class citizen_ sample.
+
+> [!NOTE]
+> See the full sources for the `ktjvm` sample [here](https://github.com/elide-dev/elide/tree/main/packages/cli/src/projects/ktjvm)
 
 Read more about Elide's [feature highlights](https://elide.dev)
 

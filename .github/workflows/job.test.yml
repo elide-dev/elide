@@ -184,6 +184,7 @@ jobs:
             dc.services.visualstudio.com:443
             dl.elide.dev:443
             dl.google.com:443
+            gradle.elide.dev:443
             dl.less.build:443
             download-cdn.jetbrains.com:443
             download.jetbrains.com:443

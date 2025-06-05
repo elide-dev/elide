@@ -90,6 +90,7 @@ jobs:
             maven.elide.dev:443
             maven.pkg.jetbrains.space:443
             maven.pkg.st:443
+            gradle.elide.dev:443
             nodejs.org:443
             objects.githubusercontent.com:443
             oss.sonatype.org:443

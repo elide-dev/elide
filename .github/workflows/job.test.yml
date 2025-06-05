@@ -128,7 +128,7 @@ name: Tests
         required: false
         description: "Gradle cache key"
       SONAR_TOKEN:
-        required: true
+        required: false
         description: "Sonar token"
 
 permissions:
@@ -356,8 +356,6 @@ jobs:
       - name: "👨‍🔬 Test: Runtime"
         env:
           CI: true
-          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         run: |
           ./gradlew \
@@ -374,22 +372,6 @@ jobs:
             -x spotlessCheck \
             -Pelide.ci=true \
             -PbuildDocs=false
-      - name: "Analysis: Sonar"
-        if: false
-        continue-on-error: true
-        env:
-          CI: true
-          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          TEST_EXCEPTIONS: true
-        run: |
-          ./gradlew \
-              sonar \
-              --build-cache \
-              --dependency-verification=lenient \
-              -x apiCheck \
-              -Pelide.ci=true \
-              -PbuildDocs=false
       - name: "Artifact: Reports"
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -595,7 +577,6 @@ jobs:
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         with:
           cache-read-only: true

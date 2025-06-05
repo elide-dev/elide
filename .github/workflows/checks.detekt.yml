@@ -72,6 +72,7 @@ jobs:
             keys.openpgp.org:443
             keyserver.ubuntu.com:443
             maven.elide.dev:443
+            gradle.elide.dev:443
             maven.pkg.jetbrains.space:443
             maven.pkg.st:443
             objects.githubusercontent.com:443

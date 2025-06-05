@@ -1766,6 +1766,7 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$NoContent : 
 	public fun asBytes ()Lkotlinx/io/bytestring/ByteString;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -1811,9 +1812,20 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerpri
 	public static final fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
 }
 
+public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
 public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint$Companion {
 	public final fun getSerialVersionUID ()J
 	public final fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue : elide/tooling/lockfile/ElideLockfile$Fingerprint, java/io/Serializable {

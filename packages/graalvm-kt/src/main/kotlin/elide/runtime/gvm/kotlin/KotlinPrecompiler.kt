@@ -74,7 +74,7 @@ public fun Diagnostic.Companion.fromKotlincDiagnostic(
 // Implements a precompiler which compiles Kotlin to Java bytecode.
 public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinRunnable> {
   // Embedded Kotlin version.
-  public const val KOTLIN_VERSION: String = "2.2.0-RC"
+  public const val KOTLIN_VERSION: String = "2.2.0-RC2"
 
   private val kotlinVerbose by lazy {
     System.getProperty("elide.kotlin.verbose") == "true"

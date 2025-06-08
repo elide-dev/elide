@@ -128,6 +128,12 @@ import elide.tooling.kotlin.kotlinc
     @CommandLine.Spec override lateinit var spec: CommandLine.Model.CommandSpec
     @CommandLine.Parameters @Suppress("unused") lateinit var allParams: List<String>
 
+    @CommandLine.Option(
+      names = ["--no-default-plugins"],
+      description = ["Disable default suite of Kotlin Compiler plugins"],
+    )
+    var noDefaultPlugins: Boolean = false
+
     companion object {
       // Gather options, inputs, and outputs for an invocation of the Kotlin compiler.
       @JvmStatic private fun gatherArgs(args: Arguments): Pair<KotlinCompilerInputs, KotlinCompilerOutputs> {
@@ -147,7 +153,12 @@ import elide.tooling.kotlin.kotlinc
           env = environment,
           inputs = state.first,
           outputs = state.second,
-        )
+        ) {
+          // configure default plugins
+          if (!noDefaultPlugins) {
+            KotlinCompiler.configureDefaultPlugins(this)
+          }
+        }
       }
     }
 

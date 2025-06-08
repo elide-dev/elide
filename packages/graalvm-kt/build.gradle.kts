@@ -65,17 +65,35 @@ val javacFlags = listOf(
   "--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
 )
 
-fun Configuration.embeddedConfiguration() {
+fun Configuration.embeddedConfiguration(kotlin: Boolean = false) {
   isCanBeConsumed = true
 
   resolutionStrategy {
     failOnDynamicVersions()
     failOnNonReproducibleResolution()
   }
+
+  if (kotlin) {
+    listOf(
+      "org.jetbrains.kotlin" to "kotlin-gradle-plugin-api",
+      "org.jetbrains.kotlin" to "kotlin-gradle-plugin-model",
+    ).forEach {
+      exclude(group = it.first, module = it.second)
+    }
+  }
+
+  attributes {
+    if (kotlin) {
+      attributes.attribute(
+        org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.attribute,
+        org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType.jvm
+      )
+    }
+  }
 }
 
 // exported to other projects
-val embeddedKotlin: Configuration by configurations.creating { embeddedConfiguration() }
+val embeddedKotlin: Configuration by configurations.creating { embeddedConfiguration(kotlin = true) }
 val embeddedJava: Configuration by configurations.creating { embeddedConfiguration() }
 
 val embeddedKotlinRuntime = layout.projectDirectory.file(
@@ -108,6 +126,7 @@ dependencies {
   implementation(libs.kotlin.scripting.jvm.host)
   implementation(libs.kotlin.scripting.compiler.embeddable)
   implementation(libs.kotlin.compiler.embedded)
+  implementation(libs.kotlin.serialization.embedded)
   implementation(libs.kotlin.scripting.dependencies)
   implementation(libs.kotlin.scripting.dependencies.maven) {
     exclude(group = "com.google.inject", module = "guice")
@@ -143,6 +162,9 @@ dependencies {
   embeddedKotlin(libs.junit.platform.console)
   embeddedKotlin(libs.junit.platform.engine)
   embeddedKotlin(files(embeddedKotlinRuntime))
+
+  // @TODO(sgammon): needed at build time, but not runtime
+  embeddedKotlin(libs.kotlin.serialization.embedded)
 
   embeddedJava(libs.jacoco.agent)
   embeddedJava(libs.junit.jupiter.api)
@@ -283,7 +305,7 @@ fun indexedDeps(cfg: Configuration): KotlinResourceIndex {
     }
     val b64 = Base64.getEncoder().encodeToString(fingerprint)
     if (b64 in seenHashes) {
-      error("Hash $b64 already seen")
+      error("Hash $b64 already seen: ${dep.absolutePath}")
     } else {
       seenHashes.add(b64)
     }

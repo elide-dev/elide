@@ -291,7 +291,10 @@ public data class ElidePackageManifest(
     val injection: Boolean = true,
     val testing: Boolean = true,
     val kotlinx: Boolean = true,
-    val serialization: Boolean = kotlinx,
+    val enableDefaultPlugins: Boolean = true,
+    val experimental: Boolean = false,
+    val incremental: Boolean = true,
+    val serialization: Boolean = kotlinx && enableDefaultPlugins && experimental,
     val coroutines: Boolean = kotlinx,
     val autoClasspath: Boolean = true,
   )

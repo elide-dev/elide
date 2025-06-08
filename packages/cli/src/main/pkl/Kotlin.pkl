@@ -78,11 +78,20 @@ class KotlinFeatureOptions {
   /// Whether to enable Kotlin's test support features.
   testing: Boolean = true
 
+  /// Whether to enable incremental compilation for Kotlin.
+  incremental: Boolean = true
+
   /// Whether to enable KotlinX dependencies automatically on the classpath.
   kotlinx: Boolean = true
 
+  /// Whether to enable the default suite of built-in plugins for the Kotlin compiler.
+  enableDefaultPlugins: Boolean = true
+
+  /// Whether to allow use of experimental features (i.e. compiler plugins).
+  experimental: Boolean = false
+
   /// Enable or disable KotlinX serialization support.
-  serialization: Boolean = kotlinx
+  serialization: Boolean = kotlinx && enableDefaultPlugins && experimental
 
   /// Enable or disable KotlinX Coroutines support.
   coroutines: Boolean = kotlinx

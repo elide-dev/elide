@@ -10,6 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:Suppress("deprecation")
+
 package elide.tooling.kotlin
 
 import com.github.ajalt.mordant.rendering.TextColors
@@ -23,11 +25,20 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity.EXCEPTIO
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
+import org.jetbrains.kotlin.com.intellij.openapi.Disposable
+import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
+import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
+import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.incremental.destinationAsFile
+import org.jetbrains.kotlin.util.ServiceLoaderLite
 import java.io.Closeable
 import java.lang.IllegalArgumentException
+import java.lang.ref.WeakReference
 import java.net.URI
+import java.net.URLClassLoader
+import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.LinkedList
@@ -42,6 +53,8 @@ import elide.runtime.diag.Diagnostic
 import elide.runtime.diag.DiagnosticsContainer
 import elide.runtime.diag.DiagnosticsReceiver
 import elide.runtime.diag.DiagnosticsSuite
+import elide.runtime.gvm.kotlin.KotlinCompilerConfig
+import elide.runtime.gvm.kotlin.KotlinCompilerConfig.KotlinBuiltinPlugin
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.runtime.gvm.kotlin.KotlinPrecompiler.KOTLIN_VERSION
 import elide.runtime.gvm.kotlin.fromKotlincDiagnostic
@@ -190,6 +203,10 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       container.report(
         Diagnostic.fromKotlincDiagnostic(severity, message, location)
       )
+      if (message == "Argument -Xcompiler-plugin is experimental") {
+        // skip this message, since we use this flag from internals.
+        return
+      }
 
       val msgBuilder = StringBuilder()
       val kotlincTag = TextStyles.dim("[kotlinc:${severityHighlighted}]")
@@ -250,9 +267,6 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
   // Kotlin compiler.
   private val ktCompiler by lazy { K2JVMCompiler() }
 
-  // Logging.
-  private val ktLogger by lazy { Logging.of(KotlinCompiler::class) }
-
   override fun supported(): Boolean = kotlinIsSupported
 
   /**
@@ -295,6 +309,92 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
 
   /** Factories for configuring and obtaining instances of [KotlinCompiler]. */
   public companion object {
+    // Logging.
+    @JvmStatic private val ktLogger by lazy { Logging.of(KotlinCompiler::class) }
+
+    @JvmStatic private fun debugLog(message: String) {
+      if (KOTLINC_DEBUG_LOGGING) {
+        System.err.println("[kotlinc:debug] $message")
+      }
+    }
+
+    init {
+      initializeKotlinCompilerPlugins()
+    }
+
+    private fun createClassLoader(classpath: Iterable<Path>, parentDisposable: Disposable): URLClassLoader {
+      val classLoader = URLClassLoader(
+        classpath.map { it.toFile().toURI().toURL() }.toTypedArray(), this::class.java.classLoader
+      )
+      Disposer.register(parentDisposable, UrlClassLoaderDisposable(classLoader))
+      return classLoader
+    }
+
+    private lateinit var compilerServices: Services
+
+    @JvmStatic internal fun resolveCompilerServices(): Services = compilerServices
+
+    @Suppress("TooGenericExceptionCaught")
+    @OptIn(ExperimentalCompilerApi::class)
+    @JvmStatic private fun initializeKotlinCompilerPlugins() {
+      try {
+        val rootDisposable = Disposer.newDisposable("kotlinc")
+        val kotlinClassPath = Files.list(Paths.get(System.getProperty("elide.gvmResources"))
+             .resolve("kotlin")
+             .resolve(KotlinLanguage.VERSION)
+             .resolve("lib")
+        ).toList()
+
+        val classLoader = createClassLoader(
+          kotlinClassPath,
+          rootDisposable,
+        )
+
+        // load services eagerly
+        debugLog("Building Kotlin compiler services")
+        buildList<Any> {
+          addAll(ServiceLoaderLite.loadImplementations(ComponentRegistrar::class.java, classLoader))
+          addAll(ServiceLoaderLite.loadImplementations(CompilerPluginRegistrar::class.java, classLoader))
+        }.let {
+          if (it.isEmpty()) {
+            error(
+              "No Kotlin compiler plugins found; this is an error."
+            )
+          } else {
+            val size = it.size
+            Logging.root().debug { "Kotlin compiler plugins loaded: $it" }
+            Services.Builder().apply {
+              it.forEach { svc ->
+                register(svc::class.java as Class<Any>, svc)
+              }
+            }.build().let {
+              debugLog("Registered $size Kotlin compiler plugins")
+              compilerServices = it
+            }
+          }
+        }
+      } catch (err: Throwable) {
+        // if we fail to initialize the compiler, we should log this and exit.
+        val msg = "Failed to initialize Kotlin compiler: ${err.message}"
+        Logging.of(KotlinCompiler::class).error(msg, err)
+        error(msg)
+      }
+    }
+
+    /**
+     * Configure the default suite of plugins supported by the Kotlin compiler.
+     *
+     * @param config Arguments to configure the Kotlin compiler.
+     * @return Set of plugins which were configured.
+     */
+    @JvmStatic public fun configureDefaultPlugins(config: K2JVMCompilerArguments): Set<KotlinBuiltinPlugin> {
+      val defaultPlugins = KotlinCompilerConfig.DEFAULT_PLUGINS
+      defaultPlugins.forEach { plugin ->
+        plugin.apply(config, Statics.resourcesPath)
+      }
+      return defaultPlugins
+    }
+
     /**
      * Create inputs for the Kotlin compiler which include the provided source paths.
      *
@@ -402,12 +502,6 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     }
   }
 
-  private fun debugLog(message: String) {
-    if (KOTLINC_DEBUG_LOGGING) {
-      ktLogger.debug("[kotlinc:debug] $message")
-    }
-  }
-
   @Suppress("TooGenericExceptionCaught")
   override suspend fun invoke(state: EmbeddedToolState): Tool.Result {
     debugLog("Preparing Kotlin Compiler invocation")
@@ -420,9 +514,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     val kotlinMajorMinor = KOTLIN_VERSION.substringBeforeLast('.')
     debugLog("Kotlin version: $kotlinMajorMinor")
 
-    val svcs = Services.EMPTY
-    debugLog("Compiler services: $svcs")
-
+    val svcs = resolveCompilerServices()
     val renderCtx = ArgumentContext.of(
       argSeparator = ' ',
       kvToken = ' ',
@@ -510,5 +602,17 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     }
     debugLog("Kotlin compiler invocation complete")
     return Tool.Result.Success
+  }
+
+  internal class UrlClassLoaderDisposable(classLoader: URLClassLoader) : Disposable {
+    private val classLoaderRef: WeakReference<URLClassLoader> = WeakReference(classLoader)
+
+    override fun dispose() {
+      val classLoader = classLoaderRef.get()
+      if (classLoader != null) {
+        classLoader.close()
+        classLoaderRef.clear()
+      }
+    }
   }
 }

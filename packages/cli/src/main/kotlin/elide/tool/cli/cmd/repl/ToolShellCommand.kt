@@ -1710,6 +1710,7 @@ internal class ToolShellCommand @Inject constructor(
     // @TODO: use manifest to resolve versions
     val kotlinVersion = KotlinLanguage.VERSION
     val coroutinesVersion = KotlinLanguage.COROUTINES_VERSION
+    val serializationVersion = KotlinLanguage.SERIALIZATION_VERSION
 
     return sequenceOf(
       langHomeResources.resolve("elide-kotlin.jar"),
@@ -1718,6 +1719,8 @@ internal class ToolShellCommand @Inject constructor(
       langHomeResources.resolve("kotlin-stdlib.jar"),
       langHomeResources.resolve("kotlin-reflect.jar"),
       langHomeResources.resolve("kotlin-script-runtime.jar"),
+      langHomeResources.resolve("kotlinx-serialization-core-jvm-$serializationVersion.jar"),
+      langHomeResources.resolve("kotlinx-serialization-json-jvm-$serializationVersion.jar"),
     ).plus(sequence {
       if (testMode()) {
         yield(langHomeResources.resolve("elide-test.jar"))

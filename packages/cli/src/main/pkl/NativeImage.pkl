@@ -1,0 +1,27 @@
+/// Describes Native Image configurations and artifacts for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.nativeImage
+
+import "Artifacts.pkl" as _artifacts
+
+/// Specifies the layout of options for a Native Image.
+open class NativeImageOptions {
+  /// Extra flags to pass to the Native Image compiler; added to all project targets.
+  args: Listing<String> = new {}
+}
+
+/// Configures Native Image generation settings, project-wide.
+class NativeImageSettings extends NativeImageOptions {}
+
+/// Describes a Native Image artifact within an Elide project.
+class NativeImage extends _artifacts.Artifact {
+  /// Entrypoint class for the Native Image. If the class is within a JPMS module, the module should be specified in the
+  /// `moduleName` field.
+  entrypoint: String?
+
+  /// Module where the entrypoint class is located, if applicable.
+  moduleName: String?
+
+  /// Options which apply to this artifact only.
+  options: NativeImageOptions = new {}
+}

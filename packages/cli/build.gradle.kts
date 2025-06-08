@@ -138,6 +138,7 @@ val enablePreinitializeAll = true
 val enableExperimental = false
 val enableExperimentalLlvmBackend = false
 val enableExperimentalLlvmEdge = false
+val enableEmbeddedSvm = true
 val enableFfm = hostIsLinux && System.getProperty("os.arch") != "aarch64"
 val enableEmbeddedResources = false
 val enableResourceFilter = false
@@ -147,7 +148,6 @@ val enableJpms = false
 val enableConscrypt = false
 val enableBouncycastle = false
 val enableEmbeddedJvm = false
-val enableEmbeddedBuilder = false
 val enableBuildReport = true
 val enableHeapReport = false
 val enableG1 = false
@@ -227,6 +227,53 @@ val jvmOnlyCompileArgs: List<String> = listOfNotNull(
   // Nothing at this time.
 )
 
+// Modules for SVM exports.
+val svmModules = "com.oracle.graal.graal_enterprise,com.oracle.svm.svm_enterprise"
+
+// JPMS add-on arguments for SVM builder stuff
+val jpmsSvmArgs = listOf(
+  "jdk.graal.compiler" to "jdk.graal.compiler.options",
+  "java.base" to "jdk.internal.module",
+  "jdk.internal.vm.ci" to "jdk.vm.ci.meta",
+  "jdk.internal.vm.ci" to "jdk.vm.ci.code",
+  "jdk.graal.compiler" to "jdk.graal.compiler.util",
+  "jdk.graal.compiler" to "jdk.graal.compiler.serviceprovider",
+  "java.base" to "jdk.internal.jimage",
+  "org.graalvm.nativeimage.builder" to "com.oracle.svm.hosted",
+  "org.graalvm.nativeimage.builder" to "com.oracle.svm.core",
+  "org.graalvm.nativeimage.builder" to "com.oracle.svm.core.util",
+).map {
+  "--add-exports=${it.first}/${it.second}=ALL-UNNAMED"
+}.plus(
+  // `--add-opens` amendments, where reflection is required for SVM's build driver
+  listOf(
+    "org.graalvm.nativeimage.builder" to "com.oracle.svm.hosted",
+  ).map {
+    "--add-opens=${it.first}/${it.second}=ALL-UNNAMED"
+  }
+).plus(
+  listOf(
+    ("java.base" to "jdk.internal.module") to "org.graalvm.nativeimage.base",
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.meta") to "org.graalvm.nativeimage.pointsto",
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.code") to "org.graalvm.nativeimage.pointsto",
+    ("java.base" to "jdk.internal.jimage") to "org.graalvm.nativeimage.driver",
+    ("java.base" to "jdk.internal.misc") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.aarch64") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.amd64") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.code.site") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.code") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.common") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.hotspot") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.meta") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.riscv64") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.runtime") to svmModules,
+    ("jdk.internal.vm.ci" to "jdk.vm.ci.services") to svmModules,
+    // ("" to "") to "",
+  ).map {
+    "--add-exports=${it.first.first}/${it.first.second}=${it.second}"
+  }
+)
+
 val jvmCompileArgs = listOfNotNull(
   "--add-modules=jdk.unsupported",
   "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
@@ -236,9 +283,11 @@ val jvmCompileArgs = listOfNotNull(
 ).plus(if (enableJpms) listOf(
   "--add-reads=elide.cli=ALL-UNNAMED",
   "--add-reads=elide.graalvm=ALL-UNNAMED",
-) else emptyList()).plus(if (enableEmbeddedBuilder) listOf(
-  "--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
-) else emptyList())
+) else emptyList()).plus(
+  jpmsSvmArgs.onlyIf(
+    enableEmbeddedSvm
+  )
+)
 
 val jvmRuntimeArgs = listOf(
   "-XX:+UnlockExperimentalVMOptions",
@@ -246,8 +295,10 @@ val jvmRuntimeArgs = listOf(
   "-XX:ConcGCThreads=2",
   "-XX:ReservedCodeCacheSize=512m",
   "-XX:+TrustFinalNonStaticFields",
-  //  "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED",
-  //  "--add-opens=java.base/java.lang=ALL-UNNAMED",
+).plus(
+  jpmsSvmArgs.onlyIf(
+    enableEmbeddedSvm
+  )
 )
 
 val nativeEnabledModules = listOf(
@@ -372,6 +423,7 @@ buildConfig {
 }
 
 val pklDependencies: Configuration by configurations.creating
+val svmModulePath: Configuration by configurations.creating
 val cliJitOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
 val cliNativeOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
 val embeddedKotlin: Configuration by configurations.creating { isCanBeResolved = true }
@@ -407,6 +459,17 @@ dependencies {
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.bundles.mordant)
 
+  val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
+  val patchedLibs = files(
+    gvmJarsRoot.file("library-support.jar"),
+    gvmJarsRoot.file("svm-driver.jar"),
+    gvmJarsRoot.file("objectfile.jar"),
+    gvmJarsRoot.file("pointsto.jar"),
+    gvmJarsRoot.file("native-image-base.jar"),
+  )
+
+  svmModulePath(patchedLibs)
+  svmModulePath(libs.graalvm.svm)
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 
   // Native-image transitive compile dependencies
@@ -681,6 +744,7 @@ val commonGvmArgs = listOfNotNull(
 
 val nativeImageBuildDebug = properties["nativeImageBuildDebug"] == "true"
 val nativeImageBuildVerbose = properties["nativeImageBuildVerbose"] == "true"
+val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
 
 val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+RemoveUnusedSymbols",
@@ -739,6 +803,7 @@ val enabledFeatures = listOfNotNull(
   onlyIf(enableJnaStatic && HostManager.hostIsMac, "com.sun.jna.SubstrateStaticJNA"),
   onlyIf(enableSqlite, "elide.runtime.feature.engine.NativeSQLiteFeature"),
   onlyIf(enableKotlin, "elide.runtime.gvm.kotlin.feature.KotlinCompilerFeature"),
+  onlyIf(enableEmbeddedSvm, "com.oracle.svm.driver.APIOptionFeature"),
 )
 
 val enabledSecurityProviders = listOfNotNull(
@@ -852,7 +917,9 @@ val initializeAtBuildtime: List<String> = listOf(
   "org.eclipse.aether.repository.RemoteRepository",
   "org.eclipse.aether.repository.RepositoryPolicy",
   "org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationComponentRegistrar",
-).onlyIf(enableKotlin))
+).onlyIf(enableKotlin)).plus(listOf(
+  "com.oracle.svm.driver",
+).onlyIf(enableEmbeddedSvm))
 
 val initializeAtBuildTimeTest: List<String> = listOf(
   "org.junit.platform.launcher.core.LauncherConfig",
@@ -888,6 +955,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tooling.jvm.JavaCompilerKt",
   "elide.tooling.jvm.JavadocToolKt",
   "elide.tooling.kotlin.DetektKt",
+  "elide.tooling.gvm.nativeImage.NativeImageDriverKt",
   "org.apache.http.impl.auth.NTLMEngineImpl",
   "elide.exec.Tracing",
 
@@ -1208,6 +1276,7 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.base/com.oracle.svm.util=ALL-UNNAMED",
   "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
+  "-J--add-opens=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
   "-J--add-exports=jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED",
@@ -1323,6 +1392,21 @@ val commonNativeArgs = listOfNotNull(
   listOf(
     "-H:AdditionalSecurityProviders=${enabledSecurityProviders.joinToString(",")}",
   ).onlyIf(enabledSecurityProviders.isNotEmpty())
+).plus(
+  jpmsSvmArgs.map { "-J$it" }.onlyIf(
+    enableEmbeddedSvm
+  )
+).plus(
+  listOf(
+    "org.graalvm.nativeimage.builder",
+  ).let {
+    listOf(
+      "--add-modules=${it.joinToString(",")}",
+      "--module-path",
+    ).plus(
+      svmModulePath.joinToString(File.pathSeparator)
+    )
+  }
 ).toList()
 
 val debugFlags: List<String> = listOfNotNull(
@@ -1479,6 +1563,7 @@ val jvmDefs = mutableMapOf(
   "elide.kotlin.verbose" to "false",
   "elide.nativeTransport.v2" to enableNativeTransportV2.toString(),
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
+  "elide.kotlinResources" to kotlinHomeRoot.get().asFile.resolve(libs.versions.kotlin.sdk.get()).absolutePath,
   "elide.gvmResources" to gvmResourcesPath,
   "jdk.image.use.jvm.map" to "false",
   "jna.library.path" to nativesPath,
@@ -1655,6 +1740,18 @@ val muslArgs = listOf(
   "--libc=musl",
 )
 
+val embeddedSubstrateFlags = listOf(
+  // @TODO
+  // "-H:+GuaranteeSubstrateTypesLinked",
+  // "-H:+AllowDeprecatedBuilderClassesOnImageClasspath",
+  "-Dcom.oracle.graalvm.isaot=true",
+  "-J-Dcom.oracle.graalvm.isaot=true",
+  "-Dorg.graalvm.version=24.2.1",
+  "-J-Dorg.graalvm.version=24.2.1",
+  "--link-at-build-time=com.oracle.svm.driver,com.oracle.svm.driver.metainf",
+  "-H:IncludeResources=com/oracle/svm/driver/launcher/.*",
+)
+
 val testOnlyArgs: List<String> = emptyList()
 
 val nativeOverrideArgs: List<String> = listOf()
@@ -1737,6 +1834,8 @@ fun nativeCliImageArgs(
     "-H:ResourceConfigurationFiles=${platformConfig()}",
   )).plus(
     sharedLibFlags.onlyIf(sharedLib)
+  ).plus(
+    embeddedSubstrateFlags.onlyIf(enableEmbeddedSvm)
   ).toList()
 
 graalvmNative {
@@ -1787,9 +1886,9 @@ graalvmNative {
       // compute main compile args
       buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs))
 
-      buildArgs.add(
+      buildArgs.addAll(listOf(
         "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeCompile").get().asFile.path}",
-      )
+      ))
     }
 
     create("shared") {
@@ -1833,9 +1932,9 @@ graalvmNative {
         configurations.nativeImageClasspath,
         configurations.runtimeClasspath,
       )
-      buildArgs.add(
+      buildArgs.addAll(listOf(
         "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeOptimizedCompile").get().asFile.path}",
-      )
+      ))
     }
 
     named("test") {
@@ -2020,7 +2119,6 @@ fun Jar.applyJarSettings() {
   }
 }
 
-val kotlinHomeRoot = layout.buildDirectory.dir("kotlin-resources/kotlin")
 val intermediateKotlinResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
 val pklSources = layout.projectDirectory.dir("src/main/pkl")
 
@@ -2196,10 +2294,6 @@ tasks {
     }
     // override: kotlin resources may not be built natively yet
     systemProperty(
-      "elide.kotlinResources",
-      kotlinHomeRoot.get().asFile.resolve(libs.versions.kotlin.sdk.get()).absolutePath,
-    )
-    systemProperty(
       "org.graalvm.language.ruby.home",
       layout.buildDirectory.dir("native/$nativeTargetType/resources/ruby/ruby-home").get().asFile.path.toString(),
     )
@@ -2249,6 +2343,12 @@ tasks {
       configurations.runtimeClasspath,
       jvmOnly,
     )
+    jvmArgumentProviders.add(CommandLineArgumentProvider {
+      listOf(
+        "--module-path=${svmModulePath.joinToString(File.pathSeparator)}",
+        "--add-modules=org.graalvm.nativeimage.driver",
+      )
+    })
   }
 
   test {
@@ -2411,6 +2511,9 @@ val (jsGroup, jsName) = libs.graalvm.js.language.get().let {
   it.group to it.name
 }
 configurations.all {
+  if (name == svmModulePath.name) {
+    return@all
+  }
   resolutionStrategy.dependencySubstitution {
     substitute(module("${jsGroup}:${jsName}")).apply {
       using(project(":packages:graalvm-js"))
@@ -2467,6 +2570,38 @@ fun spawnNativeLibCopy(receiver: BuildNativeImageTask): Copy {
   }.get()
 }
 
+fun spawnEmbeddedSvmCopy(receiver: BuildNativeImageTask): Copy {
+  val outDir = layout.buildDirectory.dir("native/${receiver.name}")
+    .get()
+    .asFile
+    .resolve("resources")
+    .resolve("gvm")
+    .resolve("lib")
+    .absolutePath
+
+  val graalvmHome = System.getenv("GRAALVM_HOME") ?: System.getenv("JAVA_HOME")
+    ?: error("GRAALVM_HOME or JAVA_HOME must be set to run this task (embedded SVM copy)")
+  val graalvmLib = File(graalvmHome, "lib")
+
+  return tasks.register("${receiver.name}CopyEmbeddedSvm", Copy::class) {
+    from(graalvmLib) {
+      include(
+        "modules",
+        "**/truffle/**/*.jar",
+        "**/svm/**/*.jar",
+        "**/svm/clibraries/*/**/*.*",
+      )
+      exclude(
+        "**/svm-wasm/**",
+        "**/profile_inference/**",
+      )
+      eachFile { logger.lifecycle("Copying: ${file.path}") }
+    }
+    into(outDir)
+    includeEmptyDirs = false
+  }.get()
+}
+
 fun spawnEmbeddedKotlinCopy(receiver: BuildNativeImageTask): Copy {
   val outDir = layout.buildDirectory.dir("native/${receiver.name}")
     .get()
@@ -2520,6 +2655,9 @@ fun BuildNativeImageTask.createFinalizer() {
   }
   if (enableKotlin) {
     finalizations.add(spawnEmbeddedKotlinCopy(this))
+  }
+  if (enableEmbeddedSvm) {
+    finalizations.add(spawnEmbeddedSvmCopy(this))
   }
   if (finalizations.isNotEmpty()) {
     val finalizer = tasks.register("${name}Finalize") {

@@ -27,6 +27,7 @@ public data class ElidePackageManifest(
   val entrypoint: List<String>? = null,
   val workspaces: List<String> = emptyList(),
   val scripts: Map<String, String> = emptyMap(),
+  val artifacts: Map<String, Artifact> = emptyMap(),
   val dependencies: DependencyResolution = DependencyResolution(),
   val javascript: JavaScriptSettings? = null,
   val typescript: TypeScriptSettings? = null,
@@ -35,13 +36,17 @@ public data class ElidePackageManifest(
   val python: PythonSettings? = null,
   val ruby: RubySettings? = null,
   val pkl: PklSettings? = null,
+  val nativeImage: NativeImageSettings? = null,
   val sources: Map<String, SourceSet> = emptyMap(),
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
 ) : PackageManifest {
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.Elide
 
-
+  @JvmRecord @Serializable public data class Artifact(
+    val name: String? = null,
+    val type: String? = null,
+  )
 
   @JvmRecord @Serializable public data class SourceSet(
     val spec: List<String>,
@@ -318,6 +323,18 @@ public data class ElidePackageManifest(
     val debug: Boolean = false,
   )
 
+  @JvmRecord @Serializable public data class NativeImageOptions(
+    val verbose: Boolean = false,
+  )
+
+  @JvmRecord @Serializable public data class NativeImageSettings(
+    val verbose: Boolean = false,
+  )
+
+  @JvmRecord @Serializable public data class NativeImage(
+    val options: NativeImageOptions = NativeImageOptions(),
+  )
+
   @JvmRecord @Serializable public data class CoverageSettings(
     val enabled: Boolean = false,
     val paths: List<String> = emptyList(),
@@ -376,11 +393,13 @@ public fun ElidePackageManifest.merge(other: ElidePackageManifest): ElidePackage
     description = description ?: other.description,
     entrypoint = (entrypoint ?: emptyList()).plus(other.entrypoint ?: emptyList()).distinct(),
     scripts = scripts + other.scripts,
+    artifacts = artifacts + other.artifacts,
     dependencies = dependencies.merge(other.dependencies),
     jvm = (other.jvm ?: jvm),
     kotlin = (other.kotlin ?: kotlin),
     python = (other.python ?: python),
     ruby = (other.ruby ?: ruby),
     pkl = (other.pkl ?: pkl),
+    nativeImage = (other.nativeImage ?: nativeImage),
   )
 }

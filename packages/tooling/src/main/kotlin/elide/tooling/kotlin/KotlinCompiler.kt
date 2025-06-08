@@ -339,9 +339,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     @JvmStatic private fun initializeKotlinCompilerPlugins() {
       try {
         val rootDisposable = Disposer.newDisposable("kotlinc")
-        val kotlinClassPath = Files.list(Paths.get(System.getProperty("elide.gvmResources"))
-             .resolve("kotlin")
-             .resolve(KotlinLanguage.VERSION)
+        val kotlinClassPath = Files.list(Paths.get(System.getProperty("elide.kotlinResources"))
              .resolve("lib")
         ).toList()
 

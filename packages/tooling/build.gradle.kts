@@ -38,6 +38,8 @@ val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
 val patchedLibs = files(
   gvmJarsRoot.file("truffle-coverage.jar"),
+  gvmJarsRoot.file("library-support.jar"),
+  gvmJarsRoot.file("svm-driver.jar"),
 )
 
 val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }
@@ -48,7 +50,7 @@ dependencies {
     exclude("org.pkl-lang", "pkl-config-java-all")
   }
 
-  api(patchedLibs)
+  compileOnly(patchedLibs)
   patchedDependencies(patchedLibs)
 
   ksp(mn.micronaut.inject.kotlin)

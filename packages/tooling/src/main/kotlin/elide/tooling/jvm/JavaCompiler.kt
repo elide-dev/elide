@@ -329,7 +329,7 @@ public val javac: Tool.CommandLineTool = Tool.describe(
       )
     }
 
-    private fun resolveFileArgInput(arg: String): List<String> {
+    @JvmStatic public fun resolveFileArgInput(arg: String): List<String> {
       return try {
         Paths.get(arg.drop(1)).let { path ->
           if (path.isAbsolute) path else Paths.get(System.getProperty("user.dir")).resolve(path)

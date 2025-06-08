@@ -15,15 +15,6 @@ tests {
   }
 }
 
-dependencies {
-  maven {
-    packages {
-      // Guava
-      "com.google.guava:guava:33.4.8-jre"
-    }
-  }
-}
-
 sources {
   ["main"] = "src/main/java/**/*.java"
   ["test"] = "src/test/java/**/*.java"

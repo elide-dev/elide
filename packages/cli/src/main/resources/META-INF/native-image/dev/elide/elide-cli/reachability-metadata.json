@@ -222,6 +222,9 @@
       "type": "[Lorg.jetbrains.kotlin.psi.KtSimpleNameStringTemplateEntry;"
     },
     {
+      "type": "[Lorg.jetbrains.kotlin.psi.KtStringInterpolationPrefix;"
+    },
+    {
       "type": "[Lorg.jetbrains.kotlin.psi.KtStringTemplateEntry;"
     },
     {
@@ -3739,6 +3742,20 @@
         {
           "name": "<init>",
           "parameterTypes": [
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "boolean",
+            "boolean",
             "boolean",
             "boolean",
             "boolean",
@@ -8443,6 +8460,17 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.com.intellij.openapi.extensions.impl.ExtensionPointImpl",
+      "fields": [
+        {
+          "name": "keyMapperToCache"
+        },
+        {
+          "name": "listeners"
+        }
+      ]
+    },
+    {
       "type": "org.jetbrains.kotlin.com.intellij.openapi.fileTypes.BinaryFileTypeDecompilers",
       "methods": [
         {
@@ -8588,6 +8616,9 @@
     },
     {
       "type": "org.jetbrains.kotlin.extensions.ProcessSourcesBeforeCompilingExtension"
+    },
+    {
+      "type": "org.jetbrains.kotlin.extensions.StorageComponentContainerContributor"
     },
     {
       "type": "org.jetbrains.kotlin.fir.extensions.FirAnalysisHandlerExtension"
@@ -8915,6 +8946,9 @@
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtSimpleNameStringTemplateEntry"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtStringInterpolationPrefix"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtStringTemplateExpression",
@@ -9281,6 +9315,9 @@
       "type": "org.jetbrains.kotlin.resolve.checkers.ResultClassInReturnTypeChecker"
     },
     {
+      "type": "org.jetbrains.kotlin.resolve.checkers.ReturnValueAnnotationChecker"
+    },
+    {
       "type": "org.jetbrains.kotlin.resolve.checkers.SealedInheritorInSameModuleChecker"
     },
     {
@@ -9350,7 +9387,28 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.serialization.DescriptorSerializerPlugin"
+    },
+    {
       "type": "org.jetbrains.kotlin.serialization.deserialization.builtins.BuiltInsLoaderImpl"
+    },
+    {
+      "type": "org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationComponentRegistrar",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationPluginOptions",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.pkl.core.runtime.VmLanguageProvider"
@@ -10257,6 +10315,9 @@
       "glob": "META-INF/services/com.sun.source.util.Plugin"
     },
     {
+      "glob": "META-INF/services/com.sun.tools.javac.platform.PlatformProvider"
+    },
+    {
       "glob": "META-INF/services/elide.runtime.intrinsics.GuestIntrinsic"
     },
     {
@@ -10302,9 +10363,6 @@
       "glob": "META-INF/services/java.nio.file.spi.FileSystemProvider"
     },
     {
-      "glob": "META-INF/services/com.sun.tools.javac.platform.PlatformProvider"
-    },
-    {
       "glob": "META-INF/services/java.time.zone.ZoneRulesProvider"
     },
     {
@@ -10330,6 +10388,9 @@
     },
     {
       "glob": "META-INF/services/org.jetbrains.kotlin.builtins.BuiltInsLoader"
+    },
+    {
+      "glob": "META-INF/services/org.jetbrains.kotlin.com.intellij.platform.diagnostic.telemetry.TelemetryManager"
     },
     {
       "glob": "META-INF/services/org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar"
@@ -10969,6 +11030,9 @@
     },
     {
       "glob": "org/graalvm/shadowed/com/ibm/icu/impl/data/icudata/uprops.icu"
+    },
+    {
+      "glob": "org/jetbrains/kotlin/cli/common/CompilerSystemProperties.class"
     },
     {
       "glob": "org/jetbrains/kotlin/cli/jvm/compiler/KotlinCoreEnvironment$Companion.class"

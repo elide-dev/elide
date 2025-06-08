@@ -1478,17 +1478,20 @@ public final class elide/tooling/kotlin/KotlinCompiler : elide/tooling/AbstractT
 	public fun <init> (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Lkotlin/jvm/functions/Function1;Ljava/nio/file/Path;)V
 	public synthetic fun <init> (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Lkotlin/jvm/functions/Function1;Ljava/nio/file/Path;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
+	public static final fun configureDefaultPlugins (Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;)Ljava/util/Set;
 	public static final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/kotlin/KotlinCompiler;
 	public final fun getInputs ()Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;
 	public final fun getOutputs ()Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
 	public fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun outputJar (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
+	public static final fun resolveCompilerServices$tooling ()Lorg/jetbrains/kotlin/config/Services;
 	public static final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;
 	public fun supported ()Z
 }
 
 public final class elide/tooling/kotlin/KotlinCompiler$Companion {
 	public final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
+	public final fun configureDefaultPlugins (Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;)Ljava/util/Set;
 	public final fun create (Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/kotlin/KotlinCompiler;
 	public static synthetic fun create$default (Lelide/tooling/kotlin/KotlinCompiler$Companion;Lelide/tool/Arguments;Lelide/tool/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/tooling/kotlin/KotlinCompiler;
 	public final fun outputJar (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
@@ -3125,8 +3128,8 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget
 public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (ZZZZZZ)V
-	public synthetic fun <init> (ZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZZZZZZZ)V
+	public synthetic fun <init> (ZZZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun autoClasspath ()Z
 	public final fun component1 ()Z
 	public final fun component2 ()Z
@@ -3134,11 +3137,17 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFea
 	public final fun component4 ()Z
 	public final fun component5 ()Z
 	public final fun component6 ()Z
-	public final fun copy (ZZZZZZ)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;ZZZZZZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
+	public final fun component7 ()Z
+	public final fun component8 ()Z
+	public final fun component9 ()Z
+	public final fun copy (ZZZZZZZZZ)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;ZZZZZZZZZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
 	public final fun coroutines ()Z
+	public final fun enableDefaultPlugins ()Z
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun experimental ()Z
 	public fun hashCode ()I
+	public final fun incremental ()Z
 	public final fun injection ()Z
 	public final fun kotlinx ()Z
 	public final fun serialization ()Z

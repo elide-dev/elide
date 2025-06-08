@@ -779,7 +779,7 @@ val preinitContextsList = preinitializedContexts.joinToString(",")
 val preinitClasslist = listOf(
   "elide.runtime.plugins.kotlin.shell.DynamicClassLoader",
   "elide.runtime.plugins.kotlin.shell.GuestClassLoader",
-)
+).joinToString(",")
 
 val entryApiHeader: File =
   rootProject.layout.projectDirectory.file("crates/entry/headers/elide-entry.h").asFile
@@ -851,6 +851,7 @@ val initializeAtBuildtime: List<String> = listOf(
   "org.jetbrains.kotlin.com.intellij.util.containers.IntKeyWeakValueHashMap\$MyReference",
   "org.eclipse.aether.repository.RemoteRepository",
   "org.eclipse.aether.repository.RepositoryPolicy",
+  "org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationComponentRegistrar",
 ).onlyIf(enableKotlin))
 
 val initializeAtBuildTimeTest: List<String> = listOf(

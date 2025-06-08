@@ -301,6 +301,7 @@ kotlin-plugin-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", versio
 kotlin-plugin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin-sdk" }
 kotlin-plugin-jsObjects = { id = "org.jetbrains.kotlin.plugin.js-plain-objects", version.ref = "kotlin-sdk" }
 kotlin-plugin-noarg = { id = "org.jetbrains.kotlin.plugin.noarg", version.ref = "kotlin-sdk" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-sdk" }
 kotlin-plugin-powerAssert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlin-sdk" }
 kotlinx-plugin-abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator" }
 kotlinx-plugin-benchmark = { id = "org.jetbrains.kotlinx.benchmark", version.ref = "kotlinx-benchmark" }
@@ -563,6 +564,7 @@ kotlin-compiler-embedded = { group = "org.jetbrains.kotlin", name = "kotlin-comp
 kotlin-compiler-runner = { group = "org.jetbrains.kotlin", name = "kotlin-compiler-runner", version.ref = "kotlin-sdk" }
 kotlin-compiler-testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
 kotlin-compiler-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
+kotlin-serialization-embedded = { group = "org.jetbrains.kotlin", name = "kotlin-serialization-compiler-plugin-embeddable", version.ref = "kotlin-sdk" }
 kotlin-main-kts = { group = "org.jetbrains.kotlin", name = "kotlin-main-kts", version.ref = "kotlin-sdk" }
 kotlin-scripting-common = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-common", version.ref = "kotlin-sdk" }
 kotlin-scripting-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin-sdk" }
@@ -818,6 +820,7 @@ plugin-kotlin-jsObjects = { group = "org.jetbrains.kotlin", name = "js-plain-obj
 plugin-kotlin-noarg = { group = "org.jetbrains.kotlin", name = "kotlin-noarg", version.ref = "kotlin-sdk" }
 plugin-kotlin-powerAssert = { group = "org.jetbrains.kotlin", name = "kotlin-power-assert", version.ref = "kotlin-sdk" }
 plugin-kotlin-samWithReceiver = { group = "org.jetbrains.kotlin", name = "kotlin-sam-with-receiver", version.ref = "kotlin-sdk" }
+plugin-kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin-sdk" }
 plugin-kotlinx-abiValidator = { group = "org.jetbrains.kotlinx", name = "binary-compatibility-validator", version.ref = "kotlinx-abiValidator" }
 plugin-kotlinx-atomicfu = { group = "org.jetbrains.kotlinx", name = "atomicfu-gradle-plugin", version.ref = "atomicfu" }
 plugin-kotlinx-serialization = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin-sdk" }

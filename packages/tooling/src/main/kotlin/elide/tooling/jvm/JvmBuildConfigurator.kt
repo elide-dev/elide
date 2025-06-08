@@ -18,12 +18,14 @@ import org.eclipse.aether.RepositorySystem
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.incremental.classpathAsList
 import java.nio.file.Path
+import java.util.LinkedList
 import kotlin.io.path.absolute
 import elide.exec.ActionScope
 import elide.exec.Task
 import elide.exec.Task.Companion.fn
 import elide.exec.taskDependencies
 import elide.runtime.Logging
+import elide.runtime.gvm.kotlin.KotlinCompilerConfig
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.tool.Arguments
 import elide.tool.Classpath
@@ -57,6 +59,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     private const val EMBEDDED_JUNIT_VERSION = "5.12.0"
     private const val EMBEDDED_JUNIT_PLATFORM_VERSION = "1.12.0"
     private const val EMBEDDED_COROUTINES_VERSION = KotlinLanguage.COROUTINES_VERSION
+    private const val EMBEDDED_SERIALIZATION_VERSION = KotlinLanguage.SERIALIZATION_VERSION
     private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
     private const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine"
     private const val JUNIT_PLATFORM_ENGINE = "org.junit.platform:junit-platform-engine"
@@ -67,6 +70,8 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     private const val KOTLIN_TEST_JUNIT5 = "org.jetbrains.kotlin:kotlin-test-junit5"
     private const val KOTLINX_COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
     private const val KOTLINX_COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
+    private const val KOTLINX_SERIALIZATION = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
+    private const val KOTLINX_SERIALIZATION_JSON = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm"
 
     private val testCoordinates = arrayOf(
       JUNIT_JUPITER_API to EMBEDDED_JUNIT_VERSION,
@@ -78,6 +83,8 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       KOTLIN_TEST to KotlinLanguage.VERSION,
       KOTLIN_TEST_JUNIT5 to KotlinLanguage.VERSION,
       KOTLINX_COROUTINES_TEST to EMBEDDED_COROUTINES_VERSION,
+      KOTLINX_SERIALIZATION to EMBEDDED_SERIALIZATION_VERSION,
+      KOTLINX_SERIALIZATION_JSON to EMBEDDED_SERIALIZATION_VERSION,
     )
 
     @JvmStatic private val logging by lazy { Logging.of(JvmBuildConfigurator::class) }
@@ -132,6 +139,13 @@ internal class JvmBuildConfigurator : BuildConfigurator {
         // add `org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm`
         staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES, EMBEDDED_COROUTINES_VERSION))
       }
+      if (state.manifest.kotlin?.features?.serialization == true) {
+        // add `org.jetbrains.kotlinx:kotlinx-serialization-core`
+        staticDeps.add(builtinKotlinJarPath(state, KOTLINX_SERIALIZATION, EMBEDDED_SERIALIZATION_VERSION))
+
+        // add `org.jetbrains.kotlinx:kotlinx-serialization-json`
+        staticDeps.add(builtinKotlinJarPath(state, KOTLINX_SERIALIZATION_JSON, EMBEDDED_SERIALIZATION_VERSION))
+      }
     }
     if (tests) {
       if (state.manifest.kotlin?.features?.testing != false) {
@@ -148,12 +162,19 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           // add `org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm`
           staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES_TEST, EMBEDDED_COROUTINES_VERSION))
         }
+        if (state.manifest.kotlin?.features?.serialization == true) {
+          // add `org.jetbrains.kotlinx:kotlinx-serialization-core-jvm`
+          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_SERIALIZATION, EMBEDDED_SERIALIZATION_VERSION))
+
+          // add `org.jetbrains.kotlinx:kotlinx-serialization-json-jvm`
+          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_SERIALIZATION_JSON, EMBEDDED_SERIALIZATION_VERSION))
+        }
       }
     }
 
     val finalizedClasspath = (compileClasspath ?: Classpath.empty()).toMutable().apply {
       // injected deps
-      add(staticDeps)
+      addAll(staticDeps.distinct())
 
       // if additional deps are provided, add them to the classpath
       additionalDeps?.let { add(it) }
@@ -173,10 +194,18 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     val env = Environment.host()
     val inputs = KotlinCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
     val outputs = KotlinCompiler.classesDir(kotlincClassesOutput)
+    val effectiveKnownPlugins: MutableList<KotlinCompilerConfig.KotlinPluginConfig> = LinkedList()
     val compiler = KotlinCompiler.create(args, env, inputs, outputs, projectRoot = state.project.root) {
       // add classpath and let caller amend args as needed
       classpathAsList = finalizedClasspath.paths.map { it.path.toFile() }
-      incrementalCompilation = true
+      incrementalCompilation = state.manifest.kotlin?.features?.incremental ?: true
+
+      // handle built-in plugins
+      if (state.manifest.kotlin?.features?.enableDefaultPlugins == true) {
+        if (state.manifest.kotlin?.features?.serialization == true) {
+          effectiveKnownPlugins.addAll(KotlinCompiler.configureDefaultPlugins(this))
+        }
+      }
       argsAmender(this)
     }
 

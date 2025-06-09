@@ -387,7 +387,7 @@ jobs:
             tools/reports/build/reports/**/*.xml
             tools/reports/build/test-results/**/*.xml
       - name: "Report: Test Reports"
-        uses: step-security/test-reporter@4d22139b61950ec42a3aee9e6b9ff2f1c755f622 # v2
+        uses: step-security/test-reporter@811774ae306bfb82d9238a125dc3253511a824bc # v2
         if: success() || failure()
         with:
           name: Testsuite

@@ -32,6 +32,7 @@ import elide.tool.Classpath
 import elide.tool.ClasspathSpec
 import elide.tool.Environment
 import elide.tool.MultiPathUsage
+import elide.tool.MutableArguments
 import elide.tool.Tool
 import elide.tool.asExecResult
 import elide.tooling.AbstractTool
@@ -41,6 +42,7 @@ import elide.tooling.deps.DependencyResolver
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.jvm.resolver.RepositorySystemFactory
 import elide.tooling.kotlin.KotlinCompiler
+import elide.tooling.project.ElideProject
 import elide.tooling.project.SourceSet
 import elide.tooling.project.SourceSetLanguage.Java
 import elide.tooling.project.SourceSetLanguage.Kotlin
@@ -56,8 +58,8 @@ private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
  */
 internal class JvmBuildConfigurator : BuildConfigurator {
   private companion object {
-    private const val EMBEDDED_JUNIT_VERSION = "5.12.0"
-    private const val EMBEDDED_JUNIT_PLATFORM_VERSION = "1.12.0"
+    private const val EMBEDDED_JUNIT_VERSION = "5.13.0"
+    private const val EMBEDDED_JUNIT_PLATFORM_VERSION = "1.13.0"
     private const val EMBEDDED_COROUTINES_VERSION = KotlinLanguage.COROUTINES_VERSION
     private const val EMBEDDED_SERIALIZATION_VERSION = KotlinLanguage.SERIALIZATION_VERSION
     private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
@@ -106,6 +108,107 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       .resolve(KotlinLanguage.VERSION)
       .resolve("lib")
       .resolve(jarNameFor(dependency, version))
+  }
+
+  private fun builtinJavaJarPath(state: ElideBuildState, dependency: String, version: String): Path {
+    return builtinKotlinJarPath(state, dependency, version)
+  }
+
+  private fun ActionScope.javac(
+    name: String,
+    resolver: MavenAetherResolver?,
+    state: ElideBuildState,
+    config: BuildConfigurator.BuildConfiguration,
+    srcSet: SourceSet,
+    additionalDeps: Classpath? = null,
+    tests: Boolean = false,
+    dependencies: List<Task> = emptyList(),
+    argsAmender: MutableArguments.() -> Unit = {},
+  ) = fn(name, taskDependencies(dependencies)) {
+    val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
+      override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestCompile else MultiPathUsage.Compile
+    })?.classpath()
+
+    val mainClassesOutput = state.layout.artifacts
+      .resolve("jvm") // `.dev/artifacts/jvm/...`
+      .resolve("classes") // `.../classes/...`
+      .resolve(srcSet.name) // `.../classes/main/...`
+
+    val testClassesOutput = state.layout.artifacts
+      .resolve("jvm") // `.dev/artifacts/jvm/...`
+      .resolve("classes") // `.../classes/...`
+      .resolve("test") // `.../classes/main/...`
+
+    val classOutput = if (tests) testClassesOutput else mainClassesOutput
+
+    logging.debug { "Java compiler task dependencies: $dependencies" }
+    logging.debug { "Java main classpath: $compileClasspath" }
+    logging.debug { "Classes output root: $classOutput" }
+
+    // prepare to inject deps
+    val staticDeps = Classpath.empty().toMutable()
+    if (config.settings.dependencies && state.manifest.jvm?.features?.testing != false && tests) {
+      // add:
+      // `org.junit.jupiter:junit-jupiter-engine`
+      // `org.junit.jupiter:junit-jupiter-api`
+      // `org.junit.jupiter:junit-jupiter-params`
+      staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_ENGINE, EMBEDDED_JUNIT_VERSION))
+      staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_API, EMBEDDED_JUNIT_VERSION))
+      staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_PARAMS, EMBEDDED_JUNIT_VERSION))
+    }
+
+    // main classes should be on classpath in tests mode
+    if (tests) {
+      staticDeps.prepend(mainClassesOutput)
+    }
+
+    val args = Arguments.empty().toMutable().apply {
+      compileClasspath?.let { add(it) }
+      additionalDeps?.let { add(it) }
+      argsAmender()
+    }.build()
+
+    logging.debug { "Java compiler args: '${args.asArgumentList().joinToString(" ")}'" }
+
+    // prepare compiler configuration
+    val env = Environment.host()
+    val inputs = JavaCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
+    val outputs = JavaCompiler.classesDir(classOutput)
+    val compiler = JavaCompiler.create(
+      args = args,
+      env = env,
+      inputs = inputs,
+      outputs = outputs,
+    )
+
+    // fire compile job
+    val result = compiler.invoke(object : AbstractTool.EmbeddedToolState {
+      override val resourcesPath: Path get() = state.resourcesPath
+      override val project: ElideProject? get() = state.project
+    })
+    when (result) {
+      is Tool.Result.Success -> {
+        logging.debug { "Java compilation finished without error" }
+      }
+      else -> {
+        logging.error { "Java compilation failed" }
+      }
+    }
+    result.asExecResult()
+    // @TODO error triggering
+  }.describedBy {
+    val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
+    val suiteTag = if (srcSet.name == "main") "" else " (suite '${srcSet.name}')"
+    "Compiling ${srcSet.paths.size} Java $pluralized$suiteTag"
+  }.also { javac ->
+    config.taskGraph.apply {
+      addNode(javac)
+      if (dependencies.isNotEmpty()) {
+        dependencies.forEach { dependency ->
+          putEdge(javac, dependency)
+        }
+      }
+    }
   }
 
   private fun ActionScope.kotlinc(
@@ -202,9 +305,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
       // handle built-in plugins
       if (state.manifest.kotlin?.features?.enableDefaultPlugins == true) {
-        if (state.manifest.kotlin?.features?.serialization == true) {
-          effectiveKnownPlugins.addAll(KotlinCompiler.configureDefaultPlugins(this))
-        }
+        effectiveKnownPlugins.addAll(KotlinCompiler.configureDefaultPlugins(
+          this,
+          tests,
+          enableSerialization = state.manifest.kotlin?.features?.serialization == true,
+        ))
       }
       argsAmender(this)
     }
@@ -212,6 +317,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     // fire compile job
     compiler.invoke(object : AbstractTool.EmbeddedToolState {
       override val resourcesPath: Path get() = state.resourcesPath
+      override val project: ElideProject? get() = state.project
     }).also { result ->
       when (result) {
         is Tool.Result.Success -> {
@@ -286,58 +392,13 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           } else {
             // skip all tests for now (these come last, and depend on mains)
             javaSrcSet.filter { it.paths.isNotEmpty() && it.type != SourceSetType.Tests }.map { srcSet ->
-              // `compileJavaMain` for name `main`
-              fn(name = srcSetTaskName(srcSet, "compileJava")) {
-                val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
-                  override val usage: MultiPathUsage = MultiPathUsage.Compile
-                })?.classpath()
-
-                val javacClassesOutput = state.layout.artifacts
-                  .resolve("jvm") // `.dev/artifacts/jvm/...`
-                  .resolve("classes") // `.../classes/...`
-                  .resolve(srcSet.name) // `.../classes/main/...`
-
-                logging.debug { "Kotlin main classpath: $compileClasspath" }
-                logging.debug { "Classes output root: $javacClassesOutput" }
-
-                val args = Arguments.empty().toMutable().apply {
-                  compileClasspath?.let { add(it) }
-                }.build()
-
-                logging.debug { "Java compiler args: '${args.asArgumentList().joinToString(" ")}'" }
-
-                // prepare compiler configuration
-                val env = Environment.host()
-                val inputs = JavaCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
-                val outputs = JavaCompiler.classesDir(javacClassesOutput)
-                val compiler = JavaCompiler.create(
-                  args = args,
-                  env = env,
-                  inputs = inputs,
-                  outputs = outputs,
-                )
-
-                // fire compile job
-                val result = compiler.invoke(object : AbstractTool.EmbeddedToolState {
-                  override val resourcesPath: Path get() = state.resourcesPath
-                })
-                when (result) {
-                  is Tool.Result.Success -> {
-                    logging.debug { "Java compilation finished without error" }
-                  }
-                  else -> {
-                    logging.error { "Java compilation failed" }
-                  }
-                }
-                result.asExecResult()
-                // @TODO error triggering
-              }.describedBy {
-                val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
-                val suiteTag = if (srcSet.name == "main") "" else " (suite '${srcSet.name}')"
-                "Compiling ${srcSet.paths.size} Java $pluralized$suiteTag"
-              }.also { javac ->
-                addNode(javac)
-              }
+              javac(
+                srcSetTaskName(srcSet, "compileJava"),
+                resolver,
+                state,
+                config,
+                srcSet,
+              )
             }
           }
           val kotlincs = if (kotlinSrcSet.isEmpty()) {
@@ -364,62 +425,13 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
             // find all tests and depend on both kotlinc and javac output
             javaSrcSet.filter { it.paths.isNotEmpty() && it.type == SourceSetType.Tests }.map { srcSet ->
-              // `compileJavaTest` for name `test`
-              fn(name = srcSetTaskName(srcSet, "compileJava")) {
-                val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
-                  override val usage: MultiPathUsage = MultiPathUsage.Compile
-                })?.classpath()
-
-                val javacMainClassesOutput = state.layout.artifacts
-                  .resolve("jvm") // `.dev/artifacts/jvm/...`
-                  .resolve("classes") // `.../classes/...`
-                  .resolve("main") // `.../classes/main/...`
-
-                val javacClassesOutput = state.layout.artifacts
-                  .resolve("jvm") // `.dev/artifacts/jvm/...`
-                  .resolve("classes") // `.../classes/...`
-                  .resolve(srcSet.name) // `.../classes/test/...`
-
-                logging.debug { "Java main classpath: $compileClasspath" }
-                logging.debug { "Java output root: $javacClassesOutput" }
-
-                val args = Arguments.empty().toMutable().apply {
-                  (compileClasspath ?: Classpath.empty()).toMutable().apply {
-                    // user's test deps go before all compile-time and static libs
-                    testCompileClasspath?.let { prepend(it) }
-
-                    // class deps go before all other deps
-                    prepend(javacMainClassesOutput)
-                  }.also {
-                    add(it)
-                  }
-                }.build()
-
-                // prepare compiler configuration
-                val env = Environment.host()
-                val inputs = JavaCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
-                val outputs = JavaCompiler.classesDir(javacClassesOutput)
-                val compiler = JavaCompiler.create(
-                  args = args,
-                  env = env,
-                  inputs = inputs,
-                  outputs = outputs,
-                )
-
-                // fire compile job
-                val result = compiler.invoke(object : AbstractTool.EmbeddedToolState {
-                  override val resourcesPath: Path get() = state.resourcesPath
-                })
-                when (result) {
-                  is Tool.Result.Success -> {
-                    logging.debug { "Java test compilation finished without error" }
-                  }
-                  else -> {
-                    logging.error { "Java test compilation failed" }
-                  }
-                }
-                result.asExecResult()
-              }.describedBy {
+              javac(
+                srcSetTaskName(srcSet, "compileJavaTest"),
+                resolver,
+                state,
+                config,
+                srcSet,
+              ).describedBy {
                 val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
                 "Compiling ${srcSet.paths.size} Java test $pluralized"
               }.also { javacTest ->

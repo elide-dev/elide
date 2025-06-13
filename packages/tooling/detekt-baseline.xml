@@ -2,8 +2,8 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
+    <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$inputs: NativeImageInputs.Paths</ID>
+    <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$javaToolchainHome: Path</ID>
     <ID>UnusedParameter:TestDriver.kt$TestDriver$binder: ExecutionBinder? = null</ID>
-    <ID>UnusedPrivateProperty:MavenAetherResolver.kt$MavenAetherResolver$private val config: BuildConfigurator.BuildConfiguration</ID>
-    <ID>UnusedPrivateProperty:MavenAetherResolver.kt$MavenAetherResolver$private val events: BuildConfigurator.BuildEventController</ID>
   </CurrentIssues>
 </SmellBaseline>

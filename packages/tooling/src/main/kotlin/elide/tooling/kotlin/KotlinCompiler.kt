@@ -18,6 +18,7 @@ import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
+import org.graalvm.nativeimage.ImageInfo
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity.ERROR
@@ -56,7 +57,6 @@ import elide.runtime.diag.DiagnosticsSuite
 import elide.runtime.gvm.kotlin.KotlinCompilerConfig
 import elide.runtime.gvm.kotlin.KotlinCompilerConfig.KotlinBuiltinPlugin
 import elide.runtime.gvm.kotlin.KotlinLanguage
-import elide.runtime.gvm.kotlin.KotlinPrecompiler.KOTLIN_VERSION
 import elide.runtime.gvm.kotlin.fromKotlincDiagnostic
 import elide.tool.ArgumentContext
 import elide.tool.Arguments
@@ -339,9 +339,16 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     @JvmStatic private fun initializeKotlinCompilerPlugins() {
       try {
         val rootDisposable = Disposer.newDisposable("kotlinc")
-        val kotlinClassPath = Files.list(Paths.get(System.getProperty("elide.kotlinResources"))
-             .resolve("lib")
-        ).toList()
+
+        val kotlinClassPath = Files.list(when {
+          ImageInfo.inImageBuildtimeCode() -> Paths.get(System.getProperty("elide.kotlinResources")).resolve("lib")
+          else -> Paths.get(System.getProperty("user.home"))
+            .resolve("elide")
+            .resolve("resources")
+            .resolve("kotlin")
+            .resolve(KotlinLanguage.VERSION)
+            .resolve("lib")
+        }).toList()
 
         val classLoader = createClassLoader(
           kotlinClassPath,
@@ -509,7 +516,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     debugLog("Kotlin home: $kotlinVersionRoot")
     val closeables = LinkedList<Closeable>()
     val diagnostics = K2DiagnosticsListener()
-    val kotlinMajorMinor = KOTLIN_VERSION.substringBeforeLast('.')
+    val kotlinMajorMinor = KotlinLanguage.VERSION.substringBeforeLast('.')
     debugLog("Kotlin version: $kotlinMajorMinor")
 
     val svcs = resolveCompilerServices()

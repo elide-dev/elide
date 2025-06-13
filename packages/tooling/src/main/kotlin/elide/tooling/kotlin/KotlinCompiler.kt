@@ -151,6 +151,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
   public val outputs: KotlinCompilerOutputs,
   private val argsAmender: K2JVMCompilerArguments.() -> Unit = {},
   private val projectRoot: Path,
+  private val testMode: Boolean = false,
 ) : AbstractTool(info = kotlinc.extend(
   args,
   env,
@@ -390,11 +391,21 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
      * Configure the default suite of plugins supported by the Kotlin compiler.
      *
      * @param config Arguments to configure the Kotlin compiler.
+     * @param test Whether this is a test run; defaults to `false`.
+     * @param enableSerialization Whether to enable the Kotlin serialization plugin; defaults to `true`.
      * @return Set of plugins which were configured.
      */
-    @JvmStatic public fun configureDefaultPlugins(config: K2JVMCompilerArguments): Set<KotlinBuiltinPlugin> {
-      val defaultPlugins = KotlinCompilerConfig.DEFAULT_PLUGINS
+    @JvmStatic public fun configureDefaultPlugins(
+      config: K2JVMCompilerArguments,
+      test: Boolean = false,
+      enableSerialization: Boolean = true,
+    ): Set<KotlinBuiltinPlugin> {
+      val defaultPlugins = KotlinCompilerConfig.getDefaultPlugins(test = test)
       defaultPlugins.forEach { plugin ->
+        if (plugin == KotlinBuiltinPlugin.SERIALIZATION && !enableSerialization) {
+          // skip serialization plugin if it is not enabled.
+          return@forEach
+        }
         plugin.apply(config, Statics.resourcesPath)
       }
       return defaultPlugins
@@ -442,6 +453,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       inputs: KotlinCompilerInputs,
       outputs: KotlinCompilerOutputs,
       projectRoot: Path = Paths.get(System.getProperty("user.dir")),
+      test: Boolean = false,
       argsAmender: K2JVMCompilerArguments.() -> Unit = {},
     ): KotlinCompiler = KotlinCompiler(
       args = args,
@@ -450,6 +462,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       outputs = outputs,
       projectRoot = projectRoot,
       argsAmender = argsAmender,
+      testMode = test,
     )
   }
 

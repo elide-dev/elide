@@ -399,6 +399,7 @@ public final class elide/runtime/diag/DiagnosticExtensionsKt {
 
 public abstract interface class elide/runtime/diag/DiagnosticInfo {
 	public static final field Companion Lelide/runtime/diag/DiagnosticInfo$Companion;
+	public fun formattedString ()Ljava/lang/StringBuilder;
 	public fun getAdvice ()Ljava/lang/String;
 	public fun getId ()Ljava/lang/String;
 	public fun getLang ()Ljava/lang/String;

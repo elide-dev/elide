@@ -232,9 +232,14 @@ public data class ElidePackageManifest(
     @JvmRecord @Serializable public data class StringJvmTarget(public val name: String) : JvmTarget
   }
 
+  @JvmRecord @Serializable public data class JvmFeatures(
+    val testing: Boolean = true,
+  )
+
   @JvmRecord @Serializable public data class JvmSettings(
     val target: JvmTarget? = null,
     val javaHome: String? = null,
+    val features: JvmFeatures = JvmFeatures(),
   )
 
   @JvmRecord @Serializable public data class JavaScriptSettings(

@@ -2580,7 +2580,7 @@ fun spawnEmbeddedSvmCopy(receiver: BuildNativeImageTask): Copy {
     .absolutePath
 
   val graalvmHome = System.getenv("GRAALVM_HOME") ?: System.getenv("JAVA_HOME")
-    ?: error("GRAALVM_HOME or JAVA_HOME must be set to run this task (embedded SVM copy)")
+    ?: "/usr/lib/jvm/gvm.jdk24"  // default
   val graalvmLib = File(graalvmHome, "lib")
 
   return tasks.register("${receiver.name}CopyEmbeddedSvm", Copy::class) {

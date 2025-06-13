@@ -48,4 +48,12 @@ public interface DiagnosticInfo {
     /** @return Empty mutable diagnostic record. */
     public fun mutable(): MutableDiagnostic = MutableDiagnostic.create()
   }
+
+  public fun formattedString(): StringBuilder = StringBuilder().apply {
+    append('[')
+    append(severity.name)
+    append(']')
+    append(" ")
+    append(renderedMessage ?: message ?: advice ?: "No message.")
+  }
 }

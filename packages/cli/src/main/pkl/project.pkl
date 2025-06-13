@@ -20,6 +20,7 @@ import "Python.pkl" as _python
 import "Ruby.pkl" as _ruby
 import "JavaScript.pkl" as _js
 import "TypeScript.pkl" as _ts
+import "NativeImage.pkl" as _nativeImage
 import "HuggingFace.pkl" as _huggingface
 import "Testing.pkl" as _testing
 import "Pkl.pkl" as _pkl
@@ -80,6 +81,9 @@ class ElideProject {
 
   /// Configure Pkl language settings.
   pkl: _pkl.PklSettings?
+
+  /// Project-wide settings for the Native Image compiler.
+  nativeImage: _nativeImage.NativeImageSettings?
 
   /// Top-level project sources definition.
   sources: _srcs.Sources
@@ -179,6 +183,9 @@ ruby: _ruby.RubySettings?
 
 /// Configure Pkl language settings.
 pkl: _pkl.PklSettings?
+
+/// Project-wide settings for the Native Image compiler.
+nativeImage: _nativeImage.NativeImageSettings?
 
 //
 // ------ Structure -------------------------------------------------------------------------------------------------

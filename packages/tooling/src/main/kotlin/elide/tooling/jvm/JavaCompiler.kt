@@ -38,6 +38,7 @@ import elide.runtime.diag.DiagnosticsContainer
 import elide.runtime.diag.DiagnosticsReceiver
 import elide.runtime.diag.DiagnosticsSuite
 import elide.runtime.gvm.jvm.fromJavacDiagnostic
+import elide.tool.ArgumentContext
 import elide.tool.Arguments
 import elide.tool.Environment
 import elide.tool.Inputs
@@ -282,11 +283,22 @@ public val javac: Tool.CommandLineTool = Tool.describe(
       val plural = if (srcsCount > 1) "source" else "source file"
       javacLogger.debug { "Preparing Java compile task for $srcsCount $plural" }
 
+      val ctx = ArgumentContext.of(
+        argSeparator = ' ',
+        kvToken = ' ',
+      )
       compiler.getTask(
         null,
         fileManager,
         diagnosticsReceiver,
-        args.asArgumentList().filter { !it.endsWith(".java") },
+        args.asArgumentList(ctx).filter { !it.endsWith(".java") }.flatMap {
+          // @TODO fix this in the Arguments object instead
+          if (it.startsWith("-classpath ")) {
+            it.split(" ")
+          } else listOf(
+            it
+          )
+        },
         null,
         units,
       ).let {
@@ -329,7 +341,7 @@ public val javac: Tool.CommandLineTool = Tool.describe(
       )
     }
 
-    private fun resolveFileArgInput(arg: String): List<String> {
+    @JvmStatic public fun resolveFileArgInput(arg: String): List<String> {
       return try {
         Paths.get(arg.drop(1)).let { path ->
           if (path.isAbsolute) path else Paths.get(System.getProperty("user.dir")).resolve(path)

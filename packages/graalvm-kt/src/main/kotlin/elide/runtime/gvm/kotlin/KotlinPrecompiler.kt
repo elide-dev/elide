@@ -73,9 +73,6 @@ public fun Diagnostic.Companion.fromKotlincDiagnostic(
 
 // Implements a precompiler which compiles Kotlin to Java bytecode.
 public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinRunnable> {
-  // Embedded Kotlin version.
-  public const val KOTLIN_VERSION: String = "2.2.0-RC2"
-
   private val kotlinVerbose by lazy {
     System.getProperty("elide.kotlin.verbose") == "true"
   }
@@ -119,13 +116,17 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
       ?: Paths.get(
         System.getProperty("user.home"),
         "elide",
+        "resources",
         "kotlin",
-        "kotlin-home",
       ).takeIf {
         it.exists()
       }
-    val kotlinVersionRoot = kotlinRoot
-      ?.resolve(KOTLIN_VERSION)
+
+    val kotlinVersionRoot = if (kotlinRoot != null && !kotlinRoot.endsWith(KotlinLanguage.VERSION)) {
+      kotlinRoot.resolve(KotlinLanguage.VERSION)
+    } else {
+      kotlinRoot
+    }
 
     val javaToolchainHome = Paths.get(requireNotNull(
       System.getenv("JAVA_HOME") ?: System.getProperty("java.home")
@@ -140,7 +141,7 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
 
     val diagnostics = DiagnosticsListener()
     val svcs = Services.EMPTY
-    val kotlinMajorMinor = KOTLIN_VERSION.substringBeforeLast('.')
+    val kotlinMajorMinor = KotlinLanguage.VERSION.substringBeforeLast('.')
     val args = ktCompiler.createArguments().apply {
       destinationAsFile = jarfile
       disableStandardScript = true

@@ -90,7 +90,7 @@ public object Constants {
     const val COROUTINES = "1.10.2"
 
     /** Constant: pinned version of AtomicFU. */
-    const val ATOMICFU = "0.27.0"
+    const val ATOMICFU = "0.28.0"
 
     /** Constant: pinned version of BouncyCastle. */
     const val BOUNCYCASTLE = "1.80"
@@ -123,7 +123,7 @@ public object Constants {
     const val JVM_TOOLCHAIN_DEFAULT = "24"
 
     /** GraalVM metadata repository version. */
-    const val GRAALVM_METADATA = "0.3.19"
+    const val GRAALVM_METADATA = "0.3.21"
 
     /** Version to pin for Diktat. */
     const val DIKTAT = "2.0.0"
@@ -141,7 +141,7 @@ public object Constants {
     const val PROTOBUF = "4.28.2"
 
     /** Static Netty version. */
-    const val NETTY = "4.1.118.Final"
+    const val NETTY = "4.2.2.Final"
 
     /** Guava version. */
     const val GUAVA = "33.4.8-jre"
@@ -153,7 +153,7 @@ public object Constants {
     const val JLINE = "3.28.0"
 
     /** Okio version. */
-    const val OKIO = "3.11.0"
+    const val OKIO = "3.13.0"
 
     /** GraalVM version. */
     const val GRAALVM = "24.2.1"

@@ -193,6 +193,12 @@ function app(entrypoint: common.FilePath | String) = new Jar {
   }
 }
 
+/// Controls features related to JVM support in Elide projects.
+class JvmFeatures {
+  /// Automatically provide test dependencies for JVM projects, like JUnit.
+  testing: Boolean = true
+}
+
 /// Specifies settings which apply to JVM targets.
 class JvmSettings {
   /// Set the JVM bytecode target level for this project.
@@ -200,4 +206,7 @@ class JvmSettings {
 
   /// Set a custom Java Home override for this project.
   javaHome: String? = null
+
+  /// Controls features and settings related to JVM support.
+  features: JvmFeatures = new {}
 }

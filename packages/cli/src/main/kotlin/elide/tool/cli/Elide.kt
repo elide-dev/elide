@@ -58,6 +58,7 @@ import elide.tool.cli.cmd.tool.jar.JarToolAdapter
 import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
 import elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter
 import elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapter
+import elide.tool.cli.cmd.tool.nativeImage.NativeImageAdapter
 import elide.tool.cli.options.CommonOptions
 import elide.tool.cli.options.ProjectOptions
 import elide.tool.cli.state.CommandState
@@ -118,6 +119,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     JavaCompilerAdapter.JavacCliTool::class,
     JarToolAdapter.JarCliTool::class,
     JavadocToolAdapter.JavadocCliTool::class,
+    NativeImageAdapter.NativeImageCliTool::class,
     ToolPklCommand::class,
     ToolDiscordCommand::class,
   ],

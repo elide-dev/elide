@@ -466,10 +466,12 @@ dependencies {
     gvmJarsRoot.file("objectfile.jar"),
     gvmJarsRoot.file("pointsto.jar"),
     gvmJarsRoot.file("native-image-base.jar"),
+    gvmJarsRoot.file("truffle-coverage.jar"),
   )
 
   svmModulePath(patchedLibs)
   svmModulePath(libs.graalvm.svm)
+  runtimeOnly(patchedLibs)
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 
   // Native-image transitive compile dependencies

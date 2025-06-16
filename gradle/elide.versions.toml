@@ -17,6 +17,7 @@
 
 [versions]
 aedile = "2.0.3"
+apiguardian = "1.1.2"
 arrow = "2.0.1"
 assertk = "0.28.1"
 asm = "9.8"
@@ -338,6 +339,7 @@ versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionChe
 
 [libraries]
 aedile-core = { group = "com.sksamuel.aedile", name = "aedile-core", version.ref = "aedile" }
+apiguardian-api = { group = "org.apiguardian", name = "apiguardian-api", version.ref = "apiguardian" }
 arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }

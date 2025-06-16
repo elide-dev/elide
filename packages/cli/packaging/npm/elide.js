@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-const version = "1.0.0-beta5"
+const version = "1.0.0-beta6"
 
 const os = require("node:os")
 const fs = require("node:fs")

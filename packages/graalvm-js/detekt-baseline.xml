@@ -1,8 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>UnusedParameter:ElideInteropModuleLoader.kt$ElideInteropModuleLoader$moduleRequest: Module.ModuleRequest</ID>
-    <ID>UnusedParameter:ElideInteropModuleLoader.kt$ElideInteropModuleLoader$referencingModule: ScriptOrModule</ID>
-  </CurrentIssues>
+  <CurrentIssues/>
 </SmellBaseline>

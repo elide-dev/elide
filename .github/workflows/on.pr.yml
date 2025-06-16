@@ -103,6 +103,22 @@ jobs:
       native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:test-native') || contains(github.event.head_commit.message, 'ci:test-native') }}
 
   ##
+  ## Job: Claude Review
+  ##
+  check-ai-review:
+    name: "Checks"
+    uses: ./.github/workflows/claude-code-review.yml
+    needs: [triage]
+    if: github.event.pull_request.draft == false
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    permissions:
+      contents: "read"
+      pull-requests: "read"
+      issues: "read"
+      id-token: "write"
+
+  ##
   ## Job: API Check
   ##
   check-api:

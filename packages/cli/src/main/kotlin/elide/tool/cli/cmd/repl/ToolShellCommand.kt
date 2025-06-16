@@ -1935,7 +1935,7 @@ internal class ToolShellCommand @Inject constructor(
         when (testMode()) {
           // @TODO don't hardcode .dev or artifacts paths
           // @TODO this belongs better in `withProjectClasspath`
-          true -> (project?.root ?: Paths.get(System.getenv("user.dir")))
+          true -> (project?.root ?: Paths.get(System.getProperty("user.dir")))
             .resolve(".dev")
             .resolve("artifacts")
             .resolve("jvm")

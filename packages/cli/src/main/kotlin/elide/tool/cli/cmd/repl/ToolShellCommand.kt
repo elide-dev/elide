@@ -1236,7 +1236,7 @@ internal class ToolShellCommand @Inject constructor(
   }
 
   // Resolve a compiler for the provided language, compile the entrypoint, and return the resolved executable symbol.
-  private fun compileEntrypoint(language: GuestLanguage, ctxAccessor: ContextAccessor, entry: File): ShellRunnable {
+  private fun compileEntrypoint(language: GuestLanguage, ctxAccessor: ContextAccessor, entry: File): ShellRunnable? {
     return when (language) {
       // use the host java compiler, which supports up to the maximum JVM bytecode level anyway
       JAVA -> ShellRunnable.HostExecutable {
@@ -1268,9 +1268,17 @@ internal class ToolShellCommand @Inject constructor(
               ctxAccessor.invoke()
             )
             is KotlinJarBundleInfo -> {
-              val ctx = ctxAccessor()
-              val interpreter = GuestKotlinEvaluator(ctx)
-              interpreter.evaluate(it.asSource(), ctx)
+              // @TODO some way to patch the classpath earlier
+              println(
+                """
+                  Your Kotlin code was compiled to a JAR; to run it, execute:
+                  elide run ${it.path.absolutePathString()}
+
+                  Or, to run on a regular JVM:
+                  java -jar ${it.path.absolutePathString()}
+                """.trimIndent()
+              )
+              return@let null
             }
           }
         }
@@ -2488,17 +2496,19 @@ internal class ToolShellCommand @Inject constructor(
 
                     // otherwise, if we need to "compile" this source first (as is the case for LLVM targets and JVM
                     // targets like Java and Kotlin), then conduct that phase and load a symbol to begin execution.
-                    ExecutionMode.SOURCE_COMPILED -> executeCompiled(
-                      scriptFile,
-                      langs,
+                    ExecutionMode.SOURCE_COMPILED -> compileEntrypoint(
                       lang,
                       it,
-                      compileEntrypoint(
+                      scriptFile,
+                    )?.let { compiled ->
+                      executeCompiled(
+                        scriptFile,
+                        langs,
                         lang,
                         it,
-                        scriptFile,
-                      ),
-                    )
+                        compiled,
+                      )
+                    }
                   }
                 }
               }

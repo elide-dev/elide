@@ -17,9 +17,14 @@ package elide.tooling.jvm
 import org.eclipse.aether.RepositorySystem
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.incremental.classpathAsList
+import java.io.IOException
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.LinkedList
 import kotlin.io.path.absolute
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.exists
+import kotlin.io.path.isWritable
 import elide.exec.ActionScope
 import elide.exec.Task
 import elide.exec.Task.Companion.fn
@@ -27,12 +32,14 @@ import elide.exec.taskDependencies
 import elide.runtime.Logging
 import elide.runtime.gvm.kotlin.KotlinCompilerConfig
 import elide.runtime.gvm.kotlin.KotlinLanguage
+import elide.tool.Argument
 import elide.tool.Arguments
 import elide.tool.Classpath
 import elide.tool.ClasspathSpec
 import elide.tool.Environment
 import elide.tool.MultiPathUsage
 import elide.tool.MutableArguments
+import elide.tool.MutableClasspath
 import elide.tool.Tool
 import elide.tool.asExecResult
 import elide.tooling.AbstractTool
@@ -58,10 +65,12 @@ private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
  */
 internal class JvmBuildConfigurator : BuildConfigurator {
   private companion object {
-    private const val EMBEDDED_JUNIT_VERSION = "5.13.0"
-    private const val EMBEDDED_JUNIT_PLATFORM_VERSION = "1.13.0"
+    private const val EMBEDDED_JUNIT_VERSION = "5.13.1"
+    private const val EMBEDDED_JUNIT_PLATFORM_VERSION = "1.13.1"
+    private const val EMBEDDED_APIGUARDIAN_VERSION = "1.1.2"
     private const val EMBEDDED_COROUTINES_VERSION = KotlinLanguage.COROUTINES_VERSION
     private const val EMBEDDED_SERIALIZATION_VERSION = KotlinLanguage.SERIALIZATION_VERSION
+    private const val APIGUARDIAN_API = "org.apiguardian:apiguardian-api"
     private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
     private const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine"
     private const val JUNIT_PLATFORM_ENGINE = "org.junit.platform:junit-platform-engine"
@@ -87,6 +96,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       KOTLINX_COROUTINES_TEST to EMBEDDED_COROUTINES_VERSION,
       KOTLINX_SERIALIZATION to EMBEDDED_SERIALIZATION_VERSION,
       KOTLINX_SERIALIZATION_JSON to EMBEDDED_SERIALIZATION_VERSION,
+      APIGUARDIAN_API to EMBEDDED_APIGUARDIAN_VERSION,
     )
 
     @JvmStatic private val logging by lazy { Logging.of(JvmBuildConfigurator::class) }
@@ -132,14 +142,15 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     val mainClassesOutput = state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
       .resolve("classes") // `.../classes/...`
-      .resolve(srcSet.name) // `.../classes/main/...`
+      .resolve(if (tests) "main" else srcSet.name) // `.../classes/main/...`
 
-    val testClassesOutput = state.layout.artifacts
+    val testClassesOutput = if (!tests) null else state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
       .resolve("classes") // `.../classes/...`
       .resolve("test") // `.../classes/main/...`
 
-    val classOutput = if (tests) testClassesOutput else mainClassesOutput
+    val classOutput = if (tests) testClassesOutput!! else mainClassesOutput
+    val mountedInput = if (tests) mainClassesOutput else null
 
     logging.debug { "Java compiler task dependencies: $dependencies" }
     logging.debug { "Java main classpath: $compileClasspath" }
@@ -152,9 +163,17 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       // `org.junit.jupiter:junit-jupiter-engine`
       // `org.junit.jupiter:junit-jupiter-api`
       // `org.junit.jupiter:junit-jupiter-params`
+      // `org.junit.platform:junit-platform-engine`
+      // `org.junit.platform:junit-platform-commons`
+      // `org.junit.platform:junit-platform-console`
+      // `org.apiguardian:apiguardian-api`
       staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_ENGINE, EMBEDDED_JUNIT_VERSION))
       staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_API, EMBEDDED_JUNIT_VERSION))
       staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_PARAMS, EMBEDDED_JUNIT_VERSION))
+      staticDeps.add(builtinJavaJarPath(state, JUNIT_PLATFORM_ENGINE, EMBEDDED_JUNIT_PLATFORM_VERSION))
+      staticDeps.add(builtinJavaJarPath(state, JUNIT_PLATFORM_COMMONS, EMBEDDED_JUNIT_PLATFORM_VERSION))
+      staticDeps.add(builtinJavaJarPath(state, JUNIT_PLATFORM_CONSOLE, EMBEDDED_JUNIT_PLATFORM_VERSION))
+      staticDeps.add(builtinJavaJarPath(state, APIGUARDIAN_API, EMBEDDED_APIGUARDIAN_VERSION))
     }
 
     // main classes should be on classpath in tests mode
@@ -163,8 +182,33 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     }
 
     val args = Arguments.empty().toMutable().apply {
-      compileClasspath?.let { add(it) }
-      additionalDeps?.let { add(it) }
+      // assemble classpath
+      MutableClasspath.empty().apply {
+        compileClasspath?.let { add(it) }
+        add(staticDeps)
+        additionalDeps?.let { add(it) }
+        mountedInput?.let { prepend(it) }
+      }.let {
+        add(it)
+      }
+
+      // prepare outputs
+      if (!classOutput.exists()) {
+        try {
+          Files.createDirectories(classOutput)
+        } catch (ioe: IOException) {
+          logging.error { "Failed to create class output directory: $classOutput" }
+          throw ioe
+        }
+      } else if (!classOutput.isWritable()) {
+        logging.error { "Class output directory is not writable: $classOutput" }
+        throw IOException("Class output directory is not writable: $classOutput")
+      }
+      // @TODO proper splitting of args here by default, instead of manually
+      add(Argument.of("-d"))
+      add(Argument.of(classOutput.absolutePathString()))
+
+      // invoker amendments
       argsAmender()
     }.build()
 
@@ -431,6 +475,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
                 state,
                 config,
                 srcSet,
+                tests = true,
               ).describedBy {
                 val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
                 "Compiling ${srcSet.paths.size} Java test $pluralized"

@@ -177,6 +177,7 @@ dependencies {
   embeddedJava(libs.slf4j)
   embeddedJava(mn.micronaut.inject.java)
   embeddedJava(mn.micronaut.test.junit5)
+  embeddedJava(libs.apiguardian.api)
 
   // Testing
   testImplementation(projects.packages.test)

@@ -1,7 +1,10 @@
 base: &base
   - ".version"
   - ".release"
-  - ".github/workflows/*.*"
+  - ".github/workflows/job.build.yml"
+  - ".github/workflows/job.test.yml"
+  - ".github/workflows/on.pr.yml"
+  - ".github/workflows/on.push.yml"
 
 devcontainer: &ci
   - *base

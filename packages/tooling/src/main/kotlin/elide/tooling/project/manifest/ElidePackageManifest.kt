@@ -19,6 +19,8 @@ import elide.tool.MutableArguments
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest.*
 
+private const val DEFAULT_JAVA_TARGET = 21u // Default Java target version for JVM projects
+
 @JvmRecord @Serializable
 public data class ElidePackageManifest(
   val name: String? = null,
@@ -228,18 +230,39 @@ public data class ElidePackageManifest(
 
   @Serializable
   public sealed interface JvmTarget {
-    @JvmRecord @Serializable public data class NumericJvmTarget(public val number: UInt) : JvmTarget
-    @JvmRecord @Serializable public data class StringJvmTarget(public val name: String) : JvmTarget
+    @JvmRecord @Serializable public data class NumericJvmTarget(public val number: UInt) : JvmTarget {
+      override val argValue: String get() = number.toString()
+    }
+    @JvmRecord @Serializable public data class StringJvmTarget(public val name: String) : JvmTarget {
+      override val argValue: String get() = name
+    }
+
+    public val argValue: String
+
+    public companion object {
+      public val DEFAULT: JvmTarget = NumericJvmTarget(DEFAULT_JAVA_TARGET)
+    }
   }
 
   @JvmRecord @Serializable public data class JvmFeatures(
     val testing: Boolean = true,
   )
 
+  @JvmRecord @Serializable public data class JavaCompilerSettings(
+    val flags: List<String> = emptyList(),
+  )
+
+  @JvmRecord @Serializable public data class JavaLanguage(
+    val source: JvmTarget? = null,
+    val release: JvmTarget? = null,
+    val compiler: JavaCompilerSettings = JavaCompilerSettings(),
+  )
+
   @JvmRecord @Serializable public data class JvmSettings(
     val target: JvmTarget? = null,
     val javaHome: String? = null,
     val features: JvmFeatures = JvmFeatures(),
+    val java: JavaLanguage = JavaLanguage(),
   )
 
   @JvmRecord @Serializable public data class JavaScriptSettings(

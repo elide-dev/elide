@@ -15,6 +15,6 @@ public final class elide/runtime/plugins/java/Java$Plugin : elide/runtime/plugin
 	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
-public final class elide/runtime/plugins/java/JavaConfig {
+public final class elide/runtime/plugins/java/JavaConfig : elide/runtime/plugins/JVMLanguageConfig {
 }
 

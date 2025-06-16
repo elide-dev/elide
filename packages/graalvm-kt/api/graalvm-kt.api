@@ -227,12 +227,8 @@ public final class elide/runtime/plugins/kotlin/Kotlin$Plugin : elide/runtime/pl
 	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
-public final class elide/runtime/plugins/kotlin/KotlinConfig : elide/runtime/plugins/AbstractLanguageConfig {
-	public final fun getGuestClasspathRoots ()Ljava/util/List;
-	public final fun getGuestJavaHome ()Ljava/lang/String;
+public final class elide/runtime/plugins/kotlin/KotlinConfig : elide/runtime/plugins/JVMLanguageConfig {
 	public final fun getGuestKotlinHome ()Ljava/lang/String;
-	public final fun setGuestClasspathRoots (Ljava/util/List;)V
-	public final fun setGuestJavaHome (Ljava/lang/String;)V
 	public final fun setGuestKotlinHome (Ljava/lang/String;)V
 }
 

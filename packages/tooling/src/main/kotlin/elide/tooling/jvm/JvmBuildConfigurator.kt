@@ -54,10 +54,56 @@ import elide.tooling.project.SourceSet
 import elide.tooling.project.SourceSetLanguage.Java
 import elide.tooling.project.SourceSetLanguage.Kotlin
 import elide.tooling.project.SourceSetType
+import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.KotlinJvmCompilerOptions
 
 private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
   return "$name${srcSet.name[0].uppercase()}${srcSet.name.slice(1..srcSet.name.lastIndex)}"
+}
+
+public object JvmLibraries {
+  public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
+  public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"
+  public const val EMBEDDED_APIGUARDIAN_VERSION: String = "1.1.2"
+  public const val EMBEDDED_OPENTEST_VERSION: String = "1.3.0"
+  public const val EMBEDDED_COROUTINES_VERSION: String = KotlinLanguage.COROUTINES_VERSION
+  public const val EMBEDDED_SERIALIZATION_VERSION: String = KotlinLanguage.SERIALIZATION_VERSION
+  public const val APIGUARDIAN_API: String = "org.apiguardian:apiguardian-api"
+  public const val JUNIT_JUPITER_API: String = "org.junit.jupiter:junit-jupiter-api"
+  public const val JUNIT_JUPITER_ENGINE: String = "org.junit.jupiter:junit-jupiter-engine"
+  public const val JUNIT_PLATFORM_ENGINE: String = "org.junit.platform:junit-platform-engine"
+  public const val JUNIT_PLATFORM_COMMONS: String = "org.junit.platform:junit-platform-commons"
+  public const val JUNIT_PLATFORM_CONSOLE: String = "org.junit.platform:junit-platform-console"
+  public const val JUNIT_JUPITER_PARAMS: String = "org.junit.jupiter:junit-jupiter-params"
+  public const val OPENTEST: String = "org.opentest4j:opentest4j"
+  public const val KOTLIN_TEST: String = "org.jetbrains.kotlin:kotlin-test"
+  public const val KOTLIN_TEST_JUNIT5: String = "org.jetbrains.kotlin:kotlin-test-junit5"
+  public const val KOTLINX_COROUTINES: String = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
+  public const val KOTLINX_COROUTINES_TEST: String = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
+  public const val KOTLINX_SERIALIZATION: String = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
+  public const val KOTLINX_SERIALIZATION_JSON: String = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm"
+
+  internal val testCoordinates = arrayOf(
+    OPENTEST to EMBEDDED_OPENTEST_VERSION,
+    JUNIT_JUPITER_API to EMBEDDED_JUNIT_VERSION,
+    JUNIT_JUPITER_PARAMS to EMBEDDED_JUNIT_VERSION,
+    JUNIT_JUPITER_ENGINE to EMBEDDED_JUNIT_VERSION,
+    JUNIT_PLATFORM_ENGINE to EMBEDDED_JUNIT_PLATFORM_VERSION,
+    JUNIT_PLATFORM_COMMONS to EMBEDDED_JUNIT_PLATFORM_VERSION,
+    JUNIT_PLATFORM_CONSOLE to EMBEDDED_JUNIT_PLATFORM_VERSION,
+    KOTLIN_TEST to KotlinLanguage.VERSION,
+    KOTLIN_TEST_JUNIT5 to KotlinLanguage.VERSION,
+    KOTLINX_COROUTINES_TEST to EMBEDDED_COROUTINES_VERSION,
+    KOTLINX_SERIALIZATION to EMBEDDED_SERIALIZATION_VERSION,
+    KOTLINX_SERIALIZATION_JSON to EMBEDDED_SERIALIZATION_VERSION,
+    APIGUARDIAN_API to EMBEDDED_APIGUARDIAN_VERSION,
+  )
+
+  public fun jarNameFor(coordinate: String, version: String): String {
+    val parts = coordinate.split(":")
+    require(parts.size == 2) { "Invalid built-in coordinate: $coordinate" }
+    return "${parts[1]}-$version.jar"
+  }
 }
 
 /**
@@ -65,47 +111,11 @@ private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
  */
 internal class JvmBuildConfigurator : BuildConfigurator {
   private companion object {
-    private const val EMBEDDED_JUNIT_VERSION = "5.13.1"
-    private const val EMBEDDED_JUNIT_PLATFORM_VERSION = "1.13.1"
-    private const val EMBEDDED_APIGUARDIAN_VERSION = "1.1.2"
-    private const val EMBEDDED_COROUTINES_VERSION = KotlinLanguage.COROUTINES_VERSION
-    private const val EMBEDDED_SERIALIZATION_VERSION = KotlinLanguage.SERIALIZATION_VERSION
-    private const val APIGUARDIAN_API = "org.apiguardian:apiguardian-api"
-    private const val JUNIT_JUPITER_API = "org.junit.jupiter:junit-jupiter-api"
-    private const val JUNIT_JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine"
-    private const val JUNIT_PLATFORM_ENGINE = "org.junit.platform:junit-platform-engine"
-    private const val JUNIT_PLATFORM_COMMONS = "org.junit.platform:junit-platform-console"
-    private const val JUNIT_PLATFORM_CONSOLE = "org.junit.platform:junit-platform-console"
-    private const val JUNIT_JUPITER_PARAMS = "org.junit.jupiter:junit-jupiter-params"
-    private const val KOTLIN_TEST = "org.jetbrains.kotlin:kotlin-test"
-    private const val KOTLIN_TEST_JUNIT5 = "org.jetbrains.kotlin:kotlin-test-junit5"
-    private const val KOTLINX_COROUTINES = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
-    private const val KOTLINX_COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
-    private const val KOTLINX_SERIALIZATION = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
-    private const val KOTLINX_SERIALIZATION_JSON = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm"
-
-    private val testCoordinates = arrayOf(
-      JUNIT_JUPITER_API to EMBEDDED_JUNIT_VERSION,
-      JUNIT_JUPITER_PARAMS to EMBEDDED_JUNIT_VERSION,
-      JUNIT_JUPITER_ENGINE to EMBEDDED_JUNIT_VERSION,
-      JUNIT_PLATFORM_ENGINE to EMBEDDED_JUNIT_PLATFORM_VERSION,
-      JUNIT_PLATFORM_COMMONS to EMBEDDED_JUNIT_PLATFORM_VERSION,
-      JUNIT_PLATFORM_CONSOLE to EMBEDDED_JUNIT_PLATFORM_VERSION,
-      KOTLIN_TEST to KotlinLanguage.VERSION,
-      KOTLIN_TEST_JUNIT5 to KotlinLanguage.VERSION,
-      KOTLINX_COROUTINES_TEST to EMBEDDED_COROUTINES_VERSION,
-      KOTLINX_SERIALIZATION to EMBEDDED_SERIALIZATION_VERSION,
-      KOTLINX_SERIALIZATION_JSON to EMBEDDED_SERIALIZATION_VERSION,
-      APIGUARDIAN_API to EMBEDDED_APIGUARDIAN_VERSION,
-    )
-
     @JvmStatic private val logging by lazy { Logging.of(JvmBuildConfigurator::class) }
   }
 
   private fun jarNameFor(coordinate: String, version: String): String {
-    val parts = coordinate.split(":")
-    require(parts.size == 2) { "Invalid built-in coordinate: $coordinate" }
-    return "${parts[1]}-$version.jar"
+    return JvmLibraries.jarNameFor(coordinate, version)
   }
 
   private fun builtinKotlinJarPath(state: ElideBuildState, dependency: String, version: String): Path {
@@ -156,6 +166,35 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     logging.debug { "Java main classpath: $compileClasspath" }
     logging.debug { "Classes output root: $classOutput" }
 
+    // resolve source/target settings
+    val (explicitSourceVersion, sourceVersion) = (
+      state.manifest.jvm?.java?.release
+        ?: state.manifest.jvm?.java?.source
+        ?: state.manifest.jvm?.target
+    ).let {
+      when (it) {
+        null -> false to ElidePackageManifest.JvmTarget.DEFAULT
+        else -> true to it
+      }
+    }
+    val (explicitTargetVersion, targetVersion) = (
+      state.manifest.jvm?.java?.release
+        ?: state.manifest.jvm?.java?.source
+        ?: state.manifest.jvm?.target
+    ).let {
+      when (it) {
+        null -> false to ElidePackageManifest.JvmTarget.DEFAULT
+        else -> true to it
+      }
+    }
+
+    // if there is an explicit target or source version, use that pair, otherwise, use `release`.
+    val useReleaseFlag = !(explicitSourceVersion || explicitTargetVersion)
+    val effectiveReleaseVersion = when (val explicit = state.manifest.jvm?.java?.release) {
+      null -> targetVersion
+      else -> explicit
+    }
+
     // prepare to inject deps
     val staticDeps = Classpath.empty().toMutable()
     if (config.settings.dependencies && state.manifest.jvm?.features?.testing != false && tests) {
@@ -167,13 +206,46 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       // `org.junit.platform:junit-platform-commons`
       // `org.junit.platform:junit-platform-console`
       // `org.apiguardian:apiguardian-api`
-      staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_ENGINE, EMBEDDED_JUNIT_VERSION))
-      staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_API, EMBEDDED_JUNIT_VERSION))
-      staticDeps.add(builtinJavaJarPath(state, JUNIT_JUPITER_PARAMS, EMBEDDED_JUNIT_VERSION))
-      staticDeps.add(builtinJavaJarPath(state, JUNIT_PLATFORM_ENGINE, EMBEDDED_JUNIT_PLATFORM_VERSION))
-      staticDeps.add(builtinJavaJarPath(state, JUNIT_PLATFORM_COMMONS, EMBEDDED_JUNIT_PLATFORM_VERSION))
-      staticDeps.add(builtinJavaJarPath(state, JUNIT_PLATFORM_CONSOLE, EMBEDDED_JUNIT_PLATFORM_VERSION))
-      staticDeps.add(builtinJavaJarPath(state, APIGUARDIAN_API, EMBEDDED_APIGUARDIAN_VERSION))
+      staticDeps.add(builtinJavaJarPath(
+        state,
+        JvmLibraries.JUNIT_JUPITER_ENGINE,
+        JvmLibraries.EMBEDDED_JUNIT_VERSION,
+      ))
+      staticDeps.add(builtinJavaJarPath(
+        state,
+        JvmLibraries.JUNIT_JUPITER_API,
+        JvmLibraries.EMBEDDED_JUNIT_VERSION,
+      ))
+      staticDeps.add(builtinJavaJarPath(
+        state,
+        JvmLibraries.JUNIT_JUPITER_PARAMS,
+        JvmLibraries.EMBEDDED_JUNIT_VERSION,
+      ))
+      staticDeps.add(builtinJavaJarPath(
+        state,
+        JvmLibraries.JUNIT_PLATFORM_ENGINE,
+        JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
+      ))
+      staticDeps.add(builtinJavaJarPath(
+        state,
+        JvmLibraries.JUNIT_PLATFORM_COMMONS,
+        JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
+      ))
+      staticDeps.add(builtinJavaJarPath(
+        state,
+        JvmLibraries.JUNIT_PLATFORM_CONSOLE,
+        JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
+      ))
+      staticDeps.add(builtinJavaJarPath(
+        state,
+        JvmLibraries.APIGUARDIAN_API,
+        JvmLibraries.EMBEDDED_APIGUARDIAN_VERSION,
+      ))
+      staticDeps.add(builtinJavaJarPath(
+        state,
+        JvmLibraries.OPENTEST,
+        JvmLibraries.EMBEDDED_OPENTEST_VERSION,
+      ))
     }
 
     // main classes should be on classpath in tests mode
@@ -182,6 +254,21 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     }
 
     val args = Arguments.empty().toMutable().apply {
+      // bytecode and source targeting
+      if (useReleaseFlag) {
+        // @TODO: argument splitting by default
+        add(Argument.of("--release"))
+        add(Argument.of(effectiveReleaseVersion.argValue))
+        logging.debug { "Using `--release`: $effectiveReleaseVersion" }
+      } else {
+        // @TODO: argument splitting by default
+        add(Argument.of("--source"))
+        add(Argument.of(sourceVersion.argValue))
+        add(Argument.of("--target"))
+        add(Argument.of(targetVersion.argValue))
+        logging.debug { "Using `--source`/`--target`: ${sourceVersion}/${targetVersion}" }
+      }
+
       // assemble classpath
       MutableClasspath.empty().apply {
         compileClasspath?.let { add(it) }
@@ -207,6 +294,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       // @TODO proper splitting of args here by default, instead of manually
       add(Argument.of("-d"))
       add(Argument.of(classOutput.absolutePathString()))
+
+      // if the user specifies extra flags in their project configuration, add them here
+      state.manifest.jvm?.java?.compiler?.flags?.let {
+        addAllStrings(it)
+      }
 
       // invoker amendments
       argsAmender()
@@ -284,37 +376,65 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     if (state.manifest.kotlin?.features?.kotlinx != false) {
       if (state.manifest.kotlin?.features?.coroutines != false) {
         // add `org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm`
-        staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES, EMBEDDED_COROUTINES_VERSION))
+        staticDeps.add(builtinKotlinJarPath(
+          state,
+          JvmLibraries.KOTLINX_COROUTINES,
+          JvmLibraries.EMBEDDED_COROUTINES_VERSION,
+        ))
       }
       if (state.manifest.kotlin?.features?.serialization == true) {
         // add `org.jetbrains.kotlinx:kotlinx-serialization-core`
-        staticDeps.add(builtinKotlinJarPath(state, KOTLINX_SERIALIZATION, EMBEDDED_SERIALIZATION_VERSION))
+        staticDeps.add(builtinKotlinJarPath(
+          state,
+          JvmLibraries.KOTLINX_SERIALIZATION,
+          JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
+        ))
 
         // add `org.jetbrains.kotlinx:kotlinx-serialization-json`
-        staticDeps.add(builtinKotlinJarPath(state, KOTLINX_SERIALIZATION_JSON, EMBEDDED_SERIALIZATION_VERSION))
+        staticDeps.add(builtinKotlinJarPath(
+          state,
+          JvmLibraries.KOTLINX_SERIALIZATION_JSON,
+          JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
+        ))
       }
     }
     if (tests) {
       if (state.manifest.kotlin?.features?.testing != false) {
         // junit5, kotlin testing
-        testCoordinates.forEach { (testLib, version) ->
+        JvmLibraries.testCoordinates.forEach { (testLib, version) ->
           staticDeps.add(builtinKotlinJarPath(state, testLib, version))
         }
       }
       if (state.manifest.kotlin?.features?.kotlinx != false) {
         if (state.manifest.kotlin?.features?.coroutines != false) {
           // add `org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm`
-          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES, EMBEDDED_COROUTINES_VERSION))
+          staticDeps.add(builtinKotlinJarPath(
+            state,
+            JvmLibraries.KOTLINX_COROUTINES,
+            JvmLibraries.EMBEDDED_COROUTINES_VERSION,
+          ))
 
           // add `org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm`
-          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_COROUTINES_TEST, EMBEDDED_COROUTINES_VERSION))
+          staticDeps.add(builtinKotlinJarPath(
+            state,
+            JvmLibraries.KOTLINX_COROUTINES_TEST,
+            JvmLibraries.EMBEDDED_COROUTINES_VERSION,
+          ))
         }
         if (state.manifest.kotlin?.features?.serialization == true) {
           // add `org.jetbrains.kotlinx:kotlinx-serialization-core-jvm`
-          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_SERIALIZATION, EMBEDDED_SERIALIZATION_VERSION))
+          staticDeps.add(builtinKotlinJarPath(
+            state,
+            JvmLibraries.KOTLINX_SERIALIZATION,
+            JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
+          ))
 
           // add `org.jetbrains.kotlinx:kotlinx-serialization-json-jvm`
-          staticDeps.add(builtinKotlinJarPath(state, KOTLINX_SERIALIZATION_JSON, EMBEDDED_SERIALIZATION_VERSION))
+          staticDeps.add(builtinKotlinJarPath(
+            state,
+            JvmLibraries.KOTLINX_SERIALIZATION_JSON,
+            JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
+          ))
         }
       }
     }

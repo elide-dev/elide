@@ -17,14 +17,14 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.pathString
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
-import elide.runtime.plugins.AbstractLanguageConfig
+import elide.runtime.plugins.JVMLanguageConfig
 
 /**
  * Configuration for the [Jvm] plugin.
  *
  * @see classpath
  */
-@DelicateElideApi public class JvmConfig internal constructor() : AbstractLanguageConfig() {
+@DelicateElideApi public class JvmConfig internal constructor() : JVMLanguageConfig() {
   /** Collection of classpath entries passed to Espresso. */
   private val classpathEntries: MutableList<String> = mutableListOf()
 
@@ -80,11 +80,6 @@ import elide.runtime.plugins.AbstractLanguageConfig
    * Module specifications enabled for native support in the guest JVM.
    */
   public var nativeModules: List<String> = listOf("ALL-UNNAMED")
-
-  /**
-   * Set the path to JAVA_HOME that should be used, if known.
-   */
-  public var guestJavaHome: String? = null
 
   /** Returns a string representation of the classpath to be used by the guest Espresso JVM. */
   internal fun collectClasspath(): String = classpathEntries.joinToString(CLASSPATH_ENTRY_SEPARATOR)

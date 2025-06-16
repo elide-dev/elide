@@ -149,6 +149,7 @@ import elide.tooling.builder.TestDriver.discoverTests
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.TestConfigurator.*
 import elide.tooling.config.on
+import elide.tooling.jvm.JvmLibraries
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.jvm.resolver.MavenLockfileResolver
 import elide.tooling.lockfile.ElideLockfile
@@ -1356,22 +1357,26 @@ internal class ToolShellCommand @Inject constructor(
     }
   }
 
+  private val _isServeMode by lazy {
+    commandSpecifiesServer ||
+            executeServe ||
+            actionHint?.lowercase()?.trim().let {
+              it != null && it == "serve" || it == "start"
+            }
+  }
+
   // Detect whether we are running in `serve` mode (with alias `start`).
-  private fun serveMode(): Boolean = (
-          commandSpecifiesServer ||
-                  executeServe ||
-                  actionHint?.lowercase()?.trim().let {
-                    it != null && it == "serve" || it == "start"
-                  }
-          )
+  private fun serveMode(): Boolean = _isServeMode
+
+  private val _isTestMode by lazy {
+    commandSpecifiesTest ||
+            actionHint?.lowercase()?.trim().let {
+              it != null && it == "test" || it == "tests"
+            }
+  }
 
   // Detect whether we are running in `test` mode (with alias `test` or `tests`).
-  private fun testMode(): Boolean = (
-          commandSpecifiesTest ||
-                  actionHint?.lowercase()?.trim().let {
-                    it != null && it == "test" || it == "tests"
-                  }
-          )
+  private fun testMode(): Boolean = _isTestMode
 
   // Read an executable script, and then execute the script and keep it started as a server.
   private fun readStartServer(
@@ -1711,6 +1716,18 @@ internal class ToolShellCommand @Inject constructor(
     val kotlinVersion = KotlinLanguage.VERSION
     val coroutinesVersion = KotlinLanguage.COROUTINES_VERSION
     val serializationVersion = KotlinLanguage.SERIALIZATION_VERSION
+    val junitVersion = JvmLibraries.EMBEDDED_JUNIT_VERSION
+    val junitPlatVersion = JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION
+    val junitLibs = arrayOf(
+      JvmLibraries.JUNIT_JUPITER_API,
+      JvmLibraries.JUNIT_JUPITER_ENGINE,
+      JvmLibraries.JUNIT_JUPITER_PARAMS,
+    )
+    val junitPlatLibs = arrayOf(
+      JvmLibraries.JUNIT_PLATFORM_COMMONS,
+      JvmLibraries.JUNIT_PLATFORM_ENGINE,
+      JvmLibraries.JUNIT_PLATFORM_CONSOLE,
+    )
 
     return sequenceOf(
       langHomeResources.resolve("elide-kotlin.jar"),
@@ -1727,6 +1744,18 @@ internal class ToolShellCommand @Inject constructor(
         yield(langHomeResources.resolve("kotlin-test-$kotlinVersion.jar"))
         yield(langHomeResources.resolve("kotlin-test-junit5-$kotlinVersion.jar"))
         yield(langHomeResources.resolve("kotlinx-coroutines-test-jvm-$coroutinesVersion.jar"))
+        yield(
+          langHomeResources.resolve(JvmLibraries.jarNameFor(
+            JvmLibraries.OPENTEST,
+            JvmLibraries.EMBEDDED_OPENTEST_VERSION,
+          ))
+        )
+        junitLibs.forEach {
+          yield(langHomeResources.resolve(JvmLibraries.jarNameFor(it, junitVersion)))
+        }
+        junitPlatLibs.forEach {
+          yield(langHomeResources.resolve(JvmLibraries.jarNameFor(it, junitPlatVersion)))
+        }
       }
     })
   }
@@ -1902,6 +1931,22 @@ internal class ToolShellCommand @Inject constructor(
         }
       ).plus(
         pathsFromLangResources.ifEmpty { pathsFromHomeResources }
+      ).plus(
+        when (testMode()) {
+          // @TODO don't hardcode .dev or artifacts paths
+          // @TODO this belongs better in `withProjectClasspath`
+          true -> (project?.root ?: Paths.get(System.getenv("user.dir")))
+            .resolve(".dev")
+            .resolve("artifacts")
+            .resolve("jvm")
+            .resolve("classes").let { classRoot ->
+              sequenceOf(
+                classRoot.resolve("main"),
+                classRoot.resolve("test"),
+              )
+            }
+          false -> emptySequence()
+        }
       ).distinct().asStream().parallel().filter {
         Files.exists(it)
       }.let {
@@ -1933,6 +1978,8 @@ internal class ToolShellCommand @Inject constructor(
 
   override fun PolyglotEngineConfiguration.configureEngine(langs: Set<GuestLanguage>) {
     // grab project configurations, if available
+    val effectiveLangs = langs.toMutableSet()
+    val isTestMode = testMode()
     val project = activeProject.value
     if (project != null) logging.debug("Resolved project info: {}", project)
     val lockfile = activeLockfile.value
@@ -1941,7 +1988,7 @@ internal class ToolShellCommand @Inject constructor(
     // conditionally apply debugging settings
     if (debug) debugger.apply(this)
     inspector.apply(this)
-    val requiresIo = langs.let { it.contains(PYTHON) || it.contains(RUBY) }
+    val requiresIo = effectiveLangs.let { it.contains(PYTHON) || it.contains(RUBY) }
 
     // configure host access rules
     hostAccess = when {
@@ -1958,6 +2005,12 @@ internal class ToolShellCommand @Inject constructor(
       host = accessControl.allowEnv,
       dotenv = appEnvironment.dotenv,
     )
+
+    // @TODO fix: if we are in test mode, make sure jvm support is initialized as expected.
+    if (isTestMode) {
+      effectiveLangs.add(JAVA)
+      effectiveLangs.add(KOTLIN)
+    }
 
     // load arguments into context if we have them
     when (val arguments = arguments) {
@@ -1997,7 +2050,7 @@ internal class ToolShellCommand @Inject constructor(
     }
 
     // configure test-mode plugins like coverage
-    if (testMode()) configure(Coverage) {
+    if (isTestMode) configure(Coverage) {
       val projectCoverageSettings = activeProject.value?.manifest?.tests?.coverage
       val doEnable = (enableCoverage || projectCoverageSettings?.enabled == true)
       enabled = doEnable
@@ -2022,14 +2075,14 @@ internal class ToolShellCommand @Inject constructor(
       }
     }
 
-    langs.forEach { lang ->
+    effectiveLangs.forEach { lang ->
       when (lang) {
         // Primary Engines
         JS -> configure(elide.runtime.plugins.js.JavaScript) {
           logging.debug("Configuring JS VM")
           resourcesPath = gvmResources
           executable = cmd
-          testing = testMode()
+          testing = isTestMode
           executableList = listOf(cmd).plus(args)
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
           jsSettings.apply(this)
@@ -2060,7 +2113,7 @@ internal class ToolShellCommand @Inject constructor(
           installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
           resourcesPath = gvmResources
           executable = cmd
-          testing = testMode()
+          testing = isTestMode
           executableList = listOf(cmd).plus(args)
           pySettings.apply(this)
         }
@@ -2074,6 +2127,8 @@ internal class ToolShellCommand @Inject constructor(
           when (lang) {
             JAVA -> configure(elide.runtime.plugins.java.Java) {
               logging.debug("Configuring Java")
+              guestClasspathRoots.addAll(fullClasspath)
+              javaHome?.let { guestJavaHome = it }
             }
             KOTLIN -> configure(elide.runtime.plugins.kotlin.Kotlin) {
               guestClasspathRoots.addAll(fullClasspath)

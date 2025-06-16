@@ -1115,6 +1115,14 @@ public final class elide/runtime/plugins/AbstractLanguagePluginKt {
 	public static final fun defaultPolyglotEngineBuilder ()Lorg/graalvm/polyglot/Engine$Builder;
 }
 
+public abstract class elide/runtime/plugins/JVMLanguageConfig : elide/runtime/plugins/AbstractLanguageConfig {
+	public fun <init> ()V
+	public final fun getGuestClasspathRoots ()Ljava/util/List;
+	public final fun getGuestJavaHome ()Ljava/lang/String;
+	public final fun setGuestClasspathRoots (Ljava/util/List;)V
+	public final fun setGuestJavaHome (Ljava/lang/String;)V
+}
+
 public final class elide/runtime/plugins/bindings/Bindings {
 	public static final field Plugin Lelide/runtime/plugins/bindings/Bindings$Plugin;
 	public synthetic fun <init> (Ljava/util/List;Lkotlin/jvm/internal/DefaultConstructorMarker;)V

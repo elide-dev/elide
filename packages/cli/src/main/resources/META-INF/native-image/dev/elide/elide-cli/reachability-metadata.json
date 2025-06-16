@@ -3071,6 +3071,37 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tool.cli.cmd.tool.nativeImage.$NativeImageAdapter$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.nativeImage.$NativeImageAdapter$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.nativeImage.$NativeImageAdapter$NativeImageCliTool$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.nativeImage.NativeImageAdapter$NativeImageCliTool",
+      "allDeclaredFields": true
+    },
+    {
       "type": "elide.tool.cli.options.$AbstractEngineOptions$Introspection",
       "methods": [
         {
@@ -3382,6 +3413,15 @@
       ]
     },
     {
+      "type": "elide.tooling.gvm.nativeImage.$NativeImageDriver$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tooling.js.JsBuildConfigurator"
     },
     {
@@ -3598,7 +3638,36 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "java.util.Map",
+            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
+            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
+            "java.util.Map",
+            "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$Artifact"
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
@@ -3614,18 +3683,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
@@ -3815,6 +3872,18 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenRepository"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NpmDependencies",
@@ -4878,6 +4947,51 @@
       ]
     },
     {
+      "type": "io.micronaut.http.netty.channel.loom.$EventLoopLoomFactory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.netty.channel.loom.$EventLoopLoomFactory$EventLoopGroupThreadFactory0$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.netty.channel.loom.$LoomCarrierConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.netty.channel.loom.$LoomCarrierGroup$Factory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.http.netty.channel.loom.$PrivateLoomSupport$PrivateLoomCondition$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "io.micronaut.http.netty.configuration.$NettyGlobalConfiguration$Definition",
       "methods": [
         {
@@ -5338,6 +5452,33 @@
     },
     {
       "type": "io.micronaut.runtime.converters.time.TimeConverterRegistrar",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.runtime.graceful.$GracefulShutdownConfiguration$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.runtime.graceful.$GracefulShutdownListener$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.runtime.graceful.$GracefulShutdownManager$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -5935,6 +6076,18 @@
       ]
     },
     {
+      "type": "io.netty.util.internal.CleanerJava24$CleanableDirectBufferImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.AutoCloseable",
+            "java.nio.ByteBuffer"
+          ]
+        }
+      ]
+    },
+    {
       "type": "io.netty.util.internal.NativeLibraryUtil",
       "methods": [
         {
@@ -6154,6 +6307,12 @@
         {
           "name": "threadLocalRandomProbe"
         }
+      ],
+      "methods": [
+        {
+          "name": "isVirtual",
+          "parameterTypes": []
+        }
       ]
     },
     {
@@ -6169,6 +6328,30 @@
     },
     {
       "type": "java.lang.annotation.Annotation"
+    },
+    {
+      "type": "java.lang.foreign.Arena",
+      "methods": [
+        {
+          "name": "allocate",
+          "parameterTypes": [
+            "long"
+          ]
+        },
+        {
+          "name": "ofShared",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "java.lang.foreign.MemorySegment",
+      "methods": [
+        {
+          "name": "asByteBuffer",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "java.lang.invoke.VarHandle"
@@ -6270,7 +6453,15 @@
       ]
     },
     {
-      "type": "java.nio.ByteBuffer"
+      "type": "java.nio.ByteBuffer",
+      "methods": [
+        {
+          "name": "alignedSlice",
+          "parameterTypes": [
+            "int"
+          ]
+        }
+      ]
     },
     {
       "type": "java.nio.DirectByteBuffer"
@@ -10111,6 +10302,9 @@
       "glob": "META-INF/elide/pkl/Lockfile.pkl"
     },
     {
+      "glob": "META-INF/elide/pkl/NativeImage.pkl"
+    },
+    {
       "glob": "META-INF/elide/pkl/Ops.pkl"
     },
     {
@@ -10334,6 +10528,9 @@
     },
     {
       "glob": "META-INF/services/java.util.spi.ResourceBundleControlProvider"
+    },
+    {
+      "glob": "META-INF/services/javax.annotation.processing.Processor"
     },
     {
       "glob": "META-INF/services/javax.management.remote.JMXConnectorServerProvider"

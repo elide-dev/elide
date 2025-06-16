@@ -142,8 +142,8 @@ import elide.tooling.project.ElideProject
       @JvmStatic private fun detectMode(args: Arguments): NativeBuildMode {
         // @TODO not very efficient
         return when ("--shared" in args.asArgumentList()) {
-          true -> return NativeBuildMode.SHARED_LIBRARY
-          false -> return NativeBuildMode.BINARY
+          true -> NativeBuildMode.SHARED_LIBRARY
+          false -> NativeBuildMode.BINARY
         }
       }
 
@@ -232,12 +232,12 @@ import elide.tooling.project.ElideProject
           // @TODO don't serialize args everywhere
           val argsList = args.asArgumentList()
           val explicitOptSetting = argsList.find { it.startsWith("-O") && it.length == 3 }
-          val effectiveOptStting = chooseOptSetting(explicitOptSetting)
+          val effectiveOptSetting = chooseOptSetting(explicitOptSetting)
 
           // configure defaults from project/tool env
           if (!noInject) {
             if (explicitOptSetting == null) {
-              this.args.add(effectiveOptStting)
+              this.args.add(effectiveOptSetting)
             }
             this.args.add("-H:-BuildOutputRecommendations")
           }

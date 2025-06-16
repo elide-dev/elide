@@ -6703,13 +6703,37 @@ public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteObject$ReflectConf
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLitePrimitiveType$BLOB$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public synthetic class elide/runtime/intrinsics/sqlite/$SQLitePrimitiveType$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLitePrimitiveType$INTEGER$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLitePrimitiveType$REAL$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public synthetic class elide/runtime/intrinsics/sqlite/$SQLitePrimitiveType$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLitePrimitiveType$TEXT$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
@@ -6727,7 +6751,31 @@ public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransaction$Reflec
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactionType$AUTO$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactionType$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactionType$DEFERRED$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactionType$EXCLUSIVE$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactionType$IMMEDIATE$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;

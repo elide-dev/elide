@@ -98,19 +98,6 @@ import elide.tooling.project.ElideProject
     return when (result) {
       Tool.Result.Success -> {
         val totalMs = compileEnd - compileStart
-//        val srcsCount = (driver.inputs as NativeImageDriver.SourceFiles).files.size
-//        val outputPath = when (val outs = compiler.outputs) {
-//          is KotlinCompilerOutputs.Jar -> outs.path
-//          is KotlinCompilerOutputs.Classes -> outs.directory
-//        }
-//        val outputRelativeToCwd = outputPath
-//          .toAbsolutePath()
-//          .relativeTo(Paths.get(System.getProperty("user.dir")))
-
-//        output {
-//          val sourceFiles = if (srcsCount > 1) "sources" else "source file"
-//          append("[kotlinc] Compiled $srcsCount $sourceFiles in ${totalMs}ms → $outputRelativeToCwd")
-//        }
         success()
       }
       else -> {

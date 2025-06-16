@@ -353,6 +353,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class NativeImageOptions(
     val verbose: Boolean = false,
+    val flags: List<String> = emptyList(),
   )
 
   @JvmRecord @Serializable public data class NativeImageSettings(

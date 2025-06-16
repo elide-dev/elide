@@ -7,7 +7,7 @@ import "Artifacts.pkl" as _artifacts
 /// Specifies the layout of options for a Native Image.
 open class NativeImageOptions {
   /// Extra flags to pass to the Native Image compiler; added to all project targets.
-  args: Listing<String> = new {}
+  flags: Listing<String> = new {}
 }
 
 /// Configures Native Image generation settings, project-wide.

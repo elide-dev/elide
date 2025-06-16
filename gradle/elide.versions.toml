@@ -225,6 +225,7 @@ okio = "3.13.0"
 openrewrite-bom = "2.10.0"
 openrewrite-lib = "8.1.13"
 openrewrite-plugin = "6.12.0"
+opentest = "1.3.0"
 oshi = "6.8.2"
 owasp = "12.1.3"
 parallelGzip = "1.0.5"
@@ -717,6 +718,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 opentelemetry-exporter-googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
 opentelemetry-exporter-logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
+opentest = { group = "org.opentest4j", name = "opentest4j" }
 oshi-core = { group = "com.github.oshi", name = "oshi-core-java11", version.ref = "oshi" }
 owasp = { group = "org.owasp", name = "dependency-check-gradle", version.ref = "owasp" }
 parallelGzip = { group = "org.anarres", name = "parallelgzip", version.ref = "parallelGzip" }

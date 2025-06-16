@@ -2,6 +2,8 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
+    <ID>ForbiddenComment:JvmBuildConfigurator.kt$JvmBuildConfigurator$// @TODO: argument splitting by default</ID>
+    <ID>LongMethod:JvmBuildConfigurator.kt$JvmBuildConfigurator$private fun ActionScope.javac( name: String, resolver: MavenAetherResolver?, state: ElideBuildState, config: BuildConfigurator.BuildConfiguration, srcSet: SourceSet, additionalDeps: Classpath? = null, tests: Boolean = false, dependencies: List&lt;Task> = emptyList(), argsAmender: MutableArguments.() -> Unit = {}, )</ID>
     <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$inputs: NativeImageInputs.Paths</ID>
     <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$javaToolchainHome: Path</ID>
     <ID>UnusedParameter:TestDriver.kt$TestDriver$binder: ExecutionBinder? = null</ID>

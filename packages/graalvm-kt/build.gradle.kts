@@ -178,6 +178,7 @@ dependencies {
   embeddedJava(mn.micronaut.inject.java)
   embeddedJava(mn.micronaut.test.junit5)
   embeddedJava(libs.apiguardian.api)
+  embeddedJava(libs.opentest)
 
   // Testing
   testImplementation(projects.packages.test)

@@ -1408,6 +1408,31 @@ public final class elide/tooling/jvm/JavadocToolKt {
 	public static final fun getJavadoc ()Lelide/tool/Tool$CommandLineTool;
 }
 
+public final class elide/tooling/jvm/JvmLibraries {
+	public static final field APIGUARDIAN_API Ljava/lang/String;
+	public static final field EMBEDDED_APIGUARDIAN_VERSION Ljava/lang/String;
+	public static final field EMBEDDED_COROUTINES_VERSION Ljava/lang/String;
+	public static final field EMBEDDED_JUNIT_PLATFORM_VERSION Ljava/lang/String;
+	public static final field EMBEDDED_JUNIT_VERSION Ljava/lang/String;
+	public static final field EMBEDDED_OPENTEST_VERSION Ljava/lang/String;
+	public static final field EMBEDDED_SERIALIZATION_VERSION Ljava/lang/String;
+	public static final field INSTANCE Lelide/tooling/jvm/JvmLibraries;
+	public static final field JUNIT_JUPITER_API Ljava/lang/String;
+	public static final field JUNIT_JUPITER_ENGINE Ljava/lang/String;
+	public static final field JUNIT_JUPITER_PARAMS Ljava/lang/String;
+	public static final field JUNIT_PLATFORM_COMMONS Ljava/lang/String;
+	public static final field JUNIT_PLATFORM_CONSOLE Ljava/lang/String;
+	public static final field JUNIT_PLATFORM_ENGINE Ljava/lang/String;
+	public static final field KOTLINX_COROUTINES Ljava/lang/String;
+	public static final field KOTLINX_COROUTINES_TEST Ljava/lang/String;
+	public static final field KOTLINX_SERIALIZATION Ljava/lang/String;
+	public static final field KOTLINX_SERIALIZATION_JSON Ljava/lang/String;
+	public static final field KOTLIN_TEST Ljava/lang/String;
+	public static final field KOTLIN_TEST_JUNIT5 Ljava/lang/String;
+	public static final field OPENTEST Ljava/lang/String;
+	public final fun jarNameFor (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+}
+
 public synthetic class elide/tooling/jvm/resolver/$RepositorySystemFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -3096,6 +3121,66 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$GradleCat
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class elide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings : java/lang/Record {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun flags ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$JavaLanguage : java/lang/Record {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage$Companion;
+	public fun <init> ()V
+	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;)V
+	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun compiler ()Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;
+	public final fun component1 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
+	public final fun component2 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
+	public final fun component3 ()Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;
+	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun release ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
+	public final fun source ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$JavaLanguage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage$$serializer;
+	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$JavaLanguage$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings$Companion;
 	public fun <init> ()V
@@ -3155,16 +3240,18 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmFeatur
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmSettings : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings$Companion;
 	public fun <init> ()V
-	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;)V
-	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;)V
+	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;
-	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;
+	public final fun component4 ()Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;
+	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun features ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;
 	public fun hashCode ()I
+	public final fun java ()Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;
 	public final fun javaHome ()Ljava/lang/String;
 	public final fun target ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
 	public fun toString ()Ljava/lang/String;
@@ -3186,19 +3273,23 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmSettin
 
 public abstract interface class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$Companion;
+	public abstract fun getArgValue ()Ljava/lang/String;
 }
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$Companion {
+	public final fun getDEFAULT ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$JvmTarget {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget$Companion;
 	public synthetic fun <init> (ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun argValue ()Ljava/lang/String;
 	public final fun component1-pVg5ArA ()I
 	public final fun copy-WZ4Q5Ns (I)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;
 	public static synthetic fun copy-WZ4Q5Ns$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;IILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;
 	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getArgValue ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun number ()I
 	public fun toString ()Ljava/lang/String;
@@ -3221,10 +3312,12 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$JvmTarget {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget$Companion;
 	public fun <init> (Ljava/lang/String;)V
+	public fun argValue ()Ljava/lang/String;
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;
 	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;
 	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getArgValue ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun name ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;

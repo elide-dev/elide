@@ -199,6 +199,24 @@ class JvmFeatures {
   testing: Boolean = true
 }
 
+/// Controls settings relating to the Java compiler.
+class JavaCompiler {
+  /// Extra flags to pass to the Java compiler.
+  flags: Listing<String> = new {}
+}
+
+/// Controls settings relating to the Java language.
+class JavaLanguage {
+  /// The source version to use.
+  source: JvmTarget = "auto"
+
+  /// The release version to use.
+  release: JvmTarget = "auto"
+
+  /// Configuration for the Java compiler.
+  compiler: JavaCompiler = new {}
+}
+
 /// Specifies settings which apply to JVM targets.
 class JvmSettings {
   /// Set the JVM bytecode target level for this project.
@@ -209,4 +227,7 @@ class JvmSettings {
 
   /// Controls features and settings related to JVM support.
   features: JvmFeatures = new {}
+
+  /// Java language settings.
+  java: JavaLanguage = new {}
 }

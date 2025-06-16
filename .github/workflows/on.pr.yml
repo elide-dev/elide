@@ -46,12 +46,14 @@ jobs:
       branch: ${{ steps.extract_branch.outputs.branch }}
       base: ${{ steps.filter.outputs.base }}
       natives: ${{ steps.filter.outputs.natives }}
-      devcontainer: ${{ steps.filter.outputs.base }}
+      devcontainer: ${{ steps.filter.outputs.devcontainer }}
       model: ${{ steps.filter.outputs.model }}
       packages: ${{ steps.filter.outputs.packages }}
       tools: ${{ steps.filter.outputs.tools }}
-      images: ${{ steps.filter.outputs.tools }}
+      images: ${{ steps.filter.outputs.images }}
       srcs: ${{ steps.filter.outputs.srcs }}
+      workflows: ${{ steps.filter.outputs.workflows }}
+      any: ${{ steps.filter.outputs.any }}
     steps:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
@@ -101,6 +103,24 @@ jobs:
     with:
       runner: ${{ vars.RUNNER_LARGE || 'ubuntu-cipool' }}
       native: ${{ contains(github.event.pull_request.labels.*.name, 'ci:test-native') || contains(github.event.head_commit.message, 'ci:test-native') }}
+
+  ##
+  ## Job: Claude Review
+  ##
+  check-ai-review:
+    name: "Checks"
+    uses: ./.github/workflows/claude-code-review.yml
+    needs: [triage]
+    if: |
+      (fromJson(needs.triage.outputs.srcs) || fromJson(needs.triage.outputs.workflows)) &&
+      github.event.pull_request.draft == false
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    permissions:
+      contents: "read"
+      pull-requests: "read"
+      issues: "read"
+      id-token: "write"
 
   ##
   ## Job: API Check

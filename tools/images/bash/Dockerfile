@@ -1,7 +1,7 @@
 ARG ELIDE_VERSION=1.0.0-beta6
 ARG ELIDE_DIGEST=4600633661497a050270e35428e3d5bcc8ed48ed27e0197def683f38b63b600c
 
-FROM debian:unstable-slim@sha256:93700abbae646fd44d84e6e9fd85f024e6dd010e4acec250e48fc7d1b3690392 AS base
+FROM debian:unstable-slim@sha256:5a1fa4e7ca7e4a8ea0449d0e5e6ac6593b4aebac12f658e69af354c0b3cb073a AS base
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime with Bash"

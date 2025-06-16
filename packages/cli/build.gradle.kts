@@ -1693,6 +1693,8 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventArray",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueue",
+    "--initialize-at-run-time=io.netty.channel.kqueue.KQueueIoHandler",
+    "--initialize-at-run-time=io.netty.channel.kqueue.AbstractKQueueChannel",
     onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
   ).plus(
     listOfNotNull(

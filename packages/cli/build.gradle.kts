@@ -999,6 +999,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "oshi.util.platform.mac.CFUtil",
   "oshi.util.platform.mac.SmcUtil",
   "oshi.util.platform.mac.SysctlUtil",
+  "oshi.jna.platform.mac.CoreFoundation",
 
   // pkl needs this
   "org.msgpack.core.buffer.DirectBufferAccess",

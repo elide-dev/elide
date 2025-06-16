@@ -4,7 +4,7 @@
 amends "elide:project.pkl"
 
 name = "elide"
-version = "1.0.0-beta5"
+version = "1.0.0-beta6"
 description = "Polyglot runtime and toolchain"
 
 local reactVersion = "18.3.1"
@@ -15,10 +15,6 @@ workspaces {
   "packages/*"
   "tools/elide-build"
   "tools/umbrella"
-}
-
-jvm {
-  target = 22
 }
 
 kotlin {

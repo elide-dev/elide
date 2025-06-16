@@ -37,7 +37,6 @@ dependencies {
   implementation(libs.kotlinx.atomicfu)
   api(libs.kotlinx.coroutines.core)
   api(libs.kotlin.stdlib.jdk8)
-  api(libs.filament)
   api(projects.packages.core)
   api(projects.packages.base)
   api(libs.jetbrains.annotations)

@@ -39,6 +39,7 @@
     <ID>UnusedPrivateProperty:BuildOutput.kt$Animated$// Top-level build task. private val topTask = taskLayout()</ID>
     <ID>UnusedPrivateProperty:BuildOutput.kt$Animated$private val activeContext = atomic(ProgressContext())</ID>
     <ID>UnusedPrivateProperty:ExecutionController.kt$ExecutionController$private val tRunException: Lazy&lt;Value> = Lazy.of { loadClass("jdk.jshell.spi.ExecutionControl\$RunException") }</ID>
+    <ID>UnusedPrivateProperty:NativeImageAdapter.kt$NativeImageAdapter$val totalMs = compileEnd - compileStart</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Orogene. private val orogeneActions = sortedSetOf( "add", "apply", "login", "logout", "ping", "reapply", "remove", "view", "help", )</ID>
     <ID>UnusedPrivateProperty:ToolInvokeCommand.kt$// Sub-commands for Uv. private val uvActions = sortedSetOf( "pip", "tool", "toolchain", "venv", "cache", "self", "version", "help", )</ID>
     <ID>UnusedPrivateProperty:ToolTestCommand.kt$ToolTestCommand$@Inject private lateinit var projectManager: Provider&lt;ProjectManager></ID>

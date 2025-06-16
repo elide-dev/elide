@@ -105,6 +105,9 @@ val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 val patchedLibs = files(
   gvmJarsRoot.file("espresso.jar"),
   gvmJarsRoot.file("truffle-api.jar"),
+  gvmJarsRoot.file("truffle-coverage.jar"),
+  gvmJarsRoot.file("library-support.jar"),
+  gvmJarsRoot.file("svm-driver.jar"),
 )
 
 val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }
@@ -118,7 +121,6 @@ dependencies {
 
   // note: patched for use of host-source-loader
   // api(libs.graalvm.espresso.language)
-  api(patchedLibs)
   patchedDependencies(patchedLibs)
 
   implementation(libs.kotlinx.atomicfu)
@@ -175,6 +177,8 @@ dependencies {
   embeddedJava(libs.slf4j)
   embeddedJava(mn.micronaut.inject.java)
   embeddedJava(mn.micronaut.test.junit5)
+  embeddedJava(libs.apiguardian.api)
+  embeddedJava(libs.opentest)
 
   // Testing
   testImplementation(projects.packages.test)

@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tooling
 
 import java.net.URI
@@ -18,6 +17,7 @@ import java.nio.file.Path
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.tool.Tool
+import elide.tooling.project.ElideProject
 
 /**
  * ## Abstract tool.
@@ -41,6 +41,7 @@ public abstract class AbstractTool protected constructor (
   /** Wraps command-line state for access by an [AbstractTool] implementation. */
   public interface EmbeddedToolState {
     public val resourcesPath: Path
+    public val project: ElideProject? get() = null
   }
 
   // Internal method to trigger tool delegation.

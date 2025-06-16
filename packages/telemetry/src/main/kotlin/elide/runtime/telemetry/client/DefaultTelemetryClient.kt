@@ -93,6 +93,5 @@ internal class DefaultTelemetryClient @Inject constructor (private val http: Def
       logging.debug("Error delivering telemetry event", e)
       throw e
     }
-
   }
 }

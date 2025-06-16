@@ -18,12 +18,15 @@ import org.jetbrains.kotlin.config.ApiVersion
 import org.jetbrains.kotlin.config.LanguageVersion
 import java.nio.file.Path
 import java.util.EnumSet
+import kotlin.collections.orEmpty
+import kotlin.collections.toMutableList
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import elide.runtime.precompiler.Precompiler
 
-// Name of the serialization plugin JAR file, which is expected to be present in the Kotlin resources.
+// Constant plugin names.
 private const val SERIALIZATION_PLUGIN_NAME = "kotlin-serialization-compiler-plugin-embeddable"
+private const val POWERASSERT_PLUGIN_NAME = "kotlin-power-assert-compiler-plugin-embeddable"
 
 /**
  * Configures the Kotlin compiler which is embedded within Elide.
@@ -31,6 +34,7 @@ private const val SERIALIZATION_PLUGIN_NAME = "kotlin-serialization-compiler-plu
  * @property apiVersion The API version of the Kotlin compiler.
  * @property languageVersion The language version of the Kotlin compiler.
  * @property plugins String plugin specifications to pass to the Kotlin compiler.
+ * @property testMode Whether this configuration is for test mode, which may enable additional plugins.
  * @property builtinPlugins Set of built-in plugins to enable for the Kotlin compiler.
  *
  * @see KotlinBuiltinPlugin known built-in plugins
@@ -39,7 +43,8 @@ public data class KotlinCompilerConfig(
   public val apiVersion: ApiVersion,
   public val languageVersion: LanguageVersion,
   public val plugins: List<KotlinPluginConfig> = emptyList(),
-  public val builtinPlugins: Set<KotlinBuiltinPlugin> = DEFAULT_PLUGINS,
+  public val testMode: Boolean = false,
+  public val builtinPlugins: Set<KotlinBuiltinPlugin> = if (testMode) DEFAULT_PLUGINS_TEST else DEFAULT_PLUGINS,
 ) : Precompiler.Configuration {
   /**
    * Configures a Kotlin compiler plugin.
@@ -61,6 +66,34 @@ public data class KotlinCompilerConfig(
           .resolve("lib")
           .resolve("$SERIALIZATION_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar")
 
+        initializePlugin(
+          name = SERIALIZATION_PLUGIN_NAME,
+          args = args,
+          root = root,
+          artifact = artifact,
+        )
+      }
+    },
+
+    POWER_ASSERT {
+      override fun apply(args: K2JVMCompilerArguments, root: Path) {
+        val artifact = root
+          .resolve("kotlin")
+          .resolve(KotlinLanguage.VERSION)
+          .resolve("lib")
+          .resolve("$POWERASSERT_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar")
+
+        initializePlugin(
+          name = POWERASSERT_PLUGIN_NAME,
+          args = args,
+          root = root,
+          artifact = artifact,
+        )
+      }
+    };
+
+    private companion object {
+      @JvmStatic private fun initializePlugin(name: String, args: K2JVMCompilerArguments, root: Path, artifact: Path) {
         if (ImageInfo.inImageRuntimeCode()) {
           args.pluginConfigurations = (args
             .pluginConfigurations
@@ -70,13 +103,13 @@ public data class KotlinCompilerConfig(
           return
         }
         require(!(ImageInfo.inImageCode() && ImageInfo.inImageRuntimeCode())) {
-          "Cannot load Kotlin serialization plugin in native image runtime mode (loads at build time)"
+          "Cannot load Kotlin plugin in native image runtime mode (loads at build time): $name"
         }
         val kotlinSerializationPlugin = requireNotNull(
           System.getProperty("elide.kotlinResources")?.ifEmpty { null }?.ifBlank { null }
             ?.let { Path.of(it).resolve("lib").resolve("$SERIALIZATION_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar") }
             ?.takeIf { it.exists() }
-          ?: artifact.takeIf { it.exists() }
+            ?: artifact.takeIf { it.exists() }
         ) {
           "Kotlin serialization plugin not found: $SERIALIZATION_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar"
         }
@@ -86,7 +119,7 @@ public data class KotlinCompilerConfig(
           .toMutableList() + kotlinSerializationPlugin.absolutePathString())
           .toTypedArray()
       }
-    },
+    }
   }
 
   public companion object {
@@ -94,8 +127,17 @@ public data class KotlinCompilerConfig(
     public val DEFAULT: KotlinCompilerConfig = KotlinPrecompiler.currentConfig()
 
     /** Default suite of Kotlin plugins to enable. */
-    public val DEFAULT_PLUGINS: Set<KotlinBuiltinPlugin> = EnumSet.of(
+    private val DEFAULT_PLUGINS: Set<KotlinBuiltinPlugin> = EnumSet.of(
       KotlinBuiltinPlugin.SERIALIZATION,
     )
+
+    /** Default suite of Kotlin plugins to enable in test mode. */
+    private val DEFAULT_PLUGINS_TEST: Set<KotlinBuiltinPlugin> = DEFAULT_PLUGINS + EnumSet.of(
+      KotlinBuiltinPlugin.POWER_ASSERT,
+    )
+
+    @JvmStatic public fun getDefaultPlugins(test: Boolean = false): Set<KotlinBuiltinPlugin> {
+      return if (test) DEFAULT_PLUGINS_TEST else DEFAULT_PLUGINS
+    }
   }
 }

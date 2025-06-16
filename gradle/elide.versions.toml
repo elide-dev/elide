@@ -17,10 +17,11 @@
 
 [versions]
 aedile = "2.0.3"
+apiguardian = "1.1.2"
 arrow = "2.0.1"
-assertk = "0.28.1"
 asm = "9.8"
-atomicfu = "0.28.0-beta"
+assertk = "0.28.1"
+atomicfu = "0.28.0"
 auto-common = "1.2.2"
 auto-factory = "1.1.0"
 auto-service = "1.1.1"
@@ -69,7 +70,7 @@ google-api-common = "2.43.0"
 google-html-types = "1.0.8"
 gr8 = "0.11.2"
 graalvm = "24.2.1"
-graalvm-metadata = "0.3.19"
+graalvm-metadata = "0.3.21"
 graalvm-pin = "24.2.1"
 graalvm-plugin = "0.10.6"
 graalvm-stable = "24.2.1"
@@ -115,8 +116,8 @@ jprofiler = "14.0.1"
 json = "20250517"
 jsoup = "1.20.1"
 jsr310 = "2.9.8"
-junit-jupiter = "5.13.0"
-junit-platform = "1.13.0"
+junit-jupiter = "5.13.1"
+junit-platform = "1.13.1"
 junixsocket = "2.8.3"
 purl = "1.5.0"
 kapshot = "0.2.0"
@@ -146,7 +147,7 @@ kotlinx-serialization = "1.8.1"
 kotlinx-wrappers-bom = "1.0.0-pre.754"
 kotlinx-wrappers-browser = "1.0.0-pre.754"
 kotlinx-wrappers-cesium = "1.114.0-pre.754"
-kotlinx-wrappers-css = "2025.6.0"
+kotlinx-wrappers-css = "2025.6.4"
 kotlinx-wrappers-csstype = "3.1.4-pre.754"
 kotlinx-wrappers-emotion = "11.11.4-pre.754"
 kotlinx-wrappers-history = "5.3.0-pre.506-compat"
@@ -179,7 +180,7 @@ kotlinx-wrappers-web = "1.0.0-pre.754"
 kotlinxWrappers = "pre.754"
 kover = "0.9.1"
 kover-plugin = "0.9.1"
-ksp = "2.2.0-RC2-2.0.1"
+ksp = "2.2.0-RC2-2.0.2"
 ktlint = "1.1.1"
 ktoml = "0.7.0"
 larray = "0.2.1"
@@ -205,7 +206,7 @@ mordant = "3.0.2"
 mosaic = "0.16.0"
 mrjar = "0.1.1"
 msgpack = "0.9.4"
-netty = "4.1.118.Final"
+netty = "4.2.2.Final"
 netty-http3 = "0.0.70.Final"
 netty-iouring = "0.0.26.Final"
 netty-tcnative = "2.0.72.Final"
@@ -220,12 +221,13 @@ npm-google-protobuf = "3.21.2"
 npm-grpcweb = "1.4.2"
 npm-joda = "3.2.0"
 okhttp = "4.12.0"
-okio = "3.12.0"
+okio = "3.13.0"
 openrewrite-bom = "2.10.0"
 openrewrite-lib = "8.1.13"
 openrewrite-plugin = "6.12.0"
+opentest = "1.3.0"
 oshi = "6.8.2"
-owasp = "12.1.1"
+owasp = "12.1.3"
 parallelGzip = "1.0.5"
 picnic = "0.7.0"
 picocli = "4.7.7"
@@ -338,14 +340,15 @@ versionCheck = { id = "com.github.ben-manes.versions", version.ref = "versionChe
 
 [libraries]
 aedile-core = { group = "com.sksamuel.aedile", name = "aedile-core", version.ref = "aedile" }
+apiguardian-api = { group = "org.apiguardian", name = "apiguardian-api", version.ref = "apiguardian" }
 arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
 arrow-optics-core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
 arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
-assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 asm-core = { group = "org.ow2.asm", name = "asm", version.ref = "asm" }
 asm-tree = { group = "org.ow2.asm", name = "asm-tree", version.ref = "asm" }
+assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 autoService-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.1.0" }
 bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
 bouncycastle-pkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }
@@ -715,6 +718,7 @@ okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhtt
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
 opentelemetry-exporter-googleCloudTrace = { group = "com.google.cloud.opentelemetry", name = "exporter-auto" }
 opentelemetry-exporter-logging = { group = "io.opentelemetry", name = "opentelemetry-exporter-logging" }
+opentest = { group = "org.opentest4j", name = "opentest4j" }
 oshi-core = { group = "com.github.oshi", name = "oshi-core-java11", version.ref = "oshi" }
 owasp = { group = "org.owasp", name = "dependency-check-gradle", version.ref = "owasp" }
 parallelGzip = { group = "org.anarres", name = "parallelgzip", version.ref = "parallelGzip" }

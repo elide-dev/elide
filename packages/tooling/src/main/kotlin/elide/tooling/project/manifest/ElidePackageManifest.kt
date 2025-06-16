@@ -19,6 +19,8 @@ import elide.tool.MutableArguments
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest.*
 
+private const val DEFAULT_JAVA_TARGET = 21u // Default Java target version for JVM projects
+
 @JvmRecord @Serializable
 public data class ElidePackageManifest(
   val name: String? = null,
@@ -27,6 +29,7 @@ public data class ElidePackageManifest(
   val entrypoint: List<String>? = null,
   val workspaces: List<String> = emptyList(),
   val scripts: Map<String, String> = emptyMap(),
+  val artifacts: Map<String, Artifact> = emptyMap(),
   val dependencies: DependencyResolution = DependencyResolution(),
   val javascript: JavaScriptSettings? = null,
   val typescript: TypeScriptSettings? = null,
@@ -35,13 +38,17 @@ public data class ElidePackageManifest(
   val python: PythonSettings? = null,
   val ruby: RubySettings? = null,
   val pkl: PklSettings? = null,
+  val nativeImage: NativeImageSettings? = null,
   val sources: Map<String, SourceSet> = emptyMap(),
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
 ) : PackageManifest {
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.Elide
 
-
+  @JvmRecord @Serializable public data class Artifact(
+    val name: String? = null,
+    val type: String? = null,
+  )
 
   @JvmRecord @Serializable public data class SourceSet(
     val spec: List<String>,
@@ -223,13 +230,39 @@ public data class ElidePackageManifest(
 
   @Serializable
   public sealed interface JvmTarget {
-    @JvmRecord @Serializable public data class NumericJvmTarget(public val number: UInt) : JvmTarget
-    @JvmRecord @Serializable public data class StringJvmTarget(public val name: String) : JvmTarget
+    @JvmRecord @Serializable public data class NumericJvmTarget(public val number: UInt) : JvmTarget {
+      override val argValue: String get() = number.toString()
+    }
+    @JvmRecord @Serializable public data class StringJvmTarget(public val name: String) : JvmTarget {
+      override val argValue: String get() = name
+    }
+
+    public val argValue: String
+
+    public companion object {
+      public val DEFAULT: JvmTarget = NumericJvmTarget(DEFAULT_JAVA_TARGET)
+    }
   }
+
+  @JvmRecord @Serializable public data class JvmFeatures(
+    val testing: Boolean = true,
+  )
+
+  @JvmRecord @Serializable public data class JavaCompilerSettings(
+    val flags: List<String> = emptyList(),
+  )
+
+  @JvmRecord @Serializable public data class JavaLanguage(
+    val source: JvmTarget? = null,
+    val release: JvmTarget? = null,
+    val compiler: JavaCompilerSettings = JavaCompilerSettings(),
+  )
 
   @JvmRecord @Serializable public data class JvmSettings(
     val target: JvmTarget? = null,
     val javaHome: String? = null,
+    val features: JvmFeatures = JvmFeatures(),
+    val java: JavaLanguage = JavaLanguage(),
   )
 
   @JvmRecord @Serializable public data class JavaScriptSettings(
@@ -318,6 +351,19 @@ public data class ElidePackageManifest(
     val debug: Boolean = false,
   )
 
+  @JvmRecord @Serializable public data class NativeImageOptions(
+    val verbose: Boolean = false,
+    val flags: List<String> = emptyList(),
+  )
+
+  @JvmRecord @Serializable public data class NativeImageSettings(
+    val verbose: Boolean = false,
+  )
+
+  @JvmRecord @Serializable public data class NativeImage(
+    val options: NativeImageOptions = NativeImageOptions(),
+  )
+
   @JvmRecord @Serializable public data class CoverageSettings(
     val enabled: Boolean = false,
     val paths: List<String> = emptyList(),
@@ -376,11 +422,13 @@ public fun ElidePackageManifest.merge(other: ElidePackageManifest): ElidePackage
     description = description ?: other.description,
     entrypoint = (entrypoint ?: emptyList()).plus(other.entrypoint ?: emptyList()).distinct(),
     scripts = scripts + other.scripts,
+    artifacts = artifacts + other.artifacts,
     dependencies = dependencies.merge(other.dependencies),
     jvm = (other.jvm ?: jvm),
     kotlin = (other.kotlin ?: kotlin),
     python = (other.python ?: python),
     ruby = (other.ruby ?: ruby),
     pkl = (other.pkl ?: pkl),
+    nativeImage = (other.nativeImage ?: nativeImage),
   )
 }

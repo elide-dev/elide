@@ -48,7 +48,19 @@ public open class PrecompilerNotice(
 ) : PrecompilerException(severity, message, cause) {
   public companion object {
     @JvmStatic public fun from(suite: DiagnosticsSuite): PrecompilerNotice =
-      PrecompilerNotice(suite, suite.severity, "Precompiler failed with diagnostics")
+      PrecompilerNotice(
+        suite,
+        suite.severity,
+        buildString {
+          appendLine("Precompiler failed with ${suite.count} diagnostic(s):")
+          appendLine("  Severity: ${suite.severity.name}")
+          appendLine("  Fatal: ${suite.fatal}")
+          appendLine("  Diagnostics:")
+          suite.all().forEach {
+            appendLine(it.formattedString())
+          }
+        }
+      )
   }
 }
 

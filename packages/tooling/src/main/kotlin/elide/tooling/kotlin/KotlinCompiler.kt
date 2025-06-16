@@ -18,6 +18,7 @@ import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
+import org.graalvm.nativeimage.ImageInfo
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity.ERROR
@@ -56,7 +57,6 @@ import elide.runtime.diag.DiagnosticsSuite
 import elide.runtime.gvm.kotlin.KotlinCompilerConfig
 import elide.runtime.gvm.kotlin.KotlinCompilerConfig.KotlinBuiltinPlugin
 import elide.runtime.gvm.kotlin.KotlinLanguage
-import elide.runtime.gvm.kotlin.KotlinPrecompiler.KOTLIN_VERSION
 import elide.runtime.gvm.kotlin.fromKotlincDiagnostic
 import elide.tool.ArgumentContext
 import elide.tool.Arguments
@@ -151,6 +151,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
   public val outputs: KotlinCompilerOutputs,
   private val argsAmender: K2JVMCompilerArguments.() -> Unit = {},
   private val projectRoot: Path,
+  private val testMode: Boolean = false,
 ) : AbstractTool(info = kotlinc.extend(
   args,
   env,
@@ -339,11 +340,16 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     @JvmStatic private fun initializeKotlinCompilerPlugins() {
       try {
         val rootDisposable = Disposer.newDisposable("kotlinc")
-        val kotlinClassPath = Files.list(Paths.get(System.getProperty("elide.gvmResources"))
-             .resolve("kotlin")
-             .resolve(KotlinLanguage.VERSION)
-             .resolve("lib")
-        ).toList()
+
+        val kotlinClassPath = Files.list(when {
+          ImageInfo.inImageBuildtimeCode() -> Paths.get(System.getProperty("elide.kotlinResources")).resolve("lib")
+          else -> Paths.get(System.getProperty("user.home"))
+            .resolve("elide")
+            .resolve("resources")
+            .resolve("kotlin")
+            .resolve(KotlinLanguage.VERSION)
+            .resolve("lib")
+        }).toList()
 
         val classLoader = createClassLoader(
           kotlinClassPath,
@@ -385,11 +391,21 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
      * Configure the default suite of plugins supported by the Kotlin compiler.
      *
      * @param config Arguments to configure the Kotlin compiler.
+     * @param test Whether this is a test run; defaults to `false`.
+     * @param enableSerialization Whether to enable the Kotlin serialization plugin; defaults to `true`.
      * @return Set of plugins which were configured.
      */
-    @JvmStatic public fun configureDefaultPlugins(config: K2JVMCompilerArguments): Set<KotlinBuiltinPlugin> {
-      val defaultPlugins = KotlinCompilerConfig.DEFAULT_PLUGINS
+    @JvmStatic public fun configureDefaultPlugins(
+      config: K2JVMCompilerArguments,
+      test: Boolean = false,
+      enableSerialization: Boolean = true,
+    ): Set<KotlinBuiltinPlugin> {
+      val defaultPlugins = KotlinCompilerConfig.getDefaultPlugins(test = test)
       defaultPlugins.forEach { plugin ->
+        if (plugin == KotlinBuiltinPlugin.SERIALIZATION && !enableSerialization) {
+          // skip serialization plugin if it is not enabled.
+          return@forEach
+        }
         plugin.apply(config, Statics.resourcesPath)
       }
       return defaultPlugins
@@ -437,6 +453,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       inputs: KotlinCompilerInputs,
       outputs: KotlinCompilerOutputs,
       projectRoot: Path = Paths.get(System.getProperty("user.dir")),
+      test: Boolean = false,
       argsAmender: K2JVMCompilerArguments.() -> Unit = {},
     ): KotlinCompiler = KotlinCompiler(
       args = args,
@@ -445,6 +462,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       outputs = outputs,
       projectRoot = projectRoot,
       argsAmender = argsAmender,
+      testMode = test,
     )
   }
 
@@ -511,7 +529,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
     debugLog("Kotlin home: $kotlinVersionRoot")
     val closeables = LinkedList<Closeable>()
     val diagnostics = K2DiagnosticsListener()
-    val kotlinMajorMinor = KOTLIN_VERSION.substringBeforeLast('.')
+    val kotlinMajorMinor = KotlinLanguage.VERSION.substringBeforeLast('.')
     debugLog("Kotlin version: $kotlinMajorMinor")
 
     val svcs = resolveCompilerServices()

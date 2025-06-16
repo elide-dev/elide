@@ -134,6 +134,12 @@ import elide.tooling.kotlin.kotlinc
     )
     var noDefaultPlugins: Boolean = false
 
+    @CommandLine.Option(
+      names = ["--tests"],
+      description = ["Compile in test mode, which enables things like PowerAssert"],
+    )
+    var tests: Boolean = false
+
     companion object {
       // Gather options, inputs, and outputs for an invocation of the Kotlin compiler.
       @JvmStatic private fun gatherArgs(args: Arguments): Pair<KotlinCompilerInputs, KotlinCompilerOutputs> {
@@ -153,10 +159,11 @@ import elide.tooling.kotlin.kotlinc
           env = environment,
           inputs = state.first,
           outputs = state.second,
+          test = tests,
         ) {
           // configure default plugins
           if (!noDefaultPlugins) {
-            KotlinCompiler.configureDefaultPlugins(this)
+            KotlinCompiler.configureDefaultPlugins(this, tests)
           }
         }
       }

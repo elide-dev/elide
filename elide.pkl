@@ -17,10 +17,6 @@ workspaces {
   "tools/umbrella"
 }
 
-jvm {
-  target = 22
-}
-
 kotlin {
   apiLevel = "1.9"
   languageLevel = "1.9"

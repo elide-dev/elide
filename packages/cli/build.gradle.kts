@@ -471,6 +471,7 @@ dependencies {
 
   svmModulePath(patchedLibs)
   svmModulePath(libs.graalvm.svm)
+  svmModulePath(libs.graalvm.shadowed.json)
   runtimeOnly(patchedLibs)
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 

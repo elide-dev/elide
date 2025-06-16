@@ -1,5 +1,5 @@
 ARG ELIDE_VERSION=1.0.0-beta6
-ARG ELIDE_DIGEST=506c6a7aec98c7ac8aea10e365ac0706d0eedb70e45158d009695348afe28dca
+ARG ELIDE_DIGEST=4600633661497a050270e35428e3d5bcc8ed48ed27e0197def683f38b63b600c
 
 FROM debian:unstable-slim@sha256:93700abbae646fd44d84e6e9fd85f024e6dd010e4acec250e48fc7d1b3690392 AS builder
 
@@ -23,7 +23,7 @@ RUN echo "Installing Elide..." \
       && cd /tmp/elide-install \
       && curl -sSL elide.sh | bash -s - -- \
         --install-rev=1.0.0-beta6 \
-        --install-digest=506c6a7aec98c7ac8aea10e365ac0706d0eedb70e45158d009695348afe28dca \
+        --install-digest=4600633661497a050270e35428e3d5bcc8ed48ed27e0197def683f38b63b600c \
         --preserve-installer \
       && cd - \
       && rm -rf /tmp/elide-install

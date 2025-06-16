@@ -1,9 +1,8 @@
 base: &base
   - ".version"
   - ".release"
-  - ".github/workflows/*.*"
 
-devcontainer: &ci
+devcontainer: &devcontainer
   - *base
   - ".devcontainer/*.*"
   - ".devcontainer/**/*.*"
@@ -31,11 +30,21 @@ images: &images
   - "tools/images/*.*"
   - "tools/images/**/*.*"
 
+critical_workflows: &critical_workflows
+  - ".github/workflows/ci.build.yml"
+  - ".github/workflows/ci.test.yml"
+  - ".github/workflows/on.pr.yml"
+  - ".github/workflows/on.push.yml"
+
+workflows: &workflows
+  - ".github/workflows/*.yml"
+
 srcs: &srcs
   - *base
   - *model
   - *packages
   - *tools
+  - *critical_workflows
 
 natives: &natives
   - *base
@@ -44,3 +53,15 @@ natives: &natives
   - "crates/**/*.*"
   - "third_party/Makefile"
   - "third_party/*/**/*.*"
+
+any: &any
+  - *base
+  - *devcontainer
+  - *model
+  - *packages
+  - *tools
+  - *images
+  - *critical_workflows
+  - *workflows
+  - *srcs
+  - *natives

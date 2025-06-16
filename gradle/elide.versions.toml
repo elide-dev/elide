@@ -19,8 +19,8 @@
 aedile = "2.0.3"
 apiguardian = "1.1.2"
 arrow = "2.0.1"
-assertk = "0.28.1"
 asm = "9.8"
+assertk = "0.28.1"
 atomicfu = "0.28.0"
 auto-common = "1.2.2"
 auto-factory = "1.1.0"
@@ -345,9 +345,9 @@ arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow"
 arrow-fx = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
 arrow-optics-core = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
 arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
-assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 asm-core = { group = "org.ow2.asm", name = "asm", version.ref = "asm" }
 asm-tree = { group = "org.ow2.asm", name = "asm-tree", version.ref = "asm" }
+assertk = { group = "com.willowtreeapps.assertk", name = "assertk", version.ref = "assertk" }
 autoService-ksp = { module = "dev.zacsweers.autoservice:auto-service-ksp", version = "1.1.0" }
 bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
 bouncycastle-pkix = { group = "org.bouncycastle", name = "bcpkix-jdk18on", version.ref = "bouncycastle" }

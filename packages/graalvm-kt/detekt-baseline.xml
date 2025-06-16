@@ -2,7 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>ForbiddenComment:PluginResolver.kt$PluginResolver$// @TODO: value for this?</ID>
     <ID>TooGenericExceptionThrown:GuestKotlinEvaluator.kt$GuestKotlinEvaluator$throw RuntimeException("Exception during snippet evaluation", replResult.cause)</ID>
+    <ID>UnusedParameter:KotlinCompilerConfig.kt$KotlinCompilerConfig.KotlinBuiltinPlugin.Companion$root: Path</ID>
   </CurrentIssues>
 </SmellBaseline>

@@ -77,7 +77,7 @@ umbrella = { path = "tools/umbrella" }
 lazy_static = { version = "1.5.0" }
 anyhow = { version = "1.0.97" }
 llama-cpp-2 = { version = "0.1.102", default-features = false }
-bindgen = { version = "0.71.1" }
+bindgen = { version = "0.72.0" }
 build_const = { version = "0.2.2", default-features = false }
 bumpalo = { version = "3.17.0" }
 encoding_rs = { version = "0.8.35" }
@@ -125,7 +125,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "9b475ad05b750f99762d63094174be6f6fc3c0eb", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "dfdebc27e3035e9af7f52f25aac50db53db1cc69", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -133,7 +133,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "9b475ad05b750f99762d630
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "dc3fd464728fe0456c26e79beb56017d8d56a08d" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "26db29caac6965359b375fb1733e591b89068ec3" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "301b9f41353eed20d5b4b1c2a923ffe8f59b5215" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "89d915a1e34144051815dfcbe60ec2cdeb29909e" }

@@ -18,7 +18,6 @@ import com.oracle.truffle.espresso.impl.Klass
 import com.oracle.truffle.espresso.impl.Method
 import io.github.classgraph.ClassInfo
 import io.github.classgraph.MethodInfo
-import org.graalvm.polyglot.proxy.ProxyInstantiable
 import java.util.stream.Stream
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
@@ -41,9 +40,11 @@ import elide.tooling.jvm.resolver.MavenAetherResolver
 internal class JvmTestConfigurator : TestConfigurator {
   private companion object {
     private val logging by lazy { Logging.of(JvmTestConfigurator::class) }
+
     private val eligibleClassAnnotations = arrayOf(
       "io.micronaut.test.extensions.junit5.annotation.MicronautTest",
     )
+
     private val eligibleMethodAnnotations = arrayOf(
       "org.junit.jupiter.api.Test",
       // (The following are aliases for the first entry, but held here in case they become full annotation types.)
@@ -54,8 +55,12 @@ internal class JvmTestConfigurator : TestConfigurator {
 
   // Match/register a candidate test class, if it matches criteria; yield a stream of methods to process.
   private fun matchCandidateClass(registry: TestingRegistrar, cls: ClassInfo): Stream<MethodInfo> {
-    return cls.declaredMethodInfo.parallelStream().also {
-      if (eligibleClassAnnotations.any { cls.hasAnnotation(it) }) {
+    return cls.declaredMethodInfo.stream().also {
+      val clsAnnotated = eligibleClassAnnotations.any { cls.hasAnnotation(it) }
+      val methodAnnotated = cls.declaredMethodInfo.any {
+        eligibleMethodAnnotations.any { method -> it.hasAnnotation(method) }
+      }
+      if (clsAnnotated || methodAnnotated) {
         registry.register(TestingRegistrar.namedScope(
           cls.simpleName,
           cls.name,
@@ -165,7 +170,7 @@ internal class JvmTestConfigurator : TestConfigurator {
 
           // classpath is non-empty; scan for tests
           false -> graph.scanResult().use { result ->
-            result.allClassesAsMap.values.stream().parallel().flatMap { cls ->
+            result.allClassesAsMap.values.stream().flatMap { cls ->
               matchCandidateClass(state.registrar, cls).map { mth ->
                 cls to mth
               }

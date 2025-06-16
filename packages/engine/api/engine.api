@@ -399,6 +399,7 @@ public final class elide/runtime/diag/DiagnosticExtensionsKt {
 
 public abstract interface class elide/runtime/diag/DiagnosticInfo {
 	public static final field Companion Lelide/runtime/diag/DiagnosticInfo$Companion;
+	public fun formattedString ()Ljava/lang/StringBuilder;
 	public fun getAdvice ()Ljava/lang/String;
 	public fun getId ()Ljava/lang/String;
 	public fun getLang ()Ljava/lang/String;
@@ -1112,6 +1113,14 @@ public final class elide/runtime/plugins/AbstractLanguagePluginKt {
 	public static final fun defaultPolyglotContextBuilder ()Lorg/graalvm/polyglot/Context$Builder;
 	public static final fun defaultPolyglotEngine ()Lorg/graalvm/polyglot/Engine;
 	public static final fun defaultPolyglotEngineBuilder ()Lorg/graalvm/polyglot/Engine$Builder;
+}
+
+public abstract class elide/runtime/plugins/JVMLanguageConfig : elide/runtime/plugins/AbstractLanguageConfig {
+	public fun <init> ()V
+	public final fun getGuestClasspathRoots ()Ljava/util/List;
+	public final fun getGuestJavaHome ()Ljava/lang/String;
+	public final fun setGuestClasspathRoots (Ljava/util/List;)V
+	public final fun setGuestJavaHome (Ljava/lang/String;)V
 }
 
 public final class elide/runtime/plugins/bindings/Bindings {

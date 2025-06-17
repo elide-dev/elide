@@ -40,14 +40,17 @@ public abstract interface class elide/runtime/gvm/kotlin/KotlinCompilerConfig$Ko
 }
 
 public final class elide/runtime/gvm/kotlin/KotlinJarBundleInfo : elide/runtime/gvm/kotlin/KotlinRunnable, elide/runtime/precompiler/Precompiler$BundleInfo {
-	public fun <init> (Ljava/lang/String;Ljava/nio/file/Path;)V
+	public fun <init> (Ljava/lang/String;Ljava/nio/file/Path;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/nio/file/Path;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun apply (Lelide/runtime/core/PolyglotContext;)Lorg/graalvm/polyglot/Value;
 	public synthetic fun apply (Ljava/lang/Object;)Ljava/lang/Object;
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/nio/file/Path;
-	public final fun copy (Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/nio/file/Path;Ljava/lang/String;)Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;Ljava/lang/String;Ljava/nio/file/Path;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/KotlinJarBundleInfo;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntrypoint ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
 	public fun getPath ()Ljava/nio/file/Path;
 	public fun hashCode ()I
@@ -71,6 +74,12 @@ public final class elide/runtime/gvm/kotlin/KotlinPrecompiler : elide/runtime/pr
 	public static final field INSTANCE Lelide/runtime/gvm/kotlin/KotlinPrecompiler;
 	public synthetic fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun invoke (Lelide/runtime/precompiler/Precompiler$PrecompileSourceRequest;Ljava/lang/String;)Lelide/runtime/gvm/kotlin/KotlinRunnable;
+}
+
+public final class elide/runtime/gvm/kotlin/KotlinPrecompiler$PrecompileKotlinRequest : elide/runtime/precompiler/Precompiler$PrecompileSourceRequest {
+	public fun <init> (Lelide/runtime/precompiler/Precompiler$SourceInfo;Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;Ljava/nio/file/Path;)V
+	public synthetic fun <init> (Lelide/runtime/precompiler/Precompiler$SourceInfo;Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;Ljava/nio/file/Path;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getJarTarget ()Ljava/nio/file/Path;
 }
 
 public final class elide/runtime/gvm/kotlin/KotlinPrecompiler$Provider : elide/runtime/precompiler/Precompiler$Provider {

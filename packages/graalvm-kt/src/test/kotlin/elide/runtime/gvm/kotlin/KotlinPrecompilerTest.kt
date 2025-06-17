@@ -59,7 +59,7 @@ class KotlinPrecompilerTest {
           KotlinPrecompiler.precompileSafe(
             PrecompileSourceRequest(
               source = PrecompileSourceInfo(
-                name = "Example.kt",
+                name = "main.kt",
               ),
               config = KotlinCompilerConfig.DEFAULT,
             ),

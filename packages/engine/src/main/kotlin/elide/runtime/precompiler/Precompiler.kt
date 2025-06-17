@@ -112,7 +112,7 @@ public sealed interface Precompiler<C, I, O> where C : Precompiler.Configuration
    * @param source Information about the source to be compiled.
    * @param config Configuration for the precompiler.
    */
-  public class PrecompileSourceRequest<C>(
+  public open class PrecompileSourceRequest<C>(
     public val source: SourceInfo,
     public val config: C,
   )

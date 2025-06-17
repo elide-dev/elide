@@ -104,7 +104,7 @@ import elide.runtime.intrinsics.testing.TestResult
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.intrinsics.testing.TestingRegistrar.*
 import elide.runtime.plugins.Coverage
-import elide.runtime.plugins.kotlin.shell.GuestKotlinEvaluator
+import elide.runtime.plugins.jvm.Jvm
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.runtime.precompiler.Precompiler
@@ -268,8 +268,11 @@ internal class ToolShellCommand @Inject constructor(
   // Whether JVM support has initialized.
   private val jvmInitialized = atomic(false)
 
+  // "Just-in-time," or built-ahead-of-time, JAR target; pre-calculated for JVM compile-and-run.
+  private val runnableJar = atomic<Path?>(null)
+
   // Full JVM classpath; calculated on first JVM init.
-  @Volatile private lateinit var fullClasspath: List<Path>
+  @Volatile private lateinit var fullClasspath: MutableList<Path>
 
   // Java Home to use; calculated on first JVM init.
   @Volatile private var javaHome: String? = null
@@ -1231,12 +1234,8 @@ internal class ToolShellCommand @Inject constructor(
     }
   }
 
-  private fun KotlinJarBundleInfo.asSource(): Source {
-    TODO("Not yet implemented: ${this::class.simpleName}")
-  }
-
   // Resolve a compiler for the provided language, compile the entrypoint, and return the resolved executable symbol.
-  private fun compileEntrypoint(language: GuestLanguage, ctxAccessor: ContextAccessor, entry: File): ShellRunnable {
+  private fun compileEntrypoint(language: GuestLanguage, ctxAccessor: ContextAccessor, entry: File): ShellRunnable? {
     return when (language) {
       // use the host java compiler, which supports up to the maximum JVM bytecode level anyway
       JAVA -> ShellRunnable.HostExecutable {
@@ -1255,9 +1254,10 @@ internal class ToolShellCommand @Inject constructor(
 
         runBlocking(Dispatchers.IO) {
           KotlinPrecompiler.precompile(
-            Precompiler.PrecompileSourceRequest(
+            KotlinPrecompiler.PrecompileKotlinRequest(
               sourceInfo,
               config,
+              runnableJar.value,
             ),
             entry.readText(StandardCharsets.UTF_8),
           )
@@ -1268,9 +1268,54 @@ internal class ToolShellCommand @Inject constructor(
               ctxAccessor.invoke()
             )
             is KotlinJarBundleInfo -> {
-              val ctx = ctxAccessor()
-              val interpreter = GuestKotlinEvaluator(ctx)
-              interpreter.evaluate(it.asSource(), ctx)
+              if (commons().verbose) Statics.logging.info {
+                "Running effective equivalent of 'java -jar ${it.path.absolutePathString()}'"
+              }
+              val entry = when (val specified = it.entrypoint) {
+                null -> error(
+                  "Failed to determine entrypoint for Kotlin precompiled source; no `main.kt` specified or found. " +
+                  "Please specify the entrypoint to run."
+                )
+                else -> specified
+              }
+              ctxAccessor().let { ctx: PolyglotContext ->
+                when (val guestCls = ctx.bindings(Jvm).getMember(entry)) {
+                  null -> error("Failed to locate entry class '${it.name}' (at '$entry')")
+                  else -> when (val mainEntry = guestCls.getMember("main/([Ljava/lang/String;)V")) {
+                    null -> when (val mainNoArgEntry = guestCls.getMember("main/()V")) {
+                      null -> error(
+                        "Failed to locate main entrypoint in class '${it.name}'. Found members: '" +
+                        "${guestCls.memberKeys.joinToString(", ")}'."
+                      )
+                      else -> if (!mainNoArgEntry.canExecute()) {
+                        error("Main no-arg entrypoint in class '${it.name}' is not executable")
+                      } else {
+                        mainNoArgEntry.execute()
+                      }
+                    }
+                    else -> {
+                      if (!mainEntry.canExecute()) {
+                        error("Main entrypoint in class '${it.name}' is not executable")
+                      } else {
+                        // pull all args after `--`
+                        val secondOrderArgs = Statics.args.let { args ->
+                          val positionOfDoubleDash = args.indexOf("--")
+                          if (positionOfDoubleDash < 0) {
+                            emptyArray()
+                          } else {
+                            val secondaryArgs = LinkedList<String>()
+                            for (i in positionOfDoubleDash + 1 until args.size) {
+                              secondaryArgs.add(args[i])
+                            }
+                            secondaryArgs.toTypedArray()
+                          }
+                        }
+                        mainEntry.execute(secondOrderArgs)
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -1377,6 +1422,19 @@ internal class ToolShellCommand @Inject constructor(
 
   // Detect whether we are running in `test` mode (with alias `test` or `tests`).
   private fun testMode(): Boolean = _isTestMode
+
+  private val _jvmEntrypoint by lazy {
+    runnable?.takeIf {
+      it.endsWith(".jar") || it.endsWith(".kt") || it.endsWith(".java") || it.endsWith(".kts")
+    }?.let {
+      Paths.get(it).let {
+        if (it.isAbsolute) it else Paths.get(System.getProperty("user.dir")).resolve(it).absolute()
+      }
+    }
+  }
+
+  // Detect a runnable JAR, Kotlin source, or Java source file as the entrypoint.
+  private fun detectJvmEntrypoint(): Path? = _jvmEntrypoint
 
   // Read an executable script, and then execute the script and keep it started as a server.
   private fun readStartServer(
@@ -1854,16 +1912,20 @@ internal class ToolShellCommand @Inject constructor(
   }
 
   // Amend a base classpath with any additional resolved project dependencies.
-  private fun withProjectClasspath(project: ElideProject, lockfile: ElideLockfile?, base: Sequence<Path>): List<Path> {
+  private fun withProjectClasspath(
+    project: ElideProject,
+    lockfile: ElideLockfile?,
+    base: Sequence<Path>,
+  ): MutableList<Path> {
     return when (project.manifest.dependencies.maven.hasPackages()) {
       // the project doesn't specify any maven dependencies; return the base classpath
-      false -> base.toList()
+      false -> base.toMutableList()
 
       // the project defines maven dependencies; assemble a classpath and return.
       else -> runBlocking {
         withClasspathProvider(project, lockfile, base)?.classpath()?.toList()?.map {
           it.path
-        } ?: emptyList()
+        }?.toMutableList() ?: LinkedList()
       }
     }
   }
@@ -1885,6 +1947,8 @@ internal class ToolShellCommand @Inject constructor(
     project: ElideProject?,
     lockfile: ElideLockfile?,
     langs: Set<GuestLanguage>,
+    intendsToRun: Boolean = false,
+    runnableJarTarget: Path? = null,
   ) {
     val javaHome: String? = getJavaHomeAtRuntime()
     if (javaHome == null) {
@@ -1923,8 +1987,28 @@ internal class ToolShellCommand @Inject constructor(
       emptySequence()
     }
 
+    // fix: if the user intends to run kotlin, or intends to run a JAR, we should provision a path for that JAR unless
+    // the user provides one; nothing needs to be present at this path (yet), we just need to ensure it is known ahead
+    // of time so it can be added to the VM classpath.
+    val runnableJarPath = if (!intendsToRun) null else when (runnableJarTarget) {
+      // with an intent to run on JVM and no explicit JAR path, provision one where we can include things on the guest
+      // VM classpath even after initialization.
+      null -> {
+        // @TODO fix this in a smoother way, without unconditionally initializing a temp path
+        val mainTmpDir = System.getProperty("java.io.tmpdir")
+          ?: error("Failed to resolve temporary directory for JIT-runnable JAR")
+        val uuid = UUID.randomUUID().toString()
+        Paths.get(mainTmpDir).resolve("elide-runner-$uuid.jar")
+      }
+
+      // if the user passes an explicit path to a JAR, prefer that
+      else -> runnableJarTarget
+    }.also {
+      runnableJar.value = it
+    }
+
     val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
-    val fullClasspath: List<Path> = (
+    val fullClasspath: MutableList<Path> = (
         when (extraHome) {
           null -> emptySequence()
           else -> initialGuestClasspathJars(Path(extraHome).resolve("lib"))
@@ -1952,7 +2036,13 @@ internal class ToolShellCommand @Inject constructor(
       }.let {
         when (project) {
           // with no active project, just return the initial classpath
-          null -> it.toList()
+          null -> {
+            val mut = LinkedList<Path>()
+            it.forEach { path ->
+              mut.add(path)
+            }
+            mut
+          }
 
           // otherwise, assemble a classpath from the base and any project deps
           else -> withProjectClasspath(project, lockfile, it.asSequence())
@@ -1963,9 +2053,17 @@ internal class ToolShellCommand @Inject constructor(
     if (verbose) Statics.logging.info {
       "Guest classpath: ${fullClasspath.joinToString(":")}"
     }
+
+    // if we have provisioned a just-in-time runnable JAR, add it to the classpath
+    runnableJarPath?.let {
+      if (verbose) Statics.logging.info {
+        "Runnable JAR path: $runnableJarPath"
+      }
+      fullClasspath.add(it)
+    }
     this@ToolShellCommand.fullClasspath = fullClasspath
 
-    configure(elide.runtime.plugins.jvm.Jvm) {
+    configure(Jvm) {
       logging.debug("Configuring JVM")
       resourcesPath = gvmResources
       enableSourceIntegration = testMode()  // we need coverage in test mode, which needs the source loader
@@ -2122,7 +2220,20 @@ internal class ToolShellCommand @Inject constructor(
         JVM, KOTLIN, JAVA, SCALA, GROOVY -> {
           if (!jvmInitialized.value) synchronized(this) {
             jvmInitialized.compareAndSet(false, true)
-            doInitJvmSupport(gvmResources, project, lockfile?.lockfile, langs)
+            detectJvmEntrypoint().let { entryFile ->
+              // if the user provides their own JAR target, use that
+              val jarTarget = if (entryFile?.endsWith(".jar") != true) null else {
+                entryFile
+              }
+              doInitJvmSupport(
+                gvmResources,
+                project,
+                lockfile?.lockfile,
+                langs,
+                intendsToRun = entryFile != null,
+                runnableJarTarget = jarTarget,
+              )
+            }
           }
           when (lang) {
             JAVA -> configure(elide.runtime.plugins.java.Java) {
@@ -2488,17 +2599,19 @@ internal class ToolShellCommand @Inject constructor(
 
                     // otherwise, if we need to "compile" this source first (as is the case for LLVM targets and JVM
                     // targets like Java and Kotlin), then conduct that phase and load a symbol to begin execution.
-                    ExecutionMode.SOURCE_COMPILED -> executeCompiled(
-                      scriptFile,
-                      langs,
+                    ExecutionMode.SOURCE_COMPILED -> compileEntrypoint(
                       lang,
                       it,
-                      compileEntrypoint(
+                      scriptFile,
+                    )?.let { compiled ->
+                      executeCompiled(
+                        scriptFile,
+                        langs,
                         lang,
                         it,
-                        scriptFile,
-                      ),
-                    )
+                        compiled,
+                      )
+                    }
                   }
                 }
               }

@@ -1188,7 +1188,7 @@ public final class elide/runtime/precompiler/Precompiler$PrecompileSourceInfo : 
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/precompiler/Precompiler$PrecompileSourceRequest {
+public class elide/runtime/precompiler/Precompiler$PrecompileSourceRequest {
 	public fun <init> (Lelide/runtime/precompiler/Precompiler$SourceInfo;Ljava/lang/Object;)V
 	public final fun getConfig ()Ljava/lang/Object;
 	public final fun getSource ()Lelide/runtime/precompiler/Precompiler$SourceInfo;

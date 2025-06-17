@@ -458,6 +458,7 @@ dependencies {
   implementation(mn.micronaut.json.core)
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.bundles.mordant)
+  implementation(libs.classgraph)
 
   val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
   val patchedLibs = files(

@@ -34,6 +34,46 @@ name: Native Image
         type: string
         default: ubuntu-cipool
 
+      ## Input: Architecture
+      arch:
+        description: "Architecture Tag"
+        type: choice
+        options:
+          - "amd64"
+          - "arm64"
+          - "aarch64"
+        default: amd64
+
+      ## Input: Operating System
+      os:
+        description: "OS Tag"
+        type: choice
+        options:
+          - "linux"
+          - "darwin"
+          - "windows"
+        default: "linux"
+
+      ## Input: Optimization
+      opt:
+        description: "Optimization"
+        type: choice
+        options:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "b"
+          - "s"
+        default: "4"
+
+      ## Input: PGO
+      pgo:
+        description: "PGO"
+        type: boolean
+        default: false
+
   workflow_call:
     inputs:
       release:
@@ -45,9 +85,25 @@ name: Native Image
         type: boolean
         default: false
       runner:
-        description: "Runner to use"
+        description: "Runner"
         type: string
-        default: ubuntu-latest
+        default: ubuntu-cipool
+      arch:
+        description: "Architecture Tag"
+        type: string
+        default: amd64
+      os:
+        description: "OS Tag"
+        type: string
+        default: linux
+      opt:
+        description: "Optimization"
+        type: string
+        default: "4"
+      pgo:
+        description: "PGO"
+        type: boolean
+        default: false
 
     secrets:
       BUILDLESS_APIKEY:
@@ -84,12 +140,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [Ubuntu]
+        os: ["${{ inputs.os }}"]
         mode: ["Strict"]
         machine:
           - ${{ inputs.runner }}
+        arch:
+          - ${{ inputs.arch }}
 
-    name: "Native (${{ matrix.os }})"
+    name: "Native (${{ matrix.os }}-${{ matrix.arch }})"
     runs-on: ${{ matrix.machine }}
     continue-on-error: ${{ matrix.mode != 'Strict' }}
 
@@ -107,91 +165,8 @@ jobs:
       - name: "Setup: Harden Runner"
         uses: step-security/harden-runner@002fdce3c6a235733a90a27c80493a3241e56863 # v2.12.1
         with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            agent.less.build:443
-            androidx.dev:443
-            api.codecov.io:443
-            api.foojay.io:443
-            api.github.com:443
-            api.nuget.org:443
-            api.sonarcloud.io:443
-            apt.llvm.org:443
-            apt.llvm.org:80
-            azure.archive.ubuntu.com:80
-            bun.sh:443
-            cli.codecov.io:443
-            cli.less.build:443
-            crates.io:443
-            d3ob9fqp587by1.cloudfront.net:443
-            dc.services.visualstudio.com:443
-            dl.elide.dev:443
-            dl.google.com:443
-            dl.less.build:443
-            download-cdn.jetbrains.com:443
-            download.jetbrains.com:443
-            download.oracle.com:443
-            downloads.gradle.org:443
-            ea6ne4j2sb.execute-api.eu-central-1.amazonaws.com:443
-            edge.pkg.st:443
-            elide-snapshots.storage-download.googleapis.com:443
-            elide.sh:80
-            elide.zip:443
-            esm.ubuntu.com:443
-            files.pythonhosted.org:443
-            github.com:22
-            github.com:443
-            global.less.build:443
-            go.dev:443
-            google.com:443
-            gradle.less.build:443
-            gradle.pkg.st:443
-            ha.pool.sks-keyservers.net:11371
-            httpbin.org:443
-            index.crates.io:443
-            ingest.codecov.io:443
-            jcenter.bintray.com:443
-            jitpack.io:443
-            jpms.pkg.st:443
-            keybase.io:443
-            keys.openpgp.org:443
-            keyserver.ubuntu.com:443
-            local.less.build:443
-            maven.elide.dev:443
-            maven.pkg.jetbrains.space:443
-            maven.pkg.st:443
-            mirror.bazel.build:443
-            motd.ubuntu.com:443
-            nodejs.org:443
-            npm.pkg.st:443
-            o26192.ingest.us.sentry.io:443
-            objects.githubusercontent.com:443
-            oss.sonatype.org:443
-            packages.microsoft.com:443
-            pgp.mit.edu:443
-            plugins-artifacts.gradle.org:443
-            plugins.gradle.org:443
-            projectlombok.org:443
-            proxy.golang.org:443
-            pypi.org:443
-            raw.githubusercontent.com:443
-            registry.npmjs.org:443
-            registry.yarnpkg.com:443
-            releases.bazel.build:443
-            repo.maven.apache.org:443
-            repo1.maven.org:443
-            sc-cleancode-sensorcache-eu-central-1-prod.s3.amazonaws.com:443
-            scanner.sonarcloud.io:443
-            scans-in.gradle.com:443
-            services.gradle.org:443
-            sonarcloud.io:443
-            static.crates.io:443
-            static.rust-lang.org:443
-            storage.googleapis.com:443
-            www.google.com:443
-            www.googleapis.com:443
-            ziglang.org:443
+          disable-sudo: false
+          egress-policy: audit
       - name: "Setup: Checkout"
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -214,6 +189,9 @@ jobs:
           restore-keys: |
             elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-v3-
+      - name: "Setup: Packages"
+        if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
+        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@9d7e65c320fdb52dcd45ffaa68deb6c02c8754d9 # v1.12.0
         with:
@@ -270,7 +248,7 @@ jobs:
         with:
           cache-read-only: false
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
-          dependency-graph: generate-and-submit
+          dependency-graph: disabled
           gradle-home-cache-cleanup: true
           gradle-home-cache-includes: binaryen
             caches
@@ -285,7 +263,7 @@ jobs:
         run: cp -fv ./.github/workflows/gradle-ci.properties ~/.gradle/gradle.properties
       - name: "Build Environment"
         run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
-      - name: "🛠️ Build Packages"
+      - name: "🛠️ Build Image"
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -301,22 +279,24 @@ jobs:
             --build-cache \
             --daemon \
             --dependency-verification=off \
+            --no-configuration-cache \
             --stacktrace \
             -Pelide.ci=true \
             -PbuildSamples=false \
-            -Pelide.optMode=4 \
             -PbuildDocs=false \
+            -Pelide.optMode=${{ inputs.opt }} \
             -Pelide.stamp=${{ inputs.release }} \
-            -Pelide.pgo=${{ inputs.release }} \
+            -Pelide.pgo=${{ inputs.pgo }} \
             -Pelide.static=${{ inputs.static }} \
+            -Pelide.release=${{ inputs.release }} \
             -Pelide.buildMode=${{ inputs.release == true && 'release' || 'dev' }}
       - name: "Artifact: Build Outputs"
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}
+          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}
           path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
       - name: "Artifact: Provenance Subject"
         id: hash
-        if: ${{ matrix.os == 'ubuntu' && inputs.provenance }}
+        if: ${{ matrix.os == 'linux' && inputs.provenance }}
         run: |
           echo "hashes=$(sha256sum ./packages/cli/build/native/nativeOptimizedCompile/elide | base64 -w0)" >> "$GITHUB_OUTPUT"

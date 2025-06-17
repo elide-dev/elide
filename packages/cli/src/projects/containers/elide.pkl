@@ -1,0 +1,52 @@
+// amends "../../main/pkl/project.pkl"
+//
+// import "../../main/pkl/Container.pkl" as container
+// import "../../main/pkl/Jvm.pkl" as jvm
+// import "../../main/pkl/NativeImage.pkl" as native
+
+amends "elide:project.pkl"
+
+import "elide:Container.pkl" as container
+import "elide:Jvm.pkl" as jvm
+import "elide:NativeImage.pkl" as native
+
+name = "elide-test-ktjvm"
+description = "Example project using Elide with Kotlin/JVM."
+
+entrypoint {
+  "src/main/kotlin/main.kt"
+}
+
+tests {
+  coverage {
+    paths {
+      "sample*"
+    }
+  }
+}
+
+artifacts {
+  ["jar"] = new jvm.Jar {
+    name = "ktjvm"
+  }
+  ["native"] = new native.NativeImage {
+    from { "jar" }
+  }
+  ["container"] = new container.ContainerImage {
+    from { "native" }
+  }
+}
+
+dependencies {
+  maven {
+    packages {
+      // Guava
+      "com.google.guava:guava:33.4.8-jre"
+    }
+  }
+}
+
+sources {
+  ["main"] = "src/main/kotlin/**/*.kt"
+  ["test"] = "src/test/kotlin/**/*.kt"
+}

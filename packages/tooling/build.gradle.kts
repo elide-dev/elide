@@ -88,7 +88,9 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.serialization.protobuf)
+  implementation(libs.jib.core)
   implementation(libs.bundles.maven.resolver)
+
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlin.test.junit5)

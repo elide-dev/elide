@@ -15,11 +15,13 @@ package elide.tooling.project.codecs
 import org.pkl.config.java.ConfigEvaluatorBuilder
 import org.pkl.config.java.mapper.Conversion
 import org.pkl.config.java.mapper.Converter
+import org.pkl.config.java.mapper.TypeMapping
 import org.pkl.config.java.mapper.ValueMapper
 import org.pkl.config.kotlin.forKotlin
 import org.pkl.config.kotlin.to
 import org.pkl.core.ModuleSource
 import org.pkl.core.PClassInfo
+import org.pkl.core.PObject
 import org.pkl.core.SecurityManager
 import org.pkl.core.module.ModuleKey
 import org.pkl.core.module.ModuleKeyFactory
@@ -36,7 +38,7 @@ import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
-import elide.tooling.project.manifest.ElidePackageManifest.JvmTarget
+import elide.tooling.project.manifest.ElidePackageManifest.*
 
 @ManifestCodec(ProjectEcosystem.Elide)
 public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
@@ -114,18 +116,18 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
       .forKotlin()
       .addConversion(
         // convert string npm package specifications
-        Conversion.of(PClassInfo.String, ElidePackageManifest.NpmPackage::class.java, StrConverter {
-          ElidePackageManifest.NpmPackage.parse(it)
+        Conversion.of(PClassInfo.String, NpmPackage::class.java, StrConverter {
+          NpmPackage.parse(it)
         })
       ).addConversion(
         // convert string maven package specifications
-        Conversion.of(PClassInfo.String, ElidePackageManifest.MavenPackage::class.java, StrConverter {
-          ElidePackageManifest.MavenPackage.parse(it)
+        Conversion.of(PClassInfo.String, MavenPackage::class.java, StrConverter {
+          MavenPackage.parse(it)
         })
       ).addConversion(
         // convert string maven uris to repositories
-        Conversion.of(PClassInfo.String, ElidePackageManifest.MavenRepository ::class.java, StrConverter {
-          ElidePackageManifest.MavenRepository.parse(it)
+        Conversion.of(PClassInfo.String, MavenRepository ::class.java, StrConverter {
+          MavenRepository.parse(it)
         })
       ).addConversion(
         // convert int jvm target specs to jvm target
@@ -139,20 +141,36 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         })
       ).addConversion(
         // convert string to source set spec
-        Conversion.of(PClassInfo.String, ElidePackageManifest.SourceSet::class.java, StrConverter {
-          ElidePackageManifest.SourceSet.parse(it)
+        Conversion.of(PClassInfo.String, SourceSet::class.java, StrConverter {
+          SourceSet.parse(it)
         })
       ).addConversion(
         // convert string to gradle catalog spec
-        Conversion.of(PClassInfo.String, ElidePackageManifest.GradleCatalog::class.java, StrConverter {
-          ElidePackageManifest.GradleCatalog.parse(it)
+        Conversion.of(PClassInfo.String, GradleCatalog::class.java, StrConverter {
+          GradleCatalog.parse(it)
         })
       ).addConversion(
         // convert string to list of file paths
         Conversion.of(PClassInfo.String, List::class.java, StrConverter {
           listOf(it)
         })
-      )
+      ).addConverterFactory { info, type ->
+        when (info.qualifiedName) {
+          "elide.jvm#Jar" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, Jar::class.java)
+          })
+
+          "elide.nativeImage#NativeImage" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, NativeImage::class.java)
+          })
+
+          "elide.containers#ContainerImage" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, ContainerImage::class.java)
+          })
+
+          else -> Optional.empty()
+        }
+      }
       .build()
   }
 

@@ -3670,6 +3670,19 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$Artifact"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ContainerImage",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.util.List",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -3729,6 +3742,36 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GradleCatalog"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$Jar",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "elide.tooling.project.manifest.ElidePackageManifest$JarOptions",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JarOptions",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "boolean",
+            "java.lang.String"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
@@ -3877,7 +3920,29 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
@@ -6985,6 +7050,14 @@
         },
         {
           "name": "_state$volatile"
+        }
+      ]
+    },
+    {
+      "type": "kotlinx.coroutines.CompletedExceptionally",
+      "fields": [
+        {
+          "name": "_handled$volatile"
         }
       ]
     },
@@ -10278,6 +10351,9 @@
       "glob": "META-INF/elide/pkl/Base.pkl"
     },
     {
+      "glob": "META-INF/elide/pkl/Container.pkl"
+    },
+    {
       "glob": "META-INF/elide/pkl/Dev.pkl"
     },
     {
@@ -10368,6 +10444,9 @@
       "glob": "META-INF/native/libnetty_transport_native_io_uring_x86_64.so"
     },
     {
+      "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.containers.properties"
+    },
+    {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.javascript.properties"
     },
     {
@@ -10378,6 +10457,9 @@
     },
     {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.lockfile.properties"
+    },
+    {
+      "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.nativeImage.properties"
     },
     {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.project.properties"
@@ -11208,6 +11290,15 @@
       "glob": "org/pkl/core/Release.properties"
     },
     {
+      "glob": "org/pkl/core/errorMessages.properties"
+    },
+    {
+      "glob": "org/pkl/core/errorMessages_en.properties"
+    },
+    {
+      "glob": "org/pkl/core/errorMessages_en_US.properties"
+    },
+    {
       "glob": "org/pkl/core/stdlib/base.pkl"
     },
     {
@@ -11272,12 +11363,6 @@
   ],
   "bundles": [
     {
-      "name": "sun.util.logging.resources.logging",
-      "locales": [
-        "en-US"
-      ]
-    },
-    {
       "name": "ElideTool",
       "locales": [
         "en-US"
@@ -11331,7 +11416,16 @@
       ]
     },
     {
-      "name": "sun.util.logging.resources.logging"
+      "name": "org.pkl.core.errorMessages",
+      "locales": [
+        "en-US"
+      ]
+    },
+    {
+      "name": "sun.util.logging.resources.logging",
+      "locales": [
+        "en-US"
+      ]
     }
   ],
   "serialization": [

@@ -185,6 +185,35 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
     }
   }
 
+  // Render declared project artifacts to markdown so they can be rendered in the terminal.
+  private fun renderArtifactsToMd(manifest: ElidePackageManifest): String = buildString {
+    if (manifest.artifacts.isNotEmpty()) {
+      appendLine("## Artifacts")
+      appendLine("Outputs produced by the project's build, via `elide build`.")
+      appendLine()
+      manifest.artifacts.forEach { artifact ->
+        val name = artifact.key
+        val type = artifact.value::class.java.simpleName
+        val value = artifact.value
+        val dimmed = TextStyles.dim(type.toString())
+        appendLine("- `$name` ($dimmed)")
+        if (value is ElidePackageManifest.Jar) {
+          // @TODO: rename this to classes so that sources can be embedded clearly in jars
+          if (value.sources.isNotEmpty()) {
+            value.sources.forEach { sourceSet ->
+              appendLine("  - ${TextStyles.dim("classes:")} $sourceSet")
+            }
+          } else {
+            appendLine("  - ${TextStyles.dim("classes:")} main")
+          }
+        }
+        if (value.from.isNotEmpty()) {
+          appendLine("  - ${TextStyles.dim("from:")} ${value.from.joinToString(", ")}")
+        }
+      }
+    }
+  }
+
   // Render declared scripts to markdown so they can be rendered in the terminal.
   private fun renderScriptsToMd(manifest: ElidePackageManifest): String = buildString {
     appendLine("## Scripts")
@@ -234,6 +263,11 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
 
               // dependencies up next
               Statics.terminal.println(Markdown(renderDependenciesToMd(project.manifest)))
+
+              // artifacts
+              project.manifest.artifacts.takeIf { it.isNotEmpty() }?.let { artifacts ->
+                Statics.terminal.println(Markdown(renderArtifactsToMd(project.manifest)))
+              }
             }
           }
         }

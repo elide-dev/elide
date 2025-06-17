@@ -1,0 +1,23 @@
+/// Container image targets and configurations.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.containers
+
+import "Artifacts.pkl" as artifacts
+
+/// Container info without versioning.
+typealias ContainerCoordinate = String
+
+/// Validation for compliant container image tags.
+typealias ContainerTag = String
+
+/// Container coordinate qualified with versioning.
+typealias QualifiedContainerCoordinate = String
+
+/// Cryptographic fingerprint for a container image.
+typealias ContainerHash = String
+
+/// Describes a container image output.
+class ContainerImage extends artifacts.Artifact {
+  /// Tags to apply to the container image.
+  tags: Listing<ContainerTag> = new {}
+}

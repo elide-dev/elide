@@ -45,10 +45,32 @@ public data class ElidePackageManifest(
 ) : PackageManifest {
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.Elide
 
-  @JvmRecord @Serializable public data class Artifact(
+  @Serializable public sealed interface Artifact {
+    public val from: List<String>
+    public val dependsOn: List<String>
+  }
+
+  @Serializable public data class Jar(
     val name: String? = null,
-    val type: String? = null,
+    val sources: List<String> = emptyList(),
+    val resources: List<String> = emptyList(),
+    val manifest: Map<String, String> = emptyMap(),
+    val options: JarOptions = JarOptions(),
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ): Artifact
+
+  @Serializable public data class JarOptions(
+    val compress: Boolean = true,
+    val defaultManifestProperties: Boolean = true,
+    val entrypoint: String? = null,
   )
+
+  @Serializable public data class ContainerImage(
+    val tags: List<String> = emptyList(),
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ): Artifact
 
   @JvmRecord @Serializable public data class SourceSet(
     val spec: List<String>,
@@ -362,7 +384,9 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class NativeImage(
     val options: NativeImageOptions = NativeImageOptions(),
-  )
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ): Artifact
 
   @JvmRecord @Serializable public data class CoverageSettings(
     val enabled: Boolean = false,

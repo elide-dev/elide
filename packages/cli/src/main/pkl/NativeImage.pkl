@@ -6,6 +6,9 @@ import "Artifacts.pkl" as _artifacts
 
 /// Specifies the layout of options for a Native Image.
 open class NativeImageOptions {
+  /// Whether to activate verbose output.
+  verbose: Boolean = false
+
   /// Extra flags to pass to the Native Image compiler; added to all project targets.
   flags: Listing<String> = new {}
 }

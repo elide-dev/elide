@@ -45,6 +45,9 @@ class JarOptions {
 
   /// Whether to add default manifest properties.
   defaultManifestProperties: Boolean = true
+
+  /// Main entrypoint for the JAR, if applicable.
+  entrypoint: String?
 }
 
 /// Abstract definition of a JAR resource.
@@ -66,7 +69,7 @@ class ArtifactJarResource extends JarResource {
 }
 
 /// Describes a JAR output artifact.
-class Jar extends artifacts.Artifact {
+open class Jar extends artifacts.Artifact {
   /// Filename for the resulting JAR.
   name: common.FileName
 
@@ -86,6 +89,9 @@ class Jar extends artifacts.Artifact {
   /// Options for the JAR.
   options: JarOptions = new {}
 }
+
+/// Describes configuration for a shaded JAR.
+open class ShadedJar extends Jar {}
 
 /// Describes a Maven package dependency.
 class MavenPackageSpec {

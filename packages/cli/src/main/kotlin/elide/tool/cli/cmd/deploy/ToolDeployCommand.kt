@@ -7,9 +7,12 @@ import dev.elide.tool.cli.CommandResult
 import dev.elide.tool.cli.err
 import dev.elide.tool.cli.success
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
+import kotlin.io.path.writeText
 
 @Command(
   name = "deploy",
@@ -34,16 +37,22 @@ internal class ToolDeployCommand : ProjectAwareSubcommand<elide.tool.cli.ToolSta
   internal var dryRun: Boolean = false
 
   @Option(
-    names = ["--target-config"],
+    names = ["--config"],
     description = ["Target-specific config file, if applicable"]
   )
-  internal var targetConfigPath: String? = null
+  internal var configPath: String? = null
 
   @Option(
     names = ["--target", "-t"],
     description = ["Deployment target: fly, akash, or custom"]
   )
   internal var target: String? = null
+
+  @Option(
+    names = ["--image-tag"],
+    description = ["Docker image tag to use (default: elide-app:latest)"]
+  )
+  internal var imageTag: String = "elide-app:latest"
 
   /** Supported deployment targets. */
   private enum class DeployTarget(val cliName: String, val requiresConfig: Boolean = false) {
@@ -69,31 +78,31 @@ internal class ToolDeployCommand : ProjectAwareSubcommand<elide.tool.cli.ToolSta
       appendLine("=== Deployment Plan ===")
       appendLine("Target: ${selectedTarget.cliName}")
       appendLine("Binary: ${binary.absolutePath}")
-      if (targetConfigPath != null) {
-        appendLine("Target config: $targetConfigPath")
+      if (configPath != null) {
+        appendLine("Target config: $configPath")
       } else {
         appendLine("Target config: (none provided)")
       }
+      appendLine("Image tag: $imageTag")
       appendLine("Dry run: $dryRun")
       appendLine("======================")
     }
 
+    // Build Docker image
+    val imageBuildResult = buildDockerImage(binary, imageTag, dryRun)
+    if (!imageBuildResult) {
+      return err("Failed to build Docker image.")
+    }
+
     return when (selectedTarget) {
-      DeployTarget.FLY -> deployToFly(binary, targetConfigPath, dryRun)
-      DeployTarget.AKASH -> {
-        if (dryRun) {
-          output { appendLine("🚀 (dry-run) Would deploy to Akash: ${binary.absolutePath}") }
-          success()
-        } else {
-          deployToAkash(binary)
-        }
-      }
+      DeployTarget.FLY -> deployToFly(binary, configPath, imageTag, dryRun)
+      DeployTarget.AKASH -> deployToAkash(imageTag, dryRun)
       DeployTarget.CUSTOM -> {
         if (dryRun) {
-          output { appendLine("🚀 (dry-run) Would deploy ${binary.name} to a custom target. Add logic in deployToCustom.") }
+          output { appendLine("🚀 (dry-run) Would deploy Docker image $imageTag to a custom target. Add logic in deployToCustom.") }
           success()
         } else {
-          deployToCustom(binary)
+          deployToCustom(imageTag)
         }
       }
     }
@@ -128,49 +137,113 @@ internal class ToolDeployCommand : ProjectAwareSubcommand<elide.tool.cli.ToolSta
     }
   }
 
+  /**
+   * Build a minimal Docker image from the binary.
+   * Always cleans up the temp directory.
+   */
+  private fun buildDockerImage(binary: File, tag: String, dryRun: Boolean): Boolean {
+    val dockerfileContent = """
+      FROM scratch
+      COPY ${binary.name} /app
+      ENTRYPOINT ["/app"]
+    """.trimIndent()
+
+    val tempDir = Files.createTempDirectory("elide-docker-build")
+    try {
+      val dockerfilePath = tempDir.resolve("Dockerfile")
+      val binaryTarget = tempDir.resolve(binary.name)
+      dockerfilePath.writeText(dockerfileContent)
+      binary.copyTo(binaryTarget.toFile(), overwrite = true)
+
+      val buildCmd = "docker build -t $tag ${tempDir.toAbsolutePath()}"
+      if (dryRun) {
+        output { appendLine("🧱 (dry-run) Would run: $buildCmd") }
+        return true
+      }
+
+      val process = ProcessBuilder("sh", "-c", buildCmd)
+        .inheritIO()
+        .start()
+      val exitCode = process.waitFor()
+      if (exitCode != 0) {
+        output { appendLine("❌ Docker build failed with exit code $exitCode") }
+        return false
+      }
+      output { appendLine("🧱 Built Docker image: $tag") }
+      return true
+    } catch (e: Exception) {
+      output { appendLine("❌ Failed to prepare Docker build context: ${e.message}") }
+      return false
+    } finally {
+      tempDir.toFile().deleteRecursively()
+    }
+  }
+
   // --- Target-specific deploy logic ---
 
-  private fun deployToFly(binary: File, configPath: String?, dryRun: Boolean): CommandResult {
+  private fun deployToFly(binary: File, configPath: String?, imageTag: String, dryRun: Boolean): CommandResult {
     val configFile = configPath?.let { File(it) }
     if (!dryRun && configFile == null) {
-      return err("This target requires a config file (--target-config).")
+      return err("This target requires a config file (--config).")
     }
     if (configFile != null && (!configFile.exists() || !configFile.isFile)) {
       output { appendLine("❌ Provided config file does not exist: $configPath") }
       return err("Invalid config file for target.")
     }
+    // Optional: Warn if fly.toml [build] section has an image set that conflicts with --image-tag
+    if (configFile != null) {
+      val configText = configFile.readText()
+      val buildImageRegex = Regex("""^\s*image\s*=\s*["'][^"']+["']""", RegexOption.MULTILINE)
+      if (buildImageRegex.containsMatchIn(configText)) {
+        output {
+          appendLine("⚠️ Warning: Your config file sets a [build] image. This may conflict with --image-tag and the built image.")
+        }
+      }
+    }
+    val deployCmd = buildString {
+      append("fly deploy --local-only --image $imageTag")
+      if (configFile != null) append(" --config ${configFile.absolutePath}")
+    }
     if (dryRun) {
       output {
-        appendLine("🚀 (dry-run) Would deploy to Fly.io: ${binary.absolutePath}")
-        if (configFile != null) appendLine("Using config: ${configFile.absolutePath}")
+        appendLine("🚀 (dry-run) Would deploy to Fly.io using:")
+        appendLine(deployCmd)
       }
       return success()
     } else {
-      output {
-        appendLine("🚀 Deploying ${binary.name} to Fly.io...")
-        if (configFile != null) {
-          appendLine("Running: fly deploy --config ${configFile.absolutePath} --local-only --image ${binary.absolutePath}")
-        } else {
-          appendLine("⚠️ No config file provided. Please ensure you have a valid config for this target.")
-        }
-        // Future: Actually invoke Fly.io CLI or API here.
+      output { appendLine("🚀 Deploying Docker image $imageTag to Fly.io...") }
+      val process = ProcessBuilder("sh", "-c", deployCmd)
+        .inheritIO()
+        .start()
+      val exitCode = process.waitFor()
+      if (exitCode != 0) {
+        output { appendLine("❌ Fly.io deploy failed with exit code $exitCode") }
+        return err("Fly.io deploy failed.")
       }
+      output { appendLine("✅ Fly.io deploy succeeded.") }
       return success()
     }
   }
 
-  private fun deployToAkash(binary: File): CommandResult {
+  private fun deployToAkash(imageTag: String, dryRun: Boolean): CommandResult {
+    if (dryRun) {
+      output {
+        appendLine("🚀 (dry-run) Would push image $imageTag to registry and submit Akash deployment.")
+      }
+      return success()
+    }
+    // TODO: Add support for pushing $imageTag to remote registry for Akash
     output {
       appendLine("⚠️ Akash deployment is not yet implemented.")
-      appendLine("Stub: Would deploy ${binary.name} to Akash.")
+      appendLine("Stub: Would push image $imageTag to registry and submit Akash deployment.")
     }
     return success()
   }
 
-  private fun deployToCustom(binary: File): CommandResult {
+  private fun deployToCustom(imageTag: String): CommandResult {
     output {
       appendLine("⚠️ Custom deployment is not yet implemented.")
-      appendLine("Stub: Would deploy ${binary.name} to a custom target.")
+      appendLine("Stub: Would deploy Docker image $imageTag to a custom target.")
     }
     return success()
   }

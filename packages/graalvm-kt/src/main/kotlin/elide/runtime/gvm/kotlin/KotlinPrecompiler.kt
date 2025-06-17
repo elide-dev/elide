@@ -23,8 +23,10 @@ import org.jetbrains.kotlin.config.LanguageVersion
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.incremental.destinationAsFile
 import java.io.Closeable
+import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.LinkedList
 import kotlinx.atomicfu.atomic
@@ -73,6 +75,12 @@ public fun Diagnostic.Companion.fromKotlincDiagnostic(
 
 // Implements a precompiler which compiles Kotlin to Java bytecode.
 public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, KotlinRunnable> {
+  public class PrecompileKotlinRequest(
+    source: SourceInfo,
+    config: KotlinCompilerConfig,
+    public val jarTarget: Path? = null,
+  ): PrecompileSourceRequest<KotlinCompilerConfig>(source, config)
+
   private val kotlinVerbose by lazy {
     System.getProperty("elide.kotlin.verbose") == "true"
   }
@@ -83,13 +91,100 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
     languageVersion = LanguageVersion.KOTLIN_2_1,
   )
 
+  // Convert a Kotlin source path to an entrypoint string.
+  private fun entrypointFromKotlinPath(path: Path, paths: List<Path>): String? {
+    val packageStatement = try {
+      // find package statement
+      path.toFile().bufferedReader(StandardCharsets.UTF_8).use {
+        it.lineSequence()
+          .firstOrNull { line -> line.startsWith("package ") }
+          ?.removePrefix("package ")
+          ?.removeSuffix(";")
+          ?.trim()
+      }
+    } catch (e: IOException) {
+      throw IOException("Failed to read first line of Kotlin source file at $path", e)
+    }
+    val filename = path.fileName.toString().removeSuffix(".kt")
+    return when {
+      // `package.path.MainKt`
+      filename == "main" -> buildString {
+        when (packageStatement) {
+          null, "" -> append("MainKt") // no package statement, just `MainKt`
+          else -> {
+            append(packageStatement) // package statement, so `package.path.MainKt`
+            append('.')
+            append("MainKt")
+          }
+        }
+      }
+
+      // `package.path.NamedMainKt`
+      filename.endsWith("main", ignoreCase = true) -> buildString {
+        when (packageStatement) {
+          null, "" -> {}
+          else -> {
+            append(packageStatement)
+            append('.')
+          }
+        }
+        val suffix = filename.lowercase().removeSuffix("main")
+        append(suffix.replaceFirstChar { it.uppercase() })
+        append("MainKt")
+      }
+
+      // assume it is a top-level `main`
+      else -> if (paths.size > 1) null else buildString {
+        when (packageStatement) {
+          null, "" -> {} // no package statement, just `filenameKt`
+          else -> {
+            append(packageStatement)
+            append('.')
+          }
+        }
+        append(filename.replaceFirstChar { it.uppercase() })
+        append("Kt")
+      }
+    }
+  }
+
+  // Try to infer a Kotlin entrypoint, or consume one from flags or project configuration; fail if we can't determine.
+  private fun buildOrGuessEntrypointForKotlinEntry(srcs: List<Path>): String? {
+    // if we are provided an entrypoint, prefer that
+    // @TODO entrypoint from project
+    // @TODO entrypoint from flags
+
+    // if there is a file somewhere in our source set called `main.kt` (case-insensitive), then we will prefer that
+    val mainKt = srcs.firstOrNull { it.fileName.toString().endsWith("main.kt", ignoreCase = true) }
+    val mainFromProject: Path? = null
+    val mainFromFlags: Path? = null
+
+    val (ambiguity, mainSelected) = when {
+      mainFromFlags != null -> false to mainFromFlags
+      mainFromProject != null && mainKt != null && mainFromProject != mainKt -> true to mainFromProject
+      mainFromProject != null -> false to mainFromProject
+      mainKt != null -> false to mainKt
+      srcs.size == 1 -> false to srcs.first() // single source file, use that
+      else -> return null
+    }
+    if (ambiguity) {
+      Logging.root().warn(
+        buildString {
+          appendLine("Multiple potential entrypoints for Kotlin precompiled source:")
+          appendLine("- Project: ${mainFromProject?.fileName ?: "<none>"}")
+          appendLine("- Flags: ${mainFromFlags?.fileName ?: "<none>"}")
+          appendLine("- Source: ${mainKt?.fileName ?: "<none>"}")
+        }
+      )
+    }
+    return entrypointFromKotlinPath(mainSelected, srcs)
+  }
+
   @OptIn(DelicateElideApi::class)
   @Suppress("TooGenericExceptionCaught")
   override fun invoke(req: PrecompileSourceRequest<KotlinCompilerConfig>, input: String): KotlinRunnable {
     val srcs = req.source.allSources().toList()
-    val isKotlinScript = req.source.name.endsWith(".kts") || srcs.any {
-      it.endsWith(".kts")
-    }
+    val isKotlinScript = req.source.name.endsWith(".kts") || srcs.any { it.endsWith(".kts") }
     if (isKotlinScript) {
       // should only be provided with one input in this case
       check(srcs.size < 2) {
@@ -106,10 +201,14 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
         )
       }
     }
-    val closeables = LinkedList<Closeable>()
     val tmproot = Files.createTempDirectory("elide-kt-precompile")
     val tmpfile = tmproot.resolve(req.source.name).toFile()
-    val jarfile = tmproot.resolve("ktjvm.jar").toFile()
+    val closeables = LinkedList<Closeable>()
+    val effectiveOut = when (val jarTarget = (req as? PrecompileKotlinRequest)?.jarTarget) {
+      null -> tmproot.resolve("ktjvm.jar").toFile()
+      else -> jarTarget.toFile()
+    }
+
     val kotlinRoot = System.getenv("KOTLIN_HOME")
       ?.takeIf { it.isNotEmpty() }
       ?.let { Paths.get(it) }
@@ -143,7 +242,7 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
     val svcs = Services.EMPTY
     val kotlinMajorMinor = KotlinLanguage.VERSION.substringBeforeLast('.')
     val args = ktCompiler.createArguments().apply {
-      destinationAsFile = jarfile
+      destinationAsFile = effectiveOut
       disableStandardScript = true
       jdkHome = javaToolchainHome.absolutePathString()
       freeArgs = mutableListOf(tmpfile.absolutePath)
@@ -163,7 +262,8 @@ public object KotlinPrecompiler : BundlePrecompiler<KotlinCompilerConfig, Kotlin
     }
     return KotlinJarBundleInfo(
       name = req.source.name,
-      path = jarfile.toPath(),
+      path = effectiveOut.toPath(),
+      entrypoint = buildOrGuessEntrypointForKotlinEntry(srcs),
     ).also {
       if (diagnostics.hasErrors()) {
         when (diagnostics.fatal) {

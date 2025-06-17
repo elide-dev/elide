@@ -34,10 +34,10 @@ internal class ToolDeployCommand : ProjectAwareSubcommand<elide.tool.cli.ToolSta
   internal var dryRun: Boolean = false
 
   @Option(
-    names = ["--config", "-c"],
-    description = ["Path to config file (for Fly.io: fly.toml, must be provided manually)"]
+    names = ["--target-config"],
+    description = ["Target-specific config file, if applicable"]
   )
-  internal var configFilePath: String? = null
+  internal var targetConfigPath: String? = null
 
   @Option(
     names = ["--target", "-t"],
@@ -46,8 +46,8 @@ internal class ToolDeployCommand : ProjectAwareSubcommand<elide.tool.cli.ToolSta
   internal var target: String? = null
 
   /** Supported deployment targets. */
-  private enum class DeployTarget(val cliName: String) {
-    FLY("fly"),
+  private enum class DeployTarget(val cliName: String, val requiresConfig: Boolean = false) {
+    FLY("fly", requiresConfig = true),
     AKASH("akash"),
     CUSTOM("custom");
 
@@ -69,43 +69,17 @@ internal class ToolDeployCommand : ProjectAwareSubcommand<elide.tool.cli.ToolSta
       appendLine("=== Deployment Plan ===")
       appendLine("Target: ${selectedTarget.cliName}")
       appendLine("Binary: ${binary.absolutePath}")
-      when (selectedTarget) {
-        DeployTarget.FLY -> {
-          if (configFilePath != null) {
-            appendLine("Config: $configFilePath")
-          } else {
-            appendLine("Config: (none provided)")
-          }
-        }
-        DeployTarget.AKASH, DeployTarget.CUSTOM -> {
-          appendLine("Config: (none or handled by target)")
-        }
+      if (targetConfigPath != null) {
+        appendLine("Target config: $targetConfigPath")
+      } else {
+        appendLine("Target config: (none provided)")
       }
       appendLine("Dry run: $dryRun")
       appendLine("======================")
     }
 
     return when (selectedTarget) {
-      DeployTarget.FLY -> {
-        val configFile = configFilePath?.let { File(it) }
-        if (!dryRun && configFile == null) {
-          return err("Fly.io deployment requires a config file (--config).")
-        }
-        if (configFile != null && (!configFile.exists() || !configFile.isFile)) {
-          output { appendLine("❌ Provided Fly.io config file does not exist: $configFilePath") }
-          return err("Invalid Fly.io config file.")
-        }
-        if (dryRun) {
-          output {
-            appendLine("🚀 (dry-run) Would deploy to Fly.io: ${binary.absolutePath}")
-            if (configFile != null) appendLine("Using config: ${configFile.absolutePath}")
-          }
-          success()
-        } else {
-          deployToFly(binary, configFile)
-          success()
-        }
-      }
+      DeployTarget.FLY -> deployToFly(binary, targetConfigPath, dryRun)
       DeployTarget.AKASH -> {
         if (dryRun) {
           output { appendLine("🚀 (dry-run) Would deploy to Akash: ${binary.absolutePath}") }
@@ -156,15 +130,32 @@ internal class ToolDeployCommand : ProjectAwareSubcommand<elide.tool.cli.ToolSta
 
   // --- Target-specific deploy logic ---
 
-  private fun deployToFly(binary: File, config: File?) {
-    output {
-      appendLine("🚀 Deploying ${binary.name} to Fly.io...")
-      if (config != null) {
-        appendLine("Running: fly deploy --config ${config.absolutePath} --local-only --image ${binary.absolutePath}")
-      } else {
-        appendLine("⚠️ No config file provided. Please ensure you have a valid fly.toml.")
+  private fun deployToFly(binary: File, configPath: String?, dryRun: Boolean): CommandResult {
+    val configFile = configPath?.let { File(it) }
+    if (!dryRun && configFile == null) {
+      return err("This target requires a config file (--target-config).")
+    }
+    if (configFile != null && (!configFile.exists() || !configFile.isFile)) {
+      output { appendLine("❌ Provided config file does not exist: $configPath") }
+      return err("Invalid config file for target.")
+    }
+    if (dryRun) {
+      output {
+        appendLine("🚀 (dry-run) Would deploy to Fly.io: ${binary.absolutePath}")
+        if (configFile != null) appendLine("Using config: ${configFile.absolutePath}")
       }
-      // Future: Actually invoke Fly.io CLI or API here.
+      return success()
+    } else {
+      output {
+        appendLine("🚀 Deploying ${binary.name} to Fly.io...")
+        if (configFile != null) {
+          appendLine("Running: fly deploy --config ${configFile.absolutePath} --local-only --image ${binary.absolutePath}")
+        } else {
+          appendLine("⚠️ No config file provided. Please ensure you have a valid config for this target.")
+        }
+        // Future: Actually invoke Fly.io CLI or API here.
+      }
+      return success()
     }
   }
 

@@ -11272,6 +11272,12 @@
   ],
   "bundles": [
     {
+      "name": "sun.util.logging.resources.logging",
+      "locales": [
+        "en-US"
+      ]
+    },
+    {
       "name": "ElideTool",
       "locales": [
         "en-US"

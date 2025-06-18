@@ -176,9 +176,13 @@ val defaultArchTarget = when {
   TargetCriteria.allOf(elideTarget, Criteria.MacArm64) -> "armv8.1-a"
   else -> "compatibility"
 }
+val isArm = TargetCriteria.allOf(elideTarget, Criteria.Arm64)
 
 val optMode = findProperty("elide.optMode") as? String ?: "3"
-val nativeOptMode = optMode
+val nativeOptMode = when (val explicit = optMode) {
+  "b" -> "0"
+  else -> explicit
+}
 
 val elideBinaryArch = project.properties["elide.march"] as? String ?: defaultArchTarget
 logger.lifecycle("Building for architecture '$elideBinaryArch' (default: '$defaultArchTarget')")
@@ -1625,7 +1629,7 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 ) else listOf(
   "-Delide.vm.engine.preinitialize=false",
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
+  "-J-Xmx48g",
 ) else emptyList())).plus(if (oracleGvm) listOf(
   // disabled on windows
   "-H:-AuxiliaryEngineCache",
@@ -1728,7 +1732,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=true",
   ) else emptyList())
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
+  "-J-Xmx48g",
 ) else listOf(
   "-J-Xmx64g",
   "--parallelism=32",
@@ -1737,8 +1741,8 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
 val linuxGvmReleaseFlags = listOf<String>()
 
 val linuxReleaseArgs = linuxOnlyArgs.plus(
-  listOf(
-    "-R:+WriteableCodeCache",
+  listOfNotNull(
+    onlyIf(!isArm, "-R:+WriteableCodeCache"),
   ).plus(if (oracleGvm) linuxGvmReleaseFlags else emptyList()),
 )
 

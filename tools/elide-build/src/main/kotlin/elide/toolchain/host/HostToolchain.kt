@@ -411,15 +411,15 @@ private fun Project.findTarget(os: String, arch: String, libc: String): ElideTar
       // Linux supports multiple libc implementations and architectures.
       HostManager.hostIsLinux -> when (val linuxLibc = getProp(ELIDE_LIBC) ?: GNU) {
         GNU -> when (resolveTargetArch()) {
-          AARCH64 -> ElideTarget.LINUX_AARCH64_GNU
+          AARCH64, ARM64 -> ElideTarget.LINUX_AARCH64_GNU
           else -> ElideTarget.LINUX_AMD64_GNU
         }
         MUSL -> when (resolveTargetArch()) {
-          AARCH64 -> ElideTarget.LINUX_AARCH64_MUSL
+          AARCH64, ARM64 -> ElideTarget.LINUX_AARCH64_MUSL
           else -> ElideTarget.LINUX_AMD64_MUSL
         }
         BIONIC -> when (resolveTargetArch()) {
-          AARCH64 -> ElideTarget.LINUX_AARCH64_BIONIC
+          AARCH64, ARM64 -> ElideTarget.LINUX_AARCH64_BIONIC
           else -> ElideTarget.LINUX_AMD64_BIONIC
         }
         else -> error("Unsupported libc: $linuxLibc")

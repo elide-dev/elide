@@ -17,6 +17,7 @@ package elide.tooling.config
 import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KClass
 import elide.exec.ActionScope
 import elide.exec.TaskGraphBuilder
 import elide.tooling.project.ElideConfiguredProject
@@ -225,5 +226,22 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     public val config: BuildConfiguration
   }
 
+  /**
+   * Contribute configurations to the current build.
+   *
+   * This method is called during the build configuration phase, and allows the configurator to configure various
+   * aspects of Elide's build infrastructure.
+   *
+   * @param state Current build state, which provides access to the project, console, event controller, and other
+   *   state.
+   * @param config Current build configuration.
+   */
   public suspend fun contribute(state: ElideBuildState, config: BuildConfiguration)
+
+  /**
+   * Indicate the build configurators which must run before this one.
+   *
+   * @return List of configurator classes; defaults to an empty list.
+   */
+  public fun dependsOn(): List<KClass<out BuildConfigurator>> = emptyList()
 }

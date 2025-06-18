@@ -61,6 +61,11 @@ private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
   return "$name${srcSet.name[0].uppercase()}${srcSet.name.slice(1..srcSet.name.lastIndex)}"
 }
 
+/**
+ * # JVM Libraries
+ *
+ * Describes coordinates and versions for built-in libraries which ship with Elide.
+ */
 public object JvmLibraries {
   public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
   public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"
@@ -134,6 +139,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     return builtinKotlinJarPath(state, dependency, version)
   }
 
+  @Suppress("LongMethod")
   private fun ActionScope.javac(
     name: String,
     resolver: MavenAetherResolver?,

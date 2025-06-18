@@ -13,6 +13,7 @@
 package elide.tooling.project.manifest
 
 import java.net.URI
+import java.nio.file.Path
 import kotlinx.serialization.Serializable
 import elide.tool.Argument
 import elide.tool.MutableArguments
@@ -50,10 +51,15 @@ public data class ElidePackageManifest(
     public val dependsOn: List<String>
   }
 
+  @Serializable public data class JarResource(
+    val path: String,
+    val position: String,
+  )
+
   @Serializable public data class Jar(
     val name: String? = null,
     val sources: List<String> = emptyList(),
-    val resources: List<String> = emptyList(),
+    val resources: List<JarResource> = emptyList(),
     val manifest: Map<String, String> = emptyMap(),
     val options: JarOptions = JarOptions(),
     override val from: List<String> = emptyList(),

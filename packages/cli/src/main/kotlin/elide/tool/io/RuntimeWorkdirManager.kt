@@ -20,6 +20,9 @@ import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.atomic.AtomicBoolean
+import dev.dirs.BaseDirectories
+import dev.dirs.ProjectDirectories
+import dev.dirs.UserDirectories
 import kotlinx.atomicfu.atomic
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
@@ -48,16 +51,16 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
 
   internal companion object {
     private const val nativesDir = "native"
-    private const val cachesDir = "caches"
+    // private const val cachesDir = "caches"
     private const val flightRecorderDir = "blackbox"
-    private const val nixTempPath = "/tmp/elide-runtime"
-    private const val runtimeDirPrefix = "elide-runtime-"
-    private const val elideHomeDirectory = ".elide"
-    private const val elideConfigDirectory = "elide"
-    private const val configDirectory = ".config"
+    // private const val nixTempPath = "/tmp/elide-runtime"
+    // private const val runtimeDirPrefix = "elide-runtime-"
+    // private const val elideHomeDirectory = ".elide"
+    //private const val elideConfigDirectory = "elide"
+    //private const val configDirectory = ".config"
 
-    private val linuxCachesPath = "~/elide/caches/v${Elide.version()}"
-    private val darwinCachesPath = "/Library/caches/elide/v${Elide.version()}"
+    // private val linuxCachesPath = "~/elide/caches/v${Elide.version()}"
+    // private val darwinCachesPath = "/Library/caches/elide/v${Elide.version()}"
     private val projectAnchorFiles = arrayOf(
       ".git",
       "elide.pkl",
@@ -67,18 +70,18 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
       "Gemfile",
     )
 
-    private fun persistentTempPath(): Path = when (HostPlatform.resolve().os) {
-      DARWIN, LINUX -> File("$nixTempPath/v${Elide.version()}")
-        .toPath()
-        .absolute()
+    // private fun persistentTempPath(): Path = when (HostPlatform.resolve().os) {
+      // DARWIN, LINUX -> File("$nixTempPath/v${Elide.version()}")
+      //   .toPath()
+      //   .absolute()
 
-      WINDOWS -> File((System.getenv("localappdata") ?: error("No local app data folder")))
-        .resolve("Temp")
-        .resolve("Elide")
-        .resolve("v${Elide.version()}")
-        .toPath()
-        .absolute()
-    }
+      // WINDOWS -> File((System.getenv("localappdata") ?: error("No local app data folder")))
+        // .resolve("Temp")
+        // .resolve("Elide")
+        // .resolve("v${Elide.version()}")
+        // .toPath()
+        //.absolute()
+    //}
 
     /** @return Created or acquired [RuntimeWorkdirManager] singleton. */
     @JvmStatic fun acquire(): RuntimeWorkdirManager {
@@ -92,12 +95,17 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
   @Volatile private lateinit var tempDirectory: Path
   private val handleCache: SortedMap<File, WorkdirHandle> = ConcurrentSkipListMap()
 
-  private fun currentSharedTempPrefix(): String {
-    return StringBuilder().apply {
-      append(runtimeDirPrefix)
-      append(Elide.version())
-    }.toString()
-  }
+  // Direcory providers from dirs.dev library.
+  private val baseDirectories: BaseDirectories = BaseDirectories()
+  private val userDirectories: UserDirectories = UserDirectories()
+  private val projectDirectories: ProjectDirectories = ProjectDirectories("dev", "elide", "elide")
+
+  // private fun currentSharedTempPrefix(): String {
+    // return StringBuilder().apply {
+      // append(runtimeDirPrefix)
+      // append(Elide.version())
+    // }.toString()
+  // }
 
   private fun obtainHandle(file: File, read: Boolean, write: Boolean): WorkdirHandle = handleCache.getOrPut(file) {
     val knownExists = AtomicBoolean(false)
@@ -164,24 +172,24 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
     write,
   )
 
-  private fun initializeTemporaryWorkdir(): Path = synchronized(this) {
-    if (initialized) return tempDirectory
-    initialized = true
-    Files.createDirectories(persistentTempPath()).also {
-      rootDirectory = it
-    }
-  }
+  // private fun initializeTemporaryWorkdir(): Path = synchronized(this) {
+    // if (initialized) return tempDirectory
+    // initialized = true
+    // Files.createDirectories(persistentTempPath()).also {
+      // rootDirectory = it
+    // }
+  // }
 
-  private fun obtainWorkdir(): Path =
-    if (initialized) rootDirectory else initializeTemporaryWorkdir()
+  // private fun obtainWorkdir(): Path =
+    // if (initialized) rootDirectory else initializeTemporaryWorkdir()
 
-  private fun workSubdir(
-    name: String,
-    temporary: Boolean = true,
-    lazy: Boolean = false,
-  ): Path = obtainWorkdir().resolve(name).apply {
-    prepareDirectory(this, temporary, lazy)
-  }
+  // private fun workSubdir(
+    // name: String,
+    // temporary: Boolean = true,
+    // lazy: Boolean = false,
+  // ): Path = obtainWorkdir().resolve(name).apply {
+    // prepareDirectory(this, temporary, lazy)
+  // }
 
   // Find the nearest parent directory to `cwd` with one of the provided `files` present.
   private fun nearestDirectoryWithAnyOfTheseFiles(
@@ -238,15 +246,15 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
 
   // Handle the `~` symbol in path references.
   @OptIn(DelicateElideApi::class)
-  private fun userDir(path: String): Path {
-    if (path.startsWith("~")) {
-      return Path.of(path.replace("~", when (HostPlatform.resolve().os) {
-        DARWIN, LINUX -> "/home/${System.getProperty("user.name")}"
-        else -> error("Windows paths should not use `~`")
-      }))
-    }
-    return Path.of(path)
-  }
+  // private fun userDir(path: String): Path {
+    // if (path.startsWith("~")) {
+      // return Path.of(path.replace("~", when (HostPlatform.resolve().os) {
+        // DARWIN, LINUX -> "/home/${System.getProperty("user.name")}"
+        // else -> error("Windows paths should not use `~`")
+      // }))
+    // }
+    // return Path.of(path)
+  // }
 
   // Native library directory.
   private val nativesDirectory by lazy {
@@ -255,8 +263,7 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
 
   // Temporary (delete-on-exit) directory.
   private val temporaryDirectory by lazy {
-    obtainWorkdir()
-    tempDirectory = Files.createTempDirectory(currentSharedTempPrefix())
+    tempDirectory = Files.createTempDirectory("elide-runtime-${Elide.version()}")
     prepareDirectory(tempDirectory, temporary = true, lazy = true)
   }
 
@@ -267,18 +274,7 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
 
   // User-level configurations for Elide.
   private val userConfigDirectory by lazy {
-    val homeDir = Paths.get(System.getProperty("user.home"))
-    val defaultPath = homeDir.resolve(configDirectory).resolve(elideConfigDirectory)
-
-    val userConfigPaths = listOf(
-      homeDir.resolve(elideHomeDirectory),
-      defaultPath,
-    )
-
-    (userConfigPaths.firstOrNull {
-      // the first one that exists, wins, and if nothing exists, the default path is used
-      it.toAbsolutePath().exists()
-    } ?: defaultPath).toFile()
+    File(baseDirectories.configDir)
   }
 
   // Root directory for the current project, as applicable.
@@ -288,11 +284,7 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
 
   @OptIn(DelicateElideApi::class)
   private val cachesDirectory by lazy {
-    when (HostPlatform.resolve().os) {
-      DARWIN -> prepareDirectory(userDir(darwinCachesPath), temporary = false, lazy = true)
-      LINUX -> prepareDirectory(userDir(linuxCachesPath), temporary = false, lazy = true)
-      else -> workSubdir(cachesDir, temporary = false, lazy = true)
-    }
+    prepareDirectory(Path.of(projectDirectories.cacheDir), temporary = false, lazy = true)
   }
 
   override fun configRoot(): WorkdirHandle = requireActive {

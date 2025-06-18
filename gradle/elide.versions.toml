@@ -51,7 +51,7 @@ cyclonedx = "2.0.0"
 dekorate = "3.1.1"
 dependencyAnalysis = "2.8.0"
 detekt = "1.23.8"
-dirs = "bf76af41b9"
+dirs = "26"
 diktat = "2.0.0"
 docker-plugin = "9.4.0"
 doctor-plugin = "0.10.0"
@@ -382,7 +382,7 @@ confundus = { group = "com.jakewharton.confundus", name = "confundus-gradle", ve
 consoleUi = { group = "de.codeshelf.consoleui", name = "consoleui", version.ref = "consoleui" }
 crossword = { group = "com.jakewharton.crossword", name = "crossword", version.ref = "crossword" }
 dekorate-kubernetes = { group = "io.dekorate", name = "kubernetes-annotations", version.ref = "dekorate" }
-dirs = { group = "com.github.elide-dev", name = "directories-jvm", version.ref = "dirs" }
+dirs = { group = "dev.dirs", name = "directories", version.ref = "dirs" }
 errorprone-annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorprone" }
 filament = { group = "dev.karmakrafts.filament", name = "filament", version.ref = "filament" }
 gax-java = { group = "com.google.api", name = "gax", version.ref = "gax" }

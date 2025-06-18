@@ -1,10 +1,12 @@
 // amends "../../main/pkl/project.pkl"
+// import "../../main/pkl/project.pkl" as build
 //
 // import "../../main/pkl/Container.pkl" as container
 // import "../../main/pkl/Jvm.pkl" as jvm
 // import "../../main/pkl/NativeImage.pkl" as native
 
 amends "elide:project.pkl"
+import "elide:project.pkl" as build
 
 import "elide:Container.pkl" as container
 import "elide:Jvm.pkl" as jvm
@@ -13,8 +15,8 @@ import "elide:NativeImage.pkl" as native
 name = "elide-test-ktjvm"
 description = "Example project using Elide with Kotlin/JVM."
 
-entrypoint {
-  "src/main/kotlin/main.kt"
+jvm {
+  main = "sample.MainKt"
 }
 
 tests {

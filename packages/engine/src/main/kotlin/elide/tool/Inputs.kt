@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tool
 
 import kotlinx.serialization.Serializable
@@ -34,4 +33,9 @@ public sealed interface Inputs {
    * ## Inputs: Files.
    */
   public interface Files : Inputs
+
+  /**
+   * ## Inputs: Multiple.
+   */
+  public interface Compound : Inputs
 }

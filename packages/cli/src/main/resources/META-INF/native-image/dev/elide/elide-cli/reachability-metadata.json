@@ -3638,64 +3638,94 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$Artifact"
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$ContainerImage",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.List"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmFeatures",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaCompilerSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaLanguage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$Jar",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ContainerImage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageLinkAtBuildTime",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageClassInit",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageClassInit",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$OptimizationLevel",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$OptimizationLevel",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageType",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
@@ -3783,16 +3813,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
-            "java.lang.String"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget"
@@ -3895,20 +3916,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "boolean",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenPackage"
@@ -4022,15 +4030,13 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",

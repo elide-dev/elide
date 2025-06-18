@@ -47,6 +47,9 @@ public fun interface BuildConfigurator : ProjectConfigurator {
    * ## Build Settings
    */
   public interface BuildSettings {
+    /** Whether to preserve build ephemera for debugging. */
+    public val preserve: Boolean
+
     /** Whether to enable build caching. */
     public val caching: Boolean
 
@@ -69,6 +72,7 @@ public fun interface BuildConfigurator : ProjectConfigurator {
    * Build settings expressed in immutable form.
    */
   @Serializable @JvmRecord public data class ImmutableBuildSettings(
+    override val preserve: Boolean,
     override val caching: Boolean,
     override val dependencies: Boolean,
     override val dry: Boolean,
@@ -89,12 +93,14 @@ public fun interface BuildConfigurator : ProjectConfigurator {
    */
   public data class MutableBuildSettings(
     override var caching: Boolean = true,
+    override var preserve: Boolean = true,
     override var dependencies: Boolean = true,
     override var dry: Boolean = false,
     override var checks: Boolean = true,
   ) : BuildSettings {
     public fun build(): BuildSettings = ImmutableBuildSettings(
       caching = caching,
+      preserve = preserve,
       dependencies = dependencies,
       checks = checks,
       dry = dry,

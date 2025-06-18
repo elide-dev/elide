@@ -14,6 +14,7 @@
 
 package elide.tooling.jvm
 
+import com.github.ajalt.mordant.rendering.TextStyles
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -88,8 +89,8 @@ internal class JarBuildConfigurator : BuildConfigurator {
   }
 
   // Resolve the suite of tasks that should precede the JAR task. Typically class and resource prep tasks.
-  private fun taskDepsForJar(config: BuildConfiguration): List<Task> {
-    val built = config.taskGraph.build()
+  private fun taskDepsForJar(state: ElideBuildState): List<Task> {
+    val built = state.config.taskGraph.build()
     return built.nodes().filter {
       // @TODO better than strings?
       it.toString().lowercase().let {
@@ -100,9 +101,11 @@ internal class JarBuildConfigurator : BuildConfigurator {
 
   // Build the final JAR file name which should be written.
   private fun buildJarFileName(name: String, state: ElideBuildState, artifact: Jar): String = buildString {
-    val jarName = name.takeIf {
-      it != "jar" && it != "main" && it.isNotEmpty() && it.isNotBlank()
-    } ?: state.project.manifest.name ?: state.config.projectRoot.name
+    val jarName = (
+      artifact.name ?: name.takeIf {
+        it != "jar" && it != "main" && it.isNotEmpty() && it.isNotBlank()
+      } ?: state.project.manifest.name ?: state.config.projectRoot.name
+    ).removeSuffix(".jar")
 
     // @TODO qualifiers, etc
     append(jarName)
@@ -141,132 +144,152 @@ internal class JarBuildConfigurator : BuildConfigurator {
     classpath: Classpath? = null,
     stampManifest: Boolean = true,
     injectManifest: Boolean = true,
+    stampClasspath: Boolean = false,
+    entrypoint: String? = null,
     jarConfigurator: JarConfigurator.() -> Unit = {},
-  ) = fn(name, taskDependencies(dependencies)) {
-    val projectName = state.project.manifest.name?.ifBlank { null } ?: state.config.projectRoot.name
-    val projectVersion = state.project.manifest.version
-    val jarName = buildJarFileName(name, state, artifact)
-    val jarOut = state.layout
-      .artifacts
-      .resolve("jvm")
-      .resolve("jars")
-      .resolve(jarName)
+  ) = buildJarFileName(name, state, artifact).let { jarName ->
+    fn(name, taskDependencies(dependencies)) {
+      val projectName = state.project.manifest.name?.ifBlank { null } ?: state.config.projectRoot.name
+      val projectVersion = state.project.manifest.version
+      val jarOut = state.layout
+        .artifacts
+        .resolve("jvm")
+        .resolve("jars")
+        .resolve(jarName)
 
-    // build finalized JAR manifest
-    val finalizedManifest = buildMap<Attributes.Name, String> {
-      if (injectManifest) {
-        put(Attributes.Name.MANIFEST_VERSION, "1.0")
-        put(Attributes.Name("Created-By"), "Elide")
-        put(Attributes.Name.IMPLEMENTATION_TITLE, projectName)
-        projectVersion?.let { put(Attributes.Name.IMPLEMENTATION_VERSION, it) }
+      // main class entry (optional)
+      val resolvedEntry = entrypoint ?: artifact.options.entrypoint
 
-        if (stampManifest) {
-          put(Attributes.Name("Build-Timestamp"), System.currentTimeMillis().toString())
+      // build finalized JAR manifest
+      val finalizedManifest = buildMap<Attributes.Name, String> {
+        if (injectManifest) {
+          put(Attributes.Name.MANIFEST_VERSION, "1.0")
+          put(Attributes.Name("Created-By"), "Elide")
+          put(Attributes.Name.IMPLEMENTATION_TITLE, projectName)
+          projectVersion?.let { put(Attributes.Name.IMPLEMENTATION_VERSION, it) }
+
+          if (stampManifest) {
+            put(Attributes.Name("Build-Timestamp"), System.currentTimeMillis().toString())
+          }
+          if (resolvedEntry != null) {
+            put(Attributes.Name.MAIN_CLASS, resolvedEntry)
+          }
+          if (stampClasspath && classpath != null) {
+            val rendered = classpath.joinToString(":")
+            put(Attributes.Name.CLASS_PATH, rendered)
+          }
+        }
+
+        manifest.forEach { (key, value) ->
+          put(Attributes.Name(key), value)
+        }
+      }
+      val jarBuildRoot = Files.createTempDirectory(
+        "elide-build-jar-"
+      )
+      val buildroot = jarBuildRoot.resolve("jar")
+
+      val allPathsToCopy = sequence {
+        srcSets.map { (_, path) ->
+          yield(path.absolute() to "/")
+        }
+        extraPaths.map { (path, position) ->
+          yield(path to position)
+        }
+      }.flatMap { (path, position) ->
+        when {
+          path.isDirectory() -> position.let { Paths.get(it) }.let { base ->
+            Files.walk(path).map { sub ->
+              val rel = sub.relativeTo(path)
+              sub.absolute() to base.resolve(rel).toString()
+            }.asSequence()
+          }
+
+          else -> sequenceOf(
+            path.absolute() to position,
+          )
+        }
+      }.map { (path, position) ->
+        Triple(path, buildroot.resolve(position), position)
+      }
+
+      val buildrootFile = buildroot.toFile()
+      if (!config.settings.preserve) {
+        buildrootFile.deleteOnExit()
+      }
+      val jarEntries = HashMap<String, Path>()
+
+      allPathsToCopy.toList().mapNotNull { (from, relativeTo, position) ->
+        // create parent dir for target
+        val to = if (relativeTo.toString() == "/")
+          return@mapNotNull null else buildroot.resolve(relativeTo.toString().removePrefix("/"))
+        val parent = to.parent
+        if (parent != null && !parent.exists()) {
+          Files.createDirectories(parent)
+        }
+
+        // is it a file? if so, copy it. if not, and it's a directory, create it.
+        when {
+          from.isDirectory() -> Files.createDirectory(to)
+          from.isRegularFile() -> Files.copy(from, to)
+          else -> error("Cannot copy non-file and non-directory to JAR: $from")
+        }
+        to to position
+      }.map { (from, position) ->
+        jarEntries[position] = from
+      }
+
+      // write the jar manifest
+      val targetManifestPath = buildroot.resolve("META-INF/MANIFEST.MF")
+      if (!targetManifestPath.exists()) {
+        Files.createDirectories(targetManifestPath.parent)
+        Manifest().apply {
+          finalizedManifest.forEach { entry ->
+            mainAttributes[entry.key] = entry.value
+          }
+        }.let { manifest ->
+          targetManifestPath.outputStream().buffered().use { output ->
+            manifest.write(output)
+          }
         }
       }
 
-      manifest.forEach { (key, value) ->
-        put(Attributes.Name(key), value)
+      val jarArgs = Arguments.empty().toMutable().apply {
+        add("--create")
+        add("--file")
+        add(jarOut.absolutePathString())
+        add("-C")
+        add(buildroot.absolutePathString())
+        add(".")
       }
-    }
-    val buildroot = Files.createTempDirectory(
-      "elide-build-jar-"
-    )
-    val allPathsToCopy = sequence {
-      srcSets.map { (_, path) ->
-        yield(path.absolute() to "/")
-      }
-      extraPaths.map { (path, position) ->
-        yield(path to position)
-      }
-    }.flatMap { (path, position) ->
-      when {
-        path.isDirectory() -> position.let { Paths.get(it) }.let { base ->
-          Files.walk(path).map { sub ->
-            val rel = sub.relativeTo(path)
-            sub.absolute() to base.resolve(rel).toString()
-          }.asSequence()
-        }
 
-        else -> sequenceOf(
-          path.absolute() to position,
+      val jarOuts = JarTool.outputJar(jarOut)
+      val jarIns = JarTool.jarFiles(jarEntries.values.asSequence())
+      val tool = JarTool(jarArgs, Environment.host(), jarIns, jarOuts)
+
+      try {
+        // build the jar
+        tool.invoke(
+          object : AbstractTool.EmbeddedToolState {
+            override val resourcesPath: Path get() = state.resourcesPath
+            override val project: ElideProject? get() = state.project
+          }
         )
+        elide.exec.Result.Nothing
+      } catch (err: Throwable) {
+        logging.error("Failed to invoke JAR tool", err)
+        elide.exec.Result.UnspecifiedFailure
       }
-    }.map { (path, position) ->
-      Triple(path, buildroot.resolve(position), position)
-    }
-
-    val buildrootFile = buildroot.toFile()
-    buildrootFile.deleteOnExit()
-    val jarEntries = HashMap<String, Path>()
-
-    allPathsToCopy.toList().mapNotNull { (from, relativeTo, position) ->
-      // create parent dir for target
-      val to = if (relativeTo.toString() == "/")
-        return@mapNotNull null else buildroot.resolve(relativeTo.toString().removePrefix("/"))
-      val parent = to.parent
-      if (parent != null && !parent.exists()) {
-        Files.createDirectories(parent)
-      }
-
-      // is it a file? if so, copy it. if not, and it's a directory, create it.
-      when {
-        from.isDirectory() -> Files.createDirectory(to)
-        from.isRegularFile() -> Files.copy(from, to)
-        else -> error("Cannot copy non-file and non-directory to JAR: $from")
-      }
-      to to position
-    }.map { (from, position) ->
-      jarEntries[position] = from
-    }
-
-    // write the jar manifest
-    val targetManifestPath = buildroot.resolve("META-INF/MANIFEST.MF")
-    if (!targetManifestPath.exists()) {
-      Files.createDirectories(targetManifestPath.parent)
-      Manifest().apply {
-        finalizedManifest.forEach { entry ->
-          mainAttributes[entry.key] = entry.value
-        }
-      }.let { manifest ->
-        targetManifestPath.outputStream().buffered().use { output ->
-          manifest.write(output)
-        }
-      }
-    }
-
-    val jarArgs = Arguments.empty().toMutable().apply {
-      add("--create")
-      add("--file")
-      add(jarOut.absolutePathString())
-      add("-C")
-      add(buildroot.absolutePathString())
-      add(".")
-    }
-
-    val jarOuts = JarTool.outputJar(jarOut)
-    val jarIns = JarTool.jarFiles(jarEntries.values.asSequence())
-    val tool = JarTool(jarArgs, Environment.host(), jarIns, jarOuts)
-
-    try {
-      // build the jar
-      tool.invoke(object: AbstractTool.EmbeddedToolState {
-        override val resourcesPath: Path get() = state.resourcesPath
-        override val project: ElideProject? get() = state.project
-      })
-      elide.exec.Result.Nothing
-    } catch (err: Throwable) {
-      logging.error("Failed to invoke JAR tool", err)
-      elide.exec.Result.UnspecifiedFailure
-    }
-  }.describedBy {
-    "Packing JAR '$name'"
-  }.also { jar ->
-    config.taskGraph.apply {
-      addNode(jar)
-      if (dependencies.isNotEmpty()) {
-        dependencies.forEach { dependency ->
-          putEdge(jar, dependency)
+    }.describedBy {
+      val bolded = TextStyles.bold(jarName)
+      "Packing $bolded"
+    }.also { jar ->
+      config.taskGraph.apply {
+        addNode(jar)
+        if (dependencies.isNotEmpty()) {
+          dependencies.forEach { dependency ->
+            putEdge(jar, dependency)
+          }
         }
       }
     }
@@ -283,7 +306,7 @@ internal class JarBuildConfigurator : BuildConfigurator {
             jartifact as Jar,
             resolveSourceSetsForJar(state, jartifact),
             resolveExtraPathsForJar(state, jartifact),
-            taskDepsForJar(config),
+            taskDepsForJar(state),
           ).also {
             logging.debug { "Configured JAR build for name '$name'" }
           }

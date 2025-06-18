@@ -15,7 +15,6 @@ package elide.tooling.project.codecs
 import org.pkl.config.java.ConfigEvaluatorBuilder
 import org.pkl.config.java.mapper.Conversion
 import org.pkl.config.java.mapper.Converter
-import org.pkl.config.java.mapper.TypeMapping
 import org.pkl.config.java.mapper.ValueMapper
 import org.pkl.config.kotlin.forKotlin
 import org.pkl.config.kotlin.to
@@ -153,6 +152,16 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         // convert string to list of file paths
         Conversion.of(PClassInfo.String, List::class.java, StrConverter {
           listOf(it)
+        })
+      ).addConversion(
+        // convert optimization mode enums
+        Conversion.of(PClassInfo.String, OptimizationLevel::class.java, StrConverter {
+          OptimizationLevel.resolve(it)
+        })
+      ).addConversion(
+        // convert image type enums
+        Conversion.of(PClassInfo.String, NativeImageType::class.java, StrConverter {
+          NativeImageType.resolve(it)
         })
       ).addConverterFactory { info, type ->
         when (info.qualifiedName) {

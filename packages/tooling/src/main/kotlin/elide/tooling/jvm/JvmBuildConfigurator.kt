@@ -88,6 +88,11 @@ public object JvmLibraries {
   public const val KOTLINX_SERIALIZATION: String = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
   public const val KOTLINX_SERIALIZATION_JSON: String = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm"
 
+  internal val baseCoordinates = arrayOf(
+    jarNamed("kotlin-stdlib"),
+    jarNamed("kotlin-reflect"),
+  )
+
   internal val testCoordinates = arrayOf(
     OPENTEST to EMBEDDED_OPENTEST_VERSION,
     JUNIT_JUPITER_API to EMBEDDED_JUNIT_VERSION,
@@ -104,10 +109,43 @@ public object JvmLibraries {
     APIGUARDIAN_API to EMBEDDED_APIGUARDIAN_VERSION,
   )
 
+  public fun jarNamed(name: String): String = buildString {
+    append(name)
+    append('.')
+    append("jar")
+  }
+
   public fun jarNameFor(coordinate: String, version: String): String {
     val parts = coordinate.split(":")
     require(parts.size == 2) { "Invalid built-in coordinate: $coordinate" }
     return "${parts[1]}-$version.jar"
+  }
+
+  public fun resolveJarFor(path: Path, coordinate: String, version: String): Path {
+    return resolveJarFor(path, jarNameFor(coordinate, version))
+  }
+
+  public fun resolveJarFor(path: Path, name: String): Path {
+    return path
+      .resolve("kotlin")
+      .resolve(KotlinLanguage.VERSION)
+      .resolve("lib")
+      .resolve(name)
+  }
+
+  public fun builtinClasspath(path: Path, tests: Boolean = false, kotlin: Boolean = true): Classpath {
+    return Classpath.from(
+      buildList {
+        if (kotlin || tests) addAll(baseCoordinates.map {
+          resolveJarFor(path, it)
+        })
+        if (tests) {
+          addAll(testCoordinates.map { (coordinate, version) ->
+            resolveJarFor(path, coordinate, version)
+          })
+        }
+      }
+    )
   }
 }
 

@@ -106,6 +106,11 @@ jobs:
             to Elide's documentation or Discord. Consume from these sources as needed for context. Links:
             - Elide Docs: https://docs.elide.dev/
             - Elide Discord: https://elide.dev/discord
+            Some notes about what to prioritize:
+            - We don't care about test coverage on every PR; 40% is acceptable as a project-wide target
+            - The team prefers to move fast while we are in beta, so don't be overly critical
+            - Propose changes in your summary, keep your summary as concise as reasonably possible
+            - Summarize the PR for human reviewers (and self-review), mostly you are looking for glaring bugs or flaws
           allowed_tools: |
             Bash(pnpm install)
             Bash(cargo check)

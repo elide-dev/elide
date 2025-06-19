@@ -189,7 +189,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
         .resolve(it)  // source set name
     }
     val entrypoint = (jar.options.entrypoint ?: project.manifest.jvm?.main)?.ifBlank { null } ?: error(
-      "Failde to resolve main class; this is required to build a JVM container image. " +
+      "Failed to resolve main class; this is required to build a JVM container image. " +
       "Please specify a main class via `jvm { main = ... }`, or within the `jar` artifact."
     )
 

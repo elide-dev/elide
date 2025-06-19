@@ -364,7 +364,16 @@ where options include:
 
     return try {
       debugLog("Finalized arguments: ${argList.joinToString(" ")}")
-      NativeImage.main(argList.toTypedArray())
+
+      @Suppress("SwallowedException")
+      try {
+        NativeImage.buildImage(argList.toTypedArray(), /* exit = */ false)
+      } catch (result: NativeImageResult) {
+        when (val err = result.error) {
+          null -> Tool.Result.Success
+          else -> throw err
+        }
+      }
       Tool.Result.Success
     } catch (err: Throwable) {
       logging.error("Native Image compilation failed", err)

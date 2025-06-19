@@ -33,6 +33,6 @@ class DevSettings {
   /// Source info for the project.
   source: ProjectSourceSpec?
 
-  /// CI configuration for this project.
-  ci: ci.ContinuousIntegration?
+  // CI configuration for this project.
+  // ci: ci.ContinuousIntegration?
 }

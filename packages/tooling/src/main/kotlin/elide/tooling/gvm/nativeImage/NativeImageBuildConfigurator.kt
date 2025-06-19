@@ -15,6 +15,7 @@
 package elide.tooling.gvm.nativeImage
 
 import com.github.ajalt.mordant.rendering.TextStyles
+import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
@@ -30,7 +31,6 @@ import elide.tool.Classpath
 import elide.tool.ClasspathSpec
 import elide.tool.Environment
 import elide.tool.MultiPathUsage
-import elide.tool.asArgumentString
 import elide.tooling.AbstractTool
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
@@ -42,13 +42,6 @@ import elide.tooling.jvm.JvmLibraries
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.project.ElideProject
 import elide.tooling.project.manifest.ElidePackageManifest.*
-
-/**
- * ## Native Image Configurator
- *
- * Describes the receiver context for a function which configures a native image build task.
- */
-public interface NativeImageConfigurator {}
 
 /**
  * ## Native Image Build Configurator
@@ -77,7 +70,7 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
   }
 
   // Resolve the classpath to use for the Native Image build task; this should include user dependencies and code.
-  private fun classpathForImage(state: ElideBuildState, img: NativeImage, inject: Boolean): suspend () -> Classpath? = {
+  private fun classpathForImage(state: ElideBuildState, img: NativeImage): suspend () -> Classpath? = {
     (state.config.resolvers[DependencyResolver.MavenResolver::class] as? MavenAetherResolver)?.let { resolver ->
       Classpath.empty().toMutable().apply {
         // if there are jars defined by the user, we should add them
@@ -107,9 +100,7 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
         }
 
         // add classpath from builtins
-        if (inject) {
-          add(JvmLibraries.builtinClasspath(state.resourcesPath))
-        }
+        add(JvmLibraries.builtinClasspath(state.resourcesPath))
       }.let {
         Classpath.from(it.map { it.path })
       }
@@ -141,7 +132,6 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
    * @param entrypoint Entrypoint for the native image; this is typically the main class to run; `null` for libraries.
    * @param classpath Optional classpath to use for this task; if not provided, the default classpath will be used.
    * @param dependencies Optional list of tasks that this task depends on.
-   * @param configurator Optional configurator function to customize the native image task.
    * @return A new task that builds a native image.
    */
   private fun ActionScope.nativeImage(
@@ -153,7 +143,6 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
     classpath: (suspend () -> Classpath?)? = null,
     dependencies: List<Task> = emptyList(),
     injectArgs: Boolean = true,
-    configurator: NativeImageConfigurator.() -> Unit = {},
   ) = buildNativeImageName(state, config.projectRoot, artifact).let { nativeImageName ->
     fn(name, taskDependencies(dependencies)) {
       val effectiveClasspath = classpath?.invoke() ?: Classpath.empty()
@@ -172,6 +161,66 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
         addAllStrings(artifact.options.flags)
 
         if (injectArgs) {
+          if (artifact.options.verbose) {
+            add("--verbose")
+          }
+
+          // only supported on linux: debug mode builds
+          val isDebugMode = if (System.getProperty("os.name")?.lowercase() != "linux") false else {
+            if (!config.settings.debug) false else {
+              add("-g")
+              true
+            }
+          }
+
+          // add pgo information if enabled
+          val pgoEnabled = if (!artifact.options.pgo.enabled || isDebugMode) false else when {
+            // instrumentation comes first, but only in non-release mode
+            artifact.options.pgo.instrument && !config.settings.release -> false.also {
+              add("--pgo-instrument")
+              if (artifact.options.pgo.sampling) {
+                add("--pgo-sampling")
+              }
+            }
+
+            // we are enabled and we have profiles = activate it
+            artifact.options.pgo.profiles.isNotEmpty() -> true.also {
+              artifact.options.pgo.profiles.joinToString(",") {
+                if (File.pathSeparatorChar in it) {
+                  // resolve from project root
+                  state.config.projectRoot
+                    .resolve(it)
+                    .absolutePathString()
+                } else {
+                  // otherwise, pull it from `.dev/profiles`
+                  state.layout
+                    .devRoot
+                    .resolve("profiles")
+                    .resolve(it)
+                    .absolutePathString()
+                }
+              }.let {
+                add("--pgo=$it")
+              }
+            }
+
+            // otherwise, pgo is not enabled
+            else -> false
+          }
+
+          // add optimization level
+          add(when (val level = artifact.options.optimization) {
+            OptimizationLevel.AUTO -> when {
+              config.settings.release -> if (pgoEnabled) OptimizationLevel.THREE else OptimizationLevel.FOUR
+              config.settings.debug -> OptimizationLevel.ZERO
+              else -> OptimizationLevel.BUILD
+            }.let {
+              "-O${it.symbol}"
+            }
+
+            else -> "-O${level.symbol}"
+          })
+
           // disable fallback mode
           add("--no-fallback")
 
@@ -256,7 +305,7 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
             config,
             artifact as NativeImage,
             resolveEntrypointForNativeImage(state, artifact),
-            classpathForImage(state, artifact, /* inject = */ true),
+            classpathForImage(state, artifact),
             taskDepsForImage(config),
           ).also {
             logging.debug { "Configured Native Image build for name '$name'" }

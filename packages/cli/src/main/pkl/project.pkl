@@ -242,7 +242,21 @@ function nativeSharedLibrary(_from: String) = new _nativeImage.NativeImage {
 }
 
 /// Create a container image description with the provided target and base.
-function containerImage(
+function containerImage(_from: String) = new _container.ContainerImage {
+  from { _from }
+}
+
+/// Create a container image description with the provided target and base.
+function containerImageAt(
+  _from: String,
+  target: _container.ContainerCoordinate
+) = new _container.ContainerImage {
+  image = target
+  from { _from }
+}
+
+/// Create a container image description with the provided target and base.
+function containerImageWithBase(
   _from: String,
   target: _container.ContainerCoordinate,
   targetBase: _container.ContainerCoordinate

@@ -1,18 +1,10 @@
 // amends "../../main/pkl/project.pkl"
 // import "../../main/pkl/project.pkl" as build
-//
-// import "../../main/pkl/Container.pkl" as container
-// import "../../main/pkl/Jvm.pkl" as jvm
-// import "../../main/pkl/NativeImage.pkl" as native
 
 amends "elide:project.pkl"
 import "elide:project.pkl" as build
 
-import "elide:Container.pkl" as container
-import "elide:Jvm.pkl" as jvm
-import "elide:NativeImage.pkl" as native
-
-name = "elide-test-ktjvm"
+name = "elide-containers"
 description = "Example project using Elide with Kotlin/JVM."
 
 jvm {
@@ -28,14 +20,15 @@ tests {
 }
 
 artifacts {
-  ["jar"] = new jvm.Jar {
-    name = "ktjvm"
-  }
-  ["native"] = new native.NativeImage {
-    from { "jar" }
-  }
-  ["container"] = new container.ContainerImage {
-    from { "native" }
+  // Build a JAR from our Kotlin code.
+  ["jar"] = build.jar()
+
+  // Build a native image from our JAR and classpath.
+  ["native"] = build.nativeImage("jar")
+
+  // Wrap the native image in a container image.
+  ["container"] = (build.containerImage("native")) {
+    image = "ghcr.io/elide-dev/samples/containers"
   }
 }
 

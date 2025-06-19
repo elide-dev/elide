@@ -4,6 +4,9 @@ module elide.containers
 
 import "Artifacts.pkl" as artifacts
 
+/// Image coordinate string.
+typealias ContainerImageCoordinate = String
+
 /// Container info without versioning.
 typealias ContainerCoordinate = String
 
@@ -18,6 +21,12 @@ typealias ContainerHash = String
 
 /// Describes a container image output.
 class ContainerImage extends artifacts.Artifact {
+  /// Target image coordinate.
+  image: ContainerImageCoordinate?
+
+  /// Base image to use for this container image.
+  base: ContainerImageCoordinate?
+
   /// Tags to apply to the container image.
   tags: Listing<ContainerTag> = new {}
 }

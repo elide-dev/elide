@@ -1,6 +1,271 @@
 {
   "reflection": [
     {
+      "type": "[Lcom.fasterxml.jackson.databind.deser.BeanDeserializerModifier;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.deser.Deserializers;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.deser.KeyDeserializers;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.deser.ValueInstantiators;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.ser.BeanSerializerModifier;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.ser.Serializers;"
+    },
+    {
+      "type": "[Lcom.google.common.collect.ImmutableMapEntry;"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.cache.LayerEntriesSelector$LayerEntryTemplate",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.BuildableManifestTemplate"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.BuildableManifestTemplate$ContentDescriptorTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ContainerConfigurationTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ContainerConfigurationTemplate$ConfigurationObjectTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ContainerConfigurationTemplate$HealthCheckObjectTemplate",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ContainerConfigurationTemplate$RootFilesystemObjectTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.DescriptorDigestDeserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.DescriptorDigestSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.HistoryEntry",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ImageMetadataTemplate",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ManifestAndConfigTemplate",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ManifestListTemplate"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ManifestTemplate"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.OciIndexTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.OciIndexTemplate$ManifestDescriptorTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.OciIndexTemplate$ManifestDescriptorTemplate$Platform",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.OciManifestTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.V22ManifestTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.json.JsonTemplate"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.registry.RegistryAuthenticator$AuthenticationResponseTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.registry.credentials.json.DockerConfigTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.registry.credentials.json.DockerConfigTemplate$AuthTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.common.collect.ImmutableCollection",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.ImmutableList",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.ImmutableMap",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.ImmutableSortedMap",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.RegularImmutableList",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.RegularImmutableMap",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.SingletonImmutableList",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jib.$JibAdapter$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jib.$JibAdapter$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jib.$JibAdapter$JibCliTool$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jib.JibAdapter$JibCliTool",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.kotlinc.$KotlinCompilerAdapter$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "Main",
       "methods": [
         {
@@ -440,14 +705,9 @@
     },
     {
       "type": "com.google.common.jimfs.SystemJimfsFileSystemProvider",
-      "methods": [
-        {
-          "name": "removeFileSystemRunnable",
-          "parameterTypes": [
-            "java.net.URI"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "com.google.common.util.concurrent.AbstractFutureState",
@@ -3822,37 +4082,16 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTargetValidationMode"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ProfileGuidedOptimization",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinJvmCompilerOptions",
@@ -3911,6 +4150,12 @@
           ]
         }
       ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenCoordinates",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",

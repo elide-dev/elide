@@ -213,10 +213,13 @@ function withArtifact(artifactName: artifacts.ArtifactName, at: common.FilePath)
 }
 
 /// Create a JAR artifact from the `main` project source set.
-function app(entrypoint: common.FilePath | String) = new Jar {
+function app(_entrypoint: common.FilePath | String) = new Jar {
   name = "main.jar"
+  options {
+    entrypoint = _entrypoint
+  }
   manifest {
-    ["Main-Class"] = entrypoint
+    ["Main-Class"] = _entrypoint
   }
 }
 
@@ -260,4 +263,7 @@ class JvmSettings {
 
   /// Java language settings.
   java: JavaLanguage = new {}
+
+  /// Runtime JVM flags.
+  flags: Listing<String> = new {}
 }

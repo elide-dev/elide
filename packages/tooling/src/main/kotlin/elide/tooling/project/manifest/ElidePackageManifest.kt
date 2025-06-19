@@ -311,6 +311,7 @@ public data class ElidePackageManifest(
     val javaHome: String? = null,
     val features: JvmFeatures = JvmFeatures(),
     val java: JavaLanguage = JavaLanguage(),
+    val flags: List<String> = emptyList(),
   )
 
   @JvmRecord @Serializable public data class JavaScriptSettings(
@@ -433,11 +434,20 @@ public data class ElidePackageManifest(
     }
   }
 
+  @JvmRecord @Serializable public data class ProfileGuidedOptimization(
+    val enabled: Boolean = true,
+    val autoprofile: Boolean = false,
+    val instrument: Boolean = false,
+    val sampling: Boolean = false,
+    val profiles: List<String> = emptyList(),
+  )
+
   @JvmRecord @Serializable public data class NativeImageOptions(
     val verbose: Boolean = false,
     val linkAtBuildTime: NativeImageLinkAtBuildTime = NativeImageLinkAtBuildTime(),
     val classInit: NativeImageClassInit = NativeImageClassInit(),
     val optimization: OptimizationLevel = OptimizationLevel.AUTO,
+    val pgo: ProfileGuidedOptimization = ProfileGuidedOptimization(),
     val flags: List<String> = emptyList(),
   )
 

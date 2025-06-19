@@ -2,7 +2,11 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.nativeImage
 
+import "Base.pkl" as _common
 import "Artifacts.pkl" as _artifacts
+
+/// Flag for the Native Image compiler.
+typealias NativeImageFlag = String
 
 /// Optimization levels.
 typealias OptimizationLevel = "auto" | "b" | "s" | "0" | "1" | "2" | "3" | "4"
@@ -31,6 +35,24 @@ class NativeImageClassInit {
   runtime: Listing<String> = new {}
 }
 
+/// Settings which govern Profile Guided Optimization (PGO) for Native Images.
+class ProfileGuidedOptimization {
+  /// Whether PGO is enabled (only activates with present profiles).
+  enabled: Boolean = true
+
+  /// Whether to enable auto-build features for PGO.
+  autoprofile: Boolean = false
+
+  /// Whether to instrument for PGO.
+  instrument: Boolean = false
+
+  /// Whether to use sampling for PGO.
+  sampling: Boolean = false
+
+  /// PGO profiles to apply.
+  profiles: Listing<_common.FileName> = new {}
+}
+
 /// Specifies the layout of options for a Native Image.
 open class NativeImageOptions {
   /// Whether to activate verbose output.
@@ -45,8 +67,11 @@ open class NativeImageOptions {
   /// Optimization level for the Native Image.
   optimization: OptimizationLevel = "auto"
 
+  /// PGO (Profiling Guided Optimization) settings.
+  pgo: ProfileGuidedOptimization = new {}
+
   /// Extra flags to pass to the Native Image compiler; added to all project targets.
-  flags: Listing<String> = new {}
+  flags: Listing<NativeImageFlag> = new {}
 }
 
 /// Configures Native Image generation settings, project-wide.

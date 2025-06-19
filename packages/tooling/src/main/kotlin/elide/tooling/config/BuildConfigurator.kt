@@ -50,6 +50,15 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     /** Whether to preserve build ephemera for debugging. */
     public val preserve: Boolean
 
+    /** Whether to emit extra logging. */
+    public val verbose: Boolean
+
+    /** Whether the user is building a release. */
+    public val release: Boolean
+
+    /** Whether the user is building a debug-enabled release. */
+    public val debug: Boolean
+
     /** Whether to enable build caching. */
     public val caching: Boolean
 
@@ -73,6 +82,9 @@ public fun interface BuildConfigurator : ProjectConfigurator {
    */
   @Serializable @JvmRecord public data class ImmutableBuildSettings(
     override val preserve: Boolean,
+    override val release: Boolean,
+    override val debug: Boolean,
+    override val verbose: Boolean,
     override val caching: Boolean,
     override val dependencies: Boolean,
     override val dry: Boolean,
@@ -81,8 +93,12 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override fun toMutable(): MutableBuildSettings = MutableBuildSettings(
       caching = caching,
       dependencies = dependencies,
+      preserve = preserve,
+      release = release,
       dry = dry,
       checks = checks,
+      verbose = verbose,
+      debug = debug,
     )
   }
 
@@ -94,6 +110,9 @@ public fun interface BuildConfigurator : ProjectConfigurator {
   public data class MutableBuildSettings(
     override var caching: Boolean = true,
     override var preserve: Boolean = true,
+    override var verbose: Boolean = false,
+    override var release: Boolean = false,
+    override var debug: Boolean = false,
     override var dependencies: Boolean = true,
     override var dry: Boolean = false,
     override var checks: Boolean = true,
@@ -104,6 +123,9 @@ public fun interface BuildConfigurator : ProjectConfigurator {
       dependencies = dependencies,
       checks = checks,
       dry = dry,
+      release = release,
+      verbose = verbose,
+      debug = debug,
     )
 
     override fun toMutable(): MutableBuildSettings = this

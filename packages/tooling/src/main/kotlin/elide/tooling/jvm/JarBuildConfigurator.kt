@@ -158,7 +158,10 @@ internal class JarBuildConfigurator : BuildConfigurator {
         .resolve(jarName)
 
       // main class entry (optional)
-      val resolvedEntry = entrypoint ?: artifact.options.entrypoint
+      val isMainJar = srcSets.any { (name, _) -> name == "main" }
+      val resolvedEntry = entrypoint ?: artifact.options.entrypoint ?: if (!isMainJar) null else {
+        state.project.manifest.jvm?.main  // use project-level main class for main jar, if available
+      }
 
       // build finalized JAR manifest
       val finalizedManifest = buildMap<Attributes.Name, String> {
@@ -258,6 +261,10 @@ internal class JarBuildConfigurator : BuildConfigurator {
         add("--create")
         add("--file")
         add(jarOut.absolutePathString())
+        if (targetManifestPath.exists()) {
+          add("--manifest")
+          add(targetManifestPath.absolutePathString())
+        }
         add("-C")
         add(buildroot.absolutePathString())
         add(".")

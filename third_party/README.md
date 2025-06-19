@@ -18,6 +18,7 @@ Or, from inside `third_party`, you can just run `make`.
 
 - [SQLite][11]: Pinned version for Elide's use
 - [GraalVM](./oracle): Patches for GraalVM and GraalJs
+- [Google Jib](./google): Jib's CLI and related JARs, for container building
 
 [0]: https://apple.com
 [1]: https://github.com/apple/pkl

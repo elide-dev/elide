@@ -17,12 +17,14 @@ package elide.tool.cli
 import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.rendering.Theme
 import com.github.ajalt.mordant.terminal.Terminal
+import org.graalvm.nativeimage.ImageInfo
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.PrintStream
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlinx.atomicfu.atomic
+import kotlin.io.path.absolute
 import elide.runtime.Logger
 import elide.runtime.Logging
 
@@ -71,9 +73,21 @@ public object Statics {
   public val args: Array<String> get() = initialArgs
 
   public val bin: String get() = execBinPath
-  public val binPath: Path by lazy { Paths.get(bin).toAbsolutePath() }
-  public val elideHome: Path by lazy { binPath.parent }
-  public val resourcesPath: Path by lazy { elideHome.resolve("resources").toAbsolutePath() }
+  public val binPath: Path by lazy { Paths.get(bin).absolute() }
+  public val elideHome: Path by lazy {
+    if (ImageInfo.inImageCode()) {
+      binPath.parent
+    } else {
+      // the bin path on JVM points to the JVM itself
+      (System.getProperty("elide.home") ?: requireNotNull(System.getenv("HOME")) {
+        "Failed to resolve ${'$'}HOME variable"
+      }).let { Paths.get(it) }.resolve("elide").absolute()
+    }
+  }
+
+  public val resourcesPath: Path by lazy {
+    elideHome.resolve("resources").absolute()
+  }
 
   // Stream which drops all data.
   private val noOpStream by lazy {

@@ -108,6 +108,7 @@ jetty-npn = "8.1.2.v20120308"
 jgit = "7.2.0.202503040940-r"
 jib-main = "3.4.5"
 jib-core = "0.27.3"
+jib-common = "0.2.0"
 jimfs = "66161ebdf9"
 jline = "3.28.0"
 jmh-lib = "1.37"
@@ -526,7 +527,7 @@ jetbrains-annotations = { group = "org.jetbrains", name = "annotations", version
 jetty-alpn = { group = "org.eclipse.jetty.alpn", name = "alpn-api", version.ref = "jetty-alpn" }
 jetty-npn = { group = "org.eclipse.jetty.npn", name = "npn-api", version.ref = "jetty-npn" }
 jib-core = { group = "com.google.cloud.tools", name = "jib-core", version.ref = "jib-core" }
-jib-cli = { group = "com.google.cloud.tools", name = "jib-cli", version.ref = "jib-main" }
+jib-extension-commons = { group = "com.google.cloud.tools", name = "jib-plugins-extension-common", version.ref = "jib-common" }
 jgit = { group = "org.eclipse.jgit", name = "org.eclipse.jgit", version.ref = "jgit" }
 jimfs = { group = "com.github.elide-tools", name = "jimfs", version.ref = "jimfs" }
 jline-all = { module = "org.jline:jline", version.ref = "jline" }

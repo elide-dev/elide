@@ -14,12 +14,23 @@ package elide.tooling.project.manifest
 
 import java.net.URI
 import kotlinx.serialization.Serializable
+import elide.core.api.Symbolic
 import elide.tool.Argument
 import elide.tool.MutableArguments
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest.*
 
-private const val DEFAULT_JAVA_TARGET = 21u // Default Java target version for JVM projects
+// Default Java target version for JVM projects
+private const val DEFAULT_JAVA_TARGET = 21u
+
+// Optimization level strings.
+private const val OPTIMIZATION_LEVEL_AUTO = "auto"
+private const val OPTIMIZATION_LEVEL_BUILD = "b"
+private const val OPTIMIZATION_LEVEL_ZERO = "0"
+private const val OPTIMIZATION_LEVEL_ONE = "1"
+private const val OPTIMIZATION_LEVEL_TWO = "2"
+private const val OPTIMIZATION_LEVEL_THREE = "3"
+private const val OPTIMIZATION_LEVEL_FOUR = "4"
 
 @JvmRecord @Serializable
 public data class ElidePackageManifest(
@@ -45,10 +56,39 @@ public data class ElidePackageManifest(
 ) : PackageManifest {
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.Elide
 
-  @JvmRecord @Serializable public data class Artifact(
-    val name: String? = null,
-    val type: String? = null,
+  @Serializable public sealed interface Artifact {
+    public val from: List<String>
+    public val dependsOn: List<String>
+  }
+
+  @Serializable public data class JarResource(
+    val path: String,
+    val position: String,
   )
+
+  @Serializable public data class Jar(
+    val name: String? = null,
+    val sources: List<String> = emptyList(),
+    val resources: List<JarResource> = emptyList(),
+    val manifest: Map<String, String> = emptyMap(),
+    val options: JarOptions = JarOptions(),
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ): Artifact
+
+  @Serializable public data class JarOptions(
+    val compress: Boolean = true,
+    val defaultManifestProperties: Boolean = true,
+    val entrypoint: String? = null,
+  )
+
+  @Serializable public data class ContainerImage(
+    val image: String? = null,
+    val base: String? = null,
+    val tags: List<String> = emptyList(),
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ): Artifact
 
   @JvmRecord @Serializable public data class SourceSet(
     val spec: List<String>,
@@ -185,7 +225,14 @@ public data class ElidePackageManifest(
     }
   }
 
+  @JvmRecord @Serializable public data class MavenCoordinates(
+    val group: String,
+    val name: String,
+    val classifier: String? = null,
+  )
+
   @JvmRecord @Serializable public data class MavenDependencies(
+    val coordinates: MavenCoordinates? = null,
     val packages: List<MavenPackage> = emptyList(),
     val testPackages: List<MavenPackage> = emptyList(),
     val catalogs: List<GradleCatalog> = emptyList(),
@@ -259,10 +306,12 @@ public data class ElidePackageManifest(
   )
 
   @JvmRecord @Serializable public data class JvmSettings(
+    val main: String? = null,
     val target: JvmTarget? = null,
     val javaHome: String? = null,
     val features: JvmFeatures = JvmFeatures(),
     val java: JavaLanguage = JavaLanguage(),
+    val flags: List<String> = emptyList(),
   )
 
   @JvmRecord @Serializable public data class JavaScriptSettings(
@@ -351,8 +400,54 @@ public data class ElidePackageManifest(
     val debug: Boolean = false,
   )
 
+  @JvmRecord @Serializable public data class NativeImageLinkAtBuildTime(
+    val enabled: Boolean = true,
+    val packages: List<String> = emptyList(),
+  )
+
+  @JvmRecord @Serializable public data class NativeImageClassInit(
+    val enabled: Boolean = true,
+    val buildtime: List<String> = emptyList(),
+    val runtime: List<String> = emptyList(),
+  )
+
+  @Serializable public enum class OptimizationLevel(override val symbol: String): Symbolic<String> {
+    AUTO(OPTIMIZATION_LEVEL_AUTO),
+    BUILD(OPTIMIZATION_LEVEL_BUILD),
+    ZERO(OPTIMIZATION_LEVEL_ZERO),
+    ONE(OPTIMIZATION_LEVEL_ONE),
+    TWO( OPTIMIZATION_LEVEL_TWO),
+    THREE(OPTIMIZATION_LEVEL_THREE),
+    FOUR(OPTIMIZATION_LEVEL_FOUR);
+
+    public companion object: Symbolic.SealedResolver<String, OptimizationLevel> {
+      override fun resolve(symbol: String): OptimizationLevel = when (symbol.lowercase().trim()) {
+        OPTIMIZATION_LEVEL_AUTO -> AUTO
+        OPTIMIZATION_LEVEL_BUILD -> BUILD
+        OPTIMIZATION_LEVEL_ZERO -> ZERO
+        OPTIMIZATION_LEVEL_ONE -> ONE
+        OPTIMIZATION_LEVEL_TWO -> TWO
+        OPTIMIZATION_LEVEL_THREE -> THREE
+        OPTIMIZATION_LEVEL_FOUR -> FOUR
+        else -> throw unresolved(symbol)
+      }
+    }
+  }
+
+  @JvmRecord @Serializable public data class ProfileGuidedOptimization(
+    val enabled: Boolean = true,
+    val autoprofile: Boolean = false,
+    val instrument: Boolean = false,
+    val sampling: Boolean = false,
+    val profiles: List<String> = emptyList(),
+  )
+
   @JvmRecord @Serializable public data class NativeImageOptions(
     val verbose: Boolean = false,
+    val linkAtBuildTime: NativeImageLinkAtBuildTime = NativeImageLinkAtBuildTime(),
+    val classInit: NativeImageClassInit = NativeImageClassInit(),
+    val optimization: OptimizationLevel = OptimizationLevel.AUTO,
+    val pgo: ProfileGuidedOptimization = ProfileGuidedOptimization(),
     val flags: List<String> = emptyList(),
   )
 
@@ -360,9 +455,28 @@ public data class ElidePackageManifest(
     val verbose: Boolean = false,
   )
 
+  @Serializable public enum class NativeImageType(override val symbol: String): Symbolic<String> {
+    BINARY("binary"),
+    LIBRARY("library");
+
+    public companion object: Symbolic.SealedResolver<String, NativeImageType> {
+      override fun resolve(symbol: String): NativeImageType = when (symbol.lowercase().trim()) {
+        "binary" -> BINARY
+        "library" -> LIBRARY
+        else -> throw unresolved(symbol)
+      }
+    }
+  }
+
   @JvmRecord @Serializable public data class NativeImage(
+    val name: String? = null,
+    val type: NativeImageType = NativeImageType.BINARY,
+    val entrypoint: String? = null,
+    val moduleName: String? = null,
     val options: NativeImageOptions = NativeImageOptions(),
-  )
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ): Artifact
 
   @JvmRecord @Serializable public data class CoverageSettings(
     val enabled: Boolean = false,

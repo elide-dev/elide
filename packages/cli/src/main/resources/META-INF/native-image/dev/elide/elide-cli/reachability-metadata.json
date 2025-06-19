@@ -1,6 +1,271 @@
 {
   "reflection": [
     {
+      "type": "[Lcom.fasterxml.jackson.databind.deser.BeanDeserializerModifier;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.deser.Deserializers;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.deser.KeyDeserializers;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.deser.ValueInstantiators;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.ser.BeanSerializerModifier;"
+    },
+    {
+      "type": "[Lcom.fasterxml.jackson.databind.ser.Serializers;"
+    },
+    {
+      "type": "[Lcom.google.common.collect.ImmutableMapEntry;"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.cache.LayerEntriesSelector$LayerEntryTemplate",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.BuildableManifestTemplate"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.BuildableManifestTemplate$ContentDescriptorTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ContainerConfigurationTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ContainerConfigurationTemplate$ConfigurationObjectTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ContainerConfigurationTemplate$HealthCheckObjectTemplate",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ContainerConfigurationTemplate$RootFilesystemObjectTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.DescriptorDigestDeserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.DescriptorDigestSerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.HistoryEntry",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ImageMetadataTemplate",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ManifestAndConfigTemplate",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ManifestListTemplate"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.ManifestTemplate"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.OciIndexTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.OciIndexTemplate$ManifestDescriptorTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.OciIndexTemplate$ManifestDescriptorTemplate$Platform",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.OciManifestTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.image.json.V22ManifestTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.json.JsonTemplate"
+    },
+    {
+      "type": "com.google.cloud.tools.jib.registry.RegistryAuthenticator$AuthenticationResponseTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.registry.credentials.json.DockerConfigTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.cloud.tools.jib.registry.credentials.json.DockerConfigTemplate$AuthTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.google.common.collect.ImmutableCollection",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.ImmutableList",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.ImmutableMap",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.ImmutableSortedMap",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.RegularImmutableList",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.RegularImmutableMap",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.SingletonImmutableList",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jib.$JibAdapter$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jib.$JibAdapter$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jib.$JibAdapter$JibCliTool$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.jib.JibAdapter$JibCliTool",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.tool.kotlinc.$KotlinCompilerAdapter$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "Main",
       "methods": [
         {
@@ -440,14 +705,9 @@
     },
     {
       "type": "com.google.common.jimfs.SystemJimfsFileSystemProvider",
-      "methods": [
-        {
-          "name": "removeFileSystemRunnable",
-          "parameterTypes": [
-            "java.net.URI"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "com.google.common.util.concurrent.AbstractFutureState",
@@ -3638,51 +3898,94 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$Artifact"
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmFeatures",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaCompilerSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaLanguage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$Jar",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ContainerImage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageLinkAtBuildTime",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageClassInit",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageClassInit",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$OptimizationLevel",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$OptimizationLevel",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageType",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
@@ -3731,6 +4034,36 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GradleCatalog"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$Jar",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "elide.tooling.project.manifest.ElidePackageManifest$JarOptions",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JarOptions",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "boolean",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -3740,16 +4073,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
-            "java.lang.String"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget"
@@ -3758,37 +4082,16 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTargetValidationMode"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ProfileGuidedOptimization",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinJvmCompilerOptions",
@@ -3849,23 +4152,16 @@
       ]
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenCoordinates",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "boolean",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenPackage"
@@ -3877,7 +4173,29 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
@@ -3957,15 +4275,13 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
@@ -6985,6 +7301,14 @@
         },
         {
           "name": "_state$volatile"
+        }
+      ]
+    },
+    {
+      "type": "kotlinx.coroutines.CompletedExceptionally",
+      "fields": [
+        {
+          "name": "_handled$volatile"
         }
       ]
     },
@@ -10278,6 +10602,9 @@
       "glob": "META-INF/elide/pkl/Base.pkl"
     },
     {
+      "glob": "META-INF/elide/pkl/Container.pkl"
+    },
+    {
       "glob": "META-INF/elide/pkl/Dev.pkl"
     },
     {
@@ -10368,6 +10695,9 @@
       "glob": "META-INF/native/libnetty_transport_native_io_uring_x86_64.so"
     },
     {
+      "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.containers.properties"
+    },
+    {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.javascript.properties"
     },
     {
@@ -10378,6 +10708,9 @@
     },
     {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.lockfile.properties"
+    },
+    {
+      "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.nativeImage.properties"
     },
     {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.project.properties"
@@ -11208,6 +11541,15 @@
       "glob": "org/pkl/core/Release.properties"
     },
     {
+      "glob": "org/pkl/core/errorMessages.properties"
+    },
+    {
+      "glob": "org/pkl/core/errorMessages_en.properties"
+    },
+    {
+      "glob": "org/pkl/core/errorMessages_en_US.properties"
+    },
+    {
       "glob": "org/pkl/core/stdlib/base.pkl"
     },
     {
@@ -11272,12 +11614,6 @@
   ],
   "bundles": [
     {
-      "name": "sun.util.logging.resources.logging",
-      "locales": [
-        "en-US"
-      ]
-    },
-    {
       "name": "ElideTool",
       "locales": [
         "en-US"
@@ -11331,7 +11667,16 @@
       ]
     },
     {
-      "name": "sun.util.logging.resources.logging"
+      "name": "org.pkl.core.errorMessages",
+      "locales": [
+        "en-US"
+      ]
+    },
+    {
+      "name": "sun.util.logging.resources.logging",
+      "locales": [
+        "en-US"
+      ]
     }
   ],
   "serialization": [

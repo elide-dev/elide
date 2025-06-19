@@ -35,11 +35,14 @@ elide {
 }
 
 val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
+val googJarsRoot = rootProject.layout.projectDirectory.dir("third_party/google")
 
 val patchedLibs = files(
   gvmJarsRoot.file("truffle-coverage.jar"),
   gvmJarsRoot.file("library-support.jar"),
   gvmJarsRoot.file("svm-driver.jar"),
+  googJarsRoot.file("jib-plugins-common.jar"),
+  googJarsRoot.file("jib-cli.jar"),
 )
 
 val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }
@@ -88,7 +91,9 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.serialization.protobuf)
+  implementation(libs.jib.core)
   implementation(libs.bundles.maven.resolver)
+
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlin.test.junit5)

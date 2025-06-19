@@ -1,0 +1,47 @@
+// amends "../../main/pkl/project.pkl"
+// import "../../main/pkl/project.pkl" as build
+
+amends "elide:project.pkl"
+import "elide:project.pkl" as build
+
+name = "elide-containers"
+description = "Example project using Elide with Kotlin/JVM."
+
+jvm {
+  main = "sample.MainKt"
+}
+
+tests {
+  coverage {
+    paths {
+      "sample*"
+    }
+  }
+}
+
+artifacts {
+  // Build a JAR from our Kotlin code.
+  ["jar"] = build.jar()
+
+  // Build a native image from our JAR and classpath.
+  ["native"] = build.nativeImage("jar")
+
+  // Wrap the native image in a container image.
+  ["container"] = (build.containerImage("native")) {
+    image = "ghcr.io/elide-dev/samples/containers"
+  }
+}
+
+dependencies {
+  maven {
+    packages {
+      // Guava
+      "com.google.guava:guava:33.4.8-jre"
+    }
+  }
+}
+
+sources {
+  ["main"] = "src/main/kotlin/**/*.kt"
+  ["test"] = "src/test/kotlin/**/*.kt"
+}

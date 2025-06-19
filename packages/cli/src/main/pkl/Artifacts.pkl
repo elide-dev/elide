@@ -8,7 +8,7 @@ typealias ArtifactName = String
 /// Base type for all artifacts.
 abstract class Artifact {
   /// Other artifacts to include within this one.
-  artifacts: Listing<ArtifactName> = new {}
+  from: Listing<ArtifactName> = new {}
 
   /// Other artifacts this artifact depends on.
   dependsOn: Listing<ArtifactName> = new {}

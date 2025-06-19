@@ -16,6 +16,7 @@ import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import java.util.LinkedList
 import java.util.ServiceLoader
+import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.Executors
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
@@ -42,6 +43,48 @@ import elide.tooling.project.manifest.ElidePackageManifest
  * @see TestConfigurators service driver for test configuration
  */
 public object BuildConfigurators {
+  // Keeps track of executed build configurators.
+  private val executedConfigurators = ConcurrentSkipListMap<String, Boolean>()
+
+  // Accounts for dependencies between configurators.
+  private suspend fun executeDepsThenConfigurator(
+    state: ElideBuildState,
+    to: BuildConfiguration,
+    configurator: BuildConfigurator,
+    all: List<BuildConfigurator>,
+  ) {
+    val alreadyDone = executedConfigurators.containsKey(configurator::class.java.simpleName)
+    if (alreadyDone) {
+      // configurator has already been executed, skip it
+      return
+    }
+    val deps = configurator.dependsOn()
+    val depsSatisfiedOrEmpty = deps.isEmpty() || deps.all { dep ->
+      executedConfigurators.containsKey(dep.java.simpleName)
+    }
+
+    when {
+      depsSatisfiedOrEmpty -> configurator.contribute(state, to).also {
+        // mark this configurator as executed
+        executedConfigurators[configurator::class.java.simpleName] = true
+      }
+
+      else -> deps.forEach { dep ->
+        val matchedConfigurator = all.find {
+          it::class.java == dep
+        } ?: error(
+          "No matching build configurator for dependency: $dep"
+        )
+        executeDepsThenConfigurator(
+          state,
+          to,
+          matchedConfigurator,
+          all,
+        )
+      }
+    }
+  }
+
   @JvmStatic public fun collect(): Sequence<BuildConfigurator> {
     return ServiceLoader.load<BuildConfigurator>(BuildConfigurator::class.java).asSequence()
   }
@@ -109,8 +152,10 @@ public object BuildConfigurators {
         null -> it
         else -> it + sequenceOf(extraConfigurator)
       }
-    }.forEach {
-      it.contribute(state, to)
+    }.toList().let { configurators ->
+      configurators.forEach { configurator ->
+        executeDepsThenConfigurator(state, to, configurator, configurators)
+      }
     }
   }
 

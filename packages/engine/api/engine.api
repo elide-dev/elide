@@ -1846,6 +1846,9 @@ public final class elide/tool/Inputs$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public abstract interface class elide/tool/Inputs$Compound : elide/tool/Inputs {
+}
+
 public abstract interface class elide/tool/Inputs$Files : elide/tool/Inputs {
 }
 

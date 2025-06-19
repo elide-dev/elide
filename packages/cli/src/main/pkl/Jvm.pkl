@@ -35,6 +35,9 @@ typealias JarManifestKey = StandardManifestKey | String
 /// Value within a JAR manifest.
 typealias JarManifestValue = String
 
+/// Class name for a JVM class, which is a string.
+typealias JvmClass = String
+
 /// Whether to default to using compression for JARs.
 const defaultUseJarCompression = true
 
@@ -45,6 +48,9 @@ class JarOptions {
 
   /// Whether to add default manifest properties.
   defaultManifestProperties: Boolean = true
+
+  /// Main entrypoint for the JAR, if applicable.
+  entrypoint: String?
 }
 
 /// Abstract definition of a JAR resource.
@@ -66,9 +72,9 @@ class ArtifactJarResource extends JarResource {
 }
 
 /// Describes a JAR output artifact.
-class Jar extends artifacts.Artifact {
+open class Jar extends artifacts.Artifact {
   /// Filename for the resulting JAR.
-  name: common.FileName
+  name: common.FileName?
 
   /// Which source set to build this JAR from.
   sources: Listing<sources.SourceSetName> = new {
@@ -87,8 +93,23 @@ class Jar extends artifacts.Artifact {
   options: JarOptions = new {}
 }
 
+/// Describes configuration for a shaded JAR.
+open class ShadedJar extends Jar {}
+
+/// Base coordinate specification for a Maven package.
+open class MavenCoordinateSpec {
+  /// Group for the coordinate.
+  group: MavenGroup?
+
+  /// Name for the coordinate.
+  name: MavenModule?
+
+  /// Classifier for this Maven coordinate.
+  classifier: String?
+}
+
 /// Describes a Maven package dependency.
-class MavenPackageSpec {
+class MavenPackageSpec extends MavenCoordinateSpec {
   /// Group for the package.
   group: MavenGroup?
 
@@ -129,8 +150,14 @@ typealias MavenPackageDependency = MavenPackageSpec | MavenCoordinate | common.P
 /// Specifies a simple Maven repository endpoint or structural definition.
 typealias MavenRepository = MavenRepositorySpec | common.RepositoryUrl
 
+/// Coordinates for this project as a library.
+class MavenLibraryCoordinate extends MavenCoordinateSpec
+
 /// Configuration for Maven dependency resolution.
 class MavenDependencies {
+  /// Coordinates for this project as a library, if applicable.
+  coordinates: MavenLibraryCoordinate?
+
   /// A list of Maven package dependencies to be resolved for this project.
   packages: Listing<MavenPackageDependency> = new {}
 
@@ -186,10 +213,13 @@ function withArtifact(artifactName: artifacts.ArtifactName, at: common.FilePath)
 }
 
 /// Create a JAR artifact from the `main` project source set.
-function app(entrypoint: common.FilePath | String) = new Jar {
+function app(_entrypoint: common.FilePath | String) = new Jar {
   name = "main.jar"
+  options {
+    entrypoint = _entrypoint
+  }
   manifest {
-    ["Main-Class"] = entrypoint
+    ["Main-Class"] = _entrypoint
   }
 }
 
@@ -219,6 +249,9 @@ class JavaLanguage {
 
 /// Specifies settings which apply to JVM targets.
 class JvmSettings {
+  /// Entrypoint class for this project as an application.
+  main: JvmClass? = null
+
   /// Set the JVM bytecode target level for this project.
   target: JvmTarget = "auto"
 
@@ -230,4 +263,7 @@ class JvmSettings {
 
   /// Java language settings.
   java: JavaLanguage = new {}
+
+  /// Runtime JVM flags.
+  flags: Listing<String> = new {}
 }

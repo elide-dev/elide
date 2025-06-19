@@ -465,6 +465,8 @@ dependencies {
   implementation(libs.classgraph)
 
   val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
+  val googJarsRoot = rootProject.layout.projectDirectory.dir("third_party/google")
+
   val patchedLibs = files(
     gvmJarsRoot.file("library-support.jar"),
     gvmJarsRoot.file("svm-driver.jar"),
@@ -472,6 +474,8 @@ dependencies {
     gvmJarsRoot.file("pointsto.jar"),
     gvmJarsRoot.file("native-image-base.jar"),
     gvmJarsRoot.file("truffle-coverage.jar"),
+    googJarsRoot.file("jib-plugins-common.jar"),
+    googJarsRoot.file("jib-cli.jar"),
   )
 
   svmModulePath(patchedLibs)
@@ -606,6 +610,10 @@ dependencies {
   if (enableJnaStatic) {
     implementation(libs.jna.graalvm)
   }
+
+  // Jib
+  implementation(libs.jib.core)
+  implementation(libs.jib.extension.commons)
 
   // Tests
   testImplementation(libs.kotlin.test.junit5)
@@ -964,6 +972,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "elide.tooling.jvm.JavadocToolKt",
   "elide.tooling.kotlin.DetektKt",
   "elide.tooling.gvm.nativeImage.NativeImageDriverKt",
+  "elide.tooling.containers.JibDriverKt",
   "org.apache.http.impl.auth.NTLMEngineImpl",
   "elide.exec.Tracing",
 
@@ -1138,6 +1147,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.internal.tcnative.SSLContext",
   "io.netty.internal.tcnative.SSLSession",
   "io.netty.internal.tcnative.AsyncSSLPrivateKeyMethod",
+  "io.netty.handler.ssl.BouncyCastleAlpnSslUtils",
 
   // --- BouncyCastle -----
 
@@ -1201,6 +1211,12 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   // --- Java Compiler Accouterments -----
 
   "com.sun.tools.javac.platform.JDKPlatformProvider",
+
+  // --- Jib -----
+
+  "com.google.cloud.tools.jib.cli.Credentials",
+  "com.google.cloud.tools.jib.frontend.CredentialRetrieverFactory",
+  "com.google.cloud.tools.jib.plugins.common.DefaultCredentialRetrievers",
 )
 
 val initializeAtRuntimeTest: List<String> = emptyList()

@@ -8,6 +8,7 @@
     <ID>EmptyFunctionBlock:BuildOutput.kt$BaseOutput${ }</ID>
     <ID>EmptyFunctionBlock:BuildOutput.kt$BaseOutput.&lt;no name provided>${ }</ID>
     <ID>ForbiddenComment:DelegatedToolCommand.kt$DelegatedToolCommand$// @TODO: delegated error handling</ID>
+    <ID>ForbiddenComment:ToolProjectCommand.kt$ToolProjectCommand$// @TODO: rename this to classes so that sources can be embedded clearly in jars</ID>
     <ID>ForbiddenComment:ToolShellCommand.kt$ToolShellCommand$// @TODO: use manifest to resolve versions</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: Set&lt;GuestLanguage>)</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>

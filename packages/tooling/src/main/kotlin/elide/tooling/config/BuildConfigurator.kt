@@ -17,6 +17,7 @@ package elide.tooling.config
 import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KClass
 import elide.exec.ActionScope
 import elide.exec.TaskGraphBuilder
 import elide.tooling.project.ElideConfiguredProject
@@ -46,6 +47,18 @@ public fun interface BuildConfigurator : ProjectConfigurator {
    * ## Build Settings
    */
   public interface BuildSettings {
+    /** Whether to preserve build ephemera for debugging. */
+    public val preserve: Boolean
+
+    /** Whether to emit extra logging. */
+    public val verbose: Boolean
+
+    /** Whether the user is building a release. */
+    public val release: Boolean
+
+    /** Whether the user is building a debug-enabled release. */
+    public val debug: Boolean
+
     /** Whether to enable build caching. */
     public val caching: Boolean
 
@@ -68,6 +81,10 @@ public fun interface BuildConfigurator : ProjectConfigurator {
    * Build settings expressed in immutable form.
    */
   @Serializable @JvmRecord public data class ImmutableBuildSettings(
+    override val preserve: Boolean,
+    override val release: Boolean,
+    override val debug: Boolean,
+    override val verbose: Boolean,
     override val caching: Boolean,
     override val dependencies: Boolean,
     override val dry: Boolean,
@@ -76,8 +93,12 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override fun toMutable(): MutableBuildSettings = MutableBuildSettings(
       caching = caching,
       dependencies = dependencies,
+      preserve = preserve,
+      release = release,
       dry = dry,
       checks = checks,
+      verbose = verbose,
+      debug = debug,
     )
   }
 
@@ -88,15 +109,23 @@ public fun interface BuildConfigurator : ProjectConfigurator {
    */
   public data class MutableBuildSettings(
     override var caching: Boolean = true,
+    override var preserve: Boolean = true,
+    override var verbose: Boolean = false,
+    override var release: Boolean = false,
+    override var debug: Boolean = false,
     override var dependencies: Boolean = true,
     override var dry: Boolean = false,
     override var checks: Boolean = true,
   ) : BuildSettings {
     public fun build(): BuildSettings = ImmutableBuildSettings(
       caching = caching,
+      preserve = preserve,
       dependencies = dependencies,
       checks = checks,
       dry = dry,
+      release = release,
+      verbose = verbose,
+      debug = debug,
     )
 
     override fun toMutable(): MutableBuildSettings = this
@@ -225,5 +254,22 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     public val config: BuildConfiguration
   }
 
+  /**
+   * Contribute configurations to the current build.
+   *
+   * This method is called during the build configuration phase, and allows the configurator to configure various
+   * aspects of Elide's build infrastructure.
+   *
+   * @param state Current build state, which provides access to the project, console, event controller, and other
+   *   state.
+   * @param config Current build configuration.
+   */
   public suspend fun contribute(state: ElideBuildState, config: BuildConfiguration)
+
+  /**
+   * Indicate the build configurators which must run before this one.
+   *
+   * @return List of configurator classes; defaults to an empty list.
+   */
+  public fun dependsOn(): List<KClass<out BuildConfigurator>> = emptyList()
 }

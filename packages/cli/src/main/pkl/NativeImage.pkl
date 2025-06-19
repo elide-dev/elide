@@ -2,12 +2,76 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.nativeImage
 
+import "Base.pkl" as _common
 import "Artifacts.pkl" as _artifacts
+
+/// Flag for the Native Image compiler.
+typealias NativeImageFlag = String
+
+/// Optimization levels.
+typealias OptimizationLevel = "auto" | "b" | "s" | "0" | "1" | "2" | "3" | "4"
+
+/// Type of image produced by a native image task.
+typealias ImageType = "binary" | "library"
+
+/// Configuration for Native Image link-at-build-time settings.
+class NativeImageLinkAtBuildTime {
+  /// Whether link-at-build-time is enabled as the default.
+  enabled: Boolean = true
+
+  /// Specific packages to link at build time.
+  packages: Listing<String> = new {}
+}
+
+/// Configuration for Native Image class initialization settings.
+class NativeImageClassInit {
+  /// Whether initialize-at-build-time is enabled as the default.
+  enabled: Boolean = true
+
+  /// Specific classes or packages to initialize at build time.
+  buildtime: Listing<String> = new {}
+
+  /// Specific classes or packages to initialize at runtime.
+  runtime: Listing<String> = new {}
+}
+
+/// Settings which govern Profile Guided Optimization (PGO) for Native Images.
+class ProfileGuidedOptimization {
+  /// Whether PGO is enabled (only activates with present profiles).
+  enabled: Boolean = true
+
+  /// Whether to enable auto-build features for PGO.
+  autoprofile: Boolean = false
+
+  /// Whether to instrument for PGO.
+  instrument: Boolean = false
+
+  /// Whether to use sampling for PGO.
+  sampling: Boolean = false
+
+  /// PGO profiles to apply.
+  profiles: Listing<_common.FileName> = new {}
+}
 
 /// Specifies the layout of options for a Native Image.
 open class NativeImageOptions {
+  /// Whether to activate verbose output.
+  verbose: Boolean = false
+
+  /// Build-time linkage options.
+  linkAtBuildTime: NativeImageLinkAtBuildTime = new {}
+
+  /// Class initialization options.
+  classInit: NativeImageClassInit = new {}
+
+  /// Optimization level for the Native Image.
+  optimization: OptimizationLevel = "auto"
+
+  /// PGO (Profiling Guided Optimization) settings.
+  pgo: ProfileGuidedOptimization = new {}
+
   /// Extra flags to pass to the Native Image compiler; added to all project targets.
-  flags: Listing<String> = new {}
+  flags: Listing<NativeImageFlag> = new {}
 }
 
 /// Configures Native Image generation settings, project-wide.
@@ -15,9 +79,15 @@ class NativeImageSettings extends NativeImageOptions {}
 
 /// Describes a Native Image artifact within an Elide project.
 class NativeImage extends _artifacts.Artifact {
+  /// Name of the output artifact (binary or library). If not provided, one is calculated.
+  name: String?
+
   /// Entrypoint class for the Native Image. If the class is within a JPMS module, the module should be specified in the
   /// `moduleName` field.
   entrypoint: String?
+
+  /// Type of image to produce. Defaults to "binary".
+  type: ImageType = "binary"
 
   /// Module where the entrypoint class is located, if applicable.
   moduleName: String?

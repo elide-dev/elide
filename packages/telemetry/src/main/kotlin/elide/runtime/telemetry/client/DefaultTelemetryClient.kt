@@ -85,6 +85,7 @@ internal class DefaultTelemetryClient @Inject constructor (private val http: Def
     try {
       val response = http.exchange(req, String::class.java).awaitLast()
       handleResponse(event, response)
+      // @TODO sgammon wtf is this
       @Suppress("TooGenericExceptionCaught")
       return GlobalScope.async {
         EventDelivery.EventDelivered

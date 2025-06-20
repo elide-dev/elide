@@ -55,6 +55,9 @@
       "type": "[Ljava.lang.String;"
     },
     {
+      "type": "[Ljava.util.Map$Entry;"
+    },
+    {
       "type": "[Ljavax.management.openmbean.CompositeData;"
     },
     {
@@ -303,6 +306,15 @@
       "type": "[Z"
     },
     {
+      "type": "apple.security.AppleProvider",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "ch.qos.logback.classic.encoder.PatternLayoutEncoder",
       "methods": [
         {
@@ -447,6 +459,15 @@
       ]
     },
     {
+      "type": "com.fasterxml.jackson.databind.ext.Java7SupportImpl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "com.github.ajalt.clikt.core.BaseCliktCommand",
       "allDeclaredFields": true
     },
@@ -458,6 +479,176 @@
     },
     {
       "type": "com.github.ajalt.mordant.terminal.terminalinterface.nativeimage.TerminalInterfaceProviderNativeImage"
+    },
+    {
+      "type": "com.google.api.client.http.GenericUrl",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.api.client.http.HttpHeaders",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "setAccept",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setAcceptEncoding",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setAge",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setAuthenticate",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setAuthorization",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setCacheControl",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setContentEncoding",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setContentLength",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "setContentMD5",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setContentRange",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setContentType",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setCookie",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setDate",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setETag",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setExpires",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setIfMatch",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setIfModifiedSince",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setIfNoneMatch",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setIfRange",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setIfUnmodifiedSince",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setLastModified",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setLocation",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setMimeVersion",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setRange",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setRetryAfter",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setUserAgent",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.google.api.client.util.GenericData",
+      "allDeclaredFields": true
     },
     {
       "type": "com.google.cloud.tools.jib.cache.LayerEntriesSelector$LayerEntryTemplate",
@@ -616,6 +807,16 @@
       ]
     },
     {
+      "type": "com.google.cloud.tools.jib.registry.credentials.DockerCredentialHelper$DockerCredentialsTemplate",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "com.google.cloud.tools.jib.registry.credentials.json.DockerConfigTemplate",
       "allDeclaredFields": true,
       "methods": [
@@ -691,6 +892,15 @@
         },
         {
           "name": "thread"
+        }
+      ]
+    },
+    {
+      "type": "com.google.devtools.ksp.KotlinSymbolProcessingComponentRegistrar",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
         }
       ]
     },
@@ -970,6 +1180,15 @@
     },
     {
       "type": "com.sun.crypto.provider.GaloisCounterMode$AESGCM",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.crypto.provider.HmacCore$HmacSHA256",
       "methods": [
         {
           "name": "<init>",
@@ -3664,6 +3883,9 @@
       ]
     },
     {
+      "type": "elide.tooling.containers.ContainerBuildConfigurator"
+    },
+    {
       "type": "elide.tooling.gvm.nativeImage.$NativeImageDriver$Introspection",
       "methods": [
         {
@@ -3671,6 +3893,9 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "elide.tooling.gvm.nativeImage.NativeImageBuildConfigurator"
     },
     {
       "type": "elide.tooling.js.JsBuildConfigurator"
@@ -3710,6 +3935,9 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "elide.tooling.jvm.JarBuildConfigurator"
     },
     {
       "type": "elide.tooling.jvm.JavaCompiler$JavaDiagnosticsReceiver",
@@ -3889,7 +4117,33 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "java.util.Map",
+            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
+            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
+            "java.util.Map",
+            "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$Artifact"
@@ -3898,13 +4152,34 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ContainerImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
@@ -3986,16 +4261,37 @@
       ]
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JarResource"
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaCompilerSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaLanguage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
+            "elide.tooling.project.manifest.ElidePackageManifest$JavaCompilerSettings"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
@@ -4007,13 +4303,34 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmFeatures",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
+            "java.lang.String",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmFeatures",
+            "elide.tooling.project.manifest.ElidePackageManifest$JavaLanguage",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget"
@@ -4095,7 +4412,21 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$MavenCoordinates",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenPackage"
@@ -4242,7 +4573,15 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
@@ -4281,6 +4620,9 @@
     },
     {
       "type": "groovy.lang.Closure"
+    },
+    {
+      "type": "io.grpc.override.ContextStorageOverride"
     },
     {
       "type": "io.micrometer.context.ContextRegistry"
@@ -6007,6 +6349,33 @@
       ]
     },
     {
+      "type": "io.micronaut.scheduling.io.watch.osx.$MacOsWatchServiceFactory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.scheduling.io.watch.osx.$MacOsWatchServiceFactory$MacWatchService0$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.micronaut.scheduling.io.watch.osx.$MacOsWatchThread$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "io.micronaut.scheduling.processor.$ScheduledMethodProcessor$ApplicationEventListener$scheduleTasks1$Intercepted$Definition",
       "methods": [
         {
@@ -6377,6 +6746,18 @@
       ]
     },
     {
+      "type": "io.opencensus.impl.trace.TraceComponentImpl"
+    },
+    {
+      "type": "io.opencensus.impllite.trace.TraceComponentImplLite"
+    },
+    {
+      "type": "io.opentelemetry.opencensusshim.OpenTelemetryContextManager"
+    },
+    {
+      "type": "io.opentelemetry.opencensusshim.OpenTelemetryTraceComponentImpl"
+    },
+    {
       "type": "io.reactivex.Completable"
     },
     {
@@ -6408,6 +6789,9 @@
     },
     {
       "type": "java.io.IOException"
+    },
+    {
+      "type": "java.io.Serializable"
     },
     {
       "type": "java.lang.Boolean",
@@ -6861,6 +7245,14 @@
       "type": "java.time.ZonedDateTime"
     },
     {
+      "type": "java.util.AbstractCollection",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "java.util.AbstractMap",
+      "allDeclaredFields": true
+    },
+    {
       "type": "java.util.ArrayList",
       "methods": [
         {
@@ -6918,6 +7310,9 @@
       "type": "java.util.Map.Entry"
     },
     {
+      "type": "java.util.NavigableMap"
+    },
+    {
       "type": "java.util.Optional",
       "methods": [
         {
@@ -6933,6 +7328,9 @@
       ]
     },
     {
+      "type": "java.util.RandomAccess"
+    },
+    {
       "type": "java.util.ResourceBundle",
       "methods": [
         {
@@ -6942,7 +7340,13 @@
       ]
     },
     {
+      "type": "java.util.SequencedMap"
+    },
+    {
       "type": "java.util.Set"
+    },
+    {
+      "type": "java.util.SortedMap"
     },
     {
       "type": "java.util.concurrent.ForkJoinTask",
@@ -7556,13 +7960,25 @@
       "type": "org.apache.maven.model.Build",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getOutputDirectory",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.BuildBase",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getDirectory",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.CiManagement",
@@ -7658,7 +8074,21 @@
       "type": "org.apache.maven.model.Model",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getArtifactId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getBuild",
+          "parameterTypes": []
+        },
+        {
+          "name": "getVersion",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.ModelBase",
@@ -10526,7 +10956,25 @@
       ]
     },
     {
+      "type": "sun.security.rsa.RSASignature$SHA384withRSA",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "sun.security.ssl.KeyManagerFactoryImpl$SunX509",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.SSLContextImpl$DefaultSSLContext",
       "methods": [
         {
           "name": "<init>",
@@ -10883,6 +11331,12 @@
       "glob": "META-INF/native/libnetty_transport_native_io_uring_x86_64.so"
     },
     {
+      "glob": "META-INF/native/libnetty_transport_native_kqueue_aarch_64.dylib"
+    },
+    {
+      "glob": "META-INF/native/libnetty_transport_native_kqueue_aarch_64.jnilib"
+    },
+    {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.containers.properties"
     },
     {
@@ -10911,6 +11365,9 @@
     },
     {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/pkl.base.properties"
+    },
+    {
+      "glob": "META-INF/resources/engine/libtruffleattach/darwin/aarch64/sha256"
     },
     {
       "glob": "META-INF/resources/engine/libtruffleattach/linux/amd64/sha256"
@@ -11097,6 +11554,9 @@
     },
     {
       "glob": "META-INF/services/org.slf4j.spi.SLF4JServiceProvider"
+    },
+    {
+      "glob": "com/google/api/client/http/google-http-client.properties"
     },
     {
       "glob": "com/oracle/graal/python/builtins/PythonBuiltins.class"
@@ -11699,10 +12159,19 @@
       "glob": "lib/linux-x86_64/libbrotli.so"
     },
     {
+      "glob": "lib/osx-aarch64/libbrotli.dylib"
+    },
+    {
       "glob": "logback-test.scmo"
     },
     {
       "glob": "logback.scmo"
+    },
+    {
+      "glob": "mozilla/public-suffix-list.txt"
+    },
+    {
+      "glob": "org/apache/http/client/version.properties"
     },
     {
       "glob": "org/apache/maven/model/**/*"
@@ -11744,6 +12213,16 @@
       "glob": "resources/releases/element-list-*.txt"
     },
     {
+      "glob": "sun/tools/jar/resources/jar_en.properties"
+    },
+    {
+      "glob": "sun/tools/jar/resources/jar_en_US.properties"
+    },
+    {
+      "module": "java.base",
+      "glob": "jdk/internal/icu/impl/data/icudt76b/nfc.nrm"
+    },
+    {
       "module": "java.base",
       "glob": "jdk/internal/icu/impl/data/icudt76b/nfkc.nrm"
     },
@@ -11774,6 +12253,14 @@
     {
       "module": "jdk.compiler",
       "glob": "com/sun/tools/javac/resources/javac_en_US.properties"
+    },
+    {
+      "module": "jdk.jartool",
+      "glob": "sun/tools/jar/resources/jar_en.properties"
+    },
+    {
+      "module": "jdk.jartool",
+      "glob": "sun/tools/jar/resources/jar_en_US.properties"
     },
     {
       "module": "jdk.javadoc",
@@ -11856,6 +12343,12 @@
     },
     {
       "name": "org.pkl.core.errorMessages",
+      "locales": [
+        "en-US"
+      ]
+    },
+    {
+      "name": "sun.tools.jar.resources.jar",
       "locales": [
         "en-US"
       ]
@@ -12106,6 +12599,18 @@
       "type": "io.netty.channel.epoll.NativeStaticallyReferencedJniMethods"
     },
     {
+      "type": "io.netty.channel.kqueue.BsdSocket"
+    },
+    {
+      "type": "io.netty.channel.kqueue.KQueueEventArray"
+    },
+    {
+      "type": "io.netty.channel.kqueue.KQueueStaticallyReferencedJniMethods"
+    },
+    {
+      "type": "io.netty.channel.kqueue.Native"
+    },
+    {
       "type": "io.netty.channel.unix.Buffer"
     },
     {
@@ -12288,6 +12793,10 @@
       "type": "java.lang.Class",
       "methods": [
         {
+          "name": "getCanonicalName",
+          "parameterTypes": []
+        },
+        {
           "name": "getClassLoader",
           "parameterTypes": []
         }
@@ -12331,6 +12840,36 @@
         {
           "name": "getBytes",
           "parameterTypes": []
+        },
+        {
+          "name": "lastIndexOf",
+          "parameterTypes": [
+            "int"
+          ]
+        },
+        {
+          "name": "substring",
+          "parameterTypes": [
+            "int"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.lang.System",
+      "methods": [
+        {
+          "name": "getProperty",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setProperty",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String"
+          ]
         }
       ]
     },

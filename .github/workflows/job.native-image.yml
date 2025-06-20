@@ -74,6 +74,18 @@ name: Native Image
         type: boolean
         default: false
 
+      ## Input: Release Packing
+      pack:
+        description: "Pack"
+        type: boolean
+        default: false
+
+      ## Input: Version Override
+      version:
+        description: "Version Override"
+        type: string
+        default: ""
+
   workflow_call:
     inputs:
       release:
@@ -104,6 +116,21 @@ name: Native Image
         description: "PGO"
         type: boolean
         default: false
+      pack:
+        description: "Pack"
+        type: boolean
+        default: false
+      version:
+        description: "Version Override"
+        type: string
+        default: ""
+    outputs:
+      hashes:
+        description: "Provenance Hashes"
+        value: ${{ jobs.gradle.outputs.hashes }}
+      version:
+        description: "Release Version"
+        value: ${{ jobs.gradle.outputs.version }}
 
     secrets:
       BUILDLESS_APIKEY:
@@ -122,9 +149,9 @@ name: Native Image
         required: false
         description: "Gradle cache key"
 
+# Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:
   RUST_BACKTRACE: full
-  ELIDE_VERSION: "1.0.0-beta6"
   SCCACHE_DIRECT: "true"
   RUSTC_WRAPPER: "sccache"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -160,6 +187,10 @@ jobs:
 
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
+      version: ${{ steps.release-prep.outputs.version }}
+      platform: ${{ inputs.os }}-${{ inputs.arch }}
+      releaseArtifact: ${{ steps.pack-artifact.outputs.id }}
+      builtArtifact: ${{ steps.build-artifact.outputs.id }}
 
     steps:
       - name: "Setup: Harden Runner"
@@ -220,10 +251,6 @@ jobs:
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "10.6.2"
-#      - name: "Setup: Elide"
-#        uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
-#        with:
-#          version: "1.0.0-beta6"
       - name: "Setup: uv"
         uses: astral-sh/setup-uv@f0ec1fc3b38f5e7cd731bb6ce540c5af426746bb # v6.1.0
       - name: "Setup: Dependencies"
@@ -261,9 +288,21 @@ jobs:
             yarn
       - name: "Setup: Gradle Settings"
         run: cp -fv ./.github/workflows/gradle-ci.properties ~/.gradle/gradle.properties
+      - name: "Setup: Cosign"
+        if: inputs.pack
+        uses: sigstore/cosign-installer@fb28c2b6339dcd94da6e4cbcbc5e888961f6f8c3 # v3.9.0
       - name: "Build Environment"
         run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
-      - name: "🛠️ Build Image"
+      - name: "Overrides: Version"
+        if: inputs.version != ''
+        run: |
+          current_version=$(cat ./.version)
+          echo "${{ inputs.version }}" > ./.version
+          echo "${{ inputs.version }}" > ./.release
+          sed -i "s/elide = \"${current_version}\"/elide = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
+          sed -i "s/elide-bin = \"${current_version}\"/elide = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
+          sed -i "s/${current_version}/${{ inputs.version }}/g" tools/elide-build/src/main/kotlin/elide/internal/conventions/Constants.kt
+      - name: "🛠️ Release: Image"
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -292,6 +331,7 @@ jobs:
             -Pelide.buildMode=${{ inputs.release == true && 'release' || 'dev' }}
       - name: "Artifact: Build Outputs"
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        id: build-artifact
         with:
           name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}
           path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
@@ -300,3 +340,30 @@ jobs:
         if: ${{ matrix.os == 'linux' && inputs.provenance }}
         run: |
           echo "hashes=$(sha256sum ./packages/cli/build/native/nativeOptimizedCompile/elide | base64 -w0)" >> "$GITHUB_OUTPUT"
+      - name: "🛠️ Release: Package"
+        if: inputs.pack
+        run: bash ./tools/scripts/build-release-opt.sh
+      - name: "Release: Prepare"
+        if: inputs.pack
+        id: release-prep
+        working-directory: ./packages/cli/build/native/nativeOptimizedCompile
+        run: |
+          currentVersion=$(cat ./.release)
+          releaseOverride="${{ inputs.version }}"
+          version="${releaseOverride:-$currentVersion}"
+          mkdir -p "release/${{ inputs.os }}-${{ inputs.arch }}/$version"
+          cp -fv elide-*.{tgz,txz,zip}* "release/${{ inputs.os }}-${{ inputs.arch }}/$version/"
+          cp -fv elide.sbom.json "release/${{ inputs.os }}-${{ inputs.arch }}/$version/"
+          cp -fv elide-build-report.html "release/${{ inputs.os }}-${{ inputs.arch }}/$version/elide.build-report.html"
+          mkdir -p staging/release
+          mv "packages/cli/build/native/nativeOptimizedCompile/release staging/
+          echo "version=$version" >> $GITHUB_OUTPUT
+          tree -L 3 staging/
+          echo "Release built."
+      - name: "Artifact: Release Package"
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        id: pack-artifact
+        if: inputs.pack
+        with:
+          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}-release.zip
+          path: staging/**/*.*

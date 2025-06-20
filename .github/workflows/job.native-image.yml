@@ -368,7 +368,7 @@ jobs:
           cp -fv elide-build-report.html "release/${{ inputs.os }}-${{ inputs.arch }}/$version/elide.build-report.html"
           cd -;
           mkdir -p staging/release
-          mv "packages/cli/build/native/nativeOptimizedCompile/release staging/
+          mv "packages/cli/build/native/nativeOptimizedCompile/release" "staging/"
           echo "version=$version" >> $GITHUB_OUTPUT
           tree -L 3 staging/
           echo "Release built."

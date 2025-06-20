@@ -89,8 +89,9 @@ for archive in ./elide*.{tgz,txz,zip}; do
   echo "-   GPG2..."
   gpg --detach-sign --batch --yes --armor "$archive"
   echo "-   Sigstore..."
-  yes y | cosign sign-blob $COSIGN_ARGS "$archive" --output-signature="$archive.sig" --output-certificate="$archive.pem" --tlog-upload=true --bundle="$archive.sigstore" -y
+  cosignArgs="${COSIGN_ARGS} --output-signature=$archive.sig --output-certificate=$archive.pem --bundle=$archive.sigstore --tlog-upload=true"
+  yes y | cosign sign-blob "$archive" "$cosignArgs" -y
   echo ""
 done
 
-popd
+popd || exit 0

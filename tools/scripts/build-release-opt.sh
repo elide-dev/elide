@@ -13,12 +13,24 @@
 # License for the specific language governing permissions and limitations under the License.
 #
 
-version=$(cat ./.release)
-platform=$(uname -s | tr '[:upper:]' '[:lower:]')
-arch=$(uname -m)
+# load from `ELIDE_VERSION` or default to `./.release`
+releaseVersion=$(cat ./.release 2>/dev/null || echo "999.0.0")
+version="${ELIDE_VERSION:-$releaseVersion}"
+hostPlatform=$(uname -s | tr '[:upper:]' '[:lower:]')
+platform="${ELIDE_PLATFORM-$hostPlatform}"
+hostArch=$(uname -m)
+arch="${ELIDE_ARCH-$hostArch}"
 variant="opt"
-
 archive_prefix="elide"
+
+echo "----------------------------------------------------"
+
+echo "Elide Release Builder"
+echo "- Version: $version"
+echo "- Platform: $platform"
+echo "- Architecture: $arch"
+
+echo "----------------------------------------------------"
 
 if [ "$arch" = "arm64" ]; then
   arch="aarch64"

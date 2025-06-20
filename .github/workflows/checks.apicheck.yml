@@ -164,4 +164,5 @@ jobs:
             -x :packages:graalvm:buildThirdPartyNatives \
             -x :packages:graalvm:buildRustNativesForHost \
             -x :packages:graalvm:natives \
-            --no-configuration-cache
+            --no-configuration-cache \
+            --stacktrace

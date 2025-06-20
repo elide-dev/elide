@@ -23,13 +23,10 @@ artifacts {
   // Build a JAR from our Kotlin code.
   ["jar"] = build.jar()
 
-  // Build a native image from our JAR and classpath.
-  ["native"] = build.nativeImage("jar")
-
   // Wrap the native image in a container image.
   ["container"] = (build.containerImage("jar")) {
     // Set this property to a remote image. This is the target image.
-    image = "ghcr.io/elide-dev/samples/containers"
+    image = "ghcr.io/elide-dev/samples/containers-jvm"
   }
 }
 

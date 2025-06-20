@@ -300,7 +300,7 @@ jobs:
           echo "${{ inputs.version }}" > ./.version
           echo "${{ inputs.version }}" > ./.release
           sed -i "s/elide = \"${current_version}\"/elide = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
-          sed -i "s/elide-bin = \"${current_version}\"/elide = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
+          sed -i "s/elide-bin = \"${current_version}\"/elide-bin = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
           sed -i "s/${current_version}/${{ inputs.version }}/g" tools/elide-build/src/main/kotlin/elide/internal/conventions/Constants.kt
       - name: "🛠️ Release: Image"
         env:

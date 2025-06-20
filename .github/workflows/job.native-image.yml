@@ -148,6 +148,12 @@ name: Native Image
       GRADLE_CONFIGURATION_KEY:
         required: false
         description: "Gradle cache key"
+      COSIGN_KEY:
+        required: false
+        description: "Cosign Key"
+      COSIGN_PASSWORD:
+        required: false
+        description: "Cosign Password"
 
 # Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:
@@ -179,7 +185,8 @@ jobs:
     continue-on-error: ${{ matrix.mode != 'Strict' }}
 
     permissions:
-      contents: "read"
+      contents: write
+      id-token: write
 
     defaults:
       run:
@@ -343,20 +350,25 @@ jobs:
       - name: "🛠️ Release: Package"
         if: inputs.pack
         run: bash ./tools/scripts/build-release-opt.sh
+        env:
+          COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_ARGS: "--key env://COSIGN_KEY"
       - name: "Release: Prepare"
         if: inputs.pack
         id: release-prep
-        working-directory: ./packages/cli/build/native/nativeOptimizedCompile
         run: |
           currentVersion=$(cat ./.release)
           releaseOverride="${{ inputs.version }}"
           version="${releaseOverride:-$currentVersion}"
+          cd ./packages/cli/build/native/nativeOptimizedCompile/;
           mkdir -p "release/${{ inputs.os }}-${{ inputs.arch }}/$version"
           cp -fv elide-*.{tgz,txz,zip}* "release/${{ inputs.os }}-${{ inputs.arch }}/$version/"
           cp -fv elide.sbom.json "release/${{ inputs.os }}-${{ inputs.arch }}/$version/"
           cp -fv elide-build-report.html "release/${{ inputs.os }}-${{ inputs.arch }}/$version/elide.build-report.html"
+          cd -;
           mkdir -p staging/release
-          mv "packages/cli/build/native/nativeOptimizedCompile/release staging/
+          mv "packages/cli/build/native/nativeOptimizedCompile/release" "staging/"
           echo "version=$version" >> $GITHUB_OUTPUT
           tree -L 3 staging/
           echo "Release built."

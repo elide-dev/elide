@@ -27,7 +27,7 @@ artifacts {
   ["native"] = build.nativeImage("jar")
 
   // Wrap the native image in a container image.
-  ["container"] = (build.containerImage("jar")) {
+  ["container"] = (build.containerImage("native")) {
     // Set this property to a remote image. This is the target image.
     image = "ghcr.io/elide-dev/samples/containers"
   }

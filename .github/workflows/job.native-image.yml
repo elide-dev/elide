@@ -346,15 +346,16 @@ jobs:
       - name: "Release: Prepare"
         if: inputs.pack
         id: release-prep
-        working-directory: ./packages/cli/build/native/nativeOptimizedCompile
         run: |
           currentVersion=$(cat ./.release)
           releaseOverride="${{ inputs.version }}"
           version="${releaseOverride:-$currentVersion}"
+          cd ./packages/cli/build/native/nativeOptimizedCompile/;
           mkdir -p "release/${{ inputs.os }}-${{ inputs.arch }}/$version"
           cp -fv elide-*.{tgz,txz,zip}* "release/${{ inputs.os }}-${{ inputs.arch }}/$version/"
           cp -fv elide.sbom.json "release/${{ inputs.os }}-${{ inputs.arch }}/$version/"
           cp -fv elide-build-report.html "release/${{ inputs.os }}-${{ inputs.arch }}/$version/elide.build-report.html"
+          cd -;
           mkdir -p staging/release
           mv "packages/cli/build/native/nativeOptimizedCompile/release staging/
           echo "version=$version" >> $GITHUB_OUTPUT

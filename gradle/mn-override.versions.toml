@@ -1,17 +1,2 @@
 [versions]
-micronaut-aop = "4.8.14"
-micronaut-context = "4.8.14"
-micronaut-core = "4.8.14"
-micronaut-core-processor = "4.8.14"
-micronaut-graal = "4.8.14"
-micronaut-http = "4.8.14"
-micronaut-http-client = "4.8.14"
-micronaut-http-netty = "4.8.14"
-micronaut-http-server = "4.8.14"
-micronaut-http-server-netty = "4.8.14"
-micronaut-inject = "4.8.14"
-micronaut-inject-java = "4.8.14"
-micronaut-inject-kotlin = "4.8.14"
-micronaut-jackson-databind = "4.8.14"
-micronaut-json-core = "4.8.14"
-micronaut-runtime = "4.8.14"
+# Nothing at this time.

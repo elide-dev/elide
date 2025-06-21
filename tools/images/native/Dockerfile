@@ -1,4 +1,4 @@
-FROM ghcr.io/elide-dev/base@sha256:6fa899834e7f5dc6b9af667488629aff5e0cf774789e01b6ea5275826f28b7c1
+FROM ghcr.io/elide-dev/base:1.0.0-beta7@sha256:48f18ca490ae0f4a0d2dc427594910b0137a2447aa99cbe8dea754fdb1a69c67
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Base (Native)"

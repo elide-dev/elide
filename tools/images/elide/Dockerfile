@@ -1,5 +1,5 @@
 ARG ELIDE_VERSION=1.0.0-beta7
-ARG ELIDE_DIGEST=4600633661497a050270e35428e3d5bcc8ed48ed27e0197def683f38b63b600c
+ARG ELIDE_DIGEST=2cbd9d45f5904390b303a1963379cc3e68591cf09aa875bff260cf1fb45bfe38
 
 FROM debian:unstable-slim@sha256:5a1fa4e7ca7e4a8ea0449d0e5e6ac6593b4aebac12f658e69af354c0b3cb073a AS builder
 
@@ -7,7 +7,7 @@ RUN apt-get update \
   && apt-get install -y \
     bash \
     ca-certificates=20250419 \
-    curl=8.13.0-5 \
+    curl=8.14.1-2 \
     uuid-runtime=2.41-5 \
     libgomp1=14.2.0-19 \
     libc-bin=2.41-8 \
@@ -23,7 +23,7 @@ RUN echo "Installing Elide..." \
       && cd /tmp/elide-install \
       && curl -sSL elide.sh | bash -s - -- \
         --install-rev=1.0.0-beta7 \
-        --install-digest=4600633661497a050270e35428e3d5bcc8ed48ed27e0197def683f38b63b600c \
+        --install-digest=2cbd9d45f5904390b303a1963379cc3e68591cf09aa875bff260cf1fb45bfe38 \
         --preserve-installer \
       && cd - \
       && rm -rf /tmp/elide-install
@@ -46,7 +46,7 @@ RUN groupadd elide \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
     bash \
     ca-certificates=20250419 \
-    curl=8.13.0-5 \
+    curl=8.14.1-2 \
     uuid-runtime=2.41-5 \
     libgomp1=14.2.0-19 \
     libc-bin=2.41-8 \

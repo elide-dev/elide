@@ -4,7 +4,7 @@
 amends "elide:project.pkl"
 
 name = "elide"
-version = "1.0.0-beta6"
+version = "1.0.0-beta7"
 description = "Polyglot runtime and toolchain"
 
 local reactVersion = "18.3.1"

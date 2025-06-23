@@ -231,7 +231,7 @@ jobs:
         if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
         run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev
       - name: "Setup: Rust"
-        uses: actions-rust-lang/setup-rust-toolchain@9d7e65c320fdb52dcd45ffaa68deb6c02c8754d9 # v1.12.0
+        uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0
         with:
           toolchain: stable
           cache: true # handled by sccache

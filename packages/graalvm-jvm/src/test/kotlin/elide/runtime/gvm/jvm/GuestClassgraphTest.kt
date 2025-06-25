@@ -14,7 +14,7 @@ package elide.runtime.gvm.jvm
 
 import kotlinx.coroutines.test.runTest
 import elide.testing.annotations.Test
-import elide.tool.Classpath
+import elide.tooling.Classpath
 import kotlin.test.*
 
 class GuestClassgraphTest {

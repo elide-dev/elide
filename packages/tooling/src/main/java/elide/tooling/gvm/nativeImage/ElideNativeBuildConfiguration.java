@@ -16,7 +16,7 @@ import com.oracle.svm.core.annotate.Alias;
 import com.oracle.svm.core.annotate.KeepOriginal;
 import com.oracle.svm.core.annotate.Substitute;
 import com.oracle.svm.core.annotate.TargetClass;
-import elide.tool.cli.Statics;
+import elide.tooling.cli.Statics;
 import java.nio.file.Path;
 import java.util.List;
 

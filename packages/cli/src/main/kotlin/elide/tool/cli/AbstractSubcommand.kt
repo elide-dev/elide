@@ -51,6 +51,7 @@ import elide.tool.err.DefaultErrorHandler
 import elide.tool.err.ErrorHandler
 import elide.tool.listener.TelemetryTriggers
 import elide.tooling.AbstractTool
+import elide.tooling.cli.Statics
 import org.graalvm.polyglot.Engine as VMEngine
 
 fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcommand.OutputController) {

@@ -23,6 +23,7 @@ import kotlin.coroutines.CoroutineContext
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
+import elide.tooling.cli.Statics
 
 typealias CommandScope = CoroutineScope
 

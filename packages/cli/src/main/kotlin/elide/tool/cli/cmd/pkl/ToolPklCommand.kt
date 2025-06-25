@@ -22,6 +22,7 @@ import picocli.CommandLine
 import elide.tool.cli.*
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.ToolState
+import elide.tooling.cli.Statics
 
 /** Pass-through to the Pkl command-line tools. */
 @CommandLine.Command(

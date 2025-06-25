@@ -10,7 +10,7 @@ import com.github.ajalt.mordant.rendering.Whitespace.NORMAL
 import com.github.ajalt.mordant.terminal.Terminal
 import org.graalvm.polyglot.PolyglotException
 import java.util.function.Supplier
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 
 /**
  * Internal utility for formatting exceptions nicely.

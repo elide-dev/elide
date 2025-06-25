@@ -34,9 +34,9 @@ import elide.exec.ActionScope
 import elide.exec.Task
 import elide.exec.Task.Companion.fn
 import elide.exec.taskDependencies
-import elide.tool.Arguments
-import elide.tool.Classpath
-import elide.tool.Environment
+import elide.tooling.Arguments
+import elide.tooling.Classpath
+import elide.tooling.Environment
 import elide.tooling.AbstractTool
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.*

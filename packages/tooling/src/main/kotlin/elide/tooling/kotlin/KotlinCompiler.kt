@@ -58,15 +58,16 @@ import elide.runtime.gvm.kotlin.KotlinCompilerConfig
 import elide.runtime.gvm.kotlin.KotlinCompilerConfig.KotlinBuiltinPlugin
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.runtime.gvm.kotlin.fromKotlincDiagnostic
-import elide.tool.ArgumentContext
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.Inputs
-import elide.tool.Outputs
-import elide.tool.Tool
-import elide.tool.asArgumentString
-import elide.tool.cli.Statics
+import elide.tooling.ArgumentContext
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.Inputs
+import elide.tooling.Outputs
+import elide.tooling.Tool
+import elide.tooling.asArgumentString
+import elide.tooling.cli.Statics
 import elide.tooling.AbstractTool
+import elide.tooling.cli.Statics.logging
 import elide.tooling.jvm.JavaCompiler
 
 // Internal debug logs.

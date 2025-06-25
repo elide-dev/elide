@@ -14,10 +14,10 @@
 package elide.tool.cli.cmd.runner
 
 import java.nio.file.Path
-import elide.tool.Argument
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.MutableArguments
+import elide.tooling.Argument
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.MutableArguments
 import elide.tool.cli.CommandContext
 import elide.tool.exec.which
 import elide.tooling.project.ProjectEcosystem

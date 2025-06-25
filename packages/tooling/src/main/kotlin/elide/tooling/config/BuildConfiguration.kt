@@ -20,6 +20,7 @@ import elide.tooling.config.BuildConfigurator.BuildConfiguration
 import elide.tooling.config.BuildConfigurator.MutableBuildSettings
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.ElideProject
+import elide.tooling.project.load
 import elide.tooling.registry.ResolverRegistry
 
 /**

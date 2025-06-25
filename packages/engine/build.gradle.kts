@@ -56,6 +56,7 @@ dependencies {
   api(mn.micronaut.core)
   api(projects.packages.base)
   api(projects.packages.exec)
+  api(projects.packages.toolingApi)
   api(libs.graalvm.polyglot)
   api(libs.kotlinx.coroutines.core)
   api(libs.guava)

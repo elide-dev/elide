@@ -16,9 +16,8 @@ package elide.tool.cli
 import kotlinx.coroutines.CoroutineScope
 import kotlin.coroutines.CoroutineContext
 import elide.runtime.Logger
-import elide.tool.cli.CommandContext.DefaultCommandContext
-import elide.tool.cli.CommandContext.SpecializedCommandContext
 import elide.tool.cli.state.CommandState
+import elide.tooling.cli.Statics
 
 /**
  * # Command Context

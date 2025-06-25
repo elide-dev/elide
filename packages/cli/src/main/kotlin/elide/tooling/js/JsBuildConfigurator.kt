@@ -23,8 +23,8 @@ import kotlinx.coroutines.withContext
 import kotlin.io.path.exists
 import elide.exec.Tracing
 import elide.runtime.Logging
-import elide.tool.Arguments
-import elide.tool.Tool
+import elide.tooling.Arguments
+import elide.tooling.Tool
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.deps.DependencyResolver

@@ -38,13 +38,13 @@ import elide.runtime.diag.DiagnosticsContainer
 import elide.runtime.diag.DiagnosticsReceiver
 import elide.runtime.diag.DiagnosticsSuite
 import elide.runtime.gvm.jvm.fromJavacDiagnostic
-import elide.tool.ArgumentContext
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.Inputs
-import elide.tool.MutableArguments
-import elide.tool.Outputs
-import elide.tool.Tool
+import elide.tooling.ArgumentContext
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.Inputs
+import elide.tooling.MutableArguments
+import elide.tooling.Outputs
+import elide.tooling.Tool
 import elide.tooling.AbstractTool
 import elide.runtime.diag.Diagnostic as ElideDiagnostic
 

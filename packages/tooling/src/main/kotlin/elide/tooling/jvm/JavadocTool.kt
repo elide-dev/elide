@@ -22,14 +22,14 @@ import java.io.PrintWriter
 import java.net.URI
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.tool.Argument
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.Inputs
-import elide.tool.MutableArguments
-import elide.tool.Outputs
-import elide.tool.Tool
-import elide.tool.asArgumentString
+import elide.tooling.Argument
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.Inputs
+import elide.tooling.MutableArguments
+import elide.tooling.Outputs
+import elide.tooling.Tool
+import elide.tooling.asArgumentString
 import elide.tooling.GenericTool
 
 // Name of the `javadoc` tool.

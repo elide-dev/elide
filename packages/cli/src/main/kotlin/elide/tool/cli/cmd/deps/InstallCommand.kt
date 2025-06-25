@@ -33,7 +33,7 @@ import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.Elide
 import elide.tool.cli.ProjectAwareSubcommand
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.builder.BuildOutput
 import elide.tool.cli.output.redirectLoggingToMordant
@@ -50,6 +50,7 @@ import elide.tooling.lockfile.InterpretedLockfile
 import elide.tooling.lockfile.LockfileDefinition
 import elide.tooling.lockfile.Lockfiles
 import elide.tooling.project.ElideProject
+import elide.tooling.project.load
 
 @CommandLine.Command(
   name = "install",

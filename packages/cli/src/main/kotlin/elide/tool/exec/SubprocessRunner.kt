@@ -32,10 +32,10 @@ import kotlin.io.path.name
 import kotlin.sequences.filter
 import kotlin.sequences.map
 import kotlin.sequences.sortedBy
-import elide.tool.Environment
+import elide.tooling.Environment
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tooling.runner.ProcessRunner
 import elide.tooling.runner.ProcessRunner.ProcessStatus
 import elide.tooling.runner.ProcessRunner.ProcessTaskInfo

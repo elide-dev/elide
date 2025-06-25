@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets
 import java.util.concurrent.Callable
 import elide.annotations.Singleton
 import elide.tool.cli.*
+import elide.tooling.cli.Statics
 
 /** Find help or file a bug or PR against Elide. */
 @CommandLine.Command(

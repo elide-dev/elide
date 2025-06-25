@@ -214,6 +214,7 @@ include(
   ":packages:telemetry",
   ":packages:test",
   ":packages:tooling",
+  ":packages:tooling-api",
   ":tools:reports",
   ":tools:umbrella",
 )

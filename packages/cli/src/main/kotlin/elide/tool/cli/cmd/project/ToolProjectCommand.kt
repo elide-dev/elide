@@ -27,10 +27,10 @@ import elide.annotations.Inject
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
-import elide.tooling.project.PackageManifestService
 import elide.tool.project.ProjectManager
+import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
 

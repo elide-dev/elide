@@ -31,6 +31,7 @@ import kotlin.io.path.absolutePathString
 import kotlin.system.exitProcess
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.tool.cli.Elide.Companion.installStatics
+import elide.tooling.cli.Statics
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
 private const val ENABLE_CLI_ENTRY_V2 = false

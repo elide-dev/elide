@@ -31,9 +31,9 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import elide.annotations.Inject
 import elide.runtime.Logging
-import elide.tool.Argument
-import elide.tool.Arguments
-import elide.tool.Tool
+import elide.tooling.Argument
+import elide.tooling.Arguments
+import elide.tooling.Tool
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver

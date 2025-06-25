@@ -22,6 +22,7 @@ import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.tooling.config.TestConfigurator.*
 import elide.tooling.config.TestConfigurators
 import elide.tooling.project.ElideProject
+import elide.tooling.project.load
 import elide.tooling.registry.ResolverRegistry
 
 /**

@@ -15,11 +15,11 @@ package elide.tooling.kotlin
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import java.net.URI
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.Inputs
-import elide.tool.Outputs
-import elide.tool.Tool
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.Inputs
+import elide.tooling.Outputs
+import elide.tooling.Tool
 import elide.tooling.AbstractTool
 
 // Name of the Detekt.

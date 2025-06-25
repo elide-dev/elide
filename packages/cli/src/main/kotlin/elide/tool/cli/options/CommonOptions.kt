@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 import picocli.CommandLine.Option
 import java.util.*
 import kotlin.properties.Delegates
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tool.cli.output.TOOL_LOGGER_NAME
 
 private const val DEFAULT_TIMEOUT_SECONDS: Int = 1

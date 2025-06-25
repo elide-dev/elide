@@ -77,6 +77,108 @@ public abstract interface class elide/proto/api/Named {
 	public abstract fun getName ()Ljava/lang/String;
 }
 
+public abstract interface class elide/runtime/EnvVar {
+	public static final field Companion Lelide/runtime/EnvVar$Companion;
+	public static fun fromDotenv (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getSource ()Lelide/runtime/EnvVariableSource;
+	public abstract fun getValue ()Ljava/lang/String;
+	public fun isPresent ()Z
+	public static fun mapToHost (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar;
+	public static fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar;
+	public static fun provide (Ljava/lang/String;Ljava/util/function/Supplier;)Lelide/runtime/EnvVar;
+}
+
+public final class elide/runtime/EnvVar$Companion {
+	public final fun fromDotenv (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar;
+	public final fun mapToHost (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar;
+	public static synthetic fun mapToHost$default (Lelide/runtime/EnvVar$Companion;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/EnvVar;
+	public final fun of (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar;
+	public final fun provide (Ljava/lang/String;Ljava/util/function/Supplier;)Lelide/runtime/EnvVar;
+}
+
+public final class elide/runtime/EnvVar$DotEnvVar : java/lang/Record, elide/runtime/EnvVar {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar$DotEnvVar;
+	public static synthetic fun copy$default (Lelide/runtime/EnvVar$DotEnvVar;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/EnvVar$DotEnvVar;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun file ()Ljava/lang/String;
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getSource ()Lelide/runtime/EnvVariableSource;
+	public synthetic fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun name ()Ljava/lang/String;
+	public fun source ()Lelide/runtime/EnvVariableSource;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/EnvVar$HostMappedVar : java/lang/Record, elide/runtime/EnvVar {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar$HostMappedVar;
+	public static synthetic fun copy$default (Lelide/runtime/EnvVar$HostMappedVar;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/EnvVar$HostMappedVar;
+	public final fun defaultValue ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getSource ()Lelide/runtime/EnvVariableSource;
+	public synthetic fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun mapped ()Ljava/lang/String;
+	public fun name ()Ljava/lang/String;
+	public fun source ()Lelide/runtime/EnvVariableSource;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/EnvVar$InlineEnvVar : java/lang/Record, elide/runtime/EnvVar {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/EnvVar$InlineEnvVar;
+	public static synthetic fun copy$default (Lelide/runtime/EnvVar$InlineEnvVar;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/EnvVar$InlineEnvVar;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getSource ()Lelide/runtime/EnvVariableSource;
+	public synthetic fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun name ()Ljava/lang/String;
+	public fun source ()Lelide/runtime/EnvVariableSource;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/EnvVar$SuppliedEnvVar : java/lang/Record, elide/runtime/EnvVar {
+	public fun <init> (Ljava/lang/String;Ljava/util/function/Supplier;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/util/function/Supplier;)Lelide/runtime/EnvVar$SuppliedEnvVar;
+	public static synthetic fun copy$default (Lelide/runtime/EnvVar$SuppliedEnvVar;Ljava/lang/String;Ljava/util/function/Supplier;ILjava/lang/Object;)Lelide/runtime/EnvVar$SuppliedEnvVar;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getName ()Ljava/lang/String;
+	public synthetic fun getSource ()Lelide/runtime/EnvVariableSource;
+	public synthetic fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun name ()Ljava/lang/String;
+	public fun source ()Lelide/runtime/EnvVariableSource;
+	public fun toString ()Ljava/lang/String;
+	public fun value ()Ljava/lang/String;
+}
+
+public final class elide/runtime/EnvVariableSource : java/lang/Enum {
+	public static final field DOTENV Lelide/runtime/EnvVariableSource;
+	public static final field HOST Lelide/runtime/EnvVariableSource;
+	public static final field INLINE Lelide/runtime/EnvVariableSource;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/EnvVariableSource;
+	public static fun values ()[Lelide/runtime/EnvVariableSource;
+}
+
 public final class elide/runtime/LogLevel : java/lang/Enum {
 	public static final field DEBUG Lelide/runtime/LogLevel;
 	public static final field ERROR Lelide/runtime/LogLevel;

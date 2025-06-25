@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright (c) 2024-2025 Elide Technologies, Inc.
+  ~
+  ~ Licensed under the MIT license (the "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~   https://opensource.org/license/mit/
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  ~ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  ~ License for the specific language governing permissions and limitations under the License.
+  -->
+
+<idea-plugin>
+  <id>dev.elide.intellij</id>
+  <name>Elide</name>
+  <vendor url="https://elide.dev">Elide Technologies Inc.</vendor>
+
+  <description><![CDATA[
+        Elide build system support for Intellij IDEA.<br>
+    ]]></description>
+
+  <depends>com.intellij.modules.platform</depends>
+  <resource-bundle>i18n.Strings</resource-bundle>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <externalIconProvider key="ELIDE" implementationClass="dev.elide.intellij.ui.ElideIconProvider"/>
+    <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupSyncActivity"/>
+    <externalSystemManager implementation="dev.elide.intellij.ElideManager"/>
+    <projectConfigurable
+            key="elide"
+            id="reference.settingsdialog.project.elide"
+            instance="dev.elide.intellij.settings.ElideConfigurable"/>
+  </extensions>
+</idea-plugin>

@@ -88,6 +88,9 @@ hibernate = "5.6.11.Final"
 highlights = "1.0.0"
 hikari = "4.0.3"
 hoplite = "2.9.0"
+intellij-platform = "2.5.0"
+intellij-target-ide = "2025.1"
+intellij-target-build = "251"
 inquirer = "0.1.0"
 j4rs = "0.22.0"
 jackson = "2.19.1"
@@ -295,6 +298,7 @@ gr8 = { id = "com.gradleup.gr8", version.ref = "gr8" }
 graalvm = { id = "org.graalvm.buildtools.native" }
 gradle-checksum = { id = "org.gradle.crypto.checksum", version.ref = "gradleChecksum" }
 gradle-testretry = { id = "org.gradle.test-retry", version.ref = "gradleTestRetry" }
+intellij-platform = { id = "org.jetbrains.intellij.platform", version.ref = "intellij-platform" }
 jetbrains-compose = { id = "org.jetbrains.compose" }
 jmh = { id = "me.champeau.jmh", version.ref = "jmh-plugin" }
 jprofiler = { id = "com.jprofiler", version.ref = "jprofiler" }

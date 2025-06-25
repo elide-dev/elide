@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+
+package dev.elide.intellij.startup
+
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.externalSystem.autoimport.ExternalSystemProjectTracker
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode
+import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
+import com.intellij.openapi.project.BaseProjectDirectories.Companion.getBaseDirectories
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.startup.ProjectActivity
+import dev.elide.intellij.Constants
+import dev.elide.intellij.project.ElideProjectAware
+
+/** Startup activity used to detect an Elide project and sync it if needed. */
+class ElideStartupSyncActivity : ProjectActivity {
+  override suspend fun execute(project: Project) {
+    val projectTracker = ExternalSystemProjectTracker.getInstance(project)
+
+    for (baseDir in project.getBaseDirectories()) {
+      LOG.debug("Searching for Elide manifest in base dir $baseDir")
+      baseDir.findChild(Constants.MANIFEST_NAME) ?: continue
+
+      // have the IDE track changes to the project config files, then trigger a sync
+      LOG.debug("Found manifest, adding to tracker and refreshing")
+      projectTracker.register(ElideProjectAware(project, baseDir.path))
+      ExternalSystemUtil.refreshProject(
+        /* project = */ project,
+        /* externalSystemId = */ Constants.SYSTEM_ID,
+        /* externalProjectPath = */ baseDir.path,
+        /* isPreviewMode = */ false,
+        /* progressExecutionMode = */ ProgressExecutionMode.IN_BACKGROUND_ASYNC,
+      )
+
+      break
+    }
+  }
+
+  private companion object {
+    @JvmStatic private val LOG = Logger.getInstance(ElideStartupSyncActivity::class.java)
+  }
+}

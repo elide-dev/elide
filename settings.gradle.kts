@@ -223,18 +223,19 @@ val buildEmbedded: String by settings
 val buildBenchmarks: String by settings
 val enableNativeTransport: String by settings
 val buildExperimentalEntrypoint: String by settings
+val buildIdePlugins: String by settings
 
-if (buildExperimentalEntrypoint == "true") {
+if (buildExperimentalEntrypoint.toBoolean()) {
   include(":packages:entry")
 }
 
-if (buildEmbedded == "true") {
+if (buildEmbedded.toBoolean()) {
   include(
     ":packages:embedded",
   )
 }
 
-if (enableNativeTransport == "true") {
+if (enableNativeTransport.toBoolean()) {
   include(
     ":packages:tcnative",
     ":packages:transport:transport-common",
@@ -245,9 +246,15 @@ if (enableNativeTransport == "true") {
   )
 }
 
-if (buildBenchmarks == "true") {
+if (buildBenchmarks.toBoolean()) {
   include(
     ":tools:benchmarks:bench-graalvm",
+  )
+}
+
+if (buildIdePlugins.toBoolean()) {
+  include(
+    ":packages:plugin-idea"
   )
 }
 

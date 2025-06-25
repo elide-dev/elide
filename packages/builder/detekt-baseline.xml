@@ -3,10 +3,8 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ForbiddenComment:JvmBuildConfigurator.kt$JvmBuildConfigurator$// @TODO: argument splitting by default</ID>
-    <ID>UnusedParameter:ContainerBuildConfigurator.kt$ContainerBuildConfigurator$artifact: ContainerImage</ID>
-    <ID>UnusedParameter:ContainerBuildConfigurator.kt$ContainerBuildConfigurator$configurator: ContainerImageConfigurator.() -> Unit = {}</ID>
-    <ID>UnusedParameter:ContainerBuildConfigurator.kt$ContainerBuildConfigurator$state: ElideBuildState</ID>
-    <ID>UnusedParameter:NativeImageBuildConfigurator.kt$NativeImageBuildConfigurator$configurator: NativeImageConfigurator.() -> Unit = {}</ID>
+    <ID>FunctionParameterNaming:Statics.kt$Statics$`in`: InputStream</ID>
+    <ID>ObjectPropertyNaming:Statics.kt$Statics$public val `in`: InputStream get() = delegatedInStream.value ?: System.`in`</ID>
     <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$inputs: NativeImageInputs.Paths</ID>
     <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$javaToolchainHome: Path</ID>
     <ID>UnusedParameter:TestDriver.kt$TestDriver$binder: ExecutionBinder? = null</ID>

@@ -1,11 +1,11 @@
 public final class elide/runtime/gvm/jvm/GuestClassgraph {
 	public static final field INSTANCE Lelide/runtime/gvm/jvm/GuestClassgraph;
-	public final fun buildFrom (Lelide/tool/Classpath;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun buildFrom$default (Lelide/runtime/gvm/jvm/GuestClassgraph;Lelide/tool/Classpath;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun buildFrom (Lelide/tooling/Classpath;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun buildFrom$default (Lelide/runtime/gvm/jvm/GuestClassgraph;Lelide/tooling/Classpath;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/runtime/gvm/jvm/GuestClassgraph$Classgraph {
-	public abstract fun classpath ()Lelide/tool/Classpath;
+	public abstract fun classpath ()Lelide/tooling/Classpath;
 	public abstract fun export ()Lio/github/classgraph/ClassGraph;
 	public abstract fun isEmpty ()Z
 	public abstract fun scanResult ()Lio/github/classgraph/ScanResult;
@@ -18,7 +18,7 @@ public abstract interface class elide/runtime/gvm/jvm/GuestClassgraph$Classgraph
 
 public final class elide/runtime/gvm/jvm/GuestClassgraph$Empty : elide/runtime/gvm/jvm/GuestClassgraph$Classgraph {
 	public static final field INSTANCE Lelide/runtime/gvm/jvm/GuestClassgraph$Empty;
-	public fun classpath ()Lelide/tool/Classpath;
+	public fun classpath ()Lelide/tooling/Classpath;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun export ()Lio/github/classgraph/ClassGraph;
 	public fun hashCode ()I
@@ -28,7 +28,7 @@ public final class elide/runtime/gvm/jvm/GuestClassgraph$Empty : elide/runtime/g
 }
 
 public final class elide/runtime/gvm/jvm/GuestClassgraph$MaterializedClassgraph : elide/runtime/gvm/jvm/GuestClassgraph$Classgraph {
-	public fun classpath ()Lelide/tool/Classpath;
+	public fun classpath ()Lelide/tooling/Classpath;
 	public fun export ()Lio/github/classgraph/ClassGraph;
 	public fun isEmpty ()Z
 	public fun scanResult ()Lio/github/classgraph/ScanResult;

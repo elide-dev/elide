@@ -190,6 +190,7 @@ rootProject.name = "elide"
 include(
   ":packages:base",
   ":packages:bom",
+  ":packages:builder",
   ":packages:cli",
   ":packages:core",
   ":packages:engine",
@@ -214,7 +215,6 @@ include(
   ":packages:telemetry",
   ":packages:test",
   ":packages:tooling",
-  ":packages:tooling-api",
   ":tools:reports",
   ":tools:umbrella",
 )

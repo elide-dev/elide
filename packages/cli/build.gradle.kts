@@ -538,7 +538,7 @@ dependencies {
   }
 
   // Tooling
-  implementation(projects.packages.tooling)
+  implementation(projects.packages.builder)
   implementation(libs.bundles.maven.model)
   implementation(libs.bundles.maven.resolver)
 

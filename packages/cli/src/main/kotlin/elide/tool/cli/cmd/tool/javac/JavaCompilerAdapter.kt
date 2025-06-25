@@ -21,13 +21,13 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.Locale
 import kotlin.io.path.relativeTo
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.Tool
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.Tool
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.tool.DelegatedToolCommand
 import elide.tooling.AbstractTool

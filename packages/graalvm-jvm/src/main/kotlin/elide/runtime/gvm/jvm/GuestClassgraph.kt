@@ -27,7 +27,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlin.io.path.absolutePathString
 import elide.runtime.gvm.jvm.GuestClassgraph.ClassgraphBuilderApi
-import elide.tool.Classpath
+import elide.tooling.Classpath
 
 /**
  * Function which can customize how a class-graph is built.

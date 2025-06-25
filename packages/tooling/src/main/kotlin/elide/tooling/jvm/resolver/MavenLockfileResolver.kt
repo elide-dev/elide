@@ -16,11 +16,11 @@ import java.nio.file.Path
 import java.util.TreeMap
 import java.util.TreeSet
 import java.util.concurrent.ConcurrentSkipListMap
-import elide.tool.Classpath
-import elide.tool.ClasspathProvider
-import elide.tool.ClasspathSpec
-import elide.tool.ClasspathsProvider
-import elide.tool.MultiPathUsage
+import elide.tooling.Classpath
+import elide.tooling.ClasspathProvider
+import elide.tooling.ClasspathSpec
+import elide.tooling.ClasspathsProvider
+import elide.tooling.MultiPathUsage
 import elide.tooling.lockfile.ElideLockfile.MavenArtifact
 import elide.tooling.lockfile.ElideLockfile.MavenLockfile
 import elide.tooling.lockfile.ElideLockfile.MavenUsageType

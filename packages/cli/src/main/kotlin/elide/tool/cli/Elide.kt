@@ -66,6 +66,7 @@ import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
 import elide.tool.io.RuntimeWorkdirManager
+import elide.tooling.cli.Statics
 
 // Default timeout to apply to non-server commands.
 private const val DEFAULT_CMD_TIMEOUT = 30

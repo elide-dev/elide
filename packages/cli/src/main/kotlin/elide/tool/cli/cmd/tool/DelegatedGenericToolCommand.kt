@@ -14,7 +14,7 @@
 package elide.tool.cli.cmd.tool
 
 import elide.tool.cli.AbstractSubcommand
-import elide.tool.Tool
+import elide.tooling.Tool
 import elide.tooling.AbstractTool
 
 /**

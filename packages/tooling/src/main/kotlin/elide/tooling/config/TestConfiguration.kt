@@ -21,6 +21,7 @@ import elide.tooling.config.TestConfigurator.TestConfiguration
 import elide.tooling.config.TestConfigurator.MutableTestSettings
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.ElideProject
+import elide.tooling.project.load
 import elide.tooling.registry.ResolverRegistry
 
 /**

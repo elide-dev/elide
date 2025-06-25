@@ -24,14 +24,14 @@ import elide.exec.ActionScope
 import elide.exec.Task
 import elide.exec.Task.Companion.fn
 import elide.exec.taskDependencies
-import elide.tool.Argument
-import elide.tool.ArgumentContext
-import elide.tool.Arguments
-import elide.tool.Classpath
-import elide.tool.ClasspathSpec
-import elide.tool.Environment
-import elide.tool.MultiPathUsage
 import elide.tooling.AbstractTool
+import elide.tooling.Argument
+import elide.tooling.ArgumentContext
+import elide.tooling.Arguments
+import elide.tooling.Classpath
+import elide.tooling.ClasspathSpec
+import elide.tooling.Environment
+import elide.tooling.MultiPathUsage
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
 import elide.tooling.config.BuildConfigurator.ElideBuildState
@@ -53,9 +53,8 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
   )
 
   // Build a native image output name.
-  private fun buildNativeImageName(state: ElideBuildState, root: Path, artifact: NativeImage): String = when {
-    artifact.name?.ifEmpty { null }?.ifBlank { null } != null -> artifact.name
-    else -> state.manifest.name ?: root.name
+  private fun buildNativeImageName(state: ElideBuildState, root: Path, artifact: NativeImage): String {
+    return artifact.name?.takeUnless { it.isBlank() } ?: state.manifest.name ?: root.name
   }
 
   // Resolve the suite of tasks that should precede the Native Image task. All compile and JAR tasks.
@@ -77,7 +76,7 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
         val froms = img.from.map {
           // pull from artifacts
           state.manifest.artifacts[it] ?: error(
-            "No artifact named '$it' to build a native image from"
+            "No artifact named '$it' to build a native image from",
           )
         }
 
@@ -85,17 +84,21 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
         froms.filterIsInstance<Jar>().map { jar ->
           val jarname = (jar.name ?: state.manifest.name ?: state.config.projectRoot.name).removeSuffix(".jar")
           val jarNameQualified = "$jarname.jar"
-          add(state.layout
-            .artifacts
-            .resolve("jvm")
-            .resolve("jars")
-            .resolve(jarNameQualified))
+          add(
+            state.layout
+                  .artifacts
+                  .resolve("jvm")
+                  .resolve("jars")
+                  .resolve(jarNameQualified),
+          )
         }
 
         // add classpath from project dependency resolver
-        resolver.classpathProvider(object : ClasspathSpec {
-          override val usage: MultiPathUsage = MultiPathUsage.Compile
-        })?.classpath()?.let {
+        resolver.classpathProvider(
+          object : ClasspathSpec {
+                override val usage: MultiPathUsage = MultiPathUsage.Compile
+            },
+        )?.classpath()?.let {
           add(it)
         }
 
@@ -209,17 +212,19 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
           }
 
           // add optimization level
-          add(when (val level = artifact.options.optimization) {
-            OptimizationLevel.AUTO -> when {
-              config.settings.release -> if (pgoEnabled) OptimizationLevel.THREE else OptimizationLevel.FOUR
-              config.settings.debug -> OptimizationLevel.ZERO
-              else -> OptimizationLevel.BUILD
-            }.let {
-              "-O${it.symbol}"
-            }
+          add(
+            when (val level = artifact.options.optimization) {
+                  OptimizationLevel.AUTO -> when {
+                      config.settings.release -> if (pgoEnabled) OptimizationLevel.THREE else OptimizationLevel.FOUR
+                      config.settings.debug -> OptimizationLevel.ZERO
+                      else -> OptimizationLevel.BUILD
+                  }.let {
+                      "-O${it.symbol}"
+                  }
 
-            else -> "-O${level.symbol}"
-          })
+                  else -> "-O${level.symbol}"
+              },
+          )
 
           // disable fallback mode
           add("--no-fallback")
@@ -264,10 +269,10 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
       logging.debug { "Final native image args: '$finalizedNativeImageArgs'" }
 
       val inputs = NativeImageDriver.nativeImageInputs(
-        effectiveClasspath.asSequence().map { it.path }
+        effectiveClasspath.asSequence().map { it.path },
       )
       val outputs = NativeImageDriver.outputBinary(
-        imageOutPath
+        imageOutPath,
       )
       val driver = NativeImageDriver(
         nativeImageArgs,
@@ -276,10 +281,12 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
         outputs,
         projectRoot = config.projectRoot,
       )
-      driver.invoke(object: AbstractTool.EmbeddedToolState {
-        override val resourcesPath: Path get() = state.resourcesPath
-        override val project: ElideProject? get() = state.project
-      }).let {
+      driver.invoke(
+        object : AbstractTool.EmbeddedToolState {
+              override val resourcesPath: Path get() = state.resourcesPath
+              override val project: ElideProject? get() = state.project
+          },
+      ).let {
         when (it.success) {
           false -> elide.exec.Result.UnspecifiedFailure
           true -> elide.exec.Result.Nothing

@@ -17,7 +17,7 @@ import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine
 import elide.runtime.core.PolyglotEngineConfiguration
-import elide.runtime.plugins.env.EnvConfig
+import elide.runtime.EnvVariableSource
 import elide.runtime.plugins.env.environment
 import elide.tool.cli.cfg.ElideCLITool
 import elide.tooling.project.ElideProject
@@ -62,7 +62,7 @@ import elide.tooling.project.ElideProject
     // apply project-level environment variables first (if applicable)
     project?.env?.vars?.forEach {
       if (it.value.isPresent) {
-        if (it.value.source == EnvConfig.EnvVariableSource.DOTENV && !dotenv) {
+        if (it.value.source == EnvVariableSource.DOTENV && !dotenv) {
           return@forEach  // skip .env vars if so instructed
         }
         environment(it.key, it.value.value)

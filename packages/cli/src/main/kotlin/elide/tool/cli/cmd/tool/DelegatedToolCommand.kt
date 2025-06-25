@@ -15,15 +15,15 @@ package elide.tool.cli.cmd.tool
 
 import picocli.CommandLine
 import java.util.TreeSet
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.MutableArguments
-import elide.tool.MutableEnvironment
-import elide.tool.Tool
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.MutableArguments
+import elide.tooling.MutableEnvironment
+import elide.tooling.Tool
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.render
 import elide.tooling.AbstractTool

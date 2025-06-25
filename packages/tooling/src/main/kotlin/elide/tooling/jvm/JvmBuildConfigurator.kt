@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.incremental.classpathAsList
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.LinkedList
+import java.util.*
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -30,19 +30,19 @@ import elide.exec.Task
 import elide.exec.Task.Companion.fn
 import elide.exec.taskDependencies
 import elide.runtime.Logging
+import elide.runtime.exec.asExecResult
 import elide.runtime.gvm.kotlin.KotlinCompilerConfig
 import elide.runtime.gvm.kotlin.KotlinLanguage
-import elide.tool.Argument
-import elide.tool.Arguments
-import elide.tool.Classpath
-import elide.tool.ClasspathSpec
-import elide.tool.Environment
-import elide.tool.MultiPathUsage
-import elide.tool.MutableArguments
-import elide.tool.MutableClasspath
-import elide.tool.Tool
-import elide.tool.asExecResult
 import elide.tooling.AbstractTool
+import elide.tooling.Argument
+import elide.tooling.Arguments
+import elide.tooling.Classpath
+import elide.tooling.ClasspathSpec
+import elide.tooling.Environment
+import elide.tooling.MultiPathUsage
+import elide.tooling.MutableArguments
+import elide.tooling.MutableClasspath
+import elide.tooling.Tool
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
@@ -136,15 +136,19 @@ public object JvmLibraries {
   public fun builtinClasspath(path: Path, tests: Boolean = false, kotlin: Boolean = true): Classpath {
     return Classpath.from(
       buildList {
-        if (kotlin || tests) addAll(baseCoordinates.map {
-          resolveJarFor(path, it)
-        })
+        if (kotlin || tests) addAll(
+          baseCoordinates.map {
+            resolveJarFor(path, it)
+          },
+        )
         if (tests) {
-          addAll(testCoordinates.map { (coordinate, version) ->
-            resolveJarFor(path, coordinate, version)
-          })
+          addAll(
+            testCoordinates.map { (coordinate, version) ->
+              resolveJarFor(path, coordinate, version)
+            },
+          )
         }
-      }
+      },
     )
   }
 }
@@ -189,9 +193,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     dependencies: List<Task> = emptyList(),
     argsAmender: MutableArguments.() -> Unit = {},
   ) = fn(name, taskDependencies(dependencies)) {
-    val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
-      override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestCompile else MultiPathUsage.Compile
-    })?.classpath()
+    val compileClasspath = resolver?.classpathProvider(
+      object : ClasspathSpec {
+        override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestCompile else MultiPathUsage.Compile
+      },
+    )?.classpath()
 
     val mainClassesOutput = state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
@@ -212,25 +218,25 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
     // resolve source/target settings
     val (explicitSourceVersion, sourceVersion) = (
-      state.manifest.jvm?.java?.release
-        ?: state.manifest.jvm?.java?.source
-        ?: state.manifest.jvm?.target
-    ).let {
-      when (it) {
-        null -> false to ElidePackageManifest.JvmTarget.DEFAULT
-        else -> true to it
+            state.manifest.jvm?.java?.release
+              ?: state.manifest.jvm?.java?.source
+              ?: state.manifest.jvm?.target
+            ).let {
+        when (it) {
+          null -> false to ElidePackageManifest.JvmTarget.DEFAULT
+          else -> true to it
+        }
       }
-    }
     val (explicitTargetVersion, targetVersion) = (
-      state.manifest.jvm?.java?.release
-        ?: state.manifest.jvm?.java?.source
-        ?: state.manifest.jvm?.target
-    ).let {
-      when (it) {
-        null -> false to ElidePackageManifest.JvmTarget.DEFAULT
-        else -> true to it
+            state.manifest.jvm?.java?.release
+              ?: state.manifest.jvm?.java?.source
+              ?: state.manifest.jvm?.target
+            ).let {
+        when (it) {
+          null -> false to ElidePackageManifest.JvmTarget.DEFAULT
+          else -> true to it
+        }
       }
-    }
 
     // if there is an explicit target or source version, use that pair, otherwise, use `release`.
     val useReleaseFlag = !(explicitSourceVersion || explicitTargetVersion)
@@ -250,46 +256,62 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       // `org.junit.platform:junit-platform-commons`
       // `org.junit.platform:junit-platform-console`
       // `org.apiguardian:apiguardian-api`
-      staticDeps.add(builtinJavaJarPath(
-        state,
-        JvmLibraries.JUNIT_JUPITER_ENGINE,
-        JvmLibraries.EMBEDDED_JUNIT_VERSION,
-      ))
-      staticDeps.add(builtinJavaJarPath(
-        state,
-        JvmLibraries.JUNIT_JUPITER_API,
-        JvmLibraries.EMBEDDED_JUNIT_VERSION,
-      ))
-      staticDeps.add(builtinJavaJarPath(
-        state,
-        JvmLibraries.JUNIT_JUPITER_PARAMS,
-        JvmLibraries.EMBEDDED_JUNIT_VERSION,
-      ))
-      staticDeps.add(builtinJavaJarPath(
-        state,
-        JvmLibraries.JUNIT_PLATFORM_ENGINE,
-        JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
-      ))
-      staticDeps.add(builtinJavaJarPath(
-        state,
-        JvmLibraries.JUNIT_PLATFORM_COMMONS,
-        JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
-      ))
-      staticDeps.add(builtinJavaJarPath(
-        state,
-        JvmLibraries.JUNIT_PLATFORM_CONSOLE,
-        JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
-      ))
-      staticDeps.add(builtinJavaJarPath(
-        state,
-        JvmLibraries.APIGUARDIAN_API,
-        JvmLibraries.EMBEDDED_APIGUARDIAN_VERSION,
-      ))
-      staticDeps.add(builtinJavaJarPath(
-        state,
-        JvmLibraries.OPENTEST,
-        JvmLibraries.EMBEDDED_OPENTEST_VERSION,
-      ))
+      staticDeps.add(
+        builtinJavaJarPath(
+          state,
+          JvmLibraries.JUNIT_JUPITER_ENGINE,
+          JvmLibraries.EMBEDDED_JUNIT_VERSION,
+        ),
+      )
+      staticDeps.add(
+        builtinJavaJarPath(
+          state,
+          JvmLibraries.JUNIT_JUPITER_API,
+          JvmLibraries.EMBEDDED_JUNIT_VERSION,
+        ),
+      )
+      staticDeps.add(
+        builtinJavaJarPath(
+          state,
+          JvmLibraries.JUNIT_JUPITER_PARAMS,
+          JvmLibraries.EMBEDDED_JUNIT_VERSION,
+        ),
+      )
+      staticDeps.add(
+        builtinJavaJarPath(
+          state,
+          JvmLibraries.JUNIT_PLATFORM_ENGINE,
+          JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
+        ),
+      )
+      staticDeps.add(
+        builtinJavaJarPath(
+          state,
+          JvmLibraries.JUNIT_PLATFORM_COMMONS,
+          JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
+        ),
+      )
+      staticDeps.add(
+        builtinJavaJarPath(
+          state,
+          JvmLibraries.JUNIT_PLATFORM_CONSOLE,
+          JvmLibraries.EMBEDDED_JUNIT_PLATFORM_VERSION,
+        ),
+      )
+      staticDeps.add(
+        builtinJavaJarPath(
+          state,
+          JvmLibraries.APIGUARDIAN_API,
+          JvmLibraries.EMBEDDED_APIGUARDIAN_VERSION,
+        ),
+      )
+      staticDeps.add(
+        builtinJavaJarPath(
+          state,
+          JvmLibraries.OPENTEST,
+          JvmLibraries.EMBEDDED_OPENTEST_VERSION,
+        ),
+      )
     }
 
     // main classes should be on classpath in tests mode
@@ -362,14 +384,17 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     )
 
     // fire compile job
-    val result = compiler.invoke(object : AbstractTool.EmbeddedToolState {
-      override val resourcesPath: Path get() = state.resourcesPath
-      override val project: ElideProject? get() = state.project
-    })
+    val result = compiler.invoke(
+      object : AbstractTool.EmbeddedToolState {
+        override val resourcesPath: Path get() = state.resourcesPath
+        override val project: ElideProject? get() = state.project
+      },
+    )
     when (result) {
       is Tool.Result.Success -> {
         logging.debug { "Java compilation finished without error" }
       }
+
       else -> {
         logging.error { "Java compilation failed" }
       }
@@ -402,9 +427,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     dependencies: List<Task> = emptyList(),
     argsAmender: K2JVMCompilerArguments.() -> Unit = {},
   ) = fn(name, taskDependencies(dependencies)) {
-    val compileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
-      override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestCompile else MultiPathUsage.Compile
-    })?.classpath()
+    val compileClasspath = resolver?.classpathProvider(
+      object : ClasspathSpec {
+        override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestCompile else MultiPathUsage.Compile
+      },
+    )?.classpath()
 
     val kotlincClassesOutput = state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
@@ -420,26 +447,32 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     if (state.manifest.kotlin?.features?.kotlinx != false) {
       if (state.manifest.kotlin?.features?.coroutines != false) {
         // add `org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm`
-        staticDeps.add(builtinKotlinJarPath(
-          state,
-          JvmLibraries.KOTLINX_COROUTINES,
-          JvmLibraries.EMBEDDED_COROUTINES_VERSION,
-        ))
+        staticDeps.add(
+          builtinKotlinJarPath(
+            state,
+            JvmLibraries.KOTLINX_COROUTINES,
+            JvmLibraries.EMBEDDED_COROUTINES_VERSION,
+          ),
+        )
       }
       if (state.manifest.kotlin?.features?.serialization == true) {
         // add `org.jetbrains.kotlinx:kotlinx-serialization-core`
-        staticDeps.add(builtinKotlinJarPath(
-          state,
-          JvmLibraries.KOTLINX_SERIALIZATION,
-          JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
-        ))
+        staticDeps.add(
+          builtinKotlinJarPath(
+            state,
+            JvmLibraries.KOTLINX_SERIALIZATION,
+            JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
+          ),
+        )
 
         // add `org.jetbrains.kotlinx:kotlinx-serialization-json`
-        staticDeps.add(builtinKotlinJarPath(
-          state,
-          JvmLibraries.KOTLINX_SERIALIZATION_JSON,
-          JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
-        ))
+        staticDeps.add(
+          builtinKotlinJarPath(
+            state,
+            JvmLibraries.KOTLINX_SERIALIZATION_JSON,
+            JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
+          ),
+        )
       }
     }
     if (tests) {
@@ -452,33 +485,41 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       if (state.manifest.kotlin?.features?.kotlinx != false) {
         if (state.manifest.kotlin?.features?.coroutines != false) {
           // add `org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm`
-          staticDeps.add(builtinKotlinJarPath(
-            state,
-            JvmLibraries.KOTLINX_COROUTINES,
-            JvmLibraries.EMBEDDED_COROUTINES_VERSION,
-          ))
+          staticDeps.add(
+            builtinKotlinJarPath(
+              state,
+              JvmLibraries.KOTLINX_COROUTINES,
+              JvmLibraries.EMBEDDED_COROUTINES_VERSION,
+            ),
+          )
 
           // add `org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm`
-          staticDeps.add(builtinKotlinJarPath(
-            state,
-            JvmLibraries.KOTLINX_COROUTINES_TEST,
-            JvmLibraries.EMBEDDED_COROUTINES_VERSION,
-          ))
+          staticDeps.add(
+            builtinKotlinJarPath(
+              state,
+              JvmLibraries.KOTLINX_COROUTINES_TEST,
+              JvmLibraries.EMBEDDED_COROUTINES_VERSION,
+            ),
+          )
         }
         if (state.manifest.kotlin?.features?.serialization == true) {
           // add `org.jetbrains.kotlinx:kotlinx-serialization-core-jvm`
-          staticDeps.add(builtinKotlinJarPath(
-            state,
-            JvmLibraries.KOTLINX_SERIALIZATION,
-            JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
-          ))
+          staticDeps.add(
+            builtinKotlinJarPath(
+              state,
+              JvmLibraries.KOTLINX_SERIALIZATION,
+              JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
+            ),
+          )
 
           // add `org.jetbrains.kotlinx:kotlinx-serialization-json-jvm`
-          staticDeps.add(builtinKotlinJarPath(
-            state,
-            JvmLibraries.KOTLINX_SERIALIZATION_JSON,
-            JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
-          ))
+          staticDeps.add(
+            builtinKotlinJarPath(
+              state,
+              JvmLibraries.KOTLINX_SERIALIZATION_JSON,
+              JvmLibraries.EMBEDDED_SERIALIZATION_VERSION,
+            ),
+          )
         }
       }
     }
@@ -496,7 +537,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     val kotlincOpts = state.manifest.kotlin?.compilerOptions ?: KotlinJvmCompilerOptions()
     val args = Arguments.empty().toMutable().apply {
       // apply arguments
-      kotlincOpts.amend(this)
+      addAllStrings(kotlincOpts.collect().toList())
     }.build()
 
     logging.debug { "Kotlin compiler args: '${args.asArgumentList().joinToString(" ")}'" }
@@ -513,24 +554,29 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
       // handle built-in plugins
       if (state.manifest.kotlin?.features?.enableDefaultPlugins == true) {
-        effectiveKnownPlugins.addAll(KotlinCompiler.configureDefaultPlugins(
-          this,
-          tests,
-          enableSerialization = state.manifest.kotlin?.features?.serialization == true,
-        ))
+        effectiveKnownPlugins.addAll(
+          KotlinCompiler.configureDefaultPlugins(
+            this,
+            tests,
+            enableSerialization = state.manifest.kotlin?.features?.serialization == true,
+          ),
+        )
       }
       argsAmender(this)
     }
 
     // fire compile job
-    compiler.invoke(object : AbstractTool.EmbeddedToolState {
-      override val resourcesPath: Path get() = state.resourcesPath
-      override val project: ElideProject? get() = state.project
-    }).also { result ->
+    compiler.invoke(
+      object : AbstractTool.EmbeddedToolState {
+        override val resourcesPath: Path get() = state.resourcesPath
+        override val project: ElideProject? get() = state.project
+      },
+    ).also { result ->
       when (result) {
         is Tool.Result.Success -> {
           logging.debug { "Kotlin compilation finished without error" }
         }
+
         else -> {
           logging.debug { "Kotlin compilation failed" }
         }
@@ -576,6 +622,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           // configure repositories and packages for a resolver from scratch.
           registerPackagesFromManifest(state)
         }
+
         else -> (existing as MavenAetherResolver).also {
           // existing resolver is already configured; inform it of any additional packages or repositories.
           it.registerPackagesFromManifest(state)
@@ -627,9 +674,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           val javacTests = if (javaSrcSet.isEmpty()) {
             emptyList()
           } else {
-            val testCompileClasspath = resolver?.classpathProvider(object : ClasspathSpec {
-              override val usage: MultiPathUsage = MultiPathUsage.TestCompile
-            })?.classpath()
+            val testCompileClasspath = resolver?.classpathProvider(
+              object : ClasspathSpec {
+                override val usage: MultiPathUsage = MultiPathUsage.TestCompile
+              },
+            )?.classpath()
 
             // find all tests and depend on both kotlinc and javac output
             javaSrcSet.filter { it.paths.isNotEmpty() && it.type == SourceSetType.Tests }.map { srcSet ->

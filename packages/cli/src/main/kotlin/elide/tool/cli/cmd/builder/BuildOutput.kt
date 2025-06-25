@@ -23,7 +23,6 @@ import com.github.ajalt.mordant.widgets.progress.progressBarContextLayout
 import com.github.ajalt.mordant.widgets.progress.progressBarLayout
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlin.invoke
 import kotlin.io.path.name
 import kotlin.time.ComparableTimeMark
 import kotlin.time.Duration
@@ -32,7 +31,7 @@ import elide.exec.Task
 import elide.exec.TaskId
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.tool.asArgumentString
+import elide.tooling.asArgumentString
 import elide.tool.cli.CommandContext
 import elide.tool.exec.SubprocessRunner
 

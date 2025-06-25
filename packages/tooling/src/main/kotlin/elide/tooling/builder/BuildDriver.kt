@@ -28,6 +28,7 @@ import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurators
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.project.ElideProject
+import elide.tooling.project.load
 import elide.exec.TaskGraphExecution.Listener as BuildListener
 import elide.tooling.config.BuildConfigurator.BuildConfiguration as ConfiguredBuild
 

@@ -48,11 +48,11 @@ import elide.exec.ActionScope
 import elide.exec.Task
 import elide.exec.Task.Companion.fn
 import elide.exec.taskDependencies
-import elide.tool.Arguments
-import elide.tool.Classpath
-import elide.tool.ClasspathSpec
-import elide.tool.MultiPathUsage
-import elide.tool.cli.Statics
+import elide.tooling.Arguments
+import elide.tooling.Classpath
+import elide.tooling.ClasspathSpec
+import elide.tooling.MultiPathUsage
+import elide.tooling.cli.Statics
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
 import elide.tooling.config.BuildConfigurator.ElideBuildState

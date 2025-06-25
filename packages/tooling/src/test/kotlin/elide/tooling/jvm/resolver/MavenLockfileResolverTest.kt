@@ -18,7 +18,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 import elide.testing.annotations.Test
-import elide.tool.ClasspathSpec
+import elide.tooling.ClasspathSpec
 import elide.tooling.lockfile.ElideLockfile
 import elide.tooling.lockfile.LockfileStanza
 import elide.tooling.lockfile.loadLockfile

@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.HostPlatform
 import elide.tool.cli.Elide
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tool.err.ErrorHandler.*
 import elide.tool.err.ErrorHandler.ErrorCoordinates.Companion.coordinates
 import elide.tool.err.PersistedError.ErrorInfo.Companion.info

@@ -25,12 +25,12 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
 import elide.runtime.Logger
 import elide.runtime.Logging
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.Inputs
-import elide.tool.MutableArguments
-import elide.tool.Outputs
-import elide.tool.Tool
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.Inputs
+import elide.tooling.MutableArguments
+import elide.tooling.Outputs
+import elide.tooling.Tool
 import elide.tooling.GenericTool
 
 // Name of the `jar` tool.

@@ -43,7 +43,7 @@ import elide.exec.on
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.output.redirectLoggingToMordant
 import elide.tool.exec.SubprocessRunner.delegateTask

@@ -24,7 +24,7 @@ import kotlin.time.measureTimedValue
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.intrinsics.testing.TestResult
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tooling.config.TestConfigurator.TestEventController
 
 // Implements a `TestRunner` which runs tests in order, serially.

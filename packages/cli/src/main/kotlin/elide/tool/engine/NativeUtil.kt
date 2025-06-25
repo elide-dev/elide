@@ -24,7 +24,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import elide.runtime.Logger
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 
 /** Utilities for loading and copied native libraries, inspired by Netty. */
 internal object NativeUtil {

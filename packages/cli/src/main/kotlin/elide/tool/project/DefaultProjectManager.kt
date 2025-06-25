@@ -17,7 +17,7 @@ import jakarta.inject.Provider
 import kotlin.io.path.*
 import elide.annotations.Inject
 import elide.annotations.Singleton
-import elide.runtime.plugins.env.EnvConfig
+import elide.runtime.EnvVar
 import elide.tool.io.WorkdirManager
 import elide.tooling.project.ElideProject
 import elide.tooling.project.ElideProjectInfo
@@ -45,7 +45,7 @@ internal class DefaultProjectManager @Inject constructor(
       ProjectEcosystem.PythonRequirements,
     )
 
-    private fun parseDotEnv(path: Path, builder: MutableMap<String, EnvConfig.EnvVar>) {
+    private fun parseDotEnv(path: Path, builder: MutableMap<String, EnvVar>) {
       if (!path.isRegularFile()) return
 
       runCatching {
@@ -53,7 +53,7 @@ internal class DefaultProjectManager @Inject constructor(
         path.forEachLine { line ->
           if (line.isBlank()) return@forEachLine
           val (key, value) = line.split('=', limit = 2)
-          builder.put(key, EnvConfig.EnvVar.fromDotenv(fileName, key, value))
+          builder[key] = EnvVar.fromDotenv(fileName, key, value)
         }
       }
     }

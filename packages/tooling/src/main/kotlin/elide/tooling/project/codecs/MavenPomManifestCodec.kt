@@ -14,6 +14,7 @@
 
 package elide.tooling.project.codecs
 
+import org.apache.maven.model.Dependency
 import org.apache.maven.model.Model
 import org.apache.maven.model.building.DefaultModelBuilderFactory
 import org.apache.maven.model.building.DefaultModelBuildingRequest
@@ -97,14 +98,14 @@ import elide.tooling.project.manifest.MavenPomManifest
         name = source.name
         version = source.version
         dependencies.addAll(source.dependencies.maven.packages.map {
-          org.apache.maven.model.Dependency().apply {
+          Dependency().apply {
             groupId = it.group
             artifactId = it.name
             version = it.version
           }
         })
         dependencies.addAll(source.dependencies.maven.testPackages.map {
-          org.apache.maven.model.Dependency().apply {
+          Dependency().apply {
             groupId = it.group
             artifactId = it.name
             version = it.version

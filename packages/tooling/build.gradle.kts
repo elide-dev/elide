@@ -59,6 +59,7 @@ dependencies {
   ksp(mn.micronaut.inject.kotlin)
   api(libs.kotlin.stdlib.jdk8)
   api(libs.jetbrains.annotations)
+  api(projects.packages.toolingApi)
   api(projects.packages.exec)
   api(projects.packages.engine)
   api(projects.packages.graalvm)

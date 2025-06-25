@@ -50,11 +50,11 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.relativeTo
 import elide.runtime.Logging
-import elide.tool.Classpath
-import elide.tool.ClasspathProvider
-import elide.tool.ClasspathSpec
-import elide.tool.ClasspathsProvider
-import elide.tool.MultiPathUsage
+import elide.tooling.Classpath
+import elide.tooling.ClasspathProvider
+import elide.tooling.ClasspathSpec
+import elide.tooling.ClasspathsProvider
+import elide.tooling.MultiPathUsage
 import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.lockfile.ElideLockfile

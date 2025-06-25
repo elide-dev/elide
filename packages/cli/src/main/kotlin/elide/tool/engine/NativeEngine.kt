@@ -31,7 +31,7 @@ import kotlin.io.path.Path
 import elide.runtime.LogLevel.DEBUG
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem.*
-import elide.tool.cli.Statics
+import elide.tooling.cli.Statics
 import elide.tool.io.WorkdirManager
 
 /**

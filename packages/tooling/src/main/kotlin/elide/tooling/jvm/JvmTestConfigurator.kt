@@ -28,9 +28,9 @@ import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.jvm.GuestClassgraph
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.plugins.jvm.Jvm
-import elide.tool.Classpath
-import elide.tool.ClasspathSpec
-import elide.tool.MultiPathUsage
+import elide.tooling.Classpath
+import elide.tooling.ClasspathSpec
+import elide.tooling.MultiPathUsage
 import elide.tooling.config.TestConfigurator
 import elide.tooling.config.TestConfigurator.*
 import elide.tooling.deps.DependencyResolver

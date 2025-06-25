@@ -20,9 +20,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
-import elide.tool.Arguments
-import elide.tool.Environment
-import elide.tool.MutableArguments
+import elide.tooling.Arguments
+import elide.tooling.Environment
+import elide.tooling.MutableArguments
 
 /**
  * # Process Runner

@@ -95,10 +95,10 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
   @Volatile private lateinit var tempDirectory: Path
   private val handleCache: SortedMap<File, WorkdirHandle> = ConcurrentSkipListMap()
 
-  // Direcory providers from dirs.dev library.
-  private val baseDirectories: BaseDirectories = BaseDirectories()
-  private val userDirectories: UserDirectories = UserDirectories()
-  private val projectDirectories: ProjectDirectories = ProjectDirectories("dev", "elide", "elide")
+  // Directory providers from dirs.dev library.
+  private val baseDirectories: BaseDirectories = BaseDirectories.get()
+  private val userDirectories: UserDirectories = UserDirectories.get()
+  private val projectDirectories: ProjectDirectories = ProjectDirectories.from("dev", "elide", "elide")
 
   // private fun currentSharedTempPrefix(): String {
     // return StringBuilder().apply {
@@ -180,16 +180,29 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
     // }
   // }
 
-  // private fun obtainWorkdir(): Path =
-    // if (initialized) rootDirectory else initializeTemporaryWorkdir()
+  private fun obtainWorkdir(): Path {
+    if (!this::rootDirectory.isInitialized) {
+      rootDirectory = Path.of(projectDirectories.cacheDir)
+      if (!rootDirectory.exists()) {
+        Files.createDirectories(rootDirectory)
+      }
+    }
+    return rootDirectory
+  }
 
-  // private fun workSubdir(
-    // name: String,
-    // temporary: Boolean = true,
-    // lazy: Boolean = false,
-  // ): Path = obtainWorkdir().resolve(name).apply {
-    // prepareDirectory(this, temporary, lazy)
-  // }
+  private fun workSubdir(
+    name: String,
+    temporary: Boolean = true,
+    lazy: Boolean = false,
+  ): Path {
+    val baseDir = if (temporary) {
+      Files.createTempDirectory("elide-runtime-${Elide.version()}")
+    } else {
+      Path.of(projectDirectories.cacheDir)
+    }
+    val targetDir = baseDir.resolve(name)
+    return prepareDirectory(targetDir, temporary, lazy)
+  }
 
   // Find the nearest parent directory to `cwd` with one of the provided `files` present.
   private fun nearestDirectoryWithAnyOfTheseFiles(
@@ -300,7 +313,7 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
   }
 
   override fun nativesDirectory(): WorkdirHandle = requireActive {
-    nativesDirectory.toFile().toHandle()
+    File(nativesDirectory.toString()).toHandle()
   }
 
   override fun tmpDirectory(create: Boolean): WorkdirHandle = requireActive {
@@ -308,7 +321,7 @@ import elide.tool.io.WorkdirManager.WorkdirHandle
   }
 
   override fun flightRecorderDirectory(create: Boolean): WorkdirHandle = requireActive {
-    flightRecorderDirectory.toFile().toHandle()
+    File(flightRecorderDirectory.toString()).toHandle()
   }
 
   override fun cacheDirectory(create: Boolean): WorkdirHandle = requireActive {

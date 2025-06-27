@@ -46,7 +46,7 @@ dependencies {
     api(mn.micronaut.http)
     api(libs.junit.jupiter.api)
     api(libs.junit.jupiter.params)
-    api("org.wiremock:wiremock:3.13.1")
+    api("org.wiremock:wiremock-standalone:3.13.1")
 
     implementation(libs.protobuf.java)
     implementation(libs.protobuf.util)

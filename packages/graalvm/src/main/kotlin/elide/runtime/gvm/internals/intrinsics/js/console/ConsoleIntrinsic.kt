@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:OptIn(DelicateElideApi::class)
+@file:OptIn(DelicateElideApi::class, ExperimentalTime::class)
 
 package elide.runtime.gvm.internals.intrinsics.js.console
 
@@ -18,6 +18,7 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import java.time.Instant
 import java.util.*
 import kotlinx.atomicfu.atomic
+import kotlin.time.ExperimentalTime
 import elide.runtime.LogLevel
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -178,7 +179,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
     }
 
     // format temporal types in standard terms
-    is Instant, is kotlinx.datetime.Instant, is Date -> arg.toString()
+    is Instant, is kotlin.time.Instant, is Date -> arg.toString()
 
     // no special formatting can be applied to this type, so return it directly.
     else -> arg

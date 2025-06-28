@@ -15,7 +15,7 @@ package elide.tool.testing
 
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import elide.tool.cli.CommandContext
 import elide.tool.err.ErrorHandler.ErrorUtils.buildStacktrace
 import elide.tool.testing.TestEvent.Type

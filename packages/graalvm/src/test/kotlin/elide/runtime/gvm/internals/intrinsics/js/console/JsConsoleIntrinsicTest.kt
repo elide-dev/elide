@@ -156,6 +156,7 @@ import elide.testing.annotations.TestCase
     checkTestLogs(LogLevel.ERROR)
   }
 
+  @Suppress("TYPE_INTERSECTION_AS_REIFIED_WARNING")
   @CsvSource(value = [
     // Guest Logging: Direct
     "DEBUG,direct",
@@ -264,7 +265,7 @@ import elide.testing.annotations.TestCase
 
     val tests = listOf(
       "2023-01-15T22:34:45Z" to Instant.ofEpochSecond(1673822085),
-      "2023-01-15T22:34:45Z" to kotlinx.datetime.Instant.fromEpochSeconds(1673822085),
+      "2023-01-15T22:34:45Z" to kotlin.time.Instant.fromEpochSeconds(1673822085),
     )
 
     tests.forEach {

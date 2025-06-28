@@ -229,6 +229,7 @@ public object Constants {
       "-Xvalue-classes",
       "-Xinline-classes",
       "-Xabi-stability=stable",
+      "-Xannotation-default-target=param-property",
     )
 
     /** Compiler args to include in Kotlin JVM targets. */

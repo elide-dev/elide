@@ -656,13 +656,13 @@ public final class elide/tooling/JvmMultiPathContainer : elide/tooling/AbstractJ
 	public fun toMutable ()Lelide/tooling/MultiPath$MutableMultiPath;
 }
 
-public final class elide/tooling/JvmMultiPathContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/JvmMultiPathContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/JvmMultiPathContainer$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/JvmMultiPathContainer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/JvmMultiPathContainer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/JvmMultiPathContainer;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/JvmMultiPathContainer;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -681,13 +681,13 @@ public final class elide/tooling/JvmMultiPathEntry : java/lang/Record, elide/too
 	public final fun type ()Lelide/tooling/JvmMultiPathEntryType;
 }
 
-public final class elide/tooling/JvmMultiPathEntry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/JvmMultiPathEntry$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/JvmMultiPathEntry$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/JvmMultiPathEntry;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/JvmMultiPathEntry;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/JvmMultiPathEntry;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/JvmMultiPathEntry;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1195,13 +1195,13 @@ public final class elide/tooling/MutableJvmMultiPathContainer : elide/tooling/Mu
 	public fun toMutable ()Lelide/tooling/MutableJvmMultiPathContainer;
 }
 
-public final class elide/tooling/MutableJvmMultiPathContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/MutableJvmMultiPathContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/MutableJvmMultiPathContainer$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/MutableJvmMultiPathContainer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/MutableJvmMultiPathContainer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/MutableJvmMultiPathContainer;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/MutableJvmMultiPathContainer;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1381,8 +1381,6 @@ public final class elide/tooling/Tool$SimpleCliTool : java/lang/Record, elide/to
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Ljava/lang/String;
 	public final fun component7 ()Lelide/tooling/Environment;
-	public final fun copy (Ljava/lang/String;Ljava/net/URI;Lelide/tooling/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/Environment;Ljava/lang/String;)Lelide/tooling/Tool$SimpleCliTool;
-	public static synthetic fun copy$default (Lelide/tooling/Tool$SimpleCliTool;Ljava/lang/String;Ljava/net/URI;Lelide/tooling/Arguments;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/Environment;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/Tool$SimpleCliTool;
 	public fun description ()Ljava/lang/String;
 	public fun docs ()Ljava/net/URI;
 	public fun environment ()Lelide/tooling/Environment;
@@ -1602,14 +1600,14 @@ public final class elide/tooling/deps/PackageSpec$SemanticVersion : elide/toolin
 	public final synthetic fun unbox-impl ()Lorg/semver4j/Semver;
 }
 
-public final class elide/tooling/deps/PackageSpec$SemanticVersion$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/deps/PackageSpec$SemanticVersion$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/deps/PackageSpec$SemanticVersion$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-feEs_2A (Lkotlinx/serialization/encoding/Decoder;)Lorg/semver4j/Semver;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-feEs_2A (Lkotlinx/serialization/encoding/Decoder;)Lorg/semver4j/Semver;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-lvB3Mmw (Lkotlinx/serialization/encoding/Encoder;Lorg/semver4j/Semver;)V
+	public final fun serialize-lvB3Mmw (Lkotlinx/serialization/encoding/Encoder;Lorg/semver4j/Semver;)V
 }
 
 public final class elide/tooling/deps/PackageSpec$SemanticVersion$Companion {
@@ -1631,14 +1629,14 @@ public final class elide/tooling/deps/PackageSpec$SemanticVersionRange : elide/t
 	public final synthetic fun unbox-impl ()Lkotlin/Pair;
 }
 
-public final class elide/tooling/deps/PackageSpec$SemanticVersionRange$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/deps/PackageSpec$SemanticVersionRange$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/deps/PackageSpec$SemanticVersionRange$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-2QLoWv0 (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-2QLoWv0 (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-wgC37mI (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+	public final fun serialize-wgC37mI (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
 }
 
 public final class elide/tooling/deps/PackageSpec$SemanticVersionRange$Companion {
@@ -1738,14 +1736,14 @@ public final class elide/tooling/deps/PackageSpec$VersionString : elide/tooling/
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public final class elide/tooling/deps/PackageSpec$VersionString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/deps/PackageSpec$VersionString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/deps/PackageSpec$VersionString$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-mf9Hjcw (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-mf9Hjcw (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-bukAN28 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-bukAN28 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 }
 
 public final class elide/tooling/deps/PackageSpec$VersionString$Companion {
@@ -1787,8 +1785,6 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes : java
 	public final fun component1 ()[B
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()I
-	public final fun copy ([BLjava/lang/String;I)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;
-	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;[BLjava/lang/String;IILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;
 	public final fun digest ()Ljava/lang/String;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun getSerialVersionUID ()J
@@ -1799,13 +1795,13 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes : java
 	public final fun value ()[B
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Bytes;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1834,8 +1830,6 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Compound : j
 	public final fun component1 ()Ljava/util/Set;
 	public final fun component2 ()I
 	public final fun constituents ()Ljava/util/Set;
-	public final fun copy (Ljava/util/Set;I)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound;
-	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound;Ljava/util/Set;IILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Compound;
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun getSerialVersionUID ()J
 	public final fun hash ()I
@@ -1870,14 +1864,14 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Digest : eli
 	public final synthetic fun unbox-impl ()Lkotlin/Triple;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Digest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$Fingerprint$Digest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Digest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-sbpk-BE (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Triple;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-sbpk-BE (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Triple;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-jEHtoQk (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Triple;)V
+	public final fun serialize-jEHtoQk (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Triple;)V
 }
 
 public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Digest$Companion {
@@ -1905,14 +1899,14 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest :
 	public final synthetic fun unbox-impl ()Lkotlin/Pair;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-NlK8oVw (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-NlK8oVw (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-BsX3X4A (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+	public final fun serialize-BsX3X4A (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
 }
 
 public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileDigest$Companion {
@@ -1941,14 +1935,14 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileState : 
 	public final synthetic fun unbox-impl ()Lkotlin/Pair;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileState$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileState$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$FileState$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-60n-070 (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-60n-070 (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-5L4d2UA (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+	public final fun serialize-5L4d2UA (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
 }
 
 public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$FileState$Companion {
@@ -1985,14 +1979,14 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric : el
 	public final synthetic fun unbox-impl ()J
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-_H3wXn4 (Lkotlinx/serialization/encoding/Decoder;)J
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-_H3wXn4 (Lkotlinx/serialization/encoding/Decoder;)J
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-w-TI7_E (Lkotlinx/serialization/encoding/Encoder;J)V
+	public final fun serialize-w-TI7_E (Lkotlinx/serialization/encoding/Encoder;J)V
 }
 
 public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$Numeric$Companion {
@@ -2009,13 +2003,13 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerpri
 	public static final fun of ([B)Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Fingerprint$RawFingerprint;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2043,14 +2037,14 @@ public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue 
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-XBAQx5U (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-XBAQx5U (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-SQVv7II (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-SQVv7II (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 }
 
 public final class elide/tooling/lockfile/ElideLockfile$Fingerprint$StringValue$Companion {
@@ -2092,8 +2086,6 @@ public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$Dependency
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
 	public final fun component4 ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
-	public final fun copy (Lelide/tooling/project/ProjectEcosystem;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
-	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;Lelide/tooling/project/ProjectEcosystem;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
 	public final fun ecosystem ()Lelide/tooling/project/ProjectEcosystem;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun fingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
@@ -2110,13 +2102,13 @@ public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$Dependency
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$InputMaterial$DependencyManifest;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2143,8 +2135,6 @@ public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfi
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
 	public final fun component4 ()Lelide/tooling/lockfile/ElideLockfile$Remarks;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
-	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/lockfile/ElideLockfile$Fingerprint;Lelide/tooling/lockfile/ElideLockfile$Remarks;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun fingerprint ()Lelide/tooling/lockfile/ElideLockfile$Fingerprint;
 	public final fun generatedBy ()Ljava/lang/String;
@@ -2161,13 +2151,13 @@ public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfi
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$InputMaterial$PeerLockfile;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2215,13 +2205,13 @@ public final class elide/tooling/lockfile/ElideLockfile$MavenArtifact : java/lan
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$MavenArtifact$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$MavenArtifact$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$MavenArtifact$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$MavenArtifact;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$MavenArtifact;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$MavenArtifact;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$MavenArtifact;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2245,13 +2235,13 @@ public final class elide/tooling/lockfile/ElideLockfile$MavenLockfile : java/lan
 	public final fun usage ()Ljava/util/List;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$MavenLockfile$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$MavenLockfile$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$MavenLockfile$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$MavenLockfile;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$MavenLockfile;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$MavenLockfile;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$MavenLockfile;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2275,13 +2265,13 @@ public final class elide/tooling/lockfile/ElideLockfile$MavenUsage : java/lang/R
 	public final fun types ()Ljava/util/Set;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$MavenUsage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$MavenUsage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$MavenUsage$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$MavenUsage;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$MavenUsage;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$MavenUsage;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$MavenUsage;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2328,8 +2318,6 @@ public final class elide/tooling/lockfile/ElideLockfile$Remarks$None : elide/too
 public final class elide/tooling/lockfile/ElideLockfile$Remarks$Text : java/lang/Record, elide/tooling/lockfile/ElideLockfile$Remarks, java/io/Serializable {
 	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$Remarks$Text$Companion;
 	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;
-	public static synthetic fun copy$default (Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getMessage ()Ljava/lang/String;
 	public static final fun getSerialVersionUID ()J
@@ -2338,13 +2326,13 @@ public final class elide/tooling/lockfile/ElideLockfile$Remarks$Text : java/lang
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$Remarks$Text$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$Remarks$Text$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$Remarks$Text$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$Remarks$Text;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2395,13 +2383,13 @@ public final class elide/tooling/lockfile/ElideLockfile$StanzaData : java/lang/R
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/lockfile/ElideLockfile$StanzaData$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/lockfile/ElideLockfile$StanzaData$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/lockfile/ElideLockfile$StanzaData$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$StanzaData;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/lockfile/ElideLockfile$StanzaData;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$StanzaData;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/lockfile/ElideLockfile$StanzaData;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2537,13 +2525,13 @@ public final class elide/tooling/project/ElideProjectInfo : java/lang/Record, el
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/ElideProjectInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/ElideProjectInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/ElideProjectInfo$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/ElideProjectInfo;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/ElideProjectInfo;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/ElideProjectInfo;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/ElideProjectInfo;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2584,8 +2572,6 @@ public final class elide/tooling/project/ProjectEnvironment : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/ProjectEnvironment$Companion;
 	public synthetic fun <init> (Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/util/Map;
-	public final fun copy (Ljava/util/Map;)Lelide/tooling/project/ProjectEnvironment;
-	public static synthetic fun copy$default (Lelide/tooling/project/ProjectEnvironment;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/project/ProjectEnvironment;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -2593,13 +2579,13 @@ public final class elide/tooling/project/ProjectEnvironment : java/lang/Record {
 	public static final fun wrapping (Ljava/util/Map;)Lelide/tooling/project/ProjectEnvironment;
 }
 
-public final class elide/tooling/project/ProjectEnvironment$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/ProjectEnvironment$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/ProjectEnvironment$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/ProjectEnvironment;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/ProjectEnvironment;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/ProjectEnvironment;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/ProjectEnvironment;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2993,13 +2979,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest : java/la
 	public final fun workspaces ()Ljava/util/List;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3039,13 +3025,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$Container
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$ContainerImage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$ContainerImage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$ContainerImage$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$ContainerImage;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$ContainerImage;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$ContainerImage;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$ContainerImage;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3069,13 +3055,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$CoverageS
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$CoverageSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$CoverageSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3112,13 +3098,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$Dependenc
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$DependencyResolution$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$DependencyResolution$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$DependencyResolution;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3144,13 +3130,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$GemDepend
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$GemDependencies$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$GemDependencies$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$GemDependencies;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3170,13 +3156,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$GemPackag
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$GemPackage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$GemPackage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$GemPackage$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$GemPackage;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$GemPackage;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$GemPackage;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$GemPackage;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3202,13 +3188,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$GradleCat
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$GradleCatalog$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$GradleCatalog$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$GradleCatalog$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$GradleCatalog;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$GradleCatalog;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$GradleCatalog;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$GradleCatalog;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3243,13 +3229,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$Jar : eli
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$Jar$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$Jar$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$Jar$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$Jar;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$Jar;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$Jar;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$Jar;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3275,13 +3261,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JarOption
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JarOptions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JarOptions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JarOptions$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JarOptions;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JarOptions;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JarOptions;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JarOptions;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3303,13 +3289,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JarResour
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JarResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JarResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JarResource$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JarResource;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JarResource;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JarResource;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JarResource;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3331,13 +3317,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JavaCompi
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JavaCompilerSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3363,13 +3349,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JavaLangu
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JavaLanguage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JavaLanguage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JavaLanguage;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3391,13 +3377,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JavaScrip
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3419,13 +3405,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmFeatur
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JvmFeatures$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JvmFeatures$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3457,13 +3443,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmSettin
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JvmSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JvmSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3495,13 +3481,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$NumericJvmTarget;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3523,13 +3509,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget$StringJvmTarget;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3581,13 +3567,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFea
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3634,13 +3620,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinJvm
 	public final fun verbose ()Z
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3668,13 +3654,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinSet
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$KotlinSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$KotlinSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3698,13 +3684,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$LockfileS
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$LockfileSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$LockfileSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$LockfileSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3729,13 +3715,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenCoor
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3771,13 +3757,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenDepe
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$MavenDependencies$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$MavenDependencies$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3809,13 +3795,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenPack
 	public final fun version ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$MavenPackage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$MavenPackage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3843,13 +3829,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenRepo
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$MavenRepository$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$MavenRepository$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$MavenRepository$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenRepository;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenRepository;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$MavenRepository;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$MavenRepository;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3886,13 +3872,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NativeIma
 	public final fun type ()Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageType;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NativeImage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NativeImage$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImage;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImage;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImage;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImage;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3918,13 +3904,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NativeIma
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3948,13 +3934,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NativeIma
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -3986,13 +3972,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NativeIma
 	public final fun verbose ()Z
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4014,13 +4000,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NativeIma
 	public final fun verbose ()Z
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImageSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NativeImageSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4066,13 +4052,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NpmDepend
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$NpmDependencies$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NpmDependencies$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NpmDependencies;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4095,13 +4081,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NpmPackag
 	public final fun version ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$NpmPackage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NpmPackage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NpmPackage$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmPackage;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmPackage;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NpmPackage;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NpmPackage;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4124,13 +4110,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NpmReposi
 	public final fun url ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$NpmRepository$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NpmRepository$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NpmRepository$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmRepository;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NpmRepository;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NpmRepository;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NpmRepository;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4178,13 +4164,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$PipDepend
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$PipDependencies$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$PipDependencies$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$PipDependencies;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4204,13 +4190,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$PipPackag
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$PipPackage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$PipPackage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$PipPackage$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$PipPackage;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$PipPackage;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$PipPackage;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$PipPackage;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4232,13 +4218,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$PklSettin
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$PklSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$PklSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$PklSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4268,13 +4254,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$ProfileGu
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4296,13 +4282,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$PythonSet
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$PythonSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$PythonSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4324,13 +4310,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$RubySetti
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$RubySettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$RubySettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$RubySettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4351,13 +4337,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$SourceSet
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$SourceSet$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$SourceSet$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$SourceSet$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$SourceSet;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$SourceSet;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$SourceSet;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$SourceSet;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4380,13 +4366,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$TestingSe
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$TestingSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$TestingSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4408,13 +4394,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$TypeScrip
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$TypeScriptSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4440,8 +4426,6 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest : java/l
 	public final fun component3 ()Ljava/util/Map;
 	public final fun component4 ()Ljava/util/Map;
 	public final fun component5 ()Ljava/util/Map;
-	public final fun copy (Ljava/nio/file/Path;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;)Lelide/tooling/project/manifest/GradleCatalogManifest;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest;Ljava/nio/file/Path;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest;
 	public fun ecosystem ()Lelide/tooling/project/ProjectEcosystem;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getEcosystem ()Lelide/tooling/project/ProjectEcosystem;
@@ -4453,13 +4437,13 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest : java/l
 	public final fun versions ()Ljava/util/Map;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/GradleCatalogManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4467,8 +4451,6 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogB
 	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle$Companion;
 	public fun <init> ()V
 	public final fun component1 ()Ljava/util/List;
-	public final fun copy (Ljava/util/List;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getLibraries ()Ljava/util/List;
 	public fun hashCode ()I
@@ -4476,13 +4458,13 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogB
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogBundle;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4518,8 +4500,6 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogL
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
 	public fun coordinate ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getCoordinate ()Ljava/lang/String;
 	public synthetic fun getGroup ()Ljava/lang/String;
@@ -4534,13 +4514,13 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogL
 	public fun version ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryGroupName;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4553,8 +4533,6 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogL
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
 	public fun coordinate ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getCoordinate ()Ljava/lang/String;
 	public synthetic fun getGroup ()Ljava/lang/String;
@@ -4569,13 +4547,13 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogL
 	public fun version ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogLibraryModule;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4588,8 +4566,6 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogP
 	public fun <init> ()V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
-	public final fun copy (Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin;Ljava/lang/String;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getId ()Ljava/lang/String;
 	public synthetic fun getVersion ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
@@ -4599,13 +4575,13 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogP
 	public fun version ()Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$CatalogPlugin;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4650,8 +4626,6 @@ public abstract interface class elide/tooling/project/manifest/GradleCatalogMani
 public final class elide/tooling/project/manifest/GradleCatalogManifest$VersionRef : java/lang/Record, elide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec, elide/tooling/project/manifest/GradleCatalogManifest$SymbolicCatalogEntry {
 	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef$Companion;
 	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun provideVersion (Ljava/util/Map;)Ljava/lang/String;
@@ -4659,13 +4633,13 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$VersionR
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$VersionRef$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/GradleCatalogManifest$VersionRef$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$VersionRef;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4676,8 +4650,6 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$VersionR
 public final class elide/tooling/project/manifest/GradleCatalogManifest$VersionSpec : java/lang/Record, elide/tooling/project/manifest/GradleCatalogManifest$CatalogVersionSpec, elide/tooling/project/manifest/GradleCatalogManifest$SymbolicCatalogEntry {
 	public static final field Companion Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec$Companion;
 	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun provideVersion (Ljava/util/Map;)Ljava/lang/String;
@@ -4685,13 +4657,13 @@ public final class elide/tooling/project/manifest/GradleCatalogManifest$VersionS
 	public final fun version ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/GradleCatalogManifest$VersionSpec$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/GradleCatalogManifest$VersionSpec$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/GradleCatalogManifest$VersionSpec;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4716,13 +4688,13 @@ public final class elide/tooling/project/manifest/MavenPomManifest : java/lang/R
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/MavenPomManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/MavenPomManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/MavenPomManifest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/MavenPomManifest;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/MavenPomManifest;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/MavenPomManifest;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/MavenPomManifest;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4808,13 +4780,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest : java/lan
 	public final fun workspaces ()Ljava/util/List;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4844,13 +4816,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$PackageOve
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideMap$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideMap;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideMap;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideMap;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideMap;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4872,13 +4844,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$PackageOve
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideString$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideString;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideString;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideString;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$PackageOverride$PackageOverrideString;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4908,13 +4880,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectBin
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinMap$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinMap;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinMap;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinMap;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinMap;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4936,13 +4908,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectBin
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinString$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinString;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinString;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinString;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectBins$ProjectBinString;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -4974,13 +4946,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectBug
 	public final fun url ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsConfig$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsConfig;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsConfig;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsConfig;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsConfig;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5002,13 +4974,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectBug
 	public final fun url ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsUrl$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsUrl$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsUrl$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsUrl;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsUrl;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsUrl;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectBugs$ProjectBugsUrl;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5032,13 +5004,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectDir
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectDirectories$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectDirectories$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectDirectories$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectDirectories;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectDirectories;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectDirectories;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectDirectories;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5068,13 +5040,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectFun
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectMultiFunding$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectMultiFunding$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectMultiFunding$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectMultiFunding;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectMultiFunding;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectMultiFunding;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectMultiFunding;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5096,13 +5068,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectFun
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectSingleFunding$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectSingleFunding$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectSingleFunding$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectSingleFunding;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectSingleFunding;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectSingleFunding;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectFunding$ProjectSingleFunding;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5134,13 +5106,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectFun
 	public final fun url ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingMap$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingMap;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingMap;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingMap;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingMap;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5162,13 +5134,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectFun
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingString$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingString;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingString;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingString;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectFundingEntry$ProjectFundingString;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5198,13 +5170,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectMan
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManList$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManList$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManList$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManList;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManList;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManList;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManList;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5226,13 +5198,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectMan
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManString$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManString;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManString;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManString;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectMans$ProjectManString;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5266,13 +5238,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectPer
 	public final fun url ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonMap$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonMap;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonMap;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonMap;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonMap;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5292,13 +5264,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectPer
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonString$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonString;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonString;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonString;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectPerson$ProjectPersonString;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5332,13 +5304,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectRep
 	public final fun url ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoMap$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoMap$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoMap;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoMap;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoMap;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoMap;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5360,13 +5332,13 @@ public final class elide/tooling/project/manifest/NodePackageManifest$ProjectRep
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoString$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoString$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoString;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoString;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoString;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/NodePackageManifest$ProjectRepo$ProjectRepoString;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5399,13 +5371,13 @@ public final class elide/tooling/project/manifest/PyProjectManifest : java/lang/
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/PyProjectManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/PyProjectManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/PyProjectManifest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/PyProjectManifest;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/PyProjectManifest;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/PyProjectManifest;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/PyProjectManifest;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5425,13 +5397,13 @@ public final class elide/tooling/project/manifest/PyProjectManifest$BuildSystemC
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/PyProjectManifest$BuildSystemConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/PyProjectManifest$BuildSystemConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/PyProjectManifest$BuildSystemConfig$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/PyProjectManifest$BuildSystemConfig;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/PyProjectManifest$BuildSystemConfig;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/PyProjectManifest$BuildSystemConfig;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/PyProjectManifest$BuildSystemConfig;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5488,13 +5460,13 @@ public final class elide/tooling/project/manifest/PyProjectManifest$ProjectConfi
 	public final fun version ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/PyProjectManifest$ProjectConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/PyProjectManifest$ProjectConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/PyProjectManifest$ProjectConfig$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/PyProjectManifest$ProjectConfig;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/PyProjectManifest$ProjectConfig;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/PyProjectManifest$ProjectConfig;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/PyProjectManifest$ProjectConfig;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5518,13 +5490,13 @@ public final class elide/tooling/project/manifest/PyProjectManifest$ProjectPerso
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/project/manifest/PyProjectManifest$ProjectPerson$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/PyProjectManifest$ProjectPerson$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/PyProjectManifest$ProjectPerson$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/PyProjectManifest$ProjectPerson;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/PyProjectManifest$ProjectPerson;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/PyProjectManifest$ProjectPerson;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/PyProjectManifest$ProjectPerson;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -5549,14 +5521,14 @@ public final class elide/tooling/project/manifest/PythonRequirementsManifest : e
 	public final synthetic fun unbox-impl ()Ljava/util/List;
 }
 
-public final class elide/tooling/project/manifest/PythonRequirementsManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/project/manifest/PythonRequirementsManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/project/manifest/PythonRequirementsManifest$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-wYB4BT0 (Lkotlinx/serialization/encoding/Decoder;)Ljava/util/List;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-wYB4BT0 (Lkotlinx/serialization/encoding/Decoder;)Ljava/util/List;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-a3yuNkU (Lkotlinx/serialization/encoding/Encoder;Ljava/util/List;)V
+	public final fun serialize-a3yuNkU (Lkotlinx/serialization/encoding/Encoder;Ljava/util/List;)V
 }
 
 public final class elide/tooling/project/manifest/PythonRequirementsManifest$Companion {

@@ -108,7 +108,7 @@ public object Constants {
     const val OPENTELEMETRY = "1.32.0"
 
     /** Constant: default Kotlin version. */
-    const val KOTLIN_DEFAULT = "1.9"
+    const val KOTLIN_DEFAULT = "2.1"
 
     /** Property: defines the target JVM version. */
     const val JVM_TARGET = "versions.java.target"

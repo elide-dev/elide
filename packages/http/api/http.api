@@ -153,8 +153,6 @@ public final class elide/http/HeaderValue$Companion {
 
 public final class elide/http/HeaderValue$MultiHeaderValue : java/lang/Record, elide/http/HeaderValue {
 	public fun asString ()Ljava/lang/String;
-	public final fun copy (Lkotlin/Pair;)Lelide/http/HeaderValue$MultiHeaderValue;
-	public static synthetic fun copy$default (Lelide/http/HeaderValue$MultiHeaderValue;Lkotlin/Pair;ILjava/lang/Object;)Lelide/http/HeaderValue$MultiHeaderValue;
 	public fun count ()S
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getCount-Mh2AYeg ()S
@@ -437,8 +435,6 @@ public final class elide/http/MutableResponse$MutableHttpResponse : elide/http/M
 	public final fun component3 ()Lelide/http/MutableHeaders;
 	public final fun component4 ()Lelide/http/MutableHeaders;
 	public final fun component5 ()Lelide/http/Body;
-	public final fun copy (Lelide/http/ProtocolVersion;Lelide/http/Status;Lelide/http/MutableHeaders;Lelide/http/MutableHeaders;Lelide/http/Body;)Lelide/http/MutableResponse$MutableHttpResponse;
-	public static synthetic fun copy$default (Lelide/http/MutableResponse$MutableHttpResponse;Lelide/http/ProtocolVersion;Lelide/http/Status;Lelide/http/MutableHeaders;Lelide/http/MutableHeaders;Lelide/http/Body;ILjava/lang/Object;)Lelide/http/MutableResponse$MutableHttpResponse;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getBody ()Lelide/http/Body;
 	public synthetic fun getHeaders ()Lelide/http/Headers;
@@ -650,8 +646,6 @@ public final class elide/http/Response$HttpResponse : java/lang/Record, elide/ht
 	public final fun component3 ()Lelide/http/Headers;
 	public final fun component4 ()Lelide/http/Headers;
 	public final fun component5 ()Lelide/http/Body;
-	public final fun copy (Lelide/http/ProtocolVersion;Lelide/http/Status;Lelide/http/Headers;Lelide/http/Headers;Lelide/http/Body;)Lelide/http/Response$HttpResponse;
-	public static synthetic fun copy$default (Lelide/http/Response$HttpResponse;Lelide/http/ProtocolVersion;Lelide/http/Status;Lelide/http/Headers;Lelide/http/Headers;Lelide/http/Body;ILjava/lang/Object;)Lelide/http/Response$HttpResponse;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getBody ()Lelide/http/Body;
 	public synthetic fun getHeaders ()Lelide/http/Headers;

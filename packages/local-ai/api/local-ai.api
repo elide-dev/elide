@@ -103,8 +103,6 @@ public final class elide/runtime/localai/Model$HuggingFaceModel : java/lang/Reco
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/nio/file/Path;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;)Lelide/runtime/localai/Model$HuggingFaceModel;
-	public static synthetic fun copy$default (Lelide/runtime/localai/Model$HuggingFaceModel;Ljava/lang/String;Ljava/lang/String;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/runtime/localai/Model$HuggingFaceModel;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public final fun name ()Ljava/lang/String;
@@ -160,8 +158,6 @@ public final class elide/runtime/localai/Parameters : java/lang/Record {
 	public final fun component8-pVg5ArA ()I
 	public final fun component9-0hXNFcg ()Lkotlin/UInt;
 	public final fun contextSize ()I
-	public final fun copy--bZUimA (ZZZLjava/lang/String;IIIILkotlin/UInt;)Lelide/runtime/localai/Parameters;
-	public static synthetic fun copy--bZUimA$default (Lelide/runtime/localai/Parameters;ZZZLjava/lang/String;IIIILkotlin/UInt;ILjava/lang/Object;)Lelide/runtime/localai/Parameters;
 	public static final fun create-kaqE_pc (ZIZIZIILjava/lang/String;)Lelide/runtime/localai/Parameters;
 	public static final fun defaults ()Lelide/runtime/localai/Parameters;
 	public final fun disableGpu ()Z

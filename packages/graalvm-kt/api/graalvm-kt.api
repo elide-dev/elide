@@ -123,13 +123,13 @@ public final class elide/runtime/gvm/kotlin/resources/KotlinBuiltinResource : el
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/kotlin/resources/KotlinBuiltinResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/runtime/gvm/kotlin/resources/KotlinBuiltinResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinBuiltinResource;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -153,13 +153,13 @@ public final class elide/runtime/gvm/kotlin/resources/KotlinDependencyResource :
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/kotlin/resources/KotlinDependencyResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/runtime/gvm/kotlin/resources/KotlinDependencyResource$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinDependencyResource;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -192,13 +192,13 @@ public final class elide/runtime/gvm/kotlin/resources/KotlinResourceIndex {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/gvm/kotlin/resources/KotlinResourceIndex$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/runtime/gvm/kotlin/resources/KotlinResourceIndex$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/runtime/gvm/kotlin/resources/KotlinResourceIndex;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 

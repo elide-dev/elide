@@ -199,13 +199,13 @@ public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings
 	public fun verbose ()Z
 }
 
-public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -600,8 +600,6 @@ public final class elide/tooling/containers/ContainerCoordinate$CoordinateInfo :
 	public final fun component2 ()Lelide/tooling/containers/ContainerRegistry;
 	public final fun component3 ()Lelide/tooling/containers/ContainerTag;
 	public final fun component4 ()Lelide/tooling/containers/ContainerHash;
-	public final fun copy (Ljava/lang/String;Lelide/tooling/containers/ContainerRegistry;Lelide/tooling/containers/ContainerTag;Lelide/tooling/containers/ContainerHash;)Lelide/tooling/containers/ContainerCoordinate$CoordinateInfo;
-	public static synthetic fun copy$default (Lelide/tooling/containers/ContainerCoordinate$CoordinateInfo;Ljava/lang/String;Lelide/tooling/containers/ContainerRegistry;Lelide/tooling/containers/ContainerTag;Lelide/tooling/containers/ContainerHash;ILjava/lang/Object;)Lelide/tooling/containers/ContainerCoordinate$CoordinateInfo;
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getHash ()Lelide/tooling/containers/ContainerHash;
 	public synthetic fun getName ()Ljava/lang/String;
@@ -615,13 +613,13 @@ public final class elide/tooling/containers/ContainerCoordinate$CoordinateInfo :
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/ContainerCoordinate$CoordinateInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/ContainerCoordinate$CoordinateInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/ContainerCoordinate$CoordinateInfo$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/ContainerCoordinate$CoordinateInfo;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/ContainerCoordinate$CoordinateInfo;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/ContainerCoordinate$CoordinateInfo;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/ContainerCoordinate$CoordinateInfo;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -661,14 +659,14 @@ public final class elide/tooling/containers/ContainerHash$HashPair : elide/tooli
 	public final synthetic fun unbox-impl ()Lkotlin/Pair;
 }
 
-public final class elide/tooling/containers/ContainerHash$HashPair$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/ContainerHash$HashPair$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/ContainerHash$HashPair$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-6aVz-CE (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-6aVz-CE (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-uTjUWKg (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+	public final fun serialize-uTjUWKg (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
 }
 
 public final class elide/tooling/containers/ContainerHash$HashPair$Companion {
@@ -730,14 +728,14 @@ public final class elide/tooling/containers/ContainerRegistry$ContainerRegistryP
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/ContainerRegistry$ContainerRegistryPrefix$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/ContainerRegistry$ContainerRegistryPrefix$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/ContainerRegistry$ContainerRegistryPrefix$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-Y1vMqfg (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-Y1vMqfg (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-eBneNr0 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-eBneNr0 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 }
 
 public final class elide/tooling/containers/ContainerRegistry$ContainerRegistryPrefix$Companion {
@@ -791,14 +789,14 @@ public final class elide/tooling/containers/ContainerTag$Tag : elide/tooling/con
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/ContainerTag$Tag$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/ContainerTag$Tag$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/ContainerTag$Tag$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize-ZToRGGQ (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun deserialize-ZToRGGQ (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize-yepf2Ic (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public final fun serialize-yepf2Ic (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
 }
 
 public final class elide/tooling/containers/ContainerTag$Tag$Companion {
@@ -852,21 +850,19 @@ public abstract interface class elide/tooling/containers/JibDriver$JibInputs : e
 public final class elide/tooling/containers/JibDriver$JibInputs$BaseContainer : elide/tooling/Inputs$None, elide/tooling/containers/JibDriver$JibInputs {
 	public static final field Companion Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer$Companion;
 	public final fun component1 ()Lelide/tooling/containers/ContainerCoordinate;
-	public final fun copy (Lelide/tooling/containers/ContainerCoordinate;)Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer;
-	public static synthetic fun copy$default (Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer;Lelide/tooling/containers/ContainerCoordinate;ILjava/lang/Object;)Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCoordinate ()Lelide/tooling/containers/ContainerCoordinate;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/JibDriver$JibInputs$BaseContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/JibDriver$JibInputs$BaseContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibInputs$BaseContainer;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -878,21 +874,19 @@ public final class elide/tooling/containers/JibDriver$JibInputs$Compound : elide
 	public static final field Companion Lelide/tooling/containers/JibDriver$JibInputs$Compound$Companion;
 	public fun <init> ()V
 	public final fun component1 ()Ljava/util/Collection;
-	public final fun copy (Ljava/util/Collection;)Lelide/tooling/containers/JibDriver$JibInputs$Compound;
-	public static synthetic fun copy$default (Lelide/tooling/containers/JibDriver$JibInputs$Compound;Ljava/util/Collection;ILjava/lang/Object;)Lelide/tooling/containers/JibDriver$JibInputs$Compound;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getConstituents ()Ljava/util/Collection;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/JibDriver$JibInputs$Compound$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/JibDriver$JibInputs$Compound$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/JibDriver$JibInputs$Compound$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibInputs$Compound;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibInputs$Compound;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibInputs$Compound;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibInputs$Compound;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -903,21 +897,19 @@ public final class elide/tooling/containers/JibDriver$JibInputs$Compound$Compani
 public final class elide/tooling/containers/JibDriver$JibInputs$Jar : elide/tooling/Inputs$Files, elide/tooling/containers/JibDriver$JibInputs {
 	public static final field Companion Lelide/tooling/containers/JibDriver$JibInputs$Jar$Companion;
 	public final fun component1 ()Ljava/nio/file/Path;
-	public final fun copy (Ljava/nio/file/Path;)Lelide/tooling/containers/JibDriver$JibInputs$Jar;
-	public static synthetic fun copy$default (Lelide/tooling/containers/JibDriver$JibInputs$Jar;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/tooling/containers/JibDriver$JibInputs$Jar;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getPath ()Ljava/nio/file/Path;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/JibDriver$JibInputs$Jar$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/JibDriver$JibInputs$Jar$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/JibDriver$JibInputs$Jar$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibInputs$Jar;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibInputs$Jar;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibInputs$Jar;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibInputs$Jar;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -936,21 +928,19 @@ public final class elide/tooling/containers/JibDriver$JibInputs$NoInputs : elide
 public final class elide/tooling/containers/JibDriver$JibInputs$TargetContainer : elide/tooling/Inputs$None, elide/tooling/containers/JibDriver$JibInputs {
 	public static final field Companion Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer$Companion;
 	public final fun component1 ()Lelide/tooling/containers/ContainerCoordinate;
-	public final fun copy (Lelide/tooling/containers/ContainerCoordinate;)Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer;
-	public static synthetic fun copy$default (Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer;Lelide/tooling/containers/ContainerCoordinate;ILjava/lang/Object;)Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCoordinate ()Lelide/tooling/containers/ContainerCoordinate;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/JibDriver$JibInputs$TargetContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/JibDriver$JibInputs$TargetContainer$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibInputs$TargetContainer;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -979,8 +969,6 @@ public final class elide/tooling/containers/JibDriver$JibOutputs$NoOutputs : eli
 public final class elide/tooling/containers/JibDriver$JibOutputs$OutputToDocker : elide/tooling/Outputs$None, elide/tooling/containers/JibDriver$JibOutputs {
 	public static final field Companion Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker$Companion;
 	public final fun component1 ()Lelide/tooling/containers/ContainerCoordinate;
-	public final fun copy (Lelide/tooling/containers/ContainerCoordinate;)Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker;
-	public static synthetic fun copy$default (Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker;Lelide/tooling/containers/ContainerCoordinate;ILjava/lang/Object;)Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun flatten ()Lelide/tooling/Outputs;
 	public final fun getTag ()Lelide/tooling/containers/ContainerCoordinate;
@@ -988,13 +976,13 @@ public final class elide/tooling/containers/JibDriver$JibOutputs$OutputToDocker 
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/JibDriver$JibOutputs$OutputToDocker$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/JibDriver$JibOutputs$OutputToDocker$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibOutputs$OutputToDocker;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1005,8 +993,6 @@ public final class elide/tooling/containers/JibDriver$JibOutputs$OutputToDocker$
 public final class elide/tooling/containers/JibDriver$JibOutputs$Tarball : elide/tooling/Outputs$Disk$File, elide/tooling/containers/JibDriver$JibOutputs {
 	public static final field Companion Lelide/tooling/containers/JibDriver$JibOutputs$Tarball$Companion;
 	public final fun component1 ()Ljava/nio/file/Path;
-	public final fun copy (Ljava/nio/file/Path;)Lelide/tooling/containers/JibDriver$JibOutputs$Tarball;
-	public static synthetic fun copy$default (Lelide/tooling/containers/JibDriver$JibOutputs$Tarball;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/tooling/containers/JibDriver$JibOutputs$Tarball;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun flatten ()Lelide/tooling/Outputs;
 	public final fun getPath ()Ljava/nio/file/Path;
@@ -1014,13 +1000,13 @@ public final class elide/tooling/containers/JibDriver$JibOutputs$Tarball : elide
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/containers/JibDriver$JibOutputs$Tarball$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/containers/JibDriver$JibOutputs$Tarball$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/containers/JibDriver$JibOutputs$Tarball$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibOutputs$Tarball;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/containers/JibDriver$JibOutputs$Tarball;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibOutputs$Tarball;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/containers/JibDriver$JibOutputs$Tarball;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1062,13 +1048,13 @@ public final class elide/tooling/coverage/CoverageJsonReport {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/coverage/CoverageJsonReport$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/coverage/CoverageJsonReport$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1094,13 +1080,13 @@ public final class elide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza 
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageInfoStanza;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1129,13 +1115,13 @@ public final class elide/tooling/coverage/CoverageJsonReport$CoverageRoot {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/coverage/CoverageJsonReport$CoverageRoot$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/coverage/CoverageJsonReport$CoverageRoot$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageRoot;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1160,13 +1146,13 @@ public final class elide/tooling/coverage/CoverageJsonReport$CoverageSection {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/coverage/CoverageJsonReport$CoverageSection$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/coverage/CoverageJsonReport$CoverageSection$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$CoverageSection$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageSection;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -1200,13 +1186,13 @@ public final class elide/tooling/coverage/CoverageJsonReport$CoverageSourceSecti
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/coverage/CoverageJsonReport$CoverageSourceSection$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+public final synthetic class elide/tooling/coverage/CoverageJsonReport$CoverageSourceSection$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
 	public static final field INSTANCE Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection$$serializer;
-	public fun childSerializers ()[Lkotlinx/serialization/KSerializer;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;
 	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;)V
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/coverage/CoverageJsonReport$CoverageSourceSection;)V
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
@@ -2195,8 +2181,6 @@ public final class elide/tooling/runner/TestRunner$ImmutableConfig : java/lang/R
 	public final fun component7 ()Lelide/tooling/project/ElideProject;
 	public final fun component8 ()Ljava/util/function/Predicate;
 	public final fun component9 ()Ljava/nio/file/Path;
-	public final fun copy (ZZZZZLelide/exec/ActionScope;Lelide/tooling/project/ElideProject;Ljava/util/function/Predicate;Ljava/nio/file/Path;Ljava/nio/file/Path;I)Lelide/tooling/runner/TestRunner$ImmutableConfig;
-	public static synthetic fun copy$default (Lelide/tooling/runner/TestRunner$ImmutableConfig;ZZZZZLelide/exec/ActionScope;Lelide/tooling/project/ElideProject;Ljava/util/function/Predicate;Ljava/nio/file/Path;Ljava/nio/file/Path;IILjava/lang/Object;)Lelide/tooling/runner/TestRunner$ImmutableConfig;
 	public fun debug ()Z
 	public fun dry ()Z
 	public fun equals (Ljava/lang/Object;)Z

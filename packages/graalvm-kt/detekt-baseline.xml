@@ -3,6 +3,5 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>TooGenericExceptionThrown:GuestKotlinEvaluator.kt$GuestKotlinEvaluator$throw RuntimeException("Exception during snippet evaluation", replResult.cause)</ID>
-    <ID>UnusedParameter:KotlinCompilerConfig.kt$KotlinCompilerConfig.KotlinBuiltinPlugin.Companion$root: Path</ID>
   </CurrentIssues>
 </SmellBaseline>

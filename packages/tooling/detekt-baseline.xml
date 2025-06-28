@@ -1,16 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>ForbiddenComment:JvmBuildConfigurator.kt$JvmBuildConfigurator$// @TODO: argument splitting by default</ID>
-    <ID>UnusedParameter:ContainerBuildConfigurator.kt$ContainerBuildConfigurator$artifact: ContainerImage</ID>
-    <ID>UnusedParameter:ContainerBuildConfigurator.kt$ContainerBuildConfigurator$configurator: ContainerImageConfigurator.() -> Unit = {}</ID>
-    <ID>UnusedParameter:ContainerBuildConfigurator.kt$ContainerBuildConfigurator$state: ElideBuildState</ID>
-    <ID>UnusedParameter:NativeImageBuildConfigurator.kt$NativeImageBuildConfigurator$configurator: NativeImageConfigurator.() -> Unit = {}</ID>
-    <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$inputs: NativeImageInputs.Paths</ID>
-    <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$javaToolchainHome: Path</ID>
-    <ID>UnusedParameter:TestDriver.kt$TestDriver$binder: ExecutionBinder? = null</ID>
-    <ID>UnusedPrivateProperty:JibDriver.kt$JibDriver$private val configurator: JibConfigurator.() -> Unit = {}</ID>
-    <ID>UnusedPrivateProperty:JibDriver.kt$JibDriver$private val projectRoot: Path? = null</ID>
-  </CurrentIssues>
+  <CurrentIssues/>
 </SmellBaseline>

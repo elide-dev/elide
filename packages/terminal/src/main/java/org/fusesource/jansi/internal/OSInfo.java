@@ -43,6 +43,7 @@ import java.util.Locale;
  * Provides OS name and architecture name.
  *
  */
+@SuppressWarnings({"unused", "DuplicatedCode"})
 public class OSInfo {
 
     public static final String X86 = "x86";
@@ -53,7 +54,7 @@ public class OSInfo {
     public static final String PPC64 = "ppc64";
     public static final String ARM64 = "arm64";
 
-    private static final HashMap<String, String> archMapping = new HashMap<String, String>();
+    private static final HashMap<String, String> archMapping = new HashMap<>();
 
     static {
         // x86 mappings
@@ -137,19 +138,17 @@ public class OSInfo {
 
     static String getHardwareName() {
         try {
-            Process p = Runtime.getRuntime().exec("uname -m");
-            p.waitFor();
+          String[] cmd = { "uname", "-m" };
+          Process p = Runtime.getRuntime().exec(cmd);
+          p.waitFor();
 
-            InputStream in = p.getInputStream();
-            try {
-                return readFully(in);
-            } finally {
-                in.close();
-            }
-        } catch (Throwable e) {
-            System.err.println("Error while running uname -m: " + e.getMessage());
-            return "unknown";
-        }
+          try (InputStream in = p.getInputStream()) {
+            return readFully(in);
+          }
+      } catch (Throwable e) {
+          System.err.println("Error while running uname -m: " + e.getMessage());
+          return "unknown";
+      }
     }
 
     private static String readFully(InputStream in) throws IOException {

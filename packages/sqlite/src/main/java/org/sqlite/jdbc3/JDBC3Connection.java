@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings({"RedundantThrows", "Convert2Diamond", "unchecked", "SqlSourceToSinkFlow"})
 public abstract class JDBC3Connection extends SQLiteConnection {
     private final AtomicInteger savePoint = new AtomicInteger(0);
     private Map<String, Class<?>> typeMap;
@@ -38,7 +39,6 @@ public abstract class JDBC3Connection extends SQLiteConnection {
      * @throws SQLException if a statement has already been executed on this connection, then the
      *     transaction cannot be upgraded to write
      */
-    @SuppressWarnings("deprecation")
     public void tryEnforceTransactionMode() throws SQLException {
         // important note: read-only mode is only supported when auto-commit is disabled
         if (getDatabase().getConfig().isExplicitReadOnly()

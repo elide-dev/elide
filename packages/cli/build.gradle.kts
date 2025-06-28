@@ -490,7 +490,6 @@ dependencies {
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 
   // Native-image transitive compile dependencies
-  implementation(libs.jakarta.validation)
   implementation(libs.guava)
 
   implementation(libs.picocli.jansi.graalvm) {

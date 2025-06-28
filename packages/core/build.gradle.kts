@@ -50,6 +50,8 @@ dependencies {
 }
 
 tasks.named("jvmTest", Test::class) {
+  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
+
   systemProperty("java.library.path", StringBuilder().apply {
     append(rootProject.layout.projectDirectory.dir("target/debug").asFile.path)
     append(File.pathSeparator)

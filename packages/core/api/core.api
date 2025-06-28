@@ -218,3 +218,6 @@ public final class elide/core/platform/PlatformDefaults : elide/core/PlatformDef
 	public fun <init> ()V
 }
 
+public abstract interface annotation class elide/runtime/core/DelicateElideApi : java/lang/annotation/Annotation {
+}
+

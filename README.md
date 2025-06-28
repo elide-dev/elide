@@ -75,12 +75,11 @@ def greeting(name = "Elide"):
 Hello, Elide! The answer is 42
 ```
 
-
 ### Kotlin as a first-class citizen
 
 Elide can run Kotlin with no prior build step, can build Java code identically to `javac`, and can build Kotlin code identically to `kotlinc`.
 
-![elide-projects](https://github.com/user-attachments/assets/489e1a69-d2b8-4242-82be-f7cfcd5ccbd1)
+![elide-projects](./project/gifs/init-build-test.gif)
 
 - KotlinX is supported out of the box with no need to install dependencies
 - Build Kotlin to JVM bytecode, run tests, and install from Maven, all without verbose configuration
@@ -112,11 +111,39 @@ This is the manifest used above :point_up: in the _Kotlin as a first-class citiz
 
 Read more about Elide's [feature highlights](https://elide.dev)
 
+### Support for End-User Binaries + Containers
+
+Elide has early support for building _your_ apps into native binaries, too! You can even wrap these in containers,
+without the need for Docker.
+
+Adding to the _Kotlin as a first-class-citizen_ example above:
+```pkl
+artifacts {
+  // Build a JAR from our Kotlin code.
+  ["jar"] = build.jar()
+
+  // Build a native image from our JAR and classpath.
+  ["native"] = build.nativeImage("jar")
+
+  // Wrap the native image in a container image.
+  ["container"] = (build.containerImage("native")) {
+    // Set this property to a remote image. This is the target image.
+    image = "ghcr.io/elide-dev/samples/containers"
+  }
+}
+```
+
+Now, `elide build` produces a JAR, a native image, and a container image, and then pushes it directly up to the registry
+listed in the config:
+
+![elide-containers](./project/gifs/containers.gif)
+
 ## Installation
 
 You can install Elide in several ways:
 
 ### Script Install (Linux amd64 or macOS arm64)
+
 ```shell
 curl -sSL --tlsv1.2 elide.sh | bash -s -
 ```
@@ -148,7 +175,7 @@ We provide a [setup action](https://github.com/marketplace/actions/setup-elide):
 - name: "Setup: Elide"
   uses: elide-dev/setup-elide@v2
   with:
-    # any tag from the `elide-dev/releases` repo; omit for latest
+    # any tag from the `elide-dev/elide` repo; omit for latest
     version: 1.0.0-beta7
 ```
 

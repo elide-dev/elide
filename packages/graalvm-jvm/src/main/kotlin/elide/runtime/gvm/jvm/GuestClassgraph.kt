@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlin.io.path.absolutePathString
+import elide.runtime.Logging
 import elide.runtime.gvm.jvm.GuestClassgraph.ClassgraphBuilderApi
 import elide.tooling.Classpath
 
@@ -144,6 +145,10 @@ public object GuestClassgraph {
 
     override val packages: MutableSet<String> get() = acceptPackages
 
+    private val logging by lazy {
+      Logging.of(GuestClassgraph::class)
+    }
+
     // Classgraph instance managed by this builder.
     @Suppress("SpreadOperator")
     override val classgraph: ClassGraph = ClassGraph().apply {
@@ -152,7 +157,8 @@ public object GuestClassgraph {
       enableURLScheme("file")
       enableURLScheme("jar")
       enableURLScheme("jimfs")
-      enableMemoryMapping()
+      runCatching { enableMemoryMapping() } // enable memory mapping if available
+        .onFailure { logging.debug("Failed to enable memory mapping", it) }
       enableClassInfo()
       enableMethodInfo()
       enableAnnotationInfo()

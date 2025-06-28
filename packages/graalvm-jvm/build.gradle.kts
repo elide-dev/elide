@@ -154,7 +154,7 @@ dependencies {
 
   // patched for use of host source loader
   // implementation(libs.graalvm.espresso.language)
-  //
+
   api(patchedLibs)
   patchedDependencies(patchedLibs)
 
@@ -203,7 +203,7 @@ val jlinkBinRoot = File(jlinkOut).resolve("bin")
 val jlinkConfRoot = File(jlinkOut).resolve("conf")
 
 val binsToRemove = listOf(
-  // These are built into Elide's own CLI.
+  // These are shipped via Elide's own CLI.
   jlinkBinRoot.resolve("javac"),
   jlinkBinRoot.resolve("jar"),
   jlinkBinRoot.resolve("javadoc"),
@@ -298,4 +298,8 @@ tasks.build {
   if (enablePackagedJvm) {
     dependsOn(jvmBundle.name)
   }
+}
+
+tasks.test {
+  jvmArgs.add("--enable-native=ALL-UNNAMED")
 }

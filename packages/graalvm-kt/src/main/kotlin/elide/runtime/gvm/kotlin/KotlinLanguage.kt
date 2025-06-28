@@ -27,7 +27,7 @@ import elide.runtime.gvm.kotlin.feature.KotlinResource
 private const val KOTLIN_ID = "kotlin"
 private const val KOTLIN_NAME = "Kotlin"
 private const val KOTLIN_IMPL = "Kotlin/JVM (Espresso)"
-private const val KOTLIN_IMPL_VERSION = "2.2.0-RC3"
+private const val KOTLIN_IMPL_VERSION = "2.2.0"
 private const val KOTLIN_MIME_TYPE = "application/x-kotlin"
 
 /**
@@ -70,7 +70,7 @@ public class KotlinLanguage : TruffleLanguage<EspressoContext>() {
     public const val ID: String = KOTLIN_ID
     public const val VERSION: String = KOTLIN_IMPL_VERSION
     public const val COROUTINES_VERSION: String = "1.10.2"
-    public const val SERIALIZATION_VERSION: String = "1.8.1"
+    public const val SERIALIZATION_VERSION: String = "1.9.0"
 
     @JvmStatic private val ESPRESSO: LanguageReference<EspressoLanguage> = LanguageReference.create(
       EspressoLanguage::class.java,

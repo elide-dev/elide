@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.tool.project.codecs
+package elide.tooling.codecs
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.apache.maven.model.Build

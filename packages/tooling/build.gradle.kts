@@ -50,7 +50,7 @@ dependencies {
   api(libs.pkl.core) { pklExclusions() }
   api(libs.pkl.config.java) { pklExclusions() }
   api(libs.pkl.config.kotlin) { pklExclusions() }
-  api(libs.maven.model)
+  api(libs.bundles.maven.model)
 
   implementation(libs.ktoml)
   implementation(libs.kotlinx.io.bytestring)

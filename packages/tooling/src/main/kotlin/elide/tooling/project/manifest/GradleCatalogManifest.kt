@@ -43,7 +43,7 @@ public typealias CatalogBundlesMap = Map<String, GradleCatalogManifest.CatalogBu
  * @property libraries Library mappings present in the manifest.
  * @property bundles Bundle mappings present in the manifest.
  */
-@Serializable @JvmRecord public data class GradleCatalogManifest(
+@Serializable @JvmRecord public data class GradleCatalogManifest internal constructor(
   public val path: Path? = null,
   public val versions: CatalogVersionsMap = emptyMap(),
   public val plugins: CatalogPluginsMap = emptyMap(),
@@ -64,14 +64,14 @@ public typealias CatalogBundlesMap = Map<String, GradleCatalogManifest.CatalogBu
   @Serializable public data object NoVersion: CatalogVersionSpec
 
   /** Specifies a string version as a literal. */
-  @Serializable @JvmRecord public data class VersionSpec (
+  @Serializable @JvmRecord public data class VersionSpec internal constructor(
     public val version: String,
   ): CatalogVersionSpec, SymbolicCatalogEntry {
     override fun provideVersion(versions: CatalogVersionsMap): String = version
   }
 
   /** Specifies a reference to the [versions] block, by name. */
-  @Serializable @JvmRecord public data class VersionRef (
+  @Serializable @JvmRecord public data class VersionRef internal constructor(
     public val ref: String,
   ): CatalogVersionSpec, SymbolicCatalogEntry {
     override fun provideVersion(versions: CatalogVersionsMap): String =
@@ -112,7 +112,7 @@ public typealias CatalogBundlesMap = Map<String, GradleCatalogManifest.CatalogBu
   }
 
   // Implementation of a library mapping as a `module` reference.
-  @JvmRecord @Serializable public data class CatalogLibraryModule(
+  @JvmRecord @Serializable public data class CatalogLibraryModule internal constructor(
     override val module: String,
     override val version: CatalogVersionSpec = NoVersion,
   ) : CatalogLibraryDefinition {
@@ -122,7 +122,7 @@ public typealias CatalogBundlesMap = Map<String, GradleCatalogManifest.CatalogBu
   }
 
   // Implementation of a library mapping as a `group`/`name` reference.
-  @JvmRecord @Serializable public data class CatalogLibraryGroupName(
+  @JvmRecord @Serializable public data class CatalogLibraryGroupName internal constructor(
     override val group: String,
     override val name: String,
     override val version: CatalogVersionSpec = NoVersion,
@@ -132,13 +132,13 @@ public typealias CatalogBundlesMap = Map<String, GradleCatalogManifest.CatalogBu
   }
 
   // Implementation of a plugin mapping.
-  @JvmRecord @Serializable public data class CatalogPlugin(
+  @JvmRecord @Serializable public data class CatalogPlugin internal constructor(
     override val id: String = "",
     override val version: CatalogVersionSpec = NoVersion,
   ) : CatalogPluginDefinition
 
   // Implementation of a bundle mapping.
-  @JvmRecord @Serializable public data class CatalogBundle(
+  @JvmRecord @Serializable public data class CatalogBundle internal constructor(
     override val libraries: List<CatalogLibraryId> = emptyList(),
   ) : CatalogBundleDefinition
 }

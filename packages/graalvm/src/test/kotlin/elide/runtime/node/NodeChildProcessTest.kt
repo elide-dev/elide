@@ -25,7 +25,7 @@ import org.junit.jupiter.api.assertThrows
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.stream.Stream
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlin.reflect.full.isSubclassOf
 import kotlin.streams.asStream
 import kotlin.test.*

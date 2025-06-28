@@ -21,8 +21,8 @@ import picocli.CommandLine.IExitCodeExceptionMapper
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlin.system.exitProcess

@@ -17,7 +17,7 @@ package elide.tool.err
 
 import dev.elide.uuid.Uuid
 import org.graalvm.nativeimage.ImageInfo
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import elide.runtime.core.DelicateElideApi

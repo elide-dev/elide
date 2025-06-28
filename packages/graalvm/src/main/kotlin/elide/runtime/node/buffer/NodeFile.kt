@@ -13,7 +13,7 @@
 package elide.runtime.node.buffer
 
 import org.graalvm.polyglot.proxy.ProxyObject
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotValue
 import elide.runtime.intrinsics.js.node.BufferAPI

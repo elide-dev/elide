@@ -76,7 +76,7 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     public var allOpen: Boolean = false
 
     /** Whether to configure the Kotlin atomic field updater plugin with predefined settings. */
-    public var atomicFu: Boolean = false
+    public var atomicFu: Boolean = true
 
     /** Whether to include the Redacted plugin. */
     public var redacted: Boolean = false

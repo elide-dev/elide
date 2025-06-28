@@ -608,7 +608,7 @@ tasks {
     testJvmDefs.forEach {
       systemProperty(it.key, it.value)
     }
-
+    jvmArgs.add("--enable-native-access=ALL-UNNAMED")
     if (enableToolchains) javaLauncher = gvmLauncher
   }
 

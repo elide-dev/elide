@@ -174,6 +174,7 @@ graalvmNative {
 tasks.test {
   dependsOn(":packages:graalvm:natives")
   jvmArgs = jvmDefs
+  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
 }
 
 artifacts {

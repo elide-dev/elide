@@ -59,3 +59,7 @@ dependencies {
   testImplementation(project(":packages:graalvm", configuration = "testBase"))
   testImplementation(project(":packages:engine", configuration = "testInternals"))
 }
+
+tasks.test.configure {
+  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
+}

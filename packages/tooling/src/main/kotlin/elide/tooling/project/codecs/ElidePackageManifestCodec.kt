@@ -163,7 +163,7 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         Conversion.of(PClassInfo.String, NativeImageType::class.java, StrConverter {
           NativeImageType.resolve(it)
         })
-      ).addConverterFactory { info, type ->
+      ).addConverterFactory { info, _ ->
         when (info.qualifiedName) {
           "elide.jvm#Jar" -> Optional.of(Converter { value: PObject, mapper ->
             mapper.map(value, Jar::class.java)

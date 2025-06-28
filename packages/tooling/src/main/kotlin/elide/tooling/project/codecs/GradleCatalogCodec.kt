@@ -25,7 +25,6 @@ import kotlinx.serialization.encodeToString
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.GradleCatalogManifest
-import elide.tooling.project.manifest.GradleCatalogManifest.NoVersion
 
 @ManifestCodec(ProjectEcosystem.GradleCatalog)
 public class GradleCatalogCodec : PackageManifestCodec<GradleCatalogManifest> {
@@ -41,9 +40,9 @@ public class GradleCatalogCodec : PackageManifestCodec<GradleCatalogManifest> {
 
   private fun libFromPackage(lib: ElidePackageManifest.MavenPackage): GradleCatalogManifest.CatalogLibraryDefinition {
     return GradleCatalogManifest.CatalogLibraryGroupName(
-      group = lib.group ?: lib.coordinate.substringBefore(':'),
-      name = lib.name ?: lib.coordinate.substringAfter(':').substringBefore(':'),
-      version = lib.version?.let { GradleCatalogManifest.VersionSpec(it) } ?: NoVersion,
+      group = lib.group,
+      name = lib.name,
+      version = lib.version.let { GradleCatalogManifest.VersionSpec(it) },
     )
   }
 

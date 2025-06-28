@@ -1142,6 +1142,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.incubator.channel.uring.LinuxSocket",
   "io.netty.handler.codec.http.HttpObjectEncoder",
   "io.netty.handler.pcap.PcapWriteHandler${'$'}WildcardAddressHolder",
+  "io.netty.util.internal.NativeLibraryLoader",
 
   // --- Netty: Native Crypto -----
 

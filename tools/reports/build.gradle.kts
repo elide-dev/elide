@@ -14,7 +14,6 @@
 @file:Suppress(
   "UnstableApiUsage",
   "unused",
-  "DSL_SCOPE_VIOLATION",
 )
 
 plugins {

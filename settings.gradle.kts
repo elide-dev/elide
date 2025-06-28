@@ -263,23 +263,14 @@ val isCI: Boolean = System.getenv("CI") != "true"
 // -- Begin Caching Tricks
 //
 
-val inertTasks = sortedSetOf("clean", "tasks", "projects")
-if (gradle.startParameter.taskNames.size == 1 && gradle.startParameter.taskNames.first() in inertTasks) {
-  // disable the build cache when cleaning because having it on is just silly
-  buildCache {
-    local.isEnabled = false
-    remote?.isEnabled = false
-  }
-
-  // force-disable
-  gradle.startParameter.isBuildCacheEnabled = false
-} else {
-  buildCache {
-    local.isEnabled = true
-  }
+buildCache {
+  local.isEnabled = true
 }
 
 buildless {
+  localCache {
+    enabled = true
+  }
   remoteCache {
     enabled = false
   }

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("TooGenericExceptionCaught")
+@file:Suppress("TooGenericExceptionCaught", "NOTHING_TO_INLINE")
 
 package elide.runtime.gvm.internals.js
 
@@ -157,7 +157,7 @@ internal class JsTimer private constructor (
   private val timerId: TimerId,
   isScheduled: Boolean = false,
   private val repeat: Boolean,
-  private val ctx: Context,
+  @Suppress("unused") private val ctx: Context,
   private val timers: WeakReference<MutableMap<TimerId, JsTimer>>,
   private val exec: ListeningScheduledExecutorService,
   private val delay: Duration,
@@ -174,7 +174,7 @@ internal class JsTimer private constructor (
   private val future: AtomicReference<ListenableFuture<*>> = AtomicReference(null)
 
   // Number of times this timer has executed.
-  private val executions: AtomicLong = atomic(0L)
+  private val executions = atomic(0L)
 
   /** Utilities for creating raw JavaScript timer objects. */
   internal companion object {
@@ -214,21 +214,21 @@ internal class JsTimer private constructor (
     /**
      * Create a one-shot timer.
      *
-     * @param counter The counter to use.
+     * @param id ID value to use.
      * @param exec The executor service to use.
      * @param delay The delay before the timer fires.
      * @param callback The callback to execute.
      * @return The new timer.
      */
-    @JvmStatic fun oneshot(
-      counter: AtomicLong,
+    @JvmStatic inline fun oneshot(
+      id: Long,
       timers: MutableMap<TimerId, JsTimer>,
       exec: ListeningScheduledExecutorService,
       delay: Long? = null,
       ctx: Context = Context.getCurrent(),
-      callback: () -> Unit,
+      noinline callback: () -> Unit,
     ) = create(
-      counter.getAndIncrement(),
+      id,
       timers,
       ctx,
       exec,
@@ -243,21 +243,21 @@ internal class JsTimer private constructor (
     /**
      * Create a timer which re-schedules itself.
      *
-     * @param counter The counter to use.
+     * @param id ID value to use.
      * @param exec The executor service to use.
      * @param delay The delay before the timer fires.
      * @param callback The callback to execute.
      * @return The new timer.
      */
-    @JvmStatic fun repeated(
-      counter: AtomicLong,
+    @JvmStatic inline fun repeated(
+      id: Long,
       timers: MutableMap<TimerId, JsTimer>,
       exec: ListeningScheduledExecutorService,
       delay: Long? = null,
       ctx: Context = Context.getCurrent(),
-      callback: () -> Unit,
+      noinline callback: () -> Unit,
     ) = create(
-      counter.getAndIncrement(),
+      id,
       timers,
       ctx,
       exec,
@@ -344,7 +344,7 @@ internal class JsTimerManager (private val exec: ListeningScheduledExecutorServi
   private val timers: MutableMap<TimerId, JsTimer> = ConcurrentSkipListMap()
 
   override fun setTimeout(delay: Long?, callback: () -> Unit): TimerId = JsTimer.oneshot(
-    counter,
+    counter.getAndIncrement(),
     timers,
     exec,
     delay,
@@ -352,7 +352,7 @@ internal class JsTimerManager (private val exec: ListeningScheduledExecutorServi
   )
 
   override fun setTimeout(delay: Long?, vararg arg: Any?, callback: Value): TimerId = JsTimer.repeated(
-    counter,
+    counter.getAndIncrement(),
     timers,
     exec,
     delay,
@@ -365,7 +365,7 @@ internal class JsTimerManager (private val exec: ListeningScheduledExecutorServi
   }
 
   override fun setInterval(delay: Long?, callback: () -> Unit): TimerId = JsTimer.repeated(
-    counter,
+    counter.getAndIncrement(),
     timers,
     exec,
     delay,
@@ -373,7 +373,7 @@ internal class JsTimerManager (private val exec: ListeningScheduledExecutorServi
   )
 
   override fun setInterval(delay: Long?, vararg arg: Any?, callback: Value): TimerId = JsTimer.repeated(
-    counter,
+    counter.getAndIncrement(),
     timers,
     exec,
     delay,
@@ -397,7 +397,7 @@ internal class JsTimerManager (private val exec: ListeningScheduledExecutorServi
     try {
       exec.shutdownNow()
       exec.awaitTermination(SHUTDOWN_WAIT, MILLISECONDS)
-    } catch (err: InterruptedException) {
+    } catch (_: InterruptedException) {
       Thread.currentThread().interrupt()
     }
   }

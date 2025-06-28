@@ -103,7 +103,7 @@ public data class KotlinCompilerConfig(
           return
         }
         require(!(ImageInfo.inImageCode() && ImageInfo.inImageRuntimeCode())) {
-          "Cannot load Kotlin plugin in native image runtime mode (loads at build time): $name"
+          "Cannot load Kotlin plugin in native image runtime mode (loads at build time): $name, within $root"
         }
         val kotlinSerializationPlugin = requireNotNull(
           System.getProperty("elide.kotlinResources")?.ifEmpty { null }?.ifBlank { null }

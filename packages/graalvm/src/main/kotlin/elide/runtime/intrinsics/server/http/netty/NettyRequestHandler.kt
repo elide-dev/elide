@@ -29,7 +29,6 @@ import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.HttpVersion
 import io.netty.handler.codec.http.LastHttpContent
 import org.graalvm.polyglot.Value
-import kotlinx.atomicfu.atomic
 import elide.http.Body
 import elide.http.Headers
 import elide.http.Http
@@ -243,8 +242,8 @@ private fun Response.asNetty(): HttpResponse = when (body) {
       logging.debug { "Handling HTTP request: $message" }
 
       // prepare the wrappers
-      val handled = atomic(false)
-      val doFlush = atomic(true)
+      var handled = false
+      var doFlush = true
       val request = Http.request(message, Http.HttpRequestOptions(
         version = ProtocolVersion.HTTP_1_1,
         host = host,
@@ -257,10 +256,12 @@ private fun Response.asNetty(): HttpResponse = when (body) {
       // resolve the handler pipeline (or default to 'not found' if empty)
       router.pipeline(request, context).forEach { handler ->
         when (handler) {
-          is GuestSimpleHandler -> handled.value = handler(request, response, context)
+          is GuestSimpleHandler -> handled = handler(request, response, context)
           is GuestAsyncHandler -> handler(request, response, context).also {
-            handled.compareAndSet(false, true)
-            doFlush.compareAndSet(true, false)
+            assert(handled == false)
+            handled = true
+            assert(doFlush == true)
+            doFlush = false
 
             it.addListener(Runnable {
               PolyglotResponseHandler(it.get()).send(HttpVersion.HTTP_1_1, logging, channelContext)
@@ -269,7 +270,7 @@ private fun Response.asNetty(): HttpResponse = when (body) {
         }
       }
 
-      if (!handled.value) {
+      if (!handled) {
         channelContext.writeAndFlush(
           DefaultHttpResponse(
             /* version = */ HttpVersion.HTTP_1_1,
@@ -277,7 +278,7 @@ private fun Response.asNetty(): HttpResponse = when (body) {
           ),
         )
         channelContext.close()
-      } else if (doFlush.value) {
+      } else if (doFlush) {
         logging.debug("Request processing complete, flushing response")
         channelContext.flush()
         channelContext.close()

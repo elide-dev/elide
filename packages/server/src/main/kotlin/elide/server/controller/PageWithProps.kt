@@ -93,7 +93,7 @@ public abstract class PageWithProps<State : Any> protected constructor (
   private suspend fun computePropsAsync(state: RequestState): Deferred<State?> {
     return try {
       propsAsync(state)
-    } catch (uoe: UnsupportedOperationException) {
+    } catch (_: UnsupportedOperationException) {
       Futures.immediateFuture(null).asDeferred()
     }
   }

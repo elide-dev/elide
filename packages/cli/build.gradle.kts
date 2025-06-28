@@ -2709,3 +2709,11 @@ tasks.withType<BuildNativeImageTask>().all {
 tasks.installDist.configure {
   duplicatesStrategy = DuplicatesStrategy.WARN
 }
+
+tasks.prepareJitOptimizations.configure {
+  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
+}
+
+tasks.prepareNativeOptimizations.configure {
+  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
+}

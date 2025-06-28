@@ -35,6 +35,7 @@ elide {
 
 dependencies {
   jvm {
+    api(projects.packages.core)
     api(libs.kotlin.stdlib.jdk8)
     api(libs.kotlin.test.junit5)
     api(libs.jakarta.inject)

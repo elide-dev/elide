@@ -33,6 +33,7 @@ class SQLiteQueryRendererTest {
       assertNotNull(it)
       assertEquals("SELECT * FROM test WHERE id = 'hi';", it)
     }
+    @Suppress("TYPE_INTERSECTION_AS_REIFIED_WARNING")
     SqliteQueryRenderer.render("SELECT * FROM test WHERE id = ? AND cool = ?;", arrayOf("hi", 5)).let {
       assertNotNull(it)
       assertEquals("SELECT * FROM test WHERE id = 'hi' AND cool = 5;", it)

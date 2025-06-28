@@ -205,11 +205,6 @@ import elide.tooling.deps.DependencyEcosystem.*
       }
     }
 
-    // Attempt to match a dependency ecosystem prefix, considering any present project, or fallback to guesswork.
-    @JvmStatic fun detectEcosystem(subject: String, project: ElideProject?): DependencyEcosystem? {
-      return detectEcosystem(subject)  // @TODO project preference
-    }
-
     // Given the detected or preferred ecosystem, parse the provided spec string.
     @JvmStatic fun parseForEcosystem(ecosystem: DependencyEcosystem, subject: String): PackageSpec {
       return requireNotNull(parsers[ecosystem]) { "No parser for ecosystem: $ecosystem" }
@@ -294,11 +289,11 @@ import elide.tooling.deps.DependencyEcosystem.*
     @Throws(ParseError::class)
     @JvmStatic public fun parse(
       subject: String,
-      project: ElideProject? = null,
+      @Suppress("UNUSED_PARAMETER") project: ElideProject? = null,
       ecosystem: DependencyEcosystem? = null,
     ): PackageSpec {
       // resolve the ecosystem first...
-      val effective = ecosystem ?: Parser.detectEcosystem(subject, project) ?: throw AmbiguousEcosystem()
+      val effective = ecosystem ?: Parser.detectEcosystem(subject) ?: throw AmbiguousEcosystem()
 
       // then parse, after removing any prefix
       return Parser.parseForEcosystem(

@@ -92,4 +92,5 @@ tasks.test {
   systemProperty("elide.test", "true")
   systemProperty("java.library.path", javaLibPath.get())
   dependsOn(":packages:graalvm:buildRustNativesForHost")
+  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
 }

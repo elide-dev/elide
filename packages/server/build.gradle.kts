@@ -138,6 +138,7 @@ tasks {
     maxParallelForks = 4
     environment("ELIDE_TEST", "true")
     systemProperty("elide.test", "true")
+    jvmArgs.add("--enable-native-access=ALL-UNNAMED")
   }
 }
 

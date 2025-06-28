@@ -69,4 +69,5 @@ dependencies {
 
 tasks.test {
   systemProperty("elide.root", rootProject.layout.projectDirectory.asFile.toPath().absolutePathString())
+  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
 }

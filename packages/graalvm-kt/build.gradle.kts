@@ -456,6 +456,7 @@ tasks.test {
     "ELIDE_KOTLIN_HOME" to ktRuntimeRoot.asFile.absolutePath,
   )
   requireNotNull(jvmArgs).addAll(testJvmArgs)
+  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
 }
 
 tasks.withType<KotlinCompile>().configureEach {

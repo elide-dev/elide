@@ -24,9 +24,17 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer
 import org.apache.maven.project.ProjectBuildingRequest
 import org.apache.maven.project.ProjectModelResolver
 import org.apache.maven.project.createMavenReactorPool
+import org.apache.maven.repository.internal.DefaultVersionResolver
+import org.eclipse.aether.DefaultRepositorySystemSession
 import org.eclipse.aether.RepositorySystem
 import org.eclipse.aether.RepositorySystemSession
 import org.eclipse.aether.impl.RemoteRepositoryManager
+import org.eclipse.aether.internal.impl.DefaultChecksumPolicyProvider
+import org.eclipse.aether.internal.impl.DefaultMetadataResolver
+import org.eclipse.aether.internal.impl.DefaultRemoteRepositoryManager
+import org.eclipse.aether.internal.impl.DefaultRepositorySystem
+import org.eclipse.aether.internal.impl.DefaultUpdatePolicyAnalyzer
+import org.eclipse.aether.metadata.DefaultMetadata
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -37,6 +45,9 @@ import java.util.Properties
 import jakarta.inject.Provider
 import kotlin.io.path.Path
 import kotlin.io.path.name
+import elide.annotations.Factory
+import elide.annotations.Singleton
+import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.ProjectEcosystem.MavenPom
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.MavenPomManifest

@@ -62,6 +62,7 @@ dependencies {
   implementation(libs.semver)
   implementation(libs.purl)
 
+  testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlin.test.junit5)
 }

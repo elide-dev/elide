@@ -10,11 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:Suppress("unused")
 
 package elide.tool.cli.state
 
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
+import kotlinx.atomicfu.atomic
 
 /**
  * # Command State
@@ -40,10 +40,10 @@ import java.util.concurrent.atomic.AtomicReference
 
   internal companion object {
     // Private singleton instance container.
-    private val singleton: AtomicReference<CommandState?> = AtomicReference(null)
+    private val singleton = atomic<CommandState?>(null)
 
     // Whether the singleton has been initialized.
-    private val initialized = AtomicBoolean(false)
+    private val initialized = atomic(false)
 
     /** @return Root command state. */
     @JvmStatic fun of(options: CommandOptions): CommandState = CommandState(CommandInfo(
@@ -51,22 +51,23 @@ import java.util.concurrent.atomic.AtomicReference
     ))
 
     /** @return Statically-available command state. */
-    @JvmStatic fun resolve(): CommandState? = singleton.get()
+    @JvmStatic fun resolve(): CommandState? = singleton.value
 
     /** @return Reset statically-available state. */
     @JvmStatic fun reset() {
-      initialized.set(false)
-      singleton.set(null)
+      initialized.value = false
+      singleton.value = null
     }
 
     /** Register a [CommandState] instance as the canonical global instance, so it may be resolved statically. */
     @Synchronized @JvmStatic private fun registerGlobally(target: CommandState) {
-      require(!initialized.get()) {
+      require(!initialized.value) {
         "Cannot initialize `CommandState` singleton twice"
       }
-      require(singleton.compareAndSet(null, target)) {
+      require(singleton.value == null) {
         "Cannot register `CommandState` singleton twice"
       }
+      singleton.value = target
       initialized.compareAndSet(
         false,
         true,

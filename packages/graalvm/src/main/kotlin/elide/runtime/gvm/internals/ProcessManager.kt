@@ -13,7 +13,7 @@
 package elide.runtime.gvm.internals
 
 import java.nio.file.Path
-import java.util.concurrent.atomic.AtomicReference
+import kotlinx.atomicfu.atomic
 
 /**
  * # Process Manager
@@ -55,20 +55,20 @@ public interface ProcessManager {
 
   /** Static access to process manager state. */
   public companion object {
-    private val initialized: AtomicReference<Boolean> = AtomicReference(false)
-    private val args: AtomicReference<Array<String>> = AtomicReference(emptyArray())
-    private val workingDir: AtomicReference<String> = AtomicReference("")
-    private val binaryPath: AtomicReference<Path> = AtomicReference(null)
+    private val initialized = atomic(false)
+    private val args = atomic(emptyArray<String>())
+    private val workingDir = atomic("")
+    private val binaryPath = atomic<Path?>(null)
 
     private val facade = object : ProcessManager {
-      override fun binpath(): Path? = binaryPath.get()
+      override fun binpath(): Path? = binaryPath.value
 
       override fun arguments(): Array<String> {
-        return args.get()
+        return args.value
       }
 
       override fun workingDirectory(): String {
-        return workingDir.get()
+        return workingDir.value
       }
     }
 
@@ -84,9 +84,9 @@ public interface ProcessManager {
      */
     @JvmStatic public fun initializeStatic(bin: String, arguments: Array<String>, workingDirectory: String) {
       require(initialized.compareAndSet(false, true)) { "Process manager already initialized" }
-      args.set(arguments)
-      workingDir.set(workingDirectory)
-      binaryPath.set(Path.of(bin))
+      args.value = arguments
+      workingDir.value = workingDirectory
+      binaryPath.value = Path.of(bin)
     }
 
     /**

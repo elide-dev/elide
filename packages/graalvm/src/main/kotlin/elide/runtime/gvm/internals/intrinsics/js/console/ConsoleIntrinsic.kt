@@ -58,7 +58,7 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
   }
 
   // Interception logger (mostly for testing).
-  private var interceptor = atomic<Logger?>(null)
+  private val interceptor = atomic<Logger?>(null)
 
   // Set an interceptor which receives a mirror of all logging calls.
   internal fun setInterceptor(interceptor: Logger?) {

@@ -41,7 +41,6 @@ import org.graalvm.polyglot.Engine
 import java.util.EnumSet
 import java.util.TreeSet
 import java.util.concurrent.ConcurrentSkipListMap
-import kotlinx.atomicfu.atomic
 
 // Constants for use by the interop loader.
 private const val LANGUAGE_ID_PYTHON = "python"
@@ -172,7 +171,7 @@ internal object ElideInteropModuleLoader : DelegatedModuleLoaderRegistry.Delegat
       .cached(false)
       .build()
 
-    val facade = atomic<ElideForeignModuleFacade?>(null)
+    var facade: ElideForeignModuleFacade? = null
     val rootNode: JavaScriptRootNode = object : JavaScriptRootNode(
       realm.context.language,
       source.createUnavailableSection(),
@@ -192,7 +191,7 @@ internal object ElideInteropModuleLoader : DelegatedModuleLoaderRegistry.Delegat
       }
 
       private fun setInteropModuleDefaultExport(frame: VirtualFrame, module: JSModuleRecord) {
-        val surface = facade.value ?: error("Foreign module facade not initialized")
+        val surface = facade ?: error("Foreign module facade not initialized")
         val currentEnv = realm.env
         val langInfo = currentEnv.internalLanguages[surface.lang]
           ?: error("Language not initialized: '${surface.lang}'")
@@ -241,14 +240,14 @@ internal object ElideInteropModuleLoader : DelegatedModuleLoaderRegistry.Delegat
       frameDescriptor,
     )
     when (targetLang) {
-      LANGUAGE_ID_PYTHON -> facade.value = PythonForeignModuleFacade(
+      LANGUAGE_ID_PYTHON -> facade = PythonForeignModuleFacade(
         data,
         this,
       )
 
       else -> error("Unsupported language for foreign imports: '$targetLang'")
     }
-    return facade.value!!
+    return facade
   }
 
   override fun test(t: DelegatedModuleLoaderRegistry.DelegatedModuleRequest): Boolean {

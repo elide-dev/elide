@@ -1,9 +1,6 @@
 public abstract interface annotation class elide/annotations/engine/VMFeature : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class elide/runtime/core/DelicateElideApi : java/lang/annotation/Annotation {
-}
-
 public abstract interface class elide/runtime/core/EngineLifecycle {
 	public abstract fun on (Lelide/runtime/core/EngineLifecycleEvent;Lkotlin/jvm/functions/Function1;)V
 }

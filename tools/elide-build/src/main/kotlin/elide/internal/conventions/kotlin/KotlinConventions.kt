@@ -223,6 +223,9 @@ internal fun Project.configureKotlinBuild(
     sourceSets.all {
       languageSettings {
         optIn("kotlin.ExperimentalUnsignedTypes")
+        optIn("kotlin.time.ExperimentalTime")
+        optIn("elide.runtime.core.DelicateElideApi")
+
         if (conventions.explicitApi) explicitApi()
         progressiveMode = false
         apiVersion = kotlinVersionParsed.version

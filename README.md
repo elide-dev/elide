@@ -138,6 +138,9 @@ listed in the config:
 
 ![elide-containers](./project/gifs/containers.gif)
 
+> [!NOTE]
+> See the full sources for the `containers` sample [here](https://github.com/elide-dev/elide/tree/main/packages/cli/src/projects/containers)
+
 ## Installation
 
 You can install Elide in several ways:

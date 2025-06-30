@@ -77,6 +77,12 @@ dependencies {
   testImplementation(libs.kotlin.test.junit5)
 }
 
+tasks.processResources {
+  from(layout.projectDirectory.dir("src/main/pkl")) {
+    into("META-INF/elide/pkl/")
+  }
+}
+
 tasks.test {
   systemProperty("elide.root", rootProject.layout.projectDirectory.asFile.toPath().absolutePathString())
   jvmArgs.add("--enable-native-access=ALL-UNNAMED")

@@ -2196,7 +2196,6 @@ fun Jar.applyJarSettings() {
 }
 
 val intermediateKotlinResources = kotlinHomeRoot.map { it.dir(libs.versions.kotlin.sdk.get()) }
-val pklSources = layout.projectDirectory.dir("src/main/pkl")
 
 // note: the traditional KOTLIN_HOME path does not end with `lib`, so it should point to the versioned kotlin root here,
 // even though elide's own paths include `lib`.
@@ -2292,10 +2291,6 @@ tasks {
     //   include("umbrella.dll")
     //   into("META-INF/native/")
     // }
-
-    from(pklSources) {
-      into("META-INF/elide/pkl/")
-    }
   }
 
   jar {

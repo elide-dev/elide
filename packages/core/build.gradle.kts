@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import elide.internal.conventions.kotlin.*
 
 plugins {
@@ -31,6 +32,10 @@ elide {
     atomicFu = true
     target = KotlinTarget.Default
     explicitApi = true
+  }
+
+  jvm {
+    target = JvmTarget.JVM_21
   }
 }
 

@@ -111,6 +111,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     val name: String
     val description: String
     val languages: Set<String>
+    val features: SampleFeatures
     val noManifest: Boolean
     val hasTests: Boolean
     val hasBuild: Boolean
@@ -119,6 +120,18 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   private sealed interface RenderableTemplate: RenderableTemplateInfo {
     val tree: Map<Path, ProjectFile>
+  }
+
+  /** Features supported by a given sample project. */
+  @Serializable @JvmRecord private data class SampleFeatures(
+    val install: Boolean = true,
+    val build: Boolean = true,
+    val test: Boolean = true,
+  ) {
+    companion object {
+      /** Default features for a sample project. */
+      val DEFAULTS = SampleFeatures()
+    }
   }
 
   /** Models project template info as specified in JSON from resources. */
@@ -130,6 +143,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     override val hasDependencies: Boolean = true,
     override val hasTests: Boolean = true,
     override val hasBuild: Boolean = true,
+    override val features: SampleFeatures = SampleFeatures.DEFAULTS,
     val files: List<String> = emptyList(),
   ): RenderableTemplateInfo
 
@@ -177,6 +191,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     override val hasDependencies: Boolean get() = true
     override val hasTests: Boolean get() = true
     override val hasBuild: Boolean get() = true
+    override val features: SampleFeatures get() = SampleFeatures.DEFAULTS
     override val tree: Map<Path, ProjectFile> get() = buildMap {
       defaultFiles()
     }

@@ -14,16 +14,19 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-  id("java")
   alias(libs.plugins.elide.conventions)
   alias(libs.plugins.intellij.platform)
   kotlin("jvm")
+  id("java")
 }
 
 elide {
   jvm {
     // Intellij plugins can only target up to JVM 21
     target = JvmTarget.JVM_21
+  }
+  kotlin {
+    customKotlinCompilerArgs += "-Xskip-prerelease-check"
   }
 }
 
@@ -53,7 +56,10 @@ repositories {
 
 dependencies {
   // manifest and lockfile parsing
-  implementation(projects.packages.tooling)
+  implementation(projects.packages.tooling) {
+    // plugins must use the bundled coroutines library
+    exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-coroutines-core")
+  }
 
   intellijPlatform {
     create("IC", libs.versions.intellij.target.ide.get())

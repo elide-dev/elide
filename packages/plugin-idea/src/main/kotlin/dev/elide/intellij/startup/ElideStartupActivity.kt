@@ -15,17 +15,25 @@ package dev.elide.intellij.startup
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.externalSystem.autoimport.ExternalSystemProjectTracker
-import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode
+import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder
+import com.intellij.openapi.externalSystem.util.ExternalSystemConstants
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
 import com.intellij.openapi.project.BaseProjectDirectories.Companion.getBaseDirectories
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
+import com.intellij.openapi.util.io.toCanonicalPath
+import com.intellij.openapi.util.registry.Registry
 import dev.elide.intellij.Constants
 import dev.elide.intellij.project.ElideProjectAware
 
 /** Startup activity used to detect an Elide project and sync it if needed. */
-class ElideStartupSyncActivity : ProjectActivity {
+class ElideStartupActivity : ProjectActivity {
   override suspend fun execute(project: Project) {
+    // request to run external system APIs in-process, as opposed to calling them in a separate background process;
+    // this simplifies the setup of components like the project resolver, and allows them to use the full intellij API
+    Registry.get(Constants.SYSTEM_ID.id + ExternalSystemConstants.USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX)
+      .setValue(true)
+
     val projectTracker = ExternalSystemProjectTracker.getInstance(project)
 
     for (baseDir in project.getBaseDirectories()) {
@@ -35,19 +43,17 @@ class ElideStartupSyncActivity : ProjectActivity {
       // have the IDE track changes to the project config files, then trigger a sync
       LOG.debug("Found manifest, adding to tracker and refreshing")
       projectTracker.register(ElideProjectAware(project, baseDir.path))
-      ExternalSystemUtil.refreshProject(
-        /* project = */ project,
-        /* externalSystemId = */ Constants.SYSTEM_ID,
-        /* externalProjectPath = */ baseDir.path,
-        /* isPreviewMode = */ false,
-        /* progressExecutionMode = */ ProgressExecutionMode.IN_BACKGROUND_ASYNC,
-      )
 
+      val spec = ImportSpecBuilder(project, Constants.SYSTEM_ID)
+        .navigateToError()
+        .build()
+
+      ExternalSystemUtil.refreshProject(baseDir.toNioPath().toCanonicalPath(), spec)
       break
     }
   }
 
   private companion object {
-    @JvmStatic private val LOG = Logger.getInstance(ElideStartupSyncActivity::class.java)
+    @JvmStatic private val LOG = Logger.getInstance(ElideStartupActivity::class.java)
   }
 }

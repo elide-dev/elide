@@ -14,17 +14,28 @@
 package dev.elide.intellij.project
 
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.externalSystem.importing.ProjectResolverPolicy
 import com.intellij.openapi.externalSystem.model.DataNode
 import com.intellij.openapi.externalSystem.model.ProjectKeys
-import com.intellij.openapi.externalSystem.model.project.ContentRootData
-import com.intellij.openapi.externalSystem.model.project.ExternalSystemSourceType
-import com.intellij.openapi.externalSystem.model.project.ModuleData
-import com.intellij.openapi.externalSystem.model.project.ProjectData
+import com.intellij.openapi.externalSystem.model.project.*
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
+import com.intellij.openapi.progress.runBlockingCancellable
 import dev.elide.intellij.Constants
+import dev.elide.intellij.manifests.ElideManifestService
 import dev.elide.intellij.settings.ElideExecutionSettings
+import org.jetbrains.annotations.PropertyKey
+import java.nio.file.Path
+import kotlin.io.path.Path
+import kotlin.io.path.notExists
+import elide.tooling.lockfile.LockfileLoader
+import elide.tooling.lockfile.loadLockfileSafe
+import elide.tooling.project.ElideConfiguredProject
+import elide.tooling.project.ElideProjectInfo
+import elide.tooling.project.ElideProjectLoader
+import elide.tooling.project.SourceSetFactory
 
 /**
  * A service capable of using the Elide manifest and lockfile to build a project model that can be understood by the
@@ -35,51 +46,154 @@ import dev.elide.intellij.settings.ElideExecutionSettings
  * tracker.
  */
 class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSettings> {
-  override fun cancelTask(id: ExternalSystemTaskId, listener: ExternalSystemTaskNotificationListener): Boolean = true
+  private fun ExternalSystemTaskNotificationListener.onStep(taskId: ExternalSystemTaskId, text: String) {
+    onStatusChange(ExternalSystemTaskNotificationEvent(taskId, text))
+  }
 
+  private fun progressMessage(@PropertyKey(resourceBundle = "i18n.Strings") key: String): String {
+    return Constants.Strings["resolve.progress", Constants.Strings[key]]
+  }
+
+  override fun cancelTask(id: ExternalSystemTaskId, listener: ExternalSystemTaskNotificationListener): Boolean {
+    return true
+  }
+
+  @Suppress("UnstableApiUsage")
   override fun resolveProjectInfo(
     id: ExternalSystemTaskId,
     projectPath: String,
     isPreviewMode: Boolean,
     settings: ElideExecutionSettings?,
+    resolverPolicy: ProjectResolverPolicy?,
     listener: ExternalSystemTaskNotificationListener
-  ): DataNode<ProjectData?>? {
-    LOG.debug("Resolving project at '$projectPath'")
+  ): DataNode<ProjectData>? {
+    return runBlockingCancellable {
+      LOG.debug("Resolving project at '$projectPath'")
 
+      val projectModel = runCatching {
+        // find a manifest in the project directory
+        listener.onStep(id, progressMessage("resolve.steps.discovery"))
+        val projectRoot = Path(projectPath)
+        val manifestPath = projectRoot.resolve(Constants.MANIFEST_NAME)
+
+        if (manifestPath.notExists()) {
+          LOG.debug("No Elide manifest found under $projectPath")
+          return@runCatching null
+        }
+
+        // parse the manifest
+        listener.onStep(id, progressMessage("resolve.steps.parse"))
+        val manifest = ElideManifestService().parse(manifestPath)
+
+        // call the CLI in case the lockfile is outdated
+        listener.onStep(id, progressMessage("resolve.steps.refresh"))
+
+        // configure the project
+        listener.onStep(id, progressMessage("resolve.steps.configure"))
+        val loader = buildProjectLoader(projectRoot, settings)
+        val project = ElideProjectInfo(projectRoot, manifest, null).load(loader)
+
+        // build the project model from the manifest and lockfile
+        listener.onStep(id, progressMessage("resolve.steps.buildModel"))
+        buildProjectModel(projectPath, project)
+      }.onSuccess {
+        listener.onSuccess(projectPath, id)
+      }.onFailure { cause ->
+        listener.onFailure(projectPath, id, RuntimeException("Failed to load Elide project", cause))
+      }
+
+      projectModel.getOrThrow()
+    }
+  }
+
+  /** Build the project model given a configured Elide [project]. */
+  private fun buildProjectModel(projectPath: String, project: ElideConfiguredProject): DataNode<ProjectData> {
     // stubbed project model
     val projectData = ProjectData(
-      Constants.SYSTEM_ID,
-      "Elide Project",
-      projectPath,
-      projectPath,
-    )
-
-    // stubbed sample module
-    val module = ModuleData(
-      "sample",
-      Constants.SYSTEM_ID,
-      "JAVA_MODULE",
-      "Sample",
-      "$projectPath/src/main",
-      "$projectPath/src/main",
+      /* owner = */ Constants.SYSTEM_ID,
+      /* externalName = */ project.manifest.name ?: Constants.Strings["project.defaults.name"],
+      /* ideProjectFileDirectoryPath = */ projectPath,
+      /* linkedExternalProjectPath = */ projectPath,
     )
 
     val projectNode = DataNode(ProjectKeys.PROJECT, projectData, null)
-    val moduleNode = projectNode.createChild(ProjectKeys.MODULE, module)
-
-    // stubbed content root
-    val rootData = ContentRootData(
-      Constants.SYSTEM_ID,
-      "$projectPath/src/main",
-    )
-
-    rootData.storePath(ExternalSystemSourceType.SOURCE, "$projectPath/src/main/kotlin")
-    moduleNode.createChild(ProjectKeys.CONTENT_ROOT, rootData)
+    val mainModule = projectNode.createMainModule(projectPath)
+    projectNode.createTestModule(projectPath, mainModule.data)
 
     return projectNode
   }
 
-  private companion object {
+  private fun DataNode<ProjectData>.createMainModule(projectPath: String): DataNode<ModuleData> {
+    // main module
+    val module = ModuleData(
+      /* id = */ "main",
+      /* owner = */ Constants.SYSTEM_ID,
+      /* moduleTypeId = */ "JAVA_MODULE",
+      /* externalName = */ "main",
+      /* moduleFileDirectoryPath = */ "$projectPath/.idea",
+      /* externalConfigPath = */ "$projectPath/${Constants.MANIFEST_NAME}",
+    )
+
+    val sourceRootData = ContentRootData(
+      Constants.SYSTEM_ID,
+      "$projectPath/src/main",
+    )
+
+    sourceRootData.storePath(ExternalSystemSourceType.SOURCE, "$projectPath/src/main/kotlin")
+    sourceRootData.storePath(ExternalSystemSourceType.RESOURCE, "$projectPath/src/main/resources")
+
+    val moduleNode = createChild(ProjectKeys.MODULE, module)
+    moduleNode.createChild(ProjectKeys.CONTENT_ROOT, sourceRootData)
+
+    return moduleNode
+  }
+
+  private fun DataNode<ProjectData>.createTestModule(
+    projectPath: String,
+    mainModuleData: ModuleData
+  ): DataNode<ModuleData> {
+    // main module
+    val module = ModuleData(
+      /* id = */ "test",
+      /* owner = */ Constants.SYSTEM_ID,
+      /* moduleTypeId = */ "JAVA_MODULE",
+      /* externalName = */ "test",
+      /* moduleFileDirectoryPath = */ "$projectPath/.idea",
+      /* externalConfigPath = */ "$projectPath/${Constants.MANIFEST_NAME}",
+    )
+
+    val sourceRootData = ContentRootData(
+      Constants.SYSTEM_ID,
+      "$projectPath/src/test",
+    )
+
+    sourceRootData.storePath(ExternalSystemSourceType.TEST, "$projectPath/src/test/kotlin")
+    sourceRootData.storePath(ExternalSystemSourceType.TEST_RESOURCE, "$projectPath/src/test/resources")
+
+    val moduleNode = createChild(ProjectKeys.MODULE, module)
+    moduleNode.createChild(ProjectKeys.CONTENT_ROOT, sourceRootData)
+
+    val mainDependency = ModuleDependencyData(module, mainModuleData)
+    moduleNode.createChild(ProjectKeys.MODULE_DEPENDENCY, mainDependency)
+
+    return moduleNode
+  }
+
+  /**
+   * Construct a new [ElideProjectLoader] that uses the resources from the Elide distribution set in the execution
+   * [settings].
+   */
+  private fun buildProjectLoader(projectPath: Path, settings: ElideExecutionSettings?): ElideProjectLoader {
+    return object : ElideProjectLoader {
+      override val lockfileLoader: LockfileLoader = LockfileLoader { loadLockfileSafe(projectPath) }
+      override val sourceSetFactory: SourceSetFactory = SourceSetFactory.Default
+
+      // TODO(@darvld): resolve from execution settings
+      override val resourcesPath: Path get() = projectPath.resolve(".elide")
+    }
+  }
+
+  companion object {
     @JvmStatic private val LOG = Logger.getInstance(ElideProjectResolver::class.java)
   }
 }

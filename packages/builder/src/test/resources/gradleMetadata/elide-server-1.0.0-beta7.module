@@ -1,0 +1,418 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.elide",
+    "module": "elide-server",
+    "version": "1.0.0-beta7",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "9.0.0-rc-1"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 22,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "io.netty",
+          "module": "netty-bom",
+          "version": {
+            "requires": "4.2.2.Final"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "jakarta.inject",
+          "module": "jakarta.inject-api",
+          "version": {
+            "requires": "2.0.1"
+          }
+        },
+        {
+          "group": "org.slf4j",
+          "module": "slf4j-api",
+          "version": {
+            "requires": "2.0.16"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "guava",
+          "version": {
+            "requires": "33.4.8-jre"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-core",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-context",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-http",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-inject",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "org.reactivestreams",
+          "module": "reactive-streams",
+          "version": {
+            "requires": "1.0.4"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core-jvm",
+          "version": {
+            "requires": "1.10.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-html-jvm",
+          "version": {
+            "requires": "0.12.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-core-jvm",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-base",
+          "version": {
+            "requires": "1.0.0-beta7"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-ssr",
+          "version": {
+            "requires": "1.0.0-beta7"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-graalvm",
+          "version": {
+            "requires": "1.0.0-beta7"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-inject",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.2.0"
+          }
+        },
+        {
+          "group": "io.micronaut.platform",
+          "module": "micronaut-platform",
+          "version": {
+            "requires": "4.9.0"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          },
+          "endorseStrictVersions": true
+        }
+      ],
+      "files": [
+        {
+          "name": "elide-server-1.0.0-beta7.jar",
+          "url": "elide-server-1.0.0-beta7.jar",
+          "size": 186324,
+          "sha512": "a5cb2fb57908758a6fd0f2dcf794c0f7745be4941ce3e9bfd63f2a93265e36b31a97984a88982b8e60a14e9cfabd94df2d2f2d13bf8fa38bac0b8218523e0564",
+          "sha256": "42478b2a9b9869e5a970ccd8523f1c523f496aa5db89c0fe2d870157f57c044a",
+          "sha1": "84b05aff7aaf2481ead6bc08ac9422ecf4864b39",
+          "md5": "a7d539a9ccf73adbd95b351241af5be2"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 22,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.graalvm.polyglot",
+          "module": "polyglot",
+          "version": {
+            "requires": "24.2.1"
+          }
+        },
+        {
+          "group": "io.projectreactor",
+          "module": "reactor-core",
+          "version": {
+            "requires": "3.7.7"
+          }
+        },
+        {
+          "group": "io.micronaut.serde",
+          "module": "micronaut-serde-jackson",
+          "version": {
+            "requires": "2.15.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-json-jvm",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.10.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-guava",
+          "version": {
+            "requires": "1.10.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-reactor",
+          "version": {
+            "requires": "1.10.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin-wrappers",
+          "module": "kotlin-css",
+          "version": {
+            "requires": "2025.6.14"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-aop",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-http-netty",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-http-server",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-http-server-netty",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.netty",
+          "module": "netty-bom",
+          "version": {
+            "requires": "4.2.2.Final"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "jakarta.inject",
+          "module": "jakarta.inject-api",
+          "version": {
+            "requires": "2.0.1"
+          }
+        },
+        {
+          "group": "org.slf4j",
+          "module": "slf4j-api",
+          "version": {
+            "requires": "2.0.16"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "guava",
+          "version": {
+            "requires": "33.4.8-jre"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-core",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-context",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-http",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-inject",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "org.reactivestreams",
+          "module": "reactive-streams",
+          "version": {
+            "requires": "1.0.4"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core-jvm",
+          "version": {
+            "requires": "1.10.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-html-jvm",
+          "version": {
+            "requires": "0.12.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-core-jvm",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-base",
+          "version": {
+            "requires": "1.0.0-beta7"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-ssr",
+          "version": {
+            "requires": "1.0.0-beta7"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-graalvm",
+          "version": {
+            "requires": "1.0.0-beta7"
+          }
+        },
+        {
+          "group": "io.micronaut",
+          "module": "micronaut-inject",
+          "version": {
+            "requires": "4.9.5"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.2.0"
+          }
+        },
+        {
+          "group": "io.micronaut.platform",
+          "module": "micronaut-platform",
+          "version": {
+            "requires": "4.9.0"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          },
+          "endorseStrictVersions": true
+        }
+      ],
+      "files": [
+        {
+          "name": "elide-server-1.0.0-beta7.jar",
+          "url": "elide-server-1.0.0-beta7.jar",
+          "size": 186324,
+          "sha512": "a5cb2fb57908758a6fd0f2dcf794c0f7745be4941ce3e9bfd63f2a93265e36b31a97984a88982b8e60a14e9cfabd94df2d2f2d13bf8fa38bac0b8218523e0564",
+          "sha256": "42478b2a9b9869e5a970ccd8523f1c523f496aa5db89c0fe2d870157f57c044a",
+          "sha1": "84b05aff7aaf2481ead6bc08ac9422ecf4864b39",
+          "md5": "a7d539a9ccf73adbd95b351241af5be2"
+        }
+      ]
+    }
+  ]
+}

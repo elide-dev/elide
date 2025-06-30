@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage", "MagicNumber")
+@file:Suppress("UnstableApiUsage", "MagicNumber")
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_22
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1

@@ -15,13 +15,11 @@ package elide.internal.conventions.publishing
 
 import Dev_sigstore_signPlugin
 import dev.sigstore.sign.SigstoreSignExtension
-import dev.sigstore.sign.tasks.SigstoreSignFilesTask
 import org.gradle.api.Project
 import org.gradle.api.credentials.AwsCredentials
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
-import org.gradle.kotlin.dsl.register
 import org.gradle.plugins.signing.Sign
 import org.gradle.plugins.signing.SigningExtension
 import java.net.URI
@@ -82,6 +80,7 @@ internal fun Project.configurePublishing(
     this.description = "Publish all release publications for this Elide package"
 
     listOf(
+      "publishAllPublicationsToStageRepository",
       "publishToSonatype",
       "publishAllPublicationsToElideRepository",
     ).map(project.tasks::named).map { pubTask ->
@@ -138,13 +137,8 @@ internal fun Project.configurePublishingRepositories() {
 
       // GitHub Maven registry
       maven {
-        name = "github"
-        url = uri(Repositories.GITHUB_MAVEN)
-
-        credentials {
-          username = System.getenv(Credentials.GITHUB_ACTOR)
-          password = System.getenv(Credentials.GITHUB_TOKEN)
-        }
+        name = "stage"
+        url = uri("file://${rootProject.layout.buildDirectory.dir("m2").get().asFile.absolutePath}")
       }
     }
   }

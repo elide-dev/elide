@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.graalvm.js</groupId>
+  <artifactId>js</artifactId>
+  <version>24.2.1-elide-1.0.0-beta7</version>
+  <packaging>pom</packaging>
+  <url>http://www.graalvm.org/</url>
+  <name>Js Enterprise</name>
+  <description>GraalJS, a high-performance embeddable JavaScript runtime for Java. This POM dependency pulls in GraalJS dependencies and Truffle.</description>
+  <developers>
+    <developer>
+      <name>GraalVM Development</name>
+      <email>graalvm-dev@oss.oracle.com</email>
+      <organization>Oracle Corporation</organization>
+      <organizationUrl>http://www.graalvm.org/</organizationUrl>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>GraalVM Free Terms and Conditions (GFTC) including License for Early Adopter Versions</name>
+      <url>https://www.oracle.com/downloads/licenses/graal-free-license.html</url>
+    </license>
+    <license>
+      <name>MIT License</name>
+      <url>http://opensource.org/licenses/MIT</url>
+    </license>
+    <license>
+      <name>Universal Permissive License, Version 1.0</name>
+      <url>http://opensource.org/licenses/UPL</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>org.graalvm.js</groupId>
+      <artifactId>js-community</artifactId>
+      <version>24.2.1</version>
+      <type>pom</type>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.truffle</groupId>
+      <artifactId>truffle-enterprise</artifactId>
+      <version>24.2.1</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+  <scm>
+    <connection>scm:git:https://github.com/oracle/graal.git</connection>
+    <developerConnection>scm:git:git@github.com:oracle/graal.git</developerConnection>
+    <url>https://github.com/oracle/graal</url>
+  </scm>
+</project>

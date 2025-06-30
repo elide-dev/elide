@@ -207,6 +207,7 @@ include(
   ":packages:http",
   ":packages:local-ai",
   ":packages:platform",
+  ":packages:runner",
   ":packages:server",
   ":packages:sqlite",
   ":packages:ssr",

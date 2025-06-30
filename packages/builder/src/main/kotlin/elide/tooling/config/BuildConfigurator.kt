@@ -20,6 +20,7 @@ import kotlinx.serialization.Serializable
 import kotlin.reflect.KClass
 import elide.exec.ActionScope
 import elide.exec.TaskGraphBuilder
+import elide.tooling.BuildMode
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.registry.ResolverRegistry
@@ -71,6 +72,12 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     /** Whether to enable check tasks, such as linters. */
     public val checks: Boolean
 
+    /** Operating mode for the build. */
+    public val buildMode: BuildMode
+
+    /** Whether to publish and/or deploy. */
+    public val deploy: Boolean
+
     /** @return Mutable form of these build settings. */
     public fun toMutable(): MutableBuildSettings
   }
@@ -89,6 +96,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override val dependencies: Boolean,
     override val dry: Boolean,
     override val checks: Boolean,
+    override val buildMode: BuildMode,
+    override val deploy: Boolean,
   ) : BuildSettings {
     override fun toMutable(): MutableBuildSettings = MutableBuildSettings(
       caching = caching,
@@ -99,6 +108,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
       checks = checks,
       verbose = verbose,
       debug = debug,
+      buildMode = buildMode,
+      deploy = deploy,
     )
   }
 
@@ -116,6 +127,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override var dependencies: Boolean = true,
     override var dry: Boolean = false,
     override var checks: Boolean = true,
+    override var buildMode: BuildMode = BuildMode.default(),
+    override var deploy: Boolean = false,
   ) : BuildSettings {
     public fun build(): BuildSettings = ImmutableBuildSettings(
       caching = caching,
@@ -126,6 +139,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
       release = release,
       verbose = verbose,
       debug = debug,
+      buildMode = buildMode,
+      deploy = deploy,
     )
 
     override fun toMutable(): MutableBuildSettings = this

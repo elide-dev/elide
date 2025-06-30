@@ -25,6 +25,7 @@ import com.google.cloud.tools.jib.api.JibContainer
 import com.google.cloud.tools.jib.api.JibContainerBuilder
 import com.google.cloud.tools.jib.api.LogEvent
 import com.google.cloud.tools.jib.api.RegistryImage
+import com.google.cloud.tools.jib.api.TarImage
 import com.google.cloud.tools.jib.api.buildplan.AbsoluteUnixPath
 import com.google.cloud.tools.jib.api.buildplan.FileEntriesLayer
 import com.google.cloud.tools.jib.api.buildplan.FilePermissions
@@ -230,11 +231,26 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
   }
 
   // Configure target container information.
-  private fun buildTargetContainerizer(ref: ImageReference, target: TargetImage, reg: RegistryImage?): Containerizer {
-    val (_, coordinate) = target
-    return when (coordinate.registry) {
-      null -> Containerizer.to(DockerDaemonImage.named(ref))
-      else -> Containerizer.to(requireNotNull(reg) { "Expected a `RegistryImage`" })
+  private fun buildTargetContainerizer(
+    state: ElideBuildState,
+    ref: ImageReference,
+    target: TargetImage?,
+    reg: RegistryImage?,
+  ): Containerizer {
+    return if (target == null) {
+      // build to a codebase-local tarball
+      Containerizer.to(TarImage.at(
+        state.layout
+          .artifacts
+          .resolve("containers")
+          .resolve("container.tar")
+      ).named(ref))
+    } else {
+      val (_, coordinate) = target
+      when (coordinate.registry) {
+        null -> Containerizer.to(DockerDaemonImage.named(ref))
+        else -> Containerizer.to(requireNotNull(reg) { "Expected a `RegistryImage`" })
+      }
     }
   }
 
@@ -265,8 +281,15 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
     }
 
     runCatching {
+      // if we are running in dry or non-deploy mode, build to a tarball
+      val dontPush = !config.settings.deploy || config.settings.dry
+      val effectiveTarget = when (dontPush) {
+        false -> target
+        true -> null
+      }
+
       @Suppress("UsePropertyAccessSyntax")
-      jib.containerize(buildTargetContainerizer(ref, target, reg).apply {
+      jib.containerize(buildTargetContainerizer(this@build, ref, effectiveTarget, reg).apply {
         setToolName("elide")
         setToolVersion("beta")  // @TODO actual version
       })
@@ -398,9 +421,14 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
           buildString {
             append("✅ $label $postfix")
             append(" ")
-            append(TextStyles.bold(container.targetImage.toString()))
-            append('@')
-            append(container.digest)
+            if (didPush) {
+              append(TextStyles.bold(container.targetImage.toString()))
+              append('@')
+              append(container.digest)
+            } else {
+              append("container ")
+              append(TextStyles.bold(container.targetImage.toString()))
+            }
           }
         )
         elide.exec.Result.Nothing

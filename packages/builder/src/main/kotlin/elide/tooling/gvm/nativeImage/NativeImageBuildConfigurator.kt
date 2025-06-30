@@ -28,6 +28,7 @@ import elide.tooling.AbstractTool
 import elide.tooling.Argument
 import elide.tooling.ArgumentContext
 import elide.tooling.Arguments
+import elide.tooling.BuildMode
 import elide.tooling.Classpath
 import elide.tooling.ClasspathSpec
 import elide.tooling.Environment
@@ -217,7 +218,18 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
                   OptimizationLevel.AUTO -> when {
                       config.settings.release -> if (pgoEnabled) OptimizationLevel.THREE else OptimizationLevel.FOUR
                       config.settings.debug -> OptimizationLevel.ZERO
-                      else -> OptimizationLevel.BUILD
+                      else -> when (config.settings.buildMode) {
+                        BuildMode.Debug -> OptimizationLevel.ZERO
+                        BuildMode.Development -> OptimizationLevel.BUILD
+                        BuildMode.Release -> if (
+                          artifact.options.pgo.enabled &&
+                          artifact.options.pgo.profiles.isNotEmpty()
+                        ) {
+                          OptimizationLevel.THREE
+                        } else {
+                          OptimizationLevel.FOUR
+                        }
+                      }
                   }.let {
                       "-O${it.symbol}"
                   }

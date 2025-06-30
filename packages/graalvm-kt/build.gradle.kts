@@ -175,10 +175,10 @@ dependencies {
   embeddedJava(libs.junit.platform.commons)
   embeddedJava(libs.junit.platform.console)
   embeddedJava(libs.slf4j)
-  embeddedJava(mn.micronaut.inject.java)
-  embeddedJava(mn.micronaut.test.junit5)
   embeddedJava(libs.apiguardian.api)
   embeddedJava(libs.opentest)
+  embeddedJava(mn.micronaut.inject.java)
+  embeddedJava(libs.jakarta.inject)
 
   // Testing
   testImplementation(projects.packages.test)

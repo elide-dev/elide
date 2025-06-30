@@ -48,7 +48,7 @@ import elide.runtime.Logging
   @Singleton public fun repositorySystem(locator: DefaultServiceLocator): DefaultRepositorySystem {
     // Create a new Maven repository system
     logging.trace { "Creating repo system" }
-    return requireNotNull(locator.getService(RepositorySystem ::class.java) as DefaultRepositorySystem) {
+    return requireNotNull(locator.getService(RepositorySystem::class.java) as DefaultRepositorySystem) {
       "Failed to initialize Maven repository system: Repository system is null"
     }
   }

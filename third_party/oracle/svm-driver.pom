@@ -25,7 +25,7 @@
     <dependency>
       <groupId>org.graalvm.nativeimage</groupId>
       <artifactId>library-support</artifactId>
-      <version>21.3.13</version>
+      <version>24.2.1</version>
     </dependency>
   </dependencies>
   <scm>

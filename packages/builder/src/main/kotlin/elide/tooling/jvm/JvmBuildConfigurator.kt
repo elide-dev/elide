@@ -689,6 +689,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
                 config,
                 srcSet,
                 tests = true,
+                additionalDeps = testCompileClasspath,
               ).describedBy {
                 val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
                 "Compiling ${srcSet.paths.size} Java test $pluralized"

@@ -258,6 +258,22 @@ public abstract interface class elide/tooling/Arguments$Suite : elide/tooling/Ar
 	public fun toMutable ()Lelide/tooling/MutableArguments;
 }
 
+public final class elide/tooling/BuildMode : java/lang/Enum {
+	public static final field Companion Lelide/tooling/BuildMode$Companion;
+	public static final field Debug Lelide/tooling/BuildMode;
+	public static final field Development Lelide/tooling/BuildMode;
+	public static final field Release Lelide/tooling/BuildMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/BuildMode;
+	public static fun values ()[Lelide/tooling/BuildMode;
+}
+
+public final class elide/tooling/BuildMode$Companion {
+	public final fun default ()Lelide/tooling/BuildMode;
+	public final fun fromString (Ljava/lang/String;)Lelide/tooling/BuildMode;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/tooling/Classpath : elide/tooling/MultiPath$MultiPathContainer {
 	public static final field Companion Lelide/tooling/Classpath$Companion;
 	public synthetic fun <init> (Lelide/tooling/JvmMultiPathContainer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V

@@ -21,12 +21,15 @@
     ]]></description>
 
   <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.externalSystem</depends>
+  <depends>com.intellij.modules.idea</depends>
+
   <resource-bundle>i18n.Strings</resource-bundle>
 
   <extensions defaultExtensionNs="com.intellij">
     <externalIconProvider key="ELIDE" implementationClass="dev.elide.intellij.ui.ElideIconProvider"/>
-    <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupSyncActivity"/>
-    <externalSystemManager implementation="dev.elide.intellij.ElideManager"/>
+    <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupActivity"/>
+    <externalSystemManager id="ELIDE" implementation="dev.elide.intellij.ElideManager"/>
     <projectConfigurable
             key="elide"
             id="reference.settingsdialog.project.elide"

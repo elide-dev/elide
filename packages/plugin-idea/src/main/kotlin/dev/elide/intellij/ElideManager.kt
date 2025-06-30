@@ -19,6 +19,7 @@ import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware
 import com.intellij.openapi.externalSystem.ExternalSystemManager
 import com.intellij.openapi.externalSystem.model.ProjectSystemId
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
+import com.intellij.openapi.externalSystem.service.project.autoimport.CachingExternalSystemAutoImportAware
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.project.Project
@@ -43,7 +44,7 @@ import java.io.File
  *    resolver or the task manager.
  *
  * Together, these components provide the main plugin features, such as auto-import, project discovery, sync, build
- * actions, etc. Some additional parts, such as the [dev.elide.intellij.startup.ElideStartupSyncActivity], are used
+ * actions, etc. Some additional parts, such as the [dev.elide.intellij.startup.ElideStartupActivity], are used
  * to complement those features and improve the experience (e.g. by scanning for a project on startup).
  */
 class ElideManager : ExternalSystemAutoImportAware, ExternalSystemManager<
@@ -53,6 +54,8 @@ class ElideManager : ExternalSystemAutoImportAware, ExternalSystemManager<
         ElideLocalSettings,
         ElideExecutionSettings,
         > {
+
+  private val autoImportDelegate = CachingExternalSystemAutoImportAware(ElideAutoImportAware())
 
   override fun getSystemId(): ProjectSystemId = Constants.SYSTEM_ID
 
@@ -69,7 +72,8 @@ class ElideManager : ExternalSystemAutoImportAware, ExternalSystemManager<
     val path = it.second
 
     LOG.debug("Preparing execution settings for project at '$path': $project")
-    ElideExecutionSettings()
+    val settings = ElideExecutionSettings()
+    settings
   }
 
   override fun getProjectResolverClass(): Class<out ExternalSystemProjectResolver<ElideExecutionSettings>> {
@@ -83,41 +87,18 @@ class ElideManager : ExternalSystemAutoImportAware, ExternalSystemManager<
   override fun getExternalProjectDescriptor(): FileChooserDescriptor = Constants.projectFileChooser()
 
   override fun enhanceRemoteProcessing(params: SimpleJavaParameters) {
-    // noop
+    // the project resolver must run in-process with the IDE, which is not the default behavior;
+    // we set a property on startup to correct this, so if this method is ever called, something
+    // is being misconfigured, and we should know about it
+    throw UnsupportedOperationException()
   }
 
   override fun getAffectedExternalProjectPath(changedFileOrDirPath: String, project: Project): String? {
-    val file = File(changedFileOrDirPath)
-
-    return when {
-      // If the changed file is the manifest, return its parent directory
-      file.name == Constants.MANIFEST_NAME && file.isFile -> file.parent
-
-      // If it's a directory, check if it contains elide.pkl
-      file.isDirectory && File(file, Constants.MANIFEST_NAME).exists() -> changedFileOrDirPath
-
-      // Check parent directories up to a reasonable limit
-      else -> {
-        var current = if (file.isDirectory) file else file.parentFile
-        var depth = 0
-
-        while (current != null && depth < 5) {
-          if (File(current, Constants.MANIFEST_NAME).exists()) break
-
-          current = current.parentFile
-          depth++
-        }
-
-        current?.absolutePath
-      }
-    }
+    return autoImportDelegate.getAffectedExternalProjectPath(changedFileOrDirPath, project)
   }
 
   override fun getAffectedExternalProjectFiles(projectPath: String, project: Project): List<File?> {
-    return File(projectPath, Constants.MANIFEST_NAME)
-      .takeIf { it.exists() }
-      ?.let { listOf(it) }
-      .orEmpty()
+    return autoImportDelegate.getAffectedExternalProjectFiles(projectPath, project)
   }
 
   private companion object {

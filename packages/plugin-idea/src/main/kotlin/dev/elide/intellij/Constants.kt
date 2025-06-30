@@ -13,18 +13,24 @@
 
 package dev.elide.intellij
 
+import com.intellij.DynamicBundle
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.externalSystem.model.ProjectSystemId
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.util.IconLoader
 import com.intellij.ui.IconManager
 import com.intellij.ui.PlatformIcons
+import dev.elide.intellij.Constants.Strings.get
+import org.jetbrains.annotations.PropertyKey
 import javax.swing.Icon
 
 /** Useful constants used by the Elide plugin. */
 object Constants {
   /** External System ID for Elide. */
   val SYSTEM_ID = ProjectSystemId("ELIDE")
+
+  /** Elide plugin ID. */
+  const val PLUGIN_ID = "dev.elide.intellij"
 
   /** ID used to reference settings panels. */
   const val CONFIGURABLE_ID = "reference.settingsdialog.project.elide"
@@ -67,6 +73,16 @@ object Constants {
         @Suppress("UnstableApiUsage")
         IconManager.getInstance().getPlatformIcon(PlatformIcons.Stub)
       }
+    }
+  }
+
+  /**
+   * Localized strings provided by a resource bundle, use the indexing operator or the static [get] function to obtain
+   * formatted messages.
+   */
+  data object Strings : DynamicBundle("i18n.Strings") {
+    @JvmStatic operator fun get(@PropertyKey(resourceBundle = "i18n.Strings") key: String, vararg params: Any): String {
+      return getMessage(key, params = params)
     }
   }
 }

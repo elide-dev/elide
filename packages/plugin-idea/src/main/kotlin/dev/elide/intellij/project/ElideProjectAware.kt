@@ -14,23 +14,57 @@
 package dev.elide.intellij.project
 
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.externalSystem.autoimport.ExternalSystemProjectAware
-import com.intellij.openapi.externalSystem.autoimport.ExternalSystemProjectId
-import com.intellij.openapi.externalSystem.autoimport.ExternalSystemProjectListener
-import com.intellij.openapi.externalSystem.autoimport.ExternalSystemProjectReloadContext
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.externalSystem.autoimport.*
+import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder
+import com.intellij.openapi.externalSystem.model.DataNode
+import com.intellij.openapi.externalSystem.model.project.ProjectData
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
+import com.intellij.openapi.externalSystem.service.project.ExternalProjectRefreshCallback
+import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
 import com.intellij.openapi.project.Project
+import com.intellij.util.messages.Topic
 import dev.elide.intellij.Constants
 
 /** A tracker for a project in the current IDE instance, used to trigger auto-import and sync operations. */
-class ElideProjectAware(private val project: Project, projectPath: String) : ExternalSystemProjectAware {
+class ElideProjectAware(private val project: Project, private val projectPath: String) : ExternalSystemProjectAware {
   override val projectId: ExternalSystemProjectId = ExternalSystemProjectId(Constants.SYSTEM_ID, projectPath)
   override val settingsFiles: Set<String> = setOf("$projectPath/${Constants.MANIFEST_NAME}")
 
   override fun subscribe(listener: ExternalSystemProjectListener, parentDisposable: Disposable) {
-    // notify the listener once project sync is complete
+    val connection = project.messageBus.connect(parentDisposable)
+    connection.subscribe(TOPIC, listener)
   }
 
   override fun reloadProject(context: ExternalSystemProjectReloadContext) {
-    // noop
+    val publisher = project.messageBus.syncPublisher(TOPIC)
+    publisher.onProjectReloadStart()
+
+    val callback = object : ExternalProjectRefreshCallback {
+      override fun onSuccess(externalTaskId: ExternalSystemTaskId, externalProject: DataNode<ProjectData?>?) {
+        publisher.onProjectReloadFinish(ExternalSystemRefreshStatus.SUCCESS)
+      }
+
+      override fun onFailure(externalTaskId: ExternalSystemTaskId, errorMessage: String, errorDetails: String?) {
+        publisher.onProjectReloadFinish(ExternalSystemRefreshStatus.FAILURE)
+      }
+    }
+
+    val spec = ImportSpecBuilder(project, Constants.SYSTEM_ID)
+      .callback(callback)
+      .activateBuildToolWindowOnStart()
+      .navigateToError()
+      .build()
+
+    ExternalSystemUtil.refreshProject(projectPath, spec)
+  }
+
+  companion object {
+    @JvmStatic private val LOG = Logger.getInstance(ElideProjectAware::class.java)
+    @JvmStatic val TOPIC = Topic.create(
+      "ElideProjectSync",
+      ExternalSystemProjectListener::class.java,
+      Topic.BroadcastDirection.TO_CHILDREN,
+    )
   }
 }

@@ -179,6 +179,13 @@ dependencies {
   embeddedJava(libs.opentest)
   embeddedJava(mn.micronaut.inject.java)
   embeddedJava(libs.jakarta.inject)
+  embeddedJava(libs.javax.inject)
+  embeddedJava(libs.javax.annotations)
+  embeddedJava(libs.asm.core)
+  embeddedJava(libs.asm.tree)
+  embeddedJava(mn.micronaut.core.processor)
+  embeddedJava(mn.snakeyaml)
+  embeddedJava(mn.reactive.streams)
 
   // Testing
   testImplementation(projects.packages.test)

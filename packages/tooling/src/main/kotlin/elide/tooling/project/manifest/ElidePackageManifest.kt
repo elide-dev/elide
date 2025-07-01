@@ -235,6 +235,7 @@ public data class ElidePackageManifest(
     val coordinates: MavenCoordinates? = null,
     val packages: List<MavenPackage> = emptyList(),
     val testPackages: List<MavenPackage> = emptyList(),
+    val processors: List<MavenPackage> = emptyList(),
     val catalogs: List<GradleCatalog> = emptyList(),
     val repositories: Map<String, MavenRepository> = emptyMap(),
     val enableDefaultRepositories: Boolean = true,
@@ -510,6 +511,8 @@ public fun GemDependencies.merge(other: GemDependencies): GemDependencies {
 public fun MavenDependencies.merge(other: MavenDependencies): MavenDependencies {
   return MavenDependencies(
     packages = packages.union(other.packages).toList(),
+    testPackages = testPackages.union(other.testPackages).toList(),
+    processors = processors.union(other.processors).toList(),
     repositories = repositories.plus(other.repositories),
   )
 }

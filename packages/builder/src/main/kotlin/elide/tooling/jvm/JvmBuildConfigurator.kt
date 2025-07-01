@@ -17,6 +17,7 @@ package elide.tooling.jvm
 import org.eclipse.aether.RepositorySystem
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.incremental.classpathAsList
+import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -181,6 +182,40 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     return builtinKotlinJarPath(state, dependency, version)
   }
 
+  private fun calculateCommonSourceRoot(sources: JavaCompiler.JavaCompilerInputs.SourceFiles): String? {
+    val paths = sources.files
+    if (paths.size < 2) return null
+
+    // convert all paths to absolute paths, normalize, and split into components
+    val pathComponents = paths.map { path ->
+      path.toAbsolutePath()
+        .normalize()
+        .toString()
+        .split(File.pathSeparator)
+        .filter { it.isNotEmpty() }
+    }
+
+    // find the minimum length to avoid index out of bounds
+    val minLength = pathComponents.minOf { it.size }
+
+    // find the longest common prefix
+    var commonLength = 0
+    for (i in 0 until minLength) {
+      val component = pathComponents[0][i]
+      if (pathComponents.all { it[i] == component }) {
+        commonLength++
+      } else {
+        break
+      }
+    }
+
+    // if no common components (besides root), return null
+    if (commonLength == 0) return null
+
+    // reconstruct the path
+    return File.pathSeparator + pathComponents[0].take(commonLength).joinToString(File.pathSeparator)
+  }
+
   @Suppress("LongMethod")
   private fun ActionScope.javac(
     name: String,
@@ -196,6 +231,12 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     val compileClasspath = resolver?.classpathProvider(
       object : ClasspathSpec {
         override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestCompile else MultiPathUsage.Compile
+      },
+    )?.classpath()
+
+    val processorClasspath = resolver?.classpathProvider(
+      object : ClasspathSpec {
+        override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestProcessors else MultiPathUsage.Processors
       },
     )?.classpath()
 
@@ -319,6 +360,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       staticDeps.prepend(mainClassesOutput)
     }
 
+    // prepare compiler configuration
+    val env = Environment.host()
+    val inputs = JavaCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
+    val commonSourceRoot = calculateCommonSourceRoot(inputs)
+
     val args = Arguments.empty().toMutable().apply {
       // bytecode and source targeting
       if (useReleaseFlag) {
@@ -328,10 +374,16 @@ internal class JvmBuildConfigurator : BuildConfigurator {
         logging.debug { "Using `--release`: $effectiveReleaseVersion" }
       } else {
         // @TODO: argument splitting by default
-        add(Argument.of("--source"))
-        add(Argument.of(sourceVersion.argValue))
-        add(Argument.of("--target"))
-        add(Argument.of(targetVersion.argValue))
+        val src = sourceVersion.argValue
+        if (src != "auto") {
+          add(Argument.of("--source"))
+          add(Argument.of(src))
+        }
+        val tgt = targetVersion.argValue
+        if (tgt != "auto") {
+          add(Argument.of("--target"))
+          add(Argument.of(tgt))
+        }
         logging.debug { "Using `--source`/`--target`: ${sourceVersion}/${targetVersion}" }
       }
 
@@ -343,6 +395,19 @@ internal class JvmBuildConfigurator : BuildConfigurator {
         mountedInput?.let { prepend(it) }
       }.let {
         add(it)
+      }
+
+      // activate processors if we have them
+      if (processorClasspath != null) {
+        add("-proc:full")
+        add("--processor-path")
+        add(processorClasspath.asArgumentStrings().joinToString(":"))
+      }
+
+      // if we have a common source root, specify ig
+      if (commonSourceRoot != null) {
+        add("--source-path")
+        add(commonSourceRoot)
       }
 
       // prepare outputs
@@ -372,9 +437,6 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
     logging.debug { "Java compiler args: '${args.asArgumentList().joinToString(" ")}'" }
 
-    // prepare compiler configuration
-    val env = Environment.host()
-    val inputs = JavaCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
     val outputs = JavaCompiler.classesDir(classOutput)
     val compiler = JavaCompiler.create(
       args = args,
@@ -430,6 +492,12 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     val compileClasspath = resolver?.classpathProvider(
       object : ClasspathSpec {
         override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestCompile else MultiPathUsage.Compile
+      },
+    )?.classpath()
+
+    val processorClasspath = resolver?.classpathProvider(
+      object : ClasspathSpec {
+        override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestProcessors else MultiPathUsage.Processors
       },
     )?.classpath()
 
@@ -674,12 +742,6 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           val javacTests = if (javaSrcSet.isEmpty()) {
             emptyList()
           } else {
-            val testCompileClasspath = resolver?.classpathProvider(
-              object : ClasspathSpec {
-                override val usage: MultiPathUsage = MultiPathUsage.TestCompile
-              },
-            )?.classpath()
-
             // find all tests and depend on both kotlinc and javac output
             javaSrcSet.filter { it.paths.isNotEmpty() && it.type == SourceSetType.Tests }.map { srcSet ->
               javac(
@@ -689,7 +751,6 @@ internal class JvmBuildConfigurator : BuildConfigurator {
                 config,
                 srcSet,
                 tests = true,
-                additionalDeps = testCompileClasspath,
               ).describedBy {
                 val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
                 "Compiling ${srcSet.paths.size} Java test $pluralized"

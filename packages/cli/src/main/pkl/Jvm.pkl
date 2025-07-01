@@ -161,6 +161,9 @@ class MavenDependencies {
   /// A list of Maven package dependencies to be resolved for this project.
   packages: Listing<MavenPackageDependency> = new {}
 
+  /// A list of Maven package dependencies to be resolved as processor dependencies.
+  processors: Listing<MavenPackageDependency> = new {}
+
   /// A list of Maven package dependencies to be resolved for this project.
   testPackages: Listing<MavenPackageDependency> = new {}
 

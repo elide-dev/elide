@@ -399,6 +399,7 @@ public class MavenAetherResolver internal constructor (
 
     val packages = state.manifest.dependencies.maven.packages
     val testPackages = state.manifest.dependencies.maven.testPackages
+    val processors = state.manifest.dependencies.maven.processors
     val repos = state.manifest.dependencies.maven.repositories
 
     if (packages.isNotEmpty() || testPackages.isNotEmpty()) {
@@ -420,6 +421,14 @@ public class MavenAetherResolver internal constructor (
         MultiPathUsage.TestCompile,
         testPackages,
       )
+      if (processors.isNotEmpty()) {
+        registerPackages(
+          "processors",
+          state.manifest,
+          MultiPathUsage.Processors,
+          processors,
+        )
+      }
     }
   }
 
@@ -451,7 +460,7 @@ public class MavenAetherResolver internal constructor (
         val artifact = dependency.artifact
         val coordinate = artifact.groupId + ":" + artifact.artifactId
         val pkg = registry[coordinate]?.first ?: registry.values.find { (pkg, _) ->
-          pkg.coordinate == coordinate || pkg.coordinate.startsWith(coordinate)
+          pkg.coordinate == coordinate
         }?.first
 
         if (pkg == null) {
@@ -468,7 +477,7 @@ public class MavenAetherResolver internal constructor (
         if (pkg in packageArtifacts) {
           // do we already have this at the same version?
           val existing = requireNotNull(packageArtifacts[pkg])
-          if (existing.artifact.file == artifact.file) {
+          if (existing.artifact.file == artifact.file || existing is ResolvedJarArtifact) {
             return@forEach // we already have this
           }
           error(
@@ -631,6 +640,8 @@ public class MavenAetherResolver internal constructor (
                   MultiPathUsage.Compile -> ElideLockfile.MavenUsageType.COMPILE
                   MultiPathUsage.TestCompile -> ElideLockfile.MavenUsageType.TEST
                   MultiPathUsage.Runtime -> ElideLockfile.MavenUsageType.RUNTIME
+                  MultiPathUsage.Processors -> ElideLockfile.MavenUsageType.PROCESSORS
+                  MultiPathUsage.TestProcessors -> ElideLockfile.MavenUsageType.TEST_PROCESSORS
                   MultiPathUsage.TestRuntime -> ElideLockfile.MavenUsageType.TEST_RUNTIME
                 }
               }.toSortedSet(),

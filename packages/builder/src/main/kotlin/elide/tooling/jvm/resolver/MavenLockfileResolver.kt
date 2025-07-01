@@ -79,6 +79,8 @@ public class MavenLockfileResolver internal constructor (
       val mpUsage = when (usage) {
         MavenUsageType.COMPILE -> MultiPathUsage.Compile
         MavenUsageType.TEST -> MultiPathUsage.TestCompile
+        MavenUsageType.PROCESSORS -> MultiPathUsage.Processors
+        MavenUsageType.TEST_PROCESSORS -> MultiPathUsage.TestProcessors
         MavenUsageType.RUNTIME -> MultiPathUsage.Runtime
         MavenUsageType.TEST_RUNTIME -> MultiPathUsage.TestRuntime
       }

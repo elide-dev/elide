@@ -46,6 +46,7 @@ import elide.tooling.MutableArguments
 import elide.tooling.Outputs
 import elide.tooling.Tool
 import elide.tooling.AbstractTool
+import elide.tooling.jvm.JavaCompiler.JavaCompilerInputs.SourceFiles
 import elide.runtime.diag.Diagnostic as ElideDiagnostic
 
 // Name of the `javac` tool.
@@ -406,7 +407,7 @@ public val javac: Tool.CommandLineTool = Tool.describe(
      * @param sequence Sequence of source paths to include.
      * @return Compiler inputs.
      */
-    @JvmStatic public fun sources(sequence: Sequence<Path>): JavaCompilerInputs = JavaCompilerInputs.SourceFiles(
+    @JvmStatic public fun sources(sequence: Sequence<Path>): SourceFiles = SourceFiles(
       sequence.toList().toPersistentList().also {
         if (it.isEmpty()) embeddedToolError(javac, "No source files provided")
       }

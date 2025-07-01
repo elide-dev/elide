@@ -669,6 +669,8 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
   @Serializable public enum class MavenUsageType : JSerializable {
     COMPILE,
     RUNTIME,
+    PROCESSORS,
+    TEST_PROCESSORS,
     TEST,
     TEST_RUNTIME,
   }

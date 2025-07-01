@@ -13,7 +13,10 @@
 package elide.tooling.project.manifest
 
 import java.net.URI
+import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest.*
@@ -30,7 +33,7 @@ private const val OPTIMIZATION_LEVEL_TWO = "2"
 private const val OPTIMIZATION_LEVEL_THREE = "3"
 private const val OPTIMIZATION_LEVEL_FOUR = "4"
 
-@JvmRecord @Serializable
+@Serializable
 public data class ElidePackageManifest(
   val name: String? = null,
   val version: String? = null,
@@ -52,7 +55,17 @@ public data class ElidePackageManifest(
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
 ) : PackageManifest {
+  @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
+
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.Elide
+
+  public fun within(path: Path, workspace: ElidePackageManifest): ElidePackageManifest = apply {
+    this.workspace.set(path to workspace)
+  }
+
+  public fun activeWorkspace(): Pair<Path, ElidePackageManifest>? {
+    return this.workspace.get()
+  }
 
   @Serializable public sealed interface Artifact {
     public val from: List<String>

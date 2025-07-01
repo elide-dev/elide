@@ -20,9 +20,11 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import jakarta.inject.Provider
+import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.outputStream
+import kotlin.io.path.relativeTo
 import elide.annotations.Inject
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
@@ -250,16 +252,32 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
               } ?: ""
 
               // basic project info
+              val activeWorkspace = project.activeWorkspace()
+              val workspaceInfo = activeWorkspace?.let { (path, manifest) ->
+                buildString {
+                  append(manifest.name)
+                  append(" ")
+                  append("(")
+                  append(path.parent.absolutePathString())
+                  append(")")
+                }
+              }
+              val projectPath = activeWorkspace?.let { (path, _) ->
+                path.parent.resolve(project.root).relativeTo(path.parent)
+              } ?: project.root.absolute()
+
               Statics.terminal.println(Markdown("""
                   # ${project.manifest.name}
                   $descOrNone
                   - Version: ${project.manifest.version ?: "(None specified.)"}
-                  - Root: ${project.root.absolutePathString()}
-                  - Workspace: (Same as root)
+                  - Root: $projectPath
+                  - Workspace: ${workspaceInfo ?: "(Same as root)"}
                 """.trimIndent()))
 
               // next up, scripts
-              Statics.terminal.println(Markdown(renderScriptsToMd(project.manifest)))
+              if (project.manifest.scripts.isNotEmpty()) {
+                Statics.terminal.println(Markdown(renderScriptsToMd(project.manifest)))
+              }
 
               // dependencies up next
               Statics.terminal.println(Markdown(renderDependenciesToMd(project.manifest)))

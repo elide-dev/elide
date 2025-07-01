@@ -1427,7 +1427,7 @@ public final class elide/tooling/jvm/JavaCompiler : elide/tooling/AbstractTool {
 	public static final fun jvmStyleArgs (Lelide/tooling/Tool$CommandLineTool;Lelide/tooling/Arguments;)Lkotlin/Triple;
 	public static final fun resolveFileArgInput (Ljava/lang/String;)Ljava/util/List;
 	public static final fun resolveJavaToolchain (Lelide/tooling/Tool$CommandLineTool;)Ljava/nio/file/Path;
-	public static final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
+	public static final fun sources-xvaZahk (Lkotlin/sequences/Sequence;)Lkotlinx/collections/immutable/PersistentList;
 	public fun supported ()Z
 }
 
@@ -1437,7 +1437,7 @@ public final class elide/tooling/jvm/JavaCompiler$Companion {
 	public final fun jvmStyleArgs (Lelide/tooling/Tool$CommandLineTool;Lelide/tooling/Arguments;)Lkotlin/Triple;
 	public final fun resolveFileArgInput (Ljava/lang/String;)Ljava/util/List;
 	public final fun resolveJavaToolchain (Lelide/tooling/Tool$CommandLineTool;)Ljava/nio/file/Path;
-	public final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
+	public final fun sources-xvaZahk (Lkotlin/sequences/Sequence;)Lkotlinx/collections/immutable/PersistentList;
 }
 
 public abstract interface class elide/tooling/jvm/JavaCompiler$JavaCompilerInputs : elide/tooling/Inputs$Files {
@@ -2221,53 +2221,11 @@ public final class elide/tooling/jvm/resolver/RepositorySystemFactory {
 	public final fun repositorySystemSession ()Lorg/eclipse/aether/DefaultRepositorySystemSession;
 }
 
-public final synthetic class elide/tooling/kotlin/$Detekt$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun hasBuilder ()Z
-	public fun isBuildable ()Z
-}
-
 public final synthetic class elide/tooling/kotlin/$KotlinCompiler$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z
 	public fun isBuildable ()Z
-}
-
-public final class elide/tooling/kotlin/Detekt : elide/tooling/AbstractTool {
-	public fun <init> (Lelide/tooling/Arguments;Lelide/tooling/Environment;Lelide/tooling/kotlin/Detekt$DetektInputs;Lelide/tooling/kotlin/Detekt$DetektOutputs;)V
-	public final fun getInputs ()Lelide/tooling/kotlin/Detekt$DetektInputs;
-	public final fun getOutputs ()Lelide/tooling/kotlin/Detekt$DetektOutputs;
-	public fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public abstract interface class elide/tooling/kotlin/Detekt$DetektInputs : elide/tooling/Inputs$Files {
-}
-
-public final class elide/tooling/kotlin/Detekt$DetektInputs$Empty : elide/tooling/kotlin/Detekt$DetektInputs {
-	public static final field INSTANCE Lelide/tooling/kotlin/Detekt$DetektInputs$Empty;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class elide/tooling/kotlin/Detekt$DetektOutputs {
-	public abstract fun flatten ()Lelide/tooling/Outputs;
-}
-
-public final class elide/tooling/kotlin/Detekt$DetektOutputs$Empty : elide/tooling/Outputs$None, elide/tooling/kotlin/Detekt$DetektOutputs {
-	public static final field INSTANCE Lelide/tooling/kotlin/Detekt$DetektOutputs$Empty;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun flatten ()Lelide/tooling/Outputs;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class elide/tooling/kotlin/DetektKt {
-	public static final field DETEKT Ljava/lang/String;
-	public static final field DETEKT_DESCRIPTION Ljava/lang/String;
-	public static final fun getDetekt ()Lelide/tooling/Tool$CommandLineTool;
 }
 
 public final class elide/tooling/kotlin/KotlinCompiler : elide/tooling/AbstractTool {

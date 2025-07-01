@@ -232,6 +232,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
 
   // Configure target container information.
   private fun buildTargetContainerizer(
+    name: String,
     state: ElideBuildState,
     ref: ImageReference,
     target: TargetImage?,
@@ -243,7 +244,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
         state.layout
           .artifacts
           .resolve("containers")
-          .resolve("container.tar")
+          .resolve("$name.tar")
       ).named(ref))
     } else {
       val (_, coordinate) = target
@@ -255,7 +256,11 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
   }
 
   // Drive a configured container build to a terminal state.
-  private suspend fun ElideBuildState.build(target: TargetImage, jib: JibContainerBuilder) = withContext(IO) {
+  private suspend fun ElideBuildState.build(
+    name: String,
+    target: TargetImage,
+    jib: JibContainerBuilder,
+  ) = withContext(IO) {
     // configures auth
     val ref = ImageReference.parse(target.second.asString())
     val reg = RegistryImage.named(ref)
@@ -289,7 +294,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
       }
 
       @Suppress("UsePropertyAccessSyntax")
-      jib.containerize(buildTargetContainerizer(this@build, ref, effectiveTarget, reg).apply {
+      jib.containerize(buildTargetContainerizer(name, this@build, ref, effectiveTarget, reg).apply {
         setToolName("elide")
         setToolVersion("beta")  // @TODO actual version
       })
@@ -297,13 +302,18 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
   }
 
   // Build a container which wraps a built JVM artifact.
-  private suspend fun ElideBuildState.jvmContainer(image: TargetImage, jib: JibContainerBuilder): JibContainer {
+  private suspend fun ElideBuildState.jvmContainer(
+    name: String,
+    image: TargetImage,
+    jib: JibContainerBuilder,
+  ): JibContainer {
     // TODO("jar-based container images")
-    return build(image, jib).getOrThrow()
+    return build(name, image, jib).getOrThrow()
   }
 
   // Build a container which wraps a built native image artifact.
   private suspend fun ElideBuildState.nativeContainer(
+    name: String,
     artifact: NativeImage,
     image: TargetImage,
     jib: JibContainerBuilder,
@@ -333,7 +343,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
       }
     }.toList()
 
-    return build(image, jib.apply {
+    return build(name, image, jib.apply {
       addFileEntriesLayer(FileEntriesLayer.builder().apply {
         setName("app")
         paths.forEach { (path, at) ->
@@ -388,6 +398,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
         when (from) {
           // jar-based container images are based on JVM and built with classpath awareness for layering
           is Jar -> state.jvmContainer(
+            name,
             image to coordinate,
             when (base) {
               null -> JavaContainerBuilder.from(DefaultBaseImages.JVM)
@@ -397,6 +408,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
 
           // native image containers use a thin base image and have no classpath by definition
           is NativeImage -> state.nativeContainer(
+            name,
             from,
             image to coordinate,
             when (base) {

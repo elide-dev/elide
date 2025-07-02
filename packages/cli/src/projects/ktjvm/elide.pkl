@@ -3,8 +3,8 @@ amends "elide:project.pkl"
 name = "elide-test-ktjvm"
 description = "Example project using Elide with Kotlin/JVM."
 
-entrypoint {
-  "src/main/kotlin/main.kt"
+jvm {
+  main = "sample.MainKt"
 }
 
 tests {

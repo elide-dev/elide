@@ -15,8 +15,9 @@ package elide.runtime.telemetry
 /**
  * Provides access to static telemetry service configuration.
  */
-internal object TelemetryConfig {
-  const val HOSTNAME: String = "telemetry.elide.dev"
-  const val PATH: String = "/v1/event:submit"
-  const val ENDPOINT: String = "https://$HOSTNAME$PATH"
+public object TelemetryConfig {
+  public const val ENABLED: Boolean = false
+  public const val HOSTNAME: String = "telemetry.elide.dev"
+  public const val PATH: String = "/v1/event:submit"
+  public const val ENDPOINT: String = "https://$HOSTNAME$PATH"
 }

@@ -165,6 +165,14 @@ public final class elide/runtime/telemetry/RunEvent$ExecutionMode : java/lang/En
 	public static fun values ()[Lelide/runtime/telemetry/RunEvent$ExecutionMode;
 }
 
+public final class elide/runtime/telemetry/TelemetryConfig {
+	public static final field ENABLED Z
+	public static final field ENDPOINT Ljava/lang/String;
+	public static final field HOSTNAME Ljava/lang/String;
+	public static final field INSTANCE Lelide/runtime/telemetry/TelemetryConfig;
+	public static final field PATH Ljava/lang/String;
+}
+
 public synthetic class elide/runtime/telemetry/client/$DefaultTelemetryClient$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V

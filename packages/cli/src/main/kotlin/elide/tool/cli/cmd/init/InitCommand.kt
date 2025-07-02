@@ -234,6 +234,12 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
   var projectName: String? = null
 
   @CommandLine.Option(
+    names = ["--yes"],
+    description = ["Assume 'yes' to all questions; implied by 'force'."],
+  )
+  var assumeYes: Boolean = false
+
+  @CommandLine.Option(
     names = ["--interactive", "-i"],
     negatable = true,
     defaultValue = "true",
@@ -346,7 +352,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
       append("Using project name: '$selectedName'")
     }
     if (!force) {
-      when (Files.exists(targetPath)) {
+      when (Files.exists(targetPath) && Files.list(targetPath).findFirst().isPresent) {
         true -> if (interactive && terminal.terminalInfo.interactive) {
           KInquirer.promptConfirm(
             "Project path already exists. Do you want to continue?",
@@ -396,8 +402,12 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     val absoluteProjectPath = targetPath.absolutePathString()
 
     // run an `elide install` in the new project
+    if (force) {
+      // `force` implies `assumeYes`
+      assumeYes = true
+    }
     if (install && selectedTemplate.hasDependencies) {
-      val doInstall = if (interactive && terminal.terminalInfo.interactive) {
+      val doInstall = if (interactive && terminal.terminalInfo.interactive && !assumeYes) {
         KInquirer.promptConfirm("Install dependencies?", default = true)
       } else true
 
@@ -414,7 +424,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
       }
     }
     if (build && selectedTemplate.hasBuild) {
-      val doBuild = if (interactive && terminal.terminalInfo.interactive) {
+      val doBuild = if (interactive && terminal.terminalInfo.interactive && !assumeYes) {
         KInquirer.promptConfirm("Build the new project?", default = true)
       } else true
 
@@ -432,7 +442,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
       }
     }
     if (test && selectedTemplate.hasTests) {
-      val doTest = if (interactive && terminal.terminalInfo.interactive) {
+      val doTest = if (interactive && terminal.terminalInfo.interactive && !assumeYes) {
         KInquirer.promptConfirm("Run new project's tests?", default = true)
       } else true
 

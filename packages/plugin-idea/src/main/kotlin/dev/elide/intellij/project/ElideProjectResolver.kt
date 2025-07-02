@@ -16,8 +16,7 @@ package dev.elide.intellij.project
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.externalSystem.importing.ProjectResolverPolicy
 import com.intellij.openapi.externalSystem.model.DataNode
-import com.intellij.openapi.externalSystem.model.ProjectKeys
-import com.intellij.openapi.externalSystem.model.project.*
+import com.intellij.openapi.externalSystem.model.project.ProjectData
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener
@@ -32,7 +31,6 @@ import kotlin.io.path.Path
 import kotlin.io.path.notExists
 import elide.tooling.lockfile.LockfileLoader
 import elide.tooling.lockfile.loadLockfileSafe
-import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.ElideProjectInfo
 import elide.tooling.project.ElideProjectLoader
 import elide.tooling.project.SourceSetFactory
@@ -95,7 +93,7 @@ class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSetting
 
         // build the project model from the manifest and lockfile
         listener.onStep(id, progressMessage("resolve.steps.buildModel"))
-        buildProjectModel(projectPath, project)
+        ElideProjectModel.buildProjectModel(projectRoot, project)
       }.onSuccess {
         listener.onSuccess(projectPath, id)
       }.onFailure { cause ->
@@ -104,79 +102,6 @@ class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSetting
 
       projectModel.getOrThrow()
     }
-  }
-
-  /** Build the project model given a configured Elide [project]. */
-  private fun buildProjectModel(projectPath: String, project: ElideConfiguredProject): DataNode<ProjectData> {
-    // stubbed project model
-    val projectData = ProjectData(
-      /* owner = */ Constants.SYSTEM_ID,
-      /* externalName = */ project.manifest.name ?: Constants.Strings["project.defaults.name"],
-      /* ideProjectFileDirectoryPath = */ projectPath,
-      /* linkedExternalProjectPath = */ projectPath,
-    )
-
-    val projectNode = DataNode(ProjectKeys.PROJECT, projectData, null)
-    val mainModule = projectNode.createMainModule(projectPath)
-    projectNode.createTestModule(projectPath, mainModule.data)
-
-    return projectNode
-  }
-
-  private fun DataNode<ProjectData>.createMainModule(projectPath: String): DataNode<ModuleData> {
-    // main module
-    val module = ModuleData(
-      /* id = */ "main",
-      /* owner = */ Constants.SYSTEM_ID,
-      /* moduleTypeId = */ "JAVA_MODULE",
-      /* externalName = */ "main",
-      /* moduleFileDirectoryPath = */ "$projectPath/.idea",
-      /* externalConfigPath = */ "$projectPath/${Constants.MANIFEST_NAME}",
-    )
-
-    val sourceRootData = ContentRootData(
-      Constants.SYSTEM_ID,
-      "$projectPath/src/main",
-    )
-
-    sourceRootData.storePath(ExternalSystemSourceType.SOURCE, "$projectPath/src/main/kotlin")
-    sourceRootData.storePath(ExternalSystemSourceType.RESOURCE, "$projectPath/src/main/resources")
-
-    val moduleNode = createChild(ProjectKeys.MODULE, module)
-    moduleNode.createChild(ProjectKeys.CONTENT_ROOT, sourceRootData)
-
-    return moduleNode
-  }
-
-  private fun DataNode<ProjectData>.createTestModule(
-    projectPath: String,
-    mainModuleData: ModuleData
-  ): DataNode<ModuleData> {
-    // main module
-    val module = ModuleData(
-      /* id = */ "test",
-      /* owner = */ Constants.SYSTEM_ID,
-      /* moduleTypeId = */ "JAVA_MODULE",
-      /* externalName = */ "test",
-      /* moduleFileDirectoryPath = */ "$projectPath/.idea",
-      /* externalConfigPath = */ "$projectPath/${Constants.MANIFEST_NAME}",
-    )
-
-    val sourceRootData = ContentRootData(
-      Constants.SYSTEM_ID,
-      "$projectPath/src/test",
-    )
-
-    sourceRootData.storePath(ExternalSystemSourceType.TEST, "$projectPath/src/test/kotlin")
-    sourceRootData.storePath(ExternalSystemSourceType.TEST_RESOURCE, "$projectPath/src/test/resources")
-
-    val moduleNode = createChild(ProjectKeys.MODULE, module)
-    moduleNode.createChild(ProjectKeys.CONTENT_ROOT, sourceRootData)
-
-    val mainDependency = ModuleDependencyData(module, mainModuleData)
-    moduleNode.createChild(ProjectKeys.MODULE_DEPENDENCY, mainDependency)
-
-    return moduleNode
   }
 
   /**

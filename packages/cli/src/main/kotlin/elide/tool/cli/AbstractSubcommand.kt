@@ -43,6 +43,7 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.telemetry.RunEvent
+import elide.runtime.telemetry.TelemetryConfig
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.options.CommonOptions
 import elide.tool.cli.options.TelemetryOptions
@@ -535,8 +536,11 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
   }
 
   // Send a telemetry event if configured.
-  @Suppress("TooGenericExceptionCaught")
+  @Suppress("TooGenericExceptionCaught", "KotlinConstantConditions")
   private fun sendRunEvent(start: TimeSource.Monotonic.ValueTimeMark) {
+    if (!TelemetryConfig.ENABLED) {
+      return
+    }
     try {
       telemetry.sendRunEvent(
         mode = RunEvent.ExecutionMode.Run,
@@ -579,9 +583,6 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
    */
   override suspend fun Context.invoke(state: CommandState): CommandResult = use {
     val start = TimeSource.Monotonic.markNow()
-
-    // if the user has disabled telemetry in any way, we need to neuter it early
-    telemetry.manager().disableTelemetry()
 
     // allow the subclass to register its own shared resources
     sharedResources.addAll(initialize())

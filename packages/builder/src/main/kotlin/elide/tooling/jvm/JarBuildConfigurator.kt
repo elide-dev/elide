@@ -41,6 +41,8 @@ import elide.tooling.AbstractTool
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.project.ElideProject
+import elide.tooling.project.SourceSetLanguage
+import elide.tooling.project.SourceSetType
 import elide.tooling.project.manifest.ElidePackageManifest.*
 
 /**
@@ -303,9 +305,11 @@ internal class JarBuildConfigurator : BuildConfigurator {
   }
 
   override suspend fun contribute(state: ElideBuildState, config: BuildConfiguration) {
+    var hasMainJar = false
     state.manifest.artifacts.entries.filter { it.value is Jar }.forEach { (name, jartifact) ->
       config.actionScope.apply {
         config.taskGraph.apply {
+          if (name == "main" || name == "jar") hasMainJar = true
           jar(
             name,
             state,
@@ -316,6 +320,37 @@ internal class JarBuildConfigurator : BuildConfigurator {
             taskDepsForJar(state),
           ).also {
             logging.debug { "Configured JAR build for name '$name'" }
+          }
+        }
+      }
+    }
+    if (!hasMainJar) {
+      val mainSources = state.project.sourceSets.find(SourceSetType.Sources).firstOrNull()
+      val langs = mainSources?.languages ?: emptySet()
+      if (langs.isNotEmpty()) {
+        if (SourceSetLanguage.Kotlin in langs || SourceSetLanguage.Java in langs) {
+          // we are configuring a build with the following conditions:
+          // 1) there is a main source set which uses one of (Kotlin or Java), but
+          // 2) there is no explicitly configured main jar (a jar task called 'main' or 'jar'),
+          // so we can create one on behalf of the user.
+          config.actionScope.apply {
+            val jartifact = Jar(
+              name = "main",
+              sources = listOf("main"),
+              options = JarOptions(
+                entrypoint = state.manifest.jvm?.main?.ifEmpty { null }?.ifBlank { null },
+              ),
+            )
+            config.taskGraph.apply {
+              jar(
+                name = "jar",
+                state = state,
+                config = config,
+                dependencies = taskDepsForJar(state),
+                artifact = jartifact,
+                srcSets = resolveSourceSetsForJar(state, jartifact),
+              )
+            }
           }
         }
       }

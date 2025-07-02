@@ -328,16 +328,6 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
     output {
       append("Using template: '${selectedTemplate.name}'")
     }
-    // safeguard: if the project uses jvm technologies and JAVA_HOME isn't set, back out with an error.
-    val langs = selectedTemplate.languages.map { it.lowercase() }
-    if (("java" in langs || "kotlin" in langs) && System.getenv("JAVA_HOME") == null) {
-      output {
-        append("The project template '${selectedTemplate.name}' uses Kotlin or Java, and thus requires JAVA_HOME.")
-        append("Oracle GraalVM JDK24 is recommended: https://graalvm.org")
-      }
-      return err("Please set JAVA_HOME")
-    }
-
     val terminal = Statics.terminal
     val selectedName = when {
       // allow the user to select a name, and prompt for a name if we can

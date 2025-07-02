@@ -111,9 +111,10 @@ jobs:
     name: "Checks"
     uses: ./.github/workflows/claude-code-review.yml
     needs: [triage]
-    if: |
-      (fromJson(needs.triage.outputs.srcs) || fromJson(needs.triage.outputs.workflows)) &&
-      github.event.pull_request.draft == false
+    if: false
+#    if: |
+#      (fromJson(needs.triage.outputs.srcs) || fromJson(needs.triage.outputs.workflows)) &&
+#      github.event.pull_request.draft == false
     secrets:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     permissions:

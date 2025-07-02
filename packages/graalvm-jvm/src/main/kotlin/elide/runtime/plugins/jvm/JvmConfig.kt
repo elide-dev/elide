@@ -77,6 +77,11 @@ import elide.runtime.plugins.JVMLanguageConfig
   public var jvmTarget: String = "21"
 
   /**
+   * Entrypoint JAR we intend to run.
+   */
+  public var entrypointJar: Path? = null
+
+  /**
    * Module specifications enabled for native support in the guest JVM.
    */
   public var nativeModules: List<String> = listOf("ALL-UNNAMED")

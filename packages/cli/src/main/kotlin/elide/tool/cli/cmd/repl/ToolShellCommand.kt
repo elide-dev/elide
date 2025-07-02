@@ -54,6 +54,7 @@ import java.io.FileWriter
 import java.io.IOException
 import java.net.URI
 import java.nio.charset.StandardCharsets
+import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -61,6 +62,7 @@ import java.util.*
 import java.util.concurrent.Phaser
 import java.util.concurrent.TimeoutException
 import java.util.function.Supplier
+import java.util.jar.JarInputStream
 import java.util.stream.Stream
 import javax.tools.ToolProvider
 import jakarta.inject.Provider
@@ -75,6 +77,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
+import kotlin.io.path.extension
 import kotlin.math.max
 import kotlin.streams.asSequence
 import kotlin.streams.asStream
@@ -1238,9 +1241,77 @@ internal class ToolShellCommand @Inject constructor(
     }
   }
 
+  // Resolve the main-class to run for a JVM entrypoint.
+  private fun resolveMainClass(entry: File): String? {
+    return activeProject.value?.manifest?.jvm?.main ?: try {
+      JarInputStream(entry.inputStream()).use { jarStream ->
+        jarStream.manifest.mainAttributes["Main-Class"] as? String
+      }
+    } catch (ioe: IOException) {
+      logging.error("Failed to read or scan main-JAR", ioe)
+      null
+    }
+  }
+
+  // Resolve the main-class to run for a JVM entrypoint.
+  private fun resolveMainClassRequired(entry: File): String {
+    return resolveMainClass(entry) ?: error(
+      "Failed to resolve main class for entry: '$entry'"
+    )
+  }
+
+  private fun executeGuestMain(name: String, guestCls: Value): Value {
+    return when (val mainEntry = guestCls.getMember("main/([Ljava/lang/String;)V")) {
+      null -> when (val mainNoArgEntry = guestCls.getMember("main/()V")) {
+        null -> error(
+          "Failed to locate main entrypoint in class '$name'. Found members: '" +
+          "${guestCls.memberKeys.joinToString(", ")}'."
+        )
+        else -> if (!mainNoArgEntry.canExecute()) {
+          error("Main no-arg entrypoint in class '$name' is not executable")
+        } else {
+          mainNoArgEntry.execute()
+        }
+      }
+      else -> {
+        if (!mainEntry.canExecute()) {
+          error("Main entrypoint in class '$name' is not executable")
+        } else {
+          // pull all args after `--`
+          val secondOrderArgs = Statics.args.let { args ->
+            val positionOfDoubleDash = args.indexOf("--")
+            if (positionOfDoubleDash < 0) {
+              emptyArray()
+            } else {
+              val secondaryArgs = LinkedList<String>()
+              for (i in positionOfDoubleDash + 1 until args.size) {
+                secondaryArgs.add(args[i])
+              }
+              secondaryArgs.toTypedArray()
+            }
+          }
+          mainEntry.execute(secondOrderArgs)
+        }
+      }
+    }
+  }
+
   // Resolve a compiler for the provided language, compile the entrypoint, and return the resolved executable symbol.
   private fun compileEntrypoint(language: GuestLanguage, ctxAccessor: ContextAccessor, entry: File): ShellRunnable? {
     return when (language) {
+      // in 'jvm' language mode, the entrypoint has already been compiled
+      JVM -> ShellRunnable.HostExecutable {
+        require(entry.extension == "jar") { "Expected JAR for JVM entrypoint" }
+        val mainClass = resolveMainClassRequired(entry)
+
+        ctxAccessor().let { ctx: PolyglotContext ->
+          when (val guestCls = ctx.bindings(Jvm).getMember(mainClass)) {
+            null -> error("Failed to locate entry class '$mainClass' (at '$entry')")
+            else -> executeGuestMain(mainClass, guestCls)
+          }
+        }
+      }
+
       // use the host java compiler, which supports up to the maximum JVM bytecode level anyway
       JAVA -> ShellRunnable.HostExecutable {
         ToolProvider.getSystemJavaCompiler().let {
@@ -1285,39 +1356,7 @@ internal class ToolShellCommand @Inject constructor(
               ctxAccessor().let { ctx: PolyglotContext ->
                 when (val guestCls = ctx.bindings(Jvm).getMember(entry)) {
                   null -> error("Failed to locate entry class '${it.name}' (at '$entry')")
-                  else -> when (val mainEntry = guestCls.getMember("main/([Ljava/lang/String;)V")) {
-                    null -> when (val mainNoArgEntry = guestCls.getMember("main/()V")) {
-                      null -> error(
-                        "Failed to locate main entrypoint in class '${it.name}'. Found members: '" +
-                        "${guestCls.memberKeys.joinToString(", ")}'."
-                      )
-                      else -> if (!mainNoArgEntry.canExecute()) {
-                        error("Main no-arg entrypoint in class '${it.name}' is not executable")
-                      } else {
-                        mainNoArgEntry.execute()
-                      }
-                    }
-                    else -> {
-                      if (!mainEntry.canExecute()) {
-                        error("Main entrypoint in class '${it.name}' is not executable")
-                      } else {
-                        // pull all args after `--`
-                        val secondOrderArgs = Statics.args.let { args ->
-                          val positionOfDoubleDash = args.indexOf("--")
-                          if (positionOfDoubleDash < 0) {
-                            emptyArray()
-                          } else {
-                            val secondaryArgs = LinkedList<String>()
-                            for (i in positionOfDoubleDash + 1 until args.size) {
-                              secondaryArgs.add(args[i])
-                            }
-                            secondaryArgs.toTypedArray()
-                          }
-                        }
-                        mainEntry.execute(secondOrderArgs)
-                      }
-                    }
-                  }
+                  else -> executeGuestMain(it.name, guestCls)
                 }
               }
             }
@@ -1754,9 +1793,13 @@ internal class ToolShellCommand @Inject constructor(
     fileInput: File?,
   ): GuestLanguage = when {
     // if we have a file input, the extension for the file takes next precedence
-    fileInput != null && fileInput.exists() -> {
-      val ext = fileInput.extension
-      languages.find { it.extensions.contains(ext) } ?: JS
+    fileInput != null && fileInput.exists() -> when {
+      // jar files have specific behavior: instead, they are interpreted as a call to run their main class, either
+      // assigned within the JAR's manifest, or as the project's entrypoint. it is expected that the classpath is
+      // equipped with access to the entrypoint class by other means.
+      fileInput.extension == "jar" -> JVM
+
+      else -> languages.find { it.extensions.contains(fileInput.extension) } ?: JS
     }
 
     // if there is only one language, that's the result
@@ -2073,6 +2116,7 @@ internal class ToolShellCommand @Inject constructor(
       enableSourceIntegration = testMode()  // we need coverage in test mode, which needs the source loader
       multithreading = !langs.contains(JS)
       testing = testMode()
+      runnableJarPath?.let { entrypointJar = it }
       classpath(fullClasspath.map { it.absolutePathString() })
       javaHome?.let { guestJavaHome = it }
     }
@@ -2226,8 +2270,8 @@ internal class ToolShellCommand @Inject constructor(
             jvmInitialized.compareAndSet(false, true)
             detectJvmEntrypoint().let { entryFile ->
               // if the user provides their own JAR target, use that
-              val jarTarget = if (entryFile?.endsWith(".jar") != true) null else {
-                entryFile
+              val jarTarget = if (entryFile?.extension == "jar") entryFile else {
+                null
               }
               doInitJvmSupport(
                 gvmResources,
@@ -2428,6 +2472,23 @@ internal class ToolShellCommand @Inject constructor(
               } else {
                 // otherwise, resolve against the project, not cwd by default
                 activeProject.value!!.root.resolve(path).absolutePathString()
+              }
+            }
+
+            // otherwise, do we have a class output and jvm main?
+            if (runnable == null) activeProject.value?.manifest?.jvm?.main?.let {
+              // with a jvm main, treat it as a runnable, at the JAR named `main` if present, or at the class output
+              // path named `main` if not.
+              val artifacts = activeProject.value!!.root
+                .resolve(".dev")
+                .resolve("artifacts")
+                .resolve("jvm")
+              val jar = artifacts
+                .resolve("jars")
+                .resolve("main.jar")
+
+              if (jar.exists()) {
+                runnable = jar.absolutePathString()
               }
             }
           }

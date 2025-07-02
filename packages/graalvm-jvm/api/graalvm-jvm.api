@@ -121,6 +121,7 @@ public final class elide/runtime/plugins/jvm/JvmConfig : elide/runtime/plugins/J
 	public final fun getEnableNative ()Z
 	public final fun getEnableSourceIntegration ()Z
 	public final fun getEnableTruffleRegex ()Z
+	public final fun getEntrypointJar ()Ljava/nio/file/Path;
 	public final fun getJvmTarget ()Ljava/lang/String;
 	public final fun getMaxTotalNativeBufferSize ()Ljava/lang/String;
 	public final fun getMultithreading ()Z
@@ -131,6 +132,7 @@ public final class elide/runtime/plugins/jvm/JvmConfig : elide/runtime/plugins/J
 	public final fun setEnableNative (Z)V
 	public final fun setEnableSourceIntegration (Z)V
 	public final fun setEnableTruffleRegex (Z)V
+	public final fun setEntrypointJar (Ljava/nio/file/Path;)V
 	public final fun setJvmTarget (Ljava/lang/String;)V
 	public final fun setMaxTotalNativeBufferSize (Ljava/lang/String;)V
 	public final fun setMultithreading (Z)V

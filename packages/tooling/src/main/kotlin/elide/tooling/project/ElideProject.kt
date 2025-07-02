@@ -30,6 +30,14 @@ public sealed interface ElideProject {
   /** Injected project environment. */
   public val env: ProjectEnvironment?
 
+  /** Workspace root. */
+  public val workspace: Path?
+
+  /** @return Active workspace manifest, if any. */
+  public fun activeWorkspace(): Pair<Path, ElidePackageManifest>? {
+    return manifest.activeWorkspace()
+  }
+
   /**
    * Load this project's configuration, interpreting it through build configurators which are installed on the current
    * classpath.
@@ -56,6 +64,7 @@ public sealed interface ElideConfiguredProject : ElideProject {
   override val root: Path,
   override val manifest: ElidePackageManifest,
   override val env: ProjectEnvironment? = null,
+  override val workspace: Path? = null,
 ) : ElideProject {
   override suspend fun load(loader: ElideProjectLoader): ElideConfiguredProject {
     // process source sets

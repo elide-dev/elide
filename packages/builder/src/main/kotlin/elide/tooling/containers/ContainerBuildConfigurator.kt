@@ -25,6 +25,7 @@ import com.google.cloud.tools.jib.api.JibContainer
 import com.google.cloud.tools.jib.api.JibContainerBuilder
 import com.google.cloud.tools.jib.api.LogEvent
 import com.google.cloud.tools.jib.api.RegistryImage
+import com.google.cloud.tools.jib.api.TarImage
 import com.google.cloud.tools.jib.api.buildplan.AbsoluteUnixPath
 import com.google.cloud.tools.jib.api.buildplan.FileEntriesLayer
 import com.google.cloud.tools.jib.api.buildplan.FilePermissions
@@ -230,16 +231,36 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
   }
 
   // Configure target container information.
-  private fun buildTargetContainerizer(ref: ImageReference, target: TargetImage, reg: RegistryImage?): Containerizer {
-    val (_, coordinate) = target
-    return when (coordinate.registry) {
-      null -> Containerizer.to(DockerDaemonImage.named(ref))
-      else -> Containerizer.to(requireNotNull(reg) { "Expected a `RegistryImage`" })
+  private fun buildTargetContainerizer(
+    name: String,
+    state: ElideBuildState,
+    ref: ImageReference,
+    target: TargetImage?,
+    reg: RegistryImage?,
+  ): Containerizer {
+    return if (target == null) {
+      // build to a codebase-local tarball
+      Containerizer.to(TarImage.at(
+        state.layout
+          .artifacts
+          .resolve("containers")
+          .resolve("$name.tar")
+      ).named(ref))
+    } else {
+      val (_, coordinate) = target
+      when (coordinate.registry) {
+        null -> Containerizer.to(DockerDaemonImage.named(ref))
+        else -> Containerizer.to(requireNotNull(reg) { "Expected a `RegistryImage`" })
+      }
     }
   }
 
   // Drive a configured container build to a terminal state.
-  private suspend fun ElideBuildState.build(target: TargetImage, jib: JibContainerBuilder) = withContext(IO) {
+  private suspend fun ElideBuildState.build(
+    name: String,
+    target: TargetImage,
+    jib: JibContainerBuilder,
+  ) = withContext(IO) {
     // configures auth
     val ref = ImageReference.parse(target.second.asString())
     val reg = RegistryImage.named(ref)
@@ -265,8 +286,15 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
     }
 
     runCatching {
+      // if we are running in dry or non-deploy mode, build to a tarball
+      val dontPush = !config.settings.deploy || config.settings.dry
+      val effectiveTarget = when (dontPush) {
+        false -> target
+        true -> null
+      }
+
       @Suppress("UsePropertyAccessSyntax")
-      jib.containerize(buildTargetContainerizer(ref, target, reg).apply {
+      jib.containerize(buildTargetContainerizer(name, this@build, ref, effectiveTarget, reg).apply {
         setToolName("elide")
         setToolVersion("beta")  // @TODO actual version
       })
@@ -274,13 +302,18 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
   }
 
   // Build a container which wraps a built JVM artifact.
-  private suspend fun ElideBuildState.jvmContainer(image: TargetImage, jib: JibContainerBuilder): JibContainer {
+  private suspend fun ElideBuildState.jvmContainer(
+    name: String,
+    image: TargetImage,
+    jib: JibContainerBuilder,
+  ): JibContainer {
     // TODO("jar-based container images")
-    return build(image, jib).getOrThrow()
+    return build(name, image, jib).getOrThrow()
   }
 
   // Build a container which wraps a built native image artifact.
   private suspend fun ElideBuildState.nativeContainer(
+    name: String,
     artifact: NativeImage,
     image: TargetImage,
     jib: JibContainerBuilder,
@@ -310,7 +343,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
       }
     }.toList()
 
-    return build(image, jib.apply {
+    return build(name, image, jib.apply {
       addFileEntriesLayer(FileEntriesLayer.builder().apply {
         setName("app")
         paths.forEach { (path, at) ->
@@ -365,6 +398,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
         when (from) {
           // jar-based container images are based on JVM and built with classpath awareness for layering
           is Jar -> state.jvmContainer(
+            name,
             image to coordinate,
             when (base) {
               null -> JavaContainerBuilder.from(DefaultBaseImages.JVM)
@@ -374,6 +408,7 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
 
           // native image containers use a thin base image and have no classpath by definition
           is NativeImage -> state.nativeContainer(
+            name,
             from,
             image to coordinate,
             when (base) {
@@ -398,9 +433,14 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
           buildString {
             append("✅ $label $postfix")
             append(" ")
-            append(TextStyles.bold(container.targetImage.toString()))
-            append('@')
-            append(container.digest)
+            if (didPush) {
+              append(TextStyles.bold(container.targetImage.toString()))
+              append('@')
+              append(container.digest)
+            } else {
+              append("container ")
+              append(TextStyles.bold(container.targetImage.toString()))
+            }
           }
         )
         elide.exec.Result.Nothing

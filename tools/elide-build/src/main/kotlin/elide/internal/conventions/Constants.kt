@@ -138,7 +138,7 @@ public object Constants {
     const val PRETTIER = "3.2.5"
 
     /** Pinned Protobuf version. */
-    const val PROTOBUF = "4.28.2"
+    const val PROTOBUF = "4.29.3"
 
     /** Static Netty version. */
     const val NETTY = "4.2.2.Final"

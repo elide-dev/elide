@@ -133,13 +133,17 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildNoti
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$BuildSettings {
+	public abstract fun getBuildMode ()Lelide/tooling/BuildMode;
 	public abstract fun getCaching ()Z
 	public abstract fun getChecks ()Z
 	public abstract fun getDebug ()Z
 	public abstract fun getDependencies ()Z
+	public abstract fun getDeploy ()Z
+	public abstract fun getDocs ()Z
 	public abstract fun getDry ()Z
 	public abstract fun getPreserve ()Z
 	public abstract fun getRelease ()Z
+	public abstract fun getSources ()Z
 	public abstract fun getVerbose ()Z
 	public abstract fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 }
@@ -166,10 +170,14 @@ public abstract interface class elide/tooling/config/BuildConfigurator$ElideBuil
 
 public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings : java/lang/Record, elide/tooling/config/BuildConfigurator$BuildSettings {
 	public static final field Companion Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings$Companion;
-	public fun <init> (ZZZZZZZZ)V
+	public fun <init> (ZZZZZZZZLelide/tooling/BuildMode;ZZZ)V
+	public fun buildMode ()Lelide/tooling/BuildMode;
 	public fun caching ()Z
 	public fun checks ()Z
 	public final fun component1 ()Z
+	public final fun component10 ()Z
+	public final fun component11 ()Z
+	public final fun component12 ()Z
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -177,23 +185,31 @@ public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings
 	public final fun component6 ()Z
 	public final fun component7 ()Z
 	public final fun component8 ()Z
-	public final fun copy (ZZZZZZZZ)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
-	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;ZZZZZZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public final fun component9 ()Lelide/tooling/BuildMode;
+	public final fun copy (ZZZZZZZZLelide/tooling/BuildMode;ZZZ)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;ZZZZZZZZLelide/tooling/BuildMode;ZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
 	public fun debug ()Z
 	public fun dependencies ()Z
+	public fun deploy ()Z
+	public fun docs ()Z
 	public fun dry ()Z
 	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getBuildMode ()Lelide/tooling/BuildMode;
 	public synthetic fun getCaching ()Z
 	public synthetic fun getChecks ()Z
 	public synthetic fun getDebug ()Z
 	public synthetic fun getDependencies ()Z
+	public synthetic fun getDeploy ()Z
+	public synthetic fun getDocs ()Z
 	public synthetic fun getDry ()Z
 	public synthetic fun getPreserve ()Z
 	public synthetic fun getRelease ()Z
+	public synthetic fun getSources ()Z
 	public synthetic fun getVerbose ()Z
 	public fun hashCode ()I
 	public fun preserve ()Z
 	public fun release ()Z
+	public fun sources ()Z
 	public fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun toString ()Ljava/lang/String;
 	public fun verbose ()Z
@@ -229,10 +245,13 @@ public final class elide/tooling/config/BuildConfigurator$MetadataDownloading : 
 
 public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings : elide/tooling/config/BuildConfigurator$BuildSettings {
 	public fun <init> ()V
-	public fun <init> (ZZZZZZZZ)V
-	public synthetic fun <init> (ZZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZZZZZZLelide/tooling/BuildMode;ZZZ)V
+	public synthetic fun <init> (ZZZZZZZZLelide/tooling/BuildMode;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun build ()Lelide/tooling/config/BuildConfigurator$BuildSettings;
 	public final fun component1 ()Z
+	public final fun component10 ()Z
+	public final fun component11 ()Z
+	public final fun component12 ()Z
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -240,25 +259,34 @@ public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings :
 	public final fun component6 ()Z
 	public final fun component7 ()Z
 	public final fun component8 ()Z
-	public final fun copy (ZZZZZZZZ)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
-	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;ZZZZZZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public final fun component9 ()Lelide/tooling/BuildMode;
+	public final fun copy (ZZZZZZZZLelide/tooling/BuildMode;ZZZ)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;ZZZZZZZZLelide/tooling/BuildMode;ZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun getBuildMode ()Lelide/tooling/BuildMode;
 	public fun getCaching ()Z
 	public fun getChecks ()Z
 	public fun getDebug ()Z
 	public fun getDependencies ()Z
+	public fun getDeploy ()Z
+	public fun getDocs ()Z
 	public fun getDry ()Z
 	public fun getPreserve ()Z
 	public fun getRelease ()Z
+	public fun getSources ()Z
 	public fun getVerbose ()Z
 	public fun hashCode ()I
+	public fun setBuildMode (Lelide/tooling/BuildMode;)V
 	public fun setCaching (Z)V
 	public fun setChecks (Z)V
 	public fun setDebug (Z)V
 	public fun setDependencies (Z)V
+	public fun setDeploy (Z)V
+	public fun setDocs (Z)V
 	public fun setDry (Z)V
 	public fun setPreserve (Z)V
 	public fun setRelease (Z)V
+	public fun setSources (Z)V
 	public fun setVerbose (Z)V
 	public fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun toString ()Ljava/lang/String;
@@ -1413,7 +1441,7 @@ public final class elide/tooling/jvm/JavaCompiler : elide/tooling/AbstractTool {
 	public static final fun jvmStyleArgs (Lelide/tooling/Tool$CommandLineTool;Lelide/tooling/Arguments;)Lkotlin/Triple;
 	public static final fun resolveFileArgInput (Ljava/lang/String;)Ljava/util/List;
 	public static final fun resolveJavaToolchain (Lelide/tooling/Tool$CommandLineTool;)Ljava/nio/file/Path;
-	public static final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
+	public static final fun sources-xvaZahk (Lkotlin/sequences/Sequence;)Lkotlinx/collections/immutable/PersistentList;
 	public fun supported ()Z
 }
 
@@ -1423,7 +1451,7 @@ public final class elide/tooling/jvm/JavaCompiler$Companion {
 	public final fun jvmStyleArgs (Lelide/tooling/Tool$CommandLineTool;Lelide/tooling/Arguments;)Lkotlin/Triple;
 	public final fun resolveFileArgInput (Ljava/lang/String;)Ljava/util/List;
 	public final fun resolveJavaToolchain (Lelide/tooling/Tool$CommandLineTool;)Ljava/nio/file/Path;
-	public final fun sources (Lkotlin/sequences/Sequence;)Lelide/tooling/jvm/JavaCompiler$JavaCompilerInputs;
+	public final fun sources-xvaZahk (Lkotlin/sequences/Sequence;)Lkotlinx/collections/immutable/PersistentList;
 }
 
 public abstract interface class elide/tooling/jvm/JavaCompiler$JavaCompilerInputs : elide/tooling/Inputs$Files {
@@ -1542,6 +1570,597 @@ public final class elide/tooling/jvm/JvmLibraries {
 	public final fun resolveJarFor (Ljava/nio/file/Path;Ljava/lang/String;Ljava/lang/String;)Ljava/nio/file/Path;
 }
 
+public abstract interface class elide/tooling/jvm/gradle/AttributeValue {
+	public static final field Companion Lelide/tooling/jvm/gradle/AttributeValue$Companion;
+}
+
+public final class elide/tooling/jvm/gradle/AttributeValue$BooleanValue : java/lang/Record, elide/tooling/jvm/gradle/AttributeValue {
+	public static final field Companion Lelide/tooling/jvm/gradle/AttributeValue$BooleanValue$Companion;
+	public fun <init> (Z)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/jvm/gradle/AttributeValue$BooleanValue;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/AttributeValue$BooleanValue;ZILjava/lang/Object;)Lelide/tooling/jvm/gradle/AttributeValue$BooleanValue;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun value ()Z
+}
+
+public final synthetic class elide/tooling/jvm/gradle/AttributeValue$BooleanValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/AttributeValue$BooleanValue$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/AttributeValue$BooleanValue;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/AttributeValue$BooleanValue;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/AttributeValue$BooleanValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/AttributeValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/AttributeValue$NumberValue : java/lang/Record, elide/tooling/jvm/gradle/AttributeValue {
+	public static final field Companion Lelide/tooling/jvm/gradle/AttributeValue$NumberValue$Companion;
+	public fun <init> (I)V
+	public final fun component1 ()I
+	public final fun copy (I)Lelide/tooling/jvm/gradle/AttributeValue$NumberValue;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/AttributeValue$NumberValue;IILjava/lang/Object;)Lelide/tooling/jvm/gradle/AttributeValue$NumberValue;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun value ()I
+}
+
+public final synthetic class elide/tooling/jvm/gradle/AttributeValue$NumberValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/AttributeValue$NumberValue$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/AttributeValue$NumberValue;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/AttributeValue$NumberValue;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/AttributeValue$NumberValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/AttributeValue$StringValue : java/lang/Record, elide/tooling/jvm/gradle/AttributeValue {
+	public static final field Companion Lelide/tooling/jvm/gradle/AttributeValue$StringValue$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/tooling/jvm/gradle/AttributeValue$StringValue;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/AttributeValue$StringValue;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/AttributeValue$StringValue;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun value ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/AttributeValue$StringValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/AttributeValue$StringValue$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/AttributeValue$StringValue;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/AttributeValue$StringValue;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/AttributeValue$StringValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/AttributeValues {
+	public static final field CLASSES Ljava/lang/String;
+	public static final field DOCUMENTATION Ljava/lang/String;
+	public static final field EMBEDDED Ljava/lang/String;
+	public static final field EXTERNAL Ljava/lang/String;
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/AttributeValues;
+	public static final field INTEGRATION Ljava/lang/String;
+	public static final field JAR Ljava/lang/String;
+	public static final field JAVADOC Ljava/lang/String;
+	public static final field JAVA_API Ljava/lang/String;
+	public static final field JAVA_RUNTIME Ljava/lang/String;
+	public static final field JAVA_RUNTIME_JARS Ljava/lang/String;
+	public static final field LIBRARY Ljava/lang/String;
+	public static final field MILESTONE Ljava/lang/String;
+	public static final field PLATFORM Ljava/lang/String;
+	public static final field RELEASE Ljava/lang/String;
+	public static final field RESOURCES Ljava/lang/String;
+	public static final field SHADOWED Ljava/lang/String;
+	public static final field SOURCES Ljava/lang/String;
+}
+
+public final class elide/tooling/jvm/gradle/Capability : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/Capability$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/jvm/gradle/Capability;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/Capability;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/Capability;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun group ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public final fun version ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/Capability$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/Capability$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/Capability;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/Capability;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/Capability$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/Dependency : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/Dependency$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/jvm/gradle/VersionConstraint;Ljava/util/List;Ljava/lang/String;Ljava/util/Map;Ljava/util/List;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/jvm/gradle/VersionConstraint;Ljava/util/List;Ljava/lang/String;Ljava/util/Map;Ljava/util/List;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun attributes ()Ljava/util/Map;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lelide/tooling/jvm/gradle/VersionConstraint;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/util/Map;
+	public final fun component7 ()Ljava/util/List;
+	public final fun component8 ()Ljava/lang/Boolean;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/jvm/gradle/VersionConstraint;Ljava/util/List;Ljava/lang/String;Ljava/util/Map;Ljava/util/List;Ljava/lang/Boolean;)Lelide/tooling/jvm/gradle/Dependency;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/Dependency;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/jvm/gradle/VersionConstraint;Ljava/util/List;Ljava/lang/String;Ljava/util/Map;Ljava/util/List;Ljava/lang/Boolean;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/Dependency;
+	public final fun endorseStrictVersions ()Ljava/lang/Boolean;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun excludes ()Ljava/util/List;
+	public final fun group ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun module ()Ljava/lang/String;
+	public final fun reason ()Ljava/lang/String;
+	public final fun requestedCapabilities ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+	public final fun version ()Lelide/tooling/jvm/gradle/VersionConstraint;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/Dependency$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/Dependency$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/Dependency;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/Dependency;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/Dependency$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/DependencyConstraint : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/DependencyConstraint$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/jvm/gradle/VersionConstraint;Ljava/lang/String;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/jvm/gradle/VersionConstraint;Ljava/lang/String;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun attributes ()Ljava/util/Map;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lelide/tooling/jvm/gradle/VersionConstraint;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lelide/tooling/jvm/gradle/VersionConstraint;Ljava/lang/String;Ljava/util/Map;)Lelide/tooling/jvm/gradle/DependencyConstraint;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/DependencyConstraint;Ljava/lang/String;Ljava/lang/String;Lelide/tooling/jvm/gradle/VersionConstraint;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/DependencyConstraint;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun group ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun module ()Ljava/lang/String;
+	public final fun reason ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public final fun version ()Lelide/tooling/jvm/gradle/VersionConstraint;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/DependencyConstraint$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/DependencyConstraint$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/DependencyConstraint;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/DependencyConstraint;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/DependencyConstraint$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/Exclusion : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/Exclusion$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/jvm/gradle/Exclusion;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/Exclusion;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/Exclusion;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun group ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun module ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/Exclusion$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/Exclusion$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/Exclusion;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/Exclusion;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/Exclusion$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/FileInfo : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/FileInfo$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/Long;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/jvm/gradle/FileInfo;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/FileInfo;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/FileInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun md5 ()Ljava/lang/String;
+	public final fun name ()Ljava/lang/String;
+	public final fun sha1 ()Ljava/lang/String;
+	public final fun sha256 ()Ljava/lang/String;
+	public final fun sha512 ()Ljava/lang/String;
+	public final fun size ()Ljava/lang/Long;
+	public fun toString ()Ljava/lang/String;
+	public final fun url ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/FileInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/FileInfo$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/FileInfo;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/FileInfo;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/FileInfo$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/GradleAttributeSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/GradleAttributeSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/AttributeValue;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/AttributeValue;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/GradleModuleMetadata : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/GradleModuleMetadata$Companion;
+	public fun <init> (Ljava/lang/String;Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component ()Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;
+	public final fun component3 ()Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;Ljava/util/List;)Lelide/tooling/jvm/gradle/GradleModuleMetadata;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/GradleModuleMetadata;Ljava/lang/String;Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/GradleModuleMetadata;
+	public final fun createdBy ()Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun formatVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun variants ()Ljava/util/List;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/GradleModuleMetadata$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/GradleModuleMetadata$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/GradleModuleMetadata;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/GradleModuleMetadata;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/GradleModuleMetadata$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/GradleModuleMetadata$Component : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun attributes ()Ljava/util/Map;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun group ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun module ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public final fun url ()Ljava/lang/String;
+	public final fun version ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/GradleModuleMetadata$Component$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/GradleModuleMetadata$Component;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/GradleModuleMetadata$Component$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$Companion;
+	public fun <init> ()V
+	public fun <init> (Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;)V
+	public synthetic fun <init> (Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;
+	public final fun copy (Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun gradle ()Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun buildId ()Ljava/lang/String;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun version ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/GradleModuleMetadata$CreatedBy$GradleInfo$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/StandardAttributes {
+	public static final field BUNDLING Ljava/lang/String;
+	public static final field CATEGORY Ljava/lang/String;
+	public static final field DOCS_TYPE Ljava/lang/String;
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/StandardAttributes;
+	public static final field JVM_ENVIRONMENT Ljava/lang/String;
+	public static final field JVM_VERSION Ljava/lang/String;
+	public static final field KOTLIN_NATIVE_TARGET Ljava/lang/String;
+	public static final field KOTLIN_PLATFORM_TYPE Ljava/lang/String;
+	public static final field LIBRARYELEMENTS Ljava/lang/String;
+	public static final field STATUS Ljava/lang/String;
+	public static final field USAGE Ljava/lang/String;
+}
+
+public final class elide/tooling/jvm/gradle/Variant : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/Variant$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/util/Map;Lelide/tooling/jvm/gradle/Variant$AvailableAt;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/Map;Lelide/tooling/jvm/gradle/Variant$AvailableAt;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun attributes ()Ljava/util/Map;
+	public final fun available ()Lelide/tooling/jvm/gradle/Variant$AvailableAt;
+	public final fun capabilities ()Ljava/util/List;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun component3 ()Lelide/tooling/jvm/gradle/Variant$AvailableAt;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/util/List;
+	public final fun component7 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/Map;Lelide/tooling/jvm/gradle/Variant$AvailableAt;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lelide/tooling/jvm/gradle/Variant;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/Variant;Ljava/lang/String;Ljava/util/Map;Lelide/tooling/jvm/gradle/Variant$AvailableAt;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/Variant;
+	public final fun dependencies ()Ljava/util/List;
+	public final fun dependencyConstraints ()Ljava/util/List;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun files ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/Variant$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/Variant$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/Variant;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/Variant;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/Variant$AvailableAt : java/lang/Record {
+	public static final field Companion Lelide/tooling/jvm/gradle/Variant$AvailableAt$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/jvm/gradle/Variant$AvailableAt;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/Variant$AvailableAt;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/Variant$AvailableAt;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun group ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun module ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public final fun url ()Ljava/lang/String;
+	public final fun version ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/Variant$AvailableAt$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/Variant$AvailableAt$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/Variant$AvailableAt;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/Variant$AvailableAt;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/Variant$AvailableAt$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/Variant$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/jvm/gradle/VersionConstraint {
+	public static final field Companion Lelide/tooling/jvm/gradle/VersionConstraint$Companion;
+}
+
+public final class elide/tooling/jvm/gradle/VersionConstraint$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/VersionConstraint$Rich : java/lang/Record, elide/tooling/jvm/gradle/VersionConstraint {
+	public static final field Companion Lelide/tooling/jvm/gradle/VersionConstraint$Rich$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lelide/tooling/jvm/gradle/VersionConstraint$Rich;
+	public static synthetic fun copy$default (Lelide/tooling/jvm/gradle/VersionConstraint$Rich;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/jvm/gradle/VersionConstraint$Rich;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun prefers ()Ljava/lang/String;
+	public final fun rejects ()Ljava/util/List;
+	public final fun requires ()Ljava/lang/String;
+	public final fun strictly ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/VersionConstraint$Rich$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/VersionConstraint$Rich$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/VersionConstraint$Rich;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/VersionConstraint$Rich;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/jvm/gradle/VersionConstraint$Rich$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/VersionConstraint$Simple : elide/tooling/jvm/gradle/VersionConstraint {
+	public static final field Companion Lelide/tooling/jvm/gradle/VersionConstraint$Simple$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/jvm/gradle/VersionConstraint$Simple;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/jvm/gradle/VersionConstraint$Simple$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/VersionConstraint$Simple$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize--rlYjjw (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-JiECGHQ (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+}
+
+public final class elide/tooling/jvm/gradle/VersionConstraint$Simple$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/jvm/gradle/VersionConstraintSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lelide/tooling/jvm/gradle/VersionConstraintSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/jvm/gradle/VersionConstraint;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/jvm/gradle/VersionConstraint;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public synthetic class elide/tooling/jvm/resolver/$GmmAwareArtifactDescriptorReader$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/tooling/jvm/resolver/$RepositorySystemFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -1592,6 +2211,10 @@ public synthetic class elide/tooling/jvm/resolver/$RepositorySystemFactory$Repos
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public abstract interface class elide/tooling/jvm/resolver/AetherProjectProvider {
+	public abstract fun buildState ()Lelide/tooling/config/BuildConfigurator$ElideBuildState;
+}
+
 public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/tooling/ClasspathsProvider, elide/tooling/deps/DependencyResolver$MavenResolver, java/lang/AutoCloseable {
 	public static final field Companion Lelide/tooling/jvm/resolver/MavenAetherResolver$Companion;
 	public fun classpathProvider (Lelide/tooling/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -1602,6 +2225,17 @@ public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/toolin
 }
 
 public final class elide/tooling/jvm/resolver/MavenAetherResolver$Companion {
+}
+
+public final class elide/tooling/jvm/resolver/MavenClassifier : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field Default Lelide/tooling/jvm/resolver/MavenClassifier;
+	public static final field Docs Lelide/tooling/jvm/resolver/MavenClassifier;
+	public static final field Sources Lelide/tooling/jvm/resolver/MavenClassifier;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/jvm/resolver/MavenClassifier;
+	public static fun values ()[Lelide/tooling/jvm/resolver/MavenClassifier;
 }
 
 public final class elide/tooling/jvm/resolver/MavenLockfileResolver : elide/tooling/ClasspathsProvider {
@@ -1620,17 +2254,10 @@ public final class elide/tooling/jvm/resolver/MavenResolverErrors : java/lang/Ru
 
 public final class elide/tooling/jvm/resolver/RepositorySystemFactory {
 	public fun <init> ()V
-	public final fun mavenLocator ()Lorg/eclipse/aether/impl/DefaultServiceLocator;
+	public final fun mavenLocator (Lelide/tooling/jvm/resolver/AetherProjectProvider;)Lorg/eclipse/aether/impl/DefaultServiceLocator;
 	public final fun remoteRepositoryManager (Lorg/eclipse/aether/impl/DefaultServiceLocator;)Lorg/eclipse/aether/impl/RemoteRepositoryManager;
 	public final fun repositorySystem (Lorg/eclipse/aether/impl/DefaultServiceLocator;)Lorg/eclipse/aether/internal/impl/DefaultRepositorySystem;
 	public final fun repositorySystemSession ()Lorg/eclipse/aether/DefaultRepositorySystemSession;
-}
-
-public final synthetic class elide/tooling/kotlin/$Detekt$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun hasBuilder ()Z
-	public fun isBuildable ()Z
 }
 
 public final synthetic class elide/tooling/kotlin/$KotlinCompiler$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
@@ -1638,41 +2265,6 @@ public final synthetic class elide/tooling/kotlin/$KotlinCompiler$Introspection 
 	public fun <init> ()V
 	public fun hasBuilder ()Z
 	public fun isBuildable ()Z
-}
-
-public final class elide/tooling/kotlin/Detekt : elide/tooling/AbstractTool {
-	public fun <init> (Lelide/tooling/Arguments;Lelide/tooling/Environment;Lelide/tooling/kotlin/Detekt$DetektInputs;Lelide/tooling/kotlin/Detekt$DetektOutputs;)V
-	public final fun getInputs ()Lelide/tooling/kotlin/Detekt$DetektInputs;
-	public final fun getOutputs ()Lelide/tooling/kotlin/Detekt$DetektOutputs;
-	public fun invoke (Lelide/tooling/AbstractTool$EmbeddedToolState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public abstract interface class elide/tooling/kotlin/Detekt$DetektInputs : elide/tooling/Inputs$Files {
-}
-
-public final class elide/tooling/kotlin/Detekt$DetektInputs$Empty : elide/tooling/kotlin/Detekt$DetektInputs {
-	public static final field INSTANCE Lelide/tooling/kotlin/Detekt$DetektInputs$Empty;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class elide/tooling/kotlin/Detekt$DetektOutputs {
-	public abstract fun flatten ()Lelide/tooling/Outputs;
-}
-
-public final class elide/tooling/kotlin/Detekt$DetektOutputs$Empty : elide/tooling/Outputs$None, elide/tooling/kotlin/Detekt$DetektOutputs {
-	public static final field INSTANCE Lelide/tooling/kotlin/Detekt$DetektOutputs$Empty;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun flatten ()Lelide/tooling/Outputs;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class elide/tooling/kotlin/DetektKt {
-	public static final field DETEKT Ljava/lang/String;
-	public static final field DETEKT_DESCRIPTION Ljava/lang/String;
-	public static final fun getDetekt ()Lelide/tooling/Tool$CommandLineTool;
 }
 
 public final class elide/tooling/kotlin/KotlinCompiler : elide/tooling/AbstractTool {

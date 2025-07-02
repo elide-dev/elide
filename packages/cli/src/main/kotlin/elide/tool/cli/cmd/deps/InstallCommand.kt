@@ -45,6 +45,7 @@ import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.config.BuildConfigurators
 import elide.tooling.config.on
 import elide.tooling.deps.DependencyResolver
+import elide.tooling.jvm.resolver.MavenClassifier
 import elide.tooling.lockfile.ElideLockfile
 import elide.tooling.lockfile.InterpretedLockfile
 import elide.tooling.lockfile.LockfileDefinition
@@ -100,6 +101,12 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
   internal var showProgress: Boolean = true
 
   @CommandLine.Option(
+    names = ["--with"],
+    description = ["Extras to install, like 'sources' and/or 'docs'"],
+  )
+  internal var installExtras: List<MavenClassifier> = listOf()
+
+  @CommandLine.Option(
     names = ["--lockfile-format"],
     defaultValue = "BINARY",
     description = ["Force a different lockfile format to be written"],
@@ -128,6 +135,11 @@ internal class InstallCommand : ProjectAwareSubcommand<ToolState, CommandContext
     BuildConfiguration.create(project.root).let { config ->
       val opts = projectOptions()
       val loadedProject = project.load()
+      config.settings.sources = MavenClassifier.Sources in installExtras
+      config.settings.docs = MavenClassifier.Docs in installExtras
+      if (installExtras.isNotEmpty()) {
+        buildOutput.status { "Installing with extras: ${installExtras.joinToString(", ")}" }
+      }
       BuildConfigurators.contribute(beanContext, loadedProject, config, binder = {
         on<TaskState, MetadataDownloaded>(MetadataDownloaded) { ctx ->
           // on-metadata-downloaded

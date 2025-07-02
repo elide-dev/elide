@@ -1,0 +1,242 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "url": "../../elide-base/1.0.0-alpha11/elide-base-1.0.0-alpha11.module",
+    "group": "dev.elide",
+    "module": "elide-base",
+    "version": "1.0.0-alpha11",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.12-rc-2"
+    }
+  },
+  "variants": [
+    {
+      "name": "macosX64ApiElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-api",
+        "org.jetbrains.kotlin.native.target": "macos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-collections-immutable",
+          "version": {
+            "requires": "0.3.8"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-datetime",
+          "version": {
+            "requires": "0.6.1"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-core",
+          "version": {
+            "requires": "1.0.0-alpha11"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "atomicfu",
+          "version": {
+            "requires": "0.26.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-io-core",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-io-bytestring",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-core",
+          "version": {
+            "requires": "1.8.0-RC"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-uuid-core",
+          "version": {
+            "requires": "2.0.0-Beta3-0.20.0-rc1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "base-macosX64Main-1.0.0-alpha11.klib",
+          "url": "elide-base-macosx64-1.0.0-alpha11.klib",
+          "size": 116075,
+          "sha512": "7ce01fd2d0c9f8afd99a505e9e5c3036732ec5aa1bfec462b045a438b4bfabb95c9ed366a85597b71cc1cf9164c6a4b2838b2197ee91cf568a72ee7eb52f6673",
+          "sha256": "2659a9469ba23adcef88d7e01dd5926aca3431729e9ef653aeb1dbe7b629aab5",
+          "sha1": "3e2808231046bf7ec355b1649c9c27e51c5cfc7b",
+          "md5": "f783466bb2c0907b9011ff287d3d4624"
+        }
+      ]
+    },
+    {
+      "name": "macosX64SourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-runtime",
+        "org.jetbrains.kotlin.native.target": "macos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "files": [
+        {
+          "name": "base-macosx64-1.0.0-alpha11-sources.jar",
+          "url": "elide-base-macosx64-1.0.0-alpha11-sources.jar",
+          "size": 60209,
+          "sha512": "bdb0ceb2a94a2cd4020ae6958be38bedc8f5476e94b21a82a20c999631f3a1c6a0f1d55a183e1efa78386db7a532eab21d634f36aa4bccfe2d008b4633a4be06",
+          "sha256": "ea3e1fd62a86fc8ad88f74c23fe2530578d3087e0f0c497dbebec1e2fe5c6a3b",
+          "sha1": "126ac90e6e80ce062ac1bc0a60b9d725e584ff15",
+          "md5": "74648a01e22be6702803a84676777b5c"
+        }
+      ]
+    },
+    {
+      "name": "macosX64MetadataElements-published",
+      "attributes": {
+        "artifactType": "org.jetbrains.kotlin.klib",
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "non-jvm",
+        "org.gradle.usage": "kotlin-metadata",
+        "org.jetbrains.kotlin.native.target": "macos_x64",
+        "org.jetbrains.kotlin.platform.type": "native"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-collections-immutable",
+          "version": {
+            "requires": "0.3.8"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-datetime",
+          "version": {
+            "requires": "0.6.1"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-core",
+          "version": {
+            "requires": "1.0.0-alpha11"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "atomicfu",
+          "version": {
+            "requires": "0.26.1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-io-core",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-io-bytestring",
+          "version": {
+            "requires": "0.6.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-serialization-core",
+          "version": {
+            "requires": "1.8.0-RC"
+          }
+        },
+        {
+          "group": "dev.elide",
+          "module": "elide-uuid-core",
+          "version": {
+            "requires": "2.0.0-Beta3-0.20.0-rc1"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib"
+        }
+      ],
+      "dependencyConstraints": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.1.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "base-macosx64-1.0.0-alpha11-metadata.jar",
+          "url": "elide-base-macosx64-1.0.0-alpha11-metadata.jar",
+          "size": 301,
+          "sha512": "b80f55cd9fee2b53962d1f225247977f284fddead7224832f957bcb7238ae7bff95dcf60af0817a98f5b69ad8e68255153653f5a69f3e14e8aa96dd1bd518daa",
+          "sha256": "f76ddafce0668067c303c493bd2e05220919952ba137ed381d3cb3dae36c60cd",
+          "sha1": "426b1cec1208864747016a968ccbd1efc1462189",
+          "md5": "b9f9c9be63ef3a3c03d8eaa46c14d2bf"
+        }
+      ]
+    }
+  ]
+}

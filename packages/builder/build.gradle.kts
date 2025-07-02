@@ -13,6 +13,7 @@
 
 import kotlin.io.path.absolutePathString
 import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
 
 plugins {
   alias(libs.plugins.elide.conventions)
@@ -23,12 +24,23 @@ plugins {
 }
 
 elide {
+  publishing {
+    id = "builder"
+    name = "Elide Builder"
+    description = "Elide's project builder."
+
+    publish("maven") {
+      from(components["kotlin"])
+    }
+  }
+
   kotlin {
     ksp = true
     atomicFu = true
     target = KotlinTarget.JVM
     explicitApi = true
   }
+
   checks {
     diktat = false
   }
@@ -38,6 +50,7 @@ val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 val googJarsRoot = rootProject.layout.projectDirectory.dir("third_party/google")
 
 val patchedLibs = files(
+  gvmJarsRoot.file("truffle-api.jar"),
   gvmJarsRoot.file("truffle-coverage.jar"),
   gvmJarsRoot.file("library-support.jar"),
   gvmJarsRoot.file("svm-driver.jar"),

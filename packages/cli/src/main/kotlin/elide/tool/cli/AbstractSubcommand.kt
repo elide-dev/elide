@@ -347,6 +347,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
     exclusive = false,
     order = 998,
   )
+  @Suppress("unused")
   private var telemetryOptions: TelemetryOptions = TelemetryOptions()
 
   // Common options shared by all commands.
@@ -580,9 +581,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
     val start = TimeSource.Monotonic.markNow()
 
     // if the user has disabled telemetry in any way, we need to neuter it early
-    if (telemetryOptions.shouldDisable()) {
-      telemetry.manager().disableTelemetry()
-    }
+    telemetry.manager().disableTelemetry()
 
     // allow the subclass to register its own shared resources
     sharedResources.addAll(initialize())

@@ -19,6 +19,7 @@ import org.eclipse.aether.DefaultRepositoryCache
 import org.eclipse.aether.DefaultRepositorySystemSession
 import org.eclipse.aether.RepositorySystem
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory
+import org.eclipse.aether.impl.ArtifactDescriptorReader
 import org.eclipse.aether.impl.DefaultServiceLocator
 import org.eclipse.aether.impl.RemoteRepositoryManager
 import org.eclipse.aether.internal.impl.DefaultRepositorySystem
@@ -35,20 +36,29 @@ import elide.runtime.Logging
 @Factory public class RepositorySystemFactory {
   private val logging by lazy { Logging.of(RepositorySystem::class) }
 
-  @Singleton public fun mavenLocator(): DefaultServiceLocator {
+  @Singleton public fun mavenLocator(prov: AetherProjectProvider?): DefaultServiceLocator {
     logging.debug { "Initializing Maven resolver" }
     val mvnLocator = MavenRepositorySystemUtils.newServiceLocator()
     mvnLocator.addService(RepositoryConnectorFactory::class.java, BasicRepositoryConnectorFactory::class.java)
     mvnLocator.addService(TransporterFactory::class.java, FileTransporterFactory::class.java)
     mvnLocator.addService(TransporterFactory::class.java, WagonTransporterFactory::class.java)
     mvnLocator.addService(TransporterFactory::class.java, HttpTransporterFactory::class.java)
+    mvnLocator.setService(ArtifactDescriptorReader::class.java, GmmAwareArtifactDescriptorReader::class.java)
+    prov?.let {
+      mvnLocator.setServices(AetherProjectProvider::class.java, prov)
+    }
+    mvnLocator.setErrorHandler(object: DefaultServiceLocator.ErrorHandler() {
+      override fun serviceCreationFailed(type: Class<*>?, impl: Class<*>?, exception: Throwable?) {
+        logging.error { "Aether: Failed to initialize '$type' / '$impl' (error: $exception)" }
+      }
+    })
     return mvnLocator
   }
 
   @Singleton public fun repositorySystem(locator: DefaultServiceLocator): DefaultRepositorySystem {
     // Create a new Maven repository system
     logging.trace { "Creating repo system" }
-    return requireNotNull(locator.getService(RepositorySystem ::class.java) as DefaultRepositorySystem) {
+    return requireNotNull(locator.getService(RepositorySystem::class.java) as DefaultRepositorySystem) {
       "Failed to initialize Maven repository system: Repository system is null"
     }
   }

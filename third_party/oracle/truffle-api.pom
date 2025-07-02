@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.graalvm.truffle</groupId>
+  <artifactId>truffle-api</artifactId>
+  <version>24.2.1-elide-1.0.0-beta7</version>
+  <url>http://openjdk.java.net/projects/graal</url>
+  <name>Truffle API</name>
+  <description>Truffle is a multi-language framework for executing dynamic languages
+    that achieves high performance when combined with Graal.</description>
+  <developers>
+    <developer>
+      <name>GraalVM Development</name>
+      <email>graalvm-dev@oss.oracle.com</email>
+      <organization>Oracle Corporation</organization>
+      <organizationUrl>http://www.graalvm.org/</organizationUrl>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>Universal Permissive License, Version 1.0</name>
+      <url>http://opensource.org/licenses/UPL</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>org.graalvm.sdk</groupId>
+      <artifactId>collections</artifactId>
+      <version>24.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.sdk</groupId>
+      <artifactId>nativeimage</artifactId>
+      <version>24.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.polyglot</groupId>
+      <artifactId>polyglot</artifactId>
+      <version>24.2.1</version>
+    </dependency>
+  </dependencies>
+  <scm>
+    <connection>scm:git:https://github.com/oracle/graal.git</connection>
+    <developerConnection>scm:git:git@github.com:oracle/graal.git</developerConnection>
+    <url>https://github.com/oracle/graal/tree/master/truffle</url>
+  </scm>
+</project>

@@ -25,4 +25,8 @@ public data class ProjectEnvironment private constructor(
     /** @return Project environment wrapping the provided [map] of env vars. */
     @JvmStatic public fun wrapping(map: Map<String, EnvVar>): ProjectEnvironment = ProjectEnvironment(vars = map)
   }
+
+  public operator fun plus(other: ProjectEnvironment): ProjectEnvironment {
+    return ProjectEnvironment(vars + other.vars)
+  }
 }

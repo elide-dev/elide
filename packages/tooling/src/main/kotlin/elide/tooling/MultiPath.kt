@@ -746,6 +746,16 @@ public sealed interface MultiPathUsage : Comparable<MultiPathUsage> {
     override fun includes(): List<MultiPathUsage> = listOf(Compile)
     override val scope: String get() = "runtime"
   }
+  public data object Processors : MultiPathUsage {
+    override val order: UInt get() = 1u
+    override fun includes(): List<MultiPathUsage> = listOf()
+    override val scope: String get() = "proc"
+  }
+  public data object TestProcessors : MultiPathUsage {
+    override val order: UInt get() = 1u
+    override fun includes(): List<MultiPathUsage> = listOf()
+    override val scope: String get() = "testproc"
+  }
   public data object TestCompile : MultiPathUsage {
     override val order: UInt get() = 2u
     override fun includes(): List<MultiPathUsage> = listOf(Compile)

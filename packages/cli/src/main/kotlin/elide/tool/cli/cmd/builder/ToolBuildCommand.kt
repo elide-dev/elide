@@ -49,6 +49,7 @@ import elide.tool.cli.output.redirectLoggingToMordant
 import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
 import elide.tool.project.ProjectManager
+import elide.tooling.BuildMode
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
@@ -106,6 +107,27 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   internal var dryRun: Boolean = false
 
   @CommandLine.Option(
+    names = ["--release"],
+    description = ["Enable release mode (shorthand for `--build-mode=release`)"],
+    defaultValue = "false",
+  )
+  internal var release: Boolean = false
+
+  @CommandLine.Option(
+    names = ["--deploy"],
+    negatable = true,
+    description = ["Whether to deploy artifacts, as applicable"],
+    defaultValue = "false",
+  )
+  internal var deploy: Boolean = release
+
+  @CommandLine.Option(
+    names = ["--mode"],
+    description = ["Exact build mode to use for this build."],
+  )
+  internal var buildModeParam: BuildMode? = null
+
+  @CommandLine.Option(
     names = ["--cache"],
     negatable = true,
     defaultValue = "true",
@@ -153,6 +175,16 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   // Progress controller to use.
   private lateinit var buildOutput: BuildOutput
 
+  // Effective build mode, resolved from all parameters and other state.
+  private val effectiveBuildMode: BuildMode by lazy {
+    // if the user has specified a build mode, use that.
+    buildModeParam ?: when {
+      release -> BuildMode.Release
+      System.getenv("NODE_ENV") == "production" -> BuildMode.Release
+      else -> BuildMode.Development
+    }
+  }
+
   private fun prepareBuilderOutput(scope: CommandContext) = Statics.terminal.let { terminal ->
     if (showProgress && terminal.terminalInfo.interactive) {
       terminal.redirectLoggingToMordant()
@@ -178,6 +210,10 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
       config.settings.caching = enableCaching
       config.settings.dependencies = enableDeps
       config.settings.checks = enableChecks
+      config.settings.buildMode = effectiveBuildMode
+      config.settings.release = effectiveBuildMode == BuildMode.Release
+      config.settings.debug = effectiveBuildMode == BuildMode.Debug
+      config.settings.deploy = deploy
     }
     val taskMap = ConcurrentSkipListMap<TaskId, BuildOutput.TaskOutput>()
     timedStep("Dependencies ready") {

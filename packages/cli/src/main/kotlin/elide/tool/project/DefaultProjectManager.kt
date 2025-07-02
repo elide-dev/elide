@@ -13,7 +13,12 @@
 package elide.tool.project
 
 import java.nio.file.Path
+import java.util.LinkedList
 import jakarta.inject.Provider
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import kotlin.io.path.*
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -61,17 +66,29 @@ internal class DefaultProjectManager @Inject constructor(
     // Read any present `.env` file in the project directory.
     @JvmStatic
     private fun readDotEnv(dir: Path): ProjectEnvironment {
-      val env = buildMap {
+      return ProjectEnvironment.wrapping(buildMap {
         sequenceOf(
           dir.resolve(DOT_ENV_FILE).takeIf { it.isRegularFile() },
           dir.resolve(DOT_ENV_FILE_LOCAL).takeIf { it.isRegularFile() },
         ).filterNotNull().forEach {
           parseDotEnv(it, this)
         }
-      }
-
-      return ProjectEnvironment.wrapping(env)
+      })
     }
+  }
+
+  private suspend fun resolveWorkspace(leaf: Path): Path? = withContext(IO) {
+    val top = leaf.absolute()
+    val parents = LinkedList<Path>()
+    var subject = top.parent
+    while (subject != null) {
+      val cfg = subject.resolve("elide.pkl")
+      if (cfg.exists()) {
+        parents.add(cfg)
+      }
+      subject = subject.parent
+    }
+    parents.lastOrNull()
   }
 
   override suspend fun resolveProject(pathOverride: Path?): ElideProject? {
@@ -80,29 +97,56 @@ internal class DefaultProjectManager @Inject constructor(
       else -> pathOverride
     }
     val root = rootBase?.takeIf { it.isDirectory() } ?: return null
+    val workspaceRoot = resolveWorkspace(root)
     val env = readDotEnv(root)
+    val rootEnv = workspaceRoot?.let { readDotEnv(it) }
 
     // prefer an Elide manifest if present
     val manifests = manifests.get()
-    var elideManifest = manifests.resolve(root).takeIf { it.isRegularFile() }?.let { manifestFile ->
-      manifestFile.inputStream().use { manifests.parse(it, ProjectEcosystem.Elide) }
-    } as ElidePackageManifest?
-
-    // if no Elide manifest is found, attempt to merge other supported formats
-    if (elideManifest == null) {
-      val candidates = supportedThirdPartyManifests.mapNotNull { ecosystem ->
-        manifests.resolve(root, ecosystem).takeIf { it.isRegularFile() }
-      }.mapNotNull { manifestFile ->
-        runCatching { manifests.parse(manifestFile) }.getOrNull()
+    return coroutineScope {
+      val elideManifestOp = async(IO) {
+        manifests.resolve(root).takeIf { it.isRegularFile() }?.let { manifestFile ->
+          manifestFile.inputStream().use { manifests.parse(it, ProjectEcosystem.Elide) }
+        } as ElidePackageManifest?
       }
 
-      elideManifest = manifests.merge(candidates.asIterable())
-    }
+      val rootManifestOp = async(IO) {
+        if (workspaceRoot == null) null else {
+          manifests.resolve(workspaceRoot.parent).takeIf { it.isRegularFile() }?.let { manifestFile ->
+            manifestFile.inputStream().use { manifests.parse(it, ProjectEcosystem.Elide) }
+          } as ElidePackageManifest?
+        }
+      }
 
-    return ElideProjectInfo(
-      root = root,
-      env = env,
-      manifest = elideManifest,
-    )
+      var elideManifest: ElidePackageManifest? = elideManifestOp.await()
+      val rootManifest = rootManifestOp.await()
+
+      // if no Elide manifest is found, attempt to merge other supported formats
+      if (elideManifest == null) {
+        val candidates = supportedThirdPartyManifests.mapNotNull { ecosystem ->
+          manifests.resolve(root, ecosystem).takeIf { it.isRegularFile() }
+        }.mapNotNull { manifestFile ->
+          runCatching { manifests.parse(manifestFile) }.getOrNull()
+        }
+
+        elideManifest = manifests.merge(candidates.asIterable())
+      }
+
+      when {
+        workspaceRoot != null && rootManifest != null -> ElideProjectInfo(
+          root = root,
+          env = rootEnv?.let { rootEnv + env } ?: env,
+          manifest = elideManifest.within(workspaceRoot, rootManifest),
+          workspace = workspaceRoot,
+        )
+
+        else -> ElideProjectInfo(
+          root = root,
+          env = rootEnv?.let { rootEnv + env } ?: env,
+          manifest = elideManifest,
+          workspace = workspaceRoot,
+        )
+      }
+    }
   }
 }

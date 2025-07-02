@@ -13,7 +13,10 @@
 package elide.tooling.project.manifest
 
 import java.net.URI
+import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicReference
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest.*
@@ -30,7 +33,7 @@ private const val OPTIMIZATION_LEVEL_TWO = "2"
 private const val OPTIMIZATION_LEVEL_THREE = "3"
 private const val OPTIMIZATION_LEVEL_FOUR = "4"
 
-@JvmRecord @Serializable
+@Serializable
 public data class ElidePackageManifest(
   val name: String? = null,
   val version: String? = null,
@@ -52,7 +55,17 @@ public data class ElidePackageManifest(
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
 ) : PackageManifest {
+  @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
+
   override val ecosystem: ProjectEcosystem get() = ProjectEcosystem.Elide
+
+  public fun within(path: Path, workspace: ElidePackageManifest): ElidePackageManifest = apply {
+    this.workspace.set(path to workspace)
+  }
+
+  public fun activeWorkspace(): Pair<Path, ElidePackageManifest>? {
+    return this.workspace.get()
+  }
 
   @Serializable public sealed interface Artifact {
     public val from: List<String>
@@ -151,6 +164,7 @@ public data class ElidePackageManifest(
     val group: String = "",
     val name: String = "",
     val version: String = "",
+    val classifier: String = "",
     val repository: String = "",
     val coordinate: String,
   ) : DependencyEcosystemConfig.PackageSpec, Comparable<MavenPackage> {
@@ -172,6 +186,17 @@ public data class ElidePackageManifest(
             coordinate = str,
             repository = if ('@' in str) str.substringAfterLast('@') else "",
           )
+
+          3 -> str.split(':').let { split ->
+            MavenPackage(
+              group = split.first(),
+              name = split[1],
+              classifier = split[2],
+              version = str.substringAfterLast(':'),
+              coordinate = str,
+              repository = if ('@' in str) str.substringAfterLast('@') else "",
+            )
+          }
 
           else -> error("Too many separators in Maven coordinate: '$str'")
         }
@@ -235,6 +260,7 @@ public data class ElidePackageManifest(
     val coordinates: MavenCoordinates? = null,
     val packages: List<MavenPackage> = emptyList(),
     val testPackages: List<MavenPackage> = emptyList(),
+    val processors: List<MavenPackage> = emptyList(),
     val catalogs: List<GradleCatalog> = emptyList(),
     val repositories: Map<String, MavenRepository> = emptyMap(),
     val enableDefaultRepositories: Boolean = true,
@@ -510,6 +536,8 @@ public fun GemDependencies.merge(other: GemDependencies): GemDependencies {
 public fun MavenDependencies.merge(other: MavenDependencies): MavenDependencies {
   return MavenDependencies(
     packages = packages.union(other.packages).toList(),
+    testPackages = testPackages.union(other.testPackages).toList(),
+    processors = processors.union(other.processors).toList(),
     repositories = repositories.plus(other.repositories),
   )
 }

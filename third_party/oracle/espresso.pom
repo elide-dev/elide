@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.graalvm.espresso</groupId>
+  <artifactId>espresso-language</artifactId>
+  <version>24.2.1-elide-1.0.0-beta7</version>
+  <url>https://www.graalvm.org/reference-manual/java-on-truffle/</url>
+  <name>Espresso</name>
+  <description>Core module of the Java on Truffle (aka Espresso): a Java bytecode interpreter</description>
+  <developers>
+    <developer>
+      <name>GraalVM Development</name>
+      <email>graalvm-dev@oss.oracle.com</email>
+      <organization>Oracle Corporation</organization>
+      <organizationUrl>http://www.graalvm.org/</organizationUrl>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>GNU General Public License, version 2</name>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <dependency>
+      <groupId>org.graalvm.truffle</groupId>
+      <artifactId>truffle-api</artifactId>
+      <version>24.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.truffle</groupId>
+      <artifactId>truffle-nfi</artifactId>
+      <version>24.2.1</version>
+    </dependency>
+  </dependencies>
+  <scm>
+    <connection>scm:git:https://github.com/oracle/graal.git</connection>
+    <developerConnection>scm:git:git@github.com:oracle/graal.git</developerConnection>
+    <url>https://github.com/oracle/graal/tree/master/truffle</url>
+  </scm>
+</project>

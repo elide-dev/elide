@@ -32,6 +32,7 @@ import org.eclipse.aether.resolution.DependencyResult
 import org.eclipse.aether.transfer.AbstractTransferListener
 import org.eclipse.aether.transfer.TransferEvent
 import org.eclipse.aether.transfer.TransferEvent.EventType
+import org.eclipse.aether.util.artifact.SubArtifact
 import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator
 import java.io.File
 import java.lang.AutoCloseable
@@ -49,6 +50,7 @@ import kotlinx.coroutines.async
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.relativeTo
+import elide.core.api.Symbolic
 import elide.runtime.Logging
 import elide.tooling.Classpath
 import elide.tooling.ClasspathProvider
@@ -66,7 +68,8 @@ import elide.tooling.project.manifest.ElidePackageManifest.MavenPackage
 import elide.tooling.project.manifest.ElidePackageManifest.MavenRepository
 
 // Calculate the resolved Maven coordinate to use for a given dependency.
-private fun MavenPackage.resolvedCoordinate(): String {
+@Suppress("UNUSED_PARAMETER")
+private fun MavenPackage.resolvedCoordinate(usageType: MavenClassifier = MavenClassifier.Default): String {
   return coordinate // @TODO resolve special versions
 }
 
@@ -79,6 +82,17 @@ public class MavenResolverErrors internal constructor (public val errors: List<T
   "Failed to resolve Maven dependencies; encountered ${errors.size} error(s). The first is shown.",
   errors.firstOrNull(),
 )
+
+/**
+ * ## Maven Usage Type
+ *
+ * Enumerates types of libraries consumable via Maven.
+ */
+public enum class MavenClassifier(override val symbol: String): Symbolic<String> {
+  Default(""),
+  Docs("javadoc"),
+  Sources("sources"),
+}
 
 /**
  * ## Maven Resolver
@@ -333,10 +347,23 @@ public class MavenAetherResolver internal constructor (
     }
 
     logging.debug { "Configuring Maven packages" }
-    val packages = registry.values.map { (pkg, usage) ->
+    val packages = registry.values.flatMap { (pkg, usage) ->
       logging.trace { "- Adding Maven package: ${pkg.coordinate}" }
-      val artifact = DefaultArtifact(pkg.resolvedCoordinate())
-      Dependency(artifact, usage.scope)
+      val coord = pkg.resolvedCoordinate()
+      val artifact = DefaultArtifact(coord)
+      buildList{
+        add(Dependency(artifact, usage.scope))
+
+        // always fetch gradle metadata, if present
+        add(Dependency(SubArtifact(artifact, "", "module"), usage.scope, true))
+
+        if (config.settings.docs) {
+          add(Dependency(SubArtifact(artifact, "javadoc", "jar"), usage.scope, true))
+        }
+        if (config.settings.sources) {
+          add(Dependency(SubArtifact(artifact, "sources", "jar"), usage.scope, true))
+        }
+      }
     }.also {
       logging.debug { "Configured ${it.size} Maven packages" }
     }
@@ -399,6 +426,7 @@ public class MavenAetherResolver internal constructor (
 
     val packages = state.manifest.dependencies.maven.packages
     val testPackages = state.manifest.dependencies.maven.testPackages
+    val processors = state.manifest.dependencies.maven.processors
     val repos = state.manifest.dependencies.maven.repositories
 
     if (packages.isNotEmpty() || testPackages.isNotEmpty()) {
@@ -420,6 +448,14 @@ public class MavenAetherResolver internal constructor (
         MultiPathUsage.TestCompile,
         testPackages,
       )
+      if (processors.isNotEmpty()) {
+        registerPackages(
+          "processors",
+          state.manifest,
+          MultiPathUsage.Processors,
+          processors,
+        )
+      }
     }
   }
 
@@ -451,7 +487,7 @@ public class MavenAetherResolver internal constructor (
         val artifact = dependency.artifact
         val coordinate = artifact.groupId + ":" + artifact.artifactId
         val pkg = registry[coordinate]?.first ?: registry.values.find { (pkg, _) ->
-          pkg.coordinate == coordinate || pkg.coordinate.startsWith(coordinate)
+          pkg.coordinate == coordinate
         }?.first
 
         if (pkg == null) {
@@ -459,6 +495,7 @@ public class MavenAetherResolver internal constructor (
             group = artifact.groupId,
             name = artifact.artifactId,
             version = artifact.version,
+            classifier = artifact.classifier,
             coordinate = coordinate,
           )
           val resolved = ResolvedJarArtifact.of(artifact)
@@ -468,7 +505,7 @@ public class MavenAetherResolver internal constructor (
         if (pkg in packageArtifacts) {
           // do we already have this at the same version?
           val existing = requireNotNull(packageArtifacts[pkg])
-          if (existing.artifact.file == artifact.file) {
+          if (existing.artifact.file == artifact.file || existing is ResolvedJarArtifact) {
             return@forEach // we already have this
           }
           error(
@@ -581,11 +618,18 @@ public class MavenAetherResolver internal constructor (
       val coordinate = it.key.coordinate
       val pkg = it.key
       val artifact = it.value
+      val classifier = it.value.artifact.classifier
+      if (classifier == "sources" || classifier == "javadoc") {
+        // always skip docs/sources w.r.t. lockfile calculations
+        return@mapNotNull null
+      }
+
       artifact.artifact.file.toPath().let { filePath ->
         idAssigner().let { assigned ->
           localIdMap[pkg] = assigned
           ElideLockfile.MavenArtifact(
             coordinate = coordinate,
+            // @TODO use layout for this path
             artifact = filePath.relativeTo(abs.resolve(".dev").resolve("dependencies")).toString(),
             fingerprint = Fingerprints.forFile(filePath),
             id = assigned,
@@ -631,6 +675,8 @@ public class MavenAetherResolver internal constructor (
                   MultiPathUsage.Compile -> ElideLockfile.MavenUsageType.COMPILE
                   MultiPathUsage.TestCompile -> ElideLockfile.MavenUsageType.TEST
                   MultiPathUsage.Runtime -> ElideLockfile.MavenUsageType.RUNTIME
+                  MultiPathUsage.Processors -> ElideLockfile.MavenUsageType.PROCESSORS
+                  MultiPathUsage.TestProcessors -> ElideLockfile.MavenUsageType.TEST_PROCESSORS
                   MultiPathUsage.TestRuntime -> ElideLockfile.MavenUsageType.TEST_RUNTIME
                 }
               }.toSortedSet(),

@@ -32,6 +32,11 @@ echo "- Architecture: $arch"
 
 echo "----------------------------------------------------"
 
+if [[ "$@" == *"--dry"* ]]; then
+  echo "Dry run mode enabled, skipping further steps."
+  exit 0
+fi
+
 if [ "$arch" = "arm64" ]; then
   arch="aarch64"
 fi

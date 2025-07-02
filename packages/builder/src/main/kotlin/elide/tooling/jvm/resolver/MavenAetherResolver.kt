@@ -352,16 +352,17 @@ public class MavenAetherResolver internal constructor (
       val coord = pkg.resolvedCoordinate()
       val artifact = DefaultArtifact(coord)
       buildList{
+        // always fetch gradle metadata, if present
+        add(Dependency(SubArtifact(artifact, "", "module"), "metadata", true))
+
+        // then main dependency
         add(Dependency(artifact, usage.scope))
 
-        // always fetch gradle metadata, if present
-        add(Dependency(SubArtifact(artifact, "", "module"), usage.scope, true))
-
         if (config.settings.docs) {
-          add(Dependency(SubArtifact(artifact, "javadoc", "jar"), usage.scope, true))
+          add(Dependency(SubArtifact(artifact, "javadoc", "jar"), "metadata", true))
         }
         if (config.settings.sources) {
-          add(Dependency(SubArtifact(artifact, "sources", "jar"), usage.scope, true))
+          add(Dependency(SubArtifact(artifact, "sources", "jar"), "metadata", true))
         }
       }
     }.also {

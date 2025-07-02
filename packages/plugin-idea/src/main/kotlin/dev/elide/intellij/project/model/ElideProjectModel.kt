@@ -11,12 +11,13 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package dev.elide.intellij.project
+package dev.elide.intellij.project.model
 
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.externalSystem.model.DataNode
 import com.intellij.openapi.externalSystem.model.ProjectKeys
 import com.intellij.openapi.externalSystem.model.project.*
+import com.intellij.openapi.projectRoots.ProjectJdkTable
 import com.intellij.openapi.util.io.toCanonicalPath
 import dev.elide.intellij.Constants
 import java.nio.file.Path
@@ -52,7 +53,7 @@ data object ElideProjectModel {
   }
 
   /** Build the project model given a configured Elide [elideProject]. */
-  fun buildProjectModel(projectPath: Path, elideProject: ElideConfiguredProject): DataNode<ProjectData> {
+  suspend fun buildProjectModel(projectPath: Path, elideProject: ElideConfiguredProject): DataNode<ProjectData> {
     // stubbed project model
     val projectData = ProjectData(
       /* owner = */ Constants.SYSTEM_ID,
@@ -64,24 +65,31 @@ data object ElideProjectModel {
     elideProject.sourceSets.find(SourceSetType.Sources)
 
     val projectNode = DataNode(ProjectKeys.PROJECT, projectData, null)
+    val dependencies = CompositeLibraryContributor()
 
-    val mainModules = elideProject.sourceSets.find(SourceSetType.Sources).map {
-      buildModuleDataFromSourceSet(projectNode, it, projectPath)
-    }.toList()
+    val mainModules = elideProject.sourceSets.find(SourceSetType.Sources).toList().map {
+      buildModuleDataFromSourceSet(projectNode, elideProject, it, projectPath, dependencies)
+    }
+    LOG.info("Registered ${mainModules.size} source modules.")
 
-    val testModules = elideProject.sourceSets.find(SourceSetType.Tests).map {
-      buildModuleDataFromSourceSet(projectNode, it, projectPath, dependsOn = mainModules)
-    }.toList()
+    val testModules = elideProject.sourceSets.find(SourceSetType.Tests).toList().map {
+      buildModuleDataFromSourceSet(projectNode, elideProject, it, projectPath, dependencies, mainModules)
+    }
+    LOG.info("Registered ${testModules.size} test modules.")
 
-    LOG.info("Registered ${mainModules.size} source and ${testModules.size} test modules.")
+    // TODO(@darvld): use configured JDK instead of choosing a default
+    projectNode.createChild(ProjectSdkData.KEY, ProjectSdkData(ProjectJdkTable.getInstance().allJdks.first().name))
+
     return projectNode
   }
 
-  fun buildModuleDataFromSourceSet(
-    project: DataNode<ProjectData>,
+  suspend fun buildModuleDataFromSourceSet(
+    projectNode: DataNode<ProjectData>,
+    elideProject: ElideConfiguredProject,
     elideSourceSet: SourceSet,
     projectPath: Path,
-    dependsOn: Iterable<DataNode<ModuleData>>? = null,
+    libraryDependencies: LibraryDependencyContributor,
+    moduleDependencies: Iterable<DataNode<ModuleData>>? = null,
   ): DataNode<ModuleData> {
     // TODO(@darvld): account for language information in the source set instead of assuming Kotlin/Java
     // compute module info
@@ -94,7 +102,7 @@ data object ElideProjectModel {
       /* externalConfigPath = */ projectPath.resolve(Constants.MANIFEST_NAME).toCanonicalPath(),
     )
 
-    val moduleNode = project.createChild(ProjectKeys.MODULE, module)
+    val moduleNode = projectNode.createChild(ProjectKeys.MODULE, module)
 
     // map content roots
     elideSourceSet.spec.forEach { spec ->
@@ -108,9 +116,19 @@ data object ElideProjectModel {
     }
 
     // add module dependencies
-    dependsOn?.forEach {
+    moduleDependencies?.forEach {
       moduleNode.createChild(ProjectKeys.MODULE_DEPENDENCY, ModuleDependencyData(module, it.data))
     }
+
+    // collect and add library dependencies
+    libraryDependencies.collectDependencies(projectPath, elideProject, elideSourceSet).forEach {
+      val dependency = LibraryDependencyData(module, it, LibraryLevel.MODULE)
+      moduleNode.createChild(ProjectKeys.LIBRARY_DEPENDENCY, dependency)
+      moduleNode.createChild(ProjectKeys.LIBRARY, it)
+    }
+
+    // TODO(@darvld): use configured JDK instead of choosing a default
+    moduleNode.createChild(ModuleSdkData.KEY, ModuleSdkData(ProjectJdkTable.getInstance().allJdks.first().name))
 
     return moduleNode
   }

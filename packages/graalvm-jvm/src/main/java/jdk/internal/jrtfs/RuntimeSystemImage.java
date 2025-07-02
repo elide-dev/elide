@@ -15,12 +15,21 @@ package jdk.internal.jrtfs;
 import com.oracle.svm.core.annotate.KeepOriginal;
 import com.oracle.svm.core.annotate.Substitute;
 import com.oracle.svm.core.annotate.TargetClass;
+import java.util.Objects;
 
 @TargetClass(className = "jdk.internal.jrtfs.SystemImage")
 @KeepOriginal
 public final class RuntimeSystemImage {
   @Substitute
   private static String findHome() {
-    return System.getProperty("java.home");
+    var assigned = System.getProperty("java.home");
+    if (assigned != null) {
+      return assigned;
+    }
+    var env = System.getenv("JAVA_HOME");
+    if (env != null) {
+      return env;
+    }
+    return Objects.requireNonNull(System.getProperty("elide.java.home"));
   }
 }

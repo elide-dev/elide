@@ -48,9 +48,6 @@ internal var exitOnComplete = true
 // Unhandled error that caused exit, if any.
 internal val unhandledExc = atomic<Throwable?>(null)
 
-// Whether an embedded JVM is available.
-val embeddedJvmEnabled = System.getProperty("elide.jvm.embedded") == "true"
-
 private inline fun earlyLog(msg: String) {
   if (EARLY_INIT_LOG) println("[init] $msg")
 }
@@ -149,17 +146,16 @@ inline fun setStaticProperties(binPath: String) {
   System.setProperty(org.fusesource.jansi.AnsiConsole.JANSI_GRACEFUL, "false")
 
   // if no java home property is set, and an env variable is set, propagate it
+  val embeddedJavaHome = path.resolve("resources").resolve("gvm").also { jvmPath ->
+    System.setProperty("elide.java.home", jvmPath.absolutePathString())
+  }
   if (System.getProperty("java.home") == null) {
     when (System.getenv("JAVA_HOME")?.ifBlank { null }?.let { javaHome ->
       System.setProperty("java.home", javaHome)
     }) {
       null -> {
         // if no java home is set at all, and elide shipped with an embedded jvm, use that
-        if (embeddedJvmEnabled) {
-          path.resolve("jvm").let { jvmPath ->
-            System.setProperty("java.home", jvmPath.absolutePathString())
-          }
-        }
+        System.setProperty("java.home", embeddedJavaHome.absolutePathString())
       }
 
       // otherwise do nothing

@@ -46,6 +46,7 @@ import elide.tooling.MutableArguments
 import elide.tooling.Outputs
 import elide.tooling.Tool
 import elide.tooling.AbstractTool
+import elide.tooling.cli.Statics
 import elide.tooling.jvm.JavaCompiler.JavaCompilerInputs.SourceFiles
 import elide.runtime.diag.Diagnostic as ElideDiagnostic
 
@@ -332,13 +333,20 @@ public val javac: Tool.CommandLineTool = Tool.describe(
 
   /** Factories for configuring and obtaining instances of [JavaCompiler]. */
   public companion object {
+    private const val USE_FALLBACK_JVM_TOOLCHAIN = true
     private val logging by lazy { Logging.of(JavaCompiler::class) }
+
+    @Suppress("KotlinConstantConditions")
+    @JvmStatic private fun fallbackToolchain(tool: Tool.CommandLineTool): String {
+      if (!USE_FALLBACK_JVM_TOOLCHAIN) embeddedToolError(tool, "Java toolchain missing; please set `JAVA_HOME`")
+      return Statics.resourcesPath.resolve("gvm").absolutePathString()
+    }
 
     // Resolve the Java toolchain for the Kotlin compiler.
     @JvmStatic public fun resolveJavaToolchain(tool: Tool.CommandLineTool): Path {
       return Paths.get(
         (System.getenv("JAVA_HOME") ?: System.getProperty("java.home"))?.ifBlank { null }
-          ?: embeddedToolError(tool, "Java toolchain missing; please set `JAVA_HOME`")
+          ?: fallbackToolchain(tool)
       )
     }
 

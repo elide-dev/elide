@@ -16,9 +16,6 @@ package elide.tooling.jvm
 
 import org.eclipse.aether.DefaultRepositorySystemSession
 import org.eclipse.aether.RepositorySystem
-import org.eclipse.aether.RepositorySystemSession
-import org.eclipse.aether.artifact.ArtifactTypeRegistry
-import org.eclipse.aether.resolution.ArtifactDescriptorPolicy
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.incremental.classpathAsList
 import java.io.File

@@ -6526,6 +6526,104 @@ public abstract interface class elide/runtime/intrinsics/js/node/zlib/ZlibOption
 	public abstract fun getWindowBits ()I
 }
 
+public synthetic class elide/runtime/intrinsics/js/s3/$S3Module$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/intrinsics/js/s3/$S3Module$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun isBuildable ()Z
+}
+
+public abstract interface class elide/runtime/intrinsics/js/s3/S3Client : org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun file (Ljava/lang/String;)Lelide/runtime/intrinsics/js/s3/S3File;
+}
+
+public final class elide/runtime/intrinsics/js/s3/S3ClientConstructorOptions : java/lang/Record {
+	public static final field Companion Lelide/runtime/intrinsics/js/s3/S3ClientConstructorOptions$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;)V
+	public final fun accessKeyId ()Ljava/lang/String;
+	public final fun acl ()Ljava/lang/String;
+	public final fun bucket ()Ljava/lang/String;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/Boolean;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;)Lelide/runtime/intrinsics/js/s3/S3ClientConstructorOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/s3/S3ClientConstructorOptions;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/s3/S3ClientConstructorOptions;
+	public final fun endpoint ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/s3/S3ClientConstructorOptions;
+	public fun hashCode ()I
+	public final fun region ()Ljava/lang/String;
+	public final fun secretAccessKey ()Ljava/lang/String;
+	public final fun sessionToken ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public final fun virtualHostedStyle ()Ljava/lang/Boolean;
+}
+
+public final class elide/runtime/intrinsics/js/s3/S3ClientConstructorOptions$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/s3/S3ClientConstructorOptions;
+}
+
+public final class elide/runtime/intrinsics/js/s3/S3ClientProxy : elide/runtime/intrinsics/js/s3/S3Client {
+	public fun <init> (Lelide/runtime/exec/GuestExecutorProvider;Lelide/runtime/intrinsics/js/s3/S3ClientConstructorOptions;)V
+	public fun file (Ljava/lang/String;)Lelide/runtime/intrinsics/js/s3/S3File;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getMemberKeys ()Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Ljava/lang/Void;
+	public synthetic fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/s3/S3File : org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun arrayBuffer ()Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun bytes ()Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun delete ()Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun exists ()Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun json ()Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun presign (Ljava/lang/String;J)Ljava/lang/String;
+	public abstract fun stat ()Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun text ()Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun write (Lelide/runtime/intrinsics/js/Blob;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun write (Lelide/runtime/intrinsics/js/ReadableStream;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun write (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun write-AgME8lA (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+}
+
+public final class elide/runtime/intrinsics/js/s3/S3FileProxy : elide/runtime/intrinsics/js/s3/S3File {
+	public fun <init> (Lelide/runtime/exec/GuestExecutorProvider;Lsoftware/amazon/awssdk/services/s3/S3AsyncClient;Lsoftware/amazon/awssdk/regions/Region;Lsoftware/amazon/awssdk/auth/credentials/AwsCredentialsProvider;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun arrayBuffer ()Lelide/runtime/intrinsics/js/JsPromise;
+	public fun bytes ()Lelide/runtime/intrinsics/js/JsPromise;
+	public fun delete ()Lelide/runtime/intrinsics/js/JsPromise;
+	public fun exists ()Lelide/runtime/intrinsics/js/JsPromise;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getMemberKeys ()Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun json ()Lelide/runtime/intrinsics/js/JsPromise;
+	public fun presign (Ljava/lang/String;J)Ljava/lang/String;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Ljava/lang/Void;
+	public synthetic fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun stat ()Lelide/runtime/intrinsics/js/JsPromise;
+	public fun text ()Lelide/runtime/intrinsics/js/JsPromise;
+	public fun write (Lelide/runtime/intrinsics/js/Blob;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun write (Lelide/runtime/intrinsics/js/ReadableStream;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun write (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+	public fun write-AgME8lA (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/js/JsPromise;
+}
+
 public final class elide/runtime/intrinsics/js/stream/ByteLengthQueuingStrategy : elide/runtime/intrinsics/js/stream/QueuingStrategy {
 	public static final field Companion Lelide/runtime/intrinsics/js/stream/ByteLengthQueuingStrategy$Companion;
 	public static final synthetic fun box-impl (D)Lelide/runtime/intrinsics/js/stream/ByteLengthQueuingStrategy;

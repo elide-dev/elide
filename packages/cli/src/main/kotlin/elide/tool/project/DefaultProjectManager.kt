@@ -17,6 +17,7 @@ import java.util.LinkedList
 import jakarta.inject.Provider
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlin.io.path.*
@@ -84,7 +85,7 @@ internal class DefaultProjectManager @Inject constructor(
     while (subject != null) {
       val cfg = subject.resolve("elide.pkl")
       if (cfg.exists()) {
-        parents.add(cfg)
+        parents.add(cfg.parent)
       }
       subject = subject.parent
     }
@@ -112,13 +113,24 @@ internal class DefaultProjectManager @Inject constructor(
 
       val rootManifestOp = async(IO) {
         if (workspaceRoot == null) null else {
-          manifests.resolve(workspaceRoot.parent).takeIf { it.isRegularFile() }?.let { manifestFile ->
+          manifests.resolve(workspaceRoot).takeIf { it.isRegularFile() }?.let { manifestFile ->
             manifestFile.inputStream().use { manifests.parse(it, ProjectEcosystem.Elide) }
           } as ElidePackageManifest?
         }
       }
 
-      var elideManifest: ElidePackageManifest? = elideManifestOp.await()
+      var elideManifest: ElidePackageManifest? = async(IO) {
+        listOf(elideManifestOp, rootManifestOp).awaitAll()
+        var current: ElidePackageManifest? = elideManifestOp.await()
+        val root: ElidePackageManifest? = rootManifestOp.await()
+        when {
+          current != null && root == null -> current
+          current == null && root != null -> root
+          current != null && root != null -> current.within(requireNotNull(workspaceRoot), root)
+          else -> null
+        }
+      }.await()
+
       val rootManifest = rootManifestOp.await()
 
       // if no Elide manifest is found, attempt to merge other supported formats

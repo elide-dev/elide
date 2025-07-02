@@ -2633,7 +2633,9 @@ fun spawnEmbeddedSvmCopy(receiver: BuildNativeImageTask): Copy {
   return tasks.register("${receiver.name}CopyEmbeddedSvm", Copy::class) {
     from(graalvmLib) {
       include(
+        "ct.sym",
         "modules",
+        "jrt-fs.jar",
         "**/truffle/**/*.jar",
         "**/svm/**/*.jar",
         "**/svm/clibraries/*/**/*.*",

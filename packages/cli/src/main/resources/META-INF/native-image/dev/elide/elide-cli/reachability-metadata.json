@@ -1256,6 +1256,17 @@
       ]
     },
     {
+      "type": "elide.runtime.diag.DiagnosticsContainer",
+      "fields": [
+        {
+          "name": "isClosed$volatile"
+        },
+        {
+          "name": "isLocked$volatile"
+        }
+      ]
+    },
+    {
       "type": "elide.runtime.exec.$GuestExecutorFactory$Definition",
       "methods": [
         {
@@ -1459,6 +1470,14 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.console.ConsoleIntrinsic",
+      "fields": [
+        {
+          "name": "interceptor$volatile"
         }
       ]
     },
@@ -1737,6 +1756,17 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.testing.TestingRegistrarImpl",
+      "fields": [
+        {
+          "name": "activeScope$volatile"
+        },
+        {
+          "name": "isMutable$volatile"
         }
       ]
     },
@@ -2789,6 +2819,14 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.telemetry.manager.DefaultTelemetryManager",
+      "fields": [
+        {
+          "name": "telemetryEnabled$volatile"
         }
       ]
     },
@@ -3954,6 +3992,15 @@
       "type": "elide.tooling.jvm.JvmTestConfigurator"
     },
     {
+      "type": "elide.tooling.jvm.resolver.$GmmAwareArtifactDescriptorReader$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tooling.jvm.resolver.$MavenAetherResolver$Definition",
       "methods": [
         {
@@ -4000,6 +4047,15 @@
     },
     {
       "type": "elide.tooling.jvm.resolver.$RepositorySystemFactory$RepositorySystemSession2$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.jvm.resolver.GmmAwareArtifactDescriptorReader",
       "methods": [
         {
           "name": "<init>",
@@ -4414,6 +4470,19 @@
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true,
       "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$MavenCoordinates",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "boolean",
+            "java.util.List"
+          ]
+        },
         {
           "name": "<init>",
           "parameterTypes": [

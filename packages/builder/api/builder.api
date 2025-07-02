@@ -139,9 +139,11 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildSett
 	public abstract fun getDebug ()Z
 	public abstract fun getDependencies ()Z
 	public abstract fun getDeploy ()Z
+	public abstract fun getDocs ()Z
 	public abstract fun getDry ()Z
 	public abstract fun getPreserve ()Z
 	public abstract fun getRelease ()Z
+	public abstract fun getSources ()Z
 	public abstract fun getVerbose ()Z
 	public abstract fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 }
@@ -168,12 +170,14 @@ public abstract interface class elide/tooling/config/BuildConfigurator$ElideBuil
 
 public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings : java/lang/Record, elide/tooling/config/BuildConfigurator$BuildSettings {
 	public static final field Companion Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings$Companion;
-	public fun <init> (ZZZZZZZZLelide/tooling/BuildMode;Z)V
+	public fun <init> (ZZZZZZZZLelide/tooling/BuildMode;ZZZ)V
 	public fun buildMode ()Lelide/tooling/BuildMode;
 	public fun caching ()Z
 	public fun checks ()Z
 	public final fun component1 ()Z
 	public final fun component10 ()Z
+	public final fun component11 ()Z
+	public final fun component12 ()Z
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -182,11 +186,12 @@ public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings
 	public final fun component7 ()Z
 	public final fun component8 ()Z
 	public final fun component9 ()Lelide/tooling/BuildMode;
-	public final fun copy (ZZZZZZZZLelide/tooling/BuildMode;Z)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
-	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;ZZZZZZZZLelide/tooling/BuildMode;ZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public final fun copy (ZZZZZZZZLelide/tooling/BuildMode;ZZZ)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;ZZZZZZZZLelide/tooling/BuildMode;ZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$ImmutableBuildSettings;
 	public fun debug ()Z
 	public fun dependencies ()Z
 	public fun deploy ()Z
+	public fun docs ()Z
 	public fun dry ()Z
 	public fun equals (Ljava/lang/Object;)Z
 	public synthetic fun getBuildMode ()Lelide/tooling/BuildMode;
@@ -195,13 +200,16 @@ public final class elide/tooling/config/BuildConfigurator$ImmutableBuildSettings
 	public synthetic fun getDebug ()Z
 	public synthetic fun getDependencies ()Z
 	public synthetic fun getDeploy ()Z
+	public synthetic fun getDocs ()Z
 	public synthetic fun getDry ()Z
 	public synthetic fun getPreserve ()Z
 	public synthetic fun getRelease ()Z
+	public synthetic fun getSources ()Z
 	public synthetic fun getVerbose ()Z
 	public fun hashCode ()I
 	public fun preserve ()Z
 	public fun release ()Z
+	public fun sources ()Z
 	public fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun toString ()Ljava/lang/String;
 	public fun verbose ()Z
@@ -237,11 +245,13 @@ public final class elide/tooling/config/BuildConfigurator$MetadataDownloading : 
 
 public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings : elide/tooling/config/BuildConfigurator$BuildSettings {
 	public fun <init> ()V
-	public fun <init> (ZZZZZZZZLelide/tooling/BuildMode;Z)V
-	public synthetic fun <init> (ZZZZZZZZLelide/tooling/BuildMode;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZZZZZZLelide/tooling/BuildMode;ZZZ)V
+	public synthetic fun <init> (ZZZZZZZZLelide/tooling/BuildMode;ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun build ()Lelide/tooling/config/BuildConfigurator$BuildSettings;
 	public final fun component1 ()Z
 	public final fun component10 ()Z
+	public final fun component11 ()Z
+	public final fun component12 ()Z
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -250,8 +260,8 @@ public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings :
 	public final fun component7 ()Z
 	public final fun component8 ()Z
 	public final fun component9 ()Lelide/tooling/BuildMode;
-	public final fun copy (ZZZZZZZZLelide/tooling/BuildMode;Z)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
-	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;ZZZZZZZZLelide/tooling/BuildMode;ZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public final fun copy (ZZZZZZZZLelide/tooling/BuildMode;ZZZ)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
+	public static synthetic fun copy$default (Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;ZZZZZZZZLelide/tooling/BuildMode;ZZZILjava/lang/Object;)Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getBuildMode ()Lelide/tooling/BuildMode;
 	public fun getCaching ()Z
@@ -259,9 +269,11 @@ public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings :
 	public fun getDebug ()Z
 	public fun getDependencies ()Z
 	public fun getDeploy ()Z
+	public fun getDocs ()Z
 	public fun getDry ()Z
 	public fun getPreserve ()Z
 	public fun getRelease ()Z
+	public fun getSources ()Z
 	public fun getVerbose ()Z
 	public fun hashCode ()I
 	public fun setBuildMode (Lelide/tooling/BuildMode;)V
@@ -270,9 +282,11 @@ public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings :
 	public fun setDebug (Z)V
 	public fun setDependencies (Z)V
 	public fun setDeploy (Z)V
+	public fun setDocs (Z)V
 	public fun setDry (Z)V
 	public fun setPreserve (Z)V
 	public fun setRelease (Z)V
+	public fun setSources (Z)V
 	public fun setVerbose (Z)V
 	public fun toMutable ()Lelide/tooling/config/BuildConfigurator$MutableBuildSettings;
 	public fun toString ()Ljava/lang/String;
@@ -2137,6 +2151,16 @@ public final class elide/tooling/jvm/gradle/VersionConstraintSerializer : kotlin
 	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
 }
 
+public synthetic class elide/tooling/jvm/resolver/$GmmAwareArtifactDescriptorReader$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/tooling/jvm/resolver/$RepositorySystemFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2187,6 +2211,10 @@ public synthetic class elide/tooling/jvm/resolver/$RepositorySystemFactory$Repos
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public abstract interface class elide/tooling/jvm/resolver/AetherProjectProvider {
+	public abstract fun buildState ()Lelide/tooling/config/BuildConfigurator$ElideBuildState;
+}
+
 public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/tooling/ClasspathsProvider, elide/tooling/deps/DependencyResolver$MavenResolver, java/lang/AutoCloseable {
 	public static final field Companion Lelide/tooling/jvm/resolver/MavenAetherResolver$Companion;
 	public fun classpathProvider (Lelide/tooling/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -2197,6 +2225,17 @@ public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/toolin
 }
 
 public final class elide/tooling/jvm/resolver/MavenAetherResolver$Companion {
+}
+
+public final class elide/tooling/jvm/resolver/MavenClassifier : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field Default Lelide/tooling/jvm/resolver/MavenClassifier;
+	public static final field Docs Lelide/tooling/jvm/resolver/MavenClassifier;
+	public static final field Sources Lelide/tooling/jvm/resolver/MavenClassifier;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/jvm/resolver/MavenClassifier;
+	public static fun values ()[Lelide/tooling/jvm/resolver/MavenClassifier;
 }
 
 public final class elide/tooling/jvm/resolver/MavenLockfileResolver : elide/tooling/ClasspathsProvider {
@@ -2215,7 +2254,7 @@ public final class elide/tooling/jvm/resolver/MavenResolverErrors : java/lang/Ru
 
 public final class elide/tooling/jvm/resolver/RepositorySystemFactory {
 	public fun <init> ()V
-	public final fun mavenLocator ()Lorg/eclipse/aether/impl/DefaultServiceLocator;
+	public final fun mavenLocator (Lelide/tooling/jvm/resolver/AetherProjectProvider;)Lorg/eclipse/aether/impl/DefaultServiceLocator;
 	public final fun remoteRepositoryManager (Lorg/eclipse/aether/impl/DefaultServiceLocator;)Lorg/eclipse/aether/impl/RemoteRepositoryManager;
 	public final fun repositorySystem (Lorg/eclipse/aether/impl/DefaultServiceLocator;)Lorg/eclipse/aether/internal/impl/DefaultRepositorySystem;
 	public final fun repositorySystemSession ()Lorg/eclipse/aether/DefaultRepositorySystemSession;

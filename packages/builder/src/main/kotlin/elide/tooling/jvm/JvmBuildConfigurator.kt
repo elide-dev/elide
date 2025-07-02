@@ -14,7 +14,11 @@
 
 package elide.tooling.jvm
 
+import org.eclipse.aether.DefaultRepositorySystemSession
 import org.eclipse.aether.RepositorySystem
+import org.eclipse.aether.RepositorySystemSession
+import org.eclipse.aether.artifact.ArtifactTypeRegistry
+import org.eclipse.aether.resolution.ArtifactDescriptorPolicy
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.incremental.classpathAsList
 import java.io.File
@@ -47,6 +51,7 @@ import elide.tooling.Tool
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
+import elide.tooling.jvm.resolver.AetherProjectProvider
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.jvm.resolver.RepositorySystemFactory
 import elide.tooling.kotlin.KotlinCompiler
@@ -679,16 +684,25 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       when (
         val existing = config.resolvers[DependencyResolver.MavenResolver::class]
       ) {
-        null -> MavenAetherResolver(
-          config,
-          state.events,
-          state.beanContext.getBean(RepositorySystem::class.java),
-          RepositorySystemFactory().repositorySystemSession().apply {
-            setOffline(config.settings.dry)
-          },
-        ).apply {
-          // configure repositories and packages for a resolver from scratch.
-          registerPackagesFromManifest(state)
+        null -> RepositorySystemFactory().let { systemFactory ->
+          // register build state as injectable; must occur before other aether DI usages
+          state.beanContext.registerSingleton(
+            AetherProjectProvider::class.java,
+            object: AetherProjectProvider {
+              override fun buildState(): ElideBuildState = state
+            }
+          )
+          MavenAetherResolver(
+            config,
+            state.events,
+            state.beanContext.getBean(RepositorySystem::class.java),
+            state.beanContext.getBean(DefaultRepositorySystemSession::class.java).apply {
+              setOffline(config.settings.dry)
+            },
+          ).apply {
+            // configure repositories and packages for a resolver from scratch.
+            registerPackagesFromManifest(state)
+          }
         }
 
         else -> (existing as MavenAetherResolver).also {

@@ -2414,7 +2414,7 @@ internal class ToolShellCommand @Inject constructor(
 
         // make sure we don't write this in test mode, which gathers tests instead of running
         if (!testMode()) {
-          runnable = activeProject.value?.manifest?.entrypoint?.first()?.let {
+          runnable = activeProject.value?.manifest?.entrypoint?.firstOrNull()?.let {
             // resolve against the current directory before assigning
             val path = Path.of(it)
 
@@ -2519,7 +2519,7 @@ internal class ToolShellCommand @Inject constructor(
           // warn about experimental status, as applicable
           if (verbose && experimentalLangs.isNotEmpty()) {
             logging.warn(
-              "Caution: Support for ${experimentalLangs.joinToString(", ") { i -> i.formalName }} " +
+              "Caution: Support for ${experimentalLangs.map { it.formalName }.distinct().joinToString(", ")} " +
                       "considered experimental.",
             )
           }

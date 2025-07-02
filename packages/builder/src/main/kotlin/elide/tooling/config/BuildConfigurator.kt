@@ -69,6 +69,12 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     /** Whether to enable dependencies (installation-aware). */
     public val dependencies: Boolean
 
+    /** Whether to download source dependencies (installation-aware). */
+    public val sources: Boolean
+
+    /** Whether to download doc dependencies (installation-aware). */
+    public val docs: Boolean
+
     /** Whether to enable check tasks, such as linters. */
     public val checks: Boolean
 
@@ -98,6 +104,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override val checks: Boolean,
     override val buildMode: BuildMode,
     override val deploy: Boolean,
+    override val sources: Boolean,
+    override val docs: Boolean,
   ) : BuildSettings {
     override fun toMutable(): MutableBuildSettings = MutableBuildSettings(
       caching = caching,
@@ -110,6 +118,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
       debug = debug,
       buildMode = buildMode,
       deploy = deploy,
+      sources = sources,
+      docs = docs,
     )
   }
 
@@ -129,6 +139,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override var checks: Boolean = true,
     override var buildMode: BuildMode = BuildMode.default(),
     override var deploy: Boolean = false,
+    override var sources: Boolean = false,
+    override var docs: Boolean = false,
   ) : BuildSettings {
     public fun build(): BuildSettings = ImmutableBuildSettings(
       caching = caching,
@@ -141,6 +153,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
       debug = debug,
       buildMode = buildMode,
       deploy = deploy,
+      sources = sources,
+      docs = docs,
     )
 
     override fun toMutable(): MutableBuildSettings = this

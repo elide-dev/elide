@@ -164,6 +164,7 @@ public data class ElidePackageManifest(
     val group: String = "",
     val name: String = "",
     val version: String = "",
+    val classifier: String = "",
     val repository: String = "",
     val coordinate: String,
   ) : DependencyEcosystemConfig.PackageSpec, Comparable<MavenPackage> {
@@ -185,6 +186,17 @@ public data class ElidePackageManifest(
             coordinate = str,
             repository = if ('@' in str) str.substringAfterLast('@') else "",
           )
+
+          3 -> str.split(':').let { split ->
+            MavenPackage(
+              group = split.first(),
+              name = split[1],
+              classifier = split[2],
+              version = str.substringAfterLast(':'),
+              coordinate = str,
+              repository = if ('@' in str) str.substringAfterLast('@') else "",
+            )
+          }
 
           else -> error("Too many separators in Maven coordinate: '$str'")
         }

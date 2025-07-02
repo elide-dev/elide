@@ -14,9 +14,8 @@ import "Workspace.pkl" as _workspace
 import "Lockfile.pkl" as _lockfile
 
 import "Container.pkl" as _container
-import "Jvm.pkl" as _jvm
-import "Java.pkl" as _java
 import "Kotlin.pkl" as _kotlin
+import "Jvm.pkl" as _jvm
 import "Python.pkl" as _python
 import "Ruby.pkl" as _ruby
 import "JavaScript.pkl" as _js
@@ -61,9 +60,6 @@ class ElideProject {
 
   /// Configure JVM runtime settings.
   jvm: _jvm.JvmSettings?
-
-  /// Configure Java language settings.
-  java: _java.JavaSettings?
 
   /// Configure Kotlin language settings.
   kotlin: _kotlin.KotlinSettings?
@@ -163,9 +159,6 @@ dependencies: Dependencies = new {}
 
 /// Configure JVM runtime settings.
 jvm: _jvm.JvmSettings?
-
-/// Configure Java language settings.
-java: _java.JavaSettings?
 
 /// Configure Kotlin language settings.
 kotlin: _kotlin.KotlinSettings?

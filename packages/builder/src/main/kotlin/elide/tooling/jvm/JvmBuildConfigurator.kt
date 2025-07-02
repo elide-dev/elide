@@ -35,16 +35,7 @@ import elide.runtime.Logging
 import elide.runtime.exec.asExecResult
 import elide.runtime.gvm.kotlin.KotlinCompilerConfig
 import elide.runtime.gvm.kotlin.KotlinLanguage
-import elide.tooling.AbstractTool
-import elide.tooling.Argument
-import elide.tooling.Arguments
-import elide.tooling.Classpath
-import elide.tooling.ClasspathSpec
-import elide.tooling.Environment
-import elide.tooling.MultiPathUsage
-import elide.tooling.MutableArguments
-import elide.tooling.MutableClasspath
-import elide.tooling.Tool
+import elide.tooling.*
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.deps.DependencyResolver
@@ -62,98 +53,6 @@ import elide.tooling.project.manifest.ElidePackageManifest.KotlinJvmCompilerOpti
 
 private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
   return "$name${srcSet.name[0].uppercase()}${srcSet.name.slice(1..srcSet.name.lastIndex)}"
-}
-
-/**
- * # JVM Libraries
- *
- * Describes coordinates and versions for built-in libraries which ship with Elide.
- */
-public object JvmLibraries {
-  public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
-  public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"
-  public const val EMBEDDED_APIGUARDIAN_VERSION: String = "1.1.2"
-  public const val EMBEDDED_OPENTEST_VERSION: String = "1.3.0"
-  public const val EMBEDDED_COROUTINES_VERSION: String = KotlinLanguage.COROUTINES_VERSION
-  public const val EMBEDDED_SERIALIZATION_VERSION: String = KotlinLanguage.SERIALIZATION_VERSION
-  public const val APIGUARDIAN_API: String = "org.apiguardian:apiguardian-api"
-  public const val JUNIT_JUPITER_API: String = "org.junit.jupiter:junit-jupiter-api"
-  public const val JUNIT_JUPITER_ENGINE: String = "org.junit.jupiter:junit-jupiter-engine"
-  public const val JUNIT_PLATFORM_ENGINE: String = "org.junit.platform:junit-platform-engine"
-  public const val JUNIT_PLATFORM_COMMONS: String = "org.junit.platform:junit-platform-commons"
-  public const val JUNIT_PLATFORM_CONSOLE: String = "org.junit.platform:junit-platform-console"
-  public const val JUNIT_JUPITER_PARAMS: String = "org.junit.jupiter:junit-jupiter-params"
-  public const val OPENTEST: String = "org.opentest4j:opentest4j"
-  public const val KOTLIN_TEST: String = "org.jetbrains.kotlin:kotlin-test"
-  public const val KOTLIN_TEST_JUNIT5: String = "org.jetbrains.kotlin:kotlin-test-junit5"
-  public const val KOTLINX_COROUTINES: String = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
-  public const val KOTLINX_COROUTINES_TEST: String = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
-  public const val KOTLINX_SERIALIZATION: String = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
-  public const val KOTLINX_SERIALIZATION_JSON: String = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm"
-
-  internal val baseCoordinates = arrayOf(
-    jarNamed("kotlin-stdlib"),
-    jarNamed("kotlin-reflect"),
-  )
-
-  internal val testCoordinates = arrayOf(
-    OPENTEST to EMBEDDED_OPENTEST_VERSION,
-    JUNIT_JUPITER_API to EMBEDDED_JUNIT_VERSION,
-    JUNIT_JUPITER_PARAMS to EMBEDDED_JUNIT_VERSION,
-    JUNIT_JUPITER_ENGINE to EMBEDDED_JUNIT_VERSION,
-    JUNIT_PLATFORM_ENGINE to EMBEDDED_JUNIT_PLATFORM_VERSION,
-    JUNIT_PLATFORM_COMMONS to EMBEDDED_JUNIT_PLATFORM_VERSION,
-    JUNIT_PLATFORM_CONSOLE to EMBEDDED_JUNIT_PLATFORM_VERSION,
-    KOTLIN_TEST to KotlinLanguage.VERSION,
-    KOTLIN_TEST_JUNIT5 to KotlinLanguage.VERSION,
-    KOTLINX_COROUTINES_TEST to EMBEDDED_COROUTINES_VERSION,
-    KOTLINX_SERIALIZATION to EMBEDDED_SERIALIZATION_VERSION,
-    KOTLINX_SERIALIZATION_JSON to EMBEDDED_SERIALIZATION_VERSION,
-    APIGUARDIAN_API to EMBEDDED_APIGUARDIAN_VERSION,
-  )
-
-  public fun jarNamed(name: String): String = buildString {
-    append(name)
-    append('.')
-    append("jar")
-  }
-
-  public fun jarNameFor(coordinate: String, version: String): String {
-    val parts = coordinate.split(":")
-    require(parts.size == 2) { "Invalid built-in coordinate: $coordinate" }
-    return "${parts[1]}-$version.jar"
-  }
-
-  public fun resolveJarFor(path: Path, coordinate: String, version: String): Path {
-    return resolveJarFor(path, jarNameFor(coordinate, version))
-  }
-
-  public fun resolveJarFor(path: Path, name: String): Path {
-    return path
-      .resolve("kotlin")
-      .resolve(KotlinLanguage.VERSION)
-      .resolve("lib")
-      .resolve(name)
-  }
-
-  public fun builtinClasspath(path: Path, tests: Boolean = false, kotlin: Boolean = true): Classpath {
-    return Classpath.from(
-      buildList {
-        if (kotlin || tests) addAll(
-          baseCoordinates.map {
-            resolveJarFor(path, it)
-          },
-        )
-        if (tests) {
-          addAll(
-            testCoordinates.map { (coordinate, version) ->
-              resolveJarFor(path, coordinate, version)
-            },
-          )
-        }
-      },
-    )
-  }
 }
 
 /**

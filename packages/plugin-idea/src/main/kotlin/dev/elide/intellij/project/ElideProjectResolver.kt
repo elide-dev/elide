@@ -24,6 +24,7 @@ import com.intellij.openapi.externalSystem.service.project.ExternalSystemProject
 import com.intellij.openapi.progress.runBlockingCancellable
 import dev.elide.intellij.Constants
 import dev.elide.intellij.manifests.ElideManifestService
+import dev.elide.intellij.project.model.ElideProjectModel
 import dev.elide.intellij.settings.ElideExecutionSettings
 import org.jetbrains.annotations.PropertyKey
 import java.nio.file.Path
@@ -100,6 +101,7 @@ class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSetting
         listener.onFailure(projectPath, id, RuntimeException("Failed to load Elide project", cause))
       }
 
+      listener.onEnd(projectPath, id)
       projectModel.getOrThrow()
     }
   }

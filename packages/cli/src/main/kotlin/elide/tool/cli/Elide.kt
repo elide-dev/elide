@@ -493,14 +493,19 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
       } else {
         // proxy to the `shell` command for a naked run
         val bean = beanContext.getBean(ToolShellCommand::class.java).apply {
-          this@Elide.srcfile?.let {
-            if (!ToolShellCommand.languageAliasToEngineId.contains(it)) {
-              runnable = it
-              if (this@Elide.args?.isNotEmpty() == true) {
-                arguments = this@Elide.args!!
+          this@Elide.srcfile.let { srcfile ->
+            when (srcfile) {
+              // with no srcfile hint, it's probably an interactive session
+              null -> interactiveHint = true
+
+              else -> if (!ToolShellCommand.languageAliasToEngineId.contains(srcfile)) {
+                runnable = srcfile
+                if (this@Elide.args?.isNotEmpty() == true) {
+                  arguments = this@Elide.args!!
+                }
+              } else {
+                languageHint = srcfile
               }
-            } else {
-              languageHint = it
             }
           }
         }

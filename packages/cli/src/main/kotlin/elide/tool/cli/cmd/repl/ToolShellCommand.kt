@@ -514,6 +514,9 @@ internal class ToolShellCommand @Inject constructor(
   )
   internal var arguments: List<String>? = null
 
+  // Hint to run an interactive session.
+  internal var interactiveHint: Boolean = false
+
   // Language hint passed in from outer tools, like when the user calls `elide python`.
   internal var languageHint: String? = null
 
@@ -2408,22 +2411,24 @@ internal class ToolShellCommand @Inject constructor(
     // a script name in either `elide.pkl` or a foreign manifest.
     when (val tgt = runnable) {
       null -> {
-        projectResolution.join()
+        if (!interactiveHint) {
+          projectResolution.join()
 
-        // @TODO ability to select an entrypoint
+          // @TODO ability to select an entrypoint
 
-        // make sure we don't write this in test mode, which gathers tests instead of running
-        if (!testMode()) {
-          runnable = activeProject.value?.manifest?.entrypoint?.firstOrNull()?.let {
-            // resolve against the current directory before assigning
-            val path = Path.of(it)
+          // make sure we don't write this in test mode, which gathers tests instead of running
+          if (!testMode()) {
+            runnable = activeProject.value?.manifest?.entrypoint?.firstOrNull()?.let {
+              // resolve against the current directory before assigning
+              val path = Path.of(it)
 
-            if (path.isAbsolute) {
-              // absolute paths go right through
-              it
-            } else {
-              // otherwise, resolve against the project, not cwd by default
-              activeProject.value!!.root.resolve(path).absolutePathString()
+              if (path.isAbsolute) {
+                // absolute paths go right through
+                it
+              } else {
+                // otherwise, resolve against the project, not cwd by default
+                activeProject.value!!.root.resolve(path).absolutePathString()
+              }
             }
           }
         }

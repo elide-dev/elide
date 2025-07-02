@@ -48,6 +48,25 @@ jobs:
       runner: ${{ vars.RUNNER_LARGE || 'ubuntu-cipool' }}
 
   ##
+  ## Job: Multi-platform Test
+  ##
+  test:
+    name: "Test"
+    uses: ./.github/workflows/job.test.yml
+    secrets: inherit
+    needs: build
+    permissions:
+      actions: "read"
+      checks: "write"
+      contents: "write"
+      id-token: "write"
+      packages: "read"
+      pull-requests: "write"
+      security-events: "write"
+    with:
+      runner: ${{ vars.RUNNER_LARGE || 'ubuntu-cipool' }}
+
+  ##
   ## Job: Checks for Models
   ##
   publish-model:

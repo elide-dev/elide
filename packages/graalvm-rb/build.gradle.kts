@@ -52,7 +52,7 @@ elide {
   }
 }
 
-val oracleGvm = false
+val oracleGvm = true
 val nativeArgs = listOfNotNull(
   "--shared",
   "--initialize-at-build-time=",

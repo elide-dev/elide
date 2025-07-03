@@ -103,11 +103,13 @@ val embeddedKotlinRuntime = layout.projectDirectory.file(
 val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
 val patchedLibs = files(
-  gvmJarsRoot.file("espresso.jar"),
-  gvmJarsRoot.file("truffle-api.jar"),
-  gvmJarsRoot.file("truffle-coverage.jar"),
-  gvmJarsRoot.file("library-support.jar"),
-  gvmJarsRoot.file("svm-driver.jar"),
+  gvmJarsRoot.file("espresso-jdk25.jar"),
+  gvmJarsRoot.file("espresso-shared-jdk25.jar"),
+  gvmJarsRoot.file("espresso-svm-jdk25.jar"),
+  gvmJarsRoot.file("truffle-api-jdk25.jar"),
+  gvmJarsRoot.file("truffle-coverage-jdk25.jar"),
+  gvmJarsRoot.file("library-support-jdk25.jar"),
+  gvmJarsRoot.file("svm-driver-jdk25.jar"),
 )
 
 val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }

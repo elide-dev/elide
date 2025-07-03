@@ -83,8 +83,8 @@ val java = javaToolchains.launcherFor { javaToolchainSuite() }
 val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
 val patchedLibs = files(
-  gvmJarsRoot.file("graaljs.jar"),
-  gvmJarsRoot.file("truffle-api.jar"),
+  gvmJarsRoot.file("graaljs-jdk25.jar"),
+  gvmJarsRoot.file("truffle-api-jdk25.jar"),
 )
 
 val patched: Configuration by configurations.creating {

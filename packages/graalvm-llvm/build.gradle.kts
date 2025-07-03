@@ -47,7 +47,7 @@ elide {
   }
 }
 
-val oracleGvm = false
+val oracleGvm = true
 
 dependencies {
   api(libs.bundles.graalvm.llvm)

@@ -24,8 +24,10 @@ plugins {
 val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
 val patchedLibs = files(
-  gvmJarsRoot.file("espresso.jar"),
-  gvmJarsRoot.file("truffle-api.jar"),
+  gvmJarsRoot.file("espresso-jdk25.jar"),
+  gvmJarsRoot.file("espresso-shared-jdk25.jar"),
+  gvmJarsRoot.file("espresso-svm-jdk25.jar"),
+  gvmJarsRoot.file("truffle-api-jdk25.jar"),
 )
 
 val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }

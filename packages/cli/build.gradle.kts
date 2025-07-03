@@ -193,8 +193,8 @@ val exclusions = listOfNotNull(
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 24
-val stableJvmTarget = 24
+val edgeJvmTarget = 25
+val stableJvmTarget = 25
 
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val stableJvm = JavaVersion.toVersion(stableJvmTarget)
@@ -473,18 +473,17 @@ dependencies {
   val googJarsRoot = rootProject.layout.projectDirectory.dir("third_party/google")
 
   val patchedLibs = files(
-    gvmJarsRoot.file("library-support.jar"),
-    gvmJarsRoot.file("svm-driver.jar"),
-    gvmJarsRoot.file("objectfile.jar"),
-    gvmJarsRoot.file("pointsto.jar"),
-    gvmJarsRoot.file("native-image-base.jar"),
-    gvmJarsRoot.file("truffle-coverage.jar"),
+    gvmJarsRoot.file("library-support-jdk25.jar"),
+    gvmJarsRoot.file("svm-driver-jdk25.jar"),
+    gvmJarsRoot.file("objectfile-jdk25.jar"),
+    gvmJarsRoot.file("pointsto-jdk25.jar"),
+    gvmJarsRoot.file("native-image-base-jdk25.jar"),
+    gvmJarsRoot.file("truffle-coverage-jdk25.jar"),
     googJarsRoot.file("jib-plugins-common.jar"),
     googJarsRoot.file("jib-cli.jar"),
   )
 
   svmModulePath(patchedLibs)
-  svmModulePath(libs.graalvm.svm)
   svmModulePath(libs.graalvm.shadowed.json)
   jvmOnly(patchedLibs)
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))

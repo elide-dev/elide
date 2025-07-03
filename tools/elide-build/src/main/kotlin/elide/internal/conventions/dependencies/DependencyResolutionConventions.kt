@@ -52,6 +52,12 @@ private val gvmConfigurations = sortedSetOf(
   "runtimeClasspath",
 )
 
+// Libraries to skip in all configurations.
+private val skipResolutionOf = listOf(
+  "org.graalvm.espresso" to "espresso-shared",
+  "org.graalvm.espresso" to "espresso-svm",
+)
+
 // Whether we are currently running under GraalVM.
 private val isGraalVm: Boolean = (
   (System.getProperty("java.vm.version") ?: "").let { version ->
@@ -98,6 +104,9 @@ internal fun Project.configureDependencyLocking(conventions: ElideBuildExtension
 /** Establishes the dependency conflict resolution policy. */
 internal fun Project.configureDependencyResolution(conventions: ElideBuildExtension) {
   configurations.all {
+    skipResolutionOf.forEach {
+      exclude(group = it.first, module = it.second)
+    }
     resolutionStrategy.apply {
       // prefer modules that are part of this build
       preferProjectModules()

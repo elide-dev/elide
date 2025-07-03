@@ -193,7 +193,7 @@ class BasicGraphTest {
       task(name = "example") {
         // this is an example task
         executed.compareAndSet(false, true)
-        taskScope.fork {
+        taskScope.fork<Any?> {
           subExecuted.compareAndSet(false, true)
         }
       }

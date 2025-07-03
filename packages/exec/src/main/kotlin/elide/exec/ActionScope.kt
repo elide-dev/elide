@@ -29,7 +29,7 @@ import elide.runtime.Logging
  */
 public sealed interface ActionScope : CoroutineScope, AutoCloseable {
   public val actionContext: Action.ActionContext
-  public val taskScope: StructuredTaskScope<Any?>
+  public val taskScope: StructuredTaskScope<Any?, Void>
   public val allTasks: Sequence<StructuredTaskScope.Subtask<*>>
   public val logging: Logger
   public fun bind(execution: TaskGraphExecution.Listener)
@@ -39,7 +39,7 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
   public class DefaultActionScope internal constructor (
     override val actionContext: Action.ActionContext,
     override val coroutineContext: CoroutineContext,
-    override val taskScope: StructuredTaskScope<Any?>,
+    override val taskScope: StructuredTaskScope<Any?, Void>,
     override val logging: Logger,
   ) : ActionScope {
     // Bound execution scope, if any.
@@ -73,12 +73,12 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
   }
 
   public class TaskGraphScope internal constructor (
-    name: String,
-    fac: ThreadFactory,
-  ) : StructuredTaskScope<Any?>(name, fac) {
-    override fun handleComplete(subtask: Subtask<out Any?>?) {
-      // nothing to do at this time
-    }
+    private val name: String,
+    private val fac: ThreadFactory,
+  ) {
+    private val scope = StructuredTaskScope.open<Any?>()
+
+    public fun asScope(): StructuredTaskScope<Any?, Void> = scope
   }
 
   /** Factories for creating or obtaining an [ActionScope]. */
@@ -98,7 +98,7 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
     @JvmStatic public fun named(name: String, actions: Action.ActionContext): ActionScope = create(
       actions,
       Dispatchers.Default,
-      namedStructuredScope(name),
+      namedStructuredScope(name).asScope(),
     )
 
     /** @return Default action scope, configured with the provided parameters. */
@@ -106,19 +106,19 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
 
     /** @return Default action scope, configured with the provided parameters. */
     @JvmStatic public fun create(actions: Action.ActionContext, coroutines: CoroutineContext): ActionScope {
-      return create(actions, coroutines, defaultStructuredTaskScope())
+      return create(actions, coroutines, defaultStructuredTaskScope().asScope())
     }
 
     /** @return Default action scope, configured with the provided parameters. */
     @JvmStatic public fun named(ctx: Action.ActionContext, coroutines: CoroutineContext, name: String): ActionScope {
-      return create(ctx, coroutines, namedStructuredScope(name))
+      return create(ctx, coroutines, namedStructuredScope(name).asScope())
     }
 
     /** @return Default action scope, configured with the provided parameters. */
     @JvmStatic public fun create(
       actions: Action.ActionContext,
       coroutines: CoroutineContext,
-      scope: StructuredTaskScope<Any?>,
+      scope: StructuredTaskScope<Any?, Void>,
     ): ActionScope {
       return DefaultActionScope(actions, coroutines, scope, Logging.of(ActionScope::class))
     }

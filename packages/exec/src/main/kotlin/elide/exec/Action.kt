@@ -15,7 +15,6 @@ package elide.exec
 import java.util.concurrent.StructuredTaskScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlin.coroutines.CoroutineContext
@@ -40,7 +39,7 @@ public sealed interface Action {
       return invoke(ctx, ctx.taskScope)
     }
 
-    public suspend fun invoke(ctx: ActionScope, scope: StructuredTaskScope<Any?>): Result
+    public suspend fun invoke(ctx: ActionScope, scope: StructuredTaskScope<Any?, Void>): Result
   }
 
   public fun interface ActionFn : Action {
@@ -48,7 +47,7 @@ public sealed interface Action {
       return invoke(ctx, ctx.taskScope)
     }
 
-    public fun invoke(ctx: ActionScope, scope: StructuredTaskScope<Any?>): Result
+    public fun invoke(ctx: ActionScope, scope: StructuredTaskScope<Any?, Void>): Result
   }
 
   /**

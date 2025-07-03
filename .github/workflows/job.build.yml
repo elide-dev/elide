@@ -228,11 +228,11 @@ jobs:
         uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
       - name: "Setup: Rust Caching"
         run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
-      - name: "Setup: GraalVM (Java 24)"
+      - name: "Setup: GraalVM (Java 25)"
         uses: graalvm/setup-graalvm@e1df20a713a4cc6ab5b0eb03f0e0dcdc0199b805 # v1.3.4
         with:
           distribution: "graalvm"
-          java-version: "24"
+          java-version: "25-ea"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0

@@ -14,8 +14,7 @@
 package dev.elide.intellij.startup
 
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.externalSystem.autoimport.ExternalSystemProjectTracker
-import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
 import com.intellij.openapi.project.BaseProjectDirectories.Companion.getBaseDirectories
@@ -24,7 +23,7 @@ import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.util.io.toCanonicalPath
 import com.intellij.openapi.util.registry.Registry
 import dev.elide.intellij.Constants
-import dev.elide.intellij.project.ElideProjectAware
+import dev.elide.intellij.settings.ElideProjectSettings
 
 /** Startup activity used to detect an Elide project and sync it if needed. */
 class ElideStartupActivity : ProjectActivity {
@@ -34,21 +33,24 @@ class ElideStartupActivity : ProjectActivity {
     Registry.get(Constants.SYSTEM_ID.id + ExternalSystemConstants.USE_IN_PROCESS_COMMUNICATION_REGISTRY_KEY_SUFFIX)
       .setValue(true)
 
-    val projectTracker = ExternalSystemProjectTracker.getInstance(project)
-
     for (baseDir in project.getBaseDirectories()) {
       LOG.debug("Searching for Elide manifest in base dir $baseDir")
       baseDir.findChild(Constants.MANIFEST_NAME) ?: continue
 
       // have the IDE track changes to the project config files, then trigger a sync
-      LOG.debug("Found manifest, adding to tracker and refreshing")
-      projectTracker.register(ElideProjectAware(project, baseDir.path))
+      LOG.debug("Found manifest, linking project")
+      val settings = project.getService(ElideProjectSettings::class.java)
+      settings.externalProjectPath = baseDir.toNioPath().toCanonicalPath()
 
-      val spec = ImportSpecBuilder(project, Constants.SYSTEM_ID)
-        .navigateToError()
-        .build()
-
-      ExternalSystemUtil.refreshProject(baseDir.toNioPath().toCanonicalPath(), spec)
+      ExternalSystemUtil.linkExternalProject(
+        /* externalSystemId = */ Constants.SYSTEM_ID,
+        /* projectSettings = */ settings,
+        /* project = */ project,
+        /* importResultCallback = */ { },
+        /* isPreviewMode = */ false,
+        /* progressExecutionMode = */ ProgressExecutionMode.IN_BACKGROUND_ASYNC,
+      )
+      
       break
     }
   }

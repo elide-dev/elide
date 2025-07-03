@@ -14,29 +14,37 @@
 package dev.elide.intellij.project.model
 
 import com.intellij.openapi.extensions.ExtensionPointName
-import com.intellij.openapi.externalSystem.model.project.LibraryData
-import dev.elide.intellij.project.model.LibraryDependencyContributor.Companion.Extensions
+import com.intellij.openapi.externalSystem.model.DataNode
+import com.intellij.openapi.externalSystem.model.project.ModuleData
+import com.intellij.openapi.externalSystem.model.project.ProjectData
 import java.nio.file.Path
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.SourceSet
 
 /**
- * An extension used by the [ElideProjectModel] builder to collect library dependencies during project resolution. Use
- * the [Extensions] static property to access all registered contributors.
+ * An extension used by the [ElideProjectModel] builder to enhance project data during resolution. Project model
+ * contributors can add library dependencies, configure SDKs, and attach custom data to a project or module.
  */
-fun interface LibraryDependencyContributor {
-  /**
-   * Collect all library dependencies for the given [sourceSet]. Implementations are encouraged to attach as much
-   * metadata as possible, such as source and documentation paths.
-   */
-  suspend fun collectDependencies(
-    projectPath: Path,
+interface ElideProjectModelContributor {
+  suspend fun enhanceProject(
+    projectNode: DataNode<ProjectData>,
     elideProject: ElideConfiguredProject,
-    sourceSet: SourceSet,
-  ): Sequence<LibraryData>
+    projectPath: Path,
+  ) {
+    // noop
+  }
+
+  suspend fun enhanceModule(
+    moduleNode: DataNode<ModuleData>,
+    elideProject: ElideConfiguredProject,
+    elideSourceSet: SourceSet,
+    projectPath: Path,
+  ) {
+    // noop
+  }
 
   companion object {
     @JvmStatic val Extensions =
-      ExtensionPointName.create<LibraryDependencyContributor>("dev.elide.intellij.libraryDependencyContributor")
+      ExtensionPointName.create<ElideProjectModelContributor>("dev.elide.intellij.projectModelContributor")
   }
 }

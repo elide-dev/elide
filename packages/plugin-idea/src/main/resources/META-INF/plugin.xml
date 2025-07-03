@@ -27,19 +27,18 @@
   <resource-bundle>i18n.Strings</resource-bundle>
 
   <extensionPoints>
-    <extensionPoint name="libraryDependencyContributor"
-                    interface="dev.elide.intellij.project.model.LibraryDependencyContributor"
+    <extensionPoint name="projectModelContributor"
+                    interface="dev.elide.intellij.project.model.ElideProjectModelContributor"
                     dynamic="true"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="dev.elide.intellij">
-    <libraryDependencyContributor implementation="dev.elide.intellij.project.model.MavenLibraryContributor"/>
-    <libraryDependencyContributor implementation="dev.elide.intellij.project.model.BuiltinLibraryContributor"/>
+    <projectModelContributor implementation="dev.elide.intellij.project.model.ElideDependenciesContributor"/>
+    <projectModelContributor implementation="dev.elide.intellij.project.model.ElideJdkContributor"/>
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
-<!--    <projectOpenProcessor implementation=""-->
-<!--    <externalSystemUnlinkedProjectAware implementation=""-->
+    <externalSystemUnlinkedProjectAware implementation="dev.elide.intellij.project.ElideUnlinkedProjectAware"/>
     <externalIconProvider key="ELIDE" implementationClass="dev.elide.intellij.ui.ElideIconProvider"/>
     <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupActivity"/>
     <externalSystemManager id="ELIDE" implementation="dev.elide.intellij.ElideManager"/>

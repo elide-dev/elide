@@ -108,7 +108,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin
     }
 
     builder.disableOptions(
-      "java.EnableAgents",
+      "java.EnableNativeAgents",
       "java.EnableManagement",
       "java.ExposeNativeJavaVM",
     )

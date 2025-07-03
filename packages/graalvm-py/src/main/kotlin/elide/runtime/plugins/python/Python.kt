@@ -72,7 +72,6 @@ private val BUILTIN_PYTHON_PATHS = listOf(
     )
 
     builder.enableOptions(
-      "python.NativeModules",
       "python.LazyStrings",
       "python.WithTRegex",
       "python.NoSiteFlag", // @TODO
@@ -93,7 +92,6 @@ private val BUILTIN_PYTHON_PATHS = listOf(
       else -> error("Unsupported Python engine: ${config.pythonEngine}")
     }
     builder.setOptions(
-      "python.HPyBackend" to nfi,
       "python.PosixModuleBackend" to engine,
       "python.PythonPath" to renderPythonPath(),
     )

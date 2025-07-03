@@ -1920,6 +1920,8 @@ graalvmNative {
     }
   }
 
+  val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-substrate.nil")
+
   binaries {
     named("main") {
       imageName = "elide"
@@ -1943,6 +1945,29 @@ graalvmNative {
 
       buildArgs.addAll(listOf(
         "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeCompile").get().asFile.path}",
+      ))
+    }
+
+    create("layer") {
+      imageName = "libelidesubstrate"
+      fallback = false
+      quickBuild = quickbuild
+      sharedLibrary = false
+      useArgFile = true
+      if (enableToolchains) javaLauncher = gvmLauncher
+
+      classpath = files(
+        tasks.optimizedNativeJar,
+        configurations.nativeImageClasspath,
+        configurations.runtimeClasspath,
+      ).filter {
+        // filter out the base jar
+        it.name !== tasks.jar.get().outputs.files.filter { it.path.endsWith(".jar") }.single().name
+      }
+
+      // compute main compile args
+      buildArgs.addAll(nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs).plus(
+        "-H:LayerCreate=${layerOut.get().asFile.name}"
       ))
     }
 

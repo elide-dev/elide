@@ -117,6 +117,7 @@ val testJar by tasks.registering(Jar::class) {
 val pluginApiHeader =
   rootProject.layout.projectDirectory.file("crates/substrate/headers/elide-plugin.h").asFile.path
 
+val nativeImageBuildDebug = properties["nativeImageBuildDebug"] == "true"
 val nativeArgs = listOfNotNull(
   "-Delide.natives.pluginApiHeader=$pluginApiHeader",
   "-H:+SourceLevelDebug",
@@ -127,6 +128,8 @@ val nativeArgs = listOfNotNull(
   "-H:+JNIVerboseLookupErrors",
   "-H:+UnlockExperimentalVMOptions",
   "-H:+ReportExceptionStackTraces",
+).plus(
+  if (nativeImageBuildDebug) listOf("--debug-attach") else emptyList()
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
@@ -159,14 +162,21 @@ graalvmNative {
   binaries {
     create("shared") {
       imageName = "libelidecore"
-      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
       buildArgs(nativeArgs.plus("--shared"))
+      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
     }
 
     create("layer") {
       imageName = "libelidecore"
-      classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
       buildArgs(nativeArgs.plus("-H:LayerCreate=${layerOut.get().asFile.name}"))
+
+      classpath(
+        tasks.compileJava,
+        tasks.compileKotlin,
+        configurations.nativeImageClasspath,
+        configurations.compileClasspath,
+        configurations.runtimeClasspath,
+      )
     }
   }
 }

@@ -14,12 +14,13 @@
 package dev.elide.intellij.project.model
 
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.externalSystem.autolink.forEachExtensionSafeAsync
 import com.intellij.openapi.externalSystem.model.DataNode
 import com.intellij.openapi.externalSystem.model.ProjectKeys
 import com.intellij.openapi.externalSystem.model.project.*
-import com.intellij.openapi.projectRoots.ProjectJdkTable
 import com.intellij.openapi.util.io.toCanonicalPath
 import dev.elide.intellij.Constants
+import dev.elide.intellij.project.model.ElideProjectModel.SOURCE_PATH_GLOB_CHAR
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
@@ -27,18 +28,39 @@ import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.SourceSet
 import elide.tooling.project.SourceSetType
 
+/** A collection of functions used to map Elide's manifest and lockfile data to Intellij's project model. */
+@Suppress("UnstableApiUsage")
 data object ElideProjectModel {
   @JvmStatic private val LOG = Logger.getInstance(ElideProjectModel::class.java)
 
   private const val SOURCE_PATH_GLOB_CHAR = '*'
   private const val SOURCE_PATH_SEPARATOR = '/'
 
+  /**
+   * Given a source set content spec, extract the content path for the equivalent intellij content root.
+   *
+   * This function uses a simple heuristic: a subpath from the start until the last segment that does not contain a
+   * [SOURCE_PATH_GLOB_CHAR] will be selected, as it is usually the directory that contains all desired sources.
+   *
+   * For example, for an Elide source set defined with the pattern `"src/main/kotlin/**/*.kt"`, the returned path will
+   * be "src/main/kotlin".
+   */
   fun extractSourceSetContentRoot(spec: String): String {
     return spec.splitToSequence(SOURCE_PATH_SEPARATOR)
       .takeWhile { !it.contains(SOURCE_PATH_GLOB_CHAR) }
       .joinToString(separator = SOURCE_PATH_SEPARATOR.toString())
   }
 
+  /**
+   * Given a source set and its associated content root, select a path containing [contentRoot] that will be used as
+   * the content root's "root" path, that is, the path that contains all content paths in that root.
+   *
+   * As a heuristic, this function searches for a parent of [contentRoot] with the same name as the [sourceSet]; if
+   * no such path exists, the [contentRoot] is returned.
+   *
+   * For example, for an Elide source set named "main", with a content root at `"src/main/kotlin"`, the
+   * returned path will be "src/main"; if the content root is `"src/other/kotlin"`, that same path will be returned
+   */
   fun selectSourceSetRoot(contentRoot: Path, sourceSet: SourceSet): Path {
     for (i in contentRoot.nameCount - 1 downTo 0) {
       if (contentRoot.getName(i).pathString == sourceSet.name) return contentRoot.subpath(0, i + 1)
@@ -47,12 +69,22 @@ data object ElideProjectModel {
     return contentRoot
   }
 
+  /** Maps an Elide [SourceSetType] to its corresponding [ExternalSystemSourceType]. */
   fun mapSourceSetType(type: SourceSetType): ExternalSystemSourceType = when (type) {
     SourceSetType.Sources -> ExternalSystemSourceType.SOURCE
     SourceSetType.Tests -> ExternalSystemSourceType.TEST
   }
 
-  /** Build the project model given a configured Elide [elideProject]. */
+  /**
+   * Build the project model given a configured Elide [elideProject]. The following mapping operations are performed:
+   *
+   * - The project's name is set to the one in the manifest.
+   * - For each source set defined in the manifest, an Intellij [ModuleData] node is created, with a content root
+   *   created from the source set's definition. The source set's type determines the type of content root created,
+   *   and a module dependency on the "main" modules is automatically added to all "test" modules.
+   * - Project model extensions are called to provide additional metadata for the project and its modules, such as
+   *   library dependencies.
+   */
   suspend fun buildProjectModel(projectPath: Path, elideProject: ElideConfiguredProject): DataNode<ProjectData> {
     // stubbed project model
     val projectData = ProjectData(
@@ -65,30 +97,30 @@ data object ElideProjectModel {
     elideProject.sourceSets.find(SourceSetType.Sources)
 
     val projectNode = DataNode(ProjectKeys.PROJECT, projectData, null)
-    val dependencies = CompositeLibraryContributor()
 
     val mainModules = elideProject.sourceSets.find(SourceSetType.Sources).toList().map {
-      buildModuleDataFromSourceSet(projectNode, elideProject, it, projectPath, dependencies)
+      buildModuleDataFromSourceSet(projectNode, elideProject, it, projectPath)
     }
     LOG.info("Registered ${mainModules.size} source modules.")
 
     val testModules = elideProject.sourceSets.find(SourceSetType.Tests).toList().map {
-      buildModuleDataFromSourceSet(projectNode, elideProject, it, projectPath, dependencies, mainModules)
+      buildModuleDataFromSourceSet(projectNode, elideProject, it, projectPath, mainModules)
     }
     LOG.info("Registered ${testModules.size} test modules.")
 
-    // TODO(@darvld): use configured JDK instead of choosing a default
-    projectNode.createChild(ProjectSdkData.KEY, ProjectSdkData(ProjectJdkTable.getInstance().allJdks.first().name))
+    ElideProjectModelContributor.Extensions.forEachExtensionSafeAsync {
+      it.enhanceProject(projectNode, elideProject, projectPath)
+    }
 
     return projectNode
   }
 
-  suspend fun buildModuleDataFromSourceSet(
+  /** Build an Intellij project module for the given Elide source set. */
+  private suspend fun buildModuleDataFromSourceSet(
     projectNode: DataNode<ProjectData>,
     elideProject: ElideConfiguredProject,
     elideSourceSet: SourceSet,
     projectPath: Path,
-    libraryDependencies: LibraryDependencyContributor,
     moduleDependencies: Iterable<DataNode<ModuleData>>? = null,
   ): DataNode<ModuleData> {
     // TODO(@darvld): account for language information in the source set instead of assuming Kotlin/Java
@@ -120,15 +152,9 @@ data object ElideProjectModel {
       moduleNode.createChild(ProjectKeys.MODULE_DEPENDENCY, ModuleDependencyData(module, it.data))
     }
 
-    // collect and add library dependencies
-    libraryDependencies.collectDependencies(projectPath, elideProject, elideSourceSet).forEach {
-      val dependency = LibraryDependencyData(module, it, LibraryLevel.MODULE)
-      moduleNode.createChild(ProjectKeys.LIBRARY_DEPENDENCY, dependency)
-      moduleNode.createChild(ProjectKeys.LIBRARY, it)
+    ElideProjectModelContributor.Extensions.forEachExtensionSafeAsync {
+      it.enhanceModule(moduleNode, elideProject, elideSourceSet, projectPath)
     }
-
-    // TODO(@darvld): use configured JDK instead of choosing a default
-    moduleNode.createChild(ModuleSdkData.KEY, ModuleSdkData(ProjectJdkTable.getInstance().allJdks.first().name))
 
     return moduleNode
   }

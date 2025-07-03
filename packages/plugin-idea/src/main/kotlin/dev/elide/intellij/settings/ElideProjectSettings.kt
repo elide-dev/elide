@@ -13,6 +13,7 @@
 
 package dev.elide.intellij.settings
 
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings
 
 /**
@@ -21,6 +22,7 @@ import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings
  *
  * @see ElideConfigurable
  */
+@Service(Service.Level.PROJECT)
 class ElideProjectSettings : ExternalProjectSettings() {
   override fun clone(): ExternalProjectSettings = ElideProjectSettings()
 }

@@ -13,28 +13,73 @@
 
 package dev.elide.intellij.project.model
 
-import com.intellij.openapi.externalSystem.model.project.LibraryData
-import com.intellij.openapi.externalSystem.model.project.LibraryPathType
+import com.intellij.openapi.externalSystem.model.DataNode
+import com.intellij.openapi.externalSystem.model.ProjectKeys
+import com.intellij.openapi.externalSystem.model.project.*
 import dev.elide.intellij.Constants
 import java.nio.file.Path
 import kotlin.io.path.nameWithoutExtension
 import kotlin.io.path.pathString
 import elide.tooling.ClasspathSpec
 import elide.tooling.JvmMultiPathEntryType
+import elide.tooling.jvm.JvmLibraries
 import elide.tooling.jvm.resolver.MavenLockfileResolver
 import elide.tooling.lockfile.ElideLockfile
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.SourceSet
+import elide.tooling.project.SourceSetLanguage
 import elide.tooling.project.SourceSetType
 
 /**
- * Provides library data from the resolved classpath stored in the project's lockfile, using a [MavenLockfileResolver].
+ * Adds library dependencies to a project and its modules, using the resolved dependency data from the Elide lockfile.
+ * Where applicable, built-in dependencies shipped with the runtime are also added.
  */
-class MavenLibraryContributor : LibraryDependencyContributor {
-  override suspend fun collectDependencies(
-    projectPath: Path,
+class ElideDependenciesContributor : ElideProjectModelContributor {
+  override suspend fun enhanceModule(
+    moduleNode: DataNode<ModuleData>,
     elideProject: ElideConfiguredProject,
-    sourceSet: SourceSet
+    elideSourceSet: SourceSet,
+    projectPath: Path
+  ) {
+    // add dependencies
+    val libraries = collectMavenDependencies(elideProject, elideSourceSet, projectPath) +
+            collectBuiltinDependencies(elideProject, elideSourceSet)
+
+    libraries.forEach {
+      moduleNode.createChild(
+        ProjectKeys.LIBRARY_DEPENDENCY,
+        LibraryDependencyData(moduleNode.data, it, LibraryLevel.MODULE),
+      )
+    }
+  }
+
+  /** Provides library data for dependencies that are bundled with Elide for JVM projects. */
+  private fun collectBuiltinDependencies(
+    elideProject: ElideConfiguredProject,
+    sourceSet: SourceSet,
+  ): Sequence<LibraryData> {
+    if (sourceSet.languages?.contains(SourceSetLanguage.Kotlin) != true) return emptySequence()
+
+    return JvmLibraries.builtinClasspath(
+      path = elideProject.resourcesPath,
+      tests = sourceSet.type == SourceSetType.Tests,
+      kotlin = true,
+    ).asSequence().map {
+      val library = LibraryData(Constants.SYSTEM_ID, it.path.pathString, false)
+      library.addPath(LibraryPathType.BINARY, it.path.pathString)
+
+      library
+    }
+  }
+
+  /**
+   * Provides library data from the resolved classpath stored in the project's lockfile, using a
+   * [MavenLockfileResolver].
+   */
+  private suspend fun collectMavenDependencies(
+    elideProject: ElideConfiguredProject,
+    sourceSet: SourceSet,
+    projectPath: Path
   ): Sequence<LibraryData> {
     val mavenLockfile = elideProject.activeLockfile
       ?.lockfile
@@ -58,8 +103,8 @@ class MavenLibraryContributor : LibraryDependencyContributor {
         val basePath = it.path.parent.resolve(it.path.nameWithoutExtension)
 
         library.addPath(LibraryPathType.BINARY, it.path.pathString)
-        library.addPath(LibraryPathType.SOURCE, "${basePath.pathString}$SUFFIX_SOURCES")
-        library.addPath(LibraryPathType.DOC, "${basePath.pathString}$SUFFIX_JAVADOC")
+        library.addPath(LibraryPathType.SOURCE, "${basePath.pathString}${SUFFIX_SOURCES}")
+        library.addPath(LibraryPathType.DOC, "${basePath.pathString}${SUFFIX_JAVADOC}")
 
         library
       }.orEmpty()

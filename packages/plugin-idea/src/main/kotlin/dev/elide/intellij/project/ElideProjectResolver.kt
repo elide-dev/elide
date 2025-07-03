@@ -40,9 +40,6 @@ import elide.tooling.project.SourceSetFactory
  * A service capable of using the Elide manifest and lockfile to build a project model that can be understood by the
  * IDE. Generally, the model can be built without calling the Elide CLI; however, in cases where the lockfile is out of
  * date, or dependencies are not installed, a command invocation will take place in a background task.
- *
- * The resolver is part of the auto-import feature, providing the actual import logic for the [ElideProjectAware]
- * tracker.
  */
 class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSettings> {
   private fun ExternalSystemTaskNotificationListener.onStep(taskId: ExternalSystemTaskId, text: String) {

@@ -153,7 +153,7 @@ public object Constants {
     const val JLINE = "3.28.0"
 
     /** Okio version. */
-    const val OKIO = "3.13.0"
+    const val OKIO = "3.15.0"
 
     /** GraalVM version. */
     const val GRAALVM = "24.2.1"

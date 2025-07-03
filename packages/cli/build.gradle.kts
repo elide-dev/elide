@@ -272,6 +272,7 @@ val jpmsSvmArgs = listOf(
     ("jdk.internal.vm.ci" to "jdk.vm.ci.riscv64") to svmModules,
     ("jdk.internal.vm.ci" to "jdk.vm.ci.runtime") to svmModules,
     ("jdk.internal.vm.ci" to "jdk.vm.ci.services") to svmModules,
+    ("jdk.jfr" to "jdk.jfr.internal") to "org.graalvm.nativeimage.driver",
     // ("" to "") to "",
   ).map {
     "--add-exports=${it.first.first}/${it.first.second}=${it.second}"
@@ -1129,11 +1130,17 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.resolver.HostsFileEntriesResolver",
   "io.netty.resolver.dns.ResolvConf${'$'}ResolvConfLazy",
   "io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider",
+  "io.netty.handler.codec.http.HttpObjectAggregator",
   "io.netty.handler.codec.http2.Http2CodecUtil",
   "io.netty.handler.codec.http2.Http2ClientUpgradeCodec",
   "io.netty.handler.codec.http2.Http2ConnectionHandler",
   "io.netty.handler.codec.http2.DefaultHttp2FrameWriter",
   "io.netty.handler.ssl.ReferenceCountedOpenSslEngine",
+  "io.netty.handler.ssl.BouncyCastleAlpnSslUtils",
+  "io.netty.handler.ssl.OpenSsl",
+  "io.netty.handler.ssl.OpenSslPrivateKeyMethod",
+  "io.netty.handler.ssl.OpenSslAsyncPrivateKeyMethod",
+  "io.netty.handler.ssl.JdkSslServerContext",
   "io.netty.incubator.channel.uring.IOUring",
   "io.netty.incubator.channel.uring.IOUringEventLoopGroup",
   "io.netty.incubator.channel.uring.Native",
@@ -1141,6 +1148,9 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.handler.codec.http.HttpObjectEncoder",
   "io.netty.handler.pcap.PcapWriteHandler${'$'}WildcardAddressHolder",
   "io.netty.util.internal.NativeLibraryLoader",
+  "io.netty.buffer.UnpooledByteBufAllocator",
+  "io.netty.buffer.Unpooled",
+  "io.netty.buffer.EmptyByteBuf",
 
   // --- Netty: Native Crypto -----
 
@@ -1151,7 +1161,8 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.internal.tcnative.SSLContext",
   "io.netty.internal.tcnative.SSLSession",
   "io.netty.internal.tcnative.AsyncSSLPrivateKeyMethod",
-  "io.netty.handler.ssl.BouncyCastleAlpnSslUtils",
+  "io.netty.internal.tcnative.CertificateCompressionAlgo",
+  "io.netty.internal.tcnative.SSLPrivateKeyMethod",
 
   // --- BouncyCastle -----
 

@@ -1,10 +1,21 @@
 {
   "downcalls": [
     {
-      "descriptor": "(long,int,long,long,long)int"
+      "returnType": "int",
+      "parameterTypes": [
+        "long",
+        "int",
+        "long",
+        "long",
+        "long"
+      ]
     },
     {
-      "descriptor": "(long,int)int"
+      "returnType": "int",
+      "parameterTypes": [
+        "long",
+        "int"
+      ]
     }
   ]
 }

@@ -55,7 +55,6 @@ dependencies {
     api(projects.packages.core)
     api(libs.kotlinx.serialization.core)
 
-    api(libs.elide.uuid)
     implementation(kotlin("stdlib"))
   }
 

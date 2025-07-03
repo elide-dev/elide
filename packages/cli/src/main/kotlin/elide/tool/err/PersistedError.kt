@@ -15,8 +15,8 @@
 
 package elide.tool.err
 
-import dev.elide.uuid.Uuid
 import org.graalvm.nativeimage.ImageInfo
+import java.util.UUID
 import kotlin.time.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -44,7 +44,7 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
 @Serializable @JvmRecord data class PersistedError @OptIn(DelicateElideApi::class) private constructor (
   val version: Int = 1,
   val id: String,
-  val timestamp: Instant,
+  val timestamp: Long,
   val error: ErrorInfo,
   val runtime: RuntimeInfo = RuntimeInfo(),
   val os: HostPlatform.OperatingSystem,
@@ -62,12 +62,12 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
     @OptIn(DelicateElideApi::class)
     @JvmStatic fun create(
       event: ErrorEvent,
-      id: Uuid = event.uuid,
+      id: UUID = event.uuid,
       timestamp: Instant = event.timestamp,
     ): PersistedError = HostPlatform.resolve().let { platform ->
       return PersistedError(
         id = id.toString(),
-        timestamp = timestamp,
+        timestamp = timestamp.toEpochMilliseconds(),
         error = event.info(),
         os = platform.os,
         arch = platform.arch,

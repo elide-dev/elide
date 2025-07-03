@@ -58,7 +58,6 @@ doctor-plugin = "0.10.0"
 dokka = "2.0.0"
 elide = "1.0.0-beta7"
 elide-bin = "1.0.0-beta7"
-elide-uuid = "2.0.0-Beta3-0.20.0-rc1"
 errorprone = "2.36.0"
 faker = "1.15.0"
 filament = "1.2.0.0-SNAPSHOT"
@@ -875,8 +874,6 @@ elide-tools-conventions = { group = "dev.elide.tools", name = "elide-convention-
 elide-tools-processor = { group = "dev.elide.tools", name = "elide-processor", version.ref = "elide" }
 elide-tools-substrate = { group = "dev.elide.tools", name = "elide-substrate", version.ref = "elide" }
 elide-tools-substrate-bom = { group = "dev.elide.tools", name = "elide-substrate-bom", version.ref = "elide" }
-elide-uuid = { group = "dev.elide", name = "elide-uuid-core", version.ref = "elide-uuid" }
-elide-uuid-kotlinx = { group = "dev.elide", name = "elide-uuid-kotlinx", version.ref = "elide-uuid" }
 
 [bundles]
 arrow = ["arrow-core", "arrow-fx", "arrow-optics-core"]

@@ -15,11 +15,10 @@
 
 package elide.tool.err
 
-import dev.elide.uuid.Uuid
-import dev.elide.uuid.uuid4
 import picocli.CommandLine.IExitCodeExceptionMapper
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.util.UUID
 import kotlinx.collections.immutable.toImmutableList
 import kotlin.time.Clock
 import kotlin.time.Instant
@@ -181,11 +180,11 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
     val fatal: Boolean = true,
     val guest: Boolean = false,
     val coordinates: ErrorCoordinates? = null,
-    val timestamp: Instant = Clock.System.now(),
+    val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
     val stacktrace: String? = null,
     val frames: List<ErrorStackFrame>? = null,
     val language: GuestLanguage? = null,
-    @Transient val uuid: Uuid = uuid4(),
+    @Transient val uuid: UUID = UUID.randomUUID(),
     @Transient val thread: Thread? = null,
   ) {
     companion object {
@@ -245,7 +244,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
    */
   @kotlin.Suppress("unused") sealed interface ErrorEvent : Comparable<ErrorEvent> {
     /** Return the UUID assigned to this error. */
-    val uuid: Uuid
+    val uuid: UUID
 
     /** Timestamp provided for this event. */
     val timestamp: Instant
@@ -323,10 +322,10 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
     }
 
     /** Return the UUID assigned to this error. */
-    override val uuid: Uuid get() = err.second.uuid
+    override val uuid: UUID get() = err.second.uuid
 
     /** Timestamp provided for this event. */
-    override val timestamp: Instant get() = err.second.timestamp
+    override val timestamp: Instant get() = Instant.fromEpochMilliseconds(err.second.timestamp)
 
     /** Return the error which this event describes. */
     override val error: Throwable get() = err.first

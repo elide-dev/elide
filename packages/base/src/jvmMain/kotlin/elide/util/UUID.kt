@@ -13,8 +13,6 @@
 
 package elide.util
 
-import dev.elide.uuid.uuid4
-
 /** UUID tools provided to all platforms. */
 public actual object UUID {
   /**
@@ -23,6 +21,6 @@ public actual object UUID {
    * @return Randomly-generated UUID.
    */
   public actual fun random(): String {
-    return uuid4().toString().uppercase()
+    return java.util.UUID.randomUUID().toString().uppercase()
   }
 }

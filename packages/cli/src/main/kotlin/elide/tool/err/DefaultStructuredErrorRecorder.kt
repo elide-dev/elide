@@ -49,7 +49,7 @@ internal class DefaultStructuredErrorRecorder private constructor (
   }
 
   // Generate a filename for a `PersistedError`.
-  private fun PersistedError.filename(): String = "error-${timestamp.epochSeconds}-$id.json.gz"
+  private fun PersistedError.filename(): String = "error-${timestamp}-$id.json.gz"
 
   // Serialize and write an error.
   @OptIn(ExperimentalSerializationApi::class)

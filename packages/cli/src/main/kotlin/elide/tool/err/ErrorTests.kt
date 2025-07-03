@@ -13,8 +13,8 @@
 
 package elide.tool.err
 
-import dev.elide.uuid.uuid4
 import io.micronaut.context.annotation.Bean
+import java.util.UUID
 import elide.tool.annotations.EmbeddedTest
 import elide.tool.err.ErrorHandler.ErrorContext
 import elide.tool.err.ErrorHandler.ErrorEvent
@@ -39,7 +39,7 @@ import elide.tool.testing.TestContext
     recorder.recordError(ErrorEvent.of(
       IllegalArgumentException("test - test - test"),
       ErrorContext.DEFAULT.copy(
-        uuid = uuid4(),
+        uuid = UUID.randomUUID(),
         fatal = false,
         guest = false,
         thread = Thread.currentThread(),

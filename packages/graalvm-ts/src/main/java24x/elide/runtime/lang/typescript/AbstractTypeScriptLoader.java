@@ -26,6 +26,8 @@ import com.oracle.truffle.js.runtime.objects.JSModuleRecord;
 import com.oracle.truffle.js.runtime.objects.ScriptOrModule;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -147,15 +149,15 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
       throws IOException {
     if (moduleFile != null && moduleFile.exists()) {
       var canonicalPath = moduleFile.getCanonicalFile().getPath();
-      var maybeModuleMapEntry = moduleMap.get(canonicalPath);
+      var key = new CanonicalModuleKey(canonicalPath, Collections.emptyMap());
+      var maybeModuleMapEntry = moduleMap.get(key);
       if (maybeModuleMapEntry != null) {
         return maybeModuleMapEntry;
       }
-
       Source source = transpileModule(referrer, moduleRequest, moduleFile, canonicalPath);
       JSModuleData parsedModule = realm.getContext().getEvaluator().envParseModule(realm, source);
       var module = new JSModuleRecord(parsedModule, this);
-      moduleMap.put(canonicalPath, module);
+      moduleMap.put(key, module);
       return module;
     }
     return super.loadModuleFromFile(referrer, moduleRequest, moduleFile, maybeCanonicalPath);

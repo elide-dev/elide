@@ -230,9 +230,6 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     prefix: String?,
     name: String,
   ): AbstractModuleRecord {
-    if (name in moduleMap) {
-      return requireNotNull(moduleMap[name])
-    }
     return when (val info = ModuleInfo.find(name)) {
       // not a registered module; fall back but with un-prefixed name, unless the prefix is `node`
       null -> if (prefix == NODE_MODULE_PREFIX) {

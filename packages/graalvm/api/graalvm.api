@@ -3842,6 +3842,14 @@ public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesys
 	public abstract fun mkdirSync (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 	public abstract fun mkdirSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 	public static synthetic fun mkdirSync$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/MkdirOptions;ILjava/lang/Object;)Ljava/lang/String;
+	public abstract fun opendir (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;Lkotlin/jvm/functions/Function2;)V
+	public abstract fun opendir (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
+	public static synthetic fun opendir$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static synthetic fun opendir$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)V
+	public abstract fun opendirSync (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;)Lelide/runtime/node/fs/Directory;
+	public abstract fun opendirSync (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/node/fs/Directory;
+	public static synthetic fun opendirSync$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;ILjava/lang/Object;)Lelide/runtime/node/fs/Directory;
+	public static synthetic fun opendirSync$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/node/fs/Directory;
 	public abstract fun writeFile (Lelide/runtime/intrinsics/js/node/path/Path;Ljava/lang/String;Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;Lkotlin/jvm/functions/Function1;)V
 	public abstract fun writeFile (Lelide/runtime/intrinsics/js/node/path/Path;[BLelide/runtime/intrinsics/js/node/fs/WriteFileOptions;Lkotlin/jvm/functions/Function1;)V
 	public abstract fun writeFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
@@ -3865,6 +3873,10 @@ public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesys
 	public abstract fun mkdir (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun mkdir (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static synthetic fun mkdir$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemPromiseAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/MkdirOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun opendir (Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;)Lelide/runtime/intrinsics/js/JsPromise;
+	public abstract fun opendir (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun opendir$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemPromiseAPI;Lelide/runtime/intrinsics/js/node/path/Path;Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static synthetic fun opendir$default (Lelide/runtime/intrinsics/js/node/WritableFilesystemPromiseAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun writeFile (Lelide/runtime/intrinsics/js/node/path/Path;Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/fs/WriteFileOptions;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun writeFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
 	public abstract fun writeFile (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/JsPromise;
@@ -4597,10 +4609,25 @@ public final class elide/runtime/intrinsics/js/node/events/RemoveEventListenerOp
 	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/events/RemoveEventListenerOptions;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/fs/Dir {
+public abstract interface class elide/runtime/intrinsics/js/node/fs/Dir : elide/runtime/interop/ReadOnlyProxyObject, java/lang/AutoCloseable, org/graalvm/polyglot/proxy/ProxyIterable {
+	public abstract fun close (Lkotlin/jvm/functions/Function0;)V
+	public abstract fun close (Lorg/graalvm/polyglot/Value;)V
+	public abstract fun closeSync ()V
+	public abstract fun getPath ()Ljava/lang/String;
+	public abstract fun read (Lorg/graalvm/polyglot/Value;)V
+	public abstract fun readSync ()Lelide/runtime/intrinsics/js/node/fs/Dirent;
 }
 
-public abstract interface class elide/runtime/intrinsics/js/node/fs/Dirent {
+public abstract interface class elide/runtime/intrinsics/js/node/fs/Dirent : elide/runtime/interop/ReadOnlyProxyObject {
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getParentPath ()Ljava/lang/String;
+	public abstract fun isBlockDevice ()Z
+	public abstract fun isCharacterDevice ()Z
+	public abstract fun isDirectory ()Z
+	public abstract fun isFIFO ()Z
+	public abstract fun isFile ()Z
+	public abstract fun isSocket ()Z
+	public abstract fun isSymbolicLink ()Z
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/fs/FSWatcher {
@@ -4629,6 +4656,30 @@ public final class elide/runtime/intrinsics/js/node/fs/MkdirOptions {
 public final class elide/runtime/intrinsics/js/node/fs/MkdirOptions$Companion {
 	public final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/fs/MkdirOptions;
 	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/fs/MkdirOptions;
+}
+
+public final class elide/runtime/intrinsics/js/node/fs/OpenDirOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Object;Ljava/lang/Integer;Z)V
+	public synthetic fun <init> (Ljava/lang/Object;Ljava/lang/Integer;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/Object;Ljava/lang/Integer;Z)Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;Ljava/lang/Object;Ljava/lang/Integer;ZILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;
+	public final fun getBufferSize ()Ljava/lang/Integer;
+	public final fun getEncoding ()Ljava/lang/Object;
+	public final fun getRecursive ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/fs/OpenDirOptions$Companion {
+	public final fun from (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/fs/OpenDirOptions;
 }
 
 public final class elide/runtime/intrinsics/js/node/fs/ReadFileOptions {
@@ -8160,6 +8211,81 @@ public synthetic class elide/runtime/node/fs/$VfsInitializerListener$Definition 
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/node/fs/Directory : elide/runtime/intrinsics/js/node/fs/Dir {
+	public static final field Factory Lelide/runtime/node/fs/Directory$Factory;
+	public synthetic fun <init> (Ljava/io/File;Ljava/lang/String;Ljava/nio/file/DirectoryStream;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
+	public fun close (Lkotlin/jvm/functions/Function0;)V
+	public fun close (Lorg/graalvm/polyglot/Value;)V
+	public fun closeSync ()V
+	public synthetic fun getIterator ()Ljava/lang/Object;
+	public fun getIterator ()Lorg/graalvm/polyglot/proxy/ProxyIterator;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun getPath ()Ljava/lang/String;
+	public static final fun of (Ljava/io/File;Ljava/nio/file/Path;)Lelide/runtime/node/fs/Directory;
+	public fun read (Lorg/graalvm/polyglot/Value;)V
+	public fun readSync ()Lelide/runtime/intrinsics/js/node/fs/Dirent;
+	public static final fun wrap (Ljava/io/File;Ljava/nio/file/DirectoryStream;)Lelide/runtime/node/fs/Directory;
+}
+
+public final class elide/runtime/node/fs/Directory$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public final fun of (Ljava/io/File;Ljava/nio/file/Path;)Lelide/runtime/node/fs/Directory;
+	public final fun wrap (Ljava/io/File;Ljava/nio/file/DirectoryStream;)Lelide/runtime/node/fs/Directory;
+}
+
+public abstract interface class elide/runtime/node/fs/DirectoryEntry : elide/runtime/intrinsics/js/node/fs/Dirent {
+	public static final field Factory Lelide/runtime/node/fs/DirectoryEntry$Factory;
+	public static fun forFile (Ljava/io/File;)Lelide/runtime/node/fs/DirectoryEntry$FileEntry;
+	public static fun forPath (Ljava/nio/file/Path;)Lelide/runtime/node/fs/DirectoryEntry$PathEntry;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+}
+
+public final class elide/runtime/node/fs/DirectoryEntry$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public final fun forFile (Ljava/io/File;)Lelide/runtime/node/fs/DirectoryEntry$FileEntry;
+	public final fun forPath (Ljava/nio/file/Path;)Lelide/runtime/node/fs/DirectoryEntry$PathEntry;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public final class elide/runtime/node/fs/DirectoryEntry$FileEntry : elide/runtime/node/fs/DirectoryEntry {
+	public synthetic fun <init> (Ljava/io/File;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getFile ()Ljava/io/File;
+	public fun getName ()Ljava/lang/String;
+	public fun getParentPath ()Ljava/lang/String;
+	public fun isBlockDevice ()Z
+	public fun isCharacterDevice ()Z
+	public fun isDirectory ()Z
+	public fun isFIFO ()Z
+	public fun isFile ()Z
+	public fun isSocket ()Z
+	public fun isSymbolicLink ()Z
+	public static final fun of (Ljava/io/File;)Lelide/runtime/node/fs/DirectoryEntry$FileEntry;
+}
+
+public final class elide/runtime/node/fs/DirectoryEntry$PathEntry : elide/runtime/node/fs/DirectoryEntry {
+	public synthetic fun <init> (Ljava/nio/file/Path;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getName ()Ljava/lang/String;
+	public fun getParentPath ()Ljava/lang/String;
+	public final fun getPath ()Ljava/nio/file/Path;
+	public fun isBlockDevice ()Z
+	public fun isCharacterDevice ()Z
+	public fun isDirectory ()Z
+	public fun isFIFO ()Z
+	public fun isFile ()Z
+	public fun isSocket ()Z
+	public fun isSymbolicLink ()Z
+	public static final fun of (Ljava/nio/file/Path;)Lelide/runtime/node/fs/DirectoryEntry$PathEntry;
+}
+
+public final class elide/runtime/node/fs/DirectoryEntryKt {
+	public static final fun asDirectoryEntry (Ljava/io/File;)Lelide/runtime/node/fs/DirectoryEntry$FileEntry;
+	public static final fun asDirectoryEntry (Ljava/nio/file/Path;)Lelide/runtime/node/fs/DirectoryEntry$PathEntry;
 }
 
 public final class elide/runtime/node/fs/VfsInitializerListener : elide/runtime/plugins/vfs/VfsListener, java/util/function/Supplier {

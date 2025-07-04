@@ -23,12 +23,15 @@ import org.junit.jupiter.api.assertThrows
 import java.nio.charset.StandardCharsets
 import java.nio.file.AccessMode.*
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE
 import java.nio.file.attribute.PosixFilePermission.OWNER_WRITE
+import java.util.LinkedList
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Function
 import java.util.stream.Stream
 import jakarta.inject.Provider
+import kotlin.io.path.absolutePathString
 import kotlin.streams.asStream
 import kotlin.test.*
 import elide.annotations.Inject
@@ -39,11 +42,15 @@ import elide.runtime.intrinsics.js.err.Error
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.node.WritableFilesystemAPI
+import elide.runtime.intrinsics.js.node.fs.Dirent
 import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
 import elide.runtime.intrinsics.js.node.fs.WriteFileOptions
+import elide.runtime.node.fs.Directory
+import elide.runtime.node.fs.DirectoryEntry
 import elide.runtime.node.fs.FilesystemConstants
 import elide.runtime.node.fs.NodeFilesystemModule
 import elide.runtime.node.fs.VfsInitializerListener
+import elide.runtime.node.fs.asDirectoryEntry
 import elide.runtime.node.fs.resolveEncodingString
 import elide.runtime.node.path.NodePathsModule
 import elide.testing.annotations.TestCase
@@ -1257,6 +1264,317 @@ import elide.runtime.intrinsics.js.node.path.Path as NodePath
           test(() => { copyFileSync("$srcPath", "$destPath") }).fails();
         """
       }.doesNotFail()
+    }
+  }
+
+  @Test fun testDirectoryHandle() {
+    val somePath = Paths.get("/tmp")
+    val getDir = { Directory.of(somePath.toFile(), somePath) }
+    val dir = getDir()
+    assertNotNull(dir)
+    assertNotNull(dir.memberKeys)
+    dir.memberKeys.forEach {
+      assertNotNull(dir.getMember(it), "expected member '$it' on '$dir'")
+    }
+    assertDoesNotThrow {
+      dir.use {
+        // blah blah
+      }
+    }
+  }
+
+  @Test fun testDirectoryHandleClosed() {
+    val somePath = Paths.get("/tmp")
+    val getDir = { Directory.of(somePath.toFile(), somePath) }
+    val dir = getDir()
+    assertNotNull(dir)
+    // using a closed handle should fail
+    getDir().let { dir ->
+      dir.close()
+      assertThrows<Throwable> {
+        dir.readSync()
+      }
+    }
+  }
+
+  @Test fun testDirectoryHandleCloseCallback() {
+    val somePath = Paths.get("/tmp")
+    val getDir = { Directory.of(somePath.toFile(), somePath) }
+    val dir = getDir()
+    assertNotNull(dir)
+    // closing callback should be called
+    getDir().let { dir ->
+      var called = false
+      dir.close {
+        called = true
+      }
+      assertTrue(called)
+    }
+  }
+
+  @Test fun testDirectoryEntryFactories() {
+    val somePath = Paths.get("/tmp")
+    assertNotNull(DirectoryEntry.forPath(somePath))
+    assertNotNull(somePath.asDirectoryEntry())
+    assertNotNull(DirectoryEntry.forFile(somePath.toFile()))
+    assertNotNull(somePath.toFile().asDirectoryEntry())
+    val entries = listOf(
+      assertNotNull(DirectoryEntry.forPath(somePath)),
+      assertNotNull(DirectoryEntry.forFile(somePath.toFile()))
+    )
+    entries.forEach {
+      assertNotNull(it.memberKeys)
+      it.memberKeys.forEach { key ->
+        assertNotNull(it.getMember(key), "expected member '$key' but was null")
+      }
+    }
+  }
+
+  @Test fun `opendir() host-side test`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val samplePath = tmp.resolve("opendir-host-test-with-contents").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.mkdir(NodePath.from(samplePath)) {
+        assertNull(it)
+        assertTrue(Files.exists(samplePath), "directory should exist after creation")
+      }
+      assertTrue(Files.exists(samplePath))
+
+      val sampleFile = samplePath.resolve("sample-file.txt")
+      fs.writeFileSync(NodePath.from(sampleFile), "abc123")
+      assertTrue(Files.exists(sampleFile))
+      assertTrue(Files.isRegularFile(sampleFile))
+
+      val allContents = LinkedList<Dirent>()
+      fs.opendir(NodePath.from(samplePath)) { err, value ->
+        assertNull(err)
+        assertNotNull(value)
+
+        var next = value.readSync()
+        while (next != null) {
+          allContents.add(next)
+          next = value.readSync()
+        }
+      }
+      assertTrue(allContents.isNotEmpty())
+      assertEquals(1, allContents.size)
+      val first = allContents.first()
+      assertEquals("sample-file.txt", first.name)
+      assertNotNull(first.parentPath)
+      assertFalse(first.isDirectory)
+      assertTrue(first.isFile)
+      assertFalse(first.isSymbolicLink)
+      assertFalse(first.isBlockDevice)
+      assertFalse(first.isCharacterDevice)
+      assertFalse(first.isFIFO)
+      assertFalse(first.isSocket)
+      val asFileEntry = DirectoryEntry.forFile((first as DirectoryEntry.PathEntry).path.toFile())
+      assertEquals("sample-file.txt", asFileEntry.name)
+      assertNotNull(asFileEntry.parentPath)
+      assertFalse(asFileEntry.isDirectory)
+      assertTrue(asFileEntry.isFile)
+      assertFalse(asFileEntry.isSymbolicLink)
+      assertFalse(asFileEntry.isBlockDevice)
+      assertFalse(asFileEntry.isCharacterDevice)
+      assertFalse(asFileEntry.isFIFO)
+      assertFalse(asFileEntry.isSocket)
+    }
+  }
+
+  @Test fun `opendir() host-side test with no contents`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val samplePath = tmp.resolve("opendir-host-test-no-contents").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.mkdir(NodePath.from(samplePath)) {
+        assertNull(it)
+        assertTrue(Files.exists(samplePath), "directory should exist after creation")
+      }
+      assertTrue(Files.exists(samplePath))
+
+      val allContents = LinkedList<Dirent>()
+      fs.opendir(NodePath.from(samplePath)) { err, value ->
+        assertNull(err)
+        assertNotNull(value)
+
+        var next = value.readSync()
+        while (next != null) {
+          allContents.add(next)
+          next = value.readSync()
+        }
+      }
+      assertTrue(allContents.isEmpty())
+    }
+  }
+
+  @Test fun `opendir() with valid directory with contents`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val samplePath = tmp.resolve("opendir-test-with-contents").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.mkdir(NodePath.from(samplePath)) {
+        assertNull(it)
+        assertTrue(Files.exists(samplePath), "directory should exist after creation")
+      }
+      assertTrue(Files.exists(samplePath))
+      assertTrue(Files.isDirectory(samplePath))
+
+      val sampleFile = samplePath.resolve("sample-file.txt")
+      fs.writeFileSync(NodePath.from(sampleFile), "abc123")
+      assertTrue(Files.exists(sampleFile))
+      assertTrue(Files.isRegularFile(sampleFile))
+      val absoluteDirPath = samplePath.absolutePathString()
+
+      executeGuest {
+        // language=javascript
+        """
+          const { opendir } = require("node:fs");
+          test(opendir).isNotNull();
+          let didError = false;
+          let didSeeContents = false;
+          const entries = [];
+
+          opendir("$absoluteDirPath", (dir) => {
+            if (dir instanceof Error) {
+              didError = true;
+            } else {
+              const entry = dir.readSync();
+              didSeeContents = true;
+              entries.push(entry);
+            }
+          });
+          test(didError).shouldBeFalse();
+          test(didSeeContents).shouldBeTrue();
+          test(entries[0].name).isEqualTo("sample-file.txt");
+          test(entries[0].isFile).shouldBeTrue();
+          test(entries[0].isDirectory).shouldBeFalse();
+          test(entries[0].isSymbolicLink).shouldBeFalse();
+        """
+      }.doesNotFail()
+    }
+  }
+
+  @Test fun `opendir() with missing directory`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val samplePath = tmp.resolve("opendir-test-missing").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist")
+      val absoluteDirPath = samplePath.absolutePathString()
+
+      executeGuest {
+        // language=javascript
+        """
+          const { opendir } = require("node:fs");
+          test(opendir).isNotNull();
+          let didError = false;
+          opendir("$absoluteDirPath", (dir) => {
+            didError = dir instanceof Error;
+          });
+          test(didError).shouldBeTrue();
+        """
+      }.doesNotFail()
+    }
+  }
+
+  @Test fun `opendirSync() host-side test`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val samplePath = tmp.resolve("opendirsync-host-test-with-contents").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.mkdir(NodePath.from(samplePath)) {
+        assertNull(it)
+        assertTrue(Files.exists(samplePath), "directory should exist after creation")
+      }
+      assertTrue(Files.exists(samplePath))
+
+      val sampleFile = samplePath.resolve("sample-file.txt")
+      fs.writeFileSync(NodePath.from(sampleFile), "abc123")
+      assertTrue(Files.exists(sampleFile))
+      assertTrue(Files.isRegularFile(sampleFile))
+
+      val allContents = LinkedList<String>()
+      val dir = fs.opendirSync(NodePath.from(samplePath))
+      assertNotNull(dir)
+      var next = dir.readSync()
+      while (next != null) {
+        allContents.add(next.name)
+        next = dir.readSync()
+      }
+      assertTrue(allContents.isNotEmpty())
+      assertEquals(1, allContents.size)
+    }
+  }
+
+  @Test fun `opendirSync() host-side test with no contents`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val samplePath = tmp.resolve("opendirsync-host-test-no-contents").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.mkdir(NodePath.from(samplePath)) {
+        assertNull(it)
+        assertTrue(Files.exists(samplePath), "directory should exist after creation")
+      }
+      assertTrue(Files.exists(samplePath))
+
+      val allContents = LinkedList<String>()
+      val dir = fs.opendirSync(NodePath.from(samplePath))
+      assertNotNull(dir)
+      var next = dir.readSync()
+      while (next != null) {
+        allContents.add(next.name)
+        next = dir.readSync()
+      }
+      assertTrue(allContents.isEmpty())
+    }
+  }
+
+  @Test fun `opendirSync() with valid directory with contents`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val samplePath = tmp.resolve("opendirsync-test-with-contents").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist before creation")
+      assertIs<WritableFilesystemAPI>(fs)
+      fs.mkdir(NodePath.from(samplePath)) {
+        assertNull(it)
+        assertTrue(Files.exists(samplePath), "directory should exist after creation")
+      }
+      assertTrue(Files.exists(samplePath))
+      assertTrue(Files.isDirectory(samplePath))
+
+      val sampleFile = samplePath.resolve("sample-file.txt")
+      fs.writeFileSync(NodePath.from(sampleFile), "abc123")
+      assertTrue(Files.exists(sampleFile))
+      assertTrue(Files.isRegularFile(sampleFile))
+      val absoluteDirPath = samplePath.absolutePathString()
+
+      executeGuest {
+        // language=javascript
+        """
+          const { opendirSync } = require("node:fs");
+          test(opendirSync).isNotNull();
+          const entries = [];
+          const dir = opendirSync("$absoluteDirPath");
+          const entry = dir.readSync();
+          entries.push(entry.name);
+          test(entries[0]).isEqualTo("sample-file.txt");
+        """
+      }.doesNotFail()
+    }
+  }
+
+  @Test fun `opendirSync() with missing directory`() = withTemp { tmp ->
+    filesystem.provideStd().let { fs ->
+      val samplePath = tmp.resolve("opendirsync-test-missing").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist")
+      val absoluteDirPath = samplePath.absolutePathString()
+
+      executeGuest {
+        // language=javascript
+        """
+          const { opendirSync } = require("node:fs");
+          test(opendirSync).isNotNull();
+          opendirSync("$absoluteDirPath");
+        """
+      }.fails()
     }
   }
 }

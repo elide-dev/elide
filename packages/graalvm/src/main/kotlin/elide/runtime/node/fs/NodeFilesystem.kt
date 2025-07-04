@@ -14,6 +14,10 @@
 
 package elide.runtime.node.fs
 
+import com.oracle.truffle.api.strings.TruffleString
+import com.oracle.truffle.js.lang.JavaScriptLanguage
+import com.oracle.truffle.js.runtime.JSErrorType
+import com.oracle.truffle.js.runtime.builtins.JSError
 import io.micronaut.core.annotation.ReflectiveAccess
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.io.ByteSequence
@@ -78,6 +82,8 @@ internal const val FS_F_MKDIR = "mkdir"
 private const val FS_F_MKDIR_SYNC = "mkdirSync"
 internal const val FS_F_COPY_FILE = "copyFile"
 private const val FS_F_COPY_FILE_SYNC = "copyFileSync"
+internal const val FS_F_OPEN_DIR = "opendir"
+private const val FS_F_OPEN_DIR_SYNC = "opendirSync"
 private const val FS_P_CONSTANTS = "constants"
 private const val FS_ENCODING_UTF8 = "utf8"
 private const val FS_ENCODING_UTF8_ALT = "utf-8"
@@ -97,6 +103,8 @@ private const val FS_C_X_OK = "X_OK"
 private const val FS_C_COPYFILE_EXCL = "COPYFILE_EXCL"
 private const val FS_C_COPYFILE_FICLONE = "COPYFILE_FICLONE"
 private const val FS_C_COPYFILE_FICLONE_FORCE = "COPYFILE_FICLONE_FORCE"
+private const val FS_CLS_DIR = "Dir"
+private const val FS_CLS_DIRENT = "Dirent"
 
 // Listener bean for VFS init.
 @Singleton @Eager public class VfsInitializerListener : VfsListener, Supplier<GuestVFS> {
@@ -150,9 +158,6 @@ internal fun resolveEncodingString(encoding: String): Charset = when (encoding.t
 
 // Implements the Node built-in filesystem modules.
 internal object NodeFilesystem {
-  internal const val SYMBOL_STD: String = "node_${NodeModuleName.FS}"
-  internal const val SYMBOL_PROMISES: String = "node_fs_promises"
-
   /** @return Instance of the `fs` module. */
   fun createStd(
     exec: GuestExecutor,
@@ -487,6 +492,15 @@ internal abstract class FilesystemBase(
     return op()
   }
 
+  protected inline fun <reified T> checkForDirectoryRead(path: java.nio.file.Path, op: () -> T): T {
+    when {
+      !Files.exists(path) -> JsError.error("EEXIST: directory does not exist, open '${path}'")
+      !Files.isReadable(path) -> JsError.error("EACCES: permission denied, open '${path}'")
+      !Files.isDirectory(path) -> JsError.error("ENOTDIR: not a directory, open '${path}'")
+    }
+    return op()
+  }
+
   protected fun createDirectory(path: java.nio.file.Path, recursive: Boolean = false, op: ((Path) -> Unit)? = null) {
     try {
       if (recursive) Files.createDirectories(path) else Files.createDirectory(path)
@@ -530,6 +544,8 @@ internal abstract class FilesystemBase(
   ReadOnlyProxyObject,
   FilesystemBase(path, exec, fs) {
   override fun getMemberKeys(): Array<String> = arrayOf(
+    FS_CLS_DIR,
+    FS_CLS_DIRENT,
     FS_F_ACCESS,
     FS_F_ACCESS_SYNC,
     FS_F_EXISTS,
@@ -538,6 +554,8 @@ internal abstract class FilesystemBase(
     FS_F_READ_FILE_SYNC,
     FS_F_WRITE_FILE,
     FS_F_WRITE_FILE_SYNC,
+    FS_F_OPEN_DIR,
+    FS_F_OPEN_DIR_SYNC,
     FS_F_MKDIR,
     FS_F_MKDIR_SYNC,
     FS_F_COPY_FILE,
@@ -546,6 +564,9 @@ internal abstract class FilesystemBase(
   )
 
   override fun getMember(key: String?): Any? = when (key) {
+    FS_CLS_DIR -> Directory.Factory
+    FS_CLS_DIRENT -> DirectoryEntry.Factory
+
     FS_F_ACCESS -> ProxyExecutable {
       when (it.size) {
         2 -> access(it.first(), it[1])
@@ -643,6 +664,22 @@ internal abstract class FilesystemBase(
       }
     }
 
+    FS_F_OPEN_DIR -> ProxyExecutable {
+      when (it.size) {
+        0, 1 -> throw JsError.typeError("Not enough arguments for `opendir`")
+        2 -> opendir(it.first(), null, it.last())
+        else -> opendir(it.first(), it[1], it.last())
+      }
+    }
+
+    FS_F_OPEN_DIR_SYNC -> ProxyExecutable {
+      when (it.size) {
+        0 -> throw JsError.typeError("Not enough arguments for `opendir`")
+        1 -> opendirSync(it.first(), null)
+        else -> opendirSync(it.first(), it.last())
+      }
+    }
+
     FS_P_CONSTANTS -> FilesystemConstants
 
     else -> null
@@ -732,8 +769,8 @@ internal abstract class FilesystemBase(
         if (err != null) callback(err, null)
         else callback(null, data)
       } else if (optionsIsCallback) {
-        if (err != null) options!!.executeVoid(err, null)
-        else options!!.executeVoid(null, data)
+        if (err != null) options.executeVoid(err, null)
+        else options.executeVoid(null, data)
       } else {
         throw JsError.typeError("Callback for `readFile` must be a function")
       }
@@ -943,6 +980,56 @@ internal abstract class FilesystemBase(
       if (it != null) throw it
     }
   }
+
+  override fun opendir(path: Path, options: OpenDirOptions, callback: OpenDirCallback) {
+    withExec {
+      val jpath = path.toJavaPath()
+      try {
+        checkForDirectoryRead(jpath) {
+          val file = jpath.toFile()
+          val walker = Files.newDirectoryStream(jpath)
+          val dir = Directory.wrap(file, walker)
+          callback.invoke(null, dir)
+        }
+      } catch (err: Throwable) {
+        if (err is AbstractJsException) {
+          callback.invoke(err, null)
+        } else {
+          throw JsError.error("Failed to open directory", err)
+        }
+      }
+    }
+  }
+
+  @Polyglot override fun opendir(path: Value, options: Value?, callback: Value) {
+    val opts = options?.let { OpenDirOptions.from(it) } ?: OpenDirOptions.DEFAULTS
+    opendir(resolvePath("opendir", path), opts) { err: AbstractJsException?, value: Dir? ->
+      if (err != null) {
+        val jsErr = JSError.create(
+          JSErrorType.Error,
+          JavaScriptLanguage.getCurrentJSRealm(),
+          TruffleString.fromJavaStringUncached(err.toString(), TruffleString.Encoding.UTF_8),
+        )
+        callback.executeVoid(jsErr)
+      } else if (value != null) {
+        callback.executeVoid(value)
+      }
+    }
+  }
+
+  override fun opendirSync(path: Path, options: OpenDirOptions): Directory {
+    val jpath = path.toJavaPath()
+    return checkForDirectoryRead(jpath) {
+      val file = jpath.toFile()
+      val walker = Files.newDirectoryStream(jpath)
+      Directory.wrap(file, walker)
+    }
+  }
+
+  @Polyglot override fun opendirSync(path: Value, options: Value?): Directory {
+    val opts = options?.let { OpenDirOptions.from(it) } ?: OpenDirOptions.DEFAULTS
+    return opendirSync(resolvePath("opendirSync", path), opts)
+  }
 }
 
 // Implements the Node `fs/promises` module.
@@ -956,6 +1043,7 @@ internal abstract class FilesystemBase(
     FS_F_WRITE_FILE,
     FS_F_MKDIR,
     FS_F_COPY_FILE,
+    FS_F_OPEN_DIR,
     FS_P_CONSTANTS,
   )
 
@@ -997,6 +1085,14 @@ internal abstract class FilesystemBase(
         2 -> copyFile(it.first(), it[1])
         3 -> copyFile(it.first(), it[1], it[2].asInt())
         else -> throw JsError.typeError("Invalid number of arguments to `fs.copyFile`")
+      }
+    }
+
+    FS_F_OPEN_DIR -> ProxyExecutable {
+      when (it.size) {
+        0 -> throw JsError.typeError("Not enough arguments for `fs.opendir`")
+        1 -> opendir(it.first())
+        else -> opendir(it.first(), it.last())
       }
     }
 
@@ -1084,4 +1180,16 @@ internal abstract class FilesystemBase(
       nioPath
     }.toString()
   }
+
+  override fun opendir(path: Path, options: OpenDirOptions?): JsPromise<Dir> = withExec {
+    val jpath = path.toJavaPath()
+    checkForDirectoryRead(jpath) {
+      val file = jpath.toFile()
+      val walker = Files.newDirectoryStream(jpath)
+      Directory.wrap(file, walker)
+    }
+  }
+
+  @Polyglot override fun opendir(path: Value, options: Value?): JsPromise<Dir> =
+    opendir(resolvePath("opendir", path), options?.let { OpenDirOptions.from(it) })
 }

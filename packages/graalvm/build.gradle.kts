@@ -423,7 +423,6 @@ graalvmNative {
       classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
 
       buildArgs(sharedLibArgs.plus(listOf(
-        // "-H:LayerUse=${baseLayer.get().asFile.absolutePath}",
         "-H:LayerCreate=${layerOut.get().asFile.name}"
       )))
     }
@@ -432,6 +431,7 @@ graalvmNative {
       fallback = false
       sharedLibrary = false
       quickBuild = true
+      jvmArgs("-Dpolyglot.engine.WarnInterpreterOnly=false")
       buildArgs(sharedLibArgs.plus(testLibArgs).plus(listOf(
         "--features=org.graalvm.junit.platform.JUnitPlatformFeature",
       )))

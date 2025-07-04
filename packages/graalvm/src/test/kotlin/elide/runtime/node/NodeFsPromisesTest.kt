@@ -16,13 +16,17 @@ package elide.runtime.node
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import java.util.LinkedList
 import jakarta.inject.Provider
+import kotlin.io.path.absolutePathString
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.vfs.EmbeddedGuestVFS
 import elide.runtime.intrinsics.js.asDeferred
+import elide.runtime.intrinsics.js.node.WritableFilesystemAPI
 import elide.runtime.intrinsics.js.node.WritableFilesystemPromiseAPI
+import elide.runtime.intrinsics.js.node.fs.Dirent
 import elide.runtime.intrinsics.js.node.fs.ReadFileOptions
 import elide.runtime.intrinsics.js.node.path.Path
 import elide.runtime.node.fs.NodeFilesystemModule
@@ -66,6 +70,7 @@ import elide.testing.annotations.TestCase
     yield("mkdir")
     yield("mkdtemp")
     yield("open")
+    yield("opendir")
     yield("readdir")
     yield("readFile")
     yield("readlink")
@@ -230,6 +235,29 @@ import elide.testing.annotations.TestCase
       assertTrue(Files.exists(destPath))
       assertTrue(Files.isRegularFile(destPath))
       assertEquals("Hello, world!", Files.readString(destPath))
+    }
+  }
+
+  @Test fun `opendir() with valid directory with contents`() = withTemp { tmp ->
+    filesystem.providePromises().let { fs ->
+      val samplePath = tmp.resolve("opendir-test-with-contents").toAbsolutePath()
+      assertFalse(Files.exists(samplePath), "directory should not exist before creation")
+      assertIs<WritableFilesystemPromiseAPI>(fs)
+      fs.mkdir(Path.from(samplePath)).asDeferred().await().also {
+        assertTrue(Files.exists(samplePath), "directory should exist after creation")
+      }
+      assertTrue(Files.exists(samplePath))
+
+      val sampleFile = samplePath.resolve("sample-file.txt")
+      fs.writeFile(Path.from(sampleFile), "abc123").asDeferred().await()
+      assertTrue(Files.exists(sampleFile))
+      assertTrue(Files.isRegularFile(sampleFile))
+
+      val allContents = LinkedList<Dirent>()
+      val dir = fs.opendir(Path.from(samplePath)).asDeferred().await()
+      allContents.add(assertNotNull(dir.readSync()))
+      assertTrue(allContents.isNotEmpty())
+      assertEquals(1, allContents.size)
     }
   }
 }

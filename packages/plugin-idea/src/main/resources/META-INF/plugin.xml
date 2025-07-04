@@ -45,6 +45,7 @@
     <projectConfigurable
             key="elide"
             id="reference.settingsdialog.project.elide"
+            groupId="build.tools"
             instance="dev.elide.intellij.settings.ElideConfigurable"/>
   </extensions>
 </idea-plugin>

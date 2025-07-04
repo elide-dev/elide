@@ -24,6 +24,7 @@ import com.intellij.openapi.util.io.toCanonicalPath
 import com.intellij.openapi.util.registry.Registry
 import dev.elide.intellij.Constants
 import dev.elide.intellij.settings.ElideProjectSettings
+import dev.elide.intellij.settings.ElideSettings
 
 /** Startup activity used to detect an Elide project and sync it if needed. */
 class ElideStartupActivity : ProjectActivity {
@@ -39,8 +40,9 @@ class ElideStartupActivity : ProjectActivity {
 
       // have the IDE track changes to the project config files, then trigger a sync
       LOG.debug("Found manifest, linking project")
-      val settings = project.getService(ElideProjectSettings::class.java)
-      settings.externalProjectPath = baseDir.toNioPath().toCanonicalPath()
+      val settings = ElideSettings.getSettings(project)
+        .getLinkedProjectSettings(baseDir.toNioPath().toCanonicalPath())
+        ?: ElideProjectSettings().apply { externalProjectPath = baseDir.toNioPath().toCanonicalPath() }
 
       ExternalSystemUtil.linkExternalProject(
         /* externalSystemId = */ Constants.SYSTEM_ID,
@@ -50,7 +52,7 @@ class ElideStartupActivity : ProjectActivity {
         /* isPreviewMode = */ false,
         /* progressExecutionMode = */ ProgressExecutionMode.IN_BACKGROUND_ASYNC,
       )
-      
+
       break
     }
   }

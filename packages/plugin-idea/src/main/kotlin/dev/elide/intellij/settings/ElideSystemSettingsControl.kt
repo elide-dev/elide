@@ -14,31 +14,72 @@
 package dev.elide.intellij.settings
 
 import com.intellij.openapi.externalSystem.util.ExternalSystemSettingsControl
+import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil
 import com.intellij.openapi.externalSystem.util.PaintAwarePanel
+import com.intellij.openapi.ui.DialogPanel
+import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.panel
+import dev.elide.intellij.Constants
 
 /**
  * UI manager for [system-wide][ElideSettings] Elide settings panel.
  *
  * @see ElideConfigurable
  */
-class ElideSystemSettingsControl : ExternalSystemSettingsControl<ElideSettings> {
+class ElideSystemSettingsControl(
+  private val initialSettings: ElideSettings
+) : ExternalSystemSettingsControl<ElideSettings> {
+  private lateinit var controls: DialogPanel
+
+  // controls state
+  private var downloadSources: Boolean = initialSettings.downloadSources
+  private var downloadDocs: Boolean = initialSettings.downloadDocs
+
+  private fun controlsPanel(): DialogPanel = panel {
+    row {
+      checkBox(Constants.Strings["settings.general.downloadSources"])
+        .comment(Constants.Strings["settings.general.downloadSources.comment"])
+        .bindSelected(::downloadSources)
+    }
+
+    row {
+      checkBox(Constants.Strings["settings.general.downloadDocs"])
+        .comment(Constants.Strings["settings.general.downloadDocs.comment"])
+        .bindSelected(::downloadDocs)
+    }
+  }
+
   override fun isModified(): Boolean {
+    controls.apply() // apply UI changes to bound properties before checking
+
+    if (downloadSources != initialSettings.downloadSources) return true
+    if (downloadDocs != initialSettings.downloadDocs) return true
+
     return false
   }
 
-  override fun fillUi(panel: PaintAwarePanel, indent: Int) {
-    // noop
+  override fun fillUi(canvas: PaintAwarePanel, indent: Int) {
+    controls = controlsPanel()
+    canvas.add(controls, ExternalSystemUiUtil.getFillLineConstraints(indent))
   }
 
   override fun reset() {
-    // noop
+    downloadSources = initialSettings.downloadSources
+    downloadDocs = initialSettings.downloadDocs
+
+    controls.reset()
   }
 
   override fun apply(settings: ElideSettings) {
-    // noop
+    // apply UI changes to bound properties before committing
+    controls.apply()
+
+    settings.downloadSources = downloadSources
+    settings.downloadDocs = downloadDocs
   }
 
   override fun validate(settings: ElideSettings): Boolean {
+    controls.apply()
     return true
   }
 
@@ -47,6 +88,10 @@ class ElideSystemSettingsControl : ExternalSystemSettingsControl<ElideSettings> 
   }
 
   override fun showUi(visible: Boolean) {
-    // noop
+    controls.isVisible = visible
+  }
+
+  private companion object {
+    private val LOG = com.intellij.openapi.diagnostic.Logger.getInstance(ElideSystemSettingsControl::class.java)
   }
 }

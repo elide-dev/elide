@@ -44,6 +44,15 @@ object Constants {
   /** Name and extension of the Elide lockfile. */
   const val LOCKFILE_NAME = "elide.lock.bin"
 
+  /** Default installation directory for Elide under the user home path. */
+  const val ELIDE_HOME = "elide"
+
+  /** Resources path relative to the root of the Elide distribution. */
+  const val ELIDE_RESOURCES_DIR = "resources"
+
+  /** Relative path to the CLI binary in an Elide distribution. */
+  const val ELIDE_BINARY = "elide"
+
   /** Descriptor for a file chooser to be used when selecting an Elide project. */
   @JvmStatic fun projectFileChooser(): FileChooserDescriptor {
     return FileChooserDescriptor(
@@ -54,6 +63,18 @@ object Constants {
       /* chooseJarContents = */ false,
       /* chooseMultiple = */ false,
     ).withFileFilter { it.name == MANIFEST_NAME }
+  }
+
+  /** Descriptor for a file chooser to be used when selecting an Elide distribution. */
+  @JvmStatic fun sdkFileChooser(): FileChooserDescriptor {
+    return FileChooserDescriptor(
+      /* chooseFiles = */ false,
+      /* chooseFolders = */ true,
+      /* chooseJars = */ false,
+      /* chooseJarsAsFiles = */ false,
+      /* chooseJarContents = */ false,
+      /* chooseMultiple = */ false,
+    )
   }
 
   data object Icons {

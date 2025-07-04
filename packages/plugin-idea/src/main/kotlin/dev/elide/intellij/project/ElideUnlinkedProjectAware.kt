@@ -23,14 +23,12 @@ import com.intellij.openapi.vfs.VirtualFile
 import dev.elide.intellij.Constants
 import dev.elide.intellij.settings.ElideProjectSettings
 import dev.elide.intellij.settings.ElideSettings
-import java.util.concurrent.ConcurrentSkipListSet
 
 /**
  * Tracking service used to link Elide projects when they are opened by the IDE. This class enables the auto-import
  * and project sync features automatically, by configuring which files should be tracked by Intellij.
  */
 @Suppress("UnstableApiUsage") class ElideUnlinkedProjectAware : ExternalSystemUnlinkedProjectAware {
-  private val linkedProjects = ConcurrentSkipListSet<String>()
   override val systemId: ProjectSystemId = Constants.SYSTEM_ID
 
   override fun isBuildFile(project: Project, buildFile: VirtualFile): Boolean {
@@ -38,12 +36,12 @@ import java.util.concurrent.ConcurrentSkipListSet
   }
 
   override fun isLinkedProject(project: Project, externalProjectPath: String): Boolean {
-    val settings = project.getService(ElideSettings::class.java)
+    val settings = ElideSettings.getSettings(project)
     return settings.getLinkedProjectSettings(externalProjectPath) != null
   }
 
   override fun subscribe(project: Project, listener: ExternalSystemProjectLinkListener, parentDisposable: Disposable) {
-    project.getService(ElideSettings::class.java).subscribe(
+    ElideSettings.getSettings(project).subscribe(
       object : ExternalSystemSettingsListener<ElideProjectSettings?> {
         override fun onProjectsLinked(settings: Collection<ElideProjectSettings?>) {
           settings.forEach { if (it != null) listener.onProjectLinked(it.externalProjectPath) }
@@ -58,13 +56,11 @@ import java.util.concurrent.ConcurrentSkipListSet
   }
 
   override suspend fun linkAndLoadProjectAsync(project: Project, externalProjectPath: String) {
-    linkedProjects.add(externalProjectPath)
     ElideOpenProjectProvider().linkToExistingProjectAsync(externalProjectPath, project)
 
   }
 
   override suspend fun unlinkProject(project: Project, externalProjectPath: String) {
     ElideOpenProjectProvider().unlinkProject(project, externalProjectPath)
-    linkedProjects.remove(externalProjectPath)
   }
 }

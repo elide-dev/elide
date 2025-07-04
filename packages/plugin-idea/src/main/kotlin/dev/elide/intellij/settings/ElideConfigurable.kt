@@ -34,6 +34,6 @@ class ElideConfigurable(project: Project) : AbstractExternalSystemConfigurable<
   override fun getDisplayName() = "Elide"
 
   override fun newProjectSettings(): ElideProjectSettings = ElideProjectSettings()
-  override fun createProjectSettingsControl(settings: ElideProjectSettings) = ElideProjectSettingsControl()
-  override fun createSystemSettingsControl(settings: ElideSettings) = ElideSystemSettingsControl()
+  override fun createProjectSettingsControl(settings: ElideProjectSettings) = ElideProjectSettingsControl(settings)
+  override fun createSystemSettingsControl(settings: ElideSettings) = ElideSystemSettingsControl(settings)
 }

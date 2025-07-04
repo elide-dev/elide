@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -341,6 +341,28 @@ import elide.vm.annotations.Polyglot
    * @return Upon success, fulfills with `undefined`; otherwise, rejects with an error.
    */
   @Polyglot public fun copyFile(src: Value, dest: Value, mode: Int): JsPromise<Value>
+
+  /**
+   * ## Method: `fs.opendir`
+   *
+   * Asynchronously opens a directory for the streaming of entries.
+   *
+   * @param path Path to the directory to stream entries for.
+   * @param options Options to apply to the operation.
+   * @return Upon success, fulfills with an instance of [Dir]; otherwise, errors.
+   */
+  public fun opendir(path: Path, options: OpenDirOptions? = null): JsPromise<Dir>
+
+  /**
+   * ## Method: `fs.opendir`
+   *
+   * Asynchronously opens a directory for the streaming of entries.
+   *
+   * @param path Path to the directory to stream entries for.
+   * @param options Options to apply to the operation.
+   * @return Upon success, fulfills with an instance of [Dir]; otherwise, errors.
+   */
+  @Polyglot public fun opendir(path: Value, options: Value? = null): JsPromise<Dir>
 }
 
 /**

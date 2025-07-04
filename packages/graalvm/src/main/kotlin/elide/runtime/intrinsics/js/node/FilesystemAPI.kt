@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -17,6 +17,7 @@ import java.nio.file.AccessMode
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.fs.*
 import elide.runtime.intrinsics.js.node.path.Path
+import elide.runtime.node.fs.Directory
 import elide.vm.annotations.Polyglot
 
 /**
@@ -512,6 +513,80 @@ import elide.vm.annotations.Polyglot
    * @param dest The destination path to copy to.
    */
   @Polyglot public fun copyFileSync(src: Value, dest: Value)
+
+  /**
+   * ## Method: `fs.opendir`
+   *
+   * Asynchronously open a directory at the provided [path], employing the provided [options]; a `Dir` instance is
+   * passed to the provided [callback] for directory operations.
+   *
+   * From the Node.js docs:
+   * "Asynchronously open a directory. See the POSIX `opendir(3)` documentation for more details. Creates an `fs.Dir`,
+   * which contains all further functions for reading from and cleaning up the directory. The `encoding` option sets the
+   * encoding for the path while opening the directory and subsequent read operations."
+   *
+   * This method variant is meant for implementation and host-side dispatch.
+   *
+   * @param path Path to the directory to open.
+   * @param options Options to apply to the operation.
+   * @param callback Callback function to invoke with the directory iterator.
+   */
+  @Polyglot public fun opendir(path: Path, options: OpenDirOptions = OpenDirOptions.DEFAULTS, callback: OpenDirCallback)
+
+  /**
+   * ## Method: `fs.opendir`
+   *
+   * Asynchronously open a directory at the provided [path], employing the provided [options]; a `Dir` instance is
+   * passed to the provided [callback] for directory operations.
+   *
+   * From the Node.js docs:
+   * "Asynchronously open a directory. See the POSIX `opendir(3)` documentation for more details. Creates an `fs.Dir`,
+   * which contains all further functions for reading from and cleaning up the directory. The `encoding` option sets the
+   * encoding for the path while opening the directory and subsequent read operations."
+   *
+   * This method variant is meant for guest-side dispatch.
+   *
+   * @param path Path to the directory to open.
+   * @param options Options to apply to the operation.
+   * @param callback Callback function to invoke with the directory iterator.
+   */
+  @Polyglot public fun opendir(path: Value, options: Value? = null, callback: Value)
+
+  /**
+   * ## Method: `fs.opendirSync`
+   *
+   * Synchronously open a directory at the provided [path], employing the provided [options].
+   *
+   * From the Node.js docs:
+   * "Synchronously open a directory. See `opendir(3)`. Creates an `fs.Dir`, which contains all further functions for
+   * reading from and cleaning up the directory. The encoding option sets the encoding for the path while opening the
+   * directory and subsequent read operations."
+   *
+   * This method variant is meant for implementation and host-side dispatch.
+   *
+   * @param path Path to the directory to open.
+   * @param options Options to apply to the operation.
+   * @return [Directory] handle instance.
+   */
+  @Polyglot public fun opendirSync(path: Path, options: OpenDirOptions = OpenDirOptions.DEFAULTS): Directory
+
+  /**
+   * ## Method: `fs.opendirSync`
+   *
+   * Synchronously open a directory at the provided [path], employing the provided [options], if any.
+   *
+   * From the Node.js docs:
+   * "Synchronously open a directory. See `opendir(3)`. Creates an `fs.Dir`, which contains all further functions for
+   * reading from and cleaning up the directory. The encoding option sets the encoding for the path while opening the
+   * directory and subsequent read operations."
+   *
+   * This method variant is meant for guest-side dispatch.
+   *
+   * @param path Path to the directory to open.
+   * @param options Options to apply to the operation.
+   * @return [Directory] handle instance.
+   */
+  @Polyglot public fun opendirSync(path: Value, options: Value? = null): Directory
 }
 
 /**

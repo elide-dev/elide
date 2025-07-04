@@ -13,15 +13,11 @@
 
 package dev.elide.intellij.settings
 
-import com.intellij.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings
-import java.nio.file.Path
+/** Describes the preferred resolution method for the Elide distribution used in a project. */
+enum class ElideDistributionSetting {
+  /** Use the default Elide distribution or detect it from the environment. */
+  AutoDetect,
 
-/**
- * Execution settings used in tasks like project sync or build. The [dev.elide.intellij.ElideManager] prepares
- * instances of this container to be handed to the [elide.tooling.project.ElideProjectLoader] and other services.
- */
-data class ElideExecutionSettings(
-  val elideHome: Path,
-  val downloadSources: Boolean,
-  val downloadDocs: Boolean,
-) : ExternalSystemExecutionSettings()
+  /** Use the distribution specified by the user in the project settings. */
+  Custom
+}

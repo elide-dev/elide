@@ -25,6 +25,7 @@ import com.intellij.openapi.progress.runBlockingCancellable
 import dev.elide.intellij.Constants
 import dev.elide.intellij.manifests.ElideManifestService
 import dev.elide.intellij.project.model.ElideProjectModel
+import dev.elide.intellij.service.ElideDistributionResolver
 import dev.elide.intellij.settings.ElideExecutionSettings
 import org.jetbrains.annotations.PropertyKey
 import java.nio.file.Path
@@ -107,13 +108,17 @@ class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSetting
    * Construct a new [ElideProjectLoader] that uses the resources from the Elide distribution set in the execution
    * [settings].
    */
-  private fun buildProjectLoader(projectPath: Path, settings: ElideExecutionSettings?): ElideProjectLoader {
+  private fun buildProjectLoader(
+    projectPath: Path,
+    settings: ElideExecutionSettings?
+  ): ElideProjectLoader {
     return object : ElideProjectLoader {
       override val lockfileLoader: LockfileLoader = LockfileLoader { loadLockfileSafe(projectPath) }
       override val sourceSetFactory: SourceSetFactory = SourceSetFactory.Default
-
-      // TODO(@darvld): resolve from execution settings
-      override val resourcesPath: Path get() = projectPath.resolve(".elide")
+      override val resourcesPath: Path by lazy {
+        val elideHome = settings?.elideHome ?: ElideDistributionResolver.defaultDistributionPath()
+        ElideDistributionResolver.resourcesPath(elideHome)
+      }
     }
   }
 

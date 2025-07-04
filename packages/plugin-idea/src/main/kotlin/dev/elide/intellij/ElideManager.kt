@@ -16,16 +16,19 @@ package dev.elide.intellij
 import com.intellij.execution.configurations.SimpleJavaParameters
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.externalSystem.ExternalSystemAutoImportAware
+import com.intellij.openapi.externalSystem.ExternalSystemConfigurableAware
 import com.intellij.openapi.externalSystem.ExternalSystemManager
 import com.intellij.openapi.externalSystem.model.ProjectSystemId
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
 import com.intellij.openapi.externalSystem.service.project.autoimport.CachingExternalSystemAutoImportAware
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
+import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Pair
 import com.intellij.util.Function
 import dev.elide.intellij.project.ElideProjectResolver
+import dev.elide.intellij.service.ElideDistributionResolver
 import dev.elide.intellij.settings.*
 import dev.elide.intellij.tasks.ElideTaskManager
 import java.io.File
@@ -47,7 +50,7 @@ import java.io.File
  * actions, etc. Some additional parts, such as the [dev.elide.intellij.startup.ElideStartupActivity], are used
  * to complement those features and improve the experience (e.g. by scanning for a project on startup).
  */
-class ElideManager : ExternalSystemAutoImportAware, ExternalSystemManager<
+class ElideManager : ExternalSystemAutoImportAware, ExternalSystemConfigurableAware, ExternalSystemManager<
         ElideProjectSettings,
         ElideSettingsListener,
         ElideSettings,
@@ -60,7 +63,7 @@ class ElideManager : ExternalSystemAutoImportAware, ExternalSystemManager<
   override fun getSystemId(): ProjectSystemId = Constants.SYSTEM_ID
 
   override fun getSettingsProvider(): Function<Project, ElideSettings> = Function { project ->
-    project.getService(ElideSettings::class.java)
+    ElideSettings.getSettings(project)
   }
 
   override fun getLocalSettingsProvider(): Function<Project, ElideLocalSettings> = Function { project ->
@@ -71,9 +74,14 @@ class ElideManager : ExternalSystemAutoImportAware, ExternalSystemManager<
     val project = it.first
     val path = it.second
 
+    val settings = ElideSettings.getSettings(project)
+
     LOG.debug("Preparing execution settings for project at '$path': $project")
-    val settings = ElideExecutionSettings()
-    settings
+    ElideExecutionSettings(
+      elideHome = ElideDistributionResolver.getElideHome(project, path),
+      downloadSources = settings.downloadSources,
+      downloadDocs = settings.downloadDocs,
+    )
   }
 
   override fun getProjectResolverClass(): Class<out ExternalSystemProjectResolver<ElideExecutionSettings>> {
@@ -99,6 +107,10 @@ class ElideManager : ExternalSystemAutoImportAware, ExternalSystemManager<
 
   override fun getAffectedExternalProjectFiles(projectPath: String, project: Project): List<File?> {
     return autoImportDelegate.getAffectedExternalProjectFiles(projectPath, project)
+  }
+
+  override fun getConfigurable(project: Project): Configurable {
+    return ElideConfigurable(project)
   }
 
   private companion object {

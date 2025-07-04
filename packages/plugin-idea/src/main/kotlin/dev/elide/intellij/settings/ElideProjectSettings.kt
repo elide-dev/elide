@@ -13,7 +13,8 @@
 
 package dev.elide.intellij.settings
 
-import com.intellij.openapi.components.Service
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings
 
 /**
@@ -22,7 +23,10 @@ import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings
  *
  * @see ElideConfigurable
  */
-@Service(Service.Level.PROJECT)
-class ElideProjectSettings : ExternalProjectSettings() {
-  override fun clone(): ExternalProjectSettings = ElideProjectSettings()
+@State(name = "dev.elide.settings.project", storages = [Storage("elide.xml")])
+data class ElideProjectSettings(
+  var elideDistributionType: ElideDistributionSetting = ElideDistributionSetting.AutoDetect,
+  var elideDistributionPath: String = "",
+) : ExternalProjectSettings() {
+  override fun clone(): ExternalProjectSettings = copy()
 }

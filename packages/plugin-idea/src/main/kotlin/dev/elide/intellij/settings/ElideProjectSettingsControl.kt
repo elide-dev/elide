@@ -13,40 +13,107 @@
 
 package dev.elide.intellij.settings
 
-import com.intellij.openapi.externalSystem.util.ExternalSystemSettingsControl
+import com.intellij.openapi.externalSystem.service.settings.AbstractExternalProjectSettingsControl
+import com.intellij.openapi.externalSystem.util.ExternalSystemUiUtil
 import com.intellij.openapi.externalSystem.util.PaintAwarePanel
+import com.intellij.openapi.ui.DialogPanel
+import com.intellij.ui.dsl.builder.bindItem
+import com.intellij.ui.dsl.builder.bindText
+import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.layout.selectedValueIs
+import dev.elide.intellij.Constants
+import java.awt.Component
+import javax.swing.JLabel
+import javax.swing.JList
+import javax.swing.ListCellRenderer
 
 /**
  * UI manager for [project-level][ElideProjectSettings] Elide settings panel.
  *
  * @see ElideConfigurable
  */
-class ElideProjectSettingsControl : ExternalSystemSettingsControl<ElideProjectSettings> {
-  override fun isModified(): Boolean {
+@Suppress("UnstableApiUsage") class ElideProjectSettingsControl(
+  initialSettings: ElideProjectSettings
+) : AbstractExternalProjectSettingsControl<ElideProjectSettings>(initialSettings) {
+  private lateinit var projectControls: DialogPanel
+
+  private var distributionType: ElideDistributionSetting = initialSettings.elideDistributionType
+  private var distributionPath: String = initialSettings.elideDistributionPath
+
+  private fun controlsPanel(): DialogPanel = panel {
+    group(Constants.Strings["settings.project.execution.title"]) {
+      row(Constants.Strings["settings.project.distribution.label"]) {
+        val distributionTypeBox = comboBox(ElideDistributionSetting.entries, DistributionTypeRenderer)
+          .bindItem(::distributionType) { distributionType = it ?: ElideDistributionSetting.AutoDetect }
+
+        textFieldWithBrowseButton(Constants.sdkFileChooser(), null) { it.path }
+          .bindText(getter = { distributionPath }, setter = { distributionPath = it })
+          .visibleIf(distributionTypeBox.component.selectedValueIs(ElideDistributionSetting.Custom))
+
+        rowComment(Constants.Strings["settings.project.distribution.comment"])
+      }
+    }
+  }
+
+  override fun fillExtraControls(canvas: PaintAwarePanel, indent: Int) {
+    projectControls = controlsPanel()
+    canvas.add(projectControls, ExternalSystemUiUtil.getFillLineConstraints(indent))
+  }
+
+  override fun showUi(show: Boolean) {
+    super.showUi(show)
+    projectControls.isVisible = show
+  }
+
+  override fun isExtraSettingModified(): Boolean {
+    projectControls.apply()
+
+    if (distributionPath != initialSettings.elideDistributionPath) return true
+    if (distributionType != initialSettings.elideDistributionType) return true
+
     return false
   }
 
-  override fun fillUi(panel: PaintAwarePanel, indent: Int) {
-    // noop
+  override fun resetExtraSettings(isDefaultModuleCreation: Boolean) {
+    distributionPath = initialSettings.elideDistributionPath
+    distributionType = initialSettings.elideDistributionType
+
+    projectControls.reset()
   }
 
-  override fun reset() {
-    // noop
+  override fun updateInitialExtraSettings() {
+    projectControls.apply()
+
+    initialSettings.elideDistributionPath = distributionPath
+    initialSettings.elideDistributionType = distributionType
   }
 
-  override fun apply(settings: ElideProjectSettings) {
-    // noop
+  override fun applyExtraSettings(settings: ElideProjectSettings) {
+    projectControls.apply()
+
+    settings.elideDistributionPath = distributionPath
+    settings.elideDistributionType = distributionType
   }
 
   override fun validate(settings: ElideProjectSettings): Boolean {
+    projectControls.apply()
     return true
   }
 
-  override fun disposeUIResources() {
-    // noop
-  }
+  private data object DistributionTypeRenderer : ListCellRenderer<ElideDistributionSetting?> {
+    override fun getListCellRendererComponent(
+      list: JList<out ElideDistributionSetting>,
+      value: ElideDistributionSetting?,
+      index: Int,
+      isSelected: Boolean,
+      cellHasFocus: Boolean
+    ): Component {
+      val text = when (value) {
+        ElideDistributionSetting.Custom -> Constants.Strings["settings.project.distribution.type.custom"]
+        else -> Constants.Strings["settings.project.distribution.type.auto"]
+      }
 
-  override fun showUi(visible: Boolean) {
-    // noop
+      return JLabel(text)
+    }
   }
 }

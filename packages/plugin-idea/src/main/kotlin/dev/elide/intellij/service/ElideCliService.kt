@@ -79,7 +79,7 @@ class ElideCliService(private val project: Project, private val serviceScope: Co
        */
       fun launch(
         elideBinary: Path,
-        projectPath: String,
+        workdir: String? = null,
         scope: CoroutineScope,
         buildCommand: MutableList<String>.() -> Unit
       ): ElideProcess {
@@ -89,7 +89,7 @@ class ElideCliService(private val project: Project, private val serviceScope: Co
         }
 
         val process = ProcessBuilder(command)
-          .directory(File(projectPath))
+          .also { if (workdir != null) it.directory(File(workdir)) }
           .start()
 
         return ElideProcess(process, scope, scope.async { process.awaitExit() })
@@ -98,19 +98,52 @@ class ElideCliService(private val project: Project, private val serviceScope: Co
   }
 
   /**
-   * Launch the Elide CLI binary as a subprocess and wrap it in [ElideProcess] for easy handling. The settings of the
-   * linked project at [projectPath] are used to select an Elide distribution to be invoked.
+   * A bridge used to call an Elide Command Line distribution at a specific path. Use the command methods to interface
+   * with the CLI without blocking.
    */
-  private fun launchElide(projectPath: String, buildCommand: MutableList<String>.() -> Unit): ElideProcess {
-    val elideHome = ElideDistributionResolver.getElideHome(project, projectPath)
-    val elideBin = elideHome.resolve(Constants.ELIDE_BINARY)
+  class ElideCommandLine private constructor(
+    private val elideHome: Path,
+    private val scope: CoroutineScope,
+  ) {
+    /** Invoke the Elide CLI with the `--version` option in a background context and return its output. */
+    suspend fun version(workdir: String? = null): String = withContext(Dispatchers.IO) {
+      val elide = launchElide(elideHome, workdir, buildCommand = { add("--version") })
+      elide.readStdOut()
+    }
 
-    return ElideProcess.launch(elideBin, projectPath, serviceScope, buildCommand)
+    /**
+     * Launch the Elide CLI binary as a subprocess and wrap it in [ElideProcess] for easy handling. The settings of the
+     * linked project at [workdir] are used to select an Elide distribution to be invoked.
+     */
+    private fun launchElide(
+      elideHome: Path,
+      workdir: String? = null,
+      buildCommand: MutableList<String>.() -> Unit
+    ): ElideProcess {
+      val elideBin = elideHome.resolve(Constants.ELIDE_BINARY)
+      return ElideProcess.launch(elideBin, workdir, scope, buildCommand)
+    }
+
+    companion object {
+      fun at(elideHome: Path, scope: CoroutineScope): ElideCommandLine {
+        return ElideCommandLine(elideHome, scope)
+      }
+    }
   }
 
-  /** Invoke the Elide CLI with the `--version` option in a background context and return its output. */
-  fun version(projectPath: String): Deferred<String> = serviceScope.async {
-    val elide = launchElide(projectPath, buildCommand = { add("--version") })
-    elide.readStdOut()
+  /** Returns a configured [ElideCommandLine] at the given [elideHome]. */
+  fun at(elideHome: Path): ElideCommandLine {
+    return ElideCommandLine.at(elideHome, serviceScope)
+  }
+
+  /** Resolves an [ElideCommandLine] for the linked project at [externalProjectPath]. */
+  fun resolve(externalProjectPath: String): ElideCommandLine {
+    return ElideCommandLine.at(ElideDistributionResolver.getElideHome(project, externalProjectPath), serviceScope)
+  }
+
+  companion object {
+    fun getInstance(project: Project): ElideCliService {
+      return project.getService(ElideCliService::class.java)
+    }
   }
 }

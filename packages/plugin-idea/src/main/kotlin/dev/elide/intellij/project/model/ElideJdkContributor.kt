@@ -33,8 +33,7 @@ class ElideJdkContributor : ElideProjectModelContributor {
     projectPath: Path
   ) {
     // configure the project's JDK
-    // TODO(@darvld): use configured JDK instead of choosing a default
-    val jdkName = ProjectJdkTable.getInstance().allJdks.first().name
+    val jdkName = ProjectJdkTable.getInstance().allJdks.lastOrNull()?.name
     projectNode.createChild(ProjectSdkData.KEY, ProjectSdkData(jdkName))
   }
 
@@ -45,8 +44,7 @@ class ElideJdkContributor : ElideProjectModelContributor {
     projectPath: Path
   ) {
     // configure the module's JDK
-    // TODO(@darvld): use configured JDK instead of choosing a default
-    val jdkName = ProjectJdkTable.getInstance().allJdks.first().name
+    val jdkName = ProjectJdkTable.getInstance().allJdks.lastOrNull()?.name
     moduleNode.createChild(ModuleSdkData.KEY, ModuleSdkData(jdkName))
   }
 }

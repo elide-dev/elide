@@ -868,7 +868,15 @@
       "type": "com.google.common.jimfs.SystemJimfsFileSystemProvider",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "removeFileSystemRunnable",
+          "parameterTypes": [
+            "java.net.URI"
+          ]
+        }
+      ]
     },
     {
       "type": "com.google.common.util.concurrent.AbstractFutureState",
@@ -1256,6 +1264,17 @@
       ]
     },
     {
+      "type": "elide.runtime.core.internals.graalvm.GraalVMConfiguration",
+      "fields": [
+        {
+          "name": "entrypointArgs$volatile"
+        },
+        {
+          "name": "initialized$volatile"
+        }
+      ]
+    },
+    {
       "type": "elide.runtime.diag.DiagnosticsContainer",
       "fields": [
         {
@@ -1416,6 +1435,17 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.abort.AbortSignal",
+      "fields": [
+        {
+          "name": "abortReason$volatile"
+        },
+        {
+          "name": "didAbort$volatile"
         }
       ]
     },
@@ -2801,6 +2831,54 @@
         {
           "name": "<init>",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.runner.AbstractRunner",
+      "fields": [
+        {
+          "name": "activeContext$volatile"
+        },
+        {
+          "name": "activeJob$volatile"
+        },
+        {
+          "name": "closed$volatile"
+        },
+        {
+          "name": "coroutines$volatile"
+        },
+        {
+          "name": "initialized$volatile"
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.runner.AbstractRunnerJob",
+      "fields": [
+        {
+          "name": "allArguments$volatile"
+        },
+        {
+          "name": "currentInputs$volatile"
+        },
+        {
+          "name": "currentOutputs$volatile"
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.runner.jvm.EspressoJvmRunner"
+    },
+    {
+      "type": "elide.runtime.runner.jvm.StandardJvmRunner",
+      "fields": [
+        {
+          "name": "resolvedJavaHome$volatile"
+        },
+        {
+          "name": "runnerOptions$volatile"
         }
       ]
     },
@@ -4398,7 +4476,23 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinJvmCompilerOptions",
@@ -11527,6 +11621,9 @@
     },
     {
       "glob": "META-INF/services/elide.runtime.intrinsics.GuestIntrinsic"
+    },
+    {
+      "glob": "META-INF/services/elide.runtime.runner.Runner"
     },
     {
       "glob": "META-INF/services/elide.tooling.config.BuildConfigurator"

@@ -29,4 +29,11 @@ import elide.tool.cli.GuestLanguage
     defaultValue = "false",
   )
   override var debug: Boolean = false
+
+  @Option(
+    names = ["--jvm:espresso"],
+    description = ["Prefer Espresso over standard JVMs"],
+    defaultValue = "false",
+  )
+  var preferEspresso: Boolean = false
 }

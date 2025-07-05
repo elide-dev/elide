@@ -32,7 +32,7 @@ public object Runners {
    *
    * @return A list of all available [Runner] instances.
    */
-  @JvmStatic public fun jvm(truffle: Boolean? = null): List<JvmRunner> = all()
+  @JvmStatic public fun jvm(job: JvmRunner.JvmRunnerJob, truffle: Boolean? = null): List<JvmRunner> = all()
     .filterIsInstance<JvmRunner>()
     .filter {
       when (truffle) {
@@ -40,5 +40,7 @@ public object Runners {
         true -> it is TruffleRunner
         false -> it !is TruffleRunner
       }
+    }.filter {
+      it.eligible(job)
     }
 }

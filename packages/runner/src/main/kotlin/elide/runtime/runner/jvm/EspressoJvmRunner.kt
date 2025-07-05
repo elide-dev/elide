@@ -26,36 +26,18 @@ private const val RUNNER_ESPRESSO = "espresso"
 // Implements a JVM runner which uses Espresso on Truffle to run JVM bytecode.
 internal class EspressoJvmRunner : AbstractRunner<JvmRunner.JvmRunnerJob>(RUNNER_ESPRESSO), JvmRunner, TruffleRunner {
   // Resolve the entrypoint main method to invoke.
-  private fun resolveMain(clsName: String, guestCls: Value): Pair<Value, Boolean>? {
-    return when (val mainEntry = guestCls.getMember("main/([Ljava/lang/String;)V")) {
-      null -> when (val mainNoArgEntry = guestCls.getMember("main/()V")) {
-        null -> null
-        else -> if (!mainNoArgEntry.canExecute()) {
-          error("Main no-arg entrypoint in class '$clsName' is not executable")
-        } else {
-          mainNoArgEntry to false
-        }
-      }
-      else -> {
-        if (!mainEntry.canExecute()) {
-          error("Main entrypoint in class '$clsName' is not executable")
-        } else {
-          mainEntry to true
-        }
-      }
+  private fun resolveMain(guestCls: Value): Value? {
+    return when (val mainEntry = guestCls.getMember("main/([Ljava/lang/String;)V")?.takeIf { it.canExecute() }) {
+      null -> null
+      else -> mainEntry
     }
   }
 
   // Invoke the main method and return a runner outcome.
   @Suppress("TooGenericExceptionCaught")
-  private fun invokeMain(guestCls: Value, entry: Value, acceptsArgs: Boolean, args: Arguments): RunnerOutcome {
+  private fun invokeMain(guestCls: Value, entry: Value, args: Arguments): RunnerOutcome {
     return try {
-      if (acceptsArgs) {
-        val argsAsArray = args.asArgumentList().toTypedArray()
-        entry.executeVoid(argsAsArray)
-      } else {
-        entry.executeVoid()
-      }
+      entry.executeVoid(args.asArgumentList().toTypedArray())
       success()
     } catch (err: Throwable) {
       err(
@@ -76,11 +58,10 @@ internal class EspressoJvmRunner : AbstractRunner<JvmRunner.JvmRunnerJob>(RUNNER
     }
 
     // next up, the entrypoint method
-    val entry = resolveMain(exec.job.mainClass, mainCls)
+    val entry = resolveMain(mainCls)
     if (entry == null) {
       return err("main method not found in class: ${exec.job.mainClass}")
     }
-    val (entryMethod, acceptsArgs) = entry
-    return invokeMain(mainCls, entryMethod, acceptsArgs, exec.job.arguments)
+    return invokeMain(mainCls, entry, exec.job.arguments)
   }
 }

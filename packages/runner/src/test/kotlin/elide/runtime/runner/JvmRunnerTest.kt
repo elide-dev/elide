@@ -16,6 +16,7 @@ import org.graalvm.polyglot.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import kotlin.test.*
+import elide.runtime.runner.jvm.StandardJvmRunner
 import elide.tooling.Arguments
 import elide.tooling.Classpath
 import elide.tooling.asArgumentString
@@ -24,8 +25,8 @@ class JvmRunnerTest {
   val entrypointCls = "elide.runtime.runner.JvmRunnerEntrypointSample"
   private fun currentClasspath(): Classpath = Classpath.fromCurrent()
 
-  private fun jvmRunnerJob(): JvmRunner.JvmRunnerJob = JvmRunner.of(
-    mainClass = entrypointCls,
+  private fun jvmRunnerJob(entry: String? = null): JvmRunner.JvmRunnerJob = JvmRunner.of(
+    mainClass = entry ?: entrypointCls,
     classpath = currentClasspath(),
     args = Arguments.empty(),
   )
@@ -51,17 +52,20 @@ class JvmRunnerTest {
   }
 
   @Test fun testResolveJvmRunner() {
-    val jvmRunners = assertNotNull(Runners.jvm())
+    val runnerJob = jvmRunnerJob()
+    val jvmRunners = assertNotNull(Runners.jvm(runnerJob))
     assertTrue(jvmRunners.isNotEmpty())
   }
 
   @Test fun testResolveJvmTruffleRunner() {
-    val jvmRunner = assertNotNull(Runners.jvm(truffle = true)).first()
+    val runnerJob = jvmRunnerJob()
+    val jvmRunner = assertNotNull(Runners.jvm(runnerJob, truffle = true)).first()
     assertTrue(jvmRunner is TruffleRunner)
   }
 
   @Test fun testResolveJvmNonTruffleRunner() {
-    val jvmRunner = assertNotNull(Runners.jvm(truffle = false)).first()
+    val runnerJob = jvmRunnerJob()
+    val jvmRunner = assertNotNull(Runners.jvm(runnerJob, truffle = false)).first()
     assertTrue(jvmRunner !is TruffleRunner)
   }
 
@@ -71,7 +75,7 @@ class JvmRunnerTest {
 
   @Test fun testRunnerJobOnTruffle() = runTest {
     val job = jvmRunnerJob()
-    val runner = Runners.jvm(truffle = true).first().prepare()
+    val runner = Runners.jvm(job, truffle = true).first().prepare()
     assertIs<TruffleRunner>(runner)
     val outcome = assertNotNull(runner(job))
     assertIs<RunnerOutcome.Success>(outcome)
@@ -79,9 +83,59 @@ class JvmRunnerTest {
 
   @Test fun testRunnerJobOnStandardJvm() = runTest {
     val job = jvmRunnerJob()
-    val runner = Runners.jvm(truffle = false).first().prepare()
+    val runner = Runners.jvm(job, truffle = false).first().prepare()
     assertIsNot<TruffleRunner>(runner)
     val outcome = assertNotNull(runner(job))
     assertIs<RunnerOutcome.Success>(outcome)
+  }
+
+  @Test fun testRunnerJobOnStandardJvmClsNotFound() = runTest {
+    val job = jvmRunnerJob("some.unknown.Class")
+    val runner = Runners.jvm(job, truffle = false).first().prepare()
+    assertIsNot<TruffleRunner>(runner)
+    val outcome = assertNotNull(runner(job))
+    assertIsNot<RunnerOutcome.Success>(outcome)
+  }
+
+  @Test fun testRunnerJobOnTruffleJvmClsNotFound() = runTest {
+    val job = jvmRunnerJob("some.unknown.Class")
+    val runner = Runners.jvm(job, truffle = true).first().prepare()
+    assertIs<TruffleRunner>(runner)
+    val outcome = assertNotNull(runner(job))
+    assertIsNot<RunnerOutcome.Success>(outcome)
+  }
+
+  @Test fun testRunnerJobOnTruffleJvmClsNotRunnable() = runTest {
+    val job = jvmRunnerJob("elide.runtime.runner.JvmRunnerNoEntrypointSample")
+    val runner = Runners.jvm(job, truffle = true).first().prepare()
+    assertIs<TruffleRunner>(runner)
+    val outcome = assertNotNull(runner(job))
+    assertIsNot<RunnerOutcome.Success>(outcome)
+  }
+
+  @Test fun testRunnerJobOnStandardJvmClsNotRunnable() = runTest {
+    val job = jvmRunnerJob("elide.runtime.runner.JvmRunnerNoEntrypointSample")
+    val runner = Runners.jvm(job, truffle = false).first().prepare()
+    assertIsNot<TruffleRunner>(runner)
+    val outcome = assertNotNull(runner(job))
+    assertIsNot<RunnerOutcome.Success>(outcome)
+  }
+
+  @Test fun testRunnerJobOnStandardJvmReflective() = runTest {
+    val job = jvmRunnerJob()
+    val runner = Runners.jvm(job, truffle = false).first().prepare()
+    assertIsNot<TruffleRunner>(runner)
+    assertIs<StandardJvmRunner>(runner)
+    try {
+      runner.configureStandardJvmRunner(StandardJvmRunner.JvmRunnerOptions(
+        reflective = true,  // force reflective in-proc mode
+      ))
+      val outcome = assertNotNull(runner(job))
+      assertIs<RunnerOutcome.Success>(outcome)
+    } finally {
+      runner.configureStandardJvmRunner(StandardJvmRunner.JvmRunnerOptions(
+        reflective = false,
+      ))
+    }
   }
 }

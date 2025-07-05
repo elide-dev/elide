@@ -51,13 +51,11 @@ public abstract class AbstractRunner<T: RunnerJob>(private val name: String) : R
 
   override fun accept(job: T): Unit = withActive {
     runBlocking {
-      coroutineScope {
-        activeJob.value = async(requireNotNull(coroutines.value), start = kotlinx.coroutines.CoroutineStart.DEFAULT) {
-          invoke(object: RunnerExecution<T> {
-            override val job: T = job
-            override val context: Context = requireNotNull(activeContext.value) { "Context not ready for execution" }
-          })
-        }
+      activeJob.value = async(requireNotNull(coroutines.value), start = kotlinx.coroutines.CoroutineStart.DEFAULT) {
+        invoke(object: RunnerExecution<T> {
+          override val job: T = job
+          override val context: Context = requireNotNull(activeContext.value) { "Context not ready for execution" }
+        })
       }
     }
   }

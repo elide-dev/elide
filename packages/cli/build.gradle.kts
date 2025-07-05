@@ -462,6 +462,7 @@ dependencies {
   implementation(projects.packages.terminal)
   implementation(projects.packages.localAi)
   implementation(projects.packages.telemetry)
+  implementation(projects.packages.runner)
   implementation(libs.dirs)
   implementation(libs.snakeyaml)
   implementation(mn.micronaut.json.core)

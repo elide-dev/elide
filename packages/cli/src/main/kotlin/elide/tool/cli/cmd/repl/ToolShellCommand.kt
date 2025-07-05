@@ -110,6 +110,9 @@ import elide.runtime.plugins.jvm.Jvm
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.runtime.precompiler.Precompiler
+import elide.runtime.runner.JvmRunner
+import elide.runtime.runner.RunnerOutcome
+import elide.runtime.runner.Runners
 import elide.tooling.Classpath
 import elide.tooling.ClasspathProvider
 import elide.tooling.ClasspathSpec
@@ -143,6 +146,7 @@ import elide.tool.exec.allProjectPaths
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.project.ProjectManager
+import elide.tooling.Arguments
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
@@ -167,6 +171,9 @@ import elide.tooling.project.manifest.NodePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 import elide.tooling.runner.ProcessRunner
 import elide.tooling.runner.TestRunner
+
+// Whether to use Espresso as the JVM engine by default.
+private const val USE_TRUFFLE_JVM_DEFAULT = false
 
 /**
  * Type alias for an accessor method which allows an optional builder amendment.
@@ -1259,37 +1266,62 @@ internal class ToolShellCommand @Inject constructor(
     )
   }
 
-  private fun executeGuestMain(name: String, guestCls: Value): Value {
-    return when (val mainEntry = guestCls.getMember("main/([Ljava/lang/String;)V")) {
-      null -> when (val mainNoArgEntry = guestCls.getMember("main/()V")) {
-        null -> error(
-          "Failed to locate main entrypoint in class '$name'. Found members: '" +
-          "${guestCls.memberKeys.joinToString(", ")}'."
-        )
-        else -> if (!mainNoArgEntry.canExecute()) {
-          error("Main no-arg entrypoint in class '$name' is not executable")
+  // Resolve a JVM runner implementation to use, and then invoke `main` with it.
+  private fun PolyglotContext.executeWithJvmRunner(main: String, truffle: Boolean = USE_TRUFFLE_JVM_DEFAULT) {
+    val useTruffle = truffle || jvmSettings.preferEspresso || testMode()
+    logging.debug("Prefer JVM truffle: $useTruffle")
+
+    runBlocking {
+      val secondOrderArgs = buildList {
+        val positionOfDashes = Statics.args.indexOf("--")
+        if (positionOfDashes >= 0) {
+          for (i in positionOfDashes + 1 until Statics.args.size) {
+            add(Statics.args[i])
+          }
+        }
+      }.let {
+        if (it.isEmpty()) {
+          Arguments.empty()
         } else {
-          mainNoArgEntry.execute()
+          Arguments.from(it)
         }
       }
-      else -> {
-        if (!mainEntry.canExecute()) {
-          error("Main entrypoint in class '$name' is not executable")
-        } else {
-          // pull all args after `--`
-          val secondOrderArgs = Statics.args.let { args ->
-            val positionOfDoubleDash = args.indexOf("--")
-            if (positionOfDoubleDash < 0) {
-              emptyArray()
-            } else {
-              val secondaryArgs = LinkedList<String>()
-              for (i in positionOfDoubleDash + 1 until args.size) {
-                secondaryArgs.add(args[i])
-              }
-              secondaryArgs.toTypedArray()
-            }
+      val job = JvmRunner.of(
+        mainClass = main,
+        classpath = Classpath.from(fullClasspath),
+        args = secondOrderArgs,
+      )
+      val runner = Runners.jvm(job, truffle = useTruffle).firstOrNull() ?: error("No suitable JVM runner found")
+      logging.debug("Resolved runner: $runner")
+      runner.configure(context = unwrap(), coroutineContext = Dispatchers.Default)
+
+      runner(job).let { outcome ->
+        when (outcome) {
+          RunnerOutcome.Success -> {
+            logging.debug("JVM runner executed successfully")
           }
-          mainEntry.execute(secondOrderArgs)
+          is RunnerOutcome.Failure -> {
+            val cause = outcome.cause
+            error(buildString {
+              append("failed to run: ${outcome.message}")
+              if (cause != null) {
+                append(" Caused by: ")
+                append(cause::class.java.name)
+                val msg = cause.message?.ifBlank { null }
+                if (msg != null) {
+                  append(": $msg")
+                }
+              }
+              val stacktrace = cause?.stackTraceToString()
+              if (stacktrace != null && stacktrace.isNotBlank()) {
+                append("\nStacktrace:\n$stacktrace")
+              }
+            })
+
+            error(
+              "failed to run: ${outcome.message}",
+            )
+          }
         }
       }
     }
@@ -1304,10 +1336,8 @@ internal class ToolShellCommand @Inject constructor(
         val mainClass = resolveMainClassRequired(entry)
 
         ctxAccessor().let { ctx: PolyglotContext ->
-          when (val guestCls = ctx.bindings(Jvm).getMember(mainClass)) {
-            null -> error("Failed to locate entry class '$mainClass' (at '$entry')")
-            else -> executeGuestMain(mainClass, guestCls)
-          }
+          ctx.executeWithJvmRunner(mainClass)
+          Value.asValue(null) // @TODO remove this return value
         }
       }
 
@@ -1353,10 +1383,8 @@ internal class ToolShellCommand @Inject constructor(
                 else -> specified
               }
               ctxAccessor().let { ctx: PolyglotContext ->
-                when (val guestCls = ctx.bindings(Jvm).getMember(entry)) {
-                  null -> error("Failed to locate entry class '${it.name}' (at '$entry')")
-                  else -> executeGuestMain(it.name, guestCls)
-                }
+                ctx.executeWithJvmRunner(entry)
+                Value.asValue(null) // @TODO remove this return value
               }
             }
           }

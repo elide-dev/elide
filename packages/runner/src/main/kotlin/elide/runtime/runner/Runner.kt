@@ -33,6 +33,17 @@ public sealed interface Runner<T> : AutoCloseable, Consumer<T> where T: RunnerJo
   public val info: RunnerInfo
 
   /**
+   * Decide whether this runner is eligible to run the given [job]. This method should be used to determine if the
+   * runner itself is supported.
+   *
+   * @param job The [JvmRunner.JvmRunnerJob] to check for eligibility.
+   * @return `true` if the runner is eligible to run the job, `false` otherwise.
+   */
+  public fun eligible(job: JvmRunner.JvmRunnerJob): Boolean {
+    return true
+  }
+
+  /**
    * Assign a Truffle [context] to use for this runner. This method must be called at least once before invoking the
    * runner with a job, if the runner plans to use Truffle execution facilities.
    *

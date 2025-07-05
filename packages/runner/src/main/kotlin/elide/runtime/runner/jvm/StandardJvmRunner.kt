@@ -36,7 +36,7 @@ internal class StandardJvmRunner : AbstractRunner<JvmRunner.JvmRunnerJob>(RUNNER
   // Install custom options for the standard JVM runner.
   fun configureStandardJvmRunner(options: JvmRunnerOptions): StandardJvmRunner = apply {
     runnerOptions.value = options
-    if (options.javahome != null || options.javahome != resolvedJavaHome.value) {
+    if (options.javahome != null && options.javahome != resolvedJavaHome.value) {
       resolvedJavaHome.value = null  // refresh
     }
   }
@@ -53,11 +53,24 @@ internal class StandardJvmRunner : AbstractRunner<JvmRunner.JvmRunnerJob>(RUNNER
   // Resolve the Java Home to use for this runner.
   private fun javaHome(): Path? = when (val currentHome = resolvedJavaHome.value) {
     null -> {
-      val javaHomeEnv = System.getenv("JAVA_HOME")
-      if (javaHomeEnv != null) {
-        Path.of(javaHomeEnv).also { resolvedJavaHome.value = it }
+      val assigned = runnerOptions.value.javahome
+      if (assigned != null) {
+        assigned.also { resolvedJavaHome.value = it }
       } else {
-        null // no Java Home available
+        val javaHomeEnv = System.getenv("JAVA_HOME")
+        if (javaHomeEnv != null) {
+          Path.of(javaHomeEnv).also { resolvedJavaHome.value = it }
+        } else if (!ImageInfo.inImageCode()) {
+          val javaHomeByProperty = System.getProperty("java.home")
+          if (javaHomeByProperty != null) {
+            Path.of(javaHomeByProperty).also { resolvedJavaHome.value = it }
+          } else {
+            null // no Java Home available
+          }
+        } else {
+          // cannot use `java.home` in image code
+          null
+        }
       }
     }
 
@@ -102,11 +115,11 @@ internal class StandardJvmRunner : AbstractRunner<JvmRunner.JvmRunnerJob>(RUNNER
         addAllStrings(jvmArgs.asArgumentList())
 
         add("-cp")
-        add(exec.job.classpath.joinToString(separator = ":") { it.path.absolutePathString() })
+        add(exec.job.classpath.joinToString(separator = File.pathSeparator) { it.path.absolutePathString() })
 
         exec.job.modulepath?.let { modulepath ->
           add("--module-path")
-          add(modulepath.joinToString(separator = ":") { it.path.absolutePathString() })
+          add(modulepath.joinToString(separator = File.pathSeparator) { it.path.absolutePathString() })
         }
 
         if (exec.job.mainModule.isPresent) {
@@ -149,6 +162,8 @@ internal class StandardJvmRunner : AbstractRunner<JvmRunner.JvmRunnerJob>(RUNNER
       }
     }
   }
+
+  override fun eligible(job: JvmRunner.JvmRunnerJob): Boolean = javaHome() != null
 
   override suspend fun invoke(exec: RunnerExecution<JvmRunner.JvmRunnerJob>): RunnerOutcome = when {
     // reflective invocation within this JVM is only supported in non-image contexts, and when activated.

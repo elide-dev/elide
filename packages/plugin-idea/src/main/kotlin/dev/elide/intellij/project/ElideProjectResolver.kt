@@ -21,14 +21,18 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
+import com.intellij.openapi.progress.coroutineToIndicator
 import com.intellij.openapi.progress.runBlockingCancellable
 import dev.elide.intellij.Constants
+import dev.elide.intellij.cli.ElideCommandLine
+import dev.elide.intellij.cli.install
 import dev.elide.intellij.manifests.ElideManifestService
 import dev.elide.intellij.project.model.ElideProjectModel
 import dev.elide.intellij.service.ElideDistributionResolver
 import dev.elide.intellij.settings.ElideExecutionSettings
 import org.jetbrains.annotations.PropertyKey
 import java.nio.file.Path
+import kotlinx.coroutines.launch
 import kotlin.io.path.Path
 import kotlin.io.path.notExists
 import elide.tooling.lockfile.LockfileLoader
@@ -65,6 +69,9 @@ class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSetting
     listener: ExternalSystemTaskNotificationListener
   ): DataNode<ProjectData>? {
     return runBlockingCancellable {
+      coroutineToIndicator {
+
+      }
       LOG.debug("Resolving project at '$projectPath'")
 
       val projectModel = runCatching {
@@ -82,13 +89,34 @@ class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSetting
         listener.onStep(id, progressMessage("resolve.steps.parse"))
         val manifest = ElideManifestService().parse(manifestPath)
 
-        // call the CLI in case the lockfile is outdated
-        listener.onStep(id, progressMessage("resolve.steps.refresh"))
-
         // configure the project
         listener.onStep(id, progressMessage("resolve.steps.configure"))
         val loader = buildProjectLoader(projectRoot, settings)
         val project = ElideProjectInfo(projectRoot, manifest, null).load(loader)
+
+        // call the CLI in case the lockfile is outdated
+        listener.onStep(id, progressMessage("resolve.steps.refresh"))
+        val elideHome = settings?.elideHome ?: ElideDistributionResolver.defaultDistributionPath()
+        val cli = ElideCommandLine.at(elideHome, projectRoot)
+
+        val exitCode = cli.install(
+          withSources = settings?.downloadSources ?: true,
+          withDocs = settings?.downloadDocs ?: true,
+        ) { process ->
+          // pass process output on to the IDE
+          launch {
+            process.inputStream.bufferedReader().forEachLine {
+              listener.onTaskOutput(id, "$it\n", true)
+            }
+          }
+          launch {
+            process.errorStream.bufferedReader().forEachLine {
+              listener.onTaskOutput(id, "$it\n", false)
+            }
+          }
+        }
+
+        if (exitCode != 0) error("Command 'elide install' failed with exit code $exitCode")
 
         // build the project model from the manifest and lockfile
         listener.onStep(id, progressMessage("resolve.steps.buildModel"))

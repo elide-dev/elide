@@ -1,0 +1,83 @@
+package dev.elide.intellij.cli
+
+import com.intellij.openapi.project.Project
+import com.intellij.util.io.awaitExit
+import dev.elide.intellij.Constants
+import dev.elide.intellij.service.ElideDistributionResolver
+import java.nio.file.Path
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+
+/**
+ * Bridge service used to invoke the Elide CLI on a configured distribution. Use [ElideCommandLine.at] to manually set
+ * the path to the distribution or [ElideCommandLine.resolve] to automatically retrieve the path from the project
+ * settings.
+ */
+class ElideCommandLine private constructor(
+  private val elideHome: Path,
+  private val workDir: Path? = null,
+) {
+  /**
+   * Launch the Elide CLI binary as a subprocess and suspend until it finishes executing. The supplied [block] will
+   * be called after the process is launched, and can be used to interact with it in any way; note that it is not
+   * necessary to use [awaitExit] in [block], as it is already called before returning.
+   *
+   * Calling this method directly is discouraged in favor of command-specific extensions like [install], which provide
+   * type-safe handling of arguments.
+   */
+  suspend operator fun <R> invoke(
+    buildCommand: MutableList<String>.() -> Unit,
+    block: suspend CoroutineScope.(Process) -> R
+  ): R {
+    val elideBin = elideHome.resolve(Constants.ELIDE_BINARY)
+    val command = buildList {
+      add(elideBin.toString())
+      buildCommand()
+    }
+
+    val process = ProcessBuilder(command)
+      .also { if (workDir != null) it.directory(workDir.toFile()) }
+      .start()
+
+    return coroutineScope {
+      val result = async { block(process) }
+
+      process.awaitExit()
+      result.await()
+    }
+  }
+
+  companion object {
+    /** Returns an [ElideCommandLine] at the given [elideHome], optionally using [workDir] when invoking commands. */
+    @JvmStatic fun at(elideHome: Path, workDir: Path? = null): ElideCommandLine {
+      return ElideCommandLine(elideHome, workDir)
+    }
+
+    /** Returns an [ElideCommandLine] configured according to a linked external project's settings. */
+    @JvmStatic fun resolve(project: Project, externalProjectPath: String, workDir: Path? = null): ElideCommandLine {
+      return at(ElideDistributionResolver.getElideHome(project, externalProjectPath), workDir)
+    }
+  }
+}
+
+/**
+ * Calls `elide install`, optionally passing [`--with=sources`][withSources] and [`--with=docs`][withDocs], and returns
+ * the exit code. The [useProcess] block can be used to access the output streams for monitoring the operation.
+ */
+suspend fun ElideCommandLine.install(
+  withSources: Boolean = true,
+  withDocs: Boolean = true,
+  useProcess: suspend CoroutineScope.(Process) -> Unit = {},
+): Int {
+  return invoke(
+    buildCommand = {
+      add("install")
+      if (withSources) add("--with=sources")
+      if (withDocs) add("--with=docs")
+    },
+  ) {
+    useProcess(it)
+    it.awaitExit()
+  }
+}

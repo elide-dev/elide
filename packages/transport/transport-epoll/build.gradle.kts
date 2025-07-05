@@ -29,7 +29,6 @@ elide {
 
   jvm {
     alignVersions = true
-    target = JvmTarget.JVM_22
   }
 
   publishing {

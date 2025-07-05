@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.toolchain.host.TargetInfo
 
@@ -28,6 +29,7 @@ elide {
     explicitApi = true
     customKotlinCompilerArgs += listOf("-Xcontext-receivers")
   }
+
   checks {
     diktat = false
   }

@@ -221,8 +221,10 @@ public final class elide/runtime/core/PolyglotContextKt {
 }
 
 public abstract interface class elide/runtime/core/PolyglotEngine {
-	public abstract fun acquire (Lkotlin/jvm/functions/Function1;)Lelide/runtime/core/PolyglotContext;
+	public fun acquire (Lkotlin/jvm/functions/Function1;)Lelide/runtime/core/PolyglotContext;
+	public abstract fun acquire (ZLkotlin/jvm/functions/Function1;)Lelide/runtime/core/PolyglotContext;
 	public static synthetic fun acquire$default (Lelide/runtime/core/PolyglotEngine;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/core/PolyglotContext;
+	public static synthetic fun acquire$default (Lelide/runtime/core/PolyglotEngine;ZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/core/PolyglotContext;
 	public abstract fun unwrap ()Lorg/graalvm/polyglot/Engine;
 }
 
@@ -1106,6 +1108,8 @@ public final class elide/runtime/plugins/AbstractLanguagePluginKt {
 	public static final fun defaultPolyglotContextBuilder ()Lorg/graalvm/polyglot/Context$Builder;
 	public static final fun defaultPolyglotEngine ()Lorg/graalvm/polyglot/Engine;
 	public static final fun defaultPolyglotEngineBuilder ()Lorg/graalvm/polyglot/Engine$Builder;
+	public static final fun initializeDefaultContext (Lorg/graalvm/polyglot/Context$Builder;Z)Lorg/graalvm/polyglot/Context$Builder;
+	public static synthetic fun initializeDefaultContext$default (Lorg/graalvm/polyglot/Context$Builder;ZILjava/lang/Object;)Lorg/graalvm/polyglot/Context$Builder;
 }
 
 public abstract class elide/runtime/plugins/JVMLanguageConfig : elide/runtime/plugins/AbstractLanguageConfig {

@@ -40,6 +40,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.TimeSource
 import elide.runtime.Logger
 import elide.runtime.core.PolyglotContext
+import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.telemetry.RunEvent
@@ -491,7 +492,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
     )
   }
 
-  @Synchronized protected fun resolveEngine(langs: Set<GuestLanguage>): PolyglotEngine {
+  @Synchronized protected fun resolveEngine(langs: Set<GuestLanguage> = emptySet()): PolyglotEngine {
     return when (val ready = engine.value) {
       null -> createEngine(langs).also { engine.value = it }
       else -> ready
@@ -504,7 +505,11 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
    *
    * Subclasses should prefer [withContext] as it provides a limited scope in which the context can be used.
    */
-  protected fun resolvePolyglotContext(langs: Set<GuestLanguage>): PolyglotContext {
+  protected fun resolvePolyglotContext(
+    langs: Set<GuestLanguage>,
+    shared: Boolean = false,
+    cfg: (PolyglotContextBuilder.() -> Unit) = {},
+  ): PolyglotContext {
     logging.debug("Resolving context for current thread")
 
     // already initialized on the current thread
@@ -515,7 +520,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
 
     // not initialized yet, acquire a new one and store it
     logging.debug("No cached context found for current thread, acquiring new context")
-    return resolveEngine(langs).acquire().also { created ->
+    return resolveEngine(langs).acquire(shared = shared, cfg).also { created ->
       contextHandle.set(created)
     }
   }
@@ -672,9 +677,14 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
    * The first invocation of this method will cause the [engine] to be initialized, triggering the
    * [configureEngine] event.
    */
-  protected open fun withDeferredContext(langs: Set<GuestLanguage>, block: (() -> PolyglotContext) -> Unit) {
+  protected open fun withDeferredContext(
+    langs: Set<GuestLanguage>,
+    cfg: PolyglotContextBuilder.() -> Unit = {},
+    shared: Boolean = true,
+    block: (() -> PolyglotContext) -> Unit,
+  ) {
     block.invoke {
-      resolvePolyglotContext(langs)
+      resolvePolyglotContext(langs, shared, cfg)
     }
   }
 

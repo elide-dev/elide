@@ -4283,6 +4283,24 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$Artifact"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$DevSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ContainerImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,

@@ -195,6 +195,7 @@ magicProgress = "0.3.2"
 maven-core = "3.9.9"
 maven-lib = "1.9.22"
 maven-wagon = "3.5.3"
+mcp = "0.5.0"
 mermaidDokka = "0.6.0"
 micronaut = "4.9.5"
 micronaut-aot = "2.8.0"
@@ -697,6 +698,7 @@ maven-resolver-transport-wagon = { group = "org.apache.maven.resolver", name = "
 maven-resolver-impl = { group = "org.apache.maven.resolver", name = "maven-resolver-impl", version.ref = "maven-lib" }
 maven-resolver-api = { group = "org.apache.maven.resolver", name = "maven-resolver-api", version.ref = "maven-lib" }
 magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
+mcp = { group = "io.modelcontextprotocol", name = "kotlin-sdk", version.ref = "mcp" }
 mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
 mordant-coroutines = { group = "com.github.ajalt.mordant", name = "mordant-coroutines", version.ref = "mordant" }
 mordant-markdown = { group = "com.github.ajalt.mordant", name = "mordant-markdown", version.ref = "mordant" }

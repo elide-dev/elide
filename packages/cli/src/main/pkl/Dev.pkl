@@ -28,11 +28,17 @@ class ProjectSourceSpec {
   subpath: String?
 }
 
+/// LSP (Language Server Protocol) settings for the project.
+class LspSettings {
+  /// Additional delegated LSP servers, in the format `[languageId@][[host]:port]`.
+  delegates: Listing<String> = new {}
+}
+
 /// Development settings for the project.
 class DevSettings {
   /// Source info for the project.
   source: ProjectSourceSpec?
 
-  // CI configuration for this project.
-  // ci: ci.ContinuousIntegration?
+  /// Settings which apply to the project's language server.
+  lsp: LspSettings?
 }

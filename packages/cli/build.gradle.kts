@@ -546,6 +546,7 @@ dependencies {
   implementation(projects.packages.builder)
   implementation(libs.bundles.maven.model)
   implementation(libs.bundles.maven.resolver)
+  implementation(libs.mcp)
 
   // GraalVM: Engines
   implementation(projects.packages.graalvm)
@@ -586,6 +587,8 @@ dependencies {
   implementation(libs.graalvm.tools.dap)
   implementation(libs.graalvm.tools.chromeinspector)
   implementation(libs.graalvm.tools.profiler)
+  implementation(libs.graalvm.tools.lsp.api)
+  implementation(libs.graalvm.tools.lsp.impl)
 
   // TODO: patched
   // implementation(libs.graalvm.tools.coverage)

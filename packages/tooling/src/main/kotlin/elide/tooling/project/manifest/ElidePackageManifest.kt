@@ -51,6 +51,7 @@ public data class ElidePackageManifest(
   val ruby: RubySettings? = null,
   val pkl: PklSettings? = null,
   val nativeImage: NativeImageSettings? = null,
+  val dev: DevSettings? = null,
   val sources: Map<String, SourceSet> = emptyMap(),
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
@@ -75,6 +76,21 @@ public data class ElidePackageManifest(
   @Serializable public data class JarResource(
     val path: String,
     val position: String,
+  )
+
+  @Serializable public data class ProjectSourceSpec(
+    val platform: String? = null,
+    val project: String? = null,
+    val subpath: String? = null,
+  )
+
+  @Serializable public data class LspSettings(
+    val delegates: List<String>? = null,
+  )
+
+  @Serializable public data class DevSettings(
+    val source: ProjectSourceSpec? = null,
+    val lsp: LspSettings? = null,
   )
 
   @Serializable public data class Jar(

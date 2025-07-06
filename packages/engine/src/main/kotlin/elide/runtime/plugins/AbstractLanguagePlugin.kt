@@ -100,7 +100,7 @@ private val contextHostAccess = HostAccess.newBuilder(HostAccess.ALL)
 
 // Initialize default context settings.
 @OptIn(DelicateElideApi::class)
-private fun Context.Builder.initializeDefaultContext(defaults: Boolean = false): Context.Builder = apply {
+public fun Context.Builder.initializeDefaultContext(defaults: Boolean = false): Context.Builder = apply {
   allowExperimentalOptions(true)
   allowValueSharing(true)
   allowCreateThread(true)

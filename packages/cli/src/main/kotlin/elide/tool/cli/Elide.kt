@@ -46,6 +46,8 @@ import elide.tool.cli.cmd.builder.ToolWhichCommand
 import elide.tool.cli.cmd.checks.ToolCheckCommand
 import elide.tool.cli.cmd.deps.AddCommand
 import elide.tool.cli.cmd.deps.InstallCommand
+import elide.tool.cli.cmd.dev.LspCommand
+import elide.tool.cli.cmd.dev.McpCommand
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
@@ -125,6 +127,8 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     JibAdapter.JibCliTool::class,
     ToolPklCommand::class,
     ToolDiscordCommand::class,
+    LspCommand::class,
+    McpCommand::class,
   ],
   customSynopsis = [
     "",

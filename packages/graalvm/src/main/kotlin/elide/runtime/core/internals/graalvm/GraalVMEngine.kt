@@ -21,7 +21,6 @@ import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Context.Builder
 import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.EnvironmentAccess
-import org.graalvm.polyglot.PolyglotAccess
 import org.graalvm.polyglot.Value
 import java.io.InputStream
 import java.io.OutputStream
@@ -32,26 +31,19 @@ import java.util.logging.Level
 import java.util.logging.LogRecord
 import kotlinx.io.IOException
 import kotlin.io.path.Path
-import kotlin.math.max
-import kotlin.math.min
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.runtime.core.*
 import elide.runtime.core.EngineLifecycleEvent.*
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess.*
-import elide.runtime.core.extensions.disableOption
-import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMEngine.Companion.create
-import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23
-import elide.runtime.core.internals.graalvm.GraalVMRuntime.Companion.GVM_23_1
 import elide.runtime.lang.typescript.TypeScriptLanguage
 import elide.runtime.plugins.defaultPolyglotContextBuilder
 import elide.runtime.plugins.defaultPolyglotEngine
 import elide.runtime.plugins.defaultPolyglotEngineBuilder
-import elide.vm.annotations.Polyglot
-import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
+import elide.runtime.plugins.initializeDefaultContext
 
 /**
  * A [PolyglotEngine] implementation built around a GraalVM [engine]. This class allows plugins to configure the
@@ -81,11 +73,23 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
   override fun unwrap(): Engine = engine
 
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
-  private fun createContext(cfg: Builder.() -> Unit, finalizer: Builder.() -> Context = { build() }): GraalVMContext {
+  private fun createContext(
+    shared: Boolean,
+    cfg: Builder.() -> Unit,
+    finalizer: Builder.() -> Context = { build() },
+  ): GraalVMContext {
     // build a new context using the shared engine
-    val builder = defaultPolyglotContextBuilder()
-      .allowEnvironmentAccess(config.hostAccess.toEnvAccess())
-      .engine(engine)
+    val builder = (if (shared) {
+      defaultPolyglotContextBuilder()
+    } else {
+      Context.newBuilder()
+        .initializeDefaultContext(defaults = true)
+    }).apply {
+      allowEnvironmentAccess(config.hostAccess.toEnvAccess())
+      if (shared) {
+        engine(engine)
+      }
+    }
 
     // allow plugins to customize the context on creation
     lifecycle.emit(ContextCreated, builder)
@@ -145,8 +149,8 @@ import org.graalvm.polyglot.HostAccess as PolyglotHostAccess
     }
   }
 
-  override fun acquire(cfg: Builder.() -> Unit): PolyglotContext {
-    return createContext(cfg)
+  override fun acquire(shared: Boolean, cfg: Builder.() -> Unit): PolyglotContext {
+    return createContext(shared, cfg)
   }
 
   public companion object {

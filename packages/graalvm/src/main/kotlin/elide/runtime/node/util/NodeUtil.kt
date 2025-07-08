@@ -48,6 +48,7 @@ private const val F_PROMISIFY = "promisify"
 private const val F_DEBUGLOG = "debuglog"
 private const val F_DEBUGLOG_ALT = "debug"
 private const val F_DEPRECATE = "deprecate"
+private const val F_IS_ARRAY = "isArray"
 private const val F_TRANSFERABLE_ABORT_CONTROLLER = "transferableAbortController"
 private const val F_TRANSFERABLE_ABORT_SIGNAL = "transferableAbortSignal"
 private const val P_CLS_TEXTENCODER = "TextEncoder"
@@ -63,6 +64,7 @@ private val moduleMembers = arrayOf(
   F_DEPRECATE,
   F_TRANSFERABLE_ABORT_CONTROLLER,
   F_TRANSFERABLE_ABORT_SIGNAL,
+  F_IS_ARRAY,
 )
 
 // Installs the Node `util` module into the intrinsic bindings.
@@ -108,6 +110,7 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
         .getOrNull()?.let { transferableAbortSignal(it) }
         ?: throw JsError.typeError("`transferableAbortSignal` requires an AbortSignal instance")
     }
+    F_IS_ARRAY -> ProxyExecutable { args -> isArray(args.firstOrNull()) }
     else -> null
   }
 
@@ -210,4 +213,9 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
   @Polyglot override fun transferableAbortSignal(signal: AbortSignal): AbortSignal = signal.apply {
     markTransferable()
   }
+
+  @Polyglot override fun isArray(value: Value?): Boolean = (
+    value != null &&
+    value.hasArrayElements()
+  )
 }

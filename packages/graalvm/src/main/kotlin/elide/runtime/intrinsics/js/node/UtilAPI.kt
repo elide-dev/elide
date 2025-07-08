@@ -16,6 +16,8 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.annotations.API
 import elide.runtime.gvm.js.JsError
+import elide.runtime.intrinsics.js.AbortController
+import elide.runtime.intrinsics.js.AbortSignal
 import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.vm.annotations.Polyglot
 
@@ -157,4 +159,25 @@ import elide.vm.annotations.Polyglot
       code?.takeIf { it.isString }?.asString(),
     )
   }
+
+  /**
+   * ## Transferable Abort Controller
+   *
+   * Creates a new [AbortController] which is marked for transferability, meaning it can safely be transferred across
+   * threading contexts and used via `postMessage` or similar mechanisms.
+   *
+   * @return A transferable [AbortController] instance that can be used across contexts.
+   */
+  @Polyglot public fun transferableAbortController(): AbortController
+
+  /**
+   * ## Transferable Abort Signal
+   *
+   * Marks an [AbortSignal] as transferable, meaning it can be transferred across threading contexts and used via
+   * `postMessage` or similar mechanisms.
+   *
+   * @param signal [AbortSignal] to mark as transferable.
+   * @return The marked abort signal.
+   */
+  @Polyglot public fun transferableAbortSignal(signal: AbortSignal): AbortSignal
 }

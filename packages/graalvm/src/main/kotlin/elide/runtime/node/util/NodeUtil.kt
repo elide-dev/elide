@@ -33,18 +33,23 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.js.AbortController
+import elide.runtime.intrinsics.js.AbortSignal
 import elide.runtime.intrinsics.js.JsPromise.Companion.promise
 import elide.runtime.intrinsics.js.node.UtilAPI
 import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.vm.annotations.Polyglot
+import elide.runtime.gvm.internals.intrinsics.js.abort.AbortController.Factory as AbortControllerFactory
 
 private const val F_CALLBACKIFY = "callbackify"
 private const val F_PROMISIFY = "promisify"
 private const val F_DEBUGLOG = "debuglog"
 private const val F_DEBUGLOG_ALT = "debug"
 private const val F_DEPRECATE = "deprecate"
+private const val F_TRANSFERABLE_ABORT_CONTROLLER = "transferableAbortController"
+private const val F_TRANSFERABLE_ABORT_SIGNAL = "transferableAbortSignal"
 private const val P_CLS_TEXTENCODER = "TextEncoder"
 private const val P_CLS_TEXTDECODER = "TextDecoder"
 
@@ -56,6 +61,8 @@ private val moduleMembers = arrayOf(
   F_DEBUGLOG,
   F_DEBUGLOG_ALT,
   F_DEPRECATE,
+  F_TRANSFERABLE_ABORT_CONTROLLER,
+  F_TRANSFERABLE_ABORT_SIGNAL,
 )
 
 // Installs the Node `util` module into the intrinsic bindings.
@@ -94,6 +101,12 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
         1 -> deprecate(args.first())
         else -> deprecate(args.first(), args[1], args.getOrNull(2))
       }
+    }
+    F_TRANSFERABLE_ABORT_CONTROLLER -> ProxyExecutable { transferableAbortController() }
+    F_TRANSFERABLE_ABORT_SIGNAL -> ProxyExecutable {
+      runCatching { it.firstOrNull()?.asProxyObject<AbortSignal>() }
+        .getOrNull()?.let { transferableAbortSignal(it) }
+        ?: throw JsError.typeError("`transferableAbortSignal` requires an AbortSignal instance")
     }
     else -> null
   }
@@ -189,4 +202,12 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
     message,
     code,
   )
+
+  @Polyglot override fun transferableAbortController(): AbortController = AbortControllerFactory.newInstance().apply {
+    markTransferable()
+  }
+
+  @Polyglot override fun transferableAbortSignal(signal: AbortSignal): AbortSignal = signal.apply {
+    markTransferable()
+  }
 }

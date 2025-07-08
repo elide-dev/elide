@@ -10,6 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:Suppress("JSUnresolvedReference")
+
 package elide.runtime.node
 
 import com.oracle.truffle.js.runtime.builtins.JSPromiseObject
@@ -390,4 +392,34 @@ import elide.testing.annotations.TestCase
     val result = assertNotNull(retval.getMember("result")).asInt()
     assertEquals(5, result, "expected deprecated function to return 5")
   }
+
+  @Test fun `transferableAbortController - creates controller`() = executeGuest {
+    // language=javascript
+    """
+      const { transferableAbortController } = require("node:util");
+      const controller = transferableAbortController();
+      test(controller).isNotNull();
+    """
+  }.doesNotFail()
+
+  @Test fun `transferableAbortSignal - requires an argument`() = executeGuest {
+    // language=javascript
+    """
+      const { transferableAbortSignal } = require("node:util");
+      transferableAbortSignal();
+    """
+  }.fails()
+
+  @Test fun `transferableAbortSignal - marks signal`() = executeGuest {
+    // language=javascript
+    """
+      const { transferableAbortController, transferableAbortSignal } = require("node:util");
+      const controller = transferableAbortController();
+      test(controller).isNotNull();
+      const signal = controller.signal;
+      test(signal).isNotNull();
+      const marked = transferableAbortSignal(signal);
+      test(marked === signal).shouldBeTrue();
+    """
+  }.doesNotFail()
 }

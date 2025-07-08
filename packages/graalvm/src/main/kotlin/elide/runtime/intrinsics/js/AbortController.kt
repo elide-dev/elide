@@ -49,6 +49,22 @@ import elide.vm.annotations.Polyglot
   @get:Polyglot public val signal: AbortSignal
 
   /**
+   * Mark this abort controller as transferable, enabling it for use across threaded contexts, and with `postMessage`
+   * and similar mechanisms.
+   *
+   * This method is meant for host-side use only.
+   */
+  public fun markTransferable()
+
+  /**
+   * Indicate whether [markTransferable] has been called on this controller, and, therefore, whether it is eligible for
+   * use within the context of `postMessage` and similar mechanisms.
+   *
+   * @return `true` if this controller is transferable, `false` otherwise.
+   */
+  public fun canBeTransferred(): Boolean
+
+  /**
    * Abort
    *
    * Triggers this controller to use the paired [AbortSignal] to abort any relying operation. From MDN:

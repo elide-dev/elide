@@ -15,6 +15,7 @@ package elide.runtime.gvm.internals.intrinsics.js.abort
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
+import kotlinx.atomicfu.atomic
 import elide.runtime.gvm.js.JsError
 import elide.vm.annotations.Polyglot
 import elide.runtime.intrinsics.js.AbortSignal as AbortSignalAPI
@@ -22,10 +23,19 @@ import elide.runtime.intrinsics.js.AbortController as AbortControllerAPI
 
 private const val SIGNAL_PROP = "signal"
 private const val ABORT_METHOD = "abort"
+private const val TRANSFERABLE_BY_DEFAULT = false
 
 // Implements `AbortController` and `AbortController.Factory` for use in JavaScript.
 public class AbortController : AbortControllerAPI, ProxyObject {
+  private val transferable = atomic(TRANSFERABLE_BY_DEFAULT)
   private val managed = AbortSignal.create()
+
+  override fun markTransferable() {
+    transferable.value = true
+    signal.markTransferable()
+  }
+
+  override fun canBeTransferred(): Boolean = transferable.value
 
   @get:Polyglot override val signal: AbortSignalAPI get() = managed
 

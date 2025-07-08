@@ -35,12 +35,15 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise.Companion.promise
 import elide.runtime.intrinsics.js.node.UtilAPI
+import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.vm.annotations.Polyglot
 
 private const val F_CALLBACKIFY = "callbackify"
 private const val F_PROMISIFY = "promisify"
+private const val F_DEBUGLOG = "debuglog"
+private const val F_DEBUGLOG_ALT = "debug"
 private const val P_CLS_TEXTENCODER = "TextEncoder"
 private const val P_CLS_TEXTDECODER = "TextDecoder"
 
@@ -49,6 +52,8 @@ private val moduleMembers = arrayOf(
   F_PROMISIFY,
   P_CLS_TEXTENCODER,
   P_CLS_TEXTDECODER,
+  F_DEBUGLOG,
+  F_DEBUGLOG_ALT,
 )
 
 // Installs the Node `util` module into the intrinsic bindings.
@@ -80,6 +85,7 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
     F_PROMISIFY -> ProxyExecutable { promisify(it.firstOrNull()) }
     P_CLS_TEXTENCODER -> TextEncoder.Factory
     P_CLS_TEXTDECODER -> TextDecoder.Factory
+    F_DEBUGLOG, F_DEBUGLOG_ALT -> ProxyExecutable { debuglog(it.firstOrNull()) }
     else -> null
   }
 
@@ -166,4 +172,6 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
       }
     }
   }
+
+  override fun debuglog(name: String): DebugLogger = DebugLogger.named(name)
 }

@@ -15,7 +15,8 @@ package elide.runtime.intrinsics.js.node
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.annotations.API
-import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.gvm.js.JsError
+import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.vm.annotations.Polyglot
 
 /**
@@ -91,4 +92,34 @@ import elide.vm.annotations.Polyglot
    * @return Function that returns a promise.
    */
   @Polyglot public fun promisify(fn: Value?): ProxyExecutable
+
+  /**
+   * ## Debug Logger
+   *
+   * Creates a named debug logger (at [name]) which is active only when the following conditions are met:
+   * - The `--js:debug` flag is provided on the command line
+   * - The logger's name is specified in, or mentioned in, the `NODE_DEBUG` environment variable (comma-separated)
+   *
+   * This method variant is designed for implementation and host-side dispatch.
+   *
+   * @param name Name of the debug logger to create.
+   * @return A debug logger instance which can be used to log debug messages.
+   */
+  public fun debuglog(name: String): DebugLogger
+
+  /**
+   * ## Debug Logger
+   *
+   * Creates a named debug logger (at [name]) which is active only when the following conditions are met:
+   * - The `--js:debug` flag is provided on the command line
+   * - The logger's name is specified in, or mentioned in, the `NODE_DEBUG` environment variable (comma-separated)
+   *
+   * This method variant is designed for guest-side dispatch.
+   *
+   * @param name Name of the debug logger to create.
+   * @return A debug logger instance which can be used to log debug messages.
+   */
+  @Polyglot public fun debuglog(name: Value?): DebugLogger = debuglog(
+    name?.takeIf { it.isString }?.asString() ?: throw JsError.typeError("Creating a logger requires a string name")
+  )
 }

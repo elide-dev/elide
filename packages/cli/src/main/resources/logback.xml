@@ -118,6 +118,7 @@
 
   <!-- JS Console -->
   <logger name="gvm:js.console" level="trace" />
+  <logger name="gvm:js.debug" level="off" />
 
   <!-- Root Logger -->
   <root level="${ROOT_LOGLEVEL}">

@@ -19,6 +19,7 @@
 
 package elide.tool.cli.cmd.repl
 
+import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import com.github.ajalt.mordant.rendering.TextColors
@@ -100,6 +101,7 @@ import elide.runtime.gvm.kotlin.KotlinJarBundleInfo
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.runtime.gvm.kotlin.KotlinPrecompiler
 import elide.runtime.gvm.kotlin.KotlinScriptCallable
+import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.intrinsics.testing.Reason
 import elide.runtime.intrinsics.testing.TestResult
@@ -2259,6 +2261,11 @@ internal class ToolShellCommand @Inject constructor(
           executableList = listOf(cmd).plus(args)
           installIntrinsics(intrinsics, GraalVMGuest.JAVASCRIPT, versionProp)
           jsSettings.apply(this)
+          if (jsSettings.debug) {
+            val ctx = LoggerFactory.getILoggerFactory() as LoggerContext
+            val logger = ctx.getLogger(DebugLogger.JS_DEBUG_LOGGER_NAME)
+            logger.level = ch.qos.logback.classic.Level.DEBUG
+          }
         }
 
         WASM -> configure(elide.runtime.plugins.wasm.Wasm) {

@@ -36,6 +36,7 @@ private const val ABORT_EVENT_NAME = "abort"
 private const val TIMED_OUT_REASON = "Timed out"
 private const val THROW_IF_ABORTED_METHOD = "throwIfAborted"
 private val TIMED_OUT_EXC = JsError.of(TIMED_OUT_REASON)
+private const val TRANSFERABLE_BY_DEFAULT = false
 
 /**
  * ## Abortable
@@ -60,6 +61,9 @@ public class AbortSignal private constructor (
   private val events: EventAware = EventAware.create(),
 ) : Abortable, EventTarget by events, ProxyObject {
   // Atomic state of this abort signal.
+  private val transferable: AtomicBoolean = atomic(TRANSFERABLE_BY_DEFAULT)
+
+  // Atomic state of this abort signal.
   private val didAbort: AtomicBoolean = atomic(initialState)
 
   // Atomic reason this signal was aborted.
@@ -67,6 +71,16 @@ public class AbortSignal private constructor (
 
   private val gate: Boolean get() = didAbort.value
   private val reasonInfo: Any? get() = abortReason.value
+
+  // Internal method to mark this signal as transferable.
+  override fun markTransferable() {
+    transferable.value = true
+  }
+
+  // Indicate whether this abort signal was marked as transferable.
+  override fun canBeTransferred(): Boolean {
+    return TRANSFERABLE_BY_DEFAULT || transferable.value
+  }
 
   // Internal method to cause this abort signal to show as aborted; called from `AbortController` or runtime internals.
   override fun assignAborted(reason: Any?) {
@@ -128,6 +142,7 @@ public class AbortSignal private constructor (
      * @return A new empty instance of [AbortSignal].
      */
     public fun delegated(iterable: Iterable<AbortSignalAPI>): Abortable {
+      var canBeTransferred = false
       val topAborted = java.util.concurrent.atomic.AtomicBoolean(false)
       val abortReason = java.util.concurrent.atomic.AtomicReference<Any?>(null)
       val events = EventAware.create()
@@ -143,6 +158,8 @@ public class AbortSignal private constructor (
         override val aborted: Boolean get() = topAborted.get() || iterable.any { it.aborted }
         override val reason: Any? get() = abortReason.get() ?: iterable.firstOrNull { it.aborted }?.reason
         override fun throwIfAborted(): Unit = iterable.forEach { it.throwIfAborted() }
+        override fun markTransferable() { canBeTransferred = true }
+        override fun canBeTransferred(): Boolean = canBeTransferred
         override fun assignAborted(reason: Any?) {
           topAborted.compareAndSet(false, true)
           iterable.forEach {

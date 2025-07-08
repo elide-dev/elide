@@ -13,6 +13,7 @@
 package elide.runtime.intrinsics.js
 
 import org.graalvm.polyglot.HostAccess
+import org.graalvm.polyglot.proxy.Proxy
 import elide.annotations.API
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.node.events.EventTarget
@@ -32,7 +33,7 @@ import elide.vm.annotations.Polyglot
  * [`AbortController` on MDN](https://developer.mozilla.org/en-US/docs/Web/API/AbortController)
  * @see AbortController Companion `AbortController` class
  */
-@API @HostAccess.Implementable public interface AbortSignal : EventTarget {
+@API @HostAccess.Implementable public interface AbortSignal : EventTarget, Proxy {
   /**
    * ## Aborted
    *
@@ -69,6 +70,22 @@ import elide.vm.annotations.Polyglot
    * [`AbortSignal.throwIfAborted` on MDN](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/throwIfAborted)
    */
   @Polyglot public fun throwIfAborted()
+
+  /**
+   * Mark this abort signal as transferable, enabling it for use across threaded contexts, and with `postMessage` and
+   * similar mechanisms.
+   *
+   * This method is meant for host-side use only.
+   */
+  public fun markTransferable()
+
+  /**
+   * Indicate whether [markTransferable] has been called on this abortion signal, and, therefore, whether it is eligible
+   * for use within the context of `postMessage` and similar mechanisms.
+   *
+   * @return `true` if this signal is transferable, `false` otherwise.
+   */
+  public fun canBeTransferred(): Boolean
 
   /**
    * ## Abort Signal - Factory

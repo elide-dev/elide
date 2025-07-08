@@ -122,4 +122,39 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun debuglog(name: Value?): DebugLogger = debuglog(
     name?.takeIf { it.isString }?.asString() ?: throw JsError.typeError("Creating a logger requires a string name")
   )
+
+  /**
+   * ## Deprecate a Function
+   *
+   * Accepts a callable function, and, optionally, a message and code to include in the deprecation warning; then, when
+   * the function is called, the first time it is called (only), the deprecation warning is emitted.
+   *
+   * This variant is designed for implementation and host-side dispatch.
+   *
+   * @param fn Function to deprecate.
+   * @param message Optional message to include in the deprecation warning.
+   * @param code Optional code to include in the deprecation warning.
+   */
+  public fun deprecate(fn: Value, message: String?, code: String?): ProxyExecutable
+
+  /**
+   * ## Deprecate a Function
+   *
+   * Accepts a callable function, and, optionally, a message and code to include in the deprecation warning; then, when
+   * the function is called, the first time it is called (only), the deprecation warning is emitted.
+   *
+   * This variant is designed for guest-side dispatch.
+   *
+   * @param fn Function to deprecate.
+   * @param message Optional message to include in the deprecation warning.
+   * @param code Optional code to include in the deprecation warning.
+   */
+  @Suppress("SpreadOperator")
+  @Polyglot public fun deprecate(fn: Value, message: Value? = null, code: Value? = null): ProxyExecutable {
+    return deprecate(
+      fn,
+      message?.takeIf { it.isString }?.asString(),
+      code?.takeIf { it.isString }?.asString(),
+    )
+  }
 }

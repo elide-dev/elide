@@ -44,6 +44,7 @@ private const val F_CALLBACKIFY = "callbackify"
 private const val F_PROMISIFY = "promisify"
 private const val F_DEBUGLOG = "debuglog"
 private const val F_DEBUGLOG_ALT = "debug"
+private const val F_DEPRECATE = "deprecate"
 private const val P_CLS_TEXTENCODER = "TextEncoder"
 private const val P_CLS_TEXTDECODER = "TextDecoder"
 
@@ -54,6 +55,7 @@ private val moduleMembers = arrayOf(
   P_CLS_TEXTDECODER,
   F_DEBUGLOG,
   F_DEBUGLOG_ALT,
+  F_DEPRECATE,
 )
 
 // Installs the Node `util` module into the intrinsic bindings.
@@ -86,6 +88,13 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
     P_CLS_TEXTENCODER -> TextEncoder.Factory
     P_CLS_TEXTDECODER -> TextDecoder.Factory
     F_DEBUGLOG, F_DEBUGLOG_ALT -> ProxyExecutable { debuglog(it.firstOrNull()) }
+    F_DEPRECATE -> ProxyExecutable { args ->
+      when (args.size) {
+        0 -> throw JsError.typeError("`deprecate` requires at least one argument (a function)")
+        1 -> deprecate(args.first())
+        else -> deprecate(args.first(), args[1], args.getOrNull(2))
+      }
+    }
     else -> null
   }
 
@@ -174,4 +183,10 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
   }
 
   override fun debuglog(name: String): DebugLogger = DebugLogger.named(name)
+
+  override fun deprecate(fn: Value, message: String?, code: String?): ProxyExecutable = DeprecatedCallable.create(
+    fn,
+    message,
+    code,
+  )
 }

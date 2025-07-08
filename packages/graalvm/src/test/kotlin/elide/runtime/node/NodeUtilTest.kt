@@ -340,4 +340,54 @@ import elide.testing.annotations.TestCase
       assertEquals("test", logger.loggerName)
     }
   }
+
+  @Test fun `deprecate - create deprecated callable`() = executeGuest {
+    // language=javascript
+    """
+      const { deprecate } = require("node:util");
+      let called = false;
+      const sample = () => {
+        called = true;
+        return "hello"
+      };
+
+      test(deprecate).isNotNull();
+      const deprecated = deprecate(sample, "example deprecated method");
+      test(deprecated).isNotNull();
+      let result = deprecated();
+      test(called).shouldBeTrue();
+      ({
+        result,
+        called
+      });
+    """
+  }.thenAssert {
+    val retval = assertNotNull(it.returnValue())
+    val result = assertNotNull(retval.getMember("result")).asString()
+    val called = assertNotNull(retval.getMember("called")).asBoolean()
+    assertTrue(called, "expected deprecated function to be called")
+    assertEquals("hello", result, "expected deprecated function to return 'hello'")
+  }
+
+  @Test fun `deprecate - deprecated callable passes args`() = executeGuest {
+    // language=javascript
+    """
+      const { deprecate } = require("node:util");
+      const sample = (a) => {
+        return a;
+      };
+
+      test(deprecate).isNotNull();
+      const deprecated = deprecate(sample, "example deprecated method");
+      test(deprecated).isNotNull();
+      let result = deprecated(5);
+      ({
+        result
+      });
+    """
+  }.thenAssert {
+    val retval = assertNotNull(it.returnValue())
+    val result = assertNotNull(retval.getMember("result")).asInt()
+    assertEquals(5, result, "expected deprecated function to return 5")
+  }
 }

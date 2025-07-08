@@ -2632,7 +2632,7 @@ public abstract interface class elide/runtime/intrinsics/js/AbortController {
 public abstract interface class elide/runtime/intrinsics/js/AbortController$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
 }
 
-public abstract interface class elide/runtime/intrinsics/js/AbortSignal : elide/runtime/intrinsics/js/node/events/EventTarget {
+public abstract interface class elide/runtime/intrinsics/js/AbortSignal : elide/runtime/intrinsics/js/node/events/EventTarget, org/graalvm/polyglot/proxy/Proxy {
 	public abstract fun canBeTransferred ()Z
 	public abstract fun getAborted ()Z
 	public abstract fun getReason ()Ljava/lang/Object;
@@ -3830,6 +3830,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/UtilAPI : elide
 	public abstract fun deprecate (Lorg/graalvm/polyglot/Value;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 	public fun deprecate (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 	public static synthetic fun deprecate$default (Lelide/runtime/intrinsics/js/node/UtilAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
+	public abstract fun isArray (Lorg/graalvm/polyglot/Value;)Z
 	public abstract fun promisify (Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 	public abstract fun transferableAbortController ()Lelide/runtime/intrinsics/js/AbortController;
 	public abstract fun transferableAbortSignal (Lelide/runtime/intrinsics/js/AbortSignal;)Lelide/runtime/intrinsics/js/AbortSignal;

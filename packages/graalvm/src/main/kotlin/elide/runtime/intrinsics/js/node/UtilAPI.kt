@@ -180,4 +180,14 @@ import elide.vm.annotations.Polyglot
    * @return The marked abort signal.
    */
   @Polyglot public fun transferableAbortSignal(signal: AbortSignal): AbortSignal
+
+  /**
+   * ## Is Array
+   *
+   * Indicate whether the provided [value] behaves like an array, or is an array-like object.
+   *
+   * @param value Value to check for array-like behavior.
+   * @return `true` if the value is an array or array-like, `false` otherwise.
+   */
+  @Polyglot public fun isArray(value: Value?): Boolean
 }

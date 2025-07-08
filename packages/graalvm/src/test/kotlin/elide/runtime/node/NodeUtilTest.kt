@@ -15,6 +15,7 @@
 package elide.runtime.node
 
 import com.oracle.truffle.js.runtime.builtins.JSPromiseObject
+import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.util.SortedSet
 import kotlin.test.*
@@ -422,4 +423,34 @@ import elide.testing.annotations.TestCase
       test(marked === signal).shouldBeTrue();
     """
   }.doesNotFail()
+
+  @Test fun `isArray - works for guest arrays`() = executeGuest {
+    // language=javascript
+    """
+      const { isArray } = require("node:util");
+      const arr = [1, 2, 3];
+      test(isArray(arr)).shouldBeTrue();
+      test(isArray({})).shouldBeFalse();
+      test(isArray("string")).shouldBeFalse();
+    """
+  }.doesNotFail()
+
+  @Test fun `isArray - works for guest arrays on host`() = executeGuest {
+    // language=javascript
+    """
+      const arr = [1, 2, 3];
+      arr;
+    """
+  }.thenAssert {
+    val arraySample = assertNotNull(it.returnValue())
+    assertTrue(assertDoesNotThrow { provide().provide().isArray(arraySample) })
+  }
+
+  @Test fun `isArray - falsy for non-array types`() {
+    val mod = provide().provide()
+    assertFalse(mod.isArray(null))
+    assertFalse(mod.isArray(Value.asValue(42)))
+    assertFalse(mod.isArray(Value.asValue("a string")))
+    assertFalse(mod.isArray(Value.asValue(5.5)))
+  }
 }

@@ -79,6 +79,7 @@ import elide.runtime.node.stream.NodeStreamModule
 import elide.runtime.node.stream.NodeStreamPromisesModule
 import elide.runtime.node.stringDecoder.NodeStringDecoderModule
 import elide.runtime.node.url.NodeURLModule
+import elide.runtime.node.util.NodeUtilModule
 import elide.runtime.node.worker.NodeWorkerModule
 import elide.runtime.node.zlib.NodeZlibModule
 import elide.runtime.plugins.env.EnvConfig
@@ -142,6 +143,7 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val abortSignal = AbortSignalIntrinsic(execProvider)
     @JvmStatic private val worker = NodeWorkerModule()
     @JvmStatic private val navigator = NavigatorBuiltin()
+    @JvmStatic private val util = NodeUtilModule(execProvider)
     @JvmStatic private val zlib = NodeZlibModule()
     @JvmStatic private val webCrypto = WebCryptoIntrinsic()
     @JvmStatic private val inspector = NodeInspectorModule()
@@ -215,6 +217,7 @@ import elide.runtime.plugins.env.EnvConfig
       elideSqlite,
       elideTesting,
       elideLlm,
+      util,
     )
   }
 

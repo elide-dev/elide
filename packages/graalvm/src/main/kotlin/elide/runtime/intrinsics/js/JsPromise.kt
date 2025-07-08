@@ -14,15 +14,18 @@ package elide.runtime.intrinsics.js
 
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
+import com.oracle.truffle.js.runtime.builtins.JSErrorObject
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Future
 import java.util.function.Supplier
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import elide.runtime.exec.GuestExecutor
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
+import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.err.TypeError
 import elide.vm.annotations.Polyglot
 
@@ -94,6 +97,11 @@ public interface JsPromise<out T> : ProxyObject {
     else -> throw IllegalArgumentException("Unknown member key: $key")
   }
 
+  public interface PromiseOperation<V> {
+    public fun resolve(value: V)
+    public fun reject(reason: Any? = null)
+  }
+
   public companion object {
     // Keys available for object access on a JavaScript promise.
     private const val THEN_SYMBOL = "then"
@@ -126,6 +134,44 @@ public interface JsPromise<out T> : ProxyObject {
 
     /** Create a new promise encapsulating the result of launching an async operation on this guest executor. */
     @JvmStatic public fun <T> GuestExecutor.spawn(fn: () -> T): JsPromise<T> = wrap(submit(fn))
+
+    /** Create a new promise wrapping the given async operation. */
+    @JvmStatic public fun <T> GuestExecutor.promise(op: PromiseOperation<T>.() -> Unit): JsPromise<T?> {
+      var out: T? = null
+      var err: Any? = null
+
+      return wrap<T?>(submit<T?> {
+        val latch = CountDownLatch(1)
+        val ctx = object: PromiseOperation<T> {
+          override fun resolve(value: T) {
+            out = value
+            latch.countDown()
+          }
+
+          override fun reject(reason: Any?) {
+            err = reason
+            latch.countDown()
+          }
+        }
+        @Suppress("TooGenericExceptionCaught")
+        try {
+          ctx.op()
+        } catch (err: Throwable) {
+          ctx.reject(err)
+        }
+        latch.await()
+
+        when {
+          err != null -> when (err) {
+            is Throwable -> throw (err as Throwable)
+            is JSErrorObject -> throw (err as JSErrorObject).exception
+            else -> throw JsError.of(err.toString())
+          }
+        }
+        @Suppress("UNCHECKED_CAST")
+        if (out != null) out as T else null
+      })
+    }
 
     /** Create a new promise wrapping the given supplier's getter. */
     @JvmStatic public fun <T> GuestExecutor.of(supplier: Supplier<T>): JsPromise<T> = wrap(submit(supplier::get))

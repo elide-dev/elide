@@ -2871,6 +2871,7 @@ public abstract interface class elide/runtime/intrinsics/js/JsPromise : org/graa
 	public fun hasMember (Ljava/lang/String;)Z
 	public abstract fun isDone ()Z
 	public static fun of (Lelide/runtime/exec/GuestExecutor;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public static fun promise (Lelide/runtime/exec/GuestExecutor;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public static fun rejected (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
@@ -2886,6 +2887,7 @@ public abstract interface class elide/runtime/intrinsics/js/JsPromise : org/graa
 
 public final class elide/runtime/intrinsics/js/JsPromise$Companion {
 	public final fun of (Lelide/runtime/exec/GuestExecutor;Ljava/util/function/Supplier;)Lelide/runtime/intrinsics/js/JsPromise;
+	public final fun promise (Lelide/runtime/exec/GuestExecutor;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun rejected (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static synthetic fun rejected$default (Lelide/runtime/intrinsics/js/JsPromise$Companion;Ljava/lang/Object;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun resolved (Ljava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
@@ -2895,6 +2897,12 @@ public final class elide/runtime/intrinsics/js/JsPromise$Companion {
 	public static synthetic fun wrap$default (Lelide/runtime/intrinsics/js/JsPromise$Companion;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
 	public final fun wrapOrNull (Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/js/JsPromise;
 	public static synthetic fun wrapOrNull$default (Lelide/runtime/intrinsics/js/JsPromise$Companion;Lorg/graalvm/polyglot/Value;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/JsPromise;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/JsPromise$PromiseOperation {
+	public abstract fun reject (Ljava/lang/Object;)V
+	public static synthetic fun reject$default (Lelide/runtime/intrinsics/js/JsPromise$PromiseOperation;Ljava/lang/Object;ILjava/lang/Object;)V
+	public abstract fun resolve (Ljava/lang/Object;)V
 }
 
 public final class elide/runtime/intrinsics/js/JsPromiseKt {
@@ -3808,6 +3816,8 @@ public abstract interface class elide/runtime/intrinsics/js/node/URLAPI : elide/
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/UtilAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun callbackify (Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
+	public abstract fun promisify (Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/V8API : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -9099,6 +9109,24 @@ public synthetic class elide/runtime/node/url/$NodeURLModule$Provide$graalvm0$De
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/node/util/$NodeUtilModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/util/$NodeUtilModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun isBuildable ()Z
 }
 
 public synthetic class elide/runtime/node/worker/$NodeWorkerModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

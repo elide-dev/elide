@@ -14,7 +14,6 @@
 
 package elide.runtime.gvm.internals.js
 
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
@@ -38,7 +37,6 @@ import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.Symbol
 import elide.runtime.lang.javascript.JavaScriptLang
 import elide.runtime.node.buffer.NodeBufferModule
-import elide.runtime.node.buffer.NodeBufferModuleFacade
 import elide.runtime.plugins.js.JavaScript as JavaScriptPlugin
 import elide.runtime.plugins.js.javascript
 import elide.runtime.plugins.vfs.vfs
@@ -73,6 +71,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
   }
 
   // Logic to execute a guest-side test.
+  @Suppress("LongParameterList")
   private fun executeGuestInternal(
       ctx: PolyglotContext,
       bind: Boolean,
@@ -82,6 +81,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindConsole: Boolean,
       bindBase64: Boolean,
       bindBuffer: Boolean,
+      esm: Boolean,
       op: JavaScript,
   ): GuestValue {
     // resolve the script
@@ -173,7 +173,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     // execute script
     val returnValue = try {
       ctx.enter()
-      ctx.javascript(script)
+      ctx.javascript(script, esm = esm)
     } catch (err: Throwable) {
       hasErr.set(true)
       subjectErr.set(err)
@@ -191,6 +191,21 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
     }
   }
 
+  fun executeESM(bind: Boolean = true, op: JavaScript) = GuestTestExecution(::withContext) {
+    executeGuestInternal(
+      this,
+      bind,
+      bindUtils = bind,
+      bindPrimordials = bind,
+      bindAssert = bind,
+      bindConsole = bind,
+      bindBase64 = bind,
+      bindBuffer = bind,
+      esm = true,
+      op,
+    )
+  }
+
   // Run the provided factory to produce a script, then run that test within a warmed `Context`.
   override fun executeGuest(bind: Boolean, op: JavaScript) = GuestTestExecution(::withContext) {
     executeGuestInternal(
@@ -202,6 +217,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindConsole = true,
       bindBase64 = true,
       bindBuffer = true,
+      esm = false,
       op,
     )
   }
@@ -225,6 +241,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
       bindConsole = true,
       bindBase64 = true,
       bindBuffer = true,
+      esm = false,
       guest,
     )
   }
@@ -247,6 +264,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
           bindConsole = true,
           bindBase64 = true,
           bindBuffer = true,
+          esm = false,
           guestOperation,
         )
       }.doesNotFail()
@@ -261,6 +279,7 @@ internal abstract class AbstractJsIntrinsicTest<T : GuestIntrinsic>(
           bindConsole = true,
           bindBase64 = true,
           bindBuffer = true,
+          esm = false,
           guestOperation,
         )
       }

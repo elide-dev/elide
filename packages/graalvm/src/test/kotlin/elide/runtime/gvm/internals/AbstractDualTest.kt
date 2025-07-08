@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -330,6 +330,11 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
   /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */
   protected open fun <T> withContext(block: PolyglotContext.() -> T): T {
     return block(engine.acquire())
+  }
+
+  /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */
+  protected open fun <T> withContext(builder: Context.Builder.() -> Unit, block: PolyglotContext.() -> T): T {
+    return block(engine.acquire(builder))
   }
 
   /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */

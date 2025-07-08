@@ -13,10 +13,14 @@
 package elide.runtime.node
 
 import com.oracle.truffle.js.runtime.builtins.JSPromiseObject
+import org.junit.jupiter.api.assertDoesNotThrow
+import java.util.SortedSet
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.exec.GuestExecution
 import elide.runtime.exec.GuestExecutorProvider
+import elide.runtime.node.util.DebugLoggerImpl
+import elide.runtime.node.util.InertDebugLogger
 import elide.runtime.node.util.NodeUtilModule
 import elide.testing.annotations.TestCase
 
@@ -28,6 +32,18 @@ import elide.testing.annotations.TestCase
   })
 
   @Inject lateinit var util: NodeUtilModule
+
+  private inline fun withActivatedLoggers(suite: SortedSet<String> = sortedSetOf(), op: () -> Unit) {
+    DebugLoggerImpl.Factory.resetActivatedLogs()
+    DebugLoggerImpl.Factory.mountActivatedLogs(suite)
+
+    try {
+      op.invoke()
+    } finally {
+      DebugLoggerImpl.Factory.resetActivatedLogs()
+      DebugLoggerImpl.Factory.mountActivatedLogs(DebugLoggerImpl.Factory.buildActivatedLogs())
+    }
+  }
 
   // @TODO(sgammon): Not yet fully supported
   override fun expectCompliance(): Boolean = false
@@ -300,5 +316,28 @@ import elide.testing.annotations.TestCase
     assertTrue(err.isNull)
     val out = result.asInt()
     assertEquals(42, out, "expected promisified function to resolve to 42")
+  }
+
+  @Test fun `debuglog - creating inert log`() {
+    val logger = provide().provide().debuglog("test")
+    assertNotNull(logger)
+    assertIs<InertDebugLogger>(logger)
+    assertDoesNotThrow {
+      logger("here is a debug log which will be dropped")
+    }
+    assertFalse(logger.enabled)
+  }
+
+  @Test fun `debuglog - creating active log`() {
+    withActivatedLoggers(sortedSetOf("test")) {
+      val logger = provide().provide().debuglog("test")
+      assertNotNull(logger)
+      assertIsNot<InertDebugLogger>(logger)
+      assertDoesNotThrow {
+        logger("here is a debug log which will not be dropped")
+      }
+      assertTrue(logger.enabled)
+      assertEquals("test", logger.loggerName)
+    }
   }
 }

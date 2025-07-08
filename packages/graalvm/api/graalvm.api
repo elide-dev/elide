@@ -3817,6 +3817,8 @@ public abstract interface class elide/runtime/intrinsics/js/node/URLAPI : elide/
 
 public abstract interface class elide/runtime/intrinsics/js/node/UtilAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 	public abstract fun callbackify (Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
+	public abstract fun debuglog (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/DebugLogger;
+	public fun debuglog (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/util/DebugLogger;
 	public abstract fun promisify (Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 }
 
@@ -5749,6 +5751,31 @@ public abstract interface class elide/runtime/intrinsics/js/node/stream/Writable
 
 public final class elide/runtime/intrinsics/js/node/stream/Writable$Companion {
 	public final fun wrap (Ljava/io/OutputStream;)Lelide/runtime/intrinsics/js/node/stream/Writable;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/util/DebugLogger : elide/runtime/interop/ReadOnlyProxyObject, org/graalvm/polyglot/proxy/ProxyExecutable {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/util/DebugLogger$Companion;
+	public static final field JS_DEBUG_LOGGER_NAME Ljava/lang/String;
+	public abstract fun emit (Ljava/lang/StringBuilder;)V
+	public fun execute ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public abstract fun getEnabled ()Z
+	public abstract fun getLoggerName ()Ljava/lang/String;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public abstract fun invoke ([Ljava/lang/Object;)Ljava/lang/Object;
+	public static fun named (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/DebugLogger;
+}
+
+public final class elide/runtime/intrinsics/js/node/util/DebugLogger$Companion {
+	public static final field JS_DEBUG_LOGGER_NAME Ljava/lang/String;
+	public final fun named (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/DebugLogger;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/util/DebugLogger$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public abstract fun createLogger (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/DebugLogger;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/util/DebugLogger;
+	public synthetic fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/zlib/BrotliCompress : elide/runtime/intrinsics/js/node/stream/Writable, elide/runtime/intrinsics/js/node/zlib/Compressor {

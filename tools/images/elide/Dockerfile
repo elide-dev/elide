@@ -1,7 +1,7 @@
 ARG ELIDE_VERSION=1.0.0-beta7
 ARG ELIDE_DIGEST=2cbd9d45f5904390b303a1963379cc3e68591cf09aa875bff260cf1fb45bfe38
 
-FROM debian:unstable-slim@sha256:5a1fa4e7ca7e4a8ea0449d0e5e6ac6593b4aebac12f658e69af354c0b3cb073a AS builder
+FROM debian:unstable-slim@sha256:66e1330bbabc981c6c0c3aa7cc6d08c6fe212fab6404b48befd8715e663a00ab AS builder
 
 RUN apt-get update \
   && apt-get install -y \
@@ -28,7 +28,7 @@ RUN echo "Installing Elide..." \
       && cd - \
       && rm -rf /tmp/elide-install
 
-FROM debian:unstable-slim@sha256:5a1fa4e7ca7e4a8ea0449d0e5e6ac6593b4aebac12f658e69af354c0b3cb073a AS runtime
+FROM debian:unstable-slim@sha256:66e1330bbabc981c6c0c3aa7cc6d08c6fe212fab6404b48befd8715e663a00ab AS runtime
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime"

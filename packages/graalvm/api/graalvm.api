@@ -5792,6 +5792,33 @@ public abstract interface class elide/runtime/intrinsics/js/node/util/DebugLogge
 	public synthetic fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/util/MIMEParams : elide/runtime/interop/ReadOnlyProxyObject, org/graalvm/polyglot/proxy/ProxyHashMap {
+	public abstract fun get (Ljava/lang/String;)Ljava/lang/String;
+	public abstract fun has (Ljava/lang/String;)Z
+	public abstract fun toMap ()Ljava/util/Map;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/util/MIMEParams$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public abstract fun create (Ljava/util/Map;)Lelide/runtime/intrinsics/js/node/util/MIMEParams;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public abstract fun parse (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/MIMEParams;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/util/MIMEType : org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun getEssence ()Ljava/lang/String;
+	public abstract fun getParams ()Lelide/runtime/intrinsics/js/node/util/MIMEParams;
+	public abstract fun getSubtype ()Ljava/lang/String;
+	public abstract fun getType ()Ljava/lang/String;
+	public abstract fun setSubtype (Ljava/lang/String;)V
+	public abstract fun setType (Ljava/lang/String;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/util/MIMEType$Factory : org/graalvm/polyglot/proxy/ProxyInstantiable {
+	public abstract fun create (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/MIMEType;
+	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public abstract fun parse (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/MIMEType;
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/zlib/BrotliCompress : elide/runtime/intrinsics/js/node/stream/Writable, elide/runtime/intrinsics/js/node/zlib/Compressor {
 }
 

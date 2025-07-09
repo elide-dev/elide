@@ -17,6 +17,8 @@ package elide.runtime.node
 import com.oracle.truffle.js.runtime.builtins.JSPromiseObject
 import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import java.util.SortedSet
 import kotlin.test.*
 import elide.annotations.Inject
@@ -24,6 +26,7 @@ import elide.runtime.exec.GuestExecution
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.node.util.DebugLoggerImpl
 import elide.runtime.node.util.InertDebugLogger
+import elide.runtime.node.util.MimeTypes
 import elide.runtime.node.util.NodeUtilModule
 import elide.testing.annotations.TestCase
 
@@ -453,4 +456,55 @@ import elide.testing.annotations.TestCase
     assertFalse(mod.isArray(Value.asValue("a string")))
     assertFalse(mod.isArray(Value.asValue(5.5)))
   }
+
+  @Test fun `MIMETypes - parse from string`() {
+    assertNotNull(MimeTypes.parse("text/html")).let {
+      assertEquals("text", it.type)
+      assertEquals("html", it.subtype)
+      assertNull(it.params)
+    }
+  }
+
+  @Test fun `MIMETypes - parse from string with parameters`() {
+    assertNotNull(MimeTypes.parse("text/html;charset=utf-8")).let {
+      assertEquals("text", it.type)
+      assertEquals("html", it.subtype)
+      assertNotNull(it.params)
+      assertTrue(it.params!!.hasMember("charset"))
+      assertTrue(it.params!!.memberKeys.contains("charset"))
+      val charset = it.params!!.getMember("charset") as String
+      assertEquals("utf-8", charset, "expected charset to be 'utf-8'")
+    }
+  }
+
+  @CsvSource(
+    "text/html,text,html",
+    "application/json,application,json",
+    "image/png,image,png",
+    "audio/mpeg,audio,mpeg",
+    "video/mp4,video,mp4",
+    "text/html;charset=UTF-8,text,html",
+    "application/json;charset=utf-8,application,json",
+  )
+  @ParameterizedTest fun `MIMETypes - parse known mime type`(mime: String, type: String, subtype: String) {
+    assertNotNull(MimeTypes.parse(mime)).let {
+      assertEquals(type, it.type)
+      assertEquals(subtype, it.subtype)
+      assertEquals(mime, it.essence)
+      assertEquals(mime, it.toString())
+    }
+  }
+
+  @Test fun `MIMETypes - parse from string via guest`() = executeGuest {
+    // language=javascript
+    """
+      const { MIMEType } = require("node:util");
+      const mime = new MIMEType("text/html;charset=utf-8");
+      test(mime).isNotNull();
+      test(mime.type).equals("text");
+      test(mime.subtype).equals("html");
+      test(mime.params).isNotNull();
+      test(mime.params.get("charset")).equals("utf-8");
+    """
+  }.doesNotFail()
 }

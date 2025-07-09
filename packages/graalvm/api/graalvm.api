@@ -3830,6 +3830,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/UtilAPI : elide
 	public abstract fun deprecate (Lorg/graalvm/polyglot/Value;Ljava/lang/String;Ljava/lang/String;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 	public fun deprecate (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 	public static synthetic fun deprecate$default (Lelide/runtime/intrinsics/js/node/UtilAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
+	public abstract fun getSystemErrorMap ()Ljava/util/Map;
+	public abstract fun getSystemErrorName (I)Ljava/lang/String;
+	public fun getSystemErrorName (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 	public abstract fun isArray (Lorg/graalvm/polyglot/Value;)Z
 	public abstract fun promisify (Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 	public abstract fun transferableAbortController ()Lelide/runtime/intrinsics/js/AbortController;
@@ -9195,6 +9198,106 @@ public final synthetic class elide/runtime/node/util/$NodeUtilModule$Introspecti
 	public fun <init> ()V
 	public fun hasBuilder ()Z
 	public fun isBuildable ()Z
+}
+
+public final class elide/runtime/node/util/NodeSystemErrors {
+	public static final field E2BIG I
+	public static final field EACCES I
+	public static final field EADDRINUSE I
+	public static final field EADDRNOTAVAIL I
+	public static final field EAFNOSUPPORT I
+	public static final field EAGAIN I
+	public static final field EAI_ADDRFAMILY I
+	public static final field EAI_AGAIN I
+	public static final field EAI_BADFLAGS I
+	public static final field EAI_BADHINTS I
+	public static final field EAI_CANCELED I
+	public static final field EAI_FAIL I
+	public static final field EAI_FAMILY I
+	public static final field EAI_MEMORY I
+	public static final field EAI_NODATA I
+	public static final field EAI_NONAME I
+	public static final field EAI_OVERFLOW I
+	public static final field EAI_PROTOCOL I
+	public static final field EAI_SERVICE I
+	public static final field EAI_SOCKTYPE I
+	public static final field EALREADY I
+	public static final field EBADF I
+	public static final field EBUSY I
+	public static final field ECANCELED I
+	public static final field ECHARSET I
+	public static final field ECONNABORTED I
+	public static final field ECONNREFUSED I
+	public static final field ECONNRESET I
+	public static final field EDESTADDRREQ I
+	public static final field EEXIST I
+	public static final field EFAULT I
+	public static final field EFBIG I
+	public static final field EFTYPE I
+	public static final field EHOSTDOWN I
+	public static final field EHOSTUNREACH I
+	public static final field EILSEQ I
+	public static final field EINTR I
+	public static final field EINVAL I
+	public static final field EIO I
+	public static final field EISCONN I
+	public static final field EISDIR I
+	public static final field ELOOP I
+	public static final field EMFILE I
+	public static final field EMLINK I
+	public static final field EMSGSIZE I
+	public static final field ENAMETOOLONG I
+	public static final field ENETDOWN I
+	public static final field ENETUNREACH I
+	public static final field ENFILE I
+	public static final field ENOBUFS I
+	public static final field ENODATA I
+	public static final field ENODEV I
+	public static final field ENOENT I
+	public static final field ENOMEM I
+	public static final field ENONET I
+	public static final field ENOPROTOOPT I
+	public static final field ENOSPC I
+	public static final field ENOSYS I
+	public static final field ENOTCONN I
+	public static final field ENOTDIR I
+	public static final field ENOTEMPTY I
+	public static final field ENOTSOCK I
+	public static final field ENOTSUP I
+	public static final field ENOTTY I
+	public static final field ENXIO I
+	public static final field EOF I
+	public static final field EOVERFLOW I
+	public static final field EPERM I
+	public static final field EPIPE I
+	public static final field EPROTO I
+	public static final field EPROTONOSUPPORT I
+	public static final field EPROTOTYPE I
+	public static final field ERANGE I
+	public static final field EREMOTEIO I
+	public static final field EROFS I
+	public static final field ESHUTDOWN I
+	public static final field ESOCKTNOSUPPORT I
+	public static final field ESPIPE I
+	public static final field ESRCH I
+	public static final field ETIMEDOUT I
+	public static final field ETXTBSY I
+	public static final field EUNATCH I
+	public static final field EXDEV I
+	public static final field INSTANCE Lelide/runtime/node/util/NodeSystemErrors;
+	public static final field UNKNOWN I
+	public final fun all ()Lkotlin/sequences/Sequence;
+	public final fun contains (I)Z
+	public final fun contains (Ljava/lang/String;)Z
+	public final fun export ()Ljava/util/Map;
+	public final fun get (I)Lelide/runtime/node/util/NodeSystemErrors$SystemErrorInfo;
+	public final fun get (Ljava/lang/String;)Lelide/runtime/node/util/NodeSystemErrors$SystemErrorInfo;
+}
+
+public abstract interface class elide/runtime/node/util/NodeSystemErrors$SystemErrorInfo {
+	public abstract fun getId ()I
+	public abstract fun getMessage ()Ljava/lang/String;
+	public abstract fun getName ()Ljava/lang/String;
 }
 
 public synthetic class elide/runtime/node/worker/$NodeWorkerModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

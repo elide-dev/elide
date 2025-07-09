@@ -82,15 +82,17 @@
     <ID>TooGenericExceptionCaught:JsIterator.kt$JsIterator.JsIteratorImpl$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy$err: Throwable</ID>
     <ID>TooGenericExceptionCaught:SqliteModule.kt$SqliteDatabaseProxy.SQLiteTransactionImpl$err: Throwable</ID>
-    <ID>UnusedParameter:NodeUtil.kt$NodeUtil$label: String? = null</ID>
-    <ID>UnusedParameter:NodeUtil.kt$NodeUtil$obj: Value</ID>
-    <ID>UnusedParameter:NodeUtil.kt$NodeUtil$options: InspectOptionsAPI</ID>
+    <ID>UnusedParameter:ObjectInspector.kt$ObjectInspector$label: String? = null</ID>
+    <ID>UnusedParameter:ObjectInspector.kt$ObjectInspector$obj: Value</ID>
+    <ID>UnusedParameter:ObjectInspector.kt$ObjectInspector$options: InspectOptionsAPI</ID>
+    <ID>UnusedParameter:StringFormatter.kt$StringFormatter.StringFormatterImpl$argValue: Any?</ID>
+    <ID>UnusedParameter:StringFormatter.kt$StringFormatter.StringFormatterImpl$defaults: Boolean</ID>
+    <ID>UnusedParameter:StringFormatter.kt$StringFormatter.StringFormatterImpl$json: Boolean</ID>
+    <ID>UnusedParameter:StringFormatter.kt$StringFormatter.StringFormatterImpl$typeAndPosition: Pair&lt;Char, UInt></ID>
     <ID>UnusedParameter:VfsPlugin.kt$Vfs$@Suppress("unused_parameter") builder: PolyglotEngineBuilder</ID>
     <ID>UnusedPrivateProperty:AbstractJsIntrinsicTest.kt$AbstractJsIntrinsicTest$private val testInject: Boolean = true</ID>
     <ID>UnusedPrivateProperty:NodeUtil.kt$// Method and property names for the Node `util` module. private const val F_ABORTED = "aborted"</ID>
     <ID>UnusedPrivateProperty:NodeUtil.kt$private const val F_DIFF = "diff"</ID>
-    <ID>UnusedPrivateProperty:NodeUtil.kt$private const val F_FORMAT = "format"</ID>
-    <ID>UnusedPrivateProperty:NodeUtil.kt$private const val F_FORMAT_WITH_OPTIONS = "formatWithOptions"</ID>
     <ID>UnusedPrivateProperty:NodeUtil.kt$private const val F_GETCALLSITES = "getCallSites"</ID>
     <ID>UnusedPrivateProperty:NodeUtil.kt$private const val F_ISDEEPSTRICTEQUAL = "isDeepStrictEqual"</ID>
     <ID>UnusedPrivateProperty:NodeUtil.kt$private const val F_PARSEARGS = "parseArgs"</ID>

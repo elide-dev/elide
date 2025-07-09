@@ -153,6 +153,9 @@ import elide.vm.annotations.Polyglot
    */
   @Suppress("SpreadOperator")
   @Polyglot public fun deprecate(fn: Value, message: Value? = null, code: Value? = null): ProxyExecutable {
+    if (fn.isNull || !fn.canExecute()) {
+      throw JsError.typeError("Cannot deprecate a non-callable value: $fn")
+    }
     return deprecate(
       fn,
       message?.takeIf { it.isString }?.asString(),

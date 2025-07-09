@@ -98,7 +98,7 @@ internal class DebugLoggerImpl private constructor (private val name: String) : 
 
     // Indicate whether debug logging is enabled for the given name.
     @JvmStatic internal fun enabled(name: String): Boolean = (name in resolveActivatedLogs()).also {
-      require(!ImageInfo.inImageCode())
+      require(!ImageInfo.inImageBuildtimeCode())
     }
 
     override fun createLogger(name: String): DebugLogger = when (enabled(name)) {

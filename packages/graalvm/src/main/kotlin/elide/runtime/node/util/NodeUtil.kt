@@ -185,7 +185,7 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
         args.firstOrNull()?.takeIf { it.hasMembers() } ?: throw JsError.typeError(
           "`util.formatWithOptions` requires an options object as the first argument"
         ),
-        args.firstOrNull()?.takeIf { it.isString } ?: throw JsError.typeError(
+        args.getOrNull(1)?.takeIf { it.isString } ?: throw JsError.typeError(
           "`util.formatWithOptions` requires a format string as the second argument"
         ),
         *args.drop(2).toTypedArray(),
@@ -199,8 +199,6 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
     // methods which are not implemented yet
     // F_DIFF,
     // F_GETCALLSITES,
-    // F_FORMAT,
-    // F_FORMAT_WITH_OPTIONS,
     // F_ISDEEPSTRICTEQUAL,
     // F_PARSEARGS,
     // F_PARSEENV,

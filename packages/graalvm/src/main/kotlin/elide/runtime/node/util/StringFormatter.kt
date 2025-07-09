@@ -14,10 +14,13 @@
 
 package elide.runtime.node.util
 
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
+import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.node.UtilAPI
 import elide.runtime.intrinsics.js.node.util.InspectOptionsAPI
+import elide.runtime.node.util.ObjectInspector.renderInspected
 
 // Implements string formatting for `util.format`, based on simple logic and `util.inspect`.
 internal object StringFormatter {
@@ -50,11 +53,20 @@ internal object StringFormatter {
   }
 
   // Implements `%s` (formatting as a string).
-  private class StringComponentFormatter(info: Pair<Char, UInt>, value: Any?): ComponentFormatter<String>(info, value) {
+  private class StringComponentFormatter(
+    info: Pair<Char, UInt>,
+    value: Any?,
+    private val limit: Int = Int.MAX_VALUE,
+  ): ComponentFormatter<String>(info, value) {
     override fun cast(): String? = value.toString()
 
     override fun format(builder: StringBuilder, value: String?) {
-      builder.append(value ?: "null")
+      val built = value ?: "null"
+      if (built.length >= limit) {
+        builder.append(built.take(limit - 3)).append("...")
+      } else {
+        builder.append(built)
+      }
     }
   }
 
@@ -165,10 +177,13 @@ internal object StringFormatter {
     private val utils: UtilAPI,
     private val builder: StringBuilder,
     private val options: InspectOptionsAPI,
+    private val contextGetter: () -> Context,
   ) : FormatContext, Appendable by builder, CharSequence by builder {
     override fun utils(): UtilAPI = utils
     override fun options(): InspectOptionsAPI = options
     override fun styles(): InspectStyling = options.styles
+
+    private val context by lazy { contextGetter.invoke() }
 
     private inline fun fail(message: String): Nothing {
       throw JsError.of("Format error: $message")
@@ -185,7 +200,7 @@ internal object StringFormatter {
     // Format a primitive value based on the specified type.
     private fun formatPrimitive(typeAndPosition: Pair<Char, UInt>, argValue: Any?) {
       when (typeAndPosition.first) {
-        FORMAT_STRING -> StringComponentFormatter(typeAndPosition, argValue).format(builder)
+        FORMAT_STRING -> StringComponentFormatter(typeAndPosition, argValue, options().maxStringLength).format(builder)
         FORMAT_INT -> IntComponentFormatter(typeAndPosition, argValue).format(builder)
         FORMAT_FLOAT -> FloatComponentFormatter(typeAndPosition, argValue).format(builder)
         FORMAT_NUMBER -> NumberComponentFormatter(typeAndPosition, argValue).format(builder)
@@ -193,9 +208,57 @@ internal object StringFormatter {
       }
     }
 
+    // Format the value as JSON using guest intrinsics.
+    private fun formatWithGuestJson(argValue: Value) {
+      val guestJson = requireNotNull(context.getBindings(GraalVMGuest.JAVASCRIPT.symbol)).getMember("JSON")
+      val guestJsonStringify = requireNotNull(guestJson).getMember("stringify")
+      require(guestJsonStringify != null && guestJsonStringify.canExecute()) {
+        "Guest JSON.stringify is not available or cannot be executed"
+      }
+      append(guestJsonStringify.execute(argValue).asString())
+    }
+
+    // Format the value as object notation.
+    private fun formatGuestObject(argValue: Value, defaults: Boolean, depth: UInt) {
+      utils.renderInspected(
+        argValue,
+        if (defaults) InspectOptions.defaults().copy(
+          depth = (minOf(1, options.depth.toInt() - depth.toInt())),
+        ) else options,
+      ).also { append(it) }
+    }
+
     // Format a structured value based on the specified type, with options for JSON and defaults.
-    private fun formatStructured(typeAndPosition: Pair<Char, UInt>, argValue: Any?, json: Boolean, defaults: Boolean) {
-      TODO("Not yet implemented: Format structured value as string")
+    private fun formatStructured(
+      argValue: Any?,
+      json: Boolean,
+      defaults: Boolean,
+      depth: UInt = 0u,
+    ) {
+      when {
+        // don't exceed specified depth in options
+        depth.toInt() > options().depth -> {
+          append("[Object]")
+          return
+        }
+
+        // nulls are easy
+        argValue == null -> append("null")
+
+        // json mode is next
+        json -> when (argValue) {
+          // foreign values are rendered by guest JSON intrinsics.
+          is Value -> formatWithGuestJson(argValue)
+          else -> formatWithGuestJson(Value.asValue(argValue))
+        }
+
+        // regular object printing mode
+        else -> when (argValue) {
+          // foreign values are rendered according to their structure and type.
+          is Value -> formatGuestObject(argValue, defaults, depth)
+          else -> formatGuestObject(Value.asValue(argValue), defaults, depth)
+        }
+      }
     }
 
     operator fun invoke(args: List<Any?>): StringBuilder = builder.apply {
@@ -214,11 +277,11 @@ internal object StringFormatter {
         nextConsumedArg += 1u
         formatPrimitive(type to thisArgPosition, argValue)
       }
-      fun StringBuilder.formatObject(type: Char, args: List<Any?>, json: Boolean, defaults: Boolean) {
+      fun StringBuilder.formatObject(args: List<Any?>, json: Boolean, defaults: Boolean) {
         val thisArgPosition = nextConsumedArg
         val argValue = consumeArgAt(args, thisArgPosition)
         nextConsumedArg += 1u
-        formatStructured(type to thisArgPosition, argValue, json, defaults)
+        formatStructured(argValue, json, defaults)
       }
 
       while (charIdx < format.length) {
@@ -248,13 +311,13 @@ internal object StringFormatter {
             FORMAT_STRING,
             FORMAT_NUMBER,
             FORMAT_INT,
-            FORMAT_CSS,
             FORMAT_FLOAT -> builder.formatPrimitiveChunk(thisChar, args)
 
             // object formatting
-            FORMAT_JSON -> builder.formatObject(thisChar, args, json = true, defaults = false)
-            FORMAT_OBJECT_DEFAULTS -> builder.formatObject(thisChar, args, json = false, defaults = true)
-            FORMAT_OBJECT -> builder.formatObject(thisChar, args, json = false, defaults = false)
+            FORMAT_JSON -> builder.formatObject(args, json = true, defaults = false)
+            FORMAT_OBJECT_DEFAULTS -> builder.formatObject(args, json = false, defaults = true)
+            FORMAT_OBJECT -> builder.formatObject(args, json = false, defaults = false)
+            FORMAT_CSS -> { /* ignored, consumes argument */ }
             else -> error("Unrecognized format specifier: '$thisChar'")
           }.also {
             reset(thisChar)
@@ -270,9 +333,14 @@ internal object StringFormatter {
   }
 
   // Implements checked (host-side) `util.format` from the Node.js API.
-  internal fun UtilAPI.formatString(obj: String, effective: InspectOptionsAPI, args: List<Any?>): String = buildString {
+  internal fun UtilAPI.formatString(
+    obj: String,
+    effective: InspectOptionsAPI,
+    args: List<Any?>,
+    contextGetter: () -> Context = { Context.getCurrent() },
+  ): String = buildString {
     if (obj.isNotEmpty()) {
-      StringFormatterImpl(obj, this@formatString, this@buildString, effective).apply {
+      StringFormatterImpl(obj, this@formatString, this@buildString, effective, contextGetter).apply {
         this(args)
       }
     }

@@ -44,7 +44,7 @@ public interface DebugLogger : ProxyExecutable, ReadOnlyProxyObject {
     /**
      * JavaScript debug logging logger name.
      */
-    public const val JS_DEBUG_LOGGER_NAME: String = "js.debug"
+    public const val JS_DEBUG_LOGGER_NAME: String = "gvm:js.debug"
 
     /**
      * Shorthand to create a named debug logger instance.

@@ -17,11 +17,15 @@ package elide.runtime.node
 import com.oracle.truffle.js.runtime.builtins.JSPromiseObject
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.util.SortedSet
+import java.util.stream.Stream
+import kotlin.streams.asStream
 import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.exec.GuestExecution
@@ -29,6 +33,7 @@ import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.node.util.DebugLoggerImpl
 import elide.runtime.node.util.InertDebugLogger
 import elide.runtime.node.util.MimeTypes
+import elide.runtime.node.util.NodeSystemErrors
 import elide.runtime.node.util.NodeUtilModule
 import elide.testing.annotations.TestCase
 
@@ -598,4 +603,33 @@ import elide.testing.annotations.TestCase
       test(mime.params.get("charset")).equals("utf-8");
     """
   }.doesNotFail()
+
+  @Test fun `getSystemErrorName - retrieves error name`() {
+    val mod = provide().provide()
+    // -13 to ("EACCES" to "permission denied")
+    val known = assertNotNull(NodeSystemErrors[NodeSystemErrors.EACCES])
+    val name = mod.getSystemErrorName(NodeSystemErrors.EACCES)
+    assertEquals(NodeSystemErrors.EACCES, known.id)
+    assertEquals("EACCES", known.name)
+    assertEquals("permission denied", known.message)
+    assertEquals("EACCES", name, "expected system error name to be 'EACCES'")
+  }
+
+  @TestFactory fun testGetSystemErrorName(): Stream<DynamicTest> = sequence<DynamicTest> {
+    val mod = provide().provide()
+    NodeSystemErrors.all().forEach { error ->
+      yield(DynamicTest.dynamicTest("${error.id} - ${error.name}") {
+        val info = NodeSystemErrors[error.id]
+        assertNotNull(info)
+        assertNotNull(NodeSystemErrors[error.name])
+        val name = mod.getSystemErrorName(error.id)
+        assertEquals(error.id, info.id)
+        assertEquals(error.name, info.name)
+        assertTrue(error.name.isNotEmpty())
+        assertEquals(error.message, info.message)
+        assertTrue(error.message.isNotEmpty())
+        assertEquals(error.name, name, "expected system error name to be '${error.name}'")
+      })
+    }
+  }.asStream()
 }

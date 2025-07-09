@@ -51,6 +51,8 @@ private const val F_DEPRECATE = "deprecate"
 private const val F_IS_ARRAY = "isArray"
 private const val F_TRANSFERABLE_ABORT_CONTROLLER = "transferableAbortController"
 private const val F_TRANSFERABLE_ABORT_SIGNAL = "transferableAbortSignal"
+private const val F_GETSYSTEMERRORNAME = "getSystemErrorName"
+private const val F_GETSYSTEMERRORMAP = "getSystemErrorMap"
 private const val P_CLS_TEXTENCODER = "TextEncoder"
 private const val P_CLS_TEXTDECODER = "TextDecoder"
 private const val P_CLS_MIMETYPE = "MIMEType"
@@ -69,6 +71,8 @@ private val moduleMembers = arrayOf(
   F_IS_ARRAY,
   P_CLS_MIMETYPE,
   P_CLS_MIMEPARAMS,
+  F_GETSYSTEMERRORNAME,
+  F_GETSYSTEMERRORMAP,
 )
 
 // Installs the Node `util` module into the intrinsic bindings.
@@ -117,6 +121,10 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
     F_IS_ARRAY -> ProxyExecutable { args -> isArray(args.firstOrNull()) }
     P_CLS_MIMETYPE -> MimeTypes
     P_CLS_MIMEPARAMS -> MimeTypes.Params
+    F_GETSYSTEMERRORNAME -> ProxyExecutable { args ->
+      getSystemErrorName(args.firstOrNull() ?: throw JsError.typeError("`getSystemErrorName` requires an error code"))
+    }
+    F_GETSYSTEMERRORMAP -> ProxyExecutable { getSystemErrorMap() }
     else -> null
   }
 
@@ -224,4 +232,14 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
     value != null &&
     value.hasArrayElements()
   )
+
+  override fun getSystemErrorName(id: Int): String? = NodeSystemErrors[id]?.name
+
+  @Polyglot override fun getSystemErrorMap(): Map<Int, List<String>> = NodeSystemErrors.export().let { errors ->
+    buildMap {
+      errors.forEach { (id, error) ->
+        put(id, listOfNotNull(error.name, error.message))
+      }
+    }
+  }
 }

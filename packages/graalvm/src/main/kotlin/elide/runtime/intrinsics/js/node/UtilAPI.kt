@@ -14,6 +14,7 @@ package elide.runtime.intrinsics.js.node
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyHashMap
 import elide.annotations.API
 import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.AbortController
@@ -193,4 +194,51 @@ import elide.vm.annotations.Polyglot
    * @return `true` if the value is an array or array-like, `false` otherwise.
    */
   @Polyglot public fun isArray(value: Value?): Boolean
+
+  /**
+   * ## Get System Error Name
+   *
+   * Given a system error [id] (also known as an error "code"), returns the name of the system error, as known to the
+   * Node.js API.
+   *
+   * This method variant is designed for implementation and host-side dispatch.
+   *
+   * @param id Numeric ID of the system error to look up.
+   * @return The name of the system error, or `null` if the ID is not recognized.
+   */
+  @Polyglot public fun getSystemErrorName(id: Int): String?
+
+  /**
+   * ## Get System Error Name
+   *
+   * Given a system error [id] (also known as an error "code"), returns the name of the system error, as known to the
+   * Node.js API.
+   *
+   * This method variant is designed for guest-side dispatch.
+   *
+   * @param id Numeric ID of the system error to look up.
+   * @return The name of the system error, or `null` if the ID is not recognized.
+   */
+  @Polyglot public fun getSystemErrorName(id: Value): String? {
+    if (!id.isNumber || !id.fitsInInt()) {
+      throw JsError.typeError("System error ID must be a number: $id")
+    }
+    return getSystemErrorName(id.asInt())
+  }
+
+  /**
+   * ## Get System Error Map
+   *
+   * Retrieve the mapping of known system error IDs to their names and messages, as understood by the Node.js API; the
+   * structure of the returned map is as follows:
+   *
+   * - Key: System error ID (an `Int`).
+   * - Value: A list of strings, where the first string is the name of the system error, and the second string is the
+   *   message associated with the system error.
+   *
+   * This method variant is designed for implementation and dispatch from both host and guest contexts.
+   *
+   * @return A map of system error IDs to their names and messages.
+   */
+  @Polyglot public fun getSystemErrorMap(): Map<Int, List<String>>
 }

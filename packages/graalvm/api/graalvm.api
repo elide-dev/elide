@@ -5822,6 +5822,52 @@ public abstract interface class elide/runtime/intrinsics/js/node/util/MIMEType$F
 	public abstract fun parse (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/MIMEType;
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/util/NodeTypechecksAPI {
+	public abstract fun isAnyArrayBuffer (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isArgumentsObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isArrayBuffer (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isArrayBufferView (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isAsyncFunction (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isBigInt64Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isBigIntObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isBigUint64Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isBooleanObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isBoxedPrimitive (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isCryptoKey (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isDataView (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isDate (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isExternal (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isFloat16Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isFloat32Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isFloat64Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isGeneratorFunction (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isGeneratorObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isInt16Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isInt32Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isInt8Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isKeyObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isMap (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isMapIterator (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isModuleNamespaceObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isNativeError (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isNumberObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isPromise (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isProxy (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isRegExp (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isSet (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isSetIterator (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isSharedArrayBuffer (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isStringObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isSymbolObject (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isTypedArray (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isUint16Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isUint32Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isUint8Array (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isUint8ClampedArray (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isWeakMap (Lorg/graalvm/polyglot/Value;)Z
+	public abstract fun isWeakSet (Lorg/graalvm/polyglot/Value;)Z
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/zlib/BrotliCompress : elide/runtime/intrinsics/js/node/stream/Writable, elide/runtime/intrinsics/js/node/zlib/Compressor {
 }
 

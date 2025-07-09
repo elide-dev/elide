@@ -53,6 +53,8 @@ private const val F_TRANSFERABLE_ABORT_CONTROLLER = "transferableAbortController
 private const val F_TRANSFERABLE_ABORT_SIGNAL = "transferableAbortSignal"
 private const val P_CLS_TEXTENCODER = "TextEncoder"
 private const val P_CLS_TEXTDECODER = "TextDecoder"
+private const val P_CLS_MIMETYPE = "MIMEType"
+private const val P_CLS_MIMEPARAMS = "MIMEParams"
 
 private val moduleMembers = arrayOf(
   F_CALLBACKIFY,
@@ -65,6 +67,8 @@ private val moduleMembers = arrayOf(
   F_TRANSFERABLE_ABORT_CONTROLLER,
   F_TRANSFERABLE_ABORT_SIGNAL,
   F_IS_ARRAY,
+  P_CLS_MIMETYPE,
+  P_CLS_MIMEPARAMS,
 )
 
 // Installs the Node `util` module into the intrinsic bindings.
@@ -111,6 +115,8 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
         ?: throw JsError.typeError("`transferableAbortSignal` requires an AbortSignal instance")
     }
     F_IS_ARRAY -> ProxyExecutable { args -> isArray(args.firstOrNull()) }
+    P_CLS_MIMETYPE -> MimeTypes
+    P_CLS_MIMEPARAMS -> MimeTypes.Params
     else -> null
   }
 

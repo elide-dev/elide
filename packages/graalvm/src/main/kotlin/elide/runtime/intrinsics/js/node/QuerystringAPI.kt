@@ -86,7 +86,7 @@ import elide.vm.annotations.Polyglot
    * @param str The string to percent-encode.
    * @return The percent-encoded string.
    */
-  @Polyglot public fun escape(str: String): String
+  @Polyglot public fun escape(str: Value): String
 
   /**
    * ## Method: `querystring.parse(str, sep, eq, options)`
@@ -136,5 +136,5 @@ import elide.vm.annotations.Polyglot
    * @param str The string to decode.
    * @return The decoded string.
    */
-  @Polyglot public fun unescape(str: String): String
+  @Polyglot public fun unescape(str: Value): String
 }

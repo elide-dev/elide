@@ -16,7 +16,9 @@ package elide.runtime.node
 
 import com.oracle.truffle.js.runtime.builtins.JSPromiseObject
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import java.util.SortedSet
@@ -88,6 +90,14 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(util)
+  }
+
+  @Test fun `callbackify - requires a function`() {
+    val mod = provide().provide()
+    assertThrows<Throwable> { mod.callbackify(null) }
+    assertThrows<Throwable> { mod.callbackify(Value.asValue(null)) }
+    assertThrows<Throwable> { mod.callbackify(Value.asValue("sample")) }
+    assertThrows<Throwable> { mod.callbackify(Value.asValue(42)) }
   }
 
   @Test fun `callbackify - handles resolution`() = executeESM {
@@ -241,6 +251,14 @@ import elide.testing.annotations.TestCase
     assertTrue(value.isNull, "expected no value for errored callback")
   }
 
+  @Test fun `promisify - requires a function`() {
+    val mod = provide().provide()
+    assertThrows<Throwable> { mod.promisify(null) }
+    assertThrows<Throwable> { mod.promisify(Value.asValue(null)) }
+    assertThrows<Throwable> { mod.promisify(Value.asValue("sample")) }
+    assertThrows<Throwable> { mod.promisify(Value.asValue(42)) }
+  }
+
   @Test fun `promisify - handles resolution`() = executeESM {
     // language=javascript
     """
@@ -347,6 +365,23 @@ import elide.testing.annotations.TestCase
     }
   }
 
+  @Test fun `deprecate - requires a callable`() {
+    val mod = provide().provide()
+    assertThrows<Throwable>("guest null should throw") { mod.deprecate(Value.asValue(null)) }
+    assertThrows<Throwable>("guest string should throw") { mod.deprecate(Value.asValue("sample")) }
+    assertThrows<Throwable>("guest number should throw") { mod.deprecate(Value.asValue(42)) }
+    val deprecated = mod.getMember("deprecate") as ProxyExecutable
+    assertThrows<Throwable>("guest with no args should throw") { deprecated.execute() }
+  }
+
+  @Test fun `deprecate - requires a callable from guest`() = executeGuest {
+    // language=javascript
+    """
+    const { deprecate } = require("node:util");
+    deprecate();
+    """
+  }.fails()
+
   @Test fun `deprecate - create deprecated callable`() = executeGuest {
     // language=javascript
     """
@@ -359,6 +394,62 @@ import elide.testing.annotations.TestCase
 
       test(deprecate).isNotNull();
       const deprecated = deprecate(sample, "example deprecated method");
+      test(deprecated).isNotNull();
+      let result = deprecated();
+      test(called).shouldBeTrue();
+      ({
+        result,
+        called
+      });
+    """
+  }.thenAssert {
+    val retval = assertNotNull(it.returnValue())
+    val result = assertNotNull(retval.getMember("result")).asString()
+    val called = assertNotNull(retval.getMember("called")).asBoolean()
+    assertTrue(called, "expected deprecated function to be called")
+    assertEquals("hello", result, "expected deprecated function to return 'hello'")
+  }
+
+  @Test fun `deprecate - create deprecated callable with no message`() = executeGuest {
+    // language=javascript
+    """
+      const { deprecate } = require("node:util");
+      let called = false;
+      const sample = () => {
+        called = true;
+        return "hello"
+      };
+
+      test(deprecate).isNotNull();
+      const deprecated = deprecate(sample);
+      test(deprecated).isNotNull();
+      let result = deprecated();
+      test(called).shouldBeTrue();
+      ({
+        result,
+        called
+      });
+    """
+  }.thenAssert {
+    val retval = assertNotNull(it.returnValue())
+    val result = assertNotNull(retval.getMember("result")).asString()
+    val called = assertNotNull(retval.getMember("called")).asBoolean()
+    assertTrue(called, "expected deprecated function to be called")
+    assertEquals("hello", result, "expected deprecated function to return 'hello'")
+  }
+
+  @Test fun `deprecate - create deprecated callable with message and code`() = executeGuest {
+    // language=javascript
+    """
+      const { deprecate } = require("node:util");
+      let called = false;
+      const sample = () => {
+        called = true;
+        return "hello"
+      };
+
+      test(deprecate).isNotNull();
+      const deprecated = deprecate(sample, "deprecated method", "DEP0001");
       test(deprecated).isNotNull();
       let result = deprecated();
       test(called).shouldBeTrue();

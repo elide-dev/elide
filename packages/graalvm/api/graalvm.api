@@ -3833,6 +3833,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/UtilAPI : elide
 	public abstract fun getSystemErrorMap ()Ljava/util/Map;
 	public abstract fun getSystemErrorName (I)Ljava/lang/String;
 	public fun getSystemErrorName (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public abstract fun inspect (Ljava/lang/Object;Lelide/runtime/intrinsics/js/node/util/InspectOptionsAPI;)Ljava/lang/String;
+	public fun inspect (Ljava/lang/Object;Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public static synthetic fun inspect$default (Lelide/runtime/intrinsics/js/node/UtilAPI;Ljava/lang/Object;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/lang/String;
 	public abstract fun isArray (Lorg/graalvm/polyglot/Value;)Z
 	public abstract fun promisify (Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/proxy/ProxyExecutable;
 	public abstract fun transferableAbortController ()Lelide/runtime/intrinsics/js/AbortController;
@@ -5793,6 +5796,22 @@ public abstract interface class elide/runtime/intrinsics/js/node/util/DebugLogge
 	public abstract fun createLogger (Ljava/lang/String;)Lelide/runtime/intrinsics/js/node/util/DebugLogger;
 	public fun newInstance ([Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/util/DebugLogger;
 	public synthetic fun newInstance ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/util/InspectOptionsAPI : elide/runtime/interop/ReadOnlyProxyObject {
+	public abstract fun getBreakLength ()I
+	public abstract fun getColors ()Z
+	public abstract fun getCompact ()Lorg/graalvm/polyglot/Value;
+	public abstract fun getCustomInspect ()Z
+	public abstract fun getDepth ()I
+	public abstract fun getGetters ()Lorg/graalvm/polyglot/Value;
+	public abstract fun getMaxArrayLength ()I
+	public abstract fun getMaxStringLength ()I
+	public abstract fun getNumericSeparator ()Z
+	public abstract fun getShowHidden ()Z
+	public abstract fun getShowProxy ()Z
+	public abstract fun getSorted ()Lorg/graalvm/polyglot/Value;
+	public fun getStyles ()Lelide/runtime/node/util/InspectStyling;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/util/MIMEParams : elide/runtime/interop/ReadOnlyProxyObject, org/graalvm/polyglot/proxy/ProxyHashMap {
@@ -9244,6 +9263,19 @@ public final synthetic class elide/runtime/node/util/$NodeUtilModule$Introspecti
 	public fun <init> ()V
 	public fun hasBuilder ()Z
 	public fun isBuildable ()Z
+}
+
+public abstract interface class elide/runtime/node/util/InspectStyling {
+	public static final field Companion Lelide/runtime/node/util/InspectStyling$Companion;
+	public static fun default ()Lelide/runtime/node/util/InspectStyling;
+	public fun getComplexStringValue ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun getNullValue ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun getPrimitiveValue ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+	public fun getStringValue ()Lcom/github/ajalt/mordant/rendering/TextStyle;
+}
+
+public final class elide/runtime/node/util/InspectStyling$Companion {
+	public final fun default ()Lelide/runtime/node/util/InspectStyling;
 }
 
 public final class elide/runtime/node/util/NodeSystemErrors {

@@ -15,6 +15,7 @@
 package elide.runtime.node
 
 import com.oracle.truffle.js.runtime.builtins.JSPromiseObject
+import com.oracle.truffle.js.runtime.objects.Undefined
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.junit.jupiter.api.Assumptions
@@ -598,6 +599,60 @@ private val allTypeChecks = arrayOf(
     assertFalse(mod.isArray(Value.asValue(42)))
     assertFalse(mod.isArray(Value.asValue("a string")))
     assertFalse(mod.isArray(Value.asValue(5.5)))
+  }
+
+  @Test fun `inspect - basic primitives`() {
+    val util = provide().provide()
+    assertEquals("42", util.inspect(42))
+    assertEquals("'42'", util.inspect("42"))
+    assertEquals("5.5", util.inspect(5.5))
+    assertEquals("'5.5'", util.inspect("5.5"))
+    assertEquals("false", util.inspect(false))
+    assertEquals("true", util.inspect(true))
+    assertEquals("null", util.inspect(Value.asValue(null)))
+    assertEquals("undefined", util.inspect(Undefined.instance))
+  }
+
+  @Test fun `inspect - host lists`() {
+    val util = provide().provide()
+    val list = listOf(1, 2, 3)
+    assertEquals("[ 1, 2, 3 ]", util.inspect(list))
+  }
+
+  @Test fun `inspect - host maps`() {
+    val util = provide().provide()
+    val list = mapOf("hi" to 1, "example" to 2, "another" to 3)
+    assertEquals("Map(3) { 'hi' => 1, 'example' => 2, 'another' => 3 }", util.inspect(list))
+  }
+
+  @Test fun `inspect - host sets`() {
+    val util = provide().provide()
+    val list = setOf("hi", "hello")
+    assertEquals("Set(2) { 'hi', 'hello' }", util.inspect(list))
+  }
+
+  @Test fun `inspect - guest arrays`() = executeGuest {
+    // language=javascript
+    "[1, 2, 3]"
+  }.thenAssert {
+    val util = provide().provide()
+    val list = assertNotNull(it.returnValue())
+    assertEquals("[ 1, 2, 3 ]", util.inspect(list))
+  }
+
+  @Test fun `inspect - guest maps`() = executeGuest {
+    // language=javascript
+    """
+    const map = new Map();
+    map.set("hi", 1);
+    map.set("example", 2);
+    map.set("another", 3);
+    map;
+    """
+  }.thenAssert {
+    val util = provide().provide()
+    val list = assertNotNull(it.returnValue())
+    assertEquals("Map(3) { 'hi' => 1, 'example' => 2, 'another' => 3 }", util.inspect(list))
   }
 
   @Test fun `MIMETypes - parse from string`() {

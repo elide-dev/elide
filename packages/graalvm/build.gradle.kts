@@ -505,6 +505,7 @@ dependencies {
 
   // General
   implementation(libs.jimfs)
+  implementation(libs.mordant)
 
   // Compression
   api(libs.commons.compress)

@@ -14,12 +14,13 @@ package elide.runtime.intrinsics.js.node
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
-import org.graalvm.polyglot.proxy.ProxyHashMap
 import elide.annotations.API
 import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.AbortController
 import elide.runtime.intrinsics.js.AbortSignal
 import elide.runtime.intrinsics.js.node.util.DebugLogger
+import elide.runtime.intrinsics.js.node.util.InspectOptionsAPI
+import elide.runtime.node.util.InspectOptions
 import elide.vm.annotations.Polyglot
 
 /**
@@ -241,4 +242,30 @@ import elide.vm.annotations.Polyglot
    * @return A map of system error IDs to their names and messages.
    */
   @Polyglot public fun getSystemErrorMap(): Map<Int, List<String>>
+
+  /**
+   * ## Inspect
+   *
+   * Inspects the provided [obj] and returns a string representation of the object, formatted according to the provided
+   * suite of [options], as applicable.
+   *
+   * @param obj Object to inspect.
+   * @param options Effective inspection options to customize the output.
+   * @return A string representation of the inspected object.
+   */
+  public fun inspect(obj: Any, options: InspectOptionsAPI): String
+
+  /**
+   * ## Inspect
+   *
+   * Inspects the provided [obj] and returns a string representation of the object, formatted according to the provided
+   * suite of [options], as applicable.
+   *
+   * @param obj Object to inspect.
+   * @param options Optional settings to apply to customize the output.
+   * @return A string representation of the inspected object.
+   */
+  @Polyglot public fun inspect(obj: Any, options: Value? = null): String {
+    return inspect(obj, options?.let { InspectOptions.from(it) } ?: InspectOptions.defaults())
+  }
 }

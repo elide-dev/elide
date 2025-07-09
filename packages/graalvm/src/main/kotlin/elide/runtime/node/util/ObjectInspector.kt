@@ -184,8 +184,28 @@ internal object ObjectInspector {
   }
 
   // Render a object-like value for inspection.
-  private fun InspectRenderer.renderObject(obj: Value, options: InspectOptionsAPI, label: String? = null) {
-    TODO("support for inspecting raw objects")
+  private fun InspectRenderer.renderObject(obj: Value, options: InspectOptionsAPI) {
+    if (!obj.hasMembers()) {
+      append("{}") // empty object
+      return
+    }
+    append("{ ")
+    val members = obj.memberKeys
+    var i = 0
+    for (key in members) {
+      if ((i + 1) >= options.maxArrayLength) {
+        append("...")
+        break
+      }
+      i += 1
+      append("$key: ")
+      val value = obj.getMember(key)
+      renderValue(value, options, contextOf = obj)
+      if (i < members.size) {
+        append(", ")
+      }
+    }
+    append(" }")
   }
 
   // Render a single (potentially complex) value for inspection.

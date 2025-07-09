@@ -166,8 +166,10 @@ internal object NodeTypechecks : NodeTypechecksAPI {
 
   @Polyglot override fun isAnyArrayBuffer(value: Value): Boolean = (
     !value.isNull &&
-    isArrayBuffer(value) ||
-    isArrayBufferView(value)
+    (
+      isArrayBuffer(value) ||
+      isArrayBufferView(value)
+    )
   )
 
   @Polyglot override fun isUint8Array(value: Value): Boolean = (

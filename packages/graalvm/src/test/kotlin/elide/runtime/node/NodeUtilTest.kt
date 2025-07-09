@@ -32,6 +32,8 @@ import kotlin.test.*
 import elide.annotations.Inject
 import elide.runtime.exec.GuestExecution
 import elide.runtime.exec.GuestExecutorProvider
+import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMap
+import elide.runtime.intrinsics.js.node.UtilAPI
 import elide.runtime.node.util.DebugLoggerImpl
 import elide.runtime.node.util.InertDebugLogger
 import elide.runtime.node.util.MimeTypes
@@ -694,6 +696,105 @@ private val allTypeChecks = arrayOf(
     assertEquals("the answer to the question: 42", util.format("the answer to %s: %i", listOf("the question", 42)))
   }
 
+  private fun formatWithContext(op: UtilAPI.() -> Unit): Unit = withContext {
+    val ctx = unwrap()
+    val util = provide().provide()
+    ctx.enter()
+    try {
+      op.invoke(util)
+    } finally {
+      ctx.leave()
+    }
+  }
+
+  @Test fun `format - simple json cases`() {
+    formatWithContext {
+      assertEquals("here is a json thing: \"hello\"", format("here is a json thing: %j", listOf("hello")))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5", format("here is a json thing: %j", listOf(5)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5.5", format("here is a json thing: %j", listOf(5.5)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5.5", format("here is a json thing: %j", listOf(5.5f)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: false", format("here is a json thing: %j", listOf(false)))
+    }
+  }
+
+  @Test fun `format - json arrays`() {
+    formatWithContext {
+      assertEquals("here is a json thing: [1,2,3]", format("here is a json thing: %j", listOf(listOf(1, 2, 3))))
+    }
+    formatWithContext {
+      assertEquals(
+        "here is a json thing: [false,false]",
+        format("here is a json thing: %j", listOf(listOf(false, false)))
+      )
+    }
+  }
+
+  @Test fun `format - json objects`() {
+    formatWithContext {
+      executeGuest {
+        // language=javascript
+        """
+        ({a: 1, b: 2})
+        """
+      }.thenAssert {
+        assertEquals(
+          "here is a json thing: {\"a\":1,\"b\":2}",
+          format("here is a json thing: %j", listOf(requireNotNull(it.returnValue())))
+        )
+      }
+    }
+  }
+
+  @Test fun `format - simple object cases`() {
+    formatWithContext {
+      assertEquals("here is a json thing: 'hello'", format("here is a json thing: %o", listOf("hello")))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5", format("here is a json thing: %o", listOf(5)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5.5", format("here is a json thing: %o", listOf(5.5)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5.5", format("here is a json thing: %o", listOf(5.5f)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: false", format("here is a json thing: %o", listOf(false)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: null", format("here is a json thing: %o", listOf(null)))
+    }
+  }
+
+  @Test fun `format - simple object cases with defaults`() {
+    formatWithContext {
+      assertEquals("here is a json thing: 'hello'", format("here is a json thing: %O", listOf("hello")))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5", format("here is a json thing: %O", listOf(5)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5.5", format("here is a json thing: %O", listOf(5.5)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: 5.5", format("here is a json thing: %O", listOf(5.5f)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: false", format("here is a json thing: %O", listOf(false)))
+    }
+    formatWithContext {
+      assertEquals("here is a json thing: null", format("here is a json thing: %O", listOf(null)))
+    }
+  }
+
   @Test fun `MIMETypes - parse from string`() {
     assertNotNull(MimeTypes.parse("text/html")).let {
       assertEquals("text", it.type)
@@ -1245,7 +1346,6 @@ private val allTypeChecks = arrayOf(
     "isFloat16Array",
     "isFloat32Array",
     "isFloat64Array",
-    "isUint8ClampedArray",
     "isAnyArrayBuffer",
     "isBigInt64Array",
     "isBigUint64Array",

@@ -24,7 +24,7 @@ import elide.runtime.node.util.InspectOptions
 import elide.vm.annotations.Polyglot
 
 /**
- * ## Node API: Utilities
+ * # Node API: Utilities
  *
  * Provides an API surface definition for Node.js' built-in `util` module, which provides various utility functions used
  * throughout Node.js applications and libraries.
@@ -98,7 +98,7 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun promisify(fn: Value?): ProxyExecutable
 
   /**
-   * ## Debug Logger
+   * ### Debug Logger
    *
    * Creates a named debug logger (at [name]) which is active only when the following conditions are met:
    * - The `--js:debug` flag is provided on the command line
@@ -112,7 +112,7 @@ import elide.vm.annotations.Polyglot
   public fun debuglog(name: String): DebugLogger
 
   /**
-   * ## Debug Logger
+   * ### Debug Logger
    *
    * Creates a named debug logger (at [name]) which is active only when the following conditions are met:
    * - The `--js:debug` flag is provided on the command line
@@ -128,7 +128,7 @@ import elide.vm.annotations.Polyglot
   )
 
   /**
-   * ## Deprecate a Function
+   * ### Deprecate a Function
    *
    * Accepts a callable function, and, optionally, a message and code to include in the deprecation warning; then, when
    * the function is called, the first time it is called (only), the deprecation warning is emitted.
@@ -142,7 +142,7 @@ import elide.vm.annotations.Polyglot
   public fun deprecate(fn: Value, message: String?, code: String?): ProxyExecutable
 
   /**
-   * ## Deprecate a Function
+   * ### Deprecate a Function
    *
    * Accepts a callable function, and, optionally, a message and code to include in the deprecation warning; then, when
    * the function is called, the first time it is called (only), the deprecation warning is emitted.
@@ -166,7 +166,7 @@ import elide.vm.annotations.Polyglot
   }
 
   /**
-   * ## Transferable Abort Controller
+   * ### Transferable Abort Controller
    *
    * Creates a new [AbortController] which is marked for transferability, meaning it can safely be transferred across
    * threading contexts and used via `postMessage` or similar mechanisms.
@@ -176,7 +176,7 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun transferableAbortController(): AbortController
 
   /**
-   * ## Transferable Abort Signal
+   * ### Transferable Abort Signal
    *
    * Marks an [AbortSignal] as transferable, meaning it can be transferred across threading contexts and used via
    * `postMessage` or similar mechanisms.
@@ -187,7 +187,7 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun transferableAbortSignal(signal: AbortSignal): AbortSignal
 
   /**
-   * ## Is Array
+   * ### Is Array
    *
    * Indicate whether the provided [value] behaves like an array, or is an array-like object.
    *
@@ -197,7 +197,7 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun isArray(value: Value?): Boolean
 
   /**
-   * ## Get System Error Name
+   * ### Get System Error Name
    *
    * Given a system error [id] (also known as an error "code"), returns the name of the system error, as known to the
    * Node.js API.
@@ -210,7 +210,7 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun getSystemErrorName(id: Int): String?
 
   /**
-   * ## Get System Error Name
+   * ### Get System Error Name
    *
    * Given a system error [id] (also known as an error "code"), returns the name of the system error, as known to the
    * Node.js API.
@@ -228,7 +228,7 @@ import elide.vm.annotations.Polyglot
   }
 
   /**
-   * ## Get System Error Map
+   * ### Get System Error Map
    *
    * Retrieve the mapping of known system error IDs to their names and messages, as understood by the Node.js API; the
    * structure of the returned map is as follows:
@@ -244,7 +244,7 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun getSystemErrorMap(): Map<Int, List<String>>
 
   /**
-   * ## Inspect
+   * ### Inspect
    *
    * Inspects the provided [obj] and returns a string representation of the object, formatted according to the provided
    * suite of [options], as applicable.
@@ -256,7 +256,7 @@ import elide.vm.annotations.Polyglot
   public fun inspect(obj: Any, options: InspectOptionsAPI): String
 
   /**
-   * ## Inspect
+   * ### Inspect
    *
    * Inspects the provided [obj] and returns a string representation of the object, formatted according to the provided
    * suite of [options], as applicable.
@@ -268,4 +268,59 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun inspect(obj: Any, options: Value? = null): String {
     return inspect(obj, options?.let { InspectOptions.from(it) } ?: InspectOptions.defaults())
   }
+
+  /**
+   * ### Format
+   *
+   * Formats the provided [format] string, and any additional [args] provided, into a string representation, optionally
+   * applying any provided [options].
+   *
+   * This method variant is designed for implementation and host-side dispatch.
+   *
+   * @param format Format string to render.
+   * @param options Options to apply to the formatting.
+   * @param args Additional arguments to include in the formatted output.
+   * @return A formatted string representation of the provided format and arguments.
+   */
+  public fun format(format: String, args: List<Any?>, options: InspectOptionsAPI = InspectOptions.defaults()): String
+
+  /**
+   * ### Format
+   *
+   * Formats the provided [format] string, and any additional [args] provided, into a string representation.
+   *
+   * This method variant is designed and guest-side dispatch.
+   *
+   * @param format Format string to render.
+   * @param args Arguments to include in the formatted output.
+   * @return A formatted string representation of the provided format and arguments.
+   */
+  @Polyglot public fun format(format: Value, vararg args: Value): String = format(
+    format.takeIf { it.isString }?.asString() ?: throw JsError.typeError(
+      "Format string must be a string: $format"
+    ),
+    args.toList(),
+    InspectOptions.defaults(),
+  )
+
+  /**
+   * ### Format
+   *
+   * Formats the provided `format` string, and any additional [args] provided, into a string representation; the first
+   * argument is the format string.
+   *
+   * This method variant is designed and guest-side dispatch.
+   *
+   * @param options Options to apply to the formatting.
+   * @param format Format string to render.
+   * @param args Additional arguments to include in the formatted output.
+   * @return A formatted string representation of the provided format and arguments.
+   */
+  @Polyglot public fun formatWithOptions(options: Value, format: Value, vararg args: Value): String = format(
+    format.takeIf { it.isString }?.asString() ?: throw JsError.typeError(
+      "Format string must be a string: $format"
+    ),
+    args.toList(),
+    InspectOptions.from(options),
+  )
 }

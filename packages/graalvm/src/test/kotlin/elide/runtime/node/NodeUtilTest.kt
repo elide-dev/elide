@@ -655,6 +655,45 @@ private val allTypeChecks = arrayOf(
     assertEquals("Map(3) { 'hi' => 1, 'example' => 2, 'another' => 3 }", util.inspect(list))
   }
 
+  @Test fun `format - simple cases`() {
+    val util = provide().provide()
+    assertEquals("here is a static string", util.format("here is a static string", emptyList()))
+  }
+
+  @Test fun `format - render a string`() {
+    val util = provide().provide()
+    assertEquals("here is a string", util.format("here is a %s", listOf("string")))
+  }
+
+  @Test fun `format - render an int`() {
+    val util = provide().provide()
+    assertEquals("the answer is 42", util.format("the answer is %i", listOf(42)))
+    assertEquals("the answer is 42", util.format("the answer is %i", listOf(42.0f)))
+    assertEquals("the answer is 42", util.format("the answer is %i", listOf(42.0)))
+    assertEquals("the answer is 42", util.format("the answer is %i", listOf(42L)))
+  }
+
+  @Test fun `format - render a float`() {
+    val util = provide().provide()
+    assertEquals("the answer is 5.5", util.format("the answer is %f", listOf(5.5)))
+    assertEquals("the answer is 5.0", util.format("the answer is %f", listOf(5)))
+    assertEquals("the answer is 5.5", util.format("the answer is %f", listOf(5.5f)))
+    assertEquals("the answer is 5.0", util.format("the answer is %f", listOf(5L)))
+  }
+
+  @Test fun `format - render a number`() {
+    val util = provide().provide()
+    assertEquals("the answer is 5.5", util.format("the answer is %d", listOf(5.5)))
+    assertEquals("the answer is 5", util.format("the answer is %d", listOf(5)))
+    assertEquals("the answer is 5.5", util.format("the answer is %d", listOf(5.5f)))
+    assertEquals("the answer is 5", util.format("the answer is %d", listOf(5L)))
+  }
+
+  @Test fun `format - render a mixed phrase`() {
+    val util = provide().provide()
+    assertEquals("the answer to the question: 42", util.format("the answer to %s: %i", listOf("the question", 42)))
+  }
+
   @Test fun `MIMETypes - parse from string`() {
     assertNotNull(MimeTypes.parse("text/html")).let {
       assertEquals("text", it.type)

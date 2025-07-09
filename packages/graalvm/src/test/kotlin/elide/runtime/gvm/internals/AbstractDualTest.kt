@@ -363,6 +363,15 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
     // Retrieve the return value from a test execution.
     fun returnValue(): Value? = returnValue.get()
 
+    // Await the return value and then use it.
+    fun await(): Value? {
+      factory {
+        val result = test.invoke(this)
+        if (result != null) setReturnValue(result)
+      }
+      return returnValue.get()
+    }
+
     /** After guest execution concludes, execute the provided [assertions] against the test context. */
     fun thenAssert(
       allowFailure: Boolean = false,

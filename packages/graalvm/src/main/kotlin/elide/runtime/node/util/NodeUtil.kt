@@ -43,6 +43,8 @@ import elide.runtime.lang.javascript.SyntheticJSModule
 import elide.vm.annotations.Polyglot
 import elide.runtime.gvm.internals.intrinsics.js.abort.AbortController.Factory as AbortControllerFactory
 
+// Method and property names for the Node `util` module.
+private const val F_ABORTED = "aborted"
 private const val F_CALLBACKIFY = "callbackify"
 private const val F_PROMISIFY = "promisify"
 private const val F_DEBUGLOG = "debuglog"
@@ -53,11 +55,26 @@ private const val F_TRANSFERABLE_ABORT_CONTROLLER = "transferableAbortController
 private const val F_TRANSFERABLE_ABORT_SIGNAL = "transferableAbortSignal"
 private const val F_GETSYSTEMERRORNAME = "getSystemErrorName"
 private const val F_GETSYSTEMERRORMAP = "getSystemErrorMap"
+private const val F_DIFF = "diff"
+private const val F_FORMAT = "format"
+private const val F_FORMAT_WITH_OPTIONS = "formatWithOptions"
+private const val F_INHERITS = "inherits"
+private const val F_INSPECT = "inspect"
+private const val F_EXTEND = "_extend"
+private const val F_ISDEEPSTRICTEQUAL = "isDeepStrictEqual"
+private const val F_GETCALLSITES = "getCallSites"
+private const val F_PARSEARGS = "parseArgs"
+private const val F_PARSEENV = "parseEnv"
+private const val F_STRIP_VT_CONTROL_CHARACTERS = "stripVTControlCharacters"
+private const val F_STYLE_TEXT = "styleText"
+private const val F_TO_USV_STRING = "toUSVString"
 private const val P_CLS_TEXTENCODER = "TextEncoder"
 private const val P_CLS_TEXTDECODER = "TextDecoder"
 private const val P_CLS_MIMETYPE = "MIMEType"
 private const val P_CLS_MIMEPARAMS = "MIMEParams"
+private const val P_TYPES = "types"
 
+// All module members for the Node `util` module.
 private val moduleMembers = arrayOf(
   F_CALLBACKIFY,
   F_PROMISIFY,
@@ -73,6 +90,21 @@ private val moduleMembers = arrayOf(
   P_CLS_MIMEPARAMS,
   F_GETSYSTEMERRORNAME,
   F_GETSYSTEMERRORMAP,
+  F_DIFF,
+  F_INHERITS,
+  F_GETCALLSITES,
+  F_FORMAT,
+  F_FORMAT_WITH_OPTIONS,
+  F_INSPECT,
+  F_ISDEEPSTRICTEQUAL,
+  F_PARSEARGS,
+  F_PARSEENV,
+  F_ABORTED,
+  F_STRIP_VT_CONTROL_CHARACTERS,
+  F_STYLE_TEXT,
+  F_TO_USV_STRING,
+  F_EXTEND,
+  P_TYPES,
 )
 
 // Installs the Node `util` module into the intrinsic bindings.
@@ -125,6 +157,25 @@ internal class NodeUtil private constructor (private val exec: GuestExecutorProv
       getSystemErrorName(args.firstOrNull() ?: throw JsError.typeError("`getSystemErrorName` requires an error code"))
     }
     F_GETSYSTEMERRORMAP -> ProxyExecutable { getSystemErrorMap() }
+
+    // methods which are not implemented yet
+    F_DIFF,
+    F_INHERITS,
+    F_GETCALLSITES,
+    F_FORMAT,
+    F_FORMAT_WITH_OPTIONS,
+    F_INSPECT,
+    F_ISDEEPSTRICTEQUAL,
+    F_PARSEARGS,
+    F_PARSEENV,
+    F_ABORTED,
+    F_STRIP_VT_CONTROL_CHARACTERS,
+    F_STYLE_TEXT,
+    F_TO_USV_STRING,
+    F_EXTEND -> ProxyExecutable { TODO("Not yet implemented: `util.$key`") }
+
+    P_TYPES -> NodeTypechecks
+
     else -> null
   }
 

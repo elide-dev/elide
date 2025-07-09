@@ -10,13 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("JSUnresolvedReference")
+@file:Suppress("JSUnresolvedReference", "JSUnusedLocalSymbols", "JSPrimitiveTypeWrapperUsage", "LargeClass")
 
 package elide.runtime.node
 
 import com.oracle.truffle.js.runtime.builtins.JSPromiseObject
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -36,6 +37,52 @@ import elide.runtime.node.util.MimeTypes
 import elide.runtime.node.util.NodeSystemErrors
 import elide.runtime.node.util.NodeUtilModule
 import elide.testing.annotations.TestCase
+
+private val allTypeChecks = arrayOf(
+  "isAnyArrayBuffer",
+  "isArrayBufferView",
+  "isArgumentsObject",
+  "isArrayBuffer",
+  "isAsyncFunction",
+  "isBigInt64Array",
+  "isBigIntObject",
+  "isBigUint64Array",
+  "isBooleanObject",
+  "isBoxedPrimitive",
+  "isCryptoKey",
+  "isDataView",
+  "isDate",
+  "isExternal",
+  "isFloat16Array",
+  "isFloat32Array",
+  "isFloat64Array",
+  "isGeneratorFunction",
+  "isGeneratorObject",
+  "isInt8Array",
+  "isInt16Array",
+  "isInt32Array",
+  "isKeyObject",
+  "isMap",
+  "isMapIterator",
+  "isModuleNamespaceObject",
+  "isNativeError",
+  "isNumberObject",
+  "isProxy",
+  "isRegExp",
+  "isSet",
+  "isSetIterator",
+  "isSharedArrayBuffer",
+  "isStringObject",
+  "isSymbolObject",
+  "isTypedArray",
+  "isUint8Array",
+  "isUint8ClampedArray",
+  "isUint16Array",
+  "isUint32Array",
+  "isWeakMap",
+  "isWeakSet",
+  "isPromise",
+)
 
 /** Tests for Elide's implementation of the Node `util` built-in module. */
 @TestCase internal class NodeUtilTest : NodeModuleConformanceTest<NodeUtilModule>() {
@@ -631,5 +678,512 @@ import elide.testing.annotations.TestCase
         assertEquals(error.name, name, "expected system error name to be '${error.name}'")
       })
     }
+  }.asStream()
+
+  private fun SequenceScope<DynamicTest>.testGuestType(
+    method: String,
+    desc: String? = null,
+    pass: Boolean = true,
+    obtainer: SequenceScope<DynamicTest>.() -> String,
+  ): DynamicTest {
+    val label = "types.$method${if (desc != null) " - $desc" else ""}"
+    return DynamicTest.dynamicTest(label) {
+      val code = obtainer.invoke(this)
+      executeGuest {
+        // language=javascript
+        """
+            const { types } = require("node:util");
+            $code
+            types.$method(subject);
+          """
+      }.let {
+        it.thenAssert { inner ->
+          val ret = assertNotNull(inner.returnValue(), "expected return value from inner type check function")
+          assertTrue(ret.isBoolean, "expected boolean return value from type check for '$method'")
+          if (pass) {
+            assertTrue(ret.asBoolean(), "expected type check to pass for '$method'")
+          } else {
+            assertFalse(ret.asBoolean(), "expected type check to fail for '$method'")
+          }
+        }
+      }
+    }
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsPromise() {
+    yield(testGuestType("isPromise") {
+      // language=javascript
+      """
+        const fn = async () => "hello";
+        const subject = fn();
+      """
+    })
+
+    yield(testGuestType("isPromise", "not a number", pass = false) {
+      // language=javascript
+      """
+        const subject = 5;
+      """
+    })
+
+    yield(testGuestType("isPromise", "not a string", pass = false) {
+      // language=javascript
+      """
+        const subject = 5;
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsStringObject() {
+    yield(testGuestType("isStringObject") {
+      // language=javascript
+      """
+        const subject = new String("hi");
+      """
+    })
+
+    yield(testGuestType("isStringObject", "not a raw string", pass = false) {
+      // language=javascript
+      """
+        const subject = "hi";
+      """
+    })
+
+    yield(testGuestType("isStringObject", "not a raw number", pass = false) {
+      // language=javascript
+      """
+        const subject = "hi";
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsRegExp() {
+    yield(testGuestType("isRegExp") {
+      // language=javascript
+      """
+        const subject = new RegExp("hi");
+      """
+    })
+
+    yield(testGuestType("isRegExp", "not a raw string", pass = false) {
+      // language=javascript
+      """
+        const subject = "hi";
+      """
+    })
+
+    yield(testGuestType("isRegExp", "not a raw number", pass = false) {
+      // language=javascript
+      """
+        const subject = 42;
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsMap() {
+    yield(testGuestType("isMap") {
+      // language=javascript
+      """
+        const subject = new Map();
+      """
+    })
+
+    yield(testGuestType("isMap", "not an object", pass = false) {
+      // language=javascript
+      """
+        const subject = {};
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsSet() {
+    yield(testGuestType("isSet") {
+      // language=javascript
+      """
+        const subject = new Set();
+      """
+    })
+
+    yield(testGuestType("isSet", "not an object", pass = false) {
+      // language=javascript
+      """
+        const subject = {};
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsWeakMap() {
+    yield(testGuestType("isWeakMap") {
+      // language=javascript
+      """
+        const subject = new WeakMap();
+      """
+    })
+
+    yield(testGuestType("isWeakMap", "not a regular map", pass = false) {
+      // language=javascript
+      """
+        const subject = new Map();
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsWeakSet() {
+    yield(testGuestType("isWeakSet") {
+      // language=javascript
+      """
+        const subject = new WeakSet();
+      """
+    })
+
+    yield(testGuestType("isWeakSet", "not a regular set", pass = false) {
+      // language=javascript
+      """
+        const subject = new Set();
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsDate() {
+    yield(testGuestType("isDate") {
+      // language=javascript
+      """
+        const subject = new Date();
+      """
+    })
+
+    yield(testGuestType("isDate", "not an object", pass = false) {
+      // language=javascript
+      """
+        const subject = {};
+      """
+    })
+
+    yield(testGuestType("isDate", "not a number", pass = false) {
+      // language=javascript
+      """
+        const subject = 42;
+      """
+    })
+
+    yield(testGuestType("isDate", "not a string", pass = false) {
+      // language=javascript
+      """
+        const subject = (new Date()).toString();
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsBooleanObject() {
+    yield(testGuestType("isBooleanObject", "truthy") {
+      // language=javascript
+      """
+        const subject = new Boolean(true);
+      """
+    })
+
+    yield(testGuestType("isBooleanObject", "falsy") {
+      // language=javascript
+      """
+        const subject = new Boolean(false);
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsNumberObject() {
+    yield(testGuestType("isNumberObject") {
+      // language=javascript
+      """
+        const subject = new Number(42);
+      """
+    })
+
+    yield(testGuestType("isNumberObject", "not a raw int", pass = false) {
+      // language=javascript
+      """
+        const subject = 42;
+      """
+    })
+
+    yield(testGuestType("isNumberObject", "not a string number", pass = false) {
+      // language=javascript
+      """
+        const subject = "42";
+      """
+    })
+
+    yield(testGuestType("isNumberObject", "not a string float", pass = false) {
+      // language=javascript
+      """
+        const subject = "42";
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsSymbolObject() {
+    yield(testGuestType("isSymbolObject") {
+      // language=javascript
+      """
+        const subject = Symbol("hello");
+      """
+    })
+
+    yield(testGuestType("isSymbolObject", "not a raw string", pass = false) {
+      // language=javascript
+      """
+        const subject = "hello";
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsBigIntObject() {
+    yield(testGuestType("isBigIntObject", "only a bigint-wrapped object") {
+      // language=javascript
+      """
+        const subject = Object(BigInt(9007199254740991n));
+      """
+    })
+
+    yield(testGuestType("isBigIntObject", "not a bigint literal", pass = false) {
+      // language=javascript
+      """
+        const subject = 9007199254740991n;
+      """
+    })
+
+    yield(testGuestType("isBigIntObject", "not a BigInt object", pass = false) {
+      // language=javascript
+      """
+        const subject = BigInt(9007199254740991n);
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsAsyncFunction() {
+    yield(testGuestType("isAsyncFunction") {
+      // language=javascript
+      """
+        const subject = async () => "hello";
+      """
+    })
+
+    yield(testGuestType("isAsyncFunction", "not a promise", pass = false) {
+      // language=javascript
+      """
+        const op = async () => "hello";
+        const subject = op();
+      """
+    })
+
+    yield(testGuestType("isAsyncFunction", "not a regular function", pass = false) {
+      // language=javascript
+      """
+        const subject = () => "hello";
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsGeneratorFunction() {
+    yield(testGuestType("isGeneratorFunction") {
+      // language=javascript
+      """
+      const subject = function* () { yield "hello"; };
+      """
+    })
+
+    yield(testGuestType("isGeneratorFunction", "not an async function", pass = false) {
+      // language=javascript
+      """
+      const subject = async () => "hello";
+      """
+    })
+
+    yield(testGuestType("isGeneratorFunction", "not a regular function", pass = false) {
+      // language=javascript
+      """
+      const subject = () => "hello";
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testIsArgumentsObject() {
+    // Always `false`.
+    yield(testGuestType("isArgumentsObject", pass = false) {
+      // language=javascript
+      """
+      const subject = (() => arguments)();
+      """
+    })
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.testTypedArraysAndBuffers() {
+    // isArrayBuffer
+    yield(testGuestType("isArrayBuffer") {
+      // language=javascript
+      """
+      const subject = new ArrayBuffer(8);
+      """
+    })
+    yield(testGuestType("isArrayBuffer", "not a view", pass = false) {
+      // language=javascript
+      """
+      const buf = new ArrayBuffer(8);
+      const subject = new Uint8Array(buf);
+      """
+    })
+
+    // isArrayBufferView / isTypedArray
+    val arrayTypes = sortedSetOf(
+      "Uint8Array",
+      "Uint8ClampedArray",
+      "Uint16Array",
+      "Uint32Array",
+      "Int8Array",
+      "Int16Array",
+      "Int32Array",
+      "Float32Array",
+      "Float64Array",
+      "BigInt64Array",
+      "BigUint64Array",
+    )
+    arrayTypes.forEach { arrayType ->
+      yield(testGuestType("is$arrayType") {
+        // language=javascript
+        """
+            const buf = new ArrayBuffer(8);
+            const subject = new $arrayType(buf);
+        """
+      })
+      yield(testGuestType("isArrayBufferView", "as $arrayType") {
+        // language=javascript
+        """
+            const buf = new ArrayBuffer(8);
+            const subject = new $arrayType(buf);
+        """
+      })
+      yield(testGuestType("isAnyArrayBuffer", "as $arrayType") {
+        // language=javascript
+        """
+            const buf = new ArrayBuffer(8);
+            const subject = new $arrayType(buf);
+        """
+      })
+      yield(testGuestType("isTypedArray", "as $arrayType") {
+        // language=javascript
+        """
+          const buf = new ArrayBuffer(8);
+          const subject = new $arrayType(buf);
+        """
+      })
+      (arrayTypes - arrayType).forEach { otherType ->
+        yield(testGuestType("is$arrayType", "not a $otherType", pass = false) {
+          // language=javascript
+          """
+            const buf = new ArrayBuffer(8);
+            const subject = new $otherType(buf);
+        """
+        })
+      }
+    }
+
+    yield(testGuestType("isAnyArrayBuffer", "as ArrayBuffer") {
+      // language=javascript
+      """
+      const subject = new ArrayBuffer(8);
+      """
+    })
+    yield(testGuestType("isArrayBufferView", "not an array", pass = false) {
+      // language=javascript
+      """
+      const subject = new ArrayBuffer(8);
+      """
+    })
+
+    // isSharedArrayBuffer
+  }
+
+  private suspend fun SequenceScope<DynamicTest>.allSpecificTypeCheckTests() {
+    testIsPromise()
+    testIsStringObject()
+    testIsRegExp()
+    testIsMap()
+    testIsSet()
+    testIsWeakMap()
+    testIsWeakSet()
+    testIsDate()
+    testIsBooleanObject()
+    testIsNumberObject()
+    testIsSymbolObject()
+    testIsBigIntObject()
+    testIsAsyncFunction()
+    testIsGeneratorFunction()
+    testIsArgumentsObject()
+    testTypedArraysAndBuffers()
+  }
+
+  private val implementedTypeChecks = arrayOf(
+    "isPromise",
+    "isStringObject",
+    "isRegExp",
+    "isMap",
+    "isSet",
+    "isDate",
+    "isBooleanObject",
+    "isNumberObject",
+    "isWeakMap",
+    "isWeakSet",
+    "isSymbolObject",
+    "isBigIntObject",
+    "isAsyncFunction",
+    "isGeneratorFunction",
+    "isArgumentsObject",
+    "isArrayBuffer",
+    "isArrayBufferView",
+    "isSharedArrayBuffer",
+    "isTypedArray",
+    "isUint8Array",
+    "isUint8ClampedArray",
+    "isUint16Array",
+    "isUint32Array",
+    "isInt8Array",
+    "isInt16Array",
+    "isInt32Array",
+    "isFloat16Array",
+    "isFloat32Array",
+    "isFloat64Array",
+    "isUint8ClampedArray",
+    "isAnyArrayBuffer",
+    "isBigInt64Array",
+    "isBigUint64Array",
+    "isSharedArrayBuffer",
+  )
+
+  @TestFactory fun testTypechecks(): Stream<DynamicTest> = sequence<DynamicTest> {
+    allTypeChecks.forEach { method ->
+      yield(DynamicTest.dynamicTest("$method - exists") {
+        executeGuest {
+          // language=javascript
+          """
+            const { types } = require("node:util");
+            const { $method: method } = types;
+            test(method).isNotNull();
+          """
+        }.doesNotFail()
+      })
+
+      yield(testGuestType(method, "`false` for `null`", pass = false) {
+        Assumptions.assumeTrue(method in implementedTypeChecks) {
+          "check '$method' is not implemented yet"
+        }
+
+        // language=javascript
+        """
+          const subject = null;
+          types.$method(subject);
+        """
+      })
+    }
+
+    allSpecificTypeCheckTests()
   }.asStream()
 }

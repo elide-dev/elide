@@ -2799,6 +2799,10 @@
       ]
     },
     {
+      "type": "elide.runtime.node.util.NodeTypechecks",
+      "allPublicMethods": true
+    },
+    {
       "type": "elide.runtime.node.worker.$NodeWorkerModule$Definition",
       "methods": [
         {

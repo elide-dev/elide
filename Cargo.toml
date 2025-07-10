@@ -91,13 +91,13 @@ jni-sys = { version = "0.4.0" }
 libloading = { version = "0.8.6" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
-orogene = { git = "https://github.com/elide-dev/orogene", rev = "b588243194126dda6899041317ef765c9e383827", default-features = false, features = [
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "1122f0884f8c6e726ac36dbd926a5102ce2fa950", default-features = false, features = [
   "mimalloc",
 ] }
 rustc_version = { version = "0.4.1" }
 rustix = { version = "1.0.2", features = ["process"] }
 serde = { version = "1.0.218", default-features = false }
-sysinfo = { version = "0.35.0" }
+sysinfo = { version = "0.36.0" }
 once_cell = { version = "1.21.3" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
 log = { version = "0.4.27" }
@@ -125,7 +125,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "3982963fb6e60b5de41a68633c9ac1c9305fb728", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "29516454d52d2197f9332b39162d27c913f31af6", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -133,7 +133,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "3982963fb6e60b5de41a686
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "38ee6ec80096e69a244e82b9cdc3c12feceada7f" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "43dbdba578179d8e6ced763916b658dcfb9c53c6" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "321575e48fa3aa6c7a2af7c96bfc85417b4ec4de" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "08bc6d25899501d690c37a87d6da51951280dfc5" }

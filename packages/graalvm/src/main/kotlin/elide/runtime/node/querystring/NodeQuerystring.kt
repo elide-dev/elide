@@ -12,12 +12,9 @@
  */
 package elide.runtime.node.querystring
 
-import com.oracle.truffle.js.runtime.builtins.JSURLDecoder
-import com.oracle.truffle.js.runtime.builtins.JSURLEncoder
+import org.apache.commons.codec.net.PercentCodec
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
-import java.net.URLDecoder
-import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
@@ -61,6 +58,41 @@ private val moduleMembers = arrayOf(
  * # Node API: `querystring`
  */
 internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
+
+  // Characters that Node.js querystring.escape() encodes beyond non-ASCII and %
+  // These are the characters NOT in the Node.js whitelist: A-Z a-z 0-9 - _ . ! ~ * ' ( )
+  private val ADDITIONAL_ENCODE_CHARS = byteArrayOf(
+    // RFC 3986 reserved characters that Node.js encodes
+    ' '.code.toByte(),   // %20
+    ':'.code.toByte(),   // %3A
+    '/'.code.toByte(),   // %2F
+    '?'.code.toByte(),   // %3F
+    '#'.code.toByte(),   // %23
+    '['.code.toByte(),   // %5B
+    ']'.code.toByte(),   // %5D
+    '@'.code.toByte(),   // %40
+    '$'.code.toByte(),   // %24
+    '&'.code.toByte(),   // %26
+    '+'.code.toByte(),   // %2B
+    ','.code.toByte(),   // %2C
+    ';'.code.toByte(),   // %3B
+    '='.code.toByte(),   // %3D
+
+    // Other characters that Node.js encodes
+    '"'.code.toByte(),   // %22
+    '<'.code.toByte(),   // %3C
+    '>'.code.toByte(),   // %3E
+    '\\'.code.toByte(),  // %5C
+    '^'.code.toByte(),   // %5E
+    '`'.code.toByte(),   // %60
+    '{'.code.toByte(),   // %7B
+    '|'.code.toByte(),   // %7C
+    '}'.code.toByte(),    // %7D
+  )
+
+  // PercentCodec configured for querystring behavior
+  // - Encodes additional characters specified above
+  private val codec = PercentCodec(ADDITIONAL_ENCODE_CHARS, false)
 
   private fun valueToString(value: Value): String = when {
     value.isString -> value.asString()
@@ -160,14 +192,10 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   ): String = stringify(obj, sep, eq, options)
 
   override fun escape(str: Value): String {
-    return URLEncoder.encode(valueToString(str), StandardCharsets.UTF_8)
-      .replace("+", "%20")      // Space: + -> %20
-      .replace("%21", "!")      // Exclamation mark: %21 -> !
-      .replace("%7E", "~")      // Tilde: %7E -> ~
-      .replace("%27", "'")      // Apostrophe: %27 -> '
-      .replace("%28", "(")      // Left parenthesis: %28 -> (
-      .replace("%29", ")")      // Right parenthesis: %29 -> )
+    val bytes = valueToString(str).toByteArray(StandardCharsets.UTF_8)
+    return codec.encode(bytes).toString(Charsets.UTF_8)
   }
+
 
   override fun parse(
     str: String,
@@ -188,6 +216,19 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   }
 
   override fun unescape(str: Value): String {
-    TODO("Not yet implemented")
+    val input = valueToString(str)
+
+    return runCatching {
+      val bytes = input.toByteArray(StandardCharsets.UTF_8)
+      codec.decode(bytes).toString(Charsets.UTF_8)
+    }.getOrElse {
+      // Fallback: manually decode percent-encoded sequences
+      input.replace(Regex("%([0-9A-Fa-f]{2})")) { match ->
+        when (val charCode = match.groupValues[1].toIntOrNull(16)) {
+          null -> match.value   // Keep original if hex is invalid
+          else -> charCode.toChar().toString()
+        }
+      }
+    }
   }
 }

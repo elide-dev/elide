@@ -15,7 +15,6 @@
 
 package elide.tool.err
 
-import dev.elide.uuid.Uuid
 import org.graalvm.nativeimage.ImageInfo
 import kotlin.time.Instant
 import kotlinx.serialization.SerialName
@@ -62,7 +61,7 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
     @OptIn(DelicateElideApi::class)
     @JvmStatic fun create(
       event: ErrorEvent,
-      id: Uuid = event.uuid,
+      id: String = event.uuid,
       timestamp: Instant = event.timestamp,
     ): PersistedError = HostPlatform.resolve().let { platform ->
       return PersistedError(

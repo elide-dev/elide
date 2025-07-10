@@ -448,7 +448,11 @@ dependencies {
   annotationProcessor(libs.picocli.codegen)
   ksp(mn.micronaut.inject.kotlin)
   classpathExtras(mn.micronaut.core.processor)
-  api(mn.micronaut.http.netty)
+
+  // fix for elide-dev/elide#1503
+  api(mn.micronaut.http.netty) {
+    version { strictly("4.8.18") }
+  }
 
   api(libs.clikt)
   api(libs.picocli)

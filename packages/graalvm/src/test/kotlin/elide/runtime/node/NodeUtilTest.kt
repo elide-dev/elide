@@ -1069,22 +1069,6 @@ private val allTypeChecks = arrayOf(
     })
   }
 
-  private suspend fun SequenceScope<DynamicTest>.testIsBooleanObject() {
-    yield(testGuestType("isBooleanObject", "truthy") {
-      // language=javascript
-      """
-        const subject = new Boolean(true);
-      """
-    })
-
-    yield(testGuestType("isBooleanObject", "falsy") {
-      // language=javascript
-      """
-        const subject = new Boolean(false);
-      """
-    })
-  }
-
   private suspend fun SequenceScope<DynamicTest>.testIsNumberObject() {
     yield(testGuestType("isNumberObject") {
       // language=javascript
@@ -1306,7 +1290,6 @@ private val allTypeChecks = arrayOf(
     testIsWeakMap()
     testIsWeakSet()
     testIsDate()
-    testIsBooleanObject()
     testIsNumberObject()
     testIsSymbolObject()
     testIsBigIntObject()

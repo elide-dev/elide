@@ -89,10 +89,8 @@ internal object NodeTypechecks : NodeTypechecksAPI {
     value.isDate
   )
 
-  @Polyglot override fun isBooleanObject(value: Value): Boolean = (
-    !value.isNull &&
-    value.isBoolean
-  )
+  // Not supported.
+  @Polyglot override fun isBooleanObject(value: Value): Boolean = false
 
   @Polyglot override fun isNumberObject(value: Value): Boolean = (
     !value.isNull &&

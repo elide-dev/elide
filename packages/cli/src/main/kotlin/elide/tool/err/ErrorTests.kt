@@ -13,13 +13,13 @@
 
 package elide.tool.err
 
-import dev.elide.uuid.uuid4
 import io.micronaut.context.annotation.Bean
 import elide.tool.annotations.EmbeddedTest
 import elide.tool.err.ErrorHandler.ErrorContext
 import elide.tool.err.ErrorHandler.ErrorEvent
 import elide.tool.testing.SelfTest
 import elide.tool.testing.TestContext
+import elide.util.UUID
 
 /** Test acquiring the error recorder. */
 @Bean @EmbeddedTest class ErrorRecorderAcquireTest : SelfTest() {
@@ -39,7 +39,7 @@ import elide.tool.testing.TestContext
     recorder.recordError(ErrorEvent.of(
       IllegalArgumentException("test - test - test"),
       ErrorContext.DEFAULT.copy(
-        uuid = uuid4(),
+        uuid = UUID.random(),
         fatal = false,
         guest = false,
         thread = Thread.currentThread(),

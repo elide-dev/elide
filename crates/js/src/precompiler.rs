@@ -13,7 +13,7 @@
 
 use crate::codegen::GeneratorOptions;
 use oxc::CompilerInterface;
-use oxc::codegen::{CodegenOptions, CodegenReturn, LegalComment};
+use oxc::codegen::{CodegenOptions, CodegenReturn, CommentOptions, LegalComment};
 use oxc::diagnostics::OxcDiagnostic;
 use oxc::parser::ParseOptions;
 use oxc::span::SourceType;
@@ -48,9 +48,12 @@ impl CompilerInterface for Precompiler {
   fn codegen_options(&self) -> Option<CodegenOptions> {
     Some(CodegenOptions {
       minify: true,
-      comments: false,
-      annotation_comments: true,
-      legal_comments: LegalComment::None,
+      comments: CommentOptions {
+        normal: false,
+        jsdoc: false,
+        annotation: true,
+        legal: LegalComment::None,
+      },
       ..self.config.codegen.clone()?
     })
   }

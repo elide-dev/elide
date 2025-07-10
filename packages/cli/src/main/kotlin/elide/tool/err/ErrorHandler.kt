@@ -180,7 +180,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
     val fatal: Boolean = true,
     val guest: Boolean = false,
     val coordinates: ErrorCoordinates? = null,
-    val timestamp: Instant = Clock.System.now(),
+    val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
     val stacktrace: String? = null,
     val frames: List<ErrorStackFrame>? = null,
     val language: GuestLanguage? = null,
@@ -325,7 +325,7 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
     override val uuid: String get() = err.second.uuid
 
     /** Timestamp provided for this event. */
-    override val timestamp: Instant get() = err.second.timestamp
+    override val timestamp: Instant get() = Instant.fromEpochMilliseconds(err.second.timestamp)
 
     /** Return the error which this event describes. */
     override val error: Throwable get() = err.first

@@ -8,6 +8,8 @@ import java.nio.file.Path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 /**
  * Bridge service used to invoke the Elide CLI on a configured distribution. Use [ElideCommandLine.at] to manually set
@@ -43,7 +45,12 @@ class ElideCommandLine private constructor(
     return coroutineScope {
       val result = async { block(process) }
 
-      process.awaitExit()
+      suspendCancellableCoroutine { continuation ->
+        @Suppress("UsePlatformProcessAwaitExit")
+        process.onExit().whenComplete { _, _ -> continuation.resume(Unit) }
+        continuation.invokeOnCancellation { process.destroy() }
+      }
+
       result.await()
     }
   }
@@ -59,6 +66,19 @@ class ElideCommandLine private constructor(
       return at(ElideDistributionResolver.getElideHome(project, externalProjectPath), workDir)
     }
   }
+}
+
+
+/**
+ * Launch the Elide CLI binary as a subprocess and suspend until it finishes executing. The supplied [block] will
+ * be called after the process is launched, and can be used to interact with it in any way; note that it is not
+ * necessary to use [awaitExit] in [block], as it is already called before returning.
+ */
+suspend inline operator fun <R> ElideCommandLine.invoke(
+  vararg commands: String,
+  noinline block: suspend CoroutineScope.(Process) -> R
+): R {
+  return invoke({ addAll(commands) }, block)
 }
 
 /**

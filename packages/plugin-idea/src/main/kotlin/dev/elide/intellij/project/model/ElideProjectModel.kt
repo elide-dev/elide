@@ -98,6 +98,23 @@ data object ElideProjectModel {
 
     val projectNode = DataNode(ProjectKeys.PROJECT, projectData, null)
 
+    val rootModule = ModuleData(
+      /* id = */ projectData.id,
+      /* owner = */ Constants.SYSTEM_ID,
+      /* moduleTypeId = */ "EMPTY_MODULE",
+      /* externalName = */ projectData.externalName,
+      /* moduleFileDirectoryPath = */ projectPath.resolve(".idea").toCanonicalPath(),
+      /* externalConfigPath = */ projectPath.resolve(Constants.MANIFEST_NAME).toCanonicalPath(),
+    )
+
+    val rootModuleNode = projectNode.createChild(ProjectKeys.MODULE, rootModule)
+
+    // add the `.dev` directory as an excluded root
+    val outputDir = projectPath.resolve(Constants.OUTPUT_DIR).pathString
+    val outputRoot = ContentRootData(Constants.SYSTEM_ID, outputDir)
+    outputRoot.storePath(ExternalSystemSourceType.EXCLUDED, outputDir)
+    rootModuleNode.createChild(ProjectKeys.CONTENT_ROOT, outputRoot)
+
     val mainModules = elideProject.sourceSets.find(SourceSetType.Sources).toList().map {
       buildModuleDataFromSourceSet(projectNode, elideProject, it, projectPath)
     }

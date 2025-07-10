@@ -117,13 +117,13 @@ public object Constants {
     const val JVM_TOOLCHAIN = "versions.java.toolchain"
 
     /** Property: JVM bytecode target if no other version is specified. */
-    const val JVM_DEFAULT = "23"
+    const val JVM_DEFAULT = "21"
 
     /** Property: JVM bytecode target expected for the toolchain. */
     const val JVM_TOOLCHAIN_DEFAULT = "24"
 
     /** GraalVM metadata repository version. */
-    const val GRAALVM_METADATA = "0.3.21"
+    const val GRAALVM_METADATA = "0.3.22"
 
     /** Version to pin for Diktat. */
     const val DIKTAT = "2.0.0"

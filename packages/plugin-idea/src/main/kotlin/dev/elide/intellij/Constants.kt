@@ -80,8 +80,11 @@ object Constants {
   data object Icons {
     @JvmStatic private val LOG = Logger.getInstance(Icons::class.java)
 
+    /** Generic Icon for Elide. */
+    @JvmStatic val ELIDE = load("/icons/elide.svg")
+
     /** Icon for the project sync button. */
-    @JvmStatic val RELOAD_PROJECT = load("/icons/elide.svg")
+    @JvmStatic val RELOAD_PROJECT = ELIDE
 
     /** Load an icon at the given [path] from the plugin resources. */
     private fun load(path: String): Icon {

@@ -38,6 +38,12 @@
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
+    <configurationType implementation="dev.elide.intellij.execution.ElideExternalTaskConfigurationType"/>
+    <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideRuntimeConfigurationProducer"/>
+    <runAnything.executionProvider implementation="dev.elide.intellij.action.ElideRunAnythingProvider"/>
+    <executionTargetLanguageRuntimeType implementation="dev.elide.intellij.execution.ElideRuntimeType"/>
+    <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideLazyRunConfigurationProducer"/>
+
     <externalSystemUnlinkedProjectAware implementation="dev.elide.intellij.project.ElideUnlinkedProjectAware"/>
     <externalIconProvider key="ELIDE" implementationClass="dev.elide.intellij.ui.ElideIconProvider"/>
     <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupActivity"/>
@@ -47,5 +53,10 @@
             id="reference.settingsdialog.project.elide"
             groupId="build.tools"
             instance="dev.elide.intellij.settings.ElideConfigurable"/>
+    <externalSystem.runConfigurationEx implementation="dev.elide.intellij.execution.ElideRunConfigurationExtension"/>
   </extensions>
+
+  <actions>
+    <action id="Elide.Run" class="dev.elide.intellij.action.ElideRunAction" icon="AllIcons.Actions.RunAnything"/>
+  </actions>
 </idea-plugin>

@@ -54,7 +54,6 @@ class ElideSettings(
     listener: ExternalSystemSettingsListener<ElideProjectSettings?>,
     parentDisposable: Disposable
   ) {
-    // noop
     doSubscribe(
       object : ElideSettingsListener {
         override fun onBulkChangeStart() = listener.onBulkChangeStart()

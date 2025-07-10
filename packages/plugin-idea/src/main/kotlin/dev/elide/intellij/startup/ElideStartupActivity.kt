@@ -25,6 +25,7 @@ import com.intellij.openapi.util.registry.Registry
 import dev.elide.intellij.Constants
 import dev.elide.intellij.settings.ElideProjectSettings
 import dev.elide.intellij.settings.ElideSettings
+import dev.elide.intellij.settings.ElideSettingsListener
 
 /** Startup activity used to detect an Elide project and sync it if needed. */
 class ElideStartupActivity : ProjectActivity {
@@ -37,20 +38,35 @@ class ElideStartupActivity : ProjectActivity {
     for (baseDir in project.getBaseDirectories()) {
       LOG.debug("Searching for Elide manifest in base dir $baseDir")
       baseDir.findChild(Constants.MANIFEST_NAME) ?: continue
+      val externalProjectPath = baseDir.toNioPath().toCanonicalPath()
 
       // have the IDE track changes to the project config files, then trigger a sync
       LOG.debug("Found manifest, linking project")
-      val settings = ElideSettings.getSettings(project)
+      val projectSettings = ElideSettings.getSettings(project)
         .getLinkedProjectSettings(baseDir.toNioPath().toCanonicalPath())
-        ?: ElideProjectSettings().apply { externalProjectPath = baseDir.toNioPath().toCanonicalPath() }
+        ?: ElideProjectSettings().also { it.externalProjectPath = externalProjectPath }
 
       ExternalSystemUtil.linkExternalProject(
         /* externalSystemId = */ Constants.SYSTEM_ID,
-        /* projectSettings = */ settings,
+        /* projectSettings = */ projectSettings,
         /* project = */ project,
         /* importResultCallback = */ { },
         /* isPreviewMode = */ false,
         /* progressExecutionMode = */ ProgressExecutionMode.IN_BACKGROUND_ASYNC,
+      )
+
+      // listen for settings changes and refresh if needed
+      project.messageBus.connect().subscribe(
+        topic = ElideSettings.getSettings(project).changesTopic,
+        handler = object : ElideSettingsListener {
+          override fun onBulkChangeEnd() = ExternalSystemUtil.refreshProject(
+            /* project = */ project,
+            /* externalSystemId = */ Constants.SYSTEM_ID,
+            /* externalProjectPath = */ externalProjectPath,
+            /* isPreviewMode = */ false,
+            /* progressExecutionMode = */ ProgressExecutionMode.IN_BACKGROUND_ASYNC,
+          )
+        },
       )
 
       break

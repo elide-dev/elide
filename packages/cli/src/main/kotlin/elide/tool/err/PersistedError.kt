@@ -43,7 +43,7 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
 @Serializable @JvmRecord data class PersistedError @OptIn(DelicateElideApi::class) private constructor (
   val version: Int = 1,
   val id: String,
-  val timestamp: Instant,
+  val timestamp: Long,
   val error: ErrorInfo,
   val runtime: RuntimeInfo = RuntimeInfo(),
   val os: HostPlatform.OperatingSystem,
@@ -66,7 +66,7 @@ import elide.tool.err.PersistedError.ErrorInfo.Companion.info
     ): PersistedError = HostPlatform.resolve().let { platform ->
       return PersistedError(
         id = id.toString(),
-        timestamp = timestamp,
+        timestamp = timestamp.toEpochMilliseconds(),
         error = event.info(),
         os = platform.os,
         arch = platform.arch,

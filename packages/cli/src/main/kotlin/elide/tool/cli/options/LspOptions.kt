@@ -33,7 +33,7 @@ import elide.tooling.project.ElideConfiguredProject
     names = ["--lsp:debug"],
     description = ["Activate debugging for LSP services."],
   )
-  private var lspDebug: Boolean = false
+  var lspDebug: Boolean = false
 
   /** Specifies the host to bind to for LSP services. */
   @Option(
@@ -41,7 +41,7 @@ import elide.tooling.project.ElideConfiguredProject
     description = ["Host to use for the LSP server."],
     paramLabel = "<host>",
   )
-  private var lspHost: String? = null
+  var lspHost: String? = null
 
   /** Specifies the port to bind to for LSP services. */
   @Option(
@@ -49,7 +49,7 @@ import elide.tooling.project.ElideConfiguredProject
     description = ["Port to use for the LSP server."],
     paramLabel = "<port>",
   )
-  private var lspPort: Int? = null
+  var lspPort: Int? = null
 
   /** Enable internal sources via LSP. */
   @Option(

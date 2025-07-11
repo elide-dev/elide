@@ -508,7 +508,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
   protected fun resolvePolyglotContext(
     langs: Set<GuestLanguage>,
     shared: Boolean = false,
-    cfg: (PolyglotContextBuilder.() -> Unit) = {},
+    cfg: (PolyglotContextBuilder.(VMEngine) -> Unit) = {},
   ): PolyglotContext {
     logging.debug("Resolving context for current thread")
 
@@ -679,7 +679,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
    */
   protected open fun withDeferredContext(
     langs: Set<GuestLanguage>,
-    cfg: PolyglotContextBuilder.() -> Unit = {},
+    cfg: PolyglotContextBuilder.(VMEngine) -> Unit = {},
     shared: Boolean = true,
     block: (() -> PolyglotContext) -> Unit,
   ) {

@@ -15,6 +15,7 @@ package elide.runtime.feature
 import com.google.common.jimfs.SystemJimfsFileSystemProvider
 import com.oracle.svm.core.jdk.FileSystemProviderSupport
 import org.graalvm.nativeimage.hosted.Feature
+import java.nio.file.FileSystems
 import elide.annotations.engine.VMFeature
 
 /** GraalVM feature which enables reflection required for VFS (Virtual File System) services. */
@@ -35,6 +36,8 @@ internal class VirtualFilesystem : FrameworkFeature {
   override fun afterRegistration(access: Feature.AfterRegistrationAccess?) {
     // register jimfs
     FileSystemProviderSupport.register(SystemJimfsFileSystemProvider())
+    // register the default file system provider
+    FileSystemProviderSupport.register(FileSystems.getDefault().provider())
   }
 
   override fun getDescription(): String = "Configures guest VFS features"

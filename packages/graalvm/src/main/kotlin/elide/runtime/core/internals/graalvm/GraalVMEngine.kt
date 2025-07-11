@@ -75,8 +75,8 @@ import elide.runtime.plugins.initializeDefaultContext
   /** Create a new [GraalVMContext], triggering lifecycle events to allow customization. */
   private fun createContext(
     shared: Boolean,
-    cfg: Builder.() -> Unit,
-    finalizer: Builder.() -> Context = { build() },
+    cfg: Builder.(Engine) -> Unit,
+    finalizer: Builder.(Engine) -> Context = { build() },
   ): GraalVMContext {
     // build a new context using the shared engine
     val builder = (if (shared) {
@@ -104,7 +104,7 @@ import elide.runtime.plugins.initializeDefaultContext
     }
 
     // build the context, notify event listeners, and finalize
-    return GraalVMContext(finalizer.invoke(builder.apply { cfg.invoke(builder) })).also { ctx->
+    return GraalVMContext(finalizer.invoke(builder.apply { cfg.invoke(builder, engine) }, engine)).also { ctx->
       lifecycle.emit(ContextInitialized, ctx)
     }.finalizeContext()
   }
@@ -149,7 +149,7 @@ import elide.runtime.plugins.initializeDefaultContext
     }
   }
 
-  override fun acquire(shared: Boolean, cfg: Builder.() -> Unit): PolyglotContext {
+  override fun acquire(shared: Boolean, cfg: Builder.(Engine) -> Unit): PolyglotContext {
     return createContext(shared, cfg)
   }
 

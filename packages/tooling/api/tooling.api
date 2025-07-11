@@ -5676,3 +5676,68 @@ public final class elide/tooling/project/manifest/PythonRequirementsManifest$Com
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class elide/tooling/project/mcp/McpProjectConfig {
+	public static final field Companion Lelide/tooling/project/mcp/McpProjectConfig$Companion;
+	public fun <init> (Ljava/util/Map;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;)Lelide/tooling/project/mcp/McpProjectConfig;
+	public static synthetic fun copy$default (Lelide/tooling/project/mcp/McpProjectConfig;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/project/mcp/McpProjectConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMcpServers ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/mcp/McpProjectConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/mcp/McpProjectConfig$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/mcp/McpProjectConfig;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/mcp/McpProjectConfig;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/mcp/McpProjectConfig$Command : elide/tooling/project/mcp/McpProjectConfig$McpServerType {
+	public static final field Companion Lelide/tooling/project/mcp/McpProjectConfig$Command$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;Ljava/util/Map;)Lelide/tooling/project/mcp/McpProjectConfig$Command;
+	public static synthetic fun copy$default (Lelide/tooling/project/mcp/McpProjectConfig$Command;Ljava/lang/String;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/project/mcp/McpProjectConfig$Command;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgs ()Ljava/util/List;
+	public final fun getCommand ()Ljava/lang/String;
+	public final fun getEnv ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/mcp/McpProjectConfig$Command$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/mcp/McpProjectConfig$Command$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/mcp/McpProjectConfig$Command;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/mcp/McpProjectConfig$Command;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/mcp/McpProjectConfig$Command$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/mcp/McpProjectConfig$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/project/mcp/McpProjectConfig$McpServerType {
+	public static final field Companion Lelide/tooling/project/mcp/McpProjectConfig$McpServerType$Companion;
+}
+
+public final class elide/tooling/project/mcp/McpProjectConfig$McpServerType$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+

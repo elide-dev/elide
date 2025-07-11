@@ -25,6 +25,7 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.QuerystringAPI
 import elide.runtime.intrinsics.js.node.querystring.ParseOptions
+import elide.runtime.intrinsics.js.node.querystring.StringifyOptions
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.gvm.js.JsError
 
@@ -135,9 +136,9 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     QS_ENCODE -> ProxyExecutable { args ->
       when (args.size) {
         1 -> encode(args[0], null, null, null)
-        2 -> encode(args[0], args[1].toString(), null, null)
-        3 -> encode(args[0], args[1].toString(), args[2].toString(), null)
-        4 -> encode(args[0], args[1].toString(), args[2].toString(), args[3])
+        2 -> encode(args[0], args[1], null, null)
+        3 -> encode(args[0], args[1], args[2], null)
+        4 -> encode(args[0], args[1], args[2], args[3])
         else -> throw JsError.typeError("Invalid number of arguments to `querystring.encode`")
       }
     }
@@ -162,9 +163,9 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     QS_STRINGIFY -> ProxyExecutable { args ->
       when (args.size) {
         1 -> stringify(args[0], null, null, null)
-        2 -> stringify(args[0], args[1].toString(), null, null)
-        3 -> stringify(args[0], args[1].toString(), args[2].toString(), null)
-        4 -> stringify(args[0], args[1].toString(), args[2].toString(), args[3])
+        2 -> stringify(args[0], args[1], null, null)
+        3 -> stringify(args[0], args[1], args[2], null)
+        4 -> stringify(args[0], args[1], args[2], args[3])
         else -> throw JsError.typeError("Invalid number of arguments to `querystring.stringify`")
       }
     }
@@ -188,8 +189,8 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
   override fun encode(
     obj: Value,
-    sep: String?,
-    eq: String?,
+    sep: Value?,
+    eq: Value?,
     options: Value?
   ): String = stringify(obj, sep, eq, options)
 
@@ -248,11 +249,67 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
   override fun stringify(
     obj: Value,
-    sep: String?,
-    eq: String?,
+    sep: Value?,
+    eq: Value?,
     options: Value?
   ): String {
-    TODO("Not yet implemented")
+    val separator = sep?.let(::valueToString) ?: "&"
+    val equals = eq?.let(::valueToString) ?: "="
+    val stringifyOptions = StringifyOptions.fromGuest(options)
+    
+    val result = mutableListOf<String>()
+    
+    when {
+      obj.hasMembers() -> {
+        obj.memberKeys.forEach { key ->
+          val value = obj.getMember(key)
+          appendKeyValuePairs(result, key, value,  equals, stringifyOptions)
+        }
+      }
+      else -> {
+        // Node.js returns empty string for non-objects (Maps, etc.)
+        return ""
+      }
+    }
+    
+    return result.joinToString(separator)
+  }
+  
+  private fun appendKeyValuePairs(
+    result: MutableList<String>,
+    key: String,
+    value: Value?,
+    equals: String,
+    options: StringifyOptions
+  ) {
+    if (value?.isNull != false) return
+    
+    val encoder = options.encodeURIComponent
+    val encodedKey = encoder?.execute(Value.asValue(key))?.asString() ?: escape(Value.asValue(key))
+    
+    when {
+      value.hasArrayElements() -> {
+        (0 until value.arraySize)
+          .asSequence()
+          .mapNotNull { value.getArrayElement(it) }
+          .filterNot { it.isNull }
+          .map { element ->
+            val encodedValue = encoder?.execute(element)?.asString() ?: escape(element)
+            "$encodedKey$equals$encodedValue"
+          }
+          .forEach { result += it }
+      }
+      else -> {
+        val stringValue = when {
+          value.isString -> value.asString()
+          value.isNumber -> value.toString()
+          value.isBoolean -> value.toString()
+          else -> valueToString(value)
+        }
+        val encodedValue = encoder?.execute(Value.asValue(stringValue))?.asString() ?: escape(Value.asValue(stringValue))
+        result += "$encodedKey$equals$encodedValue"
+      }
+    }
   }
 
   override fun unescape(str: Value): String {

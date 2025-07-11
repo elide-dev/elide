@@ -20,6 +20,7 @@ import jakarta.inject.Provider
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToStream
+import kotlin.time.Instant
 import elide.annotations.Context
 import elide.annotations.Factory
 import elide.annotations.Singleton
@@ -49,7 +50,13 @@ internal class DefaultStructuredErrorRecorder private constructor (
   }
 
   // Generate a filename for a `PersistedError`.
-  private fun PersistedError.filename(): String = "error-$timestamp-$id.json.gz"
+  private fun PersistedError.filename(): String = buildString {
+    append("error-")
+    append(Instant.fromEpochMilliseconds(timestamp).epochSeconds)
+    append('-')
+    append(id)
+    append(".json.gz")
+  }
 
   // Serialize and write an error.
   @OptIn(ExperimentalSerializationApi::class)

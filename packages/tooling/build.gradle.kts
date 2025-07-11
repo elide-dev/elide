@@ -58,9 +58,10 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.serialization.protobuf)
-
+  implementation(libs.graalvm.polyglot)
   implementation(libs.semver)
   implementation(libs.purl)
+  implementation(libs.mcp)
 
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)

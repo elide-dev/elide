@@ -109,4 +109,8 @@ object Constants {
       return getMessage(key, params = params)
     }
   }
+
+  data object Commands {
+    const val RUN = "run"
+  }
 }

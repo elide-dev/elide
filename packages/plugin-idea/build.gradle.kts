@@ -63,6 +63,8 @@ dependencies {
 
   intellijPlatform {
     create("IC", libs.versions.intellij.target.ide.get())
+    bundledPlugin("com.intellij.java")
+    bundledPlugin("org.jetbrains.kotlin")
     testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
   }
 }

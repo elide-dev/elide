@@ -9,6 +9,8 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import dev.elide.intellij.Constants
 import dev.elide.intellij.execution.ElideExecutionService
+import dev.elide.intellij.project.data.ElideProjectData
+import dev.elide.intellij.project.data.fullCommandLine
 import dev.elide.intellij.settings.ElideSettings
 import org.jetbrains.annotations.Nls
 import javax.swing.Icon
@@ -23,13 +25,22 @@ class ElideRunAnythingProvider : RunAnythingCommandLineProvider() {
   override fun getCompletionGroupTitle(): String = Constants.Strings["actions.runAnything.completionGroup"]
   override fun getHelpCommandPlaceholder(): String = Constants.Strings["actions.runAnything.helpPlaceholder"]
   override fun getHelpCommand(): String = Constants.Strings["actions.runAnything.helpCommand"]
-  override fun getHelpGroupTitle(): @Nls(capitalization = Nls.Capitalization.Title) String {
+  override fun getHelpGroupTitle(): String {
     return Constants.SYSTEM_ID.readableName
   }
 
   override fun suggestCompletionVariants(dataContext: DataContext, commandLine: CommandLine): Sequence<String> {
-    // TODO(@darvld): suggest scripts and entry points from the manifest
-    return arrayOf("install", "build", "run").asSequence()
+    val project = RunAnythingUtil.fetchProject(dataContext)
+    val projectPath = (dataContext.getData(EXECUTING_CONTEXT) ?: RunAnythingContext.ProjectContext(project))
+      .workingDirectory()
+
+    val info = ElideProjectData.load(project)
+
+    val tasks = projectPath?.let { info[it] }?.entrypoints?.map {
+      it.fullCommandLine
+    }?.sorted()?.asSequence().orEmpty()
+
+    return tasks + arrayOf("install", "build", "run").asSequence()
   }
 
   override fun run(

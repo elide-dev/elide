@@ -24,7 +24,7 @@ class ElideRunConfigurationExtension :
 
     addCommandLineFragment(
       project = project,
-      commandLineInfo = ElideCommandLineInfo(workingDirectoryField.component().component),
+      commandLineInfo = ElideCommandLineInfo(project, workingDirectoryField.component().component),
       getCommandLine = { rawCommandLine },
       setCommandLine = { rawCommandLine = it },
     )

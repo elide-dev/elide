@@ -8,6 +8,7 @@ import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunCo
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
 import com.intellij.openapi.project.Project
 import dev.elide.intellij.Constants
+import dev.elide.intellij.project.data.ElideEntrypointInfo
 import javax.swing.Icon
 
 /** Elide run configuration type. */
@@ -21,6 +22,7 @@ class ElideRunConfiguration(
   /* factory = */ factory,
   /* name = */ name,
 ), TargetEnvironmentAwareRunProfile {
+  var entrypoint: ElideEntrypointInfo? = null
   var rawCommandLine
     get() = settings.taskNames.joinToString(" ")
     set(value) {

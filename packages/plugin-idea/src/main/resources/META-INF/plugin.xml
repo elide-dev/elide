@@ -23,8 +23,14 @@
   <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.externalSystem</depends>
   <depends>com.intellij.modules.idea</depends>
+  <depends>com.intellij.java</depends>
+  <depends>org.jetbrains.kotlin</depends>
 
   <resource-bundle>i18n.Strings</resource-bundle>
+
+  <extensions defaultExtensionNs="org.jetbrains.kotlin">
+    <supportsKotlinPluginMode supportsK2="true"/>
+  </extensions>
 
   <extensionPoints>
     <extensionPoint name="projectModelContributor"
@@ -43,7 +49,6 @@
     <runAnything.executionProvider implementation="dev.elide.intellij.action.ElideRunAnythingProvider"/>
     <executionTargetLanguageRuntimeType implementation="dev.elide.intellij.execution.ElideRuntimeType"/>
     <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideLazyRunConfigurationProducer"/>
-
     <externalSystemUnlinkedProjectAware implementation="dev.elide.intellij.project.ElideUnlinkedProjectAware"/>
     <externalIconProvider key="ELIDE" implementationClass="dev.elide.intellij.ui.ElideIconProvider"/>
     <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupActivity"/>

@@ -30,10 +30,10 @@ public interface PolyglotEngine {
   public fun unwrap(): Engine
 
   /** Acquire a new [PolyglotContext]. The returned context has all plugins applied on creation. */
-  public fun acquire(cfg: Context.Builder.() -> Unit = {}): PolyglotContext {
+  public fun acquire(cfg: Context.Builder.(Engine) -> Unit = {}): PolyglotContext {
     return acquire(shared = true, cfg = cfg)
   }
 
   /** Acquire a new [PolyglotContext]. The returned context has all plugins applied on creation. */
-  public fun acquire(shared: Boolean, cfg: Context.Builder.() -> Unit = {}): PolyglotContext
+  public fun acquire(shared: Boolean, cfg: Context.Builder.(Engine) -> Unit = {}): PolyglotContext
 }

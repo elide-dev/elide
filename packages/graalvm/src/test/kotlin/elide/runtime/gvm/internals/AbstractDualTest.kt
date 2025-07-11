@@ -18,6 +18,7 @@ package elide.runtime.gvm.internals
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.BeanContext
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Engine
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
 import org.intellij.lang.annotations.Language
@@ -333,12 +334,12 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
   }
 
   /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */
-  protected open fun <T> withContext(builder: Context.Builder.() -> Unit, block: PolyglotContext.() -> T): T {
+  protected open fun <T> withContext(builder: Context.Builder.(Engine) -> Unit, block: PolyglotContext.() -> T): T {
     return block(engine.acquire(builder))
   }
 
   /** Acquire an exclusive [PolyglotContext] instance from the [engine] and use it with a given [block] of code. */
-  protected open fun withCustomContext(block: Context.Builder.() -> Unit): (PolyglotContext.() -> Unit) -> Unit {
+  protected open fun withCustomContext(block: Context.Builder.(Engine) -> Unit): (PolyglotContext.() -> Unit) -> Unit {
     engine.acquire(block).let { ctx ->
       return { op ->
         op.invoke(ctx)

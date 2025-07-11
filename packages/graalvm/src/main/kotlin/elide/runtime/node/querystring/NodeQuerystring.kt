@@ -15,6 +15,7 @@ package elide.runtime.node.querystring
 import org.apache.commons.codec.net.PercentCodec
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 import java.nio.charset.StandardCharsets
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
@@ -23,6 +24,7 @@ import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.QuerystringAPI
+import elide.runtime.intrinsics.js.node.querystring.ParseOptions
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.gvm.js.JsError
 
@@ -92,7 +94,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
   // PercentCodec configured for querystring behavior
   // - Encodes additional characters specified above
-  private val codec = PercentCodec(ADDITIONAL_ENCODE_CHARS, false)
+  private val codec = PercentCodec(ADDITIONAL_ENCODE_CHARS, true)
 
   private fun valueToString(value: Value): String = when {
     value.isString -> value.asString()
@@ -122,10 +124,10 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   override fun getMember(key: String?): Any? = when (key) {
     QS_DECODE -> ProxyExecutable { args ->
       when (args.size) {
-        1 -> decode(args.first().toString(), null, null, null)
-        2 -> decode(args.first().toString(), args[1].toString(), null, null)
-        3 -> decode(args.first().toString(), args[1].toString(), args[2].toString(), null)
-        4 -> decode(args.first().toString(), args[1].toString(), args[2].toString(), args[3])
+        1 -> decode(args.first(), null, null, null)
+        2 -> decode(args.first(), args[1], null, null)
+        3 -> decode(args.first(), args[1], args[2], null)
+        4 -> decode(args.first(), args[1], args[2], args[3])
         else -> throw JsError.typeError("Invalid number of arguments to `querystring.decode`")
       }
     }
@@ -149,10 +151,10 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
     QS_PARSE -> ProxyExecutable { args ->
       when (args.size) {
-        1 -> parse(args[0].toString(), null, null, null)
-        2 -> parse(args[0].toString(), args[1].toString(), null, null)
-        3 -> parse(args[0].toString(), args[1].toString(), args[2].toString(), null)
-        4 -> parse(args[0].toString(), args[1].toString(), args[2].toString(), args[3])
+        1 -> parse(args.first(), null, null, null)
+        2 -> parse(args.first(), args[1], null, null)
+        3 -> parse(args.first(), args[1], args[2], null)
+        4 -> parse(args.first(), args[1], args[2], args[3])
         else -> throw JsError.typeError("Invalid number of arguments to `querystring.parse`")
       }
     }
@@ -178,9 +180,9 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   }
 
   override fun decode(
-    str: String,
-    sep: String?,
-    eq: String?,
+    str: Value,
+    sep: Value?,
+    eq: Value?,
     options: Value?
   ): Value = parse(str, sep, eq, options)
 
@@ -196,14 +198,52 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     return codec.encode(bytes).toString(Charsets.UTF_8)
   }
 
-
   override fun parse(
-    str: String,
-    sep: String?,
-    eq: String?,
+    str: Value,
+    sep: Value?,
+    eq: Value?,
     options: Value?
   ): Value {
-    TODO("Not yet implemented")
+    val string = valueToString(str)
+    val separator = sep?.let(::valueToString) ?: "&"
+    val equals = eq?.let(::valueToString) ?: "="
+    val parseOptions = ParseOptions.fromGuest(options)
+
+    val result = mutableMapOf<String, Any>()
+    
+    if (string.isBlank()) {
+      return Value.asValue(result)
+    }
+
+    var keyCount = 0
+    string.split(separator)
+      .asSequence()
+      .filter { it.isNotEmpty() }
+      .takeWhile { keyCount < parseOptions.maxKeys }
+      .forEach { pair ->
+        val (rawKey, rawValue) = pair.split(equals, limit = 2)
+          .let { parts -> parts[0] to parts.getOrElse(1) { "" } }
+
+        val decoder = parseOptions.decodeURIComponent
+        val key = decoder?.execute(Value.asValue(rawKey))?.asString() ?: unescape(Value.asValue(rawKey))
+        val value = decoder?.execute(Value.asValue(rawValue))?.asString() ?: unescape(Value.asValue(rawValue))
+
+        when (val existing = result[key]) {
+          null -> {
+            result[key] = value
+            keyCount++
+          }
+          is MutableList<*> -> {
+            @Suppress("UNCHECKED_CAST")
+            (existing as MutableList<String>).add(value)
+          }
+          is String -> {
+            result[key] = mutableListOf(existing, value)
+          }
+        }
+      }
+
+    return Value.asValue(result)
   }
 
   override fun stringify(

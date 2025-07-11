@@ -72,8 +72,8 @@ import elide.vm.annotations.Polyglot
    */
   @Polyglot public fun encode(
     obj: Value,
-    sep: String? = "&",
-    eq: String? = "=",
+    sep: Value? = Value.asValue("&"),
+    eq: Value? = Value.asValue("="),
     options: Value? = null
   ): String
 
@@ -123,8 +123,8 @@ import elide.vm.annotations.Polyglot
    */
   @Polyglot public fun stringify(
     obj: Value,
-    sep: String? = "&",
-    eq: String? = "=",
+    sep: Value? = Value.asValue("&"),
+    eq: Value? = Value.asValue("="),
     options: Value? = null
   ): String
 

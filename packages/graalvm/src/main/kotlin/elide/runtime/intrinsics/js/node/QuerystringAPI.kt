@@ -53,9 +53,9 @@ import elide.vm.annotations.Polyglot
    * @return A JavaScript object representing the parsed query string.
    */
   @Polyglot public fun decode(
-    str: String,
-    sep: String? = "&",
-    eq: String? = "=",
+    str: Value,
+    sep: Value? = Value.asValue("&"),
+    eq: Value? = Value.asValue("="),
     options: Value? = null
   ): Value
 
@@ -102,9 +102,9 @@ import elide.vm.annotations.Polyglot
    * @return A JavaScript object representing the parsed query string.
    */
   @Polyglot public fun parse(
-    str: String,
-    sep: String? = "&",
-    eq: String? = "=",
+    str: Value,
+    sep: Value? = Value.asValue("&"),
+    eq: Value? = Value.asValue("="),
     options: Value? = null
   ): Value
 

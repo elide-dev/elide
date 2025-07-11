@@ -5678,10 +5678,13 @@ public final class elide/tooling/project/manifest/PythonRequirementsManifest$Com
 
 public final class elide/tooling/project/mcp/McpProjectConfig {
 	public static final field Companion Lelide/tooling/project/mcp/McpProjectConfig$Companion;
+	public static final field MCP_CONFIG_FILE Ljava/lang/String;
 	public fun <init> (Ljava/util/Map;)V
 	public final fun component1 ()Ljava/util/Map;
 	public final fun copy (Ljava/util/Map;)Lelide/tooling/project/mcp/McpProjectConfig;
 	public static synthetic fun copy$default (Lelide/tooling/project/mcp/McpProjectConfig;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/project/mcp/McpProjectConfig;
+	public static final fun createForElide ()Lelide/tooling/project/mcp/McpProjectConfig;
+	public static final fun createForElideJson ()Ljava/lang/String;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getMcpServers ()Ljava/util/Map;
 	public fun hashCode ()I
@@ -5730,6 +5733,8 @@ public final class elide/tooling/project/mcp/McpProjectConfig$Command$Companion 
 }
 
 public final class elide/tooling/project/mcp/McpProjectConfig$Companion {
+	public final fun createForElide ()Lelide/tooling/project/mcp/McpProjectConfig;
+	public final fun createForElideJson ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

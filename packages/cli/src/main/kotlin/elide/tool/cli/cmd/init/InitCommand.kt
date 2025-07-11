@@ -38,6 +38,7 @@ import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
+import elide.tooling.project.mcp.McpProjectConfig
 
 /**
  * Initialize a new project.
@@ -293,6 +294,13 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
   )
   var path: String? = null
 
+  @CommandLine.Option(
+    names = ["--mcp"],
+    defaultValue = "true",
+    description = ["Initialize a `${McpProjectConfig.MCP_CONFIG_FILE}` file."],
+  )
+  var mcp: Boolean? = null
+
   private fun renderManifest(template: RenderableTemplate, name: String): StringBuilder = StringBuilder().apply {
     when (val existing = template.tree[Path.of("elide.pkl")]) {
       null -> {
@@ -365,6 +373,16 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         false -> Files.createDirectories(targetPath)
       }
     }
+    val doCreateMcp: Boolean = if (mcp != null) (mcp == true) else {
+      if (interactive && terminal.terminalInfo.interactive) {
+        KInquirer.promptConfirm(
+          "Initialize a `${McpProjectConfig.MCP_CONFIG_FILE}` file?",
+          default = true,
+        )
+      } else true  // assume yes if not interactive
+    }.also {
+      mcp = it  // update for other uses
+    }
 
     // start inflating files from the project
     val elideManifest = renderManifest(
@@ -377,6 +395,11 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
       // render a manifest and add it
       addFile("elide.pkl") { elideManifest.toString() }
+
+      // if we should create an MCP config, add it
+      if (doCreateMcp) addFile(McpProjectConfig.MCP_CONFIG_FILE) {
+        McpProjectConfig.createForElideJson()
+      }
     }
     projectFiles.values.forEach { file ->
       val targetFile = targetPath.resolve(file.path)

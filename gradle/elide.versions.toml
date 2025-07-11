@@ -190,6 +190,7 @@ lmaxDisruptor = "4.0.0"
 lmaxDisruptorProxy = "3.1.1"
 logback = "1.5.18"
 lz4 = "1.3.0"
+markdown = "0.7.3"
 magicProgress = "0.3.2"
 maven-core = "3.9.9"
 maven-lib = "1.9.22"
@@ -682,6 +683,7 @@ lmax-disruptor-proxy = { group = "com.lmax", name = "disruptor-proxy", version.r
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
 logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "logback" }
 lz4 = { group = "net.jpountz.lz4", name = "lz4", version.ref = "lz4" }
+markdown = { group = "org.jetbrains", name = "markdown", version.ref = "markdown" }
 maven-core = { group = "org.apache.maven", name = "maven-core", version.ref = "maven-core" }
 maven-model = { group = "org.apache.maven", name = "maven-model", version.ref = "maven-core" }
 maven-model-builder = { group = "org.apache.maven", name = "maven-model-builder", version.ref = "maven-core" }

@@ -81,6 +81,7 @@ dependencies {
   api(projects.packages.graalvmKt)
   api(projects.packages.telemetry)
   api(libs.sarif4k)
+  api(libs.markdown)
   api(libs.bundles.maven.model)
   api(libs.pkl.core) { pklExclusions() }
   api(libs.pkl.config.java) { pklExclusions() }

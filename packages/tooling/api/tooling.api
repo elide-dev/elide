@@ -2771,6 +2771,180 @@ public abstract interface class elide/tooling/project/SourceSets {
 	public abstract fun get (Ljava/lang/String;)Lelide/tooling/project/SourceSet;
 }
 
+public abstract interface class elide/tooling/project/agents/AdviceEnabled {
+	public abstract fun advice (Lelide/tooling/project/agents/AgentAdviceBuilder;)V
+}
+
+public abstract interface class elide/tooling/project/agents/AdviceStanza : elide/tooling/project/agents/RenderableAdvice {
+	public static final field Companion Lelide/tooling/project/agents/AdviceStanza$Companion;
+}
+
+public final class elide/tooling/project/agents/AdviceStanza$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/agents/AgentAdvice : java/lang/Record, elide/tooling/project/agents/RenderableAdvice {
+	public static final field Companion Lelide/tooling/project/agents/AgentAdvice$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public static final fun build (Lkotlin/jvm/functions/Function1;)Lelide/tooling/project/agents/AgentAdvice;
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lelide/tooling/project/agents/AgentAdvice;
+	public static synthetic fun copy$default (Lelide/tooling/project/agents/AgentAdvice;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/agents/AgentAdvice;
+	public static final fun defaults (Lelide/tooling/project/ElideConfiguredProject;)Lelide/tooling/project/agents/AgentAdvice;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun export (Ljava/lang/StringBuilder;)V
+	public fun hashCode ()I
+	public final fun plus (Lelide/tooling/project/agents/AgentAdvice;)Lelide/tooling/project/agents/AgentAdvice;
+	public final fun stanzas ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+	public static final fun withDefaults (Lelide/tooling/project/ElideConfiguredProject;Lkotlin/jvm/functions/Function1;)Lelide/tooling/project/agents/AgentAdvice;
+}
+
+public final synthetic class elide/tooling/project/agents/AgentAdvice$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/agents/AgentAdvice$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/agents/AgentAdvice;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/agents/AgentAdvice;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/agents/AgentAdvice$Companion {
+	public final fun build (Lkotlin/jvm/functions/Function1;)Lelide/tooling/project/agents/AgentAdvice;
+	public final fun defaults (Lelide/tooling/project/ElideConfiguredProject;)Lelide/tooling/project/agents/AgentAdvice;
+	public static synthetic fun defaults$default (Lelide/tooling/project/agents/AgentAdvice$Companion;Lelide/tooling/project/ElideConfiguredProject;ILjava/lang/Object;)Lelide/tooling/project/agents/AgentAdvice;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public final fun withDefaults (Lelide/tooling/project/ElideConfiguredProject;Lkotlin/jvm/functions/Function1;)Lelide/tooling/project/agents/AgentAdvice;
+	public static synthetic fun withDefaults$default (Lelide/tooling/project/agents/AgentAdvice$Companion;Lelide/tooling/project/ElideConfiguredProject;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/tooling/project/agents/AgentAdvice;
+}
+
+public abstract interface class elide/tooling/project/agents/AgentAdviceBuilder : elide/tooling/project/agents/RenderableAdvice {
+	public abstract fun add (Lelide/tooling/project/agents/RenderableAdvice;)Lelide/tooling/project/agents/RenderableAdvice;
+	public abstract fun buildWith (Lkotlin/jvm/functions/Function1;)Lelide/tooling/project/agents/RenderableAdvice;
+	public fun forProject (Lelide/tooling/project/ElideConfiguredProject;)Lelide/tooling/project/agents/RenderableAdvice;
+	public fun heading-tdVZR1g (Ljava/lang/String;)Ljava/lang/String;
+	public fun plus (Lelide/tooling/project/agents/RenderableAdvice;)V
+	public fun plusAssign (Lelide/tooling/project/agents/RenderableAdvice;)V
+	public fun section-nd44FIE (Ljava/lang/String;Ljava/lang/String;)Lkotlin/Pair;
+	public fun text-38wvzaY (Ljava/lang/String;)Ljava/lang/String;
+	public fun text-38wvzaY (Lkotlin/jvm/functions/Function0;)Ljava/lang/String;
+}
+
+public final class elide/tooling/project/agents/ElideAdvice : elide/tooling/project/agents/AdviceEnabled {
+	public static final field INSTANCE Lelide/tooling/project/agents/ElideAdvice;
+	public fun advice (Lelide/tooling/project/agents/AgentAdviceBuilder;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/agents/Heading : elide/tooling/project/agents/AdviceStanza {
+	public static final field Companion Lelide/tooling/project/agents/Heading$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/project/agents/Heading;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun export (Ljava/lang/StringBuilder;)V
+	public static fun export-impl (Ljava/lang/String;Ljava/lang/StringBuilder;)V
+	public static final fun getHeadingText-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/agents/Heading$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/agents/Heading$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-tdVZR1g (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-MfVRbnk (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+}
+
+public final class elide/tooling/project/agents/Heading$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/agents/ProjectAdvice : elide/tooling/project/agents/RenderableAdvice {
+	public static final field Companion Lelide/tooling/project/agents/ProjectAdvice$Companion;
+	public static final fun build (Lelide/tooling/project/ElideConfiguredProject;)Lelide/tooling/project/agents/ProjectAdvice;
+	public fun export (Ljava/lang/StringBuilder;)V
+}
+
+public final class elide/tooling/project/agents/ProjectAdvice$Companion {
+	public final fun build (Lelide/tooling/project/ElideConfiguredProject;)Lelide/tooling/project/agents/ProjectAdvice;
+}
+
+public abstract interface class elide/tooling/project/agents/RenderableAdvice {
+	public abstract fun export (Ljava/lang/StringBuilder;)V
+}
+
+public final class elide/tooling/project/agents/Section : elide/tooling/project/agents/AdviceStanza {
+	public static final field Companion Lelide/tooling/project/agents/Section$Companion;
+	public static final synthetic fun box-impl (Lkotlin/Pair;)Lelide/tooling/project/agents/Section;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlin/Pair;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlin/Pair;Lkotlin/Pair;)Z
+	public fun export (Ljava/lang/StringBuilder;)V
+	public static fun export-impl (Lkotlin/Pair;Ljava/lang/StringBuilder;)V
+	public static final fun getHeadingText-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public static final fun getTextContent-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlin/Pair;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlin/Pair;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlin/Pair;
+}
+
+public final synthetic class elide/tooling/project/agents/Section$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/agents/Section$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-k_NIFGA (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/Pair;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-O5ZZglA (Lkotlinx/serialization/encoding/Encoder;Lkotlin/Pair;)V
+}
+
+public final class elide/tooling/project/agents/Section$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/agents/Text : elide/tooling/project/agents/AdviceStanza {
+	public static final field Companion Lelide/tooling/project/agents/Text$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/project/agents/Text;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun export (Ljava/lang/StringBuilder;)V
+	public static fun export-impl (Ljava/lang/String;Ljava/lang/StringBuilder;)V
+	public final fun getContent ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/agents/Text$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/agents/Text$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-38wvzaY (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-Taqz-q4 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+}
+
+public final class elide/tooling/project/agents/Text$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public synthetic class elide/tooling/project/codecs/$ElidePackageManifestCodec$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -5676,6 +5850,20 @@ public final class elide/tooling/project/manifest/PythonRequirementsManifest$Com
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public abstract interface class elide/tooling/project/mcp/McpContributor {
+	public static final field Companion Lelide/tooling/project/mcp/McpContributor$Companion;
+	public static fun all ()Lkotlin/sequences/Sequence;
+	public abstract fun contribute (Lelide/tooling/project/mcp/McpContributor$McpContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/project/mcp/McpContributor$Companion {
+	public final fun all ()Lkotlin/sequences/Sequence;
+}
+
+public abstract interface class elide/tooling/project/mcp/McpContributor$McpContext {
+	public abstract fun getServer ()Lio/modelcontextprotocol/kotlin/sdk/server/Server;
+}
+
 public final class elide/tooling/project/mcp/McpProjectConfig {
 	public static final field Companion Lelide/tooling/project/mcp/McpProjectConfig$Companion;
 	public static final field MCP_CONFIG_FILE Ljava/lang/String;
@@ -5744,5 +5932,26 @@ public abstract interface class elide/tooling/project/mcp/McpProjectConfig$McpSe
 
 public final class elide/tooling/project/mcp/McpProjectConfig$McpServerType$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/mcp/ModelContextProtocol {
+	public static final field INSTANCE Lelide/tooling/project/mcp/ModelContextProtocol;
+	public final fun build (Lelide/tooling/project/mcp/ModelContextProtocol$McpConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun configure (Lelide/tooling/project/ElideConfiguredProject;Lkotlin/jvm/functions/Function0;Ljava/lang/String;Z)Lelide/tooling/project/mcp/ModelContextProtocol$McpConfiguration;
+	public static synthetic fun configure$default (Lelide/tooling/project/mcp/ModelContextProtocol;Lelide/tooling/project/ElideConfiguredProject;Lkotlin/jvm/functions/Function0;Ljava/lang/String;ZILjava/lang/Object;)Lelide/tooling/project/mcp/ModelContextProtocol$McpConfiguration;
+}
+
+public abstract interface class elide/tooling/project/mcp/ModelContextProtocol$McpConfiguration {
+	public abstract fun getContextFactory ()Lkotlin/jvm/functions/Function0;
+	public abstract fun getDebug ()Z
+	public abstract fun getElideVersion ()Ljava/lang/String;
+	public abstract fun getProject ()Lkotlin/jvm/functions/Function0;
+}
+
+public abstract interface class elide/tooling/project/mcp/ModelContextProtocol$McpServer {
+	public abstract fun getServer ()Lio/modelcontextprotocol/kotlin/sdk/server/Server;
+	public fun launchAndWait (ZLio/modelcontextprotocol/kotlin/sdk/shared/AbstractTransport;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun launchAndWaitStdio (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun launchAndWaitStdio$default (Lelide/tooling/project/mcp/ModelContextProtocol$McpServer;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 

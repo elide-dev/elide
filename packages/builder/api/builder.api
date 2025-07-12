@@ -293,12 +293,18 @@ public final class elide/tooling/config/BuildConfigurator$MutableBuildSettings :
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$ProjectDirectories {
+	public static final field Companion Lelide/tooling/config/BuildConfigurator$ProjectDirectories$Companion;
+	public static fun forProject (Lelide/tooling/project/ElideProject;)Lelide/tooling/config/BuildConfigurator$ProjectDirectories;
 	public fun getArtifacts ()Ljava/nio/file/Path;
 	public fun getCache ()Ljava/nio/file/Path;
 	public fun getDependencies ()Ljava/nio/file/Path;
 	public fun getDevRoot ()Ljava/nio/file/Path;
 	public abstract fun getProjectRoot ()Ljava/nio/file/Path;
 	public fun getWorkspaceRoot ()Ljava/nio/file/Path;
+}
+
+public final class elide/tooling/config/BuildConfigurator$ProjectDirectories$Companion {
+	public final fun forProject (Lelide/tooling/project/ElideProject;)Lelide/tooling/config/BuildConfigurator$ProjectDirectories;
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$RepositoryEvent : elide/tooling/config/BuildConfigurator$BuildEvent {

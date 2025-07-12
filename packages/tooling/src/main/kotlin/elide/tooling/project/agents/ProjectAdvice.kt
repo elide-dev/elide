@@ -77,7 +77,7 @@ public class ProjectAdvice internal constructor(private val project: ElideConfig
           appendLine("### Project Scripts")
           appendLine()
           append("The project has the following scripts defined, all usable with `elide <script>`")
-          append("or `elide run <script>`:")
+          append(" or `elide run <script>`:")
           appendLine()
           project.manifest.scripts.forEach { (name, script) ->
             appendLine()

@@ -28,7 +28,7 @@
   </appender>
 
   <appender name="CONSOLE_TIMED" class="ch.qos.logback.core.ConsoleAppender">
-    <target>System.out</target>
+    <target>System.err</target>
     <immediateFlush>true</immediateFlush>
     <encoder>
       <pattern>%-4relative %d{HH:mm:ss.SSS} [%thread] %msg%n</pattern>
@@ -36,7 +36,7 @@
   </appender>
 
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <target>System.out</target>
+    <target>System.err</target>
     <immediateFlush>true</immediateFlush>
     <encoder>
       <pattern>%magenta(elide) %msg%n</pattern>

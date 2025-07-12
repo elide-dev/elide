@@ -267,10 +267,10 @@ public object ModelContextProtocol {
     // add project config as resource
     if (projectConfig != null) {
       server.addResource(
-        uri = "file:///elide.pkl",
+        uri = "file://${projectConfig.toAbsolutePath()}",
         name = "Elide Project Manifest",
         description = "Project configuration file for an Elide project",
-        mimeType = "application/x-elide-pkl",
+        mimeType = "application/x-pkl",
       ) { resource ->
         ReadResourceResult(
           contents = listOf(
@@ -290,6 +290,7 @@ public object ModelContextProtocol {
     McpContributor.all().apply {
       object: McpContributor.McpContext {
         override val server: Server get() = server
+        override suspend fun project(): ElideConfiguredProject? = configured
       }.let { ctx ->
         forEach {
           it.contribute(ctx)

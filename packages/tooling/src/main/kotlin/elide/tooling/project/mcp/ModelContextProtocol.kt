@@ -94,13 +94,13 @@ public object ModelContextProtocol {
      */
     public suspend fun launchAndWaitStdio(awaitClose: Boolean = true) {
       // build and run with transport
-      val (awaitClose, transport) = when {
-        else -> false to StdioServerTransport(
+      val (shouldAwait, transport) = when {
+        else -> awaitClose to StdioServerTransport(
           inputStream = System.`in`.asInput().buffered(),
           outputStream = System.out.asSink().buffered(),
         )
       }
-      return launchAndWait(awaitClose, transport)
+      return launchAndWait(shouldAwait, transport)
     }
   }
 

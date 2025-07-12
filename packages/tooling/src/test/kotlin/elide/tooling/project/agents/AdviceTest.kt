@@ -46,10 +46,6 @@ class AdviceTest {
     assertTrue(advice.hasCustomAdvice())
   }
 
-  private fun assertHasProjectAdvice(advice: AgentAdvice) {
-    assertTrue(advice.hasProjectAdvice())
-  }
-
   @Test fun testBuildDefaultAdviceNoProject() {
     assertNotNull(AgentAdvice.defaults()).let { advice ->
       assertAdvice(advice)

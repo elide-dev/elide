@@ -405,9 +405,8 @@ internal class LspCommand @Inject constructor(
 
     withDeferredContext(emptySet(), shared = false, cfg = { configureLSP(configured, it) }) { accessor ->
       runBlocking {
-        // warm it before use
+        // warm it before use (two calls are deliberate)
         accessor()
-
         activeContext = accessor()
         if (!USE_BUILTIN_LSP) {
           lspEntry()

@@ -31,6 +31,7 @@ import kotlinx.serialization.json.Json
     @JvmStatic public fun createForElide(): McpProjectConfig = McpProjectConfig(
       mcpServers = mapOf(
         "elide" to Command(
+          type = "stdio",
           command = "elide",
           args = listOf("mcp"),
         )
@@ -69,5 +70,6 @@ import kotlinx.serialization.json.Json
     public val command: String,
     public val args: List<String> = emptyList(),
     public val env: Map<String, String> = emptyMap(),
+    public val type: String? = null,
   ) : McpServerType
 }

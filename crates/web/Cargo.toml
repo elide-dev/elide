@@ -30,5 +30,13 @@ lol_html = { workspace = true }
 lightningcss = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
+js = { workspace = true }
 diag = { workspace = true }
 lazy_static = { workspace = true }
+parcel_sourcemap = { workspace = true }
+minify-html = { workspace = true }
+cookie = { workspace = true }
+sourcemap = { workspace = true }
+grass = { workspace = true }
+oxvg = { workspace = true }
+rimage = { workspace = true }

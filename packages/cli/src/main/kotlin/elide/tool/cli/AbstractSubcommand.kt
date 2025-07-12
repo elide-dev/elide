@@ -364,7 +364,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
   @Spec internal var commandSpec: CommandSpec? = null
 
   // Parent command for all invocations.
-  @CommandLine.ParentCommand internal var elideCli: Elide? = null
+  @CommandLine.ParentCommand internal var elideCli: Any? = null
 
   /** A thread-local [PolyglotContext] instance acquired from the [engine]. */
   private val contextHandle: ThreadLocal<PolyglotContext> = ThreadLocal()
@@ -404,7 +404,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
   val pretty: Boolean get() = commons().pretty
 
   private val mergedOptions by lazy {
-    commons.merge(elideCli?.commons)
+    commons.merge((elideCli as? Elide)?.commons)
   }
 
   internal fun commons(): CommonOptions = mergedOptions

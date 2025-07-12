@@ -22,6 +22,7 @@ import elide.exec.ActionScope
 import elide.exec.TaskGraphBuilder
 import elide.tooling.BuildMode
 import elide.tooling.project.ElideConfiguredProject
+import elide.tooling.project.ElideProject
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.registry.ResolverRegistry
 
@@ -270,6 +271,12 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     public val cache: Path get() = devRoot.resolve("cache")
     public val dependencies: Path get() = devRoot.resolve("dependencies")
     public val artifacts: Path get() = devRoot.resolve("artifacts")
+
+    public companion object {
+      @JvmStatic public fun forProject(project: ElideProject): ProjectDirectories = object : ProjectDirectories {
+        override val projectRoot: Path get() = project.root
+      }
+    }
   }
 
   public interface ElideBuildState {

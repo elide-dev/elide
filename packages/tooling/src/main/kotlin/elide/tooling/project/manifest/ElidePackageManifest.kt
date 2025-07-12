@@ -55,6 +55,7 @@ public data class ElidePackageManifest(
   val sources: Map<String, SourceSet> = emptyMap(),
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
+  val web: WebSettings? = null,
 ) : PackageManifest {
   @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
 
@@ -126,6 +127,21 @@ public data class ElidePackageManifest(
       }
     }
   }
+
+  @Serializable public data class WebSettings(
+    val debug: Boolean = false,
+    val css: CssSettings = CssSettings(),
+  )
+
+  @Serializable public data class CssTarget(
+    val browser: String,
+    val version: String? = null,
+  )
+
+  @Serializable public data class CssSettings(
+    val minify: Boolean = true,
+    val targets: List<CssTarget> = emptyList(),
+  )
 
   public sealed interface DependencyEcosystemConfig {
     public sealed interface PackageSpec

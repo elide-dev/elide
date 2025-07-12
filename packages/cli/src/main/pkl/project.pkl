@@ -10,6 +10,7 @@ import "Ops.pkl" as _ops
 import "Artifacts.pkl" as _artifacts
 import "Products.pkl" as _products
 import "Task.pkl" as _tasks
+import "Web.pkl" as _web
 import "Workspace.pkl" as _workspace
 import "Lockfile.pkl" as _lockfile
 
@@ -105,6 +106,9 @@ class ElideProject {
 
   /// Settings which govern Elide's lockfile.
   lockfile: _lockfile.LockfileSettings?
+
+  /// Settings which apply to web-based projects and applications.
+  web: _web.WebSettings?
 }
 
 /// A name for the project.
@@ -209,6 +213,9 @@ tests: _testing.Testing?
 /// Settings which govern Elide's lockfile.
 lockfile: _lockfile.LockfileSettings = new {}
 
+/// Settings which apply to web-based projects and applications.
+web: _web.WebSettings?
+
 //
 // ------ Execution -------------------------------------------------------------------------------------------------
 //
@@ -226,6 +233,12 @@ function jar() = new _jvm.Jar {}
 /// Create a Native Image from an artifact and entrypoint.
 function nativeImage(_from: String) = new _nativeImage.NativeImage {
   from { _from }
+}
+
+/// Create CSS browser target with the provided browser and version.
+function cssBrowser(_browser: _web.CssBrowser, _version: String) = new _web.CssTarget {
+  browser = _browser
+  version = _version
 }
 
 /// Create a Native Image shared library from an artifact.

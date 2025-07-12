@@ -1726,6 +1726,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
     "-H:NativeLinkerOption=$nativesPath/libterminal.a",
     "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
+    "-H:NativeLinkerOption=$nativesPath/libweb.a",
     "-H:NativeLinkerOption=-lm",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",

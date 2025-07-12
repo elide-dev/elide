@@ -1,0 +1,34 @@
+/// Describes web-related settings and configuration.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.web
+
+/// CSS browser types.
+typealias CssBrowser = "chrome" | "firefox" | "safari" | "edge" | "opera"
+
+/// Describes targeting of a CSS-enabled platform (i.e. browsers).
+class CssTarget {
+  /// The name of the browser type to target.
+  browser: CssBrowser
+
+  /// The version of the browser to target.
+  version: String?
+}
+
+/// Describes settings which configure CSS builder and serving behavior.
+class CssSettings {
+  /// Whether to enable minification of CSS code.
+  minify: Boolean = true
+
+  /// Target platforms (browsers) to consider when rendering/building CSS.
+  targets: Listing<CssTarget> = new {}
+}
+
+/// Describes settings which apply in web-based environments; these settings configure how Elide builds and serves web
+/// applications, and related resources like images, stylesheets, and JavaScript.
+class WebSettings {
+  /// Whether to enable debug logging for web-related stuff.
+  debug: Boolean = false
+
+  /// Settings to apply to CSS processing and serving.
+  css: CssSettings = new {}
+}

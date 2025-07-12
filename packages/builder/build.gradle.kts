@@ -11,6 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.jetbrains.kotlin.konan.target.HostManager
+import kotlin.collections.joinToString
+import kotlin.collections.plus
 import kotlin.io.path.absolutePathString
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.publishing.publish
@@ -114,7 +117,57 @@ dependencies {
   testImplementation(libs.kotlin.test.junit5)
 }
 
-tasks.test {
+val isRelease = (
+  project.properties["elide.release"] == "true" ||
+  project.properties["elide.buildMode"] == "release"
+)
+
+val nativesType = if (!isRelease) "debug" else "release"
+val archTripleToken = (findProperty("elide.arch") as? String)
+  ?: if (System.getProperty("os.arch") == "aarch64") "aarch64" else "x86_64"
+val muslTarget = "$archTripleToken-unknown-linux-musl"
+val gnuTarget = "$archTripleToken-unknown-linux-gnu"
+val enableStatic = findProperty("elide.static") == "true"
+val macTarget = "$archTripleToken-apple-darwin"
+val winTarget = "$archTripleToken-pc-windows-gnu"
+
+val targetPath: String = when {
+  HostManager.hostIsLinux -> when (enableStatic) {
+    // if we are targeting a fully static environment (i.e. musl), we need to sub in the target name in the path as we
+    // are always technically cross-compiling.
+    true -> rootProject.layout.projectDirectory.dir("target/$muslTarget/$nativesType")
+
+    // otherwise, we use gnu's target.
+    false -> rootProject.layout.projectDirectory.dir("target/$gnuTarget/$nativesType")
+  }.asFile.path
+
+  HostManager.hostIsMac -> rootProject.layout.projectDirectory.dir("target/$macTarget/$nativesType").asFile.path
+  HostManager.hostIsMingw -> rootProject.layout.projectDirectory.dir("target/$winTarget/$nativesType").asFile.path
+  else -> error("Unsupported platform for target path")
+}
+
+tasks.named("test", Test::class) {
+  dependsOn(
+    ":packages:graalvm:buildRustNativesForHost",
+  )
+  useJUnitPlatform()
+
   systemProperty("elide.root", rootProject.layout.projectDirectory.asFile.toPath().absolutePathString())
-  jvmArgs.add("--enable-native-access=ALL-UNNAMED")
+
+  systemProperty(
+    "java.library.path",
+    listOf(
+      targetPath,
+    ).plus(
+      System.getProperty("java.library.path", "").split(File.pathSeparator).filter {
+        it.isNotEmpty()
+      }
+    ).joinToString(
+      File.pathSeparator
+    )
+  )
+
+  jvmArgs(listOf(
+    "--enable-native-access=ALL-UNNAMED",
+  ))
 }

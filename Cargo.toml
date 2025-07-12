@@ -71,6 +71,8 @@ diag = { path = "crates/diag" }
 substrate = { path = "crates/substrate" }
 trace = { path = "crates/trace" }
 exec = { path = "crates/exec" }
+js = { path = "crates/js" }
+web = { path = "crates/web" }
 umbrella = { path = "tools/umbrella" }
 
 ## Dependencies
@@ -80,10 +82,12 @@ llama-cpp-2 = { version = "0.1.102", default-features = false }
 bindgen = { version = "0.72.0" }
 build_const = { version = "0.2.2", default-features = false }
 bumpalo = { version = "3.17.0" }
+cookie = { version = "0.18.1" }
 encoding_rs = { version = "0.8.35" }
 cc = { version = "1.2.15", features = ["parallel"] }
 clap = { version = "4.5.30", features = ["derive"] }
 console-subscriber = { version = "0.4.1" }
+grass = { version = "0.13.4" }
 hf-hub = { version = "0.4.2" }
 java_native = { git = "https://github.com/elide-tools/jni-macros", rev = "7dc95cc2d7534761d0b16899dcda9e7729bdb89d" }
 jni = { version = "0.21.1", default-features = false, features = [] }
@@ -94,16 +98,28 @@ lightningcss = { version = "1.0.0-alpha.67", features = [
   "browserslist",
 ] }
 lol_html = { version = "2.5.0" }
+minify-html = { version = "0.16.4" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
 orogene = { git = "https://github.com/elide-dev/orogene", rev = "1122f0884f8c6e726ac36dbd926a5102ce2fa950", default-features = false, features = [
   "mimalloc",
 ] }
+rimage = { version = "0.11.0", default-features = false, features = [
+  "webp",
+  "resize",
+  "oxipng",
+  "mozjpeg",
+  "metadata",
+  "threads",
+] }
 rustc_version = { version = "0.4.1" }
 rustix = { version = "1.0.2", features = ["process"] }
 serde = { version = "1.0.218", default-features = false }
+parcel_sourcemap = { version = "2.1.1" }
+sourcemap = { version = "9.2.2" }
 sysinfo = { version = "0.36.0" }
 once_cell = { version = "1.21.3" }
+oxvg = { git = "https://github.com/elide-tools/oxvg", rev = "02993ff81c668410270ee5f2fbc3af67fd265add" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
 log = { version = "0.4.27" }
 tracing = { version = "0.1.41" }
@@ -130,7 +146,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "29516454d52d2197f9332b39162d27c913f31af6", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "2cdf722e6c1b321df4ee74c10151179345ee24b9", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -138,7 +154,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "29516454d52d2197f9332b3
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "43dbdba578179d8e6ced763916b658dcfb9c53c6" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "ee35fe34ab90adb99505581daeb63edd5c3f827f" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "08bc6d25899501d690c37a87d6da51951280dfc5" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "7154b64248e7d42f277d892f347527a7ec1410d6" }

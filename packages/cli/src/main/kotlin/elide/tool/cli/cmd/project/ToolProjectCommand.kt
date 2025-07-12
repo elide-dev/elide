@@ -50,7 +50,10 @@ import elide.tooling.project.manifest.ElidePackageManifest
     "   or: elide @|bold,fg(cyan) project|@ [OPTIONS] [TASKS] [--] [ARGS]",
     "   or: elide @|bold,fg(cyan) project|@ @|bold,fg(cyan) --export|@ [@|bold,fg(cyan) --target=...|@]",
     "",
-  ]
+  ],
+  subcommands = [
+    ProjectAdviceCommand::class,
+  ],
 )
 @Introspected
 @ReflectiveAccess

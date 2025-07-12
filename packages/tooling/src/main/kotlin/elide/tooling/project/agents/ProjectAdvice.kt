@@ -38,6 +38,7 @@ public class ProjectAdvice internal constructor(private val project: ElideConfig
       null -> append("None set")
       else -> append("`${value}`")
     }
+    append("\n")
   }
 
   private fun projectName(project: ElideConfiguredProject): String {
@@ -53,6 +54,9 @@ public class ProjectAdvice internal constructor(private val project: ElideConfig
   private fun projectVersion(project: ElideConfiguredProject): String =
     projectKeyValue("Version", project.manifest.version?.toString())
 
+  private fun projectDescription(project: ElideConfiguredProject): String =
+    projectKeyValue("Description", project.manifest.description)
+
   override fun export(builder: StringBuilder) {
     when (val project = project) {
       null -> builder.apply {
@@ -60,15 +64,55 @@ public class ProjectAdvice internal constructor(private val project: ElideConfig
       }
 
       else -> builder.apply {
-        appendLine()
-        appendLine("### Elide: Project Advice")
+        appendLine("## Project Advice")
         appendLine()
         appendLine("There is an Elide Project configuration file present for this project (`elide.pkl`).")
         appendLine("Project configuration summary:")
         appendLine()
         append(projectName(project))
         append(projectVersion(project))
+        append(projectDescription(project))
+        if (project.manifest.scripts.isNotEmpty()) {
+          appendLine()
+          appendLine("### Project Scripts")
+          appendLine()
+          append("The project has the following scripts defined, all usable with `elide <script>`")
+          append("or `elide run <script>`:")
+          appendLine()
+          project.manifest.scripts.forEach { (name, script) ->
+            appendLine()
+            appendLine("- `${name}`: `$script`")
+          }
+        }
         appendLine()
+        appendLine("### Project Dependencies")
+        appendLine()
+        var hasDeps = false
+        if (project.manifest.dependencies.maven.hasPackages()) {
+          hasDeps = true
+          appendLine("The project has the following Maven dependencies defined:")
+          appendLine()
+          project.manifest.dependencies.maven.packages.forEach { artifact ->
+            appendLine("- `${artifact.group}:${artifact.name}@${artifact.version}`")
+          }
+          appendLine()
+        }
+        if (project.manifest.dependencies.npm.hasPackages()) {
+          hasDeps = true
+          appendLine("The project has the following NPM dependencies defined:")
+          appendLine()
+          project.manifest.dependencies.npm.packages.forEach { artifact ->
+            append("- `${artifact.name}")
+            when (val version = artifact.version) {
+              null -> append("`")
+              else -> append("@$version`")
+            }
+            append("\n")
+          }
+        }
+        if (!hasDeps) {
+          appendLine("No dependencies defined for this project via Elide.")
+        }
       }
     }
   }

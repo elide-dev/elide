@@ -2,6 +2,7 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.dev
 
+import "Base.pkl" as _common
 import "ci/ContinuousIntegration.pkl" as ci
 
 /// Source platform where the project is hosted.
@@ -34,6 +35,27 @@ class LspSettings {
   delegates: Listing<String> = new {}
 }
 
+/// Declaration for an MCP resource.
+class McpResource {
+  /// Path to the file.
+  path: _common.FilePath
+
+  /// Mime type to explicitly set; one is detected if not provided.
+  mimeType: String?
+}
+
+/// Settings for Model Context Protocol (MCP) servers.
+class McpSettings {
+  /// Additional MCP resources to be used by the project.
+  resources: Listing<McpResource> = new {}
+
+  /// Whether to register Elide as an MCP tool.
+  registerElide: Boolean = true
+
+  /// Whether to register project advice with MCP.
+  advice: Boolean = true
+}
+
 /// Development settings for the project.
 class DevSettings {
   /// Source info for the project.
@@ -41,4 +63,7 @@ class DevSettings {
 
   /// Settings which apply to the project's language server.
   lsp: LspSettings?
+
+  /// Settings which apply to Model Context Protocol (MCP) servers.
+  mcp: McpSettings?
 }

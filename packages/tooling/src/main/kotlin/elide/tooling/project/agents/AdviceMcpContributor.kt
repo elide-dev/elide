@@ -22,6 +22,9 @@ import elide.tooling.project.mcp.McpContributor
 
 // Bridges project advice to MCP.
 internal class AdviceMcpContributor : McpContributor {
+  override suspend fun enabled(context: McpContributor.McpContext): Boolean =
+    context.project()?.manifest?.dev?.mcp?.advice != false
+
   override suspend fun contribute(context: McpContributor.McpContext): Unit = with(context.server) {
     when (val project = context.project()) {
       null -> {}

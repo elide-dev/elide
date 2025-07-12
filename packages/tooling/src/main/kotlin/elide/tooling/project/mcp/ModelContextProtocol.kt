@@ -36,7 +36,6 @@ import io.modelcontextprotocol.kotlin.sdk.shared.AbstractTransport
 import org.graalvm.polyglot.Context
 import java.nio.charset.StandardCharsets
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.io.asSink
 import kotlinx.io.buffered
 import kotlin.io.path.readText
@@ -45,6 +44,24 @@ import elide.tooling.project.ElideConfiguredProject
 
 /**
  * # Model Context Protocol (MCP)
+ *
+ * Public API for the configuration, execution, and operation of Model Context Protocol (MCP) servers for configured
+ * Elide projects. MCP provides a standardized way for AI agents to interact with software projects. This API allows
+ * for the configuration and execution of an MCP server, which an AI agent can connet to, and use to perform various
+ * tasks within the context of the project.
+ *
+ * ## Supported Features
+ *
+ * Elide's MCP implementation supports a few features out of the box:
+ *
+ * - **Project Configuration**: The MCP server can read and expose the project's configuration file (e.g., `elide.pkl`).
+ * - **Project Advice**: Elide can render Markdown advice about a project, and expose this via the MCP server.
+ * - **Self-Tool Usage**: Elide can register itself as a tool for use by the AI agent.
+ *
+ * ## Configuration & Usage
+ *
+ * MCP services can be used directly from these methods, either via Standard I/O or HTTP. Within the context of an Elide
+ * project, the `mcp { ... }` block can be used to configure MCP services. This implementation respects such options.
  */
 public object ModelContextProtocol {
   /**
@@ -53,14 +70,10 @@ public object ModelContextProtocol {
    * Enumerates different serving modes for the MCP server.
    */
   public enum class McpServingMode {
-    /**
-     * Standard I/O.
-     */
+    /** Operate over Standard I/O. */
     Stdio,
 
-    /**
-     * HTTP.
-     */
+    /** Operate over HTTP. */
     Http,
   }
 
@@ -70,9 +83,7 @@ public object ModelContextProtocol {
    * Specifies types of server configurations.
    */
   public sealed interface McpServerConfig {
-    /**
-     * Operating mode for the MCP server.
-     */
+    /** Operating mode for the MCP server. */
     public val mode: McpServingMode
   }
 
@@ -176,8 +187,6 @@ public object ModelContextProtocol {
       }
     }
 
-    private fun configureServer(): Server = serverFactory()
-
     private fun httpServer(
       config: McpOverHttp,
       start: Boolean = true,
@@ -192,7 +201,7 @@ public object ModelContextProtocol {
         routing {
           sse("/sse") {
             val transport = SseServerTransport("/message", this)
-            val server = configureServer()
+            val server = serverFactory()
             servers[transport.sessionId] = server
 
             server.onClose {
@@ -287,12 +296,14 @@ public object ModelContextProtocol {
     }
 
     // configure via all installed mcp contributors
-    McpContributor.all().apply {
+    McpContributor.all().toList().apply {
       object: McpContributor.McpContext {
         override val server: Server get() = server
         override suspend fun project(): ElideConfiguredProject? = configured
       }.let { ctx ->
-        forEach {
+        filter {
+          it.enabled(ctx)
+        }.forEach {
           it.contribute(ctx)
         }
       }

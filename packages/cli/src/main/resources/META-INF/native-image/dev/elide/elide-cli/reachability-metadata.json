@@ -4400,42 +4400,6 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$Artifact"
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$WebSettings",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$CssTarget",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$CssSettings",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$DevSettings",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
-    },
-    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ContainerImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -7152,6 +7116,15 @@
       "type": "io.reactivex.rxjava3.core.Single"
     },
     {
+      "type": "java.io.Console",
+      "methods": [
+        {
+          "name": "isTerminal",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "java.io.FileDescriptor"
     },
     {
@@ -7326,6 +7299,15 @@
       "fields": [
         {
           "name": "TYPE"
+        }
+      ]
+    },
+    {
+      "type": "java.lang.System",
+      "methods": [
+        {
+          "name": "console",
+          "parameterTypes": []
         }
       ]
     },
@@ -12616,6 +12598,10 @@
     {
       "module": "java.base",
       "glob": "sun/net/www/content-types.properties"
+    },
+    {
+      "module": "java.base",
+      "glob": "sun/text/resources/LineBreakIteratorData"
     },
     {
       "module": "jdk.compiler",

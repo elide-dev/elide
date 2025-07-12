@@ -89,6 +89,11 @@ java_native = { git = "https://github.com/elide-tools/jni-macros", rev = "7dc95c
 jni = { version = "0.21.1", default-features = false, features = [] }
 jni-sys = { version = "0.4.0" }
 libloading = { version = "0.8.6" }
+lightningcss = { version = "1.0.0-alpha.67", features = [
+  "sourcemap",
+  "browserslist",
+] }
+lol_html = { version = "2.5.0" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
 orogene = { git = "https://github.com/elide-dev/orogene", rev = "1122f0884f8c6e726ac36dbd926a5102ce2fa950", default-features = false, features = [

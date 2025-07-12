@@ -2886,3 +2886,107 @@ public final class elide/tooling/runner/ThreadedTestRunner$Builder : elide/tooli
 	public fun setExecutor (Ljava/util/concurrent/Executor;)V
 }
 
+public final class elide/tooling/web/WebBuilder {
+	public static final field INSTANCE Lelide/tooling/web/WebBuilder;
+	public final fun css ()Lelide/tooling/web/css/CssBuilder;
+	public final fun markdown ()Lelide/tooling/md/Markdown;
+}
+
+public final class elide/tooling/web/css/CssBuilder {
+	public static final field INSTANCE Lelide/tooling/web/css/CssBuilder;
+	public final fun buildCss (Lelide/tooling/web/css/CssBuilder$CssBuild;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun buildCss$default (Lelide/tooling/web/css/CssBuilder;Lelide/tooling/web/css/CssBuilder$CssBuild;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun configureCss (Lelide/tooling/web/css/CssBuilder$CssOptions;Lkotlin/sequences/Sequence;)Lelide/tooling/web/css/CssBuilder$CssBuild;
+}
+
+public final class elide/tooling/web/css/CssBuilder$CssBuild {
+	public final fun getOptions ()Lelide/tooling/web/css/CssBuilder$CssOptions;
+	public final fun getSources ()Lelide/tooling/web/css/CssBuilder$CssSources;
+}
+
+public final class elide/tooling/web/css/CssBuilder$CssDefaults {
+	public static final field INSTANCE Lelide/tooling/web/css/CssBuilder$CssDefaults;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDEFAULT_TARGETS ()[Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/web/css/CssBuilder$CssMinification {
+}
+
+public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Record {
+	public static final field Companion Lelide/tooling/web/css/CssBuilder$CssOptions$Companion;
+	public final fun absoluteProjectRoot ()Ljava/lang/String;
+	public final fun bundle ()Z
+	public final fun component1 ()Z
+	public final fun component2 ()Lelide/tooling/web/css/CssBuilder$CssMinification;
+	public final fun component3 ()Z
+	public final fun component4 ()Z
+	public final fun component5 ()Ljava/nio/file/Path;
+	public final fun component6 ()Z
+	public final fun debug ()Z
+	public static final fun defaults ()Lelide/tooling/web/css/CssBuilder$CssOptions;
+	public final fun enableBundle ()Z
+	public final fun enableDebugLogs ()Z
+	public final fun enableMinification ()Z
+	public final fun enableModules ()Z
+	public final fun enableSourceMaps ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun forProject (Lelide/tooling/project/ElideProject;)Lelide/tooling/web/css/CssBuilder$CssOptions;
+	public fun hashCode ()I
+	public final fun minify ()Lelide/tooling/web/css/CssBuilder$CssMinification;
+	public final fun modules ()Z
+	public final fun projectRoot ()Ljava/nio/file/Path;
+	public final fun sourceMap ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/css/CssBuilder$CssOptions$Companion {
+	public final fun defaults ()Lelide/tooling/web/css/CssBuilder$CssOptions;
+	public final fun forProject (Lelide/tooling/project/ElideProject;)Lelide/tooling/web/css/CssBuilder$CssOptions;
+}
+
+public abstract interface class elide/tooling/web/css/CssBuilder$CssResult {
+	public abstract fun code ()Ljava/util/List;
+}
+
+public abstract interface class elide/tooling/web/css/CssBuilder$CssSourceFile : elide/tooling/web/css/CssBuilder$CssSourceMaterial {
+	public fun code (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getPath ()Ljava/nio/file/Path;
+}
+
+public abstract interface class elide/tooling/web/css/CssBuilder$CssSourceLiteral : elide/tooling/web/css/CssBuilder$CssSourceMaterial {
+}
+
+public abstract interface class elide/tooling/web/css/CssBuilder$CssSourceMaterial {
+	public abstract fun code (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/web/css/CssBuilder$CssSources : java/lang/Record {
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/css/CssBuilder$MinifyOptions : java/lang/Record, elide/tooling/web/css/CssBuilder$CssMinification {
+	public static final field Companion Lelide/tooling/web/css/CssBuilder$MinifyOptions$Companion;
+	public final fun component1 ()[Ljava/lang/String;
+	public static final fun defaults ()Lelide/tooling/web/css/CssBuilder$MinifyOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun targets ()[Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/css/CssBuilder$MinifyOptions$Companion {
+	public final fun defaults ()Lelide/tooling/web/css/CssBuilder$MinifyOptions;
+}
+
+public final class elide/tooling/web/css/CssBuilder$NoMinification : elide/tooling/web/css/CssBuilder$CssMinification {
+	public static final field INSTANCE Lelide/tooling/web/css/CssBuilder$NoMinification;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

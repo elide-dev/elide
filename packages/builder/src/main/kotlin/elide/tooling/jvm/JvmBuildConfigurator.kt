@@ -74,6 +74,9 @@ public object JvmLibraries {
   public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"
   public const val EMBEDDED_APIGUARDIAN_VERSION: String = "1.1.2"
   public const val EMBEDDED_OPENTEST_VERSION: String = "1.3.0"
+  public const val EMBEDDED_KOTLINX_HTML_VERSION: String = "0.12.0"
+  public const val EMBEDDED_KOTLINX_CSS_VERSION: String = "2025.7.1"
+  public const val EMBEDDED_KOTLINX_IO_VERSION: String = "0.8.0"
   public const val EMBEDDED_COROUTINES_VERSION: String = KotlinLanguage.COROUTINES_VERSION
   public const val EMBEDDED_SERIALIZATION_VERSION: String = KotlinLanguage.SERIALIZATION_VERSION
   public const val APIGUARDIAN_API: String = "org.apiguardian:apiguardian-api"
@@ -86,6 +89,10 @@ public object JvmLibraries {
   public const val OPENTEST: String = "org.opentest4j:opentest4j"
   public const val KOTLIN_TEST: String = "org.jetbrains.kotlin:kotlin-test"
   public const val KOTLIN_TEST_JUNIT5: String = "org.jetbrains.kotlin:kotlin-test-junit5"
+  public const val KOTLINX_HTML: String = "org.jetbrains.kotlinx:kotlinx-html-jvm"
+  public const val KOTLINX_CSS: String = "org.jetbrains.kotlinx:kotlinx-css-jvm"
+  public const val KOTLINX_IO: String = "org.jetbrains.kotlinx:kotlinx-io-jvm"
+  public const val KOTLINX_IO_BYTESTRING: String = "org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm"
   public const val KOTLINX_COROUTINES: String = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm"
   public const val KOTLINX_COROUTINES_TEST: String = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
   public const val KOTLINX_SERIALIZATION: String = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
@@ -94,6 +101,13 @@ public object JvmLibraries {
   internal val baseCoordinates = arrayOf(
     jarNamed("kotlin-stdlib"),
     jarNamed("kotlin-reflect"),
+  )
+
+  internal val baseKotlinxCoordinates = arrayOf(
+    KOTLINX_HTML to EMBEDDED_KOTLINX_HTML_VERSION,
+    KOTLINX_CSS to EMBEDDED_KOTLINX_CSS_VERSION,
+    KOTLINX_IO to EMBEDDED_KOTLINX_IO_VERSION,
+    KOTLINX_IO_BYTESTRING to EMBEDDED_KOTLINX_IO_VERSION,
   )
 
   internal val testCoordinates = arrayOf(
@@ -136,7 +150,12 @@ public object JvmLibraries {
       .resolve(name)
   }
 
-  public fun builtinClasspath(path: Path, tests: Boolean = false, kotlin: Boolean = true): Classpath {
+  public fun builtinClasspath(
+    path: Path,
+    tests: Boolean = false,
+    kotlin: Boolean = true,
+    kotlinx: Boolean = true,
+  ): Classpath {
     return Classpath.from(
       buildList {
         if (kotlin || tests) addAll(
@@ -144,6 +163,9 @@ public object JvmLibraries {
             resolveJarFor(path, it)
           },
         )
+        if (kotlinx) baseKotlinxCoordinates.forEach { (coordinate, version) ->
+          add(resolveJarFor(path, coordinate, version))
+        }
         if (tests) {
           addAll(
             testCoordinates.map { (coordinate, version) ->

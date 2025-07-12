@@ -122,6 +122,7 @@ junit-platform = "1.13.1"
 junixsocket = "2.8.3"
 purl = "1.5.0"
 kapshot = "0.2.0"
+kdl = "1.0.0-RC2"
 koin = "3.4.3"
 koin-ksp = "1.2.2"
 konform = "0.4.0"
@@ -560,6 +561,7 @@ junixsocket-core = { group = "com.kohlschutter.junixsocket", name = "junixsocket
 junixsocket-darwin = { group = "com.kohlschutter.junixsocket", name = "junixsocket-darwin", version.ref = "junixsocket" }
 junixsocket-native = { group = "com.kohlschutter.junixsocket", name = "junixsocket-native", version.ref = "junixsocket" }
 junixsocket-server = { group = "com.kohlschutter.junixsocket", name = "junixsocket-server", version.ref = "junixsocket" }
+kdl = { group = "dev.kdl", name = "kdl4j", version.ref = "kdl" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koin-ksp" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-ksp = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koin-ksp" }

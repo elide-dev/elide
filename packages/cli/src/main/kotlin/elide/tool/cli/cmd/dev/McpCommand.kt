@@ -29,6 +29,10 @@ import elide.tool.project.ProjectManager
 import elide.tooling.project.load
 import elide.tooling.project.mcp.ModelContextProtocol
 import elide.tooling.project.mcp.ModelContextProtocol.build
+import elide.tooling.project.mcp.ModelContextProtocol.McpOverHttp
+import elide.tooling.project.mcp.ModelContextProtocol.McpOverStdio
+import elide.tooling.project.mcp.ModelContextProtocol.McpServingMode.Http
+import elide.tooling.project.mcp.ModelContextProtocol.McpServingMode.Stdio
 
 /** Starts an MCP for an Elide project. */
 @Command(
@@ -52,6 +56,43 @@ internal class McpCommand @Inject constructor(
   )
   internal var mcpOptions: McpOptions = McpOptions()
 
+  /** Whether to wait for server exit. */
+  @CommandLine.Option(
+    names = ["--wait"],
+    description = ["Wait for the MCP to exit before returning."],
+    defaultValue = "true",
+    negatable = true,
+  )
+  internal var waitForMcp: Boolean = true
+
+  /** Server mode to use for the MCP. */
+  @CommandLine.Option(
+    names = ["--server"],
+    description = ["Server mode to use for MCP services."],
+  )
+  internal var serverMode: ModelContextProtocol.McpServingMode? = null
+
+  /** Hostname to use when operating over HTTP. */
+  @CommandLine.Option(
+    names = ["--http:host"],
+    description = ["Hostname to use when operating over HTTP."],
+  )
+  internal var httpHost: String? = null
+
+  /** Port to use when operating over HTTP. */
+  @CommandLine.Option(
+    names = ["--http:port"],
+    description = ["Port to use when operating over HTTP."],
+  )
+  internal var httpPort: Int? = null
+
+  // Configure a transport to use for MCP.
+  private fun configureTransport(): ModelContextProtocol.McpServerConfig = when (serverMode) {
+    Stdio -> McpOverStdio
+    Http -> McpOverHttp.of(host = httpHost, port = httpPort?.toUShort())
+    else -> McpOverStdio
+  }
+
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult = success().also {
     withDeferredContext(emptySet(), shared = true) { accessor ->
       runBlocking {
@@ -61,7 +102,7 @@ internal class McpCommand @Inject constructor(
           version = ELIDE_TOOL_VERSION,
           debug = mcpOptions.mcpDebug,
         ).apply {
-          build().launchAndWaitStdio(awaitClose = true)
+          build().launchAndWait(configureTransport(), awaitClose = waitForMcp)
         }
       }
     }

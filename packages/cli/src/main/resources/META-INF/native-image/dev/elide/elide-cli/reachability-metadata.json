@@ -49,6 +49,9 @@
       "type": "[Lcom.google.common.collect.ImmutableMapEntry;"
     },
     {
+      "type": "[Lio.ktor.network.selector.SelectInterest;"
+    },
+    {
       "type": "[Ljava.lang.Object;"
     },
     {
@@ -3339,6 +3342,24 @@
       "allDeclaredMethods": true
     },
     {
+      "type": "elide.tool.cli.cmd.project.$ProjectAdviceCommand$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.project.$ProjectAdviceCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.cmd.project.$ToolProjectCommand$Definition",
       "methods": [
         {
@@ -3355,6 +3376,10 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.project.ProjectAdviceCommand",
+      "allDeclaredFields": true
     },
     {
       "type": "elide.tool.cli.cmd.project.ToolProjectCommand",
@@ -4286,6 +4311,12 @@
       ]
     },
     {
+      "type": "elide.tooling.project.agents.AdviceMcpContributor"
+    },
+    {
+      "type": "elide.tooling.project.agents.SelfToolMcpContributor"
+    },
+    {
       "type": "elide.tooling.project.codecs.$ElidePackageManifestCodec$Definition",
       "methods": [
         {
@@ -4368,6 +4399,32 @@
             "java.util.Map",
             "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "java.util.Map",
+            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
+            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$DevSettings",
+            "java.util.Map",
+            "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$WebSettings"
           ]
         },
         {
@@ -4472,6 +4529,14 @@
           "parameterTypes": [
             "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
             "elide.tooling.project.manifest.ElidePackageManifest$LspSettings"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
+            "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$McpSettings"
           ]
         }
       ]
@@ -4748,6 +4813,30 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenRepository"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$McpPrompt",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$McpResource",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$McpSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$McpTool",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -4954,6 +5043,124 @@
     },
     {
       "type": "io.grpc.override.ContextStorageOverride"
+    },
+    {
+      "type": "io.ktor.http.HttpStatusCode"
+    },
+    {
+      "type": "io.ktor.http.content.TextContent"
+    },
+    {
+      "type": "io.ktor.network.selector.InterestSuspensionsMap",
+      "fields": [
+        {
+          "name": "acceptHandlerReference"
+        },
+        {
+          "name": "connectHandlerReference"
+        },
+        {
+          "name": "readHandlerReference"
+        },
+        {
+          "name": "writeHandlerReference"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.network.selector.LockFreeMPSCQueue",
+      "fields": [
+        {
+          "name": "_cur"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.network.selector.LockFreeMPSCQueueCore",
+      "fields": [
+        {
+          "name": "_next"
+        },
+        {
+          "name": "_state"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.network.selector.SelectableBase",
+      "fields": [
+        {
+          "name": "_interestedOps"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.server.application.PluginInstance"
+    },
+    {
+      "type": "io.ktor.server.engine.BaseApplicationResponse"
+    },
+    {
+      "type": "io.ktor.server.plugins.MutableOriginConnectionPoint"
+    },
+    {
+      "type": "io.ktor.server.request.DoubleReceivePreventionToken"
+    },
+    {
+      "type": "io.ktor.server.routing.RoutingRoot"
+    },
+    {
+      "type": "io.ktor.server.sse.SSEServerContent"
+    },
+    {
+      "type": "io.ktor.util.Attributes"
+    },
+    {
+      "type": "io.ktor.util.collections.CopyOnWriteHashMap",
+      "fields": [
+        {
+          "name": "current"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.util.internal.LockFreeLinkedListNode",
+      "fields": [
+        {
+          "name": "_next"
+        },
+        {
+          "name": "_prev"
+        },
+        {
+          "name": "_removedRef"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.util.reflect.TypeInfo"
+    },
+    {
+      "type": "io.ktor.utils.io.ByteChannel",
+      "fields": [
+        {
+          "name": "_closedCause"
+        },
+        {
+          "name": "suspensionSlot"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.utils.io.ByteReadChannel"
+    },
+    {
+      "type": "io.ktor.utils.io.pool.DefaultPool",
+      "fields": [
+        {
+          "name": "top"
+        }
+      ]
     },
     {
       "type": "io.micrometer.context.ContextRegistry"
@@ -7004,6 +7211,295 @@
       ]
     },
     {
+      "type": "io.modelcontextprotocol.kotlin.sdk.CallToolRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.CallToolRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.CallToolResult",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.CallToolResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.EmptyRequestResult",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.EmptyRequestResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.InitializeRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.InitializeRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.InitializeResult",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.InitializeResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.JSONRPCResponse",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.JSONRPCResponse$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListResourceTemplatesRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListResourceTemplatesRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListResourceTemplatesResult",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListResourceTemplatesResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListResourcesRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListResourcesRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListResourcesResult",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListResourcesResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListToolsRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListToolsRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListToolsResult",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ListToolsResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.PingRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.PingRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ReadResourceRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ReadResourceRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ReadResourceResult",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.ReadResourceResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.TextContent",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.TextContent$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.TextResourceContents",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.TextResourceContents$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "io.netty.channel.DefaultFileRegion"
     },
     {
@@ -7441,6 +7937,9 @@
       "type": "java.net.PortUnreachableException"
     },
     {
+      "type": "java.net.StandardSocketOptions"
+    },
+    {
       "type": "java.net.http.HttpClient",
       "methods": [
         {
@@ -7865,6 +8364,9 @@
       "type": "kotlin.Int"
     },
     {
+      "type": "kotlin.Long"
+    },
+    {
       "type": "kotlin.Metadata",
       "methods": [
         {
@@ -7911,6 +8413,9 @@
     },
     {
       "type": "kotlin.String"
+    },
+    {
+      "type": "kotlin.Unit"
     },
     {
       "type": "kotlin.collections.List"
@@ -8019,6 +8524,14 @@
       ]
     },
     {
+      "type": "kotlinx.coroutines.CancelledContinuation",
+      "fields": [
+        {
+          "name": "_resumed$volatile"
+        }
+      ]
+    },
+    {
       "type": "kotlinx.coroutines.CompletedExceptionally",
       "fields": [
         {
@@ -8070,6 +8583,38 @@
         },
         {
           "name": "_rootCause$volatile"
+        }
+      ]
+    },
+    {
+      "type": "kotlinx.coroutines.channels.BufferedChannel",
+      "fields": [
+        {
+          "name": "_closeCause$volatile"
+        },
+        {
+          "name": "bufferEnd$volatile"
+        },
+        {
+          "name": "bufferEndSegment$volatile"
+        },
+        {
+          "name": "closeHandler$volatile"
+        },
+        {
+          "name": "completedExpandBuffersAndPauseFlag$volatile"
+        },
+        {
+          "name": "receiveSegment$volatile"
+        },
+        {
+          "name": "receivers$volatile"
+        },
+        {
+          "name": "sendSegment$volatile"
+        },
+        {
+          "name": "sendersAndCloseStatus$volatile"
         }
       ]
     },
@@ -11650,6 +12195,9 @@
       "glob": "META-INF/elide/pkl/TypeScript.pkl"
     },
     {
+      "glob": "META-INF/elide/pkl/Web.pkl"
+    },
+    {
       "glob": "META-INF/elide/pkl/Workspace.pkl"
     },
     {
@@ -11828,6 +12376,9 @@
     },
     {
       "glob": "META-INF/services/elide.tooling.lockfile.LockfileContributor"
+    },
+    {
+      "glob": "META-INF/services/elide.tooling.project.mcp.McpContributor"
     },
     {
       "glob": "META-INF/services/io.micronaut.context.ApplicationContextConfigurer"

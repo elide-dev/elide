@@ -67,7 +67,7 @@ public fun interface AdviceEnabled {
  * Holds a [text] portion to be emitted directly to an advice file as a heading.
  */
 @Serializable @JvmInline public value class Heading internal constructor(private val text: String) : AdviceStanza {
-  public val headingText: String get() = "### $text"
+  public val headingText: String get() = "## $text"
 
   override fun export(builder: StringBuilder) {
     builder.appendLine(headingText)
@@ -113,7 +113,7 @@ public interface AgentAdviceBuilder: RenderableAdvice {
    *
    * @param content Text content to append.
    */
-  public fun text(content: String): Text = Text(content.trimIndent())
+  public fun text(content: String): Text = Text(content.trimIndent().replace("\n\n\n", "\n\n"))
 
   /**
    * Append a portion of text to the advice under build.
@@ -193,7 +193,12 @@ public interface AgentAdviceBuilder: RenderableAdvice {
         }
 
         override fun export(builder: StringBuilder) {
-          allStanzas.forEach { it.export(builder) }
+          allStanzas.forEachIndexed { i, value ->
+            value.export(builder)
+            if (i != allStanzas.indices.last) {
+              builder.appendLine()
+            }
+          }
         }
 
         override fun <T : RenderableAdvice> add(stanza: T): T {
@@ -227,14 +232,17 @@ public interface AgentAdviceBuilder: RenderableAdvice {
      * @return Combined default advice.
      */
     @JvmStatic public fun defaults(project: ElideConfiguredProject? = null): AgentAdvice = build {
-      ElideAdvice.advice(this)
       project?.let { this += forProject(it) }
+      ElideAdvice.advice(this)
     }
   }
 
   override fun export(builder: StringBuilder) {
-    stanzas.forEach {
-      it.export(builder)
+    stanzas.forEachIndexed { i, value ->
+      value.export(builder)
+      if (i != stanzas.indices.last) {
+          builder.appendLine()
+      }
     }
   }
 

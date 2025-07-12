@@ -31,8 +31,12 @@ import kotlinx.serialization.Serializable
       - `elide build`: Build the project, which involves compiling code, building output artifacts/containers, etc.
       - `elide test`: Run tests defined in the project, similar to how you would with `npm test` or `mvn test`.
       - `elide run <script>`: Run a script in the Elide runtime.
+      - `elide lsp`: Start the Language Server Protocol (LSP) server for IDE integration.
+      - `elide mcp`: Start the Multi-Context Protocol (MCP) server for polyglot execution and interaction.
 
-      Note that `<script>` in `elide run <script>` can be several things, including:
+      See `elide --help` for a full list of commands and options. Note that `<script>` in `elide run <script>` can be
+      several things, including:
+
       - A source file to run
       - A script defined in `elide.pkl` in the `scripts` block
       - A script defined in a foreign manifest, like `package.json`

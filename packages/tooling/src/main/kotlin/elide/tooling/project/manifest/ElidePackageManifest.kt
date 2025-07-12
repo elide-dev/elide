@@ -89,9 +89,23 @@ public data class ElidePackageManifest(
     val delegates: List<String>? = null,
   )
 
+  @Serializable public data class McpResource(
+    val path: String,
+    val name: String,
+    val description: String = "",
+    val mimeType: String? = null,
+  )
+
+  @Serializable public data class McpSettings(
+    val resources: List<McpResource>? = null,
+    val advice: Boolean = true,
+    val registerElide: Boolean = true,
+  )
+
   @Serializable public data class DevSettings(
     val source: ProjectSourceSpec? = null,
     val lsp: LspSettings? = null,
+    val mcp: McpSettings? = null,
   )
 
   @Serializable public data class Jar(

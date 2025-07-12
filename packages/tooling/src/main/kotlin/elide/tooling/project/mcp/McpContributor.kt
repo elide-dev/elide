@@ -12,6 +12,7 @@
  */
 package elide.tooling.project.mcp
 
+import elide.tooling.project.ElideConfiguredProject
 import io.modelcontextprotocol.kotlin.sdk.server.Server
 
 /**
@@ -32,7 +33,23 @@ public interface McpContributor {
      * MCP server which is under configuration.
      */
     public val server: Server
+
+    /**
+     * Configured Elide project which we are working with.
+     *
+     * @return The configured Elide project, if available; `null` if no project is available.
+     */
+    public suspend fun project(): ElideConfiguredProject?
   }
+
+  /**
+   * Indicate whether this contributor is enabled for the given context.
+   *
+   * @param context Context for the MCP server being constructed, which may be used to determine whether this
+   *   contributor is enabled for the server.
+   * @return `true` if this contributor is enabled for the given context, or `false` if it is not.
+   */
+  public suspend fun enabled(context: McpContext): Boolean = true
 
   /**
    * Contribute to the MCP server context under construction.

@@ -1103,6 +1103,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "kotlin.random.Random${'$'}Default",
   "kotlin.random.RandomKt",
   "kotlin.random.jdk8.PlatformThreadLocalRandom",
+  "kotlin.uuid.SecureRandomHolder",
 
   // --- Kotlin (SDK) -----
 
@@ -1895,7 +1896,7 @@ graalvmNative {
   toolchainDetection = false
 
   agent {
-    defaultMode = "standard"
+    defaultMode = findProperty("elide.native.agentMode")?.toString() ?: "standard"
     builtinCallerFilter = true
     builtinHeuristicFilter = true
     trackReflectionMetadata = true
@@ -1909,6 +1910,13 @@ graalvmNative {
 
     modes {
       standard {}
+      direct {
+        options.addAll(listOf(
+          "config-output-dir=${layout.buildDirectory.dir("native/agent-output/direct").get().asFile.absolutePath}",
+          "config-write-period-secs=10",
+          "config-write-initial-delay-secs=5",
+        ))
+      }
     }
     metadataCopy {
       inputTaskNames.addAll(listOf("run", "optimizedRun"))

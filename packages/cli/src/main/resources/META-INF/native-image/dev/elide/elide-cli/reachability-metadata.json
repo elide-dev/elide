@@ -4311,6 +4311,12 @@
       ]
     },
     {
+      "type": "elide.tooling.project.agents.AdviceMcpContributor"
+    },
+    {
+      "type": "elide.tooling.project.agents.SelfToolMcpContributor"
+    },
+    {
       "type": "elide.tooling.project.codecs.$ElidePackageManifestCodec$Definition",
       "methods": [
         {
@@ -4523,6 +4529,14 @@
           "parameterTypes": [
             "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
             "elide.tooling.project.manifest.ElidePackageManifest$LspSettings"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
+            "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$McpSettings"
           ]
         }
       ]
@@ -4797,6 +4811,30 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenRepository"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$McpPrompt",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$McpResource",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$McpSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$McpTool",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
@@ -7190,6 +7228,23 @@
       ]
     },
     {
+      "type": "io.modelcontextprotocol.kotlin.sdk.CallToolResult",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.CallToolResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "io.modelcontextprotocol.kotlin.sdk.EmptyRequestResult",
       "fields": [
         {
@@ -7403,6 +7458,23 @@
     },
     {
       "type": "io.modelcontextprotocol.kotlin.sdk.ReadResourceResult$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.TextContent",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "io.modelcontextprotocol.kotlin.sdk.TextContent$Companion",
       "methods": [
         {
           "name": "serializer",

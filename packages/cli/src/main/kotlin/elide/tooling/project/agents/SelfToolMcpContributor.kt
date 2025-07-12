@@ -32,6 +32,9 @@ import elide.tooling.project.mcp.McpContributor
 
 // Contributes Elide itself as a tool to the MCP.
 internal class SelfToolMcpContributor : McpContributor {
+  override suspend fun enabled(context: McpContributor.McpContext): Boolean =
+    context.project()?.manifest?.dev?.mcp?.registerElide != false
+
   override suspend fun contribute(context: McpContributor.McpContext) = with(context.server) {
     addTool(
       name = "elide",

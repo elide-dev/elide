@@ -5953,6 +5953,7 @@ public final class elide/tooling/project/mcp/McpContributor$Companion {
 
 public abstract interface class elide/tooling/project/mcp/McpContributor$McpContext {
 	public abstract fun getServer ()Lio/modelcontextprotocol/kotlin/sdk/server/Server;
+	public abstract fun project (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class elide/tooling/project/mcp/McpProjectConfig {
@@ -6088,5 +6089,18 @@ public final class elide/tooling/project/mcp/ModelContextProtocol$McpServingMode
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/project/mcp/ModelContextProtocol$McpServingMode;
 	public static fun values ()[Lelide/tooling/project/mcp/ModelContextProtocol$McpServingMode;
+}
+
+public abstract interface class elide/tooling/web/RoutedStaticWebsite : elide/tooling/web/StaticWebsite {
+}
+
+public abstract interface class elide/tooling/web/StaticWebsite : elide/tooling/web/WebProject {
+	public fun isDynamic ()Z
+	public fun startsServer ()Z
+}
+
+public abstract interface class elide/tooling/web/WebProject {
+	public abstract fun isDynamic ()Z
+	public abstract fun startsServer ()Z
 }
 

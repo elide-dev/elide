@@ -47,7 +47,7 @@ import elide.tooling.project.ElideConfiguredProject
  *
  * Public API for the configuration, execution, and operation of Model Context Protocol (MCP) servers for configured
  * Elide projects. MCP provides a standardized way for AI agents to interact with software projects. This API allows
- * for the configuration and execution of an MCP server, which an AI agent can connet to, and use to perform various
+ * for the configuration and execution of an MCP server, which an AI agent can connect to and use to perform various
  * tasks within the context of the project.
  *
  * ## Supported Features
@@ -211,7 +211,11 @@ public object ModelContextProtocol {
           }
 
           post("/message") {
-            val sessionId: String = call.request.queryParameters["sessionId"]!!
+            val sessionId: String? = call.request.queryParameters["sessionId"]
+            if (sessionId == null) {
+              call.respond(HttpStatusCode.BadRequest, "Missing sessionId query parameter")
+              return@post
+            }
             val transport = servers[sessionId]?.transport as? SseServerTransport
             if (transport == null) {
               call.respond(HttpStatusCode.NotFound, "Session not found")

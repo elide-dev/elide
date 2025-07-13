@@ -12,7 +12,9 @@
  */
 package elide.tooling.project.mcp
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.ClassDiscriminatorMode
 import kotlinx.serialization.json.Json
 
 /**
@@ -38,9 +40,11 @@ import kotlinx.serialization.json.Json
       )
     )
 
+    @OptIn(ExperimentalSerializationApi::class)
     private val json by lazy {
       Json {
         prettyPrint = true
+        classDiscriminatorMode = ClassDiscriminatorMode.NONE
       }
     }
 

@@ -113,7 +113,7 @@ public interface AgentAdviceBuilder: RenderableAdvice {
    *
    * @param content Text content to append.
    */
-  public fun text(content: String): Text = Text(content.trimIndent().replace("\n\n\n", "\n\n"))
+  public fun text(content: String): Text = Text(content.trimIndent().replace(Regex("\n{2,}"), "\n\n"))
 
   /**
    * Append a portion of text to the advice under build.

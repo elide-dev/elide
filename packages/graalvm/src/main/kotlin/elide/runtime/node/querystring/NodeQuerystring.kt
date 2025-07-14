@@ -25,6 +25,7 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.QuerystringAPI
 import elide.runtime.intrinsics.js.node.querystring.ParseOptions
+import elide.runtime.intrinsics.js.node.querystring.QueryParams
 import elide.runtime.intrinsics.js.node.querystring.StringifyOptions
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.gvm.js.JsError
@@ -97,24 +98,46 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   // - Encodes additional characters specified above
   private val codec = PercentCodec(ADDITIONAL_ENCODE_CHARS, true)
 
-  private fun valueToString(value: Value): String = when {
-    value.isString -> value.asString()
-    value.isNull -> "null"
-    value.isNumber -> value.toString()
-    value.isBoolean -> value.toString()
-    value.hasMembers() -> {
-      sequenceOf("toString", "valueOf")
-        .mapNotNull { methodName ->
-          value.getMember(methodName)
-            ?.takeIf { it.canExecute() }
-            ?.runCatching { execute().asString() }
-            ?.getOrNull()
-        }
-        .firstOrNull()
-        ?: throw JsError.typeError("Cannot convert object to string")
-    }
+  private fun valueToString(value: Value): String {
+    println("DEBUG: valueToString called with: $value")
+    println("DEBUG: value.isString = ${value.isString}")
+    println("DEBUG: value.isNull = ${value.isNull}")
+    println("DEBUG: value.isNumber = ${value.isNumber}")
+    println("DEBUG: value.isBoolean = ${value.isBoolean}")
+    println("DEBUG: value.hasArrayElements() = ${value.hasArrayElements()}")
+    println("DEBUG: value.isHostObject = ${value.isHostObject}")
+    println("DEBUG: value.hasMembers() = ${value.hasMembers()}")
 
-    else -> throw JsError.typeError("Cannot convert value to string")
+
+
+    return when {
+      value.isString -> value.asString()
+      value.isNull -> "null"
+      value.isNumber -> value.toString()
+      value.isBoolean -> value.toString()
+      value.hasArrayElements() -> {
+        // Handle arrays - convert to JavaScript-like string representation
+        (0 until value.arraySize).joinToString(",") { index -> valueToString(value.getArrayElement(index)) }
+      }
+
+      !value.hasMembers() -> "[object Object]"
+      value.hasMembers() -> {
+        sequenceOf("toString", "valueOf")
+          .mapNotNull { methodName ->
+            value.getMember(methodName)
+              ?.takeIf { it.canExecute() }
+              ?.runCatching { execute().asString() }
+              ?.getOrNull()
+          }
+          .firstOrNull()
+          ?: throw JsError.typeError("Cannot convert object to primitive value")
+      }
+
+      else -> {
+        println(value.toString())
+        throw JsError.typeError("Cannot convert object to primitive value")
+      }
+    }
   }
 
   internal companion object {
@@ -185,7 +208,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     sep: Value?,
     eq: Value?,
     options: Value?
-  ): Value = parse(str, sep, eq, options)
+  ): QueryParams = parse(str, sep, eq, options)
 
   override fun encode(
     obj: Value,
@@ -204,16 +227,18 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     sep: Value?,
     eq: Value?,
     options: Value?
-  ): Value {
+  ): QueryParams {
+
+
     val string = valueToString(str)
     val separator = sep?.let(::valueToString) ?: "&"
     val equals = eq?.let(::valueToString) ?: "="
     val parseOptions = ParseOptions.fromGuest(options)
 
     val result = mutableMapOf<String, Any>()
-    
+
     if (string.isBlank()) {
-      return Value.asValue(result)
+      return QueryParams.of(result)
     }
 
     var keyCount = 0
@@ -234,17 +259,28 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
             result[key] = value
             keyCount++
           }
+
           is MutableList<*> -> {
             @Suppress("UNCHECKED_CAST")
             (existing as MutableList<String>).add(value)
           }
+
           is String -> {
             result[key] = mutableListOf(existing, value)
           }
         }
       }
 
-    return Value.asValue(result)
+    println("result type: ${result::class}")
+    println("result contents: $result")
+    val proxy = QueryParams.of(result)
+    println("proxy.hasMembers(): ${proxy.getMember("__proto__")}")
+    println("proxy type: ${proxy::class}")
+    val wrapped = Value.asValue(proxy)
+    println("wrapped type: ${wrapped::class}")
+    println("wrapped.hasMembers(): ${wrapped.hasMembers()}")
+
+    return proxy
   }
 
   override fun stringify(
@@ -256,25 +292,26 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     val separator = sep?.let(::valueToString) ?: "&"
     val equals = eq?.let(::valueToString) ?: "="
     val stringifyOptions = StringifyOptions.fromGuest(options)
-    
+
     val result = mutableListOf<String>()
-    
+
     when {
       obj.hasMembers() -> {
         obj.memberKeys.forEach { key ->
           val value = obj.getMember(key)
-          appendKeyValuePairs(result, key, value,  equals, stringifyOptions)
+          appendKeyValuePairs(result, key, value, equals, stringifyOptions)
         }
       }
+
       else -> {
         // Node.js returns empty string for non-objects (Maps, etc.)
         return ""
       }
     }
-    
+
     return result.joinToString(separator)
   }
-  
+
   private fun appendKeyValuePairs(
     result: MutableList<String>,
     key: String,
@@ -283,10 +320,10 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     options: StringifyOptions
   ) {
     if (value?.isNull != false) return
-    
+
     val encoder = options.encodeURIComponent
     val encodedKey = encoder?.execute(Value.asValue(key))?.asString() ?: escape(Value.asValue(key))
-    
+
     when {
       value.hasArrayElements() -> {
         (0 until value.arraySize)
@@ -299,6 +336,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
           }
           .forEach { result += it }
       }
+
       else -> {
         val stringValue = when {
           value.isString -> value.asString()
@@ -306,7 +344,8 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
           value.isBoolean -> value.toString()
           else -> valueToString(value)
         }
-        val encodedValue = encoder?.execute(Value.asValue(stringValue))?.asString() ?: escape(Value.asValue(stringValue))
+        val encodedValue =
+          encoder?.execute(Value.asValue(stringValue))?.asString() ?: escape(Value.asValue(stringValue))
         result += "$encodedKey$equals$encodedValue"
       }
     }

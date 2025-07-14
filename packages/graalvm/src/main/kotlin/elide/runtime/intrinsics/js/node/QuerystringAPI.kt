@@ -13,7 +13,9 @@
 package elide.runtime.intrinsics.js.node
 
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
+import elide.runtime.intrinsics.js.node.querystring.QueryParams
 import elide.vm.annotations.Polyglot
 
 /**
@@ -57,7 +59,7 @@ import elide.vm.annotations.Polyglot
     sep: Value? = Value.asValue("&"),
     eq: Value? = Value.asValue("="),
     options: Value? = null
-  ): Value
+  ): QueryParams
 
   /**
    * ## Method: `querystring.encode(obj, sep, eq, options)`
@@ -106,7 +108,7 @@ import elide.vm.annotations.Polyglot
     sep: Value? = Value.asValue("&"),
     eq: Value? = Value.asValue("="),
     options: Value? = null
-  ): Value
+  ): QueryParams
 
   /**
    * ## Method: `querystring.stringify(obj, sep, eq, options)`

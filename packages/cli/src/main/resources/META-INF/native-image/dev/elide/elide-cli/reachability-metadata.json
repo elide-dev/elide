@@ -13496,13 +13496,6 @@
       "type": "elide.tooling.web.css.CssNative",
       "methods": [
         {
-          "name": "buildCss",
-          "parameterTypes": [
-            "java.lang.String",
-            "elide.tooling.web.css.CssBuilder$CssOptions"
-          ]
-        },
-        {
           "name": "reportCssError",
           "parameterTypes": [
             "java.lang.String"
@@ -13536,6 +13529,17 @@
         {
           "name": "enableSourceMaps",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.web.mdx.MdxNative",
+      "methods": [
+        {
+          "name": "reportCssError",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         }
       ]
     },

@@ -11,7 +11,11 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+/// CSS (Cascading Style Sheets) processing for the Elide toolchain.
 mod css;
+
+/// Markdown and MDX processing for the Elide toolchain.
+mod md;
 
 use crate::css::{CssBuilderError, CssBuilderErrorCase, build_css, css_options};
 use java_native::jni;
@@ -34,6 +38,22 @@ fn dispatch_css_error(mut env: JNIEnv, cls: JClass, message: String) {
       &[JValue::Object(&jstring_err)],
     )
     .expect("failed to report CSS parser error");
+}
+
+/// Dispatch a MDX processing error to the Java side.
+fn dispatch_mdx_error(mut env: JNIEnv, cls: JClass, message: String) {
+  let jstring_err = env
+    .new_string(message)
+    .expect("failed to create error string");
+
+  env
+    .call_static_method(
+      cls,
+      "reportMdxError",
+      "(Ljava/lang/String;)V",
+      &[JValue::Object(&jstring_err)],
+    )
+    .expect("failed to report MDX builder error");
 }
 
 /// JNI entrypoint function to parse and then build CSS code for a given stylesheet and suite of options.
@@ -80,6 +100,25 @@ pub fn buildCss<'a>(
     Err(err) => {
       let msg = format!("{:?}: {:?}", err.case, err.message);
       dispatch_css_error(env, cls, msg);
+      JObject::null()
+    }
+  }
+}
+
+/// JNI entrypoint function to parse and then build MDX code for a given source file.
+#[jni("elide.tooling.web.mdx.MdxNative")]
+pub fn buildMdx<'a>(mut env: JNIEnv<'a>, cls: JClass<'a>, jmdx: JString<'a>) -> JObject<'a> {
+  let binding = env.get_string(&jmdx).expect("failed to obtain MDX string");
+  let mdx_code = binding.to_str();
+  match md::compile_mdx(mdx_code.to_string()) {
+    Ok(mdx) => env
+      .new_string(mdx)
+      .expect("failed to create built MDX string")
+      .into(),
+
+    Err(err) => {
+      let msg = format!("Error: {:?}", err);
+      dispatch_mdx_error(env, cls, msg);
       JObject::null()
     }
   }

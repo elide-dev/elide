@@ -20,10 +20,54 @@ class MarkdownRenderTest {
   @Test fun testRenderMarkdown() = runTest {
     Markdown.renderMarkdown {
       MarkdownSourceLiteral {
+        // language=markdown
         """
         ### Hello Markdown!
 
         Here is some markdown to render.
+        """
+      }
+    }.let {
+      assertNotNull(it)
+      assertTrue(it.isNotEmpty())
+      assertTrue(it.isNotBlank())
+      assertTrue(it.contains("Hello Markdown!"))
+      assertTrue(it.contains("Here is some markdown to render."))
+    }
+  }
+
+  @Test fun testRenderMarkdownGfm() = runTest {
+    Markdown.renderMarkdown(style = MarkdownFlavor.GitHub) {
+      MarkdownSourceLiteral {
+        // language=markdown
+        """
+        ### Hello Markdown!
+
+        Here is some markdown to render. Some GFM specific markdown:
+        ```js
+        console.log("Hello, world!");
+        ```
+        """
+      }
+    }.let {
+      assertNotNull(it)
+      assertTrue(it.isNotEmpty())
+      assertTrue(it.isNotBlank())
+      assertTrue(it.contains("Hello Markdown!"))
+      assertTrue(it.contains("Here is some markdown to render."))
+      assertTrue(it.contains("Some GFM"))
+      assertTrue(it.contains("<code class=\"language-js\">"))
+    }
+  }
+
+  @Test fun testRenderMarkdownCommon() = runTest {
+    Markdown.renderMarkdown(style = MarkdownFlavor.CommonMark) {
+      MarkdownSourceLiteral {
+        // language=markdown
+        """
+        ### Hello Markdown!
+
+        Here is some markdown to render. This is specifically common markdown.
         """
       }
     }.let {

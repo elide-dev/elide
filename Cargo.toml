@@ -119,6 +119,8 @@ parcel_sourcemap = { version = "2.1.1" }
 sourcemap = { version = "9.2.2" }
 sysinfo = { version = "0.36.0" }
 once_cell = { version = "1.21.3" }
+markdown = { version = "1.0.0" }
+mdxjs = { version = "1.0.4" }
 oxvg = { git = "https://github.com/elide-tools/oxvg", rev = "02993ff81c668410270ee5f2fbc3af67fd265add" }
 tikv-jemallocator = { version = "0.6.0", default-features = false, features = ["disable_initial_exec_tls"] }
 log = { version = "0.4.27" }

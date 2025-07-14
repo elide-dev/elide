@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package dev.elide.intellij.manifests
+package dev.elide.intellij.project.manifest
 
 import java.io.InputStream
 import java.io.OutputStream

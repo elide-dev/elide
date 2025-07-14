@@ -12,9 +12,9 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
 import dev.elide.intellij.Constants
-import dev.elide.intellij.project.data.ElideEntrypointInfo
-import dev.elide.intellij.project.data.elideProjectIndex
-import dev.elide.intellij.project.data.fullCommandLine
+import dev.elide.intellij.project.model.ElideEntrypointInfo
+import dev.elide.intellij.service.elideProjectIndex
+import dev.elide.intellij.project.model.fullCommandLine
 import org.jetbrains.kotlin.idea.base.codeInsight.KotlinMainFunctionDetector
 import org.jetbrains.kotlin.idea.base.codeInsight.findMainOwner
 import org.jetbrains.kotlin.idea.run.KotlinRunConfigurationProducer.Companion.getMainClassJvmName

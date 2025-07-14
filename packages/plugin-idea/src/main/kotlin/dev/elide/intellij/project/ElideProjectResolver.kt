@@ -21,12 +21,11 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
-import com.intellij.openapi.progress.coroutineToIndicator
 import com.intellij.openapi.progress.runBlockingCancellable
 import dev.elide.intellij.Constants
 import dev.elide.intellij.cli.ElideCommandLine
 import dev.elide.intellij.cli.install
-import dev.elide.intellij.manifests.ElideManifestService
+import dev.elide.intellij.project.manifest.ElideManifestService
 import dev.elide.intellij.project.model.ElideProjectModel
 import dev.elide.intellij.service.ElideDistributionResolver
 import dev.elide.intellij.settings.ElideExecutionSettings

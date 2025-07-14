@@ -1,4 +1,4 @@
-package dev.elide.intellij.execution
+package dev.elide.intellij.service
 
 import com.intellij.execution.Executor
 import com.intellij.execution.RunManager

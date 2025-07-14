@@ -1,4 +1,4 @@
-package dev.elide.intellij.project.data
+package dev.elide.intellij.project.model
 
 import com.intellij.openapi.externalSystem.model.Key
 import com.intellij.util.xmlb.annotations.Attribute
@@ -8,7 +8,7 @@ import dev.elide.intellij.Constants
 /**
  * Serializable project data resolved from an Elide manifest during project sync. Each linked project's data is read
  * by the [dev.elide.intellij.project.ElideProjectDataService] after being resolved, and is later persisted by the
- * IDE through the [ElideProjectIndexService].
+ * IDE through the [dev.elide.intellij.service.ElideProjectIndexService].
  */
 data class ElideProjectData(
   /** Resolved entrypoints from the project's manifest. */

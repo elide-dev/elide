@@ -1,8 +1,9 @@
-package dev.elide.intellij.project.data
+package dev.elide.intellij.service
 
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
-import dev.elide.intellij.project.data.ElideProjectIndexService.ElideProjectIndex
+import dev.elide.intellij.service.ElideProjectIndexService.ElideProjectIndex
+import dev.elide.intellij.project.model.ElideProjectData
 
 /** Retrieves the index service for this project. */
 inline val Project.elideProjectIndex: ElideProjectIndexService

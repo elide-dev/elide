@@ -5,10 +5,9 @@ import com.intellij.execution.target.LanguageRuntimeType
 import com.intellij.execution.target.TargetEnvironmentAwareRunProfile
 import com.intellij.execution.target.TargetEnvironmentConfiguration
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration
-import com.intellij.openapi.externalSystem.util.ExternalSystemUtil
 import com.intellij.openapi.project.Project
 import dev.elide.intellij.Constants
-import dev.elide.intellij.project.data.ElideEntrypointInfo
+import dev.elide.intellij.project.model.ElideEntrypointInfo
 import javax.swing.Icon
 
 /** Elide run configuration type. */

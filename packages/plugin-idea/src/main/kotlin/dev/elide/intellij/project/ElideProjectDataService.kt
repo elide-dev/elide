@@ -9,23 +9,23 @@ import com.intellij.openapi.externalSystem.service.project.manage.AbstractProjec
 import com.intellij.openapi.externalSystem.util.ExternalSystemConstants
 import com.intellij.openapi.externalSystem.util.Order
 import com.intellij.openapi.project.Project
-import dev.elide.intellij.project.data.ElideProjectData
-import dev.elide.intellij.project.data.elideProjectIndex
+import dev.elide.intellij.project.model.ElideProjectData
+import dev.elide.intellij.service.elideProjectIndex
 
 /**
- * Data import service used to populate the [project index][dev.elide.intellij.project.data.ElideProjectIndexService]
+ * Data import service used to populate the [project index][dev.elide.intellij.service.ElideProjectIndexService]
  * after a successful project resolution, allowing the index to be persisted between IDE runs without the need to
  * resync the project.
  */
 @Order(ExternalSystemConstants.BUILTIN_SERVICE_ORDER)
 class ElideProjectDataService : AbstractProjectDataService<ElideProjectData, Project>() {
-  override fun getTargetDataKey(): Key<ElideProjectData> = ElideProjectData.PROJECT_KEY
+  override fun getTargetDataKey(): Key<ElideProjectData> = ElideProjectData.Companion.PROJECT_KEY
 
   override fun importData(
-    toImport: Collection<DataNode<ElideProjectData?>?>,
-    projectData: ProjectData?,
-    project: Project,
-    modelsProvider: IdeModifiableModelsProvider
+      toImport: Collection<DataNode<ElideProjectData?>?>,
+      projectData: ProjectData?,
+      project: Project,
+      modelsProvider: IdeModifiableModelsProvider
   ) {
     if (projectData == null) return
     if (toImport.size > 1) LOG.warn("More than one node to import (${toImport.size}), only the first one will be used")

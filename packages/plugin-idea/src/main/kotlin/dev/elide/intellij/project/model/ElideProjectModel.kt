@@ -20,8 +20,6 @@ import com.intellij.openapi.externalSystem.model.ProjectKeys
 import com.intellij.openapi.externalSystem.model.project.*
 import com.intellij.openapi.util.io.toCanonicalPath
 import dev.elide.intellij.Constants
-import dev.elide.intellij.project.data.ElideEntrypointInfo
-import dev.elide.intellij.project.data.ElideProjectData
 import dev.elide.intellij.project.model.ElideProjectModel.SOURCE_PATH_GLOB_CHAR
 import java.nio.file.Path
 import kotlin.io.path.Path

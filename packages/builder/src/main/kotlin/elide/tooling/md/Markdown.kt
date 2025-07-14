@@ -24,6 +24,8 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.io.path.inputStream
 import kotlin.text.trimIndent
+import elide.tooling.web.WebBuilder
+import elide.tooling.web.mdx.MdxBuilder
 
 /**
  * ## Markdown Builder
@@ -89,7 +91,14 @@ public object Markdown {
   @JvmRecord public data class MarkdownOptions(
     public val flavor: MarkdownFlavor = DEFAULT_MARKDOWN_FLAVOR,
     public val trimIndent: Boolean = true,
-  )
+  ) {
+    public companion object {
+      @JvmStatic public fun defaults(): MarkdownOptions = MarkdownOptions(
+        flavor = DEFAULT_MARKDOWN_FLAVOR,
+        trimIndent = true,
+      )
+    }
+  }
 
   /**
    * ### Markdown Sources
@@ -104,11 +113,10 @@ public object Markdown {
    * @param style Markdown flavor to use.
    * @return Markdown flavour descriptor for the specified style.
    */
-  public fun markdownStyle(style: MarkdownFlavor = DEFAULT_MARKDOWN_FLAVOR): MarkdownFlavourDescriptor {
-    return when (style) {
-      MarkdownFlavor.CommonMark -> CommonMarkFlavourDescriptor()
-      MarkdownFlavor.GitHub -> GFMFlavourDescriptor()
-    }
+  public fun markdownStyle(style: MarkdownFlavor = DEFAULT_MARKDOWN_FLAVOR): MarkdownFlavourDescriptor? = when (style) {
+    MarkdownFlavor.CommonMark -> CommonMarkFlavourDescriptor()
+    MarkdownFlavor.GitHub -> GFMFlavourDescriptor()
+    else -> null
   }
 
   /**
@@ -123,14 +131,27 @@ public object Markdown {
   public suspend fun renderMarkdown(
     style: MarkdownFlavor = DEFAULT_MARKDOWN_FLAVOR,
     options: MarkdownOptions = MarkdownOptions(flavor = style),
-    descriptor: MarkdownFlavourDescriptor = markdownStyle(options.flavor),
+    descriptor: MarkdownFlavourDescriptor? = markdownStyle(options.flavor),
     context: CoroutineContext = Dispatchers.IO,
     md: suspend () -> MarkdownSourceMaterial,
   ): String = withContext(context) {
+    // mdx requires web builder stuff
+    WebBuilder.load()
+
     val src = md().code().let {
       if (options.trimIndent) it.trimIndent() else it
     }
-    val parsedTree = MarkdownParser(descriptor).buildMarkdownTreeFromString(src)
-    HtmlGenerator(src, parsedTree, descriptor).generateHtml()
+    when (options.flavor) {
+      // for mdx, we use a native parser
+      MarkdownFlavor.Mdx -> return@withContext MdxBuilder.renderMdx(
+        src = src,
+        options = options,
+      )
+
+      // for markdown, we use jvm-side libs
+      else -> MarkdownParser(requireNotNull(descriptor)).buildMarkdownTreeFromString(src).let { parsedTree ->
+        HtmlGenerator(src, parsedTree, descriptor).generateHtml()
+      }
+    }
   }
 }

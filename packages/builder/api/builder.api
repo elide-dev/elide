@@ -2376,6 +2376,7 @@ public final class elide/tooling/md/Markdown {
 }
 
 public final class elide/tooling/md/Markdown$MarkdownOptions : java/lang/Record {
+	public static final field Companion Lelide/tooling/md/Markdown$MarkdownOptions$Companion;
 	public fun <init> ()V
 	public fun <init> (Lelide/tooling/md/MarkdownFlavor;Z)V
 	public synthetic fun <init> (Lelide/tooling/md/MarkdownFlavor;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -2383,11 +2384,16 @@ public final class elide/tooling/md/Markdown$MarkdownOptions : java/lang/Record 
 	public final fun component2 ()Z
 	public final fun copy (Lelide/tooling/md/MarkdownFlavor;Z)Lelide/tooling/md/Markdown$MarkdownOptions;
 	public static synthetic fun copy$default (Lelide/tooling/md/Markdown$MarkdownOptions;Lelide/tooling/md/MarkdownFlavor;ZILjava/lang/Object;)Lelide/tooling/md/Markdown$MarkdownOptions;
+	public static final fun defaults ()Lelide/tooling/md/Markdown$MarkdownOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun flavor ()Lelide/tooling/md/MarkdownFlavor;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 	public final fun trimIndent ()Z
+}
+
+public final class elide/tooling/md/Markdown$MarkdownOptions$Companion {
+	public final fun defaults ()Lelide/tooling/md/Markdown$MarkdownOptions;
 }
 
 public abstract interface class elide/tooling/md/Markdown$MarkdownSourceFile : elide/tooling/md/Markdown$MarkdownSourceMaterial {
@@ -2411,6 +2417,7 @@ public final class elide/tooling/md/Markdown$MarkdownSources : java/lang/Record 
 public final class elide/tooling/md/MarkdownFlavor : java/lang/Enum {
 	public static final field CommonMark Lelide/tooling/md/MarkdownFlavor;
 	public static final field GitHub Lelide/tooling/md/MarkdownFlavor;
+	public static final field Mdx Lelide/tooling/md/MarkdownFlavor;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/md/MarkdownFlavor;
 	public static fun values ()[Lelide/tooling/md/MarkdownFlavor;
@@ -3001,5 +3008,11 @@ public final class elide/tooling/web/css/CssBuilder$NoMinification : elide/tooli
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/mdx/MdxBuilder {
+	public static final field INSTANCE Lelide/tooling/web/mdx/MdxBuilder;
+	public static final fun renderMdx (Ljava/lang/String;Lelide/tooling/md/Markdown$MarkdownOptions;)Ljava/lang/String;
+	public static synthetic fun renderMdx$default (Ljava/lang/String;Lelide/tooling/md/Markdown$MarkdownOptions;ILjava/lang/Object;)Ljava/lang/String;
 }
 

@@ -8,11 +8,9 @@ import com.intellij.openapi.externalSystem.service.ui.project.path.WorkingDirect
 import com.intellij.openapi.observable.util.createTextModificationTracker
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.ModificationTracker
-import com.intellij.openapi.util.NlsContexts
 import dev.elide.intellij.Constants
-import dev.elide.intellij.project.data.ElideProjectData
+import dev.elide.intellij.project.data.elideProjectIndex
 import dev.elide.intellij.project.data.fullCommandLine
-import org.jetbrains.annotations.Nls
 import javax.swing.Icon
 
 /** Extension used to provide completion suggestions and assistance for Elide run configurations. */
@@ -68,14 +66,12 @@ class ElideCommandLineInfo(
     }
 
     private fun collectEntrypointTasks(): List<TextCompletionInfo> {
-      val elideData = ElideProjectData.load(project)[workdirField.workingDirectory] ?: return emptyList()
-
-      return elideData.entrypoints.map {
+      return project.elideProjectIndex[workdirField.workingDirectory]?.entrypoints?.map {
         TextCompletionInfo(
           text = it.fullCommandLine,
           description = "Run the ${it.descriptiveName}",
         )
-      }
+      }.orEmpty()
     }
   }
 }

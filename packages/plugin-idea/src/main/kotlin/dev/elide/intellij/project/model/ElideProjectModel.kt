@@ -22,7 +22,6 @@ import com.intellij.openapi.util.io.toCanonicalPath
 import dev.elide.intellij.Constants
 import dev.elide.intellij.project.data.ElideEntrypointInfo
 import dev.elide.intellij.project.data.ElideProjectData
-import dev.elide.intellij.project.data.ElideProjectKeys
 import dev.elide.intellij.project.model.ElideProjectModel.SOURCE_PATH_GLOB_CHAR
 import java.nio.file.Path
 import kotlin.io.path.Path
@@ -133,8 +132,7 @@ data object ElideProjectModel {
     }
 
     val elideData = collectElideProjectData(elideProject)
-    LOG.warn("Collected elide data: $elideData")
-    projectNode.createChild(ElideProjectKeys.ELIDE_DATA, elideData)
+    projectNode.createChild(ElideProjectData.PROJECT_KEY, elideData)
 
     return projectNode
   }
@@ -187,17 +185,17 @@ data object ElideProjectModel {
     val entrypoints = buildList {
       // scripts can be used as tasks
       elideProject.manifest.scripts.forEach { (name, script) ->
-        add(ElideEntrypointInfo.Script(name, script))
+        add(ElideEntrypointInfo.script(name))
       }
 
       // explicit entry points
       elideProject.manifest.entrypoint?.forEach { entrypoint ->
-        add(ElideEntrypointInfo.MainEntrypoint(entrypoint))
+        add(ElideEntrypointInfo.generic(entrypoint))
       }
 
       // JVM main class
-      elideProject.manifest.jvm?.main?.let { main ->
-        add(ElideEntrypointInfo.JvmMainEntrypoint(main))
+      elideProject.manifest.jvm?.main?.let { mainClassName ->
+        add(ElideEntrypointInfo.jvmMain(mainClassName))
       }
     }
 

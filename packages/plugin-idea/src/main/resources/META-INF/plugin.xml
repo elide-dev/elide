@@ -59,6 +59,7 @@
             groupId="build.tools"
             instance="dev.elide.intellij.settings.ElideConfigurable"/>
     <externalSystem.runConfigurationEx implementation="dev.elide.intellij.execution.ElideRunConfigurationExtension"/>
+    <externalProjectDataService implementation="dev.elide.intellij.project.ElideProjectDataService"/>
   </extensions>
 
   <actions>

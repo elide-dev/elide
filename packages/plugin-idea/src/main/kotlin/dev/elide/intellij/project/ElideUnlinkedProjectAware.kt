@@ -57,7 +57,6 @@ import dev.elide.intellij.settings.ElideSettings
 
   override suspend fun linkAndLoadProjectAsync(project: Project, externalProjectPath: String) {
     ElideOpenProjectProvider().linkToExistingProjectAsync(externalProjectPath, project)
-
   }
 
   override suspend fun unlinkProject(project: Project, externalProjectPath: String) {

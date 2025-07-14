@@ -13,8 +13,7 @@ import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
 import dev.elide.intellij.Constants
 import dev.elide.intellij.project.data.ElideEntrypointInfo
-import dev.elide.intellij.project.data.ElideProjectData
-import dev.elide.intellij.project.data.ExternalProjectPath
+import dev.elide.intellij.project.data.elideProjectIndex
 import dev.elide.intellij.project.data.fullCommandLine
 import org.jetbrains.kotlin.idea.base.codeInsight.KotlinMainFunctionDetector
 import org.jetbrains.kotlin.idea.base.codeInsight.findMainOwner
@@ -64,7 +63,9 @@ import org.jetbrains.kotlin.psi.KtDeclarationContainer
     val entryPointContainer = getEntryPointContainer(context.location) ?: return false
     val startClassFQName = getMainClassJvmName(entryPointContainer) ?: return false
 
-    val storedEntrypoint = configuration.entrypoint as? ElideEntrypointInfo.JvmMainEntrypoint ?: return false
+    val storedEntrypoint = configuration.entrypoint?.takeIf { it.kind == ElideEntrypointInfo.Kind.JvmMainClass }
+      ?: return false
+
     return storedEntrypoint.value == startClassFQName
   }
 
@@ -75,7 +76,7 @@ import org.jetbrains.kotlin.psi.KtDeclarationContainer
     ProgressManager.checkCanceled()
     return getConfigurationSettingsList(RunManager.getInstance(context.project)).find { configurationSettings ->
       val elideConfiguration = (configurationSettings.configuration as ElideRunConfiguration)
-      val storedEntrypoint = elideConfiguration.entrypoint as? ElideEntrypointInfo.JvmMainEntrypoint
+      val storedEntrypoint = elideConfiguration.entrypoint?.takeIf { it.kind == ElideEntrypointInfo.Kind.JvmMainClass }
       storedEntrypoint?.value == startClassFQName
     }
   }
@@ -88,10 +89,10 @@ import org.jetbrains.kotlin.psi.KtDeclarationContainer
   private fun findJvmEntrypoint(
     context: ConfigurationContext,
     qualifiedName: String
-  ): Pair<ExternalProjectPath, ElideEntrypointInfo>? {
-    for ((path, project) in ElideProjectData.load(context.project).entries) {
+  ): Pair<String, ElideEntrypointInfo>? {
+    for ((path, project) in context.project.elideProjectIndex.entries) {
       val jvmMain = project.entrypoints.find {
-        it is ElideEntrypointInfo.JvmMainEntrypoint && it.value == qualifiedName
+        it.kind == ElideEntrypointInfo.Kind.JvmMainClass && it.value == qualifiedName
       } ?: continue
 
       return path to jvmMain

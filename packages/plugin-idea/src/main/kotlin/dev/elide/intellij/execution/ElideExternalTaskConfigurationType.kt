@@ -6,6 +6,7 @@ import com.intellij.openapi.externalSystem.service.execution.AbstractExternalSys
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration
 import com.intellij.openapi.project.Project
 import dev.elide.intellij.Constants
+import dev.elide.intellij.settings.ElideSettings
 import javax.swing.Icon
 
 /** Extension providing the [ElideRunConfiguration] type. */
@@ -24,6 +25,9 @@ class ElideExternalTaskConfigurationType : AbstractExternalSystemTaskConfigurati
     factory: ConfigurationFactory,
     name: String
   ): ExternalSystemRunConfiguration {
-    return ElideRunConfiguration(project, factory, name)
+    val defaultPath = ElideSettings.getSettings(project).linkedProjectsSettings.firstOrNull()?.externalProjectPath
+    return ElideRunConfiguration(project, factory, name).apply {
+      settings.externalProjectPath = defaultPath ?: project.basePath
+    }
   }
 }

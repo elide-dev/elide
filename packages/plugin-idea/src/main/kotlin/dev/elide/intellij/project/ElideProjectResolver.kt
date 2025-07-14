@@ -69,9 +69,6 @@ class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSetting
     listener: ExternalSystemTaskNotificationListener
   ): DataNode<ProjectData>? {
     return runBlockingCancellable {
-      coroutineToIndicator {
-
-      }
       LOG.debug("Resolving project at '$projectPath'")
 
       val projectModel = runCatching {

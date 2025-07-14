@@ -90,8 +90,4 @@ class ElideSystemSettingsControl(
   override fun showUi(visible: Boolean) {
     controls.isVisible = visible
   }
-
-  private companion object {
-    private val LOG = com.intellij.openapi.diagnostic.Logger.getInstance(ElideSystemSettingsControl::class.java)
-  }
 }

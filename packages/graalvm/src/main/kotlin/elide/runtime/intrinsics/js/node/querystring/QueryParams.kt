@@ -15,7 +15,6 @@ package elide.runtime.intrinsics.js.node.querystring
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyArray
 import org.graalvm.polyglot.proxy.ProxyObject
-import elide.annotations.API
 import elide.vm.annotations.Polyglot
 
 /**
@@ -74,6 +73,54 @@ public interface QueryParams : ProxyObject {
 
     @JvmStatic public fun of(data: Map<String, StringOrArray>): QueryParams = object : QueryParams {
       override val data: Map<String, StringOrArray> = data
+    }
+
+    /**
+     * Convert a guest data structure to a [QueryParams] structure on a best-effort basis.
+     *
+     * @param params The guest data structure to convert.
+     * @return The converted [QueryParams] structure, or null if the input is not convertible.
+     */
+    @JvmStatic public fun fromGuest(params: Value?): QueryParams? {
+      return when {
+        params == null || params.isNull-> of(emptyMap())
+
+        params.isHostObject -> {
+          val hostObject = params.asHostObject<Any>()
+          if (hostObject is Map<*, *>) {
+            val data = mutableMapOf<String, StringOrArray>()
+            hostObject.forEach { (key, value) ->
+              if (key is String && value != null) {
+                data[key] = when (value) {
+                  is Array<*> -> value.map { it.toString() }
+                  is List<*> -> value.map { it.toString() }
+                  else -> value.toString()
+                }
+              }
+            }
+            of(data)
+          } else {
+            null
+          }
+        }
+
+        params.hasMembers() -> {
+          val data = mutableMapOf<String, StringOrArray>()
+          params.memberKeys.forEach { key ->
+            val param = params.getMember(key)
+            if (param != null && !param.isNull) {
+              data[key] = when {
+                param.hasArrayElements() -> {
+                  (0 until param.arraySize).map { param.getArrayElement(it).toString() }
+                }
+                else -> param.toString()
+              }
+            }
+          }
+          of(data)
+        }
+        else -> null
+      }
     }
 
     /**

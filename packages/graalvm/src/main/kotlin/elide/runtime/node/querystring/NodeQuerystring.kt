@@ -15,7 +15,6 @@ package elide.runtime.node.querystring
 import org.apache.commons.codec.net.PercentCodec
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
-import org.graalvm.polyglot.proxy.ProxyObject
 import java.nio.charset.StandardCharsets
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
@@ -29,6 +28,8 @@ import elide.runtime.intrinsics.js.node.querystring.QueryParams
 import elide.runtime.intrinsics.js.node.querystring.StringifyOptions
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.gvm.js.JsError
+import elide.runtime.intrinsics.js.node.querystring.QueryParams.Companion.of
+import elide.runtime.intrinsics.js.node.querystring.StringOrArray
 
 // Names of `querystring` methods.
 private const val QS_DECODE = "decode"
@@ -99,17 +100,6 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   private val codec = PercentCodec(ADDITIONAL_ENCODE_CHARS, true)
 
   private fun valueToString(value: Value): String {
-    println("DEBUG: valueToString called with: $value")
-    println("DEBUG: value.isString = ${value.isString}")
-    println("DEBUG: value.isNull = ${value.isNull}")
-    println("DEBUG: value.isNumber = ${value.isNumber}")
-    println("DEBUG: value.isBoolean = ${value.isBoolean}")
-    println("DEBUG: value.hasArrayElements() = ${value.hasArrayElements()}")
-    println("DEBUG: value.isHostObject = ${value.isHostObject}")
-    println("DEBUG: value.hasMembers() = ${value.hasMembers()}")
-
-
-
     return when {
       value.isString -> value.asString()
       value.isNull -> "null"
@@ -295,19 +285,19 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
     val result = mutableListOf<String>()
 
-    when {
-      obj.hasMembers() -> {
-        obj.memberKeys.forEach { key ->
-          val value = obj.getMember(key)
-          appendKeyValuePairs(result, key, value, equals, stringifyOptions)
-        }
-      }
+    val queryParams = QueryParams.fromGuest(obj)
 
-      else -> {
-        // Node.js returns empty string for non-objects (Maps, etc.)
-        return ""
+    if (queryParams != null) {
+      queryParams.memberKeys.forEach { key ->
+        val value = Value.asValue(queryParams.getMember(key))
+        appendKeyValuePairs(result, key, value, equals, stringifyOptions)
       }
+    } else {
+      // Node.js returns empty string for non-objects (primitives, null, etc.)
+      return ""
     }
+
+    println("Printing result: $result")
 
     return result.joinToString(separator)
   }
@@ -325,6 +315,25 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     val encodedKey = encoder?.execute(Value.asValue(key))?.asString() ?: escape(Value.asValue(key))
 
     when {
+      value.isHostObject -> {
+        val hostObject = value.asHostObject<Any>()
+
+        println(value.javaClass)
+        when (hostObject) {
+          is Array<*> -> {
+            hostObject
+              .asSequence()
+              .filterNotNull()
+              .map { element ->
+                val encodedValue =
+                  encoder?.execute(Value.asValue(element))?.asString() ?: escape(Value.asValue(element))
+                "$encodedKey$equals$encodedValue"
+              }
+              .forEach { result += it }
+          }
+        }
+      }
+
       value.hasArrayElements() -> {
         (0 until value.arraySize)
           .asSequence()
@@ -337,13 +346,9 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
           .forEach { result += it }
       }
 
+
       else -> {
-        val stringValue = when {
-          value.isString -> value.asString()
-          value.isNumber -> value.toString()
-          value.isBoolean -> value.toString()
-          else -> valueToString(value)
-        }
+        val stringValue = valueToString(value)
         val encodedValue =
           encoder?.execute(Value.asValue(stringValue))?.asString() ?: escape(Value.asValue(stringValue))
         result += "$encodedKey$equals$encodedValue"

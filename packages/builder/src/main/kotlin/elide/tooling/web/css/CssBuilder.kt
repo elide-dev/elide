@@ -25,6 +25,15 @@ import elide.runtime.diag.Diagnostics
 import elide.tooling.project.ElideProject
 import elide.tooling.web.WebBuilder
 
+// JNI callables.
+private const val ENABLE_MINIFICATION = "enableMinification"
+private const val ENABLE_SCSS = "enableScss"
+private const val ENABLE_SOURCE_MAPS = "enableSourceMaps"
+private const val ENABLE_MODULES = "enableModules"
+private const val ENABLE_BUNDLE = "enableBundle"
+private const val ENABLE_DEBUG_LOGS = "enableDebugLogs"
+private const val ABSOLUTE_PROJECT_ROOT = "absoluteProjectRoot"
+
 /**
  * ## CSS Builder
  *
@@ -104,32 +113,37 @@ public object CssBuilder {
    * @property bundle Whether to bundle multiple CSS files into one.
    * @property projectRoot The root project path, if any, which is used to resolve relative paths in CSS.
    * @property sourceMap Whether to generate a source map for the CSS output.
+   * @property scss Whether to enable SCSS/SASS pre-processing.
    */
-  @JvmRecord public data class CssOptions private constructor (
+  @JvmRecord public data class CssOptions (
     public val debug: Boolean = false,
     public val minify: CssMinification = MinifyOptions.defaults(),
     public val modules: Boolean = false,
     public val bundle: Boolean = false,
     public val projectRoot: Path? = null,
     public val sourceMap: Boolean = false,
+    public val scss: Boolean = false,
   ) {
     /** @return Indication of whether minification is active. */
-    @JvmName("enableMinification") public fun enableMinification(): Boolean = minify != NoMinification
+    @JvmName(ENABLE_MINIFICATION) public fun enableMinification(): Boolean = minify != NoMinification
+
+    /** @return Indication of whether SCSS/SASS pre-processing is active. */
+    @JvmName(ENABLE_SCSS) public fun enableScss(): Boolean = scss
 
     /** @return Indication of whether source mapping is active. */
-    @JvmName("enableSourceMaps") public fun enableSourceMaps(): Boolean = sourceMap
+    @JvmName(ENABLE_SOURCE_MAPS) public fun enableSourceMaps(): Boolean = sourceMap
 
     /** @return Indication of whether CSS Modules are active. */
-    @JvmName("enableModules") public fun enableModules(): Boolean = modules
+    @JvmName(ENABLE_MODULES) public fun enableModules(): Boolean = modules
 
     /** @return Indication of whether to bundle outputs. */
-    @JvmName("enableBundle") public fun enableBundle(): Boolean = bundle
+    @JvmName(ENABLE_BUNDLE) public fun enableBundle(): Boolean = bundle
 
     /** @return Indication of whether to emit debug logs. */
-    @JvmName("enableDebugLogs") public fun enableDebugLogs(): Boolean = debug
+    @JvmName(ENABLE_DEBUG_LOGS) public fun enableDebugLogs(): Boolean = debug
 
     /** @return Absolute path string for the project root, if set, otherwise, `null`. */
-    @JvmName("absoluteProjectRoot") public fun absoluteProjectRoot(): String? = projectRoot?.absolutePathString()
+    @JvmName(ABSOLUTE_PROJECT_ROOT) public fun absoluteProjectRoot(): String? = projectRoot?.absolutePathString()
 
     /** Factories for obtaining instances of [CssOptions]. */
     public companion object {
@@ -247,6 +261,7 @@ public object CssBuilder {
             build.options,
             minify = build.options.enableMinification(),
             sourceMaps = build.options.enableSourceMaps(),
+            scss = build.options.enableScss(),
           )
         }
       }

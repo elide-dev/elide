@@ -34,5 +34,6 @@ internal object CssNative {
     options: CssOptions,
     minify: Boolean,
     sourceMaps: Boolean,
+    scss: Boolean,
   ): String?
 }

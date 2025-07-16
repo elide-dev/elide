@@ -17,12 +17,13 @@ mod css;
 /// Markdown and MDX processing for the Elide toolchain.
 mod md;
 
-use crate::css::{CssBuilderError, CssBuilderErrorCase, build_css, css_options};
+use crate::css::{CssBuilderError, CssBuilderErrorCase, build_css, build_scss, css_options};
 use java_native::jni;
 use jni::JNIEnv;
 use jni::objects::{JClass, JObject, JString, JValue};
 use jni::sys::jboolean;
 use lightningcss::stylesheet::{ParserOptions, StyleSheet};
+use std::borrow::Cow;
 
 /// Dispatch a CSS processing error to the Java side.
 fn dispatch_css_error(mut env: JNIEnv, cls: JClass, message: String) {
@@ -70,9 +71,33 @@ pub fn buildCss<'a>(
   _opts: JObject<'a>,
   minify: jboolean,
   _sourceMaps: jboolean,
+  scss: jboolean,
 ) -> JObject<'a> {
   let binding = env.get_string(&css).expect("failed to obtain CSS string");
-  let css_code = binding.to_str();
+  let code_in = binding.to_str();
+  let css_code: Cow<str> = if !scss {
+    code_in
+  } else {
+    match build_scss(&code_in, None) {
+      Ok(out) => {
+        // if we don't need to minify the output scss, we can return directly
+        if !minify {
+          return env
+            .new_string(out)
+            .expect("failed to create built CSS string")
+            .into();
+        } else {
+          Cow::Owned(out)
+        }
+      }
+
+      Err(err) => {
+        dispatch_css_error(env, cls, format!("{:?}Error: {:?}", err.case, err.message));
+        return JObject::null();
+      }
+    }
+  };
+
   let parser_options = ParserOptions::default();
   match StyleSheet::parse(&css_code, parser_options).map_err(|e| CssBuilderError {
     case: CssBuilderErrorCase::Parse,
@@ -117,7 +142,7 @@ pub fn buildMdx<'a>(mut env: JNIEnv<'a>, cls: JClass<'a>, jmdx: JString<'a>) -> 
       .into(),
 
     Err(err) => {
-      let msg = format!("Error: {:?}", err);
+      let msg = format!("Error: {err:?}");
       dispatch_mdx_error(env, cls, msg);
       JObject::null()
     }

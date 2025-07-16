@@ -3019,6 +3019,9 @@ public abstract interface class elide/tooling/web/css/CssBuilder$CssMinification
 
 public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Record {
 	public static final field Companion Lelide/tooling/web/css/CssBuilder$CssOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZ)V
+	public synthetic fun <init> (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun absoluteProjectRoot ()Ljava/lang/String;
 	public final fun bundle ()Z
 	public final fun component1 ()Z
@@ -3027,12 +3030,16 @@ public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Recor
 	public final fun component4 ()Z
 	public final fun component5 ()Ljava/nio/file/Path;
 	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun copy (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZ)Lelide/tooling/web/css/CssBuilder$CssOptions;
+	public static synthetic fun copy$default (Lelide/tooling/web/css/CssBuilder$CssOptions;ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZILjava/lang/Object;)Lelide/tooling/web/css/CssBuilder$CssOptions;
 	public final fun debug ()Z
 	public static final fun defaults ()Lelide/tooling/web/css/CssBuilder$CssOptions;
 	public final fun enableBundle ()Z
 	public final fun enableDebugLogs ()Z
 	public final fun enableMinification ()Z
 	public final fun enableModules ()Z
+	public final fun enableScss ()Z
 	public final fun enableSourceMaps ()Z
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun forProject (Lelide/tooling/project/ElideProject;)Lelide/tooling/web/css/CssBuilder$CssOptions;
@@ -3040,6 +3047,7 @@ public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Recor
 	public final fun minify ()Lelide/tooling/web/css/CssBuilder$CssMinification;
 	public final fun modules ()Z
 	public final fun projectRoot ()Ljava/nio/file/Path;
+	public final fun scss ()Z
 	public final fun sourceMap ()Z
 	public fun toString ()Ljava/lang/String;
 }

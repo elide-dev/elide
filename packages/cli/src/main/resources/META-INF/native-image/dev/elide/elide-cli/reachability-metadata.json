@@ -13529,6 +13529,10 @@
           "parameterTypes": []
         },
         {
+          "name": "enableScss",
+          "parameterTypes": []
+        },
+        {
           "name": "enableModules",
           "parameterTypes": []
         },

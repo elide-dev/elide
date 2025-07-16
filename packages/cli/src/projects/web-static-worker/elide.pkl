@@ -24,6 +24,7 @@ artifacts {
 
     stylesheets {
       "styles.css"
+      "globals.scss"
     }
     scripts {
       "main.mts"

@@ -1,6 +1,7 @@
 lockfile-version 1
 root{
 dev-dependencies{
+"@elide-dev/types" "1.0.0-beta7"
 wrangler "4.24.3"
     }
 }
@@ -48,6 +49,14 @@ resolved "https://registry.npmjs.org/@cspotcode/source-map-support/-/source-map-
 integrity "sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw=="
 dependencies{
 "@jridgewell/trace-mapping" "0.3.9"
+    }
+}
+pkg "@elide-dev/types"{
+version "1.0.0-beta7"
+resolved "https://registry.npmjs.org/@elide-dev/types/-/types-1.0.0-beta7.tgz"
+integrity "sha512-MenlYYrvm1rUvBBB7E8rb59JAMI42Oq0txi4mBk1iJ15bGbsP8alq2SK5XtJI6+4PHNVNcPbF9+c8/A1krLz+w=="
+dependencies{
+"@types/node" ">=0.0.0"
     }
 }
 pkg "@emnapi/runtime"{
@@ -362,6 +371,14 @@ version "1.2.7"
 resolved "https://registry.npmjs.org/@speed-highlight/core/-/core-1.2.7.tgz"
 integrity "sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g=="
 }
+pkg "@types/node"{
+version "24.0.14"
+resolved "https://registry.npmjs.org/@types/node/-/node-24.0.14.tgz"
+integrity "sha512-4zXMWD91vBLGRtHK3YbIoFMia+1nqEz72coM42C5ETjnNCa/heoj7NT1G67iAfOqMmcfhuCZ4uNpyz8EjlAejw=="
+dependencies{
+undici-types ">=7.8.0 <7.9.0-0"
+    }
+}
 pkg acorn{
 version "8.14.0"
 resolved "https://registry.npmjs.org/acorn/-/acorn-8.14.0.tgz"
@@ -600,6 +617,11 @@ integrity "sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBL
 dependencies{
 "@fastify/busboy" ">=2.0.0 <3.0.0-0"
     }
+}
+pkg undici-types{
+version "7.8.0"
+resolved "https://registry.npmjs.org/undici-types/-/undici-types-7.8.0.tgz"
+integrity "sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw=="
 }
 pkg unenv{
 version "2.0.0-rc.17"

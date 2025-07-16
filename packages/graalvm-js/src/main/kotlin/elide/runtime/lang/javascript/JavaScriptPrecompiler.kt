@@ -30,8 +30,7 @@ private const val TOOL_PRECOMPILER = "precompiler"
  *
  * Bridges via JNI to the OXC parsing and code-generator tools.
  */
-@API
-public object JavaScriptPrecompiler : Precompiler.SourcePrecompiler<JavaScriptCompilerConfig> {
+@API public object JavaScriptPrecompiler : Precompiler.SourcePrecompiler<JavaScriptCompilerConfig> {
   private const val JS_LIB = "js"
   @Volatile private var initialized = false
   @Volatile private var libDidLoad = false

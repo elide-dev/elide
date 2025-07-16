@@ -190,6 +190,7 @@ internal object ElideInteropModuleLoader : DelegatedModuleLoaderRegistry.Delegat
         return Undefined.instance
       }
 
+      @Suppress("TooGenericExceptionCaught")
       private fun setInteropModuleDefaultExport(frame: VirtualFrame, module: JSModuleRecord) {
         val surface = facade ?: error("Foreign module facade not initialized")
         val currentEnv = realm.env
@@ -200,7 +201,11 @@ internal object ElideInteropModuleLoader : DelegatedModuleLoaderRegistry.Delegat
         // make sure the language has initialized in the current context
         currentEnv.initializeLanguage(langInfo)
         val py = PythonLanguage.get(null)
-        val pyCtx = PythonContext(py, currentEnv)
+        val pyCtx = try {
+          PythonContext.get(null)
+        } catch (e: Exception) {
+          error("Could not initialize Python context: ${e.message}")
+        }
         val src = Source.newBuilder(surface.lang, file)
           .cached(true)
           .build()

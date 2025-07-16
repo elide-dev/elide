@@ -1,6 +1,5 @@
 package elide.tool.cli
 
-import io.micronaut.configuration.picocli.PicocliRunner
 import org.apache.commons.io.output.ByteArrayOutputStream
 import java.io.PrintStream
 import java.nio.file.Path

@@ -24,10 +24,13 @@ import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
+import kotlinx.html.link
+import kotlinx.html.script
 import kotlin.collections.ifEmpty
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import kotlin.io.path.isRegularFile
 import kotlin.io.path.nameWithoutExtension
 import kotlin.io.path.outputStream
 import kotlin.io.path.relativeTo
@@ -44,7 +47,9 @@ import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
 import elide.tooling.md.Markdown
 import elide.tooling.md.Markdown.MarkdownOptions
+import elide.tooling.md.Markdown.defaultPage
 import elide.tooling.md.MarkdownFlavor
+import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.SourceFilePath
 import elide.tooling.project.SourceSet
 import elide.tooling.project.SourceSetLanguage
@@ -53,11 +58,13 @@ import elide.tooling.project.SourceSets
 import elide.tooling.project.manifest.ElidePackageManifest.StaticSite
 import elide.tooling.web.css.CssBuilder
 
-// Default output path for static assets.
+// Constants for the site builder.
 private const val STATIC_ASSETS_PATH_DEFAULT = "assets"
-
-// Default output path for site artifacts.
 private const val STATIC_SITE_ARTIFACT_PATH = "sites"
+private const val STYLESHEET = "stylesheet"
+private const val TYPE_TEXT_CSS = "text/css"
+private const val TYPE_TEXT_JAVASCRIPT = "text/javascript"
+private const val WEB_SLASH = "/"
 
 private interface Checkable {
   fun check(): String?
@@ -85,6 +92,28 @@ private sealed interface SourceTargetPair: Checkable {
     // Factory method to create a new source-target pair.
     @JvmStatic fun of(source: Path, target: Path): SourceTargetPair = SourceTargetDirs(source to target)
   }
+}
+
+// Models a pair of files: a source file and target file, which is a static asset or other unidentified file.
+@JvmRecord private data class SourceTargetFile private constructor (
+  override val source: Path,
+  override val target: Path,
+  val sourceSet: SourceSet,
+): SourceTargetPair {
+  companion object {
+    // Factory method to create a new source-target pair for a regular file.
+    @JvmStatic fun of(
+      source: Path,
+      target: Path,
+      sourceSet: SourceSet,
+    ): SourceTargetFile = SourceTargetFile(source, target, sourceSet)
+  }
+
+  fun withTarget(target: Path): SourceTargetFile = SourceTargetFile(
+    source = source,
+    target = target,
+    sourceSet = sourceSet,
+  )
 }
 
 // Models a pair of files: a source file and target file.
@@ -134,7 +163,9 @@ internal class StaticSiteContributor : BuildConfigurator {
     val state: ElideBuildState,
     val config: BuildConfiguration,
     val scope: ActionScope,
+    val project: ElideConfiguredProject,
     val dry: Boolean,
+    val rewriteLinks: Boolean = true,
   ) {
     val taskGraph get() = config.taskGraph
     val allSrcs: Sequence<Pair<SourceSet, SourceFilePath>> get() = sequence {
@@ -154,6 +185,14 @@ internal class StaticSiteContributor : BuildConfigurator {
         allSrcs
           .filter { it.first.type == SourceSetType.Sources }
           .filter { it.second.lang == lang }
+      )
+    }.toList()
+
+    fun srcsOfUndefinedType(): List<Pair<SourceSet, SourceFilePath>> = sequence {
+      yieldAll(
+        allSrcs
+          .filter { it.first.type == SourceSetType.Sources }
+          .filter { it.second.lang == null }
       )
     }.toList()
   }
@@ -206,26 +245,47 @@ internal class StaticSiteContributor : BuildConfigurator {
     state = state,
     config = config,
     dry = config.settings.dry,
+    project = state.project,
     scope = this,
   )
 
   private suspend fun StaticSiteConfiguration.createParentsIfNeeded(path: Path) = path.parent.let { parent ->
     // sanity check: should always be within site root, should always be directory
-    require(parent.isDirectory()) { "Cannot create parents for non-directory" }
-    require(parent.startsWith(siteRoot.target)) { "Cannot create directories outside of site root" }
+    require(!parent.isRegularFile()) { "Cannot create parents for non-directory" }
+    when (parent.isAbsolute) {
+      true -> parent.startsWith(siteRoot.target.absolute())
+      false -> parent.startsWith(siteRoot.target) // relative paths are always relative to the site root
+    }.let {
+      require(it) { "Cannot create directories outside of site root" }
+    }
 
     if (!parent.exists()) withContext(IO) {
       Files.createDirectories(parent)
     }
   }
 
-  private suspend fun StaticSiteConfiguration.copyToTarget(src: SourceTargetCode) = when (dry) {
+  private suspend fun compareFilesForCopy(left: Path, right: Path): Boolean = withContext(IO) {
+    !Files.exists(left) || !Files.exists(right) || !Files.isRegularFile(left) || !Files.isRegularFile(right) ||
+      Files.size(left) != Files.size(right) || Files.getLastModifiedTime(left) != Files.getLastModifiedTime(right)
+  }
+
+  private suspend fun StaticSiteConfiguration.copyToTarget(src: SourceTargetPair) = when (dry) {
     true -> logging.info { "Copy (dry run): ${src.source} → ${src.target}" }
 
     false -> withContext(IO) {
       runCatching {
-        createParentsIfNeeded(src.target).also {
-          Files.copy(src.source, src.target)
+        val absTarget = src.target.absolute()
+        val exists = absTarget.exists() && absTarget.isRegularFile()
+        val doCopy = !exists || compareFilesForCopy(src.source, absTarget)
+
+        if (!doCopy) logging.debug {
+          "Skipping copy because files are already identical"
+        } else createParentsIfNeeded(src.target).also {
+          if (exists) {
+            Files.copy(src.source, src.target, java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+          } else {
+            Files.copy(src.source, src.target)
+          }
         }
       }.onFailure {
         logging.error("Failed to copy source to target: ${src.source} → ${src.target}", it)
@@ -233,7 +293,7 @@ internal class StaticSiteContributor : BuildConfigurator {
     }
   }
 
-  private suspend fun StaticSiteConfiguration.writeToTarget(src: SourceTargetCode, str: String) = when (dry) {
+  private suspend fun StaticSiteConfiguration.writeToTarget(src: SourceTargetPair, str: String) = when (dry) {
     true -> logging.info { "Write (dry run): ${src.source} → ${src.target} (size: ${str.length})" }
 
     false -> withContext(IO) {
@@ -252,11 +312,55 @@ internal class StaticSiteContributor : BuildConfigurator {
   private suspend fun StaticSiteConfiguration.buildHtmlFile(src: SourceTargetCode): Result = Result.Nothing.also {
     // for now, we just copy the source to the target @TODO html processing
     copyToTarget(src)
-    return Result.Nothing
+  }
+
+  @Suppress("UNUSED_PARAMETER")
+  private fun StaticSiteConfiguration.assetHref(from: SourceTargetCode, asset: String): String = buildString {
+    append(site.prefix)
+    append(assetsRoot.target.resolve(asset).relativeTo(siteRoot.target))
   }
 
   private suspend fun StaticSiteConfiguration.buildMarkdownFile(src: SourceTargetCode): Result = runCatching {
-    Markdown.renderMarkdown(style = MarkdownFlavor.GitHub, options = MarkdownOptions.defaults()) {
+    Markdown.renderMarkdown(style = MarkdownFlavor.GitHub, options = MarkdownOptions.defaults().copy(
+      linkRenderer = { path, href, default ->
+        when (rewriteLinks) {
+          // don't rewrite links unless configured to do so
+          false -> default
+
+          // otherwise, reparent links based on the prefix
+          true -> when (site.prefix) {
+            WEB_SLASH -> if (href.startsWith(WEB_SLASH)) href else "$WEB_SLASH$href"
+            else -> buildList<String> {
+              add("")
+              addAll(site.prefix.split(WEB_SLASH))
+              addAll(default.removePrefix(WEB_SLASH).split(WEB_SLASH))
+            }.filter {
+              !it.isEmpty() && !it.isBlank() && it != "."
+            }.joinToString(
+              WEB_SLASH
+            )
+          }
+        }
+
+      },
+      renderer = { metadata, str ->
+        defaultPage(metadata, str.toString()) {
+          // configures the `<head>` of the page
+          site.stylesheets.forEach { stylesheet ->
+            link(
+              rel = STYLESHEET,
+              type = TYPE_TEXT_CSS,
+              href = assetHref(src, stylesheet)
+            )
+          }
+          site.scripts.forEach { script ->
+            script(type = TYPE_TEXT_JAVASCRIPT, src = assetHref(src, script)) {
+              defer = true
+            }
+          }
+        }
+      }
+    )) {
       Markdown.MarkdownSourceFile {
         src.source
       }
@@ -276,7 +380,12 @@ internal class StaticSiteContributor : BuildConfigurator {
     with(CssBuilder) {
       buildCss(configureCss(CssBuilder.CssOptions.defaults(), sequence {
         yield(CssBuilder.CssSourceFile { src.source })
-      }))
+      })).let { builtCss ->
+        writeToTarget(
+          src,
+          builtCss.code().single(),
+        )
+      }
     }
   }.asExecResult()
 
@@ -296,6 +405,7 @@ internal class StaticSiteContributor : BuildConfigurator {
     allSrcs: Map<Path, SourceTargetCode>,
     lang: SourceSetLanguage,
     tag: String = lang.formalName,
+    label: Pair<String, String>? = null,
     builder: suspend StaticSiteConfiguration.(Path, SourceTargetCode) -> Result,
   ): Task? = with(scope) {
     taskForSources(allSrcs, lang) { srcs ->
@@ -311,8 +421,14 @@ internal class StaticSiteContributor : BuildConfigurator {
           }
         }
       }.describedBy {
-        val pluralized = if (srcs.size == 1) "$tag file" else "$tag sources"
-        "Building ${srcs.size} $pluralized (site: $name)"
+        val pluralized = when (label) {
+          null -> if (srcs.size == 1) "$tag file" else "$tag sources"
+          else -> label.let { (singular, plural) ->
+            if (srcs.size == 1) singular else plural
+          }
+        }
+        val siteLabel = if (name != "main") " (site: $name)" else ""
+        "Building ${srcs.size} ${pluralized}${siteLabel}"
       }
     }
   }
@@ -323,6 +439,7 @@ internal class StaticSiteContributor : BuildConfigurator {
     val html = site.srcsOfType(SourceSetLanguage.HTML).map { (SourceSetLanguage.HTML as SourceSetLanguage) to it }
     val md = site.srcsOfType(SourceSetLanguage.Markdown).map { (SourceSetLanguage.Markdown as SourceSetLanguage) to it }
     val css = site.srcsOfType(SourceSetLanguage.CSS).map { (SourceSetLanguage.CSS as SourceSetLanguage) to it }
+    val anythingElse = site.srcsOfUndefinedType()
 
     val allSrcs: PersistentMap<Path, SourceTargetCode> = sequence {
       yieldAll(html)
@@ -361,9 +478,35 @@ internal class StaticSiteContributor : BuildConfigurator {
       }
 
       // do we have css?
-      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.CSS) { _, src ->
-        buildCssFile(src)
+      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.CSS, label = STYLESHEET to "stylesheets") { _, src ->
+        buildCssFile(src.withTarget(
+          assetsRoot.target.absolute().resolve(src.source.absolute().relativeTo(assetsRoot.source.absolute()))
+        ))
       }?.let {
+        add(it)
+      }
+
+      // are there any other sources? if so, they are copied as-is.
+      anythingElse.ifEmpty { null }?.let { extraCopiedSrcs ->
+        fn(name = "${site.name}CopyExtraSrcs") {
+          runCatching {
+            extraCopiedSrcs.forEach { (srcSet, copiedSrc) ->
+              site.copyToTarget(SourceTargetFile.of(
+                copiedSrc.path,
+                site.siteRoot.target.resolve(copiedSrc.path.relativeTo(site.siteRoot.source)),
+                srcSet,
+              ))
+            }
+          }.asExecResult()
+        }.describedBy {
+          val pluralized = when (extraCopiedSrcs.size) {
+            1 -> "source file"
+            else -> "sources"
+          }
+          "Copying ${extraCopiedSrcs.size} extra $pluralized"
+        }
+      }?.let {
+        addNode(it)
         add(it)
       }
     }
@@ -416,12 +559,14 @@ internal class StaticSiteContributor : BuildConfigurator {
       .resolve(name)  // artifact name
 
     // asset root where static assets will be placed
-    val assetsRoot = siteRoot  // `./.dev/artifacts/sites/<name>/`
-      .resolve(artifact.assets ?: STATIC_ASSETS_PATH_DEFAULT)  // `/assets/` or custom path
+     val assetsRoot = siteRoot  // `./.dev/artifacts/sites/<name>/`
+      .resolve(artifact.assets?.removePrefix("/") ?: STATIC_ASSETS_PATH_DEFAULT)  // `/assets/` or custom path
 
     // resolve the source root for the site, if specified
     val siteSourceRoot = artifact.srcs.let { state.layout.projectRoot.resolve(it) }
-    val assetsSourceRoot = (artifact.assets ?: STATIC_ASSETS_PATH_DEFAULT).let { state.layout.projectRoot.resolve(it) }
+    val assetsSourceRoot = siteSourceRoot  // assets are always within the site source root for now
+    // val assetsSourceRoot =
+    //   (artifact.assets ?: STATIC_ASSETS_PATH_DEFAULT).let { state.layout.projectRoot.resolve(it) }
 
     // build a suite of tasks to compile each asset type
     val deps = LinkedList<Task>()

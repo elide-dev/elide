@@ -546,9 +546,13 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class StaticSite(
     val srcs: String,
+    val prefix: String = "/",
     val assets: String? = null,
     val domain: String? = null,
     val preview: String? = null,
+    val stylesheets: List<String> = emptyList(),
+    val scripts: List<String> = emptyList(),
+    val hosting: String? = null,
     override val from: List<String> = emptyList(),
     override val dependsOn: List<String> = emptyList(),
   ) : Artifact

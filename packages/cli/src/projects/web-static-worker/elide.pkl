@@ -4,10 +4,6 @@ import "elide:project.pkl" as build
 name = "elide-web-static-worker"
 description = "Static website via Cloudflare Workers and Elide."
 
-entrypoint {
-  "src/index.md"
-}
-
 dependencies {
   npm {
     devPackages {
@@ -22,12 +18,16 @@ sources {
 
 artifacts {
   ["main"] = (build.staticSite("src")) {
-    domain = "docs.elide.dev"
-    preview = "preview.docs.elide.dev"
-    assets = "public"
+    domain = "static-worker.samples.elide.dev"
+    hosting = "workers"
+
+    stylesheets {
+      "styles.css"
+    }
   }
 }
 
 scripts {
   ["deploy"] = "wrangler deploy"
+  ["build-deploy"] = "elide build && elide deploy"
 }

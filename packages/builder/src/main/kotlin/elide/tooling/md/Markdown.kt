@@ -26,7 +26,7 @@ import java.nio.file.Path
 import java.util.LinkedList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.html.body
+import kotlinx.html.HEAD
 import kotlinx.html.head
 import kotlinx.html.html
 import kotlinx.html.meta
@@ -189,8 +189,19 @@ public object Markdown {
    */
   public fun interface MarkdownSourceLiteral : MarkdownSourceMaterial
 
-  // Wrap markdown in the default template.
-  private fun defaultPage(metadata: Frontmatter?, str: String): StringBuilder = StringBuilder().appendHTML().html {
+  /**
+   * Wrap markdown in the default template.
+   *
+   * @param metadata Frontmatter to render with, if any.
+   * @param body Markdown body source to render in.
+   * @param head Optional head block to configure the HTML document head.
+   * @return Rendered HTML string, wrapped in a default HTML document template.
+   */
+  public fun defaultPage(
+    metadata: Frontmatter?,
+    body: String,
+    head: HEAD.() -> Unit = {},
+  ): StringBuilder = StringBuilder().appendHTML().html {
     head {
       meta(charset = "UTF-8")
       meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
@@ -227,7 +238,7 @@ public object Markdown {
     public val frontmatter: Boolean = true,
     public val titleProvider: () -> String? = { null },
     public val frontmatterBuilder: (String) -> Pair<String, Frontmatter?> = { frontmatter(it) },
-    public val linkRenderer: ((Path?, String) -> CharSequence?)? = null,
+    public val linkRenderer: ((Path?, String, String) -> CharSequence?)? = null,
     public val renderer: (Frontmatter?, StringBuilder) -> StringBuilder = { metadata, str ->
       defaultPage(metadata, str.toString())
     },
@@ -444,9 +455,7 @@ public object Markdown {
   }
 }
 
-private fun MarkdownOptions.renderLink(referrer: Path?, href: String): CharSequence = linkRenderer?.let { renderer ->
-  renderer.invoke(referrer, href) ?: href
-} ?: when {
+private fun MarkdownOptions.renderLink(referrer: Path?, href: String): CharSequence = when {
   referrer != null -> referrer.parent.resolve(href).normalize().relativeTo(referrer.parent).let { a ->
     when {
       a.extension == "md" -> buildString {
@@ -457,8 +466,12 @@ private fun MarkdownOptions.renderLink(referrer: Path?, href: String): CharSeque
       else -> a.toString()
     }
   }
-
   else -> href
+}.let {
+  when (val linker = linkRenderer) {
+    null -> it
+    else -> linker.invoke(referrer, href, it) ?: it
+  }
 }
 
 private fun MarkdownOptions.renderLinkAttrs(referrer: Path?, attrs: Iterable<CharSequence?>): Iterable<CharSequence?> {

@@ -258,7 +258,8 @@ semver = "6.0.0"
 shadow-plugin = "8.1.1"
 sigstore = "1.3.0"
 slf4j = "2.0.16"
-snakeyaml = "2.4"
+snakeyaml-core = "2.4"
+snakeyaml-engine = "2.10"
 snappy = "1.1.10.7"
 snyk = "0.6.1"
 smartexception = "0.2.1"
@@ -765,7 +766,8 @@ slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-l
 slf4j-jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
 slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
 slf4j-log4j-bridge = { group = "org.slf4j", name = "log4j-over-slf4j", version.ref = "slf4j" }
-snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
+snakeyaml-core = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml-core" }
+snakeyaml-engine = { group = "org.yaml", name = "snakeyaml-engine", version.ref = "snakeyaml-engine" }
 snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
 smartexception = { group = "com.arthenica", name = "smart-exception-java9", version.ref = "smartexception" }
 sqlcommenter-hibernate = { group = "com.google.cloud", name = "sqlcommenter-hibernate", version.ref = "sqlcommenter" }

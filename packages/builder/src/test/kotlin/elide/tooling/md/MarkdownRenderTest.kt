@@ -47,6 +47,40 @@ class MarkdownRenderTest {
     }
   }
 
+  @Test fun testParseFrontmatterFullYaml() = runTest {
+    Markdown.renderMarkdown {
+      MarkdownSourceLiteral {
+        // language=markdown
+        """
+        ---
+        title: Some Title
+        another: Field
+        yet-another:
+        - this one is a list
+        ---
+        ### Hello Markdown!
+
+        Here is some markdown to render.
+        """
+      }
+    }.let {
+      assertNotNull(it)
+      val out = it.asString()
+      val metadata = it.metadata()
+      assertTrue(out.isNotEmpty())
+      assertTrue(out.isNotBlank())
+      assertTrue(out.contains("Hello Markdown!"))
+      assertTrue(out.contains("Here is some markdown to render."))
+      assertFalse(out.contains("---"))
+      assertFalse(out.contains("title: Some Title"))
+      assertNotNull(metadata)
+      assertEquals(3, metadata.size)
+      assertTrue("another" in metadata)
+      assertTrue("yet-another" in metadata)
+      assertIs<List<*>>(metadata["yet-another"])
+    }
+  }
+
   @Test fun testRenderMarkdown() = runTest {
     Markdown.renderMarkdown {
       MarkdownSourceLiteral {

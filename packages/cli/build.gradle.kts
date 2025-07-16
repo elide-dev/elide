@@ -2005,9 +2005,10 @@ graalvmNative {
       buildArgs.addAll(nativeCliImageArgs(test = true, platform = targetOs).plus(
         nativeCompileJvmArgs
       ))
-      buildArgs.add(
+      buildArgs.addAll(listOf(
         "-Delide.target.buildRoot=${layout.buildDirectory.dir("native/nativeTestCompile").get().asFile.path}",
-      )
+        "-Delide.rootDir=${rootProject.layout.projectDirectory.asFile.absolutePath}",
+      ))
     }
   }
 }

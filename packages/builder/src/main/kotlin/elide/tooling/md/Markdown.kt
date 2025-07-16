@@ -21,6 +21,13 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.html.body
+import kotlinx.html.head
+import kotlinx.html.html
+import kotlinx.html.meta
+import kotlinx.html.stream.appendHTML
+import kotlinx.html.title
+import kotlinx.html.unsafe
 import kotlin.coroutines.CoroutineContext
 import kotlin.io.path.inputStream
 import kotlin.text.trimIndent
@@ -41,6 +48,92 @@ public object Markdown {
   public val DEFAULT_MARKDOWN_FLAVOR: MarkdownFlavor = MarkdownFlavor.GitHub
 
   /**
+   * ### Markdown Frontmatter
+   *
+   * Describes parsed, or materialized, data as frontmatter for Markdown rendering.
+   */
+  public sealed interface Frontmatter : Map<String, String>
+
+  /**
+   * ### Known Frontmatter Properties
+   *
+   * Provides constants for known frontmatter properties, which are recognized by Elide's Markdown renderer.
+   */
+  public data object KnownProperties {
+    /** Title to use for this page. */
+    public const val TITLE: String = "title"
+  }
+
+  /**
+   * ### Page Frontmatter
+   *
+   * Describes extended frontmatter for page-like objects, with elevated properties.
+   */
+  public sealed interface PageFrontmatter : Frontmatter {
+    /**
+     * Title to use for the page, if specified or defined.
+     */
+    public val title: String?
+  }
+
+  /**
+   * ### Rendered Markdown
+   *
+   * Represents the final rendered forms of Markdown output, potentially including additional metadata.
+   */
+  public sealed interface RenderedMarkdown {
+    /**
+     * Return the rendered Markdown as a string.
+     *
+     * @return Rendered Markdown as a string.
+     */
+    public fun asString(): String
+
+    /**
+     * Return the frontmatter metadata associated with this rendered Markdown, if any.
+     *
+     * @return [Frontmatter] if metadata is available, or `null` if no metadata is associated with this rendered
+     *   Markdown, or if frontmatter support was not enabled.
+     */
+    public fun metadata(): Frontmatter? = null
+  }
+
+  /**
+   * ### Rendered Markdown String
+   *
+   * Simple implementation of [RenderedMarkdown] which holds a rendered Markdown string.
+   */
+  @JvmInline public value class RenderedMarkdownValue internal constructor(private val str: String) : RenderedMarkdown {
+    override fun asString(): String = str
+  }
+
+  /**
+   * ### Rendered Markdown String
+   *
+   * Simple implementation of [RenderedMarkdown] which holds a rendered Markdown string.
+   */
+  @JvmRecord public data class RenderedMarkdownWithMetadata internal constructor (
+    private val content: String,
+    private val metadata: Frontmatter,
+  ) : RenderedMarkdown {
+    override fun asString(): String = content
+    override fun metadata(): Frontmatter? = metadata
+  }
+
+  /**
+   * ### Frontmatter Data
+   *
+   * Regular map-like data, with certain important fields elevated to properties.
+   *
+   * @property title Optional title for the frontmatter, if specified.
+   * @property all All frontmatter data, as a map of key-value pairs.
+   */
+  internal data class FrontmatterData internal constructor(
+    override val title: String? = null,
+    private val all: Map<String, String> = emptyMap(),
+  ) : PageFrontmatter, Map<String, String> by all
+
+  /**
    * ### Markdown Source Material
    *
    * Abstracts where source material for Markdown inputs comes from, via sealed subclasses which inherit various
@@ -58,16 +151,14 @@ public object Markdown {
   /**
    * ### Markdown Source File
    *
-   * Represents a single Markdown source file specification, which knows the [path] the MD file in question and any
-   * other inputs or options that may be relevant to this file only.
-   *
-   * @property path Path to the Markdown source file.
+   * Represents a single Markdown source file specification, which knows the path the MD file in question and any other
+   * inputs or options that may be relevant to this file only.
    */
-  public interface MarkdownSourceFile : MarkdownSourceMaterial {
-    public val path: Path
+  public fun interface MarkdownSourceFile : MarkdownSourceMaterial {
+    public fun atPath(): Path
 
     override suspend fun code(): String = withContext(Dispatchers.IO) {
-      path.inputStream().bufferedReader(StandardCharsets.UTF_8).use { reader ->
+      atPath().inputStream().bufferedReader(StandardCharsets.UTF_8).use { reader ->
         reader.readText()
       }
     }
@@ -80,6 +171,24 @@ public object Markdown {
    */
   public fun interface MarkdownSourceLiteral : MarkdownSourceMaterial
 
+  // Wrap markdown in the default template.
+  private fun defaultPage(metadata: Frontmatter?, str: String): StringBuilder = StringBuilder().appendHTML().html {
+    head {
+      meta(charset = "UTF-8")
+      meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
+
+      (metadata as? PageFrontmatter)?.title?.let {
+        title { +it }
+      }
+    }
+    body {
+      // @TODO don't modify
+      unsafe {
+        raw(str.removePrefix("<body>").removeSuffix("</body>"))
+      }
+    }
+  }
+
   /**
    * ### Markdown Options
    *
@@ -87,10 +196,18 @@ public object Markdown {
    *
    * @property flavor Markdown flavor to use for rendering.
    * @property trimIndent Whether to trim indentation from Markdown source strings before rendering.
+   * @property renderer Optional template function to apply to the rendered Markdown source string before returning a
+   *   result to the caller; typically used to splice rendered content into a final HTML document.
    */
   @JvmRecord public data class MarkdownOptions(
     public val flavor: MarkdownFlavor = DEFAULT_MARKDOWN_FLAVOR,
     public val trimIndent: Boolean = true,
+    public val frontmatter: Boolean = true,
+    public val titleProvider: () -> String? = { null },
+    public val frontmatterBuilder: (String) -> Pair<String, Frontmatter?> = { frontmatter(it) },
+    public val renderer: (Frontmatter?, StringBuilder) -> StringBuilder = { metadata, str ->
+      defaultPage(metadata, str.toString())
+    },
   ) {
     public companion object {
       @JvmStatic public fun defaults(): MarkdownOptions = MarkdownOptions(
@@ -120,6 +237,123 @@ public object Markdown {
   }
 
   /**
+   * Assemble frontmatter from raw data.
+   *
+   * @param all Map of frontmatter data, where keys are frontmatter keys and values are frontmatter values.
+   * @return [PageFrontmatter] containing the assembled frontmatter data.
+   */
+  public fun frontmatter(all: Map<String, String>): PageFrontmatter = FrontmatterData(
+    title = all[KnownProperties.TITLE]?.ifEmpty { null }?.ifBlank { null }?.trim(),
+    all = all,
+  )
+
+  // Parse a line of frontmatter, returning a key-value pair if the line is valid.
+  private fun parseFrontmatterPropertySafe(line: String): Pair<String, String>? {
+    val parts = line.split(":", limit = 2)
+    return if (parts.size == 2) {
+      parts[0].trim() to parts[1].trim()
+    } else {
+      null // invalid frontmatter line
+    }
+  }
+
+  /**
+   * Parse Markdown frontmatter from a source string. If no frontmatter is found (expected in YAML), then `null` is
+   * returned.
+   *
+   * It is expected that frontmatter will exist by the time this method is called. Thus, `null` should only be returned
+   * for malformed frontmatter, or if no frontmatter is found at all.
+   *
+   * @param subject Raw content to parse for frontmatter.
+   * @return [Frontmatter] if frontmatter is found, or `null` if no frontmatter is found.
+   */
+  @Suppress("LoopWithTooManyJumpStatements")
+  private fun parseFrontmatter(subject: String): Pair<String, Frontmatter?> {
+    val lines = subject.lineSequence().iterator()
+    var inner = false
+    var contentSeen = false
+    val builder = StringBuilder()
+    return buildMap<String, String> {
+      while (lines.hasNext()) {
+        val line = lines.next()
+        when {
+          // start of frontmatter
+          !inner && line.startsWith("---") -> {
+            inner = true
+            continue
+          }
+
+          // end of frontmatter
+          inner && line.startsWith("---") -> {
+            inner = false
+            continue
+          }
+
+          // we are inside the frontmatter block
+          inner -> parseFrontmatterPropertySafe(line)?.let { (key, value) ->
+            put(key, value)
+          }
+
+          else -> if (contentSeen) {
+            builder.appendLine(line)
+          } else {
+            if (line.isNotBlank() && line.isNotEmpty()) {
+              contentSeen = true // we have seen content, so we can stop parsing frontmatter
+              builder.appendLine(line)
+            } else {
+              continue // skip empty lines until we see initial content
+            }
+          }
+        }
+      }
+    }.let { metadata ->
+      when (metadata.isEmpty()) {
+        true -> builder.toString() to null
+        false -> builder.toString() to frontmatter(metadata)
+      }
+    }
+  }
+
+  /**
+   * Assemble frontmatter by parsing code; this operation is **consumptive**, in that it will trim the frontmatter from
+   * the top of the source code. The returned pair contains the remaining source code and the parsed data.
+   *
+   * @param subject Raw content to parse for frontmatter.
+   * @return Pair of: (1) remaining code, and, (2) [Frontmatter], if any.
+   */
+  public fun frontmatter(subject: String): Pair<String, Frontmatter?> {
+    var foundFrontmatter = false
+    for (line in subject.lineSequence()) {
+      when {
+        line.isEmpty() || line.isBlank() -> continue  // skip initial empty lines, if any
+        else -> {
+          foundFrontmatter = line.startsWith("---")
+          break
+        }
+      }
+    }
+    return when (foundFrontmatter) {
+      false -> subject to null
+      else -> parseFrontmatter(subject)
+    }
+  }
+
+  // Render markdown with the specified descriptor, source string, and options.
+  private fun renderMarkdown(
+    use: MarkdownFlavourDescriptor,
+    src: String,
+    options: MarkdownOptions,
+    frontmatter: Frontmatter? = null,
+  ): RenderedMarkdown = MarkdownParser(use).buildMarkdownTreeFromString(src).let { parsedTree ->
+    options.renderer(frontmatter, StringBuilder(HtmlGenerator(src, parsedTree, use).generateHtml())).let { builder ->
+      when (frontmatter) {
+        null -> RenderedMarkdownValue(builder.toString())
+        else -> RenderedMarkdownWithMetadata(builder.toString(), frontmatter)
+      }
+    }
+  }
+
+  /**
    * Render a Markdown source string to HTML.
    *
    * @param style Markdown flavor to use for rendering.
@@ -134,7 +368,7 @@ public object Markdown {
     descriptor: MarkdownFlavourDescriptor? = markdownStyle(options.flavor),
     context: CoroutineContext = Dispatchers.IO,
     md: suspend () -> MarkdownSourceMaterial,
-  ): String = withContext(context) {
+  ): RenderedMarkdown = withContext(context) {
     // mdx requires web builder stuff
     WebBuilder.load()
 
@@ -146,11 +380,25 @@ public object Markdown {
       MarkdownFlavor.Mdx -> return@withContext MdxBuilder.renderMdx(
         src = src,
         options = options,
-      )
+      ).let { rendered ->
+        RenderedMarkdownValue(rendered)
+      }
 
       // for markdown, we use jvm-side libs
-      else -> MarkdownParser(requireNotNull(descriptor)).buildMarkdownTreeFromString(src).let { parsedTree ->
-        HtmlGenerator(src, parsedTree, descriptor).generateHtml()
+      else -> when (options.frontmatter) {
+        // there is no front-matter, so we don't need to swap out the markdown code we parse
+        false -> renderMarkdown(requireNotNull(descriptor), src, options)
+
+        // there is front-matter, so make sure the code we pass is front-matter free (the underlying jetbrains markdown
+        // parser doesn't handle front-matter for us)
+        else -> options.frontmatterBuilder(src).let { (code, frontmatter) ->
+          renderMarkdown(
+            requireNotNull(descriptor),
+            code,
+            options,
+            frontmatter,
+          )
+        }
       }
     }
   }

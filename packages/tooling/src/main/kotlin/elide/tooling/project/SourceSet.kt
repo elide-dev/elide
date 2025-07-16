@@ -14,6 +14,8 @@ package elide.tooling.project
 
 import java.nio.file.Path
 import java.util.*
+import kotlin.reflect.KClass
+import elide.tooling.project.SourceSetLanguage.SourceVariant
 
 /** Name of the source set. */
 public typealias SourceSetName = String
@@ -42,37 +44,124 @@ public typealias SourceTaggedPathSuite = SortedSet<SourceFilePath>
   }
 }
 
+public fun SourceSetLanguage.isVariant(): Boolean {
+  return this as? SourceVariant<*> != null
+}
+
+public inline fun <reified T : SourceSetLanguage> SourceSetLanguage.rootVariant(): KClass<T> {
+  return T::class
+}
+
+public inline fun <reified T : SourceSetLanguage, reified O: SourceSetLanguage> O.isVariantOf(): Boolean {
+  return isVariant() && rootVariant<T>() == rootVariant<O>()
+}
+
 /** Describes known languages of source sets. */
 public sealed interface SourceSetLanguage {
+  /** Extensions associated with this source set language. */
+  public fun extensions(): Set<String> = emptySet()
+
+  /** Formal name for this language. */
+  public val formalName: String
+
   /** Describes a variant or dialect of a known language. */
   public sealed interface SourceVariant<T> : SourceSetLanguage where T : SourceSetLanguage
 
   /** The source set specifies Java sources. */
-  public data object Java : SourceSetLanguage
+  public data object Java : SourceSetLanguage {
+    override val formalName: String = "Java"
+    override fun extensions(): Set<String> = setOf("java")
+  }
 
   /** The source set specifies Kotlin sources. */
-  public data object Kotlin : SourceSetLanguage
+  public data object Kotlin : SourceSetLanguage {
+    override val formalName: String = "Kotlin"
+    override fun extensions(): Set<String> = setOf("kt")
+  }
 
   /** The source set specifies Kotlin Script sources. */
-  public data object KotlinScript : SourceSetLanguage, SourceVariant<Kotlin>
+  public data object KotlinScript : SourceSetLanguage, SourceVariant<Kotlin> {
+    override val formalName: String = "KotlinScript"
+    override fun extensions(): Set<String> = setOf("kts")
+  }
 
   /** The source set specifies JavaScript sources. */
-  public data object JavaScript : SourceSetLanguage
+  public data object JavaScript : SourceSetLanguage {
+    override val formalName: String = "JavaScript"
+    override fun extensions(): Set<String> = setOf("js", "mjs", "cjs")
+  }
 
   /** The source set specifies JSX sources. */
-  public data object JSX : SourceSetLanguage, SourceVariant<JavaScript>
+  public data object JSX : SourceSetLanguage, SourceVariant<JavaScript> {
+    override val formalName: String = "JSX"
+    override fun extensions(): Set<String> = setOf("jsx")
+  }
 
   /** The source set specifies TypeScript sources. */
-  public data object TypeScript : SourceSetLanguage
+  public data object TypeScript : SourceSetLanguage {
+    override val formalName: String = "TypeScript"
+    override fun extensions(): Set<String> = setOf("ts", "cts", "mts")
+  }
 
   /** The source set specifies JSX sources. */
-  public data object TSX : SourceSetLanguage, SourceVariant<TypeScript>
+  public data object TSX : SourceSetLanguage, SourceVariant<TypeScript> {
+    override val formalName: String = "TSX"
+    override fun extensions(): Set<String> = setOf("tsx")
+  }
 
   /** The source set specifies Python sources. */
-  public data object Python : SourceSetLanguage
+  public data object Python : SourceSetLanguage {
+    override val formalName: String = "Python"
+    override fun extensions(): Set<String> = setOf("py")
+  }
 
   /** The source set specifies Ruby sources. */
-  public data object Ruby : SourceSetLanguage
+  public data object Ruby : SourceSetLanguage {
+    override val formalName: String = "Ruby"
+    override fun extensions(): Set<String> = setOf("rb")
+  }
+
+  /** The source set specifies JSON assets. */
+  public data object JSON : SourceSetLanguage {
+    override val formalName: String = "JSON"
+    override fun extensions(): Set<String> = setOf("json")
+  }
+
+  /** The source set specifies SVG assets. */
+  public data object SVG : SourceSetLanguage {
+    override val formalName: String = "SVG"
+    override fun extensions(): Set<String> = setOf("svg")
+  }
+
+  /** The source set specifies HTML sources. */
+  public data object HTML : SourceSetLanguage {
+    override val formalName: String = "HTML"
+    override fun extensions(): Set<String> = setOf("html")
+  }
+
+  /** The source set specifies CSS sources. */
+  public data object CSS : SourceSetLanguage {
+    override val formalName: String = "CSS"
+    override fun extensions(): Set<String> = setOf("css")
+  }
+
+  /** The source set specifies SCSS sources. */
+  public data object SCSS : SourceSetLanguage, SourceVariant<CSS> {
+    override val formalName: String = "SCSS"
+    override fun extensions(): Set<String> = setOf("scss", "sass")
+  }
+
+  /** The source set specifies Markdown sources. */
+  public data object Markdown : SourceSetLanguage {
+    override val formalName: String = "Markdown"
+    override fun extensions(): Set<String> = setOf("md")
+  }
+
+  /** The source set specifies MDX sources. */
+  public data object MDX : SourceSetLanguage, SourceVariant<Markdown> {
+    override val formalName: String = "MDX"
+    override fun extensions(): Set<String> = setOf("mdx")
+  }
 }
 
 /** Describes types of source sets. */

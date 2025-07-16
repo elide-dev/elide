@@ -109,6 +109,8 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.serialization.protobuf)
+  implementation(libs.kotlinx.html)
+  implementation(libs.kotlinx.wrappers.css)
   implementation(libs.jib.core)
   implementation(libs.bundles.maven.resolver)
 

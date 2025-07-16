@@ -60,6 +60,11 @@ public fun interface SourceSetFactory {
           "tsx" -> SourceSetLanguage.TSX
           "py" -> SourceSetLanguage.Python
           "rb" -> SourceSetLanguage.Ruby
+          "html" -> SourceSetLanguage.HTML
+          "css" -> SourceSetLanguage.CSS
+          "scss", "sass" -> SourceSetLanguage.SCSS
+          "md" -> SourceSetLanguage.Markdown
+          "mdx" -> SourceSetLanguage.MDX
           else -> null
         },
       )
@@ -105,6 +110,8 @@ public fun interface SourceSetFactory {
                 if (srcRelative.toString().isEmpty()) {
                   false
                 } else {
+                  // special case: for `**/*.*`, everything matches with a prefix
+                  if (spec.endsWith("**/*.*")) return@filter true
                   val srcRelativeSrcPath = rootRelative.resolve(srcRelative)
                   matcher.matches(srcRelativeSrcPath)
                 }

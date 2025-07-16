@@ -1,0 +1,33 @@
+amends "elide:project.pkl"
+import "elide:project.pkl" as build
+
+name = "elide-web-static-worker"
+description = "Static website via Cloudflare Workers and Elide."
+
+entrypoint {
+  "src/index.md"
+}
+
+dependencies {
+  npm {
+    devPackages {
+      "wrangler@4.24.3"
+    }
+  }
+}
+
+sources {
+  ["main"] = "src/**/*.*"
+}
+
+artifacts {
+  ["main"] = (build.staticSite("src")) {
+    domain = "docs.elide.dev"
+    preview = "preview.docs.elide.dev"
+    assets = "public"
+  }
+}
+
+scripts {
+  ["deploy"] = "wrangler deploy"
+}

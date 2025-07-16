@@ -177,6 +177,10 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
             mapper.map(value, ContainerImage::class.java)
           })
 
+          "elide.web#StaticSite" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, StaticSite::class.java)
+          })
+
           else -> Optional.empty()
         }
       }

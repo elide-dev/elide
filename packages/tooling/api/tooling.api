@@ -2674,12 +2674,47 @@ public final class elide/tooling/project/SourceSetFactory$Default : elide/toolin
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class elide/tooling/project/SourceSetKt {
+	public static final fun isVariant (Lelide/tooling/project/SourceSetLanguage;)Z
+}
+
 public abstract interface class elide/tooling/project/SourceSetLanguage {
+	public fun extensions ()Ljava/util/Set;
+	public abstract fun getFormalName ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/SourceSetLanguage$CSS : elide/tooling/project/SourceSetLanguage {
+	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$CSS;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/SourceSetLanguage$HTML : elide/tooling/project/SourceSetLanguage {
+	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$HTML;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/SourceSetLanguage$JSON : elide/tooling/project/SourceSetLanguage {
+	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$JSON;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/tooling/project/SourceSetLanguage$JSX : elide/tooling/project/SourceSetLanguage, elide/tooling/project/SourceSetLanguage$SourceVariant {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$JSX;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2687,6 +2722,8 @@ public final class elide/tooling/project/SourceSetLanguage$JSX : elide/tooling/p
 public final class elide/tooling/project/SourceSetLanguage$Java : elide/tooling/project/SourceSetLanguage {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$Java;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2694,6 +2731,8 @@ public final class elide/tooling/project/SourceSetLanguage$Java : elide/tooling/
 public final class elide/tooling/project/SourceSetLanguage$JavaScript : elide/tooling/project/SourceSetLanguage {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$JavaScript;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2701,6 +2740,8 @@ public final class elide/tooling/project/SourceSetLanguage$JavaScript : elide/to
 public final class elide/tooling/project/SourceSetLanguage$Kotlin : elide/tooling/project/SourceSetLanguage {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$Kotlin;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2708,6 +2749,26 @@ public final class elide/tooling/project/SourceSetLanguage$Kotlin : elide/toolin
 public final class elide/tooling/project/SourceSetLanguage$KotlinScript : elide/tooling/project/SourceSetLanguage, elide/tooling/project/SourceSetLanguage$SourceVariant {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$KotlinScript;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/SourceSetLanguage$MDX : elide/tooling/project/SourceSetLanguage, elide/tooling/project/SourceSetLanguage$SourceVariant {
+	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$MDX;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/SourceSetLanguage$Markdown : elide/tooling/project/SourceSetLanguage {
+	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$Markdown;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2715,6 +2776,8 @@ public final class elide/tooling/project/SourceSetLanguage$KotlinScript : elide/
 public final class elide/tooling/project/SourceSetLanguage$Python : elide/tooling/project/SourceSetLanguage {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$Python;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2722,6 +2785,26 @@ public final class elide/tooling/project/SourceSetLanguage$Python : elide/toolin
 public final class elide/tooling/project/SourceSetLanguage$Ruby : elide/tooling/project/SourceSetLanguage {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$Ruby;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/SourceSetLanguage$SCSS : elide/tooling/project/SourceSetLanguage, elide/tooling/project/SourceSetLanguage$SourceVariant {
+	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$SCSS;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/SourceSetLanguage$SVG : elide/tooling/project/SourceSetLanguage {
+	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$SVG;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2732,6 +2815,8 @@ public abstract interface class elide/tooling/project/SourceSetLanguage$SourceVa
 public final class elide/tooling/project/SourceSetLanguage$TSX : elide/tooling/project/SourceSetLanguage, elide/tooling/project/SourceSetLanguage$SourceVariant {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$TSX;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -2739,6 +2824,8 @@ public final class elide/tooling/project/SourceSetLanguage$TSX : elide/tooling/p
 public final class elide/tooling/project/SourceSetLanguage$TypeScript : elide/tooling/project/SourceSetLanguage {
 	public static final field INSTANCE Lelide/tooling/project/SourceSetLanguage$TypeScript;
 	public fun equals (Ljava/lang/Object;)Z
+	public fun extensions ()Ljava/util/Set;
+	public fun getFormalName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -4792,6 +4879,45 @@ public final synthetic class elide/tooling/project/manifest/ElidePackageManifest
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$SourceSet$Companion {
 	public final fun parse (Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$SourceSet;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$StaticSite : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$Artifact {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$StaticSite$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun assets ()Ljava/lang/String;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$StaticSite;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$StaticSite;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$StaticSite;
+	public fun dependsOn ()Ljava/util/List;
+	public final fun domain ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun from ()Ljava/util/List;
+	public synthetic fun getDependsOn ()Ljava/util/List;
+	public synthetic fun getFrom ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun preview ()Ljava/lang/String;
+	public final fun srcs ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$StaticSite$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$StaticSite$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$StaticSite;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$StaticSite;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$StaticSite$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

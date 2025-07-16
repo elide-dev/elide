@@ -12,10 +12,8 @@
  */
 package elide.tooling.web.mdx
 
-import org.junit.jupiter.api.Test
 import kotlinx.coroutines.test.runTest
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 import kotlin.text.contains
 import kotlin.text.isNotBlank
 import kotlin.text.isNotEmpty
@@ -47,9 +45,11 @@ class MdxBuilderTest {
       }
     }.let {
       assertNotNull(it)
-      assertTrue(it.isNotEmpty())
-      assertTrue(it.isNotBlank())
-      assertTrue(it.contains("Last year's snowfall"))
+      val out = it.asString()
+      assertTrue(out.isNotEmpty())
+      assertTrue(out.isNotBlank())
+      assertTrue(out.contains("Last year's snowfall"))
+      assertNull(it.metadata())
     }
   }
 }

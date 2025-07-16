@@ -183,8 +183,8 @@ dependencies {
   embeddedJava(libs.javax.annotations)
   embeddedJava(libs.asm.core)
   embeddedJava(libs.asm.tree)
+  embeddedJava(libs.snakeyaml.core)
   embeddedJava(mn.micronaut.core.processor)
-  embeddedJava(mn.snakeyaml)
   embeddedJava(mn.reactive.streams)
 
   // Testing

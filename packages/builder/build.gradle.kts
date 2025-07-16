@@ -113,6 +113,7 @@ dependencies {
   implementation(libs.kotlinx.wrappers.css)
   implementation(libs.jib.core)
   implementation(libs.bundles.maven.resolver)
+  implementation(libs.snakeyaml.core)
 
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)

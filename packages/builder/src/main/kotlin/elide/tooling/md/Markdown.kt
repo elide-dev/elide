@@ -20,8 +20,10 @@ import org.intellij.markdown.html.AttributesCustomizer
 import org.intellij.markdown.html.HtmlGenerator
 import org.intellij.markdown.html.HtmlGenerator.DefaultTagRenderer
 import org.intellij.markdown.parser.MarkdownParser
+import org.yaml.snakeyaml.Yaml
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
+import java.util.LinkedList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.html.body
@@ -39,6 +41,9 @@ import kotlin.text.trimIndent
 import elide.tooling.md.Markdown.MarkdownOptions
 import elide.tooling.web.WebBuilder
 import elide.tooling.web.mdx.MdxBuilder
+
+// Constants for Markdown parsing and formatting.
+private const val FRONTMATTER_FENCE = "---"
 
 /**
  * ## Markdown Builder
@@ -58,7 +63,7 @@ public object Markdown {
    *
    * Describes parsed, or materialized, data as frontmatter for Markdown rendering.
    */
-  public sealed interface Frontmatter : Map<String, String>
+  public sealed interface Frontmatter : Map<String, Any?>
 
   /**
    * ### Known Frontmatter Properties
@@ -136,8 +141,8 @@ public object Markdown {
    */
   internal data class FrontmatterData internal constructor(
     override val title: String? = null,
-    private val all: Map<String, String> = emptyMap(),
-  ) : PageFrontmatter, Map<String, String> by all
+    private val all: Map<String, Any?> = emptyMap(),
+  ) : PageFrontmatter, Map<String, Any?> by all
 
   /**
    * ### Markdown Source Material
@@ -193,12 +198,10 @@ public object Markdown {
       (metadata as? PageFrontmatter)?.title?.let {
         title { +it }
       }
+      head.invoke(this)
     }
-    body {
-      // @TODO don't modify
-      unsafe {
-        raw(str.removePrefix("<body>").removeSuffix("</body>"))
-      }
+    unsafe {
+      raw(body)
     }
   }
 
@@ -262,20 +265,10 @@ public object Markdown {
    * @param all Map of frontmatter data, where keys are frontmatter keys and values are frontmatter values.
    * @return [PageFrontmatter] containing the assembled frontmatter data.
    */
-  public fun frontmatter(all: Map<String, String>): PageFrontmatter = FrontmatterData(
-    title = all[KnownProperties.TITLE]?.ifEmpty { null }?.ifBlank { null }?.trim(),
+  public fun frontmatter(all: Map<String, Any?>): PageFrontmatter = FrontmatterData(
+    title = (all[KnownProperties.TITLE] as? String)?.ifEmpty { null }?.ifBlank { null }?.trim(),
     all = all,
   )
-
-  // Parse a line of frontmatter, returning a key-value pair if the line is valid.
-  private fun parseFrontmatterPropertySafe(line: String): Pair<String, String>? {
-    val parts = line.split(":", limit = 2)
-    return if (parts.size == 2) {
-      parts[0].trim() to parts[1].trim()
-    } else {
-      null // invalid frontmatter line
-    }
-  }
 
   /**
    * Parse Markdown frontmatter from a source string. If no frontmatter is found (expected in YAML), then `null` is
@@ -293,25 +286,27 @@ public object Markdown {
     var inner = false
     var contentSeen = false
     val builder = StringBuilder()
-    return buildMap {
+    return buildMap<String, Any?> {
+      val frontmatterLines = LinkedList<String>()
       while (lines.hasNext()) {
         val line = lines.next()
         when {
           // start of frontmatter
-          !inner && line.startsWith("---") -> {
+          !inner && line.startsWith(FRONTMATTER_FENCE) -> {
             inner = true
             continue
           }
 
           // end of frontmatter
-          inner && line.startsWith("---") -> {
+          inner && line.startsWith(FRONTMATTER_FENCE) -> {
             inner = false
             continue
           }
 
           // we are inside the frontmatter block
-          inner -> parseFrontmatterPropertySafe(line)?.let { (key, value) ->
-            put(key, value)
+          inner -> {
+            frontmatterLines.add(line)
+            continue
           }
 
           else -> if (contentSeen) builder.appendLine(line) else {
@@ -322,6 +317,14 @@ public object Markdown {
               continue // skip empty lines until we see initial content
             }
           }
+        }
+      }
+
+      // we have gathered frontmatter lines; parse them into properties
+      if (frontmatterLines.isNotEmpty()) {
+        val yaml = Yaml()
+        yaml.load<Map<String, Any?>>(frontmatterLines.joinToString("\n"))?.let { parsed ->
+          putAll(parsed)
         }
       }
     }.let { metadata ->
@@ -345,7 +348,7 @@ public object Markdown {
       when {
         line.isEmpty() || line.isBlank() -> continue  // skip initial empty lines, if any
         else -> {
-          foundFrontmatter = line.startsWith("---")
+          foundFrontmatter = line.startsWith(FRONTMATTER_FENCE)
           break
         }
       }

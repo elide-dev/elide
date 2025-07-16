@@ -464,7 +464,7 @@ dependencies {
   implementation(projects.packages.telemetry)
   implementation(projects.packages.runner)
   implementation(libs.dirs)
-  implementation(libs.snakeyaml)
+  implementation(libs.snakeyaml.core)
   implementation(mn.micronaut.json.core)
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.bundles.mordant)

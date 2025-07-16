@@ -12,10 +12,13 @@
  */
 package elide.tooling.md
 
+import org.intellij.markdown.ast.ASTNode
 import org.intellij.markdown.flavours.MarkdownFlavourDescriptor
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import org.intellij.markdown.html.AttributesCustomizer
 import org.intellij.markdown.html.HtmlGenerator
+import org.intellij.markdown.html.HtmlGenerator.DefaultTagRenderer
 import org.intellij.markdown.parser.MarkdownParser
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
@@ -29,8 +32,11 @@ import kotlinx.html.stream.appendHTML
 import kotlinx.html.title
 import kotlinx.html.unsafe
 import kotlin.coroutines.CoroutineContext
+import kotlin.io.path.extension
 import kotlin.io.path.inputStream
+import kotlin.io.path.relativeTo
 import kotlin.text.trimIndent
+import elide.tooling.md.Markdown.MarkdownOptions
 import elide.tooling.web.WebBuilder
 import elide.tooling.web.mdx.MdxBuilder
 
@@ -146,6 +152,13 @@ public object Markdown {
      * @return Markdown code.
      */
     public suspend fun code(): String
+
+    /**
+     * Return the location of this source material, if available.
+     *
+     * @return [Path] if a location is available, or `null` if no location is specified or available.
+     */
+    public fun atPath(): Path? = null
   }
 
   /**
@@ -155,7 +168,7 @@ public object Markdown {
    * inputs or options that may be relevant to this file only.
    */
   public fun interface MarkdownSourceFile : MarkdownSourceMaterial {
-    public fun atPath(): Path
+    override fun atPath(): Path
 
     override suspend fun code(): String = withContext(Dispatchers.IO) {
       atPath().inputStream().bufferedReader(StandardCharsets.UTF_8).use { reader ->
@@ -196,6 +209,12 @@ public object Markdown {
    *
    * @property flavor Markdown flavor to use for rendering.
    * @property trimIndent Whether to trim indentation from Markdown source strings before rendering.
+   * @property frontmatter Whether to parse frontmatter from Markdown source strings before rendering.
+   * @property titleProvider Optional provider for the page title, if any; this is used to set the `<title>` tag in the
+   *   rendered HTML document.
+   * @property frontmatterBuilder Optional builder function to apply to the Markdown source string before rendering.
+   *   Expected to return frontmatter and remaining code to process, if provided.
+   * @property linkRenderer Optional link renderer function to apply to links in the rendered Markdown source string.
    * @property renderer Optional template function to apply to the rendered Markdown source string before returning a
    *   result to the caller; typically used to splice rendered content into a final HTML document.
    */
@@ -205,6 +224,7 @@ public object Markdown {
     public val frontmatter: Boolean = true,
     public val titleProvider: () -> String? = { null },
     public val frontmatterBuilder: (String) -> Pair<String, Frontmatter?> = { frontmatter(it) },
+    public val linkRenderer: ((Path?, String) -> CharSequence?)? = null,
     public val renderer: (Frontmatter?, StringBuilder) -> StringBuilder = { metadata, str ->
       defaultPage(metadata, str.toString())
     },
@@ -273,7 +293,7 @@ public object Markdown {
     var inner = false
     var contentSeen = false
     val builder = StringBuilder()
-    return buildMap<String, String> {
+    return buildMap {
       while (lines.hasNext()) {
         val line = lines.next()
         when {
@@ -294,9 +314,7 @@ public object Markdown {
             put(key, value)
           }
 
-          else -> if (contentSeen) {
-            builder.appendLine(line)
-          } else {
+          else -> if (contentSeen) builder.appendLine(line) else {
             if (line.isNotBlank() && line.isNotEmpty()) {
               contentSeen = true // we have seen content, so we can stop parsing frontmatter
               builder.appendLine(line)
@@ -344,8 +362,24 @@ public object Markdown {
     src: String,
     options: MarkdownOptions,
     frontmatter: Frontmatter? = null,
+    location: Path? = null,
   ): RenderedMarkdown = MarkdownParser(use).buildMarkdownTreeFromString(src).let { parsedTree ->
-    options.renderer(frontmatter, StringBuilder(HtmlGenerator(src, parsedTree, use).generateHtml())).let { builder ->
+    val generator = HtmlGenerator(src, parsedTree, use)
+    val renderer = DefaultTagRenderer(
+      includeSrcPositions = false,
+      customizer = object: AttributesCustomizer {
+        override fun invoke(node: ASTNode, tag: CharSequence, attrs: Iterable<CharSequence?>): Iterable<CharSequence?> {
+          return when (tag) {
+            "a" -> options.renderLinkAttrs(location, attrs)
+            else -> attrs
+          }
+        }
+      }
+    )
+
+    options.renderer(frontmatter, StringBuilder(
+      generator.generateHtml(renderer)
+    )).let { builder ->
       when (frontmatter) {
         null -> RenderedMarkdownValue(builder.toString())
         else -> RenderedMarkdownWithMetadata(builder.toString(), frontmatter)
@@ -372,7 +406,9 @@ public object Markdown {
     // mdx requires web builder stuff
     WebBuilder.load()
 
-    val src = md().code().let {
+    val item = md()
+    val loc = item.atPath()
+    val src = item.code().let {
       if (options.trimIndent) it.trimIndent() else it
     }
     when (options.flavor) {
@@ -387,7 +423,7 @@ public object Markdown {
       // for markdown, we use jvm-side libs
       else -> when (options.frontmatter) {
         // there is no front-matter, so we don't need to swap out the markdown code we parse
-        false -> renderMarkdown(requireNotNull(descriptor), src, options)
+        false -> renderMarkdown(requireNotNull(descriptor), src, options, location = loc)
 
         // there is front-matter, so make sure the code we pass is front-matter free (the underlying jetbrains markdown
         // parser doesn't handle front-matter for us)
@@ -397,9 +433,42 @@ public object Markdown {
             code,
             options,
             frontmatter,
+            location = loc,
           )
         }
       }
     }
   }
+}
+
+private fun MarkdownOptions.renderLink(referrer: Path?, href: String): CharSequence = linkRenderer?.let { renderer ->
+  renderer.invoke(referrer, href) ?: href
+} ?: when {
+  referrer != null -> referrer.parent.resolve(href).normalize().relativeTo(referrer.parent).let { a ->
+    when {
+      a.extension == "md" -> buildString {
+        append(a.toString().removeSuffix(".md"))
+        append(".html")
+      }
+
+      else -> a.toString()
+    }
+  }
+
+  else -> href
+}
+
+private fun MarkdownOptions.renderLinkAttrs(referrer: Path?, attrs: Iterable<CharSequence?>): Iterable<CharSequence?> {
+  val res = attrs.map { attr ->
+    val prop = (attr as? String)?.substringBefore("=")?.removePrefix("\"")
+    when (prop) {
+      null -> null
+      else -> when (prop) {
+        "href" -> renderLink(referrer, attr.removePrefix("href=\"").removeSuffix("\""))
+          .let { rendered -> "href=\"$rendered\"" }
+        else -> attr
+      }
+    }
+  }
+  return res
 }

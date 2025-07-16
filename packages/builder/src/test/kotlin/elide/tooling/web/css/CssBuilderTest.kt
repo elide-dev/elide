@@ -62,4 +62,31 @@ class CssBuilderTest {
       assertTrue(out.contains("#000;"))
     }
   }
+
+  @Test fun testBuildSimpleScss() = runTest {
+    configureCss(CssOptions.defaults().copy(scss = true), sequence {
+      yield(CssSourceLiteral {
+        // language=scss
+        """
+          body {
+            background-color: #ffffff;
+            color: #000000;
+            &.div {
+              color: #ff0000;
+            }
+          }
+        """
+      })
+    }).let { css ->
+      assertNotNull(css)
+      buildCss(css)
+    }.let { result ->
+      assertNotNull(result)
+      val out = result.code().joinToString("")
+      assertTrue(out.startsWith("body{"))
+      assertTrue(out.contains("#000;"))
+      assertTrue(out.contains("red")) // Check nested div color
+      assertTrue(out.contains("body.div{")) // Check nested selector
+    }
+  }
 }

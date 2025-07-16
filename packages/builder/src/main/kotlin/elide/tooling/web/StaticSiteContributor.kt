@@ -69,6 +69,9 @@ import elide.tooling.web.css.CssBuilder
 private const val STATIC_ASSETS_PATH_DEFAULT = "assets"
 private const val STATIC_SITE_ARTIFACT_PATH = "sites"
 private const val STYLESHEET = "stylesheet"
+private const val STYLESHEETS = "stylesheets"
+private const val SCRIPT = "script"
+private const val SCRIPTS = "scripts"
 private const val TYPE_TEXT_CSS = "text/css"
 private const val TYPE_TEXT_JAVASCRIPT = "text/javascript"
 private const val TYPE_MODULE = "module"
@@ -348,6 +351,7 @@ internal class StaticSiteContributor : BuildConfigurator {
         "tsx" -> append(".mjs")
         "jsx" -> append(".mjs")
         "md" -> append(".html")
+        "scss" -> append(".css")
         else -> append('.').append(ext) // keep the original extension
       }
     }
@@ -387,7 +391,7 @@ internal class StaticSiteContributor : BuildConfigurator {
               link(
                 rel = STYLESHEET,
                 type = TYPE_TEXT_CSS,
-                href = assetHref(src, stylesheet)
+                href = assetHref(src, rewriteExtension(stylesheet))
               )
             }
             site.scripts.forEach { script ->
@@ -415,14 +419,19 @@ internal class StaticSiteContributor : BuildConfigurator {
     }
   }.asExecResult()
 
-  private suspend fun StaticSiteConfiguration.buildCssFile(src: SourceTargetCode): Result = runCatching {
+  private suspend fun StaticSiteConfiguration.buildCssFile(scss: Boolean, src: SourceTargetCode): Result = runCatching {
     // nothing to do yet
     with(CssBuilder) {
-      buildCss(configureCss(CssBuilder.CssOptions.defaults(), sequence {
+      buildCss(configureCss(CssBuilder.CssOptions.defaults().copy(scss = scss), sequence {
         yield(CssBuilder.CssSourceFile { src.source })
       })).let { builtCss ->
         writeToTarget(
-          src,
+          if (!scss) src else src.withTarget(
+            src.target.parent.resolve(buildString {
+              append(src.source.nameWithoutExtension)
+              append(".css")
+            })
+          ),
           builtCss.code().single(),
         )
       }
@@ -558,8 +567,17 @@ internal class StaticSiteContributor : BuildConfigurator {
       }
 
       // do we have css?
-      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.CSS, label = STYLESHEET to "stylesheets") { _, src ->
-        buildCssFile(src.withTarget(
+      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.CSS, label = STYLESHEET to STYLESHEETS) { _, src ->
+        buildCssFile(scss = false, src.withTarget(
+          assetsRoot.target.absolute().resolve(src.source.absolute().relativeTo(assetsRoot.source.absolute()))
+        ))
+      }?.let {
+        add(it)
+      }
+
+      // how about scss, which must be precompiled?
+      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.SCSS) { _, src ->
+        buildCssFile(scss = true, src.withTarget(
           assetsRoot.target.absolute().resolve(src.source.absolute().relativeTo(assetsRoot.source.absolute()))
         ))
       }?.let {
@@ -567,7 +585,7 @@ internal class StaticSiteContributor : BuildConfigurator {
       }
 
       // js and ts are more complex, so we handle them last and separately.
-      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.JavaScript) { _, src ->
+      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.JavaScript, label = SCRIPT to SCRIPTS) { _, src ->
         buildJsFile(src.withTarget(
           assetsRoot.target.absolute().resolve(src.source.absolute().relativeTo(assetsRoot.source.absolute()))
         ))

@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+use grass::Options as ScssOptions;
+use grass::from_string as compile_scss_from_string;
 use lightningcss::printer::PrinterOptions;
 use lightningcss::stylesheet::{MinifyOptions, StyleSheet};
 use lightningcss::targets::Targets;
@@ -23,6 +25,12 @@ pub(crate) struct CssBuilderOptions<'a> {
 
   /// Options which apply to printing of CSS.
   printer: Option<PrinterOptions<'a>>,
+}
+
+/// Options which can be specified for SCSS processing.
+#[derive(Debug, Default)]
+pub(crate) struct ScssBuilderOptions<'a> {
+  pub scss_options: ScssOptions<'a>,
 }
 
 /// Error cases for the CSS builder.
@@ -38,11 +46,28 @@ pub(crate) enum CssBuilderErrorCase {
   Printer,
 }
 
+/// Error cases for the SCSS builder.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum ScssBuilderErrorCase {
+  /// An error occurred while printing SCSS.
+  Render,
+}
+
 /// Error type for CSS builder operations.
 #[derive(Debug, Clone)]
 pub(crate) struct CssBuilderError {
   /// The case of the error.
   pub(crate) case: CssBuilderErrorCase,
+
+  /// A message describing the error.
+  pub(crate) message: String,
+}
+
+/// Error type for SCSS builder operations.
+#[derive(Debug, Clone)]
+pub(crate) struct ScssBuilderError {
+  /// The case of the error.
+  pub(crate) case: ScssBuilderErrorCase,
 
   /// A message describing the error.
   pub(crate) message: String,
@@ -98,4 +123,22 @@ pub(crate) fn build_css<'a>(
       message: e.to_string(),
     })
     .map(|result| result.code)
+}
+
+/// Build the underlying SCSS and return it as a string.
+pub(crate) fn build_scss<'a>(
+  input: &'a str,
+  opts: Option<ScssBuilderOptions<'a>>,
+) -> Result<String, ScssBuilderError> {
+  compile_scss_from_string(
+    input,
+    &(opts
+      .or(Some(ScssBuilderOptions::default()))
+      .unwrap_or_default()
+      .scss_options),
+  )
+  .map_err(|e| ScssBuilderError {
+    case: ScssBuilderErrorCase::Render,
+    message: e.to_string(),
+  })
 }

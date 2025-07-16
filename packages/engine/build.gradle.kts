@@ -168,6 +168,24 @@ graalvmNative {
       classpath(tasks.compileJava, tasks.compileKotlin, configurations.nativeImageClasspath)
       buildArgs(nativeArgs.plus("-H:LayerCreate=${layerOut.get().asFile.name}"))
     }
+
+    named("test") {
+      buildArgs(nativeArgs.plus(jvmDefs).plus(buildString {
+        append("--initialize-at-build-time=")
+
+        listOf(
+          "org.junit.platform.launcher.core.DiscoveryIssueNotifier",
+          "org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider",
+          "org.junit.platform.launcher.core.LauncherDiscoveryResult${'$'}EngineResultInfo",
+          "org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor${'$'}MethodInfo",
+          "org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor${'$'}ClassInfo",
+          "org.junit.jupiter.engine.descriptor.ExclusiveResourceCollector${'$'}1",
+          "org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor${'$'}LifecycleMethods",
+        ).joinToString(",").let {
+          append(it)
+        }
+      }))
+    }
   }
 }
 

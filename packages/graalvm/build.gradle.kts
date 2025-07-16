@@ -433,6 +433,8 @@ graalvmNative {
       jvmArgs("-Dpolyglot.engine.WarnInterpreterOnly=false")
       buildArgs(sharedLibArgs.plus(testLibArgs).plus(listOf(
         "--features=org.graalvm.junit.platform.JUnitPlatformFeature",
+        "--verbose",
+        "org.graalvm.junit.platform.NativeImageJUnitLauncher",
       )))
     }
   }
@@ -790,6 +792,12 @@ val selectedRustNatives: String = if (isRelease)
   buildRustNativesForHostRelease.name
 else
   buildRustNativesForHost.name
+
+tasks.nativeTestCompile.configure {
+  doFirst {
+    mkdir(layout.buildDirectory.dir("classes/java/test"))
+  }
+}
 
 val natives by tasks.registering {
   group = "build"

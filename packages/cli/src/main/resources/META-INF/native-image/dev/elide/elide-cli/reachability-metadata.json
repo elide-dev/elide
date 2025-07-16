@@ -13445,6 +13445,43 @@
       ]
     },
     {
+      "type": "elide.runtime.diag.MutableDiagnostic",
+      "allPublicMethods": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setAdvice",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setMessage",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.diag.NativeDiagnostics",
+      "allPublicMethods": true,
+      "methods": [
+        {
+          "name": "reportNativeDiagnostic",
+          "parameterTypes": [
+            "elide.runtime.diag.DiagnosticInfo"
+          ]
+        },
+        {
+          "name": "createDiagnostic"
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.MainKt",
       "methods": [
         {

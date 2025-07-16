@@ -8,19 +8,34 @@ import "Base.pkl" as _common
 /// CSS browser types.
 typealias CssBrowser = "chrome" | "firefox" | "safari" | "edge" | "opera"
 
+/// Static site hosting types.
+typealias StaticSiteHost = "workers" | "github-pages"
+
 /// Declares a static website as an artifact.
 class StaticSite extends _artifacts.Artifact {
   /// Path to the root source directory for the site.
   srcs: _common.FilePath?
-
-  /// Path to public assets for this site.
-  assets: _common.FilePath = "public"
 
   /// Production domain to use for this site.
   domain: String?
 
   /// Preview domain to use for this site.
   preview: String?
+
+  /// Web prefix where this site is mounted; considered for links and assets. Must end with a slash.
+  prefix: String = "/"
+
+  /// Public web path to use for public assets for this site.
+  assets: String = "\(prefix)_/assets"
+
+  /// Stylesheets to add to all pages.
+  stylesheets: Listing<_common.FilePath> = new {}
+
+  /// Scripts to add to all pages.
+  scripts: Listing<_common.FilePath> = new {}
+
+  /// Static site host (optional).
+  hosting: StaticSiteHost? = null
 }
 
 /// Describes targeting of a CSS-enabled platform (i.e. browsers).

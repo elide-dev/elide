@@ -2241,7 +2241,9 @@ tasks {
       archiveBaseName = sample
       archiveVersion = ""
       destinationDirectory = builtSamples
-      from(path)
+      from(path) {
+        exclude("node_modules", ".dev/artifacts", ".dev/dependencies")
+      }
     }
   }
 

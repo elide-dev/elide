@@ -2,8 +2,26 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.web
 
+import "Artifacts.pkl" as _artifacts
+import "Base.pkl" as _common
+
 /// CSS browser types.
 typealias CssBrowser = "chrome" | "firefox" | "safari" | "edge" | "opera"
+
+/// Declares a static website as an artifact.
+class StaticSite extends _artifacts.Artifact {
+  /// Path to the root source directory for the site.
+  srcs: _common.FilePath?
+
+  /// Path to public assets for this site.
+  assets: _common.FilePath = "public"
+
+  /// Production domain to use for this site.
+  domain: String?
+
+  /// Preview domain to use for this site.
+  preview: String?
+}
 
 /// Describes targeting of a CSS-enabled platform (i.e. browsers).
 class CssTarget {

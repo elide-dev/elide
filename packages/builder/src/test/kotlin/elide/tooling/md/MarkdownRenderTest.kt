@@ -17,6 +17,36 @@ import kotlin.test.*
 import elide.tooling.md.Markdown.MarkdownSourceLiteral
 
 class MarkdownRenderTest {
+  @Test fun testParseFrontmatter() = runTest {
+    Markdown.renderMarkdown {
+      MarkdownSourceLiteral {
+        // language=markdown
+        """
+        ---
+        title: Some Title
+        another: Field
+        ---
+        ### Hello Markdown!
+
+        Here is some markdown to render.
+        """
+      }
+    }.let {
+      assertNotNull(it)
+      val out = it.asString()
+      val metadata = it.metadata()
+      assertTrue(out.isNotEmpty())
+      assertTrue(out.isNotBlank())
+      assertTrue(out.contains("Hello Markdown!"))
+      assertTrue(out.contains("Here is some markdown to render."))
+      assertFalse(out.contains("---"))
+      assertFalse(out.contains("title: Some Title"))
+      assertNotNull(metadata)
+      assertEquals(2, metadata.size)
+      assertTrue("another" in metadata)
+    }
+  }
+
   @Test fun testRenderMarkdown() = runTest {
     Markdown.renderMarkdown {
       MarkdownSourceLiteral {
@@ -29,10 +59,12 @@ class MarkdownRenderTest {
       }
     }.let {
       assertNotNull(it)
-      assertTrue(it.isNotEmpty())
-      assertTrue(it.isNotBlank())
-      assertTrue(it.contains("Hello Markdown!"))
-      assertTrue(it.contains("Here is some markdown to render."))
+      val out = it.asString()
+      assertTrue(out.isNotEmpty())
+      assertTrue(out.isNotBlank())
+      assertTrue(out.contains("Hello Markdown!"))
+      assertTrue(out.contains("Here is some markdown to render."))
+      assertNull(it.metadata())
     }
   }
 
@@ -51,12 +83,14 @@ class MarkdownRenderTest {
       }
     }.let {
       assertNotNull(it)
-      assertTrue(it.isNotEmpty())
-      assertTrue(it.isNotBlank())
-      assertTrue(it.contains("Hello Markdown!"))
-      assertTrue(it.contains("Here is some markdown to render."))
-      assertTrue(it.contains("Some GFM"))
-      assertTrue(it.contains("<code class=\"language-js\">"))
+      val out = it.asString()
+      assertTrue(out.isNotEmpty())
+      assertTrue(out.isNotBlank())
+      assertTrue(out.contains("Hello Markdown!"))
+      assertTrue(out.contains("Here is some markdown to render."))
+      assertTrue(out.contains("Some GFM"))
+      assertTrue(out.contains("<code class=\"language-js\">"))
+      assertNull(it.metadata())
     }
   }
 
@@ -72,10 +106,12 @@ class MarkdownRenderTest {
       }
     }.let {
       assertNotNull(it)
-      assertTrue(it.isNotEmpty())
-      assertTrue(it.isNotBlank())
-      assertTrue(it.contains("Hello Markdown!"))
-      assertTrue(it.contains("Here is some markdown to render."))
+      val out = it.asString()
+      assertTrue(out.isNotEmpty())
+      assertTrue(out.isNotBlank())
+      assertTrue(out.contains("Hello Markdown!"))
+      assertTrue(out.contains("Here is some markdown to render."))
+      assertNull(it.metadata())
     }
   }
 }

@@ -30,6 +30,19 @@
         "src/main/kotlin/sample/main.kt",
         "src/test/kotlin/sample/testGreeting.kt"
       ]
+    },
+    {
+      "name": "web-static-worker",
+      "description": "Static website built with Elide and shipped with Cloudflare Workers",
+      "languages": ["Markdown"],
+      "files": [
+        ".dev/elide.lock.bin",
+        "README.md",
+        "elide.pkl",
+        "package-lock.kdl",
+        "wrangler.toml",
+        "src/index.md"
+      ]
     }
   ]
 }

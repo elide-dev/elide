@@ -15,6 +15,22 @@ package elide.exec
 import kotlinx.serialization.Serializable
 
 /**
+ * Transform a regular [kotlin.Result] into an [elide.exec.Result].
+ *
+ * @receiver Kotlin result
+ * @return Execution result
+ */
+public fun <T> kotlin.Result<T>.asExecResult(): Result = when (this.isSuccess) {
+  false -> this.exceptionOrNull()?.let { Result.ThrowableFailure(it) } ?: Result.UnspecifiedFailure
+  true -> when (val value = this.getOrNull()) {
+    is Result -> value
+    is kotlin.Result<*> -> value.asExecResult()
+    null, Unit, is Unit -> Result.Nothing
+    else -> Result.Something(value)
+  }
+}
+
+/**
  *
  */
 @Serializable

@@ -544,6 +544,15 @@ public data class ElidePackageManifest(
     override val dependsOn: List<String> = emptyList(),
   ) : Artifact
 
+  @JvmRecord @Serializable public data class StaticSite(
+    val srcs: String,
+    val assets: String? = null,
+    val domain: String? = null,
+    val preview: String? = null,
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ) : Artifact
+
   @JvmRecord @Serializable public data class CoverageSettings(
     val enabled: Boolean = false,
     val paths: List<String> = emptyList(),

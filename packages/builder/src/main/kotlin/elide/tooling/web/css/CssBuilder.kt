@@ -160,16 +160,14 @@ public object CssBuilder {
   /**
    * ### CSS Source File
    *
-   * Represents a single CSS source file specification, which knows the [path] the CSS file in question and any other
+   * Represents a single CSS source file specification, which knows the path the CSS file in question and any other
    * inputs or options that may be relevant to this file only.
-   *
-   * @property path Path to the CSS source file.
    */
-  public interface CssSourceFile : CssSourceMaterial {
-    public val path: Path
+  public fun interface CssSourceFile : CssSourceMaterial {
+    public fun asPath(): Path
 
     override suspend fun code(): String = withContext(Dispatchers.IO) {
-      path.inputStream().bufferedReader(StandardCharsets.UTF_8).use { reader ->
+      asPath().inputStream().bufferedReader(StandardCharsets.UTF_8).use { reader ->
         reader.readText()
       }
     }

@@ -28,9 +28,11 @@ import kotlinx.html.link
 import kotlinx.html.script
 import kotlin.collections.ifEmpty
 import kotlin.io.path.absolute
+import kotlin.io.path.bufferedReader
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
+import kotlin.io.path.name
 import kotlin.io.path.nameWithoutExtension
 import kotlin.io.path.outputStream
 import kotlin.io.path.relativeTo
@@ -41,6 +43,11 @@ import elide.exec.Task.Companion.fn
 import elide.exec.asExecResult
 import elide.exec.taskDependencies
 import elide.runtime.Logging
+import elide.runtime.lang.javascript.JavaScriptCompilerConfig
+import elide.runtime.lang.javascript.JavaScriptPrecompiler
+import elide.runtime.precompiler.Precompiler.PrecompileSourceInfo
+import elide.runtime.precompiler.Precompiler.PrecompileSourceRequest
+import elide.runtime.typescript.TypeScriptPrecompiler
 import elide.tooling.archive.ZipTasks.zip
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
@@ -64,6 +71,7 @@ private const val STATIC_SITE_ARTIFACT_PATH = "sites"
 private const val STYLESHEET = "stylesheet"
 private const val TYPE_TEXT_CSS = "text/css"
 private const val TYPE_TEXT_JAVASCRIPT = "text/javascript"
+private const val TYPE_MODULE = "module"
 private const val WEB_SLASH = "/"
 
 private interface Checkable {
@@ -320,47 +328,79 @@ internal class StaticSiteContributor : BuildConfigurator {
     append(assetsRoot.target.resolve(asset).relativeTo(siteRoot.target))
   }
 
+  private fun tsToJsName(name: String): String = buildString {
+    name.substringBeforeLast('.').let {
+      append(it)
+      if (it.endsWith(".ts") || it.endsWith(".cts")) {
+        append(".js")
+      } else {
+        append(".mjs")
+      }
+    }
+  }
+
+  private fun rewriteExtension(href: String): String = when ('.' in href) {
+    false -> href
+    else -> buildString {
+      append(href.substringBeforeLast('.'))
+      when (val ext = href.substringAfterLast('.')) {
+        "ts" -> append(".js")
+        "tsx" -> append(".mjs")
+        "jsx" -> append(".mjs")
+        "md" -> append(".html")
+        else -> append('.').append(ext) // keep the original extension
+      }
+    }
+  }
+
   private suspend fun StaticSiteConfiguration.buildMarkdownFile(src: SourceTargetCode): Result = runCatching {
-    Markdown.renderMarkdown(style = MarkdownFlavor.GitHub, options = MarkdownOptions.defaults().copy(
-      linkRenderer = { path, href, default ->
-        when (rewriteLinks) {
-          // don't rewrite links unless configured to do so
-          false -> default
+    Markdown.renderMarkdown(
+      style = MarkdownFlavor.GitHub,
+      options = MarkdownOptions.defaults().copy(
+        linkRenderer = { path, href, default ->
+          when (rewriteLinks) {
+            // don't rewrite links unless configured to do so
+            false -> default
 
-          // otherwise, reparent links based on the prefix
-          true -> when (site.prefix) {
-            WEB_SLASH -> if (href.startsWith(WEB_SLASH)) href else "$WEB_SLASH$href"
-            else -> buildList<String> {
-              add("")
-              addAll(site.prefix.split(WEB_SLASH))
-              addAll(default.removePrefix(WEB_SLASH).split(WEB_SLASH))
-            }.filter {
-              !it.isEmpty() && !it.isBlank() && it != "."
-            }.joinToString(
-              WEB_SLASH
-            )
-          }
-        }
-
-      },
-      renderer = { metadata, str ->
-        defaultPage(metadata, str.toString()) {
-          // configures the `<head>` of the page
-          site.stylesheets.forEach { stylesheet ->
-            link(
-              rel = STYLESHEET,
-              type = TYPE_TEXT_CSS,
-              href = assetHref(src, stylesheet)
-            )
-          }
-          site.scripts.forEach { script ->
-            script(type = TYPE_TEXT_JAVASCRIPT, src = assetHref(src, script)) {
-              defer = true
+            // otherwise, reparent links based on the prefix
+            true -> when (site.prefix) {
+              WEB_SLASH -> if (href.startsWith(WEB_SLASH)) rewriteExtension(default) else buildString {
+                append(WEB_SLASH)
+                append(rewriteExtension(default))
+              }
+              else -> buildList<String> {
+                add("")
+                addAll(site.prefix.split(WEB_SLASH))
+                addAll(default.removePrefix(WEB_SLASH).split(WEB_SLASH))
+              }.filter {
+                !it.isEmpty() && !it.isBlank() && it != "."
+              }.joinToString(
+                WEB_SLASH
+              )
             }
           }
-        }
-      }
-    )) {
+        },
+        renderer = { metadata, str ->
+          defaultPage(metadata, str.toString()) {
+            // configures the `<head>` of the page
+            site.stylesheets.forEach { stylesheet ->
+              link(
+                rel = STYLESHEET,
+                type = TYPE_TEXT_CSS,
+                href = assetHref(src, stylesheet)
+              )
+            }
+            site.scripts.forEach { script ->
+              val isModule = script.endsWith(".mjs") || script.endsWith(".mts")
+              val type = if (isModule) TYPE_MODULE else TYPE_TEXT_JAVASCRIPT
+              script(type = type, src = assetHref(src, tsToJsName(script))) {
+                if (!isModule) defer = true
+              }
+            }
+          }
+        },
+      ),
+    ) {
       Markdown.MarkdownSourceFile {
         src.source
       }
@@ -386,6 +426,36 @@ internal class StaticSiteContributor : BuildConfigurator {
           builtCss.code().single(),
         )
       }
+    }
+  }.asExecResult()
+
+  private suspend fun StaticSiteConfiguration.buildJsFile(src: SourceTargetCode): Result = runCatching {
+    val sourceAbsolute = src.source.absolute()
+    sourceAbsolute.bufferedReader(StandardCharsets.UTF_8).use { reader ->
+      JavaScriptPrecompiler.precompile(
+        PrecompileSourceRequest(
+          source = PrecompileSourceInfo(name = src.source.name, path = sourceAbsolute),
+          config = JavaScriptCompilerConfig.DEFAULT,
+        ),
+        reader.readText(),
+      )
+    }.let { compiled ->
+      writeToTarget(src, requireNotNull(compiled) { "Failed to build JavaScript at src '$sourceAbsolute'" })
+    }
+  }.asExecResult()
+
+  private suspend fun StaticSiteConfiguration.buildTsFile(src: SourceTargetCode): Result = runCatching {
+    val sourceAbsolute = src.source.absolute()
+    sourceAbsolute.bufferedReader(StandardCharsets.UTF_8).use { reader ->
+      TypeScriptPrecompiler.precompile(
+        PrecompileSourceRequest(
+          source = PrecompileSourceInfo(name = src.source.name, path = sourceAbsolute),
+          config = JavaScriptCompilerConfig.DEFAULT,
+        ),
+        reader.readText(),
+      )
+    }.let { compiled ->
+      writeToTarget(src, requireNotNull(compiled) { "Failed to build TypeScript at src '$sourceAbsolute'" })
     }
   }.asExecResult()
 
@@ -439,13 +509,23 @@ internal class StaticSiteContributor : BuildConfigurator {
     val html = site.srcsOfType(SourceSetLanguage.HTML).map { (SourceSetLanguage.HTML as SourceSetLanguage) to it }
     val md = site.srcsOfType(SourceSetLanguage.Markdown).map { (SourceSetLanguage.Markdown as SourceSetLanguage) to it }
     val css = site.srcsOfType(SourceSetLanguage.CSS).map { (SourceSetLanguage.CSS as SourceSetLanguage) to it }
+    val scss = site.srcsOfType(SourceSetLanguage.SCSS).map { (SourceSetLanguage.SCSS as SourceSetLanguage) to it }
+    val js = site.srcsOfType(SourceSetLanguage.JavaScript).map {
+      (SourceSetLanguage.JavaScript as SourceSetLanguage) to it
+    }
+    val ts = site.srcsOfType(SourceSetLanguage.TypeScript).map {
+      (SourceSetLanguage.TypeScript as SourceSetLanguage) to it
+    }
     val anythingElse = site.srcsOfUndefinedType()
 
-    val allSrcs: PersistentMap<Path, SourceTargetCode> = sequence {
-      yieldAll(html)
-      yieldAll(md)
-      yieldAll(css)
-    }.map { (lang, src) ->
+    val allSrcs: PersistentMap<Path, SourceTargetCode> = listOf(
+      html,
+      md,
+      css,
+      scss,
+      js,
+      ts,
+    ).asSequence().flatten().map { (lang, src) ->
       SourceTargetCode.of(
         lang = lang,
         source = src.second.path.absolute(),
@@ -481,6 +561,24 @@ internal class StaticSiteContributor : BuildConfigurator {
       site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.CSS, label = STYLESHEET to "stylesheets") { _, src ->
         buildCssFile(src.withTarget(
           assetsRoot.target.absolute().resolve(src.source.absolute().relativeTo(assetsRoot.source.absolute()))
+        ))
+      }?.let {
+        add(it)
+      }
+
+      // js and ts are more complex, so we handle them last and separately.
+      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.JavaScript) { _, src ->
+        buildJsFile(src.withTarget(
+          assetsRoot.target.absolute().resolve(src.source.absolute().relativeTo(assetsRoot.source.absolute()))
+        ))
+      }?.let {
+        add(it)
+      }
+      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.TypeScript) { _, src ->
+        buildTsFile(src.withTarget(
+          assetsRoot.target.absolute().resolve(src.source.absolute().relativeTo(assetsRoot.source.absolute()))
+            .parent
+            .resolve(tsToJsName(src.source.name))
         ))
       }?.let {
         add(it)

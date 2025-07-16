@@ -8,6 +8,7 @@ dependencies {
   npm {
     devPackages {
       "wrangler@4.24.3"
+      "@elide-dev/types@1.0.0-beta7"
     }
   }
 }
@@ -23,6 +24,10 @@ artifacts {
 
     stylesheets {
       "styles.css"
+    }
+    scripts {
+      "main.mts"
+      "example.mjs"
     }
   }
 }

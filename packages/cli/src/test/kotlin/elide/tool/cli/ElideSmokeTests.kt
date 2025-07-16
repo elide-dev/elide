@@ -85,11 +85,11 @@ import elide.testing.annotations.TestCase
       testFile("stdlib.cjs"),
       testFile("stdlib.mjs"),
       testFile("py_json.py"),
+      testFile("fibgen.mts"),
       testFile("sample.test.mts", listOf("test")),
     )
 
     private val knownBroken = sortedSetOf<String>(
-      "say_hello.mts",
       "main.kts",
       "main-another.kts",
     )

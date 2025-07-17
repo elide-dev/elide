@@ -78,7 +78,6 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.extension
-import kotlin.io.path.name
 import kotlin.math.max
 import kotlin.streams.asSequence
 import kotlin.streams.asStream
@@ -138,6 +137,7 @@ import elide.tool.cli.options.EngineJavaScriptOptions
 import elide.tool.cli.options.EngineJvmOptions
 import elide.tool.cli.options.EngineKotlinOptions
 import elide.tool.cli.options.EnginePythonOptions
+import elide.tool.cli.options.ServerOptions
 import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.cli.output.TOOL_LOGGER_APPENDER
 import elide.tool.cli.output.TOOL_LOGGER_NAME
@@ -462,6 +462,13 @@ internal class ToolShellCommand @Inject constructor(
     heading = "%nDebugger:%n",
   )
   internal var debugger: DebugConfig = DebugConfig()
+
+  /** Settings which apply to servers. */
+  @ArgGroup(
+    validate = false,
+    heading = "%nServer:%n",
+  )
+  internal var serverSettings: ServerOptions = ServerOptions()
 
   /** Language selector. */
   @ArgGroup(
@@ -1513,7 +1520,7 @@ internal class ToolShellCommand @Inject constructor(
   private fun detectJvmEntrypoint(): Path? = _jvmEntrypoint
 
   // Build and start a server for a static site.
-  private fun startStaticSiteServer(name: String, site: StaticSite, host: Pair<String, UShort>) {
+  private fun startStaticSiteServer(name: String, site: StaticSite, server: ServerOptions.EffectiveServerOptions) {
     val project = requireNotNull(activeProject.value) { "Cannot start static site server without project" }
     val layout = BuildConfigurator.ProjectDirectories.forProject(project)
     val target = layout.artifacts.resolve("sites").resolve("$name.zip")
@@ -1532,7 +1539,7 @@ internal class ToolShellCommand @Inject constructor(
     with(StaticSiteServer.StaticServerConfig(
       site = site,
       root = layout.artifacts.resolve("sites").resolve("$name.zip"),
-      host = host,
+      host = server.hostPair(),
       devMode = true,
     )) {
       buildStaticServer().start(wait = true)
@@ -1542,12 +1549,12 @@ internal class ToolShellCommand @Inject constructor(
   // Build and start a server for a path.
   private fun startGenericStaticServer(
     path: Path,
-    host: Pair<String, UShort>,
+    server: ServerOptions.EffectiveServerOptions,
     devMode: Boolean = true,
     wait: Boolean = true,
   ) = with(StaticSiteServer.StaticServerConfig(
     root = path,
-    host = host,
+    host = server.hostPair(),
     devMode = devMode,
   )) {
     buildStaticServer().start(wait = wait)
@@ -2673,8 +2680,7 @@ internal class ToolShellCommand @Inject constructor(
           val startGenericStatic = {
             logging.info("No project found; serving static files from current directory")
             Paths.get(System.getProperty("user.dir")).let { thisDir ->
-              val serverHost: Pair<String, UShort> = "0.0.0.0" to 8080u
-              startGenericStaticServer(thisDir, serverHost)
+              startGenericStaticServer(thisDir, serverSettings.effectiveServerOptions())
             }
           }
 
@@ -2730,7 +2736,8 @@ internal class ToolShellCommand @Inject constructor(
                   if (cfg == null) startGenericStatic() else {
                     val name = cfg.key
                     val site = cfg.value as StaticSite
-                    val serverHost: Pair<String, UShort> = "0.0.0.0" to 8080u
+                    val server = serverSettings.effectiveServerOptions()
+                    val serverHost = server.hostPair()
                     logging.debug("Found single artifact of type: StaticSite at name '$name'. Serving the site.")
 
                     @Suppress("HttpUrlsUsage")
@@ -2754,7 +2761,7 @@ internal class ToolShellCommand @Inject constructor(
                     }.let { msg ->
                       Statics.terminal.println(msg, stderr = true)
                     }
-                    startStaticSiteServer(name, site, serverHost)
+                    startStaticSiteServer(name, site, server)
                   }
                 }
               }

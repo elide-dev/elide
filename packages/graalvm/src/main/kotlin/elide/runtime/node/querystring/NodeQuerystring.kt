@@ -66,8 +66,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
   internal companion object {
     // Characters that Node.js querystring.escape() encodes beyond non-ASCII and %
-    // These are the characters NOT in the Node.js whitelist: A-Z a-z 0-9 - _ . ! ~ * ' ( )
-    private val additionalEncodeChars = charArrayOf(
+    private val ADDITIONAL_ENCODE_CHARS = charArrayOf(
       // RFC 3986 reserved characters that Node.js encodes
       ' ', ':', '/', '?', '#', '[', ']', '@', '$', '&', '+', ',', ';', '=',
 
@@ -76,13 +75,16 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     ).map { it.code.toByte() }.toByteArray()
 
     private const val HEX_RADIX = 16
+    
+    /** Regex pattern for matching percent-encoded sequences in URL unescape fallback. */
+    private val PERCENT_ENCODED_PATTERN = Regex("%([0-9A-Fa-f]{2})")
 
     @JvmStatic fun create(): NodeQuerystring = NodeQuerystring()
   }
 
   // PercentCodec configured for querystring behavior
   // - Encodes additional characters specified above
-  private val codec = PercentCodec(additionalEncodeChars, true)
+  private val codec = PercentCodec(ADDITIONAL_ENCODE_CHARS, true)
 
   private fun valueToString(value: Value): String {
     return when {
@@ -125,57 +127,33 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   override fun getMemberKeys(): Array<String> = moduleMembers
   override fun getMember(key: String?): Any? = when (key) {
     QS_DECODE -> ProxyExecutable { args ->
-      when (args.size) {
-        1 -> decode(args[0], null, null, null)
-        2 -> decode(args[0], args[1], null, null)
-        3 -> decode(args[0], args[1], args[2], null)
-        4 -> decode(args[0], args[1], args[2], args[3])
-        else -> throw JsError.typeError("Invalid number of arguments to `querystring.decode`")
-      }
+      if (args.isEmpty()) throw JsError.typeError("Invalid number of arguments to `querystring.decode`")
+      decode(args[0], args.getOrNull(1), args.getOrNull(2), args.getOrNull(3))
     }
 
     QS_ENCODE -> ProxyExecutable { args ->
-      when (args.size) {
-        1 -> encode(args[0], null, null, null)
-        2 -> encode(args[0], args[1], null, null)
-        3 -> encode(args[0], args[1], args[2], null)
-        4 -> encode(args[0], args[1], args[2], args[3])
-        else -> throw JsError.typeError("Invalid number of arguments to `querystring.encode`")
-      }
+      if (args.isEmpty()) throw JsError.typeError("Invalid number of arguments to `querystring.encode`")
+      encode(args[0], args.getOrNull(1), args.getOrNull(2), args.getOrNull(3))
     }
 
     QS_ESCAPE -> ProxyExecutable { args ->
-      when (args.size) {
-        1 -> escape(args[0])
-        else -> throw JsError.typeError("Invalid number of arguments to `querystring.escape`")
-      }
+      if (args.isEmpty()) throw JsError.typeError("Invalid number of arguments to `querystring.escape`")
+      escape(args[0])
     }
 
     QS_PARSE -> ProxyExecutable { args ->
-      when (args.size) {
-        1 -> parse(args[0], null, null, null)
-        2 -> parse(args[0], args[1], null, null)
-        3 -> parse(args[0], args[1], args[2], null)
-        4 -> parse(args[0], args[1], args[2], args[3])
-        else -> throw JsError.typeError("Invalid number of arguments to `querystring.parse`")
-      }
+      if (args.isEmpty()) throw JsError.typeError("Invalid number of arguments to `querystring.parse`")
+      parse(args[0], args.getOrNull(1), args.getOrNull(2), args.getOrNull(3))
     }
 
     QS_STRINGIFY -> ProxyExecutable { args ->
-      when (args.size) {
-        1 -> stringify(args[0], null, null, null)
-        2 -> stringify(args[0], args[1], null, null)
-        3 -> stringify(args[0], args[1], args[2], null)
-        4 -> stringify(args[0], args[1], args[2], args[3])
-        else -> throw JsError.typeError("Invalid number of arguments to `querystring.stringify`")
-      }
+      if (args.isEmpty()) throw JsError.typeError("Invalid number of arguments to `querystring.stringify`")
+      stringify(args[0], args.getOrNull(1), args.getOrNull(2), args.getOrNull(3))
     }
 
     QS_UNESCAPE -> ProxyExecutable { args ->
-      when (args.size) {
-        1 -> unescape(args[0])
-        else -> throw JsError.typeError("Invalid number of arguments to `querystring.unescape`")
-      }
+      if (args.isEmpty()) throw JsError.typeError("Invalid number of arguments to `querystring.unescape`")
+      unescape(args[0])
     }
 
     else -> null
@@ -220,8 +198,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     }
 
     var keyCount = 0
-    string.split(separator)
-      .asSequence()
+    string.splitToSequence(separator)
       .filter { it.isNotEmpty() }
       .takeWhile { keyCount < parseOptions.maxKeys }
       .forEach { pair ->
@@ -356,7 +333,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
       codec.decode(bytes).toString(Charsets.UTF_8)
     }.getOrElse {
       // Fallback: manually decode percent-encoded sequences
-      input.replace(Regex("%([0-9A-Fa-f]{2})")) { match ->
+      input.replace(PERCENT_ENCODED_PATTERN) { match ->
         when (val charCode = match.groupValues[1].toIntOrNull(HEX_RADIX)) {
           null -> match.value   // Keep original if hex is invalid
           else -> charCode.toChar().toString()

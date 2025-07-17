@@ -26,9 +26,12 @@ import org.graalvm.polyglot.Value
 public data class ParseOptions(
   // Should call NodeQueryString module's implementation of unescape(), but we can't access it here yet(?)
   val decodeURIComponent: Value? = null,
-  val maxKeys: Int = 1000,
+  val maxKeys: Int = DEFAULT_MAX_KEYS,
 ) {
   public companion object {
+    /** Default maximum number of keys to parse. */
+    public const val DEFAULT_MAX_KEYS: Int = 1000
+    
     /** Default parse options. */
     public val DEFAULTS: ParseOptions = ParseOptions()
 
@@ -41,12 +44,12 @@ public data class ParseOptions(
     @JvmStatic public fun fromGuest(options: Value?): ParseOptions = when {
       options == null || options.isNull -> DEFAULTS
       options.hasMembers() -> ParseOptions(
-        maxKeys = options.getMember("maxKeys")?.takeIf { it.isNumber }?.asInt() ?: 1000,
+        maxKeys = options.getMember("maxKeys")?.takeIf { it.isNumber }?.asInt() ?: DEFAULT_MAX_KEYS,
         decodeURIComponent = options.getMember("decodeURIComponent")?.takeIf { it.canExecute() },
       )
 
       options.hasHashEntries() -> ParseOptions(
-        maxKeys = options.getMember("maxKeys")?.takeIf { it.isNumber }?.asInt() ?: 1000,
+        maxKeys = options.getMember("maxKeys")?.takeIf { it.isNumber }?.asInt() ?: DEFAULT_MAX_KEYS,
         decodeURIComponent = options.getMember("decodeURIComponent")?.takeIf { it.canExecute() },
       )
 

@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 @file:Suppress(
   "UNUSED_PARAMETER",
   "MaxLineLength",
@@ -78,6 +77,8 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.extension
+import kotlin.io.path.isDirectory
+import kotlin.io.path.isRegularFile
 import kotlin.math.max
 import kotlin.streams.asSequence
 import kotlin.streams.asStream
@@ -1525,7 +1526,32 @@ internal class ToolShellCommand @Inject constructor(
     val layout = BuildConfigurator.ProjectDirectories.forProject(project)
     val target = layout.artifacts.resolve("sites").resolve("$name.zip")
     val dirTarget = layout.artifacts.resolve("sites").resolve(name)
-    when {
+    val serverHost = server.hostPair()
+    logging.debug("Found single artifact of type: StaticSite at name '$name'. Serving the site.")
+
+    @Suppress("HttpUrlsUsage")
+    if (!quiet) buildString {
+      append("Serving static site ")
+      if (Statics.noColor) {
+        append("$name at ")
+      } else {
+        append("${TextStyles.bold(TextColors.cyan(name))} at ")
+      }
+      val hostToPrint = when (val host = serverHost.first) {
+        "127.0.0.1", "0.0.0.0" -> "localhost"
+        else -> host
+      }
+      val at = "http://$hostToPrint:${serverHost.second}"
+      if (Statics.noColor) {
+        append(at)
+      } else {
+        append(TextStyles.bold(TextColors.cyan(at)))
+      }
+    }.let { msg ->
+      Statics.terminal.println(msg, stderr = true)
+    }
+
+    val effectiveTarget = when {
       target.exists() -> target
       dirTarget.exists() -> dirTarget
       else -> {
@@ -1538,7 +1564,7 @@ internal class ToolShellCommand @Inject constructor(
 
     with(StaticSiteServer.StaticServerConfig(
       site = site,
-      root = layout.artifacts.resolve("sites").resolve("$name.zip"),
+      root = effectiveTarget,
       host = server.hostPair(),
       devMode = true,
     )) {
@@ -1557,6 +1583,30 @@ internal class ToolShellCommand @Inject constructor(
     host = server.hostPair(),
     devMode = devMode,
   )) {
+    @Suppress("HttpUrlsUsage")
+    if (!quiet) buildString {
+      append("Serving from directory ")
+      val prettied = root.toString().removePrefix("./")
+      if (Statics.noColor) {
+        append(prettied)
+      } else {
+        append(TextStyles.bold(TextColors.cyan(prettied)))
+      }
+      append(" at ")
+      val hostToPrint = when (val host = host.first) {
+        "127.0.0.1", "0.0.0.0" -> "localhost"
+        else -> host
+      }
+      val at = "http://$hostToPrint:${host.second}"
+      if (Statics.noColor) {
+        append(at)
+      } else {
+        append(TextStyles.bold(TextColors.cyan(at)))
+      }
+    }.let { msg ->
+      Statics.terminal.println(msg, stderr = true)
+    }
+
     buildStaticServer().start(wait = wait)
   }
 
@@ -1582,11 +1632,7 @@ internal class ToolShellCommand @Inject constructor(
   }
 
   @Suppress("TooGenericExceptionCaught")
-  private fun execWrapped(
-    label: String,
-    ctxAccessor: ContextAccessor,
-    source: Source,
-  ) {
+  private fun execWrapped(label: String, ctxAccessor: ContextAccessor, source: Source) {
     // parse the source
     val ctx = ctxAccessor.invoke()
     val parsed = try {
@@ -2677,10 +2723,11 @@ internal class ToolShellCommand @Inject constructor(
           }
 
           val testOrServeMode = testMode() || serveMode()
-          val startGenericStatic = {
-            logging.info("No project found; serving static files from current directory")
-            Paths.get(System.getProperty("user.dir")).let { thisDir ->
-              startGenericStaticServer(thisDir, serverSettings.effectiveServerOptions())
+          val server = serverSettings.effectiveServerOptions()
+          val startProjectStaticOrGeneric = { project: ElideProject, at: Path ->
+            when (val artifact = project.manifest.artifacts.entries.firstOrNull { it.value is StaticSite }) {
+              null -> startGenericStaticServer(at, server)
+              else -> startStaticSiteServer(artifact.key, (artifact.value as StaticSite), server)
             }
           }
 
@@ -2728,42 +2775,11 @@ internal class ToolShellCommand @Inject constructor(
               // plain `elide serve` works for projects which configure a server of some kind
               else -> when (val project = activeProject.value) {
                 // plain `elide serve` for no project means serving static files from this directory
-                null -> startGenericStatic()
+                null -> startGenericStaticServer(Paths.get(System.getProperty("user.dir")), server)
 
                 // special case: if the project exports only one artifact, and it is a static site artifact, then we
                 // should serve the static site from the built site root.
-                else -> project.manifest.artifacts.entries.firstOrNull { it.value is StaticSite }.let { cfg ->
-                  if (cfg == null) startGenericStatic() else {
-                    val name = cfg.key
-                    val site = cfg.value as StaticSite
-                    val server = serverSettings.effectiveServerOptions()
-                    val serverHost = server.hostPair()
-                    logging.debug("Found single artifact of type: StaticSite at name '$name'. Serving the site.")
-
-                    @Suppress("HttpUrlsUsage")
-                    if (!quiet) buildString {
-                      append("Serving static site ")
-                      if (Statics.noColor) {
-                        append("$name at ")
-                      } else {
-                        append("${TextStyles.bold(TextColors.cyan(name))} at ")
-                      }
-                      val hostToPrint = when (val host = serverHost.first) {
-                        "127.0.0.1", "0.0.0.0" -> "localhost"
-                        else -> host
-                      }
-                      val at = "http://$hostToPrint:${serverHost.second}"
-                      if (Statics.noColor) {
-                        append(at)
-                      } else {
-                        append(TextStyles.bold(TextColors.cyan(at)))
-                      }
-                    }.let { msg ->
-                      Statics.terminal.println(msg, stderr = true)
-                    }
-                    startStaticSiteServer(name, site, server)
-                  }
-                }
+                else -> startProjectStaticOrGeneric(project, project.root)
               }
             }
 
@@ -2779,40 +2795,53 @@ internal class ToolShellCommand @Inject constructor(
             } else {
               // no literal execution flag = we need to parse `runnable` as a file path
               logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
-              File(scriptTargetOrCode).let { scriptFile ->
-                primaryLang.invoke(scriptFile).let { lang ->
-                  when (lang.executionMode) {
-                    // if this engine supports direct execution of source files, execute it that way
-                    ExecutionMode.SOURCE_DIRECT -> executeSource(
-                      scriptFile.name,
-                      langs,
-                      lang,
-                      it,
-                      readExecutableScript(
-                        allSupportedLangs,
-                        langs,
-                        lang,
-                        scriptFile,
-                      ),
-                    )
+              val asPath = Paths.get(scriptTargetOrCode)
 
-                    // otherwise, if we need to "compile" this source first (as is the case for LLVM targets and JVM
-                    // targets like Java and Kotlin), then conduct that phase and load a symbol to begin execution.
-                    ExecutionMode.SOURCE_COMPILED -> compileEntrypoint(
-                      lang,
-                      it,
-                      scriptFile,
-                    )?.let { compiled ->
-                      executeCompiled(
-                        scriptFile,
+              when {
+                // for regular files, we should proceed as if we have been handed code (a frequent case)
+                asPath.isRegularFile() -> asPath.toFile().let { scriptFile ->
+                  primaryLang.invoke(scriptFile).let { lang ->
+                    when (lang.executionMode) {
+                      // if this engine supports direct execution of source files, execute it that way
+                      ExecutionMode.SOURCE_DIRECT -> executeSource(
+                        scriptFile.name,
                         langs,
                         lang,
                         it,
-                        compiled,
+                        readExecutableScript(
+                          allSupportedLangs,
+                          langs,
+                          lang,
+                          scriptFile,
+                        ),
                       )
+
+                      // otherwise, if we need to "compile" this source first (as is the case for LLVM targets and JVM
+                      // targets like Java and Kotlin), then conduct that phase and load a symbol to begin execution.
+                      ExecutionMode.SOURCE_COMPILED -> compileEntrypoint(
+                        lang,
+                        it,
+                        scriptFile,
+                      )?.let { compiled ->
+                        executeCompiled(
+                          scriptFile,
+                          langs,
+                          lang,
+                          it,
+                          compiled,
+                        )
+                      }
                     }
                   }
                 }
+
+                // for directories, we should resolve the directory as a project, or fall back to a generic static
+                // server (but for both cases, only in test or serve mode).
+                // @TODO resolve other dir as project?
+                asPath.isDirectory() -> startGenericStaticServer(asPath, server)
+
+                // otherwise, we throw a not-a-file error
+                else -> logging.error("Don't know how to run: $asPath")
               }
             }
           }

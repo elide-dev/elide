@@ -3,6 +3,7 @@ package dev.elide.intellij.cli
 import com.intellij.openapi.project.Project
 import com.intellij.util.io.awaitExit
 import dev.elide.intellij.Constants
+import dev.elide.intellij.InvalidElideHomeException
 import dev.elide.intellij.service.ElideDistributionResolver
 import java.nio.file.Path
 import kotlinx.coroutines.CoroutineScope
@@ -10,6 +11,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import kotlin.io.path.isRegularFile
 
 /**
  * Bridge service used to invoke the Elide CLI on a configured distribution. Use [ElideCommandLine.at] to manually set
@@ -33,6 +35,8 @@ class ElideCommandLine private constructor(
     block: suspend CoroutineScope.(Process) -> R
   ): R {
     val elideBin = elideHome.resolve(Constants.ELIDE_BINARY)
+    if (!elideBin.isRegularFile()) throw InvalidElideHomeException(elideHome)
+
     val command = buildList {
       add(elideBin.toString())
       buildCommand()

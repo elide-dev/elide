@@ -18,9 +18,11 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotifica
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener
 import com.intellij.openapi.externalSystem.task.ExternalSystemTaskManager
 import com.intellij.util.io.awaitExit
+import dev.elide.intellij.InvalidElideHomeException
 import dev.elide.intellij.cli.ElideCommandLine
 import dev.elide.intellij.cli.invoke
 import dev.elide.intellij.settings.ElideExecutionSettings
+import dev.elide.intellij.ui.ElideNotifications
 import java.io.BufferedReader
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.*
@@ -55,6 +57,9 @@ class ElideTaskManager : ExternalSystemTaskManager<ElideExecutionSettings> {
           if (exitCode == 0) listener.onSuccess(projectPath, id)
           else error("Elide invocation failed with code $exitCode")
         }
+      } catch (cause: InvalidElideHomeException) {
+        ElideNotifications.notifyInvalidElideHome()
+        throw cause
       } finally {
         runningTasks.remove(id)
       }

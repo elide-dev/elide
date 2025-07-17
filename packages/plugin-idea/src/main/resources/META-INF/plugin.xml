@@ -62,6 +62,12 @@
     <externalProjectDataService implementation="dev.elide.intellij.project.ElideProjectDataService"/>
   </extensions>
 
+  <extensions defaultExtensionNs="com.intellij">
+    <notificationGroup id="Elide Notifications"
+                       displayType="BALLOON"
+                       key="elide.notifications.group"/>
+  </extensions>
+
   <actions>
     <action id="Elide.Run" class="dev.elide.intellij.action.ElideRunAction" icon="AllIcons.Actions.RunAnything"/>
   </actions>

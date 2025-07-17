@@ -53,6 +53,9 @@ object Constants {
   /** Relative path to the CLI binary in an Elide distribution. */
   const val ELIDE_BINARY = "elide"
 
+  /** Browser URL for the installation section of the documentation. */
+  const val INSTALL_URL = "https://docs.elide.dev/installation"
+
   /** Descriptor for a file chooser to be used when selecting an Elide project. */
   @JvmStatic fun projectFileChooser(): FileChooserDescriptor {
     return FileChooserDescriptor(

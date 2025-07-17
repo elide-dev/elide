@@ -23,12 +23,14 @@ import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotifica
 import com.intellij.openapi.externalSystem.service.project.ExternalSystemProjectResolver
 import com.intellij.openapi.progress.runBlockingCancellable
 import dev.elide.intellij.Constants
+import dev.elide.intellij.InvalidElideHomeException
 import dev.elide.intellij.cli.ElideCommandLine
 import dev.elide.intellij.cli.install
 import dev.elide.intellij.project.manifest.ElideManifestService
 import dev.elide.intellij.project.model.ElideProjectModel
 import dev.elide.intellij.service.ElideDistributionResolver
 import dev.elide.intellij.settings.ElideExecutionSettings
+import dev.elide.intellij.ui.ElideNotifications
 import org.jetbrains.annotations.PropertyKey
 import java.nio.file.Path
 import kotlinx.coroutines.launch
@@ -120,6 +122,7 @@ class ElideProjectResolver : ExternalSystemProjectResolver<ElideExecutionSetting
       }.onSuccess {
         listener.onSuccess(projectPath, id)
       }.onFailure { cause ->
+        if (cause is InvalidElideHomeException) ElideNotifications.notifyInvalidElideHome()
         listener.onFailure(projectPath, id, RuntimeException("Failed to load Elide project", cause))
       }
 

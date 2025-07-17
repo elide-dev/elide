@@ -682,11 +682,12 @@ internal class StaticSiteContributor : BuildConfigurator {
       fn(name = "${name}${tag[0].uppercaseChar()}${tag.substring(1)}") {
         srcs.map { src ->
           builder(src.key, src.value)
-        }.any {
-          !it.isSuccess
-        }.let { didFail ->
-          when (didFail) {
-            true -> Result.UnspecifiedFailure
+        }.let { srcs ->
+          when (srcs.any { !it.isSuccess }) {
+            true -> when (val exc = srcs.firstNotNullOfOrNull { it.exceptionOrNull() }) {
+              null -> Result.UnspecifiedFailure
+              else -> Result.ThrowableFailure(exc)
+            }
             false -> Result.Nothing
           }
         }
@@ -802,29 +803,35 @@ internal class StaticSiteContributor : BuildConfigurator {
         addNode(it)
         add(it)
       }
+    }
 
+    val primaries = buildList<Task> {
       // do we have html?
       site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.HTML) { _, src ->
         buildHtmlFile(src)
       }?.let {
+        // add html to graph, build it after all other assets
         add(it)
+        deps.forEach { dep -> putEdge(it, dep) }
       }
 
       // do we have markdown or mdx?
       site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.Markdown) { _, src ->
         buildMarkdownFile(src)
       }?.let {
+        // add markdown to graph, build it after all other assets
         add(it)
+        deps.forEach { dep -> putEdge(it, dep) }
       }
     }
 
     // then, organize a final task to assemble the site
-    fn(site.name, taskDependencies(site.deps + deps)) {
+    fn(site.name, taskDependencies(site.deps + deps + primaries)) {
       zip(site.siteRoot.target.parent.resolve("${site.name}.zip"), configure = {
         setUseZip64(Zip64Mode.AlwaysWithCompatibility)
         setComment("Static site named '${site.name}'")
         setMethod(ZipArchiveEntry.DEFLATED)
-        setLevel(9) // maximum compression
+        setLevel(6) // maximum compression
       }) {
         Files.walk(site.siteRoot.target).forEach { file ->
           if (file.isDirectory()) return@forEach // skip directories
@@ -860,6 +867,8 @@ internal class StaticSiteContributor : BuildConfigurator {
     artifact: StaticSite,
     dependencies: List<Task> = emptyList(),
   ) {
+    WebBuilder.load()
+
     // build paths for outputs
     val siteRoot = state.layout.artifacts  // `./.dev/artifacts/`
       .resolve(STATIC_SITE_ARTIFACT_PATH)  // `/sites/`
@@ -905,8 +914,8 @@ internal class StaticSiteContributor : BuildConfigurator {
 
   override suspend fun contribute(state: ElideBuildState, config: BuildConfiguration) {
     state.manifest.artifacts.entries.filter { it.value is StaticSite }.forEach { (name, artifact) ->
-      config.actionScope.apply {
-        config.taskGraph.apply {
+      with(config.actionScope) {
+        with(config.taskGraph) {
           staticSite(
             name = name,
             state = state,

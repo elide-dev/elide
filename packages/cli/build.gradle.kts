@@ -817,6 +817,7 @@ val enabledFeatures = listOfNotNull(
   "elide.runtime.feature.engine.NativeTraceFeature",
   "elide.tool.feature.DisallowedHostJvmFeature",
   "elide.tool.feature.FileSystemsFeature",
+  "elide.tool.feature.WebBuilderFeature",
   onlyIf(enablePython, "elide.runtime.feature.python.PythonFeature"),
   onlyIf(enableNativeTransportV2, "elide.runtime.feature.engine.NativeTransportFeature"),
   onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),
@@ -1690,6 +1691,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
   "-H:NativeLinkerOption=$nativesPath/libtrace.a",
   "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
+  "-H:NativeLinkerOption=$nativesPath/libweb.a",
   "-H:NativeLinkerOption=-lm",
   "-H:NativeLinkerOption=-lstdc++",
 ).plus(if (oracleGvm) listOf(

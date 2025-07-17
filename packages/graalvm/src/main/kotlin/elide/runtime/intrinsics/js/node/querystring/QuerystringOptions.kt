@@ -59,7 +59,7 @@ public data class ParseOptions(
  *
  * Describes the options which can be provided to a `stringify` operation.
  *
- * @param encodeURIComponent Function to use when encoding characters; defaults to querystring.escape().
+ * @param encodeURIComponent Function to use when encoding characters; if null, it defaults to querystring.escape().
  */
 public data class StringifyOptions(
   val encodeURIComponent: Value? = null,

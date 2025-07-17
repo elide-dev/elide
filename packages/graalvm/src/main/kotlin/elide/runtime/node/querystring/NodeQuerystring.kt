@@ -282,22 +282,41 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     val separator = sep?.let(::valueToString) ?: "&"
     val equals = eq?.let(::valueToString) ?: "="
     val stringifyOptions = StringifyOptions.fromGuest(options)
-
     val result = mutableListOf<String>()
 
-    val queryParams = QueryParams.fromGuest(obj)
-
-    if (queryParams != null) {
-      queryParams.memberKeys.forEach { key ->
-        val value = Value.asValue(queryParams.getMember(key))
-        appendKeyValuePairs(result, key, value, equals, stringifyOptions)
+    when {
+      obj.isHostObject -> {
+        println("we've got a host object!")
+        // Handle host objects directly without QueryParams conversion
+        val hostObject = obj.asHostObject<Any>()
+        if (hostObject is Map<*, *>) {
+          println("host object is map!")
+          hostObject.forEach { (key, value) ->
+            if (key is String && value != null) {
+              println("appending key value pairs for $key")
+              appendKeyValuePairs(result, key, Value.asValue(value), equals, stringifyOptions)
+            }
+          }
+        } else {
+          // Non-map host objects should return empty string
+          return ""
+        }
       }
-    } else {
-      // Node.js returns empty string for non-objects (primitives, null, etc.)
-      return ""
-    }
 
-    println("Printing result: $result")
+      else -> {
+        // Use QueryParams.fromGuest for guest objects
+        val queryParams = QueryParams.fromGuest(obj)
+        if (queryParams != null) {
+          queryParams.memberKeys.forEach { key ->
+            val value = queryParams.getMember(key)
+            appendKeyValuePairs(result, key, value, equals, stringifyOptions)
+          }
+        } else {
+          // Node.js returns empty string for non-objects (primitives, null, etc.)
+          return ""
+        }
+      }
+    }
 
     return result.joinToString(separator)
   }
@@ -305,50 +324,66 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   private fun appendKeyValuePairs(
     result: MutableList<String>,
     key: String,
-    value: Value?,
+    value: Any?,
     equals: String,
     options: StringifyOptions
   ) {
-    if (value?.isNull != false) return
-
     val encoder = options.encodeURIComponent
     val encodedKey = encoder?.execute(Value.asValue(key))?.asString() ?: escape(Value.asValue(key))
 
-    when {
-      value.isHostObject -> {
-        val hostObject = value.asHostObject<Any>()
+    when (value) {
+      is QueryParams.Companion.ArrayValueProxy -> {
+        // Handle ArrayValueProxy directly
+        (0 until value.size).forEach { index ->
+          val element = value.get(index)
 
-        println(value.javaClass)
-        when (hostObject) {
-          is Array<*> -> {
-            hostObject
-              .asSequence()
-              .filterNotNull()
-              .map { element ->
-                val encodedValue =
-                  encoder?.execute(Value.asValue(element))?.asString() ?: escape(Value.asValue(element))
-                "$encodedKey$equals$encodedValue"
+          println(element?.javaClass)
+          println(element == null)
+          val encodedValue = when (element) {
+            null -> ""
+            else -> encoder?.execute(Value.asValue(element))?.asString() ?: escape(Value.asValue(element))
+          }
+
+          result += "$encodedKey$equals$encodedValue"
+        }
+      }
+
+      is Value -> {
+        // Handle Value objects
+        when {
+          value.isNull -> result += "null"
+
+          value.isHostObject -> {
+            val hostObject = value.asHostObject<Any>()
+            when (hostObject) {
+              is Array<*> -> {
+                hostObject.asSequence()
+                  .map { element ->
+                    val encodedValue = when (element) {
+                      null -> ""
+                      else -> encoder?.execute(Value.asValue(element))?.asString() ?: escape(Value.asValue(element))
+                    }
+
+                    "$encodedKey$equals$encodedValue"
+                  }
+                  .forEach { result += it }
               }
-              .forEach { result += it }
+            }
+          }
+
+
+          else -> {
+            val stringValue = valueToString(value)
+            val encodedValue =
+              encoder?.execute(Value.asValue(stringValue))?.asString() ?: escape(Value.asValue(stringValue))
+            result += "$encodedKey$equals$encodedValue"
           }
         }
       }
 
-      value.hasArrayElements() -> {
-        (0 until value.arraySize)
-          .asSequence()
-          .mapNotNull { value.getArrayElement(it) }
-          .filterNot { it.isNull }
-          .map { element ->
-            val encodedValue = encoder?.execute(element)?.asString() ?: escape(element)
-            "$encodedKey$equals$encodedValue"
-          }
-          .forEach { result += it }
-      }
-
-
       else -> {
-        val stringValue = valueToString(value)
+        // Handle other types (String, etc.)
+        val stringValue = value.toString()
         val encodedValue =
           encoder?.execute(Value.asValue(stringValue))?.asString() ?: escape(Value.asValue(stringValue))
         result += "$encodedKey$equals$encodedValue"

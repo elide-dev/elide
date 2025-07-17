@@ -22,7 +22,7 @@ import elide.vm.annotations.Polyglot
  *
  * Describes a `String` or `Array` type for each query parameter, depending on how many values there are.
  */
-public typealias StringOrArray = Any
+public typealias StringOrArray = Any?
 
 /**
  * ## Querystring: Query Parameters
@@ -48,7 +48,8 @@ public interface QueryParams : ProxyObject {
   override fun getMember(key: String): Any? {
     val value = data[key]
     return when (value) {
-      is List<*> -> ArrayValueProxy(value as List<String>)
+      is List<*> -> ArrayValueProxy(value)
+      is Array<*> -> ArrayValueProxy(value.indices.map { index -> value[index] })
       else -> value
     }
   }
@@ -92,8 +93,8 @@ public interface QueryParams : ProxyObject {
             hostObject.forEach { (key, value) ->
               if (key is String && value != null) {
                 data[key] = when (value) {
-                  is Array<*> -> value.map { it.toString() }
-                  is List<*> -> value.map { it.toString() }
+                  is Array<*> -> value.toList()
+                  is List<*> -> value
                   else -> value.toString()
                 }
               }
@@ -111,7 +112,13 @@ public interface QueryParams : ProxyObject {
             if (param != null && !param.isNull) {
               data[key] = when {
                 param.hasArrayElements() -> {
-                  (0 until param.arraySize).map { param.getArrayElement(it).toString() }
+                  (0 until param.arraySize).map {
+                    val value = param.getArrayElement(it)
+                    when  {
+                      value.isNull -> ""
+                      else -> value
+                    }
+                  }
                 }
                 else -> param.toString()
               }
@@ -127,7 +134,7 @@ public interface QueryParams : ProxyObject {
      * Proxy array implementation for handling multiple values for the same query parameter key.
      * This allows JavaScript code to access array properties like `.length` and use array indexing.
      */
-    internal class ArrayValueProxy(private val list: List<String>) : ProxyArray {
+    internal class ArrayValueProxy(private val list: List<Any?>) : ProxyArray {
       override fun get(index: Long): Any? = if (index in 0 until list.size) list[index.toInt()] else null
       override fun set(index: Long, value: Value?) = throw UnsupportedOperationException("Cannot modify querystring parse result")
       override fun getSize(): Long = list.size.toLong()

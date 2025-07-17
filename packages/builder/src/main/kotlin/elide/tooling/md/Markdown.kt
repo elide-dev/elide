@@ -81,7 +81,7 @@ public object Markdown {
     public const val STYLESHEETS: String = "stylesheets"
 
     /** Scripts to include on this page. */
-    public const val SCRIPTS: String = "styles"
+    public const val SCRIPTS: String = "scripts"
   }
 
   /**

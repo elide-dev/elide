@@ -387,14 +387,45 @@ internal class StaticSiteContributor : BuildConfigurator {
         renderer = { metadata, str ->
           defaultPage(metadata, str.toString()) {
             // configures the `<head>` of the page
-            site.stylesheets.forEach { stylesheet ->
+            sequence {
+              // site-wide stylesheets
+              yieldAll(site.stylesheets)
+
+              // page-level stylesheets
+              (
+                metadata?.get(Markdown.KnownProperties.STYLES) ?:
+                metadata?.get(Markdown.KnownProperties.STYLESHEETS)
+              )?.let { stylesheets ->
+                when (stylesheets) {
+                  is String -> listOf(stylesheets)
+                  is List<*> -> stylesheets.filterIsInstance<String>()
+                  else -> emptyList()
+                }
+              }?.let { stylesheets ->
+                yieldAll(stylesheets)
+              }
+            }.forEach { stylesheet ->
               link(
                 rel = STYLESHEET,
                 type = TYPE_TEXT_CSS,
                 href = assetHref(src, rewriteExtension(stylesheet))
               )
             }
-            site.scripts.forEach { script ->
+            sequence {
+              // site-wide scripts
+              yieldAll(site.scripts)
+
+              // page-level scripts
+              metadata?.get(Markdown.KnownProperties.SCRIPTS)?.let { scripts ->
+                when (scripts) {
+                  is String -> listOf(scripts)
+                  is List<*> -> scripts.filterIsInstance<String>()
+                  else -> emptyList()
+                }
+              }?.let { scripts ->
+                yieldAll(scripts)
+              }
+            }.forEach { script ->
               val isModule = script.endsWith(".mjs") || script.endsWith(".mts")
               val type = if (isModule) TYPE_MODULE else TYPE_TEXT_JAVASCRIPT
               script(type = type, src = assetHref(src, tsToJsName(script))) {

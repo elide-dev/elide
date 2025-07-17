@@ -29,7 +29,7 @@ import elide.runtime.intrinsics.js.node.querystring.StringifyOptions
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.node.querystring.QueryParams.Companion.of
-import elide.runtime.intrinsics.js.node.querystring.StringOrArray
+import elide.runtime.intrinsics.js.node.querystring.ReadOnlyArrayProxy
 
 // Names of `querystring` methods.
 private const val QS_DECODE = "decode"
@@ -66,34 +66,34 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
   // Characters that Node.js querystring.escape() encodes beyond non-ASCII and %
   // These are the characters NOT in the Node.js whitelist: A-Z a-z 0-9 - _ . ! ~ * ' ( )
-  private val ADDITIONAL_ENCODE_CHARS = byteArrayOf(
+  private val ADDITIONAL_ENCODE_CHARS = charArrayOf(
     // RFC 3986 reserved characters that Node.js encodes
-    ' '.code.toByte(),   // %20
-    ':'.code.toByte(),   // %3A
-    '/'.code.toByte(),   // %2F
-    '?'.code.toByte(),   // %3F
-    '#'.code.toByte(),   // %23
-    '['.code.toByte(),   // %5B
-    ']'.code.toByte(),   // %5D
-    '@'.code.toByte(),   // %40
-    '$'.code.toByte(),   // %24
-    '&'.code.toByte(),   // %26
-    '+'.code.toByte(),   // %2B
-    ','.code.toByte(),   // %2C
-    ';'.code.toByte(),   // %3B
-    '='.code.toByte(),   // %3D
+    ' ',
+    ':',
+    '/',
+    '?',
+    '#',
+    '[',
+    ']',
+    '@',
+    '$',
+    '&',
+    '+',
+    ',',
+    ';',
+    '=',
 
     // Other characters that Node.js encodes
-    '"'.code.toByte(),   // %22
-    '<'.code.toByte(),   // %3C
-    '>'.code.toByte(),   // %3E
-    '\\'.code.toByte(),  // %5C
-    '^'.code.toByte(),   // %5E
-    '`'.code.toByte(),   // %60
-    '{'.code.toByte(),   // %7B
-    '|'.code.toByte(),   // %7C
-    '}'.code.toByte(),    // %7D
-  )
+    '"',
+    '<',
+    '>',
+    '\\',
+    '^',
+    '`',
+    '{',
+    '|',
+    '}',
+  ).map { it.code.toByte() }.toByteArray()
 
   // PercentCodec configured for querystring behavior
   // - Encodes additional characters specified above
@@ -109,8 +109,6 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
         // Handle arrays - convert to JavaScript-like string representation
         (0 until value.arraySize).joinToString(",") { index -> valueToString(value.getArrayElement(index)) }
       }
-
-      !value.hasMembers() -> "[object Object]"
       value.hasMembers() -> {
         sequenceOf("toString", "valueOf")
           .mapNotNull { methodName ->
@@ -122,13 +120,23 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
           .firstOrNull()
           ?: throw JsError.typeError("Cannot convert object to primitive value")
       }
-
-      else -> {
-        println(value.toString())
-        throw JsError.typeError("Cannot convert object to primitive value")
+      value.isHostObject -> {
+        val hostObject = value.asHostObject<Any>()
+        when (hostObject) {
+          is Array<*> -> {
+            hostObject.joinToString(",") { element -> valueToString(Value.asValue(element)) }
+          }
+          is List<*> -> {
+            hostObject.joinToString(",") { element -> valueToString(Value.asValue(element))}
+          }
+          else -> "[object Object]"
+        }
       }
+
+      else -> "[object Object]"
     }
   }
+
 
   internal companion object {
     @JvmStatic fun create(): NodeQuerystring = NodeQuerystring()
@@ -138,10 +146,10 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
   override fun getMember(key: String?): Any? = when (key) {
     QS_DECODE -> ProxyExecutable { args ->
       when (args.size) {
-        1 -> decode(args.first(), null, null, null)
-        2 -> decode(args.first(), args[1], null, null)
-        3 -> decode(args.first(), args[1], args[2], null)
-        4 -> decode(args.first(), args[1], args[2], args[3])
+        1 -> decode(args[0], null, null, null)
+        2 -> decode(args[0], args[1], null, null)
+        3 -> decode(args[0], args[1], args[2], null)
+        4 -> decode(args[0], args[1], args[2], args[3])
         else -> throw JsError.typeError("Invalid number of arguments to `querystring.decode`")
       }
     }
@@ -158,17 +166,17 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
     QS_ESCAPE -> ProxyExecutable { args ->
       when (args.size) {
-        1 -> escape(args.first())
+        1 -> escape(args[0])
         else -> throw JsError.typeError("Invalid number of arguments to `querystring.escape`")
       }
     }
 
     QS_PARSE -> ProxyExecutable { args ->
       when (args.size) {
-        1 -> parse(args.first(), null, null, null)
-        2 -> parse(args.first(), args[1], null, null)
-        3 -> parse(args.first(), args[1], args[2], null)
-        4 -> parse(args.first(), args[1], args[2], args[3])
+        1 -> parse(args[0], null, null, null)
+        2 -> parse(args[0], args[1], null, null)
+        3 -> parse(args[0], args[1], args[2], null)
+        4 -> parse(args[0], args[1], args[2], args[3])
         else -> throw JsError.typeError("Invalid number of arguments to `querystring.parse`")
       }
     }
@@ -228,7 +236,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     val result = mutableMapOf<String, Any>()
 
     if (string.isBlank()) {
-      return QueryParams.of(result)
+      return of(result)
     }
 
     var keyCount = 0
@@ -261,16 +269,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
         }
       }
 
-    println("result type: ${result::class}")
-    println("result contents: $result")
-    val proxy = QueryParams.of(result)
-    println("proxy.hasMembers(): ${proxy.getMember("__proto__")}")
-    println("proxy type: ${proxy::class}")
-    val wrapped = Value.asValue(proxy)
-    println("wrapped type: ${wrapped::class}")
-    println("wrapped.hasMembers(): ${wrapped.hasMembers()}")
-
-    return proxy
+    return of(result)
   }
 
   override fun stringify(
@@ -286,14 +285,11 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
     when {
       obj.isHostObject -> {
-        println("we've got a host object!")
         // Handle host objects directly without QueryParams conversion
         val hostObject = obj.asHostObject<Any>()
         if (hostObject is Map<*, *>) {
-          println("host object is map!")
           hostObject.forEach { (key, value) ->
             if (key is String && value != null) {
-              println("appending key value pairs for $key")
               appendKeyValuePairs(result, key, Value.asValue(value), equals, stringifyOptions)
             }
           }
@@ -321,6 +317,13 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     return result.joinToString(separator)
   }
 
+  private fun encodeValue(value: Any?, encoder: Value?): String {
+    return when (value) {
+      null -> ""
+      else -> encoder?.execute(Value.asValue(value))?.asString() ?: escape(Value.asValue(value))
+    }
+  }
+
   private fun appendKeyValuePairs(
     result: MutableList<String>,
     key: String,
@@ -332,60 +335,34 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     val encodedKey = encoder?.execute(Value.asValue(key))?.asString() ?: escape(Value.asValue(key))
 
     when (value) {
-      is QueryParams.Companion.ArrayValueProxy -> {
-        // Handle ArrayValueProxy directly
+      is ReadOnlyArrayProxy -> {
         (0 until value.size).forEach { index ->
-          val element = value.get(index)
-
-          println(element?.javaClass)
-          println(element == null)
-          val encodedValue = when (element) {
-            null -> ""
-            else -> encoder?.execute(Value.asValue(element))?.asString() ?: escape(Value.asValue(element))
-          }
-
+          val encodedValue = encodeValue(value.get(index), encoder)
           result += "$encodedKey$equals$encodedValue"
         }
       }
 
       is Value -> {
-        // Handle Value objects
         when {
           value.isNull -> result += "null"
-
           value.isHostObject -> {
             val hostObject = value.asHostObject<Any>()
-            when (hostObject) {
-              is Array<*> -> {
-                hostObject.asSequence()
-                  .map { element ->
-                    val encodedValue = when (element) {
-                      null -> ""
-                      else -> encoder?.execute(Value.asValue(element))?.asString() ?: escape(Value.asValue(element))
-                    }
-
-                    "$encodedKey$equals$encodedValue"
-                  }
-                  .forEach { result += it }
+            if (hostObject is Array<*>) {
+              hostObject.forEach { element ->
+                val encodedValue = encodeValue(element, encoder)
+                result += "$encodedKey$equals$encodedValue"
               }
             }
           }
-
-
           else -> {
-            val stringValue = valueToString(value)
-            val encodedValue =
-              encoder?.execute(Value.asValue(stringValue))?.asString() ?: escape(Value.asValue(stringValue))
+            val encodedValue = encodeValue(valueToString(value), encoder)
             result += "$encodedKey$equals$encodedValue"
           }
         }
       }
 
       else -> {
-        // Handle other types (String, etc.)
-        val stringValue = value.toString()
-        val encodedValue =
-          encoder?.execute(Value.asValue(stringValue))?.asString() ?: escape(Value.asValue(stringValue))
+        val encodedValue = encodeValue(value.toString(), encoder)
         result += "$encodedKey$equals$encodedValue"
       }
     }

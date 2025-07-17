@@ -25,6 +25,23 @@ import elide.vm.annotations.Polyglot
 public typealias StringOrArray = Any?
 
 /**
+ * Proxy array implementation for handling multiple values for the same query parameter key.
+ * This allows JavaScript code to access array properties like `.length` and use array indexing.
+ */
+internal class ReadOnlyArrayProxy(private val values: List<Any?>) : ProxyArray {
+  override fun get(index: Long): Any? = 
+    if (index in 0 until values.size) values[index.toInt()] else null
+  
+  override fun set(index: Long, value: Value?) = 
+    throw UnsupportedOperationException("Cannot modify querystring parse result")
+  
+  override fun getSize(): Long = values.size.toLong()
+  
+  override fun remove(index: Long) = 
+    throw UnsupportedOperationException("Cannot modify querystring parse result")
+}
+
+/**
  * ## Querystring: Query Parameters
  *
  * Represents the result of parsing a URL query string into a JavaScript object.
@@ -48,8 +65,8 @@ public interface QueryParams : ProxyObject {
   override fun getMember(key: String): Any? {
     val value = data[key]
     return when (value) {
-      is List<*> -> ArrayValueProxy(value)
-      is Array<*> -> ArrayValueProxy(value.indices.map { index -> value[index] })
+      is List<*> -> ReadOnlyArrayProxy(value)
+      is Array<*> -> ReadOnlyArrayProxy(value.toList())
       else -> value
     }
   }
@@ -130,15 +147,5 @@ public interface QueryParams : ProxyObject {
       }
     }
 
-    /**
-     * Proxy array implementation for handling multiple values for the same query parameter key.
-     * This allows JavaScript code to access array properties like `.length` and use array indexing.
-     */
-    internal class ArrayValueProxy(private val list: List<Any?>) : ProxyArray {
-      override fun get(index: Long): Any? = if (index in 0 until list.size) list[index.toInt()] else null
-      override fun set(index: Long, value: Value?) = throw UnsupportedOperationException("Cannot modify querystring parse result")
-      override fun getSize(): Long = list.size.toLong()
-      override fun remove(index: Long) = throw UnsupportedOperationException("Cannot modify querystring parse result")
-    }
   }
 }

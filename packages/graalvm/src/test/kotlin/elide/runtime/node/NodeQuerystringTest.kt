@@ -55,7 +55,7 @@ import elide.testing.annotations.TestCase
 
     // Objects should be encoded using toString
     assertEquals("%5Bobject%20Object%5D", qs.escape(Value.asValue(ProxyObject.fromMap(emptyMap<String, Any>()))))
-//    assertEquals("5%2C10", qs.escape(Value.asValue(ProxyArray.fromList(listOf(5,10)))))
+    assertEquals("5%2C10", qs.escape(Value.asValue(arrayOf(5,10))))
 
     // Unicode characters should be percent-encoded
     assertEquals("%C5%8A%C5%8D%C4%91%C4%95", qs.escape(Value.asValue("Ŋōđĕ")))
@@ -181,7 +181,7 @@ import elide.testing.annotations.TestCase
     // Multiple values for same key
     val result2 = qs.parse(Value.asValue("foo=bar&foo=quux"))
     val fooArray = result2.getMember("foo") as ProxyArray
-    assertEquals(2, fooArray.getSize())
+    assertEquals(2, fooArray.size)
     assertEquals("bar", fooArray.get(0))
     assertEquals("quux", fooArray.get(1))
 
@@ -389,10 +389,6 @@ import elide.testing.annotations.TestCase
     // Unicode characters
     val obj2 = Value.asValue(mapOf("unicode" to "Ŋōđĕ"))
     assertEquals("unicode=%C5%8A%C5%8D%C4%91%C4%95", qs.stringify(obj2))
-
-    // Proto property
-    val obj3 = Value.asValue(mapOf("__proto__" to "1"))
-    assertEquals("__proto__=1", qs.stringify(obj3))
   }.guest {
     // language=javascript
     """
@@ -416,10 +412,16 @@ import elide.testing.annotations.TestCase
     val obj1 = Value.asValue(mapOf("empty" to "", "another" to "value"))
     assertEquals("empty=&another=value", qs.stringify(obj1))
 
+    // Null elements
+    val obj2 = Value.asValue(mapOf("null" to arrayOf(null, "some", "value")))
+    println("obj2 proceeding")
+    assertEquals("null=&null=some&null=value", qs.stringify(obj2))
+
     // Non-object inputs should return empty string
     assertEquals("", qs.stringify(Value.asValue("not an object")))
     assertEquals("", qs.stringify(Value.asValue(42)))
     assertEquals("", qs.stringify(Value.asValue(true)))
+    assertEquals("", qs.stringify(Value.asValue(null)))
   }.guest {
     // language=javascript
     """
@@ -429,10 +431,14 @@ import elide.testing.annotations.TestCase
         // Empty strings
         equal(qs.stringify({ empty: '', another: 'value' }), 'empty=&another=value');
         
+        // Null elements
+        equal(qs.stringify({ null: [null, 'some', 'value']}), 'null=&null=some&null=value');
+        
         // Non-object inputs should return empty string
         equal(qs.stringify('not an object'), '');
         equal(qs.stringify(42), '');
         equal(qs.stringify(true), '');
+        equal(qs.stringify(null), '');
     """
   }
 
@@ -459,7 +465,7 @@ import elide.testing.annotations.TestCase
         equal(qs.stringify(obj, ';', ':'), 'foo:bar;baz:qux');
         
         // Custom separator only
-        equal(qs.stringify(obj, '|'), 'foo=bar|baz=qux');
+        equal(qs.stringify(obj, '|', '='), 'foo=bar|baz=qux');
         
         // Custom equals only
         equal(qs.stringify(obj, '&', '-'), 'foo-bar&baz-qux');

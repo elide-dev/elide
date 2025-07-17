@@ -48,6 +48,7 @@ import kotlin.time.measureTimedValue
 import elide.exec.ActionScope
 import elide.exec.Task
 import elide.exec.Task.Companion.fn
+import elide.exec.asExecResult
 import elide.exec.taskDependencies
 import elide.tooling.Arguments
 import elide.tooling.Classpath
@@ -443,15 +444,11 @@ internal class ContainerBuildConfigurator : BuildConfigurator {
             }
           }
         )
-        elide.exec.Result.Nothing
+        result.asExecResult()
       } else {
-        val exc = result.exceptionOrNull()
+        val exc = requireNotNull(result.exceptionOrNull()) { "No exception provided for Jib build failure" }
         logging.error("Failed to build container image", exc)
-        if (exc != null) {
-          elide.exec.Result.ThrowableFailure(exc)
-        } else {
-          elide.exec.Result.UnspecifiedFailure
-        }
+        result.asExecResult()
       }
     }
   }.describedBy {

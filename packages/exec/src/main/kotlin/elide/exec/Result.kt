@@ -38,11 +38,16 @@ public sealed interface Result {
   /** Indicate whether this task was successful, meaning it ran without errors (as applicable). */
   public val isSuccess: Boolean
 
+  /** Provide the failure exception for this result, if applicable. */
+  public fun exceptionOrNull(): Throwable?
+
   /**
    * A successful result which yields nothing.
    */
   public data object Nothing : Result {
     override val isSuccess: Boolean get() = true
+    override fun exceptionOrNull(): Throwable? = null
+    override fun toString(): String = "Nothing"
   }
 
   /**
@@ -50,6 +55,8 @@ public sealed interface Result {
    */
   public class Something<V: Any>(public val value: V) : Result {
     override val isSuccess: Boolean get() = true
+    override fun exceptionOrNull(): Throwable? = null
+    override fun toString(): String = "Something(${value})"
   }
 
   /**
@@ -57,6 +64,8 @@ public sealed interface Result {
    */
   public class ThrowableFailure<E: Throwable>(public val err: E) : Result {
     override val isSuccess: Boolean get() = false
+    override fun exceptionOrNull(): Throwable? = err
+    override fun toString(): String = "ThrowableFailure(${err::class.simpleName}): ${err.message ?: "No message"}"
   }
 
   /**
@@ -64,5 +73,7 @@ public sealed interface Result {
    */
   public data object UnspecifiedFailure : Result {
     override val isSuccess: Boolean get() = false
+    override fun exceptionOrNull(): Throwable? = null
+    override fun toString(): String = "UnspecifiedFailure"
   }
 }

@@ -445,10 +445,9 @@ export default class extends WorkerEntrypoint<Env> {
       }
       headers.set("Content-Disposition", `attachment; filename="${obj.key.split("/").pop()}"`)
       const resp = new Response(obj.body, { headers })
-      this.ctx.waitUntil(Promise.all([
-        record(this.env, start, url, request, resp, true, false),
-        cache.put(url, resp.clone())
-      ]))
+      this.ctx.waitUntil(
+        Promise.all([record(this.env, start, url, request, resp, true, false), cache.put(url, resp.clone())]),
+      )
       return resp
     }
 

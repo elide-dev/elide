@@ -27,12 +27,12 @@ enum EventType {
   /**
    * Elide ran a thing; this is the most common event type, and is emitted for runtime executions.
    */
-  Run = 'run',
+  Run = "run",
 
   /**
    * Hard-crash event (this does not include user errors).
    */
-  Crash = 'crash',
+  Crash = "crash",
 }
 
 /**
@@ -42,26 +42,26 @@ type EventMetadata = {
   /**
    * Version of Elide; extracted from HTTP headers.
    */
-  version: string,
+  version: string
 
   /**
    * Platform tag for this distribution of elide.
    */
-  platform: string,
+  platform: string
 
   /**
    * Whether Elide is operating in debug mode.
    */
-  debug?: boolean,
+  debug?: boolean
 
   /**
    * Timings recorded by the telemetry receiver and frontend.
    */
   timing?: {
-    received?: number,
-    queued?: number,
-    processed?: number,
-  },
+    received?: number
+    queued?: number
+    processed?: number
+  }
 }
 
 /**
@@ -71,7 +71,7 @@ type BaseEventPayload = {
   /**
    * Type of event.
    */
-  type: EventType,
+  type: EventType
 }
 
 /**
@@ -83,17 +83,17 @@ type EventPayload<T> = BaseEventPayload & T
  * Defines a `run`-type event.
  */
 type RunEventPayload = BaseEventPayload & {
-  type: EventType.Run,
-  mode?: 'run' | 'test' | 'server',
-  exitCode?: number,
-  duration?: number,
+  type: EventType.Run
+  mode?: "run" | "test" | "server"
+  exitCode?: number
+  duration?: number
 }
 
 /**
  * Defines a `crash`-type event.
  */
 type CrashEventPayload = BaseEventPayload & {
-  type: EventType.Crash,
+  type: EventType.Crash
 }
 
 /**
@@ -108,17 +108,17 @@ type QueuedEvent = {
   /**
    * Version of the event schema; `1` is the current version.
    */
-  v: 1,
+  v: 1
 
   /**
    * Event data associated with this object.
    */
-  e: EventPayload<AnyEventPayload>,
+  e: EventPayload<AnyEventPayload>
 
   /**
    * Generic metadata about this event; recorded by the telemetry receiver.
    */
-  m: EventMetadata,
+  m: EventMetadata
 }
 
 /**
@@ -148,7 +148,7 @@ async function buildEvent(req: Request, payload: EventPayload<AnyEventPayload>, 
         received: start,
         queued: performance.now(),
       },
-    }
+    },
   }
 }
 
@@ -188,8 +188,8 @@ async function prepareEvent(ev: QueuedEvent): Promise<QueuedEvent> {
       timing: {
         ...ev.m.timing,
         processed: performance.now(),
-      }
-    }
+      },
+    },
   }
 }
 
@@ -207,7 +207,7 @@ function eventToDatapoint(ev: QueuedEvent): any {
       const { exitCode, duration, mode } = payload
       if (exitCode !== undefined) {
         datapoint.blobs.push(`exit:${exitCode}`)
-        datapoint.blobs.push(exitCode === 0 ? 'success' : 'err')
+        datapoint.blobs.push(exitCode === 0 ? "success" : "err")
       }
       if (duration !== undefined && duration) {
         datapoint.doubles.push(duration)
@@ -215,10 +215,10 @@ function eventToDatapoint(ev: QueuedEvent): any {
       if (mode !== undefined && mode) {
         datapoint.blobs.push(`mode:${mode}`)
       }
-      break;
+      break
     }
     case EventType.Crash: {
-      break;
+      break
     }
   }
   return datapoint
@@ -284,17 +284,17 @@ export default class extends WorkerEntrypoint<Env> {
         start,
       })
     }
-    let payload: EventPayload<AnyEventPayload>;
+    let payload: EventPayload<AnyEventPayload>
     switch (request.method) {
-      case 'GET':
-        if (url.pathname === '/' || url.pathname === '/health') {
+      case "GET":
+        if (url.pathname === "/" || url.pathname === "/health") {
           return new Response(null, { status: 204 })
         }
-        break;
-      case 'POST': {
+        break
+      case "POST": {
         // decode json event payload
         try {
-          payload = await request.json() as EventPayload<AnyEventPayload>
+          payload = (await request.json()) as EventPayload<AnyEventPayload>
         } catch (err) {
           console.error(`Failed to decode JSON: ${err}`)
           return new Response("Invalid JSON", { status: 400 })
@@ -302,7 +302,7 @@ export default class extends WorkerEntrypoint<Env> {
         if (DEBUG) {
           console.log(`Received event: ${JSON.stringify(payload)}`)
         }
-        break;
+        break
       }
       default:
         return new Response("Method not allowed", { status: 405 })
@@ -315,7 +315,7 @@ export default class extends WorkerEntrypoint<Env> {
           console.log(`Event accepted; returning 202.`)
         }
         return new Response(null, { status: 202, statusText: "Accepted" })
-      }
+      },
     }
     try {
       const handler = routing[url.pathname]
@@ -335,7 +335,6 @@ export default class extends WorkerEntrypoint<Env> {
         return new Response("Unknown error", { status: 500 })
       }
     }
-
   }
 
   /**
@@ -352,7 +351,7 @@ export default class extends WorkerEntrypoint<Env> {
       console.log(`Processing telemetry batch of ${batch.messages.length} messages`)
     }
 
-    batch.messages.forEach((message) => {
+    batch.messages.forEach(message => {
       if (DEBUG) {
         console.log(`- Processing message '${message.id}'`)
       }
@@ -373,7 +372,7 @@ export default class extends WorkerEntrypoint<Env> {
       }
     })
     if (allErrors.length > 0) {
-      console.error(`Errors while processing batch (${allErrors.length}): ${allErrors.map((e) => e.message).join(", ")}`)
+      console.error(`Errors while processing batch (${allErrors.length}): ${allErrors.map(e => e.message).join(", ")}`)
     } else {
       if (DEBUG) {
         console.log(`Awaiting settlement of all processed messages`)

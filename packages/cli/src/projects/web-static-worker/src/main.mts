@@ -7,6 +7,6 @@ function sayHello(name: string): string {
   return `Hello, ${name}, from TypeScript!`
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log(sayHello('World'));
-});
+document.addEventListener("DOMContentLoaded", () => {
+  console.log(sayHello("World"))
+})

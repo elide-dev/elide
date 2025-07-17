@@ -13,7 +13,7 @@
 package elide.runtime.diag
 
 // Default diagnostics receiver/buffer.
-private val DEFAULT: DiagnosticsContainer = DiagnosticsContainer.create()
+private val DEFAULT: DiagnosticsContainer = DiagnosticsContainer.create(lockable = false)
 
 /**
  * # Diagnostics

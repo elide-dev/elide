@@ -1,3 +1,5 @@
-div.box {
-  font-weight: bold;
+div {
+  &.box {
+    font-weight: bold;
+  }
 }

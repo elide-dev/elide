@@ -2409,6 +2409,9 @@ public abstract interface class elide/tooling/md/Markdown$Frontmatter : java/uti
 
 public final class elide/tooling/md/Markdown$KnownProperties {
 	public static final field INSTANCE Lelide/tooling/md/Markdown$KnownProperties;
+	public static final field SCRIPTS Ljava/lang/String;
+	public static final field STYLES Ljava/lang/String;
+	public static final field STYLESHEETS Ljava/lang/String;
 	public static final field TITLE Ljava/lang/String;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I

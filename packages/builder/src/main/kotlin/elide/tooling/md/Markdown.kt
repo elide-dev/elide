@@ -73,6 +73,15 @@ public object Markdown {
   public data object KnownProperties {
     /** Title to use for this page. */
     public const val TITLE: String = "title"
+
+    /** Styles to include on this page. */
+    public const val STYLES: String = "styles"
+
+    /** Stylesheets to include on this page (alias for [STYLES]). */
+    public const val STYLESHEETS: String = "stylesheets"
+
+    /** Scripts to include on this page. */
+    public const val SCRIPTS: String = "styles"
   }
 
   /**

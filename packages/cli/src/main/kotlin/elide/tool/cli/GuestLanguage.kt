@@ -46,7 +46,7 @@ enum class GuestLanguage (
     id = "ts",
     engine = ENGINE_JS,
     formalName = "TypeScript",
-    experimental = true,
+    experimental = false,
     onByDefault = true,
     extensions = sortedSetOf(
       TypeScriptLanguage.EXTENSION_TS,
@@ -71,7 +71,7 @@ enum class GuestLanguage (
   PYTHON (
     id = ENGINE_PYTHON,
     formalName = "Python",
-    experimental = true,
+    experimental = false,
     onByDefault = true,
     extensions = sortedSetOf("py"),
     mimeTypes = sortedSetOf("application/x-python-code", "text/x-python")

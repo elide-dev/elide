@@ -19,7 +19,9 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
+import java.security.MessageDigest
 import java.util.LinkedList
+import java.util.concurrent.ConcurrentSkipListMap
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.Dispatchers.IO
@@ -30,6 +32,8 @@ import kotlin.collections.ifEmpty
 import kotlin.io.path.absolute
 import kotlin.io.path.bufferedReader
 import kotlin.io.path.exists
+import kotlin.io.path.extension
+import kotlin.io.path.inputStream
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.name
@@ -64,6 +68,7 @@ import elide.tooling.project.SourceSetType
 import elide.tooling.project.SourceSets
 import elide.tooling.project.manifest.ElidePackageManifest.StaticSite
 import elide.tooling.web.css.CssBuilder
+import elide.util.toBase64String
 
 // Constants for the site builder.
 private const val STATIC_ASSETS_PATH_DEFAULT = "assets"
@@ -76,6 +81,8 @@ private const val TYPE_TEXT_CSS = "text/css"
 private const val TYPE_TEXT_JAVASCRIPT = "text/javascript"
 private const val TYPE_MODULE = "module"
 private const val WEB_SLASH = "/"
+private const val DEFAULT_ASSET_IDENTITY_SIZE: UShort = 8u
+private const val DEFAULT_ASSET_IDENTITY_ALGO = "SHA-1"
 
 private interface Checkable {
   fun check(): String?
@@ -161,7 +168,96 @@ internal class StaticSiteContributor : BuildConfigurator {
     @JvmStatic private val logging by lazy {
       Logging.of(StaticSiteContributor::class.java)
     }
+
+    private val assetCache by lazy {
+      ConcurrentSkipListMap<Path, Path>()
+    }
   }
+
+  // Holds information about an asset, including its calculated hash (identity).
+  @OptIn(ExperimentalStdlibApi::class)
+  private class AssetIdentity(
+    val asset: SourceTargetPair,
+    private val identityBytes: ByteArray,
+  ) {
+    fun asBase64(): String = identityBytes.toBase64String()
+    fun asHex(): String = identityBytes.toHexString()
+  }
+
+  // Describes settings which govern how assets are addressed and written.
+  private sealed interface AssetIdentityConfiguration {
+    /**
+     * Generate a finalized encoded asset identity from the provided source code [info] and [content].
+     *
+     * @param info Info about this source code.
+     * @param content Content of the source code.
+     */
+    fun encodedAssetIdentity(info: SourceTargetPair, content: ByteArray): String? = null
+
+    /**
+     * Generate a finalized encoded asset identity from the provided source code [info].
+     *
+     * @param info Info about this source code.
+     * @return Asset identity (just the identity portion).
+     */
+    fun encodedAssetIdentity(info: SourceTargetPair): String? = encodedAssetIdentity(
+      info,
+      info.source.inputStream().buffered().use { reader ->
+        reader.readBytes()
+      },
+    )
+
+    /**
+     * Generate an asset identity from the provided source code [info] and [content].
+     *
+     * @param info Info about this source code.
+     * @param content Content of the source code.
+     * @return Asset identity (just the identity portion).
+     */
+    fun assetIdentity(info: SourceTargetPair, content: ByteArray): AssetIdentity? = null
+
+    /**
+     * Generate an asset identity from the provided source code [info].
+     *
+     * @param info Info about this source code.
+     * @return Asset identity (just the identity portion).
+     */
+    suspend fun assetIdentity(info: SourceTargetPair): AssetIdentity? = assetIdentity(
+      info,
+      info.source.inputStream().buffered().use { reader ->
+        reader.readBytes()
+      },
+    )
+  }
+
+  // Don't change how assets are addressed.
+  private data object UnchangedAssetReferences : AssetIdentityConfiguration
+
+  // Use some identity-driven way of addressing assets.
+  private sealed class AssetsByIdentity (private val hashAlgorithm: String) : AssetIdentityConfiguration {
+    override fun assetIdentity(info: SourceTargetPair, content: ByteArray): AssetIdentity = MessageDigest.getInstance(
+      hashAlgorithm
+    ).let { digester ->
+      digester.update(content)
+      AssetIdentity(info, digester.digest())
+    }
+  }
+
+  // Use base64 encoded identity with a fixed size and algorithm.
+  private class AssetsByHexIdentity (
+    private val size: UShort = DEFAULT_ASSET_IDENTITY_SIZE,
+    algo: String = DEFAULT_ASSET_IDENTITY_ALGO,
+  ) : AssetsByIdentity(algo) {
+    override fun encodedAssetIdentity(info: SourceTargetPair, content: ByteArray): String? {
+      return assetIdentity(info, content).asHex().takeLast(size.toInt())
+    }
+  }
+
+  // Describes settings which govern how assets are handled.
+  @JvmRecord private data class AssetConfiguration(
+    val enabled: Boolean = true,
+    val references: AssetIdentityConfiguration = if (enabled) AssetsByHexIdentity() else UnchangedAssetReferences,
+  )
 
   // Describes resolved settings for a static site build.
   @JvmRecord private data class StaticSiteConfiguration(
@@ -176,6 +272,7 @@ internal class StaticSiteContributor : BuildConfigurator {
     val scope: ActionScope,
     val project: ElideConfiguredProject,
     val dry: Boolean,
+    val assets: AssetConfiguration = AssetConfiguration(),
     val rewriteLinks: Boolean = true,
   ) {
     val taskGraph get() = config.taskGraph
@@ -262,7 +359,9 @@ internal class StaticSiteContributor : BuildConfigurator {
 
   private suspend fun StaticSiteConfiguration.createParentsIfNeeded(path: Path) = path.parent.let { parent ->
     // sanity check: should always be within site root, should always be directory
-    require(!parent.isRegularFile()) { "Cannot create parents for non-directory" }
+    assert(!parent.isRegularFile()) { "Cannot create parents for non-directory" }
+    assert(!parent.name.contains('.')) { "This looks like a file" }
+
     when (parent.isAbsolute) {
       true -> parent.startsWith(siteRoot.target.absolute())
       false -> parent.startsWith(siteRoot.target) // relative paths are always relative to the site root
@@ -278,6 +377,30 @@ internal class StaticSiteContributor : BuildConfigurator {
   private suspend fun compareFilesForCopy(left: Path, right: Path): Boolean = withContext(IO) {
     !Files.exists(left) || !Files.exists(right) || !Files.isRegularFile(left) || !Files.isRegularFile(right) ||
       Files.size(left) != Files.size(right) || Files.getLastModifiedTime(left) != Files.getLastModifiedTime(right)
+  }
+
+  private fun StaticSiteConfiguration.assembleIdentityAssetPath(target: Path, identity: String): Path {
+    val name = target.nameWithoutExtension
+    val ext = target.extension
+    val base = target.parent
+    return base.resolve(buildString {
+      append(name)
+      append('.')
+      append(identity)
+      append('.')
+      append(ext)
+    })
+  }
+
+  private fun StaticSiteConfiguration.computeAssetIdentity(src: SourceTargetPair, bytes: ByteArray): Path? {
+    return when (val cached = assetCache[src.source]) {
+      null -> assets.references.encodedAssetIdentity(src, bytes)?.let { encoded ->
+        assembleIdentityAssetPath(src.target, encoded).also {
+          assetCache[src.source] = it
+        }
+      }
+      else -> cached
+    }
   }
 
   private suspend fun StaticSiteConfiguration.copyToTarget(src: SourceTargetPair) = when (dry) {
@@ -304,13 +427,25 @@ internal class StaticSiteContributor : BuildConfigurator {
     }
   }
 
-  private suspend fun StaticSiteConfiguration.writeToTarget(src: SourceTargetPair, str: String) = when (dry) {
+  private suspend fun StaticSiteConfiguration.write(src: SourceTargetPair, str: String, asset: Boolean) = when (dry) {
     true -> logging.info { "Write (dry run): ${src.source} → ${src.target} (size: ${str.length})" }
 
     false -> withContext(IO) {
+      val bytes = str.toByteArray(StandardCharsets.UTF_8)
+      val finalizedTarget = when (asset) {
+        // non-assets do not get transformed by identity
+        false -> src.target
+
+        // if identity is enabled, a non-null value is returned
+        else -> when (val identity = computeAssetIdentity(src, bytes)) {
+          null -> src.target  // no identity-based reference for asset, so just include it as-is
+          else -> identity
+        }
+      }
+
       runCatching {
-        createParentsIfNeeded(src.target).also {
-          src.target.outputStream().bufferedWriter(StandardCharsets.UTF_8).use { writer ->
+        createParentsIfNeeded(finalizedTarget).also {
+          finalizedTarget.outputStream().bufferedWriter(StandardCharsets.UTF_8).use { writer ->
             writer.write(str)
           }
         }
@@ -326,9 +461,23 @@ internal class StaticSiteContributor : BuildConfigurator {
   }
 
   @Suppress("UNUSED_PARAMETER")
-  private fun StaticSiteConfiguration.assetHref(from: SourceTargetCode, asset: String): String = buildString {
+  private fun StaticSiteConfiguration.assetHref(
+    from: SourceTargetCode,
+    asset: String,
+    src: String,
+  ): String = buildString {
     append(site.prefix)
-    append(assetsRoot.target.resolve(asset).relativeTo(siteRoot.target))
+    when (assets.references) {
+      is AssetsByIdentity -> from.source.parent.resolve(src).let { assetPathFromSource ->
+        requireNotNull(assetCache[assetPathFromSource]?.relativeTo(siteRoot.target.absolute())) {
+          "Failed to locate in asset cache: ${from.source}"
+        }
+      }
+
+      else -> assetsRoot.target.resolve(asset).relativeTo(siteRoot.target)
+    }.let { maybeRewritten ->
+      append(maybeRewritten)
+    }
   }
 
   private fun tsToJsName(name: String): String = buildString {
@@ -348,6 +497,7 @@ internal class StaticSiteContributor : BuildConfigurator {
       append(href.substringBeforeLast('.'))
       when (val ext = href.substringAfterLast('.')) {
         "ts" -> append(".js")
+        "mts" -> append(".mjs")
         "tsx" -> append(".mjs")
         "jsx" -> append(".mjs")
         "md" -> append(".html")
@@ -408,7 +558,7 @@ internal class StaticSiteContributor : BuildConfigurator {
               link(
                 rel = STYLESHEET,
                 type = TYPE_TEXT_CSS,
-                href = assetHref(src, rewriteExtension(stylesheet))
+                href = assetHref(src, rewriteExtension(stylesheet), stylesheet)
               )
             }
             sequence {
@@ -428,7 +578,7 @@ internal class StaticSiteContributor : BuildConfigurator {
             }.forEach { script ->
               val isModule = script.endsWith(".mjs") || script.endsWith(".mts")
               val type = if (isModule) TYPE_MODULE else TYPE_TEXT_JAVASCRIPT
-              script(type = type, src = assetHref(src, tsToJsName(script))) {
+              script(type = type, src = assetHref(src, tsToJsName(script), script)) {
                 if (!isModule) defer = true
               }
             }
@@ -440,12 +590,13 @@ internal class StaticSiteContributor : BuildConfigurator {
         src.source
       }
     }.let { rendered ->
-      writeToTarget(
+      write(
         src.withTarget(src.target.parent.resolve(buildString {
           append(src.source.nameWithoutExtension)
           append(".html")
         })),
         rendered.asString(),
+        asset = false,
       )
     }
   }.asExecResult()
@@ -456,7 +607,7 @@ internal class StaticSiteContributor : BuildConfigurator {
       buildCss(configureCss(CssBuilder.CssOptions.forProject(project).copy(scss = scss), sequence {
         yield(CssBuilder.CssSourceFile { src.source })
       })).let { builtCss ->
-        writeToTarget(
+        write(
           if (!scss) src else src.withTarget(
             src.target.parent.resolve(buildString {
               append(src.source.nameWithoutExtension)
@@ -464,6 +615,7 @@ internal class StaticSiteContributor : BuildConfigurator {
             })
           ),
           builtCss.code().single(),
+          asset = true,
         )
       }
     }
@@ -480,7 +632,11 @@ internal class StaticSiteContributor : BuildConfigurator {
         reader.readText(),
       )
     }.let { compiled ->
-      writeToTarget(src, requireNotNull(compiled) { "Failed to build JavaScript at src '$sourceAbsolute'" })
+      write(
+        src,
+        requireNotNull(compiled) { "Failed to build JavaScript at src '$sourceAbsolute'" },
+        asset = true,
+      )
     }
   }.asExecResult()
 
@@ -495,7 +651,11 @@ internal class StaticSiteContributor : BuildConfigurator {
         reader.readText(),
       )
     }.let { compiled ->
-      writeToTarget(src, requireNotNull(compiled) { "Failed to build TypeScript at src '$sourceAbsolute'" })
+      write(
+        src,
+        requireNotNull(compiled) { "Failed to build TypeScript at src '$sourceAbsolute'" },
+        asset = true,
+      )
     }
   }.asExecResult()
 
@@ -583,20 +743,6 @@ internal class StaticSiteContributor : BuildConfigurator {
     }
 
     val deps = buildList<Task> {
-      // do we have html?
-      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.HTML) { _, src ->
-        buildHtmlFile(src)
-      }?.let {
-        add(it)
-      }
-
-      // do we have markdown or mdx?
-      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.Markdown) { _, src ->
-        buildMarkdownFile(src)
-      }?.let {
-        add(it)
-      }
-
       // do we have css?
       site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.CSS, label = STYLESHEET to STYLESHEETS) { _, src ->
         buildCssFile(scss = false, src.withTarget(
@@ -654,6 +800,20 @@ internal class StaticSiteContributor : BuildConfigurator {
         }
       }?.let {
         addNode(it)
+        add(it)
+      }
+
+      // do we have html?
+      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.HTML) { _, src ->
+        buildHtmlFile(src)
+      }?.let {
+        add(it)
+      }
+
+      // do we have markdown or mdx?
+      site.buildWebSourcesFileWise(allSrcs, SourceSetLanguage.Markdown) { _, src ->
+        buildMarkdownFile(src)
+      }?.let {
         add(it)
       }
     }

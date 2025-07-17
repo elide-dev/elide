@@ -17,10 +17,14 @@ mod css;
 /// Markdown and MDX processing for the Elide toolchain.
 mod md;
 
+/// Browserlist support utilities.
+mod browsers;
+
+use crate::browsers::use_or_load_browserlist;
 use crate::css::{CssBuilderError, CssBuilderErrorCase, build_css, build_scss, css_options};
 use java_native::jni;
 use jni::JNIEnv;
-use jni::objects::{JClass, JObject, JString, JValue};
+use jni::objects::{JClass, JObject, JObjectArray, JString, JValue};
 use jni::sys::jboolean;
 use lightningcss::stylesheet::{ParserOptions, StyleSheet};
 use std::borrow::Cow;
@@ -70,8 +74,10 @@ pub fn buildCss<'a>(
   css: JString<'a>,
   _opts: JObject<'a>,
   minify: jboolean,
+  _modules: jboolean,
   _sourceMaps: jboolean,
   scss: jboolean,
+  browsers: JObjectArray<'a>,
 ) -> JObject<'a> {
   let binding = env.get_string(&css).expect("failed to obtain CSS string");
   let code_in = binding.to_str();
@@ -98,28 +104,63 @@ pub fn buildCss<'a>(
     }
   };
 
+  // begin to extract array of browsers
+  let browser_count = env.get_array_length(&browsers).unwrap_or(0) as usize;
+  let mut browser_list = Vec::with_capacity(browser_count);
+  for i in 0..browser_count {
+    let browser = env
+      .get_object_array_element(&browsers, i as jni::sys::jint)
+      .expect("failed to get browser from array");
+
+    let jbrowser_str = JString::from(browser);
+
+    let browser_name = env
+      .get_string(&jbrowser_str)
+      .expect("failed to get browser string");
+
+    let owned_copy = browser_name.to_str();
+
+    // push the browser name into the list
+    browser_list.push(owned_copy.to_string());
+  }
+
   let parser_options = ParserOptions::default();
+  let browsers_list = match use_or_load_browserlist(if browser_list.is_empty() {
+    None
+  } else {
+    Some(browser_list)
+  }) {
+    Ok(list) => list,
+    Err(err) => {
+      dispatch_css_error(env, cls, format!("Error loading Browserslist: {err:?}"));
+      return JObject::null();
+    }
+  };
+  let options = match css_options(minify, Some(browsers_list), None) {
+    Ok(out) => out,
+    Err(err) => {
+      dispatch_css_error(env, cls, format!("Error building CSS options: {err}"));
+      return JObject::null();
+    }
+  };
+
   match StyleSheet::parse(&css_code, parser_options).map_err(|e| CssBuilderError {
     case: CssBuilderErrorCase::Parse,
     message: e.to_string(),
   }) {
     // if we successfully parse the stylesheet, create a new wrapper to handle this object and build.
-    Ok(sheet) => {
-      let options = css_options(minify, None, None);
+    Ok(sheet) => match build_css(sheet, options) {
+      Ok(built) => env
+        .new_string(built)
+        .expect("failed to create built CSS string")
+        .into(),
 
-      match build_css(sheet, options) {
-        Ok(built) => env
-          .new_string(built)
-          .expect("failed to create built CSS string")
-          .into(),
-
-        Err(err) => {
-          let msg = format!("{:?}Error: {:?}", err.case, err.message);
-          dispatch_css_error(env, cls, msg);
-          JObject::null()
-        }
+      Err(err) => {
+        let msg = format!("{:?}Error: {:?}", err.case, err.message);
+        dispatch_css_error(env, cls, msg);
+        JObject::null()
       }
-    }
+    },
 
     // if we can't parse the stylesheet, return a null result and report the error.
     Err(err) => {

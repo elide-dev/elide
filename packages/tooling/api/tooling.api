@@ -4988,13 +4988,15 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$TypeScrip
 public final class elide/tooling/project/manifest/ElidePackageManifest$WebSettings {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$WebSettings$Companion;
 	public fun <init> ()V
-	public fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$CssSettings;)V
-	public synthetic fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$CssSettings;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$CssSettings;Lelide/tooling/web/Browsers;)V
+	public synthetic fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$CssSettings;Lelide/tooling/web/Browsers;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
 	public final fun component2 ()Lelide/tooling/project/manifest/ElidePackageManifest$CssSettings;
-	public final fun copy (ZLelide/tooling/project/manifest/ElidePackageManifest$CssSettings;)Lelide/tooling/project/manifest/ElidePackageManifest$WebSettings;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$WebSettings;ZLelide/tooling/project/manifest/ElidePackageManifest$CssSettings;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$WebSettings;
+	public final fun component3 ()Lelide/tooling/web/Browsers;
+	public final fun copy (ZLelide/tooling/project/manifest/ElidePackageManifest$CssSettings;Lelide/tooling/web/Browsers;)Lelide/tooling/project/manifest/ElidePackageManifest$WebSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$WebSettings;ZLelide/tooling/project/manifest/ElidePackageManifest$CssSettings;Lelide/tooling/web/Browsers;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$WebSettings;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBrowsers ()Lelide/tooling/web/Browsers;
 	public final fun getCss ()Lelide/tooling/project/manifest/ElidePackageManifest$CssSettings;
 	public final fun getDebug ()Z
 	public fun hashCode ()I
@@ -6291,6 +6293,155 @@ public final class elide/tooling/project/mcp/ModelContextProtocol$McpServingMode
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/project/mcp/ModelContextProtocol$McpServingMode;
 	public static fun values ()[Lelide/tooling/project/mcp/ModelContextProtocol$McpServingMode;
+}
+
+public abstract interface class elide/tooling/web/Browsers {
+	public static final field Companion Lelide/tooling/web/Browsers$Companion;
+	public abstract fun asSequence ()Lkotlin/sequences/Sequence;
+	public abstract fun asTokens ()Ljava/util/Set;
+	public static fun browser (Ljava/lang/String;)Lelide/tooling/web/Browsers$Browser;
+	public static fun build (Lkotlin/jvm/functions/Function1;)Lelide/tooling/web/Browsers$BrowserList;
+	public static fun builder ()Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public abstract fun contains (Lelide/tooling/web/Browsers;)Z
+	public fun contains (Ljava/lang/String;)Z
+	public static fun defaults ()Lelide/tooling/web/Browsers;
+	public static fun parse (Ljava/lang/Iterable;)Lelide/tooling/web/Browsers$BrowserList;
+	public static fun parse (Ljava/lang/String;[Ljava/lang/String;)Lelide/tooling/web/Browsers$BrowserList;
+	public static fun parse (Lkotlin/sequences/Sequence;)Lelide/tooling/web/Browsers$BrowserList;
+}
+
+public abstract interface class elide/tooling/web/Browsers$Browser : elide/tooling/web/Browsers {
+	public static final field Companion Lelide/tooling/web/Browsers$Browser$Companion;
+}
+
+public final class elide/tooling/web/Browsers$Browser$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/web/Browsers$BrowserList : elide/tooling/web/Browsers {
+	public static final field Companion Lelide/tooling/web/Browsers$BrowserList$Companion;
+}
+
+public final class elide/tooling/web/Browsers$BrowserList$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/tooling/web/Browsers$BrowserListBuilder {
+	public abstract fun build ()Lelide/tooling/web/Browsers$BrowserList;
+	public abstract fun specify (Lelide/tooling/web/Browsers$Browser;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public abstract fun specify (Lelide/tooling/web/Browsers$BrowserList;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public fun specify (Ljava/lang/String;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public fun unaryPlus (Lelide/tooling/web/Browsers$Browser;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public fun unaryPlus (Lelide/tooling/web/Browsers$BrowserList;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public fun unaryPlus (Lelide/tooling/web/Browsers$BrowserType;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public fun unaryPlus (Ljava/lang/String;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+}
+
+public abstract interface class elide/tooling/web/Browsers$BrowserType : elide/core/api/Symbolic {
+	public static final field Companion Lelide/tooling/web/Browsers$BrowserType$Companion;
+}
+
+public final class elide/tooling/web/Browsers$BrowserType$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/web/Browsers$Companion {
+	public final fun browser (Ljava/lang/String;)Lelide/tooling/web/Browsers$Browser;
+	public final fun build (Lkotlin/jvm/functions/Function1;)Lelide/tooling/web/Browsers$BrowserList;
+	public final fun builder ()Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public final fun defaults ()Lelide/tooling/web/Browsers;
+	public final fun parse (Ljava/lang/Iterable;)Lelide/tooling/web/Browsers$BrowserList;
+	public final fun parse (Ljava/lang/String;[Ljava/lang/String;)Lelide/tooling/web/Browsers$BrowserList;
+	public final fun parse (Lkotlin/sequences/Sequence;)Lelide/tooling/web/Browsers$BrowserList;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/web/Browsers$DefaultBrowser : elide/tooling/web/Browsers$Browser {
+	public static final field Companion Lelide/tooling/web/Browsers$DefaultBrowser$Companion;
+	public fun asSequence ()Lkotlin/sequences/Sequence;
+	public fun asTokens ()Ljava/util/Set;
+	public fun contains (Lelide/tooling/web/Browsers;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/web/Browsers$DefaultBrowser$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/web/Browsers$DefaultBrowser$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/web/Browsers$DefaultBrowser;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/web/Browsers$DefaultBrowser;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/web/Browsers$DefaultBrowser$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/web/Browsers$DefaultBrowserList : elide/tooling/web/Browsers$BrowserList {
+	public static final field Companion Lelide/tooling/web/Browsers$DefaultBrowserList$Companion;
+	public fun asSequence ()Lkotlin/sequences/Sequence;
+	public fun asTokens ()Ljava/util/Set;
+	public fun contains (Lelide/tooling/web/Browsers;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/web/Browsers$DefaultBrowserList$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/web/Browsers$DefaultBrowserList$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/web/Browsers$DefaultBrowserList;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/web/Browsers$DefaultBrowserList;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/web/Browsers$DefaultBrowserList$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/web/Browsers$DefaultBrowserListBuilder : elide/tooling/web/Browsers$BrowserListBuilder {
+	public fun <init> ()V
+	public fun build ()Lelide/tooling/web/Browsers$BrowserList;
+	public fun specify (Lelide/tooling/web/Browsers$Browser;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+	public fun specify (Lelide/tooling/web/Browsers$BrowserList;)Lelide/tooling/web/Browsers$BrowserListBuilder;
+}
+
+public final class elide/tooling/web/Browsers$Defaults : elide/tooling/web/Browsers {
+	public static final field INSTANCE Lelide/tooling/web/Browsers$Defaults;
+	public fun asSequence ()Lkotlin/sequences/Sequence;
+	public fun asTokens ()Ljava/util/Set;
+	public fun contains (Lelide/tooling/web/Browsers;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/Browsers$KnownBrowserType : java/lang/Enum, elide/tooling/web/Browsers$BrowserType {
+	public static final field Android Lelide/tooling/web/Browsers$KnownBrowserType;
+	public static final field Chrome Lelide/tooling/web/Browsers$KnownBrowserType;
+	public static final field Companion Lelide/tooling/web/Browsers$KnownBrowserType$Companion;
+	public static final field Edge Lelide/tooling/web/Browsers$KnownBrowserType;
+	public static final field Firefox Lelide/tooling/web/Browsers$KnownBrowserType;
+	public static final field InternetExplorer Lelide/tooling/web/Browsers$KnownBrowserType;
+	public static final field Opera Lelide/tooling/web/Browsers$KnownBrowserType;
+	public static final field Safari Lelide/tooling/web/Browsers$KnownBrowserType;
+	public final fun asBrowser ()Lelide/tooling/web/Browsers$Browser;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/web/Browsers$KnownBrowserType;
+	public static fun values ()[Lelide/tooling/web/Browsers$KnownBrowserType;
+}
+
+public final class elide/tooling/web/Browsers$KnownBrowserType$Companion : elide/core/api/Symbolic$SealedResolver {
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/tooling/web/Browsers$KnownBrowserType;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public abstract interface class elide/tooling/web/RoutedStaticWebsite : elide/tooling/web/StaticWebsite {

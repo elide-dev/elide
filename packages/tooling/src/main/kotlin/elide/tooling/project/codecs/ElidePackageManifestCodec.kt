@@ -38,6 +38,7 @@ import kotlin.io.path.nameWithoutExtension
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.*
+import elide.tooling.web.Browsers
 
 @ManifestCodec(ProjectEcosystem.Elide)
 public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManifest> {
@@ -101,6 +102,15 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
     fun fromString(value: String): T & Any
   }
 
+  private fun interface ListConverter<I, T>: Converter<List<*>, T> {
+    @Suppress("UNCHECKED_CAST")
+    override fun convert(value: List<*>, mapper: ValueMapper): T & Any {
+      return fromString(value as List<I>)
+    }
+
+    fun fromString(value: List<I>): T & Any
+  }
+
   private fun interface LongConverter<T>: Converter<Long, T> {
     override fun convert(value: Long, mapper: ValueMapper): T & Any {
       return fromInt(value)
@@ -162,6 +172,16 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         // convert image type enums
         Conversion.of(PClassInfo.String, NativeImageType::class.java, StrConverter {
           NativeImageType.resolve(it)
+        })
+      ).addConversion(
+        // convert image type enums
+        Conversion.of(PClassInfo.String, Browsers::class.java, StrConverter {
+          Browsers.parse(it)
+        })
+      ).addConversion(
+        // convert image type enums
+        Conversion.of(PClassInfo.List, Browsers::class.java, ListConverter<String, Browsers> { them ->
+          Browsers.parse(them)
         })
       ).addConverterFactory { info, _ ->
         when (info.qualifiedName) {

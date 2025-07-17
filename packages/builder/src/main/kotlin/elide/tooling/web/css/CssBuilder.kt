@@ -23,6 +23,7 @@ import kotlin.io.path.absolutePathString
 import kotlin.io.path.inputStream
 import elide.runtime.diag.Diagnostics
 import elide.tooling.project.ElideProject
+import elide.tooling.web.Browsers
 import elide.tooling.web.WebBuilder
 
 // JNI callables.
@@ -114,6 +115,7 @@ public object CssBuilder {
    * @property projectRoot The root project path, if any, which is used to resolve relative paths in CSS.
    * @property sourceMap Whether to generate a source map for the CSS output.
    * @property scss Whether to enable SCSS/SASS pre-processing.
+   * @property browsers Browser support configuration.
    */
   @JvmRecord public data class CssOptions (
     public val debug: Boolean = false,
@@ -123,6 +125,7 @@ public object CssBuilder {
     public val projectRoot: Path? = null,
     public val sourceMap: Boolean = false,
     public val scss: Boolean = false,
+    public val browsers: Browsers = Browsers.defaults(),
   ) {
     /** @return Indication of whether minification is active. */
     @JvmName(ENABLE_MINIFICATION) public fun enableMinification(): Boolean = minify != NoMinification
@@ -145,6 +148,9 @@ public object CssBuilder {
     /** @return Absolute path string for the project root, if set, otherwise, `null`. */
     @JvmName(ABSOLUTE_PROJECT_ROOT) public fun absoluteProjectRoot(): String? = projectRoot?.absolutePathString()
 
+    /** @return Supported browsers for this build run. */
+    @JvmName(ABSOLUTE_PROJECT_ROOT) public fun supportedBrowsers(): Array<String> = browsers.asTokens().toTypedArray()
+
     /** Factories for obtaining instances of [CssOptions]. */
     public companion object {
       /** @return Default suite of CSS build options. */
@@ -153,6 +159,18 @@ public object CssBuilder {
       /** @return Defaults with additional configuration from the specified [project]. */
       @JvmStatic public fun forProject(project: ElideProject): CssOptions = defaults().copy(
         projectRoot = project.root,
+        browsers = when (val targets = project.manifest.web?.css?.targets) {
+          // if no targets are specified for css specifically, use project-wide browser support settings
+          null -> project.manifest.web?.browsers ?: Browsers.defaults()
+
+          // otherwise, prefer css-specific targets
+          else -> Browsers.parse(targets.map {
+            when (val version = it.version) {
+              null -> it.browser
+              else -> "${it.browser} $version"
+            }
+          })
+        }
       )
     }
   }
@@ -260,8 +278,10 @@ public object CssBuilder {
             it,
             build.options,
             minify = build.options.enableMinification(),
+            modules = build.options.enableModules(),
             sourceMaps = build.options.enableSourceMaps(),
             scss = build.options.enableScss(),
+            browsers = build.options.browsers.asTokens().toTypedArray(),
           )
         }
       }

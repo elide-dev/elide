@@ -17,6 +17,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 import elide.tooling.project.ElideProjectInfo
 import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.web.Browsers
 import elide.tooling.web.css.CssBuilder.buildCss
 import elide.tooling.web.css.CssBuilder.configureCss
 import elide.tooling.web.css.CssBuilder.CssOptions
@@ -43,6 +44,32 @@ class CssBuilderTest {
 
   @Test fun testBuildSimpleCss() = runTest {
     configureCss(CssOptions.defaults(), sequence {
+      yield(CssSourceLiteral {
+        // language=css
+        """
+          body {
+            background-color: #ffffff;
+            color: #000000;
+          }
+        """
+      })
+    }).let { css ->
+      assertNotNull(css)
+      buildCss(css)
+    }.let { result ->
+      assertNotNull(result)
+      val out = result.code().joinToString("")
+      assertTrue(out.startsWith("body{"))
+      assertTrue(out.contains("#000;"))
+    }
+  }
+
+  @Test fun testBuildSimpleCssWithTargets() = runTest {
+    configureCss(CssOptions.defaults().copy(
+      browsers = Browsers.build {
+        +"last 2 chrome versions"
+      }
+    ), sequence {
       yield(CssSourceLiteral {
         // language=css
         """

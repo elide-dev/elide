@@ -6,7 +6,7 @@ import "Artifacts.pkl" as _artifacts
 import "Base.pkl" as _common
 
 /// CSS browser types.
-typealias CssBrowser = "chrome" | "firefox" | "safari" | "edge" | "opera"
+typealias Browser = "chrome" | "firefox" | "safari" | "edge" | "opera" | String
 
 /// Static site hosting types.
 typealias StaticSiteHost = "workers" | "github-pages"
@@ -41,7 +41,7 @@ class StaticSite extends _artifacts.Artifact {
 /// Describes targeting of a CSS-enabled platform (i.e. browsers).
 class CssTarget {
   /// The name of the browser type to target.
-  browser: CssBrowser
+  browser: Browser
 
   /// The version of the browser to target.
   version: String?
@@ -62,6 +62,10 @@ class WebSettings {
   /// Whether to enable debug logging for web-related stuff.
   debug: Boolean = false
 
-  /// Settings to apply to CSS processing and serving.
+  /// Settings to apply to CSS processing and serving. If both `browsers` and `css.targets` are specified, the CSS suite
+  /// wins at build-time.
   css: CssSettings = new {}
+
+  /// Browser support for this project, which applies to all built targets.
+  browsers: Listing<String> = new {}
 }

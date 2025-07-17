@@ -267,7 +267,7 @@ function containerImageWithBase(
 }
 
 /// Create CSS browser target with the provided browser and version.
-function cssBrowser(_browser: _web.CssBrowser, _version: String) = new _web.CssTarget {
+function browser(_browser: _web.Browser, _version: String) = new _web.CssTarget {
   browser = _browser
   version = _version
 }

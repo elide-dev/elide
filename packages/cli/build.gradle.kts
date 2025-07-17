@@ -596,7 +596,14 @@ dependencies {
   // KotlinX
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.kotlinx.html)
+  implementation(libs.kotlinx.wrappers.css)
   implementation(libs.ktoml)
+
+  // Ktor
+  implementation(libs.bundles.ktor.server)
+  implementation(libs.ktor.server.cio)
+  implementation(libs.ktor.server.netty)
 
   // Logging
   api(libs.slf4j)

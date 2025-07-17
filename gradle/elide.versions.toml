@@ -183,7 +183,7 @@ kotlinxWrappers = "pre.754"
 kover = "0.9.1"
 kover-plugin = "0.9.1"
 ksp = "2.2.0-2.0.2"
-ktor = "3.0.2"
+ktor = "3.2.2"
 ktlint = "1.1.1"
 ktoml = "0.7.0"
 larray = "0.2.1"
@@ -677,9 +677,20 @@ kotlinx-wrappers-web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-cmdline = { group = "com.google.devtools.ksp", name = "symbol-processing-cmdline", version.ref = "ksp" }
-ktor-server-core-jvm = { group = "io.ktor", name = "ktor-server-core-jvm", version.ref = "ktor" }
-ktor-server-cio-jvm = { group = "io.ktor", name = "ktor-server-cio-jvm", version.ref = "ktor" }
-ktor-server-sse-jvm = { group = "io.ktor", name = "ktor-server-sse-jvm", version.ref = "ktor" }
+ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
+ktor-server-cio = { group = "io.ktor", name = "ktor-server-cio", version.ref = "ktor" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
+ktor-server-sse = { group = "io.ktor", name = "ktor-server-sse", version.ref = "ktor" }
+ktor-server-html = { group = "io.ktor", name = "ktor-server-html-builder", version.ref = "ktor" }
+ktor-server-callLogging = { group = "io.ktor", name = "ktor-server-call-logging", version.ref = "ktor" }
+ktor-server-defaultHeaders = { group = "io.ktor", name = "ktor-server-default-headers", version.ref = "ktor" }
+ktor-server-cachingHeaders = { group = "io.ktor", name = "ktor-server-caching-headers", version.ref = "ktor" }
+ktor-server-contentNegotiation = { group = "io.ktor", name = "ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-conditionalHeaders = { group = "io.ktor", name = "ktor-server-conditional-headers", version.ref = "ktor" }
+ktor-server-sessions = { group = "io.ktor", name = "ktor-server-sessions", version.ref = "ktor" }
+ktor-server-hsts = { group = "io.ktor", name = "ktor-server-hsts", version.ref = "ktor" }
+ktor-server-compression = { group = "io.ktor", name = "ktor-server-compression", version.ref = "ktor" }
+ktor-server-websockets = { group = "io.ktor", name = "ktor-server-websockets", version.ref = "ktor" }
 ktoml = { group = "com.akuleshov7", name = "ktoml-core", version.ref = "ktoml" }
 larray-buffer = { group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
 larray-core = { group = "org.xerial.larray", name = "larray", version.ref = "larray" }
@@ -980,4 +991,19 @@ mordant = [
   "mordant",
   "mordant-coroutines",
   "mordant-markdown",
+]
+
+ktor-server = [
+  "ktor-server-core",
+  "ktor-server-sse",
+  "ktor-server-html",
+  "ktor-server-callLogging",
+  "ktor-server-compression",
+  "ktor-server-defaultHeaders",
+  "ktor-server-conditionalHeaders",
+  "ktor-server-cachingHeaders",
+  "ktor-server-contentNegotiation",
+  "ktor-server-sessions",
+  "ktor-server-hsts",
+  "ktor-server-websockets",
 ]

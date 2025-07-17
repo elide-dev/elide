@@ -78,6 +78,7 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.extension
+import kotlin.io.path.name
 import kotlin.math.max
 import kotlin.streams.asSequence
 import kotlin.streams.asStream
@@ -148,6 +149,8 @@ import elide.tool.exec.allProjectPaths
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.project.ProjectManager
+import elide.tool.server.StaticSiteServer
+import elide.tool.server.StaticSiteServer.buildStaticServer
 import elide.tooling.Arguments
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
@@ -169,6 +172,7 @@ import elide.tooling.project.ElideProject
 import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.ElidePackageManifest.StaticSite
 import elide.tooling.project.manifest.NodePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 import elide.tooling.runner.ProcessRunner
@@ -1508,6 +1512,47 @@ internal class ToolShellCommand @Inject constructor(
   // Detect a runnable JAR, Kotlin source, or Java source file as the entrypoint.
   private fun detectJvmEntrypoint(): Path? = _jvmEntrypoint
 
+  // Build and start a server for a static site.
+  private fun startStaticSiteServer(name: String, site: StaticSite, host: Pair<String, UShort>) {
+    val project = requireNotNull(activeProject.value) { "Cannot start static site server without project" }
+    val layout = BuildConfigurator.ProjectDirectories.forProject(project)
+    val target = layout.artifacts.resolve("sites").resolve("$name.zip")
+    val dirTarget = layout.artifacts.resolve("sites").resolve(name)
+    when {
+      target.exists() -> target
+      dirTarget.exists() -> dirTarget
+      else -> {
+        logging.warn(
+          "Can't start the static site server named '$name': the site root doesn't exist. Have you run `elide build`?"
+        )
+        return
+      }
+    }
+
+    with(StaticSiteServer.StaticServerConfig(
+      site = site,
+      root = layout.artifacts.resolve("sites").resolve("$name.zip"),
+      host = host,
+      devMode = true,
+    )) {
+      buildStaticServer().start(wait = true)
+    }
+  }
+
+  // Build and start a server for a path.
+  private fun startGenericStaticServer(
+    path: Path,
+    host: Pair<String, UShort>,
+    devMode: Boolean = true,
+    wait: Boolean = true,
+  ) = with(StaticSiteServer.StaticServerConfig(
+    root = path,
+    host = host,
+    devMode = devMode,
+  )) {
+    buildStaticServer().start(wait = wait)
+  }
+
   // Read an executable script, and then execute the script and keep it started as a server.
   private fun readStartServer(
     label: String,
@@ -2625,6 +2670,14 @@ internal class ToolShellCommand @Inject constructor(
           }
 
           val testOrServeMode = testMode() || serveMode()
+          val startGenericStatic = {
+            logging.info("No project found; serving static files from current directory")
+            Paths.get(System.getProperty("user.dir")).let { thisDir ->
+              val serverHost: Pair<String, UShort> = "0.0.0.0" to 8080u
+              startGenericStaticServer(thisDir, serverHost)
+            }
+          }
+
           when (val scriptTargetOrCode = runnable) {
             // run in interactive mode
             null, "-" -> if (useStdin || runnable == "-") {
@@ -2666,7 +2719,45 @@ internal class ToolShellCommand @Inject constructor(
                 guestExec,
               )
 
-              else -> logging.error("To run a server, pass a file, or code via stdin or `-c`")
+              // plain `elide serve` works for projects which configure a server of some kind
+              else -> when (val project = activeProject.value) {
+                // plain `elide serve` for no project means serving static files from this directory
+                null -> startGenericStatic()
+
+                // special case: if the project exports only one artifact, and it is a static site artifact, then we
+                // should serve the static site from the built site root.
+                else -> project.manifest.artifacts.entries.firstOrNull { it.value is StaticSite }.let { cfg ->
+                  if (cfg == null) startGenericStatic() else {
+                    val name = cfg.key
+                    val site = cfg.value as StaticSite
+                    val serverHost: Pair<String, UShort> = "0.0.0.0" to 8080u
+                    logging.debug("Found single artifact of type: StaticSite at name '$name'. Serving the site.")
+
+                    @Suppress("HttpUrlsUsage")
+                    if (!quiet) buildString {
+                      append("Serving static site ")
+                      if (Statics.noColor) {
+                        append("$name at ")
+                      } else {
+                        append("${TextStyles.bold(TextColors.cyan(name))} at ")
+                      }
+                      val hostToPrint = when (val host = serverHost.first) {
+                        "127.0.0.1", "0.0.0.0" -> "localhost"
+                        else -> host
+                      }
+                      val at = "http://$hostToPrint:${serverHost.second}"
+                      if (Statics.noColor) {
+                        append(at)
+                      } else {
+                        append(TextStyles.bold(TextColors.cyan(at)))
+                      }
+                    }.let { msg ->
+                      Statics.terminal.println(msg, stderr = true)
+                    }
+                    startStaticSiteServer(name, site, serverHost)
+                  }
+                }
+              }
             }
 
             // run a script as a file, or perhaps a string literal

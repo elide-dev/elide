@@ -20,7 +20,8 @@ import org.graalvm.polyglot.Value
  * Describes the options which can be provided to a `parse` operation.
  *
  * @param maxKeys Maximum number of keys to parse; defaults to 1000.
- * @param decodeURIComponent Function to use when decoding percent-encoded characters; defaults to querystring.unescape().
+ * @param decodeURIComponent Function to use when decoding percent-encoded characters; 
+ *   defaults to querystring.unescape().
  */
 public data class ParseOptions(
   // Should call NodeQueryString module's implementation of unescape(), but we can't access it here yet(?)

@@ -64,40 +64,25 @@ private val moduleMembers = arrayOf(
  */
 internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
-  // Characters that Node.js querystring.escape() encodes beyond non-ASCII and %
-  // These are the characters NOT in the Node.js whitelist: A-Z a-z 0-9 - _ . ! ~ * ' ( )
-  private val ADDITIONAL_ENCODE_CHARS = charArrayOf(
-    // RFC 3986 reserved characters that Node.js encodes
-    ' ',
-    ':',
-    '/',
-    '?',
-    '#',
-    '[',
-    ']',
-    '@',
-    '$',
-    '&',
-    '+',
-    ',',
-    ';',
-    '=',
+  internal companion object {
+    // Characters that Node.js querystring.escape() encodes beyond non-ASCII and %
+    // These are the characters NOT in the Node.js whitelist: A-Z a-z 0-9 - _ . ! ~ * ' ( )
+    private val additionalEncodeChars = charArrayOf(
+      // RFC 3986 reserved characters that Node.js encodes
+      ' ', ':', '/', '?', '#', '[', ']', '@', '$', '&', '+', ',', ';', '=',
 
-    // Other characters that Node.js encodes
-    '"',
-    '<',
-    '>',
-    '\\',
-    '^',
-    '`',
-    '{',
-    '|',
-    '}',
-  ).map { it.code.toByte() }.toByteArray()
+      // Other characters that Node.js encodes
+      '"', '<', '>', '\\', '^', '`', '{', '|', '}',
+    ).map { it.code.toByte() }.toByteArray()
+
+    private const val HEX_RADIX = 16
+
+    @JvmStatic fun create(): NodeQuerystring = NodeQuerystring()
+  }
 
   // PercentCodec configured for querystring behavior
   // - Encodes additional characters specified above
-  private val codec = PercentCodec(ADDITIONAL_ENCODE_CHARS, true)
+  private val codec = PercentCodec(additionalEncodeChars, true)
 
   private fun valueToString(value: Value): String {
     return when {
@@ -135,11 +120,6 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
       else -> "[object Object]"
     }
-  }
-
-
-  internal companion object {
-    @JvmStatic fun create(): NodeQuerystring = NodeQuerystring()
   }
 
   override fun getMemberKeys(): Array<String> = moduleMembers
@@ -336,7 +316,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
 
     when (value) {
       is ReadOnlyArrayProxy -> {
-        (0 until value.size).forEach { index ->
+        for (index in 0 until value.size) {
           val encodedValue = encodeValue(value.get(index), encoder)
           result += "$encodedKey$equals$encodedValue"
         }
@@ -377,7 +357,7 @@ internal class NodeQuerystring : ReadOnlyProxyObject, QuerystringAPI {
     }.getOrElse {
       // Fallback: manually decode percent-encoded sequences
       input.replace(Regex("%([0-9A-Fa-f]{2})")) { match ->
-        when (val charCode = match.groupValues[1].toIntOrNull(16)) {
+        when (val charCode = match.groupValues[1].toIntOrNull(HEX_RADIX)) {
           null -> match.value   // Keep original if hex is invalid
           else -> charCode.toChar().toString()
         }

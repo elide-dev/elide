@@ -73,6 +73,7 @@ trace = { path = "crates/trace" }
 exec = { path = "crates/exec" }
 js = { path = "crates/js" }
 web = { path = "crates/web" }
+media = { path = "crates/media" }
 umbrella = { path = "tools/umbrella" }
 
 ## Dependencies
@@ -99,7 +100,8 @@ lightningcss = { version = "1.0.0-alpha.67", features = [
   "browserslist",
 ] }
 lol_html = { version = "2.5.0" }
-minify-html = { version = "0.16.4" }
+minify-html = { version = "0.15.0" }
+minify-html-onepass = { version = "0.15.0" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
 orogene = { git = "https://github.com/elide-dev/orogene", rev = "1122f0884f8c6e726ac36dbd926a5102ce2fa950", default-features = false, features = [

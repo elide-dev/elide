@@ -24,12 +24,10 @@ import elide.tooling.web.WebBuilder
 
 @VMFeature class WebBuilderFeature : AbstractStaticNativeLibraryFeature() {
   companion object {
+    private const val LIBWEB = "web"
     @JvmStatic private val staticJni = System.getProperty("elide.staticJni") == "true"
-
-    private val libweb = arrayOf(
-      "elide.tooling.web.css.CssNative",
-      "elide.tooling.web.mdx.MdxNative",
-    )
+    private val libweb = arrayOf("elide.tooling.web.css.CssNative", "elide.tooling.web.mdx.MdxNative")
+    private val libminifyhtml = arrayOf("in.wilsonl.minifyhtml.MinifyHtml")
   }
 
   override fun getDescription(): String = "Embeds Elide's web builder"
@@ -39,14 +37,17 @@ import elide.tooling.web.WebBuilder
   }
 
   @Suppress("SpreadOperator")
-  override fun nativeLibs(access: BeforeAnalysisAccess): List<NativeLibInfo?> = if (staticJni) listOf(libraryNamed(
-    "web",
-    *libweb,
-    type = STATIC,
-    registerJni = true,
-    builtin = true,
-    eager = true,
-  )) else emptyList()
+  override fun nativeLibs(access: BeforeAnalysisAccess): List<NativeLibInfo?> = if (!staticJni) emptyList() else listOf(
+    libraryNamed(
+      LIBWEB,
+      *libweb,
+      *libminifyhtml,
+      type = STATIC,
+      registerJni = true,
+      builtin = true,
+      eager = true,
+    )
+  )
 
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {
     super.beforeAnalysis(access)

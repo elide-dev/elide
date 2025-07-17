@@ -111,6 +111,7 @@ dependencies {
   implementation(libs.kotlinx.serialization.protobuf)
   implementation(libs.kotlinx.html)
   implementation(libs.kotlinx.wrappers.css)
+  implementation(libs.minifyHtml)
   implementation(libs.jib.core)
   implementation(libs.bundles.maven.resolver)
   implementation(libs.snakeyaml.core)

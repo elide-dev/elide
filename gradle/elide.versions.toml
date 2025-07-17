@@ -205,6 +205,7 @@ micronaut-lib = "4.9.0"
 micronaut-liquibase = "5.4.1"
 micronaut-plugin = "4.5.4"
 micronaut-xml = "3.1.0"
+minifyHtml = "0.15.0"
 mockito-bom = "5.10.0"
 mockito-junit = "5.10.0"
 mordant = "3.0.2"
@@ -718,6 +719,7 @@ maven-resolver-impl = { group = "org.apache.maven.resolver", name = "maven-resol
 maven-resolver-api = { group = "org.apache.maven.resolver", name = "maven-resolver-api", version.ref = "maven-lib" }
 magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
 mcp = { group = "io.modelcontextprotocol", name = "kotlin-sdk", version.ref = "mcp" }
+minifyHtml = { group = "in.wilsonl.minifyhtml", name = "minify-html", version.ref = "minifyHtml" }
 mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
 mordant-coroutines = { group = "com.github.ajalt.mordant", name = "mordant-coroutines", version.ref = "mordant" }
 mordant-markdown = { group = "com.github.ajalt.mordant", name = "mordant-markdown", version.ref = "mordant" }

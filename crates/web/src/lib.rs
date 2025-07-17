@@ -11,17 +11,21 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-/// CSS (Cascading Style Sheets) processing for the Elide toolchain.
+/// CSS (Cascading Style Sheets) processing.
 mod css;
 
-/// Markdown and MDX processing for the Elide toolchain.
+/// Markdown and MDX processing.
 mod md;
+
+/// HTML minification and processing.
+mod html;
 
 /// Browserlist support utilities.
 mod browsers;
 
 use crate::browsers::use_or_load_browserlist;
 use crate::css::{CssBuilderError, CssBuilderErrorCase, build_css, build_scss, css_options};
+use crate::html::build_html_minify_cfg;
 use java_native::jni;
 use jni::JNIEnv;
 use jni::objects::{JClass, JObject, JObjectArray, JString, JValue};
@@ -188,4 +192,19 @@ pub fn buildMdx<'a>(mut env: JNIEnv<'a>, cls: JClass<'a>, jmdx: JString<'a>) -> 
       JObject::null()
     }
   }
+}
+
+/// JNI entrypoint for performing minification of HTML code, using the `minify-html` crate.
+#[jni("in.wilsonl.minifyhtml.MinifyHtml")]
+pub fn minify<'a>(
+  mut env: JNIEnv<'a>,
+  _class: JClass<'a>,
+  input: JString<'a>,
+  jcfg: JObject<'a>,
+) -> JString<'a> {
+  let source: String = env.get_string(&input).unwrap().into();
+  let code = source.into_bytes();
+  let cfg = build_html_minify_cfg(&mut env, &jcfg);
+  let out_code = html::minify_html(&code, &cfg);
+  env.new_string(out_code.as_str()).unwrap()
 }

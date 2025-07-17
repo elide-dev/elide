@@ -68,6 +68,9 @@ import elide.tooling.project.SourceSetType
 import elide.tooling.project.SourceSets
 import elide.tooling.project.manifest.ElidePackageManifest.StaticSite
 import elide.tooling.web.css.CssBuilder
+import elide.tooling.web.html.HtmlBuilder
+import elide.tooling.web.html.HtmlBuilder.buildHtml
+import elide.tooling.web.html.HtmlBuilder.configureHtml
 import elide.util.toBase64String
 
 // Constants for the site builder.
@@ -274,6 +277,7 @@ internal class StaticSiteContributor : BuildConfigurator {
     val dry: Boolean,
     val assets: AssetConfiguration = AssetConfiguration(),
     val rewriteLinks: Boolean = true,
+    val minifyHtml: Boolean = true,
   ) {
     val taskGraph get() = config.taskGraph
     val allSrcs: Sequence<Pair<SourceSet, SourceFilePath>> get() = sequence {
@@ -455,9 +459,24 @@ internal class StaticSiteContributor : BuildConfigurator {
     }
   }
 
-  private suspend fun StaticSiteConfiguration.buildHtmlFile(src: SourceTargetCode): Result = Result.Nothing.also {
-    // for now, we just copy the source to the target @TODO html processing
-    copyToTarget(src)
+  private suspend fun StaticSiteConfiguration.buildHtmlFile(src: SourceTargetCode): Result = when (minifyHtml) {
+    // with no post-processing, we just copy the source to the target
+    false -> Result.Nothing.also { copyToTarget(src) }
+
+    // otherwise, we minify the HTML and write it to the target
+    else -> runCatching {
+      with(HtmlBuilder) {
+        buildHtml(configureHtml(HtmlBuilder.HtmlOptions.defaults(), sequence {
+          yield(HtmlBuilder.HtmlSourceFile { src.source })
+        })).let { builtCss ->
+          write(
+            src,
+            builtCss.code().single(),
+            asset = false,
+          )
+        }
+      }
+    }.asExecResult()
   }
 
   @Suppress("UNUSED_PARAMETER")
@@ -586,23 +605,28 @@ internal class StaticSiteContributor : BuildConfigurator {
         },
       ),
     ) {
-      Markdown.MarkdownSourceFile {
-        src.source
-      }
+      Markdown.MarkdownSourceFile { src.source }
     }.let { rendered ->
-      write(
-        src.withTarget(src.target.parent.resolve(buildString {
-          append(src.source.nameWithoutExtension)
-          append(".html")
-        })),
-        rendered.asString(),
-        asset = false,
-      )
+      // now, pass it through the HTML builder, if so inclined
+      when (minifyHtml) {
+        false -> rendered.asString()
+        true -> buildHtml(configureHtml(HtmlBuilder.HtmlOptions.defaults(), sequence {
+          yield(HtmlBuilder.HtmlSourceLiteral { rendered.asString() })
+        })).code().single()
+      }.let { maybeMinified ->
+        write(
+          src.withTarget(src.target.parent.resolve(buildString {
+            append(src.source.nameWithoutExtension)
+            append(".html")
+          })),
+          maybeMinified,
+          asset = false,
+        )
+      }
     }
   }.asExecResult()
 
   private suspend fun StaticSiteConfiguration.buildCssFile(scss: Boolean, src: SourceTargetCode): Result = runCatching {
-    // nothing to do yet
     with(CssBuilder) {
       buildCss(configureCss(CssBuilder.CssOptions.forProject(project).copy(scss = scss), sequence {
         yield(CssBuilder.CssSourceFile { src.source })

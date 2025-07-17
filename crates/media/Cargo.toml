@@ -12,7 +12,7 @@
 #
 
 [package]
-name = "web"
+name = "media"
 version = { workspace = true }
 edition = { workspace = true }
 rust-version = { workspace = true }
@@ -26,19 +26,7 @@ license = { workspace = true }
 crate-type = ["lib", "staticlib", "cdylib"]
 
 [dependencies]
-# lol_html = { workspace = true }
-lightningcss = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
 diag = { workspace = true }
-parcel_sourcemap = { workspace = true }
-minify-html = { workspace = true }
-# minify-html-onepass = { workspace = true }
-# cookie = { workspace = true }
-# sourcemap = { workspace = true }
-grass = { workspace = true }
-# oxvg = { workspace = true }
-mdxjs = { workspace = true }
-markdown = { workspace = true }
-media = { workspace = true }
-browserslist-rs = { workspace = true }
+rimage = { workspace = true }

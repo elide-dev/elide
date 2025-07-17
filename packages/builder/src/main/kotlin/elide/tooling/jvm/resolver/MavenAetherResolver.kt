@@ -353,7 +353,7 @@ public class MavenAetherResolver internal constructor (
       val artifact = DefaultArtifact(coord)
       buildList{
         // always fetch gradle metadata, if present
-        add(Dependency(SubArtifact(artifact, "", "module"), "metadata", true))
+        // add(Dependency(SubArtifact(artifact, "", "module"), "metadata", true))
 
         // then main dependency
         add(Dependency(artifact, usage.scope))

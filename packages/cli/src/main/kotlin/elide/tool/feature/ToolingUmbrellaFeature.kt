@@ -93,7 +93,7 @@ import elide.runtime.feature.engine.AbstractStaticNativeLibraryFeature
       "aarch64", "arm64" -> access.unpackLibrary(
         "jnidispatch",
         "jnidispatch",
-        "x86-64",
+        "aarch64",
         "com/sun/jna/win32-aarch64/jnidispatch.dll",
       )
 

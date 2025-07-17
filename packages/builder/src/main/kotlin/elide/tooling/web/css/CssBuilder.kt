@@ -292,9 +292,7 @@ public object CssBuilder {
       }
 
       CssResult {
-        results.mapNotNull {
-          it.getOrThrow()
-        }
+        results.mapNotNull { it.getOrThrow() }
       }
     }
   }

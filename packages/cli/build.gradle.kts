@@ -611,6 +611,7 @@ dependencies {
 
   // General
   implementation(libs.smartexception)
+  implementation(libs.minifyHtml)
   implementation(libs.magicProgress)
   implementation(libs.inquirer) {
     exclude(group = "org.jline", module = "jline")
@@ -1335,6 +1336,11 @@ val commonNativeArgs = listOfNotNull(
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:ExcludeResources=META-INF/native/libumbrella.so",
   "-H:ExcludeResources=META-INF/native/libumbrella.a",
+  "-H:ExcludeResources=/linux-aarch64.nativelib",  // provided by our own rust-libs, for `minify-html`
+  "-H:ExcludeResources=/linux-x64.nativelib",
+  "-H:ExcludeResources=/mac-aarch64.nativelib",
+  "-H:ExcludeResources=/mac-x64.nativelib",
+  "-H:ExcludeResources=/win-x64.nativelib",
   "-H:ExcludeResources=.*.proto",
   "-H:ExcludeResources=elide/app/.*\\.proto",
   "-H:ExcludeResources=elide/assets/.*\\.proto",

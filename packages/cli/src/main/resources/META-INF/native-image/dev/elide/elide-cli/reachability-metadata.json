@@ -4576,6 +4576,12 @@
       ]
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$DevServerSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -13688,6 +13694,18 @@
     }
   ],
   "jni": [
+    {
+      "type": "in.wilsonl.minifyhtml.MinifyHtml",
+      "allDeclaredMethods": true,
+      "allDeclaredFields": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "in.wilsonl.minifyhtml.Configuration",
+      "allDeclaredMethods": true,
+      "allDeclaredFields": true,
+      "allDeclaredConstructors": true
+    },
     {
       "type": "[B"
     },

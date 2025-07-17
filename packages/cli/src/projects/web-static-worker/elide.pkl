@@ -13,8 +13,12 @@ dependencies {
   }
 }
 
-sources {
-  ["main"] = "src/**/*.*"
+web {
+  browsers {
+    "last 2 chrome versions"
+    "not dead"
+    "> 0.3%"
+  }
 }
 
 artifacts {
@@ -31,6 +35,10 @@ artifacts {
       "example.mjs"
     }
   }
+}
+
+sources {
+  ["main"] = "src/**/*.*"
 }
 
 scripts {

@@ -12,10 +12,23 @@
  */
 package elide.tooling.web
 
-/**
- * ## Static Website (Routed)
- *
- * Describes a type of [WebProject], specifically, a [StaticWebsite], for which routing is performed by the framework,
- * based on project structure on-disk. This is also referred to as a "static site generator" (SSG) project.
- */
-public sealed interface RoutedStaticWebsite : StaticWebsite
+import kotlin.test.*
+
+class BrowsersTest {
+  @Test fun testDefaultBrowsers() {
+    assertNotNull(Browsers.defaults())
+    assertNotNull(Browsers.Defaults)
+    assertTrue(Browsers.defaults().asTokens().isEmpty())
+    assertTrue(Browsers.Defaults.asTokens().isEmpty())
+  }
+
+  @Test fun testBuildBrowsersFromStrings() = Browsers.build {
+    +"chrome"
+    +"last 2 versions"
+  }.let { browsers ->
+    assertNotNull(browsers)
+    assertFalse(browsers.asTokens().isEmpty())
+    assertTrue("chrome" in browsers)
+    assertTrue("last 2 versions" in browsers)
+  }
+}

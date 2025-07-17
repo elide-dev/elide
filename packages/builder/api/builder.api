@@ -3020,9 +3020,11 @@ public abstract interface class elide/tooling/web/css/CssBuilder$CssMinification
 public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Record {
 	public static final field Companion Lelide/tooling/web/css/CssBuilder$CssOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZ)V
-	public synthetic fun <init> (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZLelide/tooling/web/Browsers;)V
+	public synthetic fun <init> (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZLelide/tooling/web/Browsers;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun absoluteProjectRoot ()Ljava/lang/String;
+	public final fun absoluteProjectRoot ()[Ljava/lang/String;
+	public final fun browsers ()Lelide/tooling/web/Browsers;
 	public final fun bundle ()Z
 	public final fun component1 ()Z
 	public final fun component2 ()Lelide/tooling/web/css/CssBuilder$CssMinification;
@@ -3031,8 +3033,9 @@ public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Recor
 	public final fun component5 ()Ljava/nio/file/Path;
 	public final fun component6 ()Z
 	public final fun component7 ()Z
-	public final fun copy (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZ)Lelide/tooling/web/css/CssBuilder$CssOptions;
-	public static synthetic fun copy$default (Lelide/tooling/web/css/CssBuilder$CssOptions;ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZILjava/lang/Object;)Lelide/tooling/web/css/CssBuilder$CssOptions;
+	public final fun component8 ()Lelide/tooling/web/Browsers;
+	public final fun copy (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZLelide/tooling/web/Browsers;)Lelide/tooling/web/css/CssBuilder$CssOptions;
+	public static synthetic fun copy$default (Lelide/tooling/web/css/CssBuilder$CssOptions;ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZLelide/tooling/web/Browsers;ILjava/lang/Object;)Lelide/tooling/web/css/CssBuilder$CssOptions;
 	public final fun debug ()Z
 	public static final fun defaults ()Lelide/tooling/web/css/CssBuilder$CssOptions;
 	public final fun enableBundle ()Z

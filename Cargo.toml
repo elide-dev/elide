@@ -82,6 +82,7 @@ llama-cpp-2 = { version = "0.1.102", default-features = false }
 bindgen = { version = "0.72.0" }
 build_const = { version = "0.2.2", default-features = false }
 bumpalo = { version = "3.17.0" }
+browserslist-rs = { version = "0.19.0" }
 cookie = { version = "0.18.1" }
 encoding_rs = { version = "0.8.35" }
 cc = { version = "1.2.15", features = ["parallel"] }

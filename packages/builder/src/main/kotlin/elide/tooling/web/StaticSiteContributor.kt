@@ -422,7 +422,7 @@ internal class StaticSiteContributor : BuildConfigurator {
   private suspend fun StaticSiteConfiguration.buildCssFile(scss: Boolean, src: SourceTargetCode): Result = runCatching {
     // nothing to do yet
     with(CssBuilder) {
-      buildCss(configureCss(CssBuilder.CssOptions.defaults().copy(scss = scss), sequence {
+      buildCss(configureCss(CssBuilder.CssOptions.forProject(project).copy(scss = scss), sequence {
         yield(CssBuilder.CssSourceFile { src.source })
       })).let { builtCss ->
         writeToTarget(

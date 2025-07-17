@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+use browserslist::Error as BrowserslistError;
 use grass::Options as ScssOptions;
 use grass::from_string as compile_scss_from_string;
 use lightningcss::printer::PrinterOptions;
@@ -74,12 +75,17 @@ pub(crate) struct ScssBuilderError {
 }
 
 /// Build minification options from JVM-side flags.
-fn build_printer_options(minify: bool, source_map: Option<&mut SourceMap>) -> PrinterOptions {
-  PrinterOptions {
+fn build_printer_options(
+  minify: bool,
+  source_map: Option<&mut SourceMap>,
+  targets: Targets,
+) -> Result<PrinterOptions, BrowserslistError> {
+  Ok(PrinterOptions {
     minify,
     source_map,
+    targets,
     ..PrinterOptions::default()
-  }
+  })
 }
 
 /// Build CSS options from JVM-side flags.
@@ -87,7 +93,7 @@ pub(crate) fn css_options(
   do_minify: bool,
   use_targets: Option<Targets>,
   source_map: Option<&mut SourceMap>,
-) -> CssBuilderOptions {
+) -> Result<CssBuilderOptions, BrowserslistError> {
   let targets = use_targets.or(Some(Targets::default())).unwrap_or_default();
   let minify = match do_minify {
     true => Some(MinifyOptions {
@@ -96,9 +102,9 @@ pub(crate) fn css_options(
     }),
     false => None,
   };
-  let printer = Some(build_printer_options(do_minify, source_map));
-
-  CssBuilderOptions { minify, printer }
+  let printer_opts = build_printer_options(do_minify, source_map, targets)?;
+  let printer = Some(printer_opts);
+  Ok(CssBuilderOptions { minify, printer })
 }
 
 /// Build the underlying CSS and return it as a string.

@@ -20,6 +20,7 @@ import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest.*
+import elide.tooling.web.Browsers
 
 // Default Java target version for JVM projects
 private const val DEFAULT_JAVA_TARGET = 21u
@@ -145,6 +146,7 @@ public data class ElidePackageManifest(
   @Serializable public data class WebSettings(
     val debug: Boolean = false,
     val css: CssSettings = CssSettings(),
+    val browsers: Browsers = Browsers.Defaults,
   )
 
   @Serializable public data class CssTarget(

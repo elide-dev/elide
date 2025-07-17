@@ -42,3 +42,4 @@ oxvg = { workspace = true }
 rimage = { workspace = true }
 mdxjs = { workspace = true }
 markdown = { workspace = true }
+browserslist-rs = { workspace = true }

@@ -14,9 +14,9 @@ package elide.tool.server
 
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.cio.*
 import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
-import io.ktor.server.netty.*
 import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.calllogging.CallLogging
 import io.ktor.server.plugins.conditionalheaders.*
@@ -77,7 +77,7 @@ object StaticSiteServer {
     // activate dev mode if requested
     if (devMode) System.setProperty("io.ktor.development", "true")
 
-    embeddedServer(Netty, host = host, port = port.toInt()) {
+    embeddedServer(CIO, host = host, port = port.toInt()) {
       // install plugins
       install(Compression)
       install(ContentNegotiation)

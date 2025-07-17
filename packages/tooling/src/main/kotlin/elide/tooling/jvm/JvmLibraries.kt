@@ -22,6 +22,8 @@ import elide.tooling.Classpath
  * Describes coordinates and versions for built-in libraries which ship with Elide.
  */
 public object JvmLibraries {
+  public const val EMBEDDED_KOTLIN: String = "2.2.0"
+
   public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
   public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"
   public const val EMBEDDED_APIGUARDIAN_VERSION: String = "1.1.2"
@@ -29,8 +31,8 @@ public object JvmLibraries {
   public const val EMBEDDED_KOTLINX_HTML_VERSION: String = "0.12.0"
   public const val EMBEDDED_KOTLINX_CSS_VERSION: String = "2025.7.1"
   public const val EMBEDDED_KOTLINX_IO_VERSION: String = "0.8.0"
-  public const val EMBEDDED_COROUTINES_VERSION: String = KotlinLanguage.COROUTINES_VERSION
-  public const val EMBEDDED_SERIALIZATION_VERSION: String = KotlinLanguage.SERIALIZATION_VERSION
+  public const val EMBEDDED_COROUTINES_VERSION: String = "1.10.2"
+  public const val EMBEDDED_SERIALIZATION_VERSION: String = "1.9.0"
   public const val APIGUARDIAN_API: String = "org.apiguardian:apiguardian-api"
   public const val JUNIT_JUPITER_API: String = "org.junit.jupiter:junit-jupiter-api"
   public const val JUNIT_JUPITER_ENGINE: String = "org.junit.jupiter:junit-jupiter-engine"
@@ -62,7 +64,7 @@ public object JvmLibraries {
     KOTLINX_IO_BYTESTRING to EMBEDDED_KOTLINX_IO_VERSION,
   )
 
-  internal val testCoordinates = arrayOf(
+  public val testCoordinates: Array<Pair<String, String>> = arrayOf(
     OPENTEST to EMBEDDED_OPENTEST_VERSION,
     JUNIT_JUPITER_API to EMBEDDED_JUNIT_VERSION,
     JUNIT_JUPITER_PARAMS to EMBEDDED_JUNIT_VERSION,
@@ -70,8 +72,8 @@ public object JvmLibraries {
     JUNIT_PLATFORM_ENGINE to EMBEDDED_JUNIT_PLATFORM_VERSION,
     JUNIT_PLATFORM_COMMONS to EMBEDDED_JUNIT_PLATFORM_VERSION,
     JUNIT_PLATFORM_CONSOLE to EMBEDDED_JUNIT_PLATFORM_VERSION,
-    KOTLIN_TEST to KotlinLanguage.VERSION,
-    KOTLIN_TEST_JUNIT5 to KotlinLanguage.VERSION,
+    KOTLIN_TEST to EMBEDDED_KOTLIN,
+    KOTLIN_TEST_JUNIT5 to EMBEDDED_KOTLIN,
     KOTLINX_COROUTINES_TEST to EMBEDDED_COROUTINES_VERSION,
     KOTLINX_SERIALIZATION to EMBEDDED_SERIALIZATION_VERSION,
     KOTLINX_SERIALIZATION_JSON to EMBEDDED_SERIALIZATION_VERSION,
@@ -97,7 +99,7 @@ public object JvmLibraries {
   public fun resolveJarFor(path: Path, name: String): Path {
     return path
       .resolve("kotlin")
-      .resolve(KotlinLanguage.VERSION)
+      .resolve(EMBEDDED_KOTLIN)
       .resolve("lib")
       .resolve(name)
   }

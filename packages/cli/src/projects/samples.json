@@ -24,25 +24,13 @@
       "name": "containers",
       "description": "Kotlin/JVM with JARs, Native Image, and containers",
       "languages": ["Kotlin"],
-      "files": [
-        "README.md",
-        "elide.pkl",
-        "src/main/kotlin/sample/main.kt",
-        "src/test/kotlin/sample/testGreeting.kt"
-      ]
+      "files": ["README.md", "elide.pkl", "src/main/kotlin/sample/main.kt", "src/test/kotlin/sample/testGreeting.kt"]
     },
     {
       "name": "web-static-worker",
       "description": "Static website built with Elide and shipped with Cloudflare Workers",
       "languages": ["Markdown"],
-      "files": [
-        ".dev/elide.lock.bin",
-        "README.md",
-        "elide.pkl",
-        "package-lock.kdl",
-        "wrangler.toml",
-        "src/index.md"
-      ]
+      "files": [".dev/elide.lock.bin", "README.md", "elide.pkl", "package-lock.kdl", "wrangler.toml", "src/index.md"]
     }
   ]
 }

@@ -31,6 +31,13 @@ import elide.runtime.diag.Severity.INFO
     @JvmStatic public fun create(): MutableDiagnostic = MutableDiagnostic()
   }
 
+  override fun toString(): String = buildString {
+    append(severity.name)
+    append(':')
+    append(' ')
+    append(message ?: "No message provided")
+  }
+
   /**
    * Build this mutable diagnostic into a finalized immutable record.
    *

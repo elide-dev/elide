@@ -444,14 +444,14 @@ public abstract interface class elide/runtime/diag/DiagnosticsBuffer : java/io/C
 
 public final class elide/runtime/diag/DiagnosticsContainer : elide/runtime/diag/DiagnosticsReceiver, elide/runtime/diag/DiagnosticsSuite {
 	public static final field Companion Lelide/runtime/diag/DiagnosticsContainer$Companion;
-	public synthetic fun <init> (Lkotlin/sequences/Sequence;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (ZLkotlin/sequences/Sequence;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun all ()Lkotlin/sequences/Sequence;
 	public fun clear ()V
 	public fun close ()V
-	public static final fun create ()Lelide/runtime/diag/DiagnosticsContainer;
+	public static final fun create (Z)Lelide/runtime/diag/DiagnosticsContainer;
 	public fun dirty (Ljava/lang/String;)Z
 	public static final fun empty ()Lelide/runtime/diag/DiagnosticsSuite;
-	public static final fun from (Lkotlin/sequences/Sequence;)Lelide/runtime/diag/DiagnosticsContainer;
+	public static final fun from (Lkotlin/sequences/Sequence;Z)Lelide/runtime/diag/DiagnosticsContainer;
 	public fun getCount-pVg5ArA ()I
 	public fun getSeverity ()Lelide/runtime/diag/Severity;
 	public fun lock ()V
@@ -464,9 +464,11 @@ public final class elide/runtime/diag/DiagnosticsContainer : elide/runtime/diag/
 }
 
 public final class elide/runtime/diag/DiagnosticsContainer$Companion {
-	public final fun create ()Lelide/runtime/diag/DiagnosticsContainer;
+	public final fun create (Z)Lelide/runtime/diag/DiagnosticsContainer;
+	public static synthetic fun create$default (Lelide/runtime/diag/DiagnosticsContainer$Companion;ZILjava/lang/Object;)Lelide/runtime/diag/DiagnosticsContainer;
 	public final fun empty ()Lelide/runtime/diag/DiagnosticsSuite;
-	public final fun from (Lkotlin/sequences/Sequence;)Lelide/runtime/diag/DiagnosticsContainer;
+	public final fun from (Lkotlin/sequences/Sequence;Z)Lelide/runtime/diag/DiagnosticsContainer;
+	public static synthetic fun from$default (Lelide/runtime/diag/DiagnosticsContainer$Companion;Lkotlin/sequences/Sequence;ZILjava/lang/Object;)Lelide/runtime/diag/DiagnosticsContainer;
 }
 
 public abstract interface class elide/runtime/diag/DiagnosticsReceiver : java/io/Closeable, java/lang/AutoCloseable {
@@ -510,6 +512,7 @@ public final class elide/runtime/diag/MutableDiagnostic : elide/runtime/diag/Mut
 	public fun setSource (Ljava/lang/String;)V
 	public fun setSpan (Lelide/runtime/diag/SourceSpan;)V
 	public fun setTool (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/diag/MutableDiagnostic$Companion {

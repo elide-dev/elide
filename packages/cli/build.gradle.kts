@@ -826,6 +826,7 @@ val enabledFeatures = listOfNotNull(
   "elide.tool.feature.DisallowedHostJvmFeature",
   "elide.tool.feature.FileSystemsFeature",
   "elide.tool.feature.WebBuilderFeature",
+  "elide.tool.feature.MediaBuilderFeature",
   onlyIf(enablePython, "elide.runtime.feature.python.PythonFeature"),
   onlyIf(enableNativeTransportV2, "elide.runtime.feature.engine.NativeTransportFeature"),
   onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),

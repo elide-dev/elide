@@ -11,3 +11,5 @@ Also, here is [another page](./hello.md).
 <div class="box">
   Here is a box which uses CSS.
 </div>
+
+![](picture.png)

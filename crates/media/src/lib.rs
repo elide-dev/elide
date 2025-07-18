@@ -59,15 +59,18 @@ impl Default for JpegOptions {
   }
 }
 
+// #[jni("elide.tooling.web.mdx.MdxNative")]
+// pub fn buildMdx<'a>(mut env: JNIEnv<'a>, cls: JClass<'a>, jmdx: JString<'a>) -> JObject<'a> {
+
 /// JNI entrypoint which provides image compression facilities for PNGs.
 #[jni("elide.tooling.img.ImgNative")]
-pub fn compress_png<'a>(
+pub fn compressPng<'a>(
   mut env: JNIEnv<'a>,
   _cls: JClass<'a>,
   _opts: JObject<'a>,
-  img: JByteBuffer<'a>,
+  img: JObject<'a>,
 ) -> jboolean {
-  let data: &'a mut [u8] = read_in_place(&mut env, &img);
+  let data: &'a mut [u8] = read_in_place(&mut env, (&img).into());
   let opts = PngOptions::default();
   let mut loaded = ImageReader::new(Cursor::new(&mut *data));
   loaded.set_format(ImageFormat::Png);
@@ -83,13 +86,13 @@ pub fn compress_png<'a>(
 
 /// JNI entrypoint which provides image compression facilities for JPGs.
 #[jni("elide.tooling.img.ImgNative")]
-pub fn compress_jpg<'a>(
+pub fn compressJpg<'a>(
   mut env: JNIEnv<'a>,
   _cls: JClass<'a>,
   _opts: JObject<'a>,
-  img: JByteBuffer<'a>,
+  img: JObject<'a>,
 ) -> jboolean {
-  let data: &'a mut [u8] = read_in_place(&mut env, &img);
+  let data: &'a mut [u8] = read_in_place(&mut env, (&img).into());
   let opts = JpegOptions::default();
   let mut loaded = ImageReader::new(Cursor::new(&mut *data));
   loaded.set_format(ImageFormat::Jpeg);
@@ -105,7 +108,7 @@ pub fn compress_jpg<'a>(
 
 /// JNI entrypoint which provides image conversion facilities to WebP.
 #[jni("elide.tooling.img.ImgNative")]
-pub fn convert_to_webp<'a>(
+pub fn convertToWebp<'a>(
   mut _env: JNIEnv<'a>,
   _cls: JClass<'a>,
   _opts: JObject<'a>,
@@ -117,7 +120,7 @@ pub fn convert_to_webp<'a>(
 
 /// JNI entrypoint which provides image conversion facilities to AVIF.
 #[jni("elide.tooling.img.ImgNative")]
-pub fn convert_to_avif<'a>(
+pub fn convertToAvif<'a>(
   mut _env: JNIEnv<'a>,
   _cls: JClass<'a>,
   _opts: JObject<'a>,

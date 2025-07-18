@@ -1706,6 +1706,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libtrace.a",
   "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
   "-H:NativeLinkerOption=$nativesPath/libweb.a",
+  "-H:NativeLinkerOption=$nativesPath/libmedia.a",
   "-H:NativeLinkerOption=-lm",
   "-H:NativeLinkerOption=-lstdc++",
 ).plus(if (oracleGvm) listOf(
@@ -1744,6 +1745,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=$nativesPath/libterminal.a",
     "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
     "-H:NativeLinkerOption=$nativesPath/libweb.a",
+    "-H:NativeLinkerOption=$nativesPath/libmedia.a",
     "-H:NativeLinkerOption=-lm",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",

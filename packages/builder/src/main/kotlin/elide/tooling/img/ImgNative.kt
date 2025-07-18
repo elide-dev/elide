@@ -23,10 +23,10 @@ import elide.tooling.img.Images.ImageResult
 import elide.tooling.img.Images.ImgOperationError
 
 // JNI methods used for image processing.
-private const val JNI_METHOD_COMPRESS_PNG = "compress_png"
-private const val JNI_METHOD_COMPRESS_JPG = "compress_jpg"
-private const val JNI_METHOD_CONVERT_TO_WEBP = "convert_to_webp"
-private const val JNI_METHOD_CONVERT_TO_AVIF = "convert_to_avif"
+private const val JNI_METHOD_COMPRESS_PNG = "compressPng"
+private const val JNI_METHOD_COMPRESS_JPG = "compressJpg"
+private const val JNI_METHOD_CONVERT_TO_WEBP = "convertToWebp"
+private const val JNI_METHOD_CONVERT_TO_AVIF = "convertToAvif"
 
 // Implements native image compression and transformation methods via JNI. Note that this has nothing to do with the
 // GraalVM-related concept of "native images," which relate to program binaries instead of visual image formats.
@@ -99,17 +99,17 @@ internal object ImgNative {
 
   // Native JNI method to compress PNG data.
   @JvmName(JNI_METHOD_COMPRESS_PNG)
-  private external fun compressPng(options: PngOptions?, data: ByteBuffer): Boolean
+  @JvmStatic private external fun compressPng(options: PngOptions?, data: ByteBuffer): Boolean
 
   // Native JNI method to compress JPG data.
   @JvmName(JNI_METHOD_COMPRESS_JPG)
-  private external fun compressJpg(options: JpgOptions?, data: ByteBuffer): Boolean
+  @JvmStatic private external fun compressJpg(options: JpgOptions?, data: ByteBuffer): Boolean
 
   // Native JNI method to convert data to WebP format.
   @JvmName(JNI_METHOD_CONVERT_TO_WEBP)
-  private external fun convertToWebP(options: WebpOptions?, data: ByteBuffer): Boolean
+  @JvmStatic private external fun convertToWebP(options: WebpOptions?, data: ByteBuffer): Boolean
 
   // Native JNI method to convert data to AVIF format.
   @JvmName(JNI_METHOD_CONVERT_TO_AVIF)
-  private external fun convertToAvif(options: AvifOptions?, data: ByteBuffer): Boolean
+  @JvmStatic private external fun convertToAvif(options: AvifOptions?, data: ByteBuffer): Boolean
 }

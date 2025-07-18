@@ -254,7 +254,7 @@ if (buildBenchmarks.toBoolean()) {
 
 if (buildIdePlugins.toBoolean()) {
   include(
-    ":packages:plugin-idea"
+    ":packages:plugin-idea",
   )
 }
 

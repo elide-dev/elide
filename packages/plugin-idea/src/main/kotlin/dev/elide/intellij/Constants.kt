@@ -10,16 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package dev.elide.intellij
 
 import com.intellij.DynamicBundle
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.externalSystem.model.ProjectSystemId
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.util.IconLoader
-import com.intellij.ui.IconManager
-import com.intellij.ui.PlatformIcons
 import dev.elide.intellij.Constants.Strings.get
 import org.jetbrains.annotations.PropertyKey
 import javax.swing.Icon
@@ -81,8 +77,6 @@ object Constants {
   }
 
   data object Icons {
-    @JvmStatic private val LOG = Logger.getInstance(Icons::class.java)
-
     /** Generic Icon for Elide. */
     @JvmStatic val ELIDE = load("/icons/elide.svg")
 
@@ -91,15 +85,7 @@ object Constants {
 
     /** Load an icon at the given [path] from the plugin resources. */
     private fun load(path: String): Icon {
-      return try {
-        IconLoader.getIcon(path, Icons::class.java)
-      } catch (e: Exception) {
-        LOG.warn("Unable to load icon from $path", e)
-
-        // Fallback to IntelliJ's default icons if custom icons aren't available
-        @Suppress("UnstableApiUsage")
-        IconManager.getInstance().getPlatformIcon(PlatformIcons.Stub)
-      }
+      return IconLoader.getIcon(path, Icons::class.java)
     }
   }
 

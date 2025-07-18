@@ -31,6 +31,8 @@ elide {
 }
 
 repositories {
+  // because we need to declare custom repositories for intellij artifacts, and Gradle will only select repositories at
+  // the settings-level *or* the project-level, we need to repeat repository configurations from the root settings
   intellijPlatform {
     defaultRepositories()
   }
@@ -71,10 +73,29 @@ dependencies {
 
 intellijPlatform {
   pluginConfiguration {
+    id = "dev.elide.intellij"
+    version = "0.1.0"
+
     ideaVersion {
-      sinceBuild = libs.versions.intellij.target.build.get()
+      sinceBuild = libs.versions.intellij.sinceBuild.get()
     }
 
     changeNotes = "Initial release."
+  }
+
+  pluginVerification {
+    ides {
+      recommended()
+    }
+  }
+
+  signing {
+    certificateChain = providers.environmentVariable("ELIDE_JB_CERT_CHAIN")
+    privateKey = providers.environmentVariable("ELIDE_JB_KEY")
+    password = providers.environmentVariable("ELIDE_JB_KEY_PASSWORD")
+  }
+
+  publishing {
+    token = providers.environmentVariable("ELIDE_JB_TOKEN")
   }
 }

@@ -3791,6 +3791,16 @@ public abstract interface class elide/runtime/intrinsics/js/node/ProcessAPI : el
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/QuerystringAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun decode (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
+	public static synthetic fun decode$default (Lelide/runtime/intrinsics/js/node/QuerystringAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
+	public abstract fun encode (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public static synthetic fun encode$default (Lelide/runtime/intrinsics/js/node/QuerystringAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/lang/String;
+	public abstract fun escape (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public abstract fun parse (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
+	public static synthetic fun parse$default (Lelide/runtime/intrinsics/js/node/QuerystringAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
+	public abstract fun stringify (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public static synthetic fun stringify$default (Lelide/runtime/intrinsics/js/node/QuerystringAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/lang/String;
+	public abstract fun unescape (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/ReadlineAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -5392,6 +5402,67 @@ public final class elide/runtime/intrinsics/js/node/process/ProcessStandardOutpu
 
 public abstract interface class elide/runtime/intrinsics/js/node/process/ProcessStandardStream : elide/runtime/intrinsics/js/node/stream/Stream {
 	public abstract fun getFd ()I
+}
+
+public final class elide/runtime/intrinsics/js/node/querystring/ParseOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/querystring/ParseOptions$Companion;
+	public static final field DEFAULT_MAX_KEYS I
+	public fun <init> ()V
+	public fun <init> (Lorg/graalvm/polyglot/Value;I)V
+	public synthetic fun <init> (Lorg/graalvm/polyglot/Value;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lorg/graalvm/polyglot/Value;
+	public final fun component2 ()I
+	public final fun copy (Lorg/graalvm/polyglot/Value;I)Lelide/runtime/intrinsics/js/node/querystring/ParseOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/querystring/ParseOptions;Lorg/graalvm/polyglot/Value;IILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/querystring/ParseOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/ParseOptions;
+	public final fun getDecodeURIComponent ()Lorg/graalvm/polyglot/Value;
+	public final fun getMaxKeys ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/querystring/ParseOptions$Companion {
+	public final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/ParseOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/querystring/ParseOptions;
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/querystring/QueryParams : org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/querystring/QueryParams$Companion;
+	public static fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
+	public abstract fun getData ()Ljava/util/Map;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public static fun of (Ljava/util/Map;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun removeMember (Ljava/lang/String;)Z
+}
+
+public final class elide/runtime/intrinsics/js/node/querystring/QueryParams$Companion {
+	public final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
+	public final fun of (Ljava/util/Map;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
+}
+
+public final class elide/runtime/intrinsics/js/node/querystring/StringifyOptions {
+	public static final field Companion Lelide/runtime/intrinsics/js/node/querystring/StringifyOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (Lorg/graalvm/polyglot/Value;)V
+	public synthetic fun <init> (Lorg/graalvm/polyglot/Value;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lorg/graalvm/polyglot/Value;
+	public final fun copy (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/StringifyOptions;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/js/node/querystring/StringifyOptions;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/querystring/StringifyOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/StringifyOptions;
+	public final fun getEncodeURIComponent ()Lorg/graalvm/polyglot/Value;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/js/node/querystring/StringifyOptions$Companion {
+	public final fun fromGuest (Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/StringifyOptions;
+	public final fun getDEFAULTS ()Lelide/runtime/intrinsics/js/node/querystring/StringifyOptions;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/stream/Duplex : elide/runtime/intrinsics/js/node/stream/Stream {

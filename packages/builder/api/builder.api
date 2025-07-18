@@ -3128,7 +3128,7 @@ public final class elide/tooling/runner/ThreadedTestRunner$Builder : elide/tooli
 public final class elide/tooling/web/WebBuilder {
 	public static final field INSTANCE Lelide/tooling/web/WebBuilder;
 	public final fun css ()Lelide/tooling/web/css/CssBuilder;
-	public final fun load ()V
+	public final fun load ()Z
 	public final fun markdown ()Lelide/tooling/md/Markdown;
 }
 

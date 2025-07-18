@@ -22,12 +22,19 @@ repository = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
 
+[features]
+images = ["dep:image"]
+png = []
+jpg = []
+avif = ["dep:ravif"]
+default = ["images", "png", "jpg"]
+
 [lib]
-crate-type = ["lib", "staticlib", "cdylib"]
+crate-type = ["lib"]
 
 [dependencies]
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
 diag = { workspace = true }
-image = { workspace = true }
-ravif = { workspace = true }
+image = { workspace = true, optional = true }
+ravif = { workspace = true, optional = true }

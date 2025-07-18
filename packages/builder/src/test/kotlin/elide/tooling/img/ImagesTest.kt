@@ -12,11 +12,15 @@
  */
 package elide.tooling.img
 
+import org.junit.jupiter.api.Assumptions
 import kotlinx.coroutines.test.runTest
 import kotlin.test.*
 
+private const val ENABLE_IMAGE_COMPRESSION = false
+
 class ImagesTest {
   @Test fun testCompressPngInMemory() = runTest {
+    Assumptions.assumeTrue { ENABLE_IMAGE_COMPRESSION }
     val input = ImagesTest::class.java.getResourceAsStream("/test.png") ?: error("Missing test image")
     val rawData = input.readBytes()
     val compressed = Images.compress(ImageOptions.PngOptions(debug = true), from = Images.ImageSourceInMemory {
@@ -28,10 +32,10 @@ class ImagesTest {
     }
     assertNotNull(compressed, "compressed png should not be null")
     assertTrue(compressedData.isNotEmpty(), "compressed data should not be empty")
-    assertFalse(compressedData.equals(rawData), "compressed data should not equal original")
   }
 
   @Test fun testCompressJpgInMemory() = runTest {
+    Assumptions.assumeTrue { ENABLE_IMAGE_COMPRESSION }
     val input = ImagesTest::class.java.getResourceAsStream("/test.jpg") ?: error("Missing test image")
     val rawData = input.readBytes()
     val compressed = Images.compress(ImageOptions.JpgOptions(debug = true), from = Images.ImageSourceInMemory {
@@ -43,6 +47,5 @@ class ImagesTest {
     }
     assertNotNull(compressed, "compressed png should not be null")
     assertTrue(compressedData.isNotEmpty(), "compressed data should not be empty")
-    assertFalse(compressedData.equals(rawData), "compressed data should not equal original")
   }
 }

@@ -13707,6 +13707,15 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tooling.img.ImgNative",
+      "allDeclaredMethods": true,
+      "allDeclaredFields": true,
+      "allDeclaredConstructors": true,
+      "methods": [
+        {"name": "compressPng", "parameterTypes": ["elide.tooling.img.ImageOptions$PngOptions", "java.nio.ByteBuffer"]}
+      ]
+    },
+    {
       "type": "[B"
     },
     {

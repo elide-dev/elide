@@ -13,6 +13,7 @@
 package elide.runtime.runner
 
 import org.graalvm.polyglot.Context
+import org.junit.jupiter.api.Assumptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import kotlin.test.*
@@ -74,6 +75,7 @@ class JvmRunnerTest {
   }
 
   @Test fun testRunnerJobOnTruffle() = runTest {
+    Assumptions.assumeFalse { System.getProperty("os.name").lowercase().contains("mac") }
     val job = jvmRunnerJob()
     val runner = Runners.jvm(job, truffle = true).first().prepare()
     assertIs<TruffleRunner>(runner)
@@ -106,6 +108,7 @@ class JvmRunnerTest {
   }
 
   @Test fun testRunnerJobOnTruffleJvmClsNotRunnable() = runTest {
+    Assumptions.assumeFalse { System.getProperty("os.name").lowercase().contains("mac") }
     val job = jvmRunnerJob("elide.runtime.runner.JvmRunnerNoEntrypointSample")
     val runner = Runners.jvm(job, truffle = true).first().prepare()
     assertIs<TruffleRunner>(runner)

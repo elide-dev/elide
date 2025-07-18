@@ -280,6 +280,7 @@ internal class StaticSiteContributor : BuildConfigurator {
     val assets: AssetConfiguration = AssetConfiguration(),
     val rewriteLinks: Boolean = true,
     val minifyHtml: Boolean = true,
+    val compressImages: Boolean = false,
   ) {
     val taskGraph get() = config.taskGraph
     val allSrcs: Sequence<Pair<SourceSet, SourceFilePath>> get() = sequence {
@@ -414,6 +415,12 @@ internal class StaticSiteContributor : BuildConfigurator {
     false -> withContext(IO) {
       // if we can't compress or if it isn't optimal, just copy the source to the target
       val fallbackToCopy = suspend { copyToTarget(src) }
+
+      // only compress images if configured to do so
+      if (!compressImages) {
+        fallbackToCopy()
+        return@withContext
+      }
 
       // decide what kind of asset we are dealing with
       val imageCompressorOptions = when (src.source.extension) {

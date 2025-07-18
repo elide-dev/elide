@@ -1703,7 +1703,6 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libposix.a",
   "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
-  "-H:NativeLinkerOption=$nativesPath/libtrace.a",
   "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
   "-H:NativeLinkerOption=$nativesPath/libweb.a",
   "-H:NativeLinkerOption=-lm",

@@ -41,3 +41,4 @@ grass = { workspace = true }
 mdxjs = { workspace = true }
 markdown = { workspace = true }
 browserslist-rs = { workspace = true }
+media = { workspace = true }

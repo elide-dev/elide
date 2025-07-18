@@ -28,9 +28,10 @@ use crate::css::{CssBuilderError, CssBuilderErrorCase, build_css, build_scss, cs
 use crate::html::build_html_minify_cfg;
 use java_native::jni;
 use jni::JNIEnv;
-use jni::objects::{JClass, JObject, JObjectArray, JString, JValue};
+use jni::objects::{JByteBuffer, JClass, JObject, JObjectArray, JString, JValue};
 use jni::sys::jboolean;
 use lightningcss::stylesheet::{ParserOptions, StyleSheet};
+use media::images::{do_compress_jpg, do_compress_png};
 use std::borrow::Cow;
 
 /// Dispatch a CSS processing error to the Java side.
@@ -207,4 +208,38 @@ pub fn minify<'a>(
   let cfg = build_html_minify_cfg(&mut env, &jcfg);
   let out_code = html::minify_html(&code, &cfg);
   env.new_string(out_code.as_str()).unwrap()
+}
+
+/// JNI entrypoint which provides image compression facilities for PNGs.
+#[jni("elide.tooling.img.ImgNative")]
+pub fn compressPng<'a>(
+  env: JNIEnv<'a>,
+  cls: JClass<'a>,
+  opts: JObject<'a>,
+  img: JByteBuffer<'a>,
+) -> jboolean {
+  do_compress_png(env, cls, opts, img)
+}
+
+/// JNI entrypoint which provides image compression facilities for JPGs.
+#[jni("elide.tooling.img.ImgNative")]
+pub fn compressJpg<'a>(
+  env: JNIEnv<'a>,
+  cls: JClass<'a>,
+  opts: JObject<'a>,
+  img: JByteBuffer<'a>,
+) -> jboolean {
+  do_compress_jpg(env, cls, opts, img)
+}
+
+/// JNI entrypoint which provides image conversion facilities to WebP.
+#[jni("elide.tooling.img.ImgNative")]
+pub fn convertToWebp<'a>(_env: JNIEnv<'a>, _cls: JClass<'a>) -> jboolean {
+  todo!("not yet implemented")
+}
+
+/// JNI entrypoint which provides image conversion facilities to AVIF.
+#[jni("elide.tooling.img.ImgNative")]
+pub fn convertToAvif<'a>(_env: JNIEnv<'a>, _cls: JClass<'a>) -> jboolean {
+  todo!("not yet implemented")
 }

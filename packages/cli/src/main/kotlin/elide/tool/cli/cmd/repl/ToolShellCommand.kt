@@ -1564,6 +1564,7 @@ internal class ToolShellCommand @Inject constructor(
 
     with(StaticSiteServer.StaticServerConfig(
       site = site,
+      project = activeProject.value,
       root = effectiveTarget,
       host = server.hostPair(),
       devMode = true,
@@ -1580,6 +1581,7 @@ internal class ToolShellCommand @Inject constructor(
     wait: Boolean = true,
   ) = with(StaticSiteServer.StaticServerConfig(
     root = path,
+    project = activeProject.value,
     host = server.hostPair(),
     devMode = devMode,
   )) {

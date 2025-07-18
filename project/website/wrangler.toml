@@ -1,0 +1,12 @@
+name = "elide-website-simple"
+compatibility_date = "2025-03-14"
+
+routes = [
+  { pattern = "site.elide.dev", custom_domain = true },
+]
+
+[observability.logs]
+enabled = true
+
+[assets]
+directory = "./.dev/artifacts/sites/main"

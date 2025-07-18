@@ -84,7 +84,9 @@ class ElideProject {
   nativeImage: _nativeImage.NativeImageSettings?
 
   /// Top-level project sources definition.
-  sources: _srcs.Sources
+  sources: _srcs.Sources = new {
+    ["main"] = "src/**.*"
+  }
 
   /// Development settings for this project.
   dev: _dev.DevSettings
@@ -190,7 +192,10 @@ nativeImage: _nativeImage.NativeImageSettings?
 //
 
 /// Top-level project sources definition.
-sources: _srcs.Sources = new {}
+sources: _srcs.Sources = new {
+  ["main"] = "src/**.*"
+  ["test"] = "test/**.*"
+}
 
 /// Development settings for this project.
 dev: _dev.DevSettings = new {}

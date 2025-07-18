@@ -37,10 +37,6 @@ artifacts {
   }
 }
 
-sources {
-  ["main"] = "src/**/*.*"
-}
-
 scripts {
   ["deploy"] = "wrangler deploy"
   ["build-deploy"] = "elide build && elide deploy"

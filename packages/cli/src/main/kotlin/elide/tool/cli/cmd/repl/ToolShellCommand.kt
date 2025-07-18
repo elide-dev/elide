@@ -2723,7 +2723,7 @@ internal class ToolShellCommand @Inject constructor(
           }
 
           val testOrServeMode = testMode() || serveMode()
-          val server = serverSettings.effectiveServerOptions()
+          val server = serverSettings.effectiveServerOptions(activeProject.value)
           val startProjectStaticOrGeneric = { project: ElideProject, at: Path ->
             when (val artifact = project.manifest.artifacts.entries.firstOrNull { it.value is StaticSite }) {
               null -> startGenericStaticServer(at, server)

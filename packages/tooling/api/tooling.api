@@ -2663,7 +2663,11 @@ public abstract interface class elide/tooling/project/SourceSet {
 }
 
 public abstract interface class elide/tooling/project/SourceSetFactory {
+	public static final field Companion Lelide/tooling/project/SourceSetFactory$Companion;
 	public abstract fun load (Ljava/nio/file/Path;Ljava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$SourceSet;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/project/SourceSetFactory$Companion {
 }
 
 public final class elide/tooling/project/SourceSetFactory$Default : elide/tooling/project/SourceSetFactory {

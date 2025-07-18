@@ -40,5 +40,4 @@ grass = { workspace = true }
 # oxvg = { workspace = true }
 mdxjs = { workspace = true }
 markdown = { workspace = true }
-media = { workspace = true }
 browserslist-rs = { workspace = true }

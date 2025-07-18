@@ -1329,6 +1329,140 @@ public class elide/tooling/gvm/nativeImage/NativeImageResult : java/lang/Runtime
 	public fun isSuccess ()Z
 }
 
+public final class elide/tooling/img/ImageFormat : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field AVIF Lelide/tooling/img/ImageFormat;
+	public static final field Companion Lelide/tooling/img/ImageFormat$Companion;
+	public static final field GIF Lelide/tooling/img/ImageFormat;
+	public static final field JPG Lelide/tooling/img/ImageFormat;
+	public static final field PNG Lelide/tooling/img/ImageFormat;
+	public static final field SVG Lelide/tooling/img/ImageFormat;
+	public static final field WEBP Lelide/tooling/img/ImageFormat;
+	public final fun getAliases ()[Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getEncodable ()Z
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getOptimizable ()Z
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/img/ImageFormat;
+	public static fun values ()[Lelide/tooling/img/ImageFormat;
+}
+
+public final class elide/tooling/img/ImageFormat$Companion : elide/core/api/Symbolic$SealedResolver {
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/tooling/img/ImageFormat;
+}
+
+public abstract interface class elide/tooling/img/ImageOptions {
+	public fun check ()Lkotlin/Pair;
+	public abstract fun getDebug ()Z
+	public abstract fun getFormat ()Lelide/tooling/img/ImageFormat;
+}
+
+public final class elide/tooling/img/ImageOptions$AvifOptions : java/lang/Record, elide/tooling/img/ImageOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/img/ImageOptions$AvifOptions;
+	public static synthetic fun copy$default (Lelide/tooling/img/ImageOptions$AvifOptions;ZILjava/lang/Object;)Lelide/tooling/img/ImageOptions$AvifOptions;
+	public fun debug ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun format ()Lelide/tooling/img/ImageFormat;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getFormat ()Lelide/tooling/img/ImageFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/img/ImageOptions$JpgOptions : java/lang/Record, elide/tooling/img/ImageOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/img/ImageOptions$JpgOptions;
+	public static synthetic fun copy$default (Lelide/tooling/img/ImageOptions$JpgOptions;ZILjava/lang/Object;)Lelide/tooling/img/ImageOptions$JpgOptions;
+	public fun debug ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun format ()Lelide/tooling/img/ImageFormat;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getFormat ()Lelide/tooling/img/ImageFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/img/ImageOptions$PngOptions : java/lang/Record, elide/tooling/img/ImageOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/img/ImageOptions$PngOptions;
+	public static synthetic fun copy$default (Lelide/tooling/img/ImageOptions$PngOptions;ZILjava/lang/Object;)Lelide/tooling/img/ImageOptions$PngOptions;
+	public fun debug ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun format ()Lelide/tooling/img/ImageFormat;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getFormat ()Lelide/tooling/img/ImageFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/img/ImageOptions$WebpOptions : java/lang/Record, elide/tooling/img/ImageOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/img/ImageOptions$WebpOptions;
+	public static synthetic fun copy$default (Lelide/tooling/img/ImageOptions$WebpOptions;ZILjava/lang/Object;)Lelide/tooling/img/ImageOptions$WebpOptions;
+	public fun debug ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun format ()Lelide/tooling/img/ImageFormat;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getFormat ()Lelide/tooling/img/ImageFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/img/Images {
+	public static final field INSTANCE Lelide/tooling/img/Images;
+	public final fun compress (Lelide/tooling/img/ImageOptions;Lkotlin/coroutines/CoroutineContext;Lelide/tooling/img/Images$ImageSource;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun compress$default (Lelide/tooling/img/Images;Lelide/tooling/img/ImageOptions;Lkotlin/coroutines/CoroutineContext;Lelide/tooling/img/Images$ImageSource;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun convert (Ljava/lang/String;Lelide/tooling/img/ImageOptions;Lkotlin/coroutines/CoroutineContext;Lelide/tooling/img/Images$ImageSource;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun convert$default (Lelide/tooling/img/Images;Ljava/lang/String;Lelide/tooling/img/ImageOptions;Lkotlin/coroutines/CoroutineContext;Lelide/tooling/img/Images$ImageSource;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun imageBufferFor ([B)Ljava/nio/ByteBuffer;
+	public final fun imageBufferForSize-WZ4Q5Ns (I)Ljava/nio/ByteBuffer;
+	public final fun load ()V
+}
+
+public final class elide/tooling/img/Images$ImageData : elide/tooling/img/Images$ImageResult {
+	public final fun getOptions ()Lelide/tooling/img/ImageOptions;
+	public final fun getResult ()Ljava/nio/ByteBuffer;
+	public fun isSuccess ()Z
+}
+
+public abstract interface class elide/tooling/img/Images$ImageFile : elide/tooling/img/Images$ImageSource {
+	public abstract fun atPath ()Ljava/nio/file/Path;
+	public fun provide ()Ljava/nio/ByteBuffer;
+}
+
+public abstract interface class elide/tooling/img/Images$ImageResult {
+	public abstract fun isSuccess ()Z
+}
+
+public abstract interface class elide/tooling/img/Images$ImageSource {
+	public abstract fun provide ()Ljava/nio/ByteBuffer;
+}
+
+public abstract interface class elide/tooling/img/Images$ImageSourceInMemory : elide/tooling/img/Images$ImageSource {
+}
+
+public final class elide/tooling/img/Images$ImgOperationError : java/lang/Exception, elide/tooling/img/Images$ImageResult {
+	public fun <init> (Lelide/tooling/img/ImageOptions;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Lelide/tooling/img/ImageOptions;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getOptions ()Lelide/tooling/img/ImageOptions;
+	public fun isSuccess ()Z
+}
+
 public synthetic class elide/tooling/js/resolver/$NpmResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V

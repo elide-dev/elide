@@ -29,4 +29,5 @@ crate-type = ["lib", "staticlib", "cdylib"]
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
 diag = { workspace = true }
-rimage = { workspace = true }
+image = { workspace = true }
+ravif = { workspace = true }

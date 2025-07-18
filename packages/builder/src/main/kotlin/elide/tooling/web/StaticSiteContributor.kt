@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage", "LargeClass")
 
 package elide.tooling.web
 
@@ -56,6 +56,8 @@ import elide.tooling.archive.ZipTasks.zip
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.ElideBuildState
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
+import elide.tooling.img.ImageOptions
+import elide.tooling.img.Images
 import elide.tooling.md.Markdown
 import elide.tooling.md.Markdown.MarkdownOptions
 import elide.tooling.md.Markdown.defaultPage
@@ -407,7 +409,48 @@ internal class StaticSiteContributor : BuildConfigurator {
     }
   }
 
-  private suspend fun StaticSiteConfiguration.copyToTarget(src: SourceTargetPair) = when (dry) {
+  private suspend fun StaticSiteConfiguration.compressAndOrCopy(src: SourceTargetPair): Unit = when (dry) {
+    true -> logging.info { "Compress and copy (dry run): ${src.source} → ${src.target}" }
+    false -> withContext(IO) {
+      // if we can't compress or if it isn't optimal, just copy the source to the target
+      val fallbackToCopy = suspend { copyToTarget(src) }
+
+      // decide what kind of asset we are dealing with
+      val imageCompressorOptions = when (src.source.extension) {
+        // pngs can be compressed and transformed to webp and avif
+        "png" -> ImageOptions.PngOptions()
+
+        // jpegs can be compressed and transformed to webp and avif as well
+        "jpg", "jpeg" -> ImageOptions.JpgOptions()
+
+        // otherwise, fallback to a simple copy
+        else -> return@withContext fallbackToCopy()
+      }
+
+      // compress it maybe
+      val imageBytes = src.source.inputStream().buffered().use { buf -> buf.readBytes() }
+      val compressed = Images.compress(imageCompressorOptions, from = Images.ImageSourceInMemory {
+        Images.imageBufferFor(imageBytes)
+      }).result
+
+      // is the compressed version smaller? if so prefer it
+      val compressedSize = compressed.remaining()
+      val resultingBytes = if (imageBytes.size <= compressedSize) imageBytes else {
+        ByteArray(compressedSize).also { compressedBuffer ->
+          compressed.get(compressedBuffer)
+        }
+      }
+
+      // finally, write the finalized asset
+      write(
+        src,
+        resultingBytes,
+        asset = false,
+      )
+    }
+  }
+
+  private suspend fun StaticSiteConfiguration.copyToTarget(src: SourceTargetPair): Unit = when (dry) {
     true -> logging.info { "Copy (dry run): ${src.source} → ${src.target}" }
 
     false -> withContext(IO) {
@@ -431,11 +474,22 @@ internal class StaticSiteContributor : BuildConfigurator {
     }
   }
 
-  private suspend fun StaticSiteConfiguration.write(src: SourceTargetPair, str: String, asset: Boolean) = when (dry) {
-    true -> logging.info { "Write (dry run): ${src.source} → ${src.target} (size: ${str.length})" }
+  private suspend fun StaticSiteConfiguration.write(src: SourceTargetPair, str: String, asset: Boolean) {
+    write(
+      src,
+      str.toByteArray(StandardCharsets.UTF_8),
+      asset,
+    )
+  }
+
+  private suspend fun StaticSiteConfiguration.write(
+    src: SourceTargetPair,
+    bytes: ByteArray,
+    asset: Boolean,
+  ) = when (dry) {
+    true -> logging.info { "Write (dry run): ${src.source} → ${src.target} (size: ${bytes.size})" }
 
     false -> withContext(IO) {
-      val bytes = str.toByteArray(StandardCharsets.UTF_8)
       val finalizedTarget = when (asset) {
         // non-assets do not get transformed by identity
         false -> src.target
@@ -449,8 +503,8 @@ internal class StaticSiteContributor : BuildConfigurator {
 
       runCatching {
         createParentsIfNeeded(finalizedTarget).also {
-          finalizedTarget.outputStream().bufferedWriter(StandardCharsets.UTF_8).use { writer ->
-            writer.write(str)
+          finalizedTarget.outputStream().buffered().use { writer ->
+            writer.write(bytes)
           }
         }
       }.onFailure {
@@ -804,8 +858,32 @@ internal class StaticSiteContributor : BuildConfigurator {
         add(it)
       }
 
+      val imageExtensions = sortedSetOf("png", "jpg", "jpeg")
+      anythingElse.filter { it.second.path.extension in imageExtensions }.ifEmpty { null }?.let { imgSrcs ->
+        fn(name = "${site.name}CompressImages") {
+          runCatching {
+            imgSrcs.forEach { (srcSet, copiedSrc) ->
+              site.compressAndOrCopy(SourceTargetFile.of(
+                copiedSrc.path,
+                site.siteRoot.target.resolve(copiedSrc.path.relativeTo(site.siteRoot.source)),
+                srcSet,
+              ))
+            }
+          }.asExecResult()
+        }.describedBy {
+          val pluralized = when (imgSrcs.size) {
+            1 -> "image file"
+            else -> "images"
+          }
+          "Compressing ${imgSrcs.size} $pluralized"
+        }
+      }?.let {
+        addNode(it)
+        add(it)
+      }
+
       // are there any other sources? if so, they are copied as-is.
-      anythingElse.ifEmpty { null }?.let { extraCopiedSrcs ->
+      anythingElse.filter { it.second.path.extension !in imageExtensions }.ifEmpty { null }?.let { extraCopiedSrcs ->
         fn(name = "${site.name}CopyExtraSrcs") {
           runCatching {
             extraCopiedSrcs.forEach { (srcSet, copiedSrc) ->

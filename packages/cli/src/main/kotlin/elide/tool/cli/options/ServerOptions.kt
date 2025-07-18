@@ -15,6 +15,7 @@ package elide.tool.cli.options
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Option
+import elide.tooling.project.ElideProject
 
 /**
  * ## Server Options
@@ -45,13 +46,13 @@ import picocli.CommandLine.Option
   )
   var port: Int? = null
 
-  fun effectiveServerOptions(): EffectiveServerOptions {
+  fun effectiveServerOptions(project: ElideProject?): EffectiveServerOptions {
     return EffectiveServerOptions(
-      host = host ?: DEFAULT_SERVER_HOST,
-      port = (port ?: DEFAULT_SERVER_PORT).toUShort(),
+      host = host ?: project?.manifest?.dev?.server?.host ?: DEFAULT_SERVER_HOST,
+      port = (port ?: project?.manifest?.dev?.server?.port ?:DEFAULT_SERVER_PORT).toUShort(),
       linkHost = when (val explicit = host) {
         null -> DEFAULT_LINK_HOST
-        "127.0.0.1", "0.0.0.0" -> DEFAULT_LINK_HOST
+        LOCAL_SERVER_HOST, DEFAULT_SERVER_HOST -> DEFAULT_LINK_HOST
         else -> explicit
       },
     )
@@ -59,6 +60,7 @@ import picocli.CommandLine.Option
 
   companion object {
     const val DEFAULT_SERVER_HOST: String = "0.0.0.0"
+    const val LOCAL_SERVER_HOST: String = "127.0.0.1"
     const val DEFAULT_LINK_HOST: String = "localhost"
     const val DEFAULT_SERVER_PORT: Int = 8080
   }

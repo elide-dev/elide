@@ -103,10 +103,16 @@ public data class ElidePackageManifest(
     val registerElide: Boolean = true,
   )
 
+  @Serializable public data class DevServerSettings(
+    val host: String = "0.0.0.0",
+    val port: Int = 8080,
+  )
+
   @Serializable public data class DevSettings(
     val source: ProjectSourceSpec? = null,
     val lsp: LspSettings? = null,
     val mcp: McpSettings? = null,
+    val server: DevServerSettings? = null,
   )
 
   @Serializable public data class Jar(

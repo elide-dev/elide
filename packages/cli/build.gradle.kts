@@ -1814,8 +1814,8 @@ val embeddedSubstrateFlags = listOf(
   // "-H:+AllowDeprecatedBuilderClassesOnImageClasspath",
   "-Dcom.oracle.graalvm.isaot=true",
   "-J-Dcom.oracle.graalvm.isaot=true",
-  "-Dorg.graalvm.version=24.2.1",
-  "-J-Dorg.graalvm.version=24.2.1",
+  "-Dorg.graalvm.version=24.2.2",
+  "-J-Dorg.graalvm.version=24.2.2",
   "--link-at-build-time=com.oracle.svm.driver,com.oracle.svm.driver.metainf",
   "-H:IncludeResources=com/oracle/svm/driver/launcher/.*",
 )

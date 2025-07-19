@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import kotlin.io.path.absolutePathString
 import elide.internal.conventions.kotlin.KotlinTarget
 
@@ -28,6 +29,10 @@ elide {
     atomicFu = true
     target = KotlinTarget.JVM
     explicitApi = true
+  }
+  jvm {
+    // tooling consumers (such as the intellij plugin) may not support the latest bytecode
+    target = JvmTarget.JVM_21
   }
   checks {
     diktat = false
@@ -70,6 +75,12 @@ dependencies {
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)
   testImplementation(libs.kotlin.test.junit5)
+}
+
+tasks.processResources {
+  from(layout.projectDirectory.dir("src/main/pkl")) {
+    into("META-INF/elide/pkl/")
+  }
 }
 
 tasks.test {

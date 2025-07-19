@@ -38,7 +38,7 @@ debug = true
 incremental = true
 
 [profile.release]
-opt-level = 3
+opt-level = 2
 lto = true
 strip = "debuginfo"
 debug = true
@@ -50,6 +50,15 @@ codegen-units = 1
 opt-level = "s"
 
 [profile.release.package.local-ai]
+opt-level = "s"
+
+[profile.release.package.trace]
+opt-level = "s"
+
+[profile.release.package.exec]
+opt-level = "s"
+
+[profile.release.package.umbrella]
 opt-level = "s"
 
 [profile.dev.package.builder]

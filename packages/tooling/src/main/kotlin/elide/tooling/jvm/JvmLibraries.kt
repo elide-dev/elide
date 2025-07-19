@@ -28,7 +28,7 @@ public object JvmLibraries {
   public const val EMBEDDED_APIGUARDIAN_VERSION: String = "1.1.2"
   public const val EMBEDDED_OPENTEST_VERSION: String = "1.3.0"
   public const val EMBEDDED_KOTLINX_HTML_VERSION: String = "0.12.0"
-  public const val EMBEDDED_KOTLINX_CSS_VERSION: String = "2025.7.1"
+  public const val EMBEDDED_KOTLINX_CSS_VERSION: String = "2025.7.7"
   public const val EMBEDDED_KOTLINX_IO_VERSION: String = "0.8.0"
   public const val EMBEDDED_COROUTINES_VERSION: String = "1.10.2"
   public const val EMBEDDED_SERIALIZATION_VERSION: String = "1.9.0"

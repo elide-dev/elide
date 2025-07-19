@@ -70,6 +70,10 @@ class ElideCommandLineInfo(
           text = Constants.Strings["execution.completion.tasks.run.name"],
           description = Constants.Strings["execution.completion.tasks.run.description"],
         ),
+        TextCompletionInfo(
+          text = Constants.Strings["execution.completion.tasks.serve.name"],
+          description = Constants.Strings["execution.completion.tasks.serve.description"],
+        ),
       )
     }
 

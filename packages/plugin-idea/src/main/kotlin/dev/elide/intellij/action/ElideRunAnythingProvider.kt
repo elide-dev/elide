@@ -20,9 +20,9 @@ import com.intellij.ide.actions.runAnything.getPath
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import dev.elide.intellij.Constants
+import dev.elide.intellij.project.model.fullCommandLine
 import dev.elide.intellij.service.ElideExecutionService
 import dev.elide.intellij.service.elideProjectIndex
-import dev.elide.intellij.project.model.fullCommandLine
 import dev.elide.intellij.settings.ElideSettings
 import javax.swing.Icon
 
@@ -49,7 +49,7 @@ class ElideRunAnythingProvider : RunAnythingCommandLineProvider() {
       it.fullCommandLine
     }?.sorted()?.asSequence().orEmpty()
 
-    return tasks + arrayOf("install", "build", "run").asSequence()
+    return tasks + Constants.DEFAULT_COMMANDS.asSequence()
   }
 
   override fun run(

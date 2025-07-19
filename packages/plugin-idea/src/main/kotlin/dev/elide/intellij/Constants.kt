@@ -52,6 +52,9 @@ object Constants {
   /** Browser URL for the installation section of the documentation. */
   const val INSTALL_URL = "https://docs.elide.dev/installation"
 
+  /** Commands available to all projects by default. */
+  val DEFAULT_COMMANDS = arrayOf("install", "build", "run", "serve")
+
   /** Descriptor for a file chooser to be used when selecting an Elide project. */
   @JvmStatic fun projectFileChooser(): FileChooserDescriptor {
     return FileChooserDescriptor(

@@ -14,22 +14,40 @@ package elide.tooling.web.css
 
 import elide.runtime.diag.DiagnosticInfo
 import elide.runtime.diag.Diagnostics
+import elide.runtime.diag.Severity
 import elide.tooling.web.css.CssBuilder.CssOptions
+
+private const val REPORT_CSS_ERROR_METHOD = "reportCssError"
+private const val BUILD_CSS_METHOD = "buildCss"
 
 // Implements native methods for CSS parsing and building via LightningCSS in Rust.
 internal object CssNative {
-  @Suppress("unused")
-  @JvmName("reportCssError") @JvmStatic internal fun reportCssError(error: String?) {
-    Diagnostics.report(DiagnosticInfo.mutable().apply {
-      message = error ?: "Unknown CSS error"
-    })
+  @Suppress("unused", "TooGenericExceptionCaught") // Used from JNI.
+  @JvmName(REPORT_CSS_ERROR_METHOD) @JvmStatic internal fun reportCssError(error: String?) {
+    try {
+      Diagnostics.report(DiagnosticInfo.mutable().apply {
+        severity = Severity.ERROR
+        message = error ?: "Unknown CSS error"
+      })
+    } catch (exc: Throwable) {
+      // never ever fail here because we are dispatched from a native context.
+      System.err.println(buildString {
+        append("Failed to report native diagnostic: ${exc.message ?: "Unknown error"}.")
+        append(" Stacktrace:")
+        appendLine()
+        append(exc.stackTraceToString())
+      })
+    }
   }
 
   // Builds CSS and returns a success or error code.
-  @JvmName("buildCss") @JvmStatic internal external fun buildCss(
+  @JvmName(BUILD_CSS_METHOD) @JvmStatic internal external fun buildCss(
     css: String,
     options: CssOptions,
     minify: Boolean,
+    modules: Boolean,
     sourceMaps: Boolean,
+    scss: Boolean,
+    browsers: Array<String>,
   ): String?
 }

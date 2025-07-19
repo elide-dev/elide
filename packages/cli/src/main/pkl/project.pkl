@@ -84,7 +84,9 @@ class ElideProject {
   nativeImage: _nativeImage.NativeImageSettings?
 
   /// Top-level project sources definition.
-  sources: _srcs.Sources
+  sources: _srcs.Sources = new {
+    ["main"] = "src/**.*"
+  }
 
   /// Development settings for this project.
   dev: _dev.DevSettings
@@ -190,7 +192,10 @@ nativeImage: _nativeImage.NativeImageSettings?
 //
 
 /// Top-level project sources definition.
-sources: _srcs.Sources = new {}
+sources: _srcs.Sources = new {
+  ["main"] = "src/**.*"
+  ["test"] = "test/**.*"
+}
 
 /// Development settings for this project.
 dev: _dev.DevSettings = new {}
@@ -235,12 +240,6 @@ function nativeImage(_from: String) = new _nativeImage.NativeImage {
   from { _from }
 }
 
-/// Create CSS browser target with the provided browser and version.
-function cssBrowser(_browser: _web.CssBrowser, _version: String) = new _web.CssTarget {
-  browser = _browser
-  version = _version
-}
-
 /// Create a Native Image shared library from an artifact.
 function nativeSharedLibrary(_from: String) = new _nativeImage.NativeImage {
   from { _from }
@@ -270,4 +269,15 @@ function containerImageWithBase(
   image = target
   base = targetBase
   from { _from }
+}
+
+/// Create CSS browser target with the provided browser and version.
+function browser(_browser: _web.Browser, _version: String) = new _web.CssTarget {
+  browser = _browser
+  version = _version
+}
+
+/// Create a static site artifact.
+function staticSite(_srcPath: _common.FilePath) = new _web.StaticSite {
+  srcs = _srcPath
 }

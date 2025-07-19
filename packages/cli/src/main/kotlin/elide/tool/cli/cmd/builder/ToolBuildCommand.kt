@@ -42,6 +42,7 @@ import elide.exec.execute
 import elide.exec.on
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
+import elide.tool.cli.Elide
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
@@ -283,6 +284,7 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   @Suppress("ReturnCount")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
+    Elide.requestNatives(server = false, tooling = true)
     val project = projectManager.resolveProject(projectOptions().projectPath()) ?: return CommandResult.err(
       message = "No valid Elide project found, nothing to build"
     )

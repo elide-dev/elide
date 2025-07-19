@@ -464,7 +464,7 @@ dependencies {
   implementation(projects.packages.telemetry)
   implementation(projects.packages.runner)
   implementation(libs.dirs)
-  implementation(libs.snakeyaml)
+  implementation(libs.snakeyaml.core)
   implementation(mn.micronaut.json.core)
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.bundles.mordant)
@@ -596,7 +596,14 @@ dependencies {
   // KotlinX
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
+  implementation(libs.kotlinx.html)
+  implementation(libs.kotlinx.wrappers.css)
   implementation(libs.ktoml)
+
+  // Ktor
+  implementation(libs.bundles.ktor.server)
+  implementation(libs.ktor.server.cio)
+  implementation(libs.ktor.server.netty)
 
   // Logging
   api(libs.slf4j)
@@ -604,6 +611,7 @@ dependencies {
 
   // General
   implementation(libs.smartexception)
+  implementation(libs.minifyHtml)
   implementation(libs.magicProgress)
   implementation(libs.inquirer) {
     exclude(group = "org.jline", module = "jline")
@@ -817,6 +825,8 @@ val enabledFeatures = listOfNotNull(
   "elide.runtime.feature.engine.NativeTraceFeature",
   "elide.tool.feature.DisallowedHostJvmFeature",
   "elide.tool.feature.FileSystemsFeature",
+  "elide.tool.feature.WebBuilderFeature",
+  "elide.tool.feature.MediaBuilderFeature",
   onlyIf(enablePython, "elide.runtime.feature.python.PythonFeature"),
   onlyIf(enableNativeTransportV2, "elide.runtime.feature.engine.NativeTransportFeature"),
   onlyIf(enableNativeCryptoV2, "elide.runtime.feature.engine.NativeCryptoFeature"),
@@ -1327,6 +1337,11 @@ val commonNativeArgs = listOfNotNull(
   "-H:MaxRuntimeCompileMethods=20000",
   "-H:ExcludeResources=META-INF/native/libumbrella.so",
   "-H:ExcludeResources=META-INF/native/libumbrella.a",
+  "-H:ExcludeResources=/linux-aarch64.nativelib",  // provided by our own rust-libs, for `minify-html`
+  "-H:ExcludeResources=/linux-x64.nativelib",
+  "-H:ExcludeResources=/mac-aarch64.nativelib",
+  "-H:ExcludeResources=/mac-x64.nativelib",
+  "-H:ExcludeResources=/win-x64.nativelib",
   "-H:ExcludeResources=.*.proto",
   "-H:ExcludeResources=elide/app/.*\\.proto",
   "-H:ExcludeResources=elide/assets/.*\\.proto",
@@ -1688,8 +1703,8 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libposix.a",
   "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
-  "-H:NativeLinkerOption=$nativesPath/libtrace.a",
   "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
+  "-H:NativeLinkerOption=$nativesPath/libweb.a",
   "-H:NativeLinkerOption=-lm",
   "-H:NativeLinkerOption=-lstdc++",
 ).plus(if (oracleGvm) listOf(
@@ -2241,7 +2256,9 @@ tasks {
       archiveBaseName = sample
       archiveVersion = ""
       destinationDirectory = builtSamples
-      from(path)
+      from(path) {
+        exclude("node_modules", ".dev/artifacts", ".dev/dependencies")
+      }
     }
   }
 

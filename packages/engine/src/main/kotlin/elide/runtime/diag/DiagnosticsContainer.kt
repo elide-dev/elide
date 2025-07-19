@@ -29,8 +29,10 @@ import elide.runtime.diag.Severity.INFO
  * Generally speaking, diagnostics are reported in cases where the engine intends to crash before continuing (compiler
  * errors, warnings in strict mode).
  */
-public class DiagnosticsContainer private constructor (initial: Sequence<DiagnosticInfo>? = null) :
-  DiagnosticsReceiver, DiagnosticsSuite {
+public class DiagnosticsContainer private constructor (
+  private val lockable: Boolean = true,
+  initial: Sequence<DiagnosticInfo>? = null,
+) : DiagnosticsReceiver, DiagnosticsSuite {
   // Whether this container has locked.
   private val isLocked = atomic(false)
 
@@ -51,13 +53,15 @@ public class DiagnosticsContainer private constructor (initial: Sequence<Diagnos
 
   // Lock the container if needed, then run the block.
   private inline fun <R> withLocked(crossinline block: () -> R): R {
-    isLocked.compareAndSet(expect = false, update = true)
+    if (lockable) {
+      isLocked.compareAndSet(expect = false, update = true)
+    }
     return block()
   }
 
   // Fail if the container is locked, otherwise run the block.
   private inline fun <R> withMutable(crossinline block: () -> R): R {
-    if (isLocked.value) {
+    if (lockable && isLocked.value) {
       error("Container is locked.")
     }
     return block()
@@ -136,9 +140,13 @@ public class DiagnosticsContainer private constructor (initial: Sequence<Diagnos
     }
 
     /** @return Empty diagnostics container. */
-    @JvmStatic public fun create(): DiagnosticsContainer = DiagnosticsContainer()
+    @JvmStatic public fun create(lockable: Boolean = true): DiagnosticsContainer = DiagnosticsContainer(lockable)
 
     /** @return Diagnostics container from the provided sequence. */
-    @JvmStatic public fun from(seq: Sequence<DiagnosticInfo>): DiagnosticsContainer = DiagnosticsContainer(seq)
+    @JvmStatic public fun from(seq: Sequence<DiagnosticInfo>, lockable: Boolean = true): DiagnosticsContainer =
+      DiagnosticsContainer(
+        lockable,
+        seq,
+      )
   }
 }

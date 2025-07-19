@@ -13,9 +13,7 @@
     "last 3 safari versions"
   ],
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": ["@commitlint/config-conventional"]
   },
   "dependencies": {
     "browserslist": "4.25.1",
@@ -31,7 +29,7 @@
     "typescript": "5.8.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.1.1",
+    "@biomejs/biome": "1.8.3",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
     "@mdx-js/esbuild": "3.1.0",
@@ -72,11 +70,6 @@
     "lint:check": "prettier --check  . --plugin=prettier-plugin-sh --plugin=prettier-plugin-toml --plugin=prettier-plugin-properties --plugin=prettier-plugin-java"
   },
   "prettier": {
-    "plugins": [
-      "@prettier/plugin-xml",
-      "prettier-plugin-toml",
-      "prettier-plugin-sh",
-      "prettier-plugin-properties"
-    ]
+    "plugins": ["@prettier/plugin-xml", "prettier-plugin-toml", "prettier-plugin-sh", "prettier-plugin-properties"]
   }
 }

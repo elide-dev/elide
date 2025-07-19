@@ -1,3 +1,28 @@
+public abstract interface class elide/tooling/archive/ArchiveBuilder {
+	public static final field Companion Lelide/tooling/archive/ArchiveBuilder$Companion;
+	public abstract fun finalizeArchive ()V
+	public abstract fun packFile (Ljava/nio/file/Path;Ljava/lang/String;)Lorg/apache/commons/compress/archivers/ArchiveEntry;
+	public static fun zipBuilder (Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
+	public static fun zipBuilder (Lorg/apache/commons/compress/archivers/ArchiveOutputStream;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
+}
+
+public final class elide/tooling/archive/ArchiveBuilder$Companion {
+	public final fun zipBuilder (Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
+	public final fun zipBuilder (Lorg/apache/commons/compress/archivers/ArchiveOutputStream;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
+	public static synthetic fun zipBuilder$default (Lelide/tooling/archive/ArchiveBuilder$Companion;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
+}
+
+public final class elide/tooling/archive/ArchiveBuilder$ZipBuilder : elide/tooling/archive/ArchiveBuilder {
+	public fun finalizeArchive ()V
+	public fun packFile (Ljava/nio/file/Path;Ljava/lang/String;)Lorg/apache/commons/compress/archivers/ArchiveEntry;
+}
+
+public final class elide/tooling/archive/ZipTasks {
+	public static final field INSTANCE Lelide/tooling/archive/ZipTasks;
+	public final fun zip (Lelide/exec/Action$ActionContext;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lelide/exec/Result;
+	public static synthetic fun zip$default (Lelide/tooling/archive/ZipTasks;Lelide/exec/Action$ActionContext;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/exec/Result;
+}
+
 public final class elide/tooling/builder/BuildDriver {
 	public static final field INSTANCE Lelide/tooling/builder/BuildDriver;
 	public static final fun buildProject (Lkotlinx/coroutines/CoroutineScope;Lio/micronaut/context/BeanContext;Lelide/tooling/project/ElideProject;Lelide/tooling/config/BuildConfigurator$BuildConfiguration;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -1304,6 +1329,140 @@ public class elide/tooling/gvm/nativeImage/NativeImageResult : java/lang/Runtime
 	public fun isSuccess ()Z
 }
 
+public final class elide/tooling/img/ImageFormat : java/lang/Enum, elide/core/api/Symbolic {
+	public static final field AVIF Lelide/tooling/img/ImageFormat;
+	public static final field Companion Lelide/tooling/img/ImageFormat$Companion;
+	public static final field GIF Lelide/tooling/img/ImageFormat;
+	public static final field JPG Lelide/tooling/img/ImageFormat;
+	public static final field PNG Lelide/tooling/img/ImageFormat;
+	public static final field SVG Lelide/tooling/img/ImageFormat;
+	public static final field WEBP Lelide/tooling/img/ImageFormat;
+	public final fun getAliases ()[Ljava/lang/String;
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getEncodable ()Z
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getOptimizable ()Z
+	public synthetic fun getSymbol ()Ljava/lang/Object;
+	public fun getSymbol ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/img/ImageFormat;
+	public static fun values ()[Lelide/tooling/img/ImageFormat;
+}
+
+public final class elide/tooling/img/ImageFormat$Companion : elide/core/api/Symbolic$SealedResolver {
+	public synthetic fun resolve (Ljava/lang/Object;)Lelide/core/api/Symbolic;
+	public fun resolve (Ljava/lang/String;)Lelide/tooling/img/ImageFormat;
+}
+
+public abstract interface class elide/tooling/img/ImageOptions {
+	public fun check ()Lkotlin/Pair;
+	public abstract fun getDebug ()Z
+	public abstract fun getFormat ()Lelide/tooling/img/ImageFormat;
+}
+
+public final class elide/tooling/img/ImageOptions$AvifOptions : java/lang/Record, elide/tooling/img/ImageOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/img/ImageOptions$AvifOptions;
+	public static synthetic fun copy$default (Lelide/tooling/img/ImageOptions$AvifOptions;ZILjava/lang/Object;)Lelide/tooling/img/ImageOptions$AvifOptions;
+	public fun debug ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun format ()Lelide/tooling/img/ImageFormat;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getFormat ()Lelide/tooling/img/ImageFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/img/ImageOptions$JpgOptions : java/lang/Record, elide/tooling/img/ImageOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/img/ImageOptions$JpgOptions;
+	public static synthetic fun copy$default (Lelide/tooling/img/ImageOptions$JpgOptions;ZILjava/lang/Object;)Lelide/tooling/img/ImageOptions$JpgOptions;
+	public fun debug ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun format ()Lelide/tooling/img/ImageFormat;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getFormat ()Lelide/tooling/img/ImageFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/img/ImageOptions$PngOptions : java/lang/Record, elide/tooling/img/ImageOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/img/ImageOptions$PngOptions;
+	public static synthetic fun copy$default (Lelide/tooling/img/ImageOptions$PngOptions;ZILjava/lang/Object;)Lelide/tooling/img/ImageOptions$PngOptions;
+	public fun debug ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun format ()Lelide/tooling/img/ImageFormat;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getFormat ()Lelide/tooling/img/ImageFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/img/ImageOptions$WebpOptions : java/lang/Record, elide/tooling/img/ImageOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lelide/tooling/img/ImageOptions$WebpOptions;
+	public static synthetic fun copy$default (Lelide/tooling/img/ImageOptions$WebpOptions;ZILjava/lang/Object;)Lelide/tooling/img/ImageOptions$WebpOptions;
+	public fun debug ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun format ()Lelide/tooling/img/ImageFormat;
+	public synthetic fun getDebug ()Z
+	public synthetic fun getFormat ()Lelide/tooling/img/ImageFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/img/Images {
+	public static final field INSTANCE Lelide/tooling/img/Images;
+	public final fun compress (Lelide/tooling/img/ImageOptions;Lkotlin/coroutines/CoroutineContext;Lelide/tooling/img/Images$ImageSource;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun compress$default (Lelide/tooling/img/Images;Lelide/tooling/img/ImageOptions;Lkotlin/coroutines/CoroutineContext;Lelide/tooling/img/Images$ImageSource;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun convert (Ljava/lang/String;Lelide/tooling/img/ImageOptions;Lkotlin/coroutines/CoroutineContext;Lelide/tooling/img/Images$ImageSource;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun convert$default (Lelide/tooling/img/Images;Ljava/lang/String;Lelide/tooling/img/ImageOptions;Lkotlin/coroutines/CoroutineContext;Lelide/tooling/img/Images$ImageSource;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun imageBufferFor ([B)Ljava/nio/ByteBuffer;
+	public final fun imageBufferForSize-WZ4Q5Ns (I)Ljava/nio/ByteBuffer;
+	public final fun load ()V
+}
+
+public final class elide/tooling/img/Images$ImageData : elide/tooling/img/Images$ImageResult {
+	public final fun getOptions ()Lelide/tooling/img/ImageOptions;
+	public final fun getResult ()Ljava/nio/ByteBuffer;
+	public fun isSuccess ()Z
+}
+
+public abstract interface class elide/tooling/img/Images$ImageFile : elide/tooling/img/Images$ImageSource {
+	public abstract fun atPath ()Ljava/nio/file/Path;
+	public fun provide ()Ljava/nio/ByteBuffer;
+}
+
+public abstract interface class elide/tooling/img/Images$ImageResult {
+	public abstract fun isSuccess ()Z
+}
+
+public abstract interface class elide/tooling/img/Images$ImageSource {
+	public abstract fun provide ()Ljava/nio/ByteBuffer;
+}
+
+public abstract interface class elide/tooling/img/Images$ImageSourceInMemory : elide/tooling/img/Images$ImageSource {
+}
+
+public final class elide/tooling/img/Images$ImgOperationError : java/lang/Exception, elide/tooling/img/Images$ImageResult {
+	public fun <init> (Lelide/tooling/img/ImageOptions;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Lelide/tooling/img/ImageOptions;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getOptions ()Lelide/tooling/img/ImageOptions;
+	public fun isSuccess ()Z
+}
+
 public synthetic class elide/tooling/js/resolver/$NpmResolver$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2368,6 +2527,10 @@ public final class elide/tooling/kotlin/KotlinCompilerKt {
 
 public final class elide/tooling/md/Markdown {
 	public static final field INSTANCE Lelide/tooling/md/Markdown;
+	public final fun defaultPage (Lelide/tooling/md/Markdown$Frontmatter;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/StringBuilder;
+	public static synthetic fun defaultPage$default (Lelide/tooling/md/Markdown;Lelide/tooling/md/Markdown$Frontmatter;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/StringBuilder;
+	public final fun frontmatter (Ljava/lang/String;)Lkotlin/Pair;
+	public final fun frontmatter (Ljava/util/Map;)Lelide/tooling/md/Markdown$PageFrontmatter;
 	public final fun getDEFAULT_MARKDOWN_FLAVOR ()Lelide/tooling/md/MarkdownFlavor;
 	public final fun markdownStyle (Lelide/tooling/md/MarkdownFlavor;)Lorg/intellij/markdown/flavours/MarkdownFlavourDescriptor;
 	public static synthetic fun markdownStyle$default (Lelide/tooling/md/Markdown;Lelide/tooling/md/MarkdownFlavor;ILjava/lang/Object;)Lorg/intellij/markdown/flavours/MarkdownFlavourDescriptor;
@@ -2375,30 +2538,61 @@ public final class elide/tooling/md/Markdown {
 	public static synthetic fun renderMarkdown$default (Lelide/tooling/md/Markdown;Lelide/tooling/md/MarkdownFlavor;Lelide/tooling/md/Markdown$MarkdownOptions;Lorg/intellij/markdown/flavours/MarkdownFlavourDescriptor;Lkotlin/coroutines/CoroutineContext;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
+public abstract interface class elide/tooling/md/Markdown$Frontmatter : java/util/Map, kotlin/jvm/internal/markers/KMappedMarker {
+}
+
+public final class elide/tooling/md/Markdown$KnownProperties {
+	public static final field INSTANCE Lelide/tooling/md/Markdown$KnownProperties;
+	public static final field SCRIPTS Ljava/lang/String;
+	public static final field STYLES Ljava/lang/String;
+	public static final field STYLESHEETS Ljava/lang/String;
+	public static final field TITLE Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/tooling/md/Markdown$MarkdownOptions : java/lang/Record {
+	public static final field Companion Lelide/tooling/md/Markdown$MarkdownOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (Lelide/tooling/md/MarkdownFlavor;Z)V
-	public synthetic fun <init> (Lelide/tooling/md/MarkdownFlavor;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lelide/tooling/md/MarkdownFlavor;ZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;)V
+	public synthetic fun <init> (Lelide/tooling/md/MarkdownFlavor;ZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lelide/tooling/md/MarkdownFlavor;
 	public final fun component2 ()Z
-	public final fun copy (Lelide/tooling/md/MarkdownFlavor;Z)Lelide/tooling/md/Markdown$MarkdownOptions;
-	public static synthetic fun copy$default (Lelide/tooling/md/Markdown$MarkdownOptions;Lelide/tooling/md/MarkdownFlavor;ZILjava/lang/Object;)Lelide/tooling/md/Markdown$MarkdownOptions;
+	public final fun component3 ()Z
+	public final fun component4 ()Lkotlin/jvm/functions/Function0;
+	public final fun component5 ()Lkotlin/jvm/functions/Function1;
+	public final fun component6 ()Lkotlin/jvm/functions/Function3;
+	public final fun component7 ()Lkotlin/jvm/functions/Function2;
+	public final fun copy (Lelide/tooling/md/MarkdownFlavor;ZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;)Lelide/tooling/md/Markdown$MarkdownOptions;
+	public static synthetic fun copy$default (Lelide/tooling/md/Markdown$MarkdownOptions;Lelide/tooling/md/MarkdownFlavor;ZZLkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lelide/tooling/md/Markdown$MarkdownOptions;
+	public static final fun defaults ()Lelide/tooling/md/Markdown$MarkdownOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun flavor ()Lelide/tooling/md/MarkdownFlavor;
+	public final fun frontmatter ()Z
+	public final fun frontmatterBuilder ()Lkotlin/jvm/functions/Function1;
 	public fun hashCode ()I
+	public final fun linkRenderer ()Lkotlin/jvm/functions/Function3;
+	public final fun renderer ()Lkotlin/jvm/functions/Function2;
+	public final fun titleProvider ()Lkotlin/jvm/functions/Function0;
 	public fun toString ()Ljava/lang/String;
 	public final fun trimIndent ()Z
 }
 
+public final class elide/tooling/md/Markdown$MarkdownOptions$Companion {
+	public final fun defaults ()Lelide/tooling/md/Markdown$MarkdownOptions;
+}
+
 public abstract interface class elide/tooling/md/Markdown$MarkdownSourceFile : elide/tooling/md/Markdown$MarkdownSourceMaterial {
+	public abstract fun atPath ()Ljava/nio/file/Path;
 	public fun code (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getPath ()Ljava/nio/file/Path;
 }
 
 public abstract interface class elide/tooling/md/Markdown$MarkdownSourceLiteral : elide/tooling/md/Markdown$MarkdownSourceMaterial {
 }
 
 public abstract interface class elide/tooling/md/Markdown$MarkdownSourceMaterial {
+	public fun atPath ()Ljava/nio/file/Path;
 	public abstract fun code (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
@@ -2408,9 +2602,41 @@ public final class elide/tooling/md/Markdown$MarkdownSources : java/lang/Record 
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class elide/tooling/md/Markdown$PageFrontmatter : elide/tooling/md/Markdown$Frontmatter {
+	public abstract fun getTitle ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/md/Markdown$RenderedMarkdown {
+	public abstract fun asString ()Ljava/lang/String;
+	public fun metadata ()Lelide/tooling/md/Markdown$Frontmatter;
+}
+
+public final class elide/tooling/md/Markdown$RenderedMarkdownValue : elide/tooling/md/Markdown$RenderedMarkdown {
+	public fun asString ()Ljava/lang/String;
+	public static fun asString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/md/Markdown$RenderedMarkdownValue;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/tooling/md/Markdown$RenderedMarkdownWithMetadata : java/lang/Record, elide/tooling/md/Markdown$RenderedMarkdown {
+	public fun asString ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun metadata ()Lelide/tooling/md/Markdown$Frontmatter;
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class elide/tooling/md/MarkdownFlavor : java/lang/Enum {
 	public static final field CommonMark Lelide/tooling/md/MarkdownFlavor;
 	public static final field GitHub Lelide/tooling/md/MarkdownFlavor;
+	public static final field Mdx Lelide/tooling/md/MarkdownFlavor;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/md/MarkdownFlavor;
 	public static fun values ()[Lelide/tooling/md/MarkdownFlavor;
@@ -2902,6 +3128,7 @@ public final class elide/tooling/runner/ThreadedTestRunner$Builder : elide/tooli
 public final class elide/tooling/web/WebBuilder {
 	public static final field INSTANCE Lelide/tooling/web/WebBuilder;
 	public final fun css ()Lelide/tooling/web/css/CssBuilder;
+	public final fun load ()Z
 	public final fun markdown ()Lelide/tooling/md/Markdown;
 }
 
@@ -2930,7 +3157,12 @@ public abstract interface class elide/tooling/web/css/CssBuilder$CssMinification
 
 public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Record {
 	public static final field Companion Lelide/tooling/web/css/CssBuilder$CssOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZLelide/tooling/web/Browsers;)V
+	public synthetic fun <init> (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZLelide/tooling/web/Browsers;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun absoluteProjectRoot ()Ljava/lang/String;
+	public final fun absoluteProjectRoot ()[Ljava/lang/String;
+	public final fun browsers ()Lelide/tooling/web/Browsers;
 	public final fun bundle ()Z
 	public final fun component1 ()Z
 	public final fun component2 ()Lelide/tooling/web/css/CssBuilder$CssMinification;
@@ -2938,12 +3170,17 @@ public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Recor
 	public final fun component4 ()Z
 	public final fun component5 ()Ljava/nio/file/Path;
 	public final fun component6 ()Z
+	public final fun component7 ()Z
+	public final fun component8 ()Lelide/tooling/web/Browsers;
+	public final fun copy (ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZLelide/tooling/web/Browsers;)Lelide/tooling/web/css/CssBuilder$CssOptions;
+	public static synthetic fun copy$default (Lelide/tooling/web/css/CssBuilder$CssOptions;ZLelide/tooling/web/css/CssBuilder$CssMinification;ZZLjava/nio/file/Path;ZZLelide/tooling/web/Browsers;ILjava/lang/Object;)Lelide/tooling/web/css/CssBuilder$CssOptions;
 	public final fun debug ()Z
 	public static final fun defaults ()Lelide/tooling/web/css/CssBuilder$CssOptions;
 	public final fun enableBundle ()Z
 	public final fun enableDebugLogs ()Z
 	public final fun enableMinification ()Z
 	public final fun enableModules ()Z
+	public final fun enableScss ()Z
 	public final fun enableSourceMaps ()Z
 	public fun equals (Ljava/lang/Object;)Z
 	public static final fun forProject (Lelide/tooling/project/ElideProject;)Lelide/tooling/web/css/CssBuilder$CssOptions;
@@ -2951,6 +3188,7 @@ public final class elide/tooling/web/css/CssBuilder$CssOptions : java/lang/Recor
 	public final fun minify ()Lelide/tooling/web/css/CssBuilder$CssMinification;
 	public final fun modules ()Z
 	public final fun projectRoot ()Ljava/nio/file/Path;
+	public final fun scss ()Z
 	public final fun sourceMap ()Z
 	public fun toString ()Ljava/lang/String;
 }
@@ -2965,8 +3203,8 @@ public abstract interface class elide/tooling/web/css/CssBuilder$CssResult {
 }
 
 public abstract interface class elide/tooling/web/css/CssBuilder$CssSourceFile : elide/tooling/web/css/CssBuilder$CssSourceMaterial {
+	public abstract fun asPath ()Ljava/nio/file/Path;
 	public fun code (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getPath ()Ljava/nio/file/Path;
 }
 
 public abstract interface class elide/tooling/web/css/CssBuilder$CssSourceLiteral : elide/tooling/web/css/CssBuilder$CssSourceMaterial {
@@ -3001,5 +3239,115 @@ public final class elide/tooling/web/css/CssBuilder$NoMinification : elide/tooli
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/html/HtmlBuilder {
+	public static final field INSTANCE Lelide/tooling/web/html/HtmlBuilder;
+	public final fun buildHtml (Lelide/tooling/web/html/HtmlBuilder$HtmlBuild;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun buildHtml$default (Lelide/tooling/web/html/HtmlBuilder;Lelide/tooling/web/html/HtmlBuilder$HtmlBuild;Lkotlin/coroutines/CoroutineContext;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun configureHtml (Lelide/tooling/web/html/HtmlBuilder$HtmlOptions;Lkotlin/sequences/Sequence;)Lelide/tooling/web/html/HtmlBuilder$HtmlBuild;
+}
+
+public final class elide/tooling/web/html/HtmlBuilder$HtmlBuild {
+	public final fun getOptions ()Lelide/tooling/web/html/HtmlBuilder$HtmlOptions;
+	public final fun getSources ()Lelide/tooling/web/html/HtmlBuilder$HtmlSources;
+}
+
+public final class elide/tooling/web/html/HtmlBuilder$HtmlDefaults {
+	public static final field INSTANCE Lelide/tooling/web/html/HtmlBuilder$HtmlDefaults;
+	public static final field MINIFY_COMMENTS Z
+	public static final field MINIFY_CSS Z
+	public static final field MINIFY_JS Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/web/html/HtmlBuilder$HtmlMinification {
+	public fun getComments ()Z
+	public fun getCss ()Z
+	public fun getJs ()Z
+}
+
+public final class elide/tooling/web/html/HtmlBuilder$HtmlOptions : java/lang/Record {
+	public static final field Companion Lelide/tooling/web/html/HtmlBuilder$HtmlOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (ZLelide/tooling/web/html/HtmlBuilder$HtmlMinification;)V
+	public synthetic fun <init> (ZLelide/tooling/web/html/HtmlBuilder$HtmlMinification;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Lelide/tooling/web/html/HtmlBuilder$HtmlMinification;
+	public final fun copy (ZLelide/tooling/web/html/HtmlBuilder$HtmlMinification;)Lelide/tooling/web/html/HtmlBuilder$HtmlOptions;
+	public static synthetic fun copy$default (Lelide/tooling/web/html/HtmlBuilder$HtmlOptions;ZLelide/tooling/web/html/HtmlBuilder$HtmlMinification;ILjava/lang/Object;)Lelide/tooling/web/html/HtmlBuilder$HtmlOptions;
+	public final fun debug ()Z
+	public static final fun defaults ()Lelide/tooling/web/html/HtmlBuilder$HtmlOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun minify ()Lelide/tooling/web/html/HtmlBuilder$HtmlMinification;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/html/HtmlBuilder$HtmlOptions$Companion {
+	public final fun defaults ()Lelide/tooling/web/html/HtmlBuilder$HtmlOptions;
+}
+
+public abstract interface class elide/tooling/web/html/HtmlBuilder$HtmlResult {
+	public abstract fun code ()Ljava/util/List;
+}
+
+public abstract interface class elide/tooling/web/html/HtmlBuilder$HtmlSourceFile : elide/tooling/web/html/HtmlBuilder$HtmlSourceMaterial {
+	public abstract fun asPath ()Ljava/nio/file/Path;
+	public fun code (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tooling/web/html/HtmlBuilder$HtmlSourceLiteral : elide/tooling/web/html/HtmlBuilder$HtmlSourceMaterial {
+}
+
+public abstract interface class elide/tooling/web/html/HtmlBuilder$HtmlSourceMaterial {
+	public abstract fun code (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/web/html/HtmlBuilder$HtmlSources : java/lang/Record {
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/html/HtmlBuilder$MinifyOptions : java/lang/Record, elide/tooling/web/html/HtmlBuilder$HtmlMinification {
+	public static final field Companion Lelide/tooling/web/html/HtmlBuilder$MinifyOptions$Companion;
+	public fun <init> ()V
+	public fun <init> (ZZZ)V
+	public synthetic fun <init> (ZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun comments ()Z
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun copy (ZZZ)Lelide/tooling/web/html/HtmlBuilder$MinifyOptions;
+	public static synthetic fun copy$default (Lelide/tooling/web/html/HtmlBuilder$MinifyOptions;ZZZILjava/lang/Object;)Lelide/tooling/web/html/HtmlBuilder$MinifyOptions;
+	public fun css ()Z
+	public static final fun defaults ()Lelide/tooling/web/html/HtmlBuilder$MinifyOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getComments ()Z
+	public synthetic fun getCss ()Z
+	public synthetic fun getJs ()Z
+	public fun hashCode ()I
+	public fun js ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/html/HtmlBuilder$MinifyOptions$Companion {
+	public final fun defaults ()Lelide/tooling/web/html/HtmlBuilder$MinifyOptions;
+}
+
+public final class elide/tooling/web/html/HtmlBuilder$NoMinification : elide/tooling/web/html/HtmlBuilder$HtmlMinification {
+	public static final field INSTANCE Lelide/tooling/web/html/HtmlBuilder$NoMinification;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/web/mdx/MdxBuilder {
+	public static final field INSTANCE Lelide/tooling/web/mdx/MdxBuilder;
+	public static final fun renderMdx (Ljava/lang/String;Lelide/tooling/md/Markdown$MarkdownOptions;)Ljava/lang/String;
+	public static synthetic fun renderMdx$default (Ljava/lang/String;Lelide/tooling/md/Markdown$MarkdownOptions;ILjava/lang/Object;)Ljava/lang/String;
 }
 

@@ -26,17 +26,19 @@ license = { workspace = true }
 crate-type = ["lib", "staticlib", "cdylib"]
 
 [dependencies]
-lol_html = { workspace = true }
+# lol_html = { workspace = true }
 lightningcss = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
-js = { workspace = true }
 diag = { workspace = true }
-lazy_static = { workspace = true }
 parcel_sourcemap = { workspace = true }
 minify-html = { workspace = true }
-cookie = { workspace = true }
-sourcemap = { workspace = true }
+# minify-html-onepass = { workspace = true }
+# cookie = { workspace = true }
+# sourcemap = { workspace = true }
 grass = { workspace = true }
-oxvg = { workspace = true }
-rimage = { workspace = true }
+# oxvg = { workspace = true }
+mdxjs = { workspace = true }
+markdown = { workspace = true }
+browserslist-rs = { workspace = true }
+media = { workspace = true }

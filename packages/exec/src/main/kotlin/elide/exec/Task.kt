@@ -92,6 +92,13 @@ public sealed interface Task : Satisfiable {
   public suspend fun executeTask(scope: ActionScope): Job
 
   /**
+   * Return the exception which caused this task to fail, if any.
+   *
+   * @return Exception which caused this task to fail, or `null` if this task has not failed or has no exception.
+   */
+  public fun exceptionOrNull(): Throwable?
+
+  /**
    * ## Task Status
    *
    * Holds status in potentially mutable form for a task.
@@ -130,6 +137,8 @@ public sealed interface Task : Satisfiable {
     public fun describedBy(descriptionProvider: Task.() -> String): DefaultTask = apply {
       this.description.set(descriptionProvider)
     }
+
+    override fun exceptionOrNull(): Throwable? = err.get()
 
     private fun ActionScope.debugLog(msg: () -> String) {
       if (TASK_DEBUG_LOG) {

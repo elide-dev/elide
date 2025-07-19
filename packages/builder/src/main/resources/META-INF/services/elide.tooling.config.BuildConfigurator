@@ -2,3 +2,4 @@ elide.tooling.jvm.JvmBuildConfigurator
 elide.tooling.jvm.JarBuildConfigurator
 elide.tooling.gvm.nativeImage.NativeImageBuildConfigurator
 elide.tooling.containers.ContainerBuildConfigurator
+elide.tooling.web.StaticSiteContributor

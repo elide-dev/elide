@@ -30,9 +30,9 @@ public object WebBuilder {
    *
    * If an error occurs while loading the native library, an exception will be thrown.
    */
-  internal fun load() {
+  public fun load(): Boolean = WebBuilderInternals.load().also {
     // Load the native library for CSS parsing and building.
-    if (!WebBuilderInternals.load()) {
+    if (!it) {
       error("Failed to load native web library")
     }
   }

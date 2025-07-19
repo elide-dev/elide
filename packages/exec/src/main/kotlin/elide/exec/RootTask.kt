@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.exec
 
 import kotlinx.coroutines.Job
@@ -36,6 +35,7 @@ public sealed interface RootTask : Task {
     }
     override suspend fun executeTask(scope: ActionScope): Job = rootJob
     override fun describe(): String = "Building project..."
+    override fun exceptionOrNull(): Throwable? = null
   }
 
   override val id: TaskId get() = RootTaskId

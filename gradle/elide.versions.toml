@@ -183,7 +183,7 @@ kotlinxWrappers = "pre.754"
 kover = "0.9.1"
 kover-plugin = "0.9.1"
 ksp = "2.2.0-2.0.2"
-ktor = "3.0.2"
+ktor = "3.2.2"
 ktlint = "1.1.1"
 ktoml = "0.7.0"
 larray = "0.2.1"
@@ -205,6 +205,7 @@ micronaut-lib = "4.9.0"
 micronaut-liquibase = "5.4.1"
 micronaut-plugin = "4.5.4"
 micronaut-xml = "3.1.0"
+minifyHtml = "0.15.0"
 mockito-bom = "5.10.0"
 mockito-junit = "5.10.0"
 mordant = "3.0.2"
@@ -258,7 +259,8 @@ semver = "6.0.0"
 shadow-plugin = "8.1.1"
 sigstore = "1.3.0"
 slf4j = "2.0.16"
-snakeyaml = "2.4"
+snakeyaml-core = "2.4"
+snakeyaml-engine = "2.10"
 snappy = "1.1.10.7"
 snyk = "0.6.1"
 smartexception = "0.2.1"
@@ -676,9 +678,20 @@ kotlinx-wrappers-web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-cmdline = { group = "com.google.devtools.ksp", name = "symbol-processing-cmdline", version.ref = "ksp" }
-ktor-server-core-jvm = { group = "io.ktor", name = "ktor-server-core-jvm", version.ref = "ktor" }
-ktor-server-cio-jvm = { group = "io.ktor", name = "ktor-server-cio-jvm", version.ref = "ktor" }
-ktor-server-sse-jvm = { group = "io.ktor", name = "ktor-server-sse-jvm", version.ref = "ktor" }
+ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
+ktor-server-cio = { group = "io.ktor", name = "ktor-server-cio", version.ref = "ktor" }
+ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
+ktor-server-sse = { group = "io.ktor", name = "ktor-server-sse", version.ref = "ktor" }
+ktor-server-html = { group = "io.ktor", name = "ktor-server-html-builder", version.ref = "ktor" }
+ktor-server-callLogging = { group = "io.ktor", name = "ktor-server-call-logging", version.ref = "ktor" }
+ktor-server-defaultHeaders = { group = "io.ktor", name = "ktor-server-default-headers", version.ref = "ktor" }
+ktor-server-cachingHeaders = { group = "io.ktor", name = "ktor-server-caching-headers", version.ref = "ktor" }
+ktor-server-contentNegotiation = { group = "io.ktor", name = "ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-conditionalHeaders = { group = "io.ktor", name = "ktor-server-conditional-headers", version.ref = "ktor" }
+ktor-server-sessions = { group = "io.ktor", name = "ktor-server-sessions", version.ref = "ktor" }
+ktor-server-hsts = { group = "io.ktor", name = "ktor-server-hsts", version.ref = "ktor" }
+ktor-server-compression = { group = "io.ktor", name = "ktor-server-compression", version.ref = "ktor" }
+ktor-server-websockets = { group = "io.ktor", name = "ktor-server-websockets", version.ref = "ktor" }
 ktoml = { group = "com.akuleshov7", name = "ktoml-core", version.ref = "ktoml" }
 larray-buffer = { group = "org.xerial.larray", name = "larray-buffer", version.ref = "larray" }
 larray-core = { group = "org.xerial.larray", name = "larray", version.ref = "larray" }
@@ -706,6 +719,7 @@ maven-resolver-impl = { group = "org.apache.maven.resolver", name = "maven-resol
 maven-resolver-api = { group = "org.apache.maven.resolver", name = "maven-resolver-api", version.ref = "maven-lib" }
 magicProgress = { group = "com.github.lukfor", name = "magic-progress", version.ref = "magicProgress" }
 mcp = { group = "io.modelcontextprotocol", name = "kotlin-sdk", version.ref = "mcp" }
+minifyHtml = { group = "in.wilsonl.minifyhtml", name = "minify-html", version.ref = "minifyHtml" }
 mordant = { group = "com.github.ajalt.mordant", name = "mordant", version.ref = "mordant" }
 mordant-coroutines = { group = "com.github.ajalt.mordant", name = "mordant-coroutines", version.ref = "mordant" }
 mordant-markdown = { group = "com.github.ajalt.mordant", name = "mordant-markdown", version.ref = "mordant" }
@@ -765,7 +779,8 @@ slf4j-jdk-platform-logging = { group = "org.slf4j", name = "slf4j-jdk-platform-l
 slf4j-jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
 slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
 slf4j-log4j-bridge = { group = "org.slf4j", name = "log4j-over-slf4j", version.ref = "slf4j" }
-snakeyaml = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml" }
+snakeyaml-core = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml-core" }
+snakeyaml-engine = { group = "org.yaml", name = "snakeyaml-engine", version.ref = "snakeyaml-engine" }
 snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
 smartexception = { group = "com.arthenica", name = "smart-exception-java9", version.ref = "smartexception" }
 sqlcommenter-hibernate = { group = "com.google.cloud", name = "sqlcommenter-hibernate", version.ref = "sqlcommenter" }
@@ -978,4 +993,19 @@ mordant = [
   "mordant",
   "mordant-coroutines",
   "mordant-markdown",
+]
+
+ktor-server = [
+  "ktor-server-core",
+  "ktor-server-sse",
+  "ktor-server-html",
+  "ktor-server-callLogging",
+  "ktor-server-compression",
+  "ktor-server-defaultHeaders",
+  "ktor-server-conditionalHeaders",
+  "ktor-server-cachingHeaders",
+  "ktor-server-contentNegotiation",
+  "ktor-server-sessions",
+  "ktor-server-hsts",
+  "ktor-server-websockets",
 ]

@@ -63,10 +63,9 @@ dependencies {
   implementation(libs.purl)
   implementation(libs.mcp)
 
-  // ktor (needed for mcp)
-  implementation(libs.ktor.server.core.jvm)
-  implementation(libs.ktor.server.cio.jvm)
-  implementation(libs.ktor.server.sse.jvm)
+  // Ktor
+  implementation(libs.bundles.ktor.server)
+  implementation(libs.ktor.server.cio)
 
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)

@@ -56,6 +56,15 @@ class McpSettings {
   advice: Boolean = true
 }
 
+/// Development server settings for the project.
+class DevServerSettings {
+  /// Host to listen on.
+  host: String = "0.0.0.0"
+
+  /// Port to listen on.
+  port: UInt16 = 8080
+}
+
 /// Development settings for the project.
 class DevSettings {
   /// Source info for the project.
@@ -66,4 +75,7 @@ class DevSettings {
 
   /// Settings which apply to Model Context Protocol (MCP) servers.
   mcp: McpSettings?
+
+  /// Development server settings for the project.
+  server: DevServerSettings?
 }

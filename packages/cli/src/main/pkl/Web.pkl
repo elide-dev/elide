@@ -2,13 +2,46 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.web
 
+import "Artifacts.pkl" as _artifacts
+import "Base.pkl" as _common
+
 /// CSS browser types.
-typealias CssBrowser = "chrome" | "firefox" | "safari" | "edge" | "opera"
+typealias Browser = "chrome" | "firefox" | "safari" | "edge" | "opera" | String
+
+/// Static site hosting types.
+typealias StaticSiteHost = "workers" | "github-pages"
+
+/// Declares a static website as an artifact.
+class StaticSite extends _artifacts.Artifact {
+  /// Path to the root source directory for the site.
+  srcs: _common.FilePath?
+
+  /// Production domain to use for this site.
+  domain: String?
+
+  /// Preview domain to use for this site.
+  preview: String?
+
+  /// Web prefix where this site is mounted; considered for links and assets. Must end with a slash.
+  prefix: String = "/"
+
+  /// Public web path to use for public assets for this site.
+  assets: String = "\(prefix)_/assets"
+
+  /// Stylesheets to add to all pages.
+  stylesheets: Listing<_common.FilePath> = new {}
+
+  /// Scripts to add to all pages.
+  scripts: Listing<_common.FilePath> = new {}
+
+  /// Static site host (optional).
+  hosting: StaticSiteHost? = null
+}
 
 /// Describes targeting of a CSS-enabled platform (i.e. browsers).
 class CssTarget {
   /// The name of the browser type to target.
-  browser: CssBrowser
+  browser: Browser
 
   /// The version of the browser to target.
   version: String?
@@ -29,6 +62,10 @@ class WebSettings {
   /// Whether to enable debug logging for web-related stuff.
   debug: Boolean = false
 
-  /// Settings to apply to CSS processing and serving.
+  /// Settings to apply to CSS processing and serving. If both `browsers` and `css.targets` are specified, the CSS suite
+  /// wins at build-time.
   css: CssSettings = new {}
+
+  /// Browser support for this project, which applies to all built targets.
+  browsers: Listing<String> = new {}
 }

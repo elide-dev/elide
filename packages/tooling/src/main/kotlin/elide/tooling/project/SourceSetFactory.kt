@@ -19,11 +19,16 @@ import java.nio.file.Path
 import java.nio.file.PathMatcher
 import kotlin.io.path.extension
 import kotlin.streams.asSequence
+import elide.runtime.Logging
 
 /**
  * Factory for loading source sets defined in the Elide project configuration.
  */
 public fun interface SourceSetFactory {
+  public companion object {
+    private val logging by lazy { Logging.of(SourceSetFactory::class) }
+  }
+
   /**
    * Load a defined source set spec from the Elide package into an actual source set.
    *
@@ -60,13 +65,18 @@ public fun interface SourceSetFactory {
           "tsx" -> SourceSetLanguage.TSX
           "py" -> SourceSetLanguage.Python
           "rb" -> SourceSetLanguage.Ruby
+          "html" -> SourceSetLanguage.HTML
+          "css" -> SourceSetLanguage.CSS
+          "scss", "sass" -> SourceSetLanguage.SCSS
+          "md" -> SourceSetLanguage.Markdown
+          "mdx" -> SourceSetLanguage.MDX
           else -> null
         },
       )
     }
 
     override suspend fun load(root: Path, key: String, sourceSetSpec: ElidePackageManifest.SourceSet): SourceSet {
-      val sourceFilePaths: Sequence<SourceFilePath> = sourceSetSpec.spec.stream().flatMap { spec ->
+      val sourceFilePaths: Sequence<SourceFilePath> = sourceSetSpec.spec.mapNotNull { spec ->
         Path.of(spec).let { path ->
           when {
             // if there are asterisks, or it doesn't exist as a file, resolve this path as a glob.
@@ -89,7 +99,8 @@ public fun interface SourceSetFactory {
                 if (it.startsWith("/")) it else root.resolve(it)
               }
               if (!Files.exists(pathPrefix)) {
-                throw IllegalArgumentException("Source set path '$pathPrefix' does not exist (from glob: '$spec')")
+                logging.debug("Source set path '{}' does not exist (from glob: '{}')", pathPrefix, spec)
+                return@mapNotNull null
               }
               if (!Files.isDirectory(pathPrefix)) {
                 throw IllegalArgumentException("Source set path '$pathPrefix' is not a directory (from glob: '$spec')")
@@ -105,6 +116,8 @@ public fun interface SourceSetFactory {
                 if (srcRelative.toString().isEmpty()) {
                   false
                 } else {
+                  // special case: for `**/*.*`, everything matches with a prefix
+                  if (spec.endsWith("**/*.*")) return@filter true
                   val srcRelativeSrcPath = rootRelative.resolve(srcRelative)
                   matcher.matches(srcRelativeSrcPath)
                 }
@@ -117,7 +130,9 @@ public fun interface SourceSetFactory {
             else -> listOf(sourceSetFileFromPath(root.resolve(path))).stream()
           }
         }
-      }.asSequence()
+      }.asSequence().flatMap {
+        it.asSequence()
+      }
 
       val taggedPaths = sourceFilePaths.toSortedSet()
 

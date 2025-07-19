@@ -20,6 +20,7 @@ import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest.*
+import elide.tooling.web.Browsers
 
 // Default Java target version for JVM projects
 private const val DEFAULT_JAVA_TARGET = 21u
@@ -102,10 +103,16 @@ public data class ElidePackageManifest(
     val registerElide: Boolean = true,
   )
 
+  @Serializable public data class DevServerSettings(
+    val host: String = "0.0.0.0",
+    val port: Int = 8080,
+  )
+
   @Serializable public data class DevSettings(
     val source: ProjectSourceSpec? = null,
     val lsp: LspSettings? = null,
     val mcp: McpSettings? = null,
+    val server: DevServerSettings? = null,
   )
 
   @Serializable public data class Jar(
@@ -145,6 +152,7 @@ public data class ElidePackageManifest(
   @Serializable public data class WebSettings(
     val debug: Boolean = false,
     val css: CssSettings = CssSettings(),
+    val browsers: Browsers = Browsers.Defaults,
   )
 
   @Serializable public data class CssTarget(
@@ -540,6 +548,19 @@ public data class ElidePackageManifest(
     val entrypoint: String? = null,
     val moduleName: String? = null,
     val options: NativeImageOptions = NativeImageOptions(),
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ) : Artifact
+
+  @JvmRecord @Serializable public data class StaticSite(
+    val srcs: String,
+    val prefix: String = "/",
+    val assets: String? = null,
+    val domain: String? = null,
+    val preview: String? = null,
+    val stylesheets: List<String> = emptyList(),
+    val scripts: List<String> = emptyList(),
+    val hosting: String? = null,
     override val from: List<String> = emptyList(),
     override val dependsOn: List<String> = emptyList(),
   ) : Artifact

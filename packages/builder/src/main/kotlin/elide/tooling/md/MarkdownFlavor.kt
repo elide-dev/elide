@@ -27,4 +27,9 @@ public enum class MarkdownFlavor {
    * GitHub Flavored Markdown, which is a superset of CommonMark with additional features.
    */
   GitHub,
+
+  /**
+   * MDX, which is a superset of CommonMark with additional features for extended Markdown syntax via React.
+   */
+  Mdx,
 }

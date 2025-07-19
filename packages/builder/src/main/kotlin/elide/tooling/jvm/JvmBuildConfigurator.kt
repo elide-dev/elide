@@ -60,8 +60,10 @@ import elide.tooling.project.SourceSetType
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.KotlinJvmCompilerOptions
 
-private fun srcSetTaskName(srcSet: SourceSet, name: String): String {
-  return "$name${srcSet.name[0].uppercase()}${srcSet.name.slice(1..srcSet.name.lastIndex)}"
+private fun srcSetTaskName(srcSet: SourceSet, name: String): String = buildString {
+  append(name)
+  append(srcSet.name[0].uppercase())
+  append(srcSet.name.slice(1..srcSet.name.lastIndex))
 }
 
 /**

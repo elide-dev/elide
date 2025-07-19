@@ -309,6 +309,9 @@
       "type": "[Z"
     },
     {
+      "type": "android.os.Build$VERSION"
+    },
+    {
       "type": "apple.security.AppleProvider",
       "methods": [
         {
@@ -1259,6 +1262,14 @@
       "type": "com.sun.management.internal.VirtualThreadSchedulerImpls$VirtualThreadSchedulerImpl"
     },
     {
+      "type": "com.sun.nio.file.SensitivityWatchEventModifier",
+      "fields": [
+        {
+          "name": "HIGH"
+        }
+      ]
+    },
+    {
       "type": "elide.exec.ActionScope$DefaultActionScope",
       "fields": [
         {
@@ -1442,6 +1453,14 @@
       ]
     },
     {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.abort.AbortController",
+      "fields": [
+        {
+          "name": "transferable$volatile"
+        }
+      ]
+    },
+    {
       "type": "elide.runtime.gvm.internals.intrinsics.js.abort.AbortSignal",
       "fields": [
         {
@@ -1449,6 +1468,9 @@
         },
         {
           "name": "didAbort$volatile"
+        },
+        {
+          "name": "transferable$volatile"
         }
       ]
     },
@@ -4071,6 +4093,9 @@
       ]
     },
     {
+      "type": "elide.tool.server.StaticSiteServer$buildStaticServer$1$1"
+    },
+    {
       "type": "elide.tool.testing.$SanitySelfTest$Definition",
       "methods": [
         {
@@ -4493,7 +4518,16 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CssSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CssTarget",
@@ -4540,6 +4574,12 @@
           ]
         }
       ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$DevServerSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies",
@@ -4978,6 +5018,29 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$SourceSet"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$StaticSite",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.util.List",
+            "java.util.List",
+            "java.lang.String",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -5001,7 +5064,17 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$WebSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "elide.tooling.project.manifest.ElidePackageManifest$CssSettings",
+            "elide.tooling.web.Browsers"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.runner.AbstractTestRunner",
@@ -5033,6 +5106,9 @@
       ]
     },
     {
+      "type": "elide.tooling.web.Browsers"
+    },
+    {
       "type": "elide.tooling.web.css.CssOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -5049,6 +5125,9 @@
     },
     {
       "type": "io.ktor.http.content.TextContent"
+    },
+    {
+      "type": "io.ktor.http.content.Version"
     },
     {
       "type": "io.ktor.network.selector.InterestSuspensionsMap",
@@ -5101,10 +5180,72 @@
       "type": "io.ktor.server.engine.BaseApplicationResponse"
     },
     {
+      "type": "io.ktor.server.http.content.CompressedFileType"
+    },
+    {
+      "type": "io.ktor.server.http.content.LocalPathContent"
+    },
+    {
+      "type": "io.ktor.server.netty.NettyApplicationCall",
+      "fields": [
+        {
+          "name": "messageReleased"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.server.netty.NettyApplicationCallHandler"
+    },
+    {
+      "type": "io.ktor.server.netty.NettyChannelInitializer"
+    },
+    {
+      "type": "io.ktor.server.netty.NettyHttpHandlerState",
+      "fields": [
+        {
+          "name": "activeRequests$internal"
+        },
+        {
+          "name": "isChannelReadCompleted$internal"
+        },
+        {
+          "name": "isCurrentRequestFullyRead$internal"
+        },
+        {
+          "name": "skippedRead$internal"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.server.netty.cio.NettyHttpResponsePipeline",
+      "fields": [
+        {
+          "name": "isDataNotFlushed"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.server.netty.cio.RequestBodyHandler",
+      "fields": [
+        {
+          "name": "buffersInProcessingCount"
+        }
+      ]
+    },
+    {
+      "type": "io.ktor.server.netty.http1.NettyHttp1Handler"
+    },
+    {
       "type": "io.ktor.server.plugins.MutableOriginConnectionPoint"
     },
     {
+      "type": "io.ktor.server.plugins.calllogging.KtorMDCProvider"
+    },
+    {
       "type": "io.ktor.server.request.DoubleReceivePreventionToken"
+    },
+    {
+      "type": "io.ktor.server.routing.RoutingCall"
     },
     {
       "type": "io.ktor.server.routing.RoutingRoot"
@@ -5134,6 +5275,9 @@
         },
         {
           "name": "_removedRef"
+        },
+        {
+          "name": "removedRef"
         }
       ]
     },
@@ -7500,7 +7644,93 @@
       ]
     },
     {
+      "type": "io.netty.bootstrap.ServerBootstrap$1"
+    },
+    {
+      "type": "io.netty.bootstrap.ServerBootstrap$ServerBootstrapAcceptor"
+    },
+    {
+      "type": "io.netty.buffer.AbstractByteBufAllocator"
+    },
+    {
+      "type": "io.netty.buffer.AbstractReferenceCountedByteBuf",
+      "fields": [
+        {
+          "name": "refCnt"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.buffer.AdaptivePoolingAllocator$Chunk",
+      "fields": [
+        {
+          "name": "refCnt"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.buffer.AdaptivePoolingAllocator$Magazine",
+      "fields": [
+        {
+          "name": "nextInLine"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.AbstractChannelHandlerContext",
+      "fields": [
+        {
+          "name": "handlerState"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.ChannelOutboundBuffer",
+      "fields": [
+        {
+          "name": "totalPendingSize"
+        },
+        {
+          "name": "unwritable"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.DefaultChannelConfig",
+      "fields": [
+        {
+          "name": "autoRead"
+        },
+        {
+          "name": "writeBufferWaterMark"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.DefaultChannelPipeline",
+      "fields": [
+        {
+          "name": "estimatorHandle"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.DefaultChannelPipeline$HeadContext"
+    },
+    {
+      "type": "io.netty.channel.DefaultChannelPipeline$TailContext"
+    },
+    {
       "type": "io.netty.channel.DefaultFileRegion"
+    },
+    {
+      "type": "io.netty.channel.epoll.EpollServerSocketChannel",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "io.netty.channel.epoll.NativeDatagramPacketArray$NativeDatagramPacket"
@@ -7521,6 +7751,15 @@
     },
     {
       "type": "io.netty.channel.unix.PeerCredentials"
+    },
+    {
+      "type": "io.netty.handler.codec.http.HttpServerCodec"
+    },
+    {
+      "type": "io.netty.handler.codec.http.HttpServerExpectContinueHandler"
+    },
+    {
+      "type": "io.netty.handler.timeout.WriteTimeoutHandler"
     },
     {
       "type": "io.netty.internal.tcnative.CertificateCallback"
@@ -7549,6 +7788,55 @@
       ]
     },
     {
+      "type": "io.netty.util.DefaultAttributeMap",
+      "fields": [
+        {
+          "name": "attributes"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.Recycler$DefaultHandle",
+      "fields": [
+        {
+          "name": "state"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.ReferenceCountUtil"
+    },
+    {
+      "type": "io.netty.util.ResourceLeakDetector$DefaultResourceLeak",
+      "fields": [
+        {
+          "name": "droppedRecords"
+        },
+        {
+          "name": "head"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.concurrent.DefaultPromise",
+      "fields": [
+        {
+          "name": "result"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.concurrent.SingleThreadEventExecutor",
+      "fields": [
+        {
+          "name": "state"
+        },
+        {
+          "name": "threadProperties"
+        }
+      ]
+    },
+    {
       "type": "io.netty.util.internal.CleanerJava24$CleanableDirectBufferImpl",
       "methods": [
         {
@@ -7569,6 +7857,46 @@
             "java.lang.String",
             "boolean"
           ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.atomic.BaseMpscLinkedAtomicArrayQueueColdProducerFields",
+      "fields": [
+        {
+          "name": "producerLimit"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.atomic.BaseMpscLinkedAtomicArrayQueueConsumerFields",
+      "fields": [
+        {
+          "name": "consumerIndex"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.atomic.BaseMpscLinkedAtomicArrayQueueProducerFields",
+      "fields": [
+        {
+          "name": "producerIndex"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.atomic.MpmcAtomicArrayQueueConsumerIndexField",
+      "fields": [
+        {
+          "name": "consumerIndex"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.atomic.MpmcAtomicArrayQueueProducerIndexField",
+      "fields": [
+        {
+          "name": "producerIndex"
         }
       ]
     },
@@ -7619,6 +7947,9 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "java.io.File"
     },
     {
       "type": "java.io.FileDescriptor"
@@ -7732,6 +8063,19 @@
     },
     {
       "type": "java.lang.OutOfMemoryError"
+    },
+    {
+      "type": "java.lang.ProcessHandle",
+      "methods": [
+        {
+          "name": "current",
+          "parameterTypes": []
+        },
+        {
+          "name": "pid",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "java.lang.Runnable",
@@ -8356,6 +8700,9 @@
     },
     {
       "type": "jdk.management.jfr.SettingDescriptorInfo"
+    },
+    {
+      "type": "kotlin.Any"
     },
     {
       "type": "kotlin.Boolean"
@@ -12272,6 +12619,9 @@
       "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.testing.properties"
     },
     {
+      "glob": "META-INF/org/pkl/config/java/mapper/classes/elide.web.properties"
+    },
+    {
       "glob": "META-INF/org/pkl/config/java/mapper/classes/pkl.base.properties"
     },
     {
@@ -12381,6 +12731,9 @@
     },
     {
       "glob": "META-INF/services/elide.tooling.project.mcp.McpContributor"
+    },
+    {
+      "glob": "META-INF/services/io.ktor.server.application.ModuleParametersInjector"
     },
     {
       "glob": "META-INF/services/io.micronaut.context.ApplicationContextConfigurer"
@@ -13342,6 +13695,27 @@
   ],
   "jni": [
     {
+      "type": "in.wilsonl.minifyhtml.MinifyHtml",
+      "allDeclaredMethods": true,
+      "allDeclaredFields": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "in.wilsonl.minifyhtml.Configuration",
+      "allDeclaredMethods": true,
+      "allDeclaredFields": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.img.ImgNative",
+      "allDeclaredMethods": true,
+      "allDeclaredFields": true,
+      "allDeclaredConstructors": true,
+      "methods": [
+        {"name": "compressPng", "parameterTypes": ["elide.tooling.img.ImageOptions$PngOptions", "java.nio.ByteBuffer"]}
+      ]
+    },
+    {
       "type": "[B"
     },
     {
@@ -13496,13 +13870,6 @@
       "type": "elide.tooling.web.css.CssNative",
       "methods": [
         {
-          "name": "buildCss",
-          "parameterTypes": [
-            "java.lang.String",
-            "elide.tooling.web.css.CssBuilder$CssOptions"
-          ]
-        },
-        {
           "name": "reportCssError",
           "parameterTypes": [
             "java.lang.String"
@@ -13530,12 +13897,27 @@
           "parameterTypes": []
         },
         {
+          "name": "enableScss",
+          "parameterTypes": []
+        },
+        {
           "name": "enableModules",
           "parameterTypes": []
         },
         {
           "name": "enableSourceMaps",
           "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.web.mdx.MdxNative",
+      "methods": [
+        {
+          "name": "reportCssError",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         }
       ]
     },

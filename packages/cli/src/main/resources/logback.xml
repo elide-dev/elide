@@ -115,6 +115,8 @@
   <logger name="tool:server" additivity="false">
     <appender-ref ref="${APPENDER}" />
   </logger>
+  <logger name="io.ktor.server.Application" level="warn" />
+  <logger name="tool:server:static" level="info" />
 
   <!-- JS Console -->
   <logger name="gvm:js.console" level="trace" />

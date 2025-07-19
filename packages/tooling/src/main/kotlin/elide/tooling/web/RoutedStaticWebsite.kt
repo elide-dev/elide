@@ -18,5 +18,4 @@ package elide.tooling.web
  * Describes a type of [WebProject], specifically, a [StaticWebsite], for which routing is performed by the framework,
  * based on project structure on-disk. This is also referred to as a "static site generator" (SSG) project.
  */
-public sealed interface RoutedStaticWebsite : StaticWebsite {
-}
+public sealed interface RoutedStaticWebsite : StaticWebsite

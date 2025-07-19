@@ -1,0 +1,41 @@
+amends "elide:project.pkl"
+import "elide:project.pkl" as build
+
+name = "elide-site-simple"
+description = "Elide's own website as a static worker"
+
+dependencies {
+  npm {
+    devPackages {
+      "wrangler@4.24.3"
+      "@elide-dev/types@1.0.0-beta7"
+    }
+  }
+}
+
+web {
+  browsers {
+    "last 2 chrome versions"
+    "not dead"
+    "> 0.3%"
+  }
+}
+
+artifacts {
+  ["main"] = (build.staticSite("src")) {
+    domain = "site.elide.dev"
+    hosting = "workers"
+
+    stylesheets {
+      "global.scss"
+    }
+    scripts {
+      "global.mts"
+    }
+  }
+}
+
+scripts {
+  ["deploy"] = "wrangler deploy"
+  ["build-deploy"] = "elide build && elide deploy"
+}

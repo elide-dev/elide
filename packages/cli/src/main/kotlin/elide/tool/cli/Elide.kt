@@ -46,6 +46,7 @@ import elide.tool.cli.cmd.builder.ToolWhichCommand
 import elide.tool.cli.cmd.checks.ToolCheckCommand
 import elide.tool.cli.cmd.deps.AddCommand
 import elide.tool.cli.cmd.deps.InstallCommand
+import elide.tool.cli.cmd.dev.DevCommand
 import elide.tool.cli.cmd.dev.LspCommand
 import elide.tool.cli.cmd.dev.McpCommand
 import elide.tool.cli.cmd.discord.ToolDiscordCommand
@@ -110,7 +111,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   subcommands = [
     ToolShellCommand::class,
     ToolBuildCommand::class,
-    ToolCheckCommand::class,
+    DevCommand::class,
     ToolProjectCommand::class,
     InitCommand::class,
     InstallCommand::class,

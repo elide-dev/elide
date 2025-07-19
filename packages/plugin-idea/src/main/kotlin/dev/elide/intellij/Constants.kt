@@ -52,8 +52,14 @@ object Constants {
   /** Browser URL for the installation section of the documentation. */
   const val INSTALL_URL = "https://docs.elide.dev/installation"
 
+  // command names
+  const val COMMAND_RUN = "run"
+  const val COMMAND_BUILD = "build"
+  const val COMMAND_INSTALL = "install"
+  const val COMMAND_SERVE = "serve"
+
   /** Commands available to all projects by default. */
-  val DEFAULT_COMMANDS = arrayOf("install", "build", "run", "serve")
+  val DEFAULT_COMMANDS = arrayOf(COMMAND_BUILD, COMMAND_INSTALL, COMMAND_RUN, COMMAND_SERVE)
 
   /** Descriptor for a file chooser to be used when selecting an Elide project. */
   @JvmStatic fun projectFileChooser(): FileChooserDescriptor {
@@ -100,9 +106,5 @@ object Constants {
     @JvmStatic operator fun get(@PropertyKey(resourceBundle = "i18n.Strings") key: String, vararg params: Any): String {
       return getMessage(key, params = params)
     }
-  }
-
-  data object Commands {
-    const val RUN = "run"
   }
 }

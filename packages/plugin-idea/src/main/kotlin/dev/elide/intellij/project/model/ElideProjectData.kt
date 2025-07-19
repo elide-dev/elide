@@ -88,4 +88,7 @@ data class ElideEntrypointInfo(
 
 /** Returns the raw base command line for the Elide CLI that can be used to invoke this entrypoint. */
 val ElideEntrypointInfo.fullCommandLine: String
-  get() = "${Constants.Commands.RUN} $value"
+  get() = when (kind) {
+    ElideEntrypointInfo.Kind.JvmMainClass -> Constants.COMMAND_RUN
+    else -> "${Constants.COMMAND_RUN} $value"
+  }

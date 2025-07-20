@@ -12,6 +12,8 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import org.graalvm.polyglot.Value
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -25,7 +27,7 @@ import elide.runtime.intrinsics.js.MultiMapLike
 import elide.vm.annotations.Polyglot
 
 /** Implementation of `Headers` intrinsic from the Fetch API. */
-internal class FetchHeadersIntrinsic private constructor (
+@ReflectiveAccess @Introspected internal class FetchHeadersIntrinsic private constructor (
   initialData: JsMutableMultiMap<String, String>?,
 
   // Internal data map.

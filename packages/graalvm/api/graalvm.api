@@ -896,6 +896,32 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/js/crypto/$W
 	public fun isBuildable ()Z
 }
 
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchHeadersIntrinsic$Factory$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchHeadersIntrinsic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchHeadersIntrinsic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$Companion$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -913,6 +939,12 @@ public final synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$Fe
 	public fun hasBuilder ()Z
 	public fun instantiate ()Ljava/lang/Object;
 	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/gvm/internals/intrinsics/js/fetch/$FetchIntrinsic$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
 public synthetic class elide/runtime/gvm/internals/intrinsics/js/stream/$CoreStreamsIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

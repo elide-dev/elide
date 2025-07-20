@@ -12,9 +12,10 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyInstantiable
-import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
@@ -31,8 +32,7 @@ import elide.vm.annotations.Polyglot
  *
  * TBD.
  */
-@Intrinsic
-internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
+@Intrinsic @ReflectiveAccess @Introspected internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
   internal companion object {
     /** Global where the fetch method is available. */
     private const val GLOBAL_FETCH = "fetch"
@@ -130,11 +130,7 @@ internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
     FetchRequestIntrinsic(url)
   )
 
-  override fun fetch(request: FetchRequest): JsPromise<FetchResponse> {
-    TODO("Fetch is not implemented yet")
-  }
+  override fun fetch(request: FetchRequest): JsPromise<FetchResponse> = handleFetch(Value.asValue(request))
 
-  override fun fetch(url: URL): JsPromise<FetchResponse> {
-    TODO("Not yet implemented")
-  }
+  override fun fetch(url: URL): JsPromise<FetchResponse> = handleFetch(Value.asValue(url))
 }

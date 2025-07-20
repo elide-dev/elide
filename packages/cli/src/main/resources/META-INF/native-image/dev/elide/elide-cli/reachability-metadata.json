@@ -1788,6 +1788,24 @@
       ]
     },
     {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.fetch.$FetchHeadersIntrinsic$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.fetch.$FetchHeadersIntrinsic$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.runtime.gvm.internals.intrinsics.js.fetch.$FetchIntrinsic$Definition",
       "methods": [
         {
@@ -1804,6 +1822,18 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.fetch.FetchHeadersIntrinsic"
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.fetch.FetchIntrinsic"
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.fetch.FetchRequestIntrinsic"
+    },
+    {
+      "type": "elide.runtime.gvm.internals.intrinsics.js.fetch.FetchResponseIntrinsic"
     },
     {
       "type": "elide.runtime.gvm.internals.intrinsics.js.stream.$CoreStreamsIntrinsic$Definition",
@@ -12963,6 +12993,9 @@
       "glob": "META-INF/micronaut/"
     },
     {
+      "glob": "META-INF/native/libnetty_tcnative_linux_x86_64.so"
+    },
+    {
       "glob": "META-INF/native/libnetty_transport_native_epoll_x86_64.so"
     },
     {
@@ -13738,6 +13771,27 @@
     },
     {
       "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_POLYGLOT.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_POLYGLOT_DATETIME.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_POLYGLOT_TIME.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_PY_ABC.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_SITEBUILTINS.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_SYSCONFIGDATA.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_WEAKREFSET.bin"
+    },
+    {
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__HELLO__.bin"
     },
     {
       "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__PHELLO__.bin"

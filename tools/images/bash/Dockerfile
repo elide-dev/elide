@@ -1,6 +1,3 @@
-ARG ELIDE_VERSION=1.0.0-beta8
-ARG ELIDE_DIGEST=2cbd9d45f5904390b303a1963379cc3e68591cf09aa875bff260cf1fb45bfe38
-
 FROM debian:sid-slim@sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac AS base
 
 LABEL org.opencontainers.image.vendor=Elide
@@ -11,6 +8,9 @@ LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=debian:sid-slim
 LABEL org.opencontainers.image.base.digest=sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/bash/Dockerfile
+
+ARG ELIDE_DIGEST_LINUX_AMD64=a5430b7e398c12b66fc6a13a1ac3fd1a7622db48b0a312ccce6232aafa40d23d
+ARG ELIDE_DIGEST_LINUX_ARM64=f5bdc8845726cb32564cd8ea97c286e8c5ef243662bb52480ff553c29c7231d7
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
@@ -28,15 +28,23 @@ RUN apt-get update \
 
 USER dev
 
-RUN echo "Installing Elide..." \
-  && mkdir -p /tmp/elide-install \
-  && cd /tmp/elide-install \
-  && curl -sSL elide.sh | bash -s - -- \
-    --install-rev=1.0.0-beta8 \
-    --install-digest=2cbd9d45f5904390b303a1963379cc3e68591cf09aa875bff260cf1fb45bfe38 \
-  && cd - \
-  && rm -rf /tmp/elide-install \
-  && which elide \
-  && elide --help \
-  && elide info \
-  && echo "Elide/Bash container image ready."
+ENV ELIDE_VERSION=1.0.0-beta8
+
+RUN ELIDE_ARCH=$(uname -m) \
+    && if [ "$ELIDE_ARCH" = "x86_64" ]; then \
+      ELIDE_DIGEST=${ELIDE_DIGEST_LINUX_AMD64}; \
+    elif [ "$ELIDE_ARCH" = "aarch64" ]; then \
+      ELIDE_DIGEST=${ELIDE_DIGEST_LINUX_ARM64}; \
+    elif [ "$ELIDE_ARCH" = "arm64" ]; then \
+      ELIDE_DIGEST=${ELIDE_DIGEST_LINUX_ARM64}; \
+    else \
+      echo "Unsupported architecture: $ELIDE_ARCH"; exit 1; \
+    fi \
+    && echo "Installing Elide (arch: $ELIDE_ARCH, pin: $ELIDE_DIGEST)..." \
+    && mkdir -p /tmp/elide-install \
+    && cd /tmp/elide-install \
+    && curl -sSL elide.sh | bash -s - -- \
+      --install-rev=$ELIDE_VERSION \
+      --install-digest=$ELIDE_DIGEST \
+    && cd - \
+    && rm -rf /tmp/elide-install

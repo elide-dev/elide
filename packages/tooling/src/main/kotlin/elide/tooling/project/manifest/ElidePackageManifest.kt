@@ -448,7 +448,7 @@ public data class ElidePackageManifest(
     val testing: Boolean = true,
     val kotlinx: Boolean = true,
     val enableDefaultPlugins: Boolean = true,
-    val experimental: Boolean = false,
+    val experimental: Boolean = true,
     val incremental: Boolean = true,
     val serialization: Boolean = kotlinx && enableDefaultPlugins && experimental,
     val coroutines: Boolean = kotlinx,

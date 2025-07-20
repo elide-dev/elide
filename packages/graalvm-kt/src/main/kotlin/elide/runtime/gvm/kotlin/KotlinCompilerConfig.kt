@@ -12,7 +12,6 @@
  */
 package elide.runtime.gvm.kotlin
 
-import org.graalvm.nativeimage.ImageInfo
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.config.ApiVersion
 import org.jetbrains.kotlin.config.LanguageVersion
@@ -21,7 +20,6 @@ import java.util.EnumSet
 import kotlin.collections.orEmpty
 import kotlin.collections.toMutableList
 import kotlin.io.path.absolutePathString
-import kotlin.io.path.exists
 import elide.runtime.precompiler.Precompiler
 
 // Constant plugin names.
@@ -67,9 +65,7 @@ public data class KotlinCompilerConfig(
           .resolve("$SERIALIZATION_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar")
 
         initializePlugin(
-          name = SERIALIZATION_PLUGIN_NAME,
           args = args,
-          root = root,
           artifact = artifact,
         )
       }
@@ -84,40 +80,30 @@ public data class KotlinCompilerConfig(
           .resolve("$POWERASSERT_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar")
 
         initializePlugin(
-          name = POWERASSERT_PLUGIN_NAME,
           args = args,
-          root = root,
           artifact = artifact,
+          options = powerAssertSymbols.map { "function" to it }.toList(),
         )
       }
     };
 
     private companion object {
-      @JvmStatic private fun initializePlugin(name: String, args: K2JVMCompilerArguments, root: Path, artifact: Path) {
-        if (ImageInfo.inImageRuntimeCode()) {
-          args.pluginConfigurations = (args
-            .pluginConfigurations
-            .orEmpty()
-            .toMutableList() + artifact.absolutePathString())
-            .toTypedArray()
-          return
-        }
-        require(!(ImageInfo.inImageCode() && ImageInfo.inImageRuntimeCode())) {
-          "Cannot load Kotlin plugin in native image runtime mode (loads at build time): $name, within $root"
-        }
-        val kotlinSerializationPlugin = requireNotNull(
-          System.getProperty("elide.kotlinResources")?.ifEmpty { null }?.ifBlank { null }
-            ?.let { Path.of(it).resolve("lib").resolve("$SERIALIZATION_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar") }
-            ?.takeIf { it.exists() }
-            ?: artifact.takeIf { it.exists() }
-        ) {
-          "Kotlin serialization plugin not found: $SERIALIZATION_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar"
-        }
+      @JvmStatic private fun initializePlugin(
+        args: K2JVMCompilerArguments,
+        artifact: Path,
+        options: List<Pair<String, String>> = emptyList()
+      ) {
         args.pluginConfigurations = (args
           .pluginConfigurations
           .orEmpty()
-          .toMutableList() + kotlinSerializationPlugin.absolutePathString())
-          .toTypedArray()
+          .toMutableList() + buildString {
+            append(artifact.absolutePathString())
+            if (options.isNotEmpty()) {
+              append("=")
+              append(options.joinToString(",") { "${it.first}=${it.second}" })
+            }
+          }
+        ).toTypedArray()
       }
     }
   }
@@ -139,5 +125,20 @@ public data class KotlinCompilerConfig(
     @JvmStatic public fun getDefaultPlugins(test: Boolean = false): Set<KotlinBuiltinPlugin> {
       return if (test) DEFAULT_PLUGINS_TEST else DEFAULT_PLUGINS
     }
+
+    private val powerAssertSymbols = sortedSetOf(
+      "kotlin.assert",
+      "kotlin.test.assertEquals",
+      "kotlin.test.assertNotEquals",
+      "kotlin.test.assertTrue",
+      "kotlin.test.assertFalse",
+      "kotlin.test.assertNull",
+      "kotlin.test.assertNotNull",
+      "kotlin.test.assertContentEquals",
+      "kotlin.test.assertContentSame",
+      "kotlin.test.assertFailsWith",
+      "kotlin.test.assertFails",
+      "kotlin.test.assertIs",
+    )
   }
 }

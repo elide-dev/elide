@@ -106,6 +106,8 @@ dependencies {
   implementation(libs.highlights)
   implementation(libs.ktoml)
   implementation(libs.kotlin.compiler.embedded)
+  implementation(libs.kotlin.serialization.embedded)
+  implementation(libs.kotlin.powerAssert.embedded)
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.serialization.protobuf)

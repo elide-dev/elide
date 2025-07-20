@@ -129,6 +129,7 @@ dependencies {
   implementation(libs.kotlin.scripting.compiler.embeddable)
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlin.serialization.embedded)
+  implementation(libs.kotlin.powerAssert.embedded)
   implementation(libs.kotlin.scripting.dependencies)
   implementation(libs.kotlin.scripting.dependencies.maven) {
     exclude(group = "com.google.inject", module = "guice")
@@ -167,6 +168,7 @@ dependencies {
 
   // @TODO(sgammon): needed at build time, but not runtime
   embeddedKotlin(libs.kotlin.serialization.embedded)
+  embeddedKotlin(libs.kotlin.powerAssert.embedded)
 
   embeddedJava(libs.jacoco.agent)
   embeddedJava(libs.junit.jupiter.api)

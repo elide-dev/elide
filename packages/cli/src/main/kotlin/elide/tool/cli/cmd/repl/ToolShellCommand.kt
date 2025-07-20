@@ -1820,7 +1820,7 @@ internal class ToolShellCommand @Inject constructor(
           }
           output {
             append(formatMaybe(
-              "✗  ${test.qualifiedName} ($msg)",
+              "✗  ${test.qualifiedName}\n$msg",
               TextStyles.bold + TextColors.red,
               false,
             ))

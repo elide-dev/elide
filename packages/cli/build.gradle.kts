@@ -1581,6 +1581,9 @@ val experimentalCFlags: List<String> = listOf(
   // Nothing at this time.
 )
 
+// List of PGO profiles, mapped to the directory above cwd and a subdir, because cwd may be deleted during the build.
+val profilesList = profiles.joinToString(",") { "../pgo/$it" }
+
 // Full release flags (for all operating systems and platforms).
 val releaseFlags: List<String> = listOf(
   "-H:+LocalizationOptimizedMode",
@@ -1591,7 +1594,7 @@ val releaseFlags: List<String> = listOf(
     "--native-compiler-options=$it",
   )
 }).plus(
-  listOf("--pgo=${profiles.joinToString(",")}").onlyIf(enablePgo)
+  listOf("--pgo=${profilesList}").onlyIf(enablePgo)
 ).plus(listOf(
   if (oracleGvm && enableSbom) listOf(
     if (enableSbomStrict) "--enable-sbom=cyclonedx,export,strict" else "--enable-sbom=cyclonedx,export"
@@ -2034,7 +2037,8 @@ graalvmNative {
 
 val decompressProfiles: TaskProvider<Copy> by tasks.registering(Copy::class) {
   from(zipTree(layout.projectDirectory.file("profiles.zip")))
-  into(layout.buildDirectory.dir("native/nativeOptimizedCompile"))
+  into(layout.buildDirectory.dir("native/pgo"))
+  outputs.dir(layout.buildDirectory.dir("native/pgo"))
 }
 
 val excludedStatics = arrayOf(

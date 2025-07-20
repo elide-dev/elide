@@ -24,6 +24,8 @@ import ch.qos.logback.core.ConsoleAppender
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles
+import com.oracle.truffle.host.HostException
+import com.oracle.truffle.js.runtime.UserScriptException
 import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
@@ -75,9 +77,11 @@ import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.bufferedReader
 import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.isDirectory
+import kotlin.io.path.isReadable
 import kotlin.io.path.isRegularFile
 import kotlin.math.max
 import kotlin.streams.asSequence
@@ -886,10 +890,21 @@ internal class ToolShellCommand @Inject constructor(
         if (allSeenStatements.isNotEmpty()) {
           ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
           (errorBase + 1) to ctxLines
-        } else when (runnable?.ifBlank { null }) {
-          // @TODO implement
+        } else when (val target = runnable?.ifBlank { null }) {
+          // with no runnable, we can't resolve lines by hand
           null -> (errorBase + 1) to emptyList()
-          else -> (-1) to emptyList()
+
+          // if we can resolve it, pluck the lines from there
+          else -> totalLines.takeIf { it > 0 }?.let {
+            val asPath = runCatching { Paths.get(target) }.getOrNull()
+            if (asPath != null && asPath.isRegularFile() && asPath.isReadable()) {
+              val linesFromRange = asPath.bufferedReader(StandardCharsets.UTF_8).use { reader ->
+                reader.lineSequence().drop(errorBase).take(totalLines).toList()
+              }
+              ctxLines.addAll(linesFromRange)
+              (errorBase + 1) to ctxLines
+            } else null  // fallback to below
+          } ?: ((-1) to emptyList())
         }
       }
     }
@@ -901,6 +916,18 @@ internal class ToolShellCommand @Inject constructor(
     maxLength = terminal.value?.width ?: ErrPrinter.DEFAULT_MAX_WIDTH,
   )
 
+  @Suppress("UNUSED_PARAMETER")
+  private fun displayFormattedNonPolyglotError(
+    exc: Throwable,
+    message: String,
+    advice: String? = null,
+    internal: Boolean = false,
+    stacktrace: Boolean = internal,
+    withCause: Boolean = true,
+  ) {
+    exc.printStackTrace()
+  }
+
   // Given an error, render a table explaining the error, along with any source context if we have it.
   private fun displayFormattedError(
     exc: Throwable,
@@ -911,8 +938,14 @@ internal class ToolShellCommand @Inject constructor(
     withCause: Boolean = true,
   ) {
     if (exc !is PolyglotException) {
-      exc.printStackTrace()
-      return
+      return displayFormattedNonPolyglotError(
+        exc,
+        message,
+        advice,
+        internal = internal,
+        stacktrace = stacktrace,
+        withCause = withCause,
+      )
     }
     if (debug || verbose) {
       // print full stack traces raw in debug or verbose mode mode
@@ -1014,7 +1047,6 @@ internal class ToolShellCommand @Inject constructor(
 
     // render error string
     val rendered = StringBuilder().apply {
-      append("\n")
       appendLine(top)
       // ╔══════════════════════╗
       // ║ 1┊ (code)            ║
@@ -1050,15 +1082,26 @@ internal class ToolShellCommand @Inject constructor(
         if (doPrintStack) {
           // ║ Stacktrace:          ║
           append(middlePrefix).append("Stacktrace:".padEnd(textWidth - 1, ' ') + "║\n")
-          appendLine(blankLine)
+          val extraStackPad = 2
 
           // ║ ...                  ║
-          stacktraceLines.forEach {
-            if (it.startsWith('\t')) {
+          stacktraceLines.filter { it.isNotEmpty() && it.isNotBlank() }.forEach { originalLine ->
+            if (originalLine.contains("at java.base/invoke.LambdaForm${'$'}DMH")) {
+              return@forEach  // skip lambda form lines
+            }
+            val line = if (!originalLine.contains("at <js>.:program(")) originalLine else {
+              originalLine.replace("at <js>.:program(", "at ").removeSuffix(")")
+            }
+
+            if (line.startsWith('\t')) {
               // if it's a spaced line, don't add additional end-spacing (for tab-prefixes)
-              append(middlePrefix).append(it.padEnd(textWidth - pad - middlePrefix.length, ' ') + "║\n")
+              append(middlePrefix)
+                .append(" ".repeat(extraStackPad))
+                .append(line.padEnd(textWidth - pad - middlePrefix.length - extraStackPad, ' ') + "║\n")
             } else {
-              append(middlePrefix).append(it.padEnd(textWidth - 1, ' ') + "║\n")
+              append(middlePrefix)
+                append(" ".repeat(extraStackPad))
+                .append(line.padEnd(textWidth - 1 - extraStackPad, ' ') + "║\n")
             }
           }
         }
@@ -1066,9 +1109,7 @@ internal class ToolShellCommand @Inject constructor(
 
       appendLine(bottom)
       // ╚══════════════════════╝
-      append("\n")
     }.toString()
-
 
     if (reader != null) {
       // format error string
@@ -1080,8 +1121,11 @@ internal class ToolShellCommand @Inject constructor(
         reader.printAbove(rendered)
       }
     } else System.err.use {
-      it.writeBytes(rendered.toByteArray(StandardCharsets.UTF_8))
-      it.flush()
+      Statics.terminal.print(
+        if (Statics.noColor) rendered else TextColors.red(rendered),
+        stderr = true,
+      )
+      HandledExit.notify(-1, message = "Exited because of error", cause = exc)
     }
   }
 
@@ -1121,8 +1165,35 @@ internal class ToolShellCommand @Inject constructor(
 
       // if this is a guest-side exception, throw it
       exc.guestObject != null && exc.guestObject.isException -> {
-        logging.debug("Detected guest-side exception; throwing")
-        exc.guestObject.throwException()
+        // sometimes it's a java exception which was caused by a guest-side call of some kind, in which case, we need to
+        // start over, considering this a host-side exception.
+        // (exc.guestObject.`as`<UserScriptException>(UserScriptException::class.java).exceptionObject as HostException).original
+        val jsExc = runCatching {
+          exc.guestObject.`as`<UserScriptException>(UserScriptException::class.java)
+        }.getOrNull()
+
+        when (val innerHostException = (jsExc?.errorObject as? HostException)?.original) {
+          // we are dealing with a non-host exception
+          null -> displayFormattedError(
+            exc,
+            msg ?: exc.message ?: "An error was thrown",
+            stacktrace = !isInteractive(),
+          ).also {
+            logging.debug("Detected guest-side exception; throwing")
+          }
+
+          // this is a host exception caused by guest code, but underneath that it's probably elide's fault
+          else -> {
+            logging.debug("Detected guest-side exception which wraps host-side exception; throwing")
+            displayFormattedError(
+              innerHostException,
+              msg ?: innerHostException.message ?: "An error was thrown",
+              advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
+              stacktrace = true,
+              internal = true,
+            )
+          }
+        }
       }
 
       exc.isGuestException -> displayFormattedError(

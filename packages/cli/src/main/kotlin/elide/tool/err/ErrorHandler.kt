@@ -26,6 +26,7 @@ import kotlinx.serialization.Transient
 import kotlin.system.exitProcess
 import elide.runtime.Logger
 import elide.tool.cli.GuestLanguage
+import elide.tool.cli.cmd.repl.HandledExit
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.err.ErrorHandler.Action.*
 import elide.tool.err.ErrorHandler.ErrorActionStrategy.*
@@ -653,7 +654,10 @@ interface ErrorHandler : IExitCodeExceptionMapper, Thread.UncaughtExceptionHandl
       exitCode
     }
 
-    else -> {
+    else -> if (exception is HandledExit) {
+      logging.debug(exception.message)
+      exception.exitCode
+    } else {
       logging.error("Exiting with code -1 due to uncaught $exception")
       -1
     }

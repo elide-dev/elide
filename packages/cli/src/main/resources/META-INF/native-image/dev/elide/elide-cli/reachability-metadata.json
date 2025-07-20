@@ -478,6 +478,10 @@
       "allDeclaredFields": true
     },
     {
+      "type": "com.github.ajalt.mordant.internal.jna.PosixLibC$winsize",
+      "allDeclaredFields": true
+    },
+    {
       "type": "com.github.ajalt.mordant.terminal.terminalinterface.ffm.TerminalInterfaceProviderFfm"
     },
     {
@@ -1221,6 +1225,217 @@
     },
     {
       "type": "com.sun.crypto.provider.TlsMasterSecretGenerator",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.CallbackProxy",
+      "methods": [
+        {
+          "name": "callback",
+          "parameterTypes": [
+            "java.lang.Object[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.Native",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.linux.Udev"
+    },
+    {
+      "type": "com.sun.jna.platform.linux.Udev$UdevContext",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.linux.Udev$UdevDevice",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.linux.Udev$UdevEnumerate",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.linux.Udev$UdevListEntry",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.CoreFoundation$CFDataRef",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.CoreFoundation$CFIndex",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.CoreFoundation$CFMutableDictionaryRef",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.CoreFoundation$CFStringRef",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.CoreFoundation$CFTypeID",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.CoreFoundation$CFTypeRef",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.IOKit$IOIterator",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.IOKit$IORegistryEntry",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.unix.LibCAPI$size_t",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.ptr.IntByReference",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.ptr.PointerByReference",
       "methods": [
         {
           "name": "<init>",
@@ -3158,6 +3373,15 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tool.cli.cmd.dev.$DevCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.cmd.dev.$LspCommand$Definition",
       "methods": [
         {
@@ -3192,6 +3416,10 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.dev.DevCommand",
+      "allDeclaredFields": true
     },
     {
       "type": "elide.tool.cli.cmd.dev.LspCommand",
@@ -3909,6 +4137,15 @@
       ]
     },
     {
+      "type": "elide.tool.cli.options.$ServerOptions$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.options.$TelemetryOptions$Introspection",
       "methods": [
         {
@@ -3987,6 +4224,10 @@
     },
     {
       "type": "elide.tool.cli.options.ProjectOptions",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.options.ServerOptions",
       "allDeclaredFields": true
     },
     {
@@ -4553,6 +4794,12 @@
       ]
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$DevServerSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DevSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -4572,14 +4819,17 @@
             "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$McpSettings"
           ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
+            "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$McpSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$DevServerSettings"
+          ]
         }
       ]
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$DevServerSettings",
-      "allDeclaredFields": true,
-      "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies",
@@ -8204,6 +8454,18 @@
       ]
     },
     {
+      "type": "java.lang.invoke.MethodHandle"
+    },
+    {
+      "type": "java.lang.invoke.MethodHandles"
+    },
+    {
+      "type": "java.lang.invoke.MethodHandles$Lookup"
+    },
+    {
+      "type": "java.lang.invoke.MethodType"
+    },
+    {
       "type": "java.lang.invoke.VarHandle"
     },
     {
@@ -8265,6 +8527,15 @@
           "parameterTypes": [
             "java.lang.Object"
           ]
+        }
+      ]
+    },
+    {
+      "type": "java.lang.reflect.Method",
+      "methods": [
+        {
+          "name": "isDefault",
+          "parameterTypes": []
         }
       ]
     },
@@ -11763,6 +12034,58 @@
       "type": "org.pkl.core.runtime.VmLanguageProvider"
     },
     {
+      "type": "oshi.jna.ByRef$CloseableIntByReference",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "oshi.jna.ByRef$CloseableLongByReference",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "oshi.jna.ByRef$CloseableNativeLongByReference",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "oshi.jna.ByRef$CloseableSizeTByReference",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "picocli.CommandLine$AutoHelpMixin",
       "allDeclaredFields": true
     },
@@ -12399,7 +12722,56 @@
     {
       "type": {
         "proxy": [
+          "com.github.ajalt.mordant.internal.jna.MacosLibC"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "com.github.ajalt.mordant.internal.jna.PosixLibC"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "com.sun.jna.platform.linux.Udev"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "com.sun.jna.platform.mac.CoreFoundation"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "com.sun.jna.platform.mac.IOKit"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "com.sun.jna.platform.mac.SystemB"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
           "java.security.PrivilegedAction"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "kotlin.jvm.functions.Function2"
         ]
       }
     },
@@ -12421,6 +12793,20 @@
       "type": {
         "proxy": [
           "org.jetbrains.kotlin.com.intellij.psi.util.PsiModificationTracker$Listener"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "oshi.jna.platform.linux.LinuxLibc"
+        ]
+      }
+    },
+    {
+      "type": {
+        "proxy": [
+          "oshi.jna.platform.mac.SystemB"
         ]
       }
     }
@@ -13240,6 +13626,9 @@
       "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY_UNICODEDATA.bin"
     },
     {
+      "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__NT.bin"
+    },
+    {
       "glob": "com/oracle/graal/python/builtins/objects/module/FrozenGRAALPY__POLYGLOT.bin"
     },
     {
@@ -13348,19 +13737,7 @@
       "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_COLLECTIONS_ABC.bin"
     },
     {
-      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_PY_ABC.bin"
-    },
-    {
-      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_SITEBUILTINS.bin"
-    },
-    {
-      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_SYSCONFIGDATA.bin"
-    },
-    {
-      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_WEAKREFSET.bin"
-    },
-    {
-      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__HELLO__.bin"
+      "glob": "com/oracle/graal/python/builtins/objects/module/Frozen_POLYGLOT.bin"
     },
     {
       "glob": "com/oracle/graal/python/builtins/objects/module/Frozen__PHELLO__.bin"
@@ -13695,27 +14072,6 @@
   ],
   "jni": [
     {
-      "type": "in.wilsonl.minifyhtml.MinifyHtml",
-      "allDeclaredMethods": true,
-      "allDeclaredFields": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "in.wilsonl.minifyhtml.Configuration",
-      "allDeclaredMethods": true,
-      "allDeclaredFields": true,
-      "allDeclaredConstructors": true
-    },
-    {
-      "type": "elide.tooling.img.ImgNative",
-      "allDeclaredMethods": true,
-      "allDeclaredFields": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {"name": "compressPng", "parameterTypes": ["elide.tooling.img.ImageOptions$PngOptions", "java.nio.ByteBuffer"]}
-      ]
-    },
-    {
       "type": "[B"
     },
     {
@@ -13741,6 +14097,391 @@
           ]
         }
       ]
+    },
+    {
+      "type": "com.sun.jna.Callback",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
+    },
+    {
+      "type": "com.sun.jna.CallbackReference",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "getCallback",
+          "parameterTypes": [
+            "java.lang.Class",
+            "com.sun.jna.Pointer",
+            "boolean"
+          ]
+        },
+        {
+          "name": "getFunctionPointer",
+          "parameterTypes": [
+            "com.sun.jna.Callback",
+            "boolean"
+          ]
+        },
+        {
+          "name": "getNativeString",
+          "parameterTypes": [
+            "java.lang.Object",
+            "boolean"
+          ]
+        },
+        {
+          "name": "initializeThread",
+          "parameterTypes": [
+            "com.sun.jna.Callback",
+            "com.sun.jna.CallbackReference$AttachOptions"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.CallbackReference$AttachOptions",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
+    },
+    {
+      "type": "com.sun.jna.FromNativeConverter",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "nativeType",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.IntegerType",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "fields": [
+        {
+          "name": "value",
+          "allowWrite": true
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.JNIEnv",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
+    },
+    {
+      "type": "com.sun.jna.Native",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "close",
+          "parameterTypes": [
+            "java.lang.Long"
+          ]
+        },
+        {
+          "name": "dispose",
+          "parameterTypes": []
+        },
+        {
+          "name": "findSymbol",
+          "parameterTypes": [
+            "java.lang.Long",
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "fromNative",
+          "parameterTypes": [
+            "com.sun.jna.FromNativeConverter",
+            "java.lang.Object",
+            "java.lang.reflect.Method"
+          ]
+        },
+        {
+          "name": "fromNative",
+          "parameterTypes": [
+            "java.lang.Class",
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "fromNative",
+          "parameterTypes": [
+            "java.lang.reflect.Method",
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "nativeType",
+          "parameterTypes": [
+            "java.lang.Class"
+          ]
+        },
+        {
+          "name": "open",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.Integer"
+          ]
+        },
+        {
+          "name": "toNative",
+          "parameterTypes": [
+            "com.sun.jna.ToNativeConverter",
+            "java.lang.Object"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.Native$ffi_callback",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "invoke",
+          "parameterTypes": [
+            "long",
+            "long",
+            "long"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.NativeLong",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
+    },
+    {
+      "type": "com.sun.jna.NativeMapped",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "toNative",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.Pointer",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "fields": [
+        {
+          "name": "peer",
+          "allowWrite": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.PointerType",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "fields": [
+        {
+          "name": "pointer",
+          "allowWrite": true
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.Structure",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "fields": [
+        {
+          "name": "memory",
+          "allowWrite": true
+        },
+        {
+          "name": "typeInfo",
+          "allowWrite": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "autoRead",
+          "parameterTypes": []
+        },
+        {
+          "name": "autoWrite",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTypeInfo",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTypeInfo",
+          "parameterTypes": [
+            "java.lang.Object"
+          ]
+        },
+        {
+          "name": "newInstance",
+          "parameterTypes": [
+            "java.lang.Class"
+          ]
+        },
+        {
+          "name": "newInstance",
+          "parameterTypes": [
+            "java.lang.Class",
+            "long"
+          ]
+        },
+        {
+          "name": "newInstance",
+          "parameterTypes": [
+            "java.lang.Class",
+            "com.sun.jna.Pointer"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.Structure$ByValue",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
+    },
+    {
+      "type": "com.sun.jna.Structure$FFIType",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
+    },
+    {
+      "type": "com.sun.jna.Structure$FFIType$FFITypes",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "fields": [
+        {
+          "name": "ffi_type_double",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_float",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_longdouble",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_pointer",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_sint16",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_sint32",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_sint64",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_sint8",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_uint16",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_uint32",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_uint64",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_uint8",
+          "allowWrite": true
+        },
+        {
+          "name": "ffi_type_void",
+          "allowWrite": true
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.WString",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "com.sun.jna.platform.mac.CoreFoundation$CFStringRef",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
+    },
+    {
+      "type": "com.sun.jna.ptr.PointerByReference",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
     },
     {
       "type": "com.sun.management.internal.DiagnosticCommandArgumentInfo",
@@ -13769,11 +14510,31 @@
             "java.lang.String",
             "java.lang.String",
             "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "boolean",
+            "java.util.List"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
             "boolean",
             "java.util.List"
           ]
         }
       ]
+    },
+    {
+      "type": "dev.elide.cli.bridge.CliNativeBridge",
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true
     },
     {
       "type": "elide.exec.TraceNative",
@@ -13845,13 +14606,14 @@
       "allPublicMethods": true,
       "methods": [
         {
+          "name": "createDiagnostic",
+          "parameterTypes": []
+        },
+        {
           "name": "reportNativeDiagnostic",
           "parameterTypes": [
             "elide.runtime.diag.DiagnosticInfo"
           ]
-        },
-        {
-          "name": "createDiagnostic"
         }
       ]
     },
@@ -13862,6 +14624,21 @@
           "name": "main",
           "parameterTypes": [
             "java.lang.String[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.img.ImgNative",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "compressPng",
+          "parameterTypes": [
+            "elide.tooling.img.ImageOptions$PngOptions",
+            "java.nio.ByteBuffer"
           ]
         }
       ]
@@ -13897,11 +14674,11 @@
           "parameterTypes": []
         },
         {
-          "name": "enableScss",
+          "name": "enableModules",
           "parameterTypes": []
         },
         {
-          "name": "enableModules",
+          "name": "enableScss",
           "parameterTypes": []
         },
         {
@@ -13920,6 +14697,18 @@
           ]
         }
       ]
+    },
+    {
+      "type": "in.wilsonl.minifyhtml.Configuration",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "in.wilsonl.minifyhtml.MinifyHtml",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "io.netty.channel.ChannelException"

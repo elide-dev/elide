@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import elide.tool.cli.cmd.repl.HandledExit
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
@@ -175,6 +176,9 @@ abstract class AbstractToolCommand<Context>:
       }.let {
         if (it.isFailure) {
           val err = it.exceptionOrNull()
+          if (err != null && HandledExit.isHandledExit(err)) {
+            throw err  // re-throw for outer
+          }
           val stack = err?.stackTrace?.joinToString("\n") ?: "(unknown)"
           val label = err ?: "(unknown)"
           logging.error("Uncaught fatal exception: $label\n$stack")

@@ -31,6 +31,7 @@ import kotlin.io.path.absolutePathString
 import kotlin.system.exitProcess
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.tool.cli.Elide.Companion.installStatics
+import elide.tool.cli.cmd.repl.HandledExit
 import elide.tooling.cli.Statics
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
@@ -225,8 +226,14 @@ fun entry(args: Array<String>, installStatics: Boolean): Int = runBlocking(Dispa
     initializeEntry(args, installStatics)
     runInner(args)
   } catch (err: RuntimeException) {
-    unhandledExc.compareAndSet(null, err)
-    throw err
+    when {
+      HandledExit.isHandledExit(err) -> (err as HandledExit).exitCode
+
+      else -> {
+        unhandledExc.compareAndSet(null, err)
+        throw err
+      }
+    }
   }
 }
 
@@ -249,9 +256,13 @@ fun main(args: Array<String>): Unit = try {
     earlyLog("Passing to inner entrypoint")
     runInner(args)
   } catch (err: RuntimeException) {
-    unhandledExc.compareAndSet(null, err)
-    err.printStackTrace()
-    1
+    when (err) {
+      is HandledExit -> err.exitCode
+      else -> {
+        unhandledExc.compareAndSet(null, err)
+        1
+      }
+    }
   }
 } finally {
   Elide.close()

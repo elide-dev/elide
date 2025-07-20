@@ -1,6 +1,3 @@
-ARG ELIDE_VERSION=1.0.0-beta8
-ARG ELIDE_DIGEST=2cbd9d45f5904390b303a1963379cc3e68591cf09aa875bff260cf1fb45bfe38
-
 FROM debian:sid-slim@sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac AS builder
 
 RUN apt-get update \
@@ -16,16 +13,30 @@ RUN apt-get update \
   && useradd dev -g elide -m -s /bin/bash \
   && rm -rf /var/lib/apt/lists/*
 
+ENV ELIDE_VERSION=1.0.0-beta8
+ENV ELIDE_DIGEST_LINUX_AMD64=a5430b7e398c12b66fc6a13a1ac3fd1a7622db48b0a312ccce6232aafa40d23d
+ENV ELIDE_DIGEST_LINUX_ARM64=f5bdc8845726cb32564cd8ea97c286e8c5ef243662bb52480ff553c29c7231d7
+
 USER dev
-RUN echo "Installing Elide..." \
-      && mkdir -p /tmp/elide-install \
-      && cd /tmp/elide-install \
-      && curl -sSL elide.sh | bash -s - -- \
-        --install-rev=1.0.0-beta8 \
-        --install-digest=2cbd9d45f5904390b303a1963379cc3e68591cf09aa875bff260cf1fb45bfe38 \
-        --preserve-installer \
-      && cd - \
-      && rm -rf /tmp/elide-install
+RUN ELIDE_ARCH=$(uname -m) \
+    && if [ "$ELIDE_ARCH" = "x86_64" ]; then \
+      ELIDE_DIGEST=$ELIDE_DIGEST_LINUX_AMD64; \
+    elif [ "$ELIDE_ARCH" = "aarch64" ]; then \
+      ELIDE_DIGEST=$ELIDE_DIGEST_LINUX_ARM64; \
+    elif [ "$ELIDE_ARCH" = "arm64" ]; then \
+      ELIDE_DIGEST=$ELIDE_DIGEST_LINUX_ARM64; \
+    else \
+      echo "Unsupported architecture: $ELIDE_ARCH"; exit 1; \
+    fi \
+    && echo "Installing Elide (arch: $ELIDE_ARCH, pin: $ELIDE_DIGEST)..." \
+    && mkdir -p /tmp/elide-install \
+    && cd /tmp/elide-install \
+    && curl -sSL elide.sh | bash -s - -- \
+      --install-rev=$ELIDE_VERSION \
+      --install-digest=$ELIDE_DIGEST \
+      --preserve-installer \
+    && cd - \
+    && rm -rf /tmp/elide-install
 
 FROM debian:sid-slim@sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac AS runtime
 
@@ -55,10 +66,11 @@ COPY --from=builder --chown=dev:elide /home/dev/elide /home/dev/elide
 COPY entrypoint.sh /home/dev/elide/entrypoint.sh
 USER dev
 
+ENV ELIDE_VERSION=1.0.0-beta8
+
 RUN echo "Setting up Elide..." \
   && mkdir -p /home/dev/.elide /home/dev/workdir \
   && touch /home/dev/.env \
-  && echo '{}' > /home/dev/package.json \
   && which elide \
   && elide --help \
   && elide info \

@@ -45,7 +45,7 @@ jobs:
       security-events: "write"
     with:
       provenance: true
-      runner: ${{ vars.RUNNER_LARGE || 'ubuntu-cipool' }}
+      runner: 'ubuntu-latest'
 
   ##
   ## Job: Multi-platform Test

@@ -582,6 +582,7 @@ kotlin-compiler-runner = { group = "org.jetbrains.kotlin", name = "kotlin-compil
 kotlin-compiler-testing = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing", version.ref = "kotlin-compile-testing" }
 kotlin-compiler-testing-ksp = { group = "com.github.tschuchortdev", name = "kotlin-compile-testing-ksp", version.ref = "kotlin-compile-testing" }
 kotlin-serialization-embedded = { group = "org.jetbrains.kotlin", name = "kotlin-serialization-compiler-plugin-embeddable", version.ref = "kotlin-sdk" }
+kotlin-powerAssert-embedded = { group = "org.jetbrains.kotlin", name = "kotlin-power-assert-compiler-plugin-embeddable", version.ref = "kotlin-sdk" }
 kotlin-main-kts = { group = "org.jetbrains.kotlin", name = "kotlin-main-kts", version.ref = "kotlin-sdk" }
 kotlin-scripting-common = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-common", version.ref = "kotlin-sdk" }
 kotlin-scripting-runtime = { group = "org.jetbrains.kotlin", name = "kotlin-script-runtime", version.ref = "kotlin-sdk" }

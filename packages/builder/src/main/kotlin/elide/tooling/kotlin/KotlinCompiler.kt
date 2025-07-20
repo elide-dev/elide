@@ -359,9 +359,11 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
 
         // load services eagerly
         debugLog("Building Kotlin compiler services")
-        buildList<Any> {
+
+        buildList {
           addAll(ServiceLoaderLite.loadImplementations(ComponentRegistrar::class.java, classLoader))
           addAll(ServiceLoaderLite.loadImplementations(CompilerPluginRegistrar::class.java, classLoader))
+          add(org.jetbrains.kotlin.powerassert.PowerAssertCommandLineProcessor())
         }.let {
           if (it.isEmpty()) {
             error(
@@ -400,11 +402,16 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       config: K2JVMCompilerArguments,
       test: Boolean = false,
       enableSerialization: Boolean = true,
+      enablePowerAssert: Boolean = test,
     ): Set<KotlinBuiltinPlugin> {
       val defaultPlugins = KotlinCompilerConfig.getDefaultPlugins(test = test)
       defaultPlugins.forEach { plugin ->
         if (plugin == KotlinBuiltinPlugin.SERIALIZATION && !enableSerialization) {
           // skip serialization plugin if it is not enabled.
+          return@forEach
+        }
+        if (plugin == KotlinBuiltinPlugin.POWER_ASSERT && !enablePowerAssert) {
+          // skip power assert plugin if it is not enabled.
           return@forEach
         }
         plugin.apply(config, Statics.resourcesPath)

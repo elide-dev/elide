@@ -533,12 +533,12 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       incrementalCompilation = state.manifest.kotlin?.features?.incremental ?: true
 
       // handle built-in plugins
-      if (state.manifest.kotlin?.features?.enableDefaultPlugins == true) {
+      if (state.manifest.kotlin?.features?.enableDefaultPlugins != false) {
         effectiveKnownPlugins.addAll(
           KotlinCompiler.configureDefaultPlugins(
             this,
             tests,
-            enableSerialization = state.manifest.kotlin?.features?.serialization == true,
+            enableSerialization = state.manifest.kotlin?.features?.serialization != false,
           ),
         )
       }

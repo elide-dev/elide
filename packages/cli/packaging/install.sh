@@ -4,7 +4,7 @@
 # shellcheck disable=SC2199
 set -e
 set +x
-TOOL_REVISION="1.0.0-beta7"
+TOOL_REVISION="1.0.0-beta8"
 INSTALLER_VERSION="v0.18"
 TOOL="cli"
 VERSION="v1"

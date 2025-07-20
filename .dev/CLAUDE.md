@@ -4,7 +4,7 @@ There is an Elide Project configuration file present for this project (`elide.pk
 Project configuration summary:
 
 - Project Name: `elide`
-- Version: `1.0.0-beta7`
+- Version: `1.0.0-beta8`
 - Description: `Polyglot runtime and toolchain`
 
 ### Project Scripts

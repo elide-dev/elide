@@ -1,7 +1,7 @@
 lockfile-version 1
 root{
 dev-dependencies{
-"@elide-dev/types" "1.0.0-beta7"
+"@elide-dev/types" "1.0.0-beta8"
 wrangler "4.24.3"
     }
 }
@@ -52,8 +52,8 @@ dependencies{
     }
 }
 pkg "@elide-dev/types"{
-version "1.0.0-beta7"
-resolved "https://registry.npmjs.org/@elide-dev/types/-/types-1.0.0-beta7.tgz"
+version "1.0.0-beta8"
+resolved "https://registry.npmjs.org/@elide-dev/types/-/types-1.0.0-beta8.tgz"
 integrity "sha512-MenlYYrvm1rUvBBB7E8rb59JAMI42Oq0txi4mBk1iJ15bGbsP8alq2SK5XtJI6+4PHNVNcPbF9+c8/A1krLz+w=="
 dependencies{
 "@types/node" ">=0.0.0"

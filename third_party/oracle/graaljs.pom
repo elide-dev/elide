@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.graalvm.js</groupId>
   <artifactId>js</artifactId>
-  <version>24.2.1-elide-1.0.0-beta7</version>
+  <version>24.2.2-elide-1.0.0-beta8</version>
   <packaging>pom</packaging>
   <url>http://www.graalvm.org/</url>
   <name>Js Enterprise</name>
@@ -34,14 +34,14 @@
     <dependency>
       <groupId>org.graalvm.js</groupId>
       <artifactId>js-community</artifactId>
-      <version>24.2.1</version>
+      <version>24.2.2</version>
       <type>pom</type>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.graalvm.truffle</groupId>
       <artifactId>truffle-enterprise</artifactId>
-      <version>24.2.1</version>
+      <version>24.2.2</version>
       <scope>runtime</scope>
     </dependency>
   </dependencies>

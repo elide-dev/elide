@@ -1796,7 +1796,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=true",
   ) else emptyList())
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx48g",
+  "-J-Xmx64g",
 ) else listOf(
   "-J-Xmx64g",
   "--parallelism=32",

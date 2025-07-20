@@ -164,7 +164,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "8917a5f5f3324fbfc825989fe0f1ce9ee7562b1e", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "83dd31d38ed1b61e304301fecdf753cdda8b596d", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",

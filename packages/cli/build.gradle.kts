@@ -999,6 +999,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
 
   // --- JNA + OSHI -----
 
+  "com.sun.jna.Native",
   "com.sun.jna.platform.linux.LibC",
   "com.sun.jna.platform.linux.Udev",
   "oshi.software.os.linux.LinuxOperatingSystem",
@@ -1027,6 +1028,8 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "oshi.software.os.unix.openbsd.OpenBsdOperatingSystem",
   "oshi.software.os.unix.solaris",
   "oshi.software.os.unix.solaris.SolarisOperatingSystem",
+  "com.sun.jna.platform.win32",
+  "com.sun.jna.platform.win32.WinNT",
   "oshi.util.platform.mac.CFUtil",
   "oshi.util.platform.mac.SmcUtil",
   "oshi.util.platform.mac.SysctlUtil",

@@ -899,6 +899,10 @@ build-test-deb:  ## Test the Debian package for Elide.
 
 test-deb: build-test-deb  ## Run the Debian test image.
 	@echo "Running Debian test image for Elide..."
+	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-deb elide --version
+
+run-test-deb: build-test-deb  ## Run the Debian test image with Bash.
+	@echo "Running Debian test image for Elide..."
 	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-deb bash
 
 build-rpm:  ## Build a RPM package for Elide.
@@ -915,7 +919,48 @@ build-test-rpm:  ## Test the RPM package for Elide.
 
 test-rpm: build-test-rpm  ## Run the RPM test image.
 	@echo "Running RPM test image for Elide..."
+	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-rpm elide --version
+
+run-test-rpm: build-test-rpm  ## Run the RPM test image with Bash.
+	@echo "Running RPM test image for Elide..."
 	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-rpm bash
+
+RELEASE_RESOURCES_TGZ = packages/cli/build/native/nativeOptimizedCompile/resources.tgz
+
+# special case: apk requires `resources.tgz`
+$(RELEASE_RESOURCES_TGZ):
+	@echo "Building resources.tgz for Alpine package..."
+	$(CMD)cd packages/cli/build/native/nativeOptimizedCompile \
+		&& $(TAR) -cf resources.tar resources \
+		&& $(GZIP) --best --verbose resources.tar \
+		&& mv resources.tar.gz resources.tgz
+
+build-apk: $(RELEASE_RESOURCES_TGZ)  ## Build an Alpine package for Elide.
+	@echo "Building Alpine package for Elide..."
+	$(CMD)bash ./tools/scripts/release/build-apk.sh
+
+sign-apk:  ## Sign a Alpine package for Elide.
+	@echo "Signing Alpine package for Elide..."
+	$(CMD)bash ./tools/scripts/release/sign-apk.sh
+
+build-test-apk:  ## Test the Alpine package for Elide.
+	@echo "Testing Alpine package for Elide..."
+	$(CMD)$(DOCKER) buildx build -f ./packages/cli/packaging/apk/Dockerfile . -t elide-apk
+
+test-apk: build-test-apk  ## Run the Alpine test image.
+	@echo "Running Alpine test image for Elide..."
+	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-apk elide --version
+
+run-test-apk: build-test-apk  ## Run the Alpine test image with Bash.
+	@echo "Running Alpine test image for Elide..."
+	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-apk bash
+
+build-dists:  ## Build all binary distributions for a newly-minted native image.
+	@echo "Building all distributions..."
+	$(CMD)$(MAKE) build-deb
+	$(CMD)$(MAKE) build-rpm
+	$(CMD)$(MAKE) build-apk
+	@echo "All distributions built (apk, deb, rpm)."
 
 node_modules/:
 	$(info Installing NPM dependencies...)

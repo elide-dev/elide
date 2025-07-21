@@ -48,8 +48,14 @@ fi
 
 # if HOME is not set, fail
 if [ -z "$HOME" ]; then
-  echo "Error: HOME environment variable is not set."
-  exit 1
+  # special case: if we are running as root, set it ourselves
+  if [ "$(id -u)" -eq 0 ]; then
+    HOME="/root"
+    debug "HOME environment variable not set, defaulting to /root"
+  else
+    echo "Error: HOME environment variable is not set and we are not running as root."
+    exit 1
+  fi
 fi
 
 # if the path `$HOME/elide` exists, move it to `$HOME/elide.old`; if `$HOME/elide.old` exists, delete it.
@@ -67,5 +73,15 @@ ln -s "$ELIDE_CURRENT_SYM" "$HOME/elide"
 
 # install a symlink into `/usr/bin`
 ln -s "$ELIDE_CURRENT_SYM/elide" "/usr/bin/elide"
+
+# if `/opt/elide/current/resources.tgz` exists, unpack it to `$HOME/elide/resources`, and remove the archive.
+if [ -f "$ELIDE_CURRENT_SYM/resources.tgz" ]; then
+  mkdir -p "$HOME/elide/resources"
+  tar -xzf "$ELIDE_CURRENT_SYM/resources.tgz" -C "$HOME/elide/resources"
+  rm "$ELIDE_CURRENT_SYM/resources.tgz"
+  debug "Unpacked resources to $HOME/elide/resources and removed archive."
+else
+  debug "No resources archive found at $ELIDE_CURRENT_SYM/resources.tgz"
+fi
 
 debug "Elide installation complete. Version: $ELIDE_VERSION"

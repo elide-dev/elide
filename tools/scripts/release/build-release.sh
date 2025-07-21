@@ -14,29 +14,19 @@
 #
 
 set -euo pipefail
+source tools/scripts/release/commons.sh
 
-# load from `ELIDE_VERSION` or default to `./.release`
-releaseVersion=$(cat ./.release 2>/dev/null || echo "999.0.0")
-version="${ELIDE_VERSION:-$releaseVersion}"
-hostPlatform=$(uname -s | tr '[:upper:]' '[:lower:]')
-platform="${ELIDE_PLATFORM-$hostPlatform}"
-hostArch=$(uname -m)
-arch="${ELIDE_ARCH-$hostArch}"
-variant="opt"
-archive_prefix="elide"
-
-if [[ "$@" == *"--dry"* ]]; then
-  echo "Dry run mode enabled, skipping further steps."
-  exit 0
+# if ELIDE_COSIGN is set to `false`, skip cosign
+do_cosign=true
+if [ "${ELIDE_COSIGN:-true}" = "false" ]; then
+  do_cosign=false
 fi
 
-if [ "$arch" = "arm64" ]; then
-  arch="aarch64"
+# if ELIDE_GPGSIGN is set to `false`, skip cosign
+do_gpgsign=true
+if [ "${ELIDE_GPGSIGN:-true}" = "false" ]; then
+  do_gpgsign=false
 fi
-if [ "$arch" = "x86_64" ]; then
-  arch="amd64"
-fi
-platform="$platform-$arch"
 
 echo "----------------------------------------------------"
 
@@ -77,6 +67,11 @@ echo "- Building txz package (variant: $variant / platform: $platform)..."
 xz -v --best -k "$archive_prefix-$version-$platform.tar"
 mv "$archive_prefix-$version-$platform.tar.xz" "$archive_prefix-$version-$platform.txz"
 
+if [[ "$@" == *"--dry"* ]]; then
+  echo "Dry run mode enabled, skipping further steps."
+  exit 0
+fi
+
 echo "- Stamping releases (variant: $variant / platform: $platform)..."
 
 if [ "$(uname -o)" = "Darwin" ]; then
@@ -93,11 +88,15 @@ for archive in ./elide*.{tgz,txz,zip}; do
   $SHA256SUM "$archive" > "$archive.sha256"
   echo "-   SHA512..."
   $SHA512SUM "$archive" > "$archive.sha512"
-  echo "-   GPG2..."
-  gpg --detach-sign --batch --yes --armor "$archive"
-  echo "-   Sigstore..."
-  cosignArgs="${COSIGN_ARGS} --output-signature=$archive.sig --output-certificate=$archive.pem --bundle=$archive.sigstore --tlog-upload=true"
-  yes y | cosign sign-blob "$archive" $cosignArgs -y
+  if [ "$do_gpgsign" = true ]; then
+      echo "-   GPG2..."
+      gpg --detach-sign --batch --yes --armor "$archive"
+  fi
+  if [ "$do_cosign" = true ]; then
+    echo "-   Sigstore..."
+    cosignArgs="${COSIGN_ARGS} --output-signature=$archive.sig --output-certificate=$archive.pem --bundle=$archive.sigstore"
+    yes y | cosign sign-blob "$archive" $cosignArgs -y
+  fi
   echo ""
 done
 

@@ -142,6 +142,7 @@ JQ ?= $(shell which jq)
 BAZEL ?= $(shell which bazel)
 RUSTC ?= $(shell which rustc)
 CARGO ?= $(shell which cargo)
+DOCKER ?= $(shell which docker)
 LLVM_COV ?= $(shell which llvm-cov)
 LLVM_PROFDATA ?= $(shell which llvm-profdata)
 LLVM_CONFIG ?= $(shell which llvm-config)
@@ -883,6 +884,22 @@ image-native:  ## Build native Ubuntu base image.
 image-native-alpine:  ## Build native Alpine base image.
 	@echo "Building image 'native-alpine'..."
 	$(CMD)$(MAKE) -C tools/images/native-alpine PUSH=$(PUSH) REMOTE=$(REMOTE)
+
+build-deb:  ## Build a Debian package for Elide.
+	@echo "Building Debian package for Elide..."
+	$(CMD)bash ./tools/scripts/release/build-deb.sh
+
+sign-deb:  ## Sign a Debian package for Elide.
+	@echo "Signing Debian package for Elide..."
+	$(CMD)bash ./tools/scripts/release/sign-deb.sh
+
+test-deb:  ## Test the Debian package for Elide.
+	@echo "Testing Debian package for Elide..."
+	$(CMD)$(DOCKER) buildx build -f ./packages/cli/packaging/deb/Dockerfile . -t elide-deb
+
+run-test-deb:  ## Run the Debian test image.
+	@echo "Running Debian test image for Elide..."
+	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-deb bash
 
 node_modules/:
 	$(info Installing NPM dependencies...)

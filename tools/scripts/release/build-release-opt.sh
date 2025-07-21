@@ -13,6 +13,8 @@
 # License for the specific language governing permissions and limitations under the License.
 #
 
+set -euo pipefail
+
 # load from `ELIDE_VERSION` or default to `./.release`
 releaseVersion=$(cat ./.release 2>/dev/null || echo "999.0.0")
 version="${ELIDE_VERSION:-$releaseVersion}"
@@ -22,15 +24,6 @@ hostArch=$(uname -m)
 arch="${ELIDE_ARCH-$hostArch}"
 variant="opt"
 archive_prefix="elide"
-
-echo "----------------------------------------------------"
-
-echo "Elide Release Builder"
-echo "- Version: $version"
-echo "- Platform: $platform"
-echo "- Architecture: $arch"
-
-echo "----------------------------------------------------"
 
 if [[ "$@" == *"--dry"* ]]; then
   echo "Dry run mode enabled, skipping further steps."
@@ -44,6 +37,15 @@ if [ "$arch" = "x86_64" ]; then
   arch="amd64"
 fi
 platform="$platform-$arch"
+
+echo "----------------------------------------------------"
+
+echo "Elide Release Builder"
+echo "- Version: $version"
+echo "- Platform: $platform"
+echo "- Architecture: $arch"
+
+echo "----------------------------------------------------"
 
 # echo "platform: $platform"
 # echo "variant: $variant"

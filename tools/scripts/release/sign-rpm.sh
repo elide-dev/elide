@@ -14,10 +14,11 @@
 #
 
 set -euo pipefail
+source tools/scripts/release/commons.sh
 
 # if `DRY` is equal to `true`, skip the signature
 if [[ "$@" == *"--dry"* ]]; then
-  echo "Dry run mode enabled, skipping deb sign."
+  echo "Dry run mode enabled, skipping rpm sign."
   exit 0
 fi
 

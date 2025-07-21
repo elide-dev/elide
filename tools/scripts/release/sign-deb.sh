@@ -14,6 +14,7 @@
 #
 
 set -euo pipefail
+source tools/scripts/release/commons.sh
 
 # if `DRY` is equal to `true`, skip the signature
 if [[ "$@" == *"--dry"* ]]; then

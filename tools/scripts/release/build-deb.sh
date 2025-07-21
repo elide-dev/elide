@@ -14,33 +14,7 @@
 #
 
 set -euo pipefail
-
-# load from `ELIDE_TARGET` or default to `nativeOptimizedCompile`
-nativeBinTarget="${ELIDE_TARGET:-nativeOptimizedCompile}"
-
-# prefix path
-nativePrefix="packages/cli/build/native/$nativeBinTarget"
-elideBin="$nativePrefix/elide"
-
-# load from `ELIDE_VERSION` or default to `./.release`
-releaseVersion=$($elideBin --version)
-version="${ELIDE_VERSION:-$releaseVersion}"
-hostPlatform=$(uname -s | tr '[:upper:]' '[:lower:]')
-platform="${ELIDE_PLATFORM-$hostPlatform}"
-hostArch=$(uname -m)
-arch="${ELIDE_ARCH-$hostArch}"
-variant="opt"
-archive_prefix="elide"
-install_prefix="/opt/elide"
-revision="0"
-
-if [ "$arch" = "arm64" ]; then
-  arch="aarch64"
-fi
-if [ "$arch" = "x86_64" ]; then
-  arch="amd64"
-fi
-platform="$platform-$arch"
+source tools/scripts/release/commons.sh
 
 echo "----------------------------------------------------"
 

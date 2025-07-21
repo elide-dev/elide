@@ -893,13 +893,29 @@ sign-deb:  ## Sign a Debian package for Elide.
 	@echo "Signing Debian package for Elide..."
 	$(CMD)bash ./tools/scripts/release/sign-deb.sh
 
-test-deb:  ## Test the Debian package for Elide.
+build-test-deb:  ## Test the Debian package for Elide.
 	@echo "Testing Debian package for Elide..."
 	$(CMD)$(DOCKER) buildx build -f ./packages/cli/packaging/deb/Dockerfile . -t elide-deb
 
-run-test-deb:  ## Run the Debian test image.
+test-deb: build-test-deb  ## Run the Debian test image.
 	@echo "Running Debian test image for Elide..."
 	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-deb bash
+
+build-rpm:  ## Build a RPM package for Elide.
+	@echo "Building RPM package for Elide..."
+	$(CMD)bash ./tools/scripts/release/build-rpm.sh
+
+sign-rpm:  ## Sign a RPM package for Elide.
+	@echo "Signing RPM package for Elide..."
+	$(CMD)bash ./tools/scripts/release/sign-rpm.sh
+
+build-test-rpm:  ## Test the RPM package for Elide.
+	@echo "Testing RPM package for Elide..."
+	$(CMD)$(DOCKER) buildx build -f ./packages/cli/packaging/rpm/Dockerfile . -t elide-rpm
+
+test-rpm: build-test-rpm  ## Run the RPM test image.
+	@echo "Running RPM test image for Elide..."
+	$(CMD)$(DOCKER) run --rm -it -v $(PWD):/elide elide-rpm bash
 
 node_modules/:
 	$(info Installing NPM dependencies...)

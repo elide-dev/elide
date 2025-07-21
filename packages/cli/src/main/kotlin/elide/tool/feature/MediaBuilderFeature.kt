@@ -48,6 +48,7 @@ import elide.tooling.img.Images
   )
 
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {
+    if (staticJni) return
     Images.load()
   }
 }

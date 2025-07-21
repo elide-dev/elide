@@ -3259,6 +3259,16 @@
       "allDeclaredMethods": true
     },
     {
+      "type": "elide.tool.cli.Elide$Completions",
+      "allDeclaredFields": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.ElideKt",
       "allDeclaredFields": true,
       "allDeclaredMethods": true
@@ -12123,6 +12133,10 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "picocli.AutoComplete$GenerateCompletion",
+      "allDeclaredFields": true
     },
     {
       "type": "picocli.CommandLine$AutoHelpMixin",

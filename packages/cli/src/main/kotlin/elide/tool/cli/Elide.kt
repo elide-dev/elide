@@ -43,7 +43,6 @@ import elide.runtime.gvm.internals.intrinsics.ElideIntrinsic
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.builder.ToolBuildCommand
 import elide.tool.cli.cmd.builder.ToolWhichCommand
-import elide.tool.cli.cmd.checks.ToolCheckCommand
 import elide.tool.cli.cmd.deps.AddCommand
 import elide.tool.cli.cmd.deps.InstallCommand
 import elide.tool.cli.cmd.dev.DevCommand
@@ -130,6 +129,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     ToolDiscordCommand::class,
     LspCommand::class,
     McpCommand::class,
+    Elide.Completions::class,
   ],
   customSynopsis = [
     "",
@@ -160,6 +160,20 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
 @Suppress("MemberVisibilityCanBePrivate")
 @Introspected
 @Context class Elide : ToolCommandBase<CommandContext>() {
+  @Command(
+    name = "completions",
+    mixinStandardHelpOptions = true,
+    description = [
+      "Generate bash/zsh completion script for Elide.",
+      "Run the following command to give `elide` TAB completion in the current shell:",
+      "",
+      "  source <(elide completions)", ""
+    ],
+    optionListHeading = "Options:%n",
+    helpCommand = true,
+  )
+  class Completions : picocli.AutoComplete.GenerateCompletion()
+
   companion object {
     /** Name of the tool. */
     const val TOOL_NAME: String = "elide"
@@ -366,7 +380,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
 
           applicationContext = it
           cliBuilder.apply {
-            setColorScheme(
+            colorScheme = (
               Help.defaultColorScheme(
                 if (args.find { arg -> arg == "--no-pretty" || arg == "--pretty=false" } != null ||
                   System.getenv("NO_COLOR") != null) {

@@ -73,9 +73,9 @@ private const val USE_BUILTIN_LSP = false
 )
 @Introspected
 @ReflectiveAccess
-internal class LspCommand @Inject constructor(
-  private val projectManagerProvider: Provider<ProjectManager>,
-) : ProjectAwareSubcommand<ToolState, CommandContext>() {
+internal class LspCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
+  @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
+
   private var waitForClose: Boolean = false
   private lateinit var activeContext: PolyglotContext
   private lateinit var executorWrapper: ContextAwareExecutor

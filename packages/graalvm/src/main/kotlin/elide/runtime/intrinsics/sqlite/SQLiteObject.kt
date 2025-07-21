@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -14,6 +14,7 @@ package elide.runtime.intrinsics.sqlite
 
 import io.micronaut.core.annotation.ReflectiveAccess
 import elide.annotations.API
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.MapLike
 
 /**
@@ -27,7 +28,7 @@ import elide.runtime.intrinsics.js.MapLike
  *
  * @see MapLike Map-like base interface
  */
-@API @ReflectiveAccess public interface SQLiteObject: MapLike<String, Any?> {
+@API @ReflectiveAccess public interface SQLiteObject: MapLike<String, Any?>, ReadOnlyProxyObject {
   /** Host-side only: array of columns specified by this object. */
   public val columns: Array<String>
 

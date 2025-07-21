@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -12,14 +12,14 @@
  */
 package elide.runtime.intrinsics.sqlite
 
+import com.oracle.truffle.js.runtime.objects.JSDynamicObject
 import io.micronaut.core.annotation.ReflectiveAccess
-import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.proxy.ProxyObject
 import org.intellij.lang.annotations.Language
 import org.sqlite.SQLiteConnection
 import org.sqlite.core.DB
 import java.io.Closeable
 import elide.annotations.API
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.Disposable
 import elide.vm.annotations.Polyglot
 
@@ -101,7 +101,7 @@ private val SQLITE_DATABASE_PROPS_AND_METHODS = arrayOf(
  * @see SQLiteTransactor Transactor Interface
  * @see SQLiteType SQLite Types
  */
-@API @ReflectiveAccess public interface SQLiteDatabase: Closeable, AutoCloseable, ProxyObject, Disposable {
+@API @ReflectiveAccess public interface SQLiteDatabase: Closeable, AutoCloseable, ReadOnlyProxyObject, Disposable {
   /** Hard-coded defaults for SQLite. */
   public companion object Defaults {
     public const val DEFAULT_CREATE: Boolean = false
@@ -137,7 +137,7 @@ private val SQLITE_DATABASE_PROPS_AND_METHODS = arrayOf(
    *
    * @param extension Extension path or name to load.
    */
-  @Polyglot public fun loadExtension(extension: String)
+  @Polyglot public fun loadExtension(extension: String): JSDynamicObject
 
   /**
    * ## Prepare Statement
@@ -201,7 +201,7 @@ private val SQLITE_DATABASE_PROPS_AND_METHODS = arrayOf(
    * @param statement SQL query to execute.
    * @param args Arguments to bind to the statement.
    */
-  @Polyglot public fun exec(@Language("sql") statement: String, vararg args: Any?)
+  @Polyglot public fun exec(@Language("sql") statement: String, vararg args: Any?): JSDynamicObject
 
   /**
    * ## Execute (Statement)
@@ -214,7 +214,7 @@ private val SQLITE_DATABASE_PROPS_AND_METHODS = arrayOf(
    * @param statement Prepared statement to execute.
    * @param args Arguments to bind to the statement.
    */
-  @Polyglot public fun exec(statement: SQLiteStatement, vararg args: Any?)
+  @Polyglot public fun exec(statement: SQLiteStatement, vararg args: Any?): JSDynamicObject
 
   /**
    * ## Execute Transaction
@@ -282,13 +282,4 @@ private val SQLITE_DATABASE_PROPS_AND_METHODS = arrayOf(
   // -- Proxy Object Interface
 
   override fun getMemberKeys(): Array<String> = SQLITE_DATABASE_PROPS_AND_METHODS
-  override fun hasMember(key: String?): Boolean = key != null && key in SQLITE_DATABASE_PROPS_AND_METHODS
-
-  override fun putMember(key: String?, value: Value?) {
-    // no-op
-  }
-
-  override fun removeMember(key: String?): Boolean {
-    return false  // not supported
-  }
 }

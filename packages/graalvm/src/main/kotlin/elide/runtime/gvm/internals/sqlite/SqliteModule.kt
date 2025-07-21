@@ -14,6 +14,8 @@
 
 package elide.runtime.gvm.internals.sqlite
 
+import com.oracle.truffle.js.runtime.objects.JSDynamicObject
+import com.oracle.truffle.js.runtime.objects.Undefined
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyInstantiable
@@ -49,9 +51,9 @@ import elide.jvm.ResourceManager
 import elide.runtime.core.lib.NativeLibraries
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
+import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMap
 import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
-import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMap
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
@@ -223,6 +225,9 @@ internal object SQLiteDatabaseConstructor : ProxyInstantiable {
   }
 }
 
+// Properties and methods made available to guests on SQLite objects.
+private val sqliteObjectPropsAndMethods = arrayOf<String>()
+
 // Effective configuration for a SQLite database instance.
 @JvmRecord private data class SQLiteConfig(
   val path: Path?,
@@ -270,11 +275,18 @@ internal class SqliteDatabaseProxy private constructor (
     override val columnTypes: Map<String, SQLiteType> get() = schema.columns.associate { it.name to it.type }
     override fun asList(): List<Any?> = schema.columns.map { dataMap[it.name] }.toImmutableList()
 
+    override fun getMemberKeys(): Array<String> = sqliteObjectPropsAndMethods.plus(
+      dataMap.keys
+    )
+
+    override fun hasMember(key: String): Boolean = key in sqliteObjectPropsAndMethods || key in dataMap
+
+    override fun getMember(key: String): Any? = when (key) {
+      else -> dataMap[key] ?: Undefined.instance
+    }
+
     companion object {
-      fun from(
-        schema: SQLiteObjectSchema,
-        data: MapLike<String, Any?>,
-      ): SQLiteObject = SQLiteObjectImpl(
+      fun from(schema: SQLiteObjectSchema, data: MapLike<String, Any?>): SQLiteObject = SQLiteObjectImpl(
         schema,
         data,
       )
@@ -591,14 +603,15 @@ internal class SqliteDatabaseProxy private constructor (
     }
   }
 
-  @Polyglot override fun exec(statement: String, vararg args: Any?): Unit = withOpen {
+  @Polyglot override fun exec(statement: String, vararg args: Any?): JSDynamicObject = withOpen {
     exec(oneShotStatement(statement, args))
   }
 
-  @Polyglot override fun exec(statement: Statement, vararg args: Any?): Unit = withOpen {
+  @Polyglot override fun exec(statement: Statement, vararg args: Any?): JSDynamicObject = withOpen {
     statement.prepare(args).use {
       it.execute()
     }
+    Undefined.instance
   }
 
   @Polyglot override fun <R> transaction(runnable: SQLiteTransactor<R>): SQLiteTransaction<R> = withOpen {

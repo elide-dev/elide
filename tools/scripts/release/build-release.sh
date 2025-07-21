@@ -22,7 +22,7 @@ if [ "${ELIDE_COSIGN:-true}" = "false" ]; then
   do_cosign=false
 fi
 
-# if ELIDE_GPGSIGN is set to `false`, skip cosign
+# if ELIDE_GPGSIGN is set to `false`, skip GPG signing
 do_gpgsign=true
 if [ "${ELIDE_GPGSIGN:-true}" = "false" ]; then
   do_gpgsign=false

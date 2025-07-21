@@ -72,7 +72,11 @@ fi
 ln -s "$ELIDE_CURRENT_SYM" "$HOME/elide"
 
 # install a symlink into `/usr/bin`
+if [ -e "/usr/bin/elide" ] || [ -L "/usr/bin/elide" ]; then
+  rm -f "/usr/bin/elide"
+fi
 ln -s "$ELIDE_CURRENT_SYM/elide" "/usr/bin/elide"
+debug "Created symlink: /usr/bin/elide -> $ELIDE_CURRENT_SYM/elide"
 
 # if `/opt/elide/current/resources.tgz` exists, unpack it to `$HOME/elide/resources`, and remove the archive.
 if [ -f "$ELIDE_CURRENT_SYM/resources.tgz" ]; then

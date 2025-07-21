@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # Copyright (c) 2024 Elide Technologies, Inc.
@@ -13,9 +13,15 @@
 # License for the specific language governing permissions and limitations under the License.
 #
 
-echo "Building 'debug' release artifacts..."
-bash ./tools/scripts/build-release-debug.sh
+set -euo pipefail
+source tools/scripts/release/commons.sh
 
-echo ""
-echo "Building 'opt' release artifacts..."
-bash ./tools/scripts/build-release-opt.sh
+# if `DRY` is equal to `true`, skip the signature
+if [[ "$@" == *"--dry"* ]]; then
+  echo "Dry run mode enabled, skipping apk sign."
+  exit 0
+fi
+
+echo "Signing apk packages..."
+
+# not yet implemented

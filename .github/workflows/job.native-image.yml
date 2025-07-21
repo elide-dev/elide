@@ -349,7 +349,7 @@ jobs:
           echo "hashes=$(sha256sum ./packages/cli/build/native/nativeOptimizedCompile/elide | base64 -w0)" >> "$GITHUB_OUTPUT"
       - name: "🛠️ Release: Package"
         if: inputs.pack
-        run: bash ./tools/scripts/release/build-release-opt.sh
+        run: bash ./tools/scripts/release/build-release.sh
         env:
           COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}

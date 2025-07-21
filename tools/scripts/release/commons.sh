@@ -20,6 +20,12 @@ nativeBinTarget="${ELIDE_TARGET:-nativeOptimizedCompile}"
 nativePrefix="packages/cli/build/native/$nativeBinTarget"
 elideBin="$nativePrefix/elide"
 
+# ensure the binary exists and is executable
+if [ ! -x "$elideBin" ]; then
+  echo "Error: The binary '$elideBin' does not exist or is not executable." >&2
+  exit 1
+fi
+
 # load from `ELIDE_VERSION` or default to `./.release`
 releaseVersion=$($elideBin --version)
 version="${ELIDE_VERSION:-$releaseVersion}"

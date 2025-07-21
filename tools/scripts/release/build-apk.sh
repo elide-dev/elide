@@ -43,6 +43,7 @@ set -x
 # mount version file, which needs to make it into the installation
 echo "$version" > "$nativePrefix/.version"
 
+# (We intentionally exclude the package name argument so that fpm uses a compliant apk name.)
 fpm \
   -C "packages/cli/build/native/$nativeBinTarget" \
   -t apk \

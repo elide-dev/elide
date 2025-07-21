@@ -82,6 +82,7 @@ import elide.testing.annotations.TestCase
       testFile("sqlite.cjs"),
       testFile("sqlite.mjs"),
       testFile("sqlite.ts"),
+      testFile("sqlite-json.mts"),
       testFile("stdlib.cjs"),
       testFile("stdlib.mjs"),
       testFile("py_json.py"),

@@ -64,9 +64,7 @@ import elide.testing.annotations.TestCase
       assertNotNull(it.memberKeys)
       assertNull(it.getMember("nonexistent"))
       assertFalse(it.removeMember("sample"))
-      assertFalse(it.hasMember(null))
       assertTrue(it.memberKeys.isNotEmpty())
-      assertFalse(it.hasMember(null))
       it.memberKeys.forEach { key ->
         assertTrue(it.hasMember(key))
       }
@@ -977,5 +975,38 @@ import elide.testing.annotations.TestCase
 
   @Test fun `should be able to require() builtin module at elide prefix`() {
     require("elide:sqlite")
+  }
+
+  @Test fun `encode sqlite result via json`() = dual {
+    assertNotNull(SQLite.inMemory()).use {
+      assertTrue(it.active)
+      it.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT);")
+      it.exec("INSERT INTO test (name) VALUES ('hi');")
+      val query = it.query("SELECT * FROM test LIMIT 1;")
+      val result = assertNotNull(query.get())
+      assertTrue(result.isNotEmpty())
+      assertEquals("hi", result["name"])
+    }
+  }.guest {
+    // language=JavaScript
+    """
+      const { ok } = require("node:assert");
+      const { Database } = require("elide:sqlite");
+      ok(Database);
+      const db = new Database();
+      ok(db);
+      db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT);");
+      db.exec("INSERT INTO test (name) VALUES ('hi');");
+      const query = db.query("SELECT * FROM test LIMIT 1;");
+      const result = query.get();
+      ok(result);
+      ok(result.name);
+      ok(result.name === "hi");
+      const encoded = JSON.stringify(result);
+      ok(encoded);
+      const decoded = JSON.parse(encoded);
+      ok(decoded.name === "hi");
+      db.close();
+    """
   }
 }

@@ -7016,7 +7016,7 @@ public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactor$Reflect
 public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteAPI : org/graalvm/polyglot/proxy/ProxyObject {
 }
 
-public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteDatabase : elide/runtime/intrinsics/js/Disposable, java/io/Closeable, java/lang/AutoCloseable, org/graalvm/polyglot/proxy/ProxyObject {
+public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteDatabase : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/js/Disposable, java/io/Closeable, java/lang/AutoCloseable {
 	public static final field DEFAULT_CREATE Z
 	public static final field DEFAULT_READONLY Z
 	public static final field DEFAULT_THROW_ON_ERROR Z
@@ -7027,18 +7027,15 @@ public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteDatabase :
 	public abstract fun connection ()Lorg/sqlite/SQLiteConnection;
 	public abstract fun deserialize ([BLjava/lang/String;)V
 	public static synthetic fun deserialize$default (Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;[BLjava/lang/String;ILjava/lang/Object;)V
-	public abstract fun exec (Lelide/runtime/intrinsics/sqlite/SQLiteStatement;[Ljava/lang/Object;)V
-	public abstract fun exec (Ljava/lang/String;[Ljava/lang/Object;)V
+	public abstract fun exec (Lelide/runtime/intrinsics/sqlite/SQLiteStatement;[Ljava/lang/Object;)Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
+	public abstract fun exec (Ljava/lang/String;[Ljava/lang/Object;)Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
 	public abstract fun getActive ()Z
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
-	public fun hasMember (Ljava/lang/String;)Z
-	public abstract fun loadExtension (Ljava/lang/String;)V
+	public abstract fun loadExtension (Ljava/lang/String;)Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
 	public abstract fun prepare (Ljava/lang/String;[Ljava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteStatement;
-	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public abstract fun query (Lelide/runtime/intrinsics/sqlite/SQLiteStatement;[Ljava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteStatement;
 	public abstract fun query (Ljava/lang/String;[Ljava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteStatement;
-	public fun removeMember (Ljava/lang/String;)Z
 	public abstract fun serialize (Ljava/lang/String;)[B
 	public static synthetic fun serialize$default (Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;Ljava/lang/String;ILjava/lang/Object;)[B
 	public abstract fun transaction (Lelide/runtime/intrinsics/sqlite/SQLiteTransactor;)Lelide/runtime/intrinsics/sqlite/SQLiteTransaction;
@@ -7052,7 +7049,7 @@ public final class elide/runtime/intrinsics/sqlite/SQLiteDatabase$Defaults {
 	public static final field MAIN_SCHEMA Ljava/lang/String;
 }
 
-public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteObject : elide/runtime/intrinsics/js/MapLike {
+public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteObject : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/js/MapLike {
 	public abstract fun asList ()Ljava/util/List;
 	public abstract fun getColumnTypes ()Ljava/util/Map;
 	public abstract fun getColumns ()[Ljava/lang/String;

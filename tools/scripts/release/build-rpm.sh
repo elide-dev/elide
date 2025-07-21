@@ -44,7 +44,7 @@ platform="$platform-$arch"
 
 echo "----------------------------------------------------"
 
-echo "Elide Deb Builder"
+echo "Elide Rpm Builder"
 echo "- Version: $version"
 echo "- Platform: $platform"
 echo "- Architecture: $arch"
@@ -54,9 +54,9 @@ echo "----------------------------------------------------"
 echo "Output of 'fpm --version':"
 fpm --version
 
-debname="$archive_prefix-$version-$revision-$platform.deb"
+rpmname="$archive_prefix-$version-$revision-$platform.rpm"
 
-echo "Building \"$debname\"..."
+echo "Building \"$rpmname\"..."
 
 # if `DRY` is equal to `true`, skip the build
 if [[ "$@" == *"--dry"* ]]; then
@@ -71,9 +71,9 @@ echo "$version" > "$nativePrefix/.version"
 
 fpm \
   -C "packages/cli/build/native/$nativeBinTarget" \
-  -t deb \
+  -t rpm \
   -s dir \
-  -p "$debname" \
+  -p "$rpmname" \
   --log info \
   --prefix "$install_prefix" \
   --version "$version" \
@@ -86,13 +86,14 @@ fpm \
   --description "Elide is an all-in-one, full-stack, AI-native, polyglot runtime" \
   --maintainer "Elide Team <engineering@elide.dev>" \
   --provides "elide" \
-  --depends libc6 \
-  --depends libstdc++6 \
-  --depends ca-certificates \
-  --deb-recommends libgomp1 \
-  --deb-compression xz \
-  --deb-compression-level 9 \
-  --deb-dist unstable \
+  --depends glibc \
+  --depends libstdc++ \
+  --depends libgomp \
+  --rpm-os linux \
+  --rpm-compression xzmt \
+  --rpm-compression-level 9 \
+  --rpm-dist unstable \
+  --rpm-sign \
   --before-install="packages/cli/packaging/scripts/before-install.sh" \
   --after-install="packages/cli/packaging/scripts/after-install.sh" \
   "elide=$version/elide" \
@@ -101,8 +102,8 @@ fpm \
   "resources=$version/" \
   ".version=.version"
 
-mv "$debname" build/
+mv "$rpmname" build/
 
 set +x
 
-echo "Deb ready."
+echo "Rpm ready."

@@ -11,7 +11,7 @@
       "name": "java",
       "description": "Pure-Java project with Elide",
       "languages": ["Java"],
-      "files": ["elide.pkl", "src/main/java/sample/Hello.java", "src/main/test/sample/HelloTest.java"]
+      "files": ["elide.pkl", "src/main/java/sample/Hello.java", "src/test/sample/HelloTest.java"]
     },
     {
       "name": "mavenjvm",
@@ -30,7 +30,22 @@
       "name": "web-static-worker",
       "description": "Static website built with Elide and shipped with Cloudflare Workers",
       "languages": ["Markdown"],
-      "files": [".dev/elide.lock.bin", "README.md", "elide.pkl", "package-lock.kdl", "wrangler.toml", "src/index.md"]
+      "files": [
+        "README.md",
+        "elide.pkl",
+        "package-lock.kdl",
+        "wrangler.toml",
+        "src/example.mjs",
+        "src/favicon.ico",
+        "src/globals.scss",
+        "src/hello.md",
+        "src/hello.mts",
+        "src/hello.scss",
+        "src/index.md",
+        "src/main.mts",
+        "src/picture.png",
+        "src/styles.css"
+      ]
     }
   ]
 }

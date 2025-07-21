@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -11,6 +11,8 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 package elide.runtime.core.lib
+
+import org.graalvm.nativeimage.ImageInfo
 
 /**
  * # Native Libraries
@@ -37,8 +39,11 @@ public object NativeLibraries {
    * @return A boolean value indicating whether the library was loaded successfully.
    */
   public fun resolve(name: String, callback: ((Boolean) -> Unit)? = null): Boolean {
-    return runCatching { System.loadLibrary(name) }.isSuccess.also {
-      callback?.invoke(it)
+    return when (ImageInfo.inImageRuntimeCode() && System.getProperty("elide.staticJni") == "true") {
+      true -> true
+      false -> runCatching { System.loadLibrary(name) }.isSuccess.also {
+        callback?.invoke(it)
+      }
     }
   }
 

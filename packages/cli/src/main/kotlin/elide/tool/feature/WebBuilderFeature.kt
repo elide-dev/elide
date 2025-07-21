@@ -51,6 +51,7 @@ import elide.tooling.web.WebBuilder
 
   override fun beforeAnalysis(access: BeforeAnalysisAccess) {
     super.beforeAnalysis(access)
+    if (staticJni) return
     WebBuilder.load()
   }
 }

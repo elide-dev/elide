@@ -62,12 +62,10 @@ private object WebBuilderInternals {
     true -> true // built-in if running in native mode
     else -> when (initialized.value) {
       true -> true // already initialized
-      false -> synchronized(this) {
-        NativeLibraries.loadLibrary(NATIVE_WEB_LIB).also {
-          when (it) {
-            true -> initialized.value = true
-            else -> error("Failed to load lib$NATIVE_WEB_LIB")
-          }
+      false -> NativeLibraries.loadLibrary(NATIVE_WEB_LIB).also {
+        when (it) {
+          true -> initialized.value = true
+          else -> error("Failed to load lib$NATIVE_WEB_LIB")
         }
       }
     }

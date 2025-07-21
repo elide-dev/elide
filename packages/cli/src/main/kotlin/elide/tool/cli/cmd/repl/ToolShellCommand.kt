@@ -218,13 +218,13 @@ private typealias ContextAccessor = () -> PolyglotContext
 )
 @Introspected
 @ReflectiveAccess
-internal class ToolShellCommand @Inject constructor(
-  private val beanContext: BeanContext,
-  private val projectManagerProvider: Provider<ProjectManager>,
-  private val manifestsProvider: Provider<PackageManifestService>,
-  private val workdirProvider: Provider<WorkdirManager>,
-  private val guestExecProvider: Provider<GuestExecutorProvider>,
-) : ProjectAwareSubcommand<ToolState, CommandContext>() {
+internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
+  @Inject private lateinit var beanContext: BeanContext
+  @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
+  @Inject private lateinit var manifestsProvider: Provider<PackageManifestService>
+  @Inject private lateinit var workdirProvider: Provider<WorkdirManager>
+  @Inject private lateinit var guestExecProvider: Provider<GuestExecutorProvider>
+
   internal companion object {
     private const val CONFIG_PATH_APP = "/etc/elide"
     private const val VERSION_INSTRINSIC_NAME = "__Elide_version__"

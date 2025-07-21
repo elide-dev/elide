@@ -49,6 +49,7 @@ plugins {
 
   kotlin("jvm")
   kotlin("plugin.serialization")
+  alias(libs.plugins.asciidoctor)
   alias(libs.plugins.ksp)
   alias(libs.plugins.buildConfig)
   alias(libs.plugins.micronaut.minimal.application)
@@ -104,6 +105,7 @@ val macTarget = "$archTripleToken-apple-darwin"
 val winTarget = "$archTripleToken-pc-windows-gnu"
 val nativeTargetType = if (isRelease) "nativeOptimizedCompile" else "nativeCompile"
 val entrypoint = "elide.tool.cli.MainKt"
+val commandMain = "elide.tool.cli.Elide"
 
 val enablePkl = true
 val enableJs = true
@@ -148,6 +150,7 @@ val enableJpms = false
 val enableConscrypt = false
 val enableBouncycastle = false
 val enableEmbeddedJvm = false
+val enableCliDocs = true
 val enableBuildReport = true
 val enableHeapReport = false
 val enableG1 = false
@@ -428,6 +431,7 @@ buildConfig {
 
 val pklDependencies: Configuration by configurations.creating
 val svmModulePath: Configuration by configurations.creating
+val cliCodeGenerator: Configuration by configurations.creating
 val cliJitOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
 val cliNativeOptimized: Configuration by configurations.creating { isCanBeConsumed = true }
 val embeddedKotlin: Configuration by configurations.creating { isCanBeResolved = true }
@@ -446,6 +450,8 @@ dependencies {
   aotApplication(libs.graalvm.compiler)
 
   annotationProcessor(libs.picocli.codegen)
+  cliCodeGenerator(libs.picocli.codegen)
+
   ksp(mn.micronaut.inject.kotlin)
   classpathExtras(mn.micronaut.core.processor)
 
@@ -2231,7 +2237,71 @@ val prepKotlinResources by tasks.registering(Copy::class) {
   duplicatesStrategy = EXCLUDE
 }
 
+val completionsOut = layout.buildDirectory.dir("cli-completions")
+val cliDocsIntermediate = layout.buildDirectory.dir("generated-cli-docs")
+val cliDocsOut = layout.buildDirectory.dir("cli-docs")
+
 tasks {
+  val generateManpageAsciiDoc by registering(JavaExec::class) {
+    dependsOn(classes)
+    group = "Documentation"
+    description = "Generate CLI asciidoc inputs"
+    mainClass = "picocli.codegen.docgen.manpage.ManPageGenerator"
+
+    args(
+      commandMain,
+      "--outdir=${cliDocsIntermediate.get().asFile.path}",
+      "-v",
+    )
+
+    classpath = files(
+      cliCodeGenerator,
+      configurations.compileClasspath,
+      configurations.annotationProcessor,
+      sourceSets.main.get().runtimeClasspath,
+      sourceSets.main.get().output,
+    )
+  }
+
+  val generateShellCompletions by registering(JavaExec::class) {
+    dependsOn(classes)
+    group = "Documentation"
+    description = "Generate CLI shell completions"
+    mainClass = "picocli.AutoComplete"
+    workingDir(completionsOut)
+    outputs.dir(completionsOut)
+    args(commandMain, "--force")
+
+    classpath = files(
+      cliCodeGenerator,
+      configurations.compileClasspath,
+      configurations.annotationProcessor,
+      sourceSets.main.get().runtimeClasspath,
+      sourceSets.main.get().output,
+    )
+  }
+
+  asciidoctor {
+    dependsOn(generateManpageAsciiDoc)
+    sourceDir(cliDocsIntermediate)
+    setOutputDir(cliDocsOut)
+
+    outputOptions {
+      backends("manpage", "html5")
+    }
+  }
+
+  val cliDocs by registering {
+    group = "Documentation"
+    description = "Generate CLI documentation"
+
+    dependsOn(
+      generateManpageAsciiDoc,
+      asciidoctor,
+      generateShellCompletions,
+    )
+  }
+
   nativeCompile {
     doFirst {
       val args = nativeCliImageArgs(debug = quickbuild, release = !quickbuild, platform = targetOs)
@@ -2524,7 +2594,7 @@ tasks {
       "-XX:+UnlockExperimentalVMOptions",
       "--enable-native-access=ALL-UNNAMED",
       "-Xverify:none",
-      // "-agentpath:/opt/visualvm/visualvm/lib/deployed/jdk16/linux-amd64/libprofilerinterface.so=/opt/visualvm/visualvm/lib,5140",
+      // "-agentpath:/.../libprofilerinterface.so=/opt/visualvm/visualvm/lib,5140",
     )))
 
     standardInput = System.`in`
@@ -2730,6 +2800,9 @@ fun Task.configureFinalizer(receiver: BuildNativeImageTask) {
 
 fun BuildNativeImageTask.createFinalizer() {
   val finalizations = LinkedList<Task>()
+  if (enableCliDocs) {
+    finalizations.add(tasks.named("cliDocs").get())
+  }
   if (enableEmbeddedJvm) {
     finalizations.add(spawnEmbeddedJvmCopy(this))
   }
@@ -2766,4 +2839,8 @@ tasks.prepareJitOptimizations.configure {
 
 tasks.prepareNativeOptimizations.configure {
   jvmArgs.add("--enable-native-access=ALL-UNNAMED")
+}
+
+tasks.assemble.configure {
+  if (enableCliDocs) dependsOn(tasks.named("cliDocs"))
 }

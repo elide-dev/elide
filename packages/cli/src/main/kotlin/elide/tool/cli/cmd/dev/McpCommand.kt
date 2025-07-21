@@ -46,9 +46,9 @@ import elide.tooling.project.mcp.ModelContextProtocol.McpServingMode.Stdio
 )
 @Introspected
 @ReflectiveAccess
-internal class McpCommand @Inject constructor(
-  private val projectManagerProvider: Provider<ProjectManager>,
-) : ProjectAwareSubcommand<ToolState, CommandContext>() {
+internal class McpCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
+  @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
+
   /** Settings which apply to MCP. */
   @CommandLine.ArgGroup(
     validate = false,

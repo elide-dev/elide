@@ -19,6 +19,7 @@
 aedile = "2.0.3"
 apiguardian = "1.1.2"
 arrow = "2.0.1"
+asciidoctor = "4.0.4"
 asm = "9.8"
 assertk = "0.28.1"
 atomicfu = "0.29.0"
@@ -285,6 +286,7 @@ xz = "1.10"
 zstd = "1.5.6-9"
 
 [plugins]
+asciidoctor = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor" }
 buf = { id = "com.parmet.buf", version.ref = "pluginBuf" }
 buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildconfig-plugin" }
 buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "buildTimeTracker" }

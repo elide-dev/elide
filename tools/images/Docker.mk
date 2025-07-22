@@ -6,7 +6,7 @@
 #
 
 PUSH ?= yes
-REMOTE ?= yes
+REMOTE ?= no
 VERSION ?= latest
 REGISTRY ?= us-docker.pkg.dev
 PROJECT ?= elide-fw

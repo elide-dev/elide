@@ -8,7 +8,7 @@
 IMAGE ?= builder
 
 PUSH ?= yes
-REMOTE ?= yes
+REMOTE ?= no
 VERSION ?= latest
 PROJECT ?= elide-dev
 REGISTRY ?= ghcr.io

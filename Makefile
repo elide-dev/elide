@@ -885,6 +885,10 @@ image-native-alpine:  ## Build native Alpine base image.
 	@echo "Building image 'native-alpine'..."
 	$(CMD)$(MAKE) -C tools/images/native-alpine PUSH=$(PUSH) REMOTE=$(REMOTE)
 
+image-dist:  ## Build distribution builder image.
+	@echo "Building image 'dist'..."
+	$(CMD)$(MAKE) -C tools/images/dist PUSH=$(PUSH) REMOTE=$(REMOTE)
+
 build-deb:  ## Build a Debian package for Elide.
 	@echo "Building Debian package for Elide..."
 	$(CMD)bash ./tools/scripts/release/build-deb.sh

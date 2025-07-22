@@ -1,5 +1,8 @@
 lockfile-version 1
 root{
+dependencies{
+highlight.js "11.11.1"
+    }
 dev-dependencies{
 "@elide-dev/types" "1.0.0-beta8"
 wrangler "4.24.3"
@@ -496,6 +499,11 @@ pkg glob-to-regexp{
 version "0.4.1"
 resolved "https://registry.npmjs.org/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz"
 integrity "sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw=="
+}
+pkg highlight.js{
+version "11.11.1"
+resolved "https://registry.npmjs.org/highlight.js/-/highlight.js-11.11.1.tgz"
+integrity "sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w=="
 }
 pkg is-arrayish{
 version "0.3.2"

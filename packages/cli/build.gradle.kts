@@ -2797,6 +2797,8 @@ fun spawnResourcesTgzBuilder(receiver: BuildNativeImageTask): Task {
   val nativeOutDir = layout.buildDirectory.dir("native/${receiver.name}")
   val tarFileName = "resources.tar"
   val tarFile = layout.buildDirectory.file("native/${receiver.name}/$tarFileName")
+  val tgzFileName = "resources.tgz"
+  val tgzFile = layout.buildDirectory.file("native/${receiver.name}/$tgzFileName")
 
   val tarTask = tasks.register("${receiver.name}ResourcesTar", Tar::class) {
     group = "build"
@@ -2805,27 +2807,58 @@ fun spawnResourcesTgzBuilder(receiver: BuildNativeImageTask): Task {
     destinationDirectory.set(nativeOutDir)
     outputs.file(tarFile)
     compression = Compression.NONE
-    dependsOn(receiver)
     from(layout.buildDirectory.dir("native/${receiver.name}/resources"))
+    dependsOn(
+      receiver,
+      tasks.named("${receiver.name}CopyEmbeddedKotlin"),
+      tasks.named("${receiver.name}CopyEmbeddedSvm"),
+      tasks.named("${receiver.name}CopyTopLevelDoc"),
+    )
   }
-  return tasks.register("${receiver.name}ResourcesTgz", Exec::class) {
-    group = "build"
-    description = "Compress Native Image resources tarball for task '${receiver.name}'"
+  val tgzTask = tasks.register("${receiver.name}ResourcesTgz", Exec::class) {
     dependsOn(receiver, tarTask)
-    commandLine("gzip", "--best", "--verbose", tarFile.get().asFile.absolutePath)
+    commandLine("gzip", "--force", "--best", "--verbose", tarFile.get().asFile.absolutePath)
+  }.get()
+
+  val tarball = tasks.register("${receiver.name}BuildResourcesTarball", Exec::class) {
+    group = "build"
+    description = "Build Native Image apk resources tarball for task '${receiver.name}'"
+    dependsOn(tarTask, tgzTask)
+    commandLine(
+      "mv",
+      tarFile.get().asFile.absolutePath + ".gz",
+      tgzFile.get().asFile.absolutePath,
+    )
+  }.get()
+
+  val cleanTar = tasks.register("${receiver.name}RemoveTar", Delete::class) {
+    delete(tarFile)
+  }
+
+  return tasks.register("${receiver.name}BuildPackageResources") {
+    group = "build"
+    description = "Build Native Image resources tarball for task '${receiver.name}'"
+    dependsOn(tarball, tgzTask)
+    finalizedBy(cleanTar)
   }.get()
 }
 
 // CLI docs and completions must be copied to the final native image out-dir, so they can be included in package dists.
 fun spawnCliCopyDocsAndCompletions(receiver: BuildNativeImageTask): Task {
   val copyManpages = tasks.register("${receiver.name}CopyManpages", Copy::class) {
+    enabled = enableCliDocs
     from(cliDocsOut) {
-      include("**/*.1")
-      include("**/*.7")
+      include("manpage/**/*.*")
     }
     into(layout.buildDirectory.dir("native/${receiver.name}/doc/man"))
   }
+  val copyTopLevelDoc = tasks.register("${receiver.name}CopyTopLevelDoc", Copy::class) {
+    enabled = enableCliDocs
+    from(layout.projectDirectory.dir("packaging/content"))
+    into(layout.buildDirectory.dir("native/${receiver.name}"))
+  }
   val copyCompletions = tasks.register("${receiver.name}CopyCompletions", Copy::class) {
+    enabled = enableCliDocs
     from(completionsOut) {
       include("**/*")
     }
@@ -2834,7 +2867,31 @@ fun spawnCliCopyDocsAndCompletions(receiver: BuildNativeImageTask): Task {
   return tasks.register("${receiver.name}CopyCliExtras") {
     group = "build"
     description = "Copy CLI docs and completions for task '${receiver.name}'"
-    dependsOn(copyManpages, copyCompletions)
+    dependsOn(copyTopLevelDoc, copyManpages, copyCompletions)
+  }.get()
+}
+
+// We build a zip of the `sources/` folder, `elide.debug` symbols, and `gdb-debughelpers.py`.
+fun spawnSourcesZipBuilder(receiver: BuildNativeImageTask): Task {
+  val srcsPath = layout.buildDirectory.dir("native/${receiver.name}/sources")
+  return tasks.register("${receiver.name}SourcesZip", Zip::class) {
+    group = "build"
+    description = "Build a zip of sources and debug symbols for task '${receiver.name}'"
+    archiveFileName.set("sources.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("native/${receiver.name}"))
+    onlyIf { srcsPath.get().asFile.exists() }
+    dependsOn(
+      receiver,
+      tasks.named("${receiver.name}CopyTopLevelDoc"),
+    )
+
+    from(srcsPath) {
+      into("sources")
+    }
+    from(
+      layout.buildDirectory.file("native/${receiver.name}/elide.debug"),
+      layout.buildDirectory.file("native/${receiver.name}/gdb-debughelpers.py"),
+    )
   }.get()
 }
 
@@ -2846,8 +2903,9 @@ fun Task.configureFinalizer(receiver: BuildNativeImageTask) {
 
 fun BuildNativeImageTask.createFinalizer() = this@createFinalizer.let { that ->
   buildList<Task> {
+    add(spawnCliCopyDocsAndCompletions(that))
     add(spawnResourcesTgzBuilder(that))
-    if (enableCliDocs) add(spawnCliCopyDocsAndCompletions(that))
+    add(spawnSourcesZipBuilder(that))
     if (enableEmbeddedJvm) add(spawnEmbeddedJvmCopy(that))
     if (!enableStaticJni) add(spawnNativeLibCopy(that))
     if (enableKotlin) add(spawnEmbeddedKotlinCopy(that))

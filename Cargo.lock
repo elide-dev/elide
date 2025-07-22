@@ -825,9 +825,9 @@ checksum = "6099cdc01846bc367c4e7dd630dc5966dccf36b652fae7a74e17b640411a91b2"
 
 [[package]]
 name = "bitstream-io"
-version = "4.3.0"
+version = "4.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f30faa215941f112abe3f87ae44889e4596260602a1a2b82837c7860fdd56a0"
+checksum = "8e639d059c8d99f6ef2147d284e7cb376c8c3115e112b2f85f30ad9d6994d209"
 dependencies = [
  "core2",
 ]
@@ -3738,7 +3738,7 @@ checksum = "4488594b9328dee448adb906d8b126d9b7deb7cf5c22161ee591610bb1be83c0"
 dependencies = [
  "bitflags 2.9.1",
  "libc",
- "redox_syscall 0.5.14",
+ "redox_syscall 0.5.15",
 ]
 
 [[package]]
@@ -4961,7 +4961,7 @@ checksum = "48dd4f4a2c8405440fd0462561f0e5806bd0f77e86f51c761481bdd4018b545e"
 [[package]]
 name = "oxc"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "oxc_allocator",
  "oxc_ast",
@@ -5024,7 +5024,7 @@ dependencies = [
 [[package]]
 name = "oxc_allocator"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "allocator-api2",
  "bumpalo",
@@ -5036,7 +5036,7 @@ dependencies = [
 [[package]]
 name = "oxc_ast"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "bitflags 2.9.1",
  "oxc_allocator",
@@ -5051,7 +5051,7 @@ dependencies = [
 [[package]]
 name = "oxc_ast_macros"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "phf 0.12.1",
  "proc-macro2",
@@ -5062,7 +5062,7 @@ dependencies = [
 [[package]]
 name = "oxc_ast_visit"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "oxc_allocator",
  "oxc_ast",
@@ -5073,7 +5073,7 @@ dependencies = [
 [[package]]
 name = "oxc_cfg"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "bitflags 2.9.1",
  "itertools 0.14.0",
@@ -5087,7 +5087,7 @@ dependencies = [
 [[package]]
 name = "oxc_codegen"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "bitflags 2.9.1",
  "cow-utils",
@@ -5107,7 +5107,7 @@ dependencies = [
 [[package]]
 name = "oxc_data_structures"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "ropey",
  "rustversion",
@@ -5116,7 +5116,7 @@ dependencies = [
 [[package]]
 name = "oxc_diagnostics"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "cow-utils",
  "oxc-miette",
@@ -5126,7 +5126,7 @@ dependencies = [
 [[package]]
 name = "oxc_ecmascript"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "num-bigint",
  "num-traits",
@@ -5138,7 +5138,7 @@ dependencies = [
 [[package]]
 name = "oxc_estree"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 
 [[package]]
 name = "oxc_index"
@@ -5149,7 +5149,7 @@ checksum = "2fa07b0cfa997730afed43705766ef27792873fdf5215b1391949fec678d2392"
 [[package]]
 name = "oxc_isolated_declarations"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "bitflags 2.9.1",
  "oxc_allocator",
@@ -5165,7 +5165,7 @@ dependencies = [
 [[package]]
 name = "oxc_mangler"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "fixedbitset",
  "itertools 0.14.0",
@@ -5181,14 +5181,13 @@ dependencies = [
 [[package]]
 name = "oxc_minifier"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "cow-utils",
  "oxc_allocator",
  "oxc_ast",
  "oxc_ast_visit",
  "oxc_codegen",
- "oxc_data_structures",
  "oxc_ecmascript",
  "oxc_mangler",
  "oxc_parser",
@@ -5202,7 +5201,7 @@ dependencies = [
 [[package]]
 name = "oxc_parser"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "bitflags 2.9.1",
  "cow-utils",
@@ -5224,7 +5223,7 @@ dependencies = [
 [[package]]
 name = "oxc_regular_expression"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "bitflags 2.9.1",
  "oxc_allocator",
@@ -5239,7 +5238,7 @@ dependencies = [
 [[package]]
 name = "oxc_semantic"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "itertools 0.14.0",
  "oxc_allocator",
@@ -5274,7 +5273,7 @@ dependencies = [
 [[package]]
 name = "oxc_span"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "compact_str 0.9.0",
  "oxc-miette",
@@ -5286,7 +5285,7 @@ dependencies = [
 [[package]]
 name = "oxc_syntax"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "bitflags 2.9.1",
  "cow-utils",
@@ -5306,7 +5305,7 @@ dependencies = [
 [[package]]
 name = "oxc_transformer"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "base64 0.22.1",
  "compact_str 0.9.0",
@@ -5336,7 +5335,7 @@ dependencies = [
 [[package]]
 name = "oxc_transformer_plugins"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "cow-utils",
  "itoa",
@@ -5357,7 +5356,7 @@ dependencies = [
 [[package]]
 name = "oxc_traverse"
 version = "0.77.3"
-source = "git+https://github.com/elide-dev/oxc?rev=83dd31d38ed1b61e304301fecdf753cdda8b596d#83dd31d38ed1b61e304301fecdf753cdda8b596d"
+source = "git+https://github.com/elide-dev/oxc?rev=d936024462179c5a3adb170fbd30ca8872aad75a#d936024462179c5a3adb170fbd30ca8872aad75a"
 dependencies = [
  "itoa",
  "oxc_allocator",
@@ -5469,7 +5468,7 @@ checksum = "bc838d2a56b5b1a6c25f55575dfc605fabb63bb2365f6c2353ef9159aa69e4a5"
 dependencies = [
  "cfg-if",
  "libc",
- "redox_syscall 0.5.14",
+ "redox_syscall 0.5.15",
  "smallvec",
  "windows-targets 0.52.6",
 ]
@@ -6292,7 +6291,7 @@ dependencies = [
  "arrayvec",
  "av-scenechange",
  "av1-grain",
- "bitstream-io 4.3.0",
+ "bitstream-io 4.4.0",
  "built 0.8.0",
  "cfg-if",
  "interpolate_name",
@@ -6376,9 +6375,9 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.5.14"
+version = "0.5.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de3a5d9f0aba1dbcec1cc47f0ff94a4b778fe55bca98a6dfa92e4e094e57b1c4"
+checksum = "7e8af0dde094006011e6a740d4879319439489813bd0bcdc7d821beaeeff48ec"
 dependencies = [
  "bitflags 2.9.1",
 ]
@@ -6734,7 +6733,7 @@ dependencies = [
 [[package]]
 name = "ruff"
 version = "0.12.4"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anyhow",
  "argfile",
@@ -6789,7 +6788,7 @@ dependencies = [
 [[package]]
 name = "ruff_annotate_snippets"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anstyle",
  "memchr",
@@ -6799,7 +6798,7 @@ dependencies = [
 [[package]]
 name = "ruff_cache"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "filetime",
  "glob",
@@ -6812,7 +6811,7 @@ dependencies = [
 [[package]]
 name = "ruff_db"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anstyle",
  "arc-swap",
@@ -6850,7 +6849,7 @@ dependencies = [
 [[package]]
 name = "ruff_diagnostics"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "get-size2",
  "is-macro",
@@ -6861,7 +6860,7 @@ dependencies = [
 [[package]]
 name = "ruff_formatter"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "drop_bomb",
  "ruff_cache",
@@ -6877,7 +6876,7 @@ dependencies = [
 [[package]]
 name = "ruff_graph"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anyhow",
  "clap",
@@ -6897,7 +6896,7 @@ dependencies = [
 [[package]]
 name = "ruff_index"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "get-size2",
  "ruff_macros",
@@ -6907,7 +6906,7 @@ dependencies = [
 [[package]]
 name = "ruff_linter"
 version = "0.12.4"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "aho-corasick 1.1.3",
  "anyhow",
@@ -6967,7 +6966,7 @@ dependencies = [
 [[package]]
 name = "ruff_macros"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "heck",
  "itertools 0.14.0",
@@ -6980,7 +6979,7 @@ dependencies = [
 [[package]]
 name = "ruff_notebook"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anyhow",
  "itertools 0.14.0",
@@ -6998,7 +6997,7 @@ dependencies = [
 [[package]]
 name = "ruff_options_metadata"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "serde",
 ]
@@ -7006,7 +7005,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_ast"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "aho-corasick 1.1.3",
  "bitflags 2.9.1",
@@ -7029,7 +7028,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_codegen"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "ruff_python_ast",
  "ruff_python_literal",
@@ -7041,7 +7040,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_formatter"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anyhow",
  "clap",
@@ -7070,7 +7069,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_index"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "ruff_python_ast",
  "ruff_python_parser",
@@ -7082,7 +7081,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_literal"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "bitflags 2.9.1",
  "itertools 0.14.0",
@@ -7093,7 +7092,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_parser"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "bitflags 2.9.1",
  "bstr",
@@ -7113,7 +7112,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_semantic"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "bitflags 2.9.1",
  "is-macro",
@@ -7132,7 +7131,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_stdlib"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "bitflags 2.9.1",
  "unicode-ident",
@@ -7141,7 +7140,7 @@ dependencies = [
 [[package]]
 name = "ruff_python_trivia"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "itertools 0.14.0",
  "ruff_source_file",
@@ -7152,7 +7151,7 @@ dependencies = [
 [[package]]
 name = "ruff_server"
 version = "0.2.2"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anyhow",
  "crossbeam",
@@ -7189,7 +7188,7 @@ dependencies = [
 [[package]]
 name = "ruff_source_file"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "get-size2",
  "memchr",
@@ -7200,7 +7199,7 @@ dependencies = [
 [[package]]
 name = "ruff_text_size"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "get-size2",
  "serde",
@@ -7209,7 +7208,7 @@ dependencies = [
 [[package]]
 name = "ruff_workspace"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anyhow",
  "colored",
@@ -8833,7 +8832,7 @@ dependencies = [
  "serde",
  "serde_spanned 0.6.9",
  "toml_datetime 0.6.11",
- "toml_edit",
+ "toml_edit 0.22.27",
 ]
 
 [[package]]
@@ -8842,6 +8841,7 @@ version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed0aee96c12fa71097902e0bb061a5e1ebd766a6636bb605ba401c45c1650eac"
 dependencies = [
+ "foldhash",
  "indexmap 2.10.0",
  "serde",
  "serde_spanned 1.0.0",
@@ -8879,7 +8879,21 @@ dependencies = [
  "serde",
  "serde_spanned 0.6.9",
  "toml_datetime 0.6.11",
- "toml_write",
+ "winnow 0.7.12",
+]
+
+[[package]]
+name = "toml_edit"
+version = "0.23.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d1dee9dc43ac2aaf7d3b774e2fba5148212bf2bd9374f4e50152ebe9afd03d42"
+dependencies = [
+ "indexmap 2.10.0",
+ "serde",
+ "serde_spanned 1.0.0",
+ "toml_datetime 0.7.0",
+ "toml_parser",
+ "toml_writer",
  "winnow 0.7.12",
 ]
 
@@ -8891,12 +8905,6 @@ checksum = "97200572db069e74c512a14117b296ba0a80a30123fbbb5aa1f4a348f639ca30"
 dependencies = [
  "winnow 0.7.12",
 ]
-
-[[package]]
-name = "toml_write"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d99f8c9a7727884afe522e9bd5edbfc91a3312b36a77b5fb8926e4c31a41801"
 
 [[package]]
 name = "toml_writer"
@@ -9184,10 +9192,11 @@ dependencies = [
 [[package]]
 name = "ty_python_semantic"
 version = "0.0.0"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "anyhow",
  "bitflags 2.9.1",
+ "bitvec",
  "camino",
  "colored",
  "compact_str 0.9.0",
@@ -9224,7 +9233,7 @@ dependencies = [
 [[package]]
 name = "ty_static"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/ruff?rev=06f9f52e59e831cb187a100fc1a0e30995d6e638#06f9f52e59e831cb187a100fc1a0e30995d6e638"
+source = "git+https://github.com/elide-dev/ruff?rev=897889d1ce469be7b3ecc29ae0d37f943028f110#897889d1ce469be7b3ecc29ae0d37f943028f110"
 dependencies = [
  "ruff_macros",
 ]
@@ -9522,7 +9531,7 @@ dependencies = [
 [[package]]
 name = "uv"
 version = "0.8.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anstream",
  "anyhow",
@@ -9556,8 +9565,8 @@ dependencies = [
  "textwrap",
  "thiserror 2.0.12",
  "tokio",
- "toml 0.8.23",
- "toml_edit",
+ "toml 0.9.2",
+ "toml_edit 0.23.2",
  "tracing",
  "tracing-subscriber",
  "tracing-tree",
@@ -9618,7 +9627,7 @@ dependencies = [
 [[package]]
 name = "uv-auth"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -9645,7 +9654,7 @@ dependencies = [
 [[package]]
 name = "uv-build-backend"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "csv",
  "flate2",
@@ -9659,7 +9668,7 @@ dependencies = [
  "spdx",
  "tar",
  "thiserror 2.0.12",
- "toml 0.8.23",
+ "toml 0.9.2",
  "tracing",
  "uv-distribution-filename",
  "uv-fs",
@@ -9681,7 +9690,7 @@ dependencies = [
 [[package]]
 name = "uv-build-frontend"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anstream",
  "fs-err 3.1.1",
@@ -9695,7 +9704,7 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.12",
  "tokio",
- "toml_edit",
+ "toml_edit 0.23.2",
  "tracing",
  "uv-cache-key",
  "uv-configuration",
@@ -9716,7 +9725,7 @@ dependencies = [
 [[package]]
 name = "uv-cache"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "clap",
  "fs-err 3.1.1",
@@ -9742,14 +9751,14 @@ dependencies = [
 [[package]]
 name = "uv-cache-info"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "fs-err 3.1.1",
  "globwalk",
  "schemars 1.0.4",
  "serde",
  "thiserror 2.0.12",
- "toml 0.8.23",
+ "toml 0.9.2",
  "tracing",
  "walkdir",
 ]
@@ -9757,7 +9766,7 @@ dependencies = [
 [[package]]
 name = "uv-cache-key"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "hex",
  "memchr",
@@ -9770,7 +9779,7 @@ dependencies = [
 [[package]]
 name = "uv-cli"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anstream",
  "anyhow",
@@ -9800,7 +9809,7 @@ dependencies = [
 [[package]]
 name = "uv-client"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -9853,7 +9862,7 @@ dependencies = [
 [[package]]
 name = "uv-configuration"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "clap",
  "either",
@@ -9884,7 +9893,7 @@ dependencies = [
 [[package]]
 name = "uv-console"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "console 0.15.11",
 ]
@@ -9892,7 +9901,7 @@ dependencies = [
 [[package]]
 name = "uv-dirs"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "etcetera",
  "fs-err 3.1.1",
@@ -9903,7 +9912,7 @@ dependencies = [
 [[package]]
 name = "uv-dispatch"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "futures 0.3.31",
@@ -9935,7 +9944,7 @@ dependencies = [
 [[package]]
 name = "uv-distribution"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "either",
@@ -9952,7 +9961,7 @@ dependencies = [
  "thiserror 2.0.12",
  "tokio",
  "tokio-util",
- "toml 0.8.23",
+ "toml 0.9.2",
  "tracing",
  "url",
  "uv-cache",
@@ -9982,7 +9991,7 @@ dependencies = [
 [[package]]
 name = "uv-distribution-filename"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "memchr",
  "rkyv 0.8.10",
@@ -9999,7 +10008,7 @@ dependencies = [
 [[package]]
 name = "uv-distribution-types"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "arcstr",
  "bitflags 2.9.1",
@@ -10038,7 +10047,7 @@ dependencies = [
 [[package]]
 name = "uv-extract"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "astral-tokio-tar",
  "async-compression",
@@ -10065,7 +10074,7 @@ dependencies = [
 [[package]]
 name = "uv-fs"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "backon",
  "dunce",
@@ -10090,7 +10099,7 @@ dependencies = [
 [[package]]
 name = "uv-git"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "cargo-util",
@@ -10115,7 +10124,7 @@ dependencies = [
 [[package]]
 name = "uv-git-types"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "serde",
  "thiserror 2.0.12",
@@ -10127,7 +10136,7 @@ dependencies = [
 [[package]]
 name = "uv-globfilter"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "globset",
  "owo-colors",
@@ -10141,7 +10150,7 @@ dependencies = [
 [[package]]
 name = "uv-install-wheel"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "clap",
  "configparser",
@@ -10177,7 +10186,7 @@ dependencies = [
 [[package]]
 name = "uv-installer"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "async-channel",
@@ -10216,7 +10225,7 @@ dependencies = [
 [[package]]
 name = "uv-macros"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -10227,7 +10236,7 @@ dependencies = [
 [[package]]
 name = "uv-metadata"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "async_zip",
  "fs-err 3.1.1",
@@ -10245,7 +10254,7 @@ dependencies = [
 [[package]]
 name = "uv-normalize"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "rkyv 0.8.10",
  "schemars 1.0.4",
@@ -10256,7 +10265,7 @@ dependencies = [
 [[package]]
 name = "uv-once-map"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "dashmap 6.1.0",
  "futures 0.3.31",
@@ -10266,7 +10275,7 @@ dependencies = [
 [[package]]
 name = "uv-options-metadata"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "serde",
 ]
@@ -10274,7 +10283,7 @@ dependencies = [
 [[package]]
 name = "uv-pep440"
 version = "0.7.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "rkyv 0.8.10",
  "serde",
@@ -10287,7 +10296,7 @@ dependencies = [
 [[package]]
 name = "uv-pep508"
 version = "0.6.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "arcstr",
  "boxcar",
@@ -10311,7 +10320,7 @@ dependencies = [
 [[package]]
 name = "uv-performance-memory-allocator"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "mimalloc",
  "tikv-jemallocator",
@@ -10320,7 +10329,7 @@ dependencies = [
 [[package]]
 name = "uv-platform-tags"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "memchr",
  "rkyv 0.8.10",
@@ -10333,7 +10342,7 @@ dependencies = [
 [[package]]
 name = "uv-publish"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "astral-tokio-tar",
  "async-compression",
@@ -10371,7 +10380,7 @@ dependencies = [
 [[package]]
 name = "uv-pypi-types"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "hashbrown 0.15.4",
  "indexmap 2.10.0",
@@ -10386,7 +10395,7 @@ dependencies = [
  "serde",
  "serde-untagged",
  "thiserror 2.0.12",
- "toml_edit",
+ "toml_edit 0.23.2",
  "tracing",
  "url",
  "uv-distribution-filename",
@@ -10401,7 +10410,7 @@ dependencies = [
 [[package]]
 name = "uv-python"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "clap",
@@ -10462,7 +10471,7 @@ dependencies = [
 [[package]]
 name = "uv-redacted"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "ref-cast",
  "schemars 1.0.4",
@@ -10473,7 +10482,7 @@ dependencies = [
 [[package]]
 name = "uv-requirements"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "configparser",
@@ -10483,7 +10492,7 @@ dependencies = [
  "rustc-hash 2.1.1",
  "serde",
  "thiserror 2.0.12",
- "toml 0.8.23",
+ "toml 0.9.2",
  "tracing",
  "url",
  "uv-cache-key",
@@ -10509,7 +10518,7 @@ dependencies = [
 [[package]]
 name = "uv-requirements-txt"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "fs-err 3.1.1",
  "memchr",
@@ -10533,7 +10542,7 @@ dependencies = [
 [[package]]
 name = "uv-resolver"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "arcstr",
  "clap",
@@ -10557,8 +10566,8 @@ dependencies = [
  "thiserror 2.0.12",
  "tokio",
  "tokio-stream",
- "toml 0.8.23",
- "toml_edit",
+ "toml 0.9.2",
+ "toml_edit 0.23.2",
  "tracing",
  "url",
  "uv-cache-key",
@@ -10591,7 +10600,7 @@ dependencies = [
 [[package]]
 name = "uv-scripts"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "fs-err 3.1.1",
  "indoc",
@@ -10599,7 +10608,7 @@ dependencies = [
  "regex",
  "serde",
  "thiserror 2.0.12",
- "toml 0.8.23",
+ "toml 0.9.2",
  "url",
  "uv-pep440",
  "uv-pep508",
@@ -10613,7 +10622,7 @@ dependencies = [
 [[package]]
 name = "uv-settings"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "clap",
  "fs-err 3.1.1",
@@ -10621,7 +10630,7 @@ dependencies = [
  "serde",
  "textwrap",
  "thiserror 2.0.12",
- "toml 0.8.23",
+ "toml 0.9.2",
  "tracing",
  "url",
  "uv-cache-info",
@@ -10647,7 +10656,7 @@ dependencies = [
 [[package]]
 name = "uv-shell"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "home",
@@ -10663,7 +10672,7 @@ dependencies = [
 [[package]]
 name = "uv-small-str"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "arcstr",
  "rkyv 0.8.10",
@@ -10674,7 +10683,7 @@ dependencies = [
 [[package]]
 name = "uv-state"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "fs-err 3.1.1",
  "tempfile",
@@ -10684,7 +10693,7 @@ dependencies = [
 [[package]]
 name = "uv-static"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "uv-macros",
 ]
@@ -10692,15 +10701,15 @@ dependencies = [
 [[package]]
 name = "uv-tool"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "fs-err 3.1.1",
  "pathdiff",
  "self-replace",
  "serde",
  "thiserror 2.0.12",
- "toml 0.8.23",
- "toml_edit",
+ "toml 0.9.2",
+ "toml_edit 0.23.2",
  "tracing",
  "uv-cache",
  "uv-configuration",
@@ -10722,7 +10731,7 @@ dependencies = [
 [[package]]
 name = "uv-torch"
 version = "0.1.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "clap",
  "either",
@@ -10742,7 +10751,7 @@ dependencies = [
 [[package]]
 name = "uv-trampoline-builder"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "fs-err 3.1.1",
  "thiserror 2.0.12",
@@ -10753,7 +10762,7 @@ dependencies = [
 [[package]]
 name = "uv-types"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anyhow",
  "dashmap 6.1.0",
@@ -10777,12 +10786,12 @@ dependencies = [
 [[package]]
 name = "uv-version"
 version = "0.8.0"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 
 [[package]]
 name = "uv-virtualenv"
 version = "0.0.4"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "console 0.15.11",
  "fs-err 3.1.1",
@@ -10805,7 +10814,7 @@ dependencies = [
 [[package]]
 name = "uv-warnings"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "anstream",
  "owo-colors",
@@ -10815,7 +10824,7 @@ dependencies = [
 [[package]]
 name = "uv-workspace"
 version = "0.0.1"
-source = "git+https://github.com/elide-dev/uv?rev=d0efe1ed9c4bec806e8449a471bd97c9be10ba14#d0efe1ed9c4bec806e8449a471bd97c9be10ba14"
+source = "git+https://github.com/elide-dev/uv?rev=ecfa38608864f99cdb887edc97632fc3ed352fc3#ecfa38608864f99cdb887edc97632fc3ed352fc3"
 dependencies = [
  "clap",
  "fs-err 3.1.1",
@@ -10827,8 +10836,8 @@ dependencies = [
  "serde",
  "thiserror 2.0.12",
  "tokio",
- "toml 0.8.23",
- "toml_edit",
+ "toml 0.9.2",
+ "toml_edit 0.23.2",
  "tracing",
  "uv-build-backend",
  "uv-cache-key",

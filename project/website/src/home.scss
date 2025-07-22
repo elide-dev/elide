@@ -1,0 +1,47 @@
+.elide-banner {
+  color: purple;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-left: auto;
+  user-select: none;
+  font-size: large;
+}
+
+.toc {
+  margin-top: 2rem;
+  border: 1px solid gray;
+}
+
+.toc::before {
+  content: 'Navigation';
+  text-transform: uppercase;
+  font-size: small;
+  font-weight: 600;
+  user-select: none;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+section {
+  margin-top: 2rem;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+h1, h2, h3, h4 {
+  margin-block-start: 0;
+  user-select: none;
+  border-bottom: 1px dotted gray;
+}
+
+.hero {
+  width: 85%;
+  max-width: 700px;
+}
+
+@media screen and (max-width: 700px) {
+  .hero {
+    width: 100%;
+    max-width: 100%;
+  }
+}

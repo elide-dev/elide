@@ -302,6 +302,7 @@ jobs:
             -x check \
             -x test \
             -x jvmTest \
+            -x asciidoctor \
             --scan \
             --build-cache \
             --daemon \

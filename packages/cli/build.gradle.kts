@@ -2792,36 +2792,75 @@ fun spawnEmbeddedKotlinCopy(receiver: BuildNativeImageTask): Copy {
   }.get()
 }
 
+// Alpine needs a `resources.tgz` file to be built, which is unpacked upon installation from an apk.
+fun spawnResourcesTgzBuilder(receiver: BuildNativeImageTask): Task {
+  val nativeOutDir = layout.buildDirectory.dir("native/${receiver.name}")
+  val tarFileName = "resources.tar"
+  val tarFile = layout.buildDirectory.file("native/${receiver.name}/$tarFileName")
+
+  val tarTask = tasks.register("${receiver.name}ResourcesTar", Tar::class) {
+    group = "build"
+    description = "Build a tarball of Native Image resources for task '${receiver.name}'"
+    archiveFileName.set(tarFileName)
+    destinationDirectory.set(nativeOutDir)
+    outputs.file(tarFile)
+    compression = Compression.NONE
+    dependsOn(receiver)
+    from(layout.buildDirectory.dir("native/${receiver.name}/resources"))
+  }
+  return tasks.register("${receiver.name}ResourcesTgz", Exec::class) {
+    group = "build"
+    description = "Compress Native Image resources tarball for task '${receiver.name}'"
+    dependsOn(receiver, tarTask)
+    commandLine("gzip", "--best", "--verbose", tarFile.get().asFile.absolutePath)
+  }.get()
+}
+
+// CLI docs and completions must be copied to the final native image out-dir, so they can be included in package dists.
+fun spawnCliCopyDocsAndCompletions(receiver: BuildNativeImageTask): Task {
+  val copyManpages = tasks.register("${receiver.name}CopyManpages", Copy::class) {
+    from(cliDocsOut) {
+      include("**/*.1")
+      include("**/*.7")
+    }
+    into(layout.buildDirectory.dir("native/${receiver.name}/doc/man"))
+  }
+  val copyCompletions = tasks.register("${receiver.name}CopyCompletions", Copy::class) {
+    from(completionsOut) {
+      include("**/*")
+    }
+    into(layout.buildDirectory.dir("native/${receiver.name}/completions"))
+  }
+  return tasks.register("${receiver.name}CopyCliExtras") {
+    group = "build"
+    description = "Copy CLI docs and completions for task '${receiver.name}'"
+    dependsOn(copyManpages, copyCompletions)
+  }.get()
+}
+
 fun Task.configureFinalizer(receiver: BuildNativeImageTask) {
   group = "build"
   description = "Finalize Native Image resources for task '${receiver.name}'"
   dependsOn(receiver.name)
 }
 
-fun BuildNativeImageTask.createFinalizer() {
-  val finalizations = LinkedList<Task>()
-  if (enableCliDocs) {
-    finalizations.add(tasks.named("cliDocs").get())
-  }
-  if (enableEmbeddedJvm) {
-    finalizations.add(spawnEmbeddedJvmCopy(this))
-  }
-  if (!enableStaticJni) {
-    finalizations.add(spawnNativeLibCopy(this))
-  }
-  if (enableKotlin) {
-    finalizations.add(spawnEmbeddedKotlinCopy(this))
-  }
-  if (enableEmbeddedSvm) {
-    finalizations.add(spawnEmbeddedSvmCopy(this))
-  }
-  if (finalizations.isNotEmpty()) {
-    val finalizer = tasks.register("${name}Finalize") {
-      configureFinalizer(this@createFinalizer)
-      dependsOn(finalizations.map { it.name })
+fun BuildNativeImageTask.createFinalizer() = this@createFinalizer.let { that ->
+  buildList<Task> {
+    add(spawnResourcesTgzBuilder(that))
+    if (enableCliDocs) add(spawnCliCopyDocsAndCompletions(that))
+    if (enableEmbeddedJvm) add(spawnEmbeddedJvmCopy(that))
+    if (!enableStaticJni) add(spawnNativeLibCopy(that))
+    if (enableKotlin) add(spawnEmbeddedKotlinCopy(that))
+    if (enableEmbeddedSvm) add(spawnEmbeddedSvmCopy(that))
+  }.let { finalizations ->
+    if (finalizations.isNotEmpty()) {
+      val finalizer = tasks.register("${name}Finalize") {
+        configureFinalizer(this@createFinalizer)
+        dependsOn(finalizations.map { it.name })
+      }
+      finalizedBy(finalizations.map { it.name })
+      finalizedBy(finalizer.name)
     }
-    finalizedBy(finalizations.map { it.name })
-    finalizedBy(finalizer.name)
   }
 }
 

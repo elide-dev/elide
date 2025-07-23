@@ -30,6 +30,9 @@ elide {
   }
 }
 
+// plugin version is separate from the overall Elide version
+version = layout.projectDirectory.file(".version").asFile.readText().trim()
+
 repositories {
   // because we need to declare custom repositories for intellij artifacts, and Gradle will only select repositories at
   // the settings-level *or* the project-level, we need to repeat repository configurations from the root settings

@@ -1,0 +1,11 @@
+name = "elide-plugins"
+main = "worker.ts"
+compatibility_date = "2025-03-14"
+
+routes = [
+  { pattern = "plugins.elide.dev", custom_domain = true },
+]
+
+[[r2_buckets]]
+binding = "PLUGINS_BUCKET"
+bucket_name = "elide-plugins"

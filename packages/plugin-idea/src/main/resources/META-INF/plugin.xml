@@ -12,7 +12,7 @@
   -->
 
 <idea-plugin>
-  <id>dev.elide.intellij</id>
+  <id>dev.elide</id>
   <name>Elide</name>
   <vendor url="https://elide.dev">Elide Technologies Inc.</vendor>
 
@@ -48,7 +48,7 @@
                     dynamic="true"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="dev.elide.intellij">
+  <extensions defaultExtensionNs="dev.elide">
     <projectModelContributor implementation="dev.elide.intellij.project.model.ElideDependenciesContributor"/>
     <projectModelContributor implementation="dev.elide.intellij.project.model.ElideJdkContributor"/>
   </extensions>
@@ -87,7 +87,5 @@
 
   <actions>
     <action id="Elide.Run" class="dev.elide.intellij.action.ElideRunAction" icon="AllIcons.Actions.RunAnything"/>
-    <action id="dev.elide.intellij.action.ElideSyncAction" class="dev.elide.intellij.action.ElideSyncAction"
-            text="SyncElideProject"/>
   </actions>
 </idea-plugin>

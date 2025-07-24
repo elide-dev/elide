@@ -1,0 +1,21 @@
+<plugins>
+  <plugin id="dev.elide"
+          url="https://plugins.elide/dev/intellij/elide-intellij-{{ELIDE_PLUGIN_VERSION}}.zip"
+          version="{{ELIDE_PLUGIN_VERSION}}">
+    <name>Elide</name>
+    <vendor url="https://elide.dev">Elide Technologies Inc.</vendor>
+
+    <description><![CDATA[
+    <a href=https://github.com/elide-dev/elide>Elide</a> is a fast batteries-included runtime, with support for
+    Kotlin, JavaScript, TypeScript, and Python. This plugin adds support for the following features:
+    <ul>
+      <li>Import Elide projects in the IDE (currently only for Kotlin/JVM)</li>
+      <li>Install dependencies on project sync, with support for sources and documentation</li>
+      <li>Run configurations for entry points declared in the Elide project manifest</li>
+      <li>Run main entry points from the gutter in JVM projects</li>
+      <li>Run common Elide tasks from the IDE (`build`, `install`, `run`)</li>
+      <li>Use a custom Elide distribution for running tasks</li>
+    </ul>
+  ]]></description>
+  </plugin>
+</plugins>

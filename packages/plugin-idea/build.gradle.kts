@@ -39,10 +39,7 @@ repositories {
   // the settings-level *or* the project-level, we need to repeat repository configurations from the root settings
   intellijPlatform {
     defaultRepositories()
-    customPluginRepository(
-      url = "https://github.com/apple/pkl-intellij/releases/latest/download/updatePlugins.xml",
-      type = CustomPluginRepositoryType.SIMPLE,
-    )
+    customPluginRepository("https://plugins.elide.dev/intellij", CustomPluginRepositoryType.SIMPLE)
   }
 
   maven {

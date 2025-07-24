@@ -44,6 +44,7 @@ class ElideCommandLine private constructor(
    */
   suspend operator fun <R> invoke(
     buildCommand: MutableList<String>.() -> Unit,
+    environment: Map<String, String>? = null,
     block: suspend CoroutineScope.(Process) -> R
   ): R {
     val elideBin = elideHome.resolve(Constants.ELIDE_BINARY)
@@ -56,6 +57,7 @@ class ElideCommandLine private constructor(
 
     val process = ProcessBuilder(command)
       .also { if (workDir != null) it.directory(workDir.toFile()) }
+      .also { if (environment != null) it.environment().putAll(environment) }
       .start()
 
     return coroutineScope {
@@ -94,7 +96,7 @@ suspend inline operator fun <R> ElideCommandLine.invoke(
   vararg commands: String,
   noinline block: suspend CoroutineScope.(Process) -> R
 ): R {
-  return invoke({ addAll(commands) }, block)
+  return invoke({ addAll(commands) }, block = block)
 }
 
 /**

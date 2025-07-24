@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.jetbrains.intellij.platform.gradle.CustomPluginRepositoryType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -38,6 +39,10 @@ repositories {
   // the settings-level *or* the project-level, we need to repeat repository configurations from the root settings
   intellijPlatform {
     defaultRepositories()
+    customPluginRepository(
+      url = "https://github.com/apple/pkl-intellij/releases/latest/download/updatePlugins.xml",
+      type = CustomPluginRepositoryType.SIMPLE,
+    )
   }
 
   maven {
@@ -70,6 +75,7 @@ dependencies {
     create("IC", libs.versions.intellij.target.ide.get())
     bundledPlugin("com.intellij.java")
     bundledPlugin("org.jetbrains.kotlin")
+    plugin("org.pkl-lang:0.32.0")
     testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
   }
 }

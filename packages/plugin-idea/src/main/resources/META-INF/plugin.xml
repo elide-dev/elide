@@ -34,6 +34,7 @@
   <depends>com.intellij.modules.idea</depends>
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
+  <depends>org.pkl</depends>
 
   <resource-bundle>i18n.Strings</resource-bundle>
 
@@ -57,7 +58,10 @@
     <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideRuntimeConfigurationProducer"/>
     <runAnything.executionProvider implementation="dev.elide.intellij.action.ElideRunAnythingProvider"/>
     <executionTargetLanguageRuntimeType implementation="dev.elide.intellij.execution.ElideRuntimeType"/>
-    <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideLazyRunConfigurationProducer"/>
+    <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideJvmMainConfigurationProducer"/>
+    <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideManifestRunConfigurationProducer"/>
+    <runLineMarkerContributor language="Pkl"
+                              implementationClass="dev.elide.intellij.execution.ElideManifestLineMarkerContributor"/>
     <externalSystemUnlinkedProjectAware implementation="dev.elide.intellij.project.ElideUnlinkedProjectAware"/>
     <externalIconProvider key="ELIDE" implementationClass="dev.elide.intellij.ui.ElideIconProvider"/>
     <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupActivity"/>

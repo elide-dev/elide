@@ -32,8 +32,8 @@ import org.jetbrains.kotlin.idea.base.codeInsight.findMainOwner
 import org.jetbrains.kotlin.idea.run.KotlinRunConfigurationProducer.Companion.getMainClassJvmName
 import org.jetbrains.kotlin.psi.KtDeclarationContainer
 
-/** Extension responsible for providing "run from gutter icon" configurations. */
-@Suppress("UnstableApiUsage") class ElideLazyRunConfigurationProducer :
+/** Extension responsible for providing "run from gutter icon" configurations for main JVM entrypoints. */
+@Suppress("UnstableApiUsage") class ElideJvmMainConfigurationProducer :
   LazyRunConfigurationProducer<ElideRunConfiguration>() {
   override fun isDumbAware(): Boolean = true
 

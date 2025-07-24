@@ -82,7 +82,7 @@ dependencies {
 
 intellijPlatform {
   pluginConfiguration {
-    id = "dev.elide.intellij"
+    id = "dev.elide"
     version = "0.1.0"
 
     ideaVersion {

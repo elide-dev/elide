@@ -26,7 +26,7 @@ object Constants {
   val SYSTEM_ID = ProjectSystemId("ELIDE")
 
   /** Elide plugin ID. */
-  const val PLUGIN_ID = "dev.elide.intellij"
+  const val PLUGIN_ID = "dev.elide"
 
   /** ID used to reference settings panels. */
   const val CONFIGURABLE_ID = "reference.settingsdialog.project.elide"

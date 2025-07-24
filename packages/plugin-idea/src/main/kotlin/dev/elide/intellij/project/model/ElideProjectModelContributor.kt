@@ -44,6 +44,6 @@ interface ElideProjectModelContributor {
 
   companion object {
     @JvmStatic val Extensions =
-      ExtensionPointName.create<ElideProjectModelContributor>("dev.elide.intellij.projectModelContributor")
+      ExtensionPointName.create<ElideProjectModelContributor>("dev.elide.projectModelContributor")
   }
 }

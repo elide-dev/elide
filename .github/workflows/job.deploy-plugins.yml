@@ -1,0 +1,48 @@
+name: job.deploy-plugins.yml
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish-intellij:
+    name: "Publish Elide Intellij plugin"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@6c439dc8bdf85cadbbce9ed30d1c7b959517bc49 # v2.12.2
+        with:
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: "Setup: GraalVM"
+        uses: graalvm/setup-graalvm@e1df20a713a4cc6ab5b0eb03f0e0dcdc0199b805 # v1.3.4
+        with:
+          distribution: "graalvm"
+          java-version: 24
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Build Intellij plugin"
+        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
+        with: :packages:plugin-idea:buildPlugin
+      - name: "Read version"
+        run: |
+          echo "ELIDE_IDEA_PLUGIN_VERSION=$(cat ./packages/plugin-idea/.version)" >> $GITHUB_ENV
+          echo "Releasing version $ELIDE_IDEA_PLUGIN_VERSION"
+      - name: "Upload Intellij plugin archive"
+        uses: cloudflare/wrangler-action@da0e0dfe58b7a431659754fdf3f186c529afbe65 # v3.14.1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: |
+            r2 object put elide-plugins/intellij/elide-intellij-${{ env.ELIDE_IDEA_PLUGIN_VERSION }}.zip
+            --file=./packages/plugin-idea/build/distributions/plugin-idea-${{ env.ELIDE_IDEA_PLUGIN_VERSION }}.zip
+

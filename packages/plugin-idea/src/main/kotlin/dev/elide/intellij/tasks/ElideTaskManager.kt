@@ -46,7 +46,7 @@ class ElideTaskManager : ExternalSystemTaskManager<ElideExecutionSettings> {
         for (task in settings.tasks) {
           listener.onStatusChange(ExternalSystemTaskNotificationEvent(id, "Executing task $task"))
 
-          val exitCode = elide(task) { process ->
+          val exitCode = elide({ add(task) }, settings.env) { process ->
             pipeProcessOutput(id, listener, process.inputReader(), stdout = true)
             pipeProcessOutput(id, listener, process.errorReader(), stdout = false)
 

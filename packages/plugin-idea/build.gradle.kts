@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.jetbrains.intellij.platform.gradle.CustomPluginRepositoryType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -30,11 +31,15 @@ elide {
   }
 }
 
+// plugin version is separate from the overall Elide version
+version = layout.projectDirectory.file(".version").asFile.readText().trim()
+
 repositories {
   // because we need to declare custom repositories for intellij artifacts, and Gradle will only select repositories at
   // the settings-level *or* the project-level, we need to repeat repository configurations from the root settings
   intellijPlatform {
     defaultRepositories()
+    customPluginRepository("https://plugins.elide.dev/intellij", CustomPluginRepositoryType.SIMPLE)
   }
 
   maven {
@@ -67,13 +72,14 @@ dependencies {
     create("IC", libs.versions.intellij.target.ide.get())
     bundledPlugin("com.intellij.java")
     bundledPlugin("org.jetbrains.kotlin")
+    plugin("org.pkl-lang:0.32.0")
     testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
   }
 }
 
 intellijPlatform {
   pluginConfiguration {
-    id = "dev.elide.intellij"
+    id = "dev.elide"
     version = "0.1.0"
 
     ideaVersion {

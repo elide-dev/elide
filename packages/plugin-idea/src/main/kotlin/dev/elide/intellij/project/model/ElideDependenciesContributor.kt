@@ -88,25 +88,25 @@ class ElideDependenciesContributor : ElideProjectModelContributor {
       ?: return emptySequence()
 
     val resolver = MavenLockfileResolver.of(mavenLockfile, projectPath)
-    val spec = when (sourceSet.type) {
-      SourceSetType.Sources -> ClasspathSpec.Compile
-      SourceSetType.Tests -> ClasspathSpec.TestCompile
+    val specs = when (sourceSet.type) {
+      SourceSetType.Sources -> arrayOf(ClasspathSpec.Compile, ClasspathSpec.Runtime)
+      SourceSetType.Tests -> arrayOf(ClasspathSpec.TestCompile, ClasspathSpec.TestRuntime)
     }
 
-    return resolver.classpathProvider(spec)
-      ?.classpath()
-      ?.asSequence()
-      ?.filter { it.type == JvmMultiPathEntryType.JAR }
-      ?.map {
-        val library = LibraryData(Constants.SYSTEM_ID, it.path.pathString, false)
-        val basePath = it.path.parent.resolve(it.path.nameWithoutExtension)
+    return specs.mapNotNull { resolver.classpathProvider(it)?.classpath() }.asSequence().flatMap {
+      it.asSequence()
+        .filter { it.type == JvmMultiPathEntryType.JAR }
+        .map {
+          val library = LibraryData(Constants.SYSTEM_ID, it.path.pathString, false)
+          val basePath = it.path.parent.resolve(it.path.nameWithoutExtension)
 
-        library.addPath(LibraryPathType.BINARY, it.path.pathString)
-        library.addPath(LibraryPathType.SOURCE, "${basePath.pathString}${SUFFIX_SOURCES}")
-        library.addPath(LibraryPathType.DOC, "${basePath.pathString}${SUFFIX_JAVADOC}")
+          library.addPath(LibraryPathType.BINARY, it.path.pathString)
+          library.addPath(LibraryPathType.SOURCE, "${basePath.pathString}${SUFFIX_SOURCES}")
+          library.addPath(LibraryPathType.DOC, "${basePath.pathString}${SUFFIX_JAVADOC}")
 
-        library
-      }.orEmpty()
+          library
+        }
+    }
   }
 
   private companion object {

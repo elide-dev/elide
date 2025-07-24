@@ -1,0 +1,15 @@
+{
+	"name": "plugins",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+    "postinstall": "bun run wrangler types ./worker-apis.d.ts",
+    "build": "bun run wrangler deploy --dry-run",
+    "deploy": "bun run wrangler deploy"
+	},
+	"devDependencies": {
+		"wrangler": "^4.25.1",
+    "@cloudflare/workers-types": "4.20250313.0",
+    "bun-types": "1.2.5"
+  }
+}

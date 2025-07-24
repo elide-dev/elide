@@ -12,7 +12,7 @@
   -->
 
 <idea-plugin>
-  <id>dev.elide.intellij</id>
+  <id>dev.elide</id>
   <name>Elide</name>
   <vendor url="https://elide.dev">Elide Technologies Inc.</vendor>
 
@@ -34,6 +34,7 @@
   <depends>com.intellij.modules.idea</depends>
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
+  <depends>org.pkl</depends>
 
   <resource-bundle>i18n.Strings</resource-bundle>
 
@@ -47,7 +48,7 @@
                     dynamic="true"/>
   </extensionPoints>
 
-  <extensions defaultExtensionNs="dev.elide.intellij">
+  <extensions defaultExtensionNs="dev.elide">
     <projectModelContributor implementation="dev.elide.intellij.project.model.ElideDependenciesContributor"/>
     <projectModelContributor implementation="dev.elide.intellij.project.model.ElideJdkContributor"/>
   </extensions>
@@ -57,7 +58,10 @@
     <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideRuntimeConfigurationProducer"/>
     <runAnything.executionProvider implementation="dev.elide.intellij.action.ElideRunAnythingProvider"/>
     <executionTargetLanguageRuntimeType implementation="dev.elide.intellij.execution.ElideRuntimeType"/>
-    <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideLazyRunConfigurationProducer"/>
+    <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideJvmMainConfigurationProducer"/>
+    <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideManifestRunConfigurationProducer"/>
+    <runLineMarkerContributor language="Pkl"
+                              implementationClass="dev.elide.intellij.execution.ElideManifestLineMarkerContributor"/>
     <externalSystemUnlinkedProjectAware implementation="dev.elide.intellij.project.ElideUnlinkedProjectAware"/>
     <externalIconProvider key="ELIDE" implementationClass="dev.elide.intellij.ui.ElideIconProvider"/>
     <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupActivity"/>
@@ -69,6 +73,10 @@
             instance="dev.elide.intellij.settings.ElideConfigurable"/>
     <externalSystem.runConfigurationEx implementation="dev.elide.intellij.execution.ElideRunConfigurationExtension"/>
     <externalProjectDataService implementation="dev.elide.intellij.project.ElideProjectDataService"/>
+    <toolWindow id="Elide"
+                factoryClass="dev.elide.intellij.ui.ElideToolWindowFactory"
+                anchor="right"
+                icon="/icons/toolWindowElide.svg"/>
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">

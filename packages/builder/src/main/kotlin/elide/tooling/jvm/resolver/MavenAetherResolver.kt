@@ -444,10 +444,22 @@ public class MavenAetherResolver internal constructor (
         packages,
       )
       registerPackages(
+        "main-runtime",
+        state.manifest,
+        MultiPathUsage.Runtime,
+        packages,
+      )
+      registerPackages(
         "test",
         state.manifest,
         MultiPathUsage.TestCompile,
         testPackages,
+      )
+      registerPackages(
+        "test-runtime",
+        state.manifest,
+        MultiPathUsage.TestRuntime,
+        packages,
       )
       if (processors.isNotEmpty()) {
         registerPackages(

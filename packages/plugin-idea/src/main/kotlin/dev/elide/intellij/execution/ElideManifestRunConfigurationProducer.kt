@@ -47,7 +47,9 @@ class ElideManifestRunConfigurationProducer :
     configuration.name = entrypointInfo.displayName
     configuration.rawCommandLine = entrypointInfo.fullCommandLine
     configuration.settings.externalProjectPath = context.project.basePath
-    configuration.entrypoint = entrypointInfo
+
+    configuration.entrypointKind = entrypointInfo.kind
+    configuration.entrypointValue = entrypointInfo.value
 
     return true
   }
@@ -59,11 +61,9 @@ class ElideManifestRunConfigurationProducer :
     val element = context.location?.psiElement ?: return false
     if (element.language != PklLanguage) return false
 
-    LOG.warn("CHECK IS FROM CONTEXT: $element")
-
     val entrypointInfo = resolveEntrypointInfo(element) ?: return false
-    return entrypointInfo.kind == configuration.entrypoint?.kind &&
-            entrypointInfo.value == configuration.entrypoint?.value
+    return entrypointInfo.kind == configuration.entrypointKind &&
+            entrypointInfo.value == configuration.entrypointValue
   }
 
   override fun findExistingConfiguration(context: ConfigurationContext): RunnerAndConfigurationSettings? {
@@ -71,7 +71,7 @@ class ElideManifestRunConfigurationProducer :
     val entrypoint = context.location?.psiElement?.let { resolveEntrypointInfo(it) } ?: return null
     return getConfigurationSettingsList(RunManager.getInstance(context.project)).find { configurationSettings ->
       val elideConfiguration = (configurationSettings.configuration as ElideRunConfiguration)
-      elideConfiguration.entrypoint == entrypoint
+      elideConfiguration.entrypointKind == entrypoint.kind && elideConfiguration.entrypointValue == entrypoint.value
     }
   }
 
@@ -105,10 +105,5 @@ class ElideManifestRunConfigurationProducer :
       ?.reference?.resolve()
       ?.let { (it as? PklProperty)?.expr?.resolvedText() } ?: text)
       .trim('"')
-  }
-
-  private companion object {
-    private val LOG =
-      com.intellij.openapi.diagnostic.Logger.getInstance(ElideManifestRunConfigurationProducer::class.java)
   }
 }

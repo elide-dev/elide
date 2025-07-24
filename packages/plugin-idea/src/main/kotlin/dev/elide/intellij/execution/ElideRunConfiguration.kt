@@ -20,6 +20,7 @@ import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunCo
 import com.intellij.openapi.project.Project
 import dev.elide.intellij.Constants
 import dev.elide.intellij.project.model.ElideEntrypointInfo
+import org.jdom.Element
 import javax.swing.Icon
 
 /** Elide run configuration type. */
@@ -33,7 +34,9 @@ class ElideRunConfiguration(
   /* factory = */ factory,
   /* name = */ name,
 ), TargetEnvironmentAwareRunProfile {
-  var entrypoint: ElideEntrypointInfo? = null
+  var entrypointKind: ElideEntrypointInfo.Kind? = null
+  var entrypointValue: String? = null
+
   var rawCommandLine
     get() = settings.taskNames.joinToString(" ")
     set(value) {
@@ -58,5 +61,36 @@ class ElideRunConfiguration(
 
   override fun setDefaultTargetName(targetName: String?) {
     options.remoteTarget = targetName
+  }
+
+  override fun readExternal(element: Element) {
+    super.readExternal(element)
+    element.readExternalString(ENTRYPOINT_VALUE_KEY) { entrypointValue = it }
+    element.readExternalString(ENTRYPOINT_KIND_KEY) {
+      entrypointKind = ElideEntrypointInfo.Kind.valueOf(it)
+    }
+  }
+
+  override fun writeExternal(element: Element) {
+    super.writeExternal(element)
+    entrypointValue?.let { element.writeExternalString(ENTRYPOINT_VALUE_KEY, it) }
+    entrypointKind?.let { element.writeExternalString(ENTRYPOINT_KIND_KEY, it.name) }
+  }
+
+  private fun Element.writeExternalString(key: String, value: String) {
+    val childElement = Element(key)
+    childElement.setText(value)
+    this.addContent(childElement)
+  }
+
+  private fun Element.readExternalString(key: String, consumer: (String) -> Unit) {
+    val childElement = getChild(key) ?: return
+    val value = childElement.getText()
+    consumer(value)
+  }
+
+  private companion object {
+    private const val ENTRYPOINT_VALUE_KEY = "elideEntrypointValue"
+    private const val ENTRYPOINT_KIND_KEY = "elideEntrypointKind"
   }
 }

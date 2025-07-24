@@ -25,8 +25,9 @@ import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
 import dev.elide.intellij.Constants
 import dev.elide.intellij.project.model.ElideEntrypointInfo
-import dev.elide.intellij.service.elideProjectIndex
+import dev.elide.intellij.project.model.ElideEntrypointInfo.Kind
 import dev.elide.intellij.project.model.fullCommandLine
+import dev.elide.intellij.service.elideProjectIndex
 import org.jetbrains.kotlin.idea.base.codeInsight.KotlinMainFunctionDetector
 import org.jetbrains.kotlin.idea.base.codeInsight.findMainOwner
 import org.jetbrains.kotlin.idea.run.KotlinRunConfigurationProducer.Companion.getMainClassJvmName
@@ -64,7 +65,9 @@ import org.jetbrains.kotlin.psi.KtDeclarationContainer
     configuration.name = entrypoint.displayName
     configuration.rawCommandLine = entrypoint.fullCommandLine
     configuration.settings.externalProjectPath = externalProject
-    configuration.entrypoint = entrypoint
+
+    configuration.entrypointKind = entrypoint.kind
+    configuration.entrypointValue = entrypoint.value
 
     return true
   }
@@ -77,10 +80,7 @@ import org.jetbrains.kotlin.psi.KtDeclarationContainer
       ?.let(::getMainClassJvmName)
       ?: return false
 
-    val storedEntrypoint = configuration.entrypoint?.takeIf { it.kind == ElideEntrypointInfo.Kind.JvmMainClass }
-      ?: return false
-
-    return storedEntrypoint.value == startClassFQName
+    return configuration.entrypointKind == Kind.JvmMainClass && configuration.entrypointValue == startClassFQName
   }
 
   override fun findExistingConfiguration(context: ConfigurationContext): RunnerAndConfigurationSettings? {
@@ -89,9 +89,8 @@ import org.jetbrains.kotlin.psi.KtDeclarationContainer
 
     ProgressManager.checkCanceled()
     return getConfigurationSettingsList(RunManager.getInstance(context.project)).find { configurationSettings ->
-      val elideConfiguration = (configurationSettings.configuration as ElideRunConfiguration)
-      val storedEntrypoint = elideConfiguration.entrypoint?.takeIf { it.kind == ElideEntrypointInfo.Kind.JvmMainClass }
-      storedEntrypoint?.value == startClassFQName
+      val configuration = (configurationSettings.configuration as ElideRunConfiguration)
+      configuration.entrypointKind == Kind.JvmMainClass && configuration.entrypointValue == startClassFQName
     }
   }
 
@@ -106,7 +105,7 @@ import org.jetbrains.kotlin.psi.KtDeclarationContainer
   ): Pair<String, ElideEntrypointInfo>? {
     for ((path, project) in context.project.elideProjectIndex.entries) {
       val jvmMain = project.entrypoints.find {
-        it.kind == ElideEntrypointInfo.Kind.JvmMainClass && it.value == qualifiedName
+        it.kind == Kind.JvmMainClass && it.value == qualifiedName
       } ?: continue
 
       return path to jvmMain

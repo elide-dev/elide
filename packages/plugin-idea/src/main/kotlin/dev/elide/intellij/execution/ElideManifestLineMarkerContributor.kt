@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package dev.elide.intellij.execution
 
 import com.intellij.execution.lineMarker.RunLineMarkerContributor
@@ -19,6 +31,7 @@ class ElideManifestLineMarkerContributor : RunLineMarkerContributor() {
       ?: detectScript(element)
   }
 
+  @Suppress("ReturnCount")
   private fun detectJvmEntrypoint(element: PsiElement): Info? {
     if (!element.textMatches("main")) return null
     if (element.parent !is PklPropertyName) return null
@@ -30,6 +43,7 @@ class ElideManifestLineMarkerContributor : RunLineMarkerContributor() {
     return withExecutorActions(AllIcons.Actions.Execute)
   }
 
+  @Suppress("ReturnCount")
   private fun detectGenericEntrypoint(element: PsiElement): Info? {
     // only simple string elements or references are currently supported, e.g:
     // local hello = "./hello.js"
@@ -55,6 +69,7 @@ class ElideManifestLineMarkerContributor : RunLineMarkerContributor() {
     return withExecutorActions(AllIcons.Actions.Execute)
   }
 
+  @Suppress("ReturnCount")
   private fun detectScript(element: PsiElement): Info? {
     // only simple string elements or references are currently supported, e.g:
     // local bye = "bye"

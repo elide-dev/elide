@@ -73,6 +73,10 @@
             instance="dev.elide.intellij.settings.ElideConfigurable"/>
     <externalSystem.runConfigurationEx implementation="dev.elide.intellij.execution.ElideRunConfigurationExtension"/>
     <externalProjectDataService implementation="dev.elide.intellij.project.ElideProjectDataService"/>
+    <toolWindow id="Elide"
+                factoryClass="dev.elide.intellij.ui.ElideToolWindowFactory"
+                anchor="right"
+                icon="/icons/toolWindowElide.svg"/>
   </extensions>
 
   <extensions defaultExtensionNs="com.intellij">
@@ -83,5 +87,7 @@
 
   <actions>
     <action id="Elide.Run" class="dev.elide.intellij.action.ElideRunAction" icon="AllIcons.Actions.RunAnything"/>
+    <action id="dev.elide.intellij.action.ElideSyncAction" class="dev.elide.intellij.action.ElideSyncAction"
+            text="SyncElideProject"/>
   </actions>
 </idea-plugin>

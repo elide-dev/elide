@@ -33,7 +33,7 @@ export default class extends WorkerEntrypoint<Env> {
     // archives are stored in R2
     const plugin = path.substring(path.lastIndexOf("/") + 1, path.length);
     console.log(`Fetching Intellij plugin: ${plugin}`);
-    const archive = await this.env.PLUGINS_BUCKET.get(`intellij/${plugin}.zip`);
+    const archive = await this.env.PLUGINS_BUCKET.get(`intellij/${plugin}`);
 
     if (archive == null) return new Response("Not found", { status: 404 });
     return this.makeResponse(archive);

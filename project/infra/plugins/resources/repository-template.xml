@@ -1,6 +1,6 @@
 <plugins>
   <plugin id="dev.elide"
-          url="https://plugins.elide/dev/intellij/elide-intellij-{{ELIDE_PLUGIN_VERSION}}.zip"
+          url="https://plugins.elide.dev/intellij/elide-intellij-{{ELIDE_PLUGIN_VERSION}}.zip"
           version="{{ELIDE_PLUGIN_VERSION}}">
     <name>Elide</name>
     <vendor url="https://elide.dev">Elide Technologies Inc.</vendor>

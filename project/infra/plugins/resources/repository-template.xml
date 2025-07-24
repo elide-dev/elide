@@ -18,4 +18,27 @@
     </ul>
   ]]></description>
   </plugin>
+  <plugin id="org.pkl-lang"
+          url="https://plugins.elide.dev/intellij/pkl-intellij-{{PKL_PLUGIN_VERSION}}.zip"
+          version="{{PKL_PLUGIN_VERSION}}">
+    <idea-version since-build="231" until-build="252.*"/>
+    <name>Pkl</name>
+
+    <description><![CDATA[
+  <p>
+  Language support for <a href="https://github.com/apple/pkl">Pkl</a>.
+  Compatible with <strong>IntelliJ 2023.1</strong> or higher and <strong>Pkl 0.25</strong> or higher.
+  </p>
+  <p>
+  Features:
+  <ul>
+  <li>Code editing and navigation</li>
+  <li>Code completion</li>
+  <li>Code formatting</li>
+  <li>Syntax checking and highlighting</li>
+  <li>Type and constraint checking</li>
+  </ul>
+  </p>
+  ]]></description>
+  </plugin>
 </plugins>

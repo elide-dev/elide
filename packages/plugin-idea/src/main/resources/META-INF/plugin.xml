@@ -53,6 +53,10 @@
     <projectModelContributor implementation="dev.elide.intellij.project.model.ElideJdkContributor"/>
   </extensions>
 
+  <extensions defaultExtensionNs="org.pkl">
+    <moduleResolver implementation="dev.elide.intellij.psi.PklElideModuleResolver"/>
+  </extensions>
+
   <extensions defaultExtensionNs="com.intellij">
     <configurationType implementation="dev.elide.intellij.execution.ElideExternalTaskConfigurationType"/>
     <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideRuntimeConfigurationProducer"/>

@@ -81,7 +81,6 @@ dependencies {
 intellijPlatform {
   pluginConfiguration {
     id = "dev.elide"
-    version = "0.1.0"
 
     ideaVersion {
       sinceBuild = libs.versions.intellij.sinceBuild.get()

@@ -29,7 +29,7 @@ class ElideConfigurable(project: Project) : AbstractExternalSystemConfigurable<
         >(
   project, Constants.SYSTEM_ID,
 ) {
-  override fun getId(): @NonNls String = Constants.CONFIGURABLE_ID
+  override fun getId(): String = Constants.CONFIGURABLE_ID
   override fun getDisplayName() = "Elide"
 
   override fun newProjectSettings(): ElideProjectSettings = ElideProjectSettings()

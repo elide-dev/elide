@@ -57,6 +57,7 @@ repositories {
     content { includeGroup("dev.elide") }
   }
 
+  mavenLocal()
   mavenCentral()
   google()
 }
@@ -72,7 +73,7 @@ dependencies {
     create("IC", libs.versions.intellij.target.ide.get())
     bundledPlugin("com.intellij.java")
     bundledPlugin("org.jetbrains.kotlin")
-    plugin("org.pkl-lang:0.32.0")
+    plugin("pkl-intellij", "0.32.0", "org.pkl")
     testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
   }
 }
@@ -80,7 +81,6 @@ dependencies {
 intellijPlatform {
   pluginConfiguration {
     id = "dev.elide"
-    version = "0.1.0"
 
     ideaVersion {
       sinceBuild = libs.versions.intellij.sinceBuild.get()

@@ -34,7 +34,8 @@
   <depends>com.intellij.modules.idea</depends>
   <depends>com.intellij.java</depends>
   <depends>org.jetbrains.kotlin</depends>
-  <depends>org.pkl</depends>
+
+  <depends optional="true" config-file="plugin-pkl.xml">org.pkl</depends>
 
   <resource-bundle>i18n.Strings</resource-bundle>
 
@@ -60,8 +61,7 @@
     <executionTargetLanguageRuntimeType implementation="dev.elide.intellij.execution.ElideRuntimeType"/>
     <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideJvmMainConfigurationProducer"/>
     <runConfigurationProducer implementation="dev.elide.intellij.execution.ElideManifestRunConfigurationProducer"/>
-    <runLineMarkerContributor language="Pkl"
-                              implementationClass="dev.elide.intellij.execution.ElideManifestLineMarkerContributor"/>
+
     <externalSystemUnlinkedProjectAware implementation="dev.elide.intellij.project.ElideUnlinkedProjectAware"/>
     <externalIconProvider key="ELIDE" implementationClass="dev.elide.intellij.ui.ElideIconProvider"/>
     <postStartupActivity implementation="dev.elide.intellij.startup.ElideStartupActivity"/>
@@ -77,9 +77,6 @@
                 factoryClass="dev.elide.intellij.ui.ElideToolWindowFactory"
                 anchor="right"
                 icon="/icons/toolWindowElide.svg"/>
-  </extensions>
-
-  <extensions defaultExtensionNs="com.intellij">
     <notificationGroup id="Elide Notifications"
                        displayType="BALLOON"
                        key="elide.notifications.group"/>

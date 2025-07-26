@@ -46,6 +46,8 @@ import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.intrinsics.testing.TestingRegistrar.*
 import elide.runtime.node.asserts.NodeAssertModule
 import elide.runtime.node.asserts.assertionError
+import elide.tooling.testing.GlobalTestScope
+import elide.tooling.testing.TestScope
 import elide.vm.annotations.Polyglot
 
 // Constants.

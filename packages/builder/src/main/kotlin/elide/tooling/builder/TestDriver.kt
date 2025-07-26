@@ -43,7 +43,6 @@ import elide.tooling.registry.ResolverRegistry
  *   }
  * }
  * ```
- *
  */
 public object TestDriver {
   @JvmStatic

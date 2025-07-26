@@ -34,12 +34,16 @@ import kotlin.time.TimeMark
 import kotlin.time.TimeSource
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
-import elide.runtime.intrinsics.testing.Reason
 import elide.runtime.intrinsics.testing.TestEntrypoint
-import elide.runtime.intrinsics.testing.TestResult
 import elide.runtime.intrinsics.testing.TestingRegistrar.*
 import elide.tooling.config.TestConfigurator
 import elide.tooling.config.TestConfigurator.TestEventController
+import elide.tooling.testing.Reason
+import elide.tooling.testing.TestCaseResult
+import elide.tooling.testing.TestResult
+import elide.tooling.testing.TestRunResult
+import elide.tooling.testing.TestScope
+import elide.tooling.testing.TestStats
 
 // Provides abstract base behavior for test runner implementations.
 public abstract class AbstractTestRunner (
@@ -72,57 +76,6 @@ public abstract class AbstractTestRunner (
     val entry: TestEntrypoint,
     val scope: TestScope<*>,
     val context: PolyglotContext,
-  )
-
-  /**
-   * Stats describing a test run.
-   *
-   * @property tests Total number of tests seen.
-   * @property executions Total number of tests ran.
-   * @property passes Total number of tests that passed.
-   * @property fails Total number of tests that failed.
-   * @property skips Total number of tests that were skipped.
-   * @property duration Total duration of the test run.
-   */
-  @JvmRecord public data class TestStats(
-    public val tests: UInt,
-    public val executions: UInt,
-    public val passes: UInt,
-    public val fails: UInt,
-    public val skips: UInt,
-    public val duration: Duration,
-  )
-
-  /**
-   * Results of an individual test case run.
-   *
-   * @property scope The scope in which the test was a member.
-   * @property case The test case that was executed.
-   * @property result The result of the test case execution.
-   * @property duration The duration of the test case execution.
-   */
-  @JvmRecord public data class TestCaseResult(
-    public val scope: TestScope<*>,
-    public val case: RegisteredTest,
-    public val result: TestResult,
-    public val duration: Duration,
-  )
-
-  /**
-   * Results of a test run.
-   *
-   * @property result The overall result of the test run.
-   * @property exitCode The exit code of the test run.
-   * @property stats Statistics about the test run.
-   * @property results Results of individual test cases.
-   * @property earlyExit Whether the test run exited early (e.g. due to a failure during `failFast` mode).
-   */
-  @JvmRecord public data class TestRunResult(
-    public val result: TestResult,
-    public val exitCode: UInt,
-    public val stats: TestStats,
-    public val results: List<TestCaseResult>,
-    public val earlyExit: Boolean = false,
   )
 
   // Running count of all seen tests.
@@ -212,7 +165,6 @@ public abstract class AbstractTestRunner (
       results = testResults.map {
         TestCaseResult(
           scope = it.scope,
-          case = it.test,
           result = it.result,
           duration = it.timing,
         )

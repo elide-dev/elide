@@ -12,6 +12,8 @@
  */
 package elide.runtime.intrinsics.testing
 
+import elide.tooling.testing.TestResult
+
 /**
  * ## Test Entrypoint
  *

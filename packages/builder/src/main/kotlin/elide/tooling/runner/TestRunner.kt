@@ -27,10 +27,10 @@ import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.intrinsics.testing.TestingRegistrar.RegisteredTest
-import elide.runtime.intrinsics.testing.TestingRegistrar.TestScope
 import elide.tooling.config.TestConfigurator.*
 import elide.tooling.project.ElideProject
-import elide.tooling.runner.AbstractTestRunner.TestRunResult
+import elide.tooling.testing.TestRunResult
+import elide.tooling.testing.TestScope
 
 // Default test parallelism to apply.
 private val defaultParallelism by lazy {

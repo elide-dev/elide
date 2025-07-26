@@ -7145,112 +7145,8 @@ public synthetic class elide/runtime/intrinsics/testing/$TestingAPI$TestGraphNod
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
-public abstract interface class elide/runtime/intrinsics/testing/AssumptionState {
-}
-
-public final class elide/runtime/intrinsics/testing/AssumptionState$Ignored : elide/runtime/intrinsics/testing/AssumptionState {
-	public static final field INSTANCE Lelide/runtime/intrinsics/testing/AssumptionState$Ignored;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class elide/runtime/intrinsics/testing/AssumptionState$IgnoredWithReasoning : elide/runtime/intrinsics/testing/AssumptionState {
-	public static final synthetic fun box-impl (Lelide/runtime/intrinsics/testing/Reason;)Lelide/runtime/intrinsics/testing/AssumptionState$IgnoredWithReasoning;
-	public static fun constructor-impl (Lelide/runtime/intrinsics/testing/Reason;)Lelide/runtime/intrinsics/testing/Reason;
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Lelide/runtime/intrinsics/testing/Reason;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Lelide/runtime/intrinsics/testing/Reason;Lelide/runtime/intrinsics/testing/Reason;)Z
-	public final fun getReason ()Lelide/runtime/intrinsics/testing/Reason;
-	public fun hashCode ()I
-	public static fun hashCode-impl (Lelide/runtime/intrinsics/testing/Reason;)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Lelide/runtime/intrinsics/testing/Reason;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Lelide/runtime/intrinsics/testing/Reason;
-}
-
-public final class elide/runtime/intrinsics/testing/AssumptionState$Valid : elide/runtime/intrinsics/testing/AssumptionState {
-	public static final field INSTANCE Lelide/runtime/intrinsics/testing/AssumptionState$Valid;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class elide/runtime/intrinsics/testing/Reason {
-	public abstract fun message ()Ljava/lang/String;
-}
-
-public final class elide/runtime/intrinsics/testing/Reason$ReasonMessage : elide/runtime/intrinsics/testing/Reason {
-	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/intrinsics/testing/Reason$ReasonMessage;
-	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
-	public final fun getMessage ()Ljava/lang/String;
-	public fun hashCode ()I
-	public static fun hashCode-impl (Ljava/lang/String;)I
-	public fun message ()Ljava/lang/String;
-	public static fun message-impl (Ljava/lang/String;)Ljava/lang/String;
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ljava/lang/String;
-}
-
-public final class elide/runtime/intrinsics/testing/Reason$ViolatedAssumptions : elide/runtime/intrinsics/testing/Reason {
-	public static final synthetic fun box-impl (Ljava/util/List;)Lelide/runtime/intrinsics/testing/Reason$ViolatedAssumptions;
-	public static fun constructor-impl (Ljava/util/List;)Ljava/util/List;
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Ljava/util/List;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Ljava/util/List;Ljava/util/List;)Z
-	public final fun getList ()Ljava/util/List;
-	public fun hashCode ()I
-	public static fun hashCode-impl (Ljava/util/List;)I
-	public fun message ()Ljava/lang/String;
-	public static fun message-impl (Ljava/util/List;)Ljava/lang/String;
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Ljava/util/List;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Ljava/util/List;
-}
-
 public abstract interface class elide/runtime/intrinsics/testing/TestEntrypoint {
-	public abstract fun invoke ()Lelide/runtime/intrinsics/testing/TestResult;
-}
-
-public abstract interface class elide/runtime/intrinsics/testing/TestResult {
-}
-
-public final class elide/runtime/intrinsics/testing/TestResult$Fail : java/lang/Record, elide/runtime/intrinsics/testing/TestResult {
-	public fun <init> ()V
-	public fun <init> (Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun cause ()Ljava/lang/Throwable;
-	public final fun component1 ()Ljava/lang/Throwable;
-	public final fun copy (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/testing/TestResult$Fail;
-	public static synthetic fun copy$default (Lelide/runtime/intrinsics/testing/TestResult$Fail;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestResult$Fail;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class elide/runtime/intrinsics/testing/TestResult$Pass : elide/runtime/intrinsics/testing/TestResult {
-	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestResult$Pass;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class elide/runtime/intrinsics/testing/TestResult$Skip : elide/runtime/intrinsics/testing/TestResult {
-	public static final synthetic fun box-impl (Lelide/runtime/intrinsics/testing/Reason;)Lelide/runtime/intrinsics/testing/TestResult$Skip;
-	public static fun constructor-impl (Lelide/runtime/intrinsics/testing/Reason;)Lelide/runtime/intrinsics/testing/Reason;
-	public fun equals (Ljava/lang/Object;)Z
-	public static fun equals-impl (Lelide/runtime/intrinsics/testing/Reason;Ljava/lang/Object;)Z
-	public static final fun equals-impl0 (Lelide/runtime/intrinsics/testing/Reason;Lelide/runtime/intrinsics/testing/Reason;)Z
-	public final fun getReason ()Lelide/runtime/intrinsics/testing/Reason;
-	public fun hashCode ()I
-	public static fun hashCode-impl (Lelide/runtime/intrinsics/testing/Reason;)I
-	public fun toString ()Ljava/lang/String;
-	public static fun toString-impl (Lelide/runtime/intrinsics/testing/Reason;)Ljava/lang/String;
-	public final synthetic fun unbox-impl ()Lelide/runtime/intrinsics/testing/Reason;
+	public abstract fun invoke ()Lelide/tooling/testing/TestResult;
 }
 
 public abstract interface class elide/runtime/intrinsics/testing/TestingAPI {
@@ -7421,7 +7317,7 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingRegistra
 	public static fun deferred (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/testing/TestingRegistrar$TestInfo;
 	public abstract fun freeze ()Lelide/runtime/intrinsics/testing/TestingRegistrar;
 	public abstract fun grouped ()Lkotlin/sequences/Sequence;
-	public static fun guest (Lorg/graalvm/polyglot/Value;Ljava/lang/String;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;)Lelide/runtime/intrinsics/testing/TestingRegistrar$TestInfo;
+	public static fun guest (Lorg/graalvm/polyglot/Value;Ljava/lang/String;Lelide/tooling/testing/TestScope;)Lelide/runtime/intrinsics/testing/TestingRegistrar$TestInfo;
 	public static fun namedScope (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public static fun namedScope (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public static fun qualifiedNameForBlock (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Ljava/lang/String;
@@ -7435,22 +7331,13 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingRegistra
 
 public final class elide/runtime/intrinsics/testing/TestingRegistrar$Companion {
 	public final fun deferred (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lelide/runtime/intrinsics/testing/TestingRegistrar$TestInfo;
-	public final fun guest (Lorg/graalvm/polyglot/Value;Ljava/lang/String;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;)Lelide/runtime/intrinsics/testing/TestingRegistrar$TestInfo;
-	public static synthetic fun guest$default (Lelide/runtime/intrinsics/testing/TestingRegistrar$Companion;Lorg/graalvm/polyglot/Value;Ljava/lang/String;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestingRegistrar$TestInfo;
+	public final fun guest (Lorg/graalvm/polyglot/Value;Ljava/lang/String;Lelide/tooling/testing/TestScope;)Lelide/runtime/intrinsics/testing/TestingRegistrar$TestInfo;
+	public static synthetic fun guest$default (Lelide/runtime/intrinsics/testing/TestingRegistrar$Companion;Lorg/graalvm/polyglot/Value;Ljava/lang/String;Lelide/tooling/testing/TestScope;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestingRegistrar$TestInfo;
 	public final fun namedScope (Ljava/lang/String;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public final fun namedScope (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public static synthetic fun namedScope$default (Lelide/runtime/intrinsics/testing/TestingRegistrar$Companion;Lorg/graalvm/polyglot/Value;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestingRegistrar$NamedScope;
 	public final fun qualifiedNameForBlock (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Ljava/lang/String;
 	public final fun qualifiedNameToSimpleName (Ljava/lang/String;)Ljava/lang/String;
-}
-
-public final class elide/runtime/intrinsics/testing/TestingRegistrar$GlobalTestScope : elide/runtime/intrinsics/testing/TestingRegistrar$TestScope {
-	public static final field INSTANCE Lelide/runtime/intrinsics/testing/TestingRegistrar$GlobalTestScope;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun getQualifiedName ()Ljava/lang/String;
-	public fun getSimpleName ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class elide/runtime/intrinsics/testing/TestingRegistrar$NamedScope : java/lang/Record, elide/runtime/intrinsics/testing/TestingRegistrar$RegisteredScope {
@@ -7469,14 +7356,14 @@ public abstract interface class elide/runtime/intrinsics/testing/TestingRegistra
 	public abstract fun getGuestValueFactory ()Lkotlin/jvm/functions/Function1;
 }
 
-public abstract interface class elide/runtime/intrinsics/testing/TestingRegistrar$RegisteredScope : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite, elide/runtime/intrinsics/testing/TestingRegistrar$TestScope, java/lang/Comparable {
+public abstract interface class elide/runtime/intrinsics/testing/TestingRegistrar$RegisteredScope : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Suite, elide/tooling/testing/TestScope, java/lang/Comparable {
 	public synthetic fun getMember (Ljava/lang/String;)Ljava/lang/Object;
 	public fun getMember (Ljava/lang/String;)Lorg/graalvm/polyglot/Value;
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
 }
 
-public abstract interface class elide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test, elide/runtime/intrinsics/testing/TestingRegistrar$TestScope, java/lang/Comparable {
+public abstract interface class elide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest : elide/runtime/intrinsics/testing/TestingAPI$TestGraphNode$Test, elide/tooling/testing/TestScope, java/lang/Comparable {
 	public abstract fun getEntryFactory ()Lkotlin/jvm/functions/Function1;
 	public abstract fun getQualifiedName ()Ljava/lang/String;
 	public abstract fun getSimpleName ()Ljava/lang/String;
@@ -7504,21 +7391,6 @@ public final class elide/runtime/intrinsics/testing/TestingRegistrar$TestInfo : 
 	public fun qualifiedName ()Ljava/lang/String;
 	public fun simpleName ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class elide/runtime/intrinsics/testing/TestingRegistrar$TestScope : java/lang/Comparable {
-	public fun compareTo (Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;)I
-	public synthetic fun compareTo (Ljava/lang/Object;)I
-	public abstract fun getQualifiedName ()Ljava/lang/String;
-	public abstract fun getSimpleName ()Ljava/lang/String;
-	public fun qualifiedNameFor (Ljava/lang/String;)Ljava/lang/String;
-	public fun qualifiedNameFor (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Ljava/lang/String;
-}
-
-public final class elide/runtime/intrinsics/testing/ViolatedAssumption : java/lang/RuntimeException {
-	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun reasonMessage ()Ljava/lang/String;
 }
 
 public synthetic class elide/runtime/javascript/$MessageChannelBuiltin$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {

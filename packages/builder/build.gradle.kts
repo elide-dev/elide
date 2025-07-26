@@ -75,6 +75,8 @@ dependencies {
   ksp(mn.micronaut.inject.kotlin)
   api(libs.kotlin.stdlib.jdk8)
   api(libs.jetbrains.annotations)
+  api(libs.jline.reader)
+  api(libs.jline.builtins)
   api(projects.packages.tooling)
   api(projects.packages.exec)
   api(projects.packages.engine)

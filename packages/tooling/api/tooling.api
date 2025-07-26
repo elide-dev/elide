@@ -6389,6 +6389,12 @@ public final class elide/tooling/project/mcp/ModelContextProtocol$McpServingMode
 	public static fun values ()[Lelide/tooling/project/mcp/ModelContextProtocol$McpServingMode;
 }
 
+public final class elide/tooling/term/TerminalUtil {
+	public static final field INSTANCE Lelide/tooling/term/TerminalUtil;
+	public final fun to256ColorAnsiString (Lorg/jline/utils/AttributedString;)Ljava/lang/String;
+	public final fun toTrueColorAnsiString (Lorg/jline/utils/AttributedString;)Ljava/lang/String;
+}
+
 public abstract interface class elide/tooling/testing/AssumptionState {
 }
 

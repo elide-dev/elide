@@ -34,6 +34,9 @@ import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.incremental.destinationAsFile
 import org.jetbrains.kotlin.util.ServiceLoaderLite
+import org.jline.builtins.ConfigurationPath
+import org.jline.builtins.SyntaxHighlighter
+import org.jline.utils.AttributedString
 import java.io.Closeable
 import java.lang.IllegalArgumentException
 import java.lang.ref.WeakReference
@@ -69,6 +72,7 @@ import elide.tooling.cli.Statics
 import elide.tooling.AbstractTool
 import elide.tooling.cli.Statics.logging
 import elide.tooling.jvm.JavaCompiler
+import elide.tooling.term.TerminalUtil.toTrueColorAnsiString
 
 // Internal debug logs.
 private const val KOTLINC_DEBUG_LOGGING = false
@@ -153,6 +157,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
   private val argsAmender: K2JVMCompilerArguments.() -> Unit = {},
   private val projectRoot: Path,
   private val testMode: Boolean = false,
+  private val codeProcessor: (String) -> AttributedString = { AttributedString(it) },
 ) : AbstractTool(info = kotlinc.extend(
   args,
   env,
@@ -237,7 +242,8 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
           val maxLineNumberSize = location.lineEnd.toString().length
           val relativeFile = file?.relativeTo(Path.of(System.getProperty("user.dir")))
           val ctx = location.line to location.column
-          val lineSrc = location.lineContent
+          val lineAttributed = location.lineContent?.let { codeProcessor(it) }
+          val lineSrc = lineAttributed?.toTrueColorAnsiString()
           val relativeFileAsLink = relativeFile?.let {
             val relativized = runCatching { it.relativeTo(projectRoot) }.onFailure {
               logging.debug { "Failed to relativize file: $it" }
@@ -318,6 +324,20 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       if (KOTLINC_DEBUG_LOGGING) {
         System.err.println("[kotlinc:debug] $message")
       }
+    }
+
+    /**
+     * Perform highlighting against the provided Kotlin code snippet.
+     *
+     * @param snippet Snippet of Kotlin code; spacing will be preserved.
+     * @return Highlighted snippet of Kotlin code (for terminal use).
+     */
+    @JvmStatic public fun terminalHighlight(snippet: String): AttributedString {
+      val appconfigs = Paths.get(System.getProperty("user.home"), "elide", "config", "nanorc")
+      val jnanorc = Paths.get(System.getProperty("user.home"), ".elide", "nanorc")
+      val configPath = ConfigurationPath(appconfigs, jnanorc)
+      val langHighlighter = SyntaxHighlighter.build(configPath.getConfig("jnanorc"), "Kotlin")
+      return langHighlighter.highlight(snippet)
     }
 
     init {
@@ -464,6 +484,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       outputs: KotlinCompilerOutputs,
       projectRoot: Path = Paths.get(System.getProperty("user.dir")),
       test: Boolean = false,
+      codeProcessor: (String) -> AttributedString = ::terminalHighlight,
       argsAmender: K2JVMCompilerArguments.() -> Unit = {},
     ): KotlinCompiler = KotlinCompiler(
       args = args,
@@ -473,6 +494,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       projectRoot = projectRoot,
       argsAmender = argsAmender,
       testMode = test,
+      codeProcessor = codeProcessor,
     )
   }
 

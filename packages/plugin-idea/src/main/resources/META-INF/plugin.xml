@@ -81,12 +81,23 @@
                 factoryClass="dev.elide.intellij.ui.ElideToolWindowFactory"
                 anchor="right"
                 icon="/icons/toolWindowElide.svg"/>
-  </extensions>
-
-  <extensions defaultExtensionNs="com.intellij">
     <notificationGroup id="Elide Notifications"
                        displayType="BALLOON"
                        key="elide.notifications.group"/>
+
+    <psi.referenceContributor language="Pkl"
+                              implementation="dev.elide.intellij.psi.ElideManifestReferencesContributor"/>
+    <localInspection language="Pkl"
+                     key="elide.inspection.manifest.jvm.unresolvedMainClass.name"
+                     groupKey="elide.inspection.manifest.group"
+                     enabledByDefault="true"
+                     implementationClass="dev.elide.intellij.psi.ElideManifestJvmMainReferenceInspection"/>
+
+    <localInspection language="Pkl"
+                     key="elide.inspection.manifest.jvm.invalidMainClass.name"
+                     groupKey="elide.inspection.manifest.group"
+                     enabledByDefault="true"
+                     implementationClass="dev.elide.intellij.psi.ElideManifestJvmMainMethodInspection"/>
   </extensions>
 
   <actions>

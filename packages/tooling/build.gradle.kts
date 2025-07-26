@@ -56,6 +56,8 @@ dependencies {
   api(libs.pkl.config.java) { pklExclusions() }
   api(libs.pkl.config.kotlin) { pklExclusions() }
   api(libs.bundles.maven.model)
+  api(libs.jline.reader)
+  api(libs.jline.builtins)
 
   implementation(libs.ktoml)
   implementation(libs.kotlinx.io.bytestring)

@@ -247,9 +247,9 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
           }
           appendLine("   ${TextStyles.dim("at")}: ${relativeFileAsLink ?: "<no file>"}:${ctx.first}:${ctx.second}")
           if (lineSrc != null) {
-            val leftpad = " ".repeat((location.columnEnd - location.column) + 2)
             val spaceIndentSize = lineSrc.takeWhile { it == ' ' }.length
             val spaceIndent = " ".repeat(spaceIndentSize)
+            val leftpad = " ".repeat(location.column + 3 + spaceIndentSize)
             appendLine("  ${(ctx.first - 1).toString().padStart(maxLineNumberSize, ' ')} ⋮ ${spaceIndent}...")
             appendLine("  ${(ctx.first).toString().padStart(maxLineNumberSize, ' ')} ⋮ $lineSrc")
             appendLine("${leftpad}${severityColor("↑")}")

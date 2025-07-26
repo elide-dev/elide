@@ -21,8 +21,23 @@ import elide.runtime.core.DelicateElideApi
  * This container is meant to be used by the [Coverage] plugin.
  */
 @DelicateElideApi public class CoverageConfig {
+  /**
+   * Whether coverage is enabled.
+   */
   public var enabled: Boolean = true
+
+  /**
+   * Format to use for coverage; supported values are `json` and `lcov`.
+   */
   public var format: String? = null
+
+  /**
+   * Filter to apply to files when producing coverage information.
+   */
   public var filterFile: String? = null
+
+  /**
+   * Output directory where coverage reports and other ephemera should be placed.
+   */
   public var outputDirectory: Path? = null
 }

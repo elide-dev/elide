@@ -55,6 +55,8 @@ private const val DEFAULT_COVERAGE_FORMAT = "json"
         option("coverage.Output", outFmt)
         if (outFmt in sortedSetOf("json", "lcov")) {
           option("coverage.OutputFile", out.resolve("coverage.$outFmt").absolutePathString())
+        } else {
+          error("Unsupported coverage output format: '$outFmt'. Supported formats include 'json' and 'lcov'")
         }
       }
     }

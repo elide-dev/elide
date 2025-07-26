@@ -10,16 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.testing
+package elide.tooling.testing
 
 /**
- * ## Violated Assumption
+ * ## Global Test Scope
  *
- * Describes a condition where an assumption was violated while processing a test, or while registering a test; when
- * this occurs, the test is disabled within a given run. Reasoning is included for assumption violations.
+ * Fallback singleton scope for all tests which have no other scope.
  */
-public class ViolatedAssumption(message: String?, cause: Throwable? = null): RuntimeException(message, cause) {
-  public fun reasonMessage(): String {
-    return message ?: cause?.message ?: "No reason provided (type: ${this::class.java.simpleName})"
-  }
+public data object GlobalTestScope: TestScope<GlobalTestScope> {
+  override val qualifiedName: String get() = ""
+  override val simpleName: String get() = ""
 }

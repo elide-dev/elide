@@ -6380,6 +6380,221 @@ public final class elide/tooling/project/mcp/ModelContextProtocol$McpServingMode
 	public static fun values ()[Lelide/tooling/project/mcp/ModelContextProtocol$McpServingMode;
 }
 
+public abstract interface class elide/tooling/testing/AssumptionState {
+}
+
+public final class elide/tooling/testing/AssumptionState$Ignored : elide/tooling/testing/AssumptionState {
+	public static final field INSTANCE Lelide/tooling/testing/AssumptionState$Ignored;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/AssumptionState$IgnoredWithReasoning : elide/tooling/testing/AssumptionState {
+	public static final synthetic fun box-impl (Lelide/tooling/testing/Reason;)Lelide/tooling/testing/AssumptionState$IgnoredWithReasoning;
+	public static fun constructor-impl (Lelide/tooling/testing/Reason;)Lelide/tooling/testing/Reason;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/tooling/testing/Reason;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/tooling/testing/Reason;Lelide/tooling/testing/Reason;)Z
+	public final fun getReason ()Lelide/tooling/testing/Reason;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/tooling/testing/Reason;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/tooling/testing/Reason;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/tooling/testing/Reason;
+}
+
+public final class elide/tooling/testing/AssumptionState$Valid : elide/tooling/testing/AssumptionState {
+	public static final field INSTANCE Lelide/tooling/testing/AssumptionState$Valid;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/GlobalTestScope : elide/tooling/testing/TestScope {
+	public static final field INSTANCE Lelide/tooling/testing/GlobalTestScope;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getQualifiedName ()Ljava/lang/String;
+	public fun getSimpleName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/testing/Reason {
+	public abstract fun message ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/Reason$ReasonMessage : elide/tooling/testing/Reason {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/testing/Reason$ReasonMessage;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun message ()Ljava/lang/String;
+	public static fun message-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/Reason$ViolatedAssumptions : elide/tooling/testing/Reason {
+	public static final synthetic fun box-impl (Ljava/util/List;)Lelide/tooling/testing/Reason$ViolatedAssumptions;
+	public static fun constructor-impl (Ljava/util/List;)Ljava/util/List;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/util/List;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/util/List;Ljava/util/List;)Z
+	public final fun getList ()Ljava/util/List;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/util/List;)I
+	public fun message ()Ljava/lang/String;
+	public static fun message-impl (Ljava/util/List;)Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/util/List;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/util/List;
+}
+
+public final class elide/tooling/testing/TestCaseResult : java/lang/Record {
+	public synthetic fun <init> (Lelide/tooling/testing/TestScope;Lelide/tooling/testing/TestResult;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/tooling/testing/TestScope;
+	public final fun component2 ()Lelide/tooling/testing/TestResult;
+	public final fun component3-UwyO8pc ()J
+	public final fun copy-SxA4cEA (Lelide/tooling/testing/TestScope;Lelide/tooling/testing/TestResult;J)Lelide/tooling/testing/TestCaseResult;
+	public static synthetic fun copy-SxA4cEA$default (Lelide/tooling/testing/TestCaseResult;Lelide/tooling/testing/TestScope;Lelide/tooling/testing/TestResult;JILjava/lang/Object;)Lelide/tooling/testing/TestCaseResult;
+	public final fun duration ()J
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun result ()Lelide/tooling/testing/TestResult;
+	public final fun scope ()Lelide/tooling/testing/TestScope;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/TestPostProcessingOptions : java/lang/Record {
+	public fun <init> ()V
+	public fun <init> (ZZ)V
+	public synthetic fun <init> (ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Z
+	public final fun copy (ZZ)Lelide/tooling/testing/TestPostProcessingOptions;
+	public static synthetic fun copy$default (Lelide/tooling/testing/TestPostProcessingOptions;ZZILjava/lang/Object;)Lelide/tooling/testing/TestPostProcessingOptions;
+	public final fun coverageEnabled ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun reportingEnabled ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/testing/TestPostProcessor {
+	public abstract fun invoke (Lelide/tooling/testing/TestPostProcessingOptions;Lelide/tooling/testing/TestRunResult;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tooling/testing/TestPostProcessorFactory {
+	public abstract fun create (Lelide/tooling/testing/TestPostProcessingOptions;)Lelide/tooling/testing/TestPostProcessor;
+	public fun eligible (Lelide/tooling/testing/TestPostProcessingOptions;)Z
+}
+
+public final class elide/tooling/testing/TestPostProcessors {
+	public static final field INSTANCE Lelide/tooling/testing/TestPostProcessors;
+	public static final fun all ()Lkotlin/sequences/Sequence;
+	public static final fun matching (Lelide/tooling/testing/TestPostProcessingOptions;)Lkotlin/sequences/Sequence;
+	public static final fun suite (Lelide/tooling/testing/TestPostProcessingOptions;)Lkotlin/sequences/Sequence;
+}
+
+public abstract interface class elide/tooling/testing/TestResult {
+}
+
+public final class elide/tooling/testing/TestResult$Fail : java/lang/Record, elide/tooling/testing/TestResult {
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun cause ()Ljava/lang/Throwable;
+	public final fun component1 ()Ljava/lang/Throwable;
+	public final fun copy (Ljava/lang/Throwable;)Lelide/tooling/testing/TestResult$Fail;
+	public static synthetic fun copy$default (Lelide/tooling/testing/TestResult$Fail;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/tooling/testing/TestResult$Fail;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/TestResult$Pass : elide/tooling/testing/TestResult {
+	public static final field INSTANCE Lelide/tooling/testing/TestResult$Pass;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/TestResult$Skip : elide/tooling/testing/TestResult {
+	public static final synthetic fun box-impl (Lelide/tooling/testing/Reason;)Lelide/tooling/testing/TestResult$Skip;
+	public static fun constructor-impl (Lelide/tooling/testing/Reason;)Lelide/tooling/testing/Reason;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lelide/tooling/testing/Reason;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lelide/tooling/testing/Reason;Lelide/tooling/testing/Reason;)Z
+	public final fun getReason ()Lelide/tooling/testing/Reason;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lelide/tooling/testing/Reason;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lelide/tooling/testing/Reason;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lelide/tooling/testing/Reason;
+}
+
+public final class elide/tooling/testing/TestRunResult : java/lang/Record {
+	public synthetic fun <init> (Lelide/tooling/testing/TestResult;ILelide/tooling/testing/TestStats;Ljava/util/List;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/tooling/testing/TestResult;ILelide/tooling/testing/TestStats;Ljava/util/List;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/tooling/testing/TestResult;
+	public final fun component2-pVg5ArA ()I
+	public final fun component3 ()Lelide/tooling/testing/TestStats;
+	public final fun component4 ()Ljava/util/List;
+	public final fun component5 ()Z
+	public final fun copy-roUYKiI (Lelide/tooling/testing/TestResult;ILelide/tooling/testing/TestStats;Ljava/util/List;Z)Lelide/tooling/testing/TestRunResult;
+	public static synthetic fun copy-roUYKiI$default (Lelide/tooling/testing/TestRunResult;Lelide/tooling/testing/TestResult;ILelide/tooling/testing/TestStats;Ljava/util/List;ZILjava/lang/Object;)Lelide/tooling/testing/TestRunResult;
+	public final fun earlyExit ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun exitCode ()I
+	public fun hashCode ()I
+	public final fun result ()Lelide/tooling/testing/TestResult;
+	public final fun results ()Ljava/util/List;
+	public final fun stats ()Lelide/tooling/testing/TestStats;
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/tooling/testing/TestScope : java/lang/Comparable {
+	public fun compareTo (Lelide/tooling/testing/TestScope;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public abstract fun getQualifiedName ()Ljava/lang/String;
+	public abstract fun getSimpleName ()Ljava/lang/String;
+	public fun qualifiedNameFor (Ljava/lang/String;)Ljava/lang/String;
+	public fun qualifiedNameFor (Lorg/graalvm/polyglot/Value;Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/TestStats : java/lang/Record {
+	public synthetic fun <init> (IIIIIJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-pVg5ArA ()I
+	public final fun component2-pVg5ArA ()I
+	public final fun component3-pVg5ArA ()I
+	public final fun component4-pVg5ArA ()I
+	public final fun component5-pVg5ArA ()I
+	public final fun component6-UwyO8pc ()J
+	public final fun copy-NqIEkfQ (IIIIIJ)Lelide/tooling/testing/TestStats;
+	public static synthetic fun copy-NqIEkfQ$default (Lelide/tooling/testing/TestStats;IIIIIJILjava/lang/Object;)Lelide/tooling/testing/TestStats;
+	public final fun duration ()J
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun executions ()I
+	public final fun fails ()I
+	public fun hashCode ()I
+	public final fun passes ()I
+	public final fun skips ()I
+	public final fun tests ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/ViolatedAssumption : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun reasonMessage ()Ljava/lang/String;
+}
+
 public abstract interface class elide/tooling/web/Browsers {
 	public static final field Companion Lelide/tooling/web/Browsers$Companion;
 	public abstract fun asSequence ()Lkotlin/sequences/Sequence;

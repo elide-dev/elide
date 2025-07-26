@@ -2661,114 +2661,56 @@ public abstract class elide/tooling/runner/AbstractTestRunner : elide/tooling/ru
 	public synthetic fun <init> (Lelide/tooling/runner/TestRunner$Config;Ljava/util/concurrent/Executor;Lelide/tooling/config/TestConfigurator$TestEventController;Lkotlin/jvm/functions/Function0;Lkotlin/time/TimeSource;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun awaitSettled (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun close ()V
-	protected final fun fail (Ljava/lang/Throwable;)Lelide/runtime/intrinsics/testing/TestResult;
-	public static synthetic fun fail$default (Lelide/tooling/runner/AbstractTestRunner;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/runtime/intrinsics/testing/TestResult;
+	protected final fun fail (Ljava/lang/Throwable;)Lelide/tooling/testing/TestResult;
+	public static synthetic fun fail$default (Lelide/tooling/runner/AbstractTestRunner;Ljava/lang/Throwable;ILjava/lang/Object;)Lelide/tooling/testing/TestResult;
 	public fun getConfig ()Lelide/tooling/runner/TestRunner$Config;
 	protected final fun getContextProvider ()Lkotlin/jvm/functions/Function0;
 	public fun getEvents ()Lelide/tooling/config/TestConfigurator$TestEventController;
 	public fun getExecutor ()Ljava/util/concurrent/Executor;
-	protected final fun pass ()Lelide/runtime/intrinsics/testing/TestResult;
+	protected final fun pass ()Lelide/tooling/testing/TestResult;
 	protected fun resolve (Lelide/runtime/core/PolyglotContext;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;)Lelide/runtime/intrinsics/testing/TestEntrypoint;
 	protected abstract fun runTest (Lkotlinx/coroutines/CoroutineScope;Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)Lkotlinx/coroutines/Deferred;
-	protected fun runnable (Lelide/runtime/core/PolyglotContext;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;)Lelide/runtime/intrinsics/testing/Reason;
-	protected final fun skip (Lelide/runtime/intrinsics/testing/Reason;)Lelide/runtime/intrinsics/testing/TestResult;
+	protected fun runnable (Lelide/runtime/core/PolyglotContext;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;)Lelide/tooling/testing/Reason;
+	protected final fun skip (Lelide/tooling/testing/Reason;)Lelide/tooling/testing/TestResult;
 	protected final fun testExec (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
 	protected final fun testFailed (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Ljava/lang/Throwable;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	protected final fun testSeen (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;)V
-	protected final fun testSkipped (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/Reason;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected final fun testSkipped (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/tooling/testing/Reason;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	protected final fun testSucceeded (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun tests (Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public final class elide/tooling/runner/AbstractTestRunner$TestCaseResult : java/lang/Record {
-	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestResult;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun case ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
-	public final fun component1 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
-	public final fun component2 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
-	public final fun component3 ()Lelide/runtime/intrinsics/testing/TestResult;
-	public final fun component4-UwyO8pc ()J
-	public final fun copy-Wn2Vu4Y (Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestResult;J)Lelide/tooling/runner/AbstractTestRunner$TestCaseResult;
-	public static synthetic fun copy-Wn2Vu4Y$default (Lelide/tooling/runner/AbstractTestRunner$TestCaseResult;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestResult;JILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestCaseResult;
-	public final fun duration ()J
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public final fun result ()Lelide/runtime/intrinsics/testing/TestResult;
-	public final fun scope ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
-	public fun toString ()Ljava/lang/String;
-}
-
 protected final class elide/tooling/runner/AbstractTestRunner$TestExecutionResult : java/lang/Record {
-	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestResult;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/tooling/testing/TestScope;Lelide/tooling/testing/TestResult;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
-	public final fun component2 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
-	public final fun component3 ()Lelide/runtime/intrinsics/testing/TestResult;
+	public final fun component2 ()Lelide/tooling/testing/TestScope;
+	public final fun component3 ()Lelide/tooling/testing/TestResult;
 	public final fun component4-UwyO8pc ()J
-	public final fun copy-Wn2Vu4Y (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestResult;J)Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;
-	public static synthetic fun copy-Wn2Vu4Y$default (Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/intrinsics/testing/TestResult;JILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;
+	public final fun copy-Wn2Vu4Y (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/tooling/testing/TestScope;Lelide/tooling/testing/TestResult;J)Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;
+	public static synthetic fun copy-Wn2Vu4Y$default (Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/tooling/testing/TestScope;Lelide/tooling/testing/TestResult;JILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestExecutionResult;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
-	public final fun result ()Lelide/runtime/intrinsics/testing/TestResult;
-	public final fun scope ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public final fun result ()Lelide/tooling/testing/TestResult;
+	public final fun scope ()Lelide/tooling/testing/TestScope;
 	public final fun test ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
 	public final fun timing ()J
 	public fun toString ()Ljava/lang/String;
 }
 
 protected final class elide/tooling/runner/AbstractTestRunner$TestRunRequest : java/lang/Record {
-	public fun <init> (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/core/PolyglotContext;)V
+	public fun <init> (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/tooling/testing/TestScope;Lelide/runtime/core/PolyglotContext;)V
 	public final fun component1 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
 	public final fun component2 ()Lelide/runtime/intrinsics/testing/TestEntrypoint;
-	public final fun component3 ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public final fun component3 ()Lelide/tooling/testing/TestScope;
 	public final fun component4 ()Lelide/runtime/core/PolyglotContext;
 	public final fun context ()Lelide/runtime/core/PolyglotContext;
-	public final fun copy (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/core/PolyglotContext;)Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;
-	public static synthetic fun copy$default (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;Lelide/runtime/core/PolyglotContext;ILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;
+	public final fun copy (Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/tooling/testing/TestScope;Lelide/runtime/core/PolyglotContext;)Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;
+	public static synthetic fun copy$default (Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;Lelide/runtime/intrinsics/testing/TestEntrypoint;Lelide/tooling/testing/TestScope;Lelide/runtime/core/PolyglotContext;ILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestRunRequest;
 	public final fun entry ()Lelide/runtime/intrinsics/testing/TestEntrypoint;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
-	public final fun scope ()Lelide/runtime/intrinsics/testing/TestingRegistrar$TestScope;
+	public final fun scope ()Lelide/tooling/testing/TestScope;
 	public final fun test ()Lelide/runtime/intrinsics/testing/TestingRegistrar$RegisteredTest;
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class elide/tooling/runner/AbstractTestRunner$TestRunResult : java/lang/Record {
-	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestResult;ILelide/tooling/runner/AbstractTestRunner$TestStats;Ljava/util/List;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Lelide/runtime/intrinsics/testing/TestResult;ILelide/tooling/runner/AbstractTestRunner$TestStats;Ljava/util/List;ZLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lelide/runtime/intrinsics/testing/TestResult;
-	public final fun component2-pVg5ArA ()I
-	public final fun component3 ()Lelide/tooling/runner/AbstractTestRunner$TestStats;
-	public final fun component4 ()Ljava/util/List;
-	public final fun component5 ()Z
-	public final fun copy-roUYKiI (Lelide/runtime/intrinsics/testing/TestResult;ILelide/tooling/runner/AbstractTestRunner$TestStats;Ljava/util/List;Z)Lelide/tooling/runner/AbstractTestRunner$TestRunResult;
-	public static synthetic fun copy-roUYKiI$default (Lelide/tooling/runner/AbstractTestRunner$TestRunResult;Lelide/runtime/intrinsics/testing/TestResult;ILelide/tooling/runner/AbstractTestRunner$TestStats;Ljava/util/List;ZILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestRunResult;
-	public final fun earlyExit ()Z
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun exitCode ()I
-	public fun hashCode ()I
-	public final fun result ()Lelide/runtime/intrinsics/testing/TestResult;
-	public final fun results ()Ljava/util/List;
-	public final fun stats ()Lelide/tooling/runner/AbstractTestRunner$TestStats;
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class elide/tooling/runner/AbstractTestRunner$TestStats : java/lang/Record {
-	public synthetic fun <init> (IIIIIJLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-pVg5ArA ()I
-	public final fun component2-pVg5ArA ()I
-	public final fun component3-pVg5ArA ()I
-	public final fun component4-pVg5ArA ()I
-	public final fun component5-pVg5ArA ()I
-	public final fun component6-UwyO8pc ()J
-	public final fun copy-NqIEkfQ (IIIIIJ)Lelide/tooling/runner/AbstractTestRunner$TestStats;
-	public static synthetic fun copy-NqIEkfQ$default (Lelide/tooling/runner/AbstractTestRunner$TestStats;IIIIIJILjava/lang/Object;)Lelide/tooling/runner/AbstractTestRunner$TestStats;
-	public final fun duration ()J
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun executions ()I
-	public final fun fails ()I
-	public fun hashCode ()I
-	public final fun passes ()I
-	public final fun skips ()I
-	public final fun tests ()I
 	public fun toString ()Ljava/lang/String;
 }
 

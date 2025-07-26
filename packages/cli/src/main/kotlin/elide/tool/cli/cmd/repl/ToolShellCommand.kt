@@ -69,6 +69,8 @@ import javax.tools.ToolProvider
 import jakarta.inject.Provider
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.joinAll
@@ -108,8 +110,6 @@ import elide.runtime.gvm.kotlin.KotlinPrecompiler
 import elide.runtime.gvm.kotlin.KotlinScriptCallable
 import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.runtime.intrinsics.server.http.HttpServerAgent
-import elide.runtime.intrinsics.testing.Reason
-import elide.runtime.intrinsics.testing.TestResult
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.intrinsics.testing.TestingRegistrar.*
 import elide.runtime.plugins.Coverage
@@ -143,6 +143,7 @@ import elide.tool.cli.options.EngineJvmOptions
 import elide.tool.cli.options.EngineKotlinOptions
 import elide.tool.cli.options.EnginePythonOptions
 import elide.tool.cli.options.ServerOptions
+import elide.tool.cli.options.TestingOptions
 import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.cli.output.TOOL_LOGGER_APPENDER
 import elide.tool.cli.output.TOOL_LOGGER_NAME
@@ -157,6 +158,7 @@ import elide.tool.project.ProjectManager
 import elide.tool.server.StaticSiteServer
 import elide.tool.server.StaticSiteServer.buildStaticServer
 import elide.tooling.Arguments
+import elide.tooling.Tool
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
@@ -182,6 +184,10 @@ import elide.tooling.project.manifest.NodePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 import elide.tooling.runner.ProcessRunner
 import elide.tooling.runner.TestRunner
+import elide.tooling.testing.Reason
+import elide.tooling.testing.TestPostProcessingOptions
+import elide.tooling.testing.TestPostProcessors
+import elide.tooling.testing.TestResult
 
 // Whether to use Espresso as the JVM engine by default.
 private const val USE_TRUFFLE_JVM_DEFAULT = false
@@ -301,6 +307,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   // Kotlin Home to use; calculated on first JVM/Kotlin init.
   @Volatile private var extraKotlinHome: String? = null
 
+  // Whether test coverage is enabled for this run; facilitates after-run follow-up.
+  @Volatile private var coverageEnabled: Boolean = false
+
   private val projectManager: ProjectManager by lazy {
     projectManagerProvider.get()
   }
@@ -363,32 +372,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     get() = Supplier {
       registeredVfsListeners.toList()
     }
-
-  /** Activates coverage in test mode. */
-  @Option(
-    names = ["--coverage"],
-    description = ["Enable or disable coverage during `elide test`"],
-    negatable = true,
-    defaultValue = "false",
-  )
-  internal var enableCoverage: Boolean = false
-
-  /** Activates coverage in test mode. */
-  @Option(
-    names = ["--coverage-format"],
-    description = ["Coverage format to emit; defaults to 'json'"],
-    defaultValue = "json",
-  )
-  internal var coverageFormat: String = "json"
-
-  /** Activates coverage in test mode. */
-  @Option(
-    names = ["--experimental-threaded-testing"],
-    description = ["Test in threaded mode (experimental)"],
-    negatable = true,
-    defaultValue = "false",
-  )
-  internal var threadedTestMode: Boolean = false
 
   /** Specifies the guest language to run. */
   @Option(
@@ -467,6 +450,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     heading = "%nDebugger:%n",
   )
   internal var debugger: DebugConfig = DebugConfig()
+
+  /** Testing options. */
+  @ArgGroup(
+    exclusive = false,
+    heading = "%nTesting:%n",
+  )
+  internal var testingOptions: TestingOptions = TestingOptions()
 
   /** Settings which apply to servers. */
   @ArgGroup(
@@ -1789,7 +1779,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       fun TestRunner.Builder<*>.prepRunner() {
         executor = execProvider.executor()
       }
-      val testRunner = when (threadedTestMode) {
+      val testRunner = when (testingOptions.threadedTestMode) {
         false -> TestRunner.serialBuilder(ctxAccessor)
         true -> TestRunner.threadedBuilder(ctxAccessor)
       }.apply {
@@ -1832,6 +1822,29 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           testRunner.tests(this, allTests.asFlow())
           testRunner.awaitSettled()
         }
+
+        // if we need to do post-processing, we should do it here
+        TestPostProcessingOptions(
+          coverageEnabled = coverageEnabled,
+          reportingEnabled = testingOptions.testReports?.ifBlank { null } != null,
+        ).let { testProcessingOptions ->
+          TestPostProcessors.suite(testProcessingOptions).map { testPostProcessor ->
+            async {
+              testPostProcessor to testPostProcessor(testProcessingOptions, results)
+            }
+          }.toList().takeIf { it.isNotEmpty() }?.awaitAll()?.let { stepResults ->
+            if (stepResults.any { !it.second.success }) {
+              stepResults.forEach { (step, stepResult) ->
+                when (stepResult) {
+                  Tool.Result.UnspecifiedFailure -> logging.debug { "Step '$step' failed to complete or succeed" }
+                  else -> {}
+                }
+              }
+              logging.warn { "Test post-processing steps indicated failures. See debug log for more information." }
+            }
+          }
+        }
+
         output {
           if (debug) {
             append("Test results: $results")
@@ -2396,28 +2409,26 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     }
 
     // configure test-mode plugins like coverage
+    val projectCoverageSettings = activeProject.value?.manifest?.tests?.coverage
+    coverageEnabled = (testingOptions.enableCoverage || projectCoverageSettings?.enabled == true)
+
     if (isTestMode) configure(Coverage) {
-      val projectCoverageSettings = activeProject.value?.manifest?.tests?.coverage
-      val doEnable = (enableCoverage || projectCoverageSettings?.enabled == true)
-      enabled = doEnable
-      format = coverageFormat
+      enabled = coverageEnabled
+      format = testingOptions.coverageFormat
 
       projectCoverageSettings?.paths?.let {
         if (it.isNotEmpty()) {
           filterFile = it.joinToString(",")
         }
       }
-
-      if (doEnable) {
-        activeProject.value?.let {
-          outputDirectory = it.root
-            .resolve(".dev")
-            .resolve("coverage").also {
-              if (!it.exists()) {
-                Files.createDirectories(it)
-              }
+      if (coverageEnabled) activeProject.value?.let {
+        outputDirectory = it.root
+          .resolve(".dev")
+          .resolve("coverage").also { dir ->
+            if (!dir.exists()) {
+              Files.createDirectories(dir)
             }
-        }
+          }
       }
     }
 

@@ -19,6 +19,8 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
 import elide.runtime.interop.ReadOnlyProxyObject
+import elide.tooling.testing.TestResult
+import elide.tooling.testing.TestScope
 
 /**
  * # Testing Registrar
@@ -100,70 +102,6 @@ public interface TestingRegistrar {
     override fun close() {
       parent.resetScope()
     }
-  }
-
-  /**
-   * ## Test Scope
-   *
-   * Describes, in a sealed hierarchy, all scopes which apply to testing; this includes [RegisteredScope] instances
-   * which describe logical groupings of tests, and also tests themselves, via [RegisteredTest].
-   */
-  public sealed interface TestScope<T>: Comparable<T> where T: TestScope<T> {
-    /**
-     * ### Simple name.
-     *
-     * Every test and test scope provides a simple display name.
-     */
-    public val simpleName: String
-
-    /**
-     * ### Qualified name.
-     *
-     * Every test and test scope provides a well-qualified name.
-     */
-    public val qualifiedName: String
-
-    /**
-     * Return a generated qualified test name based on this scope and any parent scopes.
-     *
-     * @param block Block to generate a qualified name for.
-     * @param label Optional label to append to the qualified name.
-     * @return Qualified name for the test.
-     */
-    public fun qualifiedNameFor(block: PolyglotValue, label: String?): String {
-      if (qualifiedName.isEmpty() || qualifiedName.isBlank()) {
-        val srcfile = block.sourceLocation.source.name
-        return "$srcfile > ${label ?: block.metaSimpleName}"
-      }
-      return qualifiedName + (label?.let { " > $it" } ?: "")
-    }
-
-    /**
-     * Return a generated qualified test name based on this scope and any parent scopes.
-     *
-     * @param label Optional label to append to the qualified name.
-     * @return Qualified name for the test.
-     */
-    public fun qualifiedNameFor(label: String?): String? {
-      if (qualifiedName.isNotEmpty() && label?.isNotEmpty() == true) {
-        return qualifiedName + label.let { " > $it" }
-      }
-      return null
-    }
-
-    override fun compareTo(other: T): Int {
-      return qualifiedName.compareTo(other.qualifiedName)
-    }
-  }
-
-  /**
-   * ## Global Test Scope
-   *
-   * Fallback singleton scope for all tests which have no other scope.
-   */
-  public data object GlobalTestScope: TestScope<GlobalTestScope> {
-    override val qualifiedName: String get() = ""
-    override val simpleName: String get() = ""
   }
 
   /**

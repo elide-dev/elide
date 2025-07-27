@@ -1,11 +1,24 @@
 package sample
 
 import com.google.common.base.Joiner
+import elide.annotations.Secret
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
-fun render_greeting(): String {
+@Serializable data class MyCoolData(
+  @Secret val name: String,
+)
+
+fun renderGreeting(): String {
   return Joiner.on(" ").join("Hello", "World")
 }
 
+fun renderData(name: String = "World"): MyCoolData {
+  return MyCoolData(name = name)
+}
+
 fun main() {
-  println(render_greeting())
+  println(Json.encodeToString(renderData()))
+  println(renderData().toString())
+  println(renderGreeting())
 }

@@ -130,6 +130,7 @@ dependencies {
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlin.serialization.embedded)
   implementation(libs.kotlin.powerAssert.embedded)
+  implementation(libs.plugin.redacted.core)
   implementation(libs.kotlin.scripting.dependencies)
   implementation(libs.kotlin.scripting.dependencies.maven) {
     exclude(group = "com.google.inject", module = "guice")
@@ -171,6 +172,7 @@ dependencies {
   embeddedKotlin(libs.ksp)
   embeddedKotlin(libs.ksp.api)
   embeddedKotlin(libs.ksp.cmdline)
+  embeddedKotlin(libs.plugin.redacted.core)
   embeddedKotlin(mn.micronaut.inject.kotlin)
   embeddedKotlin(libs.junit.jupiter.api)
   embeddedKotlin(libs.junit.jupiter.params)

@@ -96,6 +96,9 @@ class KotlinFeatureOptions {
   /// Enable or disable KotlinX Coroutines support.
   coroutines: Boolean = kotlinx
 
+  /// Enable or disable secret redaction support.
+  redaction: Boolean = enableDefaultPlugins && experimental
+
   /// Whether to automatically calculate classpaths for Kotlin projects.
   autoClasspath: Boolean = true
 }

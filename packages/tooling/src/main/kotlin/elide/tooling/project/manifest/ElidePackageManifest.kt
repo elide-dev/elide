@@ -452,6 +452,7 @@ public data class ElidePackageManifest(
     val incremental: Boolean = true,
     val serialization: Boolean = kotlinx && enableDefaultPlugins && experimental,
     val coroutines: Boolean = kotlinx,
+    val redaction: Boolean = enableDefaultPlugins && experimental,
     val autoClasspath: Boolean = true,
   )
 

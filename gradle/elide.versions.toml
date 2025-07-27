@@ -257,7 +257,7 @@ qodanaGradle = "2023.3.1"
 r8 = "1.4.45"
 react = "19.0.0"
 reactivestreams = "1.0.4"
-redacted-plugin = "1.9.0"
+redacted-plugin = "1.14.1"
 sarif4k = "0.6.0"
 semver = "6.0.0"
 shadow-plugin = "8.1.1"
@@ -871,7 +871,8 @@ plugin-nexusPublishing = { group = "io.github.gradle-nexus", name = "publish-plu
 plugin-openrewrite = { group = "org.openrewrite", name = "plugin", version.ref = "openrewrite-plugin" }
 plugin-proguard = { group = "com.guardsquare", name = "proguard-gradle", version.ref = "proguard" }
 plugin-protobuf = { group = "com.google.protobuf", name = "protobuf-gradle-plugin", version.ref = "pluginProtobuf" }
-plugin-redacted = { group = "dev.zacsweers.redacted", name = "redacted-compiler-plugin-gradle", version.ref = "redacted-plugin" }
+plugin-redacted-core = { group = "dev.zacsweers.redacted", name = "redacted-compiler-plugin", version.ref = "redacted-plugin" }
+plugin-redacted-gradle = { group = "dev.zacsweers.redacted", name = "redacted-compiler-plugin-gradle", version.ref = "redacted-plugin" }
 plugin-reflekt = { group = "org.jetbrains.reflekt", name = "reflekt-plugin", version.ref = "kotlin-sdk" }
 plugin-shadow = { group = "com.github.johnrengelman", name = "shadow", version.ref = "shadow-plugin" }
 plugin-sigstore = { group = "dev.sigstore", name = "sigstore-gradle-sign-plugin", version.ref = "sigstore" }

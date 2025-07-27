@@ -105,6 +105,7 @@ dependencies {
   implementation(libs.mordant.markdown)
   implementation(libs.highlights)
   implementation(libs.ktoml)
+  implementation(libs.plugin.redacted.core)
   implementation(libs.kotlin.compiler.embedded)
   implementation(libs.kotlin.serialization.embedded)
   implementation(libs.kotlin.powerAssert.embedded)

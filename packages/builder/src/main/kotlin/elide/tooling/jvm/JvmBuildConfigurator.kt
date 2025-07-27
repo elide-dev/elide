@@ -543,11 +543,14 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       // if additional deps are provided, add them to the classpath
       additionalDeps?.let { add(it) }
     }.toList().let {
-      Classpath.from(it.map { it.path })
+      Classpath.from(it.map { item -> item.path })
     }
 
     val kotlincOpts = state.manifest.kotlin?.compilerOptions ?: KotlinJvmCompilerOptions()
     val args = Arguments.empty().toMutable().apply {
+      // @TODO eliminate this
+      add("-Xskip-prerelease-check")
+
       // apply arguments
       addAllStrings(kotlincOpts.collect().toList())
     }.build()

@@ -50,6 +50,11 @@ public object Statics {
     }
   }
 
+  /** Whether to use true-color; if `false`, 256-color mode is used (`noColor` overrides). */
+  public val trueColor: Boolean by lazy {
+    !noColor
+  }
+
   @Volatile private var execBinPath: String = ""
 
   @Volatile private var initialArgs = emptyArray<String>()

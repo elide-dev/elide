@@ -1,0 +1,12 @@
+set tabstospaces
+set autoindent
+set tempfile
+include "./args.nanorc"
+include "./command.nanorc"
+include "./java.nanorc"
+include "./javascript.nanorc"
+include "./json.nanorc"
+include "./kotlin.nanorc"
+include "./python.nanorc"
+include "./ruby.nanorc"
+include "./ts.nanorc"

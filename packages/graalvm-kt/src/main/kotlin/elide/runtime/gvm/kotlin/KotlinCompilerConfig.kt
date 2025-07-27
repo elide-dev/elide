@@ -21,10 +21,12 @@ import kotlin.collections.orEmpty
 import kotlin.collections.toMutableList
 import kotlin.io.path.absolutePathString
 import elide.runtime.precompiler.Precompiler
+import elide.tooling.jvm.JvmLibraries
 
 // Constant plugin names.
 private const val SERIALIZATION_PLUGIN_NAME = "kotlin-serialization-compiler-plugin-embeddable"
 private const val POWERASSERT_PLUGIN_NAME = "kotlin-power-assert-compiler-plugin-embeddable"
+private const val REDACTED_PLUGIN_NAME = "redacted-compiler-plugin"
 
 /**
  * Configures the Kotlin compiler which is embedded within Elide.
@@ -85,6 +87,27 @@ public data class KotlinCompilerConfig(
           options = powerAssertSymbols.map { "function" to it }.toList(),
         )
       }
+    },
+
+    REDACTED {
+      override fun apply(args: K2JVMCompilerArguments, root: Path) {
+        val artifact = root
+          .resolve("kotlin")
+          .resolve(KotlinLanguage.VERSION)
+          .resolve("lib")
+          .resolve("$REDACTED_PLUGIN_NAME-${JvmLibraries.EMBEDDED_REDACTED_VERSION}.jar")
+
+        initializePlugin(
+          args = args,
+          artifact = artifact,
+          options = buildList {
+            add("enabled" to "true")
+            add("replacementString" to "██")
+            add("unredactedAnnotations" to unredactedAnnos.joinToString(",") { it.replace(".", "/") })
+            add("redactedAnnotations" to redactedAnnos.joinToString(",") { it.replace(".", "/") })
+          },
+        )
+      }
     };
 
     private companion object {
@@ -115,6 +138,7 @@ public data class KotlinCompilerConfig(
     /** Default suite of Kotlin plugins to enable. */
     private val DEFAULT_PLUGINS: Set<KotlinBuiltinPlugin> = EnumSet.of(
       KotlinBuiltinPlugin.SERIALIZATION,
+      KotlinBuiltinPlugin.REDACTED,
     )
 
     /** Default suite of Kotlin plugins to enable in test mode. */
@@ -125,6 +149,14 @@ public data class KotlinCompilerConfig(
     @JvmStatic public fun getDefaultPlugins(test: Boolean = false): Set<KotlinBuiltinPlugin> {
       return if (test) DEFAULT_PLUGINS_TEST else DEFAULT_PLUGINS
     }
+
+    private val redactedAnnos = sortedSetOf(
+      "elide.annotations.Secret",
+    )
+
+    private val unredactedAnnos = sortedSetOf(
+      "elide.annotations.Cleartext",
+    )
 
     private val powerAssertSymbols = sortedSetOf(
       "kotlin.assert",

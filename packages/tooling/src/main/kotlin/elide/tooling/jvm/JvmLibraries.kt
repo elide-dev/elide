@@ -34,6 +34,7 @@ public object JvmLibraries {
   public const val EMBEDDED_KOTLINX_IO_VERSION: String = "0.8.0"
   public const val EMBEDDED_COROUTINES_VERSION: String = "1.10.2"
   public const val EMBEDDED_SERIALIZATION_VERSION: String = "1.9.0"
+  public const val EMBEDDED_REDACTED_VERSION: String = "1.14.1"
   public const val APIGUARDIAN_API: String = "org.apiguardian:apiguardian-api"
   public const val JUNIT_JUPITER_API: String = "org.junit.jupiter:junit-jupiter-api"
   public const val JUNIT_JUPITER_ENGINE: String = "org.junit.jupiter:junit-jupiter-engine"

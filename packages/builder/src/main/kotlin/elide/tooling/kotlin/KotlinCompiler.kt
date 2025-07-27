@@ -360,11 +360,13 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
         // load services eagerly
         debugLog("Building Kotlin compiler services")
 
-        buildList {
+        buildSet {
           addAll(ServiceLoaderLite.loadImplementations(ComponentRegistrar::class.java, classLoader))
           addAll(ServiceLoaderLite.loadImplementations(CompilerPluginRegistrar::class.java, classLoader))
           add(org.jetbrains.kotlin.powerassert.PowerAssertCommandLineProcessor())
-        }.let {
+          add(dev.zacsweers.redacted.compiler.RedactedCommandLineProcessor())
+          add(dev.zacsweers.redacted.compiler.RedactedComponentRegistrar())
+        }.distinctBy { it::class }.let {
           if (it.isEmpty()) {
             error(
               "No Kotlin compiler plugins found; this is an error."
@@ -376,9 +378,9 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
               it.forEach { svc ->
                 register(svc::class.java as Class<Any>, svc)
               }
-            }.build().let {
+            }.build().let { services ->
               debugLog("Registered $size Kotlin compiler plugins")
-              compilerServices = it
+              compilerServices = services
             }
           }
         }

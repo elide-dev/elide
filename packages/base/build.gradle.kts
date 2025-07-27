@@ -33,6 +33,7 @@ elide {
     target = KotlinTarget.Default
     atomicFu = true
     explicitApi = true
+    kotlinVersionOverride = "2.0"
   }
 
   jvm {

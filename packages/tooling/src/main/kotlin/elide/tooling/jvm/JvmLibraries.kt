@@ -21,6 +21,8 @@ import elide.tooling.Classpath
  * Describes coordinates and versions for built-in libraries which ship with Elide.
  */
 public object JvmLibraries {
+  // @TODO: don't hard-code any of this
+  public const val ELIDE_VERSION: String = "1.0.0-beta8"
   public const val EMBEDDED_KOTLIN: String = "2.2.0"
 
   public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
@@ -50,6 +52,9 @@ public object JvmLibraries {
   public const val KOTLINX_COROUTINES_TEST: String = "org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm"
   public const val KOTLINX_SERIALIZATION: String = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm"
   public const val KOTLINX_SERIALIZATION_JSON: String = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm"
+  public const val ELIDE_BASE: String = "dev.elide:elide-core-jvm"
+  public const val ELIDE_CORE: String = "dev.elide:elide-base-jvm"
+  public const val ELIDE_TEST: String = "dev.elide:elide-test-jvm"
 
   internal val baseCoordinates = arrayOf(
     jarNamed("kotlin-stdlib"),
@@ -61,6 +66,15 @@ public object JvmLibraries {
     KOTLINX_CSS to EMBEDDED_KOTLINX_CSS_VERSION,
     KOTLINX_IO to EMBEDDED_KOTLINX_IO_VERSION,
     KOTLINX_IO_BYTESTRING to EMBEDDED_KOTLINX_IO_VERSION,
+  )
+
+  internal val elideCoordinates = arrayOf(
+    ELIDE_BASE,
+    ELIDE_CORE,
+  )
+
+  internal val elideTestCoordinates = arrayOf(
+    ELIDE_TEST,
   )
 
   public val testCoordinates: Array<Pair<String, String>> = arrayOf(
@@ -91,6 +105,10 @@ public object JvmLibraries {
     return "${parts[1]}-$version.jar"
   }
 
+  public fun elideJarNameFor(coordinate: String, version: String): String {
+    return jarNameFor(coordinate, version).removePrefix("elide-")
+  }
+
   public fun resolveJarFor(path: Path, coordinate: String, version: String): Path {
     return resolveJarFor(path, jarNameFor(coordinate, version))
   }
@@ -103,14 +121,26 @@ public object JvmLibraries {
       .resolve(name)
   }
 
+  public fun resolveElideJarFor(path: Path, coordinate: String, elideVersion: String): Path {
+    return resolveJarFor(path, jarNameFor(coordinate, elideVersion))
+  }
+
   public fun builtinClasspath(
     path: Path,
+    elideVersion: String = ELIDE_VERSION,
     tests: Boolean = false,
     kotlin: Boolean = true,
     kotlinx: Boolean = true,
+    elide: Boolean = true,
   ): Classpath {
     return Classpath.from(
       buildList {
+        if (elide) {
+          addAll(elideCoordinates.map { resolveElideJarFor(path, it, elideVersion) })
+          if (tests) {
+            addAll(elideTestCoordinates.map { resolveElideJarFor(path, it, elideVersion) })
+          }
+        }
         if (kotlin || tests) addAll(
           baseCoordinates.map {
             resolveJarFor(path, it)

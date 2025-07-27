@@ -58,6 +58,7 @@ public final class elide/tooling/cli/Statics {
 	public final fun getResourcesPath ()Ljava/nio/file/Path;
 	public final fun getServerLogger ()Lelide/runtime/Logger;
 	public final fun getTerminal ()Lcom/github/ajalt/mordant/terminal/Terminal;
+	public final fun getTrueColor ()Z
 	public final fun mountArgs (Ljava/lang/String;[Ljava/lang/String;)V
 }
 

@@ -9,6 +9,9 @@ public final class elide/AppEnvironment : java/lang/Enum {
 public abstract interface annotation class elide/annotations/API : java/lang/annotation/Annotation {
 }
 
+public abstract interface annotation class elide/annotations/Cleartext : java/lang/annotation/Annotation {
+}
+
 public abstract interface annotation class elide/annotations/Eager : java/lang/annotation/Annotation {
 }
 
@@ -19,6 +22,9 @@ public abstract interface annotation class elide/annotations/Generated : java/la
 }
 
 public abstract interface annotation class elide/annotations/Logic : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class elide/annotations/Secret : java/lang/annotation/Annotation {
 }
 
 public abstract interface annotation class elide/annotations/base/Experimental : java/lang/annotation/Annotation {

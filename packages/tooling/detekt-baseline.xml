@@ -2,6 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>UnusedPrivateMember:AdviceTest.kt$AdviceTest$private fun assertHasProjectAdvice(advice: AgentAdvice)</ID>
+    <ID>ForbiddenComment:JvmLibraries.kt$JvmLibraries$// @TODO: don't hard-code any of this</ID>
   </CurrentIssues>
 </SmellBaseline>

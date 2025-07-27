@@ -4,6 +4,7 @@
   <CurrentIssues>
     <ID>ForbiddenComment:JvmBuildConfigurator.kt$JvmBuildConfigurator$// @TODO: argument splitting by default</ID>
     <ID>FunctionParameterNaming:Statics.kt$Statics$`in`: InputStream</ID>
+    <ID>LongMethod:JvmBuildConfigurator.kt$JvmBuildConfigurator$private fun ActionScope.kotlinc( name: String, resolver: MavenAetherResolver?, state: ElideBuildState, config: BuildConfigurator.BuildConfiguration, srcSet: SourceSet, additionalDeps: Classpath? = null, tests: Boolean = false, dependencies: List&lt;Task> = emptyList(), argsAmender: K2JVMCompilerArguments.() -> Unit = {}, )</ID>
     <ID>ObjectPropertyNaming:Statics.kt$Statics$public val `in`: InputStream get() = delegatedInStream.value ?: System.`in`</ID>
     <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$inputs: NativeImageInputs.Paths</ID>
     <ID>UnusedParameter:NativeImageDriver.kt$NativeImageDriver$javaToolchainHome: Path</ID>

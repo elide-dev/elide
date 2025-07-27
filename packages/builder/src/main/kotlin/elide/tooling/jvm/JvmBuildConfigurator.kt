@@ -467,7 +467,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           ),
         )
       }
-      if (state.manifest.kotlin?.features?.serialization == true) {
+      if (state.manifest.kotlin?.features?.serialization != false) {
         // add `org.jetbrains.kotlinx:kotlinx-serialization-core`
         staticDeps.add(
           builtinKotlinJarPath(

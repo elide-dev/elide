@@ -184,6 +184,8 @@ import elide.tooling.project.manifest.NodePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 import elide.tooling.runner.ProcessRunner
 import elide.tooling.runner.TestRunner
+import elide.tooling.term.TerminalUtil.to256ColorAnsiString
+import elide.tooling.term.TerminalUtil.toTrueColorAnsiString
 import elide.tooling.testing.Reason
 import elide.tooling.testing.TestPostProcessingOptions
 import elide.tooling.testing.TestPostProcessors
@@ -696,7 +698,8 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     logging.debug("Building highlighter with config path '{}'", jnanorc)
     val commandHighlighter = SyntaxHighlighter.build(jnanorc, "COMMAND")
     val argsHighlighter = SyntaxHighlighter.build(jnanorc, "ARGS")
-    val langHighlighter = SyntaxHighlighter.build(jnanorc, syntaxHighlightName(language))
+    val syntaxName = syntaxHighlightName(language)
+    val langHighlighter = SyntaxHighlighter.build(jnanorc, syntaxName)
     return SystemHighlighter(commandHighlighter, argsHighlighter, langHighlighter) to langHighlighter
   }
 
@@ -918,6 +921,24 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     exc.printStackTrace()
   }
 
+  private fun highlightLineMaybe(line: String, langId: String?): Pair<String, Int> {
+    if (langId == null) return line to 0
+    val lang = GuestLanguage.resolveFromId(langId) ?: return line to 0
+    val useTrueColor = if (Statics.noColor) return line to 0 else Statics.trueColor
+    val highlighterName = syntaxHighlightName(lang)
+    val appconfigs = Paths.get(System.getProperty("user.home"), "elide", "config", "nanorc")
+    val jnanorc = Paths.get(System.getProperty("user.home"), ".elide", "nanorc")
+    val configPath = ConfigurationPath(appconfigs, jnanorc)
+    val langHighlighter = SyntaxHighlighter.build(configPath.getConfig("jnanorc"), highlighterName)
+    val attr = langHighlighter.highlight(line)
+    return when (useTrueColor) {
+      true -> attr.toTrueColorAnsiString()
+      else -> attr.to256ColorAnsiString()
+    }.let { fmt ->
+      fmt to (fmt.length - line.length)
+    }
+  }
+
   // Given an error, render a table explaining the error, along with any source context if we have it.
   private fun displayFormattedError(
     exc: Throwable,
@@ -943,11 +964,21 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     }
     val term = terminal.value
     val reader = lineReader.value
+    val colorized = !Statics.noColor
+    val polyglotStack = exc.polyglotStackTrace?.toList() ?: emptyList()
+    val topGuestFrameIdx = maxOf(0, polyglotStack.indexOfFirst { it.isHostFrame } - 1)
+    val topGuestFrame = polyglotStack.getOrNull(topGuestFrameIdx)
+    val guestFrameLang = topGuestFrame?.language
+
+    fun red(str: String): String = if (colorized) TextStyles.dim(TextColors.red(str)) else str
+    fun bold(str: String): String = if (colorized) TextStyles.bold(str) else str
+    fun dim(str: String): String = if (colorized) TextStyles.dim(str) else str
+    fun msg(str: String): Pair<String, Int> = if (colorized) bold(str) to 9 else str to 0
 
     // begin calculating with source context
-    val middlePrefix = "║ "
-    val errPrefix = "→ "
-    val stopPrefix = "✗ "
+    val middlePrefix = red("║") + " "
+    val errPrefix = red(bold("→")) + " "
+    val stopPrefix = red(bold("✗")) + " "
     val lineContextTemplate = "$middlePrefix%lineNum┊ %lineText"
     val errContextPrefix = "$errPrefix%lineNum┊ %lineText"
     val stopContextPrefix = "$stopPrefix%lineNum┊ %lineText"
@@ -969,8 +1000,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       } else {
         // it's a context line
         lineContextTemplate
-      }).replace("%lineNum", lineNumber.toString().padStart(lineDigits + 1, ' '))
-        .replace("%lineText", line)
+      }).replace("%lineNum", lineNumber.toString().padStart(lineDigits + 1, ' ')).let { lineContent ->
+        val (highlighted, addlOffset) = when (colorized) {
+          true -> highlightLineMaybe(line, guestFrameLang?.id)
+          else -> line to 0
+        }
+        lineContent.replace("%lineText", highlighted) to addlOffset
+      }
     }
 
     // if requested, build a stacktrace for this error
@@ -1003,7 +1039,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     }
 
     val pad = 2 * 2
-    val maxErrLineSize = if (lineContextRendered.isNotEmpty()) lineContextRendered.maxOf { it.length } + pad else 0
+    val maxErrLineSize = if (lineContextRendered.isNotEmpty()) lineContextRendered.maxOf {
+      it.first.length
+    } + pad else 0
 
     // calculate the maximum width needed to display the error box, but don't exceed the width of the terminal.
     val width = maxOf(
@@ -1030,10 +1068,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       "      ".length
     } else 0
 
-    val top = ("╔" + "═".repeat(textWidth) + "╗")
-    val bottom = ("╚" + "═".repeat(textWidth) + "╝")
-    val divider = ("╟" + "─".repeat(textWidth) + "╢")
-    val blankLine = ("║" + " ".repeat(textWidth) + "║")
+    val top = red("╔" + "═".repeat(textWidth) + "╗")
+    val bottom = red("╚" + "═".repeat(textWidth) + "╝")
+    val divider = red("╟" + "─".repeat(textWidth) + "╢")
+    // val blankLine = red("║" + " ".repeat(textWidth) + "║")
 
     // render error string
     val rendered = StringBuilder().apply {
@@ -1041,16 +1079,24 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       // ╔══════════════════════╗
       // ║ 1┊ (code)            ║
       // → 2┊ (err)             ║
-      lineContextRendered.forEach {
-        appendLine(it.padEnd(textWidth + 1, ' ') + "║")
+      lineContextRendered.forEach { (line, offset) ->
+        if (colorized) {
+          appendLine(line.padEnd(top.length + offset + 1) + red("║"))
+        } else {
+          appendLine(line.padEnd(textWidth + 1, ' ') + "║")
+        }
       }
       // ╟──^───────────────────╢
       if (lineContextRendered.isNotEmpty()) appendLine(divider)
 
       if (message.isNotBlank()) {
         // ║ SomeError: A message ║
-        val fmtMsg = ErrPrinter.fmtMessage(message, settings = errPrinterSettings())
-        append(middlePrefix).append(fmtMsg.padEnd(textWidth - 2, ' ')).append(" ║\n")
+        val (fmtMsg, offset) = msg(ErrPrinter.fmtMessage(message, settings = errPrinterSettings()))
+        append(middlePrefix)
+          .append(fmtMsg.padEnd(textWidth - 2 + offset, ' '))
+          .append(" ")
+          .append(red("║"))
+          .append('\n')
       }
 
       if (doPrintStack || advice?.isNotBlank() == true) {
@@ -1061,9 +1107,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         // append advice next
         if (advice?.isNotBlank() == true) {
           // ║ Advice:              ║
-          append(middlePrefix).append("Advice:".padEnd(textWidth - 1, ' ') + "║\n")
+          append(middlePrefix).append("Advice:".padEnd(textWidth - 1, ' ') + red("║")).append('\n')
           // ║ Example advice.      ║
-          append(middlePrefix).append(advice.padEnd(textWidth - 1, ' ') + "║\n")
+          append(middlePrefix).append(advice.padEnd(textWidth - 1, ' ') + red("║")).append('\n')
           // ╟──────────────────────╢
           if (doPrintStack) appendLine(divider)
         }
@@ -1071,7 +1117,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         // append stacktrace next
         if (doPrintStack) {
           // ║ Stacktrace:          ║
-          append(middlePrefix).append("Stacktrace:".padEnd(textWidth - 1, ' ') + "║\n")
+          append(middlePrefix).append("Stacktrace:".padEnd(textWidth - 1, ' ') + red("║")).append('\n')
           val extraStackPad = 2
 
           // ║ ...                  ║
@@ -1087,11 +1133,11 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
               // if it's a spaced line, don't add additional end-spacing (for tab-prefixes)
               append(middlePrefix)
                 .append(" ".repeat(extraStackPad))
-                .append(line.padEnd(textWidth - pad - middlePrefix.length - extraStackPad, ' ') + "║\n")
+                .append(line.padEnd(textWidth - pad - middlePrefix.length - extraStackPad, ' ') + red("║") + "\n")
             } else {
               append(middlePrefix)
                 append(" ".repeat(extraStackPad))
-                .append(line.padEnd(textWidth - 1 - extraStackPad, ' ') + "║\n")
+                .append(line.padEnd(textWidth - 1 - extraStackPad, ' ') + red("║") + "\n")
             }
           }
         }
@@ -1111,10 +1157,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         reader.printAbove(rendered)
       }
     } else System.err.use {
-      Statics.terminal.print(
-        if (Statics.noColor) rendered else TextColors.red(rendered),
-        stderr = true,
-      )
+      Statics.terminal.print(rendered, stderr = true)
       HandledExit.notify(-1, message = "Exited because of error", cause = exc)
     }
   }

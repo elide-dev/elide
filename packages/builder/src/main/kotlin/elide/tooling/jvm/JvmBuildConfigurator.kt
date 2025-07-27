@@ -75,6 +75,9 @@ internal class JvmBuildConfigurator : BuildConfigurator {
   }
 
   private fun jarNameFor(coordinate: String, version: String): String {
+    if (coordinate.startsWith("dev.elide")) {
+      return JvmLibraries.elideJarNameFor(coordinate, version)
+    }
     return JvmLibraries.jarNameFor(coordinate, version)
   }
 
@@ -424,6 +427,35 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
     // kotlinx support is enabled by default; this includes kotlin's testing tools
     val staticDeps = Classpath.empty().toMutable()
+
+    if (state.manifest.kotlin?.features?.autoClasspath != false) {
+      // add `dev.elide:elide-core`
+      staticDeps.add(
+        builtinKotlinJarPath(
+          state,
+          JvmLibraries.ELIDE_CORE,
+          JvmLibraries.ELIDE_VERSION,
+        )
+      )
+      // add `dev.elide:elide-base`
+      staticDeps.add(
+        builtinKotlinJarPath(
+          state,
+          JvmLibraries.ELIDE_BASE,
+          JvmLibraries.ELIDE_VERSION,
+        )
+      )
+      if (tests) {
+        // add `dev.elide:elide-test`
+        staticDeps.add(
+          builtinKotlinJarPath(
+            state,
+            JvmLibraries.ELIDE_TEST,
+            JvmLibraries.ELIDE_VERSION,
+          )
+        )
+      }
+    }
     if (state.manifest.kotlin?.features?.kotlinx != false) {
       if (state.manifest.kotlin?.features?.coroutines != false) {
         // add `org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm`

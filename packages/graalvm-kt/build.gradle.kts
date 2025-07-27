@@ -138,6 +138,20 @@ dependencies {
   api(files(embeddedKotlinRuntime))
   compileOnly(libs.graalvm.svm)
 
+  // elide modules
+  embeddedKotlin(projects.packages.base) {
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk7")
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
+  }
+  embeddedKotlin(projects.packages.core) {
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk7")
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
+  }
+  embeddedKotlin(projects.packages.test) {
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk7")
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
+  }
+
   embeddedKotlin(libs.kotlin.stdlib)
   embeddedKotlin(libs.kotlin.reflect)
   embeddedKotlin(libs.kotlin.test.junit5)
@@ -347,7 +361,7 @@ fun indexedDeps(cfg: Configuration): KotlinResourceIndex {
 }
 
 @OptIn(ExperimentalSerializationApi::class) val indexKotlinResources by tasks.registering {
-  dependsOn("prepKotlinResources")
+  enabled = false
 
   indexedDeps(embeddedKotlin).plus(indexedDeps(embeddedJava)).let { index ->
     kotlinResourceIndex.get().asFile.parentFile.mkdirs()
@@ -382,13 +396,15 @@ val prepKotlinResources by tasks.registering(Copy::class) {
   }
   destinationDir = intermediateResources.get().dir("lib").asFile
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-  finalizedBy("indexKotlinResources")
+  // finalizedBy("indexKotlinResources")
 }
 
 val ktRuntimeTarget = "META-INF/elide/embedded/runtime/kt"
 val ktRuntimeRoot = layout.projectDirectory.dir("src/main/resources/$ktRuntimeTarget")
 val buildKotlinResourcesArchive by tasks.registering(Zip::class) {
-  dependsOn(prepKotlinResources, indexKotlinResources)
+  dependsOn(prepKotlinResources)
+  // dependsOn(indexKotlinResources)
+
   archiveFileName = archiveName
   destinationDirectory = intermediateResourcesZip.get().asFile.parentFile
   from(intermediateResources.get().asFile)
@@ -435,7 +451,12 @@ val buildResourcesManifest by tasks.registering {
 }
 
 tasks.processResources {
-  dependsOn(prepKotlinResources, buildKotlinResourcesArchive, buildResourcesManifest, indexKotlinResources)
+  dependsOn(
+    prepKotlinResources,
+    buildKotlinResourcesArchive,
+    buildResourcesManifest,
+    // indexKotlinResources,
+  )
 
   from(kotlinResourceIndex) {
     into(ktRuntimeTarget)

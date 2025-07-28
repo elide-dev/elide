@@ -1,0 +1,39 @@
+amends "elide:project.pkl"
+
+name = "elide-test-ktjvm-micronaut"
+description = "Example project using Elide with Kotlin/JVM and Micronaut."
+
+local micronautVersion = "4.8.1"
+
+jvm {
+  main = "sample.Application"
+
+  micronaut {
+    injection = true
+  }
+}
+
+tests {
+  coverage {
+    paths {
+      "sample*"
+    }
+  }
+}
+
+dependencies {
+  maven {
+    packages {
+      "io.micronaut:micronaut-core:\(micronautVersion)"
+      "io.micronaut:micronaut-runtime:\(micronautVersion)"
+    }
+    testPackages {
+      "io.micronaut.test:micronaut-test-junit5:\(micronautVersion)"
+    }
+  }
+}
+
+sources {
+  ["main"] = "src/main/kotlin/**/*.kt"
+  ["test"] = "src/test/kotlin/**/*.kt"
+}

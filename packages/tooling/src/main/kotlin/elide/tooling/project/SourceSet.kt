@@ -236,4 +236,7 @@ public interface SourceSet {
 
   /** Interpreted full suite of source set paths. */
   public val paths: SourceTaggedPathSuite
+
+  /** Root path for this source set. */
+  public val root: Path
 }

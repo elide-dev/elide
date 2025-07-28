@@ -10,10 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage", "LongMethod", "LongParameterList", "LargeClass")
 
 package elide.tooling.jvm
 
+import com.google.devtools.ksp.processing.KSPJvmConfig
 import org.eclipse.aether.DefaultRepositorySystemSession
 import org.eclipse.aether.RepositorySystem
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
@@ -23,6 +24,8 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
@@ -52,13 +55,13 @@ import elide.tooling.jvm.resolver.AetherProjectProvider
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.jvm.resolver.RepositorySystemFactory
 import elide.tooling.kotlin.KotlinCompiler
+import elide.tooling.kotlin.KotlinSymbolProcessing
 import elide.tooling.project.ElideProject
 import elide.tooling.project.SourceSet
 import elide.tooling.project.SourceSetLanguage.Java
 import elide.tooling.project.SourceSetLanguage.Kotlin
 import elide.tooling.project.SourceSetType
 import elide.tooling.project.manifest.ElidePackageManifest
-import elide.tooling.project.manifest.ElidePackageManifest.KotlinJvmCompilerOptions
 
 private fun srcSetTaskName(srcSet: SourceSet, name: String): String = buildString {
   append(name)
@@ -377,7 +380,6 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       }
     }
     result.asExecResult()
-    // @TODO error triggering
   }.describedBy {
     val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
     val suiteTag = if (srcSet.name == "main") "" else " (suite '${srcSet.name}')"
@@ -393,6 +395,34 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     }
   }
 
+  private suspend fun ksp(
+    srcSet: SourceSet,
+    classpath: Classpath,
+    outputBase: Path,
+    argsAmender: KSPJvmConfig.Builder.() -> Unit = {},
+  ) = withContext(Dispatchers.IO) {
+    val javaOut = outputBase.resolve("java")
+    val ktOut = outputBase.resolve("kotlin")
+    val rsrcsOut = outputBase.resolve("resources")
+
+    try {
+      if (!outputBase.exists()) Files.createDirectories(outputBase)
+      Files.createDirectories(javaOut)
+      Files.createDirectories(ktOut)
+      Files.createDirectories(rsrcsOut)
+    } catch (ioe: IOException) {
+      logging.error { "Failed to create directories for KSP outputs: $ioe" }
+    }
+
+    KotlinSymbolProcessing.processSymbols(classpath) {
+      javaOutputDir = outputBase.resolve("java").toFile()
+      kotlinOutputDir = outputBase.resolve("kotlin").toFile()
+      resourceOutputDir = outputBase.resolve("resources").toFile()
+      sourceRoots = listOf(srcSet.root.absolute().toFile())
+      argsAmender.invoke(this)
+    }
+  }
+
   private fun ActionScope.kotlinc(
     name: String,
     resolver: MavenAetherResolver?,
@@ -401,6 +431,8 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     srcSet: SourceSet,
     additionalDeps: Classpath? = null,
     tests: Boolean = false,
+    ksp: Boolean = false,
+    kapt: Boolean = false,
     dependencies: List<Task> = emptyList(),
     argsAmender: K2JVMCompilerArguments.() -> Unit = {},
   ) = fn(name, taskDependencies(dependencies)) {
@@ -410,20 +442,56 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       },
     )?.classpath()
 
-    val processorClasspath = resolver?.classpathProvider(
-      object : ClasspathSpec {
-        override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestProcessors else MultiPathUsage.Processors
-      },
-    )?.classpath()
+    val shouldRunKsp = (
+      ksp ||
+      state.project.manifest.kotlin?.features?.ksp != false
+    )
+    val shouldRunKapt = (
+      kapt ||
+      state.project.manifest.kotlin?.features?.kapt != false
+    )
+    val kspProcessors = if (!shouldRunKsp) emptyList() else KotlinSymbolProcessing.allProcessors(tests).toList()
 
     val kotlincClassesOutput = state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
       .resolve("classes") // `.../classes/...`
       .resolve(srcSet.name) // `.../classes/main/...`
 
+    val ktJvmTarget: ElidePackageManifest.JvmTarget = (
+      state.manifest.kotlin?.compilerOptions?.jvmTarget
+        ?: state.manifest.jvm?.java?.release
+        ?: state.manifest.jvm?.java?.source
+        ?: state.manifest.jvm?.target
+        ?: ElidePackageManifest.JvmTarget.DEFAULT
+    ).resolved()
+
+    val ktApiVersion = (
+      state.manifest.kotlin?.compilerOptions?.apiVersion ?: KotlinLanguage.API_VERSION_STABLE
+    ).let {
+      when (it) {
+        "auto" -> KotlinLanguage.API_VERSION_STABLE
+        else -> it
+      }
+    }
+    val ktLanguageVersion = (
+      state.manifest.kotlin?.compilerOptions?.apiVersion ?: KotlinLanguage.LANGUAGE_VERSION_STABLE
+    ).let {
+      when (it) {
+        "auto" -> KotlinLanguage.API_VERSION_STABLE
+        else -> it
+      }
+    }
+
+    val ktModuleName = srcSet.name
+
+    logging.debug { "Kotlin module name: '$ktModuleName'" }
+    logging.debug { "Kotlin lang/api versions: lang=$ktLanguageVersion, api=$ktApiVersion" }
+    logging.debug { "Kotlin task JVM target: '$ktJvmTarget'" }
     logging.debug { "Kotlin task dependencies: $dependencies" }
     logging.debug { "Kotlin main classpath: $compileClasspath" }
     logging.debug { "Classes output root: $kotlincClassesOutput" }
+    logging.debug { "Annotation processing: shouldRunKapt=$shouldRunKapt, shouldRunKsp=$shouldRunKsp" }
+    if (shouldRunKsp) logging.debug { "KSP processors: size=${kspProcessors.size}" }
 
     // kotlinx support is enabled by default; this includes kotlin's testing tools
     val staticDeps = Classpath.empty().toMutable()
@@ -546,26 +614,81 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       Classpath.from(it.map { item -> item.path })
     }
 
-    val kotlincOpts = state.manifest.kotlin?.compilerOptions ?: KotlinJvmCompilerOptions()
     val args = Arguments.empty().toMutable().apply {
       // @TODO eliminate this
       add("-Xskip-prerelease-check")
 
       // apply arguments
-      addAllStrings(kotlincOpts.collect().toList())
+      state.manifest.kotlin?.compilerOptions?.let { extraArgs ->
+        addAllStrings(extraArgs.collect().toList())
+      }
     }.build()
 
     logging.debug { "Kotlin compiler args: '${args.asArgumentList().joinToString(" ")}'" }
 
+    // if we need to run annotation processors that produce sources (e.g. KSP), now is when we need to do it; such srcs
+    // will end up in their own task, which this one depends on, and will be placed in an intermediate root, which must
+    // be considered as part of our compiler args.
+    val kspSrcroot = if (!shouldRunKsp) null else {
+      val kspSrcsOut = state.layout.artifacts
+        .resolve("jvm") // `.dev/artifacts/jvm/...`
+        .resolve("generated") // `.../generated/`
+        .resolve("ksp") // `.../generated/ksp/`
+        .resolve(srcSet.name) // `.../generated/ksp/main/`
+        .absolute()
+
+      val classesOut = state.layout.artifacts
+        .resolve("jvm") // `.dev/artifacts/jvm/...`
+        .resolve("classes") // `.../classes/`
+        .resolve(srcSet.name) // `.../classes/main/`
+        .absolute()
+
+      val cacheDir = state.layout.cache
+        .resolve("ksp") // `.dev/cache/ksp/...`
+        .resolve(srcSet.name) // `.../ksp/main/`
+        .absolute()
+
+      // create directories
+      Files.createDirectories(kspSrcsOut)
+      Files.createDirectories(classesOut)
+      Files.createDirectories(cacheDir)
+
+      // build our ksp task and return it along with the output root.
+      kspSrcsOut.resolve("kotlin").also {
+        ksp(srcSet = srcSet, classpath = finalizedClasspath, outputBase = kspSrcsOut) {
+          jvmTarget = ktJvmTarget.argValue
+          moduleName = ktModuleName
+          languageVersion = ktLanguageVersion
+          apiVersion = ktApiVersion
+          processorOptions = emptyMap()
+          cachesDir = cacheDir.toFile()
+          outputBaseDir = kspSrcsOut.toFile()
+          classOutputDir = classesOut.toFile()
+          projectBaseDir = config.projectRoot.absolute().toFile()
+        }
+      }
+    }
+
     // prepare compiler configuration
     val env = Environment.host()
-    val inputs = KotlinCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
+    val inputs = KotlinCompiler.sources(
+      srcSet.paths.map { it.path.absolute() }.asSequence().let { srcSeq ->
+        when (kspSrcroot) {
+          null -> srcSeq
+          else -> srcSeq.plus(sequenceOf(kspSrcroot))
+        }
+      }
+    )
     val outputs = KotlinCompiler.classesDir(kotlincClassesOutput)
     val effectiveKnownPlugins: MutableList<KotlinCompilerConfig.KotlinPluginConfig> = LinkedList()
     val compiler = KotlinCompiler.create(args, env, inputs, outputs, projectRoot = state.project.root) {
       // add classpath and let caller amend args as needed
       classpathAsList = finalizedClasspath.paths.map { it.path.toFile() }
       incrementalCompilation = state.manifest.kotlin?.features?.incremental ?: true
+      apiVersion = ktApiVersion
+      languageVersion = ktLanguageVersion
+      jvmTarget = ktJvmTarget.argValue
+      moduleName = ktModuleName
 
       // handle built-in plugins
       if (state.manifest.kotlin?.features?.enableDefaultPlugins != false) {
@@ -607,7 +730,6 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     "Compiling ${srcSet.paths.size} Kotlin $pluralized$suiteTag"
   }.also { kotlinc ->
     config.taskGraph.apply {
-      addNode(kotlinc)
       if (dependencies.isNotEmpty()) {
         dependencies.forEach { dependency ->
           putEdge(kotlinc, dependency)

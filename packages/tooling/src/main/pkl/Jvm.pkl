@@ -250,6 +250,12 @@ class JavaLanguage {
   compiler: JavaCompiler = new {}
 }
 
+/// Settings which apply to Micronaut in a JVM project.
+class MicronautSettings {
+  /// Whether to enable Micronaut's injection features.
+  injection: Boolean = false
+}
+
 /// Specifies settings which apply to JVM targets.
 class JvmSettings {
   /// Entrypoint class for this project as an application.
@@ -269,4 +275,7 @@ class JvmSettings {
 
   /// Runtime JVM flags.
   flags: Listing<String> = new {}
+
+  /// Flags and settings for Micronaut.
+  micronaut: MicronautSettings?
 }

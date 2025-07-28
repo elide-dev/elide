@@ -25,8 +25,11 @@ import elide.tooling.web.Browsers
 // Default Java target version for JVM projects
 private const val DEFAULT_JAVA_TARGET = 21u
 
+// Automatic selection mode ("auto" string).
+private const val MODE_AUTO = "auto"
+
 // Optimization level strings.
-private const val OPTIMIZATION_LEVEL_AUTO = "auto"
+private const val OPTIMIZATION_LEVEL_AUTO = MODE_AUTO
 private const val OPTIMIZATION_LEVEL_BUILD = "b"
 private const val OPTIMIZATION_LEVEL_ZERO = "0"
 private const val OPTIMIZATION_LEVEL_ONE = "1"
@@ -357,12 +360,21 @@ public data class ElidePackageManifest(
 
   @Serializable
   public sealed interface JvmTarget {
+    /** @return Non-symbolic JVM target. */
+    public fun resolved(): JvmTarget
+
     @JvmRecord @Serializable public data class NumericJvmTarget(public val number: UInt) : JvmTarget {
       override val argValue: String get() = number.toString()
+      override fun resolved(): JvmTarget = this
     }
 
     @JvmRecord @Serializable public data class StringJvmTarget(public val name: String) : JvmTarget {
       override val argValue: String get() = name
+
+      override fun resolved(): JvmTarget = when (name) {
+        MODE_AUTO -> DEFAULT
+        else -> this
+      }
     }
 
     public val argValue: String
@@ -386,6 +398,10 @@ public data class ElidePackageManifest(
     val compiler: JavaCompilerSettings = JavaCompilerSettings(),
   )
 
+  @JvmRecord @Serializable public data class MicronautSettings(
+    val injection: Boolean = true,
+  )
+
   @JvmRecord @Serializable public data class JvmSettings(
     val main: String? = null,
     val target: JvmTarget? = null,
@@ -393,6 +409,7 @@ public data class ElidePackageManifest(
     val features: JvmFeatures = JvmFeatures(),
     val java: JavaLanguage = JavaLanguage(),
     val flags: List<String> = emptyList(),
+    val micronaut: MicronautSettings? = null,
   )
 
   @JvmRecord @Serializable public data class JavaScriptSettings(
@@ -418,8 +435,8 @@ public data class ElidePackageManifest(
     val suppressWarnings: Boolean = false,
     val verbose: Boolean = false,
     val freeCompilerArgs: List<String> = emptyList(),
-    val apiVersion: String = "auto",
-    val languageVersion: String = "auto",
+    val apiVersion: String = MODE_AUTO,
+    val languageVersion: String = MODE_AUTO,
 
     // JVM Options
     val javaParameters: Boolean = false,
@@ -437,13 +454,15 @@ public data class ElidePackageManifest(
       if (allWarningsAsErrors) yield("-Werror")
       if (suppressWarnings) yield("-nowarn")
       if (verbose) yield("-verbose")
-      if (apiVersion != "auto") yield("-api-version=$apiVersion")
-      if (languageVersion != "auto") yield("-language-version=$languageVersion")
+      if (apiVersion != MODE_AUTO) yield("-api-version=$apiVersion")
+      if (languageVersion != MODE_AUTO) yield("-language-version=$languageVersion")
       if (freeCompilerArgs.isNotEmpty()) yieldAll(freeCompilerArgs)
     }
   }
 
   @JvmRecord @Serializable public data class KotlinFeatureOptions(
+    val kapt: Boolean = true,
+    val ksp: Boolean = true,
     val injection: Boolean = true,
     val testing: Boolean = true,
     val kotlinx: Boolean = true,
@@ -457,8 +476,8 @@ public data class ElidePackageManifest(
   )
 
   @JvmRecord @Serializable public data class KotlinSettings(
-    val apiLevel: String = "auto",
-    val languageLevel: String = "auto",
+    val apiLevel: String = MODE_AUTO,
+    val languageLevel: String = MODE_AUTO,
     val compilerOptions: KotlinJvmCompilerOptions = KotlinJvmCompilerOptions(),
     val features: KotlinFeatureOptions = KotlinFeatureOptions(),
   )
@@ -577,7 +596,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class LockfileSettings(
     val enabled: Boolean = true,
-    val format: String = "auto",
+    val format: String = MODE_AUTO,
   )
 }
 

@@ -11,6 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import org.gradle.api.internal.catalog.ExternalModuleDependencyFactory
 import org.jetbrains.kotlin.konan.target.HostManager
 import kotlin.collections.joinToString
 import kotlin.collections.plus
@@ -62,6 +63,12 @@ val patchedLibs = files(
 )
 
 val patchedDependencies: Configuration by configurations.creating { isCanBeResolved = true }
+val symbolProcessors: Configuration by configurations.creating { isCanBeResolved = true }
+
+fun DependencyHandlerScope.symbolProcessor(it: ExternalModuleDependencyFactory.DependencyNotationSupplier) {
+  implementation(it)
+  symbolProcessors(it)
+}
 
 dependencies {
   fun ExternalModuleDependency.pklExclusions() {
@@ -86,6 +93,7 @@ dependencies {
   api(libs.sarif4k)
   api(libs.markdown)
   api(libs.bundles.maven.model)
+  api(libs.ksp.api)
   api(libs.pkl.core) { pklExclusions() }
   api(libs.pkl.config.java) { pklExclusions() }
   api(libs.pkl.config.kotlin) { pklExclusions() }
@@ -114,10 +122,16 @@ dependencies {
   implementation(libs.kotlinx.serialization.protobuf)
   implementation(libs.kotlinx.html)
   implementation(libs.kotlinx.wrappers.css)
+  implementation(libs.ksp.cmdline)
+  implementation(libs.ksp.commons)
+  implementation(libs.ksp.embedded)
   implementation(libs.minifyHtml)
   implementation(libs.jib.core)
   implementation(libs.bundles.maven.resolver)
   implementation(libs.snakeyaml.core)
+
+  // Embedded symbol processors.
+  symbolProcessor(mn.micronaut.inject.kotlin)
 
   testImplementation(libs.bundles.maven.resolver)
   testImplementation(projects.packages.test)

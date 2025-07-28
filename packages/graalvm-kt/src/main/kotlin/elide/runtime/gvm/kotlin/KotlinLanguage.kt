@@ -23,6 +23,7 @@ import org.graalvm.polyglot.SandboxPolicy
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import kotlin.concurrent.Volatile
 import elide.runtime.gvm.kotlin.feature.KotlinResource
+import elide.tooling.jvm.JvmLibraries
 
 private const val KOTLIN_ID = "kotlin"
 private const val KOTLIN_NAME = "Kotlin"
@@ -69,8 +70,10 @@ public class KotlinLanguage : TruffleLanguage<EspressoContext>() {
   @Suppress("UNUSED", "UnusedPrivateProperty") public companion object {
     public const val ID: String = KOTLIN_ID
     public const val VERSION: String = KOTLIN_IMPL_VERSION
-    public const val COROUTINES_VERSION: String = "1.10.2"
-    public const val SERIALIZATION_VERSION: String = "1.9.0"
+    public const val COROUTINES_VERSION: String = JvmLibraries.EMBEDDED_COROUTINES_VERSION
+    public const val SERIALIZATION_VERSION: String = JvmLibraries.EMBEDDED_SERIALIZATION_VERSION
+    public const val API_VERSION_STABLE: String = "2.0"
+    public const val LANGUAGE_VERSION_STABLE: String = API_VERSION_STABLE
 
     @JvmStatic private val ESPRESSO: LanguageReference<EspressoLanguage> = LanguageReference.create(
       EspressoLanguage::class.java,

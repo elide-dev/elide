@@ -141,6 +141,7 @@ public fun interface SourceSetFactory {
         override val languages: Set<SourceSetLanguage> = taggedPaths.mapNotNull { it.lang }.toSet()
         override val spec: List<String> = sourceSetSpec.spec
         override val paths: SourceTaggedPathSuite = taggedPaths
+        override val root: Path get() = root.resolve("src")  // @TODO reliable resolution
         override val type: SourceSetType = when (key) {
           "test" -> SourceSetType.Tests
           else -> SourceSetType.Sources

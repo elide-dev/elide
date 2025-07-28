@@ -107,6 +107,7 @@
   <logger name="elide.exec.ActionScope" level="warn" />
   <logger name="io.micronaut.context.env.DefaultEnvironment" level="off" />
   <logger name="elide.tooling.jvm.JavaCompiler" level="warn" />
+  <logger name="elide.tooling.kotlin.KotlinSymbolProcessing" level="trace" />
 
   <!-- Server/Tool Logger -->
   <logger name="tool" additivity="false">

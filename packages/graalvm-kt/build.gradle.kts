@@ -172,6 +172,7 @@ dependencies {
   embeddedKotlin(libs.ksp)
   embeddedKotlin(libs.ksp.api)
   embeddedKotlin(libs.ksp.cmdline)
+  embeddedKotlin(libs.ksp.embedded)
   embeddedKotlin(libs.plugin.redacted.core)
   embeddedKotlin(mn.micronaut.inject.kotlin)
   embeddedKotlin(libs.junit.jupiter.api)

@@ -208,6 +208,7 @@ include(
   ":packages:local-ai",
   ":packages:platform",
   ":packages:runner",
+  ":packages:secrets",
   ":packages:server",
   ":packages:sqlite",
   ":packages:ssr",

@@ -22,49 +22,40 @@ import org.bouncycastle.crypto.modes.SICBlockCipher
 import org.bouncycastle.crypto.params.KeyParameter
 import org.bouncycastle.crypto.params.ParametersWithIV
 import kotlinx.io.bytestring.ByteString
+import elide.annotations.Singleton
 
 /**
  * Implementation of [Encryption], using `AES` for encryption and `SHA-256` for hashing.
  *
  * @author Lauri Heino <datafox>
  */
-public class EncryptionImpl : Encryption {
-    override fun encrypt(key: ByteString, data: ByteString): ByteString {
-        val iv: ByteArray = Utils.generateBytes(Values.IV_SIZE).toByteArray()
-        val out: ByteArray = iv.copyOf(Values.IV_SIZE + data.size)
-        val cipher = createCipher()
-        cipher.init(true, ParametersWithIV(KeyParameter(key.toByteArray()), iv))
-        cipher.processBytes(data.toByteArray(), 0, data.size, out, Values.IV_SIZE)
-        return ByteString(out)
-    }
+@Singleton
+internal class EncryptionImpl internal constructor() : Encryption {
+  override fun encrypt(key: ByteString, data: ByteString): ByteString {
+    val iv: ByteArray = Utils.generateBytes(Values.IV_SIZE).toByteArray()
+    val out: ByteArray = iv.copyOf(Values.IV_SIZE + data.size)
+    val cipher = createCipher()
+    cipher.init(true, ParametersWithIV(KeyParameter(key.toByteArray()), iv))
+    cipher.processBytes(data.toByteArray(), 0, data.size, out, Values.IV_SIZE)
+    return ByteString(out)
+  }
 
-    override fun decrypt(key: ByteString, encrypted: ByteString): ByteString {
-        val out = ByteArray(encrypted.size - Values.IV_SIZE)
-        val cipher = createCipher()
-        cipher.init(
-            false,
-            ParametersWithIV(
-                KeyParameter(key.toByteArray()),
-                encrypted.toByteArray(0, Values.IV_SIZE),
-                0,
-                Values.IV_SIZE,
-            ),
-        )
-        cipher.processBytes(encrypted.toByteArray(Values.IV_SIZE), 0, out.size, out, 0)
-        return ByteString(out)
-    }
+  override fun decrypt(key: ByteString, encrypted: ByteString): ByteString {
+    val out = ByteArray(encrypted.size - Values.IV_SIZE)
+    val cipher = createCipher()
+    cipher.init(
+      false,
+      ParametersWithIV(KeyParameter(key.toByteArray()), encrypted.toByteArray(0, Values.IV_SIZE), 0, Values.IV_SIZE),
+    )
+    cipher.processBytes(encrypted.toByteArray(Values.IV_SIZE), 0, out.size, out, 0)
+    return ByteString(out)
+  }
 
-    override fun hash(passphrase: String): ByteString {
-        val parameterGenerator = PKCS5S2ParametersGenerator(SHA256Digest())
-        parameterGenerator.init(
-            passphrase.toByteArray(Charsets.UTF_8),
-            null,
-            Values.HASH_ITERATIONS,
-        )
-        return ByteString(
-            (parameterGenerator.generateDerivedParameters(Values.KEY_SIZE * 8) as KeyParameter).key
-        )
-    }
+  override fun hash(passphrase: String): ByteString {
+    val parameterGenerator = PKCS5S2ParametersGenerator(SHA256Digest())
+    parameterGenerator.init(passphrase.toByteArray(Charsets.UTF_8), null, Values.HASH_ITERATIONS)
+    return ByteString((parameterGenerator.generateDerivedParameters(Values.KEY_SIZE * 8) as KeyParameter).key)
+  }
 
-    private fun createCipher() = SICBlockCipher.newInstance(AESEngine.newInstance())
+  private fun createCipher() = SICBlockCipher.newInstance(AESEngine.newInstance())
 }

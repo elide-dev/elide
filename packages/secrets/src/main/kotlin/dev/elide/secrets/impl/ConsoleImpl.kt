@@ -13,26 +13,28 @@
 package dev.elide.secrets.impl
 
 import dev.elide.secrets.Console
+import elide.annotations.Singleton
 
 /**
  * Implementation of [Console].
  *
  * @author Lauri Heino <datafox>
  */
-public class ConsoleImpl : Console {
-    override fun print(string: String) {
-        kotlin.io.print(string)
-    }
+@Singleton
+internal class ConsoleImpl internal constructor() : Console {
+  override fun print(string: String) {
+    kotlin.io.print(string)
+  }
 
-    override fun println(string: String) {
-        kotlin.io.println(string)
-    }
+  override fun println(string: String) {
+    kotlin.io.println(string)
+  }
 
-    override fun readln(): String {
-        return kotlin.io.readln()
-    }
+  override fun readln(): String {
+    return kotlin.io.readln()
+  }
 
-    override fun readPassword(): String {
-        return System.console().readPassword().concatToString()
-    }
+  override fun readPassword(): String {
+    return System.console()?.readPassword()?.concatToString() ?: readln()
+  }
 }

@@ -23,12 +23,12 @@ import kotlinx.io.files.Path
  * @property path path containing secrets files.
  */
 internal class SecretsState(val interactive: Boolean, val path: Path) {
-    companion object {
-        private val _instance: CompletableDeferred<SecretsState> = CompletableDeferred()
-        val instance: Deferred<SecretsState> = _instance
+  companion object {
+    private val _instance: CompletableDeferred<SecretsState> = CompletableDeferred()
+    val instance: Deferred<SecretsState> = _instance
 
-        fun set(state: SecretsState) = _instance.complete(state)
+    fun set(state: SecretsState) = _instance.complete(state)
 
-        suspend fun get(): SecretsState = instance.await()
-    }
+    suspend fun get(): SecretsState = instance.await()
+  }
 }

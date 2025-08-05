@@ -19,9 +19,4 @@ import kotlinx.serialization.Serializable
  *
  * @author Lauri Heino <datafox>
  */
-@Serializable
-internal data class GithubDeleteFileRequest(
-    val message: String,
-    val sha: String,
-    val branch: String,
-)
+@Serializable internal data class GithubDeleteFileRequest(val message: String, val sha: String, val branch: String)

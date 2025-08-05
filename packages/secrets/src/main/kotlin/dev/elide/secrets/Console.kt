@@ -18,11 +18,11 @@ package dev.elide.secrets
  * @author Lauri Heino <datafox>
  */
 internal interface Console {
-    fun print(string: String)
+  fun print(string: String)
 
-    fun println(string: String)
+  fun println(string: String)
 
-    fun readln(): String
+  fun readln(): String
 
-    fun readPassword(): String
+  fun readPassword(): String
 }

@@ -22,89 +22,75 @@ import kotlinx.io.bytestring.ByteString
  * @author Lauri Heino <datafox>
  */
 internal interface DataHandler {
-    /** Returns `true` if the metadata file exists. */
-    suspend fun metadataExists(): Boolean
+  /** Returns `true` if the metadata file exists. */
+  suspend fun metadataExists(): Boolean
 
-    /** Reads and deserializes the metadata file. */
-    suspend fun readMetadata(): SecretMetadata
+  /** Reads and deserializes the metadata file. */
+  suspend fun readMetadata(): SecretMetadata
 
-    /** Serializes [metadata] and writes it to the metadata file. */
-    suspend fun writeMetadata(metadata: SecretMetadata)
+  /** Serializes [metadata] and writes it to the metadata file. */
+  suspend fun writeMetadata(metadata: SecretMetadata)
 
-    /** Deserializes [data] to metadata. */
-    suspend fun deserializeMetadata(data: ByteString): SecretMetadata
+  /** Deserializes [data] to metadata. */
+  suspend fun deserializeMetadata(data: ByteString): SecretMetadata
 
-    /** Serializes [metadata]. */
-    suspend fun serializeMetadata(metadata: SecretMetadata): ByteString
+  /** Serializes [metadata]. */
+  suspend fun serializeMetadata(metadata: SecretMetadata): ByteString
 
-    /** Returns `true` if the local collection file exists. */
-    suspend fun localExists(): Boolean
+  /** Returns `true` if the local collection file exists. */
+  suspend fun localExists(): Boolean
 
-    /** Reads, decrypts and deserializes the local collection file with hashed [passphrase]. */
-    suspend fun readLocal(passphrase: ByteString): SecretCollection
+  /** Reads, decrypts and deserializes the local collection file with hashed [passphrase]. */
+  suspend fun readLocal(passphrase: ByteString): SecretCollection
 
-    /**
-     * Serializes [local], encrypts it with hashed [passphrase] and writes it to the local
-     * collection file.
-     */
-    suspend fun writeLocal(passphrase: ByteString, local: SecretCollection)
+  /** Serializes [local], encrypts it with hashed [passphrase] and writes it to the local collection file. */
+  suspend fun writeLocal(passphrase: ByteString, local: SecretCollection)
 
-    /** Returns `true` if a collection file for [profile] exists. */
-    suspend fun collectionExists(profile: String): Boolean
+  /** Returns `true` if a collection file for [profile] exists. */
+  suspend fun collectionExists(profile: String): Boolean
 
-    /**
-     * Reads, decrypts and deserializes a collection file for [profile]. Decryption is done by
-     * reading an encrypted key with [readKey] and decrypting it with the hashed [passphrase].
-     */
-    suspend fun readCollection(profile: String, passphrase: ByteString): SecretCollection
+  /**
+   * Reads, decrypts and deserializes a collection file for [profile]. Decryption is done by reading an encrypted key
+   * with [readKey] and decrypting it with the hashed [passphrase].
+   */
+  suspend fun readCollection(profile: String, passphrase: ByteString): SecretCollection
 
-    /** Reads an encrypted collection file for [profile]. */
-    suspend fun readEncryptedCollection(profile: String): ByteString
+  /** Reads an encrypted collection file for [profile]. */
+  suspend fun readEncryptedCollection(profile: String): ByteString
 
-    /**
-     * Serializes [collection], encrypts it and writes it to a collection file for [profile].
-     * Encryption is done by reading an encrypted key with [readKey] and decrypting it with the
-     * hashed [passphrase].
-     */
-    suspend fun writeCollection(
-        profile: String,
-        passphrase: ByteString,
-        collection: SecretCollection,
-    ): String
+  /**
+   * Serializes [collection], encrypts it and writes it to a collection file for [profile]. Encryption is done by
+   * reading an encrypted key with [readKey] and decrypting it with the hashed [passphrase].
+   */
+  suspend fun writeCollection(profile: String, passphrase: ByteString, collection: SecretCollection): String
 
-    /** Deletes a collection file and a key file for [profile]. */
-    suspend fun deleteCollection(profile: String)
+  /** Deletes a collection file and a key file for [profile]. */
+  suspend fun deleteCollection(profile: String)
 
-    /** Decrypts [encrypted] collection with [key] and deserializes it. */
-    suspend fun decryptCollection(key: ByteString, encrypted: ByteString): SecretCollection
+  /** Decrypts [encrypted] collection with [key] and deserializes it. */
+  suspend fun decryptCollection(key: ByteString, encrypted: ByteString): SecretCollection
 
-    /** Serializes [collection] and encrypts it with [key]. */
-    suspend fun encryptCollection(key: ByteString, collection: SecretCollection): ByteString
+  /** Serializes [collection] and encrypts it with [key]. */
+  suspend fun encryptCollection(key: ByteString, collection: SecretCollection): ByteString
 
-    /** Returns `true` if a key file for [profile] exists. */
-    suspend fun keyExists(profile: String): Boolean
+  /** Returns `true` if a key file for [profile] exists. */
+  suspend fun keyExists(profile: String): Boolean
 
-    /** Reads and decrypts a key file for [profile] with the hashed [passphrase]. */
-    suspend fun readKey(profile: String, passphrase: ByteString): ByteString
+  /** Reads and decrypts a key file for [profile] with the hashed [passphrase]. */
+  suspend fun readKey(profile: String, passphrase: ByteString): ByteString
 
-    /** Encrypts [key] with the hashed [passphrase] and writes it to a key file for [profile]. */
-    suspend fun writeKey(profile: String, passphrase: ByteString, key: ByteString)
+  /** Encrypts [key] with the hashed [passphrase] and writes it to a key file for [profile]. */
+  suspend fun writeKey(profile: String, passphrase: ByteString, key: ByteString)
 
-    /** Decrypts an [encrypted] key with the hashed [passphrase]. */
-    suspend fun decryptKey(passphrase: ByteString, encrypted: ByteString): ByteString
+  /** Decrypts an [encrypted] key with the hashed [passphrase]. */
+  suspend fun decryptKey(passphrase: ByteString, encrypted: ByteString): ByteString
 
-    /** Encrypts [key] with the hashed [passphrase]. */
-    suspend fun encryptKey(passphrase: ByteString, key: ByteString): ByteString
+  /** Encrypts [key] with the hashed [passphrase]. */
+  suspend fun encryptKey(passphrase: ByteString, key: ByteString): ByteString
 
-    /** Creates remote passphrase validator data from [metadata] and hashed remote [passphrase] */
-    suspend fun createValidator(metadata: SecretMetadata, passphrase: ByteString): ByteString
+  /** Creates remote passphrase validator data from [metadata] and hashed remote [passphrase] */
+  suspend fun createValidator(metadata: SecretMetadata, passphrase: ByteString): ByteString
 
-    /**
-     * Validates a remote passphrase [validator] with the [metadata] and hashed remote [passphrase]
-     */
-    suspend fun validate(
-        metadata: SecretMetadata,
-        passphrase: ByteString,
-        validator: ByteString,
-    ): Boolean
+  /** Validates a remote passphrase [validator] with the [metadata] and hashed remote [passphrase] */
+  suspend fun validate(metadata: SecretMetadata, passphrase: ByteString, validator: ByteString): Boolean
 }

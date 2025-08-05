@@ -21,8 +21,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class GithubUploadFileRequest(
-    val message: String,
-    val content: String,
-    val sha: String = "",
-    val branch: String = "",
+  val message: String,
+  val content: String,
+  val sha: String = "",
+  val branch: String = "",
 )

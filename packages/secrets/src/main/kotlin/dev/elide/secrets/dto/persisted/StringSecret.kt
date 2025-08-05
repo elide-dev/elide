@@ -21,9 +21,8 @@ import kotlinx.serialization.Serializable
  * @author Lauri Heino <datafox>
  */
 @Serializable
-public data class StringSecret(override val name: String, override val value: String) :
-    Secret<String> {
-    init {
-        Utils.checkName(name, "Secret")
-    }
+public data class StringSecret(override val name: String, override val value: String) : Secret<String> {
+  init {
+    Utils.checkName(name, "Secret")
+  }
 }

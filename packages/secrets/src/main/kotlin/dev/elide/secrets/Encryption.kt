@@ -20,12 +20,12 @@ import kotlinx.io.bytestring.ByteString
  * @author Lauri Heino <datafox>
  */
 internal interface Encryption {
-    /** Encrypts [data] with [key]. */
-    fun encrypt(key: ByteString, data: ByteString): ByteString
+  /** Encrypts [data] with [key]. */
+  fun encrypt(key: ByteString, data: ByteString): ByteString
 
-    /** Decrypts [encrypted] with [key]. */
-    fun decrypt(key: ByteString, encrypted: ByteString): ByteString
+  /** Decrypts [encrypted] with [key]. */
+  fun decrypt(key: ByteString, encrypted: ByteString): ByteString
 
-    /** Cryptographically hashes [passphrase] into a valid key. */
-    fun hash(passphrase: String): ByteString
+  /** Cryptographically hashes [passphrase] into a valid key. */
+  fun hash(passphrase: String): ByteString
 }

@@ -21,7 +21,4 @@ import kotlinx.serialization.Serializable
  * @author Lauri Heino <datafox>
  */
 @Serializable
-internal data class GithubFileResponse(
-    val sha: String,
-    @SerialName("download_url") val downloadUrl: String,
-)
+internal data class GithubFileResponse(val sha: String, @SerialName("download_url") val downloadUrl: String)

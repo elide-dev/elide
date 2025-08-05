@@ -22,28 +22,27 @@ import kotlinx.serialization.Serializable
  * @author Lauri Heino <datafox>
  */
 @Serializable
-public data class BinarySecret(override val name: String, override val value: ByteArray) :
-    Secret<ByteArray> {
+public data class BinarySecret(override val name: String, override val value: ByteArray) : Secret<ByteArray> {
 
-    public constructor(name: String, value: ByteString) : this(name, value.toByteArray())
+  public constructor(name: String, value: ByteString) : this(name, value.toByteArray())
 
-    init {
-        Utils.checkName(name, "Secret")
-    }
+  init {
+    Utils.checkName(name, "Secret")
+  }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is BinarySecret) return false
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is BinarySecret) return false
 
-        if (name != other.name) return false
-        if (!value.contentEquals(other.value)) return false
+    if (name != other.name) return false
+    if (!value.contentEquals(other.value)) return false
 
-        return true
-    }
+    return true
+  }
 
-    override fun hashCode(): Int {
-        var result = name.hashCode()
-        result = 31 * result + value.contentHashCode()
-        return result
-    }
+  override fun hashCode(): Int {
+    var result = name.hashCode()
+    result = 31 * result + value.contentHashCode()
+    return result
+  }
 }

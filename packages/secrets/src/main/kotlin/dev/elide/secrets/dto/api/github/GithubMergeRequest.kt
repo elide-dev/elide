@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class GithubMergeRequest(
-    val base: String,
-    val head: String,
-    @SerialName("commit_message") val commitMessage: String,
+  val base: String,
+  val head: String,
+  @SerialName("commit_message") val commitMessage: String,
 )

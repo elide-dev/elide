@@ -21,20 +21,18 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 public data class SecretMetadata(
-    val name: String,
-    val organization: String,
-    val collections: Map<String, CollectionMetadata>,
+  val name: String,
+  val organization: String,
+  val collections: Map<String, CollectionMetadata>,
 ) {
-    init {
-        collections.forEach {
-            if (it.key != it.value.profile)
-                throw IllegalStateException(
-                    "Collection profile ${it.value.profile} does not match map key ${it.key}"
-                )
-        }
+  init {
+    collections.forEach {
+      if (it.key != it.value.profile)
+        throw IllegalStateException("Collection profile ${it.value.profile} does not match map key ${it.key}")
     }
+  }
 
-    public fun add(collection: CollectionMetadata): SecretMetadata {
-        return copy(collections = collections + (collection.profile to collection))
-    }
+  public fun add(collection: CollectionMetadata): SecretMetadata {
+    return copy(collections = collections + (collection.profile to collection))
+  }
 }

@@ -21,6 +21,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 public sealed interface Secret<T> {
-    public val name: String
-    public val value: T
+  public val name: String
+  public val value: T
 }

@@ -22,9 +22,5 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 internal data class GithubRepositoryResponse(val private: Boolean, val permissions: Permissions) {
-    @Serializable
-    data class Permissions(
-        @SerialName("push") val write: Boolean,
-        @SerialName("pull") val read: Boolean,
-    )
+  @Serializable data class Permissions(@SerialName("push") val write: Boolean, @SerialName("pull") val read: Boolean)
 }

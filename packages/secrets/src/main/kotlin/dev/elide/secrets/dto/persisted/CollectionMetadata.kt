@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 public data class CollectionMetadata(val profile: String, val sha: String) {
-    init {
-        Utils.checkName(profile, "Profile")
-    }
+  init {
+    Utils.checkName(profile, "Profile")
+  }
 }

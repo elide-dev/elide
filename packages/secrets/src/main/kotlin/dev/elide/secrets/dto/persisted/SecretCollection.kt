@@ -22,26 +22,24 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 public data class SecretCollection(val secrets: Map<String, Secret<*>>) {
-    public constructor() : this(emptyMap())
+  public constructor() : this(emptyMap())
 
-    init {
-        secrets.forEach {
-            if (it.key != it.value.name)
-                throw IllegalStateException(
-                    "Secret name ${it.value.name} does not match map key ${it.key}"
-                )
-        }
+  init {
+    secrets.forEach {
+      if (it.key != it.value.name)
+        throw IllegalStateException("Secret name ${it.value.name} does not match map key ${it.key}")
     }
+  }
 
-    public fun add(secret: Secret<*>): SecretCollection {
-        return copy(secrets = secrets + (secret.name to secret))
-    }
+  public fun add(secret: Secret<*>): SecretCollection {
+    return copy(secrets = secrets + (secret.name to secret))
+  }
 
-    public inline operator fun <reified T> get(name: String): T? {
-        return if (T::class == ByteString::class) {
-            (secrets[name]?.value as? ByteArray)?.let { ByteString(it) as T }
-        } else {
-            secrets[name]?.value as? T
-        }
+  public inline operator fun <reified T> get(name: String): T? {
+    return if (T::class == ByteString::class) {
+      (secrets[name]?.value as? ByteArray)?.let { ByteString(it) as T }
+    } else {
+      secrets[name]?.value as? T
     }
+  }
 }

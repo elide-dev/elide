@@ -20,7 +20,9 @@ import dev.elide.secrets.dto.persisted.SecretCollection
  * @author Lauri Heino <datafox>
  */
 internal interface RemoteInitializer {
-    fun initialize(interactive: Boolean, local: SecretCollection): Remote
+  val id: String
 
-    fun updateLocal(local: SecretCollection): SecretCollection
+  fun initialize(interactive: Boolean, local: SecretCollection): Remote
+
+  fun updateLocal(local: SecretCollection): SecretCollection
 }

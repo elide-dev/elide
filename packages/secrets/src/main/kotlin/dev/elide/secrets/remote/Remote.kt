@@ -12,8 +12,6 @@
  */
 package dev.elide.secrets.remote
 
-import dev.elide.secrets.Console
-import dev.elide.secrets.DataHandler
 import dev.elide.secrets.dto.persisted.SecretMetadata
 import kotlinx.io.bytestring.ByteString
 
@@ -24,35 +22,31 @@ import kotlinx.io.bytestring.ByteString
  * @author Lauri Heino <datafox>
  */
 internal interface Remote {
-    val writeAccess: Boolean
+  val writeAccess: Boolean
 
-    /** Returns the metadata file from this remote, or `null` if none was present. */
-    suspend fun getMetadata(): ByteString?
+  /** Returns the metadata file from this remote, or `null` if none was present. */
+  suspend fun getMetadata(): ByteString?
 
-    /** Returns the passphrase validator file from this remote, or `null` if none was present. */
-    suspend fun getValidator(): ByteString?
+  /** Returns the passphrase validator file from this remote, or `null` if none was present. */
+  suspend fun getValidator(): ByteString?
 
-    /** Returns a key and collection file for [profile] in a pair from this remote. */
-    suspend fun getCollection(profile: String): Pair<ByteString, ByteString>
+  /** Returns a key and collection file for [profile] in a pair from this remote. */
+  suspend fun getCollection(profile: String): Pair<ByteString, ByteString>
 
-    /** Removes a key and collection file for [profile] from this remote */
-    suspend fun removeCollection(profile: String)
+  /** Removes a key and collection file for [profile] from this remote */
+  suspend fun removeCollection(profile: String)
 
-    /** Initializes this remote with [metadata] and passphrase [validator]. */
-    suspend fun init(metadata: SecretMetadata, validator: ByteString)
+  /** Initializes this remote with [metadata] and passphrase [validator]. */
+  suspend fun init(metadata: SecretMetadata, validator: ByteString)
 
-    /**
-     * Updates [collections] on this remote. The map keys are profile names, and the pairs contain
-     * encrypted key and collection data.
-     */
-    suspend fun update(collections: Map<String, Pair<ByteString, ByteString>>)
+  /**
+   * Updates [collections] on this remote. The map keys are profile names, and the pairs contain encrypted key and
+   * collection data.
+   */
+  suspend fun update(collections: Map<String, Pair<ByteString, ByteString>>)
 
-    companion object {
-        const val REMOTE_NAME = "remote"
-        const val PASSPHRASE_NAME = "passphrase"
-
-        /** Implemented remotes. */
-        val remotes: Map<String, (DataHandler, Console) -> RemoteInitializer> =
-            mapOf("GitHub" to { d, c -> GithubRemoteInitializer(d, c) })
-    }
+  companion object {
+    const val REMOTE_NAME = "remote"
+    const val PASSPHRASE_NAME = "passphrase"
+  }
 }

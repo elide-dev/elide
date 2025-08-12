@@ -60,6 +60,6 @@ jobs:
         run: |
           cargo clippy --all-targets --all-features --message-format=json | clippy-sarif | tee results.sarif | sarif-fmt
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@181d5eefc20863364f96762470ba6f862bdef56b # v3.29.2
+        uses: github/codeql-action/upload-sarif@76621b61decf072c1cee8dd1ce2d2a82d33c17ed # v3.29.8
         with:
           sarif_file: results.sarif

@@ -604,6 +604,9 @@ dependencies {
   // TODO: patched
   // implementation(libs.graalvm.tools.coverage)
 
+  // Secrets
+  implementation(projects.packages.secrets)
+
   // KotlinX
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)

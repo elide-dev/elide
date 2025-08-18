@@ -12,7 +12,8 @@
  */
 package dev.elide.secrets.remote
 
-import dev.elide.secrets.Console
+import com.github.kinquirer.KInquirer
+import com.github.kinquirer.components.promptInputPassword
 import dev.elide.secrets.DataHandler
 import dev.elide.secrets.Utils
 import dev.elide.secrets.dto.api.github.GithubRepositoryResponse
@@ -30,11 +31,8 @@ import elide.annotations.Singleton
  * @author Lauri Heino <datafox>
  */
 @Singleton
-internal class GithubRemoteInitializer(
-  private val console: Console,
-  private val dataHandler: DataHandler,
-  private val client: HttpClient,
-) : RemoteInitializer {
+internal class GithubRemoteInitializer(private val dataHandler: DataHandler, private val client: HttpClient) :
+  RemoteInitializer {
   private lateinit var repository: String
   private lateinit var token: String
   override val id: String = "github"
@@ -52,23 +50,22 @@ internal class GithubRemoteInitializer(
   }
 
   override fun updateLocal(local: SecretCollection): SecretCollection =
-    local.add(StringSecret(GithubRemote.REPOSITORY_NAME, repository)).add(StringSecret(GithubRemote.TOKEN_NAME, token))
+    local.addAll(StringSecret(GithubRemote.REPOSITORY_NAME, repository), StringSecret(GithubRemote.TOKEN_NAME, token))
 
   private fun askRepository(): String {
-    console.println("Elide Secrets on GitHub are stored as encrypted files committed to a private repository.")
-    return Utils.readWithConfirm(console, "Please enter the repository identity (\"owner/repository\"): ")
+    println("Elide Secrets on GitHub are stored as encrypted files committed to a private repository.")
+    return Utils.readWithConfirm("Please enter the repository identity (\"owner/repository\"): ")
   }
 
   private fun askToken(): String {
-    console.println(
+    println(
       "To access GitHub, you need a personal access token. If you do not have one with the required " +
         "permissions, please head over to https://github.com/settings/personal-access-tokens and " +
         "generate a new token. The token must at least have read access to \"Contents\" of the " +
         "repository ($repository). Optional write access to \"Contents\" allows you to update the remote " +
         "secrets."
     )
-    console.print("Please enter your token: ")
-    return console.readPassword()
+    return KInquirer.promptInputPassword("Please enter your token: ")
   }
 
   private suspend fun validateConnection(token: String, repository: String): Boolean {

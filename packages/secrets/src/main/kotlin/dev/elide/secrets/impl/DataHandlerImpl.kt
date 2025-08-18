@@ -15,6 +15,8 @@ package dev.elide.secrets.impl
 import dev.elide.secrets.*
 import dev.elide.secrets.dto.persisted.SecretCollection
 import dev.elide.secrets.dto.persisted.SecretMetadata
+import elide.annotations.Inject
+import elide.annotations.Singleton
 import kotlinx.io.buffered
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.decodeToString
@@ -28,8 +30,6 @@ import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
-import elide.annotations.Inject
-import elide.annotations.Singleton
 
 /**
  * Implementation of [DataHandler], using [Json] for metadata and [Cbor] for collections.

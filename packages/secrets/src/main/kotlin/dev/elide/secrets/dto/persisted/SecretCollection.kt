@@ -35,6 +35,10 @@ public data class SecretCollection(val secrets: Map<String, Secret<*>>) {
     return copy(secrets = secrets + (secret.name to secret))
   }
 
+  public fun addAll(vararg secrets: Secret<*>): SecretCollection {
+    return copy(secrets = this@SecretCollection.secrets + secrets.associateBy { it.name })
+  }
+
   public inline operator fun <reified T> get(name: String): T? {
     return if (T::class == ByteString::class) {
       (secrets[name]?.value as? ByteArray)?.let { ByteString(it) as T }

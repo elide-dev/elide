@@ -12,17 +12,23 @@
  */
 package dev.elide.secrets.impl
 
+import com.github.kinquirer.KInquirer
+import com.github.kinquirer.components.promptConfirm
+import com.github.kinquirer.components.promptInput
+import com.github.kinquirer.components.promptInputPassword
+import com.github.kinquirer.components.promptListObject
+import com.github.kinquirer.core.Choice
 import dev.elide.secrets.*
 import dev.elide.secrets.dto.persisted.*
 import dev.elide.secrets.remote.Remote
 import dev.elide.secrets.remote.RemoteInitializer
+import elide.annotations.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.serialization.SerializationException
-import elide.annotations.Singleton
 
 /**
  * Implementation of [Secrets].
@@ -34,7 +40,6 @@ public class SecretsImpl
 internal constructor(
   private val encryption: Encryption,
   private val dataHandler: DataHandler,
-  private val console: Console,
   remotes: List<RemoteInitializer>,
 ) : Secrets {
   private val remotes: Map<String, RemoteInitializer> = remotes.associateBy { it.id }
@@ -48,7 +53,7 @@ internal constructor(
   private val selectedCollection: SecretCollection?
     get() = selected.value?.second
 
-  override suspend fun init(interactive: Boolean, path: Path) {
+  override suspend fun init(interactive: Boolean, path: Path, projectName: String?, organizationName: String?) {
     SecretsState.Companion.set(SecretsState(interactive, path))
     if (dataHandler.metadataExists() && dataHandler.localExists()) loadSystem()
     else if (dataHandler.metadataExists())
@@ -57,7 +62,7 @@ internal constructor(
       )
     else if (dataHandler.localExists())
       throw IllegalStateException("Secrets system is invalid, \"${Values.METADATA_NAME}\" is missing in \"$path\"")
-    else if (interactive) createSystem()
+    else if (interactive) createSystem(projectName, organizationName)
     else throw IllegalStateException("Secrets have not been initialized and interactive mode is off")
   }
 
@@ -69,7 +74,6 @@ internal constructor(
           else throw IllegalStateException("No passphrase was found in the environment and interactive mode is off")
       )
     Utils.checkPassphrase(
-        console,
         SecretsState.Companion.get().interactive,
         passphrase.value,
         "passphrase",
@@ -88,25 +92,25 @@ internal constructor(
     validateCollections()
   }
 
-  private suspend fun createSystem() {
-    console.println("Welcome to Elide Secrets!")
-    console.println("First, you need a personal passphrase")
-    console.println("This passphrase protects all secrets stored locally on your system, so keep it safe!")
+  private suspend fun createSystem(projectName: String?, organizationName: String?) {
+    println("Welcome to Elide Secrets!")
+    println("First, you need a personal passphrase")
+    println("This passphrase protects all secrets stored locally on your system, so keep it safe!")
     passphrase.value =
       encryption.hash(
-        readPassphraseFromEnvironment()?.apply { console.println("Your passphrase was read from the environment") }
+        readPassphraseFromEnvironment()?.apply { println("Your passphrase was read from the environment") }
           ?: readPassphraseFromConsole(true)
       )
     SystemFileSystem.createDirectories(SecretsState.get().path)
     dataHandler.writeLocal(passphrase.value, local.value)
-    if (Utils.confirm(console, "Do you want to import existing secrets from a remote?")) {
+    if (KInquirer.promptConfirm("Do you want to import existing secrets from a remote?")) {
       importSystem()
     } else {
-      val name = Utils.readWithConfirm(console, "Please enter the name of your project: ")
-      val organization = Utils.readWithConfirm(console, "Please enter the name of your organization: ")
+      val name = projectName ?: Utils.readWithConfirm("Please enter the name of your project: ")
+      val organization = organizationName ?: Utils.readWithConfirm("Please enter the name of your organization: ")
       val metadata = SecretMetadata(name, organization, emptyMap())
       dataHandler.writeMetadata(metadata)
-      console.println("Secrets system has been created")
+      println("Secrets system has been created")
     }
   }
 
@@ -119,10 +123,9 @@ internal constructor(
     val profiles = metadata.collections.keys
     val profilesToGet: Set<String>
     while (true) {
-      console.println("The remote has following profiles: ${profiles.joinToString(", ")}")
-      console.println("Please enter the profiles you want separated by whitespace, or leave empty to get all")
-      console.print("Profiles: ")
-      val input = console.readln().trim()
+      println("The remote has following profiles: ${profiles.joinToString(", ")}")
+      println("Please enter the profiles you want separated by whitespace, or leave empty to get all")
+      val input = KInquirer.promptInput("Profiles: ")
       if (input.isEmpty()) {
         profilesToGet = profiles
         break
@@ -132,7 +135,7 @@ internal constructor(
         profilesToGet = inputs.toSet()
         break
       }
-      console.println("Invalid profiles: ${inputs.filter { it !in profiles }. joinToString(", ")}")
+      println("Invalid profiles: ${inputs.filter { it !in profiles }. joinToString(", ")}")
     }
     val collections = profilesToGet.map { it to remote.getCollection(it) }
     val remotePassphrase = validateRemotePassphrase(metadata)
@@ -152,16 +155,8 @@ internal constructor(
     var remoteName = local.value.get<String>(Remote.REMOTE_NAME)
     remoteName?.let { remotes[it]?.let { init -> initializer = init } }
     if (SecretsState.get().interactive && remote.value == null) {
-      Utils.options(
-        console,
-        remotes.values.map {
-          it.id to
-            {
-              remoteName = it.id
-              initializer = it
-            }
-        },
-      )
+      initializer = KInquirer.promptListObject("Please select a remote: ", remotes.values.map { Choice(it.id, it) })
+      remoteName = initializer.id
     }
     remote.value = initializer.initialize(SecretsState.get().interactive, local.value)
     if (remote.value == null) throw IllegalStateException("Remote could not be initialized")
@@ -175,7 +170,7 @@ internal constructor(
       try {
         dataHandler.readCollection(it.key, passphrase.value)
       } catch (_: SerializationException) {
-        console.println("Collection for profile \"${it.key}\" is corrupted")
+        println("Collection for profile \"${it.key}\" is corrupted")
         isCorrupted = true
       }
     }
@@ -184,31 +179,31 @@ internal constructor(
 
   private fun readPassphraseFromEnvironment(): String? = System.getenv(Values.PASSPHRASE_ENVIRONMENT_VARIABLE)
 
-  private fun readPassphraseFromConsole(confirm: Boolean): String =
+  private fun readPassphraseFromConsole(confirm: Boolean): String {
     if (confirm)
-      Utils.passphrase(
-        console,
-        "Please enter your passphrase: ",
-        "Please enter your passphrase again: ",
-        "Passphrases were not identical",
-      )
+      while (true) {
+        val pass1 = KInquirer.promptInputPassword("Please enter your passphrase:")
+        val pass2 = KInquirer.promptInputPassword("Please enter your passphrase again:")
+        if (pass1 != pass2) continue
+        return pass1
+      }
     else {
-      console.print("Please enter your passphrase: ")
-      console.readPassword()
+      return KInquirer.promptInputPassword("Please enter your passphrase:")
     }
+  }
 
-  private fun readRemotePassphraseFromConsole(confirm: Boolean): String =
+  private fun readRemotePassphraseFromConsole(confirm: Boolean): String {
     if (confirm)
-      Utils.passphrase(
-        console,
-        "Please enter the remote passphrase: ",
-        "Please enter the remote passphrase again: ",
-        "Passphrases were not identical",
-      )
+      while (true) {
+        val pass1 = KInquirer.promptInputPassword("Please enter the remote passphrase:")
+        val pass2 = KInquirer.promptInputPassword("Please enter the remote passphrase again:")
+        if (pass1 != pass2) continue
+        return pass1
+      }
     else {
-      console.print("Please enter the remote passphrase: ")
-      console.readPassword()
+      return KInquirer.promptInputPassword("Please enter the remote passphrase:")
     }
+  }
 
   override suspend fun createProfile(profile: String) {
     val metadata = dataHandler.readMetadata()
@@ -249,8 +244,8 @@ internal constructor(
         val nonExistent = remoteMetadata.collections.keys.filter { it !in profiles }
         if (nonExistent.isNotEmpty()) {
           if (SecretsState.get().interactive) {
-            console.println("Profiles \"${nonExistent.joinToString(", ")}\" do not exist on the remote")
-            if (!Utils.confirm(console, "Do you want to update the existing profiles?")) return
+            println("Profiles \"${nonExistent.joinToString(", ")}\" do not exist on the remote")
+            if (!KInquirer.promptConfirm("Do you want to update the existing profiles?")) return
           } else
             throw IllegalStateException("Profiles \"${nonExistent.joinToString(", ")}\" do not exist on the remote")
         }
@@ -280,18 +275,9 @@ internal constructor(
     val validator = remote.getValidator()!!
     var remotePassphrase: ByteString =
       local.value[Remote.PASSPHRASE_NAME] ?: encryption.hash(readRemotePassphraseFromConsole(false))
-    remotePassphrase =
-      Utils.checkValidatorPassphrase(
-        dataHandler,
-        console,
-        SecretsState.Companion.get().interactive,
-        metadata,
-        remotePassphrase,
-        validator,
-        "remote passphrase",
-      ) {
-        encryption.hash(readRemotePassphraseFromConsole(false))
-      }
+    while (!dataHandler.validate(metadata, remotePassphrase, validator)) {
+      remotePassphrase = encryption.hash(readRemotePassphraseFromConsole(false))
+    }
     local.update { it.add(BinarySecret(Remote.PASSPHRASE_NAME, remotePassphrase)) }
     dataHandler.writeLocal(passphrase.value, local.value)
     return remotePassphrase
@@ -306,8 +292,8 @@ internal constructor(
         val nonExistent = metadata.collections.keys.filter { it !in profiles }
         if (nonExistent.isNotEmpty()) {
           if (SecretsState.get().interactive) {
-            console.println("Profiles \"${nonExistent.joinToString(", ")}\" do not exist")
-            if (!Utils.confirm(console, "Do you want to update the remote with the existing profiles?")) return
+            println("Profiles \"${nonExistent.joinToString(", ")}\" do not exist")
+            if (!KInquirer.promptConfirm("Do you want to update the remote with the existing profiles?")) return
           } else throw IllegalStateException("Profiles \"${nonExistent.joinToString(", ")}\" do not exist")
         }
         metadata.collections.keys.filter { it in profiles }
@@ -317,7 +303,7 @@ internal constructor(
     if (remoteMetadata == null) {
       if (!SecretsState.get().interactive)
         throw IllegalStateException("Remote is not initialized and interactive mode is off")
-      console.println("Remotes use a different passphrase than your personal one.")
+      println("Remotes use a different passphrase than your personal one.")
       remotePassphrase = local.value[Remote.PASSPHRASE_NAME] ?: encryption.hash(readRemotePassphraseFromConsole(true))
       remote.init(metadata, dataHandler.createValidator(metadata, remotePassphrase))
       local.update { it.add(BinarySecret(Remote.PASSPHRASE_NAME, remotePassphrase)) }
@@ -334,6 +320,8 @@ internal constructor(
       }
     )
   }
+
+  override suspend fun getSelectedProfile(): String? = selectedProfile
 
   override suspend fun selectProfile(profile: String) {
     val metadata = dataHandler.readMetadata()

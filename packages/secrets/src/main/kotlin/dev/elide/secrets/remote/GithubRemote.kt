@@ -67,7 +67,7 @@ internal class GithubRemote(
     val (key, collection) = getCollection(profile)
     if (sha != Utils.sha(collection))
       throw IllegalStateException(
-        "Remote is corrupted (collection for profile \"$profile\" SHA-1 has does not match metadata"
+        "Remote is corrupted (collection for profile \"$profile\" SHA-1 hash does not match metadata)"
       )
     val keySha = Utils.sha(key)
     val branch = createBranch()
@@ -103,7 +103,7 @@ internal class GithubRemote(
     val remoteMetadata = dataHandler.deserializeMetadata(remoteMetadataBytes)
     val localMetadata = dataHandler.readMetadata()
     val branch = createBranch()
-    val (newRemoteMetadata, updated) = createMetadata(localMetadata, remoteMetadata, collections.keys)
+    val (newRemoteMetadata, updated) = Remote.createMetadata(localMetadata, remoteMetadata, collections.keys)
     val oldMetadataSha = Utils.sha(remoteMetadataBytes)
     writeFile(
       Values.METADATA_NAME,
@@ -123,32 +123,6 @@ internal class GithubRemote(
       token,
       GithubMergeRequest("main", branch, "merge $branch"),
       HttpStatusCode.Created,
-    )
-  }
-
-  private fun createMetadata(
-    localMetadata: SecretMetadata,
-    remoteMetadata: SecretMetadata,
-    profiles: Set<String>,
-  ): Pair<SecretMetadata, Set<Pair<String, String>>> {
-    val unvisited = profiles.toMutableSet()
-    val updated = mutableSetOf<Pair<String, String>>()
-    return Pair(
-      remoteMetadata.copy(
-        collections =
-          remoteMetadata.collections.mapValues { (key, collection) ->
-            if (key in profiles) {
-              unvisited.remove(key)
-              updated.add(Pair(collection.sha, key))
-              localMetadata.collections[key]!!
-            } else collection
-          } +
-            unvisited.map {
-              updated.add(Pair("", it))
-              it to localMetadata.collections[it]!!
-            }
-      ),
-      updated,
     )
   }
 

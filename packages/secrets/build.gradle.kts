@@ -11,7 +11,6 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import kotlin.io.path.absolutePathString
 import elide.internal.conventions.kotlin.KotlinTarget
 
@@ -47,6 +46,10 @@ dependencies {
   implementation(libs.kotlinx.serialization.cbor)
 
   implementation(libs.bouncycastle)
+  implementation(libs.inquirer) {
+    exclude(group = "org.jline", module = "jline")
+    exclude(group = "org.fusesource.jansi", module = "jansi")
+  }
 
   // Ktor
   implementation(libs.bundles.ktor.client)

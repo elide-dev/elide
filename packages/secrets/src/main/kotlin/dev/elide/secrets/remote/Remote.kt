@@ -48,5 +48,31 @@ internal interface Remote {
   companion object {
     const val REMOTE_NAME = "remote"
     const val PASSPHRASE_NAME = "passphrase"
+
+    internal fun createMetadata(
+      localMetadata: SecretMetadata,
+      remoteMetadata: SecretMetadata,
+      profiles: Set<String>,
+    ): Pair<SecretMetadata, Set<Pair<String, String>>> {
+      val unvisited = profiles.toMutableSet()
+      val updated = mutableSetOf<Pair<String, String>>()
+      return Pair(
+        remoteMetadata.copy(
+          collections =
+            remoteMetadata.collections.mapValues { (key, collection) ->
+              if (key in profiles) {
+                unvisited.remove(key)
+                updated.add(Pair(collection.sha, key))
+                localMetadata.collections[key]!!
+              } else collection
+            } +
+              unvisited.map {
+                updated.add(Pair("", it))
+                it to localMetadata.collections[it]!!
+              }
+        ),
+        updated,
+      )
+    }
   }
 }

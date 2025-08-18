@@ -22,7 +22,12 @@ import kotlinx.io.files.Path
  */
 public interface Secrets {
   /** Initializes the secret system. */
-  public suspend fun init(interactive: Boolean, path: Path)
+  public suspend fun init(
+    interactive: Boolean,
+    path: Path,
+    projectName: String? = null,
+    organizationName: String? = null,
+  )
 
   /** Creates a new profile. */
   public suspend fun createProfile(profile: String)
@@ -47,6 +52,8 @@ public interface Secrets {
    * is empty, uploads all profiles to the remote.
    */
   public suspend fun updateRemote(vararg profiles: String)
+
+  public suspend fun getSelectedProfile(): String?
 
   /** Selects a profile for access to secrets. */
   public suspend fun selectProfile(profile: String)

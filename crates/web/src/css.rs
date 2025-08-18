@@ -75,11 +75,11 @@ pub(crate) struct ScssBuilderError {
 }
 
 /// Build minification options from JVM-side flags.
-fn build_printer_options(
+fn build_printer_options<'a>(
   minify: bool,
-  source_map: Option<&mut SourceMap>,
+  source_map: Option<&'a mut SourceMap>,
   targets: Targets,
-) -> Result<PrinterOptions, BrowserslistError> {
+) -> Result<PrinterOptions<'a>, BrowserslistError> {
   Ok(PrinterOptions {
     minify,
     source_map,
@@ -89,11 +89,11 @@ fn build_printer_options(
 }
 
 /// Build CSS options from JVM-side flags.
-pub(crate) fn css_options(
+pub(crate) fn css_options<'a>(
   do_minify: bool,
   use_targets: Option<Targets>,
-  source_map: Option<&mut SourceMap>,
-) -> Result<CssBuilderOptions, BrowserslistError> {
+  source_map: Option<&'a mut SourceMap>,
+) -> Result<CssBuilderOptions<'a>, BrowserslistError> {
   let targets = use_targets.or(Some(Targets::default())).unwrap_or_default();
   let minify = match do_minify {
     true => Some(MinifyOptions {

@@ -13,16 +13,42 @@
 package elide.tooling.reporting
 
 import elide.tooling.Tool
+import elide.tooling.reporting.xml.JUnitXmlReporter
 import elide.tooling.testing.TestPostProcessingOptions
 import elide.tooling.testing.TestPostProcessor
 import elide.tooling.testing.TestPostProcessorFactory
 import elide.tooling.testing.TestRunResult
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 
 // Test post-processor which produces test result reports.
 internal class TestReportProcessor : TestPostProcessor {
   override suspend fun invoke(options: TestPostProcessingOptions, results: TestRunResult): Tool.Result {
-    // @TODO not yet implemented
-    return Tool.Result.Success
+    return try {
+      generateXmlReport(results)
+      Tool.Result.Success
+    } catch (e: Exception) {
+      Tool.Result.UnspecifiedFailure
+    }
+  }
+
+  /**
+   * Generate JUnit XML test report and write to file.
+   */
+  private fun generateXmlReport(results: TestRunResult) {
+    val xmlReporter = JUnitXmlReporter()
+    val xmlContent = xmlReporter.generateReport(results, suiteName = "Elide Test Suite")
+    
+    // Create output directory if it doesn't exist
+    val outputDir = Paths.get("build", "test-results")
+    Files.createDirectories(outputDir)
+    
+    // Write XML report file
+    val outputFile = outputDir.resolve("TEST-elide-results.xml")
+    Files.write(outputFile, xmlContent.toByteArray())
+    
+    println("Generated test report: ${outputFile.toAbsolutePath()}")
   }
 
   // Create a coverage report processor if coverage is enabled.

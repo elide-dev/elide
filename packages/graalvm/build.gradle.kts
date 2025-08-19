@@ -555,10 +555,14 @@ dependencies {
     api(libs.graalvm.polyglot.js.community)
   }
 
+  implementation(platform(libs.aws.sdk.bom))
+  implementation(libs.aws.sdk.s3)
+
   // Testing
   testApi(project(":packages:engine", configuration = "testInternals"))
   testApi(libs.graalvm.truffle.api)
   testApi(libs.graalvm.truffle.runtime)
+  testImplementation(libs.locals3)
   testImplementation(libs.jackson.core)
   testImplementation(libs.jackson.databind)
   testImplementation(libs.jackson.module.kotlin)

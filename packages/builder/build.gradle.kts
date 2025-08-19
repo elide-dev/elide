@@ -116,6 +116,8 @@ dependencies {
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.serialization.protobuf)
+  implementation(libs.jackson.dataformat.xml)
+  implementation(libs.jackson.module.kotlin)
   implementation(libs.kotlinx.html)
   implementation(libs.kotlinx.wrappers.css)
   implementation(libs.minifyHtml)

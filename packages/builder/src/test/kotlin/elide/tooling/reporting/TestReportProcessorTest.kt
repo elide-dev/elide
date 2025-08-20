@@ -133,3 +133,4 @@ class TestReportProcessorTest {
     assertTrue(xmlContent.contains("system-err"), "XML should contain empty system-err")
   }
 }
+

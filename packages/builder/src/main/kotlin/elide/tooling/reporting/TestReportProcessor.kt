@@ -25,12 +25,15 @@ import java.nio.file.Paths
 // Test post-processor which produces test result reports.
 internal class TestReportProcessor : TestPostProcessor {
   override suspend fun invoke(options: TestPostProcessingOptions, results: TestRunResult): Tool.Result {
-    return try {
-      generateXmlReport(results)
-      Tool.Result.Success
-    } catch (e: Exception) {
-      Tool.Result.UnspecifiedFailure
-    }
+    return runCatching { 
+      generateXmlReport(results) 
+    }.fold(
+      onSuccess = { Tool.Result.Success },
+      onFailure = { e ->
+        System.err.println("Failed to generate test report: ${e.message}")
+        Tool.Result.UnspecifiedFailure
+      }
+    )
   }
 
   /**

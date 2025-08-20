@@ -35,6 +35,10 @@ internal class JUnitXmlReporter {
     setSerializationInclusion(JsonInclude.Include.NON_NULL)
   }
 
+  private companion object {
+    private const val MILLISECONDS_TO_SECONDS = 1000.0
+  }
+
   /**
    * Generate JUnit XML report content from test run results.
    *
@@ -70,8 +74,8 @@ internal class JUnitXmlReporter {
       time = formatDuration(results.stats.duration),
       timestamp = formatTimestamp(Instant.now()),
       testCases = testCases,
-      systemOut = "", // TODO: Capture system output if available
-      systemErr = ""  // TODO: Capture system error output if available
+      systemOut = "", // System output capture not yet implemented
+      systemErr = ""  // System error capture not yet implemented
     )
   }
 
@@ -163,7 +167,7 @@ internal class JUnitXmlReporter {
    * @return Formatted duration string (e.g., "1.234")
    */
   private fun formatDuration(duration: Duration): String {
-    return "%.3f".format(duration.inWholeMilliseconds / 1000.0)
+    return "%.3f".format(duration.inWholeMilliseconds / MILLISECONDS_TO_SECONDS)
   }
 
   /**

@@ -1,4 +1,4 @@
-FROM debian:sid-slim@sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac AS builder
+FROM debian:sid-slim@sha256:9e31e8e61bd314f9fca1849d98621ba370d0a7e59056b20b1739224f5c46a2ea AS builder
 
 RUN apt-get update \
   && apt-get install -y \
@@ -38,7 +38,7 @@ RUN ELIDE_ARCH=$(uname -m) \
     && cd - \
     && rm -rf /tmp/elide-install
 
-FROM debian:sid-slim@sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac AS runtime
+FROM debian:sid-slim@sha256:9e31e8e61bd314f9fca1849d98621ba370d0a7e59056b20b1739224f5c46a2ea AS runtime
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime"

@@ -10,7 +10,7 @@ postcss "8.5.6"
 preact "10.26.9"
 react "18.3.1"
 react-dom "18.3.1"
-typescript "5.8.3"
+typescript "5.9.2"
     }
 dev-dependencies{
 "@biomejs/biome" "1.8.3"
@@ -20,19 +20,19 @@ dev-dependencies{
 "@mitata/counters" "0.0.8"
 "@prettier/plugin-xml" "3.4.2"
 "@types/google-protobuf" "3.15.12"
-"@types/node" "24.0.15"
+"@types/node" "24.1.0"
 bun "1.2.19"
 bun-types "1.2.19"
 commitlint "19.8.1"
 esbuild "0.25.0"
-eslint "9.31.0"
+eslint "9.32.0"
 express ">=4.21.2 <5.0.0-0"
 husky "9.1.7"
 lint-staged "16.1.2"
 mitata "1.0.34"
 postcss-cli "11.0.1"
 prettier "3.6.2"
-prettier-plugin-java "2.7.3"
+prettier-plugin-java "2.7.4"
 prettier-plugin-properties "0.3.0"
 prettier-plugin-sh "0.18.0"
 prettier-plugin-toml "2.0.6"
@@ -569,9 +569,9 @@ strip-json-comments ">=3.1.1 <4.0.0-0"
     }
 }
 pkg "@eslint/js"{
-version "9.31.0"
-resolved "https://registry.npmjs.org/@eslint/js/-/js-9.31.0.tgz"
-integrity "sha512-LOm5OVt7D4qiKCqoiPbA7LWmI+tbw1VbTUowBcUMgQSuM6poJufkFkYDcQpo5KfgD39TnNySV26QjOh7VFpSyw=="
+version "9.32.0"
+resolved "https://registry.npmjs.org/@eslint/js/-/js-9.32.0.tgz"
+integrity "sha512-BBpRFZK3eX6uMLKz8WxFOBIFFcGFJ/g8XuwjTHCqHROSIsopI+ddn/d5Cfh36+7+e5edVS8dbSHnBNhrLEX0zg=="
 }
 pkg "@eslint/object-schema"{
 version "2.1.6"
@@ -579,20 +579,12 @@ resolved "https://registry.npmjs.org/@eslint/object-schema/-/object-schema-2.1.6
 integrity "sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA=="
 }
 pkg "@eslint/plugin-kit"{
-version "0.3.3"
-resolved "https://registry.npmjs.org/@eslint/plugin-kit/-/plugin-kit-0.3.3.tgz"
-integrity "sha512-1+WqvgNMhmlAambTvT3KPtCl/Ibr68VldY2XY40SL1CE0ZXiakFR/cbTspaF5HsnpDMvcYYoJHfl4980NBjGag=="
+version "0.3.4"
+resolved "https://registry.npmjs.org/@eslint/plugin-kit/-/plugin-kit-0.3.4.tgz"
+integrity "sha512-Ul5l+lHEcw3L5+k8POx6r74mxEYKG5kOb6Xpy2gCRW6zweT6TEhAf8vhxGgjhqrd/VO/Dirhsb+1hNpD1ue9hw=="
 dependencies{
 "@eslint/core" ">=0.15.1 <0.16.0-0"
 levn ">=0.4.1 <0.5.0-0"
-    }
-}
-pkg "@eslint/plugin-kit" "@eslint/core"{
-version "0.15.1"
-resolved "https://registry.npmjs.org/@eslint/core/-/core-0.15.1.tgz"
-integrity "sha512-bkOp+iumZCCbt1K1CmWf0R9pM5yKpDv+ZXtvSyQpudrI9kuFLp+bM2WOPXImuD/ceQuaa8f5pj93Y7zyECIGNA=="
-dependencies{
-"@types/json-schema" ">=7.0.15 <8.0.0-0"
     }
 }
 pkg "@humanfs/core"{
@@ -827,9 +819,9 @@ resolved "https://registry.npmjs.org/@types/ms/-/ms-2.1.0.tgz"
 integrity "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA=="
 }
 pkg "@types/node"{
-version "24.0.15"
-resolved "https://registry.npmjs.org/@types/node/-/node-24.0.15.tgz"
-integrity "sha512-oaeTSbCef7U/z7rDeJA138xpG3NuKc64/rZ2qmUFkFJmnMsAPaluIifqyWd8hSSMxyP9oie3dLAqYPblag9KgA=="
+version "24.1.0"
+resolved "https://registry.npmjs.org/@types/node/-/node-24.1.0.tgz"
+integrity "sha512-ut5FthK5moxFKH2T1CUOC6ctR67rQRvvHdFLCD2Ql6KXmMuCrjsSsRI9UsLCm9M18BMwClv4pn327UvB7eeO1w=="
 dependencies{
 undici-types ">=7.8.0 <7.9.0-0"
     }
@@ -1725,9 +1717,9 @@ resolved "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp
 integrity "sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA=="
 }
 pkg eslint{
-version "9.31.0"
-resolved "https://registry.npmjs.org/eslint/-/eslint-9.31.0.tgz"
-integrity "sha512-QldCVh/ztyKJJZLr4jXNUByx3gR+TDYZCRXEktiZoUR3PGy4qCmSbkxcIle8GEwGpb5JBZazlaJ/CxLidXdEbQ=="
+version "9.32.0"
+resolved "https://registry.npmjs.org/eslint/-/eslint-9.32.0.tgz"
+integrity "sha512-LSehfdpgMeWcTZkWZVIJl+tkZ2nuSkyyB9C27MZqFWXuph7DvaowgcTvKqxvpLW1JZIk8PN7hFY3Rj9LQ7m7lg=="
 dependencies{
 "@eslint-community/eslint-utils" ">=4.2.0 <5.0.0-0"
 "@eslint-community/regexpp" ">=4.12.1 <5.0.0-0"
@@ -1735,8 +1727,8 @@ dependencies{
 "@eslint/config-helpers" ">=0.3.0 <0.4.0-0"
 "@eslint/core" ">=0.15.0 <0.16.0-0"
 "@eslint/eslintrc" ">=3.3.1 <4.0.0-0"
-"@eslint/js" "9.31.0"
-"@eslint/plugin-kit" ">=0.3.1 <0.4.0-0"
+"@eslint/js" "9.32.0"
+"@eslint/plugin-kit" ">=0.3.4 <0.4.0-0"
 "@humanfs/node" ">=0.16.6 <0.17.0-0"
 "@humanwhocodes/module-importer" ">=1.0.1 <2.0.0-0"
 "@humanwhocodes/retry" ">=0.4.2 <0.5.0-0"
@@ -3679,9 +3671,9 @@ resolved "https://registry.npmjs.org/prettier/-/prettier-3.6.2.tgz"
 integrity "sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ=="
 }
 pkg prettier-plugin-java{
-version "2.7.3"
-resolved "https://registry.npmjs.org/prettier-plugin-java/-/prettier-plugin-java-2.7.3.tgz"
-integrity "sha512-fZfZRNDSvgLXQSHjQkXaSCLgbA9aHs71EH7RZP8IhJXUezwvWHwqRtd4131+r/zQq0QrjmMJ0ANJvLmhCY31lw=="
+version "2.7.4"
+resolved "https://registry.npmjs.org/prettier-plugin-java/-/prettier-plugin-java-2.7.4.tgz"
+integrity "sha512-RiRNkumIW9vaDpxirgIPI+oLSRmuCmoVZuTax9i3cWzWnxd+uKyAfDe4efS+ce00owAeh0a1DI5eFaH1xYWNPg=="
 dependencies{
 java-parser "3.0.1"
     }
@@ -4324,9 +4316,9 @@ mime-types ">=2.1.24 <2.2.0-0"
     }
 }
 pkg typescript{
-version "5.8.3"
-resolved "https://registry.npmjs.org/typescript/-/typescript-5.8.3.tgz"
-integrity "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ=="
+version "5.9.2"
+resolved "https://registry.npmjs.org/typescript/-/typescript-5.9.2.tgz"
+integrity "sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A=="
 }
 pkg undici-types{
 version "7.8.0"

@@ -11,9 +11,13 @@ model: &model
   - *base
   - "proto/**/*.*"
 
+deps: &deps
+  - "gradle/elide.versions.toml"
+
 packages: &packages
   - *base
   - *model
+  - *deps
   - "packages"
   - "packages/*"
   - "packages/**/*.*"

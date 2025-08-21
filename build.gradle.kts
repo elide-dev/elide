@@ -47,6 +47,9 @@ plugins {
   alias(libs.plugins.elide.conventions)
 }
 
+// Apply JAVA_HOME detection for IntelliJ IDEA integration
+apply(from = "gradle/java-home-detection.gradle.kts")
+
 group = "dev.elide"
 
 // Set version from `.version` if stamping is enabled.
@@ -182,7 +185,13 @@ dependencies {
 //
 idea {
   project {
-    jdkName = (properties["elide.jvm"] as? String) ?: javaLanguageVersion
+    // Use detected JAVA_HOME if available, otherwise fall back to property or version
+    val detectedJavaHome = System.getProperty("elide.detected.java.home")
+    jdkName = when {
+      detectedJavaHome != null -> detectedJavaHome
+      properties.containsKey("elide.jvm") -> properties["elide.jvm"] as String
+      else -> javaLanguageVersion
+    }
     languageLevel = IdeaLanguageLevel(javaLanguageVersion)
     vcs = "Git"
   }

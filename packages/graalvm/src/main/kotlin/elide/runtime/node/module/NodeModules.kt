@@ -20,6 +20,10 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ModuleAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import elide.runtime.lang.javascript.ElideUniversalJsModuleLoader
+import com.oracle.truffle.js.runtime.JavaScriptLanguage
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 
 // Installs the Node `module` module into the intrinsic bindings.
 @Intrinsic internal class NodeModulesModule : AbstractNodeBuiltinModule() {
@@ -42,8 +46,24 @@ internal class NodeModules : ReadOnlyProxyObject, ModuleAPI {
     fun obtain(): NodeModules = SINGLETON
   }
 
-  // @TODO not yet implemented
+  override fun getMemberKeys(): Array<String> = arrayOf(
+    "builtinModules",
+    "isBuiltin",
+    "createRequire",
+  )
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  override fun getMember(key: String?): Any? = when (key) {
+    "builtinModules" -> ModuleInfo.allModuleInfos.keys.map { "node:$it" }.toTypedArray()
+    "isBuiltin" -> ProxyExecutable { a -> ModuleInfo.find(a[0].asString().removePrefix("node:")) != null }
+    "createRequire" -> ProxyExecutable { a -> createRequireFn(a.getOrNull(0)) }
+    else -> null
+  }
+
+  private fun createRequireFn(from: Value?): ProxyExecutable = ProxyExecutable { argv ->
+    val id = argv.getOrNull(0)?.asString() ?: error("require(id) expected")
+    ModuleInfo.find(id.removePrefix("node:"))?.let { return@ProxyExecutable ModuleRegistry.load(it) }
+    val realm = JavaScriptLanguage.getCurrentJSRealm()
+    ElideUniversalJsModuleLoader.resolve(realm, id)?.provide()
+      ?: error("Cannot resolve module: $id")
+  }
 }

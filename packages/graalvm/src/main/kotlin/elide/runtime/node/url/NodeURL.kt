@@ -24,6 +24,12 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.URLAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
+import java.net.IDN
+import java.net.URI
+import java.nio.file.Path
+import java.nio.file.Paths
 
 // Constructor for `URL`.
 private const val URL_CONSTRUCTOR_FN = "URL"
@@ -66,12 +72,19 @@ internal class NodeURL : ReadOnlyProxyObject, URLAPI {
   override fun getMember(key: String?): Any? = when (key) {
     URL_CONSTRUCTOR_FN -> URLIntrinsic.constructor
     URLSEARCHPARAMS_CONSTRCUTOR_FN -> URLSearchParamsIntrinsic.constructor
-    DOMAIN_TO_ASCII_FN,
-    DOMAIN_TO_UNICODE_FN,
-    FILE_URL_TO_PATH_FN,
-    PATH_TO_FILE_URL_FN,
-    URL_TO_HTTPOPTIONS_FN -> {
-      null // TODO: Implement these methods.
+    DOMAIN_TO_ASCII_FN -> ProxyExecutable { a -> IDN.toASCII(a[0].asString()) }
+    DOMAIN_TO_UNICODE_FN -> ProxyExecutable { a -> IDN.toUnicode(a[0].asString()) }
+    FILE_URL_TO_PATH_FN -> ProxyExecutable { a -> Paths.get(URI(a[0].asString())).toAbsolutePath().toString() }
+    PATH_TO_FILE_URL_FN -> ProxyExecutable { a -> URLIntrinsic.URLValue.fromURL(Path.of(a[0].asString()).toUri().toURL()) }
+    URL_TO_HTTPOPTIONS_FN -> ProxyExecutable { a ->
+      val u = URI(a[0].asString())
+      val path = (u.rawPath ?: "") + (u.rawQuery?.let { "?${it}" } ?: "")
+      ProxyObject.fromMap(mapOf(
+        "protocol" to "${u.scheme}:",
+        "hostname" to u.host,
+        "port" to (u.port.takeIf { it >= 0 }),
+        "path" to path,
+      ))
     }
     else -> null
   }

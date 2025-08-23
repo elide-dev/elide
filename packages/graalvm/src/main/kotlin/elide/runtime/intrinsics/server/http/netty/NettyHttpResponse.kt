@@ -45,6 +45,7 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
   "send",
   "set",
   "status",
+  "statusCode",
 )
 
 /** [HttpRequest] implementation wrapping a Netty handler context. */
@@ -164,7 +165,14 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
   override fun getMemberKeys(): Array<String> = NETTY_HTTP_RESPONSE_PROPS_AND_METHODS
   override fun hasMember(key: String?): Boolean = key != null && key in NETTY_HTTP_RESPONSE_PROPS_AND_METHODS
   override fun putMember(key: String?, value: Value?) {
-    // no-op
+    when (key) {
+      "statusCode" -> when {
+        value == null || value.isNull -> responseStatus.set(0)
+        value.fitsInInt() -> responseStatus.set(value.asInt())
+        else -> { /* ignore invalid */ }
+      }
+      else -> { /* no-op */ }
+    }
   }
 
   override fun removeMember(key: String?): Boolean {
@@ -227,14 +235,24 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
       }
     }
 
-    "end" -> ProxyExecutable { this.end() }
+    "end" -> ProxyExecutable {
+      val maybeBody = it.getOrNull(0)
+      if (maybeBody != null && !maybeBody.isNull) {
+        this.responseBody.set(maybeBody)
+      }
+      this.end()
+    }
+
+    "statusCode" -> when (val current = responseStatus.get()) {
+      0 -> 200
+      else -> current
+    }
 
     else -> null
   }
 
   companion object {
-    @JvmStatic fun from(res: Response, ctx: ChannelHandlerContext, includeDefaults: Boolean = true): NettyHttpResponse {
-      TODO("not yet implemented")
-    }
+    @JvmStatic fun from(res: Response, ctx: ChannelHandlerContext, includeDefaults: Boolean = true): NettyHttpResponse =
+      NettyHttpResponse(ctx, includeDefaults)
   }
 }

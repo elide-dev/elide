@@ -1,0 +1,40 @@
+﻿node(http,dns): implement dns and dns/promises; fix http server handler + callback semantics
+
+- Node DNS
+  - Added Node-style `dns` with minimal functional coverage.
+    - `resolve(hostname[, rrtype][, cb])`, `resolve4`, `resolve6` return A/AAAA addresses.
+    - `reverse(ip[, cb])` returns PTR hostnames.
+    - `setDefaultResultOrder`/`getDefaultResultOrder` support "verbatim" | "ipv4first".
+    - `getServers` returns [] for now.
+    - Unsupported RR types (`resolveAny`, `resolveCname`, `resolveCaa`, `resolveMx`, `resolveNaptr`, `resolveNs`, `resolvePtr`, `resolveSoa`, `resolveSrv`, `resolveTxt`, `lookupService`) return ENOTSUP (Node-style if callback given).
+    - Files: `packages/graalvm/src/main/kotlin/elide/runtime/node/dns/NodeDNS.kt`
+  - Added `dns/promises` parity:
+    - `resolve`, `resolve4`, `resolve6`, `reverse` return `Promise`.
+    - Same `defaultResultOrder` behavior; unsupported types reject with ENOTSUP.
+    - Files: `packages/graalvm/src/main/kotlin/elide/runtime/node/dns/NodeDNSPromises.kt`
+
+- Node HTTP
+  - Ensured createServer handler semantics and basic lifecycle:
+    - `createServer` exposes `listen`/`close` and dispatches `(req, res)` to the guest handler.
+    - Non-boolean/undefined handler returns are treated as “handled” to prevent accidental fall-through.
+    - Files touched: 
+      - `packages/graalvm/src/main/kotlin/elide/runtime/node/http/NodeHttp.kt`
+      - `packages/graalvm/src/main/kotlin/elide/runtime/intrinsics/server/http/internal/GuestSimpleHandler.kt`
+      - Related config: `packages/graalvm/src/main/kotlin/elide/runtime/intrinsics/server/http/HttpServerConfig.kt`
+
+- Behavior notes
+  - DNS resolution uses JVM `InetAddress` and filters IPv4/IPv6; `defaultResultOrder="ipv4first"` sorts v4 before v6.
+  - Reverse DNS returns a single hostname when available; empty list on failure (both callback and promises variants).
+  - HTTP response writing/closing behavior leverages existing Netty integration via `HttpResponse.of(...)`.
+
+- Tests
+  - Validated by tests:
+    - HTTP: `packages/graalvm/src/test/kotlin/elide/runtime/node/NodeHttpTest.kt`
+    - DNS (promises): `packages/graalvm/src/test/kotlin/elide/runtime/node/NodeDnsPromisesTest.kt`
+  - Example local runs:
+    - HTTP: `.\gradlew.bat :packages:graalvm:test --tests "elide.runtime.node.NodeHttpTest" -i`
+    - DNS: `.\gradlew.bat :packages:graalvm:test --tests "elide.runtime.node.NodeDnsPromisesTest" -i`
+
+- Follow-ups
+  - Implement additional RR types (CNAME/MX/TXT/etc.) and server list configuration.
+  - Expand HTTP streaming/keep-alive matrix tests as needed.

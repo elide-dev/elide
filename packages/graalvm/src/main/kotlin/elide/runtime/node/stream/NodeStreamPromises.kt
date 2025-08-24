@@ -22,9 +22,11 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.StreamPromisesAPI
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.asJsSymbolString
+import org.graalvm.polyglot.Value
 
 // Internal symbol where the Node built-in module is installed.
 private val STREAM_PROMISES_MODULE_SYMBOL = "node_${NodeModuleName.STREAM_PROMISES.asJsSymbolString()}"
@@ -59,8 +61,80 @@ internal class NodeStreamPromises : ReadOnlyProxyObject, StreamPromisesAPI {
   override fun getMemberKeys(): Array<String> = ALL_PROMISES_PROPS
 
   override fun getMember(key: String?): Any? = when (key) {
-    PIPELINE_FN -> ProxyExecutable { TODO("`stream/promises.pipeline` is not implemented yet") }
-    FINISHED_FN -> ProxyExecutable { TODO("`stream/promises.finished` is not implemented yet") }
+    PIPELINE_FN -> ProxyExecutable { args ->
+      val streams = args.toList()
+      val promise = JsPromise<Unit>()
+      if (streams.isEmpty()) return@ProxyExecutable promise.also { it.resolve(Unit) }
+      val last = streams.last()
+      val ended = (last.getMember("readableEnded").asBoolean() || last.getMember("writableFinished").asBoolean())
+      val erroredVal = last.getMember("errored")
+      val errored = (erroredVal.isNull.not() && (erroredVal.isBoolean && erroredVal.asBoolean()))
+      if (errored) return@ProxyExecutable promise.also { it.reject(erroredVal) }
+      if (ended) return@ProxyExecutable promise.also { it.resolve(Unit) }
+      // chain via pipe
+      streams.windowed(2, 1, false).forEach { pair ->
+        val src = pair[0]; val dest = pair[1]
+        src.getMember("pipe").execute(dest)
+      }
+      val on = last.getMember("on"); val off = last.getMember("off").takeIf { it.canExecute() } ?: last.getMember("removeListener").takeIf { it.canExecute() }
+      if (!on.canExecute()) return@ProxyExecutable promise.also { it.resolve(Unit) }
+      var doneCbRef: ProxyExecutable? = null
+      var errCbRef: ProxyExecutable? = null
+      val doneCb = ProxyExecutable { _: Array<Value> ->
+        off?.execute("end", doneCbRef)
+        off?.execute("finish", doneCbRef)
+        off?.execute("error", errCbRef)
+        promise.resolve(Unit)
+        null
+      }
+      val errCb = ProxyExecutable { ev: Array<Value> ->
+        off?.execute("end", doneCbRef)
+        off?.execute("finish", doneCbRef)
+        off?.execute("error", errCbRef)
+        promise.reject(ev.firstOrNull())
+        null
+      }
+      doneCbRef = doneCb
+      errCbRef = errCb
+      on.execute("end", doneCb)
+      on.execute("finish", doneCb)
+      on.execute("error", errCb)
+      promise
+    }
+    FINISHED_FN -> ProxyExecutable { args ->
+      val stream = args.firstOrNull()
+      val promise = JsPromise<Unit>()
+      if (stream == null) return@ProxyExecutable promise.also { it.resolve(Unit) }
+      val ended = (stream.getMember("readableEnded").asBoolean() || stream.getMember("writableFinished").asBoolean())
+      val erroredVal = stream.getMember("errored")
+      val errored = (erroredVal.isNull.not() && (erroredVal.isBoolean && erroredVal.asBoolean()))
+      if (errored) return@ProxyExecutable promise.also { it.reject(erroredVal) }
+      if (ended) return@ProxyExecutable promise.also { it.resolve(Unit) }
+      val on = stream.getMember("on"); val off = stream.getMember("off").takeIf { it.canExecute() } ?: stream.getMember("removeListener").takeIf { it.canExecute() }
+      if (!on.canExecute()) return@ProxyExecutable promise.also { it.resolve(Unit) }
+      var doneCbRef: ProxyExecutable? = null
+      var errCbRef: ProxyExecutable? = null
+      val doneCb = ProxyExecutable { _: Array<Value> ->
+        off?.execute("end", doneCbRef)
+        off?.execute("finish", doneCbRef)
+        off?.execute("error", errCbRef)
+        promise.resolve(Unit)
+        null
+      }
+      val errCb = ProxyExecutable { ev: Array<Value> ->
+        off?.execute("end", doneCbRef)
+        off?.execute("finish", doneCbRef)
+        off?.execute("error", errCbRef)
+        promise.reject(ev.firstOrNull())
+        null
+      }
+      doneCbRef = doneCb
+      errCbRef = errCb
+      on.execute("end", doneCb)
+      on.execute("finish", doneCb)
+      on.execute("error", errCb)
+      promise
+    }
     else -> null
   }
 

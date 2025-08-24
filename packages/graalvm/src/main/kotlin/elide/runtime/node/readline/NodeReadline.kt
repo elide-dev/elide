@@ -20,6 +20,8 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ReadlineAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 
 // Installs the Node readline module into the intrinsic bindings.
 @Intrinsic internal class NodeReadlineModule : AbstractNodeBuiltinModule() {
@@ -40,6 +42,25 @@ internal class NodeReadline private constructor () : ReadOnlyProxyObject, Readli
     @JvmStatic fun create(): NodeReadline = NodeReadline()
   }
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  override fun getMemberKeys(): Array<String> = arrayOf(
+    "InterfaceConstructor","Interface","clearLine","clearScreenDown","createInterface","cursorTo","moveCursor","emitKeypressEvents"
+  )
+  override fun getMember(key: String?): Any? = when (key) {
+    "createInterface" -> ProxyExecutable { _ ->
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("question","close")
+        override fun getMember(k: String?): Any? = when (k) {
+          "question" -> ProxyExecutable { argv: Array<Value> ->
+            val cb = argv.getOrNull(1)
+            cb?.takeIf { it.canExecute() }?.execute(argv.firstOrNull())
+            null
+          }
+          "close" -> ProxyExecutable { _: Array<Value> -> null }
+          else -> null
+        }
+      }
+    }
+    "clearLine", "clearScreenDown", "cursorTo", "moveCursor", "emitKeypressEvents" -> ProxyExecutable { _: Array<Value> -> null }
+    else -> null
+  }
 }

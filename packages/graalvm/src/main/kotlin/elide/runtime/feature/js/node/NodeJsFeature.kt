@@ -225,6 +225,10 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
     cls(TestAPI::class)
     cls(NodeTest::class)
 
+    // `constants`
+    cls(ConstantsAPI::class)
+    cls(elide.runtime.node.constants.NodeConstants::class)
+
     // `url`
     cls(URLAPI::class)
     cls(NodeURL::class)
@@ -233,6 +237,30 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
     cls(URLSearchParams::class)
     cls(URLSearchParamsIntrinsic.URLSearchParams::class)
     cls(URLSearchParamsIntrinsic.MutableURLSearchParams::class)
+
+    // `tls`
+    cls(TLSAPI::class)
+    cls(elide.runtime.node.tls.NodeTls::class)
+
+    // `trace_events`
+    cls(elide.runtime.intrinsics.js.node.TraceEventsAPI::class)
+    cls(elide.runtime.node.trace.NodeTraceEvents::class)
+
+    // `tty`
+    cls(TtyAPI::class)
+    cls(elide.runtime.node.tty.NodeTty::class)
+
+    // `v8`
+    cls(V8API::class)
+    cls(elide.runtime.node.v8.NodeV8::class)
+
+    // `vm`
+    cls(VMAPI::class)
+    cls(elide.runtime.node.vm.NodeVm::class)
+
+    // `wasi`
+    cls(WASIAPI::class)
+    cls(elide.runtime.node.wasi.NodeWasi::class)
 
     // `worker`
     cls(WorkerAPI::class)

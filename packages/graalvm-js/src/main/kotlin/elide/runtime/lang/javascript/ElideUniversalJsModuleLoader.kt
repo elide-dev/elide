@@ -125,6 +125,7 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.STRING_DECODER,
   NodeModuleName.TEST,
   NodeModuleName.TIMERS,
+  NodeModuleName.TIMERS_PROMISES,
   NodeModuleName.TLS,
   NodeModuleName.TTY,
   NodeModuleName.URL,
@@ -133,7 +134,9 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.VM,
   NodeModuleName.WORKER,
   NodeModuleName.WORKER_THREADS,
+  NodeModuleName.WASI,
   NodeModuleName.ZLIB,
+  // wasi is not a standard core module string in our NodeModuleName; allow 'wasi' directly
 )
 
 /**
@@ -187,6 +190,7 @@ public inline fun String.asJsSymbolString(): String = replace("/", "_")
   public const val STRING_DECODER: String = "string_decoder"
   public const val TEST: String = "test"
   public const val TIMERS: String = "timers"
+  public const val TIMERS_PROMISES: String = "timers/promises"
   public const val TLS: String = "tls"
   public const val TRACE_EVENTS: String = "trace_events"
   public const val TTY: String = "tty"
@@ -196,6 +200,7 @@ public inline fun String.asJsSymbolString(): String = replace("/", "_")
   public const val VM: String = "vm"
   public const val WORKER: String = "worker"
   public const val WORKER_THREADS: String = "worker_threads"
+  public const val WASI: String = "wasi"
   public const val ZLIB: String = "zlib"
 
   // named modules do not contain periods

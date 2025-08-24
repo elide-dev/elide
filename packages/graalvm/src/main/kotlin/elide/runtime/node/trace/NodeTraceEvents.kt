@@ -43,7 +43,22 @@ internal class NodeTraceEvents private constructor() : ReadOnlyProxyObject, Trac
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS
 
   override fun getMember(key: String?): Any? = when (key) {
-    F_CREATE_TRACING, F_GET_ENABLED_CATEGORIES -> ProxyExecutable { _ -> null }
+    F_CREATE_TRACING -> ProxyExecutable { args ->
+      val opts = args.getOrNull(0)
+      val categories = opts?.getMember("categories")?.takeIf { it.isString }?.asString() ?: ""
+      object : ReadOnlyProxyObject {
+        private var enabled = false
+        override fun getMemberKeys(): Array<String> = arrayOf("enable","disable","enabled","categories")
+        override fun getMember(k: String?): Any? = when (k) {
+          "enable" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> -> enabled = true; null }
+          "disable" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> -> enabled = false; null }
+          "enabled" -> enabled
+          "categories" -> categories
+          else -> null
+        }
+      }
+    }
+    F_GET_ENABLED_CATEGORIES -> ProxyExecutable { _ -> "" }
     else -> null
   }
 }

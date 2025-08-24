@@ -39,7 +39,17 @@ internal class NodeWorkerThreads private constructor() : ReadOnlyProxyObject, Wo
 
   override fun getMember(key: String?): Any? = when (key) {
     F_IS_MAIN_THREAD -> true
-    F_WORKER -> ProxyExecutable { throw UnsupportedOperationException("Worker not yet implemented") }
+    F_WORKER -> ProxyExecutable { args ->
+      val _script = args.getOrNull(0) // accept a script path or code; no-op for now
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("terminate","postMessage")
+        override fun getMember(k: String?): Any? = when (k) {
+          "terminate" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> -> 0 }
+          "postMessage" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> -> null }
+          else -> null
+        }
+      }
+    }
     else -> null
   }
 }

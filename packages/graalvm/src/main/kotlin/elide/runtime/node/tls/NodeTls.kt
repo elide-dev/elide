@@ -48,9 +48,38 @@ internal class NodeTls private constructor() : ReadOnlyProxyObject, TLSAPI {
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS
 
   override fun getMember(key: String?): Any? = when (key) {
-    F_CREATE_SERVER, F_CONNECT, F_CREATE_SECURE_CONTEXT -> ProxyExecutable { _: Array<Value> -> null }
+    F_CREATE_SERVER -> ProxyExecutable { _: Array<Value> ->
+      // Return a minimal server-like object
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("close")
+        override fun getMember(k: String?): Any? = when (k) {
+          "close" -> ProxyExecutable { _: Array<Value> -> null }
+          else -> null
+        }
+      }
+    }
+    F_CONNECT -> ProxyExecutable { _: Array<Value> ->
+      // Return a minimal socket-like object
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("end")
+        override fun getMember(k: String?): Any? = when (k) {
+          "end" -> ProxyExecutable { _: Array<Value> -> null }
+          else -> null
+        }
+      }
+    }
+    F_CREATE_SECURE_CONTEXT -> ProxyExecutable { args ->
+      val opts = args.getOrNull(0)
+      // Return options echo object for now
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("context")
+        override fun getMember(k: String?): Any? = when (k) {
+          "context" -> opts ?: Value.asValue(null)
+          else -> null
+        }
+      }
+    }
     F_GET_CIPHERS -> ProxyExecutable { _: Array<Value> ->
-      // Provide a representative list of common cipher names
       val ciphers = arrayOf(
         "TLS_AES_256_GCM_SHA384",
         "TLS_AES_128_GCM_SHA256",

@@ -23,6 +23,9 @@ private const val F_RUN_IN_CONTEXT = "runInContext"
 private const val F_RUN_IN_NEW_CONTEXT = "runInNewContext"
 private const val F_RUN_IN_THIS_CONTEXT = "runInThisContext"
 
+// Internal symbol to brand VM contexts
+private const val VM_CONTEXT_BRAND = "__elide_vm_context__"
+
 private val ALL_MEMBERS = arrayOf(
   F_CREATE_CONTEXT,
   F_IS_CONTEXT,
@@ -48,9 +51,9 @@ internal class NodeVm private constructor() : ReadOnlyProxyObject, VMAPI {
 
   override fun getMember(key: String?): Any? = when (key) {
     F_CREATE_CONTEXT -> ProxyExecutable { args ->
-      // Return a shallow copy of the provided sandbox (object literal) or an empty object
+      // Return a shallow copy of the provided sandbox (object literal) or an empty object; brand it
       val sandbox = args.getOrNull(0)
-      if (sandbox != null && sandbox.hasMembers()) {
+      val ctxObj = if (sandbox != null && sandbox.hasMembers()) {
         val map = mutableMapOf<String, Any?>()
         sandbox.memberKeys?.forEach { k ->
           val v = sandbox.getMember(k)
@@ -58,10 +61,12 @@ internal class NodeVm private constructor() : ReadOnlyProxyObject, VMAPI {
         }
         ProxyObject.fromMap(map)
       } else ProxyObject.fromMap(mutableMapOf())
+      (ctxObj as ProxyObject).putMember(VM_CONTEXT_BRAND, Value.asValue(true))
+      ctxObj
     }
     F_IS_CONTEXT -> ProxyExecutable { args ->
       val obj = args.getOrNull(0)
-      obj != null && obj.hasMembers()
+      obj != null && obj.hasMembers() && (obj.getMember(VM_CONTEXT_BRAND)?.asBoolean() == true)
     }
     F_RUN_IN_THIS_CONTEXT -> ProxyExecutable { args ->
       val code = args.getOrNull(0)?.asString() ?: ""
@@ -71,13 +76,14 @@ internal class NodeVm private constructor() : ReadOnlyProxyObject, VMAPI {
     F_RUN_IN_NEW_CONTEXT -> ProxyExecutable { args ->
       val code = args.getOrNull(0)?.asString() ?: ""
       if (code.isEmpty()) return@ProxyExecutable null
-      // Ignore sandbox/options for now and run in current context
-      Context.getCurrent().eval("js", code)
+      // Evaluate in a fresh JS context; sandbox members are ignored for now
+      val fresh = Context.newBuilder("js").allowAllAccess(true).build()
+      try { fresh.eval("js", code) } finally { fresh.close() }
     }
     F_RUN_IN_CONTEXT -> ProxyExecutable { args ->
       val code = args.getOrNull(0)?.asString() ?: ""
       if (code.isEmpty()) return@ProxyExecutable null
-      // Ignore provided context/options for now and run in current context
+      // For now, evaluate in the current context. Future: link provided context object as global
       Context.getCurrent().eval("js", code)
     }
     else -> null

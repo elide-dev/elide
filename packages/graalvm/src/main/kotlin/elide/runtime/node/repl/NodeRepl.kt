@@ -4,7 +4,9 @@
  */
 package elide.runtime.node.repl
 
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.loader.ModuleInfo
@@ -34,8 +36,19 @@ internal class NodeRepl private constructor() : ReadOnlyProxyObject, ReplAPI {
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS
 
   override fun getMember(key: String?): Any? = when (key) {
-    F_START -> ProxyExecutable { _ ->
-      throw UnsupportedOperationException("repl.start not yet implemented")
+    F_START -> ProxyExecutable { args ->
+      val opts = args.getOrNull(0)
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("close","write")
+        override fun getMember(k: String?): Any? = when (k) {
+          "close" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> -> null }
+          "write" -> ProxyExecutable { argv: Array<org.graalvm.polyglot.Value> ->
+            val code = argv.getOrNull(0)?.asString() ?: return@ProxyExecutable null
+            Context.getCurrent().eval("js", code)
+          }
+          else -> null
+        }
+      }
     }
     else -> null
   }

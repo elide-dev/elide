@@ -58,7 +58,10 @@ internal class NodeTraceEvents private constructor() : ReadOnlyProxyObject, Trac
         }
       }
     }
-    F_GET_ENABLED_CATEGORIES -> ProxyExecutable { _ -> "" }
+    F_GET_ENABLED_CATEGORIES -> ProxyExecutable { _ ->
+      // In this minimal implementation, return a deterministic empty string
+      ""
+    }
     else -> null
   }
 }

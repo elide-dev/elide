@@ -76,15 +76,34 @@ internal class NodeVm private constructor() : ReadOnlyProxyObject, VMAPI {
     F_RUN_IN_NEW_CONTEXT -> ProxyExecutable { args ->
       val code = args.getOrNull(0)?.asString() ?: ""
       if (code.isEmpty()) return@ProxyExecutable null
-      // Evaluate in a fresh JS context; sandbox members are ignored for now
+      val sandbox = args.getOrNull(1)
       val fresh = Context.newBuilder("js").allowAllAccess(true).build()
-      try { fresh.eval("js", code) } finally { fresh.close() }
+      try {
+        val bindings = fresh.getBindings("js")
+        if (sandbox != null && sandbox.hasMembers()) {
+          sandbox.memberKeys?.forEach { k ->
+            val v = sandbox.getMember(k)
+            bindings.putMember(k, v ?: Value.asValue(null))
+          }
+        }
+        fresh.eval("js", code)
+      } finally { fresh.close() }
     }
     F_RUN_IN_CONTEXT -> ProxyExecutable { args ->
       val code = args.getOrNull(0)?.asString() ?: ""
       if (code.isEmpty()) return@ProxyExecutable null
-      // For now, evaluate in the current context. Future: link provided context object as global
-      Context.getCurrent().eval("js", code)
+      val ctx = args.getOrNull(1)
+      val fresh = Context.newBuilder("js").allowAllAccess(true).build()
+      try {
+        val bindings = fresh.getBindings("js")
+        if (ctx != null && ctx.hasMembers()) {
+          ctx.memberKeys?.forEach { k ->
+            val v = ctx.getMember(k)
+            bindings.putMember(k, v ?: Value.asValue(null))
+          }
+        }
+        fresh.eval("js", code)
+      } finally { fresh.close() }
     }
     else -> null
   }

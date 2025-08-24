@@ -9,9 +9,12 @@ import kotlin.test.assertNotNull
 import elide.testing.annotations.TestCase
 
 /** A tiny smoke test to require('wasi') and instantiate WASI. */
-@TestCase internal class NodeWasiSmokeTest : GenericJsModuleTest<Nothing>() {
+@TestCase internal class NodeWasiSmokeTest : GenericJsModuleTest<elide.runtime.node.wasi.NodeWasiModule>() {
   override val moduleName: String get() = "wasi"
-  override fun provide(): Nothing = error("no provide")
+  override fun provide(): elide.runtime.node.wasi.NodeWasiModule = elide.runtime.node.wasi.NodeWasiModule()
+
+  @elide.annotations.Inject lateinit var wasi: elide.runtime.node.wasi.NodeWasiModule
+  @Test override fun testInjectable() { assertNotNull(wasi) }
 
   @Test fun `should load wasi and expose WASI constructor`() {
     val code = """

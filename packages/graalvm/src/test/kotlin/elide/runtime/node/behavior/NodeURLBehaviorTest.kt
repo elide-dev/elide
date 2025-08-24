@@ -11,24 +11,24 @@ import kotlin.test.Test
   override val moduleName: String get() = "url"
   override fun provide(): elide.runtime.node.url.NodeURLModule = elide.runtime.node.url.NodeURLModule()
 
-  @Test fun `fileURLToPath handles UNC`() = test {
+  @Test fun `fileURLToPath handles UNC`() {
     val code = """
       const url = require('node:url');
       const p = url.fileURLToPath('file:////server/share/f.txt');
       if (!p.startsWith('\\\\server\\share')) throw new Error('bad');
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 
-  @Test fun `pathToFileURL handles UNC input`() = test {
+  @Test fun `pathToFileURL handles UNC input`() {
     val code = """
       const url = require('node:url');
       const u = url.pathToFileURL('\\\\server\\share\\f.txt');
       if (!String(u.href || u).startsWith('file:////server/share')) throw new Error('bad');
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

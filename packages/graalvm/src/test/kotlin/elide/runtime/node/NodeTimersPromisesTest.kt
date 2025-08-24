@@ -5,6 +5,7 @@
 package elide.runtime.node
 
 import elide.testing.annotations.TestCase
+import elide.annotations.Inject
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
@@ -12,6 +13,12 @@ import kotlin.test.assertNotNull
 @TestCase internal class NodeTimersPromisesTest : AbstractJsModuleTest<elide.runtime.node.timers.NodeTimersPromisesModule>() {
   override val moduleName: String get() = "timers/promises"
   override fun provide(): elide.runtime.node.timers.NodeTimersPromisesModule = elide.runtime.node.timers.NodeTimersPromisesModule()
+
+  @Inject lateinit var timers: elide.runtime.node.timers.NodeTimersPromisesModule
+
+  @Test override fun testInjectable() {
+    assertNotNull(timers)
+  }
 
   @Test fun `shape - exported members`() {
     val mod = import("node:timers/promises")

@@ -11,7 +11,7 @@ import kotlin.test.Test
   override val moduleName: String get() = "async_hooks"
   override fun provide(): elide.runtime.node.async.NodeAsyncHooksModule = elide.runtime.node.async.NodeAsyncHooksModule()
 
-  @Test fun `createHook returns controller`() = test {
+  @Test fun `createHook returns controller`() {
     val code = """
       const hooks = require('node:async_hooks');
       const h = hooks.createHook({init(){}});
@@ -20,7 +20,7 @@ import kotlin.test.Test
       h.disable();
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

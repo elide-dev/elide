@@ -21,7 +21,7 @@ import elide.testing.annotations.TestCase
       new wasi.WASI({});
       'ok';
     """.trimIndent()
-    executeGuest { code }
+    executeGuest(true) { code }
   }
 }
 

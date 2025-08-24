@@ -16,6 +16,8 @@ import elide.annotations.Factory
 import elide.annotations.Singleton
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
+import elide.runtime.gvm.internals.intrinsics.js.codec.TextDecoder
+import elide.runtime.gvm.internals.intrinsics.js.codec.TextEncoder
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
@@ -23,8 +25,10 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.StreamConsumersAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 
 private const val CONSUMERS_ARRAYBUFFER_FN = "arrayBuffer"
 private const val CONSUMERS_BLOB_FN = "blob"
@@ -60,22 +64,60 @@ internal class NodeStreamConsumers : ReadOnlyProxyObject, StreamConsumersAPI {
 
   override fun getMember(key: String?): Any? = when (key) {
     CONSUMERS_TEXT_FN -> ProxyExecutable { args ->
-      // accept string/Buffer/Uint8Array/ReadableStream-like; return as string Promise
-      JsPromise.resolved(args.firstOrNull()?.asString() ?: "")
+      // Accept Buffer | Uint8Array | ArrayBuffer | string; resolve to string
+      val v: Value? = args.firstOrNull()
+      val bytes: ByteArray? = when {
+        v == null || v.isNull -> ByteArray(0)
+        v.isString -> TextEncoder().encode(v.asString())
+        v.hasArrayElements() -> {
+          // Read as Uint8Array/Buffer/ArrayBuffer
+          val len = v.arraySize.toInt()
+          val out = ByteArray(len)
+          var i = 0
+          while (i < len) { out[i] = (v.getArrayElement(i.toLong()).asInt() and 0xFF).toByte(); i++ }
+          out
+        }
+        else -> ByteArray(0)
+      }
+      JsPromise.resolved(TextDecoder().decode(Value.asValue(bytes)))
     }
     CONSUMERS_BUFFER_FN -> ProxyExecutable { args ->
-      // return the same value (placeholder)
-      JsPromise.resolved(args.firstOrNull())
-    }
-    CONSUMERS_ARRAYBUFFER_FN -> ProxyExecutable { args ->
-      JsPromise.resolved(args.firstOrNull())
-    }
-    CONSUMERS_JSON_FN -> ProxyExecutable { args ->
-      // parse text if provided
+      // Resolve to a Node Buffer-like (return original if it looks like a Buffer/Uint8Array)
       val v: Value? = args.firstOrNull()
       JsPromise.resolved(v)
     }
-    CONSUMERS_BLOB_FN -> ProxyExecutable { args -> JsPromise.resolved(args.firstOrNull()) }
+    CONSUMERS_ARRAYBUFFER_FN -> ProxyExecutable { args ->
+      val v: Value? = args.firstOrNull()
+      // If we have a Buffer/Uint8Array, return its underlying ArrayBuffer; otherwise pass-through
+      val ab = v?.getMember("buffer") ?: v
+      JsPromise.resolved(ab)
+    }
+    CONSUMERS_JSON_FN -> ProxyExecutable { args ->
+      // Parse as JSON if string-like, else pass-through
+      val v: Value? = args.firstOrNull()
+      val ctx = Context.getCurrent()
+      val JSON = ctx.getBindings("js").getMember("JSON")
+      val parse = JSON.getMember("parse")
+      val text: String = when {
+        v == null || v.isNull -> "null"
+        v.isString -> v.asString()
+        v.hasArrayElements() -> TextDecoder().decode(Value.asValue(ByteArray(v.arraySize.toInt()) { i ->
+          (v.getArrayElement(i.toLong()).asInt() and 0xFF).toByte()
+        }))
+        else -> "null"
+      }
+      JsPromise.resolved(parse.execute(text))
+    }
+    CONSUMERS_BLOB_FN -> ProxyExecutable { args ->
+      val v: Value? = args.firstOrNull()
+      // Construct a minimal Blob via global constructor if available
+      val bindings = Context.getCurrent().getBindings("js")
+      val blobCtor = bindings.getMember("Blob")
+      val array = bindings.getMember("Array")
+      val arr = array.newInstance()
+      arr.setArrayElement(0, v)
+      JsPromise.resolved(blobCtor.execute(arr))
+    }
     else -> null
   }
 

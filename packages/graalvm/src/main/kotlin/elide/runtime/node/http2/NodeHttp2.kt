@@ -65,10 +65,14 @@ internal class NodeHttp2 private constructor () : ReadOnlyProxyObject, HTTP2API 
     "connect","createServer","createSecureServer" -> ProxyExecutable { _: Array<Value> ->
       object : ReadOnlyProxyObject {
         private var started = false
-        override fun getMemberKeys(): Array<String> = arrayOf("listen","close","on")
+        override fun getMemberKeys(): Array<String> = arrayOf("listen","close","address","on")
         override fun getMember(k: String?): Any? = when (k) {
-          "listen" -> ProxyExecutable { argv: Array<Value> -> if (!started) started = true; argv.lastOrNull()?.takeIf { it.canExecute() }?.execute(); this }
+          "listen" -> ProxyExecutable { argv: Array<Value> ->
+            if (!started) started = true
+            argv.lastOrNull()?.takeIf { it.canExecute() }?.execute(); this
+          }
           "close" -> ProxyExecutable { _: Array<Value> -> this }
+          "address" -> ProxyExecutable { _: Array<Value> -> ProxyObject.fromMap(mapOf("port" to 0)) }
           "on" -> ProxyExecutable { _: Array<Value> -> this }
           else -> null
         }

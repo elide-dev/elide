@@ -699,6 +699,14 @@ val thirdPartyDir: String =
 val buildThirdPartyNatives by tasks.registering(Exec::class) {
   workingDir(rootProject.layout.projectDirectory.asFile.path)
 
+  val skipNatives = providers.gradleProperty("elide.skipNatives").isPresent
+  onlyIf {
+    if (skipNatives) {
+      logger.lifecycle("Skipping third-party natives build (elide.skipNatives=true)")
+      false
+    } else true
+  }
+
   commandLine(
     "make",
     "-C", "third_party",
@@ -813,6 +821,11 @@ listOf(
   tasks.test,
 ).forEach {
   it.configure {
-    dependsOn(natives)
+    val skipNatives = providers.gradleProperty("elide.skipNatives").isPresent
+    if (!skipNatives) {
+      dependsOn(natives)
+    } else {
+      logger.lifecycle("Skipping natives dependency for ${'$'}name (elide.skipNatives=true)")
+    }
   }
 }

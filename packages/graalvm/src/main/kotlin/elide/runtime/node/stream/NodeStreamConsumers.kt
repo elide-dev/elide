@@ -64,22 +64,47 @@ internal class NodeStreamConsumers : ReadOnlyProxyObject, StreamConsumersAPI {
 
   override fun getMember(key: String?): Any? = when (key) {
     CONSUMERS_TEXT_FN -> ProxyExecutable { args ->
-      // Accept Buffer | Uint8Array | ArrayBuffer | string; resolve to string
+      // Accept Buffer | Uint8Array | ArrayBuffer | string | minimal ReadableStream; resolve to string
       val v: Value? = args.firstOrNull()
-      val bytes: ByteArray? = when {
-        v == null || v.isNull -> ByteArray(0)
-        v.isString -> TextEncoder().encode(v.asString())
-        v.hasArrayElements() -> {
-          // Read as Uint8Array/Buffer/ArrayBuffer
-          val len = v.arraySize.toInt()
-          val out = ByteArray(len)
-          var i = 0
-          while (i < len) { out[i] = (v.getArrayElement(i.toLong()).asInt() and 0xFF).toByte(); i++ }
-          out
+      // Minimal ReadableStream support: read a single chunk and decode
+      if (v != null && !v.isNull && v.hasMembers() && v.getMember("getReader")?.canExecute() == true) {
+        val promise = JsPromise<String>()
+        val reader = v.getMember("getReader").execute()
+        val readPromise = reader.getMember("read").execute()
+        val onFulfilled = ProxyExecutable { fargs: Array<Value> ->
+          val res = fargs.firstOrNull()
+          val done = res?.getMember("done")?.asBoolean() == true
+          val valv = res?.getMember("value")
+          if (done || valv == null || valv.isNull) {
+            promise.resolve("")
+          } else {
+            val len = valv.arraySize.toInt()
+            val out = ByteArray(len)
+            var i = 0
+            while (i < len) { out[i] = (valv.getArrayElement(i.toLong()).asInt() and 0xFF).toByte(); i++ }
+            promise.resolve(TextDecoder().decode(Value.asValue(out)))
+          }
+          null
         }
-        else -> ByteArray(0)
+        val onRejected = ProxyExecutable { rargs: Array<Value> -> promise.reject(rargs.firstOrNull()); null }
+        readPromise.getMember("then").execute(onFulfilled, onRejected)
+        promise
+      } else {
+        val bytes: ByteArray? = when {
+          v == null || v.isNull -> ByteArray(0)
+          v.isString -> TextEncoder().encode(v.asString())
+          v.hasArrayElements() -> {
+            // Read as Uint8Array/Buffer/ArrayBuffer
+            val len = v.arraySize.toInt()
+            val out = ByteArray(len)
+            var i = 0
+            while (i < len) { out[i] = (v.getArrayElement(i.toLong()).asInt() and 0xFF).toByte(); i++ }
+            out
+          }
+          else -> ByteArray(0)
+        }
+        JsPromise.resolved(TextDecoder().decode(Value.asValue(bytes)))
       }
-      JsPromise.resolved(TextDecoder().decode(Value.asValue(bytes)))
     }
     CONSUMERS_BUFFER_FN -> ProxyExecutable { args ->
       // Resolve to a Node Buffer-like (return original if it looks like a Buffer/Uint8Array)

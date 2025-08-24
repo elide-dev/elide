@@ -11,7 +11,7 @@ import kotlin.test.Test
   override val moduleName: String get() = "worker_threads"
   override fun provide(): elide.runtime.node.worker.NodeWorkerThreadsModule = elide.runtime.node.worker.NodeWorkerThreadsModule()
 
-  @Test fun `worker onmessage receives postMessage`() = test {
+  @Test fun `worker onmessage receives postMessage`() {
     val code = """
       const wt = require('node:worker_threads');
       const w = new wt.Worker('');
@@ -21,7 +21,7 @@ import kotlin.test.Test
       if (!ok) throw new Error('bad');
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

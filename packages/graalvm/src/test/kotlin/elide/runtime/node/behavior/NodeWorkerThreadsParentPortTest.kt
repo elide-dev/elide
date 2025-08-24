@@ -11,7 +11,7 @@ import kotlin.test.Test
   override val moduleName: String get() = "worker_threads"
   override fun provide(): elide.runtime.node.worker.NodeWorkerThreadsModule = elide.runtime.node.worker.NodeWorkerThreadsModule()
 
-  @Test fun `parentPort handles message`() = test {
+  @Test fun `parentPort handles message`() {
     val code = """
       const wt = require('node:worker_threads');
       let got = false;
@@ -20,7 +20,7 @@ import kotlin.test.Test
       if (wt.parentPort && !got) throw new Error('bad');
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

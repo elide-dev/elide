@@ -11,7 +11,7 @@ import kotlin.test.Test
   override val moduleName: String get() = "punycode"
   override fun provide(): elide.runtime.node.punycode.NodePunycodeModule = elide.runtime.node.punycode.NodePunycodeModule()
 
-  @Test fun `encode-decode roundtrip`() = test {
+  @Test fun `encode-decode roundtrip`() {
     val code = """
       const p = require('node:punycode');
       const s = 'mañana-例';
@@ -20,7 +20,7 @@ import kotlin.test.Test
       if (dec !== s) throw new Error('bad');
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

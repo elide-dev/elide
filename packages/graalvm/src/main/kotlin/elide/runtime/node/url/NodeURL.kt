@@ -115,7 +115,11 @@ internal class NodeURL : ReadOnlyProxyObject, URLAPI {
       val input = args[0].asStringSafe()
       if (input.isEmpty()) return@ProxyExecutable null
       try {
-        val href = Paths.get(input).toUri().toString()
+        var href = Paths.get(input).toUri().toString()
+        // Normalize to `file:///` for Windows and platforms that emit `file:/` from toUri()
+        if (href.startsWith("file:/") && !href.startsWith("file:///")) {
+          href = href.replaceFirst("file:/", "file:///")
+        }
         // Return a URL object per Node API
         URLIntrinsic.constructor.execute(href)
       } catch (_: Throwable) {

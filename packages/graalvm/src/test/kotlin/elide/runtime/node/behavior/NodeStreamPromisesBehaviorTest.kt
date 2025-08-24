@@ -11,14 +11,14 @@ import kotlin.test.Test
   override val moduleName: String get() = "stream/promises"
   override fun provide(): elide.runtime.node.stream.NodeStreamPromisesModule = elide.runtime.node.stream.NodeStreamPromisesModule()
 
-  @Test fun `finished and pipeline resolve`() = test {
+  @Test fun `finished and pipeline resolve`() {
     val code = """
       const sp = require('node:stream/promises');
       await sp.finished({});
       await sp.pipeline({},{});
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

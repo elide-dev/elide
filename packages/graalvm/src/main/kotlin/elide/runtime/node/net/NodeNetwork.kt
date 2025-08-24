@@ -36,14 +36,38 @@ import org.graalvm.polyglot.proxy.ProxyExecutable
  * # Node API: `net`
  */
 internal class NodeNetwork : ReadOnlyProxyObject, NetAPI {
-  //
+  private class ReadOnlyTypeObject(private val name: String) : ReadOnlyProxyObject {
+    override fun getMemberKeys(): Array<String> = emptyArray()
+    override fun getMember(key: String?): Any? = null
+    override fun toString(): String = "[object $name]"
+  }
 
   internal companion object {
     @JvmStatic fun create(): NodeNetwork = NodeNetwork()
   }
 
-  override fun getMemberKeys(): Array<String> = arrayOf("createServer")
+  private val ALL_MEMBERS = arrayOf(
+    "BlockList","SocketAddress","Server","Socket","connect","createConnection","createServer",
+    "getDefaultAutoSelectFamily","getDefaultAutoSelectFamilyAttemptTimeout","isIP","isIPv4","isIPv6"
+  )
+
+  override fun getMemberKeys(): Array<String> = ALL_MEMBERS
   override fun getMember(key: String?): Any? = when (key) {
+    "BlockList" -> ReadOnlyTypeObject("BlockList")
+    "SocketAddress" -> ReadOnlyTypeObject("SocketAddress")
+    "Server" -> ReadOnlyTypeObject("Server")
+    "Socket" -> ReadOnlyTypeObject("Socket")
+    "connect","createConnection" -> ProxyExecutable { _: Array<Value> ->
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("end","destroy","on")
+        override fun getMember(k: String?): Any? = when (k) {
+          "end" -> ProxyExecutable { _: Array<Value> -> null }
+          "destroy" -> ProxyExecutable { _: Array<Value> -> null }
+          "on" -> ProxyExecutable { _: Array<Value> -> this }
+          else -> null
+        }
+      }
+    }
     "createServer" -> ProxyExecutable { _: Array<Value> ->
       object : ReadOnlyProxyObject {
         override fun getMemberKeys(): Array<String> = arrayOf("listen","close","on")
@@ -55,6 +79,11 @@ internal class NodeNetwork : ReadOnlyProxyObject, NetAPI {
         }
       }
     }
+    "getDefaultAutoSelectFamily" -> ProxyExecutable { _: Array<Value> -> false }
+    "getDefaultAutoSelectFamilyAttemptTimeout" -> ProxyExecutable { _: Array<Value> -> 0 }
+    "isIP" -> ProxyExecutable { _: Array<Value> -> 0 }
+    "isIPv4" -> ProxyExecutable { _: Array<Value> -> false }
+    "isIPv6" -> ProxyExecutable { _: Array<Value> -> false }
     else -> null
   }
 }

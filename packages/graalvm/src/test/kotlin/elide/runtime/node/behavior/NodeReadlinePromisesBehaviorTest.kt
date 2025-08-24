@@ -11,7 +11,7 @@ import kotlin.test.Test
   override val moduleName: String get() = "readline/promises"
   override fun provide(): elide.runtime.node.readline.NodeReadlinePromisesModule = elide.runtime.node.readline.NodeReadlinePromisesModule()
 
-  @Test fun `createInterface and question`() = test {
+  @Test fun `createInterface and question`() {
     val code = """
       const rl = require('node:readline/promises').createInterface({});
       const ans = await rl.question('answer');
@@ -19,7 +19,7 @@ import kotlin.test.Test
       rl.close();
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

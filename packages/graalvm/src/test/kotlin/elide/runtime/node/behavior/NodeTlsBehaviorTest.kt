@@ -11,14 +11,14 @@ import kotlin.test.Test
   override val moduleName: String get() = "tls"
   override fun provide(): elide.runtime.node.tls.NodeTlsModule = elide.runtime.node.tls.NodeTlsModule()
 
-  @Test fun `getCiphers returns array`() = test {
+  @Test fun `getCiphers returns array`() {
     val code = """
       const tls = require('node:tls');
       const ciphers = tls.getCiphers();
       if (!Array.isArray(ciphers) || ciphers.length === 0) throw new Error('bad');
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

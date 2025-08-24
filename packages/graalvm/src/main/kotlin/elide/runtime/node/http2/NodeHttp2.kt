@@ -20,6 +20,10 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.HTTP2API
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyArray
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 
 // Installs the Node `http2` module into the intrinsic bindings.
 @Intrinsic internal class NodeHttp2Module : AbstractNodeBuiltinModule() {
@@ -41,8 +45,35 @@ internal class NodeHttp2 private constructor () : ReadOnlyProxyObject, HTTP2API 
     @JvmStatic fun create(): NodeHttp2 = NodeHttp2()
   }
 
-  // @TODO not yet implemented
+  private class ReadOnlyTypeObject(private val name: String) : ReadOnlyProxyObject {
+    override fun getMemberKeys(): Array<String> = emptyArray()
+    override fun getMember(key: String?): Any? = null
+    override fun toString(): String = "[object $name]"
+  }
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  private val ALL_MEMBERS = arrayOf(
+    "Http2Session","ServerHttp2Session","ClientHttp2Session","Http2Stream","ClientHttp2Stream",
+    "ServerHttp2Stream","Http2Server","Http2SecureServer","Http2ServerRequest","Http2ServerResponse",
+    "connect","createServer","createSecureServer","constants"
+  )
+
+  override fun getMemberKeys(): Array<String> = ALL_MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    "Http2Session","ServerHttp2Session","ClientHttp2Session","Http2Stream","ClientHttp2Stream",
+    "ServerHttp2Stream","Http2Server","Http2SecureServer","Http2ServerRequest","Http2ServerResponse" -> ReadOnlyTypeObject(key!!)
+    "constants" -> ProxyObject.fromMap(emptyMap<String, Any>())
+    "connect","createServer","createSecureServer" -> ProxyExecutable { _: Array<Value> ->
+      object : ReadOnlyProxyObject {
+        private var started = false
+        override fun getMemberKeys(): Array<String> = arrayOf("listen","close","on")
+        override fun getMember(k: String?): Any? = when (k) {
+          "listen" -> ProxyExecutable { argv: Array<Value> -> if (!started) started = true; argv.lastOrNull()?.takeIf { it.canExecute() }?.execute(); this }
+          "close" -> ProxyExecutable { _: Array<Value> -> this }
+          "on" -> ProxyExecutable { _: Array<Value> -> this }
+          else -> null
+        }
+      }
+    }
+    else -> null
+  }
 }

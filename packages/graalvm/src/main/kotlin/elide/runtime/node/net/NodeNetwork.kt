@@ -20,6 +20,8 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.NetAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 
 // Installs the Node `net` module into the intrinsic bindings.
 @Intrinsic internal class NodeNetworkModule : AbstractNodeBuiltinModule() {
@@ -40,8 +42,19 @@ internal class NodeNetwork : ReadOnlyProxyObject, NetAPI {
     @JvmStatic fun create(): NodeNetwork = NodeNetwork()
   }
 
-  // @TODO not yet implemented
-
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  override fun getMemberKeys(): Array<String> = arrayOf("createServer")
+  override fun getMember(key: String?): Any? = when (key) {
+    "createServer" -> ProxyExecutable { _: Array<Value> ->
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("listen","close","on")
+        override fun getMember(k: String?): Any? = when (k) {
+          "listen" -> ProxyExecutable { argv: Array<Value> -> argv.lastOrNull()?.takeIf { it.canExecute() }?.execute(); this }
+          "close" -> ProxyExecutable { _: Array<Value> -> this }
+          "on" -> ProxyExecutable { _: Array<Value> -> this }
+          else -> null
+        }
+      }
+    }
+    else -> null
+  }
 }

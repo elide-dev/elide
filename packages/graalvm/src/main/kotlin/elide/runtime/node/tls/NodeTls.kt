@@ -6,6 +6,7 @@ package elide.runtime.node.tls
 
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyArray
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.loader.ModuleInfo
@@ -47,7 +48,16 @@ internal class NodeTls private constructor() : ReadOnlyProxyObject, TLSAPI {
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS
 
   override fun getMember(key: String?): Any? = when (key) {
-    F_CREATE_SERVER, F_CONNECT, F_CREATE_SECURE_CONTEXT, F_GET_CIPHERS -> ProxyExecutable { _: Array<Value> -> null }
+    F_CREATE_SERVER, F_CONNECT, F_CREATE_SECURE_CONTEXT -> ProxyExecutable { _: Array<Value> -> null }
+    F_GET_CIPHERS -> ProxyExecutable { _: Array<Value> ->
+      // Provide a representative list of common cipher names
+      val ciphers = arrayOf(
+        "TLS_AES_256_GCM_SHA384",
+        "TLS_AES_128_GCM_SHA256",
+        "TLS_CHACHA20_POLY1305_SHA256",
+      )
+      ProxyArray.fromArray(*ciphers)
+    }
     P_DEFAULT_MIN_VERSION -> "TLSv1.2"
     P_DEFAULT_MAX_VERSION -> "TLSv1.3"
     else -> null

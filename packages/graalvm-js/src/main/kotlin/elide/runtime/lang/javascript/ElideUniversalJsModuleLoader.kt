@@ -125,6 +125,7 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.STRING_DECODER,
   NodeModuleName.TEST,
   NodeModuleName.TIMERS,
+  NodeModuleName.TIMERS_PROMISES,
   NodeModuleName.TLS,
   NodeModuleName.TTY,
   NodeModuleName.URL,
@@ -187,6 +188,7 @@ public inline fun String.asJsSymbolString(): String = replace("/", "_")
   public const val STRING_DECODER: String = "string_decoder"
   public const val TEST: String = "test"
   public const val TIMERS: String = "timers"
+  public const val TIMERS_PROMISES: String = "timers/promises"
   public const val TLS: String = "tls"
   public const val TRACE_EVENTS: String = "trace_events"
   public const val TTY: String = "tty"

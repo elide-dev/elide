@@ -234,6 +234,26 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
     cls(URLSearchParamsIntrinsic.URLSearchParams::class)
     cls(URLSearchParamsIntrinsic.MutableURLSearchParams::class)
 
+    // `tls`
+    cls(TLSAPI::class)
+    cls(elide.runtime.node.tls.NodeTls::class)
+
+    // `trace_events`
+    cls(elide.runtime.intrinsics.js.node.TraceEventsAPI::class)
+    cls(elide.runtime.node.trace.NodeTraceEvents::class)
+
+    // `tty`
+    cls(TtyAPI::class)
+    cls(elide.runtime.node.tty.NodeTty::class)
+
+    // `v8`
+    cls(V8API::class)
+    cls(elide.runtime.node.v8.NodeV8::class)
+
+    // `vm`
+    cls(VMAPI::class)
+    cls(elide.runtime.node.vm.NodeVm::class)
+
     // `worker`
     cls(WorkerAPI::class)
     cls(NodeWorker::class)

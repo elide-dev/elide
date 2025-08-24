@@ -21,6 +21,7 @@ import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ModuleAPI
 import elide.runtime.lang.javascript.NodeModuleName
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.proxy.ProxyArray
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
@@ -63,10 +64,13 @@ internal class NodeModules : ReadOnlyProxyObject, ModuleAPI {
       builtins.contains(name)
     }
     "createRequire" -> ProxyExecutable { _ ->
-      // Return a minimal require() that proxies to global require
+      // Return a require() that resolves builtins via ModuleRegistry and JS via Elide's loader when possible.
       ProxyExecutable { argv: Array<Value> ->
         val id = argv.firstOrNull()?.asString() ?: ""
-        Value.asValue(requireNotNull(Value.asValue(null).context).getBindings("js").getMember("require")).execute(id)
+        // Builtins: support both 'node:mod' and 'mod'
+        ModuleInfo.find(id.removePrefix("node:"))?.let { return@ProxyExecutable ModuleRegistry.load(it) }
+        // Fallback: delegate to global require in the current JS context
+        return@ProxyExecutable Context.getCurrent().getBindings("js").getMember("require").execute(id)
       }
     }
     "register" -> ProxyExecutable { _: Array<Value> -> null }

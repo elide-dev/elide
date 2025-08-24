@@ -20,6 +20,10 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.HTTPSAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyArray
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 
 // Installs the Node `https` module into the intrinsic bindings.
 @Intrinsic internal class NodeHttpsModule : AbstractNodeBuiltinModule() {
@@ -41,8 +45,37 @@ internal class NodeHttps private constructor () : ReadOnlyProxyObject, HTTPSAPI 
     @JvmStatic fun create(): NodeHttps = NodeHttps()
   }
 
-  // @TODO not yet implemented
+  private class ReadOnlyTypeObject(private val name: String) : ReadOnlyProxyObject {
+    override fun getMemberKeys(): Array<String> = emptyArray()
+    override fun getMember(key: String?): Any? = null
+    override fun toString(): String = "[object $name]"
+  }
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  private val ALL_MEMBERS = arrayOf(
+    "Agent","Server","createServer","get","globalAgent","request"
+  )
+
+  override fun getMemberKeys(): Array<String> = ALL_MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    "Agent" -> ReadOnlyTypeObject("Agent")
+    "Server" -> ReadOnlyTypeObject("Server")
+    "createServer", "get", "request" -> ProxyExecutable { _: Array<Value> ->
+      object : ReadOnlyProxyObject {
+        private var started = false
+        override fun getMemberKeys(): Array<String> = arrayOf("listen","close","address","on")
+        override fun getMember(k: String?): Any? = when (k) {
+          "listen" -> ProxyExecutable { argv: Array<Value> ->
+            if (!started) started = true
+            argv.lastOrNull()?.takeIf { it.canExecute() }?.execute(); this
+          }
+          "close" -> ProxyExecutable { _: Array<Value> -> this }
+          "address" -> ProxyExecutable { _: Array<Value> -> ProxyObject.fromMap(mapOf("port" to 0)) }
+          "on" -> ProxyExecutable { _: Array<Value> -> this }
+          else -> null
+        }
+      }
+    }
+    "globalAgent" -> null
+    else -> null
+  }
 }

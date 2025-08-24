@@ -66,7 +66,22 @@ internal class NodeWorkerThreads private constructor() : ReadOnlyProxyObject, Wo
         }
       }
     }
-    P_PARENT_PORT -> null
+    P_PARENT_PORT -> object : ReadOnlyProxyObject {
+      private var onmessage: Any? = null
+      override fun getMemberKeys(): Array<String> = arrayOf("postMessage","onmessage")
+      override fun getMember(k: String?): Any? = when (k) {
+        "postMessage" -> ProxyExecutable { argv: Array<org.graalvm.polyglot.Value> ->
+          val handler = onmessage
+          if (handler is org.graalvm.polyglot.proxy.ProxyExecutable) handler.execute(argv.getOrNull(0))
+          null
+        }
+        "onmessage" -> onmessage
+        else -> null
+      }
+      override fun putMember(key: String?, value: org.graalvm.polyglot.Value?) {
+        if (key == "onmessage") onmessage = value else super.putMember(key, value)
+      }
+    }
     else -> null
   }
 }

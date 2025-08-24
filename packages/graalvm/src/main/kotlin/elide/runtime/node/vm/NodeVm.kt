@@ -93,6 +93,7 @@ internal class NodeVm private constructor() : ReadOnlyProxyObject, VMAPI {
       val code = args.getOrNull(0)?.asString() ?: ""
       if (code.isEmpty()) return@ProxyExecutable null
       val ctx = args.getOrNull(1)
+      // Use a fresh context to avoid global pollution; bind provided context members
       val fresh = Context.newBuilder("js").allowAllAccess(true).build()
       try {
         val bindings = fresh.getBindings("js")

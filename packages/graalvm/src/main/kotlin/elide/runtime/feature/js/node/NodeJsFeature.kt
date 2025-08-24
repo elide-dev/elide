@@ -225,6 +225,10 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
     cls(TestAPI::class)
     cls(NodeTest::class)
 
+    // `constants`
+    cls(ConstantsAPI::class)
+    cls(elide.runtime.node.constants.NodeConstants::class)
+
     // `url`
     cls(URLAPI::class)
     cls(NodeURL::class)

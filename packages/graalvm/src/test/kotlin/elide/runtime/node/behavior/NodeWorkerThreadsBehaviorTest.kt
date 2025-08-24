@@ -11,7 +11,7 @@ import kotlin.test.Test
   override val moduleName: String get() = "worker_threads"
   override fun provide(): elide.runtime.node.worker.NodeWorkerThreadsModule = elide.runtime.node.worker.NodeWorkerThreadsModule()
 
-  @Test fun `worker constructor returns object`() = test {
+  @Test fun `worker constructor returns object`() {
     val code = """
       const wt = require('node:worker_threads');
       const w = new wt.Worker('');
@@ -20,7 +20,7 @@ import kotlin.test.Test
       w.terminate();
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

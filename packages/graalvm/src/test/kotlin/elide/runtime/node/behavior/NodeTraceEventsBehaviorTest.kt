@@ -11,7 +11,7 @@ import kotlin.test.Test
   override val moduleName: String get() = "trace_events"
   override fun provide(): elide.runtime.node.trace.NodeTraceEventsModule = elide.runtime.node.trace.NodeTraceEventsModule()
 
-  @Test fun `createTracing returns controller`() = test {
+  @Test fun `createTracing returns controller`() {
     val code = """
       const trace = require('node:trace_events');
       const ctrl = trace.createTracing({categories:'node.perf'});
@@ -20,7 +20,7 @@ import kotlin.test.Test
       ctrl.disable();
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

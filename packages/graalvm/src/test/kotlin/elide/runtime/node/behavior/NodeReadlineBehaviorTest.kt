@@ -11,14 +11,14 @@ import kotlin.test.Test
   override val moduleName: String get() = "readline"
   override fun provide(): elide.runtime.node.readline.NodeReadlineModule = elide.runtime.node.readline.NodeReadlineModule()
 
-  @Test fun `createInterface and question`() = test {
+  @Test fun `createInterface and question`() {
     val code = """
       const rl = require('node:readline').createInterface({});
       rl.question('answer', (ans) => {});
       rl.close();
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

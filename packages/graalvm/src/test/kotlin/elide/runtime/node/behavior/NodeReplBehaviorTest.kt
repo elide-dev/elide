@@ -11,7 +11,7 @@ import kotlin.test.Test
   override val moduleName: String get() = "repl"
   override fun provide(): elide.runtime.node.repl.NodeReplModule = elide.runtime.node.repl.NodeReplModule()
 
-  @Test fun `start returns repl-like controller`() = test {
+  @Test fun `start returns repl-like controller`() {
     val code = """
       const repl = require('node:repl');
       const s = repl.start();
@@ -20,7 +20,7 @@ import kotlin.test.Test
       s.close();
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest(true) { code }
   }
 }
 

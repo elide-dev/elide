@@ -776,6 +776,14 @@ val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
   workingDir(rootDir)
   dependsOn("buildThirdPartyNatives")
 
+  val skipNatives = providers.gradleProperty("elide.skipNatives").isPresent
+  onlyIf {
+    if (skipNatives) {
+      logger.lifecycle("Skipping rust natives build (elide.skipNatives=true)")
+      false
+    } else true
+  }
+
   executable = "cargo"
   args(baseCargoFlags.plus("--release"))
   environment("JAVA_HOME", System.getProperty("java.home"))
@@ -788,6 +796,14 @@ val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
 val buildRustNativesForHost by tasks.registering(Exec::class) {
   workingDir(rootDir)
   dependsOn("buildThirdPartyNatives")
+
+  val skipNatives = providers.gradleProperty("elide.skipNatives").isPresent
+  onlyIf {
+    if (skipNatives) {
+      logger.lifecycle("Skipping rust natives build (elide.skipNatives=true)")
+      false
+    } else true
+  }
 
   executable = "cargo"
   args(baseCargoFlags.plus(listOfNotNull(if (isRelease) "--release" else null)))

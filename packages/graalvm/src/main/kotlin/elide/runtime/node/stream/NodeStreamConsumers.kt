@@ -66,28 +66,71 @@ internal class NodeStreamConsumers : ReadOnlyProxyObject, StreamConsumersAPI {
     CONSUMERS_TEXT_FN -> ProxyExecutable { args ->
       // Accept Buffer | Uint8Array | ArrayBuffer | string | minimal ReadableStream; resolve to string
       val v: Value? = args.firstOrNull()
-      // Minimal ReadableStream support: read a single chunk and decode
-      if (v != null && !v.isNull && v.hasMembers() && v.getMember("getReader")?.canExecute() == true) {
+      // ReadableStream or AsyncIterable: accumulate chunks and decode
+      if (v != null && !v.isNull && v.hasMembers() && (v.getMember("getReader")?.canExecute() == true || v.getMember("next")?.canExecute() == true)) {
         val promise = JsPromise<String>()
-        val reader = v.getMember("getReader").execute()
-        val readPromise = reader.getMember("read").execute()
-        val onFulfilled = ProxyExecutable { fargs: Array<Value> ->
-          val res = fargs.firstOrNull()
-          val done = res?.getMember("done")?.asBoolean() == true
-          val valv = res?.getMember("value")
-          if (done || valv == null || valv.isNull) {
-            promise.resolve("")
-          } else {
-            val len = valv.arraySize.toInt()
-            val out = ByteArray(len)
-            var i = 0
-            while (i < len) { out[i] = (valv.getArrayElement(i.toLong()).asInt() and 0xFF).toByte(); i++ }
-            promise.resolve(TextDecoder().decode(Value.asValue(out)))
+        // Try ReadableStream first
+        if (v.getMember("getReader")?.canExecute() == true) {
+          val reader = v.getMember("getReader").execute()
+          val chunks = mutableListOf<Byte>()
+          fun pump() {
+            val p = reader.getMember("read").execute()
+            val onFulfilled = ProxyExecutable { fargs: Array<Value> ->
+              val res = fargs.firstOrNull()
+              val done = res?.getMember("done")?.asBoolean() == true
+              val valv = res?.getMember("value")
+              if (done) {
+                val arr = chunks.toByteArray()
+                promise.resolve(TextDecoder().decode(Value.asValue(arr as Any)))
+              } else if (valv != null && !valv.isNull && valv.hasArrayElements()) {
+                val len = valv.arraySize.toInt()
+                var i = 0
+                while (i < len) { chunks.add((valv.getArrayElement(i.toLong()).asInt() and 0xFF).toByte()); i++ }
+                pump()
+              } else {
+                pump()
+              }
+              null
+            }
+            val onRejected = ProxyExecutable { rargs: Array<Value> -> promise.reject(rargs.firstOrNull()); null }
+            p.getMember("then").execute(onFulfilled, onRejected)
           }
-          null
+          pump()
+        } else {
+          // AsyncIterable path: for await (chunk of v)
+          val bindings = Context.getCurrent().getBindings("js")
+          val asyncIterSym = bindings.getMember("Symbol").getMember("asyncIterator")
+          val iterator = v.getMember(asyncIterSym.asString())?.execute()
+          if (iterator != null && iterator.hasMembers()) {
+            val nextFn = iterator.getMember("next")
+            val chunks = mutableListOf<Byte>()
+            fun step() {
+              val p = nextFn.execute()
+              val onFulfilled = ProxyExecutable { fargs: Array<Value> ->
+                val res = fargs.firstOrNull()
+                val done = res?.getMember("done")?.asBoolean() == true
+                val valv = res?.getMember("value")
+                if (done) {
+                  val arr = chunks.toByteArray()
+                  promise.resolve(TextDecoder().decode(Value.asValue(arr as Any)))
+                } else if (valv != null && !valv.isNull && valv.hasArrayElements()) {
+                  val len = valv.arraySize.toInt()
+                  var i = 0
+                  while (i < len) { chunks.add((valv.getArrayElement(i.toLong()).asInt() and 0xFF).toByte()); i++ }
+                  step()
+                } else {
+                  step()
+                }
+                null
+              }
+              val onRejected = ProxyExecutable { rargs: Array<Value> -> promise.reject(rargs.firstOrNull()); null }
+              p.getMember("then").execute(onFulfilled, onRejected)
+            }
+            step()
+          } else {
+            promise.resolve("")
+          }
         }
-        val onRejected = ProxyExecutable { rargs: Array<Value> -> promise.reject(rargs.firstOrNull()); null }
-        readPromise.getMember("then").execute(onFulfilled, onRejected)
         promise
       } else {
         val bytes: ByteArray? = when {

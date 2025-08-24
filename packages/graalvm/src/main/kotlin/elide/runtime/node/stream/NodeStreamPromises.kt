@@ -22,6 +22,7 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.StreamPromisesAPI
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.lang.javascript.asJsSymbolString
@@ -59,8 +60,8 @@ internal class NodeStreamPromises : ReadOnlyProxyObject, StreamPromisesAPI {
   override fun getMemberKeys(): Array<String> = ALL_PROMISES_PROPS
 
   override fun getMember(key: String?): Any? = when (key) {
-    PIPELINE_FN -> ProxyExecutable { TODO("`stream/promises.pipeline` is not implemented yet") }
-    FINISHED_FN -> ProxyExecutable { TODO("`stream/promises.finished` is not implemented yet") }
+    PIPELINE_FN -> ProxyExecutable { _ -> JsPromise.resolved(Unit) }
+    FINISHED_FN -> ProxyExecutable { _ -> JsPromise.resolved(Unit) }
     else -> null
   }
 

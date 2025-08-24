@@ -13,7 +13,7 @@ import elide.testing.annotations.TestCase
   override val moduleName: String get() = "wasi"
   override fun provide(): Nothing = error("no provide")
 
-  @Test fun `should load wasi and expose WASI constructor`() = test {
+  @Test fun `should load wasi and expose WASI constructor`() {
     val code = """
       const wasi = require('wasi');
       if (typeof wasi !== 'object') throw new Error('wasi did not load');
@@ -21,7 +21,7 @@ import elide.testing.annotations.TestCase
       new wasi.WASI({});
       'ok';
     """.trimIndent()
-    executeGuest(code)
+    executeGuest { code }
   }
 }
 

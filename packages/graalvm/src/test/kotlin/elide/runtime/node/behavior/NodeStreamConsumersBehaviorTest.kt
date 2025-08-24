@@ -6,6 +6,7 @@ package elide.runtime.node.behavior
 
 import elide.runtime.node.stream.NodeStreamConsumersModule
 import elide.testing.annotations.TestCase
+import elide.runtime.plugins.js.javascript
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -15,7 +16,7 @@ import kotlin.test.assertNotNull
   override fun provide(): NodeStreamConsumersModule = NodeStreamConsumersModule()
   override fun expectCompliance(): Boolean = false
 
-  @Test fun `text() - multi-chunk ReadableStream`() {
+  @Test fun `text() - multi-chunk ReadableStream`() { // returns a Promise; smoke that call
     val js = """
       const { ReadableStream } = globalThis;
       const chunks = [new Uint8Array([0x68,0x65,0x6c]), new Uint8Array([0x6c,0x6f])];

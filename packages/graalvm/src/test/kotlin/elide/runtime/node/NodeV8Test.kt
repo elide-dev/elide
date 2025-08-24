@@ -12,7 +12,8 @@ import elide.testing.annotations.TestCase
   override val moduleName: String get() = "v8"
   override fun provide(): elide.runtime.node.v8.NodeV8Module = elide.runtime.node.v8.NodeV8Module()
 
-  @Test fun `should load v8 module`() = test {
+  // GraalJS is not V8; ensure we can require the facade shape without engine-specific behaviors.
+  @Test fun `should load v8 module`() {
     require()
   }
 }

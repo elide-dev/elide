@@ -49,7 +49,6 @@ internal class NodeWasi private constructor() : ReadOnlyProxyObject, WASIAPI {
       object : ReadOnlyProxyObject {
         override fun getMemberKeys(): Array<String> = emptyArray()
         override fun getMember(key: String?): Any? = null
-        override fun hasMember(key: String?): Boolean = false
         override fun putMember(key: String?, value: Value?): Unit = error("Cannot modify `WASI` instance")
       }
     }

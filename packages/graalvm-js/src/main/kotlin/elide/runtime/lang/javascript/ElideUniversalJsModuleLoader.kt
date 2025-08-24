@@ -134,6 +134,7 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.VM,
   NodeModuleName.WORKER,
   NodeModuleName.WORKER_THREADS,
+  NodeModuleName.WASI,
   NodeModuleName.ZLIB,
   // wasi is not a standard core module string in our NodeModuleName; allow 'wasi' directly
 )
@@ -199,6 +200,7 @@ public inline fun String.asJsSymbolString(): String = replace("/", "_")
   public const val VM: String = "vm"
   public const val WORKER: String = "worker"
   public const val WORKER_THREADS: String = "worker_threads"
+  public const val WASI: String = "wasi"
   public const val ZLIB: String = "zlib"
 
   // named modules do not contain periods

@@ -55,13 +55,11 @@ internal class NodePunycode private constructor() : ReadOnlyProxyObject, Punycod
     // Placeholders for raw punycode encode/decode (not domain functions)
     F_ENCODE -> ProxyExecutable { args ->
       val input = args.getOrNull(0)?.asString() ?: ""
-      // Not a full raw punycode encoder; use IDN.toASCII as an approximation for domain-like strings
-      IDN.toASCII(input)
+      elide.runtime.node.punycode.PunycodeAlgo.encode(input)
     }
     F_DECODE -> ProxyExecutable { args ->
       val input = args.getOrNull(0)?.asString() ?: ""
-      // Not a full raw punycode decoder; use IDN.toUnicode as an approximation
-      IDN.toUnicode(input)
+      elide.runtime.node.punycode.PunycodeAlgo.decode(input)
     }
     else -> null
   }

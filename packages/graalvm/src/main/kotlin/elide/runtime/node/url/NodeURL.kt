@@ -106,6 +106,11 @@ internal class NodeURL : ReadOnlyProxyObject, URLAPI {
         val uri = URI(href)
         // Only handle file scheme
         if (uri.scheme?.lowercase() != "file") return@ProxyExecutable ""
+        // Handle Windows drive letters and UNC
+        if (uri.authority != null && uri.path != null && uri.path!!.startsWith("/")) {
+          // file://server/share -> \\server\share
+          return@ProxyExecutable "\\\\" + uri.authority + uri.path!!.replace('/', '\\')
+        }
         Paths.get(uri).toString()
       } catch (_: Throwable) {
         ""
@@ -120,6 +125,12 @@ internal class NodeURL : ReadOnlyProxyObject, URLAPI {
         // Normalize to `file:///` for Windows and platforms that emit `file:/` from toUri()
         if (href.startsWith("file:/") && !href.startsWith("file:///")) {
           href = href.replaceFirst("file:/", "file:///")
+        }
+        // Ensure UNC shares get the correct authority form
+        if (input.startsWith("\\\\")) {
+          // file:////server/share style
+          val without = input.removePrefix("\\\\").replace('\\', '/')
+          href = "file:////" + without
         }
         // Return a URL object per Node API
         (URLIntrinsic.constructor as ProxyInstantiable).newInstance(Value.asValue(href))

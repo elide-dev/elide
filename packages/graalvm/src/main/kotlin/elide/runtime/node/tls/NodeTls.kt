@@ -85,12 +85,19 @@ internal class NodeTls private constructor() : ReadOnlyProxyObject, TLSAPI {
       }
     }
     F_GET_CIPHERS -> ProxyExecutable { _: Array<Value> ->
-      val ciphers = arrayOf(
-        "TLS_AES_256_GCM_SHA384",
-        "TLS_AES_128_GCM_SHA256",
-        "TLS_CHACHA20_POLY1305_SHA256",
-      )
-      ProxyArray.fromArray(*ciphers)
+      try {
+        val ctx = javax.net.ssl.SSLContext.getInstance("TLS")
+        ctx.init(null, null, null)
+        val params = ctx.defaultSSLParameters
+        val suites = params.cipherSuites ?: emptyArray()
+        org.graalvm.polyglot.proxy.ProxyArray.fromArray(*suites)
+      } catch (_: Throwable) {
+        org.graalvm.polyglot.proxy.ProxyArray.fromArray(
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_AES_128_GCM_SHA256",
+          "TLS_CHACHA20_POLY1305_SHA256",
+        )
+      }
     }
     P_DEFAULT_MIN_VERSION -> "TLSv1.2"
     P_DEFAULT_MAX_VERSION -> "TLSv1.3"

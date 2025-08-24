@@ -40,27 +40,38 @@ private val ALL_MEMBERS = arrayOf(
 internal class NodeTraceEvents private constructor() : ReadOnlyProxyObject, TraceEventsAPI {
   companion object { @JvmStatic fun create(): NodeTraceEvents = NodeTraceEvents() }
 
+  private val enabledCategories: MutableSet<String> = linkedSetOf()
+
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS
 
   override fun getMember(key: String?): Any? = when (key) {
     F_CREATE_TRACING -> ProxyExecutable { args ->
       val opts = args.getOrNull(0)
-      val categories = opts?.getMember("categories")?.takeIf { it.isString }?.asString() ?: ""
+      val cats = (opts?.getMember("categories")?.takeIf { it.isString }?.asString() ?: "")
+        .split(',')
+        .mapNotNull { it.trim().takeIf { s -> s.isNotEmpty() } }
       object : ReadOnlyProxyObject {
         private var enabled = false
         override fun getMemberKeys(): Array<String> = arrayOf("enable","disable","enabled","categories")
         override fun getMember(k: String?): Any? = when (k) {
-          "enable" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> -> enabled = true; null }
-          "disable" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> -> enabled = false; null }
+          "enable" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> ->
+            enabled = true
+            enabledCategories.addAll(cats)
+            null
+          }
+          "disable" -> ProxyExecutable { _: Array<org.graalvm.polyglot.Value> ->
+            enabled = false
+            cats.forEach { enabledCategories.remove(it) }
+            null
+          }
           "enabled" -> enabled
-          "categories" -> categories
+          "categories" -> cats.joinToString(",")
           else -> null
         }
       }
     }
     F_GET_ENABLED_CATEGORIES -> ProxyExecutable { _ ->
-      // In this minimal implementation, return a deterministic empty string
-      ""
+      enabledCategories.joinToString(",")
     }
     else -> null
   }

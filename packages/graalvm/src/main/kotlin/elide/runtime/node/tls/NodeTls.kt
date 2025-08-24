@@ -70,11 +70,16 @@ internal class NodeTls private constructor() : ReadOnlyProxyObject, TLSAPI {
     }
     F_CREATE_SECURE_CONTEXT -> ProxyExecutable { args ->
       val opts = args.getOrNull(0)
-      // Return options echo object for now
+      val ca = opts?.getMember("ca")
+      val cert = opts?.getMember("cert")
+      val key = opts?.getMember("key")
       object : ReadOnlyProxyObject {
-        override fun getMemberKeys(): Array<String> = arrayOf("context")
+        override fun getMemberKeys(): Array<String> = arrayOf("context","ca","cert","key")
         override fun getMember(k: String?): Any? = when (k) {
           "context" -> opts ?: Value.asValue(null)
+          "ca" -> ca ?: Value.asValue(null)
+          "cert" -> cert ?: Value.asValue(null)
+          "key" -> key ?: Value.asValue(null)
           else -> null
         }
       }

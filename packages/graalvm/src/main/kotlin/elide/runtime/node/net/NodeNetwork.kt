@@ -25,6 +25,8 @@ import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.net.Inet4Address
 import java.net.Inet6Address
 import java.net.InetAddress
+import org.graalvm.polyglot.proxy.ProxyObject
+
 
 // Installs the Node `net` module into the intrinsic bindings.
 @Intrinsic internal class NodeNetworkModule : AbstractNodeBuiltinModule() {
@@ -73,10 +75,11 @@ internal class NodeNetwork : ReadOnlyProxyObject, NetAPI {
     }
     "createServer" -> ProxyExecutable { _: Array<Value> ->
       object : ReadOnlyProxyObject {
-        override fun getMemberKeys(): Array<String> = arrayOf("listen","close","on")
+        override fun getMemberKeys(): Array<String> = arrayOf("listen","close","address","on")
         override fun getMember(k: String?): Any? = when (k) {
           "listen" -> ProxyExecutable { argv: Array<Value> -> argv.lastOrNull()?.takeIf { it.canExecute() }?.execute(); this }
           "close" -> ProxyExecutable { _: Array<Value> -> this }
+          "address" -> ProxyExecutable { _: Array<Value> -> ProxyObject.fromMap(mapOf("port" to 0)) }
           "on" -> ProxyExecutable { _: Array<Value> -> this }
           else -> null
         }

@@ -24,6 +24,12 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.URLAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
+import java.net.IDN
+import java.net.URI
+import java.nio.file.Paths
 
 // Constructor for `URL`.
 private const val URL_CONSTRUCTOR_FN = "URL"
@@ -66,12 +72,93 @@ internal class NodeURL : ReadOnlyProxyObject, URLAPI {
   override fun getMember(key: String?): Any? = when (key) {
     URL_CONSTRUCTOR_FN -> URLIntrinsic.constructor
     URLSEARCHPARAMS_CONSTRCUTOR_FN -> URLSearchParamsIntrinsic.constructor
-    DOMAIN_TO_ASCII_FN,
-    DOMAIN_TO_UNICODE_FN,
-    FILE_URL_TO_PATH_FN,
-    PATH_TO_FILE_URL_FN,
-    URL_TO_HTTPOPTIONS_FN -> {
-      null // TODO: Implement these methods.
+    DOMAIN_TO_ASCII_FN -> ProxyExecutable { args ->
+      if (args.isEmpty()) return@ProxyExecutable ""
+      val input = args[0].asStringSafe()
+      if (input.isEmpty()) return@ProxyExecutable ""
+      try {
+        IDN.toASCII(input)
+      } catch (_: Throwable) {
+        ""
+      }
+    }
+    DOMAIN_TO_UNICODE_FN -> ProxyExecutable { args ->
+      if (args.isEmpty()) return@ProxyExecutable ""
+      val input = args[0].asStringSafe()
+      if (input.isEmpty()) return@ProxyExecutable ""
+      try {
+        IDN.toUnicode(input)
+      } catch (_: Throwable) {
+        ""
+      }
+    }
+    FILE_URL_TO_PATH_FN -> ProxyExecutable { args ->
+      if (args.isEmpty()) return@ProxyExecutable ""
+      val raw = args[0]
+      val href = when {
+        raw.isString -> raw.asString()
+        raw.hasMembers() -> raw.getMember("href")?.takeIf { it.isString }?.asString() ?: raw.toString()
+        else -> raw.toString()
+      }
+      if (href.isEmpty()) return@ProxyExecutable ""
+      try {
+        val uri = URI(href)
+        // Only handle file scheme
+        if (uri.scheme?.lowercase() != "file") return@ProxyExecutable ""
+        Paths.get(uri).toString()
+      } catch (_: Throwable) {
+        ""
+      }
+    }
+    PATH_TO_FILE_URL_FN -> ProxyExecutable { args ->
+      if (args.isEmpty()) return@ProxyExecutable null
+      val input = args[0].asStringSafe()
+      if (input.isEmpty()) return@ProxyExecutable null
+      try {
+        val href = Paths.get(input).toUri().toString()
+        // Return a URL object per Node API
+        URLIntrinsic.constructor.execute(href)
+      } catch (_: Throwable) {
+        null
+      }
+    }
+    URL_TO_HTTPOPTIONS_FN -> ProxyExecutable { args ->
+      if (args.isEmpty()) return@ProxyExecutable ProxyObject.fromMap(mutableMapOf<String, Any>())
+      val input = args[0]
+      val href = when {
+        input.isString -> input.asString()
+        input.hasMembers() ->
+          input.getMember("href")?.takeIf { it.isString }?.asString()
+            ?: runCatching { input.toString() }.getOrDefault("")
+        else -> runCatching { input.toString() }.getOrDefault("")
+      }
+      if (href.isBlank()) return@ProxyExecutable ProxyObject.fromMap(mutableMapOf<String, Any>())
+      val map = linkedMapOf<String, Any>()
+      try {
+        val uri = URI(href)
+        val scheme = uri.scheme ?: "http"
+        val hostname = uri.host ?: ""
+        val port = if (uri.port > 0) uri.port.toString() else ""
+        val host = if (port.isNotEmpty() && hostname.isNotEmpty()) "$hostname:$port" else hostname
+        val path = buildString {
+          append(uri.path ?: "")
+          val q = uri.rawQuery
+          if (!q.isNullOrEmpty()) {
+            append("?")
+            append(q)
+          }
+        }
+        val auth = uri.userInfo
+        map["protocol"] = "$scheme:"
+        if (host.isNotEmpty()) map["host"] = host
+        if (hostname.isNotEmpty()) map["hostname"] = hostname
+        if (port.isNotEmpty()) map["port"] = port
+        if (path.isNotEmpty()) map["path"] = path
+        if (!auth.isNullOrEmpty()) map["auth"] = auth
+      } catch (_: Throwable) {
+        // return empty options on parse failure (minimal behavior)
+      }
+      ProxyObject.fromMap(map)
     }
     else -> null
   }
@@ -80,4 +167,11 @@ internal class NodeURL : ReadOnlyProxyObject, URLAPI {
     private val SINGLETON = NodeURL()
     fun obtain(): NodeURL = SINGLETON
   }
+}
+
+// Helper to safely coerce a Polyglot Value to String
+private fun Value.asStringSafe(): String = when {
+  this.isNull -> ""
+  this.isString -> this.asString()
+  else -> this.toString()
 }

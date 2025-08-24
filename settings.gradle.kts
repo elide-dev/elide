@@ -44,7 +44,14 @@ pluginManagement {
     google()
   }
 
-  includeBuild("tools/elide-build")
+  // Allow disabling conventions via either -P or -D for better shell compatibility
+  val includeConventions =
+    gradle.startParameter.projectProperties["elide.includeConventions"]
+      ?: System.getProperty("elide.includeConventions")
+      ?: "true"
+  if (includeConventions.toBoolean()) {
+    includeBuild("tools/elide-build")
+  }
 }
 
 plugins {
@@ -293,4 +300,11 @@ enableFeaturePreview("GROOVY_COMPILATION_AVOIDANCE")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 val elidePluginVersion: String by settings
-apply(from = "https://gradle.elide.dev/$elidePluginVersion/elide.gradle.kts")
+// Allow disabling remote apply via either -P or -D for better shell compatibility
+val applyRemote =
+  gradle.startParameter.projectProperties["elide.applyRemote"]
+    ?: System.getProperty("elide.applyRemote")
+    ?: "true"
+if (applyRemote.toBoolean()) {
+  apply(from = "https://gradle.elide.dev/$elidePluginVersion/elide.gradle.kts")
+}

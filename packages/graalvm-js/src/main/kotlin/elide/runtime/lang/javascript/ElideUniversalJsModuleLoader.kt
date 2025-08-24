@@ -135,6 +135,7 @@ private val allNodeModules = sortedSetOf(
   NodeModuleName.WORKER,
   NodeModuleName.WORKER_THREADS,
   NodeModuleName.ZLIB,
+  // wasi is not a standard core module string in our NodeModuleName; allow 'wasi' directly
 )
 
 /**

@@ -258,6 +258,10 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
     cls(VMAPI::class)
     cls(elide.runtime.node.vm.NodeVm::class)
 
+    // `wasi`
+    cls(WASIAPI::class)
+    cls(elide.runtime.node.wasi.NodeWasi::class)
+
     // `worker`
     cls(WorkerAPI::class)
     cls(NodeWorker::class)

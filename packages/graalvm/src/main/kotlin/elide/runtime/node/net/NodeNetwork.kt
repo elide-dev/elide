@@ -22,6 +22,9 @@ import elide.runtime.intrinsics.js.node.NetAPI
 import elide.runtime.lang.javascript.NodeModuleName
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import java.net.Inet4Address
+import java.net.Inet6Address
+import java.net.InetAddress
 
 // Installs the Node `net` module into the intrinsic bindings.
 @Intrinsic internal class NodeNetworkModule : AbstractNodeBuiltinModule() {
@@ -81,9 +84,29 @@ internal class NodeNetwork : ReadOnlyProxyObject, NetAPI {
     }
     "getDefaultAutoSelectFamily" -> ProxyExecutable { _: Array<Value> -> false }
     "getDefaultAutoSelectFamilyAttemptTimeout" -> ProxyExecutable { _: Array<Value> -> 0 }
-    "isIP" -> ProxyExecutable { _: Array<Value> -> 0 }
-    "isIPv4" -> ProxyExecutable { _: Array<Value> -> false }
-    "isIPv6" -> ProxyExecutable { _: Array<Value> -> false }
+    "isIP" -> ProxyExecutable { args: Array<Value> ->
+      val ip = args.firstOrNull()?.takeIf { it.isString }?.asString()
+      if (ip.isNullOrBlank()) 0 else try {
+        val addr = InetAddress.getByName(ip)
+        when (addr) {
+          is Inet4Address -> 4
+          is Inet6Address -> 6
+          else -> 0
+        }
+      } catch (_: Throwable) { 0 }
+    }
+    "isIPv4" -> ProxyExecutable { args: Array<Value> ->
+      val ip = args.firstOrNull()?.takeIf { it.isString }?.asString()
+      if (ip.isNullOrBlank()) false else try {
+        InetAddress.getByName(ip) is Inet4Address
+      } catch (_: Throwable) { false }
+    }
+    "isIPv6" -> ProxyExecutable { args: Array<Value> ->
+      val ip = args.firstOrNull()?.takeIf { it.isString }?.asString()
+      if (ip.isNullOrBlank()) false else try {
+        InetAddress.getByName(ip) is Inet6Address
+      } catch (_: Throwable) { false }
+    }
     else -> null
   }
 }

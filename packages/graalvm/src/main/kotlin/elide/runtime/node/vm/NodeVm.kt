@@ -12,7 +12,7 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.intrinsics.js.node.NodeAPI
+import elide.runtime.intrinsics.js.node.VMAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
 private const val F_CREATE_CONTEXT = "createContext"
@@ -31,7 +31,7 @@ private val ALL_MEMBERS = arrayOf(
 
 @Intrinsic internal class NodeVmModule : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeVm.create() }
-  internal fun provide(): NodeAPI = singleton
+  internal fun provide(): VMAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.VM)) { singleton }
@@ -39,7 +39,7 @@ private val ALL_MEMBERS = arrayOf(
 }
 
 /** Minimal `vm` module facade. */
-internal class NodeVm private constructor() : ReadOnlyProxyObject, NodeAPI {
+internal class NodeVm private constructor() : ReadOnlyProxyObject, VMAPI {
   companion object { @JvmStatic fun create(): NodeVm = NodeVm() }
 
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS

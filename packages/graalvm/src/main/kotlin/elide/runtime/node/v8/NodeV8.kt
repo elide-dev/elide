@@ -11,12 +11,12 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.intrinsics.js.node.NodeAPI
+import elide.runtime.intrinsics.js.node.V8API
 import elide.runtime.lang.javascript.NodeModuleName
 
 @Intrinsic internal class NodeV8Module : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeV8.create() }
-  internal fun provide(): NodeAPI = singleton
+  internal fun provide(): V8API = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.V8)) { singleton }
@@ -24,7 +24,7 @@ import elide.runtime.lang.javascript.NodeModuleName
 }
 
 /** Minimal `v8` module facade. */
-internal class NodeV8 private constructor() : ReadOnlyProxyObject, NodeAPI {
+internal class NodeV8 private constructor() : ReadOnlyProxyObject, V8API {
   companion object { @JvmStatic fun create(): NodeV8 = NodeV8() }
 
   override fun getMemberKeys(): Array<String> = emptyArray()

@@ -18,6 +18,7 @@ import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
@@ -121,7 +122,7 @@ internal class NodeURL : ReadOnlyProxyObject, URLAPI {
           href = href.replaceFirst("file:/", "file:///")
         }
         // Return a URL object per Node API
-        URLIntrinsic.constructor.execute(href)
+        (URLIntrinsic.constructor as ProxyInstantiable).newInstance(Value.asValue(href))
       } catch (_: Throwable) {
         null
       }

@@ -13,7 +13,7 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.intrinsics.js.node.NodeAPI
+import elide.runtime.intrinsics.js.node.PunycodeAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
 private const val F_DECODE = "decode"
@@ -30,7 +30,7 @@ private val ALL_MEMBERS = arrayOf(
 
 @Intrinsic internal class NodePunycodeModule : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodePunycode.create() }
-  internal fun provide(): NodeAPI = singleton
+  internal fun provide(): PunycodeAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.PUNYCODE)) { singleton }
@@ -38,7 +38,7 @@ private val ALL_MEMBERS = arrayOf(
 }
 
 /** Minimal `punycode` module facade. */
-internal class NodePunycode private constructor() : ReadOnlyProxyObject, NodeAPI {
+internal class NodePunycode private constructor() : ReadOnlyProxyObject, PunycodeAPI {
   companion object { @JvmStatic fun create(): NodePunycode = NodePunycode() }
 
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS

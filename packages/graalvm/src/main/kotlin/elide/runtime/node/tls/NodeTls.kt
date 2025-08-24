@@ -12,7 +12,7 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.intrinsics.js.node.NodeAPI
+import elide.runtime.intrinsics.js.node.TLSAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
 private const val F_CREATE_SERVER = "createServer"
@@ -33,7 +33,7 @@ private val ALL_MEMBERS = arrayOf(
 
 @Intrinsic internal class NodeTlsModule : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeTls.create() }
-  internal fun provide(): NodeAPI = singleton
+  internal fun provide(): TLSAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.TLS)) { singleton }
@@ -41,7 +41,7 @@ private val ALL_MEMBERS = arrayOf(
 }
 
 /** Minimal `tls` module facade. */
-internal class NodeTls private constructor() : ReadOnlyProxyObject, NodeAPI {
+internal class NodeTls private constructor() : ReadOnlyProxyObject, TLSAPI {
   companion object { @JvmStatic fun create(): NodeTls = NodeTls() }
 
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS

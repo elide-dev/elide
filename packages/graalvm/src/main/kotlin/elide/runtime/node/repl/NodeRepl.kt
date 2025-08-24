@@ -11,7 +11,7 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.intrinsics.js.node.NodeAPI
+import elide.runtime.intrinsics.js.node.ReplAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
 private const val F_START = "start"
@@ -20,7 +20,7 @@ private val ALL_MEMBERS = arrayOf(F_START)
 
 @Intrinsic internal class NodeReplModule : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeRepl.create() }
-  internal fun provide(): NodeAPI = singleton
+  internal fun provide(): ReplAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.REPL)) { singleton }
@@ -28,7 +28,7 @@ private val ALL_MEMBERS = arrayOf(F_START)
 }
 
 /** Minimal `repl` module facade. */
-internal class NodeRepl private constructor() : ReadOnlyProxyObject, NodeAPI {
+internal class NodeRepl private constructor() : ReadOnlyProxyObject, ReplAPI {
   companion object { @JvmStatic fun create(): NodeRepl = NodeRepl() }
 
   override fun getMemberKeys(): Array<String> = ALL_MEMBERS

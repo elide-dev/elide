@@ -12,7 +12,9 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.JsPromise.Companion.promise
+import elide.runtime.exec.GuestExecution
 import elide.runtime.lang.javascript.NodeModuleName
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
@@ -49,7 +51,7 @@ internal class NodeTimersPromises private constructor() : ReadOnlyProxyObject {
       val value = args.getOrNull(1)
       val options = args.getOrNull(2)
       val signal = options?.getMember("signal")?.takeIf { it.hasMembers() }
-      promise<Value> {
+      GuestExecution.workStealing().promise<Value> {
         if (signal != null && signal.getMember("aborted")?.asBoolean() == true) {
           val reason = signal.getMember("reason")?.takeIf { !it.isNull }
           reject(reason ?: Value.asValue(elide.runtime.gvm.js.JsError.valueError("Aborted")))
@@ -71,7 +73,7 @@ internal class NodeTimersPromises private constructor() : ReadOnlyProxyObject {
 
     P_SET_IMMEDIATE -> ProxyExecutable { args ->
       val value = args.getOrNull(0)
-      promise<Value> {
+      GuestExecution.workStealing().promise<Value> {
         val setTimeout = jsBinding("setTimeout")
         setTimeout.execute(0, ProxyExecutable { resolve(value ?: Value.asValue(null)) })
       }

@@ -699,7 +699,7 @@ val thirdPartyDir: String =
 val buildThirdPartyNatives by tasks.registering(Exec::class) {
   workingDir(rootProject.layout.projectDirectory.asFile.path)
 
-  val skipNatives = providers.gradleProperty("elide.skipNatives").isPresent
+  val skipNatives = providers.gradleProperty("elide.skipNatives").map { it == "true" }.orElse(false).get() || (System.getenv("ELIDE_SKIP_NATIVES") == "true")
   onlyIf {
     if (skipNatives) {
       logger.lifecycle("Skipping third-party natives build (elide.skipNatives=true)")
@@ -776,7 +776,7 @@ val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
   workingDir(rootDir)
   dependsOn("buildThirdPartyNatives")
 
-  val skipNatives = providers.gradleProperty("elide.skipNatives").isPresent
+  val skipNatives = providers.gradleProperty("elide.skipNatives").map { it == "true" }.orElse(false).get() || (System.getenv("ELIDE_SKIP_NATIVES") == "true")
   onlyIf {
     if (skipNatives) {
       logger.lifecycle("Skipping rust natives build (elide.skipNatives=true)")
@@ -797,7 +797,7 @@ val buildRustNativesForHost by tasks.registering(Exec::class) {
   workingDir(rootDir)
   dependsOn("buildThirdPartyNatives")
 
-  val skipNatives = providers.gradleProperty("elide.skipNatives").isPresent
+  val skipNatives = providers.gradleProperty("elide.skipNatives").map { it == "true" }.orElse(false).get() || (System.getenv("ELIDE_SKIP_NATIVES") == "true")
   onlyIf {
     if (skipNatives) {
       logger.lifecycle("Skipping rust natives build (elide.skipNatives=true)")
@@ -837,7 +837,7 @@ listOf(
   tasks.test,
 ).forEach {
   it.configure {
-    val skipNatives = providers.gradleProperty("elide.skipNatives").isPresent
+    val skipNatives = providers.gradleProperty("elide.skipNatives").map { it == "true" }.orElse(false).get() || (System.getenv("ELIDE_SKIP_NATIVES") == "true")
     if (!skipNatives) {
       dependsOn(natives)
     } else {

@@ -12,12 +12,17 @@
  */
 package elide.runtime.node.dns
 
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import java.net.Inet4Address
+import java.net.Inet6Address
+import java.net.InetAddress
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.node.DNSPromisesAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
@@ -35,14 +40,120 @@ import elide.runtime.lang.javascript.NodeModuleName
  * # Node API: `dns/promises`
  */
 internal class NodeDNSPromises private constructor () : ReadOnlyProxyObject, DNSPromisesAPI {
-  //
+
+  private var defaultResultOrder: String = "verbatim"
+
+  private fun resolveNow(hostname: String, ipv6: Boolean?): List<String> {
+    val all = InetAddress.getAllByName(hostname)
+    val filtered = when (ipv6) {
+      true -> all.filterIsInstance<Inet6Address>()
+      false -> all.filterIsInstance<Inet4Address>()
+      else -> all.toList()
+    }
+    val addresses = filtered.map { it.hostAddress }
+    return when (defaultResultOrder) {
+      "ipv4first" -> addresses.sortedBy { if (it.contains(':')) 1 else 0 }
+      else -> addresses
+    }
+  }
+
+  private fun reverseNow(ip: String): List<String> = try {
+    listOf(InetAddress.getByName(ip).hostName)
+  } catch (_: Throwable) { emptyList() }
+
 
   internal companion object {
     @JvmStatic fun create(): NodeDNSPromises = NodeDNSPromises()
   }
 
-  // @TODO not yet implemented
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  private fun addressesFor(host: String, family: String? = null): Array<String> {
+    val addrs = try { java.net.InetAddress.getAllByName(host).toList() } catch (_: Throwable) { emptyList() }
+    val filtered = when (family) {
+      "A" -> addrs.filterIsInstance<java.net.Inet4Address>()
+      "AAAA" -> addrs.filterIsInstance<java.net.Inet6Address>()
+      null -> addrs
+      else -> addrs
+    }
+    val ordered = when (defaultResultOrder) {
+      "ipv4first" -> filtered.sortedWith(compareBy({ it is java.net.Inet6Address }))
+      else -> filtered
+    }
+    return ordered.map { it.hostAddress }.toTypedArray()
+  }
+
+  override fun getMemberKeys(): Array<String> = arrayOf(
+    "Resolver",
+    "getServers",
+    "resolve",
+    "resolve4",
+    "resolve6",
+    "reverse",
+    "setDefaultResultOrder",
+    "getDefaultResultOrder",
+  )
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "Resolver" -> object : ReadOnlyProxyObject {
+      override fun getMemberKeys(): Array<String> = arrayOf("resolve","resolve4","resolve6","reverse")
+      override fun getMember(k: String?): Any? = when (k) {
+        "resolve" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+          val host = args.getOrNull(0)?.asString() ?: ""
+          elide.runtime.intrinsics.js.JsPromise.resolved(org.graalvm.polyglot.proxy.ProxyArray.fromArray(*addressesFor(host)))
+        }
+        "resolve4" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+          val host = args.getOrNull(0)?.asString() ?: ""
+          elide.runtime.intrinsics.js.JsPromise.resolved(org.graalvm.polyglot.proxy.ProxyArray.fromArray(*addressesFor(host, "A")))
+        }
+        "resolve6" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+          val host = args.getOrNull(0)?.asString() ?: ""
+          elide.runtime.intrinsics.js.JsPromise.resolved(org.graalvm.polyglot.proxy.ProxyArray.fromArray(*addressesFor(host, "AAAA")))
+        }
+        "reverse" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+          val ip = args.getOrNull(0)?.asString() ?: ""
+          val name = try { java.net.InetAddress.getByName(ip).hostName } catch (_: Throwable) { "" }
+          val arr = if (name.isBlank()) org.graalvm.polyglot.proxy.ProxyArray.fromArray() else org.graalvm.polyglot.proxy.ProxyArray.fromArray(name)
+          elide.runtime.intrinsics.js.JsPromise.resolved(arr)
+        }
+        else -> null
+      }
+    }
+
+    "getServers" -> org.graalvm.polyglot.proxy.ProxyExecutable { _ ->
+      elide.runtime.intrinsics.js.JsPromise.resolved(org.graalvm.polyglot.proxy.ProxyArray.fromArray())
+    }
+
+    "resolve" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val host = args.getOrNull(0)?.asString() ?: ""
+      elide.runtime.intrinsics.js.JsPromise.resolved(org.graalvm.polyglot.proxy.ProxyArray.fromArray(*addressesFor(host)))
+    }
+
+    "resolve4" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val host = args.getOrNull(0)?.asString() ?: ""
+      elide.runtime.intrinsics.js.JsPromise.resolved(org.graalvm.polyglot.proxy.ProxyArray.fromArray(*addressesFor(host, "A")))
+    }
+
+    "resolve6" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val host = args.getOrNull(0)?.asString() ?: ""
+      elide.runtime.intrinsics.js.JsPromise.resolved(org.graalvm.polyglot.proxy.ProxyArray.fromArray(*addressesFor(host, "AAAA")))
+    }
+
+    "reverse" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val ip = args.getOrNull(0)?.asString() ?: ""
+      val name = try { java.net.InetAddress.getByName(ip).hostName } catch (_: Throwable) { "" }
+      val arr = if (name.isBlank()) org.graalvm.polyglot.proxy.ProxyArray.fromArray() else org.graalvm.polyglot.proxy.ProxyArray.fromArray(name)
+      elide.runtime.intrinsics.js.JsPromise.resolved(arr)
+    }
+
+    "setDefaultResultOrder" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val mode = args.getOrNull(0)?.asString()?.lowercase() ?: "verbatim"
+      defaultResultOrder = if (mode == "ipv4first") "ipv4first" else "verbatim"
+      elide.runtime.intrinsics.js.JsPromise.resolved(defaultResultOrder)
+    }
+
+    "getDefaultResultOrder" -> org.graalvm.polyglot.proxy.ProxyExecutable { _ -> elide.runtime.intrinsics.js.JsPromise.resolved(defaultResultOrder) }
+
+    else -> null
+
+}
 }

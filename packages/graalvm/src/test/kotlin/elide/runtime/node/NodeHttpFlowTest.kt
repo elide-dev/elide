@@ -21,8 +21,7 @@ internal class NodeHttpFlowTest : NodeModuleConformanceTest<NodeHttpModule>() {
 
   @Test fun `http - createServer basic flow`() {
     // Start a server listening on 0 (ephemeral) and set a simple handler
-    polyglotContext.javascript(
-      """
+    val code = """
       const http = require('node:http');
       const server = http.createServer((req, res) => {
         res.setHeader('X', '1');
@@ -31,8 +30,9 @@ internal class NodeHttpFlowTest : NodeModuleConformanceTest<NodeHttpModule>() {
       });
       server.listen(0);
       server.address();
-      """.trimIndent()
-    )
+      'ok';
+    """.trimIndent()
+    executeGuest(true) { code }.doesNotFail()
     // We don't perform a real HTTP client fetch here; the purpose is to ensure listen() doesn't throw and address() is callable
     val server = require("node:http").getMember("createServer").execute().asHostObject()
     assertNotNull(server)

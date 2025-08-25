@@ -25,7 +25,8 @@ internal class NodeCreateRequireTest : NodeModuleConformanceTest<NodeModulesModu
     val mod = require("node:module")
     val createRequire = mod.getMember("createRequire")
     assertNotNull(createRequire)
-    val req = createRequire.execute(polyglotContext.javascript("import.meta.url", esm = true))
+    // Use a simple string for import.meta.url stand-in; our createRequire ignores it for builtins.
+    val req = createRequire.execute("file:///tmp/test.mjs")
     val urlMod = req.execute("node:url")
     assertNotNull(urlMod)
     assertContains(urlMod.memberKeys, "URL")

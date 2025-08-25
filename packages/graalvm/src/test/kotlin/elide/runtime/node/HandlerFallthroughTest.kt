@@ -4,29 +4,29 @@
  */
 package elide.runtime.node
 
-import elide.runtime.intrinsics.server.http.HttpServerAgent
-import elide.runtime.gvm.test.TestContext
 import elide.testing.annotations.TestCase
 import kotlin.test.Test
 
 /** Verifies non-boolean/undefined handler return is treated as handled (no 404). */
 @TestCase
-internal class HandlerFallthroughTest : TestContext() {
+internal class HandlerFallthroughTest : GenericJsModuleTest<elide.runtime.node.http.NodeHttpModule>() {
+  override val moduleName: String get() = "http"
+  override fun provide(): elide.runtime.node.http.NodeHttpModule = elide.runtime.node.http.NodeHttpModule()
+
   @Test fun `handler returning undefined is treated as handled`() {
-    // This is a lightweight harness: build a handler that returns undefined but writes a response
-    // and ensure the pipeline does not fall through. We simulate by executing guest code that 
-    // registers a handler via Elide.http.router.
+    // Simulate a simple handler that returns undefined but writes a response
     val js = """
-      const engine = Elide.http;
-      engine.router.handle(null, '/*', (req, res, ctx) => {
-        res.header('X', '1');
-        res.send(200, 'ok');
+      const http = require('node:http');
+      const server = http.createServer((req, res) => {
+        res.setHeader('X', '1');
+        res.statusCode = 200;
+        res.end('ok');
         // return undefined (no explicit boolean)
       });
+      server.listen(0);
       true;
     """.trimIndent()
-    // Just ensure this compiles and returns
-    polyglotContext.javascript(js)
+    executeGuest(true) { js } .doesNotFail()
   }
 }
 

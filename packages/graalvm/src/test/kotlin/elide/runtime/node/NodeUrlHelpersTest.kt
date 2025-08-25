@@ -19,7 +19,7 @@ import kotlin.test.assertTrue
 import elide.testing.annotations.TestCase
 
 /** Targeted tests for Node `url` helpers. */
-@TestCase internal class NodeUrlHelpersTest : AbstractJsModuleTest<elide.runtime.node.url.NodeURLModule>() {
+@TestCase internal class NodeUrlHelpersTest : GenericJsModuleTest<elide.runtime.node.url.NodeURLModule>() {
   override val moduleName: String get() = "url"
   override fun provide(): elide.runtime.node.url.NodeURLModule = elide.runtime.node.url.NodeURLModule()
 

@@ -58,13 +58,13 @@ import elide.vm.annotations.Polyglot
   /** Resolve a handler pipeline that iterates over every stage matching the incoming [request]. */
   internal fun pipeline(request: Request, context: HttpContext): ResolvedPipeline = sequence {
     // iterate over every handler in the pipeline
-    pipeline.forEachIndexed { index, stage ->
+    pipeline.forEach { stage ->
       // test the stage against the incoming request
-      logging.debug { "Handling pipeline stage: $index" }
+      logging.debug { "Handling pipeline stage: ${stage.stage}" }
       if (stage.matcher(request, context)) {
-        // found a match, resolve the handler reference
-        logging.debug { "Handler condition matches request at stage $index" }
-        val handler = handlerRegistry.resolve(index) ?: error(
+        // found a match, resolve the handler reference by stage key
+        logging.debug { "Handler condition matches request at stage ${stage.stage}" }
+        val handler = handlerRegistry.resolve(stage.stage) ?: error(
           "Fatal error: unable to resolve handler reference for pipeline stage $stage",
         )
 

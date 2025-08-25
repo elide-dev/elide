@@ -124,7 +124,7 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val timers = JsTimersIntrinsic()
     @JvmStatic private val buffer = NodeBufferModule()
     @JvmStatic private val querystring = NodeQuerystringModule()
-    @JvmStatic private val http = NodeHttpModule()
+    @JvmStatic private val http = NodeHttpModule(execProvider)
     @JvmStatic private val https = NodeHttpsModule()
     @JvmStatic private val http2 = NodeHttp2Module()
     @JvmStatic private val encoding = JsEncodingIntrinsics()

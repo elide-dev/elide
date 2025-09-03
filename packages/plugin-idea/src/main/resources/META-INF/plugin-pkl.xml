@@ -21,5 +21,10 @@
                      groupKey="elide.inspection.manifest.group"
                      enabledByDefault="true"
                      implementationClass="dev.elide.intellij.psi.ElideManifestJvmMainMethodInspection"/>
+
+    <!-- Suppress Pkl project sync notifications for Elide manifest files -->
+    <externalSystem.unlinkedProjectNotificationAware 
+                    implementation="dev.elide.intellij.project.ElideNotificationSuppressor"/>
+    <postStartupActivity implementation="dev.elide.intellij.project.ElideNotificationStartupActivity"/>
   </extensions>
 </idea-plugin>

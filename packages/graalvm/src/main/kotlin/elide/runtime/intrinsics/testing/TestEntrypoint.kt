@@ -12,7 +12,7 @@
  */
 package elide.runtime.intrinsics.testing
 
-import elide.tooling.testing.TestResult
+import elide.tooling.testing.TestOutcome
 
 /**
  * ## Test Entrypoint
@@ -34,5 +34,5 @@ public fun interface TestEntrypoint {
    * Exception state should be described to [TestResult.Fail]. Exceptions thrown by this method lead to an immediate
    * crash of the test runner.
    */
-  public operator fun invoke(): TestResult
+  public operator fun invoke(): TestOutcome
 }

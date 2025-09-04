@@ -14,16 +14,16 @@ package elide.tooling.builder
 
 import io.micronaut.context.BeanContext
 import java.nio.file.Path
-import kotlinx.coroutines.CoroutineScope
 import elide.exec.Action
 import elide.exec.ActionScope
 import elide.exec.ExecutionBinder
-import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.runtime.core.PolyglotContext
 import elide.tooling.config.TestConfigurator.*
 import elide.tooling.config.TestConfigurators
 import elide.tooling.project.ElideProject
 import elide.tooling.project.load
 import elide.tooling.registry.ResolverRegistry
+import elide.tooling.testing.TestRegistry
 
 /**
  * # Test Driver
@@ -38,7 +38,7 @@ import elide.tooling.registry.ResolverRegistry
  *
  * // must already be in a coroutine scope, or establish one for the build
  * coroutineScope {
- *   TestDriver.discoverTests(beanContext, project) {
+ *   TestDriver.configureTests(beanContext, project) {
  *     // bind build events here
  *   }
  * }
@@ -46,17 +46,15 @@ import elide.tooling.registry.ResolverRegistry
  */
 public object TestDriver {
   @JvmStatic
-  public suspend fun CoroutineScope.configureTests(
+  public suspend fun configureTests(
     beanContext: BeanContext,
+    guestContext: () -> PolyglotContext,
     project: ElideProject,
-    registrar: TestingRegistrar? = null,
+    registry: TestRegistry,
     binder: ExecutionBinder? = null,  // @TODO test binder
     resolvers: ResolverRegistry? = null,
     scope: ActionScope? = null,
   ): TestConfiguration {
-    val effectiveRegistrar = registrar ?: requireNotNull(beanContext.getBean(TestingRegistrar::class.java)) {
-      "Failed to resolve testing registrar from DI context"
-    }
     val effectiveScope = scope ?: Action.scope()
     val effectiveResolvers = resolvers ?: ResolverRegistry.create()
     val settings = MutableTestSettings()
@@ -67,17 +65,7 @@ public object TestDriver {
       override val projectRoot: Path get() = project.root
       override val settings: MutableTestSettings get() = settings
     }.also {
-      TestConfigurators.contribute(beanContext, project.load(), effectiveRegistrar, it)
+      TestConfigurators.contribute(beanContext, guestContext, project.load(), registry, it)
     }
-  }
-
-  @JvmStatic
-  public suspend fun CoroutineScope.discoverTests(
-    beanContext: BeanContext,
-    project: ElideProject,
-    registrar: TestingRegistrar? = null,
-    binder: ExecutionBinder? = null,
-  ) {
-    configureTests(beanContext, project, registrar, binder)
   }
 }

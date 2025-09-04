@@ -19,8 +19,8 @@ import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotValue
 import elide.runtime.interop.ReadOnlyProxyObject
-import elide.tooling.testing.TestResult
 import elide.tooling.testing.TestScope
+import elide.tooling.testing.TestOutcome
 
 /**
  * # Testing Registrar
@@ -162,7 +162,7 @@ public interface TestingRegistrar {
      * ### Entrypoint factory.
      *
      * Factory which provides an instance of [TestEntrypoint], which can be used to execute the test and obtain a
-     * [TestResult].
+     * [TestOutcome].
      */
     public val entryFactory: (PolyglotContext) -> TestEntrypoint
   }
@@ -226,9 +226,9 @@ public interface TestingRegistrar {
       try {
         require(block.canExecute()) { "Block is not executable: $block" }
         block.executeVoid()
-        TestResult.Pass
+        TestOutcome.Success
       } catch (err: Throwable) {
-        TestResult.Fail(err)
+        TestOutcome.Failure(err)
       }
     }
 

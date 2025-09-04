@@ -14,36 +14,36 @@
 
 package elide.tooling.jvm
 
-import com.oracle.truffle.espresso.impl.Klass
-import com.oracle.truffle.espresso.impl.Method
-import io.github.classgraph.ClassInfo
-import io.github.classgraph.MethodInfo
-import java.util.stream.Stream
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.jvm.GuestClassgraph
-import elide.runtime.intrinsics.testing.TestingRegistrar
-import elide.runtime.plugins.jvm.Jvm
+import elide.runtime.gvm.jvm.GuestClassgraph.Classgraph
 import elide.tooling.Classpath
 import elide.tooling.ClasspathSpec
 import elide.tooling.MultiPathUsage
 import elide.tooling.config.TestConfigurator
-import elide.tooling.config.TestConfigurator.*
+import elide.tooling.config.TestConfigurator.ElideTestState
+import elide.tooling.config.TestConfigurator.TestConfiguration
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.jvm.resolver.MavenAetherResolver
+import elide.tooling.testing.TestDriverRegistry
+import elide.tooling.testing.jvm.GuestJvmTestDriver
+import elide.tooling.testing.jvm.JvmTestCase
+import elide.tooling.testing.TestGroup
+import elide.tooling.testing.TestRegistry
+import elide.util.UUID
 
 // Scans classpaths for test discovery.
 internal class JvmTestConfigurator : TestConfigurator {
   private companion object {
     private val logging by lazy { Logging.of(JvmTestConfigurator::class) }
 
-    private val eligibleClassAnnotations = arrayOf(
-      "io.micronaut.test.extensions.junit5.annotation.MicronautTest",
-    )
+    // Test registration currently depends on methods, but class-level annotations are tracked here for future use
+    // private val eligibleClassAnnotations = arrayOf(
+    //   "io.micronaut.test.extensions.junit5.annotation.MicronautTest",
+    // )
 
     private val eligibleMethodAnnotations = arrayOf(
       "org.junit.jupiter.api.Test",
@@ -51,88 +51,54 @@ internal class JvmTestConfigurator : TestConfigurator {
       // "kotlin.test.Test",
       // "elide.testing.Test",
     )
-  }
 
-  // Match/register a candidate test class, if it matches criteria; yield a stream of methods to process.
-  private fun matchCandidateClass(registry: TestingRegistrar, cls: ClassInfo): Stream<MethodInfo> {
-    return cls.declaredMethodInfo.stream().also {
-      val clsAnnotated = eligibleClassAnnotations.any { cls.hasAnnotation(it) }
-      val methodAnnotated = cls.declaredMethodInfo.any {
-        eligibleMethodAnnotations.any { method -> it.hasAnnotation(method) }
+    private fun registerTests(registry: TestRegistry, classgraph: Classgraph) {
+      if (classgraph.isEmpty()) {
+        logging.debug { "No tests found on (empty) classpath." }
+        return
       }
-      if (clsAnnotated || methodAnnotated) {
-        registry.register(TestingRegistrar.namedScope(
-          cls.simpleName,
-          cls.name,
-        ))
-      }
-    }
-  }
 
-  // Obtain an instance of the test class, so a test method can be invoked.
-  @Suppress("TooGenericExceptionCaught")
-  private fun instantiateTestClass(ctx: PolyglotContext, cls: ClassInfo): Pair<Klass, Any> {
-    // @TODO junit semantics
-    val guestCls = try {
-      requireNotNull(requireNotNull(ctx.bindings(Jvm)) { "Failed to resolve JVM bindings" }.getMember(cls.name)) {
-        "Test case class not found: '${cls.name}'"
-      }
-    } catch (err: Throwable) {
-      logging.error("Failed to load test class '${cls.name}'", err)
-      throw err
-    }
-    return try {
-      guestCls.`as`(Klass::class.java) to guestCls.newInstance()
-    } catch (err: Throwable) {
-      logging.error("Failed to instantiate test class '${cls.name}'", err)
-      throw err
-    }
-  }
+      // for each class with eligible test methods, emit a suite
+      classgraph.scanResult().use { result ->
+        result.allClasses.forEach { suiteCandidate ->
+          // class suite node, registered lazily
+          var suiteNode: TestGroup? = null
 
-  // Resolve a test method on a test class, so it can be invoked.
-  private fun pluck(guestCls: Klass, method: MethodInfo): Method {
-    // @TODO methods with same-name but different sig? forbid registration of identical names?
-    return guestCls.declaredMethods.first { mth -> mth.name.toString() == method.name }
-  }
+          // methods must have one of the test annotations
+          suiteCandidate.methodInfo.asSequence().filter { candidate ->
+            eligibleMethodAnnotations.any(candidate::hasAnnotation)
+          }.forEach { testCandidate ->
+            if (suiteNode == null) {
+              // lazy registration of the parent node (one-time)
+              suiteNode = TestGroup(
+                id = UUID.random(),
+                parent = null, // currently, there is no way to specify test super-groups via annotations
+                displayName = "${suiteCandidate.packageName}.${suiteCandidate.simpleName}",
+              )
 
-  // Resolve a test method on a test class, so it can be invoked.
-  private fun wrapTestMethod(context: PolyglotContext, instance: Any, method: Method): PolyglotValue {
-    val ctx = context.unwrap()
-    val wrappedInstance = context.unwrap().asValue(instance)
-    val callable = wrappedInstance.getMember(method.name.toString())
-    require(callable.canExecute()) { "Failed to pluck executable instance method: $callable" }
+              registry.register(suiteNode)
+            }
 
-    return ctx.asValue(Runnable {
-      callable.executeVoid()
-    })
-  }
-
-  // Match/register a candidate test method, if it matches criteria.
-  private fun matchCandidateMethod(registry: TestingRegistrar, cls: ClassInfo, method: MethodInfo) {
-    // if the method is annotated with any eligible known annotation, we register it and defer evaluation.
-    if (eligibleMethodAnnotations.any { method.hasAnnotation(it) }) {
-      registry.register(TestingRegistrar.deferred(
-        label = method.name,
-        qualified = "${cls.name}.${method.name}",
-      ) { context ->
-        instantiateTestClass(context, cls).let { (guestCls, instance) ->
-          wrapTestMethod(
-            context,
-            instance,
-            pluck(
-              guestCls,
-              method,
-            ),
-          )
+            registry.register(
+              JvmTestCase(
+                id = UUID.random(),
+                parent = suiteNode.id,
+                displayName = "${suiteNode.displayName}.${testCandidate.name}",
+                className = testCandidate.className,
+                methodName = testCandidate.name,
+              ),
+            )
+          }
         }
-      }, scope = TestingRegistrar.namedScope(
-        cls.simpleName,
-        cls.name,
-      ))
+      }
     }
   }
 
   override suspend fun contribute(state: ElideTestState, config: TestConfiguration) {
+    // add test drivers (force guest only for now, can be configured later)
+    val drivers = state.beanContext.getBean(TestDriverRegistry::class.java)
+    drivers.register(GuestJvmTestDriver(state.guestContextProvider))
+
     val javacMainClassesOutput = state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
       .resolve("classes") // `.../classes/...`
@@ -147,39 +113,30 @@ internal class JvmTestConfigurator : TestConfigurator {
 
     if (javacMainClassesOutput.exists() && javacTestClassesOutput.exists()) {
       val resolver = config.resolvers[DependencyResolver.MavenResolver::class] as? MavenAetherResolver
-      val classpathProvider = resolver?.classpathProvider(object: ClasspathSpec {
-        override val usage: MultiPathUsage get() = MultiPathUsage.TestRuntime
-      })?.classpath()
+      val classpathProvider = resolver?.classpathProvider(
+        object : ClasspathSpec {
+          override val usage: MultiPathUsage get() = MultiPathUsage.TestRuntime
+        },
+      )?.classpath()
 
-      GuestClassgraph.buildFrom(Classpath.from(
-        listOf(
-          javacTestClassesOutput,
-          javacMainClassesOutput,
-        ).plus(
-          classpathProvider?.asList()?.map { it.path } ?: emptyList()
-        )
-      ), root = config.projectRoot) {
+      val classgraph = GuestClassgraph.buildFrom(
+        Classpath.from(
+          listOf(
+            javacTestClassesOutput,
+            javacMainClassesOutput,
+          ).plus(
+            classpathProvider?.asList()?.map { it.path } ?: emptyList(),
+          ),
+        ),
+        root = config.projectRoot,
+      ) {
         // we need to scan for full class and method info, so we can catch method and class tests.
         classgraph.enableClassInfo()
         classgraph.enableAnnotationInfo()
         classgraph.enableMethodInfo()
-      }.let { graph ->
-        when (graph.isEmpty()) {
-          // no tests found on classpath
-          true -> logging.debug { "No tests found on (empty) classpath." }
-
-          // classpath is non-empty; scan for tests
-          false -> graph.scanResult().use { result ->
-            result.allClassesAsMap.values.stream().flatMap { cls ->
-              matchCandidateClass(state.registrar, cls).map { mth ->
-                cls to mth
-              }
-            }.forEach { (host, mth) ->
-              matchCandidateMethod(state.registrar, host, mth)
-            }
-          }
-        }
       }
+
+      registerTests(state.registry, classgraph)
     }
   }
 }

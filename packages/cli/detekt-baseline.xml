@@ -14,6 +14,7 @@
     <ID>LongMethod:InitCommand.kt$InitCommand$@Suppress("ReturnCount", "CyclomaticComplexMethod") override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override fun PolyglotEngineConfiguration.configureEngine(langs: Set&lt;GuestLanguage>)</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$override suspend fun CommandContext.invoke(state: ToolContext&lt;ToolState>): CommandResult</ID>
+    <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$private fun CommandContext.readRunTests( label: String, language: GuestLanguage, ctxAccessor: ContextAccessor, source: List&lt;Source>, execProvider: GuestExecutorProvider, )</ID>
     <ID>LongMethod:ToolShellCommand.kt$ToolShellCommand$private fun displayFormattedError( exc: Throwable, message: String, advice: String? = null, internal: Boolean = false, stacktrace: Boolean = internal, withCause: Boolean = true, )</ID>
     <ID>LoopWithTooManyJumpStatements:ToolShellCommand.kt$ToolShellCommand$while</ID>
     <ID>MagicNumber:RuntimeWorkdirManager.kt$RuntimeWorkdirManager$15</ID>

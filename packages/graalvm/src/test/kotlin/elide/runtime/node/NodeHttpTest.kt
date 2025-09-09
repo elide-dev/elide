@@ -98,8 +98,9 @@ import java.net.URL
     val url = java.net.URI.create("http://127.0.0.1:$port/").toURL()
     val conn = (url.openConnection() as HttpURLConnection).apply {
       requestMethod = "GET"
-      connectTimeout = 2000
-      readTimeout = 2000
+      // CI can be slow to schedule the server and accept/read the first request; be generous here.
+      connectTimeout = 10000
+      readTimeout = 10000
     }
     conn.inputStream.bufferedReader().use { reader ->
       val body = reader.readText()

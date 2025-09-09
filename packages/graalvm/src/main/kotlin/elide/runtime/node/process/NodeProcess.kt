@@ -62,8 +62,11 @@ import elide.vm.annotations.Polyglot
 
 // Implements standard `process` module logic which applies regardless of isolation settings.
 internal abstract class NodeProcessBaseline : ProcessAPI {
+  private val nextTickQueue: java.util.ArrayDeque<() -> Unit> = java.util.ArrayDeque()
   override fun nextTick(callback: (args: Array<Any>) -> Unit, vararg args: Any) {
-    // nothing (not implemented)
+    nextTickQueue.add { callback(args as Array<Any>) }
+    // Drain quickly in current thread; this is a minimal approximation
+    while (nextTickQueue.isNotEmpty()) nextTickQueue.removeFirst().invoke()
   }
 }
 

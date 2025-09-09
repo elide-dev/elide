@@ -12,7 +12,7 @@
  */
 package elide.runtime.node.dgram
 
-import org.graalvm.polyglot.proxy.ProxyExecutable
+
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -22,6 +22,9 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.DatagramAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyObject
 
 // Internal symbol where the Node built-in module is installed.
 private const val DATAGRAM_MODULE_SYMBOL = "node_${NodeModuleName.DGRAM}"
@@ -47,8 +50,25 @@ internal class NodeDatagram private constructor () : ReadOnlyProxyObject, Datagr
     @JvmStatic fun create(): NodeDatagram = NodeDatagram()
   }
 
-  // @TODO not yet implemented
-
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  override fun getMemberKeys(): Array<String> = arrayOf("createSocket")
+  override fun getMember(key: String?): Any? = when (key) {
+    "createSocket" -> ProxyExecutable { _: Array<Value> ->
+      // minimal UDP socket facade with bind/send/close
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("bind","send","close","on")
+        override fun getMember(k: String?): Any? = when (k) {
+          "bind" -> ProxyExecutable { argv: Array<Value> -> argv.lastOrNull()?.takeIf { it.canExecute() }?.execute(); this }
+          "send" -> ProxyExecutable { argv: Array<Value> ->
+            // send(buf, offset, length, port, address, cb)
+            argv.lastOrNull()?.takeIf { it.canExecute() }?.execute()
+            0
+          }
+          "close" -> ProxyExecutable { _: Array<Value> -> null }
+          "on" -> ProxyExecutable { _: Array<Value> -> this }
+          else -> null
+        }
+      }
+    }
+    else -> null
+  }
 }

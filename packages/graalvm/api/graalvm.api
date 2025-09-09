@@ -3578,6 +3578,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/AssertAPI : eli
 public abstract interface class elide/runtime/intrinsics/js/node/AssertStrictAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/AsyncHooksAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/BufferAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 	public abstract fun atob (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 	public abstract fun btoa (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
@@ -3616,6 +3619,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/ClusterAPI : el
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/ConsoleAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ConstantsAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/CryptoAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -3822,6 +3828,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/ProcessAPI : el
 	public abstract fun setTitle (Ljava/lang/String;)V
 }
 
+public abstract interface class elide/runtime/intrinsics/js/node/PunycodeAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
 public abstract interface class elide/runtime/intrinsics/js/node/QuerystringAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 	public abstract fun decode (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
 	public static synthetic fun decode$default (Lelide/runtime/intrinsics/js/node/QuerystringAPI;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Lelide/runtime/intrinsics/js/node/querystring/QueryParams;
@@ -3839,6 +3848,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/ReadlineAPI : e
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/ReadlinePromisesAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/ReplAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/StreamAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -3860,6 +3872,12 @@ public abstract interface class elide/runtime/intrinsics/js/node/TestAPI : elide
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/TimersPromisesAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/TraceEventsAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/TtyAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/URLAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -3901,6 +3919,9 @@ public abstract interface class elide/runtime/intrinsics/js/node/WebStreamsAPI :
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/WorkerAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+}
+
+public abstract interface class elide/runtime/intrinsics/js/node/WorkerThreadsAPI : elide/runtime/intrinsics/js/node/NodeAPI {
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/WritableFilesystemAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -7599,6 +7620,25 @@ public final class elide/runtime/node/asserts/NodeAssertionError$Companion {
 	public static synthetic fun of$default (Lelide/runtime/node/asserts/NodeAssertionError$Companion;Ljava/lang/Object;ZLjava/util/Optional;Ljava/util/Optional;Ljava/lang/String;ILjava/lang/Object;)Lelide/runtime/node/asserts/NodeAssertionError;
 }
 
+public synthetic class elide/runtime/node/async/$NodeAsyncHooksModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/async/$NodeAsyncHooksModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
 public synthetic class elide/runtime/node/buffer/$NodeBufferModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -8029,6 +8069,25 @@ public synthetic class elide/runtime/node/console/$NodeConsoleModule$Definition 
 }
 
 public final synthetic class elide/runtime/node/console/$NodeConsoleModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/constants/$NodeConstantsModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/constants/$NodeConstantsModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z
@@ -8983,6 +9042,35 @@ public final synthetic class elide/runtime/node/process/$NodeProcessModule$Intro
 	public fun isBuildable ()Z
 }
 
+public synthetic class elide/runtime/node/punycode/$NodePunycodeModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/punycode/$NodePunycodeModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/punycode/$NodePunycodeModule$Provide$graalvm0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/runtime/node/querystring/$NodeQuerystringModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -9033,6 +9121,25 @@ public synthetic class elide/runtime/node/readline/$NodeReadlinePromisesModule$D
 }
 
 public final synthetic class elide/runtime/node/readline/$NodeReadlinePromisesModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/repl/$NodeReplModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/repl/$NodeReplModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z
@@ -9187,6 +9294,121 @@ public synthetic class elide/runtime/node/test/$NodeTestModule$Definition : io/m
 }
 
 public final synthetic class elide/runtime/node/test/$NodeTestModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/timers/$NodeTimersModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/timers/$NodeTimersModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/timers/$NodeTimersModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/node/timers/$NodeTimersPromisesModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/timers/$NodeTimersPromisesModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/timers/$NodeTimersPromisesModule$Provide0$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/node/tls/$NodeTlsModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/tls/$NodeTlsModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/trace/$NodeTraceEventsModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/trace/$NodeTraceEventsModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/tty/$NodeTtyModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/tty/$NodeTtyModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z
@@ -9354,6 +9576,63 @@ public abstract interface class elide/runtime/node/util/NodeSystemErrors$SystemE
 	public abstract fun getName ()Ljava/lang/String;
 }
 
+public synthetic class elide/runtime/node/v8/$NodeV8Module$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/v8/$NodeV8Module$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/vm/$NodeVmModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/vm/$NodeVmModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/wasi/$NodeWasiModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/wasi/$NodeWasiModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
 public synthetic class elide/runtime/node/worker/$NodeWorkerModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -9366,6 +9645,25 @@ public synthetic class elide/runtime/node/worker/$NodeWorkerModule$Definition : 
 }
 
 public final synthetic class elide/runtime/node/worker/$NodeWorkerModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun instantiate ()Ljava/lang/Object;
+	public fun isBuildable ()Z
+}
+
+public synthetic class elide/runtime/node/worker/$NodeWorkerThreadsModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/node/worker/$NodeWorkerThreadsModule$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z

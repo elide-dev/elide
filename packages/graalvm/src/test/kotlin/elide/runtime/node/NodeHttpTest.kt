@@ -14,9 +14,15 @@ package elide.runtime.node
 
 import kotlin.test.Test
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+import kotlin.test.assertEquals
 import elide.annotations.Inject
 import elide.runtime.node.http.NodeHttpModule
 import elide.testing.annotations.TestCase
+import elide.runtime.plugins.js.javascript
+import java.net.ServerSocket
+import java.net.HttpURLConnection
+import java.net.URL
 
 /** Tests for Elide's implementation of the Node `http` built-in module. */
 @TestCase internal class NodeHttpTest : NodeModuleConformanceTest<NodeHttpModule>() {
@@ -48,5 +54,60 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(http)
+  }
+
+  private fun findFreePort(): Int = ServerSocket(0).use { it.localPort }
+
+  @Test fun `http - createServer exposes listen and close`(): Unit = run {
+    val out = polyglotContext.javascript(
+      // language=js
+      """
+        import http from "http";
+        const server = http.createServer((req, res) => {});
+        export const listen = (...args) => server.listen(...args);
+        export const close = (...args) => server.close(...args);
+      """.trimIndent(),
+      esm = true,
+    )
+    assertTrue(out.hasMembers())
+    val keys = out.memberKeys.toSet()
+    assertTrue(keys.contains("listen"))
+    assertTrue(keys.contains("close"))
+  }
+
+  @Test fun `http - server responds to basic request`(): Unit = run {
+    val port = findFreePort()
+    val out = polyglotContext.javascript(
+      // language=js
+      """
+        import http from "http";
+        const server = http.createServer((req, res) => {
+          res.statusCode = 200;
+          res.end("ok");
+        });
+        await new Promise(resolve => server.listen($port, "127.0.0.1", resolve));
+        export const ready = true;
+        export const close = () => new Promise(r => server.close(() => r(true)));
+      """.trimIndent(),
+      esm = true,
+    )
+    assertTrue(out.hasMembers())
+    assertTrue(out.getMember("ready").asBoolean())
+
+    // issue a request from the host and assert the response
+    val url = java.net.URI.create("http://127.0.0.1:$port/").toURL()
+    val conn = (url.openConnection() as HttpURLConnection).apply {
+      requestMethod = "GET"
+      connectTimeout = 2000
+      readTimeout = 2000
+    }
+    conn.inputStream.bufferedReader().use { reader ->
+      val body = reader.readText()
+      assertEquals(200, conn.responseCode)
+      assertEquals("ok", body)
+    }
+
+    // try to close the server (ignore result)
+    runCatching { out.getMember("close").execute() }
   }
 }

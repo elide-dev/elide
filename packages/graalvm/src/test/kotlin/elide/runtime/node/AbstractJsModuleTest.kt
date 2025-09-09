@@ -148,13 +148,12 @@ internal abstract class AbstractJsModuleTest<T : GuestIntrinsic> : AbstractJsInt
 
   protected fun import(module: String = moduleName, bind: Boolean = true): Value {
     val modname = module.split(":").last()
-    val modsymbol = if ("/" in modname) modname.split("/").first() else modname
     beforeExec(bind)
     return polyglotContext.javascript(
       // language=js
       """
-        import $modsymbol from "$modname";
-        $modsymbol;
+        import * as __m from "$modname";
+        __m;
       """.trimIndent(),
       esm = true,
     )

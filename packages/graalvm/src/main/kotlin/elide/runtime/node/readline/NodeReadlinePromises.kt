@@ -20,6 +20,9 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.ReadlinePromisesAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import elide.runtime.intrinsics.js.JsPromise
 
 // Installs the Node readline promises module into the intrinsic bindings.
 @Intrinsic internal class NodeReadlinePromisesModule : AbstractNodeBuiltinModule() {
@@ -40,8 +43,19 @@ internal class NodeReadlinePromises private constructor () : ReadOnlyProxyObject
     @JvmStatic fun create(): NodeReadlinePromises = NodeReadlinePromises()
   }
 
-  // @TODO not yet implemented
-
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  override fun getMemberKeys(): Array<String> = arrayOf("createInterface")
+  override fun getMember(key: String?): Any? = when (key) {
+    "createInterface" -> ProxyExecutable { args ->
+      val _opts = args.getOrNull(0)
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("question","close")
+        override fun getMember(k: String?): Any? = when (k) {
+          "question" -> ProxyExecutable { argv: Array<Value> -> JsPromise.resolved(argv.getOrNull(0)?.asString() ?: "") }
+          "close" -> ProxyExecutable { _: Array<Value> -> null }
+          else -> null
+        }
+      }
+    }
+    else -> null
+  }
 }

@@ -53,3 +53,24 @@ packages/*/packaging/** -linguist-detectable
 .github/** -linguist-detectable
 .devcontainer/Dockerfile -linguist-detectable
 .devcontainer/*/Dockerfile -linguist-detectable
+
+
+# Normalize line endings (store LF in repo)
+* text=auto
+
+# Platform-specific exceptions
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.sh  text eol=lf
+
+# Be explicit for common source types
+*.kt   text eol=lf
+*.kts  text eol=lf
+*.java text eol=lf
+*.js   text eol=lf
+*.mjs  text eol=lf
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.css  text eol=lf
+*.scss text eol=lf
+*.md   text eol=lf

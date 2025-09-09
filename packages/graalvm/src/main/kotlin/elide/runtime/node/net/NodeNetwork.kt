@@ -20,6 +20,13 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.NetAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import java.net.Inet4Address
+import java.net.Inet6Address
+import java.net.InetAddress
+import org.graalvm.polyglot.proxy.ProxyObject
+
 
 // Installs the Node `net` module into the intrinsic bindings.
 @Intrinsic internal class NodeNetworkModule : AbstractNodeBuiltinModule() {
@@ -34,14 +41,75 @@ import elide.runtime.lang.javascript.NodeModuleName
  * # Node API: `net`
  */
 internal class NodeNetwork : ReadOnlyProxyObject, NetAPI {
-  //
+  private class ReadOnlyTypeObject(private val name: String) : ReadOnlyProxyObject {
+    override fun getMemberKeys(): Array<String> = emptyArray()
+    override fun getMember(key: String?): Any? = null
+    override fun toString(): String = "[object $name]"
+  }
 
   internal companion object {
     @JvmStatic fun create(): NodeNetwork = NodeNetwork()
   }
 
-  // @TODO not yet implemented
+  private val ALL_MEMBERS = arrayOf(
+    "BlockList","SocketAddress","Server","Socket","connect","createConnection","createServer",
+    "getDefaultAutoSelectFamily","getDefaultAutoSelectFamilyAttemptTimeout","isIP","isIPv4","isIPv6"
+  )
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  override fun getMemberKeys(): Array<String> = ALL_MEMBERS
+  override fun getMember(key: String?): Any? = when (key) {
+    "BlockList" -> ReadOnlyTypeObject("BlockList")
+    "SocketAddress" -> ReadOnlyTypeObject("SocketAddress")
+    "Server" -> ReadOnlyTypeObject("Server")
+    "Socket" -> ReadOnlyTypeObject("Socket")
+    "connect","createConnection" -> ProxyExecutable { _: Array<Value> ->
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("end","destroy","on")
+        override fun getMember(k: String?): Any? = when (k) {
+          "end" -> ProxyExecutable { _: Array<Value> -> null }
+          "destroy" -> ProxyExecutable { _: Array<Value> -> null }
+          "on" -> ProxyExecutable { _: Array<Value> -> this }
+          else -> null
+        }
+      }
+    }
+    "createServer" -> ProxyExecutable { _: Array<Value> ->
+      object : ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = arrayOf("listen","close","address","on")
+        override fun getMember(k: String?): Any? = when (k) {
+          "listen" -> ProxyExecutable { argv: Array<Value> -> argv.lastOrNull()?.takeIf { it.canExecute() }?.execute(); this }
+          "close" -> ProxyExecutable { _: Array<Value> -> this }
+          "address" -> ProxyExecutable { _: Array<Value> -> ProxyObject.fromMap(mapOf("port" to 0)) }
+          "on" -> ProxyExecutable { _: Array<Value> -> this }
+          else -> null
+        }
+      }
+    }
+    "getDefaultAutoSelectFamily" -> ProxyExecutable { _: Array<Value> -> false }
+    "getDefaultAutoSelectFamilyAttemptTimeout" -> ProxyExecutable { _: Array<Value> -> 0 }
+    "isIP" -> ProxyExecutable { args: Array<Value> ->
+      val ip = args.firstOrNull()?.takeIf { it.isString }?.asString()
+      if (ip.isNullOrBlank()) 0 else try {
+        val addr = InetAddress.getByName(ip)
+        when (addr) {
+          is Inet4Address -> 4
+          is Inet6Address -> 6
+          else -> 0
+        }
+      } catch (_: Throwable) { 0 }
+    }
+    "isIPv4" -> ProxyExecutable { args: Array<Value> ->
+      val ip = args.firstOrNull()?.takeIf { it.isString }?.asString()
+      if (ip.isNullOrBlank()) false else try {
+        InetAddress.getByName(ip) is Inet4Address
+      } catch (_: Throwable) { false }
+    }
+    "isIPv6" -> ProxyExecutable { args: Array<Value> ->
+      val ip = args.firstOrNull()?.takeIf { it.isString }?.asString()
+      if (ip.isNullOrBlank()) false else try {
+        InetAddress.getByName(ip) is Inet6Address
+      } catch (_: Throwable) { false }
+    }
+    else -> null
+  }
 }

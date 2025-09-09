@@ -35,9 +35,9 @@ import elide.runtime.intrinsics.server.http.HttpResponse
       val responder = HttpResponse.of(response, context.channelContext)
       return value.execute(wrapped, responder, context).let { result ->
         when {
+          // If the handler explicitly returns a boolean, respect it; otherwise treat as handled.
           result.isBoolean -> result.asBoolean()
-          // don't forward by default
-          else -> false
+          else -> true
         }
       }
     }

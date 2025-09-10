@@ -2335,6 +2335,18 @@ tasks {
       destinationDirectory = builtSamples
       from(path) {
         exclude("node_modules", ".dev/artifacts", ".dev/dependencies")
+        // Exclude ecosystem lockfiles from embedded samples
+        exclude(
+          "package-lock.json",
+          "package-lock.kdl",
+          "pnpm-lock.yaml",
+          "yarn.lock",
+          "Cargo.lock",
+          "Pipfile.lock",
+          "poetry.lock",
+          "Gemfile.lock",
+          "**/gradle/dependency-locks/**",
+        )
       }
     }
   }

@@ -12,15 +12,32 @@
  */
 package dev.elide.secrets.dto.persisted
 
+import dev.elide.secrets.Utils
 import kotlinx.serialization.Serializable
 
 /**
- * A stored secret.
+ * Collection for [Secrets][Secret].
  *
  * @author Lauri Heino <datafox>
  */
 @Serializable
-internal sealed interface Secret<T> : Named {
-  override val name: String
-  val value: T
+internal data class SecretProfile(override val name: String, override val secrets: Map<String, Secret<*>>) : Profile {
+  constructor(name: String) : this(name, emptyMap())
+
+  init {
+    Utils.checkName(name, "Profile")
+    Utils.checkNames(secrets, "Secret")
+  }
+
+  fun add(secret: Secret<*>): SecretProfile {
+    return copy(secrets = secrets + (secret.name to secret))
+  }
+
+  fun addAll(vararg secrets: Secret<*>): SecretProfile {
+    return copy(secrets = this@SecretProfile.secrets + secrets.associateBy { it.name })
+  }
+
+  fun remove(name: String): SecretProfile {
+    return copy(secrets = secrets - name)
+  }
 }

@@ -10,14 +10,27 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
 package dev.elide.secrets
 
-import com.github.kinquirer.KInquirer
-import com.github.kinquirer.components.promptConfirm
-import com.github.kinquirer.components.promptInput
-import java.security.MessageDigest
+import dev.elide.secrets.dto.persisted.EncryptionMode
+import dev.elide.secrets.dto.persisted.Named
+import dev.elide.secrets.dto.persisted.SecretKey
+import dev.elide.secrets.dto.persisted.UserKey
 import java.security.SecureRandom
+import kotlinx.io.buffered
 import kotlinx.io.bytestring.ByteString
+import kotlinx.io.bytestring.decodeToString
+import kotlinx.io.bytestring.encodeToByteString
+import kotlinx.io.bytestring.toHexString
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.readByteString
+import kotlinx.io.write
+import kotlinx.serialization.BinaryFormat
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
+import kotlinx.serialization.json.Json
 
 /**
  * Internal utilities for secrets.
@@ -28,63 +41,60 @@ internal object Utils {
   /** Generates [size] bytes. */
   fun generateBytes(size: Int): ByteString = ByteString(ByteArray(size).apply { SecureRandom().nextBytes(this) })
 
-  /**
-   * Reads an input from [console], then [confirms][confirm] that the correct input was given. Loops until [confirm]
-   * returns `true`.
-   */
-  fun readWithConfirm(prompt: String, prefix: String = "Is \"", suffix: String = "\" correct?"): String {
-    while (true) {
-      val input: String = KInquirer.promptInput(prompt)
-      if (KInquirer.promptConfirm("$prefix$input$suffix")) return input
-    }
-  }
-
-  /** Returns the file name of a collection for [profile]. */
-  fun collectionName(profile: String): String = "${name(profile)}${Values.COLLECTION_FILE_EXTENSION}"
-
-  /** Returns the file name of a key for [profile]. */
-  fun keyName(profile: String): String = "${name(profile)}${Values.KEY_FILE_EXTENSION}"
-
-  /** Returns the file name of the files for a [profile] without an extension. */
-  fun name(profile: String): String = "${Values.FILE_NAME_PREFIX}${Values.PROFILE_SEPARATOR}$profile"
-
-  /** Calculates the GitHub-specific SHA-1 hash of [data]. */
-  @OptIn(ExperimentalStdlibApi::class)
-  fun sha(data: ByteString): String =
-    MessageDigest.getInstance("SHA-1")
-      .digest("blob ${data.size}\u0000".encodeToByteArray() + data.toByteArray())
-      .toHexString()
-
   /** Throws an [IllegalArgumentException] if a profile name is invalid (is empty or contains whitespace). */
   fun checkName(name: String, type: String) {
     if (name.isEmpty() || ' ' in name) throw IllegalArgumentException("$type name must not be empty or contain spaces")
   }
 
-  /**
-   * Checks if [initialPassphrase] is valid by calling [decrypt]. If it returns an [O], a [Pair] is returned that
-   * contains the passphrase and the returned [O]. If it returns `null` and [interactive] is `true`, reads a new [P]
-   * with [readPassphrase] up to [Values.INVALID_PASSPHRASE_TRIES] times, checking each one with [decrypt] and returning
-   * a pair of [P] and [O] if not `null`, and throws an [IllegalArgumentException] if the [P] was invalid too many
-   * times. If [interactive] is `false` and the initial [decrypt] returns `null`, an [IllegalStateException] is thrown.
-   */
-  suspend fun <P, O> checkPassphrase(
-    interactive: Boolean,
-    initialPassphrase: P,
-    name: String,
-    readPassphrase: suspend () -> P,
-    decrypt: suspend (P) -> O?,
-  ): Pair<P, O> {
-    var tries = Values.INVALID_PASSPHRASE_TRIES
-    var passphrase = initialPassphrase
-    while (tries > 0) {
-      tries--
-      val out = decrypt(passphrase)
-      if (out != null) return Pair(passphrase, out)
-      if (!interactive) throw IllegalStateException("Invalid $name was given and interactive mode is off")
-      println("Invalid $name")
-      passphrase = readPassphrase()
+  fun <T : Named> checkNames(map: Map<String, T>, type: String) =
+    map.forEach {
+      if (it.key != it.value.name)
+        throw IllegalStateException("$type name ${it.value.name} does not match map key ${it.key}")
     }
-    return decrypt(passphrase)?.let { Pair(passphrase, it) }
-      ?: throw IllegalArgumentException("Invalid $name entered too many times")
+
+  inline fun <reified T> T.serialize(serializer: BinaryFormat): ByteString =
+    ByteString(serializer.encodeToByteArray(this))
+
+  inline fun <reified T> ByteString.deserialize(serializer: BinaryFormat): T =
+    serializer.decodeFromByteArray(toByteArray())
+
+  inline fun <reified T> T.serialize(serializer: Json): ByteString =
+    serializer.encodeToString(this).encodeToByteString()
+
+  inline fun <reified T> ByteString.deserialize(serializer: Json): T = serializer.decodeFromString(decodeToString())
+
+  fun ByteString.encrypt(key: SecretKey, encryption: Encryption): ByteString = encryption.encryptAES(key.key, this)
+
+  fun ByteString.decrypt(key: SecretKey, encryption: Encryption): ByteString = encryption.decryptAES(key.key, this)
+
+  @OptIn(ExperimentalStdlibApi::class)
+  fun ByteString.encrypt(key: UserKey, encryption: Encryption): ByteString =
+    when (key.mode) {
+      EncryptionMode.PASSPHRASE -> encryption.encryptAES(key.key, this)
+      EncryptionMode.GPG -> encryption.encryptGPG(key.key.toHexString(), this)
+    }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  fun ByteString.decrypt(key: UserKey, encryption: Encryption): ByteString =
+    when (key.mode) {
+      EncryptionMode.PASSPHRASE -> encryption.decryptAES(key.key, this)
+      EncryptionMode.GPG -> encryption.decryptGPG(key.key.toHexString(), this)
+    }
+
+  fun Path.exists(): Boolean = SystemFileSystem.exists(this)
+
+  fun Path.read(): ByteString = SystemFileSystem.source(this).buffered().use { it.readByteString() }
+
+  fun ByteString.write(path: Path): ByteString {
+    SystemFileSystem.sink(path).buffered().use { it.write(this) }
+    return this
   }
+
+  fun passphrase(): String? = System.getenv(Values.PASSPHRASE_ENVIRONMENT_VARIABLE)
+
+  fun profileName(profile: String): String = "${Values.PROFILE_FILE_PREFIX}$profile${Values.PROFILE_FILE_EXTENSION}"
+
+  fun keyName(profile: String): String = "${Values.PROFILE_FILE_PREFIX}$profile${Values.KEY_FILE_EXTENSION}"
+
+  fun accessName(access: String): String = "$access${Values.ACCESS_FILE_EXTENSION}"
 }

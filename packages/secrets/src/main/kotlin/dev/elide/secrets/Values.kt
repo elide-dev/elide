@@ -22,13 +22,14 @@ internal object Values {
   const val IV_SIZE = 16
   const val HASH_ITERATIONS = 4096
   const val DEFAULT_PATH = ".elide-secrets"
-  const val METADATA_NAME = "metadata.json"
-  const val LOCAL_COLLECTION_NAME = "local.db"
-  const val VALIDATOR_NAME = "validator"
-  const val FILE_NAME_PREFIX = "secrets"
-  const val PROFILE_SEPARATOR = "-"
-  const val COLLECTION_FILE_EXTENSION = ".db"
+  const val METADATA_FILE = "metadata.json"
+  const val LOCAL_FILE = "local.db"
+  const val PROFILE_FILE_PREFIX = "secrets-"
+  const val PROFILE_FILE_EXTENSION = ".db"
   const val KEY_FILE_EXTENSION = ".key"
+  const val ACCESS_FILE_EXTENSION = ".access"
+  const val SUPER_ACCESS_FILE = ".access"
+  const val LOCAL_REMOTE_DEFAULT_PATH = ".secrets"
   const val PASSPHRASE_ENVIRONMENT_VARIABLE = "ELIDE_SECRETS_PASSPHRASE"
   const val INVALID_PASSPHRASE_TRIES = 3
 }

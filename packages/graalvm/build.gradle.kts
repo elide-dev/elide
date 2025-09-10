@@ -699,6 +699,14 @@ val thirdPartyDir: String =
 val buildThirdPartyNatives by tasks.registering(Exec::class) {
   workingDir(rootProject.layout.projectDirectory.asFile.path)
 
+  val skipNatives = providers.gradleProperty("elide.skipNatives").map { it == "true" }.orElse(false).get() || (System.getenv("ELIDE_SKIP_NATIVES") == "true")
+  onlyIf {
+    if (skipNatives) {
+      logger.lifecycle("Skipping third-party natives build (elide.skipNatives=true)")
+      false
+    } else true
+  }
+
   commandLine(
     "make",
     "-C", "third_party",
@@ -768,6 +776,14 @@ val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
   workingDir(rootDir)
   dependsOn("buildThirdPartyNatives")
 
+  val skipNatives = providers.gradleProperty("elide.skipNatives").map { it == "true" }.orElse(false).get() || (System.getenv("ELIDE_SKIP_NATIVES") == "true")
+  onlyIf {
+    if (skipNatives) {
+      logger.lifecycle("Skipping rust natives build (elide.skipNatives=true)")
+      false
+    } else true
+  }
+
   executable = "cargo"
   args(baseCargoFlags.plus("--release"))
   environment("JAVA_HOME", System.getProperty("java.home"))
@@ -780,6 +796,14 @@ val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
 val buildRustNativesForHost by tasks.registering(Exec::class) {
   workingDir(rootDir)
   dependsOn("buildThirdPartyNatives")
+
+  val skipNatives = providers.gradleProperty("elide.skipNatives").map { it == "true" }.orElse(false).get() || (System.getenv("ELIDE_SKIP_NATIVES") == "true")
+  onlyIf {
+    if (skipNatives) {
+      logger.lifecycle("Skipping rust natives build (elide.skipNatives=true)")
+      false
+    } else true
+  }
 
   executable = "cargo"
   args(baseCargoFlags.plus(listOfNotNull(if (isRelease) "--release" else null)))
@@ -813,6 +837,11 @@ listOf(
   tasks.test,
 ).forEach {
   it.configure {
-    dependsOn(natives)
+    val skipNatives = providers.gradleProperty("elide.skipNatives").map { it == "true" }.orElse(false).get() || (System.getenv("ELIDE_SKIP_NATIVES") == "true")
+    if (!skipNatives) {
+      dependsOn(natives)
+    } else {
+      logger.lifecycle("Skipping natives dependency for ${'$'}name (elide.skipNatives=true)")
+    }
   }
 }

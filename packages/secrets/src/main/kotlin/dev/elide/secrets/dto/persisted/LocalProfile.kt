@@ -12,7 +12,7 @@
  */
 package dev.elide.secrets.dto.persisted
 
-import kotlinx.io.bytestring.ByteString
+import dev.elide.secrets.Utils
 import kotlinx.serialization.Serializable
 
 /**
@@ -21,29 +21,24 @@ import kotlinx.serialization.Serializable
  * @author Lauri Heino <datafox>
  */
 @Serializable
-public data class SecretCollection(val secrets: Map<String, Secret<*>>) {
-  public constructor() : this(emptyMap())
+internal data class LocalProfile(override val secrets: Map<String, Secret<*>>) : Profile {
+  override val name: String = "local"
+
+  constructor() : this(emptyMap())
 
   init {
-    secrets.forEach {
-      if (it.key != it.value.name)
-        throw IllegalStateException("Secret name ${it.value.name} does not match map key ${it.key}")
-    }
+    Utils.checkNames(secrets, "Secret")
   }
 
-  public fun add(secret: Secret<*>): SecretCollection {
+  fun add(secret: Secret<*>): LocalProfile {
     return copy(secrets = secrets + (secret.name to secret))
   }
 
-  public fun addAll(vararg secrets: Secret<*>): SecretCollection {
-    return copy(secrets = this@SecretCollection.secrets + secrets.associateBy { it.name })
+  fun addAll(vararg secrets: Secret<*>): LocalProfile {
+    return copy(secrets = this@LocalProfile.secrets + secrets.associateBy { it.name })
   }
 
-  public inline operator fun <reified T> get(name: String): T? {
-    return if (T::class == ByteString::class) {
-      (secrets[name]?.value as? ByteArray)?.let { ByteString(it) as T }
-    } else {
-      secrets[name]?.value as? T
-    }
+  fun remove(name: String): LocalProfile {
+    return copy(secrets = secrets - name)
   }
 }

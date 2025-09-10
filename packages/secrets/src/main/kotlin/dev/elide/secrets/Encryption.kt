@@ -13,6 +13,8 @@
 package dev.elide.secrets
 
 import kotlinx.io.bytestring.ByteString
+import kotlinx.io.bytestring.append
+import kotlinx.io.bytestring.buildByteString
 
 /**
  * Cryptography functions for secrets.
@@ -20,12 +22,33 @@ import kotlinx.io.bytestring.ByteString
  * @author Lauri Heino <datafox>
  */
 internal interface Encryption {
-  /** Encrypts [data] with [key]. */
-  fun encrypt(key: ByteString, data: ByteString): ByteString
+  /** Encrypts [data] with [key] using AES. */
+  fun encryptAES(key: ByteString, data: ByteString): ByteString
 
-  /** Decrypts [encrypted] with [key]. */
-  fun decrypt(key: ByteString, encrypted: ByteString): ByteString
+  /** Decrypts [encrypted] with [key] using AES. */
+  fun decryptAES(key: ByteString, encrypted: ByteString): ByteString
 
-  /** Cryptographically hashes [passphrase] into a valid key. */
-  fun hash(passphrase: String): ByteString
+  /** Hashes [data] into a valid AES key using SHA-256. */
+  fun hashKeySHA256(data: ByteString): ByteString
+
+  /** Hashes [data] using SHA-1. */
+  fun hashDataSHA1(data: ByteString): ByteString
+
+  /** Encrypts [data] with the public key of [id] using GPG. */
+  fun encryptGPG(id: String, data: ByteString): ByteString
+
+  /** Decrypts [data] with the private key of [id] using GPG. */
+  fun decryptGPG(id: String, encrypted: ByteString): ByteString
+
+  /**
+   * Hashes [data] using SHA-1, prefixing the data with `blob `, the size of [data] in bytes and a null byte. This is
+   * how Git hashes files (blobs).
+   */
+  fun hashGitDataSHA1(data: ByteString): ByteString =
+    hashDataSHA1(
+      buildByteString {
+        append("blob ${data.size}\u0000".encodeToByteArray())
+        append(data)
+      }
+    )
 }

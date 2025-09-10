@@ -10,22 +10,27 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package dev.elide.secrets.remote
+package dev.elide.secrets.remote.impl
 
-import dev.elide.secrets.DataHandler
+import dev.elide.secrets.Encryption
 import dev.elide.secrets.Utils
+import dev.elide.secrets.Utils.deserialize
 import dev.elide.secrets.Values
 import dev.elide.secrets.dto.api.github.*
-import dev.elide.secrets.dto.persisted.SecretMetadata
-import dev.elide.secrets.exception.RemoteNotInitializedException
+import dev.elide.secrets.dto.persisted.RemoteMetadata
+import dev.elide.secrets.dto.persisted.SuperAccess
+import dev.elide.secrets.remote.Remote
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.*
+import io.ktor.util.decodeBase64Bytes
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encode
+import kotlinx.io.bytestring.toHexString
+import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -41,89 +46,58 @@ internal class GithubRemote(
   override val writeAccess: Boolean,
   private val repository: String,
   private val token: String,
-  private val dataHandler: DataHandler,
+  private val encryption: Encryption,
   private val client: HttpClient,
+  private val json: Json,
 ) : Remote {
-  override suspend fun getMetadata(): ByteString? = getFile(Values.METADATA_NAME)
+  override suspend fun getMetadata(): ByteString? = getFile(Values.METADATA_FILE)
 
-  override suspend fun getValidator(): ByteString? = getFile(Values.VALIDATOR_NAME)
+  override suspend fun getProfile(profile: String): ByteString? = getFile(Utils.profileName(profile))
 
-  override suspend fun getCollection(profile: String): Pair<ByteString, ByteString> {
-    val key =
-      getFile(Utils.keyName(profile))
-        ?: throw IllegalStateException("Key for profile \"$profile\" was not found in remote \"$repository\"")
-    val value =
-      getFile(Utils.collectionName(profile))
-        ?: throw IllegalStateException("Collection for profile \"$profile\" was not found in remote \"$repository\"")
-    return key to value
-  }
+  override suspend fun getAccess(access: String): ByteString? = getFile(Utils.accessName(access))
 
-  override suspend fun removeCollection(profile: String) {
-    val metadataBytes = getMetadata() ?: throw RemoteNotInitializedException("Remote is not initialized")
-    val metadata = dataHandler.deserializeMetadata(metadataBytes)
-    val sha =
-      metadata.collections[profile]?.sha
-        ?: throw IllegalArgumentException("Profile \"$profile\" was not found in remote \"$repository\"")
-    val (key, collection) = getCollection(profile)
-    if (sha != Utils.sha(collection))
-      throw IllegalStateException(
-        "Remote is corrupted (collection for profile \"$profile\" SHA-1 hash does not match metadata)"
-      )
-    val keySha = Utils.sha(key)
+  override suspend fun getSuperAccess(): ByteString? = getFile(Values.SUPER_ACCESS_FILE)
+
+  @OptIn(ExperimentalStdlibApi::class)
+  override suspend fun update(
+    metadata: ByteString,
+    profiles: Map<String, ByteString>
+  ) {
+    val currentMetadataBytes = getMetadata() ?: throw IllegalStateException("Remote not initialized, use remote management instead")
+    val currentMetadata: RemoteMetadata = currentMetadataBytes.deserialize(json)
     val branch = createBranch()
-    deleteFile(Utils.collectionName(profile), "remove profile $profile collection", sha, branch)
-    deleteFile(Utils.keyName(profile), "remove profile $profile key", keySha, branch)
-    val newMetadata = metadata.copy(collections = metadata.collections.filterKeys { it != profile })
-    writeFile(
-      Values.METADATA_NAME,
-      dataHandler.serializeMetadata(newMetadata),
-      "new metadata (profile \"$profile\" removed)",
-      Utils.sha(metadataBytes),
-      branch,
-    )
-    client.post<GithubMergeRequest, GithubMergeResponse>(
-      "repos/$repository/merges",
-      token,
-      GithubMergeRequest("main", branch, "merge $branch"),
-      HttpStatusCode.Created,
-    )
-  }
-
-  override suspend fun init(metadata: SecretMetadata, validator: ByteString) {
-    writeFile(
-      Values.METADATA_NAME,
-      dataHandler.serializeMetadata(metadata.copy(collections = emptyMap())),
-      "initial metadata",
-    )
-    writeFile(Values.VALIDATOR_NAME, validator, "validator")
-  }
-
-  override suspend fun update(collections: Map<String, Pair<ByteString, ByteString>>) {
-    val remoteMetadataBytes = getMetadata() ?: throw RemoteNotInitializedException("Remote is not initialized")
-    val remoteMetadata = dataHandler.deserializeMetadata(remoteMetadataBytes)
-    val localMetadata = dataHandler.readMetadata()
-    val branch = createBranch()
-    val (newRemoteMetadata, updated) = Remote.createMetadata(localMetadata, remoteMetadata, collections.keys)
-    val oldMetadataSha = Utils.sha(remoteMetadataBytes)
-    writeFile(
-      Values.METADATA_NAME,
-      dataHandler.serializeMetadata(newRemoteMetadata),
-      "new metadata",
-      oldMetadataSha,
-      branch,
-    )
-    updated.forEach { (sha, profile) ->
-      writeFile(Utils.collectionName(profile), collections[profile]!!.second, "new $profile collection", sha, branch)
-      if (sha.isEmpty()) {
-        writeFile(Utils.keyName(profile), collections[profile]!!.first, "new $profile key", "", branch)
-      }
+    profiles.forEach { (name, bytes) ->
+      val sha = currentMetadata.profiles[name]?.hash ?: ""
+      writeFile(Utils.profileName(name), bytes, "Changed profile $name", sha, branch)
     }
-    client.post<GithubMergeRequest, GithubMergeResponse>(
-      "repos/$repository/merges",
-      token,
-      GithubMergeRequest("main", branch, "merge $branch"),
-      HttpStatusCode.Created,
-    )
+    writeFile(Values.METADATA_FILE, metadata, "Changed metadata", encryption.hashGitDataSHA1(currentMetadataBytes).toHexString(), branch)
+    merge(branch)
+  }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  override suspend fun superUpdate(
+    metadata: ByteString,
+    profiles: Map<String, ByteString>,
+    superAccess: ByteString,
+    access: Map<String, ByteString>
+  ) {
+    val currentMetadataBytes = getMetadata()
+    val currentMetadata: RemoteMetadata? = currentMetadataBytes?.deserialize(json)
+    val currentSuperBytes = getSuperAccess()
+    val branch = if (currentMetadataBytes == null) "" else createBranch()
+    profiles.forEach { (name, bytes) ->
+      val sha = currentMetadata?.profiles[name]?.hash ?: ""
+      writeFile(Utils.profileName(name), bytes, "Changed profile $name", sha, branch)
+    }
+    access.forEach { (name, bytes) ->
+      val sha = currentMetadata?.access[name]?.hash ?: ""
+      writeFile(Utils.accessName(name), bytes, "Changed access $name", sha, branch)
+    }
+    val superSha = currentSuperBytes?.let { encryption.hashGitDataSHA1(it) }?.toHexString() ?: ""
+    writeFile(Values.SUPER_ACCESS_FILE, superAccess, "Changed super access", superSha, branch)
+    val metadataSha = currentMetadataBytes?.let { encryption.hashGitDataSHA1(it) }?.toHexString() ?: ""
+    writeFile(Values.METADATA_FILE, metadata, "Changed metadata", metadataSha, branch)
+    if (branch.isNotBlank()) merge(branch)
   }
 
   private suspend fun createBranch(): String {
@@ -150,12 +124,12 @@ internal class GithubRemote(
       client.get<GithubFileResponse>(
         "repos/$repository/contents/$path",
         token,
+        "raw",
         HttpStatusCode.OK,
         HttpStatusCode.NotFound,
       )
     if (content == null) return null
-    // Use download url because sometimes base64 for a binary file comes out wrong somehow
-    return ByteString(client.get(content.downloadUrl).bodyAsBytes())
+    return ByteString(content.content.decodeBase64Bytes())
   }
 
   @OptIn(ExperimentalEncodingApi::class)
@@ -182,6 +156,10 @@ internal class GithubRemote(
       GithubDeleteFileRequest(message, sha, branch),
       HttpStatusCode.OK,
     )
+  }
+
+  private suspend fun merge(branch: String) {
+    client.post<GithubMergeRequest, GithubMergeResponse>("repos/$repository/merges", token, GithubMergeRequest("main", branch, "Merge branch $branch"), HttpStatusCode.OK)
   }
 
   companion object {
@@ -224,12 +202,13 @@ internal class GithubRemote(
     suspend inline fun <reified T> HttpClient.get(
       path: String,
       token: String,
+      classifier: String = "",
       vararg allowedCodes: HttpStatusCode,
       block: HttpRequestBuilder.() -> Unit = {},
     ): Pair<HttpResponse, T?> {
       val response: HttpResponse =
         get("$GITHUB_URL$path") {
-          headers(token)
+          headers(token, classifier)
           block()
         }
       return parseContent(response, allowedCodes.toSet())
@@ -242,7 +221,7 @@ internal class GithubRemote(
       vararg allowedCodes: HttpStatusCode,
       block: HttpRequestBuilder.() -> Unit = {},
     ): Pair<HttpResponse, T?> =
-      get(path, token, *allowedCodes) {
+      get(path, token, "", *allowedCodes) {
         setBody(body)
         block()
       }
@@ -278,8 +257,9 @@ internal class GithubRemote(
       return Pair(response, content)
     }
 
-    private fun HttpMessageBuilder.headers(token: String) {
-      header("Accept", "application/vnd.github+json")
+    private fun HttpMessageBuilder.headers(token: String, classifier: String = "") {
+      val classifier = classifier.let { if (it.isBlank()) "" else ".$it" }
+      header("Accept", "application/vnd.github$classifier+json")
       header("Content-Type", "application/json")
       header("Authorization", "Bearer $token")
       header("X-GitHub-Api-Version", "2022-11-28")

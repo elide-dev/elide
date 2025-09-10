@@ -13,16 +13,18 @@
 package dev.elide.secrets.impl
 
 import dev.elide.secrets.Encryption
+import dev.elide.secrets.GPGHandler
 import dev.elide.secrets.Utils
 import dev.elide.secrets.Values
-import elide.annotations.Singleton
-import kotlinx.io.bytestring.ByteString
+import org.bouncycastle.crypto.digests.SHA1Digest
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.engines.AESEngine
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator
 import org.bouncycastle.crypto.modes.SICBlockCipher
 import org.bouncycastle.crypto.params.KeyParameter
 import org.bouncycastle.crypto.params.ParametersWithIV
+import kotlinx.io.bytestring.ByteString
+import elide.annotations.Singleton
 
 /**
  * Implementation of [Encryption], using `AES` for encryption and `SHA-256` for hashing.
@@ -30,8 +32,8 @@ import org.bouncycastle.crypto.params.ParametersWithIV
  * @author Lauri Heino <datafox>
  */
 @Singleton
-internal class EncryptionImpl internal constructor() : Encryption {
-  override fun encrypt(key: ByteString, data: ByteString): ByteString {
+internal class EncryptionImpl() : Encryption {
+  override fun encryptAES(key: ByteString, data: ByteString): ByteString {
     val iv: ByteArray = Utils.generateBytes(Values.IV_SIZE).toByteArray()
     val out: ByteArray = iv.copyOf(Values.IV_SIZE + data.size)
     val cipher = createCipher()
@@ -40,7 +42,7 @@ internal class EncryptionImpl internal constructor() : Encryption {
     return ByteString(out)
   }
 
-  override fun decrypt(key: ByteString, encrypted: ByteString): ByteString {
+  override fun decryptAES(key: ByteString, encrypted: ByteString): ByteString {
     val out = ByteArray(encrypted.size - Values.IV_SIZE)
     val cipher = createCipher()
     cipher.init(
@@ -51,11 +53,23 @@ internal class EncryptionImpl internal constructor() : Encryption {
     return ByteString(out)
   }
 
-  override fun hash(passphrase: String): ByteString {
+  override fun hashKeySHA256(data: ByteString): ByteString {
     val parameterGenerator = PKCS5S2ParametersGenerator(SHA256Digest())
-    parameterGenerator.init(passphrase.toByteArray(Charsets.UTF_8), null, Values.HASH_ITERATIONS)
+    parameterGenerator.init(data.toByteArray(), null, Values.HASH_ITERATIONS)
     return ByteString((parameterGenerator.generateDerivedParameters(Values.KEY_SIZE * 8) as KeyParameter).key)
   }
+
+  override fun hashDataSHA1(data: ByteString): ByteString {
+    val digest = SHA1Digest()
+    digest.update(data.toByteArray(), 0, data.size)
+    val out = ByteArray(digest.digestSize)
+    digest.doFinal(out, 0)
+    return ByteString(out)
+  }
+
+  override fun encryptGPG(id: String, data: ByteString): ByteString = GPGHandler.runGPG(data, "-e", "-r", id)
+
+  override fun decryptGPG(id: String, encrypted: ByteString): ByteString = GPGHandler.runGPG(encrypted, "-d", "-u", id)
 
   private fun createCipher() = SICBlockCipher.newInstance(AESEngine.newInstance())
 }

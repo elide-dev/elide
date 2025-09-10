@@ -13,16 +13,25 @@
 package dev.elide.secrets.dto.persisted
 
 import dev.elide.secrets.Utils
+import kotlinx.io.bytestring.ByteString
+import kotlinx.io.bytestring.toHexString
 import kotlinx.serialization.Serializable
 
 /**
- * Metadata for a [SecretCollection].
+ * Metadata for a [LocalProfile].
  *
  * @author Lauri Heino <datafox>
  */
 @Serializable
-public data class CollectionMetadata(val profile: String, val sha: String) {
+internal data class ProfileMetadata(override val name: String, val hash: String, val keyHash: String) : Named {
+  @OptIn(ExperimentalStdlibApi::class)
+  constructor(
+    name: String,
+    hash: ByteString,
+    keyHash: ByteString,
+  ) : this(name, hash.toHexString(), keyHash.toHexString())
+
   init {
-    Utils.checkName(profile, "Profile")
+    Utils.checkName(name, "Profile")
   }
 }

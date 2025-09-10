@@ -12,8 +12,6 @@
  */
 package dev.elide.secrets.remote
 
-import dev.elide.secrets.dto.persisted.SecretCollection
-
 /**
  * Initializer for connecting to a [Remote].
  *
@@ -22,7 +20,5 @@ import dev.elide.secrets.dto.persisted.SecretCollection
 internal interface RemoteInitializer {
   val id: String
 
-  fun initialize(interactive: Boolean, local: SecretCollection): Remote
-
-  fun updateLocal(local: SecretCollection): SecretCollection
+  suspend fun initialize(): Remote
 }

@@ -12,15 +12,12 @@
  */
 package dev.elide.secrets.dto.persisted
 
-import kotlinx.serialization.Serializable
-
 /**
- * A stored secret.
+ * Modes of encryption.
  *
  * @author Lauri Heino <datafox>
  */
-@Serializable
-internal sealed interface Secret<T> : Named {
-  override val name: String
-  val value: T
+internal enum class EncryptionMode(val displayName: String) {
+  PASSPHRASE("Passphrase"),
+  GPG("GPG"),
 }

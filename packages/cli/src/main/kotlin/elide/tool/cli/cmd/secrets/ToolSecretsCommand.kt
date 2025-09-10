@@ -14,31 +14,26 @@
 package elide.tool.cli.cmd.secrets
 
 import com.github.kinquirer.KInquirer
-import com.github.kinquirer.components.promptCheckbox
 import com.github.kinquirer.components.promptConfirm
 import com.github.kinquirer.components.promptInput
 import com.github.kinquirer.components.promptInputPassword
 import com.github.kinquirer.components.promptList
 import com.github.kinquirer.components.promptListObject
 import com.github.kinquirer.core.Choice
-import dev.elide.secrets.Secrets
-import dev.elide.secrets.dto.persisted.BinarySecret
-import dev.elide.secrets.dto.persisted.StringSecret
+import dev.elide.secrets.RemoteManagement
+import dev.elide.secrets.SecretManagement
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
-import org.fusesource.jansi.internal.JansiLoader
 import picocli.CommandLine.Command
 import jakarta.inject.Provider
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteString
-import kotlinx.io.readString
 import elide.annotations.Inject
 import elide.tool.cli.*
 import elide.tool.io.RuntimeWorkdirManager
 import elide.tool.project.ProjectManager
-import elide.tooling.cli.Statics
 
 /** TBD. */
 @Command(
@@ -51,131 +46,212 @@ import elide.tooling.cli.Statics
 internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
   @Inject private lateinit var workdirProvider: Provider<RuntimeWorkdirManager>
-  @Inject private lateinit var secretsProvider: Provider<Secrets>
+  @Inject private lateinit var secretsProvider: Provider<SecretManagement>
   private val projectManager: ProjectManager by lazy { projectManagerProvider.get() }
   private val workdir: RuntimeWorkdirManager by lazy { workdirProvider.get() }
-  private val secrets: Secrets by lazy { secretsProvider.get() }
-
-  private enum class MainMenuOptions(val text: String) {
-    CreateProfile("Create profile"),
-    SelectProfile("Select profile"),
-    UpdateLocal("Update local from remote"),
-    UpdateRemote("Update remote from local"),
-    Exit("Exit"),
-  }
-
-  private suspend fun CommandContext.mainMenu(): CommandResult? {
-    val option = KInquirer.promptListObject("Main menu:", MainMenuOptions.entries.map { Choice(it.text, it) })
-    when (option) {
-      MainMenuOptions.CreateProfile -> {
-        val profile = KInquirer.promptInput("Please enter a name for the profile:")
-        secrets.createProfile(profile)
-        if (KInquirer.promptConfirm("Do you want to select the created profile? ")) secrets.selectProfile(profile)
-      }
-      MainMenuOptions.SelectProfile -> {
-        val profile = KInquirer.promptList("Please select a profile:", secrets.getProfiles())
-        secrets.selectProfile(profile)
-      }
-      MainMenuOptions.UpdateLocal -> {
-        if (KInquirer.promptConfirm("Do you want to update all profiles?")) secrets.updateLocal()
-        else secrets.updateLocal(*selectProfiles(secrets.getRemoteProfiles()))
-      }
-      MainMenuOptions.UpdateRemote -> {
-        if (KInquirer.promptConfirm("Do you want to update all profiles?")) secrets.updateLocal()
-        else secrets.updateRemote(*selectProfiles(secrets.getProfiles()))
-      }
-      MainMenuOptions.Exit -> return success()
-    }
-    return null
-  }
-
-  private enum class EditMenuOptions(val text: String) {
-    GetSecret("Reveal secret"),
-    SetSecret("Set secret"),
-    RemoveSecret("Remove secret"),
-    WriteChanges("Update local from remote"),
-    Exit("Exit"),
-  }
-
-  private suspend fun CommandContext.editMenu(): CommandResult? {
-    val profile = secrets.getSelectedProfile()!!
-    val option = KInquirer.promptListObject("Profile \"$profile\" menu:",
-                                            EditMenuOptions.entries.map { Choice(it.text, it) })
-    when (option) {
-      EditMenuOptions.GetSecret -> {
-        val name = KInquirer.promptInput("Please enter a name for the secret you want to reveal:")
-        val secret = secrets.getSecret(name)
-        if (secret == null) {
-          output {
-            appendLine("Secret \"$name\" not found in profile \"$profile\".")
-          }
-        }
-        if (secret !is String) {
-          if (!KInquirer.promptConfirm("The secret \"$name\" is not a string. Do you want to display it anyway?")) return null
-        }
-        output {
-          appendLine("The secret is: \"$secret\"")
-        }
-      }
-      EditMenuOptions.SetSecret -> {
-        val name = KInquirer.promptInput("Please enter a name for the secret you want to set:")
-        if (KInquirer.promptConfirm("Is this secret a string?")) {
-          val value = KInquirer.promptInputPassword("Please enter the secret:")
-          secrets.setSecret(StringSecret(name, value))
-        } else {
-          val path = KInquirer.promptInput("Please enter a path to the secret file:")
-          secrets.setSecret(BinarySecret(name, SystemFileSystem.source(Path(path)).buffered().readByteString()))
-        }
-      }
-      EditMenuOptions.RemoveSecret -> {
-        val name = KInquirer.promptInput("Please enter a name for the secret you want to remove:")
-        secrets.removeSecret(name)
-      }
-      EditMenuOptions.WriteChanges -> {
-        secrets.writeChanges()
-        output {
-          appendLine("Changes written to profile \"$profile\"")
-        }
-        if (KInquirer.promptConfirm("Do you want to stop editing this profile?")) secrets.deselectProfile()
-      }
-      EditMenuOptions.Exit -> {
-        secrets.deselectProfile()
-      }
-    }
-    return null
-  }
-
-  private suspend fun CommandContext.selectProfiles(profiles: List<String>): Array<String> {
-    val selected: MutableList<String> = mutableListOf()
-    val notSelected: MutableList<String?> = profiles.toMutableList()
-    notSelected.addFirst(null)
-    while (true) {
-      output {
-        if (selected.isEmpty()) appendLine("Please select the profiles you want to update")
-        else appendLine("You have selected the following profiles: ${selected.joinToString(", ")}")
-      }
-      val choice = KInquirer.promptListObject("Please select a profile", notSelected.map { Choice(it ?: "All done", it) })
-      if (choice == null) return selected.toTypedArray()
-      selected.add(choice)
-      notSelected.remove(choice)
-    }
-  }
+  private val secrets: SecretManagement by lazy { secretsProvider.get() }
 
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val selected = KInquirer.promptList("Testing", listOf("Option 1", "Option 2", "Option 5"))
-    println(selected)
-    println(selected)
-    println(selected)
-    println(selected)
-    val root = workdir.projectRoot()?.toFile() ?: workdir.workingRoot()
-    val project = projectManager.resolveProject(projectOptions().projectPath())
-    secrets.init(true, Path(root.absolutePath, ".elide-secrets"), project?.manifest?.name)
-
-    //Main loop
-    while (true) {
-      val returned: CommandResult? = if (secrets.getSelectedProfile() == null) mainMenu() else editMenu()
-      if (returned != null) return returned
+    secrets.init(Path(System.getProperty("user.dir"), ".elide-secrets"))
+    return mainMenu()
+  }
+  
+  private suspend fun mainMenu(): CommandResult {
+    var running = true
+    while (running) {
+      when (KInquirer.promptListObject("Main menu:", MainMenuOptions.entries.map { Choice(it.displayName, it) })) {
+        MainMenuOptions.CREATE ->
+          secrets.createProfile(KInquirer.promptInput("Please enter a name for the new profile:"))
+        MainMenuOptions.LIST -> println(secrets.listProfiles())
+        MainMenuOptions.SELECT -> {
+          val profiles = secrets.listProfiles()
+          if (profiles.isEmpty()) {
+            println("No profiles found")
+            continue
+          }
+          val profile = KInquirer.promptList("Please select a profile to edit:", profiles.toList())
+          secrets.loadProfile(profile)
+          editProfileMenu(profile)
+        }
+        MainMenuOptions.REMOVE -> {
+          val profiles = secrets.listProfiles()
+          if (profiles.isEmpty()) {
+            println("No profiles found")
+            continue
+          }
+          secrets.removeProfile(KInquirer.promptList("Please select a profile to remove:", profiles.toList()))
+        }
+        MainMenuOptions.PULL -> secrets.pullFromRemote()
+        MainMenuOptions.PUSH -> secrets.pushToRemote()
+        MainMenuOptions.MANAGE -> {
+          manageRemoteMenu(secrets.manageRemote())
+        }
+        MainMenuOptions.EXIT -> running = false
+      }
     }
+    return CommandResult.success()
+  }
+
+  private suspend fun editProfileMenu(profile: String) {
+    var running = true
+    while (running) {
+      when (KInquirer.promptListObject("Edit menu for profile \"$profile\"", EditProfileOptions.entries.map { Choice(it.displayName, it) })) {
+        EditProfileOptions.CREATE -> {
+          val name = KInquirer.promptInput("Please enter a name for the new secret:")
+          if (name in secrets.listSecrets() && !KInquirer.promptConfirm("A secret with this name already exists, do you want to replace it?")) continue
+          when (KInquirer.promptListObject("Select the type of secret you want to create", SecretType.entries.map { Choice(it.displayName, it) })) {
+            SecretType.STRING -> {
+              val secret = KInquirer.promptInputPassword("Please type or paste in the secret:")
+              val repeat = KInquirer.promptInputPassword("Please type or paste in the secret again:")
+              if (secret != repeat) {
+                println("Secrets were not identical")
+                continue
+              }
+              val envVar = if (KInquirer.promptConfirm("Do you want to use this secret as an environment variable for your app?")) KInquirer.promptInput("Please enter the name of the environment variable") else null
+              secrets.setStringSecret(name, secret, envVar)
+            }
+            SecretType.BINARY -> {
+              val path = KInquirer.promptInput("Please type or paste in the absolute path to the secret binary file:")
+              val data = SystemFileSystem.source(Path(path)).buffered().use { it.readByteString() }
+              secrets.setBinarySecret(name, data)
+            }
+          }
+        }
+        EditProfileOptions.LIST -> println(secrets.listSecrets().map { (name, type) -> "$name (${type.java.simpleName})" })
+        EditProfileOptions.REVEAL -> {
+          val secretNames = secrets.listSecrets().filterValues { it == String::class }.keys
+          if (secretNames.isEmpty()) {
+            println("No text secrets found")
+            continue
+          }
+          val name = KInquirer.promptList("Please select a secret to reveal:", secretNames.toList())
+          if (KInquirer.promptConfirm("Are you sure you want to reveal the secret. It will be printed to your console in plain text!")) println(secrets.getStringSecret(name))
+        }
+        EditProfileOptions.REMOVE -> {
+          val secretNames = secrets.listSecrets().keys
+          if (secretNames.isEmpty()) {
+            println("No secrets found")
+            continue
+          }
+          secrets.removeSecret(KInquirer.promptList("Please select a secret to remove:", secrets.listSecrets().keys.toList()))
+        }
+        EditProfileOptions.WRITE -> {
+          secrets.writeChanges()
+          secrets.unloadProfile()
+          running = false
+        }
+        EditProfileOptions.DESELECT -> {
+          secrets.unloadProfile()
+          running = false
+        }
+      }
+    }
+  }
+
+  private suspend fun manageRemoteMenu(remote: RemoteManagement) {
+    var running = true
+    while (running) {
+      when (KInquirer.promptListObject("Remote management menu:", ManageRemoteOptions.entries.map { Choice(it.displayName, it) })) {
+        ManageRemoteOptions.CREATE ->
+          remote.createAccess(KInquirer.promptInput("Please enter a name for the access file:"))
+        ManageRemoteOptions.LIST -> println(remote.listAccesses())
+        ManageRemoteOptions.SELECT -> {
+          val accesses = remote.listAccesses()
+          if (accesses.isEmpty()) {
+            println("No access files found")
+            continue
+          }
+          val access = KInquirer.promptList("Please select an access file to edit:", accesses.toList())
+          remote.selectAccess(access)
+          editAccessMenu(remote, access)
+        }
+        ManageRemoteOptions.REMOVE -> {
+          val accesses = remote.listAccesses()
+          if (accesses.isEmpty()) {
+            println("No access files found")
+            continue
+          }
+          remote.removeAccess(KInquirer.promptList("Please select an access file to remove:", accesses.toList()))
+        }
+        ManageRemoteOptions.PUSH -> {
+          remote.push()
+          running = false
+        }
+        ManageRemoteOptions.EXIT -> {
+          running = false
+        }
+      }
+    }
+  }
+
+  private suspend fun editAccessMenu(remote: RemoteManagement, access: String) {
+    var running = true
+    while (running) {
+      when (KInquirer.promptListObject("Edit menu for access file \"$access\":", EditAccessOptions.entries.map { Choice(it.displayName, it) })) {
+        EditAccessOptions.ADD -> {
+          val profiles = (secrets.listProfiles() - remote.listProfiles())
+          if (profiles.isEmpty()) {
+            println("No eligible profiles found")
+            continue
+          }
+          remote.addProfile(KInquirer.promptList("Please select a profile to add to the access file:", profiles.toList()))
+        }
+        EditAccessOptions.LIST -> println(remote.listProfiles())
+        EditAccessOptions.REMOVE -> {
+          val profiles = remote.listProfiles()
+          if (profiles.isEmpty()) {
+            println("No profiles found")
+            continue
+          }
+          remote.removeProfile(KInquirer.promptList("Please select a profile to remove from the access file:", profiles.toList()))
+        }
+        EditAccessOptions.DESELECT -> {
+          remote.deselectAccess()
+          running = false
+        }
+      }
+    }
+  }
+  
+  private enum class MainMenuOptions(val displayName: String) {
+    CREATE("Create a new profile"),
+    LIST("List profiles"),
+    SELECT("Select a profile to edit"),
+    REMOVE("Remove a profile"),
+    PULL("Pull changes from remote"),
+    PUSH("Push changes to remote"),
+    MANAGE("Manage remote as a superuser"),
+    EXIT("Exit secret management"),
+  }
+  
+  private enum class EditProfileOptions(val displayName: String) {
+    CREATE("Create a secret"),
+    LIST("List secrets"),
+    REVEAL("Reveal a secret"),
+    REMOVE("Remove a secret"),
+    WRITE("Write changes and go to main menu"),
+    DESELECT("Go to the main menu without writing changes"),
+  }
+
+  private enum class ManageRemoteOptions(val displayName: String) {
+    CREATE("Create an access file"),
+    LIST("List access files"),
+    SELECT("Select an access file"),
+    REMOVE("Remove an access file"),
+    PUSH("Push changes to remote and go to the main menu"),
+    EXIT("Go to the main menu without pushing changes"),
+  }
+
+  private enum class EditAccessOptions(val displayName: String) {
+    ADD("Add a profile to the access file"),
+    LIST("List profiles in the access file"),
+    REMOVE("Remove a profile from the access file"),
+    DESELECT("Return to the remote management menu"),
+  }
+  
+  private enum class SecretType(val displayName: String) {
+    STRING("Text"),
+    BINARY("Binary"),
   }
 }

@@ -13,21 +13,34 @@
 package dev.elide.secrets.dto.persisted
 
 import dev.elide.secrets.Utils
-import dev.elide.secrets.impl.ByteStringSerializer
-import kotlinx.io.bytestring.ByteString
 import kotlinx.serialization.Serializable
 
 /**
- * [Secret] containing binary data.
+ * Metadata for secrets.
  *
  * @author Lauri Heino <datafox>
  */
 @Serializable
-internal data class BinarySecret(
+internal data class RemoteMetadata(
   override val name: String,
-  @Serializable(with = ByteStringSerializer::class) override val value: ByteString,
-) : Secret<ByteString> {
+  override val organization: String,
+  override val profiles: Map<String, ProfileMetadata>,
+  val superAccess: AccessMetadata,
+  val access: Map<String, AccessMetadata>,
+) : SecretMetadata {
+
   init {
-    Utils.checkName(name, "Secret")
+    Utils.checkName(name, "Project")
+    Utils.checkName(organization, "Organization")
+    Utils.checkNames(profiles, "Profile")
+    Utils.checkNames(access, "Access")
+  }
+
+  fun add(profile: ProfileMetadata): RemoteMetadata {
+    return copy(profiles = profiles + (profile.name to profile))
+  }
+
+  fun add(access: AccessMetadata): RemoteMetadata {
+    return copy(access = this.access + (access.name to access))
   }
 }

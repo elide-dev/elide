@@ -12,15 +12,18 @@
  */
 package dev.elide.secrets.dto.persisted
 
+import dev.elide.secrets.Utils
 import kotlinx.serialization.Serializable
 
 /**
- * A stored secret.
+ * Remote access keys for secrets.
  *
  * @author Lauri Heino <datafox>
  */
 @Serializable
-internal sealed interface Secret<T> : Named {
-  override val name: String
-  val value: T
+internal data class SecretAccess(override val name: String, val keys: Map<String, SecretKey>) : Named {
+  init {
+    Utils.checkName(name, "Access")
+    Utils.checkNames(keys, "Key")
+  }
 }

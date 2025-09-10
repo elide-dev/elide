@@ -10,33 +10,33 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package dev.elide.secrets.remote
+package dev.elide.secrets.dto.persisted
 
+import dev.elide.secrets.Utils
 import kotlinx.io.bytestring.ByteString
+import kotlinx.io.bytestring.toHexString
+import kotlinx.serialization.Serializable
 
 /**
- * Remote connection handling for secrets.
+ * Metadata for a [SecretAccess].
  *
- * @property writeAccess `true` if writing to this remote is permitted.
  * @author Lauri Heino <datafox>
  */
-internal interface Remote {
-  val writeAccess: Boolean
+@Serializable
+internal data class AccessMetadata(
+  override val name: String,
+  val hash: String,
+  val mode: EncryptionMode,
+  val fingerprint: String? = null,
+) : Named {
+  @OptIn(ExperimentalStdlibApi::class)
+  constructor(
+    name: String,
+    hash: ByteString,
+    key: UserKey,
+  ) : this(name, hash.toHexString(), key.mode, if (key.mode == EncryptionMode.GPG) key.key.toHexString() else null)
 
-  suspend fun getMetadata(): ByteString?
-
-  suspend fun getProfile(profile: String): ByteString?
-
-  suspend fun getAccess(access: String): ByteString?
-
-  suspend fun getSuperAccess(): ByteString?
-
-  suspend fun update(metadata: ByteString, profiles: Map<String, ByteString>)
-
-  suspend fun superUpdate(
-    metadata: ByteString,
-    profiles: Map<String, ByteString>,
-    superAccess: ByteString,
-    access: Map<String, ByteString>,
-  )
+  init {
+    Utils.checkName(name, "Access")
+  }
 }

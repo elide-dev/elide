@@ -12,17 +12,19 @@
  */
 package elide.tooling.testing
 
-import kotlin.time.Duration
+import elide.annotations.Singleton
 
-/**
- * Results of an individual test case run.
- *
- * @property scope The scope in which the test was a member.
- * @property result The result of the test case execution.
- * @property duration The duration of the test case execution.
- */
-@JvmRecord public data class TestCaseResult(
-  public val scope: TestScope<*>,
-  public val result: TestResult,
-  public val duration: Duration,
-)
+@Singleton public class TestDriverRegistry {
+  private val drivers = mutableSetOf<TestDriver<*>>()
+
+  public fun <T : TestCase> register(driver: TestDriver<T>) {
+    drivers.find { it.type == driver.type }?.let { driver ->
+      throw IllegalArgumentException("Test type ${driver.type} is already handled by $driver")
+    }
+
+    drivers.add(driver as TestDriver<*>)
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  public fun collect(): Set<TestDriver<TestCase>> = drivers.toSet() as Set<TestDriver<TestCase>>
+}

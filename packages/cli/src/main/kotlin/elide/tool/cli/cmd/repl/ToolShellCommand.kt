@@ -68,23 +68,10 @@ import java.util.stream.Stream
 import javax.tools.ToolProvider
 import jakarta.inject.Provider
 import kotlinx.atomicfu.atomic
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlin.io.path.Path
-import kotlin.io.path.absolute
-import kotlin.io.path.absolutePathString
-import kotlin.io.path.bufferedReader
-import kotlin.io.path.exists
-import kotlin.io.path.extension
-import kotlin.io.path.isDirectory
-import kotlin.io.path.isReadable
-import kotlin.io.path.isRegularFile
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.toList
+import kotlin.io.path.*
 import kotlin.math.max
 import kotlin.streams.asSequence
 import kotlin.streams.asStream
@@ -103,15 +90,10 @@ import elide.runtime.gvm.Engine
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
-import elide.runtime.gvm.kotlin.KotlinCompilerConfig
-import elide.runtime.gvm.kotlin.KotlinJarBundleInfo
-import elide.runtime.gvm.kotlin.KotlinLanguage
-import elide.runtime.gvm.kotlin.KotlinPrecompiler
-import elide.runtime.gvm.kotlin.KotlinScriptCallable
+import elide.runtime.gvm.kotlin.*
 import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.intrinsics.testing.TestingRegistrar
-import elide.runtime.intrinsics.testing.TestingRegistrar.*
 import elide.runtime.plugins.Coverage
 import elide.runtime.plugins.jvm.Jvm
 import elide.runtime.plugins.vfs.VfsListener
@@ -120,30 +102,14 @@ import elide.runtime.precompiler.Precompiler
 import elide.runtime.runner.JvmRunner
 import elide.runtime.runner.RunnerOutcome
 import elide.runtime.runner.Runners
-import elide.tooling.Classpath
-import elide.tooling.ClasspathProvider
-import elide.tooling.ClasspathSpec
-import elide.tooling.Environment
-import elide.tooling.MultiPathUsage
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cmd.builder.emitCommand
-import elide.tool.cli.cmd.runner.DebugConfig
+import elide.tool.cli.cmd.runner.*
 import elide.tool.cli.cmd.runner.DelegatedRunner.Companion.delegatedRunner
-import elide.tool.cli.cmd.runner.EnvironmentConfig
-import elide.tool.cli.cmd.runner.InspectorConfig
-import elide.tool.cli.cmd.runner.LanguageSelector
-import elide.tool.cli.cmd.runner.ShellRunnable
 import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.err.ShellError
-import elide.tool.cli.options.AccessControlOptions
-import elide.tool.cli.options.EngineJavaOptions
-import elide.tool.cli.options.EngineJavaScriptOptions
-import elide.tool.cli.options.EngineJvmOptions
-import elide.tool.cli.options.EngineKotlinOptions
-import elide.tool.cli.options.EnginePythonOptions
-import elide.tool.cli.options.ServerOptions
-import elide.tool.cli.options.TestingOptions
+import elide.tool.cli.options.*
 import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.cli.output.TOOL_LOGGER_APPENDER
 import elide.tool.cli.output.TOOL_LOGGER_NAME
@@ -157,24 +123,18 @@ import elide.tool.io.WorkdirManager
 import elide.tool.project.ProjectManager
 import elide.tool.server.StaticSiteServer
 import elide.tool.server.StaticSiteServer.buildStaticServer
-import elide.tooling.Arguments
-import elide.tooling.Tool
+import elide.tooling.*
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
-import elide.tooling.builder.TestDriver.discoverTests
+import elide.tooling.builder.TestDriver.configureTests
 import elide.tooling.cli.Statics
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.TestConfigurator.*
-import elide.tooling.config.on
 import elide.tooling.jvm.JvmLibraries
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.jvm.resolver.MavenLockfileResolver
-import elide.tooling.lockfile.ElideLockfile
-import elide.tooling.lockfile.InterpretedLockfile
-import elide.tooling.lockfile.LockfileStanza
-import elide.tooling.lockfile.loadLockfile
-import elide.tooling.lockfile.typedStanza
+import elide.tooling.lockfile.*
 import elide.tooling.project.ElideProject
 import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
@@ -183,13 +143,11 @@ import elide.tooling.project.manifest.ElidePackageManifest.StaticSite
 import elide.tooling.project.manifest.NodePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 import elide.tooling.runner.ProcessRunner
-import elide.tooling.runner.TestRunner
+import elide.tooling.runner.ConcurrentTestRunner
+import elide.tooling.runner.SequentialTestRunner
 import elide.tooling.term.TerminalUtil.to256ColorAnsiString
 import elide.tooling.term.TerminalUtil.toTrueColorAnsiString
-import elide.tooling.testing.Reason
-import elide.tooling.testing.TestPostProcessingOptions
-import elide.tooling.testing.TestPostProcessors
-import elide.tooling.testing.TestResult
+import elide.tooling.testing.*
 
 // Whether to use Espresso as the JVM engine by default.
 private const val USE_TRUFFLE_JVM_DEFAULT = false
@@ -1136,7 +1094,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
                 .append(line.padEnd(textWidth - pad - middlePrefix.length - extraStackPad, ' ') + red("║") + "\n")
             } else {
               append(middlePrefix)
-                append(" ".repeat(extraStackPad))
+              append(" ".repeat(extraStackPad))
                 .append(line.padEnd(textWidth - 1 - extraStackPad, ' ') + red("║") + "\n")
             }
           }
@@ -1380,7 +1338,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   // Resolve the main-class to run for a JVM entrypoint.
   private fun resolveMainClassRequired(entry: File): String {
     return resolveMainClass(entry) ?: error(
-      "Failed to resolve main class for entry: '$entry'"
+      "Failed to resolve main class for entry: '$entry'",
     )
   }
 
@@ -1418,23 +1376,26 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           RunnerOutcome.Success -> {
             logging.debug("JVM runner executed successfully")
           }
+
           is RunnerOutcome.Failure -> {
             val cause = outcome.cause
-            error(buildString {
-              append("failed to run: ${outcome.message}")
-              if (cause != null) {
-                append(" Caused by: ")
-                append(cause::class.java.name)
-                val msg = cause.message?.ifBlank { null }
-                if (msg != null) {
-                  append(": $msg")
+            error(
+              buildString {
+                append("failed to run: ${outcome.message}")
+                if (cause != null) {
+                  append(" Caused by: ")
+                  append(cause::class.java.name)
+                  val msg = cause.message?.ifBlank { null }
+                  if (msg != null) {
+                    append(": $msg")
+                  }
                 }
-              }
-              val stacktrace = cause?.stackTraceToString()
-              if (stacktrace != null && stacktrace.isNotBlank()) {
-                append("\nStacktrace:\n$stacktrace")
-              }
-            })
+                val stacktrace = cause?.stackTraceToString()
+                if (stacktrace != null && stacktrace.isNotBlank()) {
+                  append("\nStacktrace:\n$stacktrace")
+                }
+              },
+            )
 
             error(
               "failed to run: ${outcome.message}",
@@ -1487,8 +1448,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           when (it) {
             null -> error("Failed to precompile Kotlin runnable")
             is KotlinScriptCallable -> it.apply(
-              ctxAccessor.invoke()
+              ctxAccessor.invoke(),
             )
+
             is KotlinJarBundleInfo -> {
               if (commons().verbose) Statics.logging.info {
                 "Running effective equivalent of 'java -jar ${it.path.absolutePathString()}'"
@@ -1496,8 +1458,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
               val entry = when (val specified = it.entrypoint) {
                 null -> error(
                   "Failed to determine entrypoint for Kotlin precompiled source; no `main.kt` specified or found. " +
-                  "Please specify the entrypoint to run."
+                          "Please specify the entrypoint to run.",
                 )
+
                 else -> specified
               }
               ctxAccessor().let { ctx: PolyglotContext ->
@@ -1660,19 +1623,21 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       dirTarget.exists() -> dirTarget
       else -> {
         logging.warn(
-          "Can't start the static site server named '$name': the site root doesn't exist. Have you run `elide build`?"
+          "Can't start the static site server named '$name': the site root doesn't exist. Have you run `elide build`?",
         )
         return
       }
     }
 
-    with(StaticSiteServer.StaticServerConfig(
-      site = site,
-      project = activeProject.value,
-      root = effectiveTarget,
-      host = server.hostPair(),
-      devMode = true,
-    )) {
+    with(
+      StaticSiteServer.StaticServerConfig(
+        site = site,
+        project = activeProject.value,
+        root = effectiveTarget,
+        host = server.hostPair(),
+        devMode = true,
+      ),
+    ) {
       buildStaticServer().start(wait = true)
     }
   }
@@ -1683,12 +1648,14 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     server: ServerOptions.EffectiveServerOptions,
     devMode: Boolean = true,
     wait: Boolean = true,
-  ) = with(StaticSiteServer.StaticServerConfig(
-    root = path,
-    project = activeProject.value,
-    host = server.hostPair(),
-    devMode = devMode,
-  )) {
+  ) = with(
+    StaticSiteServer.StaticServerConfig(
+      root = path,
+      project = activeProject.value,
+      host = server.hostPair(),
+      devMode = devMode,
+    ),
+  ) {
     @Suppress("HttpUrlsUsage")
     if (!quiet) buildString {
       append("Serving from directory ")
@@ -1767,10 +1734,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     }
   }
 
-  private fun formatTestStatus(testStatus: TestResult, message: String): String {
+  private fun formatTestStatus(testStatus: TestOutcome, message: String): String {
     return when (testStatus) {
-      is TestResult.Pass -> formatMaybe(message, TextColors.green + TextStyles.bold, false)
-      is TestResult.Fail -> formatMaybe(message, TextColors.red + TextStyles.bold, false)
+      is TestOutcome.Success -> formatMaybe(message, TextColors.green + TextStyles.bold, false)
+      is TestOutcome.Failure, is TestOutcome.Error -> formatMaybe(message, TextColors.red + TextStyles.bold, false)
       else -> formatMaybe(message, TextColors.yellow + TextStyles.bold, false)
     }
   }
@@ -1788,83 +1755,99 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     val project = activeProject.value
     try {
       logging.trace("Entered VM for test run (language: ${language.id}). Consuming script from: '$label'")
+      val registry = MutableTestRegistry()
 
       // execute all matched or provided source files (interpreted lang tests)
-      source.forEach { entry ->
-        execWrapped(label, ctxAccessor, entry)
+      source.forEach { entry -> execWrapped(label, ctxAccessor, entry) }
+
+      // add all tests registered by guest sources
+      beanContext.getBean(TestingRegistrar::class.java)?.freeze()?.grouped()?.let { grouped ->
+        val scopeIndex = mutableMapOf<TestScope<*>, TestNodeKey>()
+        grouped.forEach { (group, test) ->
+          val parentKey = scopeIndex.getOrPut(group) { UUID.randomUUID().toString() }
+          registry += DynamicTestCase(
+            id = UUID.randomUUID().toString(),
+            parent = parentKey,
+            displayName = test.simpleName,
+            entrypointProvider = test.entryFactory,
+          )
+        }
       }
 
       // invoke all test contributors (handles registration for non-source tests)
       if (project != null) {
-        runBlocking {
-          coroutineScope {
-            discoverTests(beanContext, project)
-          }
-        }
+        runBlocking { configureTests(beanContext, ctxAccessor, project, registry) }
       }
 
       // continue to configure and plan test run
       didPrepare = true
-      val testRegistry = beanContext.getBean(TestingRegistrar::class.java)
-      val allTests = testRegistry.freeze().grouped().toList()
-      if (allTests.isEmpty()) {
+      if (registry.isEmpty) {
         logging.info("No tests to run.")
         return
       }
 
       // start up the test runner and run all eligible/matched tests
       if (verbose) {
-        logging.info { "Running ${allTests.size} tests" }
-        allTests.forEach {
-          logging.info { "- ${it.second.qualifiedName}" }
-        }
+        logging.info { "Running tests" }
+        registry.forEach { logging.info { "- ${it.displayName}" } }
       }
-      fun TestRunner.Builder<*>.prepRunner() {
-        executor = execProvider.executor()
-      }
+
+      val events = TestEventController.create()
+      val drivers = beanContext.getBean(TestDriverRegistry::class.java).collect()
       val testRunner = when (testingOptions.threadedTestMode) {
-        false -> TestRunner.serialBuilder(ctxAccessor)
-        true -> TestRunner.threadedBuilder(ctxAccessor)
-      }.apply {
-        prepRunner()
-      }.build {
-        //
-        // --- bind events for test runner ---
-        //
-        on(TestPass) { test: RegisteredTest ->
-          output {
-            append("✔  ${test.qualifiedName}")
-          }
-        }
-        on<Pair<RegisteredTest, Reason>, TestSkip>(TestSkip) { (test: RegisteredTest, reason: Reason) ->
-          output {
-            append(formatMaybe(
-              "⊝  ${test.qualifiedName} (${reason.message()})",
+        false -> SequentialTestRunner(drivers, events)
+        true -> ConcurrentTestRunner(drivers, events)
+      }
+
+      runBlocking(Dispatchers.Engine) {
+        val tests = registry.entries().filterIsInstance<TestCase>()
+        val session = testRunner.runTests(tests)
+
+        val testResults = session.testResults.onEach {
+          val testCase = registry[it.test]
+
+          // print test results
+          val message = when (val outcome = it.outcome) {
+            TestOutcome.Skipped -> formatMaybe(
+              "⊝  ${testCase.displayName}",
               TextColors.yellow + TextStyles.dim,
               false,
-            ))
+            )
+
+            TestOutcome.Success -> "✔  ${testCase.displayName}"
+            is TestOutcome.Error -> {
+              val reason = outcome.reason
+              val msg = when {
+                reason is Throwable && reason.message != null -> reason.message
+                reason != null -> reason.toString()
+                else -> "Unknown error"
+              }
+              formatMaybe(
+                "!  ${testCase.displayName}\n$msg",
+                TextStyles.bold + TextColors.red,
+                false,
+              )
+            }
+
+            is TestOutcome.Failure -> {
+              val reason = outcome.reason
+              val msg = when {
+                reason is Throwable && reason.message != null -> reason.message
+                reason != null -> reason.toString()
+                else -> "Unknown error"
+              }
+              formatMaybe(
+                "✗  ${testCase.displayName}\n$msg",
+                TextStyles.bold + TextColors.red,
+                false,
+              )
+            }
           }
-        }
-        on<Pair<RegisteredTest, Throwable?>, TestFail>(TestFail) { (test: RegisteredTest, err: Throwable?) ->
-          val msg = when {
-            err?.message != null -> err.message
-            err != null -> err::class.java.name
-            else -> "Unknown error"
-          }
-          output {
-            append(formatMaybe(
-              "✗  ${test.qualifiedName}\n$msg",
-              TextStyles.bold + TextColors.red,
-              false,
-            ))
-          }
-        }
-      }
-      runBlocking(Dispatchers.Engine) {
-        val results = coroutineScope {
-          testRunner.tests(this, allTests.asFlow())
-          testRunner.awaitSettled()
-        }
+
+          output { append(message) }
+        }.toList()
+
+        val runResult = session.result.await()
 
         // if we need to do post-processing, we should do it here
         TestPostProcessingOptions(
@@ -1873,7 +1856,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         ).let { testProcessingOptions ->
           TestPostProcessors.suite(testProcessingOptions).map { testPostProcessor ->
             async {
-              testPostProcessor to testPostProcessor(testProcessingOptions, results)
+              testPostProcessor to testPostProcessor(testProcessingOptions, runResult)
             }
           }.toList().takeIf { it.isNotEmpty() }?.awaitAll()?.let { stepResults ->
             if (stepResults.any { !it.second.success }) {
@@ -1890,34 +1873,58 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
         output {
           if (debug) {
-            append("Test results: $results")
+            append("Test results: $testResults")
           }
-          val status = when (results.result) {
-            is TestResult.Pass -> "PASS"
-            is TestResult.Fail -> "FAIL"
+          val status = when (runResult.outcome) {
+            is TestOutcome.Success -> "PASS"
+            is TestOutcome.Failure -> "FAIL"
+            is TestOutcome.Error -> "CRASH"
             else -> "UNKNOWN"
           }
           appendLine()
-          appendLine(formatMaybe("${results.stats.passes} pass", TextColors.green + TextStyles.bold, false))
-          appendLine("${results.stats.skips} skip".let {
-            if (results.stats.skips > 0u) {
-              formatMaybe(it, TextColors.yellow + TextStyles.bold, false)
-            } else {
-              formatMaybe(it, TextStyles.dim.style, false)
-            }
-          })
-          appendLine("${results.stats.fails} fail".let {
-            if (results.stats.fails > 0u) {
-              formatMaybe(it, TextColors.red + TextStyles.bold, false)
-            } else {
-              formatMaybe(it, TextStyles.dim.style, false)
-            }
-          })
+          appendLine(formatMaybe("${runResult.stats.passes} pass", TextColors.green + TextStyles.bold, false))
+          appendLine(
+            "${runResult.stats.skips} skip".let {
+              if (runResult.stats.skips > 0u) {
+                formatMaybe(it, TextColors.yellow + TextStyles.bold, false)
+              } else {
+                formatMaybe(it, TextStyles.dim.style, false)
+              }
+            },
+          )
+          appendLine(
+            "${runResult.stats.fails} fail".let {
+              if (runResult.stats.fails > 0u) {
+                formatMaybe(it, TextColors.red + TextStyles.bold, false)
+              } else {
+                formatMaybe(it, TextStyles.dim.style, false)
+              }
+            },
+          )
           appendLine()
-          appendLine(formatTestStatus(
-            results.result,
-            "$status · ${results.stats.tests} tests in ${results.stats.duration}",
-          ))
+          appendLine(
+            formatTestStatus(
+              runResult.outcome,
+              "$status · ${runResult.stats.tests} tests in ${runResult.stats.duration}",
+            ),
+          )
+
+          (runResult.outcome as? TestOutcome.Error)?.let {
+            when(val reason = it.reason) {
+              is Throwable -> {
+                appendLine(formatMaybe("The test run crashed with:", TextColors.red, false))
+                appendLine(formatMaybe(reason.stackTraceToString().prependIndent(" "), TextColors.red, false))
+              }
+
+              is Any -> {
+                appendLine(formatMaybe("The test run crashed with: $reason", TextColors.red, false))
+              }
+
+              else -> output {
+                appendLine(formatMaybe("The test run crashed with no available cause", TextColors.red))
+              }
+            }
+          }
         }
       }
       return
@@ -2099,26 +2106,30 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       langHomeResources.resolve("kotlin-script-runtime.jar"),
       langHomeResources.resolve("kotlinx-serialization-core-jvm-$serializationVersion.jar"),
       langHomeResources.resolve("kotlinx-serialization-json-jvm-$serializationVersion.jar"),
-    ).plus(sequence {
-      if (testMode()) {
-        yield(langHomeResources.resolve("elide-test.jar"))
-        yield(langHomeResources.resolve("kotlin-test-$kotlinVersion.jar"))
-        yield(langHomeResources.resolve("kotlin-test-junit5-$kotlinVersion.jar"))
-        yield(langHomeResources.resolve("kotlinx-coroutines-test-jvm-$coroutinesVersion.jar"))
-        yield(
-          langHomeResources.resolve(JvmLibraries.jarNameFor(
-            JvmLibraries.OPENTEST,
-            JvmLibraries.EMBEDDED_OPENTEST_VERSION,
-          ))
-        )
-        junitLibs.forEach {
-          yield(langHomeResources.resolve(JvmLibraries.jarNameFor(it, junitVersion)))
+    ).plus(
+      sequence {
+        if (testMode()) {
+          yield(langHomeResources.resolve("elide-test.jar"))
+          yield(langHomeResources.resolve("kotlin-test-$kotlinVersion.jar"))
+          yield(langHomeResources.resolve("kotlin-test-junit5-$kotlinVersion.jar"))
+          yield(langHomeResources.resolve("kotlinx-coroutines-test-jvm-$coroutinesVersion.jar"))
+          yield(
+            langHomeResources.resolve(
+              JvmLibraries.jarNameFor(
+                JvmLibraries.OPENTEST,
+                JvmLibraries.EMBEDDED_OPENTEST_VERSION,
+              ),
+            ),
+          )
+          junitLibs.forEach {
+            yield(langHomeResources.resolve(JvmLibraries.jarNameFor(it, junitVersion)))
+          }
+          junitPlatLibs.forEach {
+            yield(langHomeResources.resolve(JvmLibraries.jarNameFor(it, junitPlatVersion)))
+          }
         }
-        junitPlatLibs.forEach {
-          yield(langHomeResources.resolve(JvmLibraries.jarNameFor(it, junitPlatVersion)))
-        }
-      }
-    })
+      },
+    )
   }
 
   // Produce a classpaths-provider for the current project, or `null` if none is available.
@@ -2146,7 +2157,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         // and perform resolution/installation.
         true -> if (!performInstall) error(
           "Cannot run: Classpaths cannot be calculated without performing `elide install` and `elide build` first. " +
-            "Or, pass `--install` and/or `--build` and Elide will run these for you."
+                  "Or, pass `--install` and/or `--build` and Elide will run these for you.",
         ) else {
           val buildSettings = BuildConfigurator.MutableBuildSettings().apply {
             dry = true
@@ -2157,27 +2168,32 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
               it.second.joinAll()
             }.first.filterIsInstance<MavenAetherResolver>().first()
           }
-          val runtimeClasspath = mavenResolver.classpathProvider(object: ClasspathSpec {
-            override val usage: MultiPathUsage get() = when (testMode()) {
-              true -> MultiPathUsage.TestRuntime
-              false -> MultiPathUsage.Runtime
-            }
-          })?.classpath()
+          val runtimeClasspath = mavenResolver.classpathProvider(
+            object : ClasspathSpec {
+              override val usage: MultiPathUsage
+                get() = when (testMode()) {
+                  true -> MultiPathUsage.TestRuntime
+                  false -> MultiPathUsage.Runtime
+                }
+            },
+          )?.classpath()
 
           ClasspathProvider {
-            Classpath.from(buildList {
-              // before all other entries, the test classpath, but only if we are in test mode
-              if (testMode()) {
-                classesRoot.resolve("test").takeIf { it.exists() }?.let { add(it.absolute()) }
-              }
-              classesRoot.resolve("main").takeIf { it.exists() }?.let { add(it.absolute()) }
+            Classpath.from(
+              buildList {
+                // before all other entries, the test classpath, but only if we are in test mode
+                if (testMode()) {
+                  classesRoot.resolve("test").takeIf { it.exists() }?.let { add(it.absolute()) }
+                }
+                classesRoot.resolve("main").takeIf { it.exists() }?.let { add(it.absolute()) }
 
-              // the user's classpath goes first
-              runtimeClasspath?.let { addAll(it.toList().map { it.path }) }
+                // the user's classpath goes first
+                runtimeClasspath?.let { addAll(it.toList().map { it.path }) }
 
-              // then base dependencies
-              addAll(base)
-            })
+                // then base dependencies
+                addAll(base)
+              },
+            )
           }
         }
       }
@@ -2190,23 +2206,25 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             false -> ClasspathSpec.Runtime
           }.let { spec ->
             ClasspathProvider {
-              Classpath.from(buildList {
-                // before all other entries, the test classpath, but only if we are in test mode
-                if (testMode()) {
-                  classesRoot.resolve("test").takeIf { it.exists() }?.let { add(it.absolute()) }
-                }
-                classesRoot.resolve("main").takeIf { it.exists() }?.let { add(it.absolute()) }
+              Classpath.from(
+                buildList {
+                  // before all other entries, the test classpath, but only if we are in test mode
+                  if (testMode()) {
+                    classesRoot.resolve("test").takeIf { it.exists() }?.let { add(it.absolute()) }
+                  }
+                  classesRoot.resolve("main").takeIf { it.exists() }?.let { add(it.absolute()) }
 
-                // the user's classpath goes first
-                resolver.classpathProvider(spec)?.classpath()?.asList()?.map {
-                  it.path.absolute()
-                }?.forEach {
-                  add(it)
-                }
+                  // the user's classpath goes first
+                  resolver.classpathProvider(spec)?.classpath()?.asList()?.map {
+                    it.path.absolute()
+                  }?.forEach {
+                    add(it)
+                  }
 
-                // then base dependencies
-                addAll(base)
-              })
+                  // then base dependencies
+                  addAll(base)
+                },
+              )
             }
           }
         }
@@ -2312,12 +2330,12 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     val extraHome = System.getenv("KOTLIN_HOME") ?: System.getenv("ELIDE_KOTLIN_HOME")
     val fullClasspath: MutableList<Path> = (
-        when (extraHome) {
-          null -> emptySequence()
-          else -> initialGuestClasspathJars(Path(extraHome).resolve("lib"))
-        }
-      ).plus(
-        pathsFromLangResources.ifEmpty { pathsFromHomeResources }
+            when (extraHome) {
+              null -> emptySequence()
+              else -> initialGuestClasspathJars(Path(extraHome).resolve("lib"))
+            }
+            ).plus(
+        pathsFromLangResources.ifEmpty { pathsFromHomeResources },
       ).plus(
         when (testMode()) {
           // @TODO don't hardcode .dev or artifacts paths
@@ -2332,8 +2350,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
                 classRoot.resolve("test"),
               )
             }
+
           false -> emptySequence()
-        }
+        },
       ).distinct().asStream().parallel().filter {
         Files.exists(it)
       }.let {
@@ -2548,11 +2567,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
               guestClasspathRoots.addAll(fullClasspath)
               javaHome?.let { guestJavaHome = it }
             }
+
             KOTLIN -> configure(elide.runtime.plugins.kotlin.Kotlin) {
               guestClasspathRoots.addAll(fullClasspath)
               javaHome?.let { guestJavaHome = it }
               extraKotlinHome?.let { guestKotlinHome = it }
             }
+
             GROOVY -> logging.warn("Groovy runtime plugin is not yet implemented")
             SCALA -> logging.warn("Scala runtime plugin is not yet implemented")
             else -> {}
@@ -2812,21 +2833,23 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         val runnableArgs = Statics.args.drop(1)
         val binpath = resolvedBinary.absolute()
 
-        delegateTask(subprocess(binpath) {
-          // delegate streams by default
-          streams = ProcessRunner.StdStreams.Defaults
+        delegateTask(
+          subprocess(binpath) {
+            // delegate streams by default
+            streams = ProcessRunner.StdStreams.Defaults
 
-          // by default, the system env is in use
-          env = Environment.HostEnv
+            // by default, the system env is in use
+            env = Environment.HostEnv
 
-          // activate shell support
-          options = ProcessRunner.ProcessOptions(shell = ProcessRunner.ProcessShell.Active)
+            // activate shell support
+            options = ProcessRunner.ProcessOptions(shell = ProcessRunner.ProcessShell.Active)
 
-          // copy in the provided arguments
-          runnableArgs.takeIf { it.isNotEmpty() }?.let { arguments ->
-            args.addAllStrings(arguments)
-          }
-        })
+            // copy in the provided arguments
+            runnableArgs.takeIf { it.isNotEmpty() }?.let { arguments ->
+              args.addAllStrings(arguments)
+            }
+          },
+        )
       }
     }
     when (binReturn) {

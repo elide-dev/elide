@@ -15,9 +15,10 @@ package elide.tooling.config
 import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import java.util.ServiceLoader
-import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.runtime.core.PolyglotContext
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.testing.TestRegistry
 
 /**
  * ## Test Configurators
@@ -46,8 +47,9 @@ public object TestConfigurators {
   @JvmStatic
   public suspend fun contribute(
     beanContext: BeanContext,
+    guestContext: () -> PolyglotContext,
     project: ElideConfiguredProject,
-    registrar: TestingRegistrar,
+    registry: TestRegistry,
     from: Sequence<TestConfigurator>,
     to: TestConfigurator.TestConfiguration,
     extraConfigurator: TestConfigurator? = null,
@@ -62,7 +64,8 @@ public object TestConfigurators {
       override val manifest: ElidePackageManifest get() = project.manifest
       override val layout: BuildConfigurator.ProjectDirectories get() = layout
       override val resourcesPath: Path get() = project.resourcesPath
-      override val registrar: TestingRegistrar get() = registrar
+      override val registry: TestRegistry get() = registry
+      override val guestContextProvider: () -> PolyglotContext = guestContext
     }
     from.let {
       when (extraConfigurator) {
@@ -76,11 +79,12 @@ public object TestConfigurators {
 
   @JvmStatic public suspend fun contribute(
     beanContext: BeanContext,
+    guestContext: () -> PolyglotContext,
     project: ElideConfiguredProject,
-    registrar: TestingRegistrar,
+    registry: TestRegistry,
     to: TestConfigurator.TestConfiguration,
     extraConfigurator: TestConfigurator? = null,
   ) {
-    contribute(beanContext, project, registrar, collect(), to, extraConfigurator)
+    contribute(beanContext, guestContext, project, registry, collect(), to, extraConfigurator)
   }
 }

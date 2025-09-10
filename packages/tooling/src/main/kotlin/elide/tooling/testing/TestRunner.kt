@@ -12,17 +12,14 @@
  */
 package elide.tooling.testing
 
-/**
- * Results of a test run.
- *
- * @property outcome The overall result of the test run.
- * @property exitCode The exit code of the test run.
- * @property stats Statistics about the test run.
- * @property results Results of individual test cases.
- * @property earlyExit Whether the test run exited early (e.g. due to a failure during `failFast` mode).
- */
-@JvmRecord public data class TestRunResult(
-  public val outcome: TestOutcome,
-  public val stats: TestStats,
-  public val earlyExit: Boolean = false,
-)
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.flow.Flow
+
+public interface TestRunner {
+  public interface TestRun {
+    public val testResults: Flow<TestResult>
+    public val result: Deferred<TestRunResult>
+  }
+
+  public fun runTests(tests: Sequence<TestCase>): TestRun
+}

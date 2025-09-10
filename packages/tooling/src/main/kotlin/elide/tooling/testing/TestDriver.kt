@@ -13,16 +13,16 @@
 package elide.tooling.testing
 
 /**
- * Results of a test run.
- *
- * @property outcome The overall result of the test run.
- * @property exitCode The exit code of the test run.
- * @property stats Statistics about the test run.
- * @property results Results of individual test cases.
- * @property earlyExit Whether the test run exited early (e.g. due to a failure during `failFast` mode).
+ * Handles execution logic for a specific type of test case. Test drivers use the data from the test instance to
+ * resolve an entrypoint and invoke it.
  */
-@JvmRecord public data class TestRunResult(
-  public val outcome: TestOutcome,
-  public val stats: TestStats,
-  public val earlyExit: Boolean = false,
-)
+public interface TestDriver<T : TestCase> {
+  /** The type of test cases supported by this driver. */
+  public val type: TestTypeKey<T>
+
+  /**
+   * Execute a single [testCase] and return its outcome. Exceptions thrown within this method should always be captured
+   * and encapsulated by the return value instead.
+   */
+  public suspend fun run(testCase: T): TestOutcome
+}

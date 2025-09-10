@@ -119,6 +119,15 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
     fun fromInt(value: Long): T & Any
   }
 
+  // Temporary holder for structural Maven package specs from Pkl
+  private data class MavenSpecTmp(
+    val group: String? = null,
+    val name: String? = null,
+    val version: String? = null,
+    val classifier: String? = null,
+    val repository: String? = null,
+  )
+
   private val valueMapper by lazy {
     ValueMapper.preconfigured()
       .toBuilder()
@@ -187,6 +196,41 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         when (info.qualifiedName) {
           "elide.jvm#Jar" -> Optional.of(Converter { value: PObject, mapper ->
             mapper.map(value, Jar::class.java)
+          })
+
+          // Map structural Maven package specs to Kotlin MavenPackage
+          "elide.jvm#MavenPackageSpec" -> Optional.of(Converter { value: PObject, mapper ->
+            val tmp = mapper.map(value, MavenSpecTmp::class.java)
+            val group = tmp.group.orEmpty()
+            val name = tmp.name.orEmpty()
+            val version = tmp.version.orEmpty()
+            val classifier = tmp.classifier.orEmpty()
+            val repository = tmp.repository.orEmpty()
+            val coord = buildString {
+              append(group)
+              append(':')
+              append(name)
+              if (classifier.isNotEmpty()) {
+                append(':')
+                append(classifier)
+              }
+              if (version.isNotEmpty()) {
+                append(':')
+                append(version)
+              }
+              if (repository.isNotEmpty()) {
+                append('@')
+                append(repository)
+              }
+            }
+            MavenPackage(
+              group = group,
+              name = name,
+              version = version,
+              classifier = classifier,
+              repository = repository,
+              coordinate = coord,
+            )
           })
 
           "elide.nativeImage#NativeImage" -> Optional.of(Converter { value: PObject, mapper ->

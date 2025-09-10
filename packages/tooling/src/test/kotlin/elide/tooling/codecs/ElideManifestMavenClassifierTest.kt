@@ -22,7 +22,7 @@ class ElideManifestMavenClassifierTest {
 
       dependencies {
         maven {
-          packages {
+          packages = new {
             new {
               group = "com.example"
               name = "lib"

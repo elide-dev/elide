@@ -183,21 +183,52 @@ inline fun setStaticProperties(binPath: String) {
   }
 }
 
+private fun resolveBinaryPathForNative(): String {
+  // Prefer a fully-qualified, real path without relying on the process working dir.
+  val cmd = ProcessHandle.current().info().command().orElse(null)
+  if (cmd != null) {
+    val p = Path(cmd)
+    // If already absolute, resolve any symlinks and return.
+    if (p.isAbsolute) {
+      return try {
+        (if (Files.isSymbolicLink(p)) p.toRealPath() else p).absolutePathString()
+      } catch (_: Throwable) {
+        p.toAbsolutePath().absolutePathString()
+      }
+    }
+  }
+
+  // If the command was relative (common on Linux/WSL), fall back to /proc/self/exe which is
+  // always absolute and does not depend on user.dir.
+  return try {
+    Path("/proc/self/exe").toRealPath().absolutePathString()
+  } catch (_: Throwable) {
+    // Last resort: return the raw command as-is (may be relative)
+    cmd ?: "elide"
+  }
+}
+
+private fun safeWorkingDirectory(): String {
+  // Try the standard property first; if it fails (can throw in SVM if getcwd fails),
+  // fall back to Linux /proc, then environment variables.
+  return try {
+    System.getProperty("user.dir")
+  } catch (_: Throwable) {
+    try {
+      Path("/proc/self/cwd").toRealPath().absolutePathString()
+    } catch (_: Throwable) {
+      System.getenv("PWD") ?: System.getenv("HOME") ?: "."
+    }
+  }
+}
+
 fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {
   if (entryInitialized) return
   entryInitialized = true
 
   earlyLog("Setting static properties")
   val binPath = when (ImageInfo.inImageRuntimeCode()) {
-    true -> ProcessHandle.current().info().command().orElse(null).let { binPathMaybe ->
-      val asPath = Path(binPathMaybe)
-      if (Files.isSymbolicLink(asPath)) {
-        // resolve symbolic links to their absolute path
-        asPath.toRealPath().absolutePathString()
-      } else {
-        binPathMaybe
-      }
-    }
+    true -> resolveBinaryPathForNative()
     false -> requireNotNull(System.getProperty("elide.gvmResources")) {
       "Failed to resolve `elide.resources` property"
     }
@@ -206,7 +237,7 @@ fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {
   if (installStatics) {
     earlyLog("Installing statics")
     Statics.mountArgs(binPath, args)
-    installStatics(binPath, args, System.getProperty("user.dir"))
+    installStatics(binPath, args, safeWorkingDirectory())
     earlyLog("Installing bridge handler for SLF4j")
     SLF4JBridgeHandler.install()
   }

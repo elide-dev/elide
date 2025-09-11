@@ -4298,6 +4298,7 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenDepe
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$MavenPackage : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$DependencyEcosystemConfig$PackageSpec, java/lang/Comparable {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage$Companion;
+	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun classifier ()Ljava/lang/String;

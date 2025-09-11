@@ -220,7 +220,7 @@ public data class ElidePackageManifest(
     val version: String = "",
     val classifier: String = "",
     val repository: String = "",
-    val coordinate: String,
+    val coordinate: String? = null,
   ) : DependencyEcosystemConfig.PackageSpec, Comparable<MavenPackage> {
     public companion object {
       @JvmStatic public fun parse(str: String): MavenPackage {
@@ -257,7 +257,26 @@ public data class ElidePackageManifest(
       }
     }
 
-    override fun compareTo(other: MavenPackage): Int = coordinate.compareTo(other.coordinate)
+    private fun effectiveCoordinate(): String = when {
+      !coordinate.isNullOrBlank() -> coordinate
+      else -> buildString {
+        append(group)
+        if (name.isNotBlank()) {
+          append(':')
+          append(name)
+        }
+        if (classifier.isNotBlank()) {
+          append(':')
+          append(classifier)
+        }
+        if (version.isNotBlank()) {
+          append(':')
+          append(version)
+        }
+      }
+    }
+
+    override fun compareTo(other: MavenPackage): Int = effectiveCoordinate().compareTo(other.effectiveCoordinate())
 
     override fun equals(other: Any?): Boolean {
       if (this === other) return true
@@ -268,7 +287,8 @@ public data class ElidePackageManifest(
       if (group != other.group) return false
       if (name != other.name) return false
       if (version != other.version) return false
-      if (coordinate != other.coordinate) return false
+      // Only require coordinate equality when both are non-null; otherwise rely on fields above.
+      if (coordinate != null && other.coordinate != null && coordinate != other.coordinate) return false
       if (repository != other.repository) return false
 
       return true
@@ -278,7 +298,7 @@ public data class ElidePackageManifest(
       var result = group.ifBlank { null }?.hashCode() ?: 0
       result = 31 * result + (name.ifBlank { null }?.hashCode() ?: 0)
       result = 31 * result + (version.ifBlank { null }?.hashCode() ?: 0)
-      result = 31 * result + coordinate.hashCode()
+      result = 31 * result + (coordinate?.hashCode() ?: effectiveCoordinate().hashCode())
       result = 31 * result + (repository.ifBlank { null }?.hashCode() ?: 0)
       return result
     }

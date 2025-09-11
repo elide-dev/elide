@@ -859,49 +859,54 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   }
 
   // Given an error location (in interactive mode), fetch the source, plus `contextLines` on each side of the error.
-  private fun errorContextLines(exc: PolyglotException, contextLines: Int = 1): Pair<Int, List<String>> {
-    val startLine = maxOf(0, (exc.sourceLocation?.startLine ?: 0) - contextLines)
-    val endLine = exc.sourceLocation?.endLine ?: 0
-    val errorBase = minOf(0, startLine)
+  private fun errorContextLines(section: org.graalvm.polyglot.SourceSection?, contextLines: Int = 1): Pair<Int, List<String>> {
+    val start = (section?.startLine ?: 0)
+    val end = (section?.endLine ?: 0)
+    if (start == 0 && end == 0) return 0 to emptyList()
 
-    // bail: no lines to show
-    if (startLine == 0 && endLine == 0) return errorBase to emptyList()
+    // Convert to 0-based indices and expand with context
+    val startZero = maxOf(0, start - 1)
+    val base = maxOf(0, startZero - contextLines)
+    val lengthInclusive = maxOf(1, end - start + 1)
+    val totalLines = lengthInclusive + (contextLines * 2)
 
-    // otherwise, calculate lines
-    val totalLines = endLine - startLine + (contextLines * 2)
     val ctxLines = ArrayList<String>(totalLines)
-    val baseOnHand = minOf(0, statementCounter.value)
-    val errorTail = errorBase + (exc.sourceLocation.endLine - exc.sourceLocation.startLine)
+    val baseOnHand = maxOf(0, statementCounter.value)
+    val errorTail = base + maxOf(0, (section?.endLine ?: start) - (section?.startLine ?: start))
     val topLine = maxOf(statementCounter.value, errorTail)
 
     return when {
       // cannot resolve: we don't have those lines (they are too early for our buffer)
-      errorBase < baseOnHand -> -1 to emptyList()
+      base < baseOnHand -> -1 to emptyList()
 
       // otherwise, resolve from seen statements
       else -> {
         if (allSeenStatements.isNotEmpty()) {
-          ctxLines.addAll(allSeenStatements.subList(errorBase, minOf(topLine, allSeenStatements.size)))
-          (errorBase + 1) to ctxLines
+          val upper = minOf(topLine, allSeenStatements.size)
+          if (base < upper) ctxLines.addAll(allSeenStatements.subList(base, upper))
+          (base + 1) to ctxLines
         } else when (val target = runnable?.ifBlank { null }) {
           // with no runnable, we can't resolve lines by hand
-          null -> (errorBase + 1) to emptyList()
+          null -> (base + 1) to emptyList()
 
-          // if we can resolve it, pluck the lines from there
+          // if we can resolve it, pluck the lines from the file
           else -> totalLines.takeIf { it > 0 }?.let {
             val asPath = runCatching { Paths.get(target) }.getOrNull()
             if (asPath != null && asPath.isRegularFile() && asPath.isReadable()) {
               val linesFromRange = asPath.bufferedReader(StandardCharsets.UTF_8).use { reader ->
-                reader.lineSequence().drop(errorBase).take(totalLines).toList()
+                reader.lineSequence().drop(base).take(totalLines).toList()
               }
               ctxLines.addAll(linesFromRange)
-              (errorBase + 1) to ctxLines
+              (base + 1) to ctxLines
             } else null  // fallback to below
           } ?: ((-1) to emptyList())
         }
       }
     }
   }
+
+  private fun errorContextLines(exc: PolyglotException, contextLines: Int = 1): Pair<Int, List<String>> =
+    errorContextLines(exc.sourceLocation, contextLines)
 
   // Determine error printer settings for this run.
   private fun errPrinterSettings(): ErrPrinter.ErrPrinterSettings = ErrPrinter.ErrPrinterSettings(
@@ -983,9 +988,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     val errContextPrefix = "$errPrefix%lineNum┊ %lineText"
     val stopContextPrefix = "$stopPrefix%lineNum┊ %lineText"
 
-    val (startingLineNumber, errorContext) = errorContextLines(exc)
-    val startLine = startingLineNumber + max((exc.sourceLocation?.startLine ?: 0) - 1, 0)
-    val endLine = startingLineNumber + max((exc.sourceLocation?.endLine ?: 0) - 1, 0)
+    val bestSection = topGuestFrame?.sourceLocation ?: exc.sourceLocation
+    val (startingLineNumber, errorContext) = errorContextLines(bestSection)
+    val startLine = startingLineNumber + max((bestSection?.startLine ?: 0) - 1, 0)
+    val endLine = startingLineNumber + max((bestSection?.endLine ?: 0) - 1, 0)
     val lineDigits = endLine.toString().length
 
     val errRange = startLine..endLine
@@ -1187,7 +1193,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           )
 
           else -> displayFormattedError(
-            exc.asHostException(),
+            exc,
             msg ?: exc.asHostException().message ?: "A runtime error was thrown",
             advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
             stacktrace = true,

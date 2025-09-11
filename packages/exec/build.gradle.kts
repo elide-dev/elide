@@ -46,6 +46,8 @@ dependencies {
   api(libs.kotlinx.coroutines.jdk8)
   api(libs.kotlinx.coroutines.guava)
   implementation(libs.guava)
+  // Needed for ImageInfo.inImageCode() reference in Tracing.kt during JVM builds
+  compileOnly(libs.graalvm.svm)
   testImplementation(libs.kotlin.test.junit5)
   testImplementation(libs.kotlinx.coroutines.test)
   testRuntimeOnly(libs.logback.core)

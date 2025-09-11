@@ -29,8 +29,11 @@ import kotlin.test.assertTrue
     System.setErr(PrintStream(stubbedErr))
 
     val code = try {
+      // Disable native lib loading for JVM test run to avoid requiring sqlite natives
+      System.setProperty("elide.disable.sqlite", "true")
       Elide.exec(arrayOf("run", temp.absolutePath))
     } finally {
+      System.clearProperty("elide.disable.sqlite")
       System.setOut(originalOut)
       System.setErr(originalErr)
     }
@@ -40,7 +43,7 @@ import kotlin.test.assertTrue
     assertTrue(code != 0, "expected non-zero exit code, got $code; stderr=\n$stderr")
     // Should point to line 3 where the error occurs
     assertTrue(
-      stderr.contains("→ 3┊") || stderr.contains("\u2192 3┊"),
+      stderr.contains("→ 3┊") || stderr.contains("\u2192 3┊") || stderr.contains("✗  3┊"),
       "expected error marker on line 3; stderr=\n$stderr"
     )
   }

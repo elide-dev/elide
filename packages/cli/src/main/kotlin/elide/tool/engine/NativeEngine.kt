@@ -399,9 +399,15 @@ object NativeEngine {
       this::class.java.classLoader,
     )
 
-    // in jvm mode, force-load sqlite
+    // in jvm mode, force-load sqlite unless explicitly disabled
     if (!ImageInfo.inImageCode()) {
-      nativeLibraryGroups["sqlite"] = SQLiteJDBCLoader.initialize()
+      val disableSqlite = (System.getProperty("elide.disable.sqlite") == "true") ||
+        (System.getProperty("elide.disableNatives") == "true") ||
+        (System.getenv("ELIDE_DISABLE_SQLITE")?.lowercase() == "true") ||
+        (System.getenv("ELIDE_DISABLE_NATIVES")?.lowercase() == "true")
+      if (!disableSqlite) {
+        nativeLibraryGroups["sqlite"] = SQLiteJDBCLoader.initialize()
+      }
     }
 
     // fix: account for static jni

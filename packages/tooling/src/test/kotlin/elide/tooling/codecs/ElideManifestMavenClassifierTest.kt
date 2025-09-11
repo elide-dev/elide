@@ -40,6 +40,8 @@ class ElideManifestMavenClassifierTest {
     assertEquals("lib", dep.name)
     assertEquals("1.2.3", dep.version)
     assertEquals("native", dep.classifier)
+    // tiny regression: ensure coordinate is synthesized when omitted
+    assertEquals("com.example:lib:native:1.2.3", dep.coordinate)
   }
 }
 

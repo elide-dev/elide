@@ -70,7 +70,24 @@ import elide.tooling.project.manifest.ElidePackageManifest.MavenRepository
 // Calculate the resolved Maven coordinate to use for a given dependency.
 @Suppress("UNUSED_PARAMETER")
 private fun MavenPackage.resolvedCoordinate(usageType: MavenClassifier = MavenClassifier.Default): String {
-  return coordinate // @TODO resolve special versions
+  // Be null/blank-safe: construct from fields if not provided by mapper.
+  val raw = (this.coordinate ?: "")
+  if (raw.isNotBlank()) return raw
+  return buildString {
+    append(this@resolvedCoordinate.group.orEmpty())
+    append(':')
+    append(this@resolvedCoordinate.name.orEmpty())
+    val cls = this@resolvedCoordinate.classifier.orEmpty()
+    if (cls.isNotEmpty()) {
+      append(':')
+      append(cls)
+    }
+    val ver = this@resolvedCoordinate.version.orEmpty()
+    if (ver.isNotEmpty()) {
+      append(':')
+      append(ver)
+    }
+  }
 }
 
 // Resolve the local dependencies path for Maven deps.

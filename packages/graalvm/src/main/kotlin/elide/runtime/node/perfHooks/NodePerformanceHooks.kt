@@ -22,6 +22,9 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.PerformanceHooksAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyObject
+import elide.runtime.intrinsics.js.JsPromise
 
 // Internal symbol where the Node built-in module is installed.
 private const val PERFORMANCE_HOOKS_MODULE_SYMBOL = "node_${NodeModuleName.PERF_HOOKS}"
@@ -46,8 +49,35 @@ internal class NodePerformanceHooks private constructor () : ReadOnlyProxyObject
     @JvmStatic fun create(): NodePerformanceHooks = NodePerformanceHooks()
   }
 
-  // @TODO not yet implemented
+  // Minimal implementation: performance object with now() and timeOrigin; monitorEventLoopDelay returns stub
+  private val perf: Any = object : ReadOnlyProxyObject {
+    private val origin = System.currentTimeMillis().toDouble()
+    override fun getMemberKeys(): Array<String> = arrayOf("now","timeOrigin")
+    override fun getMember(key: String?): Any? = when (key) {
+      "now" -> ProxyExecutable { _: Array<Value> -> (System.nanoTime() / 1_000_000.0) }
+      "timeOrigin" -> origin
+      else -> null
+    }
+    override fun hasMember(key: String): Boolean = key in arrayOf("now","timeOrigin")
+    override fun putMember(key: String?, value: Value?) { /* read-only */ }
+    override fun removeMember(key: String?): Boolean = false
+  }
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  override fun getMemberKeys(): Array<String> = arrayOf("performance","monitorEventLoopDelay","createHistogram")
+  override fun getMember(key: String?): Any? = when (key) {
+    "performance" -> perf
+    "monitorEventLoopDelay" -> ProxyExecutable { _: Array<Value> ->
+      object: ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = emptyArray()
+        override fun getMember(key: String?): Any? = null
+      }
+    }
+    "createHistogram" -> ProxyExecutable { _: Array<Value> ->
+      object: ReadOnlyProxyObject {
+        override fun getMemberKeys(): Array<String> = emptyArray()
+        override fun getMember(key: String?): Any? = null
+      }
+    }
+    else -> null
+  }
 }

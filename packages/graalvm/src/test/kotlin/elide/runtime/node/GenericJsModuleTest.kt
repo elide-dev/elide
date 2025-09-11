@@ -19,11 +19,17 @@ import java.util.stream.Stream
 import kotlin.streams.asStream
 import kotlin.test.Test
 import kotlin.test.assertContains
+import kotlin.test.assertNotNull
 import elide.runtime.intrinsics.GuestIntrinsic
 
 internal abstract class GenericJsModuleTest<T> : AbstractJsModuleTest<T>() where T : GuestIntrinsic {
   open fun requiredMembers(): Sequence<String> = emptySequence()
   open fun expectCompliance(): Boolean = true
+
+  // Provide a default injectable check so subclasses don't need to implement it.
+  override fun testInjectable() {
+    assertNotNull(provide())
+  }
 
   @Test fun `should be able to require() builtin module`() {
     require()

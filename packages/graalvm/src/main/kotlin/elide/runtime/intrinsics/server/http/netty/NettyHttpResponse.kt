@@ -227,14 +227,23 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
       }
     }
 
-    "end" -> ProxyExecutable { this.end() }
+    "end" -> ProxyExecutable { args: Array<Value> ->
+      // Support Node-style end([data]) by accepting an optional body argument.
+      val maybeBody = args.getOrNull(0)
+      if (maybeBody != null) {
+        this.responseBody.set(maybeBody)
+      }
+      this.end()
+    }
 
     else -> null
   }
 
   companion object {
     @JvmStatic fun from(res: Response, ctx: ChannelHandlerContext, includeDefaults: Boolean = true): NettyHttpResponse {
-      TODO("not yet implemented")
+      // The current response wrapper does not require the immutable Response instance; we stream directly via ctx.
+      // Construct a NettyHttpResponse bound to the channel context and emit default headers if requested.
+      return NettyHttpResponse(ctx, includeDefaults)
     }
   }
 }

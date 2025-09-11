@@ -135,6 +135,7 @@ public final class elide/runtime/lang/javascript/NodeModuleName : java/util/func
 	public static final field STRING_DECODER Ljava/lang/String;
 	public static final field TEST Ljava/lang/String;
 	public static final field TIMERS Ljava/lang/String;
+	public static final field TIMERS_PROMISES Ljava/lang/String;
 	public static final field TLS Ljava/lang/String;
 	public static final field TRACE_EVENTS Ljava/lang/String;
 	public static final field TTY Ljava/lang/String;
@@ -142,6 +143,7 @@ public final class elide/runtime/lang/javascript/NodeModuleName : java/util/func
 	public static final field UTIL Ljava/lang/String;
 	public static final field V8 Ljava/lang/String;
 	public static final field VM Ljava/lang/String;
+	public static final field WASI Ljava/lang/String;
 	public static final field WORKER Ljava/lang/String;
 	public static final field WORKER_THREADS Ljava/lang/String;
 	public static final field ZLIB Ljava/lang/String;

@@ -392,8 +392,10 @@ public class MavenAetherResolver internal constructor (
     suites.add(suite)
 
     packages.forEach { pkg ->
-      if (pkg.coordinate !in registry) {
-        registry[pkg.coordinate] = pkg to usage
+      // Use a resolved/safe coordinate to avoid null keys in registries.
+      val key = pkg.resolvedCoordinate()
+      if (key !in registry) {
+        registry[key] = pkg to usage
       }
       registryByType.getOrDefault(suite, mutableListOf()).also {
         it.add(pkg)
@@ -402,12 +404,12 @@ public class MavenAetherResolver internal constructor (
       registryPackageMap.getOrDefault(pkg, mutableListOf()).also {
         it.add(manifest)
       }
-      when (val repo = pkg.repository.ifBlank { null }) {
+      when (val repo = pkg.repository?.ifBlank { null }) {
         // will resolve from default sources (central, et al)
         null -> {}
 
         else -> if (repo !in repositories) {
-          error("Unknown Maven repository: '$repo', for package '${pkg.coordinate}'")
+          error("Unknown Maven repository: '$repo', for package '${pkg.resolvedCoordinate()}'")
         }
       }
     }

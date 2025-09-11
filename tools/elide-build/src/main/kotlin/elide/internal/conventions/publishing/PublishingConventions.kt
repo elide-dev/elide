@@ -138,8 +138,8 @@ internal fun Project.configurePublishingRepositories() {
       // GitHub Maven registry
       maven {
         name = "stage"
-        // Use a proper file URI to avoid Windows-specific URI parsing issues
-        url = rootProject.layout.buildDirectory.dir("m2").get().asFile.toURI()
+        // Windows: use Project#uri to build a file:// URL from the absolute path
+        url = uri("file://${rootProject.layout.buildDirectory.dir("m2").get().asFile.absolutePath}")
       }
     }
   }

@@ -44,4 +44,3 @@ class ElideManifestMavenClassifierTest {
     assertEquals("com.example:lib:native:1.2.3", dep.coordinate)
   }
 }
-

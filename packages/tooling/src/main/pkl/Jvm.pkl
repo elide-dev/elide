@@ -159,13 +159,28 @@ class MavenDependencies {
   coordinates: MavenLibraryCoordinate?
 
   /// A list of Maven package dependencies to be resolved for this project.
-  packages: Listing<MavenPackageDependency> = new {}
+  packages: Listing<MavenPackageDependency> = new {
+    // Because MavenPackageDependency is a union type, Pkl cannot infer the default
+    // shape for `new {}` entries. Declare an explicit default so `new {}` yields a
+    // MavenPackageSpec element.
+    default {
+      new MavenPackageSpec {}
+    }
+  }
 
   /// A list of Maven package dependencies to be resolved as processor dependencies.
-  processors: Listing<MavenPackageDependency> = new {}
+  processors: Listing<MavenPackageDependency> = new {
+    default {
+      new MavenPackageSpec {}
+    }
+  }
 
   /// A list of Maven package dependencies to be resolved for this project.
-  testPackages: Listing<MavenPackageDependency> = new {}
+  testPackages: Listing<MavenPackageDependency> = new {
+    default {
+      new MavenPackageSpec {}
+    }
+  }
 
   /// A list of Gradle dependency catalogs to be resolved for this project.
   catalogs: Listing<GradleCatalog> = new {}

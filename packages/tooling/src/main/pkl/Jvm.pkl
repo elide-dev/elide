@@ -166,23 +166,17 @@ class MavenDependencies {
     // Because MavenPackageDependency is a union type, Pkl cannot infer the default
     // shape for `new {}` entries. Declare an explicit default so `new {}` yields a
     // MavenPackageSpec element.
-    default {
-      new MavenPackageSpec {}
-    }
+    default = (index) -> new MavenPackageSpec {}
   }
 
   /// A list of Maven package dependencies to be resolved as processor dependencies.
   processors: Listing<MavenPackageDependency> = new Listing<MavenPackageDependency> {
-    default {
-      new MavenPackageSpec {}
-    }
+    default = (index) -> new MavenPackageSpec {}
   }
 
   /// A list of Maven package dependencies to be resolved for this project.
   testPackages: Listing<MavenPackageDependency> = new Listing<MavenPackageDependency> {
-    default {
-      new MavenPackageSpec {}
-    }
+    default = (index) -> new MavenPackageSpec {}
   }
 
   /// A list of Gradle dependency catalogs to be resolved for this project.

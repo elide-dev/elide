@@ -12,12 +12,8 @@ import kotlin.test.assertTrue
   @Test fun returnsNonEmptyWhenUserDirMissingOrBlank() {
     val orig = System.getProperty("user.dir")
     try {
-      // Remove user.dir so the fallback logic engages
       System.clearProperty("user.dir")
-      val cls = Class.forName("elide.tool.cli.MainKt")
-      val m = cls.getDeclaredMethod("safeWorkingDirectory")
-      m.isAccessible = true
-      val result = m.invoke(null) as String
+      val result = safeWorkingDirectoryForTest()
       assertTrue(result.isNotBlank(), "safeWorkingDirectory should return a non-blank path")
     } finally {
       if (orig == null) System.clearProperty("user.dir") else System.setProperty("user.dir", orig)

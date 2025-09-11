@@ -223,6 +223,9 @@ private fun safeWorkingDirectory(): String {
   }
 }
 
+// Visible for tests in the same module.
+internal fun safeWorkingDirectoryForTest(): String = safeWorkingDirectory()
+
 fun initializeEntry(args: Array<String>, installStatics: Boolean = true) {
   if (entryInitialized) return
   entryInitialized = true

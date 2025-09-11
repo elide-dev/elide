@@ -209,16 +209,17 @@ private fun resolveBinaryPathForNative(): String {
 }
 
 private fun safeWorkingDirectory(): String {
-  // Try the standard property first; if it fails (can throw in SVM if getcwd fails),
-  // fall back to Linux /proc, then environment variables.
+  // Try the standard property first; if it fails or is blank, fall back to Linux /proc,
+  // then environment variables (PWD/HOME), and finally "." as a last resort.
+  val primary = try { System.getProperty("user.dir") } catch (_: Throwable) { null }
+    ?.takeIf { it.isNotBlank() }
+  if (primary != null) return primary
   return try {
-    System.getProperty("user.dir")
+    Path("/proc/self/cwd").toRealPath().absolutePathString()
   } catch (_: Throwable) {
-    try {
-      Path("/proc/self/cwd").toRealPath().absolutePathString()
-    } catch (_: Throwable) {
-      System.getenv("PWD") ?: System.getenv("HOME") ?: "."
-    }
+    System.getenv("PWD")?.takeIf { it.isNotBlank() }
+      ?: System.getenv("HOME")?.takeIf { it.isNotBlank() }
+      ?: "."
   }
 }
 

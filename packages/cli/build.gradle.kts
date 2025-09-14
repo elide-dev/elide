@@ -118,6 +118,8 @@ val enableLlvm = true
 val enableJvm = true
 val enableKotlin = true
 val enableSqlite = true
+val enableAllLocales = false
+val enableLocaleSupport = false
 val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
 val enableNativeTransportV2 = false
@@ -1668,8 +1670,30 @@ findProperty("elide.logLevel")?.let {
   jvmDefs["elide.logging.root.level"] = it as String
 }
 
+val defaultLocale = "en"
+
+val supportedLocales = listOf(
+  "en",
+  "en-US",
+  "en-GB",
+)
+
+val localeArgs = buildList {
+  add("-H:DefaultLocale=$defaultLocale")
+
+  if (enableLocaleSupport) {
+    add("-H:+UseSystemLocale")
+    if (enableAllLocales) {
+      add("-H:+IncludeAllLocales")
+    }
+  } else {
+    add("-H:-UseSystemLocale")
+    add("-H:-IncludeAllLocales")
+  }
+}
+
 val hostedRuntimeOptions = mapOf(
-  "IncludeLocales" to "en",
+  "IncludeLocales" to supportedLocales.joinToString(","),
 )
 
 val pklArgs: List<String> = listOf(
@@ -1896,6 +1920,8 @@ fun nativeCliImageArgs(
     jvmDefs.map { "-D${it.key}=${it.value}" },
   ).plus(
     hostedRuntimeOptions.map { "-H:${it.key}=${it.value}" },
+  ).plus(
+    localeArgs
   ).plus(
     commonCFlags.map { "--native-compiler-options=$it" }
   ).plus(

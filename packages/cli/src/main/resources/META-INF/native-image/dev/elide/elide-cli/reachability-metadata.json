@@ -14019,72 +14019,89 @@
     {
       "name": "ElideTool",
       "locales": [
-        "en-US"
+        "en",
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "com.sun.tools.javac.resources.compiler",
       "locales": [
         "en",
-        "en-US"
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "com.sun.tools.javac.resources.ct",
       "locales": [
-        "en-US"
+        "en",
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "com.sun.tools.javac.resources.javac",
       "locales": [
-        "en-US"
+        "en",
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "jdk.javadoc.internal.doclets.formats.html.resources.standard",
       "locales": [
         "en",
-        "en-US"
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "jdk.javadoc.internal.doclets.toolkit.resources.doclets",
       "locales": [
         "en",
-        "en-US"
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "jdk.javadoc.internal.doclint.resources.doclint",
       "locales": [
         "en",
-        "en-US"
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "jdk.javadoc.internal.tool.resources.javadoc",
       "locales": [
         "en",
-        "en-US"
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "org.pkl.core.errorMessages",
       "locales": [
-        "en-US"
+        "en",
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "sun.tools.jar.resources.jar",
       "locales": [
-        "en-US"
+        "en",
+        "en-US",
+        "en-GB"
       ]
     },
     {
       "name": "sun.util.logging.resources.logging",
       "locales": [
-        "en-US"
+        "en",
+        "en-US",
+        "en-GB"
       ]
     }
   ],

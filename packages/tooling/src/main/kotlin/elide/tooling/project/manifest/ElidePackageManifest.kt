@@ -220,7 +220,7 @@ public data class ElidePackageManifest(
     val version: String = "",
     val classifier: String = "",
     val repository: String = "",
-    val coordinate: String? = null,
+    val coordinate: String = "",
   ) : DependencyEcosystemConfig.PackageSpec, Comparable<MavenPackage> {
     public companion object {
       @JvmStatic public fun parse(str: String): MavenPackage {
@@ -258,16 +258,12 @@ public data class ElidePackageManifest(
     }
 
     private fun effectiveCoordinate(): String = when {
-      !coordinate.isNullOrBlank() -> coordinate
+      coordinate.isNotBlank() -> coordinate
       else -> buildString {
         append(group)
         if (name.isNotBlank()) {
           append(':')
           append(name)
-        }
-        if (classifier.isNotBlank()) {
-          append(':')
-          append(classifier)
         }
         if (version.isNotBlank()) {
           append(':')
@@ -288,7 +284,7 @@ public data class ElidePackageManifest(
       if (name != other.name) return false
       if (version != other.version) return false
       // Only require coordinate equality when both are non-null; otherwise rely on fields above.
-      if (coordinate != null && other.coordinate != null && coordinate != other.coordinate) return false
+      if (coordinate.isNotBlank() && other.coordinate.isNotBlank() && coordinate != other.coordinate) return false
       if (repository != other.repository) return false
 
       return true
@@ -298,7 +294,7 @@ public data class ElidePackageManifest(
       var result = group.ifBlank { null }?.hashCode() ?: 0
       result = 31 * result + (name.ifBlank { null }?.hashCode() ?: 0)
       result = 31 * result + (version.ifBlank { null }?.hashCode() ?: 0)
-      result = 31 * result + (coordinate?.hashCode() ?: effectiveCoordinate().hashCode())
+      result = 31 * result + (coordinate.ifBlank { null }?.hashCode() ?: effectiveCoordinate().hashCode())
       result = 31 * result + (repository.ifBlank { null }?.hashCode() ?: 0)
       return result
     }

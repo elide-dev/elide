@@ -76,13 +76,9 @@ private fun MavenPackage.resolvedCoordinate(usageType: MavenClassifier = MavenCl
   val group = this.group
   val name = this.name
   val ver = this.version
-  val cls = this.classifier
 
-  // Aether string format: groupId:artifactId[:extension[:classifier]]:version
   return when {
-    ver.isNotBlank() && cls.isNotBlank() -> "$group:$name:jar:$cls:$ver"
     ver.isNotBlank() -> "$group:$name:$ver"
-    cls.isNotBlank() -> "$group:$name:jar:$cls"
     else -> "$group:$name"
   }
 }
@@ -513,10 +509,17 @@ public class MavenAetherResolver internal constructor (
       try {
         // @TODO cannot associate with source sets this early
         val artifact = dependency.artifact
-        val coordinate = artifact.groupId + ":" + artifact.artifactId
-        val pkg = registry.values.find { (pkg, _) ->
-          "${pkg.group}:${pkg.name}" == coordinate
-        }?.first
+        val group = artifact.groupId
+        val name = artifact.artifactId
+        val version = artifact.version
+        val keyVersioned = "$group:$name:$version"
+        val keyNoVersion = "$group:$name"
+
+        val pkg = registry[keyVersioned]?.first
+          ?: registry[keyNoVersion]?.first
+          ?: registry.values.find { (pkg, _) ->
+            pkg.group == group && pkg.name == name && (pkg.version.isBlank() || pkg.version == version)
+          }?.first
 
         if (pkg == null) {
           val transitivePkg = MavenPackage(
@@ -524,7 +527,7 @@ public class MavenAetherResolver internal constructor (
             name = artifact.artifactId,
             version = artifact.version,
             classifier = artifact.classifier,
-            coordinate = coordinate,
+            coordinate = "${artifact.groupId}:${artifact.artifactId}:${artifact.version}",
           )
           val resolved = ResolvedJarArtifact.of(artifact)
           packageArtifacts[transitivePkg] = resolved

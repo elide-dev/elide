@@ -151,8 +151,8 @@ typealias MavenPackageDependency = MavenPackageSpec | MavenCoordinate | common.P
 typealias MavenRepository = MavenRepositorySpec | common.RepositoryUrl
 
 
-/// Listing type for Maven dependencies with a default element shape. Ensures `new {}`
-/// within listings yields a `MavenPackageSpec` even when the listing is overridden.
+// Listing type for Maven dependencies with a default element shape. Ensures `new {}`
+// within listings yields a `MavenPackageSpec` even when the listing is overridden.
 /// Coordinates for this project as a library.
 class MavenLibraryCoordinate extends MavenCoordinateSpec
 

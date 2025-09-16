@@ -4030,6 +4030,44 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTarget
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTesting : java/lang/Record {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$Companion;
+	public fun <init> ()V
+	public fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;)V
+	public synthetic fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun component2 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;
+	public final fun copy (ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;
+	public final fun driver ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;
+	public final fun enabled ()Z
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$JvmTesting$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTesting$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver : java/lang/Enum {
+	public static final field Elide Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;
+	public static final field JUnit Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;
+	public static fun values ()[Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting$JvmTestDriver;
+}
+
 public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions$Companion;
 	public fun <init> ()V
@@ -5026,14 +5064,16 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$StaticSit
 public final class elide/tooling/project/manifest/ElidePackageManifest$TestingSettings : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings$Companion;
 	public fun <init> ()V
-	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;)V
-	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;)V
+	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;
-	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;)Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;
+	public final fun component2 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;
+	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;)Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$TestingSettings;
 	public final fun coverage ()Lelide/tooling/project/manifest/ElidePackageManifest$CoverageSettings;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
+	public final fun jvm ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTesting;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -6471,13 +6511,23 @@ public final class elide/tooling/testing/Reason$ViolatedAssumptions : elide/tool
 	public final synthetic fun unbox-impl ()Ljava/util/List;
 }
 
+public abstract class elide/tooling/testing/SimpleTestDriver : elide/tooling/testing/TestDriver {
+	public fun <init> ()V
+	public fun run (Lelide/tooling/testing/TestCase;Lelide/tooling/testing/TestDriver$TestRunScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	protected abstract fun run (Lelide/tooling/testing/TestCase;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public abstract interface class elide/tooling/testing/TestCase : elide/tooling/testing/TestNode {
 	public abstract fun getType ()Lelide/tooling/testing/TestTypeKey;
 }
 
 public abstract interface class elide/tooling/testing/TestDriver {
 	public abstract fun getType ()Lelide/tooling/testing/TestTypeKey;
-	public abstract fun run (Lelide/tooling/testing/TestCase;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun run (Lelide/tooling/testing/TestCase;Lelide/tooling/testing/TestDriver$TestRunScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tooling/testing/TestDriver$TestRunScope {
+	public abstract fun emit (Lelide/tooling/testing/TestResult;)V
 }
 
 public class elide/tooling/testing/TestGroup : elide/tooling/testing/TestNode {
@@ -6585,16 +6635,16 @@ public final class elide/tooling/testing/TestRegistryKt {
 }
 
 public final class elide/tooling/testing/TestResult {
-	public synthetic fun <init> (Ljava/lang/String;Lelide/tooling/testing/TestOutcome;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
+	public synthetic fun <init> (Lelide/tooling/testing/TestCase;Lelide/tooling/testing/TestOutcome;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lelide/tooling/testing/TestCase;
 	public final fun component2 ()Lelide/tooling/testing/TestOutcome;
 	public final fun component3-UwyO8pc ()J
-	public final fun copy-SxA4cEA (Ljava/lang/String;Lelide/tooling/testing/TestOutcome;J)Lelide/tooling/testing/TestResult;
-	public static synthetic fun copy-SxA4cEA$default (Lelide/tooling/testing/TestResult;Ljava/lang/String;Lelide/tooling/testing/TestOutcome;JILjava/lang/Object;)Lelide/tooling/testing/TestResult;
+	public final fun copy-SxA4cEA (Lelide/tooling/testing/TestCase;Lelide/tooling/testing/TestOutcome;J)Lelide/tooling/testing/TestResult;
+	public static synthetic fun copy-SxA4cEA$default (Lelide/tooling/testing/TestResult;Lelide/tooling/testing/TestCase;Lelide/tooling/testing/TestOutcome;JILjava/lang/Object;)Lelide/tooling/testing/TestResult;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDuration-UwyO8pc ()J
 	public final fun getOutcome ()Lelide/tooling/testing/TestOutcome;
-	public final fun getTest ()Ljava/lang/String;
+	public final fun getTest ()Lelide/tooling/testing/TestCase;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }

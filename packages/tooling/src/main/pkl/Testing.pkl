@@ -2,6 +2,8 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.testing
 
+import "Jvm.pkl" as _jvm
+
 /// Types supported for specifying coverage.
 typealias CoverageState = Boolean | CoverageSettings
 
@@ -85,4 +87,7 @@ class CoverageSettings {
 class Testing {
   /// Settings which govern coverage support. Boolean activates or de-activats.
   coverage: CoverageState = new CoverageSettings {}
+
+  /// Options for running JVM tests
+  jvm: _jvm.JvmTesting = new _jvm.JvmTesting {}
 }

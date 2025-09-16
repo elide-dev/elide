@@ -12,11 +12,17 @@
  */
 package elide.tooling.testing
 
+import kotlin.time.measureTime
+
 /**
  * Handles execution logic for a specific type of test case. Test drivers use the data from the test instance to
  * resolve an entrypoint and invoke it.
  */
 public interface TestDriver<T : TestCase> {
+  public interface TestRunScope {
+    public fun emit(result: TestResult)
+  }
+
   /** The type of test cases supported by this driver. */
   public val type: TestTypeKey<T>
 
@@ -24,5 +30,18 @@ public interface TestDriver<T : TestCase> {
    * Execute a single [testCase] and return its outcome. Exceptions thrown within this method should always be captured
    * and encapsulated by the return value instead.
    */
-  public suspend fun run(testCase: T): TestOutcome
+  public suspend fun run(testCase: T, scope: TestRunScope)
+}
+
+public abstract class SimpleTestDriver<T : TestCase> : TestDriver<T> {
+  override suspend fun run(testCase: T, scope: TestDriver.TestRunScope) {
+    val outcome: TestOutcome
+    val duration = measureTime {
+      outcome = run(testCase)
+    }
+
+    scope.emit(TestResult(testCase, outcome, duration))
+  }
+
+  protected abstract suspend fun run(testCase: T): TestOutcome
 }

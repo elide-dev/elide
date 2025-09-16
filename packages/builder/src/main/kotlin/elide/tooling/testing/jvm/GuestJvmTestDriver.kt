@@ -14,7 +14,7 @@ package elide.tooling.testing.jvm
 
 import elide.runtime.core.PolyglotContext
 import elide.runtime.plugins.jvm.Jvm
-import elide.tooling.testing.TestDriver
+import elide.tooling.testing.SimpleTestDriver
 import elide.tooling.testing.TestOutcome
 import elide.tooling.testing.TestTypeKey
 
@@ -22,7 +22,7 @@ import elide.tooling.testing.TestTypeKey
  * Test driver for [JVM test cases][JvmTestCase], using a [PolyglotContext] to obtain an instance of the test class and
  * invoke the test method.
  */
-public class GuestJvmTestDriver(private val contextProvider: () -> PolyglotContext) : TestDriver<JvmTestCase> {
+public class GuestJvmTestDriver(private val contextProvider: () -> PolyglotContext) : SimpleTestDriver<JvmTestCase>() {
   override val type: TestTypeKey<JvmTestCase> get() = JvmTestCase
 
   override suspend fun run(testCase: JvmTestCase): TestOutcome {

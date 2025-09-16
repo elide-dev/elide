@@ -106,6 +106,8 @@ dependencies {
   implementation(libs.mordant.coroutines)
   implementation(libs.mordant.markdown)
   implementation(libs.highlights)
+  implementation(libs.junit.platform.launcher)
+  implementation(libs.junit.jupiter.engine)
   implementation(libs.ktoml)
   implementation(libs.plugin.redacted.core)
   implementation(libs.kotlin.compiler.embedded)

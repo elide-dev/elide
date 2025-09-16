@@ -47,7 +47,7 @@ public class MutableTestRegistry : TestRegistry {
     .breadthFirst(ROOT)
     .asSequence()
     .mapNotNull { index[it] }
-    .drop(1)
+    // .drop(1)
 
   private companion object {
     private const val ROOT = "<ROOT>"

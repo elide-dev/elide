@@ -14,6 +14,9 @@
 
 package elide.tooling.jvm
 
+import org.junit.platform.engine.discovery.DiscoverySelectors
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder
+import java.net.URLClassLoader
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
 import elide.runtime.Logging
@@ -28,11 +31,17 @@ import elide.tooling.config.TestConfigurator.ElideTestState
 import elide.tooling.config.TestConfigurator.TestConfiguration
 import elide.tooling.deps.DependencyResolver
 import elide.tooling.jvm.resolver.MavenAetherResolver
+import elide.tooling.project.ElideConfiguredProject
+import elide.tooling.project.manifest.ElidePackageManifest
+import elide.tooling.project.manifest.ElidePackageManifest.JvmTesting.JvmTestDriver
 import elide.tooling.testing.TestDriverRegistry
-import elide.tooling.testing.jvm.GuestJvmTestDriver
-import elide.tooling.testing.jvm.JvmTestCase
 import elide.tooling.testing.TestGroup
 import elide.tooling.testing.TestRegistry
+import elide.tooling.testing.jvm.GuestJvmTestDriver
+import elide.tooling.testing.jvm.JUnitTestDriver
+import elide.tooling.testing.jvm.JUnitTestSuite
+import elide.tooling.testing.jvm.JvmTestCase
+import elide.tooling.testing.plusAssign
 import elide.util.UUID
 
 // Scans classpaths for test discovery.
@@ -52,7 +61,30 @@ internal class JvmTestConfigurator : TestConfigurator {
       // "elide.testing.Test",
     )
 
-    private fun registerTests(registry: TestRegistry, classgraph: Classgraph) {
+    private fun contributeJUnitTests(registry: TestRegistry, project: ElideConfiguredProject, classgraph: Classgraph) {
+      val scanResult = classgraph.scanResult()
+
+      val urls = scanResult.classpathURLs.toTypedArray()
+      val builtin = JvmLibraries.builtinClasspath(project.resourcesPath, tests = true)
+        .map { it.path.toUri().toURL() }
+        .toTypedArray()
+
+      val loader = URLClassLoader(urls + builtin, JvmTestConfigurator::class.java.classLoader)
+
+      val request = LauncherDiscoveryRequestBuilder.request()
+        .selectors(DiscoverySelectors.selectClasspathRoots(scanResult.classpathFiles.map { it.toPath() }.toSet()))
+        .build()
+
+      registry += JUnitTestSuite(
+        id = UUID.random(),
+        parent = null,
+        displayName = "JUnit Test Suite",
+        request = request,
+        loader = loader,
+      )
+    }
+
+    private fun contributeElideTests(registry: TestRegistry, classgraph: Classgraph) {
       if (classgraph.isEmpty()) {
         logging.debug { "No tests found on (empty) classpath." }
         return
@@ -95,9 +127,12 @@ internal class JvmTestConfigurator : TestConfigurator {
   }
 
   override suspend fun contribute(state: ElideTestState, config: TestConfiguration) {
+    if (state.project.manifest.tests?.jvm?.enabled != true) return
+
     // add test drivers (force guest only for now, can be configured later)
     val drivers = state.beanContext.getBean(TestDriverRegistry::class.java)
     drivers.register(GuestJvmTestDriver(state.guestContextProvider))
+    drivers.register(JUnitTestDriver())
 
     val javacMainClassesOutput = state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
@@ -136,7 +171,11 @@ internal class JvmTestConfigurator : TestConfigurator {
         classgraph.enableMethodInfo()
       }
 
-      registerTests(state.registry, classgraph)
+      when (state.project.manifest.tests?.jvm?.driver) {
+        JvmTestDriver.Elide -> contributeElideTests(state.registry, classgraph)
+        JvmTestDriver.JUnit -> contributeJUnitTests(state.registry, state.project, classgraph)
+        null -> error("Should not reach here: test options cannot be null")
+      }
     }
   }
 }

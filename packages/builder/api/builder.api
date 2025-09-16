@@ -2670,18 +2670,16 @@ public final class elide/tooling/registry/ResolverRegistry$Companion {
 	public final fun create ()Lelide/tooling/registry/ResolverRegistry;
 }
 
-public abstract class elide/tooling/runner/AbstractTestRunner : elide/tooling/testing/TestRunner {
-	public fun <init> (Ljava/util/Set;)V
-	protected fun getDrivers ()Ljava/util/Map;
-	protected abstract fun getEvents ()Lelide/tooling/config/TestConfigurator$TestEventController;
-	protected final fun runTest (Lelide/tooling/testing/TestCase;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+public final class elide/tooling/runner/ElideTestRunner : elide/tooling/testing/TestRunner {
+	public static final field Companion Lelide/tooling/runner/ElideTestRunner$Companion;
+	public static final field SERIAL I
+	public static final field UNLIMITED I
+	public fun <init> (Ljava/util/Set;Lelide/tooling/config/TestConfigurator$TestEventController;ILkotlin/coroutines/CoroutineContext;)V
+	public synthetic fun <init> (Ljava/util/Set;Lelide/tooling/config/TestConfigurator$TestEventController;ILkotlin/coroutines/CoroutineContext;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun runTests (Lkotlin/sequences/Sequence;)Lelide/tooling/testing/TestRunner$TestRun;
-	protected abstract fun testFlow (Lkotlin/sequences/Sequence;)Lkotlinx/coroutines/flow/Flow;
 }
 
-public final class elide/tooling/runner/ConcurrentTestRunner : elide/tooling/runner/AbstractTestRunner {
-	public fun <init> (Ljava/util/Set;Lelide/tooling/config/TestConfigurator$TestEventController;Ljava/lang/Integer;)V
-	public synthetic fun <init> (Ljava/util/Set;Lelide/tooling/config/TestConfigurator$TestEventController;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+public final class elide/tooling/runner/ElideTestRunner$Companion {
 }
 
 public final class elide/tooling/runner/ProcessRunner {
@@ -2843,10 +2841,6 @@ public final class elide/tooling/runner/ProcessRunner$StdStreams$Defaults : elid
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/tooling/runner/SequentialTestRunner : elide/tooling/runner/AbstractTestRunner {
-	public fun <init> (Ljava/util/Set;Lelide/tooling/config/TestConfigurator$TestEventController;)V
-}
-
 public synthetic class elide/tooling/testing/$TestDriverRegistry$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2884,11 +2878,61 @@ public final class elide/tooling/testing/TestDriverRegistry {
 	public final fun register (Lelide/tooling/testing/TestDriver;)V
 }
 
-public final class elide/tooling/testing/jvm/GuestJvmTestDriver : elide/tooling/testing/TestDriver {
+public final class elide/tooling/testing/jvm/GuestJvmTestDriver : elide/tooling/testing/SimpleTestDriver {
 	public fun <init> (Lkotlin/jvm/functions/Function0;)V
 	public fun getType ()Lelide/tooling/testing/TestTypeKey;
 	public synthetic fun run (Lelide/tooling/testing/TestCase;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun run (Lelide/tooling/testing/jvm/JvmTestCase;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/testing/jvm/JUnitDynamicTestCase : elide/tooling/testing/TestCase {
+	public static final field Companion Lelide/tooling/testing/jvm/JUnitDynamicTestCase$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/testing/jvm/JUnitDynamicTestCase;
+	public static synthetic fun copy$default (Lelide/tooling/testing/jvm/JUnitDynamicTestCase;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/testing/jvm/JUnitDynamicTestCase;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getDisplayName ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public fun getParent ()Ljava/lang/String;
+	public fun getType ()Lelide/tooling/testing/TestTypeKey;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/jvm/JUnitDynamicTestCase$Companion : elide/tooling/testing/TestTypeKey {
+}
+
+public final class elide/tooling/testing/jvm/JUnitTestDriver : elide/tooling/testing/TestDriver {
+	public fun <init> ()V
+	public fun getType ()Lelide/tooling/testing/TestTypeKey;
+	public synthetic fun run (Lelide/tooling/testing/TestCase;Lelide/tooling/testing/TestDriver$TestRunScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun run (Lelide/tooling/testing/jvm/JUnitTestSuite;Lelide/tooling/testing/TestDriver$TestRunScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/tooling/testing/jvm/JUnitTestSuite : elide/tooling/testing/TestCase {
+	public static final field Companion Lelide/tooling/testing/jvm/JUnitTestSuite$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/junit/platform/launcher/LauncherDiscoveryRequest;Ljava/lang/ClassLoader;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lorg/junit/platform/launcher/LauncherDiscoveryRequest;
+	public final fun component5 ()Ljava/lang/ClassLoader;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/junit/platform/launcher/LauncherDiscoveryRequest;Ljava/lang/ClassLoader;)Lelide/tooling/testing/jvm/JUnitTestSuite;
+	public static synthetic fun copy$default (Lelide/tooling/testing/jvm/JUnitTestSuite;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/junit/platform/launcher/LauncherDiscoveryRequest;Ljava/lang/ClassLoader;ILjava/lang/Object;)Lelide/tooling/testing/jvm/JUnitTestSuite;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getDisplayName ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public final fun getLoader ()Ljava/lang/ClassLoader;
+	public fun getParent ()Ljava/lang/String;
+	public final fun getRequest ()Lorg/junit/platform/launcher/LauncherDiscoveryRequest;
+	public fun getType ()Lelide/tooling/testing/TestTypeKey;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/testing/jvm/JUnitTestSuite$Companion : elide/tooling/testing/TestTypeKey {
 }
 
 public final class elide/tooling/testing/jvm/JvmTestCase : elide/tooling/testing/TestCase {

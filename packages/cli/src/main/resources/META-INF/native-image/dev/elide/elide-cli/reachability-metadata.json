@@ -4195,6 +4195,15 @@
       ]
     },
     {
+      "type": "elide.tool.cli.options.$TestingOptions$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.options.AbstractEngineOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true
@@ -4272,6 +4281,10 @@
     },
     {
       "type": "elide.tool.cli.options.TelemetryOptions",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "elide.tool.cli.options.TestingOptions",
       "allDeclaredFields": true
     },
     {
@@ -4423,6 +4436,9 @@
     },
     {
       "type": "elide.tooling.containers.ContainerBuildConfigurator"
+    },
+    {
+      "type": "elide.tooling.coverage.CoverageReportProcessor$Factory"
     },
     {
       "type": "elide.tooling.gvm.nativeImage.$NativeImageDriver$Introspection",
@@ -5012,6 +5028,21 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTargetValidationMode"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting$Engine"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting$Engine"
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -5341,6 +5372,13 @@
           "parameterTypes": [
             "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings"
           ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting"
+          ]
         }
       ]
     },
@@ -5365,6 +5403,9 @@
           ]
         }
       ]
+    },
+    {
+      "type": "elide.tooling.reporting.TestReportProcessor$Factory"
     },
     {
       "type": "elide.tooling.runner.AbstractTestRunner",
@@ -5392,6 +5433,15 @@
         },
         {
           "name": "tests$volatile"
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.testing.$TestDriverRegistry$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
         }
       ]
     },
@@ -9019,6 +9069,9 @@
       "type": "kotlin.Boolean"
     },
     {
+      "type": "kotlin.Function"
+    },
+    {
       "type": "kotlin.Int"
     },
     {
@@ -9082,10 +9135,40 @@
       ]
     },
     {
+      "type": "kotlin.annotation.MustBeDocumented"
+    },
+    {
+      "type": "kotlin.annotation.Retention"
+    },
+    {
+      "type": "kotlin.annotation.Target"
+    },
+    {
       "type": "kotlin.collections.List"
     },
     {
       "type": "kotlin.collections.Map"
+    },
+    {
+      "type": "kotlin.coroutines.Continuation"
+    },
+    {
+      "type": "kotlin.coroutines.jvm.internal.BaseContinuationImpl"
+    },
+    {
+      "type": "kotlin.coroutines.jvm.internal.ContinuationImpl"
+    },
+    {
+      "type": "kotlin.coroutines.jvm.internal.CoroutineStackFrame"
+    },
+    {
+      "type": "kotlin.coroutines.jvm.internal.SuspendFunction"
+    },
+    {
+      "type": "kotlin.coroutines.jvm.internal.SuspendLambda"
+    },
+    {
+      "type": "kotlin.jvm.functions.Function2"
     },
     {
       "type": "kotlin.jvm.internal.BooleanCompanionObject"
@@ -9107,6 +9190,9 @@
     },
     {
       "type": "kotlin.jvm.internal.FloatCompanionObject"
+    },
+    {
+      "type": "kotlin.jvm.internal.FunctionBase"
     },
     {
       "type": "kotlin.jvm.internal.IntCompanionObject"
@@ -9140,6 +9226,9 @@
     },
     {
       "type": "kotlin.reflect.jvm.internal.impl.load.java.JavaIncompatibilityRulesOverridabilityCondition"
+    },
+    {
+      "type": "kotlin.test.junit5.JUnit5Contributor"
     },
     {
       "type": "kotlinx.atomicfu.AtomicBoolean",
@@ -9279,6 +9368,14 @@
         },
         {
           "name": "sendersAndCloseStatus$volatile"
+        }
+      ]
+    },
+    {
+      "type": "kotlinx.coroutines.flow.ChannelAsFlow",
+      "fields": [
+        {
+          "name": "consumed$volatile"
         }
       ]
     },
@@ -13175,6 +13272,9 @@
       "glob": "META-INF/services/elide.tooling.project.mcp.McpContributor"
     },
     {
+      "glob": "META-INF/services/elide.tooling.testing.TestPostProcessorFactory"
+    },
+    {
       "glob": "META-INF/services/io.ktor.server.application.ModuleParametersInjector"
     },
     {
@@ -13232,6 +13332,9 @@
       "glob": "META-INF/services/kotlin.reflect.jvm.internal.impl.util.ModuleVisibilityHelper"
     },
     {
+      "glob": "META-INF/services/kotlin.test.AsserterContributor"
+    },
+    {
       "glob": "META-INF/services/kotlinx.coroutines.reactive.ContextInjector"
     },
     {
@@ -13257,6 +13360,24 @@
     },
     {
       "glob": "META-INF/services/org.jetbrains.kotlin.util.ModuleVisibilityHelper"
+    },
+    {
+      "glob": "META-INF/services/org.junit.platform.commons.support.scanning.ClasspathScanner"
+    },
+    {
+      "glob": "META-INF/services/org.junit.platform.engine.TestEngine"
+    },
+    {
+      "glob": "META-INF/services/org.junit.platform.launcher.LauncherDiscoveryListener"
+    },
+    {
+      "glob": "META-INF/services/org.junit.platform.launcher.LauncherSessionListener"
+    },
+    {
+      "glob": "META-INF/services/org.junit.platform.launcher.PostDiscoveryFilter"
+    },
+    {
+      "glob": "META-INF/services/org.junit.platform.launcher.TestExecutionListener"
     },
     {
       "glob": "META-INF/services/org.pkl.core.StackFrameTransformer"
@@ -13845,6 +13966,9 @@
     },
     {
       "glob": "graalpy_versions"
+    },
+    {
+      "glob": "junit-platform.properties"
     },
     {
       "glob": "kotlin/annotation/annotation.kotlin_builtins"

@@ -130,7 +130,7 @@ import elide.tooling.builder.BuildDriver.resolve
 import elide.tooling.builder.TestDriver.configureTests
 import elide.tooling.cli.Statics
 import elide.tooling.config.BuildConfigurator
-import elide.tooling.config.TestConfigurator.*
+import elide.tooling.config.TestConfigurator.TestEventController
 import elide.tooling.jvm.JvmLibraries
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.jvm.resolver.MavenLockfileResolver
@@ -142,9 +142,8 @@ import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.StaticSite
 import elide.tooling.project.manifest.NodePackageManifest
 import elide.tooling.project.manifest.PackageManifest
+import elide.tooling.runner.ElideTestRunner
 import elide.tooling.runner.ProcessRunner
-import elide.tooling.runner.ConcurrentTestRunner
-import elide.tooling.runner.SequentialTestRunner
 import elide.tooling.term.TerminalUtil.to256ColorAnsiString
 import elide.tooling.term.TerminalUtil.toTrueColorAnsiString
 import elide.tooling.testing.*
@@ -1794,27 +1793,27 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
       val events = TestEventController.create()
       val drivers = beanContext.getBean(TestDriverRegistry::class.java).collect()
-      val testRunner = when (testingOptions.threadedTestMode) {
-        false -> SequentialTestRunner(drivers, events)
-        true -> ConcurrentTestRunner(drivers, events)
-      }
+      val testRunner = ElideTestRunner(
+        drivers = drivers,
+        events = events,
+        maxParallelTests = if (testingOptions.threadedTestMode) ElideTestRunner.UNLIMITED else ElideTestRunner.SERIAL,
+        context = Dispatchers.Engine,
+      )
 
       runBlocking(Dispatchers.Engine) {
         val tests = registry.entries().filterIsInstance<TestCase>()
         val session = testRunner.runTests(tests)
 
         val testResults = session.testResults.onEach {
-          val testCase = registry[it.test]
-
           // print test results
           val message = when (val outcome = it.outcome) {
             TestOutcome.Skipped -> formatMaybe(
-              "⊝  ${testCase.displayName}",
+              "⊝  ${it.test.displayName}",
               TextColors.yellow + TextStyles.dim,
               false,
             )
 
-            TestOutcome.Success -> "✔  ${testCase.displayName}"
+            TestOutcome.Success -> "✔  ${it.test.displayName}"
             is TestOutcome.Error -> {
               val reason = outcome.reason
               val msg = when {
@@ -1823,7 +1822,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
                 else -> "Unknown error"
               }
               formatMaybe(
-                "!  ${testCase.displayName}\n$msg",
+                "!  ${it.test.displayName}\n$msg",
                 TextStyles.bold + TextColors.red,
                 false,
               )
@@ -1837,7 +1836,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
                 else -> "Unknown error"
               }
               formatMaybe(
-                "✗  ${testCase.displayName}\n$msg",
+                "✗  ${it.test.displayName}\n$msg",
                 TextStyles.bold + TextColors.red,
                 false,
               )
@@ -1910,7 +1909,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           )
 
           (runResult.outcome as? TestOutcome.Error)?.let {
-            when(val reason = it.reason) {
+            when (val reason = it.reason) {
               is Throwable -> {
                 appendLine(formatMaybe("The test run crashed with:", TextColors.red, false))
                 appendLine(formatMaybe(reason.stackTraceToString().prependIndent(" "), TextColors.red, false))

@@ -15,7 +15,7 @@ package elide.tooling.testing
 import kotlin.time.Duration
 
 public data class TestResult(
-  val test: TestNodeKey,
+  val test: TestCase,
   val outcome: TestOutcome,
   val duration: Duration,
 )

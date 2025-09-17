@@ -17,16 +17,19 @@ import elide.tooling.reporting.xml.JUnitXmlReporter
 import elide.tooling.testing.TestPostProcessingOptions
 import elide.tooling.testing.TestPostProcessor
 import elide.tooling.testing.TestPostProcessorFactory
+import elide.tooling.testing.TestReportFormat
 import elide.tooling.testing.TestRunResult
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
-// Test post-processor which produces test result reports.
 internal class TestReportProcessor : TestPostProcessor {
   override suspend fun invoke(options: TestPostProcessingOptions, results: TestRunResult): Tool.Result {
     return runCatching { 
-      generateXmlReport(results) 
+      when (options.reportFormat) {
+        TestReportFormat.XML -> generateXmlReport(options, results)
+        TestReportFormat.HTML -> generateHtmlReport(options, results)
+      }
     }.fold(
       onSuccess = { Tool.Result.Success },
       onFailure = { e ->
@@ -36,23 +39,24 @@ internal class TestReportProcessor : TestPostProcessor {
     )
   }
 
-  /**
-   * Generate JUnit XML test report and write to file.
-   */
-  private fun generateXmlReport(results: TestRunResult) {
+  private fun generateXmlReport(options: TestPostProcessingOptions, results: TestRunResult) {
     val xmlReporter = JUnitXmlReporter()
-    val xmlContent = xmlReporter.generateReport(results, suiteName = "Elide Test Suite")
+    val xmlContent = xmlReporter.generateReport(results, suiteName = options.reportSuiteName)
     
     // Create output directory if it doesn't exist
-    val outputDir = Paths.get("build", "test-results")
-    Files.createDirectories(outputDir)
+    Files.createDirectories(options.reportOutputPath)
     
     // Write XML report file
-    val outputFile = outputDir.resolve("TEST-elide-results.xml")
+    val outputFile = options.reportOutputPath.resolve("TEST-elide-results.xml")
     Files.write(outputFile, xmlContent.toByteArray())
     
-    println("Generated test report: ${outputFile.toAbsolutePath()}")
+    println("Generated XML test report: ${outputFile.toAbsolutePath()}")
   }
+
+  /**
+   * TODO: Implement HTML reporter when ready
+   */
+  private fun generateHtmlReport(options: TestPostProcessingOptions, results: TestRunResult) {}
 
   // Create a coverage report processor if coverage is enabled.
   class Factory : TestPostProcessorFactory<TestReportProcessor> {

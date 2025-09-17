@@ -12,13 +12,27 @@
  */
 package elide.tooling.testing
 
+import java.nio.file.Path
+import java.nio.file.Paths
+
+public enum class TestReportFormat {
+  XML,
+  HTML
+}
+
 /**
  * ## Test Post-Processing Options
  *
  * @property coverageEnabled Whether code coverage instrumentation and reporting is enabled.
  * @property reportingEnabled Whether test and flaw reporting is enabled.
+ * @property reportFormat Format for test reports (XML, HTML, etc.).
+ * @property reportOutputPath Output directory path for test reports.
+ * @property reportSuiteName Name for the test suite in reports.
  */
 @JvmRecord public data class TestPostProcessingOptions(
   public val coverageEnabled: Boolean = false,
   public val reportingEnabled: Boolean = false,
+  public val reportFormat: TestReportFormat = TestReportFormat.XML, //Default to XML for now
+  public val reportOutputPath: Path = Paths.get("build", "test-results"),
+  public val reportSuiteName: String = "Elide Tests",
 )

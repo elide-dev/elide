@@ -129,8 +129,8 @@ class TestReportProcessorTest {
     assertTrue(xmlContent.contains("testPassed"), "XML should contain passed test")
     assertTrue(xmlContent.contains("testFailed"), "XML should contain failed test")
     assertTrue(xmlContent.contains("testSkipped"), "XML should contain skipped test")
-    assertTrue(xmlContent.contains("system-out"), "XML should contain empty system-out")
-    assertTrue(xmlContent.contains("system-err"), "XML should contain empty system-err")
+    assertTrue(xmlContent.contains("<system-out"), "XML should contain empty system-out")
+    assertTrue(xmlContent.contains("<system-err"), "XML should contain empty system-err")
   }
 }
 

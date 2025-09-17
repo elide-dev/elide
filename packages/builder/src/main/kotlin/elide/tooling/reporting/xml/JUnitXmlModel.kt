@@ -12,7 +12,6 @@
  */
 package elide.tooling.reporting.xml
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
@@ -21,8 +20,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText
 /**
  * Data model for JUnit XML test reports.
  *
- * Represents the standard JUnit XML schema used by most CI/CD systems and test reporting tools.
- * See: https://github.com/testmoapp/junitxml
  */
 
 /**

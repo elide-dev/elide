@@ -31,9 +31,9 @@ class TestReportProcessorTest {
    */
   private fun createMockTestResults(): TestRunResult {
     // Create mock test scopes
-    val passedTestScope = MockTestScope("testPassed", "MockTest.kt > testPassed")
-    val failedTestScope = MockTestScope("testFailed", "MockTest.kt > testFailed")
-    val skippedTestScope = MockTestScope("testSkipped", "MockTest.kt > testSkipped")
+    val passedTestScope = MockTestScope("should vectorize polyglot bytecode transformations", "RuntimeInteropTest.kt > should vectorize polyglot bytecode transformations")
+    val failedTestScope = MockTestScope("should demultiplex concurrent lexer tokens", "ParserEngineTest.kt > should demultiplex concurrent lexer tokens")
+    val skippedTestScope = MockTestScope("should serialize abstract syntax trees to binary format", "CodegenBackendTest.kt > should serialize abstract syntax trees to binary format")
 
     // Create test case results
     val testCases = listOf(
@@ -44,12 +44,12 @@ class TestReportProcessorTest {
       ),
       TestCaseResult(
         scope = failedTestScope,
-        result = TestResult.Fail(AssertionError("Test assertion failed")),
+        result = TestResult.Fail(AssertionError("Expected token stream to converge but got divergent branching factor")),
         duration = 150.milliseconds
       ),
       TestCaseResult(
         scope = skippedTestScope,
-        result = TestResult.Skip(Reason.ReasonMessage("Test was disabled")),
+        result = TestResult.Skip(Reason.ReasonMessage("Requires experimental WASM memory alignment support")),
         duration = 0.milliseconds
       )
     )
@@ -126,11 +126,45 @@ class TestReportProcessorTest {
     assertTrue(xmlContent.contains("<testsuite"), "XML should contain testsuite element")
     assertTrue(xmlContent.contains("tests=\"3\""), "XML should show correct test count")
     assertTrue(xmlContent.contains("failures=\"1\""), "XML should show correct failure count")
-    assertTrue(xmlContent.contains("testPassed"), "XML should contain passed test")
-    assertTrue(xmlContent.contains("testFailed"), "XML should contain failed test")
-    assertTrue(xmlContent.contains("testSkipped"), "XML should contain skipped test")
+    assertTrue(xmlContent.contains("should vectorize polyglot bytecode transformations"), "XML should contain passed test")
+    assertTrue(xmlContent.contains("should demultiplex concurrent lexer tokens"), "XML should contain failed test")
+    assertTrue(xmlContent.contains("should serialize abstract syntax trees to binary format"), "XML should contain skipped test")
     assertTrue(xmlContent.contains("<system-out"), "XML should contain empty system-out")
     assertTrue(xmlContent.contains("<system-err"), "XML should contain empty system-err")
+  }
+
+  @Test
+  fun `should generate HTML report successfully`() = runTest {
+    val processor = TestReportProcessor()
+    val options = TestPostProcessingOptions(
+      reportingEnabled = true,
+      reportFormat = TestReportFormat.HTML
+    )
+    val mockResults = createMockTestResults()
+
+    val result = processor.invoke(options, mockResults)
+
+    assertEquals(Tool.Result.Success, result)
+
+    // Verify the HTML file was created
+    val outputFile = java.nio.file.Paths.get("build", "test-results", "test-report.html")
+    assertTrue(outputFile.toFile().exists(), "HTML report file should be created")
+
+    // Verify the HTML content contains expected elements
+    val htmlContent = outputFile.toFile().readText()
+    assertTrue(htmlContent.contains("<!DOCTYPE html>") || htmlContent.contains("<html"), "HTML should contain html tag")
+    assertTrue(htmlContent.contains("Test Report"), "HTML should contain title")
+    assertTrue(htmlContent.contains("should vectorize polyglot bytecode transformations"), "HTML should contain passed test")
+    assertTrue(htmlContent.contains("should demultiplex concurrent lexer tokens"), "HTML should contain failed test") 
+    assertTrue(htmlContent.contains("should serialize abstract syntax trees to binary format"), "HTML should contain skipped test")
+    assertTrue(htmlContent.contains("Expected token stream to converge but got divergent branching factor"), "HTML should contain failure message")
+    assertTrue(htmlContent.contains("3"), "HTML should show total test count")
+    assertTrue(htmlContent.contains("test-passed"), "HTML should contain passed test CSS class")
+    assertTrue(htmlContent.contains("test-failed"), "HTML should contain failed test CSS class")
+    assertTrue(htmlContent.contains("test-skipped"), "HTML should contain skipped test CSS class")
+    
+    // Print file location for manual inspection
+    println("HTML report generated at: ${outputFile.toAbsolutePath()}")
   }
 }
 

@@ -14,12 +14,22 @@ package elide.tooling.config
 
 import io.micronaut.context.BeanContext
 import java.nio.file.Path
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 import elide.exec.ActionScope
-import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.runtime.core.PolyglotContext
 import elide.tooling.config.BuildConfigurator.ProjectDirectories
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.registry.ResolverRegistry
+import elide.tooling.testing.TestRegistry
 
 /**
  * # Test Configurator
@@ -67,7 +77,8 @@ public interface TestConfigurator : ProjectConfigurator {
     public val layout: ProjectDirectories
     public val manifest: ElidePackageManifest
     public val resourcesPath: Path
-    public val registrar: TestingRegistrar
+    public val registry: TestRegistry
+    public val guestContextProvider: () -> PolyglotContext
   }
 
   /**
@@ -91,6 +102,9 @@ public interface TestConfigurator : ProjectConfigurator {
    * Describes an event which is emitted when test results are available for a test suite or test case.
    */
   public sealed interface TestStatus : TestNotify
+
+  /** Delivered when a test or suite is scheduled for execution. */
+  public data object TestSeen : TestStatus
 
   /** Delivered when a test passes, or all tests in a suite pass. */
   public data object TestPass : TestStatus
@@ -122,24 +136,9 @@ public interface TestConfigurator : ProjectConfigurator {
    * and runners) call into the controller to emit events. The controller is expected to keep track of interested
    * parties and deliver events to them as applicable.
    */
-  public interface TestEventController {
-    /**
-     * ### Binder
-     *
-     * Context receiver which allows fluid binding to the test event controller's emitted events.
-     */
-    public interface Binder {
-      /**
-       * Bind an event handler to a method.
-       *
-       * @param T Type of event to bind to.
-       * @param X Type of context to bind to; default-bound to [Any].
-       * @param event Event type to bind to.
-       * @param contextType Type for the context value that will be bound.
-       * @param handler Handler method to dispatch.
-       */
-      public fun <T: Any, X: Any> bind(event: TestNotify, contextType: Class<T>, handler: suspend T.(X) -> Unit): Binder
-    }
+  public interface TestEventController : AutoCloseable {
+    /** A _hot_ flow of events [emitted][emit] through the controller. Events are broadcast to all consumers. */
+    public val events: Flow<TestNotify>
 
     /**
      * Emit event.
@@ -155,12 +154,39 @@ public interface TestConfigurator : ProjectConfigurator {
      * @param event Event to deliver.
      * @param context Context related to this event; if no context applies, the test runner or configurator is provided.
      */
-    public suspend fun <E: TestNotify, T: Any> emit(event: E, context: T)
+    public fun <E : TestNotify> emit(event: E)
 
     /** "Inert" event controller which does nothing. */
     public data object Inert : TestEventController {
-      override suspend fun <E : TestNotify, T : Any> emit(event: E, context: T) {
-        // no-op
+      override val events: Flow<TestEvent> = emptyFlow()
+      override fun <E : TestNotify> emit(event: E) {
+        // noop
+      }
+
+      override fun close() {
+        // noop
+      }
+    }
+
+    public companion object {
+      /**
+       * Create a new event controller backed by a shared flow that uses a background scope to launch event emitting
+       * calls if they would suspend the caller.
+       */
+      public fun create(
+        context: CoroutineContext = Dispatchers.IO
+      ): TestEventController = object : TestEventController {
+        private val scope = CoroutineScope(context + SupervisorJob())
+        override val events = MutableSharedFlow<TestNotify>()
+
+        override fun <E : TestNotify> emit(event: E) {
+          if (events.tryEmit(event)) return
+          scope.launch { events.emit(event) }
+        }
+
+        override fun close() {
+          scope.cancel()
+        }
       }
     }
   }
@@ -183,20 +209,20 @@ public interface TestConfigurator : ProjectConfigurator {
    *
    * API which provides read-only settings access for test facilities within an Elide project.
    */
-  @JvmRecord public data class ImmutableTestSettings (
+  @JvmRecord public data class ImmutableTestSettings(
     override val enableCoverage: Boolean = true,
     override val enableDiscovery: Boolean = true,
-  ): TestSettings
+  ) : TestSettings
 
   /**
    * ## Test Settings (Mutable)
    *
    * API which provides mutable settings access and control for test facilities within an Elide project.
    */
-  public data class MutableTestSettings (
+  public data class MutableTestSettings(
     override var enableCoverage: Boolean = true,
     override var enableDiscovery: Boolean = true,
-  ): TestSettings
+  ) : TestSettings
 
   /**
    * Contribute test configuration.
@@ -209,20 +235,3 @@ public interface TestConfigurator : ProjectConfigurator {
    */
   public suspend fun contribute(state: ElideTestState, config: TestConfiguration)
 }
-
-/**
- * Shorthand to bind a test event handler to the event controller.
- *
- * @param T Type of event to bind to.
- * @param X Type of context to bind to; default-bound to [Any].
- * @param event Event type to bind to.
- * @param handler Handler method to dispatch.
- */
-public inline fun <X: Any, reified T: TestConfigurator.TestNotify> TestConfigurator.TestEventController.Binder.on(
-  event: T,
-  noinline handler: suspend T.(X) -> Unit,
-): TestConfigurator.TestEventController.Binder = bind(
-  event = event,
-  contextType = T::class.java,
-  handler = handler,
-)

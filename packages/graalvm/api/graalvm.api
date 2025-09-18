@@ -7244,7 +7244,7 @@ public synthetic class elide/runtime/intrinsics/testing/$TestingAPI$TestGraphNod
 }
 
 public abstract interface class elide/runtime/intrinsics/testing/TestEntrypoint {
-	public abstract fun invoke ()Lelide/tooling/testing/TestResult;
+	public abstract fun invoke ()Lelide/tooling/testing/TestOutcome;
 }
 
 public abstract interface class elide/runtime/intrinsics/testing/TestingAPI {

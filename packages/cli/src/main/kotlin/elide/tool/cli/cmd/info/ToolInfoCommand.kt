@@ -70,16 +70,19 @@ internal class ToolInfoCommand : ProjectAwareSubcommand<ToolState, CommandContex
     val natives = workdir.nativesDirectory()
     val project = projectManager.resolveProject(projectOptions().projectPath())
     val operatingMode = if (ImageInfo.inImageCode()) "Native" else "JVM"
+    val lang = System.getProperty("user.language") ?: "(unknown)"
+    val country = System.getProperty("user.country") ?: "(unknown)"
 
     val projectBlock = if (project == null) StringBuilder("") else StringBuilder().apply {
       appendLine("Project:")
       appendLine("- Name: ${project.manifest.name ?: "(None)"}")
       appendLine("- Version: ${project.manifest.version ?: "(None)"}")
       appendLine("- Root Path: ${project.root}")
+
       when (val env = project.env) {
         null -> {}
         else -> {
-          appendLine("")
+          appendLine()
           appendLine("Environment:")
           when (env.vars.isEmpty()) {
             true -> appendLine("  (None).")
@@ -101,6 +104,10 @@ internal class ToolInfoCommand : ProjectAwareSubcommand<ToolState, CommandContex
       appendLine("Engine: ${engine.implementationName} v${engine.version}")
       appendLine("Platform: $operatingMode")
       appendLine("Languages: " + engine.languages.keys.joinToString(", "))
+      appendLine()
+      appendLine("Locale:")
+      appendLine("- Language: $lang")
+      appendLine("- Country: $country")
       appendLine()
       appendLine("Native:")
       appendLine("- Console: ${libraryGroupLoaded("console").label()}")

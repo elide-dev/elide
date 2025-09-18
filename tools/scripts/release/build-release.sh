@@ -16,11 +16,14 @@
 set -euo pipefail
 source tools/scripts/release/commons.sh
 
+set +x
+
 # if ELIDE_COSIGN is set to `false`, skip cosign
 do_cosign=true
 if [ "${ELIDE_COSIGN:-true}" = "false" ]; then
   do_cosign=false
 fi
+COSIGN_ARGS="${COSIGN_ARGS:-}"
 
 # if ELIDE_GPGSIGN is set to `false`, skip GPG signing
 do_gpgsign=true
@@ -51,7 +54,7 @@ root=$(pwd)
 echo "- Building release root (variant: $variant / platform: $platform)..."
 pushd packages/cli/build/native/nativeOptimizedCompile \
   && mkdir -p "$archive_prefix-$version-$platform/" \
-  && cp -fr elide ./*.{so,dylib,dll} $root/packages/cli/packaging/content/* resources "$archive_prefix-$version-$platform/"
+  && cp -fr elide ./*.{so,dylib,dll} $root/packages/cli/packaging/content/* resources "$archive_prefix-$version-$platform/" || echo "OK with copy warnings."
 
 echo "- Building tar package (variant: $variant / platform: $platform)..."
 tar -cf "$archive_prefix-$version-$platform.tar" "$archive_prefix-$version-$platform/"
@@ -95,9 +98,10 @@ for archive in ./elide*.{tgz,txz,zip}; do
   if [ "$do_cosign" = true ]; then
     echo "-   Sigstore..."
     cosignArgs="${COSIGN_ARGS} --output-signature=$archive.sig --output-certificate=$archive.pem --bundle=$archive.sigstore"
-    yes y | cosign sign-blob "$archive" $cosignArgs -y
+    yes y | cosign sign-blob "$archive" $cosignArgs -y || echo "Cosign failed; inspect log."
   fi
   echo ""
 done
 
 popd || exit 0
+

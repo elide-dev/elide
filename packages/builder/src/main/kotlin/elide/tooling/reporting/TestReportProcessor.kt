@@ -13,6 +13,7 @@
 package elide.tooling.reporting
 
 import elide.tooling.Tool
+import elide.tooling.reporting.html.HtmlTestReporter
 import elide.tooling.reporting.xml.JUnitXmlReporter
 import elide.tooling.testing.TestPostProcessingOptions
 import elide.tooling.testing.TestPostProcessor
@@ -43,22 +44,26 @@ internal class TestReportProcessor : TestPostProcessor {
     val xmlReporter = JUnitXmlReporter()
     val xmlContent = xmlReporter.generateReport(results, suiteName = options.reportSuiteName)
     
-    // Create output directory if it doesn't exist
     Files.createDirectories(options.reportOutputPath)
     
-    // Write XML report file
     val outputFile = options.reportOutputPath.resolve("TEST-elide-results.xml")
     Files.write(outputFile, xmlContent.toByteArray())
     
     println("Generated XML test report: ${outputFile.toAbsolutePath()}")
   }
 
-  /**
-   * TODO: Implement HTML reporter when ready
-   */
-  private fun generateHtmlReport(options: TestPostProcessingOptions, results: TestRunResult) {}
+  private fun generateHtmlReport(options: TestPostProcessingOptions, results: TestRunResult) {
+    val htmlReporter = HtmlTestReporter()
+    val htmlContent = htmlReporter.generateReport(results, suiteName = options.reportSuiteName)
+    
+    Files.createDirectories(options.reportOutputPath)
+    
+    val outputFile = options.reportOutputPath.resolve("test-report.html")
+    Files.write(outputFile, htmlContent.toByteArray()) 
+    
+    println("Generated HTML test report: ${outputFile.toAbsolutePath()}")
+  }
 
-  // Create a coverage report processor if coverage is enabled.
   class Factory : TestPostProcessorFactory<TestReportProcessor> {
     override fun create(options: TestPostProcessingOptions): TestPostProcessor? = when (options.reportingEnabled) {
       false -> null

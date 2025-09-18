@@ -70,7 +70,17 @@ import elide.tooling.project.manifest.ElidePackageManifest.MavenRepository
 // Calculate the resolved Maven coordinate to use for a given dependency.
 @Suppress("UNUSED_PARAMETER")
 private fun MavenPackage.resolvedCoordinate(usageType: MavenClassifier = MavenClassifier.Default): String {
-  return coordinate // @TODO resolve special versions
+  val raw = this.coordinate
+  if (!raw.isNullOrBlank()) return raw
+
+  val group = this.group
+  val name = this.name
+  val ver = this.version
+
+  return when {
+    ver.isNotBlank() -> "$group:$name:$ver"
+    else -> "$group:$name"
+  }
 }
 
 // Resolve the local dependencies path for Maven deps.
@@ -348,7 +358,7 @@ public class MavenAetherResolver internal constructor (
 
     logging.debug { "Configuring Maven packages" }
     val packages = registry.values.flatMap { (pkg, usage) ->
-      logging.trace { "- Adding Maven package: ${pkg.coordinate}" }
+      logging.trace { "- Adding Maven package: ${pkg.resolvedCoordinate()}" }
       val coord = pkg.resolvedCoordinate()
       val artifact = DefaultArtifact(coord)
       buildList{
@@ -392,8 +402,9 @@ public class MavenAetherResolver internal constructor (
     suites.add(suite)
 
     packages.forEach { pkg ->
-      if (pkg.coordinate !in registry) {
-        registry[pkg.coordinate] = pkg to usage
+      val key = pkg.resolvedCoordinate()
+      if (key !in registry) {
+        registry[key] = pkg to usage
       }
       registryByType.getOrDefault(suite, mutableListOf()).also {
         it.add(pkg)
@@ -407,7 +418,7 @@ public class MavenAetherResolver internal constructor (
         null -> {}
 
         else -> if (repo !in repositories) {
-          error("Unknown Maven repository: '$repo', for package '${pkg.coordinate}'")
+          error("Unknown Maven repository: '$repo', for package '${pkg.resolvedCoordinate()}'")
         }
       }
     }
@@ -498,10 +509,17 @@ public class MavenAetherResolver internal constructor (
       try {
         // @TODO cannot associate with source sets this early
         val artifact = dependency.artifact
-        val coordinate = artifact.groupId + ":" + artifact.artifactId
-        val pkg = registry[coordinate]?.first ?: registry.values.find { (pkg, _) ->
-          pkg.coordinate == coordinate
-        }?.first
+        val group = artifact.groupId
+        val name = artifact.artifactId
+        val version = artifact.version
+        val keyVersioned = "$group:$name:$version"
+        val keyNoVersion = "$group:$name"
+
+        val pkg = registry[keyVersioned]?.first
+          ?: registry[keyNoVersion]?.first
+          ?: registry.values.find { (pkg, _) ->
+            pkg.group == group && pkg.name == name && (pkg.version.isBlank() || pkg.version == version)
+          }?.first
 
         if (pkg == null) {
           val transitivePkg = MavenPackage(
@@ -509,7 +527,7 @@ public class MavenAetherResolver internal constructor (
             name = artifact.artifactId,
             version = artifact.version,
             classifier = artifact.classifier,
-            coordinate = coordinate,
+            coordinate = "${artifact.groupId}:${artifact.artifactId}:${artifact.version}",
           )
           val resolved = ResolvedJarArtifact.of(artifact)
           packageArtifacts[transitivePkg] = resolved
@@ -614,7 +632,7 @@ public class MavenAetherResolver internal constructor (
     logging.debug { "Contributing Maven dependencies to lockfile" }
     val digest = MessageDigest.getInstance("SHA-1").let { digester ->
       registry.forEach { pkg ->
-        digester.update(pkg.value.first.coordinate.toByteArray())
+        digester.update(pkg.value.first.resolvedCoordinate().toByteArray())
       }
       digester.digest()
     }
@@ -628,7 +646,7 @@ public class MavenAetherResolver internal constructor (
 
     val localIdMap = HashMap<MavenPackage, UInt>()
     val allHeld = packageArtifacts.mapNotNull {
-      val coordinate = it.key.coordinate
+      val coordinate = it.key.resolvedCoordinate()
       val pkg = it.key
       val artifact = it.value
       val classifier = it.value.artifact.classifier

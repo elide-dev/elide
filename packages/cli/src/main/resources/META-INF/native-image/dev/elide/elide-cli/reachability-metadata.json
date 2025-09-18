@@ -14020,88 +14020,88 @@
       "name": "ElideTool",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "com.sun.tools.javac.resources.compiler",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "com.sun.tools.javac.resources.ct",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "com.sun.tools.javac.resources.javac",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "jdk.javadoc.internal.doclets.formats.html.resources.standard",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "jdk.javadoc.internal.doclets.toolkit.resources.doclets",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "jdk.javadoc.internal.doclint.resources.doclint",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "jdk.javadoc.internal.tool.resources.javadoc",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "org.pkl.core.errorMessages",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "sun.tools.jar.resources.jar",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     },
     {
       "name": "sun.util.logging.resources.logging",
       "locales": [
         "en",
-        "en-US",
-        "en-GB"
+        "en_US",
+        "en_GB"
       ]
     }
   ],

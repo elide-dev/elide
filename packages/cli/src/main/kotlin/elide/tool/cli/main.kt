@@ -40,11 +40,23 @@ private const val ENABLE_CLI_ENTRY_V2 = false
 // Whether to log early init messages.
 private const val EARLY_INIT_LOG = false
 
+// Whether to resolve and enforce supported locale usage.
+private const val ENFORCE_LOCALE = true
+
+// Default locale language.
+private const val DEFAULT_LANG = "en"
+
+// Default locale country.
+private const val DEFAULT_COUNTRY = "US"
+
 // Whether to exist after completion.
 internal var exitOnComplete = true
 
 // Exit code for this run.
 @Volatile internal var exitCode = 0
+
+// Supported locales; known at build time.
+private val supportedLocales = System.getProperty("elide.locales.supported", "en").split(",").toSortedSet()
 
 // Unhandled error that caused exit, if any.
 internal val unhandledExc = atomic<Throwable?>(null)
@@ -65,7 +77,7 @@ private fun sorryIHaveToFactory(args: Array<String>): CommandLine =
   }
 
 // Run the Clikt or regular entrypoint.
-@Suppress("TooGenericExceptionCaught")
+@Suppress("TooGenericExceptionCaught", "KotlinConstantConditions")
 private inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI_ENTRY_V2) {
   false -> Elide.entry(args)
   true -> createApplicationContext(args).start().use { applicationContext ->
@@ -121,7 +133,7 @@ internal object NativeEntry {
 // Perform early startup initialization tasks.
 @Volatile var entryInitialized: Boolean = false
 
-inline fun setStaticProperties(binPath: String) {
+private inline fun setStaticProperties(binPath: String) {
   // Patch the Java library path to include the binary's own parent directory.
   val currentJavaPath = System.getProperty("java.library.path")
   val path = Path(binPath).parent
@@ -164,6 +176,9 @@ inline fun setStaticProperties(binPath: String) {
     }
   }
 
+  // handle locale stand up
+  if (ENFORCE_LOCALE) resolveOrDefaultLocale()
+
   // only set the stdlib/reflect paths if we are in a native image context. otherwise, the "binary path" may be a path
   // to the java binary, rather than elide.
   if (ImageInfo.inImageCode()) {
@@ -180,6 +195,31 @@ inline fun setStaticProperties(binPath: String) {
 
     System.setProperty("kotlin.java.stdlib.jar", kotlinStdlibPath.absolutePathString())
     System.setProperty("kotlin.java.reflect.jar", kotlinReflectPath.absolutePathString())
+  }
+}
+
+fun resolveOrDefaultLocale() {
+  val lang = System.getProperty("user.language", DEFAULT_LANG).lowercase().trim()
+  val country = System.getProperty("user.country", DEFAULT_COUNTRY).uppercase().trim()
+  val langOnly = lang
+  val langWithTag = if (country.isNotBlank()) buildString {
+    append(lang)
+    append("_")
+    append(country)
+  } else lang
+
+  when (langOnly in supportedLocales || (langWithTag != langOnly && langWithTag in supportedLocales)) {
+    // the locale is supported, either as lang-only, or lang-with-country
+    true -> {}
+
+    // the locale is not supported; enforce defaults
+    else -> {
+      System.setProperty("user.language", DEFAULT_LANG)
+      System.setProperty("user.country", DEFAULT_COUNTRY)
+      Statics.logging.warn {
+        "Locale of '${lang}_${country} is not supported yet; defaulting to '${DEFAULT_LANG}_${DEFAULT_COUNTRY}'"
+      }
+    }
   }
 }
 

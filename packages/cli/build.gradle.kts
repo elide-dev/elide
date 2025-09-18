@@ -1610,6 +1610,14 @@ val releaseFlags: List<String> = listOf(
   if (oracleGvm) gvmReleaseFlags else emptyList(),
 ).flatten()).toList()
 
+val defaultLocale = "en"
+
+val supportedLocales = listOf(
+  "en",
+  "en_US",
+  "en_GB",
+)
+
 val jvmDefs = mutableMapOf(
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
@@ -1628,6 +1636,8 @@ val jvmDefs = mutableMapOf(
   "elide.kotlin.version" to libs.versions.kotlin.sdk.get(),
   "elide.kotlinResources" to kotlinHomeRoot.get().asFile.resolve(libs.versions.kotlin.sdk.get()).absolutePath,
   "elide.gvmResources" to gvmResourcesPath,
+  "elide.locales.default" to defaultLocale,
+  "elide.locales.supported" to supportedLocales.joinToString(","),
   "jdk.image.use.jvm.map" to "false",
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
@@ -1669,14 +1679,6 @@ val jvmDefs = mutableMapOf(
 findProperty("elide.logLevel")?.let {
   jvmDefs["elide.logging.root.level"] = it as String
 }
-
-val defaultLocale = "en"
-
-val supportedLocales = listOf(
-  "en",
-  "en-US",
-  "en-GB",
-)
 
 val localeArgs = buildList {
   add("-H:DefaultLocale=$defaultLocale")

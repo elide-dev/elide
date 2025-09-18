@@ -16,13 +16,14 @@ import io.micronaut.context.BeanContext
 import java.nio.file.Path
 import elide.exec.Action
 import elide.exec.ActionScope
-import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.runtime.core.PolyglotContext
 import elide.tooling.config.TestConfigurator.TestConfiguration
 import elide.tooling.config.TestConfigurator.MutableTestSettings
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.ElideProject
 import elide.tooling.project.load
 import elide.tooling.registry.ResolverRegistry
+import elide.tooling.testing.TestRegistry
 
 /**
  * # Test Configuration
@@ -51,25 +52,27 @@ public object TestConfiguration {
   @JvmStatic
   public suspend fun ElideProject.configureTests(
     beanContext: BeanContext,
+    guestContext: () -> PolyglotContext,
     with: TestConfiguration,
-    registrar: TestingRegistrar,
+    registry: TestRegistry,
   ) {
     when (this) {
       is ElideConfiguredProject -> this
       else -> load()
     }.let {
-      TestConfigurators.contribute(beanContext, it, registrar, with)
+      TestConfigurators.contribute(beanContext, guestContext, it, registry, with)
     }
   }
 
   @JvmStatic
   public suspend fun ElideProject.configureTests(
     ctx: BeanContext,
-    registrar: TestingRegistrar? = null,
+    guestContext: () -> PolyglotContext,
+    registry: TestRegistry? = null,
   ): TestConfiguration {
-    val effectiveRegistrar = registrar ?: requireNotNull(ctx.getBean(TestingRegistrar::class.java)) {
-      "Failed to configure tests: No available testing registrar"
+    val effectiveRegistry = registry ?: requireNotNull(ctx.getBean(TestRegistry ::class.java)) {
+      "Failed to configure tests: No available testing registry"
     }
-    return create().also { configureTests(ctx, it, effectiveRegistrar) }
+    return create().also { configureTests(ctx, guestContext, it, effectiveRegistry) }
   }
 }

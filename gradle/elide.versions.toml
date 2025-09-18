@@ -565,6 +565,7 @@ jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 junit-platform-commons = { group = "org.junit.platform", name = "junit-platform-commons", version.ref = "junit-platform" }
 junit-platform-console = { group = "org.junit.platform", name = "junit-platform-console", version.ref = "junit-platform" }
 junit-platform-engine = { group = "org.junit.platform", name = "junit-platform-engine", version.ref = "junit-platform" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junit-platform" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit-jupiter" }
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }

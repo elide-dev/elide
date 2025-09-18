@@ -1,4 +1,8 @@
 public final class dev/elide/intellij/Constants {
+	public static final field COMMAND_BUILD Ljava/lang/String;
+	public static final field COMMAND_INSTALL Ljava/lang/String;
+	public static final field COMMAND_RUN Ljava/lang/String;
+	public static final field COMMAND_SERVE Ljava/lang/String;
 	public static final field CONFIGURABLE_ID Ljava/lang/String;
 	public static final field ELIDE_BINARY Ljava/lang/String;
 	public static final field ELIDE_HOME Ljava/lang/String;
@@ -9,17 +13,10 @@ public final class dev/elide/intellij/Constants {
 	public static final field MANIFEST_NAME Ljava/lang/String;
 	public static final field OUTPUT_DIR Ljava/lang/String;
 	public static final field PLUGIN_ID Ljava/lang/String;
+	public final fun getDEFAULT_COMMANDS ()[Ljava/lang/String;
 	public final fun getSYSTEM_ID ()Lcom/intellij/openapi/externalSystem/model/ProjectSystemId;
 	public static final fun projectFileChooser ()Lcom/intellij/openapi/fileChooser/FileChooserDescriptor;
 	public static final fun sdkFileChooser ()Lcom/intellij/openapi/fileChooser/FileChooserDescriptor;
-}
-
-public final class dev/elide/intellij/Constants$Commands {
-	public static final field INSTANCE Ldev/elide/intellij/Constants$Commands;
-	public static final field RUN Ljava/lang/String;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
 }
 
 public final class dev/elide/intellij/Constants$Icons {
@@ -60,7 +57,10 @@ public final class dev/elide/intellij/ElideManager : com/intellij/openapi/extern
 	public fun getTaskManagerClass ()Ljava/lang/Class;
 }
 
-public final class dev/elide/intellij/InvalidElideHomeException : java/lang/Exception {
+public abstract class dev/elide/intellij/ElidePluginException : java/lang/RuntimeException {
+}
+
+public final class dev/elide/intellij/InvalidElideHomeException : dev/elide/intellij/ElidePluginException {
 	public fun <init> (Ljava/lang/String;)V
 	public fun <init> (Ljava/nio/file/Path;)V
 	public fun getMessage ()Ljava/lang/String;
@@ -87,7 +87,8 @@ public final class dev/elide/intellij/cli/ElideCommandLine {
 	public static final field Companion Ldev/elide/intellij/cli/ElideCommandLine$Companion;
 	public synthetic fun <init> (Ljava/nio/file/Path;Ljava/nio/file/Path;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun at (Ljava/nio/file/Path;Ljava/nio/file/Path;)Ldev/elide/intellij/cli/ElideCommandLine;
-	public final fun invoke (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun invoke (Lkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun invoke$default (Ldev/elide/intellij/cli/ElideCommandLine;Lkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public static final fun resolve (Lcom/intellij/openapi/project/Project;Ljava/lang/String;Ljava/nio/file/Path;)Ldev/elide/intellij/cli/ElideCommandLine;
 }
 
@@ -120,7 +121,24 @@ public final class dev/elide/intellij/execution/ElideExternalTaskConfigurationTy
 	public fun isDumbAware ()Z
 }
 
-public final class dev/elide/intellij/execution/ElideLazyRunConfigurationProducer : com/intellij/execution/actions/LazyRunConfigurationProducer {
+public final class dev/elide/intellij/execution/ElideJvmMainConfigurationProducer : com/intellij/execution/actions/LazyRunConfigurationProducer {
+	public fun <init> ()V
+	public fun findExistingConfiguration (Lcom/intellij/execution/actions/ConfigurationContext;)Lcom/intellij/execution/RunnerAndConfigurationSettings;
+	public fun getConfigurationFactory ()Lcom/intellij/execution/configurations/ConfigurationFactory;
+	public synthetic fun isConfigurationFromContext (Lcom/intellij/execution/configurations/RunConfiguration;Lcom/intellij/execution/actions/ConfigurationContext;)Z
+	public fun isConfigurationFromContext (Ldev/elide/intellij/execution/ElideRunConfiguration;Lcom/intellij/execution/actions/ConfigurationContext;)Z
+	public fun isDumbAware ()Z
+	public fun isPreferredConfiguration (Lcom/intellij/execution/actions/ConfigurationFromContext;Lcom/intellij/execution/actions/ConfigurationFromContext;)Z
+	public synthetic fun setupConfigurationFromContext (Lcom/intellij/execution/configurations/RunConfiguration;Lcom/intellij/execution/actions/ConfigurationContext;Lcom/intellij/openapi/util/Ref;)Z
+	public fun shouldReplace (Lcom/intellij/execution/actions/ConfigurationFromContext;Lcom/intellij/execution/actions/ConfigurationFromContext;)Z
+}
+
+public final class dev/elide/intellij/execution/ElideManifestLineMarkerContributor : com/intellij/execution/lineMarker/RunLineMarkerContributor {
+	public fun <init> ()V
+	public fun getInfo (Lcom/intellij/psi/PsiElement;)Lcom/intellij/execution/lineMarker/RunLineMarkerContributor$Info;
+}
+
+public final class dev/elide/intellij/execution/ElideManifestRunConfigurationProducer : com/intellij/execution/actions/LazyRunConfigurationProducer {
 	public fun <init> ()V
 	public fun findExistingConfiguration (Lcom/intellij/execution/actions/ConfigurationContext;)Lcom/intellij/execution/RunnerAndConfigurationSettings;
 	public fun getConfigurationFactory ()Lcom/intellij/execution/configurations/ConfigurationFactory;
@@ -137,12 +155,16 @@ public final class dev/elide/intellij/execution/ElideRunConfiguration : com/inte
 	public fun canRunOn (Lcom/intellij/execution/target/TargetEnvironmentConfiguration;)Z
 	public fun getDefaultLanguageRuntimeType ()Lcom/intellij/execution/target/LanguageRuntimeType;
 	public fun getDefaultTargetName ()Ljava/lang/String;
-	public final fun getEntrypoint ()Ldev/elide/intellij/project/model/ElideEntrypointInfo;
+	public final fun getEntrypointKind ()Ldev/elide/intellij/project/model/ElideEntrypointInfo$Kind;
+	public final fun getEntrypointValue ()Ljava/lang/String;
 	public fun getIcon ()Ljavax/swing/Icon;
 	public final fun getRawCommandLine ()Ljava/lang/String;
+	public fun readExternal (Lorg/jdom/Element;)V
 	public fun setDefaultTargetName (Ljava/lang/String;)V
-	public final fun setEntrypoint (Ldev/elide/intellij/project/model/ElideEntrypointInfo;)V
+	public final fun setEntrypointKind (Ldev/elide/intellij/project/model/ElideEntrypointInfo$Kind;)V
+	public final fun setEntrypointValue (Ljava/lang/String;)V
 	public final fun setRawCommandLine (Ljava/lang/String;)V
+	public fun writeExternal (Lorg/jdom/Element;)V
 }
 
 public final class dev/elide/intellij/execution/ElideRunConfigurationExtension : com/intellij/openapi/externalSystem/service/execution/configuration/ExternalSystemReifiedRunConfigurationExtension {
@@ -337,6 +359,54 @@ public abstract interface class dev/elide/intellij/project/model/ElideProjectMod
 
 public final class dev/elide/intellij/project/model/ElideProjectModelContributor$Companion {
 	public final fun getExtensions ()Lcom/intellij/openapi/extensions/ExtensionPointName;
+}
+
+public final class dev/elide/intellij/psi/ElideManifestEntrypointFileReference : com/intellij/psi/PsiReferenceBase, com/intellij/codeInsight/highlighting/HighlightedReference {
+	public fun <init> (Lcom/intellij/psi/PsiElement;Ljava/lang/String;)V
+	public fun getVariants ()[Ljava/lang/Object;
+	public fun resolve ()Lcom/intellij/psi/PsiElement;
+}
+
+public abstract class dev/elide/intellij/psi/ElideManifestJvmMainInspectionBase : com/intellij/codeInspection/LocalInspectionTool {
+	public fun <init> ()V
+	public fun buildVisitor (Lcom/intellij/codeInspection/ProblemsHolder;Z)Lcom/intellij/psi/PsiElementVisitor;
+	protected abstract fun processElement (Lorg/pkl/intellij/psi/PklStringContentBase;Lcom/intellij/codeInspection/ProblemsHolder;Z)V
+}
+
+public final class dev/elide/intellij/psi/ElideManifestJvmMainMethodInspection : dev/elide/intellij/psi/ElideManifestJvmMainInspectionBase {
+	public fun <init> ()V
+}
+
+public final class dev/elide/intellij/psi/ElideManifestJvmMainReferenceInspection : dev/elide/intellij/psi/ElideManifestJvmMainInspectionBase {
+	public fun <init> ()V
+}
+
+public final class dev/elide/intellij/psi/ElideManifestMainClassReference : com/intellij/psi/PsiReferenceBase, com/intellij/codeInsight/highlighting/HighlightedReference {
+	public fun <init> (Lcom/intellij/psi/PsiElement;Ljava/lang/String;)V
+	public fun getVariants ()[Ljava/lang/Object;
+	public fun isSoft ()Z
+	public fun resolve ()Lcom/intellij/psi/PsiElement;
+}
+
+public final class dev/elide/intellij/psi/ElideManifestReferencesContributor : com/intellij/psi/PsiReferenceContributor {
+	public fun <init> ()V
+	public fun registerReferenceProviders (Lcom/intellij/psi/PsiReferenceRegistrar;)V
+}
+
+public final class dev/elide/intellij/psi/PklElideModuleResolver : org/pkl/intellij/psi/PklModuleResolverExtension {
+	public fun <init> ()V
+	public fun resolveModuleFile (Ljava/lang/String;Lcom/intellij/openapi/project/Project;Lorg/pkl/intellij/packages/dto/PklProject;)Lcom/intellij/openapi/vfs/VirtualFile;
+}
+
+public final class dev/elide/intellij/psi/PklExtensionsKt {
+	public static final fun getParentPropertyReference (Lcom/intellij/psi/PsiElement;)Lcom/intellij/psi/PsiElement;
+	public static final fun getParentStringLiteral (Lcom/intellij/psi/PsiElement;)Lcom/intellij/psi/PsiElement;
+}
+
+public final class dev/elide/intellij/psi/PsiLookupUtil {
+	public static final field INSTANCE Ldev/elide/intellij/psi/PsiLookupUtil;
+	public final fun lookupElementsByQualifiedNamePrefix (Lcom/intellij/openapi/project/Project;Ljava/lang/String;)Ljava/util/List;
+	public final fun lookupFilesByPrefix (Lcom/intellij/openapi/project/Project;Ljava/lang/String;)Ljava/util/List;
 }
 
 public final class dev/elide/intellij/service/ElideDistributionResolver {
@@ -534,5 +604,9 @@ public final class dev/elide/intellij/ui/ElideNotifications {
 	public static final field INSTANCE Ldev/elide/intellij/ui/ElideNotifications;
 	public final fun notifyInvalidElideHome (Lcom/intellij/openapi/project/Project;)V
 	public static synthetic fun notifyInvalidElideHome$default (Ldev/elide/intellij/ui/ElideNotifications;Lcom/intellij/openapi/project/Project;ILjava/lang/Object;)V
+}
+
+public final class dev/elide/intellij/ui/ElideToolWindowFactory : com/intellij/openapi/externalSystem/service/task/ui/AbstractExternalSystemToolWindowFactory {
+	public fun <init> ()V
 }
 

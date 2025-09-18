@@ -392,6 +392,16 @@ public data class ElidePackageManifest(
     val testing: Boolean = true,
   )
 
+  @JvmRecord @Serializable public data class JvmTesting(
+    val enabled: Boolean = true,
+    val driver: JvmTestDriver = JvmTestDriver.Elide
+  ) {
+    public enum class JvmTestDriver {
+      Elide,
+      JUnit,
+    }
+  }
+
   @JvmRecord @Serializable public data class JavaCompilerSettings(
     val flags: List<String> = emptyList(),
   )
@@ -589,6 +599,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class TestingSettings(
     val coverage: CoverageSettings = CoverageSettings(),
+    val jvm: JvmTesting = JvmTesting(),
   )
 
   @JvmRecord @Serializable public data class LockfileSettings(

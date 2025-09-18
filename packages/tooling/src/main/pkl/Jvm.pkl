@@ -282,3 +282,15 @@ class JvmSettings {
   /// Runtime JVM flags.
   flags: Listing<String> = new {}
 }
+
+/// Options for running JVM tests.
+class JvmTesting {
+  /// Enable JVM testing with automatic discovery using classpath scanning.
+  enabled: Boolean = true
+
+  /// Test engine to be used for JVM tests:
+  /// - Elide: use the built-in test engine built on GraalVM's Espresso VM; detects JUnit-compatible tests by scsanning
+  ///   the classpath.
+  /// - JUnit5: use the JUnit Jupiter engine to run compatible tests detected in the classpath.
+  driver: "Elide" | "JUnit" = "Elide"
+}

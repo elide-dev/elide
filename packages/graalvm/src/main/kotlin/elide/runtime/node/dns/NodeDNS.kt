@@ -35,14 +35,107 @@ import elide.runtime.lang.javascript.NodeModuleName
  * # Node API: `dns`
  */
 internal class NodeDNS private constructor () : ReadOnlyProxyObject, DNSAPI {
-  //
+  private var defaultOrder: String = "verbatim" // or "ipv4first"
 
   internal companion object {
     @JvmStatic fun create(): NodeDNS = NodeDNS()
   }
 
-  // @TODO not yet implemented
+  private fun addressesFor(host: String, family: String? = null): Array<String> {
+    val addrs = try { java.net.InetAddress.getAllByName(host).toList() } catch (_: Throwable) { emptyList() }
+    val filtered = when (family) {
+      "A" -> addrs.filterIsInstance<java.net.Inet4Address>()
+      "AAAA" -> addrs.filterIsInstance<java.net.Inet6Address>()
+      else -> addrs
+    }
+    val ordered = when (defaultOrder) {
+      "ipv4first" -> filtered.sortedWith(compareBy({ it is java.net.Inet6Address }))
+      else -> filtered
+    }
+    return ordered.map { it.hostAddress }.toTypedArray()
+  }
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  private fun cbOrReturn(cb: org.graalvm.polyglot.Value?, values: Array<String>): Any? {
+    val arr = org.graalvm.polyglot.proxy.ProxyArray.fromArray(*values)
+    return if (cb != null && cb.canExecute()) cb.execute(null, arr) else arr
+  }
+
+  override fun getMemberKeys(): Array<String> = arrayOf(
+    "Resolver",
+    "getServers",
+    "resolve",
+    "resolve4",
+    "resolve6",
+    "reverse",
+    "setDefaultResultOrder",
+    "getDefaultResultOrder",
+  )
+
+  override fun getMember(key: String?): Any? = when (key) {
+    "Resolver" -> object : ReadOnlyProxyObject {
+      override fun getMemberKeys(): Array<String> = arrayOf("resolve","resolve4","resolve6","reverse")
+      override fun getMember(k: String?): Any? = when (k) {
+        "resolve" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+          val host = args.getOrNull(0)?.asString() ?: ""
+          val rr = args.getOrNull(1)?.takeIf { it.isString }?.asString()
+          val cb = args.lastOrNull()?.takeIf { it.canExecute() }
+          cbOrReturn(cb, addressesFor(host, rr))
+        }
+        "resolve4" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+          val host = args.getOrNull(0)?.asString() ?: ""; val cb = args.getOrNull(1)
+          cbOrReturn(cb, addressesFor(host, "A"))
+        }
+        "resolve6" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+          val host = args.getOrNull(0)?.asString() ?: ""; val cb = args.getOrNull(1)
+          cbOrReturn(cb, addressesFor(host, "AAAA"))
+        }
+        "reverse" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+          val ip = args.getOrNull(0)?.asString() ?: ""; val cb = args.getOrNull(1)
+          val name = try { java.net.InetAddress.getByName(ip).hostName } catch (_: Throwable) { "" }
+          cbOrReturn(cb, if (name.isBlank()) emptyArray() else arrayOf(name))
+        }
+        else -> null
+      }
+    }
+
+    "getServers" -> org.graalvm.polyglot.proxy.ProxyExecutable { _ ->
+      org.graalvm.polyglot.proxy.ProxyArray.fromArray()
+    }
+
+    "resolve" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val host = args.getOrNull(0)?.asString() ?: ""
+      val second = args.getOrNull(1)
+      val (rr, cb) = when {
+        second?.canExecute() == true -> null to second
+        else -> (second?.takeIf { it.isString }?.asString()) to args.getOrNull(2)
+      }
+      cbOrReturn(cb, addressesFor(host, rr))
+    }
+
+    "resolve4" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val host = args.getOrNull(0)?.asString() ?: ""; val cb = args.getOrNull(1)
+      cbOrReturn(cb, addressesFor(host, "A"))
+    }
+
+    "resolve6" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val host = args.getOrNull(0)?.asString() ?: ""; val cb = args.getOrNull(1)
+      cbOrReturn(cb, addressesFor(host, "AAAA"))
+    }
+
+    "reverse" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val ip = args.getOrNull(0)?.asString() ?: ""; val cb = args.getOrNull(1)
+      val name = try { java.net.InetAddress.getByName(ip).hostName } catch (_: Throwable) { "" }
+      cbOrReturn(cb, if (name.isBlank()) emptyArray() else arrayOf(name))
+    }
+
+    "setDefaultResultOrder" -> org.graalvm.polyglot.proxy.ProxyExecutable { args ->
+      val mode = args.getOrNull(0)?.asString()?.lowercase() ?: "verbatim"
+      defaultOrder = if (mode == "ipv4first") "ipv4first" else "verbatim"
+      null
+    }
+
+    "getDefaultResultOrder" -> org.graalvm.polyglot.proxy.ProxyExecutable { _ -> defaultOrder }
+
+    else -> null
+  }
 }

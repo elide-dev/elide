@@ -3,7 +3,7 @@ package dev.elide.secrets
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptInputPassword
 import com.github.kinquirer.components.promptListObject
-import com.github.kinquirer.core.Choice
+import dev.elide.secrets.Utils.choices
 import dev.elide.secrets.dto.persisted.EncryptionMode
 
 /** @author Lauri Heino <datafox> */
@@ -11,67 +11,62 @@ internal object Prompts {
   fun passphrase(): String {
     checkInteractive()
     for (i in 0 until Values.INVALID_PASSPHRASE_TRIES) {
-      val pass = KInquirer.promptInputPassword("Please enter your passphrase:")
-      val repeat = KInquirer.promptInputPassword("Please enter your passphrase again:")
+      val pass = KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_PROMPT)
+      val repeat = KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_REPEAT_PROMPT)
       if (pass == repeat) return pass
-      println("Passphrases were not identical")
+      println(Values.PASSPHRASES_NOT_IDENTICAL_MESSAGE)
     }
-    throw IllegalArgumentException("Mismatching passphrases entered too many times")
+    throw IllegalArgumentException(Values.MISMATCHING_PASSPHRASES_EXCEPTION)
   }
 
   fun localUserKeyMode(): EncryptionMode {
     checkInteractive()
     return KInquirer.promptListObject(
-      "How do you want to encrypt locally stored secrets?",
-      EncryptionMode.entries.map { Choice(it.displayName, it) },
+      Values.LOCAL_STORAGE_ENCRYPTION_PROMPT,
+      EncryptionMode.entries.choices { displayName },
     )
   }
 
   fun validateLocalPassphrase(validator: (String) -> Boolean): String {
     checkInteractive()
     for (i in 0 until Values.INVALID_PASSPHRASE_TRIES) {
-      val pass = KInquirer.promptInputPassword("Please enter your passphrase:")
+      val pass = KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_PROMPT)
       if (validator(pass)) return pass
-      println("Passphrases was invalid")
+      println(Values.INVALID_PASSPHRASE_MESSAGE)
     }
-    throw IllegalArgumentException("Invalid passphrase entered too many times")
+    throw IllegalArgumentException(Values.INVALID_PASSPHRASE_EXCEPTION)
   }
 
   fun superKeyMode(): EncryptionMode {
     checkInteractive()
+    println(Values.SUPER_ACCESS_ENCRYPTION_MESSAGE)
     return KInquirer.promptListObject(
-      "How do you want to encrypt the remote super access file? This file will be able to decrypt all secrets!",
-      EncryptionMode.entries.map { Choice(it.displayName, it) },
+      Values.GENERIC_CHOICE_PROMPT,
+      EncryptionMode.entries.choices { displayName },
     )
   }
 
   fun accessMode(): EncryptionMode {
     checkInteractive()
     return KInquirer.promptListObject(
-      "How do you want to encrypt this access file?",
-      EncryptionMode.entries.map { Choice(it.displayName, it) },
+      Values.ACCESS_FILE_ENCRYPTION_PROMPT,
+      EncryptionMode.entries.choices { displayName },
     )
   }
 
   fun gpgPrivateKey(): String {
     checkInteractive()
     val keys = GPGHandler.gpgPrivateKeys()
-    return KInquirer.promptListObject(
-      "Please select a private key",
-      keys.map { (name, fingerprint) -> Choice("$name (${fingerprint.substring(0, 8)})", fingerprint) },
-    )
+    return KInquirer.promptListObject(Values.GPG_PRIVATE_KEY_PROMPT, keys.choices { "$it (${substring(0, 8)})" })
   }
 
   fun gpgPublicKey(): String {
     checkInteractive()
     val keys = GPGHandler.gpgKeys()
-    return KInquirer.promptListObject(
-      "Please select a public key",
-      keys.map { (name, fingerprint) -> Choice("$name (${fingerprint.substring(0, 8)})", fingerprint) },
-    )
+    return KInquirer.promptListObject(Values.GPG_PUBLIC_KEY_PROMPT, keys.choices { "$it (${substring(0, 8)})" })
   }
 
   private fun checkInteractive() {
-    if (!SecretsState.interactive) throw IllegalStateException("Not in interactive mode")
+    if (!SecretsState.interactive) throw IllegalStateException(Values.NOT_IN_INTERACTIVE_MODE_EXCEPTION)
   }
 }

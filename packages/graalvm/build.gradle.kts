@@ -476,6 +476,7 @@ dependencies {
   api(projects.packages.graalvmTs)
   api(projects.packages.graalvmJs)
   api(projects.packages.graalvmWasm)
+  api(projects.packages.secrets)
 
   // GraalVM / Truffle
   api(libs.graalvm.truffle.api)

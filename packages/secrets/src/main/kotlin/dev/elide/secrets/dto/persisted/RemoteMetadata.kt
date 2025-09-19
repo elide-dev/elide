@@ -23,7 +23,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class RemoteMetadata(
   override val name: String,
-  override val organization: String,
   override val profiles: Map<String, ProfileMetadata>,
   val superAccess: AccessMetadata,
   val access: Map<String, AccessMetadata>,
@@ -31,7 +30,6 @@ internal data class RemoteMetadata(
 
   init {
     Utils.checkName(name, "Project")
-    Utils.checkName(organization, "Organization")
     Utils.checkNames(profiles, "Profile")
     Utils.checkNames(access, "Access")
   }

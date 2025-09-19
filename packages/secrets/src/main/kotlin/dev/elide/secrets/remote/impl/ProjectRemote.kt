@@ -21,10 +21,7 @@ internal class ProjectRemote(private val path: Path) : Remote {
 
   override suspend fun getSuperAccess(): ByteString? = getFile(Values.SUPER_ACCESS_FILE)
 
-  override suspend fun update(
-    metadata: ByteString,
-    profiles: Map<String, ByteString>
-  ) {
+  override suspend fun update(metadata: ByteString, profiles: Map<String, ByteString>) {
     writeFile(Values.METADATA_FILE, metadata)
     profiles.forEach { writeFile(it.key, it.value) }
   }
@@ -33,7 +30,7 @@ internal class ProjectRemote(private val path: Path) : Remote {
     metadata: ByteString,
     profiles: Map<String, ByteString>,
     superAccess: ByteString,
-    access: Map<String, ByteString>
+    access: Map<String, ByteString>,
   ) {
     writeFile(Values.METADATA_FILE, metadata)
     profiles.forEach { writeFile(Utils.profileName(it.key), it.value) }
@@ -41,8 +38,7 @@ internal class ProjectRemote(private val path: Path) : Remote {
     access.forEach { writeFile(Utils.accessName(it.key), it.value) }
   }
 
-  private fun getFile(path: String): ByteString? =
-    Path(this.path, path).run { if (exists()) read() else null }
+  private fun getFile(path: String): ByteString? = Path(this.path, path).run { if (exists()) read() else null }
 
   private fun writeFile(path: String, data: ByteString) {
     data.write(Path(this.path, path))

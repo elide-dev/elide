@@ -12,7 +12,6 @@
  */
 package elide.tooling.reporting.html
 
-import elide.tooling.testing.TestResult
 import elide.tooling.testing.TestRunResult
 
 /**
@@ -47,7 +46,7 @@ internal class HtmlTestReporter {
   ): String {
     // Convert test results to HTML data models
     val summary = HtmlTestModelConverter.convertSummary(results, suiteName)
-    val testCases = results.individualTests.map { HtmlTestModelConverter.convertTestCase(it) }
+    val testCases = results.testResults.map { HtmlTestModelConverter.convertTestCase(it) }
     val testHierarchy = HtmlTestModelConverter.buildTestHierarchy(testCases)
 
     // Generate HTML using kotlinx-html DSL

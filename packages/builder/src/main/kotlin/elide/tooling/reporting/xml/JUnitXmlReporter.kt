@@ -15,7 +15,6 @@ package elide.tooling.reporting.xml
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import elide.tooling.testing.TestCase
 import elide.tooling.testing.TestResult
 import elide.tooling.testing.TestRunResult
 import elide.tooling.testing.TestOutcome
@@ -62,7 +61,7 @@ internal class JUnitXmlReporter {
     val testSuites = JUnitTestSuites(
       tests = results.stats.tests.toInt(),
       failures = results.stats.fails.toInt(),
-      errors = countErrors(results.individualTests),
+      errors = countErrors(results.testResults),
       skipped = results.stats.skips.toInt(),
       time = formatDuration(results.stats.duration),
       testSuites = listOf(testSuite)
@@ -77,13 +76,13 @@ internal class JUnitXmlReporter {
     results: TestRunResult,
     suiteName: String
   ): JUnitTestSuite {
-    val testCases = results.individualTests.map { convertToJUnitTestCase(it) }
+    val testCases = results.testResults.map { convertToJUnitTestCase(it) }
 
     return JUnitTestSuite(
       name = suiteName,
       tests = results.stats.tests.toInt(),
       failures = results.stats.fails.toInt(),
-      errors = countErrors(results.individualTests),
+      errors = countErrors(results.testResults),
       skipped = results.stats.skips.toInt(),
       time = formatDuration(results.stats.duration),
       timestamp = formatTimestamp(Instant.now()),

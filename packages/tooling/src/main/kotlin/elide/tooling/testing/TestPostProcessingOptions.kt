@@ -32,7 +32,7 @@ public enum class TestReportFormat {
 @JvmRecord public data class TestPostProcessingOptions(
   public val coverageEnabled: Boolean = false,
   public val reportingEnabled: Boolean = false,
-  public val reportFormat: TestReportFormat = TestReportFormat.XML, //Default to XML for now
+  public val reportFormat: TestReportFormat = TestReportFormat.XML, //Default to JUnit XML
   public val reportOutputPath: Path = Paths.get("build", "test-results"),
   public val reportSuiteName: String = "Elide Tests",
 )

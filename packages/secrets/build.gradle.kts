@@ -37,6 +37,7 @@ dependencies {
 
   api(projects.packages.base)
   api(projects.packages.core)
+  api(projects.packages.tooling)
 
   implementation(libs.kotlinx.io)
   implementation(libs.kotlinx.io.bytestring)

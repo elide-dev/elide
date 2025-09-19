@@ -14,6 +14,8 @@ package elide.runtime.node
 
 import kotlin.test.Test
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
+import kotlin.test.assertEquals
 import elide.annotations.Inject
 import elide.runtime.node.dns.NodeDNSPromisesModule
 import elide.testing.annotations.TestCase
@@ -51,5 +53,104 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(dns)
+  }
+
+  @Test fun `dns promises - resolve returns an array`(): Unit = run {
+    val out = polyglotContext.javascript(
+      // language=js
+      """
+        import dns from "dns/promises";
+        const res = await dns.resolve("localhost");
+        ({ isArray: Array.isArray(res) })
+      """.trimIndent(),
+      esm = true,
+    )
+    assertTrue(out.hasMembers())
+    assertTrue(out.getMember("isArray").asBoolean())
+  }
+
+  @Test fun `dns promises - resolve4 yields ipv4 strings (or empty)`(): Unit = run {
+    val out = polyglotContext.javascript(
+      // language=js
+      """
+        import dns from "dns/promises";
+        const res = await dns.resolve4("localhost");
+        ({ ok: Array.isArray(res) && res.every(x => typeof x === 'string' && x.includes('.')) })
+      """.trimIndent(),
+      esm = true,
+    )
+    assertTrue(out.hasMembers())
+    assertTrue(out.getMember("ok").asBoolean())
+  }
+
+  @Test fun `dns promises - resolve6 yields ipv6 strings (or empty)`(): Unit = run {
+    val out = polyglotContext.javascript(
+      // language=js
+      """
+        import dns from "dns/promises";
+        const res = await dns.resolve6("localhost");
+        ({ ok: Array.isArray(res) && res.every(x => typeof x === 'string' && x.includes(':')) })
+      """.trimIndent(),
+      esm = true,
+    )
+    assertTrue(out.hasMembers())
+    assertTrue(out.getMember("ok").asBoolean())
+  }
+
+  @Test fun `dns promises - reverse returns an array`(): Unit = run {
+    val out = polyglotContext.javascript(
+      // language=js
+      """
+        import dns from "dns/promises";
+        const res = await dns.reverse("127.0.0.1");
+        ({ isArray: Array.isArray(res) })
+      """.trimIndent(),
+      esm = true,
+    )
+    assertTrue(out.hasMembers())
+    assertTrue(out.getMember("isArray").asBoolean())
+  }
+
+  @Test fun `dns promises - result order set and get`(): Unit = run {
+    val out = polyglotContext.javascript(
+      // language=js
+      """
+        import dns from "dns/promises";
+        dns.setDefaultResultOrder("ipv4first");
+        const order = dns.getDefaultResultOrder();
+        ({ order })
+      """.trimIndent(),
+      esm = true,
+    )
+    assertTrue(out.hasMembers())
+    assertEquals("ipv4first", out.getMember("order").asString())
+  }
+
+  @Test fun `dns promises - unsupported rrtypes reject with ENOTSUP`(): Unit = run {
+    val out = polyglotContext.javascript(
+      // language=js
+      """
+        import dns from "dns/promises";
+        async function capture(fn) {
+          try { await fn(); return 'ok'; } catch (e) { return e; }
+        }
+        const res = await Promise.all([
+          capture(() => dns.resolveAny("example.com")),
+          capture(() => dns.resolveCname("example.com")),
+          capture(() => dns.resolveCaa("example.com")),
+          capture(() => dns.resolveMx("example.com")),
+          capture(() => dns.resolveNaptr("example.com")),
+          capture(() => dns.resolveNs("example.com")),
+          capture(() => dns.resolvePtr("example.com")),
+          capture(() => dns.resolveSoa("example.com")),
+          capture(() => dns.resolveSrv("example.com")),
+          capture(() => dns.resolveTxt("example.com")),
+        ]);
+        ({ ok: res.every(x => x === 'ENOTSUP') })
+      """.trimIndent(),
+      esm = true,
+    )
+    assertTrue(out.hasMembers())
+    assertTrue(out.getMember("ok").asBoolean())
   }
 }

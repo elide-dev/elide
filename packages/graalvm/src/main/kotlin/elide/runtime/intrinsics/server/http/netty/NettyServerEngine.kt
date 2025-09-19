@@ -13,8 +13,10 @@
 package elide.runtime.intrinsics.server.http.netty
 
 import io.netty.bootstrap.ServerBootstrap
+import io.netty.channel.Channel
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelOption
+import io.netty.channel.EventLoopGroup
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
@@ -52,6 +54,12 @@ private val HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS = arrayOf(
   /** Private logger instance. */
   private val logging by lazy { Logging.of(NettyServerEngine::class) }
 
+  /** Event loop group used by this server instance. */
+  private var group: EventLoopGroup? = null
+
+  /** Bound server channel. */
+  private var serverChannel: Channel? = null
+
   @get:Polyglot override val running: Boolean get() = serverRunning.get()
 
   /** Construct a new [ChannelHandler] used as initializer for client channels. */
@@ -76,14 +84,18 @@ private val HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS = arrayOf(
     val transport = config.resolveTransport()
     logging.debug { "Using transport: $transport" }
 
+    // create and remember the event loop group so we can shut it down later
+    val elg = transport.eventLoopGroup().also { group = it }
+
     with(ServerBootstrap()) {
       // server channel options
       option(ChannelOption.SO_BACKLOG, SERVER_BACKLOG)
       option(ChannelOption.SO_REUSEADDR, true)
 
-      // apply transport options
+      // apply transport options manually so we retain the created group
       logging.debug { "Applying options from $transport" }
-      transport.bootstrap(this)
+      group(elg)
+      channel(transport.socketChannel().java)
 
       // attach custom handler pipeline and configure client channels
       childHandler(prepareChannelInitializer())
@@ -91,13 +103,32 @@ private val HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS = arrayOf(
       childOption(ChannelOption.TCP_NODELAY, true)
 
       // start listening
-      val address = InetSocketAddress(config.port)
-      bind(address).sync().channel()
+      val address = InetSocketAddress(config.host, config.port)
+      serverChannel = bind(address).sync().channel()
 
       // notify listeners if applicable
       logging.debug { "Server listening at $address" }
       config.onBindCallback?.invoke()
     }
+  }
+
+  /** Stop the server and shut down the underlying event loop group gracefully. */
+  fun stop() {
+    logging.debug("Stopping server")
+
+    // if we weren't running, nothing to do
+    if (!serverRunning.compareAndSet(true, false)) {
+      logging.debug("Server not running, ignoring stop() call")
+      return
+    }
+
+    // close channel if present
+    runCatching { serverChannel?.close()?.sync() }
+    serverChannel = null
+
+    // shut down event loops
+    runCatching { group?.shutdownGracefully()?.sync() }
+    group = null
   }
 
   override fun hasMember(key: String?): Boolean = key != null && key in HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS

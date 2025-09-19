@@ -1694,6 +1694,16 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
+      // Proactively export the Elide intrinsic so non-JS guests can import it via polyglot.import_value("Elide")
+      runCatching {
+        val bootstrap = Source.newBuilder("js", "try { Polyglot.export('Elide', Elide); } catch (e) {}", "elide-export.js")
+          .internal(true)
+          .cached(true)
+          .buildLiteral()
+        resolvePolyglotContext(langs).evaluate(bootstrap)
+        logging.trace("Exported 'Elide' intrinsic for cross-language import")
+      }
+
       // initialize the server intrinsic and run using the provided source
       serverAgent.run(source, execProvider) { resolvePolyglotContext(langs) }
       phaser.value.register()
@@ -2431,6 +2441,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       effectiveLangs.add(JAVA)
       effectiveLangs.add(KOTLIN)
     }
+
+    // Ensure JS is initialized for serve mode so Elide intrinsics (Elide.http.router) are available to non-JS guests
+    runCatching { if (serveMode()) effectiveLangs.add(JS) }.onFailure { /* ignore outside command context */ }
 
     // load arguments into context if we have them
     when (val arguments = arguments) {

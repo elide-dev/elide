@@ -16,11 +16,15 @@ import elide.tooling.Tool
 import elide.tooling.testing.TestPostProcessingOptions
 import elide.tooling.testing.TestPostProcessor
 import elide.tooling.testing.TestPostProcessorFactory
+import elide.tooling.testing.TestResult
 import elide.tooling.testing.TestRunResult
 
 // Implements coverage reporting steps which take place after tests have run.
 internal class CoverageReportProcessor : TestPostProcessor {
-  override suspend fun invoke(options: TestPostProcessingOptions, results: TestRunResult): Tool.Result {
+  override suspend fun invoke(
+    options: TestPostProcessingOptions,
+    results: TestRunResult
+  ): Tool.Result {
     // @TODO coverage report processor is not implemented yet
     return Tool.Result.Success
   }

@@ -20,13 +20,15 @@ import elide.tooling.testing.TestPostProcessor
 import elide.tooling.testing.TestPostProcessorFactory
 import elide.tooling.testing.TestReportFormat
 import elide.tooling.testing.TestRunResult
+import elide.tooling.testing.TestResult
 import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
 
 internal class TestReportProcessor : TestPostProcessor {
-  override suspend fun invoke(options: TestPostProcessingOptions, results: TestRunResult): Tool.Result {
-    return runCatching { 
+  override suspend fun invoke(
+    options: TestPostProcessingOptions,
+    results: TestRunResult
+  ): Tool.Result {
+    return runCatching {
       when (options.reportFormat) {
         TestReportFormat.XML -> generateXmlReport(options, results)
         TestReportFormat.HTML -> generateHtmlReport(options, results)
@@ -40,27 +42,33 @@ internal class TestReportProcessor : TestPostProcessor {
     )
   }
 
-  private fun generateXmlReport(options: TestPostProcessingOptions, results: TestRunResult) {
+  private fun generateXmlReport(
+    options: TestPostProcessingOptions,
+    results: TestRunResult
+  ) {
     val xmlReporter = JUnitXmlReporter()
     val xmlContent = xmlReporter.generateReport(results, suiteName = options.reportSuiteName)
-    
+
     Files.createDirectories(options.reportOutputPath)
-    
+
     val outputFile = options.reportOutputPath.resolve("TEST-elide-results.xml")
     Files.write(outputFile, xmlContent.toByteArray())
-    
+
     println("Generated XML test report: ${outputFile.toAbsolutePath()}")
   }
 
-  private fun generateHtmlReport(options: TestPostProcessingOptions, results: TestRunResult) {
+  private fun generateHtmlReport(
+    options: TestPostProcessingOptions,
+    results: TestRunResult
+  ) {
     val htmlReporter = HtmlTestReporter()
     val htmlContent = htmlReporter.generateReport(results, suiteName = options.reportSuiteName)
-    
+
     Files.createDirectories(options.reportOutputPath)
-    
+
     val outputFile = options.reportOutputPath.resolve("test-report.html")
-    Files.write(outputFile, htmlContent.toByteArray()) 
-    
+    Files.write(outputFile, htmlContent.toByteArray())
+
     println("Generated HTML test report: ${outputFile.toAbsolutePath()}")
   }
 

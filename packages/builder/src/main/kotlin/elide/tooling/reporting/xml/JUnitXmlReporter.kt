@@ -15,9 +15,10 @@ package elide.tooling.reporting.xml
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import elide.tooling.testing.TestCaseResult
+import elide.tooling.testing.TestCase
 import elide.tooling.testing.TestResult
 import elide.tooling.testing.TestRunResult
+import elide.tooling.testing.TestOutcome
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -40,18 +41,28 @@ internal class JUnitXmlReporter {
   }
 
   /**
+   * Count the number of error outcomes in the individual results.
+   */
+  private fun countErrors(individualResults: List<TestResult>): Int {
+    return individualResults.count { it.outcome is TestOutcome.Error }
+  }
+
+  /**
    * Generate JUnit XML report content from test run results.
    *
-   * @param results The test run results to convert to XML
+   * @param results The test run summary with aggregate statistics and individual test results
    * @param suiteName Optional name for the test suite (defaults to "Elide Tests")
    * @return XML content as a string
    */
-  internal fun generateReport(results: TestRunResult, suiteName: String = "Elide Tests"): String {
+  internal fun generateReport(
+    results: TestRunResult,
+    suiteName: String = "Elide Tests"
+  ): String {
     val testSuite = convertToJUnitTestSuite(results, suiteName)
     val testSuites = JUnitTestSuites(
       tests = results.stats.tests.toInt(),
       failures = results.stats.fails.toInt(),
-      errors = 0, // Elide doesn't distinguish between failures and errors currently
+      errors = countErrors(results.individualTests),
       skipped = results.stats.skips.toInt(),
       time = formatDuration(results.stats.duration),
       testSuites = listOf(testSuite)
@@ -62,14 +73,17 @@ internal class JUnitXmlReporter {
   /**
    * Convert Elide TestRunResult to JUnit XML test suite.
    */
-  private fun convertToJUnitTestSuite(results: TestRunResult, suiteName: String): JUnitTestSuite {
-    val testCases = results.results.map { convertToJUnitTestCase(it) }
-    
+  private fun convertToJUnitTestSuite(
+    results: TestRunResult,
+    suiteName: String
+  ): JUnitTestSuite {
+    val testCases = results.individualTests.map { convertToJUnitTestCase(it) }
+
     return JUnitTestSuite(
       name = suiteName,
       tests = results.stats.tests.toInt(),
       failures = results.stats.fails.toInt(),
-      errors = 0, // Elide doesn't distinguish between failures and errors currently
+      errors = countErrors(results.individualTests),
       skipped = results.stats.skips.toInt(),
       time = formatDuration(results.stats.duration),
       timestamp = formatTimestamp(Instant.now()),
@@ -80,47 +94,80 @@ internal class JUnitXmlReporter {
   }
 
   /**
-   * Convert Elide TestCaseResult to JUnit XML test case.
+   * Convert Elide TestResult to JUnit XML test case.
    */
-  private fun convertToJUnitTestCase(caseResult: TestCaseResult): JUnitTestCase {
-    // Extract test name and classname from the test scope
-    val testName = extractTestName(caseResult.scope.simpleName)
-    val className = extractClassName(caseResult.scope.qualifiedName)
-    
+  private fun convertToJUnitTestCase(testResult: TestResult): JUnitTestCase {
+    // Extract test name and classname from the test case
+    val testName = extractTestName(testResult.test.displayName)
+    val className = extractClassName(testResult.test.id)
+
     return JUnitTestCase(
       name = testName,
       classname = className,
-      time = formatDuration(caseResult.duration),
-      failure = when (val result = caseResult.result) {
-        is TestResult.Fail -> convertToJUnitFailure(result)
+      time = formatDuration(testResult.duration),
+      failure = when (val outcome = testResult.outcome) {
+        is TestOutcome.Failure -> convertToJUnitFailure(outcome)
         else -> null
       },
-      error = null, // Elide doesn't distinguish between failures and errors currently
-      skipped = when (val result = caseResult.result) {
-        is TestResult.Skip -> convertToJUnitSkipped(result)
+      error = when (val outcome = testResult.outcome) {
+        is TestOutcome.Error -> convertToJUnitError(outcome)
+        else -> null
+      },
+      skipped = when (val outcome = testResult.outcome) {
+        is TestOutcome.Skipped -> convertToJUnitSkipped()
         else -> null
       }
     )
   }
 
   /**
-   * Convert Elide TestResult.Fail to JUnit failure element.
+   * Convert Elide TestOutcome.Failure to JUnit failure element.
    */
-  private fun convertToJUnitFailure(failure: TestResult.Fail): JUnitFailure {
-    val cause = failure.cause
+  private fun convertToJUnitFailure(failure: TestOutcome.Failure): JUnitFailure {
+    val reason = failure.reason
     return JUnitFailure(
-      message = cause?.message ?: "Test failed",
-      type = cause?.javaClass?.simpleName ?: "TestFailure",
-      content = cause?.stackTraceToString() ?: "No details available"
+      message = when (reason) {
+        is Throwable -> reason.message ?: "Test failed"
+        else -> reason?.toString() ?: "Test failed"
+      },
+      type = when (reason) {
+        is Throwable -> reason.javaClass.simpleName
+        else -> "TestFailure"
+      },
+      content = when (reason) {
+        is Throwable -> reason.stackTraceToString()
+        else -> reason?.toString() ?: "No details available"
+      }
     )
   }
 
   /**
-   * Convert Elide TestResult.Skip to JUnit skipped element.
+   * Convert Elide TestOutcome.Error to JUnit error element.
    */
-  private fun convertToJUnitSkipped(skip: TestResult.Skip): JUnitSkipped {
+  private fun convertToJUnitError(error: TestOutcome.Error): JUnitError {
+    val reason = error.reason
+    return JUnitError(
+      message = when (reason) {
+        is Throwable -> reason.message ?: "Test error"
+        else -> reason?.toString() ?: "Test error"
+      },
+      type = when (reason) {
+        is Throwable -> reason.javaClass.simpleName
+        else -> "TestError"
+      },
+      content = when (reason) {
+        is Throwable -> reason.stackTraceToString()
+        else -> reason?.toString() ?: "No details available"
+      }
+    )
+  }
+
+  /**
+   * Convert Elide TestOutcome.Skipped to JUnit skipped element.
+   */
+  private fun convertToJUnitSkipped(): JUnitSkipped {
     return JUnitSkipped(
-      message = "Test was skipped: ${skip.reason}"
+      message = "Test was skipped"
     )
   }
 
@@ -136,27 +183,36 @@ internal class JUnitXmlReporter {
   }
 
   /**
-   * Extract a meaningful class name from the qualified name.
-   * 
+   * Extract a meaningful class name from the test case ID.
+   *
    * For example:
-   * - "/path/to/test.js > describe block > test" -> "test.js"
-   * - "com.example.MyTest > testMethod" -> "com.example.MyTest"
-   * - "MyTest.kt > test function" -> "MyTest.kt"
+   * - "/path/to/test.js:testName" -> "test.js"
+   * - "com.example.MyTest.testMethod" -> "com.example.MyTest"
+   * - "MyTest.kt:test_function" -> "MyTest.kt"
    */
-  private fun extractClassName(qualifiedName: String): String {
-    // Handle different qualified name formats
+  private fun extractClassName(testId: String): String {
+    // Handle different test ID formats
     return when {
-      // File path format: "/path/to/file.ext > ..."
-      qualifiedName.contains(" > ") -> {
-        val parts = qualifiedName.split(" > ")
-        val filePath = parts.firstOrNull() ?: "unknown"
-        // Extract just the filename from the path
+      // File path format with colon: "/path/to/file.ext:testName"
+      testId.contains(':') && testId.contains('/') -> {
+        val filePath = testId.substringBeforeLast(':')
         filePath.substringAfterLast('/')
       }
-      // Simple class name format
-      qualifiedName.contains('.') && !qualifiedName.startsWith('/') -> qualifiedName
+      // File path format: "/path/to/file.ext"
+      testId.contains('/') -> {
+        testId.substringAfterLast('/')
+      }
+      // Package.Class.method format
+      testId.contains('.') -> {
+        val parts = testId.split('.')
+        if (parts.size > 1) {
+          parts.dropLast(1).joinToString(".")
+        } else {
+          testId
+        }
+      }
       // Fallback
-      else -> qualifiedName.takeIf { it.isNotEmpty() } ?: "UnknownTest"
+      else -> testId.takeIf { it.isNotEmpty() } ?: "UnknownTest"
     }
   }
 

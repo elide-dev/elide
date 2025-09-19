@@ -30,26 +30,26 @@ class TestReportProcessorTest {
    * Create mock test results for testing.
    */
   private fun createMockTestResults(): TestRunResult {
-    // Create mock test scopes
-    val passedTestScope = MockTestScope("should vectorize polyglot bytecode transformations", "RuntimeInteropTest.kt > should vectorize polyglot bytecode transformations")
-    val failedTestScope = MockTestScope("should demultiplex concurrent lexer tokens", "ParserEngineTest.kt > should demultiplex concurrent lexer tokens")
-    val skippedTestScope = MockTestScope("should serialize abstract syntax trees to binary format", "CodegenBackendTest.kt > should serialize abstract syntax trees to binary format")
+    // Create mock test cases using new TestCase interface
+    val passedTestCase = MockTestCase("RuntimeInteropTest.kt:vectorize_polyglot_bytecode", "should vectorize polyglot bytecode transformations")
+    val failedTestCase = MockTestCase("ParserEngineTest.kt:demultiplex_concurrent_tokens", "should demultiplex concurrent lexer tokens")
+    val skippedTestCase = MockTestCase("CodegenBackendTest.kt:serialize_ast_binary", "should serialize abstract syntax trees to binary format")
 
-    // Create test case results
-    val testCases = listOf(
-      TestCaseResult(
-        scope = passedTestScope,
-        result = TestResult.Pass,
+    // Create individual test results using new TestResult structure
+    val individualResults = listOf(
+      TestResult(
+        test = passedTestCase,
+        outcome = TestOutcome.Success,
         duration = 100.milliseconds
       ),
-      TestCaseResult(
-        scope = failedTestScope,
-        result = TestResult.Fail(AssertionError("Expected token stream to converge but got divergent branching factor")),
+      TestResult(
+        test = failedTestCase,
+        outcome = TestOutcome.Failure(AssertionError("Expected token stream to converge but got divergent branching factor")),
         duration = 150.milliseconds
       ),
-      TestCaseResult(
-        scope = skippedTestScope,
-        result = TestResult.Skip(Reason.ReasonMessage("Requires experimental WASM memory alignment support")),
+      TestResult(
+        test = skippedTestCase,
+        outcome = TestOutcome.Skipped,
         duration = 0.milliseconds
       )
     )
@@ -64,25 +64,26 @@ class TestReportProcessorTest {
       duration = 2.seconds
     )
 
-    return TestRunResult(
-      result = TestResult.Fail(), // Overall result is fail because one test failed
-      exitCode = 1u,
+    // Create aggregate TestRunResult with individual results
+    val runResult = TestRunResult(
+      outcome = TestOutcome.Failure(), // Overall result is fail because one test failed
       stats = stats,
-      results = testCases,
-      earlyExit = false
+      earlyExit = false,
+      individualTests = individualResults
     )
+
+    return runResult
   }
 
   /**
-   * Mock implementation of TestScope for testing.
+   * Mock implementation of TestCase for testing.
    */
-  private class MockTestScope(
-    override val simpleName: String,
-    override val qualifiedName: String
-  ) : TestScope<MockTestScope> {
-    override fun compareTo(other: MockTestScope): Int {
-      return qualifiedName.compareTo(other.qualifiedName)
-    }
+  private class MockTestCase(
+    override val id: String,
+    override val displayName: String
+  ) : TestCase {
+    override val parent: String? = null
+    override val type: TestTypeKey<TestCase> = object : TestTypeKey<TestCase> {}
   }
 
   @Test

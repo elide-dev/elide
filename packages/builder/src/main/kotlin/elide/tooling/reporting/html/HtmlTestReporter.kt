@@ -12,6 +12,7 @@
  */
 package elide.tooling.reporting.html
 
+import elide.tooling.testing.TestResult
 import elide.tooling.testing.TestRunResult
 
 /**
@@ -36,16 +37,19 @@ internal class HtmlTestReporter {
   /**
    * Generate HTML report content from test run results.
    *
-   * @param results The test run results to convert to HTML
+   * @param results The test run summary with aggregate statistics and individual test results
    * @param suiteName Optional name for the test suite (defaults to "Elide Tests")
    * @return HTML content as a string
    */
-  internal fun generateReport(results: TestRunResult, suiteName: String = "Elide Tests"): String {
+  internal fun generateReport(
+    results: TestRunResult,
+    suiteName: String = "Elide Tests"
+  ): String {
     // Convert test results to HTML data models
     val summary = HtmlTestModelConverter.convertSummary(results, suiteName)
-    val testCases = results.results.map { HtmlTestModelConverter.convertTestCase(it) }
+    val testCases = results.individualTests.map { HtmlTestModelConverter.convertTestCase(it) }
     val testHierarchy = HtmlTestModelConverter.buildTestHierarchy(testCases)
-    
+
     // Generate HTML using kotlinx-html DSL
     return templateBuilder.generateReport(summary, testHierarchy)
   }

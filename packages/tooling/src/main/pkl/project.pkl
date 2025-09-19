@@ -13,6 +13,7 @@ import "Task.pkl" as _tasks
 import "Web.pkl" as _web
 import "Workspace.pkl" as _workspace
 import "Lockfile.pkl" as _lockfile
+import "Secrets.pkl" as _secrets
 
 import "Container.pkl" as _container
 import "Kotlin.pkl" as _kotlin
@@ -111,6 +112,9 @@ class ElideProject {
 
   /// Settings which apply to web-based projects and applications.
   web: _web.WebSettings?
+
+  /// Settings which govern how secrets are handled.
+  secrets: _secrets.SecretsSettings?
 }
 
 /// A name for the project.
@@ -220,6 +224,9 @@ lockfile: _lockfile.LockfileSettings = new {}
 
 /// Settings which apply to web-based projects and applications.
 web: _web.WebSettings?
+
+/// Settings which govern how secrets are handled.
+secrets: _secrets.SecretsSettings?
 
 //
 // ------ Execution -------------------------------------------------------------------------------------------------

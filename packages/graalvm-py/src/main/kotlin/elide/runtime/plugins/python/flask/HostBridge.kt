@@ -8,6 +8,7 @@ import org.graalvm.polyglot.HostAccess.Export
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotValue
 
 /**
  * Host bridge object injected into Python as `__host__`.
@@ -17,12 +18,26 @@ import elide.runtime.core.DelicateElideApi
   /** In-memory route registry: (method,path) -> handler id. */
   private val routes: ConcurrentMap<Pair<String, String>, String> = ConcurrentHashMap()
 
+  /** Router handle from Elide intrinsics (Elide.http.router), set during context init. */
+  private var router: PolyglotValue? = null
+
   /** Thread-local snapshot of the current request for this handler thread. */
   private val currentReq: ThreadLocal<Map<String, Any?>> = ThreadLocal.withInitial { emptyMap() }
 
-  /** Register a route mapping for a Flask-like rule and list of methods. */
+  /** Register a route mapping for a Flask-like rule and list of methods (diagnostic). */
   @Export public fun register_route(rule: String, methods: List<String>, handler_id: String) {
     methods.forEach { m -> routes[m.uppercase() to rule] = handler_id }
+  }
+
+  /** Host-side: set the router value so we can bind routes from host without Python referencing Elide. */
+  @Export public fun _set_router(router: PolyglotValue) {
+    this.router = router
+  }
+
+  /** Host-side: bind a wrapped Python handler directly to the Elide router. */
+  @Export public fun bind_route(method: String, rule: String, handler: PolyglotValue) {
+    val r = requireNotNull(router) { "Router not set on HostBridge" }
+    r.invokeMember("handle", method.uppercase(), rule, handler)
   }
 
   /** Return the current request snapshot as a dictionary. */

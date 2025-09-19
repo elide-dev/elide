@@ -11,6 +11,7 @@ import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.plugins.python.Python
 import elide.runtime.core.evaluate
+import org.graalvm.polyglot.Source
 
 /**
  * Engine plugin that injects a minimal Flask-compatible shim for GraalPy.
@@ -41,6 +42,13 @@ import elide.runtime.core.evaluate
 
         // Evaluate a minimal Python shim that provides `elide_flask` with Flask, request, Response.
         scope.lifecycle.on(ContextInitialized) { ctx ->
+          // Ensure the host bridge knows the router for host-side route binding
+          runCatching {
+            val src = Source.newBuilder("js", "Elide.http.router", "elide_router.js").internal(true).cached(true).build()
+            val router = ctx.evaluate(src)
+            host._set_router(router)
+          }
+
           val shim = """
             |# Minimal Flask-compatible shim for Elide on GraalPy
             |import sys, types, json
@@ -56,6 +64,16 @@ import elide.runtime.core.evaluate
             |    Elide = polyglot.eval("js", "Elide")
             |  except Exception:
             |    Elide = None
+            |
+            |# If Elide is available, provide its router to the host bridge for host-side binding
+            |try:
+            |  if Elide is not None:
+            |    try:
+            |      __host__._set_router(Elide.http.router)
+            |    except Exception:
+            |      pass
+            |except Exception:
+            |  pass
             |
             |class Response:
             |  def __init__(self, body, status=200, headers=None):
@@ -168,9 +186,12 @@ import elide.runtime.core.evaluate
             |        __host__.register_route(rule, [m.upper() for m in methods], hid)
             |      except Exception:
             |        pass
-            |      # Register with Elide router so Netty can dispatch
+            |      # Host-side binding: ask __host__ to register this wrapped handler with the router
             |      for m in methods:
-            |        Elide.http.router.handle(str(m).upper(), str(rule), _wrap(fn))
+            |        try:
+            |          __host__.bind_route(str(m).upper(), str(rule), _wrap(fn))
+            |        except Exception:
+            |          pass
             |      return fn
             |    return _decorator
             |

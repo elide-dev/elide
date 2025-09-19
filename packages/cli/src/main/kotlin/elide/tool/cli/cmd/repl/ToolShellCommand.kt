@@ -2445,6 +2445,16 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     // Ensure JS is initialized for serve mode so Elide intrinsics (Elide.http.router) are available to non-JS guests
     runCatching { if (serveMode()) effectiveLangs.add(JS) }.onFailure { /* ignore outside command context */ }
 
+    // If serving a Python entrypoint, make sure the Python language is enabled in the context
+    runCatching {
+      if (serveMode()) {
+        val entry = runnable?.lowercase(Locale.getDefault())
+        if (entry != null && (entry.endsWith(".py") || entry.endsWith(".pyc"))) {
+          effectiveLangs.add(PYTHON)
+        }
+      }
+    }.onFailure { /* best-effort; do not fail engine config */ }
+
     // load arguments into context if we have them
     when (val arguments = arguments) {
       null -> emptyArray()

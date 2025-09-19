@@ -12,14 +12,27 @@ print("FLASK_SHIM_APP_START", file=sys.stderr, flush=True)
 
 try:
   import polyglot  # type: ignore
-  Elide = globals().get("Elide") or polyglot.eval("js", "Elide")
-except Exception:
+  Elide = globals().get("Elide")
+  if Elide is None:
+    try:
+      Elide = polyglot.import_value("Elide")
+      print("FLASK_DEBUG: Imported Elide via polyglot.import_value", file=sys.stderr, flush=True)
+    except Exception as e:
+      print(f"FLASK_DEBUG: import_value failed: {e}", file=sys.stderr, flush=True)
+      try:
+        Elide = polyglot.eval("js", "Elide")
+        print("FLASK_DEBUG: Resolved Elide via polyglot.eval('js','Elide')", file=sys.stderr, flush=True)
+      except Exception as e2:
+        print(f"FLASK_DEBUG: eval('js','Elide') failed: {e2}", file=sys.stderr, flush=True)
+        Elide = None
+except Exception as e:
+  print(f"FLASK_DEBUG: polyglot import failed: {e}", file=sys.stderr, flush=True)
   Elide = None
 
 if Elide is not None:
   try:
     import sys, os
-    cfg = Elide.http.config
+    cfg = Elide.http.server.config
     cfg.autoStart = True
     cfg.host = "127.0.0.1"
 
@@ -49,12 +62,11 @@ if Elide is not None:
       pass
     try:
       Elide.http.start()
-    except Exception:
-      pass
+    except Exception as e:
+      print(f"FLASK_DEBUG: Elide.http.start() failed: {e}", file=sys.stderr, flush=True)
 
-
-  except Exception:
-    pass
+  except Exception as e:
+    print(f"FLASK_DEBUG: Server config failed: {e}", file=sys.stderr, flush=True)
 
 @app.route("/ping", methods=["GET"])  # returns plaintext
 def ping():

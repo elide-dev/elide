@@ -65,6 +65,7 @@ private val allElideModules = sortedSetOf(
   "llm",
   "llm/local",
   "llm/remote",
+  "secrets",
 )
 
 // All TypeScript extensions.

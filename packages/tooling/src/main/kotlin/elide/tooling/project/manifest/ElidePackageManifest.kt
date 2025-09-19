@@ -57,6 +57,7 @@ public data class ElidePackageManifest(
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
   val web: WebSettings? = null,
+  val secrets: SecretSettings? = null,
 ) : PackageManifest {
   @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
 
@@ -590,6 +591,10 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class LockfileSettings(
     val enabled: Boolean = true,
     val format: String = "auto",
+  )
+
+  @JvmRecord @Serializable public data class SecretSettings(
+    val profile: String? = null
   )
 }
 

@@ -12,13 +12,13 @@
  */
 package dev.elide.secrets.remote
 
+import dev.elide.secrets.dto.persisted.Named
+
 /**
  * Initializer for connecting to a [Remote].
  *
  * @author Lauri Heino <datafox>
  */
-internal interface RemoteInitializer {
-  val id: String
-
+internal interface RemoteInitializer : Named {
   suspend fun initialize(): Remote
 }

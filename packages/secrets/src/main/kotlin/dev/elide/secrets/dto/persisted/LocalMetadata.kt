@@ -24,7 +24,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class LocalMetadata(
   override val name: String,
-  override val organization: String,
   override val profiles: Map<String, ProfileMetadata>,
   val localEncryption: EncryptionMode,
   val fingerprint: String? = null,
@@ -32,12 +31,10 @@ internal data class LocalMetadata(
   @OptIn(ExperimentalStdlibApi::class)
   constructor(
     name: String,
-    organization: String,
     key: UserKey,
     vararg profiles: ProfileMetadata,
   ) : this(
     name,
-    organization,
     profiles.associateBy { it.name },
     key.mode,
     if (key.mode == EncryptionMode.GPG) key.key.toHexString() else null,
@@ -45,7 +42,6 @@ internal data class LocalMetadata(
 
   init {
     Utils.checkName(name, "Project")
-    Utils.checkName(organization, "Organization")
     Utils.checkNames(profiles, "Profile")
   }
 

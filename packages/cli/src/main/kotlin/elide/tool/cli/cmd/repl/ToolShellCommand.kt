@@ -26,6 +26,7 @@ import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles
 import com.oracle.truffle.host.HostException
 import com.oracle.truffle.js.runtime.UserScriptException
+import dev.elide.secrets.Secrets
 import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
@@ -2761,6 +2762,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     } ?: emptySet()
 
     val effectiveInitLangs = onByDefaultLangs + projectLangs
+
+    //Initialize secrets
+    run {
+      projectResolution.join()
+      val secrets = beanContext.getBean(Secrets::class.java)
+      secrets.init(projectPath, activeProject.value?.manifest)
+    }
 
     // if no entrypoint was specified, attempt to use the one in the project manifest, or try resolving the runnable as
     // a script name in either `elide.pkl` or a foreign manifest.

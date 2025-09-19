@@ -37,11 +37,10 @@ internal class GithubRemoteInitializer(
   private val encryption: Encryption,
   private val client: HttpClient,
   private val json: Json,
-) :
-  RemoteInitializer {
+) : RemoteInitializer {
   private lateinit var repository: String
   private lateinit var token: String
-  override val id: String = "github"
+  override val name: String = "github"
 
   override suspend fun initialize(): GithubRemote {
     repository =
@@ -50,9 +49,13 @@ internal class GithubRemoteInitializer(
         else throw IllegalStateException("A GitHub repository has not been registered")
     token =
       SecretsState.local[GithubRemote.TOKEN_NAME]
-        ?: if (SecretsState.interactive) askToken() else throw IllegalStateException("A GitHub token has not been registered")
+        ?: if (SecretsState.interactive) askToken()
+        else throw IllegalStateException("A GitHub token has not been registered")
     val writeAccess = validateConnection(token, repository)
-    SecretsState.local.addAll(StringSecret(GithubRemote.REPOSITORY_NAME, repository), StringSecret(GithubRemote.TOKEN_NAME, token))
+    SecretsState.local.addAll(
+      StringSecret(GithubRemote.REPOSITORY_NAME, repository),
+      StringSecret(GithubRemote.TOKEN_NAME, token),
+    )
     return GithubRemote(writeAccess, repository, token, encryption, client, json)
   }
 

@@ -14,11 +14,7 @@
 package elide.tool.cli.cmd.secrets
 
 import com.github.kinquirer.KInquirer
-import com.github.kinquirer.components.promptConfirm
-import com.github.kinquirer.components.promptInput
-import com.github.kinquirer.components.promptInputPassword
-import com.github.kinquirer.components.promptList
-import com.github.kinquirer.components.promptListObject
+import com.github.kinquirer.components.*
 import com.github.kinquirer.core.Choice
 import dev.elide.secrets.RemoteManagement
 import dev.elide.secrets.SecretManagement
@@ -31,7 +27,10 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteString
 import elide.annotations.Inject
-import elide.tool.cli.*
+import elide.tool.cli.CommandContext
+import elide.tool.cli.CommandResult
+import elide.tool.cli.ProjectAwareSubcommand
+import elide.tool.cli.ToolState
 import elide.tool.io.RuntimeWorkdirManager
 import elide.tool.project.ProjectManager
 
@@ -53,10 +52,13 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
 
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    secrets.init(Path(System.getProperty("user.dir"), ".elide-secrets"))
+    val projectOptions = projectOptions()
+    val projectPath = projectOptions.projectPath()
+    val project = projectManager.resolveProject(projectPath)
+    secrets.init(projectPath, project?.manifest)
     return mainMenu()
   }
-  
+
   private suspend fun mainMenu(): CommandResult {
     var running = true
     while (running) {
@@ -96,11 +98,25 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
   private suspend fun editProfileMenu(profile: String) {
     var running = true
     while (running) {
-      when (KInquirer.promptListObject("Edit menu for profile \"$profile\"", EditProfileOptions.entries.map { Choice(it.displayName, it) })) {
+      when (
+        KInquirer.promptListObject(
+          "Edit menu for profile \"$profile\"",
+          EditProfileOptions.entries.map { Choice(it.displayName, it) },
+        )
+      ) {
         EditProfileOptions.CREATE -> {
           val name = KInquirer.promptInput("Please enter a name for the new secret:")
-          if (name in secrets.listSecrets() && !KInquirer.promptConfirm("A secret with this name already exists, do you want to replace it?")) continue
-          when (KInquirer.promptListObject("Select the type of secret you want to create", SecretType.entries.map { Choice(it.displayName, it) })) {
+          if (
+            name in secrets.listSecrets() &&
+              !KInquirer.promptConfirm("A secret with this name already exists, do you want to replace it?")
+          )
+            continue
+          when (
+            KInquirer.promptListObject(
+              "Select the type of secret you want to create",
+              SecretType.entries.map { Choice(it.displayName, it) },
+            )
+          ) {
             SecretType.STRING -> {
               val secret = KInquirer.promptInputPassword("Please type or paste in the secret:")
               val repeat = KInquirer.promptInputPassword("Please type or paste in the secret again:")
@@ -108,7 +124,10 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
                 println("Secrets were not identical")
                 continue
               }
-              val envVar = if (KInquirer.promptConfirm("Do you want to use this secret as an environment variable for your app?")) KInquirer.promptInput("Please enter the name of the environment variable") else null
+              val envVar =
+                if (KInquirer.promptConfirm("Do you want to use this secret as an environment variable for your app?"))
+                  KInquirer.promptInput("Please enter the name of the environment variable")
+                else null
               secrets.setStringSecret(name, secret, envVar)
             }
             SecretType.BINARY -> {
@@ -118,7 +137,8 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
             }
           }
         }
-        EditProfileOptions.LIST -> println(secrets.listSecrets().map { (name, type) -> "$name (${type.java.simpleName})" })
+        EditProfileOptions.LIST ->
+          println(secrets.listSecrets().map { (name, type) -> "$name (${type.java.simpleName})" })
         EditProfileOptions.REVEAL -> {
           val secretNames = secrets.listSecrets().filterValues { it == String::class }.keys
           if (secretNames.isEmpty()) {
@@ -126,7 +146,12 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
             continue
           }
           val name = KInquirer.promptList("Please select a secret to reveal:", secretNames.toList())
-          if (KInquirer.promptConfirm("Are you sure you want to reveal the secret. It will be printed to your console in plain text!")) println(secrets.getStringSecret(name))
+          if (
+            KInquirer.promptConfirm(
+              "Are you sure you want to reveal the secret. It will be printed to your console in plain text!"
+            )
+          )
+            println(secrets.getStringSecret(name))
         }
         EditProfileOptions.REMOVE -> {
           val secretNames = secrets.listSecrets().keys
@@ -134,7 +159,9 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
             println("No secrets found")
             continue
           }
-          secrets.removeSecret(KInquirer.promptList("Please select a secret to remove:", secrets.listSecrets().keys.toList()))
+          secrets.removeSecret(
+            KInquirer.promptList("Please select a secret to remove:", secrets.listSecrets().keys.toList())
+          )
         }
         EditProfileOptions.WRITE -> {
           secrets.writeChanges()
@@ -152,7 +179,12 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
   private suspend fun manageRemoteMenu(remote: RemoteManagement) {
     var running = true
     while (running) {
-      when (KInquirer.promptListObject("Remote management menu:", ManageRemoteOptions.entries.map { Choice(it.displayName, it) })) {
+      when (
+        KInquirer.promptListObject(
+          "Remote management menu:",
+          ManageRemoteOptions.entries.map { Choice(it.displayName, it) },
+        )
+      ) {
         ManageRemoteOptions.CREATE ->
           remote.createAccess(KInquirer.promptInput("Please enter a name for the access file:"))
         ManageRemoteOptions.LIST -> println(remote.listAccesses())
@@ -188,14 +220,21 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
   private suspend fun editAccessMenu(remote: RemoteManagement, access: String) {
     var running = true
     while (running) {
-      when (KInquirer.promptListObject("Edit menu for access file \"$access\":", EditAccessOptions.entries.map { Choice(it.displayName, it) })) {
+      when (
+        KInquirer.promptListObject(
+          "Edit menu for access file \"$access\":",
+          EditAccessOptions.entries.map { Choice(it.displayName, it) },
+        )
+      ) {
         EditAccessOptions.ADD -> {
           val profiles = (secrets.listProfiles() - remote.listProfiles())
           if (profiles.isEmpty()) {
             println("No eligible profiles found")
             continue
           }
-          remote.addProfile(KInquirer.promptList("Please select a profile to add to the access file:", profiles.toList()))
+          remote.addProfile(
+            KInquirer.promptList("Please select a profile to add to the access file:", profiles.toList())
+          )
         }
         EditAccessOptions.LIST -> println(remote.listProfiles())
         EditAccessOptions.REMOVE -> {
@@ -204,7 +243,9 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
             println("No profiles found")
             continue
           }
-          remote.removeProfile(KInquirer.promptList("Please select a profile to remove from the access file:", profiles.toList()))
+          remote.removeProfile(
+            KInquirer.promptList("Please select a profile to remove from the access file:", profiles.toList())
+          )
         }
         EditAccessOptions.DESELECT -> {
           remote.deselectAccess()
@@ -213,7 +254,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
       }
     }
   }
-  
+
   private enum class MainMenuOptions(val displayName: String) {
     CREATE("Create a new profile"),
     LIST("List profiles"),
@@ -224,7 +265,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     MANAGE("Manage remote as a superuser"),
     EXIT("Exit secret management"),
   }
-  
+
   private enum class EditProfileOptions(val displayName: String) {
     CREATE("Create a secret"),
     LIST("List secrets"),
@@ -249,7 +290,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     REMOVE("Remove a profile from the access file"),
     DESELECT("Return to the remote management menu"),
   }
-  
+
   private enum class SecretType(val displayName: String) {
     STRING("Text"),
     BINARY("Binary"),

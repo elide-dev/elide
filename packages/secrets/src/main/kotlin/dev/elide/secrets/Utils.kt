@@ -13,6 +13,7 @@
 
 package dev.elide.secrets
 
+import com.github.kinquirer.core.Choice
 import dev.elide.secrets.dto.persisted.EncryptionMode
 import dev.elide.secrets.dto.persisted.Named
 import dev.elide.secrets.dto.persisted.SecretKey
@@ -31,6 +32,7 @@ import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
+import kotlin.io.path.absolutePathString
 
 /**
  * Internal utilities for secrets.
@@ -81,6 +83,8 @@ internal object Utils {
       EncryptionMode.GPG -> encryption.decryptGPG(key.key.toHexString(), this)
     }
 
+  fun String.hashKey(encryption: Encryption): ByteString = encryption.hashKeySHA256(encodeToByteString())
+
   fun Path.exists(): Boolean = SystemFileSystem.exists(this)
 
   fun Path.read(): ByteString = SystemFileSystem.source(this).buffered().use { it.readByteString() }
@@ -97,4 +101,19 @@ internal object Utils {
   fun keyName(profile: String): String = "${Values.PROFILE_FILE_PREFIX}$profile${Values.KEY_FILE_EXTENSION}"
 
   fun accessName(access: String): String = "$access${Values.ACCESS_FILE_EXTENSION}"
+
+  inline fun <T> Collection<T>.choices(block: T.() -> String): List<Choice<T>> = map { Choice(it.block(), it) }
+
+  @JvmName("namedChoices")
+  inline fun <T : Named> Collection<T>.choices(block: T.() -> String = { name }): List<Choice<T>> = map {
+    Choice(it.block(), it)
+  }
+
+  inline fun <T> Map<String, T>.choices(block: T.(String) -> String = { it }): List<Choice<T>> = map {
+    Choice(it.value.block(it.key), it.value)
+  }
+
+  fun defaultPath(): Path = Path(System.getProperty("user.dir"), Values.DEFAULT_PATH)
+
+  fun path(path: java.nio.file.Path): Path = Path(path.absolutePathString())
 }

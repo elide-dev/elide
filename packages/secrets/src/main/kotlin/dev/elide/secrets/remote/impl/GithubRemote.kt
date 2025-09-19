@@ -18,7 +18,6 @@ import dev.elide.secrets.Utils.deserialize
 import dev.elide.secrets.Values
 import dev.elide.secrets.dto.api.github.*
 import dev.elide.secrets.dto.persisted.RemoteMetadata
-import dev.elide.secrets.dto.persisted.SuperAccess
 import dev.elide.secrets.remote.Remote
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -26,7 +25,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.*
-import io.ktor.util.decodeBase64Bytes
+import io.ktor.util.*
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encode
 import kotlinx.io.bytestring.toHexString
@@ -59,18 +58,22 @@ internal class GithubRemote(
   override suspend fun getSuperAccess(): ByteString? = getFile(Values.SUPER_ACCESS_FILE)
 
   @OptIn(ExperimentalStdlibApi::class)
-  override suspend fun update(
-    metadata: ByteString,
-    profiles: Map<String, ByteString>
-  ) {
-    val currentMetadataBytes = getMetadata() ?: throw IllegalStateException("Remote not initialized, use remote management instead")
+  override suspend fun update(metadata: ByteString, profiles: Map<String, ByteString>) {
+    val currentMetadataBytes =
+      getMetadata() ?: throw IllegalStateException("Remote not initialized, use remote management instead")
     val currentMetadata: RemoteMetadata = currentMetadataBytes.deserialize(json)
     val branch = createBranch()
     profiles.forEach { (name, bytes) ->
       val sha = currentMetadata.profiles[name]?.hash ?: ""
       writeFile(Utils.profileName(name), bytes, "Changed profile $name", sha, branch)
     }
-    writeFile(Values.METADATA_FILE, metadata, "Changed metadata", encryption.hashGitDataSHA1(currentMetadataBytes).toHexString(), branch)
+    writeFile(
+      Values.METADATA_FILE,
+      metadata,
+      "Changed metadata",
+      encryption.hashGitDataSHA1(currentMetadataBytes).toHexString(),
+      branch,
+    )
     merge(branch)
   }
 
@@ -79,7 +82,7 @@ internal class GithubRemote(
     metadata: ByteString,
     profiles: Map<String, ByteString>,
     superAccess: ByteString,
-    access: Map<String, ByteString>
+    access: Map<String, ByteString>,
   ) {
     val currentMetadataBytes = getMetadata()
     val currentMetadata: RemoteMetadata? = currentMetadataBytes?.deserialize(json)
@@ -159,7 +162,12 @@ internal class GithubRemote(
   }
 
   private suspend fun merge(branch: String) {
-    client.post<GithubMergeRequest, GithubMergeResponse>("repos/$repository/merges", token, GithubMergeRequest("main", branch, "Merge branch $branch"), HttpStatusCode.OK)
+    client.post<GithubMergeRequest, GithubMergeResponse>(
+      "repos/$repository/merges",
+      token,
+      GithubMergeRequest("main", branch, "Merge branch $branch"),
+      HttpStatusCode.OK,
+    )
   }
 
   companion object {

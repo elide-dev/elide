@@ -37,10 +37,9 @@ internal class ProjectRemoteInitializer(
   private val encryption: Encryption,
   private val client: HttpClient,
   private val json: Json,
-) :
-  RemoteInitializer {
+) : RemoteInitializer {
   private lateinit var path: String
-  override val id: String = "project"
+  override val name: String = "project"
 
   override suspend fun initialize(): ProjectRemote {
     path =
@@ -54,7 +53,9 @@ internal class ProjectRemoteInitializer(
 
   private fun askPath(): String {
     println("Elide Secrets in project mode are stored encrypted alongside project files.")
-    return KInquirer.promptInput("Please enter a path relative to the project directory (parent directory of ${Values.DEFAULT_PATH}) using your system's path separator (\"$SystemPathSeparator\"):")
+    return KInquirer.promptInput(
+      "Please enter a path relative to the project directory (parent directory of ${Values.DEFAULT_PATH}) using your system's path separator (\"$SystemPathSeparator\"):"
+    )
   }
 
   private fun validatePath(): Path {

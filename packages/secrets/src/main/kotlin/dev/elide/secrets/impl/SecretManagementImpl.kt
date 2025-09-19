@@ -4,34 +4,39 @@ import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.*
 import com.github.kinquirer.core.Choice
 import dev.elide.secrets.*
+import dev.elide.secrets.Utils.choices
 import dev.elide.secrets.Utils.decrypt
 import dev.elide.secrets.Utils.deserialize
 import dev.elide.secrets.Utils.encrypt
+import dev.elide.secrets.Utils.hashKey
 import dev.elide.secrets.Utils.serialize
 import dev.elide.secrets.dto.persisted.*
 import dev.elide.secrets.dto.persisted.Profile.Companion.get
 import dev.elide.secrets.remote.RemoteInitializer
-import io.micronaut.core.annotation.Order
+import java.nio.file.Path
 import kotlinx.io.bytestring.ByteString
-import kotlinx.io.bytestring.encodeToByteString
-import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.json.Json
+import kotlin.reflect.KClass
 import elide.annotations.Singleton
+import elide.tooling.project.manifest.ElidePackageManifest
 
 /** @author Lauri Heino <datafox> */
 @Singleton
-@Order(10)
 internal class SecretManagementImpl(
+  private val secrets: Secrets,
   private val encryption: Encryption,
   private val files: FileManagement,
   private val json: Json,
   private val cbor: BinaryFormat,
   private val remoteInitializers: List<RemoteInitializer>,
-) : SecretsImpl(encryption, files), SecretManagement {
-  override suspend fun init(path: Path) {
-    SecretsState.init(true, path)
+) : SecretManagement {
+  override val initialized: Boolean
+    get() = secrets.initialized
+
+  override suspend fun init(path: Path, manifest: ElidePackageManifest?) {
+    SecretsState.init(true, Utils.path(path))
     SystemFileSystem.createDirectories(SecretsState.path)
     if (files.metadataExists() && files.localExists()) {
       SecretsState.metadata = files.readMetadata()
@@ -39,20 +44,36 @@ internal class SecretManagementImpl(
         when (SecretsState.metadata.localEncryption) {
           EncryptionMode.PASSPHRASE ->
             UserKey(
-              encryption.hashKeySHA256(
-                (Utils.passphrase() ?: Prompts.validateLocalPassphrase { files.canDecryptLocal(it) })
-                  .encodeToByteString()
-              )
+              (Utils.passphrase() ?: Prompts.validateLocalPassphrase { files.canDecryptLocal(it) }).hashKey(encryption)
             )
           EncryptionMode.GPG -> UserKey(SecretsState.metadata.fingerprint!!)
         }
       SecretsState.local = files.readLocal()
-    } else createData()
+    } else createData(manifest)
   }
+
+  override fun listProfiles(): Set<String> = secrets.listProfiles()
+
+  override fun loadProfile(profile: String) = secrets.loadProfile(profile)
+
+  override fun getProfile(): String? = secrets.getProfile()
+
+  override fun unloadProfile() = secrets.unloadProfile()
+
+  override fun getEnv(): Map<String, String> = secrets.getEnv()
+
+  override fun getSecret(name: String): Any? = secrets.getSecret(name)
+
+  override fun getStringSecret(name: String): String? = secrets.getStringSecret(name)
+
+  override fun getBinarySecret(name: String): ByteString? = secrets.getBinarySecret(name)
+
+  override fun listSecrets(): Map<String, KClass<*>> = secrets.listSecrets()
 
   @OptIn(ExperimentalStdlibApi::class)
   override fun createProfile(profile: String) {
-    if (profile in SecretsState.metadata.profiles) throw IllegalArgumentException("Profile $profile already exists")
+    if (profile in SecretsState.metadata.profiles)
+      throw IllegalArgumentException(Values.profileAlreadyExistsException(profile))
     val key = SecretKey(profile, Utils.generateBytes(Values.KEY_SIZE))
     val profile = SecretProfile(profile)
     val (profileBytes, keyBytes) = files.writeProfile(profile, key)
@@ -69,10 +90,11 @@ internal class SecretManagementImpl(
   }
 
   override fun removeProfile(profile: String) {
-    if (profile !in SecretsState.metadata.profiles) throw IllegalArgumentException("Profile $profile already exists")
-    if (SecretsState.profileFlow.value == null) loadProfile(profile)
+    if (profile !in SecretsState.metadata.profiles)
+      throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
+    if (SecretsState.profileFlow.value == null) secrets.loadProfile(profile)
     else if (SecretsState.profile.name != profile)
-      throw IllegalStateException("Can only remove currently selected profile")
+      throw IllegalStateException(Values.REMOVED_PROFILE_NOT_SELECTED_EXCEPTION)
     files.removeProfile(profile)
     SecretsState.updateMetadata { remove(profile) }
     files.writeMetadata()
@@ -90,13 +112,11 @@ internal class SecretManagementImpl(
   }
 
   override suspend fun pushToRemote() {
-    if (SecretsState.profileFlow.value != null) throw IllegalStateException("Please unload the profile before pushing")
+    if (SecretsState.profileFlow.value != null) throw IllegalStateException(Values.PROFILE_LOADED_PUSH_EXCEPTION)
     if (SecretsState.remoteFlow.value == null) initRemote()
     val accessName: String =
-      SecretsState.local["remote:access"]
-        ?: throw IllegalArgumentException(
-          "Secrets were created locally or pulled as a superuser, please use remote management instead."
-        )
+      SecretsState.local[Values.REMOTE_ACCESS_SECRET]
+        ?: throw IllegalArgumentException(Values.REMOTE_MANAGEMENT_ONLY_EXCEPTION)
     val remoteMetadata: RemoteMetadata = SecretsState.remote.getMetadata()!!.deserialize(json)
     val accessMetadata = remoteMetadata.access[accessName]!!
     val (access, _) = getAccess(accessMetadata)
@@ -105,10 +125,10 @@ internal class SecretManagementImpl(
     val changed = localProfiles.filterValues { it.name in remoteProfiles && it.hash != remoteProfiles[it.name]!!.hash }
     val changedPushed =
       KInquirer.promptCheckboxObject(
-          "Please select the changed profiles you want to push:",
-          changed.map { Choice(it.key, it) },
+          Values.PUSH_PROFILES_PROMPT,
+          changed.choices(),
         )
-        .associate { it.key to it.value }
+        .associateBy { it.name }
     val newMetadata =
       remoteMetadata.copy(
         profiles =
@@ -120,13 +140,11 @@ internal class SecretManagementImpl(
   }
 
   override suspend fun pullFromRemote() {
-    if (SecretsState.profileFlow.value != null) throw IllegalStateException("Please unload the profile before pulling")
+    if (SecretsState.profileFlow.value != null) throw IllegalStateException(Values.PROFILE_LOADED_PULL_EXCEPTION)
     if (SecretsState.remoteFlow.value == null) initRemote()
     val accessName: String =
-      SecretsState.local["remote:access"]
-        ?: throw IllegalArgumentException(
-          "Secrets were created locally or pulled as a superuser, please use remote management instead."
-        )
+      SecretsState.local[Values.REMOTE_ACCESS_SECRET]
+        ?: throw IllegalArgumentException(Values.REMOTE_MANAGEMENT_ONLY_EXCEPTION)
     val remoteMetadata: RemoteMetadata = SecretsState.remote.getMetadata()!!.deserialize(json)
     val accessMetadata = remoteMetadata.access[accessName]!!
     val (access, _) = getAccess(accessMetadata)
@@ -156,53 +174,50 @@ internal class SecretManagementImpl(
       when (remoteMetadata.superAccess.mode) {
         EncryptionMode.PASSPHRASE ->
           UserKey(
-            SecretsState.local["remote:super"]
-              ?: encryption.hashKeySHA256(
-                KInquirer.promptInputPassword("Please enter the superuser passphrase:").encodeToByteString()
-              )
+            SecretsState.local[Values.SUPER_ACCESS_KEY_SECRET]
+              ?: KInquirer.promptInputPassword(Values.SUPERUSER_PASSPHRASE_PROMPT).hashKey(encryption)
           )
         EncryptionMode.GPG -> UserKey(remoteMetadata.superAccess.fingerprint!!)
       }
     val superAccess: SuperAccess =
       SecretsState.remote.getSuperAccess()!!.decrypt(superKey, encryption).deserialize(cbor)
-    return RemoteManagementImpl(this, files, encryption, json, cbor, remoteMetadata, superAccess, superKey).apply {
+    return RemoteManagementImpl(secrets, files, encryption, json, cbor, remoteMetadata, superAccess, superKey).apply {
       init()
-      SecretsState.updateLocal { add(BinarySecret("remote:super", superKey.key)) }
+      SecretsState.updateLocal { add(BinarySecret(Values.SUPER_ACCESS_KEY_SECRET, superKey.key)) }
       files.writeLocal()
     }
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  private suspend fun createData() {
-    println("Welcome to Elide Secrets! Let's get you set up")
+  private suspend fun createData(manifest: ElidePackageManifest?) {
+    println(Values.WELCOME_MESSAGE)
     val mode = Prompts.localUserKeyMode()
     SecretsState.userKey =
       when (mode) {
-        EncryptionMode.PASSPHRASE ->
-          UserKey(encryption.hashKeySHA256((Utils.passphrase() ?: Prompts.passphrase()).encodeToByteString()))
+        EncryptionMode.PASSPHRASE -> UserKey((Utils.passphrase() ?: Prompts.passphrase()).hashKey(encryption))
         EncryptionMode.GPG -> UserKey(Prompts.gpgPrivateKey())
       }
     SecretsState.local = LocalProfile()
+    println(Values.INIT_OR_PULL_MESSAGE)
     if (
       KInquirer.promptListObject(
-        "Do you want to initialize a new project or pull an existing project? Please note that if you initialize a new project, you can only push it as a superuser.",
+        Values.GENERIC_CHOICE_PROMPT,
         listOf(
-          Choice("Initialize a new project", true),
-          Choice("Pull an existing project", false),
+          Choice(Values.INITIALIZE_PROJECT_OPTION, true),
+          Choice(Values.PULL_PROJECT_OPTION, false),
         ),
       )
     )
-      initializeData()
+      initializeData(manifest)
     else importData()
     files.writeLocal()
     files.writeMetadata()
   }
 
   @OptIn(ExperimentalStdlibApi::class)
-  private fun initializeData() {
-    val name = KInquirer.promptInput("What is the name of your project?")
-    val organization = KInquirer.promptInput("What is the name of your organization?")
-    SecretsState.metadata = LocalMetadata(name, organization, SecretsState.userKey)
+  private fun initializeData(manifest: ElidePackageManifest?) {
+    val name = KInquirer.promptInput(Values.PROJECT_NAME_PROMPT, manifest?.name ?: "")
+    SecretsState.metadata = LocalMetadata(name, SecretsState.userKey)
   }
 
   @OptIn(ExperimentalStdlibApi::class)
@@ -210,9 +225,9 @@ internal class SecretManagementImpl(
     if (SecretsState.remoteFlow.value == null) initRemote()
     val remoteMetadata: RemoteMetadata =
       SecretsState.remote.getMetadata()?.deserialize(json)
-        ?: throw IllegalStateException("Remote is not initialized, please run remote management")
-    SecretsState.metadata = LocalMetadata(remoteMetadata.name, remoteMetadata.organization, SecretsState.userKey)
-    if (KInquirer.promptConfirm("Do you want to pull as a superuser?")) {
+        ?: throw IllegalStateException(Values.REMOTE_NOT_INITIALIZED_EXCEPTION)
+    SecretsState.metadata = LocalMetadata(remoteMetadata.name, SecretsState.userKey)
+    if (KInquirer.promptConfirm(Values.PULL_AS_SUPERUSER_PROMPT)) {
       manageRemote()
       return
     }
@@ -232,7 +247,8 @@ internal class SecretManagementImpl(
       }
     }
     SecretsState.updateLocal {
-      add(StringSecret("remote:access", access.name)).add(BinarySecret("remote:access:${access.name}", key.key))
+      add(StringSecret(Values.REMOTE_ACCESS_SECRET, access.name))
+        .add(BinarySecret(Values.REMOTE_ACCESS_KEY_SECRET, key.key))
     }
     files.writeLocal()
     files.writeMetadata()
@@ -242,16 +258,17 @@ internal class SecretManagementImpl(
     if (SecretsState.remoteFlow.value == null) initRemote()
     val metadata: RemoteMetadata =
       SecretsState.remote.getMetadata()?.deserialize(json)
-        ?: throw IllegalArgumentException("Remote has not been initialized")
+        ?: throw IllegalArgumentException(Values.REMOTE_NOT_INITIALIZED_EXCEPTION)
     val fingerprints = GPGHandler.gpgPrivateKeys().values.map { it.lowercase() }.toSet()
     val accesses =
       metadata.access.values.filter {
         it.mode == EncryptionMode.PASSPHRASE || it.fingerprint!!.lowercase() in fingerprints
       }
+    println(Values.SELECT_ACCESS_IMPORT_MESSAGE)
     val access =
       KInquirer.promptListObject(
-        "Please select the access file you want to import. Please note that for GPG-encrypted access files, only the ones that you have a private key for on this system will be displayed!",
-        accesses.map { Choice(it.name + if (it.fingerprint != null) " (${it.fingerprint})" else "", it) },
+        Values.GENERIC_CHOICE_PROMPT,
+        accesses.choices { name + if (fingerprint != null) " ($fingerprint)" else "" },
       )
     return getAccess(access)
   }
@@ -259,11 +276,11 @@ internal class SecretManagementImpl(
   private suspend fun getAccess(access: AccessMetadata): Pair<SecretAccess, UserKey> {
     val accessBytes = SecretsState.remote.getAccess(access.name)!!
     val key =
-      SecretsState.local.get<ByteString>("remote:access:${access.name}")?.let { UserKey(access.mode, it) }
+      SecretsState.local.get<ByteString>(Values.REMOTE_ACCESS_KEY_SECRET)?.let { UserKey(access.mode, it) }
         ?: when (access.mode) {
           EncryptionMode.PASSPHRASE -> {
-            val pass = KInquirer.promptInputPassword("Please enter the passphrase for this access file:")
-            UserKey(encryption.hashKeySHA256(pass.encodeToByteString()))
+            val pass = KInquirer.promptInputPassword(Values.ACCESS_PASSPHRASE_PROMPT)
+            UserKey(pass.hashKey(encryption))
           }
           EncryptionMode.GPG -> UserKey(access.fingerprint!!)
         }
@@ -274,13 +291,12 @@ internal class SecretManagementImpl(
     if (SecretsState.remoteFlow.value == null) initRemote()
     val metadata: RemoteMetadata =
       SecretsState.remote.getMetadata()?.deserialize(json)
-        ?: throw IllegalArgumentException("Remote has not been initialized")
+        ?: throw IllegalArgumentException(Values.REMOTE_NOT_INITIALIZED_EXCEPTION)
     return getAccess(metadata.access[name]!!)
   }
 
   private suspend fun initRemote() {
-    val init =
-      KInquirer.promptListObject("Please select where to access remote secrets:", remoteInitializers.map { Choice(it.id, it) })
+    val init = KInquirer.promptListObject(Values.REMOTE_SECRETS_LOCATION_PROMPT, remoteInitializers.choices())
     SecretsState.remote = init.initialize()
     files.writeLocal()
   }
@@ -291,22 +307,22 @@ internal class SecretManagementImpl(
     val mode = Prompts.superKeyMode()
     val superKey: UserKey =
       when (mode) {
-        EncryptionMode.PASSPHRASE -> UserKey(encryption.hashKeySHA256(Prompts.passphrase().encodeToByteString()))
+        EncryptionMode.PASSPHRASE -> UserKey(Prompts.passphrase().hashKey(encryption))
         EncryptionMode.GPG -> UserKey(Prompts.gpgPrivateKey())
       }
     val superAccess = SuperAccess(mapOf(), mapOf())
     val superBytes = superAccess.serialize(cbor).encrypt(superKey, encryption)
-    val superAccessMetadata = AccessMetadata("super", encryption.hashGitDataSHA1(superBytes), superKey)
+    val superAccessMetadata =
+      AccessMetadata(Values.SUPER_ACCESS_METADATA_NAME, encryption.hashGitDataSHA1(superBytes), superKey)
     val remoteMetadata =
       RemoteMetadata(
         SecretsState.metadata.name,
-        SecretsState.metadata.organization,
         mapOf(),
         superAccessMetadata,
         mapOf(),
       )
     SecretsState.remote.superUpdate(remoteMetadata.serialize(json), mapOf(), superBytes, mapOf())
-    SecretsState.updateLocal { add(BinarySecret("remote:super", superKey.key)) }
+    SecretsState.updateLocal { add(BinarySecret(Values.SUPER_ACCESS_KEY_SECRET, superKey.key)) }
     files.writeLocal()
     return remoteMetadata
   }

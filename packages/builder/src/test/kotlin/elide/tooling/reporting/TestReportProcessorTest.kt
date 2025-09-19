@@ -69,7 +69,7 @@ class TestReportProcessorTest {
       outcome = TestOutcome.Failure(), // Overall result is fail because one test failed
       stats = stats,
       earlyExit = false,
-      individualTests = individualResults
+      testResults = individualResults
     )
 
     return runResult

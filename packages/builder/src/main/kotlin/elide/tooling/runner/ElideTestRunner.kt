@@ -77,7 +77,10 @@ public class ElideTestRunner(
       resultsChannel.close()
     }
 
+    val collectedResults = mutableListOf<TestResult>()
+
     val testResults = resultsChannel.receiveAsFlow().onEach { result ->
+      collectedResults.add(result)
       seen.incrementAndGet()
       if (result.outcome != TestOutcome.Skipped) executed.incrementAndGet()
 
@@ -114,7 +117,7 @@ public class ElideTestRunner(
         else -> TestOutcome.Success
       }
 
-      runResult.complete(TestRunResult(outcome, stats, cause != null))
+      runResult.complete(TestRunResult(outcome, stats, cause != null, collectedResults))
     }
 
     return object : TestRun {

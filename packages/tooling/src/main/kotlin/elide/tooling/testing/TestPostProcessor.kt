@@ -22,7 +22,10 @@ public interface TestPostProcessor {
    * Consume the provided [options] and [results] and perform any processing needed.
    *
    * @param options Options governing test post-processing steps.
-   * @param results Test results.
+   * @param results Test run summary with statistics and individual test results.
    */
-  public suspend operator fun invoke(options: TestPostProcessingOptions, results: TestRunResult): Tool.Result
+  public suspend operator fun invoke(
+    options: TestPostProcessingOptions,
+    results: TestRunResult
+  ): Tool.Result
 }

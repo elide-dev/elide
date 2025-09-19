@@ -16,13 +16,13 @@ package elide.tooling.testing
  * Results of a test run.
  *
  * @property outcome The overall result of the test run.
- * @property exitCode The exit code of the test run.
  * @property stats Statistics about the test run.
- * @property results Results of individual test cases.
  * @property earlyExit Whether the test run exited early (e.g. due to a failure during `failFast` mode).
+ * @property individualTests Individual test case results.
  */
 @JvmRecord public data class TestRunResult(
   public val outcome: TestOutcome,
   public val stats: TestStats,
   public val earlyExit: Boolean = false,
+  public val individualTests: List<TestResult> = emptyList(),
 )

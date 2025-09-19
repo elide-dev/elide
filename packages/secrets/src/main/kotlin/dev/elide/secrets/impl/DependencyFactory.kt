@@ -1,5 +1,7 @@
 package dev.elide.secrets.impl
 
+import elide.annotations.Component
+import elide.annotations.Factory
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -9,8 +11,6 @@ import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.json.Json
-import elide.annotations.Component
-import elide.annotations.Factory
 
 /**
  * Factory for external dependencies.

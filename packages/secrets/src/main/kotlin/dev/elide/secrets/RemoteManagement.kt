@@ -1,6 +1,5 @@
 package dev.elide.secrets
 
-
 /**
  * Superuser access to remote secrets.
  *

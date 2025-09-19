@@ -16,6 +16,9 @@ internal object SecretsState {
   internal val profileFlow: MutableStateFlow<Pair<SecretProfile, SecretKey>?> = MutableStateFlow(null)
   internal val remoteFlow: MutableStateFlow<Remote?> = MutableStateFlow(null)
 
+  internal val initialized: Boolean
+    get() = interactiveFlow.value != null
+
   internal inline val interactive: Boolean
     get() = interactiveFlow.value!!
 
@@ -65,7 +68,7 @@ internal object SecretsState {
     }
 
   internal fun init(interactive: Boolean, path: Path) {
-    if (interactiveFlow.value != null) throw IllegalStateException("Already initialized")
+    if (initialized) throw IllegalStateException("Already initialized")
     interactiveFlow.value = interactive
     pathFlow.value = path
   }

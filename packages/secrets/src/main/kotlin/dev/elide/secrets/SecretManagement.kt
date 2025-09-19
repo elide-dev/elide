@@ -7,7 +7,7 @@ import kotlinx.io.bytestring.ByteString
  *
  * @author Lauri Heino <datafox>
  */
-public interface SecretManagement : Secrets {
+public interface SecretManagement : SecretsCommon {
   public fun createProfile(profile: String)
 
   public fun removeProfile(profile: String)
@@ -27,5 +27,4 @@ public interface SecretManagement : Secrets {
   public suspend fun manageRemote(): RemoteManagement
 
   public fun setBinarySecret(name: String, value: ByteArray): Unit = setBinarySecret(name, ByteString(value))
-
 }

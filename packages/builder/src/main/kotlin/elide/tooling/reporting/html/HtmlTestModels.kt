@@ -12,9 +12,10 @@
  */
 package elide.tooling.reporting.html
 
-import elide.tooling.testing.TestCaseResult
+import elide.tooling.testing.TestCase
 import elide.tooling.testing.TestResult
 import elide.tooling.testing.TestRunResult
+import elide.tooling.testing.TestOutcome
 import java.time.Instant
 import kotlin.time.Duration
 
@@ -137,43 +138,63 @@ internal object HtmlTestModelConverter {
   }
   
   /**
-   * Convert TestCaseResult to HtmlTestCase.
+   * Convert TestResult to HtmlTestCase.
    */
-  fun convertTestCase(caseResult: TestCaseResult): HtmlTestCase {
-    val status = when (val result = caseResult.result) {
-      is TestResult.Pass -> HtmlTestStatus.PASSED
-      is TestResult.Fail -> HtmlTestStatus.FAILED
-      is TestResult.Skip -> HtmlTestStatus.SKIPPED
+  fun convertTestCase(testResult: TestResult): HtmlTestCase {
+    val status = when (val outcome = testResult.outcome) {
+      is TestOutcome.Success -> HtmlTestStatus.PASSED
+      is TestOutcome.Failure -> HtmlTestStatus.FAILED
+      is TestOutcome.Error -> HtmlTestStatus.FAILED
+      is TestOutcome.Skipped -> HtmlTestStatus.SKIPPED
     }
-    
-    val (errorMessage, stackTrace) = when (val result = caseResult.result) {
-      is TestResult.Fail -> {
-        val cause = result.cause
+
+    val (errorMessage, stackTrace) = when (val outcome = testResult.outcome) {
+      is TestOutcome.Failure -> {
+        val reason = outcome.reason
         Pair(
-          cause?.message ?: "Test failed",
-          cause?.stackTraceToString()
+          when (reason) {
+            is Throwable -> reason.message ?: "Test failed"
+            else -> reason?.toString() ?: "Test failed"
+          },
+          when (reason) {
+            is Throwable -> reason.stackTraceToString()
+            else -> null
+          }
+        )
+      }
+      is TestOutcome.Error -> {
+        val reason = outcome.reason
+        Pair(
+          when (reason) {
+            is Throwable -> reason.message ?: "Test error"
+            else -> reason?.toString() ?: "Test error"
+          },
+          when (reason) {
+            is Throwable -> reason.stackTraceToString()
+            else -> null
+          }
         )
       }
       else -> Pair(null, null)
     }
-    
-    val skipReason = when (val result = caseResult.result) {
-      is TestResult.Skip -> result.reason
+
+    val skipReason = when (testResult.outcome) {
+      is TestOutcome.Skipped -> "Test was skipped"
       else -> null
     }
-    
-    // Parse hierarchical path from qualified name
-    val parentPath = parseParentPath(caseResult.scope.qualifiedName)
-    
+
+    // Parse hierarchical path from test case ID
+    val parentPath = parseParentPath(testResult.test.id)
+
     return HtmlTestCase(
-      name = caseResult.scope.simpleName.trim().takeIf { it.isNotEmpty() } ?: "unnamed_test",
-      className = extractClassName(caseResult.scope.qualifiedName),
-      fullName = caseResult.scope.qualifiedName,
+      name = testResult.test.displayName.trim().takeIf { it.isNotEmpty() } ?: "unnamed_test",
+      className = extractClassName(testResult.test.id),
+      fullName = testResult.test.id,
       status = status,
-      duration = caseResult.duration,
+      duration = testResult.duration,
       errorMessage = errorMessage,
       stackTrace = stackTrace,
-      skipReason = skipReason?.message(),
+      skipReason = skipReason,
       parentPath = parentPath
     )
   }
@@ -261,40 +282,52 @@ internal object HtmlTestModelConverter {
   }
   
   /**
-   * Parse parent path from qualified name.
-   * 
+   * Parse parent path from test case ID.
+   *
    * Examples:
-   * - "/path/to/test.js > describe block > nested describe > test" -> ["describe block", "nested describe"]
-   * - "com.example.MyTest > testMethod" -> []
+   * - "/path/to/test.js:describe.nested.test" -> ["describe", "nested"]
+   * - "com.example.MyTest:testMethod" -> []
+   * - "/path/test.js:test" -> []
    */
-  private fun parseParentPath(qualifiedName: String): List<String> {
-    if (!qualifiedName.contains(" > ")) return emptyList()
-    
-    val parts = qualifiedName.split(" > ")
-    // Remove the file path and the final test name, keep middle parts as parent path
-    return if (parts.size > 2) {
-      parts.drop(1).dropLast(1)
+  private fun parseParentPath(testId: String): List<String> {
+    if (!testId.contains(':')) return emptyList()
+
+    val testPath = testId.substringAfterLast(':')
+    val pathParts = testPath.split('.')
+
+    // Return all parts except the last one (which is the test name)
+    return if (pathParts.size > 1) {
+      pathParts.dropLast(1)
     } else {
       emptyList()
     }
   }
-  
+
   /**
-   * Extract class name from qualified name (same logic as XML reporter).
+   * Extract class name from test case ID (same logic as XML reporter).
    */
-  private fun extractClassName(qualifiedName: String): String {
+  private fun extractClassName(testId: String): String {
     return when {
-      // File path format: "/path/to/file.ext > ..."
-      qualifiedName.contains(" > ") -> {
-        val parts = qualifiedName.split(" > ")
-        val filePath = parts.firstOrNull() ?: "unknown"
-        // Extract just the filename from the path
+      // File path format with colon: "/path/to/file.ext:testName"
+      testId.contains(':') && testId.contains('/') -> {
+        val filePath = testId.substringBeforeLast(':')
         filePath.substringAfterLast('/')
       }
-      // Simple class name format
-      qualifiedName.contains('.') && !qualifiedName.startsWith('/') -> qualifiedName
+      // File path format: "/path/to/file.ext"
+      testId.contains('/') -> {
+        testId.substringAfterLast('/')
+      }
+      // Package.Class.method format
+      testId.contains('.') -> {
+        val parts = testId.split('.')
+        if (parts.size > 1) {
+          parts.dropLast(1).joinToString(".")
+        } else {
+          testId
+        }
+      }
       // Fallback
-      else -> qualifiedName.takeIf { it.isNotEmpty() } ?: "UnknownTest"
+      else -> testId.takeIf { it.isNotEmpty() } ?: "UnknownTest"
     }
   }
 }

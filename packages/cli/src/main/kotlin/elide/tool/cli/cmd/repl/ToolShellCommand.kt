@@ -2531,14 +2531,18 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 //           }
 //         }
 
-        PYTHON -> configure(elide.runtime.plugins.python.Python) {
-          logging.debug("Configuring Python VM")
-          installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
-          resourcesPath = gvmResources
-          executable = cmd
-          testing = isTestMode
-          executableList = listOf(cmd).plus(args)
-          pySettings.apply(this)
+        PYTHON -> {
+          configure(elide.runtime.plugins.python.Python) {
+            logging.debug("Configuring Python VM")
+            installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)
+            resourcesPath = gvmResources
+            executable = cmd
+            testing = isTestMode
+            executableList = listOf(cmd).plus(args)
+            pySettings.apply(this)
+          }
+          // Install Flask compatibility shim so `from elide_flask import Flask` works in Python entrypoints
+          configure(elide.runtime.plugins.python.flask.FlaskPlugin) { /* defaults */ }
         }
 
         // Secondary Engines: JVM
@@ -2653,7 +2657,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
-    Elide.requestNatives(server = true, tooling = performInstall)
+    if (System.getProperty("elide.disableNatives") != "true" && System.getenv("ELIDE_DISABLE_NATIVES") != "true") {
+      Elide.requestNatives(server = true, tooling = performInstall)
+    }
     val projectOptions = projectOptions()
     val projectPath = projectOptions.projectPath()
 
@@ -2944,7 +2950,8 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             } else {
               // no literal execution flag = we need to parse `runnable` as a file path
               logging.trace("Interpreting runnable parameter as file path (`--code` was not passed)")
-              val asPath = Paths.get(scriptTargetOrCode)
+              val rawPath = Paths.get(scriptTargetOrCode)
+              val asPath = if (rawPath.isAbsolute) rawPath else projectPath.resolve(rawPath).normalize()
 
               when {
                 // for regular files, we should proceed as if we have been handed code (a frequent case)

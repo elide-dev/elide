@@ -47,5 +47,13 @@
         "src/styles.css"
       ]
     }
+,
+    {
+      "name": "flask",
+      "description": "GraalPy + Elide Flask-compatible shim (Netty server)",
+      "languages": ["Python"],
+      "files": ["README.md", "elide.pkl", "src/app.py"]
+    }
+
   ]
 }

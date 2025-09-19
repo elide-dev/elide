@@ -1,0 +1,13 @@
+amends "elide:project.pkl"
+
+name = "elide-flask"
+description = "Example project using Elide with a Flask-compatible shim on GraalPy."
+
+// Evaluate this Python file as the app entrypoint.
+entrypoint = "src/app.py"
+
+// No external pip dependencies are required for the shim.
+dependencies {
+  pip { packages { } }
+}
+

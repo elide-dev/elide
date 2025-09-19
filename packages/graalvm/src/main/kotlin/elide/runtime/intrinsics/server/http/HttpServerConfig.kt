@@ -49,8 +49,22 @@ private const val DEFAULT_ELIDE_HTTP_SERVER_PORT = 8080
   /** The host to which the server will bind when listening for connections, defaults to `localhost`. */
   @Polyglot public open var host: String = DEFAULT_ELIDE_HTTP_SERVER_HOST
 
-  /** The port to which the server will bind when listening for connections, defaults to `8080`. */
-  @Polyglot public open var port: Int = DEFAULT_ELIDE_HTTP_SERVER_PORT
+  /** The port to which the server will bind when listening for connections.
+   *
+   * Default precedence:
+   * 1) System property 'elide.server.port'
+   * 2) Environment variable 'PORT'
+   * 3) Fallback to 8080
+   */
+  @Polyglot public open var port: Int = run {
+    val sysProp = System.getProperty("elide.server.port")?.toIntOrNull()
+    val envPort = System.getenv("PORT")?.toIntOrNull()
+    val candidate = sysProp ?: envPort ?: DEFAULT_ELIDE_HTTP_SERVER_PORT
+    when {
+      candidate in 1..65535 -> candidate
+      else -> DEFAULT_ELIDE_HTTP_SERVER_PORT
+    }
+  }
 
   /**
    * Whether to automatically start the server after evaluating the configuration code. If `true`, calling

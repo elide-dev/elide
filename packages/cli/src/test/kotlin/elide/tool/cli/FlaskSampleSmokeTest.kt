@@ -65,7 +65,7 @@ class FlaskSampleSmokeTest : AbstractEntryTest() {
 
     // 3) Probe server readiness and verify endpoints
     val client = HttpClient.newHttpClient()
-    val base = URI.create("http://localhost:$port")
+    val base = URI.create("http://127.0.0.1:$port")
 
     fun get(path: String): HttpResponse<String> = client.send(
       HttpRequest.newBuilder(base.resolve(path)).GET().build(),

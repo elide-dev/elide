@@ -96,6 +96,8 @@ private val HTTP_SERVER_INTRINSIC_PROPS_AND_METHODS = arrayOf(
 
       // notify listeners if applicable
       logging.debug { "Server listening at $address" }
+      kotlin.runCatching { System.err.println("[elide-netty] BOUND " + address) }
+
       config.onBindCallback?.invoke()
     }
   }

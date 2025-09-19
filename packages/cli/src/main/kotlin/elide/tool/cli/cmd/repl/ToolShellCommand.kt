@@ -2657,6 +2657,18 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     logging.debug("Shell/run command invoked")
+
+    // Auto-detect action hint from command alias if not already set
+    if (actionHint == null) {
+      val usedAlias = Statics.args.firstOrNull()
+      when (usedAlias) {
+        "serve" -> actionHint = "serve"
+        "test", "tests" -> actionHint = "test"
+        "repl" -> actionHint = "repl"
+        // "run" and "r" don't need special hints
+      }
+    }
+
     if (System.getProperty("elide.disableNatives") != "true" && System.getenv("ELIDE_DISABLE_NATIVES") != "true") {
       Elide.requestNatives(server = true, tooling = performInstall)
     }

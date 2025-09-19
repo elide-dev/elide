@@ -7,6 +7,9 @@ from elide_flask import Flask, request, Response  # type: ignore
 app = Flask(__name__)
 
 # Configure server: ensure Elide is reachable and auto-start the Netty server.
+import sys
+print("FLASK_SHIM_APP_START", file=sys.stderr, flush=True)
+
 try:
   import polyglot  # type: ignore
   Elide = globals().get("Elide") or polyglot.eval("js", "Elide")
@@ -18,19 +21,38 @@ if Elide is not None:
     import sys, os
     cfg = Elide.http.config
     cfg.autoStart = True
-    # Prefer --port from CLI argv, then PORT env, then 8080
+    cfg.host = "127.0.0.1"
+
+    # Get port from system property (set by test), then PORT env, then 8080
     port = None
     try:
-      args = list(sys.argv)
-      if "--port" in args:
-        i = args.index("--port")
-        if i + 1 < len(args):
-          port = int(args[i + 1])
-    except Exception:
-      port = None
+      # Check if elide.server.port system property is set (used by tests)
+      # Use polyglot to access Java System class
+      import polyglot  # type: ignore
+      JavaSystem = polyglot.eval("java", "java.lang.System")
+      port_prop = JavaSystem.getProperty("elide.server.port")
+      if port_prop:
+        port = int(port_prop)
+        print(f"FLASK_DEBUG: Using port from system property: {port}", file=sys.stderr, flush=True)
+    except Exception as e:
+      print(f"FLASK_DEBUG: Failed to get system property: {e}", file=sys.stderr, flush=True)
     if port is None:
-      port = int(os.environ.get("PORT", "8080"))
+      try:
+        port = int(os.environ.get("PORT", "8080"))
+        print(f"FLASK_DEBUG: Using port from env/default: {port}", file=sys.stderr, flush=True)
+      except Exception:
+        port = 8080
     cfg.port = port
+    try:
+      cfg.onBind(lambda: print(f"BOUND {cfg.host}:{cfg.port}", file=sys.stderr, flush=True))
+    except Exception:
+      pass
+    try:
+      Elide.http.start()
+    except Exception:
+      pass
+
+
   except Exception:
     pass
 

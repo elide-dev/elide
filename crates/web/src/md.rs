@@ -11,10 +11,14 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+#[cfg(feature = "mdx")]
 use markdown::message::Message;
+
+#[cfg(feature = "mdx")]
 use mdxjs::compile;
 
 /// Compile MDX-formatted files into JavaScript via SWC and MDX.
+#[cfg(feature = "mdx")]
 pub fn compile_mdx(src: String) -> Result<String, Message> {
   compile(src.as_str(), &Default::default())
 }

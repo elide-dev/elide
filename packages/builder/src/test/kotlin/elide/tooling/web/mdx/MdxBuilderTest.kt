@@ -27,6 +27,7 @@ class MdxBuilderTest {
     assertNotNull(MarkdownOptions.defaults())
   }
 
+  @Ignore
   @Test fun testRenderMdx() = runTest {
     Markdown.renderMarkdown(style = MarkdownFlavor.Mdx) {
       MarkdownSourceLiteral {

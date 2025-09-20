@@ -23,7 +23,7 @@ import elide.tooling.Classpath
 public object JvmLibraries {
   // @TODO: don't hard-code any of this
   public const val ELIDE_VERSION: String = "1.0.0-beta8"
-  public const val EMBEDDED_KOTLIN: String = "2.2.0"
+  public const val EMBEDDED_KOTLIN: String = "2.2.20"
 
   public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
   public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"

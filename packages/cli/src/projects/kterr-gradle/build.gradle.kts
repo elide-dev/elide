@@ -1,5 +1,5 @@
 plugins {
-  kotlin("jvm") version "2.2.0-RC3"
+  kotlin("jvm") version "2.2.20"
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
@@ -8,6 +8,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEa
 
 dependencies {
   implementation("com.google.guava:guava:33.4.8-jre")
-  testImplementation("org.jetbrains.kotlin:kotlin-test:2.2.0-RC3")
+  testImplementation("org.jetbrains.kotlin:kotlin-test:2.2.20")
 }
 

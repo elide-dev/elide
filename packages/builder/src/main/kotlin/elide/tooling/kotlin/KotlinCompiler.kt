@@ -396,6 +396,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
             Logging.root().debug { "Kotlin compiler plugins loaded: $it" }
             Services.Builder().apply {
               it.forEach { svc ->
+                @Suppress("UNCHECKED_CAST")
                 register(svc::class.java as Class<Any>, svc)
               }
             }.build().let { services ->

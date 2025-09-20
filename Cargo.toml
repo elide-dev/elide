@@ -133,7 +133,7 @@ rustix = { version = "1.0.2", features = ["process"] }
 serde = { version = "1.0.218", default-features = false }
 parcel_sourcemap = { version = "2.1.1" }
 sourcemap = { version = "9.2.2" }
-sysinfo = { version = "0.36.0" }
+sysinfo = { version = "0.37.0" }
 once_cell = { version = "1.21.3" }
 markdown = { version = "1.0.0" }
 mdxjs = { version = "1.0.4" }
@@ -164,7 +164,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "42c8f29ab27dae5163d03062a118757dcd7f56e4", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "6fcb0d05c6c78043f57b9f5b3183519cd195832d", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",

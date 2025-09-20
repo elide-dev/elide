@@ -6802,3 +6802,9 @@ public abstract interface class elide/tooling/web/WebProject {
 	public abstract fun startsServer ()Z
 }
 
+public final class org/apache/maven/project/ReactorModelPool {
+	public fun <init> ()V
+	public fun get (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/io/File;
+	public fun put (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/io/File;)V
+}
+

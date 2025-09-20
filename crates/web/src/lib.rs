@@ -51,6 +51,7 @@ fn dispatch_css_error(mut env: JNIEnv, cls: JClass, message: String) {
 }
 
 /// Dispatch a MDX processing error to the Java side.
+#[cfg(feature = "mdx")]
 fn dispatch_mdx_error(mut env: JNIEnv, cls: JClass, message: String) {
   let jstring_err = env
     .new_string(message)
@@ -177,6 +178,7 @@ pub fn buildCss<'a>(
 }
 
 /// JNI entrypoint function to parse and then build MDX code for a given source file.
+#[cfg(feature = "mdx")]
 #[jni("elide.tooling.web.mdx.MdxNative")]
 pub fn buildMdx<'a>(mut env: JNIEnv<'a>, cls: JClass<'a>, jmdx: JString<'a>) -> JObject<'a> {
   let binding = env.get_string(&jmdx).expect("failed to obtain MDX string");
@@ -193,6 +195,12 @@ pub fn buildMdx<'a>(mut env: JNIEnv<'a>, cls: JClass<'a>, jmdx: JString<'a>) -> 
       JObject::null()
     }
   }
+}
+
+#[cfg(not(feature = "mdx"))]
+#[jni("elide.tooling.web.mdx.MdxNative")]
+pub fn buildMdx<'a>(_env: JNIEnv<'a>, _cls: JClass<'a>, _jmdx: JString<'a>) -> JObject<'a> {
+  JObject::null()
 }
 
 /// JNI entrypoint for performing minification of HTML code, using the `minify-html` crate.

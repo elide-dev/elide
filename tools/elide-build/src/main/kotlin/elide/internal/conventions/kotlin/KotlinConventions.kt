@@ -294,6 +294,14 @@ internal fun Project.configureKotlinBuild(
     extensions.getByType(KspExtension::class.java).apply {
       allWarningsAsErrors = useStrictMode
     }
+
+    afterEvaluate {
+      tasks.findByName("generateBuildConfig")?.let { genBuildConfig ->
+        tasks.findByName("kspKotlin")?.apply {
+          dependsOn(genBuildConfig)
+        }
+      }
+    }
   }
 
   // configure AllOpen plugin

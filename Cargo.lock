@@ -4324,7 +4324,7 @@ dependencies = [
 [[package]]
 name = "nassun"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "async-compression",
  "async-process",
@@ -4348,7 +4348,7 @@ dependencies = [
  "oro-package-spec",
  "rkyv 0.8.11",
  "serde",
- "serde-wasm-bindgen 0.6.5",
+ "serde-wasm-bindgen",
  "serde_json",
  "ssri",
  "tar",
@@ -4438,7 +4438,7 @@ dependencies = [
 [[package]]
 name = "node-maintainer"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "async-std",
  "colored",
@@ -4458,10 +4458,10 @@ dependencies = [
  "oro-script",
  "oro-shim-bin",
  "pathdiff",
- "petgraph 0.7.1",
+ "petgraph",
  "reflink-copy",
  "serde",
- "serde-wasm-bindgen 0.6.5",
+ "serde-wasm-bindgen",
  "serde_json",
  "ssri",
  "tempfile",
@@ -4791,7 +4791,7 @@ dependencies = [
 [[package]]
 name = "oro-client"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -4817,7 +4817,7 @@ dependencies = [
 [[package]]
 name = "oro-common"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "derive_builder",
  "indexmap 2.11.4",
@@ -4835,7 +4835,7 @@ dependencies = [
 [[package]]
 name = "oro-config"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "clap",
  "config",
@@ -4848,7 +4848,7 @@ dependencies = [
 [[package]]
 name = "oro-npm-account"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "async-std",
  "base64 0.22.1",
@@ -4866,7 +4866,7 @@ dependencies = [
 [[package]]
 name = "oro-package-spec"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "bytecount",
  "miette 7.6.0",
@@ -4880,7 +4880,7 @@ dependencies = [
 [[package]]
 name = "oro-pretty-json"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "serde_json",
 ]
@@ -4888,7 +4888,7 @@ dependencies = [
 [[package]]
 name = "oro-script"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "dunce",
  "miette 7.6.0",
@@ -4904,7 +4904,7 @@ dependencies = [
 [[package]]
 name = "oro-shim-bin"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "once_cell",
  "pathdiff",
@@ -4914,7 +4914,7 @@ dependencies = [
 [[package]]
 name = "orogene"
 version = "0.3.34"
-source = "git+https://github.com/elide-dev/orogene?rev=1122f0884f8c6e726ac36dbd926a5102ce2fa950#1122f0884f8c6e726ac36dbd926a5102ce2fa950"
+source = "git+https://github.com/elide-dev/orogene?rev=020b9752f360c68b75ab1ffd28e746a3df3efb5b#020b9752f360c68b75ab1ffd28e746a3df3efb5b"
 dependencies = [
  "async-std",
  "async-trait",
@@ -5626,16 +5626,6 @@ name = "percent-encoding"
 version = "2.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220"
-
-[[package]]
-name = "petgraph"
-version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3672b37090dbd86368a4145bc067582552b29c27377cad4e0a306c97f9bd7772"
-dependencies = [
- "fixedbitset",
- "indexmap 2.11.4",
-]
 
 [[package]]
 name = "petgraph"
@@ -7499,7 +7489,7 @@ checksum = "32e265784ad618884abaea0600a9adf15393368d840e0222d101a072f3f7534d"
 dependencies = [
  "proc-macro2",
  "quote",
- "serde_derive_internals 0.29.1",
+ "serde_derive_internals",
  "syn 2.0.106",
 ]
 
@@ -7511,7 +7501,7 @@ checksum = "33d020396d1d138dc19f1165df7545479dcd58d93810dc5d646a16e55abefa80"
 dependencies = [
  "proc-macro2",
  "quote",
- "serde_derive_internals 0.29.1",
+ "serde_derive_internals",
  "syn 2.0.106",
 ]
 
@@ -7646,17 +7636,6 @@ dependencies = [
 
 [[package]]
 name = "serde-wasm-bindgen"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3b143e2833c57ab9ad3ea280d21fd34e285a42837aeb0ee301f4f41890fa00e"
-dependencies = [
- "js-sys",
- "serde",
- "wasm-bindgen",
-]
-
-[[package]]
-name = "serde-wasm-bindgen"
 version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8302e169f0eddcc139c70f139d19d6467353af16f9fce27e8c30158036a1e16b"
@@ -7680,17 +7659,6 @@ name = "serde_derive"
 version = "1.0.225"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0ea936adf78b1f766949a4977b91d2f5595825bd6ec079aa9543ad2685fc4516"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.106",
-]
-
-[[package]]
-name = "serde_derive_internals"
-version = "0.28.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e578a843d40b4189a4d66bba51d7684f57da5bd7c304c64e14bd63efbef49509"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -9214,25 +9182,25 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
 name = "tsify"
-version = "0.4.5"
+version = "0.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6b26cf145f2f3b9ff84e182c448eaf05468e247f148cf3d2a7d67d78ff023a0"
+checksum = "b2ec91b85e6c6592ed28636cb1dd1fac377ecbbeb170ff1d79f97aac5e38926d"
 dependencies = [
  "serde",
- "serde-wasm-bindgen 0.5.0",
+ "serde-wasm-bindgen",
  "tsify-macros",
  "wasm-bindgen",
 ]
 
 [[package]]
 name = "tsify-macros"
-version = "0.4.5"
+version = "0.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a94b0f0954b3e59bfc2c246b4c8574390d94a4ad4ad246aaf2fb07d7dfd3b47"
+checksum = "9a324606929ad11628a19206d7853807481dcaecd6c08be70a235930b8241955"
 dependencies = [
  "proc-macro2",
  "quote",
- "serde_derive_internals 0.28.0",
+ "serde_derive_internals",
  "syn 2.0.106",
 ]
 
@@ -9600,7 +9568,7 @@ dependencies = [
  "miette 7.6.0",
  "nix 0.30.1",
  "owo-colors",
- "petgraph 0.8.2",
+ "petgraph",
  "regex",
  "reqwest",
  "rkyv 0.8.11",
@@ -10068,7 +10036,7 @@ dependencies = [
  "jiff",
  "owo-colors",
  "percent-encoding",
- "petgraph 0.8.2",
+ "petgraph",
  "rkyv 0.8.11",
  "rustc-hash 2.1.1",
  "schemars 1.0.4",
@@ -10457,7 +10425,7 @@ dependencies = [
  "itertools 0.14.0",
  "jiff",
  "mailparse",
- "petgraph 0.8.2",
+ "petgraph",
  "regex",
  "rkyv 0.8.11",
  "rustc-hash 2.1.1",
@@ -10624,7 +10592,7 @@ dependencies = [
  "itertools 0.14.0",
  "jiff",
  "owo-colors",
- "petgraph 0.8.2",
+ "petgraph",
  "pubgrub",
  "rkyv 0.8.11",
  "rustc-hash 2.1.1",

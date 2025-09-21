@@ -1762,14 +1762,19 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       // add all tests registered by guest sources
       beanContext.getBean(TestingRegistrar::class.java)?.freeze()?.grouped()?.let { grouped ->
         val scopeIndex = mutableMapOf<TestScope<*>, TestNodeKey>()
+
         grouped.forEach { (group, test) ->
           val parentKey = scopeIndex.getOrPut(group) { UUID.randomUUID().toString() }
-          registry += DynamicTestCase(
+          registry += DynamicGuestTestCase(
             id = UUID.randomUUID().toString(),
             parent = parentKey,
             displayName = test.simpleName,
             entrypointProvider = test.entryFactory,
           )
+        }
+
+        scopeIndex.forEach { (scope, key) ->
+          registry += TestGroup(id = key, parent = null, displayName = scope.qualifiedName)
         }
       }
 
@@ -1792,9 +1797,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       }
 
       val events = TestEventController.create()
-      val drivers = beanContext.getBean(TestDriverRegistry::class.java).collect()
+
+      // always register basic guest driver
+      val drivers = beanContext.getBean(TestDriverRegistry::class.java)
+      drivers.register(DynamicGuestTestDriver(ctxAccessor))
+
       val testRunner = ElideTestRunner(
-        drivers = drivers,
+        drivers = drivers.collect(),
         events = events,
         maxParallelTests = if (testingOptions.threadedTestMode) ElideTestRunner.UNLIMITED else ElideTestRunner.SERIAL,
         context = Dispatchers.Engine,

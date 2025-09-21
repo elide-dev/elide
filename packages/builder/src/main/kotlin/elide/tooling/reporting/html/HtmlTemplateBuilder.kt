@@ -10,6 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
+@file:Suppress("ImplicitDefaultLocale", "MagicNumber")
+
 package elide.tooling.reporting.html
 
 import kotlinx.html.*
@@ -200,7 +203,7 @@ internal class HtmlTemplateBuilder {
   private fun DIV.renderTestGroup(
     groupName: String,
     tests: List<HtmlTestCase>,
-    path: List<String>,
+    @Suppress("UNUSED_PARAMETER") path: List<String>,
     summary: HtmlGroupSummary
   ) {
     div(classes = "test-group") {

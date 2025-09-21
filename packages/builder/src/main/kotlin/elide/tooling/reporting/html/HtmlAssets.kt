@@ -10,6 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+
+@file:Suppress("LargeClass")
+
 package elide.tooling.reporting.html
 
 /**
@@ -17,7 +20,6 @@ package elide.tooling.reporting.html
  * All assets are inlined to create self-contained HTML files.
  */
 internal object HtmlAssets {
-  
   /**
    * Main CSS styles for the test report.
    * Includes responsive design, modern styling, and status colors.

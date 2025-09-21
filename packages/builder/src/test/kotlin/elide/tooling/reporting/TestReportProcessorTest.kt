@@ -31,9 +31,18 @@ class TestReportProcessorTest {
    */
   private fun createMockTestResults(): TestRunResult {
     // Create mock test cases using new TestCase interface
-    val passedTestCase = MockTestCase("RuntimeInteropTest.kt:vectorize_polyglot_bytecode", "should vectorize polyglot bytecode transformations")
-    val failedTestCase = MockTestCase("ParserEngineTest.kt:demultiplex_concurrent_tokens", "should demultiplex concurrent lexer tokens")
-    val skippedTestCase = MockTestCase("CodegenBackendTest.kt:serialize_ast_binary", "should serialize abstract syntax trees to binary format")
+    val passedTestCase = MockTestCase(
+      "RuntimeInteropTest.kt:vectorize_polyglot_bytecode",
+      "should vectorize polyglot bytecode transformations",
+    )
+    val failedTestCase = MockTestCase(
+      "ParserEngineTest.kt:demultiplex_concurrent_tokens",
+      "should demultiplex concurrent lexer tokens",
+    )
+    val skippedTestCase = MockTestCase(
+      "CodegenBackendTest.kt:serialize_ast_binary",
+      "should serialize abstract syntax trees to binary format",
+    )
 
     // Create individual test results using new TestResult structure
     val individualResults = listOf(
@@ -44,7 +53,9 @@ class TestReportProcessorTest {
       ),
       TestResult(
         test = failedTestCase,
-        outcome = TestOutcome.Failure(AssertionError("Expected token stream to converge but got divergent branching factor")),
+        outcome = TestOutcome.Failure(
+          AssertionError("Expected token stream to converge but got divergent branching factor")
+        ),
         duration = 150.milliseconds
       ),
       TestResult(
@@ -123,15 +134,16 @@ class TestReportProcessorTest {
     assertTrue(outputFile.toFile().exists(), "XML report file should be created")
 
     // Verify the XML content contains expected elements
-    val xmlContent = outputFile.toFile().readText()
-    assertTrue(xmlContent.contains("<testsuite"), "XML should contain testsuite element")
-    assertTrue(xmlContent.contains("tests=\"3\""), "XML should show correct test count")
-    assertTrue(xmlContent.contains("failures=\"1\""), "XML should show correct failure count")
-    assertTrue(xmlContent.contains("should vectorize polyglot bytecode transformations"), "XML should contain passed test")
-    assertTrue(xmlContent.contains("should demultiplex concurrent lexer tokens"), "XML should contain failed test")
-    assertTrue(xmlContent.contains("should serialize abstract syntax trees to binary format"), "XML should contain skipped test")
-    assertTrue(xmlContent.contains("<system-out"), "XML should contain empty system-out")
-    assertTrue(xmlContent.contains("<system-err"), "XML should contain empty system-err")
+    with(outputFile.toFile().readText()) {
+      assertTrue(contains("<testsuite"), "XML should contain testsuite element")
+      assertTrue(contains("tests=\"3\""), "XML should show correct test count")
+      assertTrue(contains("failures=\"1\""), "XML should show correct failure count")
+      assertTrue(contains("should vectorize polyglot bytecode transformations"), "XML should contain passed test")
+      assertTrue(contains("should demultiplex concurrent lexer tokens"), "XML should contain failed test")
+      assertTrue(contains("should serialize abstract syntax trees to binary format"), "XML should contain skipped test")
+      assertTrue(contains("<system-out"), "XML should contain empty system-out")
+      assertTrue(contains("<system-err"), "XML should contain empty system-err")
+    }
   }
 
   @Test
@@ -152,18 +164,26 @@ class TestReportProcessorTest {
     assertTrue(outputFile.toFile().exists(), "HTML report file should be created")
 
     // Verify the HTML content contains expected elements
-    val htmlContent = outputFile.toFile().readText()
-    assertTrue(htmlContent.contains("<!DOCTYPE html>") || htmlContent.contains("<html"), "HTML should contain html tag")
-    assertTrue(htmlContent.contains("Test Report"), "HTML should contain title")
-    assertTrue(htmlContent.contains("should vectorize polyglot bytecode transformations"), "HTML should contain passed test")
-    assertTrue(htmlContent.contains("should demultiplex concurrent lexer tokens"), "HTML should contain failed test") 
-    assertTrue(htmlContent.contains("should serialize abstract syntax trees to binary format"), "HTML should contain skipped test")
-    assertTrue(htmlContent.contains("Expected token stream to converge but got divergent branching factor"), "HTML should contain failure message")
-    assertTrue(htmlContent.contains("3"), "HTML should show total test count")
-    assertTrue(htmlContent.contains("test-passed"), "HTML should contain passed test CSS class")
-    assertTrue(htmlContent.contains("test-failed"), "HTML should contain failed test CSS class")
-    assertTrue(htmlContent.contains("test-skipped"), "HTML should contain skipped test CSS class")
-    
+    with(outputFile.toFile().readText()) {
+      assertTrue(contains("<!DOCTYPE html>") || contains("<html"), "HTML should contain html tag")
+      assertTrue(contains("Test Report"), "HTML should contain title")
+      assertTrue(contains("should vectorize polyglot bytecode transformations"), "HTML should contain passed test")
+      assertTrue(contains("should demultiplex concurrent lexer tokens"), "HTML should contain failed test")
+      assertTrue(
+        contains("should serialize abstract syntax trees to binary format"),
+        "HTML should contain skipped test",
+      )
+      assertTrue(
+        contains("Expected token stream to converge but got divergent branching factor"),
+        "HTML should contain failure message",
+      )
+      assertTrue(contains("3"), "HTML should show total test count")
+      assertTrue(contains("test-passed"), "HTML should contain passed test CSS class")
+      assertTrue(contains("test-failed"), "HTML should contain failed test CSS class")
+      assertTrue(contains("test-skipped"), "HTML should contain skipped test CSS class")
+
+    }
+
     // Print file location for manual inspection
     println("HTML report generated at: ${outputFile.toAbsolutePath()}")
   }

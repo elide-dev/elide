@@ -5029,15 +5029,9 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting$Engine"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting$Engine"

@@ -30,6 +30,7 @@ import kotlin.time.Duration
  * that consume JUnit XML format.
  */
 internal class JUnitXmlReporter {
+  @Suppress("DEPRECATION")
   private val xmlMapper = XmlMapper().apply {
     registerKotlinModule()
     setSerializationInclusion(JsonInclude.Include.NON_NULL)

@@ -2851,8 +2851,8 @@ public synthetic class elide/tooling/testing/$TestDriverRegistry$Definition : io
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final class elide/tooling/testing/DynamicTestCase : elide/tooling/testing/TestCase {
-	public static final field Companion Lelide/tooling/testing/DynamicTestCase$Companion;
+public final class elide/tooling/testing/DynamicGuestTestCase : elide/tooling/testing/TestCase {
+	public static final field Companion Lelide/tooling/testing/DynamicGuestTestCase$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
 	public fun getDisplayName ()Ljava/lang/String;
 	public final fun getEntrypointProvider ()Lkotlin/jvm/functions/Function1;
@@ -2861,7 +2861,13 @@ public final class elide/tooling/testing/DynamicTestCase : elide/tooling/testing
 	public fun getType ()Lelide/tooling/testing/TestTypeKey;
 }
 
-public final class elide/tooling/testing/DynamicTestCase$Companion : elide/tooling/testing/TestTypeKey {
+public final class elide/tooling/testing/DynamicGuestTestCase$Companion : elide/tooling/testing/TestTypeKey {
+}
+
+public final class elide/tooling/testing/DynamicGuestTestDriver : elide/tooling/testing/SimpleTestDriver {
+	public fun <init> (Lkotlin/jvm/functions/Function0;)V
+	public fun getType ()Lelide/tooling/testing/TestTypeKey;
+	public synthetic fun run (Lelide/tooling/testing/TestCase;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class elide/tooling/testing/MutableTestRegistry : elide/tooling/testing/TestRegistry {

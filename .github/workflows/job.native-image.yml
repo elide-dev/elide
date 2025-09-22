@@ -154,6 +154,9 @@ name: Native Image
       COSIGN_PASSWORD:
         required: false
         description: "Cosign Password"
+      SIGNING_KEY:
+        required: true
+        description: "GPG Signing Key"
 
 # Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:
@@ -336,6 +339,11 @@ jobs:
             -Pelide.static=${{ inputs.static }} \
             -Pelide.release=${{ inputs.release }} \
             -Pelide.buildMode=${{ inputs.release == true && 'release' || 'dev' }}
+      - name: "Setup: Signing Keys"
+        run: |
+          cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+          gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
       - name: "Artifact: Build Outputs"
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         id: build-artifact

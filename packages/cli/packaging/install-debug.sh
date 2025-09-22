@@ -19,7 +19,7 @@
 
 # Elide Installer
 # ---------------
-# Version: 0.18
+# Version: 0.19
 # Author: Sam Gammon
 #
 # This script can be used as a one-liner to install the Elide command-line interface. Various arguments can be passed to
@@ -46,6 +46,7 @@
 #   --help                       Show the installer tool's help message
 #
 # Changelog:
+#   0.19 2025-11-22  Sam Gammon  Release at 1.0.0-beta9
 #   0.18 2025-05-24  Sam Gammon  Adds installer fingerprinting, preserve archive flag, removes bz2
 #   0.17 2025-03-16  Sam Gammon  Release at 1.0.0-beta1
 #   0.16 2025-03-14  Sam Gammon  Added --gha flag for 1.0.0-beta1 release
@@ -68,8 +69,8 @@
 set -e
 set +x
 
-TOOL_REVISION="1.0.0-beta8"
-INSTALLER_VERSION="v0.18"
+TOOL_REVISION="1.0.0-beta9"
+INSTALLER_VERSION="v0.19"
 
 TOOL="cli"
 VERSION="v1"

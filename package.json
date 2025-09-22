@@ -1,6 +1,6 @@
 {
   "name": "@elide-dev/framework",
-  "version": "1.0.0-beta8",
+  "version": "1.0.0-beta9",
   "private": true,
   "packageManager": "pnpm@10.6.2",
   "lint-staged": {

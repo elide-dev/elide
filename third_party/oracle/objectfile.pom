@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.graalvm.nativeimage</groupId>
   <artifactId>objectfile</artifactId>
-  <version>24.2.2-elide-1.0.0-beta8</version>
+  <version>24.2.2-elide-1.0.0-beta9</version>
   <url>https://github.com/oracle/graal/tree/master/substratevm</url>
   <name>Objectfile</name>
   <description>SubstrateVM object file writing library</description>

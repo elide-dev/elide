@@ -2,18 +2,18 @@ FROM debian:sid-slim@sha256:7e8e5af19ae9e22c326f52aa30a65dd635c0e45430e322fc2aa6
 
 RUN apt-get update \
   && apt-get install -y \
-    ca-certificates=20250419 \
-    curl=8.14.1-2 \
-    uuid-runtime=2.41-5 \
-    libgomp1=14.2.0-19 \
-    libstdc++6=14.2.0-19 \
-    libc-bin=2.41-10 \
-    libc6=2.41-10 \
+    ca-certificates \
+    curl \
+    uuid-runtime \
+    libgomp1 \
+    libstdc++6 \
+    libc-bin \
+    libc6 \
   && groupadd elide \
   && useradd dev -g elide -m -s /bin/bash \
   && rm -rf /var/lib/apt/lists/*
 
-ENV ELIDE_VERSION=1.0.0-beta8
+ENV ELIDE_VERSION=1.0.0-beta9
 ENV ELIDE_DIGEST_LINUX_AMD64=a5430b7e398c12b66fc6a13a1ac3fd1a7622db48b0a312ccce6232aafa40d23d
 ENV ELIDE_DIGEST_LINUX_ARM64=f5bdc8845726cb32564cd8ea97c286e8c5ef243662bb52480ff553c29c7231d7
 
@@ -43,7 +43,7 @@ FROM debian:sid-slim@sha256:7e8e5af19ae9e22c326f52aa30a65dd635c0e45430e322fc2aa6
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime"
 LABEL org.opencontainers.image.description="Elide runtime CLI as a container image"
-LABEL org.opencontainers.image.version=1.0.0-beta8
+LABEL org.opencontainers.image.version=1.0.0-beta9
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=debian:sid-slim
 LABEL org.opencontainers.image.base.digest=sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac
@@ -54,19 +54,19 @@ RUN groupadd elide \
   && ln -s /home/dev/elide/elide /bin/elide \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    ca-certificates=20250419 \
-    curl=8.14.1-2 \
-    uuid-runtime=2.41-5 \
-    libgomp1=14.2.0-19 \
-    libc-bin=2.41-10 \
-    libc6=2.41-10 \
-    libstdc++6=14.2.0-19
+    ca-certificates \
+    curl \
+    uuid-runtime \
+    libgomp1 \
+    libc-bin \
+    libc6 \
+    libstdc++6
 
 COPY --from=builder --chown=dev:elide /home/dev/elide /home/dev/elide
 COPY entrypoint.sh /home/dev/elide/entrypoint.sh
 USER dev
 
-ENV ELIDE_VERSION=1.0.0-beta8
+ENV ELIDE_VERSION=1.0.0-beta9
 
 RUN echo "Setting up Elide..." \
   && mkdir -p /home/dev/.elide /home/dev/workdir \

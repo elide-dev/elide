@@ -1,6 +1,6 @@
 {
   "name": "@elide-dev/types",
-  "version": "1.0.0-beta8",
+  "version": "1.0.0-beta9",
   "description": "TypeScript types for Elide",
   "license": "MIT",
   "types": "./index.d.ts",

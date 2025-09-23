@@ -73,7 +73,7 @@ jobs:
       - name: "Setup: Elide"
         uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
         with:
-          version: "1.0.0-beta8"
+          version: "1.0.0-beta9"
       - name: "Review: Claude"
         id: claude-review
         uses: anthropics/claude-code-action@a5528eec7426a4f0c9c1ac96018daa53ebd05bc4 # beta

@@ -3,24 +3,24 @@ FROM debian:sid-slim@sha256:7e8e5af19ae9e22c326f52aa30a65dd635c0e45430e322fc2aa6
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime with Bash"
 LABEL org.opencontainers.image.description="Elide runtime CLI as a container image, with Bash and several tools"
-LABEL org.opencontainers.image.version=1.0.0-beta8
+LABEL org.opencontainers.image.version=1.0.0-beta9
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=debian:sid-slim
-LABEL org.opencontainers.image.base.digest=sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac
+LABEL org.opencontainers.image.base.digest=sha256:7e8e5af19ae9e22c326f52aa30a65dd635c0e45430e322fc2aa64455c9ad624c
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/bash/Dockerfile
 
-ARG ELIDE_DIGEST_LINUX_AMD64=a5430b7e398c12b66fc6a13a1ac3fd1a7622db48b0a312ccce6232aafa40d23d
-ARG ELIDE_DIGEST_LINUX_ARM64=f5bdc8845726cb32564cd8ea97c286e8c5ef243662bb52480ff553c29c7231d7
+ARG ELIDE_DIGEST_LINUX_AMD64=26eb0e66d08d97911db9d021051f87a448015a48ddfebc36e7f76f6a02af263c
+ARG ELIDE_DIGEST_LINUX_ARM64=34c3aed8a9d3ac243ea62100c8ee1e17ce2d6e218f578626916feb7feb9b84ef
 
 RUN apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
-    ca-certificates=20250419 \
-    curl=8.14.1-2 \
-    uuid-runtime=2.41-5 \
-    libgomp1=14.2.0-19 \
-    libstdc++6=14.2.0-19 \
-    libc-bin=2.41-10 \
-    libc6=2.41-10 \
+    ca-certificates \
+    curl \
+    uuid-runtime \
+    libgomp1 \
+    libstdc++6 \
+    libc-bin \
+    libc6 \
   && rm -rf /var/lib/apt/lists/* \
   && groupadd elide \
   && useradd dev -g elide -m -s /bin/bash \
@@ -28,7 +28,7 @@ RUN apt-get update \
 
 USER dev
 
-ENV ELIDE_VERSION=1.0.0-beta8
+ENV ELIDE_VERSION=1.0.0-beta9
 
 RUN ELIDE_ARCH=$(uname -m) \
     && if [ "$ELIDE_ARCH" = "x86_64" ]; then \

@@ -46,6 +46,7 @@ import elide.runtime.intrinsics.IntrinsicsResolver
 import elide.runtime.intrinsics.ai.ElideLLMModule
 import elide.runtime.intrinsics.js.err.ValueErrorIntrinsic
 import elide.runtime.intrinsics.testing.TestingRegistrar
+import elide.runtime.javascript.BrowserStubs
 import elide.runtime.javascript.MessageChannelBuiltin
 import elide.runtime.javascript.NavigatorBuiltin
 import elide.runtime.javascript.QueueMicrotaskCallable
@@ -163,6 +164,7 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val readableStream = ReadableStreamIntrinsic()
     @JvmStatic private val writableStream = WritableStreamIntrinsic()
     @JvmStatic private val transformStream = TransformStreamIntrinsic()
+    @JvmStatic private val browserStubs = BrowserStubs()
 
     // All built-ins and intrinsics.
     @JvmStatic private val all = arrayOf(
@@ -220,6 +222,7 @@ import elide.runtime.plugins.env.EnvConfig
       elideTesting,
       elideLlm,
       util,
+      browserStubs,
     )
   }
 

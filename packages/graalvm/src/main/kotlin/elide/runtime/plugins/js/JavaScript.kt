@@ -29,7 +29,6 @@ import elide.runtime.core.plugin
 import elide.runtime.lang.javascript.JavaScriptLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
-import elide.runtime.plugins.defaultPolyglotContext
 import elide.runtime.plugins.env.Environment
 import elide.runtime.plugins.js.JavaScriptVersion.*
 
@@ -72,6 +71,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.lazy-translation",
       "js.new-set-methods",
       "js.performance",
+      "js.print",
       "js.shared-array-buffer",
       "js.temporal",
       "js.top-level-await",
@@ -99,7 +99,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     disableOptions(
       "js.console",
       "js.interop-complete-promises",
-      "js.print",
       "js.regexp-static-result",
       "js.scripting",
       "js.syntax-extensions",

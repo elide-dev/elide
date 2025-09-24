@@ -1205,7 +1205,6 @@ public synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$Definit
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun inject (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;Ljava/lang/Object;)Ljava/lang/Object;
 	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
 	public fun isContextScope ()Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
@@ -1217,7 +1216,6 @@ public final synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$I
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z
-	public fun instantiate ()Ljava/lang/Object;
 	public fun isBuildable ()Z
 }
 
@@ -7491,6 +7489,16 @@ public final class elide/runtime/intrinsics/testing/TestingRegistrar$TestInfo : 
 	public fun toString ()Ljava/lang/String;
 }
 
+public synthetic class elide/runtime/javascript/$BrowserStubs$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/runtime/javascript/$MessageChannelBuiltin$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -7560,6 +7568,11 @@ public final synthetic class elide/runtime/javascript/$StructuredCloneBuiltin$In
 	public fun hasBuilder ()Z
 	public fun instantiate ()Ljava/lang/Object;
 	public fun isBuildable ()Z
+}
+
+public final class elide/runtime/javascript/BrowserStubs : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic {
+	public fun <init> ()V
+	public fun install (Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;)V
 }
 
 public final class elide/runtime/javascript/MessageChannelBuiltin : elide/runtime/gvm/internals/intrinsics/js/AbstractJsIntrinsic, org/graalvm/polyglot/proxy/ProxyInstantiable {
@@ -9843,6 +9856,7 @@ public final class elide/runtime/plugins/js/JavaScriptConfig : elide/runtime/plu
 	public final fun getLanguage ()Lelide/runtime/plugins/js/JavaScriptVersion;
 	public final fun getLocale ()Ljava/util/Locale;
 	public final fun getSourceMaps ()Z
+	public final fun getStrict ()Z
 	public final fun getTimezone ()Ljava/time/ZoneId;
 	public final fun getTypescript ()Z
 	public final fun getV8 ()Z
@@ -9856,6 +9870,7 @@ public final class elide/runtime/plugins/js/JavaScriptConfig : elide/runtime/plu
 	public final fun setLanguage (Lelide/runtime/plugins/js/JavaScriptVersion;)V
 	public final fun setLocale (Ljava/util/Locale;)V
 	public final fun setSourceMaps (Z)V
+	public final fun setStrict (Z)V
 	public final fun setTimezone (Ljava/time/ZoneId;)V
 	public final fun setTypescript (Z)V
 	public final fun setV8 (Z)V

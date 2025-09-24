@@ -85,8 +85,9 @@ private const val SHUTDOWN_WAIT: Long = 10L
 }
 
 // Mounts JavaScript timer intrinsics.
-@Intrinsic @Factory internal class JsTimersIntrinsic : AbstractJsIntrinsic() {
-  @Inject private lateinit var execProvider: JsTimerExecutorProvider
+@Intrinsic @Factory internal class JsTimersIntrinsic @Inject constructor (
+  private val execProvider: JsTimerExecutorProvider,
+) : AbstractJsIntrinsic() {
   @Singleton fun provide(): Timers = manager
 
   private val manager: JsTimerManager by lazy {

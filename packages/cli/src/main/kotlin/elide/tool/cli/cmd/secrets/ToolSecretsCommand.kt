@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,14 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.tool.cli.cmd.secrets
 
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.*
 import com.github.kinquirer.core.Choice
-import dev.elide.secrets.RemoteManagement
-import dev.elide.secrets.SecretManagement
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
@@ -27,11 +24,12 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteString
 import elide.annotations.Inject
+import elide.secrets.RemoteManagement
+import elide.secrets.SecretManagement
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
-import elide.tool.io.RuntimeWorkdirManager
 import elide.tool.project.ProjectManager
 
 /** TBD. */
@@ -44,10 +42,8 @@ import elide.tool.project.ProjectManager
 @ReflectiveAccess
 internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandContext>() {
   @Inject private lateinit var projectManagerProvider: Provider<ProjectManager>
-  @Inject private lateinit var workdirProvider: Provider<RuntimeWorkdirManager>
   @Inject private lateinit var secretsProvider: Provider<SecretManagement>
   private val projectManager: ProjectManager by lazy { projectManagerProvider.get() }
-  private val workdir: RuntimeWorkdirManager by lazy { workdirProvider.get() }
   private val secrets: SecretManagement by lazy { secretsProvider.get() }
 
   /** @inheritDoc */
@@ -72,8 +68,14 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
             println("No profiles found")
             continue
           }
-          val profile = KInquirer.promptList("Please select a profile to edit:", profiles.toList())
-          secrets.loadProfile(profile)
+          val profile = KInquirer.promptList("Please select a profile to edit:", profiles.toList() + "Local secrets")
+          if (profile == "Local secrets") {
+            println("Editing local secrets can be dangerous and break things if you don't know what you're doing!")
+            if (!KInquirer.promptConfirm("Do you want to proceed?")) {
+              continue
+            }
+            secrets.loadLocalProfile()
+          } else secrets.loadProfile(profile)
           editProfileMenu(profile)
         }
         MainMenuOptions.REMOVE -> {
@@ -95,7 +97,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     return CommandResult.success()
   }
 
-  private suspend fun editProfileMenu(profile: String) {
+  private fun editProfileMenu(profile: String) {
     var running = true
     while (running) {
       when (
@@ -107,33 +109,36 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
         EditProfileOptions.CREATE -> {
           val name = KInquirer.promptInput("Please enter a name for the new secret:")
           if (
-            name in secrets.listSecrets() &&
-              !KInquirer.promptConfirm("A secret with this name already exists, do you want to replace it?")
-          )
-            continue
-          when (
-            KInquirer.promptListObject(
-              "Select the type of secret you want to create",
-              SecretType.entries.map { Choice(it.displayName, it) },
-            )
+            name !in secrets.listSecrets() ||
+              KInquirer.promptConfirm("A secret with this name already exists, do you want to replace it?")
           ) {
-            SecretType.STRING -> {
-              val secret = KInquirer.promptInputPassword("Please type or paste in the secret:")
-              val repeat = KInquirer.promptInputPassword("Please type or paste in the secret again:")
-              if (secret != repeat) {
-                println("Secrets were not identical")
-                continue
+            when (
+              KInquirer.promptListObject(
+                "Select the type of secret you want to create",
+                SecretType.entries.map { Choice(it.displayName, it) },
+              )
+            ) {
+              SecretType.STRING -> {
+                val secret = KInquirer.promptInputPassword("Please type or paste in the secret:")
+                val repeat = KInquirer.promptInputPassword("Please type or paste in the secret again:")
+                if (secret != repeat) {
+                  println("Secrets were not identical")
+                } else {
+                  val envVar =
+                    if (
+                      KInquirer.promptConfirm("Do you want to use this secret as an environment variable for your app?")
+                    )
+                      KInquirer.promptInput("Please enter the name of the environment variable:")
+                    else null
+                  secrets.setStringSecret(name, secret, envVar)
+                }
               }
-              val envVar =
-                if (KInquirer.promptConfirm("Do you want to use this secret as an environment variable for your app?"))
-                  KInquirer.promptInput("Please enter the name of the environment variable")
-                else null
-              secrets.setStringSecret(name, secret, envVar)
-            }
-            SecretType.BINARY -> {
-              val path = KInquirer.promptInput("Please type or paste in the absolute path to the secret binary file:")
-              val data = SystemFileSystem.source(Path(path)).buffered().use { it.readByteString() }
-              secrets.setBinarySecret(name, data)
+
+              SecretType.BINARY -> {
+                val path = KInquirer.promptInput("Please type or paste in the absolute path to the secret binary file:")
+                val data = SystemFileSystem.source(Path(path)).buffered().use { it.readByteString() }
+                secrets.setBinarySecret(name, data)
+              }
             }
           }
         }
@@ -143,25 +148,25 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
           val secretNames = secrets.listSecrets().filterValues { it == String::class }.keys
           if (secretNames.isEmpty()) {
             println("No text secrets found")
-            continue
-          }
-          val name = KInquirer.promptList("Please select a secret to reveal:", secretNames.toList())
-          if (
-            KInquirer.promptConfirm(
-              "Are you sure you want to reveal the secret. It will be printed to your console in plain text!"
+          } else {
+            val name = KInquirer.promptList("Please select a secret to reveal:", secretNames.toList())
+            if (
+              KInquirer.promptConfirm(
+                "Are you sure you want to reveal the secret. It will be printed to your console in plain text!"
+              )
             )
-          )
-            println(secrets.getStringSecret(name))
+              println(secrets.getStringSecret(name))
+          }
         }
         EditProfileOptions.REMOVE -> {
           val secretNames = secrets.listSecrets().keys
           if (secretNames.isEmpty()) {
             println("No secrets found")
-            continue
+          } else {
+            secrets.removeSecret(
+              KInquirer.promptList("Please select a secret to remove:", secrets.listSecrets().keys.toList())
+            )
           }
-          secrets.removeSecret(
-            KInquirer.promptList("Please select a secret to remove:", secrets.listSecrets().keys.toList())
-          )
         }
         EditProfileOptions.WRITE -> {
           secrets.writeChanges()
@@ -192,19 +197,35 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
           val accesses = remote.listAccesses()
           if (accesses.isEmpty()) {
             println("No access files found")
-            continue
+          } else {
+            val access = KInquirer.promptList("Please select an access file to edit:", accesses.toList())
+            remote.selectAccess(access)
+            editAccessMenu(remote, access)
           }
-          val access = KInquirer.promptList("Please select an access file to edit:", accesses.toList())
-          remote.selectAccess(access)
-          editAccessMenu(remote, access)
         }
         ManageRemoteOptions.REMOVE -> {
           val accesses = remote.listAccesses()
           if (accesses.isEmpty()) {
             println("No access files found")
-            continue
+          } else {
+            remote.removeAccess(KInquirer.promptList("Please select an access file to remove:", accesses.toList()))
           }
-          remote.removeAccess(KInquirer.promptList("Please select an access file to remove:", accesses.toList()))
+        }
+        ManageRemoteOptions.DELETE -> {
+          remote.deleteProfile(
+            KInquirer.promptList(
+              "Please select a profile to delete:",
+              (secrets.listProfiles() subtract remote.deletedProfiles()).toList(),
+            )
+          )
+        }
+        ManageRemoteOptions.RESTORE -> {
+          remote.restoreProfile(
+            KInquirer.promptList(
+              "Please select a deleted profile to restore:",
+              remote.deletedProfiles().toList(),
+            )
+          )
         }
         ManageRemoteOptions.PUSH -> {
           remote.push()
@@ -217,7 +238,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     }
   }
 
-  private suspend fun editAccessMenu(remote: RemoteManagement, access: String) {
+  private fun editAccessMenu(remote: RemoteManagement, access: String) {
     var running = true
     while (running) {
       when (
@@ -280,6 +301,8 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     LIST("List access files"),
     SELECT("Select an access file"),
     REMOVE("Remove an access file"),
+    DELETE("Delete a profile"),
+    RESTORE("Restore a deleted profile"),
     PUSH("Push changes to remote and go to the main menu"),
     EXIT("Go to the main menu without pushing changes"),
   }

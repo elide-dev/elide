@@ -26,7 +26,6 @@ import com.github.ajalt.mordant.rendering.TextStyle
 import com.github.ajalt.mordant.rendering.TextStyles
 import com.oracle.truffle.host.HostException
 import com.oracle.truffle.js.runtime.UserScriptException
-import dev.elide.secrets.Secrets
 import io.micronaut.context.BeanContext
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
@@ -106,6 +105,7 @@ import elide.runtime.precompiler.Precompiler
 import elide.runtime.runner.JvmRunner
 import elide.runtime.runner.RunnerOutcome
 import elide.runtime.runner.Runners
+import elide.secrets.Secrets
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cmd.builder.emitCommand

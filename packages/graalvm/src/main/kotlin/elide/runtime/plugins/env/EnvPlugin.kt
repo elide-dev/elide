@@ -12,6 +12,7 @@
  */
 package elide.runtime.plugins.env
 
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyIterable
@@ -120,6 +121,23 @@ import elide.vm.annotations.Polyglot
       scope.lifecycle.on(ContextCreated, instance::onContextCreate)
 
       return instance
+    }
+
+    /**
+     * Returns the value providing access to the environment map installed in the given [context] for a specific
+     * [language].
+     */
+    @JvmStatic public fun forLanguage(language: GuestLanguage, context: Context): PolyglotValue {
+      return forLanguage(language.languageId, context)
+    }
+
+
+    /**
+     * Returns the value providing access to the environment map installed in the given [context] for a specific
+     * [language].
+     */
+    @JvmStatic public fun forLanguage(languageId: String, context: Context): PolyglotValue {
+      return context.getBindings(languageId).getMember(APP_ENV_BIND_PATH)
     }
   }
 }

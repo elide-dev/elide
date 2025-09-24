@@ -2431,7 +2431,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     appEnvironment.apply(
       project,
       this,
-      host = accessControl.allowEnv,
+      host = accessControl.allowAll || accessControl.allowEnv,
       dotenv = appEnvironment.dotenv,
     )
 

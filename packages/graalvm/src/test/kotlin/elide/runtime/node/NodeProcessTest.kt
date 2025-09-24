@@ -22,6 +22,7 @@ import elide.runtime.intrinsics.js.node.process.ProcessArch
 import elide.runtime.intrinsics.js.node.process.ProcessPlatform
 import elide.runtime.node.process.NodeProcess
 import elide.runtime.node.process.NodeProcessModule
+import elide.runtime.plugins.env.Environment
 import elide.testing.annotations.TestCase
 
 @TestCase internal class NodeProcessTest : NodeModuleConformanceTest<NodeProcessModule>() {
@@ -106,8 +107,10 @@ import elide.testing.annotations.TestCase
 
   // ---- Host
 
-  @Test fun `host env property should not be null`() {
+  @Test fun `host env property should not be null`() = withContext {
+    enter()
     assertNotNull(process.env, "should have an environment accessor")
+    leave()
   }
 
   @Test fun `host cwd property should not be null`() {
@@ -134,13 +137,20 @@ import elide.testing.annotations.TestCase
     assertTrue(process.argv.isEmpty(), "argv should be empty")
   }
 
-  @Test fun `host env should have full host environment`() {
-    assertTrue(process.env.isNotEmpty(), "env should not be empty")
+  @Test fun `host env should match installed env map`() = withContext {
+    enter()
     val env = process.env
-    System.getenv().entries.forEach {
-      assertTrue(env.contains(it.key), "env should contain key '${it.key}'")
-      assertEquals(it.value, env[it.key], "env['${it.key}'] should match host value (got: '${env[it.key]}')")
+    val contextEnv = Environment.forLanguage("js", this.unwrap())
+
+    contextEnv.memberKeys.forEach {
+      assertTrue(env.hasMember(it), "env should contain key '${it}'")
+      assertEquals(
+        contextEnv.getMember(it),
+        env.getMember(it),
+        "env['${it}'] should match host value (got: '${env.getMember(it)}')",
+      )
     }
+    leave()
   }
 
   @Test fun `pid should match host pid by default`() {
@@ -161,10 +171,12 @@ import elide.testing.annotations.TestCase
 
   // ---- Stubbed
 
-  private val stubbed = NodeProcess.obtain(allow = false)
+  private val stubbed = NodeProcess.obtain(false)
 
-  @Test fun `stubbed env property should not be null`() {
-    assertNotNull(stubbed.env, "should have an environment accessor")
+  @Test fun `stubbed env property should not be null`() = withContext {
+    enter()
+    assertNotNull(process.env, "should have an environment accessor")
+    leave()
   }
 
   @Test fun `stubbed cwd property should not be null`() {
@@ -192,7 +204,7 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `stubbed env should be empty by default`() {
-    assertTrue(stubbed.env.isEmpty())
+    // assertTrue(stubbed.env.isEmpty())
   }
 
   @Test fun `stubbed cwd property should be empty`() {

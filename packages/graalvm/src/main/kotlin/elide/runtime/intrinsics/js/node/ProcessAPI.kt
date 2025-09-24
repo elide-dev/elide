@@ -15,6 +15,7 @@ package elide.runtime.intrinsics.js.node
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
+import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.node.process.ProcessEnvironmentAPI
 import elide.runtime.intrinsics.js.node.process.ProcessStandardInputStream
@@ -85,12 +86,11 @@ private val NODE_PROCESS_PROPS = arrayOf(
   /**
    * ## Process Environment
    *
-   * Access the environment variables of the current process.
+   * Access the environment variables of the current process as an arbitrary guest value.
    *
    * See also: [Node Process API: `env`](https://nodejs.org/api/process.html#process_process_env).
-   * @see ProcessEnvironmentAPI for details about how Elide handles Node-style environment access.
    */
-  @get:Polyglot public val env: ProcessEnvironmentAPI
+  @get:Polyglot public val env: PolyglotValue
 
   /**
    * ## Process Arguments

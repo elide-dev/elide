@@ -17,6 +17,7 @@ package elide.runtime.node.process
 
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.ProcessProperties
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.atomic.AtomicReference
@@ -26,6 +27,7 @@ import kotlin.system.exitProcess
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.PolyglotValue
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.ProcessManager
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
@@ -37,6 +39,8 @@ import elide.runtime.intrinsics.js.node.ProcessAPI
 import elide.runtime.intrinsics.js.node.process.*
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.runtime.plugins.env.EnvConfig
+import elide.runtime.plugins.env.Environment
+import elide.runtime.plugins.js.JavaScript
 import elide.vm.annotations.Polyglot
 
 // Installs the Node process module into the intrinsic bindings.
@@ -277,7 +281,8 @@ internal object NodeProcess {
     // Process title/program name override.
     private val programNameOverride: AtomicReference<String> = AtomicReference()
 
-    @get:Polyglot override val env: ProcessEnvironmentAPI get() = EnvironmentAccessMediator(envApi)
+    @get:Polyglot override val env: PolyglotValue get() = Environment.forLanguage(JavaScript, Context.getCurrent())
+
     @get:Polyglot override val argv: Array<String> get() = argvMediator.all()
     @get:Polyglot override val pid: Long get() = pidAccessor.pid()
     @get:Polyglot override val arch: String get() = activeArch.symbol

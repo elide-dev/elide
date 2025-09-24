@@ -36,6 +36,7 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.gvm.internals.AbstractDualTest.CodeGenerator
+import elide.runtime.plugins.env.Environment
 import elide.runtime.plugins.vfs.VfsListener
 import elide.runtime.plugins.vfs.vfs
 import elide.vm.annotations.Polyglot
@@ -315,6 +316,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
   /** A [PolyglotEngine] used to acquire context instances for testing, configurable trough [configureEngine]. */
   protected val engine: PolyglotEngine by lazy {
     PolyglotEngine {
+      configure(Environment)
       configureEngine(this) // provided by implementations
 
       // register event listeners

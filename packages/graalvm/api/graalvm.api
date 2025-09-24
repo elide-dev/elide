@@ -3806,7 +3806,7 @@ public abstract interface class elide/runtime/intrinsics/js/node/ProcessAPI : el
 	public abstract fun exit (Lorg/graalvm/polyglot/Value;)V
 	public abstract fun getArch ()Ljava/lang/String;
 	public abstract fun getArgv ()[Ljava/lang/String;
-	public abstract fun getEnv ()Lelide/runtime/intrinsics/js/node/process/ProcessEnvironmentAPI;
+	public abstract fun getEnv ()Lorg/graalvm/polyglot/Value;
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
 	public abstract fun getPid ()J
@@ -9804,10 +9804,14 @@ public final class elide/runtime/plugins/env/Environment {
 	public static final field Plugin Lelide/runtime/plugins/env/Environment$Plugin;
 	public synthetic fun <init> (Lelide/runtime/plugins/env/EnvConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun configure (Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/core/PolyglotContext;Lelide/runtime/core/GuestLanguage;)V
+	public static final fun forLanguage (Lelide/runtime/core/GuestLanguage;Lorg/graalvm/polyglot/Context;)Lorg/graalvm/polyglot/Value;
+	public static final fun forLanguage (Ljava/lang/String;Lorg/graalvm/polyglot/Context;)Lorg/graalvm/polyglot/Value;
 	public final fun getConfig ()Lelide/runtime/plugins/env/EnvConfig;
 }
 
 public final class elide/runtime/plugins/env/Environment$Plugin : elide/runtime/core/EnginePlugin {
+	public final fun forLanguage (Lelide/runtime/core/GuestLanguage;Lorg/graalvm/polyglot/Context;)Lorg/graalvm/polyglot/Value;
+	public final fun forLanguage (Ljava/lang/String;Lorg/graalvm/polyglot/Context;)Lorg/graalvm/polyglot/Value;
 	public fun getKey-wLvarY0 ()Ljava/lang/String;
 	public fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Lelide/runtime/plugins/env/Environment;
 	public synthetic fun install (Lelide/runtime/core/EnginePlugin$InstallationScope;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;

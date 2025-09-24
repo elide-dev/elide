@@ -47,11 +47,6 @@ internal class SecretsJsModule(private val secretAccess: Provider<Secrets>) : Ab
 
 internal class GuestSecrets(private val secretAccess: Secrets) : ReadOnlyProxyObject, SecretsAPI {
   override fun get(name: Value): Value {
-    if (secretAccess.getProfile() == null) {
-      val profiles = secretAccess.listProfiles()
-      if (profiles.size != 1) throw IllegalStateException("Multiple profiles and none is selected")
-      secretAccess.loadProfile(profiles.first())
-    }
     val secret = secretAccess.getSecret(name.asString())
     return Context.getCurrent().asValue(if (secret is ByteString) secret.toByteArray() else secret)
   }

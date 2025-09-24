@@ -2455,6 +2455,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     appEnvironment.apply(
       project,
       this,
+    beanContext.getBean(Secrets::class.java).getEnv(),
       host = accessControl.allowAll || accessControl.allowEnv,
       dotenv = appEnvironment.dotenv,
     )
@@ -2764,10 +2765,20 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     val effectiveInitLangs = onByDefaultLangs + projectLangs
 
     //Initialize secrets
-    run {
-      projectResolution.join()
-      val secrets = beanContext.getBean(Secrets::class.java)
-      secrets.init(projectPath, activeProject.value?.manifest)
+    val secretsResolution = launch {
+      run {
+        projectResolution.join()
+
+        val secrets = beanContext.getBean(Secrets::class.java)
+        secrets.init(projectPath, activeProject.value?.manifest)
+        if(secrets.initialized) {
+          if (secrets.getProfile() == null) {
+            val profiles = secrets.listProfiles()
+            if (profiles.size != 1) logging.warn { "No secret profile will be loaded" }
+            else secrets.loadProfile(profiles.first())
+          }
+        }
+      }
     }
 
     // if no entrypoint was specified, attempt to use the one in the project manifest, or try resolving the runnable as
@@ -2900,6 +2911,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     try {
       projectResolution.join()
       lockfileResolution.join()
+      secretsResolution.join()
 
       resolveEngine(effectiveInitLangs).unwrap().use {
         withDeferredContext(effectiveInitLangs) {

@@ -73,7 +73,6 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
       "js.new-set-methods",
       "js.performance",
       "js.shared-array-buffer",
-      "js.strict",
       "js.temporal",
       "js.top-level-await",
       "js.webassembly",
@@ -124,6 +123,7 @@ import elide.runtime.plugins.js.JavaScriptVersion.*
     )
 
     setOptions(
+      "js.strict" to config.strict,
       "js.commonjs-require" to config.npmConfig.enabled,
       "js.esm-bare-specifier-relative-lookup" to config.esm,
       "js.shell" to config.interactive,

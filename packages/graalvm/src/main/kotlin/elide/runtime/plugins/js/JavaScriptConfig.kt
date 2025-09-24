@@ -142,6 +142,9 @@ import elide.runtime.plugins.js.JavaScriptVersion.ES2022
   /** Whether to enable source-maps support, which enhances stack-traces, logs, and other system features. */
   public var sourceMaps: Boolean = true
 
+  /** Whether JS strict mode is active by default. */
+  public var strict: Boolean = true
+
   /**  Whether to enable V8 compatibility mode. */
   public var v8: Boolean = true
 

@@ -93,6 +93,7 @@ import elide.runtime.plugins.js.JavaScriptVersion
     config.language = JavaScriptVersion.valueOf(ecma.name)
     config.wasm = wasm
     config.esm = esm
+    config.strict = strict
     if (experimentalDisableVfs || experimentalDisablePolyfills) {
       config.experimental {
         disableVfs = experimentalDisableVfs

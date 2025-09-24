@@ -37,6 +37,7 @@ import elide.runtime.gvm.internals.intrinsics.js.url.URLSearchParamsIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.ReadableStreamIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.TransformStreamIntrinsic
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.WritableStreamIntrinsic
+import elide.runtime.gvm.internals.js.JsTimerExecutorProviderImpl
 import elide.runtime.gvm.internals.js.JsTimersIntrinsic
 import elide.runtime.gvm.internals.sqlite.ElideSqliteModule
 import elide.runtime.gvm.internals.testing.ElideTestingModule
@@ -105,6 +106,7 @@ import elide.runtime.plugins.env.EnvConfig
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var listener: VfsInitializerListener
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var registrar: TestingRegistrar
     @JvmStatic private val execProvider = GuestExecutorProvider { exec }
+    @JvmStatic private val timerExecutor = JsTimerExecutorProviderImpl()
     @JvmStatic private val vfsListenerProvider = Provider { listener }
     @JvmStatic private val registrarProvider = Provider { registrar }
     @JvmStatic private val assert = NodeAssertModule()
@@ -121,7 +123,7 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val nodeStreams = NodeStreamModule()
     @JvmStatic private val streamsPromises = NodeStreamPromisesModule()
     @JvmStatic private val streamsConsumers = NodeStreamConsumersModule()
-    @JvmStatic private val timers = JsTimersIntrinsic()
+    @JvmStatic private val timers = JsTimersIntrinsic(timerExecutor)
     @JvmStatic private val buffer = NodeBufferModule()
     @JvmStatic private val querystring = NodeQuerystringModule()
     @JvmStatic private val http = NodeHttpModule()

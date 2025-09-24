@@ -66,7 +66,7 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
     SecretsState.profileFlow.value = null
   }
 
-  override fun getEnv(): Map<String, String> = SecretsState.profile.getEnv()
+  override fun getEnv(): Map<String, String> = SecretsState.profileFlow.value?.first?.getEnv() ?: mapOf()
 
   override fun getSecret(name: String): Any? = SecretsState.profile.secrets[name]?.value
 

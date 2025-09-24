@@ -22,7 +22,6 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.util.concurrent.atomic.AtomicReference
 import jakarta.inject.Provider
-import kotlin.collections.Map.Entry
 import kotlin.system.exitProcess
 import elide.annotations.Inject
 import elide.annotations.Singleton
@@ -51,9 +50,7 @@ import elide.vm.annotations.Polyglot
   private fun envConfig(): EnvConfig? = envConfigProvider.get()
 
   fun provide(): ProcessAPI = envConfig().let { envConfig ->
-    if (envConfig == null) NodeProcess.obtain() else NodeProcess.create(
-      env = EnvAccessor.of(envConfig),
-    )
+    if (envConfig == null) NodeProcess.obtain() else NodeProcess.create()
   }
 
   private val singleton by lazy { provide() }
@@ -233,20 +230,6 @@ internal interface EnvAccessor {
   fun pid(): Long
 }
 
-// Mediate access to an environment accessor for the Node process module.
-private class EnvironmentAccessMediator(private val access: EnvAccessor) : ProcessEnvironmentAPI {
-  override val entries: Set<Entry<String, String>> get() = all().entries
-  override val keys: Set<String> get() = all().keys
-  override val size: Int get() = all().size
-  override val values: Collection<String> get() = all().values
-
-  override fun all(): Map<String, String> = access.all()
-  override fun get(key: String): String? = access[key]
-  override fun containsKey(key: String): Boolean = access[key] != null
-  override fun containsValue(value: String): Boolean = all().values.contains(value)
-  override fun isEmpty(): Boolean = all().isEmpty()
-}
-
 /**
  * # Node Process API
  */
@@ -259,7 +242,6 @@ internal object NodeProcess {
     private val activePlatform: ProcessPlatform,
     private val activeArch: ProcessArch,
     private val argvMediator: ArgvAccessor,
-    private val envApi: EnvAccessor,
     private val exiter: VmExitHandler,
     private val cwdAccessor: CwdAccessor,
     private val pidAccessor: PidAccessor,
@@ -353,7 +335,6 @@ internal object NodeProcess {
       resolveCurrentPlatform(),
       resolveCurrentArchitecture(),
       { emptyArray<String>() },
-      EnvAccessor.empty(),
       { },
       { "" },
       { -1 },
@@ -367,7 +348,6 @@ internal object NodeProcess {
         resolveCurrentPlatform(),
         resolveCurrentArchitecture(),
         { mgr.arguments() },
-        EnvAccessor.fromMap(System.getenv()),
         { exitProcess(it) },
         { mgr.workingDirectory().ifBlank { null } ?: System.getProperty("user.dir") },
         { ProcessHandle.current().pid() },
@@ -396,7 +376,6 @@ internal object NodeProcess {
    */
   @JvmStatic fun create(
     argv: ArgvAccessor = ArgvAccessor { emptyArray<String>() },
-    env: EnvAccessor = EnvAccessor.empty(),
     exiter: VmExitHandler = VmExitHandler { exitProcess(it) },
     cwd: CwdAccessor = CwdAccessor { System.getProperty("user.dir") },
     pid: PidAccessor = PidAccessor { ProcessHandle.current().pid() },
@@ -404,7 +383,6 @@ internal object NodeProcess {
     resolveCurrentPlatform(),
     resolveCurrentArchitecture(),
     argv,
-    env,
     exiter,
     cwd,
     pid,

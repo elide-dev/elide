@@ -78,5 +78,12 @@
       "prettier-plugin-sh",
       "prettier-plugin-properties"
     ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "bun",
+      "esbuild"
+    ]
   }
 }

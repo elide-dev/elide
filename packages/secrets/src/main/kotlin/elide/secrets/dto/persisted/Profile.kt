@@ -12,6 +12,9 @@
  */
 package elide.secrets.dto.persisted
 
+import kotlinx.io.bytestring.ByteString
+import elide.secrets.SecretType
+
 /** @author Lauri Heino <datafox> */
 internal interface Profile : Named {
   val secrets: Map<String, Secret<*>>
@@ -20,7 +23,14 @@ internal interface Profile : Named {
     return secrets.values.filterIsInstance<StringSecret>().filter { it.env != null }.associate { it.env!! to it.value }
   }
 
-  companion object {
+  fun listSecrets(): Map<String, SecretType> =
+    secrets.map { (key, value) -> key to when(value.value::class) {
+      String::class -> SecretType.TEXT
+      ByteString::class -> SecretType.BINARY
+      else -> throw IllegalArgumentException("Unknown secret type ${value.value::class}")
+    } }.toMap()
+
+    companion object {
     inline operator fun <reified T> Profile.get(name: String): T? =
       if (T::class == Secret::class) secrets[name] as? T else secrets[name]?.value as? T
   }

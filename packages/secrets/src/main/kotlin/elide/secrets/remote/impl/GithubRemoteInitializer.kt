@@ -44,12 +44,12 @@ internal class GithubRemoteInitializer(
   private lateinit var token: String
   override val name: String = ElidePackageManifest.SecretsRemote.GITHUB.symbol
 
-  override suspend fun initialize(): GithubRemote {
+  override suspend fun initialize(prompts: MutableList<String>): GithubRemote {
     repository =
       SecretsState.manifest?.secrets?.github?.repository
         ?: SecretsState.local[Values.GITHUB_REPOSITORY_SECRET]
-        ?: askRepository()
-    token = SecretsState.local[Values.GITHUB_TOKEN_SECRET] ?: askToken()
+        ?: askRepository(prompts)
+    token = SecretsState.local[Values.GITHUB_TOKEN_SECRET] ?: askToken(prompts)
     val writeAccess = validateConnection(token, repository)
     SecretsState.updateLocal { addAll(
       StringSecret(Values.GITHUB_REPOSITORY_SECRET, repository),
@@ -58,14 +58,14 @@ internal class GithubRemoteInitializer(
     return GithubRemote(writeAccess, repository, token, encryption, client, json)
   }
 
-  private fun askRepository(): String {
+  private fun askRepository(prompts: MutableList<String>): String {
     println(Values.GITHUB_REMOTE_REPOSITORY_MESSAGE)
-    return KInquirer.promptInput(Values.GITHUB_REMOTE_REPOSITORY_PROMPT)
+    return prompts.removeFirstOrNull() ?: KInquirer.promptInput(Values.GITHUB_REMOTE_REPOSITORY_PROMPT)
   }
 
-  private fun askToken(): String {
+  private fun askToken(prompts: MutableList<String>): String {
     println(Values.GITHUB_REMOTE_TOKEN_MESSAGE)
-    return KInquirer.promptInputPassword(Values.GITHUB_REMOTE_TOKEN_PROMPT)
+    return prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(Values.GITHUB_REMOTE_TOKEN_PROMPT)
   }
 
   private suspend fun validateConnection(token: String, repository: String): Boolean {

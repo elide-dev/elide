@@ -26,6 +26,7 @@ import kotlinx.io.readByteString
 import elide.annotations.Inject
 import elide.secrets.RemoteManagement
 import elide.secrets.SecretManagement
+import elide.secrets.SecretType
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
@@ -118,7 +119,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
                 SecretType.entries.map { Choice(it.displayName, it) },
               )
             ) {
-              SecretType.STRING -> {
+              SecretType.TEXT -> {
                 val secret = KInquirer.promptInputPassword("Please type or paste in the secret:")
                 val repeat = KInquirer.promptInputPassword("Please type or paste in the secret again:")
                 if (secret != repeat) {
@@ -143,9 +144,9 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
           }
         }
         EditProfileOptions.LIST ->
-          println(secrets.listSecrets().map { (name, type) -> "$name (${type.java.simpleName})" })
+          println(secrets.listSecrets().map { (name, type) -> "$name (${type.displayName})" })
         EditProfileOptions.REVEAL -> {
-          val secretNames = secrets.listSecrets().filterValues { it == String::class }.keys
+          val secretNames = secrets.listSecrets().filterValues { it == SecretType.TEXT }.keys
           if (secretNames.isEmpty()) {
             println("No text secrets found")
           } else {
@@ -312,10 +313,5 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     LIST("List profiles in the access file"),
     REMOVE("Remove a profile from the access file"),
     DESELECT("Return to the remote management menu"),
-  }
-
-  private enum class SecretType(val displayName: String) {
-    STRING("Text"),
-    BINARY("Binary"),
   }
 }

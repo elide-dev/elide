@@ -32,7 +32,7 @@ internal object Values {
   const val KEY_FILE_EXTENSION = ".key"
   const val ACCESS_FILE_EXTENSION = ".access"
   const val SUPER_ACCESS_FILE = ".access"
-  const val LOCAL_REMOTE_DEFAULT_PATH = ".secrets"
+  const val PROJECT_REMOTE_DEFAULT_PATH = ".secrets"
 
   // Local collection secrets
   const val REMOTE_SECRET = "remote"
@@ -110,8 +110,14 @@ internal object Values {
   const val NOT_IN_INTERACTIVE_MODE_EXCEPTION = "Application is not in interactive mode."
   const val GITHUB_REMOTE_REPOSITORY_NOT_PRIVATE_EXCEPTION = "The repository is not private."
   const val GITHUB_REMOTE_REPOSITORY_NO_READ_ACCESS_EXCEPTION = "No read access to repository contents."
+  const val NO_ACCESS_SELECTED_EXCEPTION = "No access is selected."
+  const val PROFILE_NOT_DELETED_EXCEPTION = "Profile is not deleted."
 
   fun profileDoesNotExistException(profile: String) = "Profile \"$profile\" does not exist."
 
   fun profileAlreadyExistsException(profile: String) = "Profile \"$profile\" already exists."
+
+  fun accessDoesNotExistException(access: String) = "Access \"$access\" does not exist."
+
+  fun profileNotInAccess(profile: String) = "Profile \"$profile\" is not in the access."
 }

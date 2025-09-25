@@ -43,5 +43,5 @@ public sealed interface SecretsCommon {
 
   public fun getBinarySecret(name: String): ByteString?
 
-  public fun listSecrets(): Map<String, KClass<*>>
+  public fun listSecrets(): Map<String, SecretType>
 }

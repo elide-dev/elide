@@ -10,13 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.secrets.exception
+package elide.secrets
 
-import elide.secrets.remote.Remote
-
-/**
- * Exception that is thrown if a [Remote] has not been initialized.
- *
- * @author Lauri Heino <datafox>
- */
-public class RemoteNotInitializedException(message: String) : IllegalStateException(message)
+/** @author Lauri Heino <datafox> */
+public enum class SecretType(public val displayName: String) {
+  TEXT("Text"),
+  BINARY("Binary"),
+}

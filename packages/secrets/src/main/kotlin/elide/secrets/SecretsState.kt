@@ -91,7 +91,6 @@ internal object SecretsState {
   internal fun init(interactive: Boolean, path: Path, manifest: ElidePackageManifest?) {
     if (initialized) {
       logger.warn(Values.SECRETS_STATE_INITIALIZED_WARNING)
-      return
     }
     interactiveFlow.value = interactive
     pathFlow.value = path
@@ -108,5 +107,16 @@ internal object SecretsState {
 
   internal fun updateProfile(block: SecretProfile.() -> SecretProfile) {
     profileFlow.update { it!!.copy(first = it.first.block()) }
+  }
+
+  internal fun reset() {
+    interactiveFlow.value = null
+    pathFlow.value = null
+    manifestFlow.value = null
+    metadataFlow.value = null
+    userKeyFlow.value = null
+    localFlow.value = null
+    profileFlow.value = null
+    remoteFlow.value = null
   }
 }

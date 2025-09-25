@@ -20,5 +20,5 @@ import elide.secrets.dto.persisted.Named
  * @author Lauri Heino <datafox>
  */
 internal interface RemoteInitializer : Named {
-  suspend fun initialize(): Remote
+  suspend fun initialize(prompts: MutableList<String>): Remote
 }

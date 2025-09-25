@@ -35,21 +35,22 @@ internal class ProjectRemoteInitializer : RemoteInitializer {
   private lateinit var path: String
   override val name: String = ElidePackageManifest.SecretsRemote.PROJECT.symbol
 
-  override suspend fun initialize(): ProjectRemote {
+  override suspend fun initialize(prompts: MutableList<String>): ProjectRemote {
     path =
       SecretsState.manifest?.secrets?.project?.path
         ?: SecretsState.local[Values.PROJECT_REMOTE_PATH_SECRET]
-        ?: askPath()
+        ?: askPath(prompts)
     val realPath = validatePath()
     SecretsState.updateLocal { add(StringSecret(Values.PROJECT_REMOTE_PATH_SECRET, path)) }
     return ProjectRemote(realPath)
   }
 
-  private fun askPath(): String {
+  private fun askPath(prompts: MutableList<String>): String {
     println("Elide Secrets in project mode are stored encrypted alongside project files.")
-    return KInquirer.promptInput(
+    return prompts.removeFirstOrNull() ?: KInquirer.promptInput(
       "Please enter a path relative to the project directory " +
-              "using your system's path separator (\"$SystemPathSeparator\"):"
+              "using your system's path separator (\"$SystemPathSeparator\"):",
+      Values.PROJECT_REMOTE_DEFAULT_PATH
     )
   }
 

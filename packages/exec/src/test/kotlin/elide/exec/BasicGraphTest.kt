@@ -190,10 +190,10 @@ class BasicGraphTest {
     val subExecuted = AtomicBoolean(false)
 
     TaskGraph.build {
-      task(name = "example") {
+      task<Unit>(name = "example") {
         // this is an example task
         executed.compareAndSet(false, true)
-        taskScope.fork {
+        taskScope.scope.fork<Unit> {
           subExecuted.compareAndSet(false, true)
         }
       }

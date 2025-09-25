@@ -12,7 +12,6 @@
  */
 package elide.runtime.intrinsics.ai
 
-import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
@@ -21,9 +20,7 @@ import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.net.URI
 import java.nio.file.Paths
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.ForkJoinPool
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import java.util.concurrent.Executors
 import elide.annotations.Singleton
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.api.Intrinsic
@@ -230,7 +227,9 @@ private fun Model.Companion.huggingface(value: Value): Model {
 
 // Base LLM implementation stuff.
 internal sealed class BaseLLMImpl : LLMAPI, ReadOnlyProxyObject {
-  protected val execPool: ListeningExecutorService = MoreExecutors.listeningDecorator(ForkJoinPool.commonPool())
+  protected val execPool: ListeningExecutorService = MoreExecutors.listeningDecorator(
+    Executors.newVirtualThreadPerTaskExecutor()
+  )
 
   override fun getMemberKeys(): Array<String> = moduleSurface
 

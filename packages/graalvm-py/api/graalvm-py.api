@@ -57,12 +57,6 @@ public final class elide/runtime/plugins/python/features/BouncyCastleFeature : o
 	public fun getDescription ()Ljava/lang/String;
 }
 
-public final class elide/runtime/plugins/python/features/JNIFeature : org/graalvm/nativeimage/hosted/Feature {
-	public fun <init> ()V
-	public fun afterRegistration (Lorg/graalvm/nativeimage/hosted/Feature$AfterRegistrationAccess;)V
-	public fun getDescription ()Ljava/lang/String;
-}
-
 public final class org/graalvm/python/embedding/GraalPythonFilesystem {
 	public static final field INSTANCE Lorg/graalvm/python/embedding/GraalPythonFilesystem;
 	public final fun delegate ()Lorg/graalvm/polyglot/io/FileSystem;

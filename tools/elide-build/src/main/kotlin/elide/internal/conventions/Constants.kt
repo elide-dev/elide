@@ -131,6 +131,9 @@ public object Constants {
     /** Version to pin for ktlint. */
     const val KTLINT = "1.1.1"
 
+    /** Google Java Format version to use. */
+    const val GOOGLE_JAVA_FORMAT = "1.28.0"
+
     /** Version to pin for eslint. */
     const val ESLINT = "8.56.0"
 
@@ -141,7 +144,7 @@ public object Constants {
     const val PROTOBUF = "4.29.3"
 
     /** Static Netty version. */
-    const val NETTY = "4.2.6.Final"
+    const val NETTY = "4.2.1.Final"
 
     /** Guava version. */
     const val GUAVA = "33.5.0-jre"
@@ -156,7 +159,7 @@ public object Constants {
     const val OKIO = "3.15.0"
 
     /** GraalVM version. */
-    const val GRAALVM = "24.2.2"
+    const val GRAALVM = "25.0.0"
   }
 
   /** Kotlin conventions. */

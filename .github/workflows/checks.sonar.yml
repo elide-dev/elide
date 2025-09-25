@@ -77,11 +77,11 @@ jobs:
           restore-keys: |
             elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-framework-v2-tests-
-      - name: "Setup: GraalVM (Java 24)"
+      - name: "Setup: GraalVM (Java 25)"
         uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
         with:
           distribution: "graalvm"
-          java-version: 24
+          java-version: "25"
           check-for-updates: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Artifacts"

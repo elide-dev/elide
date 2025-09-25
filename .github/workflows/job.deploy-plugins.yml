@@ -29,7 +29,7 @@ jobs:
         uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
         with:
           distribution: "graalvm"
-          java-version: 24
+          java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Build Intellij plugin"
         uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3

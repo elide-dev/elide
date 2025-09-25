@@ -131,7 +131,7 @@ val nativeArgs = listOfNotNull(
 
 // Java Launcher (GraalVM at either EA or LTS)
 val edgeJvmTarget = 25
-val stableJvmTarget = 24
+val stableJvmTarget = 25
 val oracleGvm = true
 val enableEdge = false
 val enableToolchains = true

@@ -109,28 +109,29 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: "Setup: Node"
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
-        with:
-          node-version: 23
-      - name: "Setup: Bun"
-        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
-        with:
-          bun-version: "1.2.14"
-      - name: "Setup: GraalVM (Java 24)"
-        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
-        with:
-          distribution: "graalvm"
-          java-version: "24"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Elide"
-        uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
-        with:
-          version: "1.0.0-alpha15" # unlisted (interim)
       - name: "Setup: PNPM"
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: "10.6.2"
+      - name: "Setup: Node"
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 23
+          package-manager-cache: false
+      - name: "Setup: Bun"
+        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
+        with:
+          bun-version: "1.2.14"
+      - name: "Setup: GraalVM (Java 25)"
+        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
+        with:
+          distribution: "graalvm"
+          java-version: "25"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Elide"
+        uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
+        with:
+          version: "1.0.0-beta9"
       - name: "Setup: Dependencies"
         run: pnpm install --no-lockfile --no-frozen-lockfile
       - name: "Setup: Rust"

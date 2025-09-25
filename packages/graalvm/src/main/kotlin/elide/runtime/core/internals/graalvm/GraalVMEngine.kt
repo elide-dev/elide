@@ -79,16 +79,17 @@ import elide.runtime.plugins.initializeDefaultContext
     finalizer: Builder.(Engine) -> Context = { build() },
   ): GraalVMContext {
     // build a new context using the shared engine
-    val builder = (if (shared) {
+    val builder: Builder = (if (shared) {
       defaultPolyglotContextBuilder()
     } else {
       Context.newBuilder()
         .initializeDefaultContext(defaults = true)
-    }).apply {
-      allowEnvironmentAccess(config.hostAccess.toEnvAccess())
-      if (shared) {
-        engine(engine)
-      }
+    })
+
+    builder.allowEnvironmentAccess(config.hostAccess.toEnvAccess())
+
+    if (shared) {
+      builder.engine(engine)
     }
 
     // allow plugins to customize the context on creation

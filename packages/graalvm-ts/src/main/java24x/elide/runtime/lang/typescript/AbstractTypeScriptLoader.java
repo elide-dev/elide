@@ -145,17 +145,19 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
       TruffleFile moduleFile,
       String maybeCanonicalPath)
       throws IOException {
+    var moduleKey =
+        new CanonicalModuleKey(moduleRequest.specifier().toString(), moduleRequest.attributes());
+
     if (moduleFile != null && moduleFile.exists()) {
       var canonicalPath = moduleFile.getCanonicalFile().getPath();
-      var maybeModuleMapEntry = moduleMap.get(canonicalPath);
+      var maybeModuleMapEntry = moduleMap.get(moduleKey);
       if (maybeModuleMapEntry != null) {
         return maybeModuleMapEntry;
       }
-
       Source source = transpileModule(referrer, moduleRequest, moduleFile, canonicalPath);
       JSModuleData parsedModule = realm.getContext().getEvaluator().envParseModule(realm, source);
       var module = new JSModuleRecord(parsedModule, this);
-      moduleMap.put(canonicalPath, module);
+      moduleMap.put(moduleKey, module);
       return module;
     }
     return super.loadModuleFromFile(referrer, moduleRequest, moduleFile, maybeCanonicalPath);

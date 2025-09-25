@@ -382,9 +382,10 @@ internal class LspCommand : ProjectAwareSubcommand<ToolState, CommandContext>() 
       }
     }.build()
 
-    builder = Context.newBuilder(*langs.map { it.id }.toTypedArray()).apply {
+    builder = with(Context.newBuilder(*langs.map { it.id }.toTypedArray())) {
       engine(engine)
       cfg(this, engine)
+      this
     }
 
     block.invoke {

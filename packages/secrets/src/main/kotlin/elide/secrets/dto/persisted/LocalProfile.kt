@@ -12,9 +12,8 @@
  */
 package elide.secrets.dto.persisted
 
-import kotlinx.io.bytestring.ByteString
-import elide.secrets.Utils
 import kotlinx.serialization.Serializable
+import elide.secrets.Utils
 
 /**
  * Collection for [Secrets][Secret].

@@ -12,11 +12,11 @@
  */
 package elide.secrets
 
+import kotlinx.io.bytestring.ByteString
 import elide.secrets.dto.persisted.LocalMetadata
 import elide.secrets.dto.persisted.LocalProfile
 import elide.secrets.dto.persisted.SecretKey
 import elide.secrets.dto.persisted.SecretProfile
-import kotlinx.io.bytestring.ByteString
 
 /** @author Lauri Heino <datafox> */
 internal interface FileManagement {

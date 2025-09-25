@@ -12,25 +12,24 @@
  */
 package elide.secrets.impl
 
+import java.nio.file.Path
+import kotlinx.io.bytestring.ByteString
+import elide.annotations.Singleton
+import elide.runtime.Logger
+import elide.runtime.Logging
 import elide.secrets.*
+import elide.secrets.Utils.hashKey
 import elide.secrets.dto.persisted.EncryptionMode
 import elide.secrets.dto.persisted.Profile.Companion.get
 import elide.secrets.dto.persisted.UserKey
-import elide.annotations.Singleton
 import elide.tooling.project.manifest.ElidePackageManifest
-import java.nio.file.Path
-import kotlin.reflect.KClass
-import kotlinx.io.bytestring.ByteString
-import kotlinx.io.bytestring.encodeToByteString
-import elide.runtime.Logger
-import elide.runtime.Logging
-import elide.secrets.Utils.hashKey
 
 /** @author Lauri Heino <datafox> */
 @Singleton
 internal class SecretsImpl(private val encryption: Encryption, private val files: FileManagement) : Secrets {
   override val initialized: Boolean
     get() = SecretsState.initialized
+
   private val logger: Logger = Logging.of(SecretsImpl::class)
   private var passphraseOverride: String? = null
 

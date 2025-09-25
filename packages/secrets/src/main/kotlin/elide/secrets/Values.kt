@@ -60,7 +60,7 @@ internal object Values {
   const val SELECT_ACCESS_IMPORT_MESSAGE =
     "Please select the access file you want to import.\n" +
       "Please note that for GPG-encrypted access files, only the ones that you have " +
-            "a private key for on this system will be displayed."
+      "a private key for on this system will be displayed."
   const val PASSPHRASES_NOT_IDENTICAL_MESSAGE = "Passphrases were not identical."
   const val INVALID_PASSPHRASE_MESSAGE = "Passphrases were not identical."
   const val SUPER_ACCESS_ENCRYPTION_MESSAGE =

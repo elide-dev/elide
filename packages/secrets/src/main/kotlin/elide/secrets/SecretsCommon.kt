@@ -14,7 +14,6 @@ package elide.secrets
 
 import java.nio.file.Path
 import kotlinx.io.bytestring.ByteString
-import kotlin.reflect.KClass
 import elide.tooling.project.manifest.ElidePackageManifest
 
 /**

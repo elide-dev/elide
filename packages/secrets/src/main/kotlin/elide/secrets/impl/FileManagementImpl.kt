@@ -12,6 +12,14 @@
  */
 package elide.secrets.impl
 
+import kotlinx.io.bytestring.ByteString
+import kotlinx.io.bytestring.encodeToByteString
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.serialization.BinaryFormat
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import elide.annotations.Singleton
 import elide.secrets.*
 import elide.secrets.Utils.decrypt
 import elide.secrets.Utils.deserialize
@@ -21,14 +29,6 @@ import elide.secrets.Utils.read
 import elide.secrets.Utils.serialize
 import elide.secrets.Utils.write
 import elide.secrets.dto.persisted.*
-import kotlinx.io.bytestring.ByteString
-import kotlinx.io.bytestring.encodeToByteString
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-import kotlinx.serialization.BinaryFormat
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.Json
-import elide.annotations.Singleton
 
 /** @author Lauri Heino <datafox> */
 @Singleton
@@ -98,9 +98,7 @@ internal class FileManagementImpl(
 
   private fun localProfilePath(): Path = Path(SecretsState.path, Values.LOCAL_FILE)
 
-  private fun profilePath(profile: String): Path =
-    Path(SecretsState.path, Utils.profileName(profile))
+  private fun profilePath(profile: String): Path = Path(SecretsState.path, Utils.profileName(profile))
 
-  private fun keyPath(profile: String): Path =
-    Path(SecretsState.path, Utils.keyName(profile))
+  private fun keyPath(profile: String): Path = Path(SecretsState.path, Utils.keyName(profile))
 }

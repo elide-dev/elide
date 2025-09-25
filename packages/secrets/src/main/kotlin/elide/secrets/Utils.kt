@@ -13,10 +13,6 @@
 package elide.secrets
 
 import com.github.kinquirer.core.Choice
-import elide.secrets.dto.persisted.EncryptionMode
-import elide.secrets.dto.persisted.Named
-import elide.secrets.dto.persisted.SecretKey
-import elide.secrets.dto.persisted.UserKey
 import java.security.SecureRandom
 import kotlinx.io.buffered
 import kotlinx.io.bytestring.ByteString
@@ -32,6 +28,10 @@ import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
 import kotlin.io.path.absolutePathString
+import elide.secrets.dto.persisted.EncryptionMode
+import elide.secrets.dto.persisted.Named
+import elide.secrets.dto.persisted.SecretKey
+import elide.secrets.dto.persisted.UserKey
 
 /**
  * Internal utilities for secrets.

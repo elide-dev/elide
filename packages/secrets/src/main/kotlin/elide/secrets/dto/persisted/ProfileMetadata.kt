@@ -12,10 +12,10 @@
  */
 package elide.secrets.dto.persisted
 
-import elide.secrets.Utils
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.toHexString
 import kotlinx.serialization.Serializable
+import elide.secrets.Utils
 
 /**
  * Metadata for a [LocalProfile].

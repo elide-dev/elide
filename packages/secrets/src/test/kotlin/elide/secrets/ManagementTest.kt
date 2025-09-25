@@ -1,9 +1,20 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package elide.secrets
 
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlinx.coroutines.runBlocking
 import kotlinx.io.bytestring.encodeToByteString
 import kotlin.io.path.exists
 import kotlin.io.path.readText
@@ -14,23 +25,25 @@ import kotlin.test.assertTrue
 import elide.annotations.Inject
 import elide.secrets.dto.persisted.EncryptionMode
 import elide.secrets.impl.SecretManagementImpl
-import elide.secrets.impl.SecretsImpl
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
 /** @author Lauri Heino <datafox> */
-@TestCase class ManagementTest : AbstractSecretTest() {
+@TestCase
+class ManagementTest : AbstractSecretTest() {
   @Inject private lateinit var secrets: SecretManagementImpl
 
-  private val managementFiles = secretFiles.map { "management/$it" } +
-          listOf("management/secret/secrets-other.db", "management/secret/secrets-other.key")
-  private val remoteFiles = listOf(
-    "management/remote/.access",
-    "management/remote/access.access",
-    "management/remote/metadata.json",
-    "management/remote/secrets-other.db",
-    "management/remote/secrets-test.db",
-  )
+  private val managementFiles =
+    secretFiles.map { "management/$it" } +
+      listOf("management/secret/secrets-other.db", "management/secret/secrets-other.key")
+  private val remoteFiles =
+    listOf(
+      "management/remote/.access",
+      "management/remote/access.access",
+      "management/remote/metadata.json",
+      "management/remote/secrets-other.db",
+      "management/remote/secrets-test.db",
+    )
 
   @Test
   fun `test calls to secrets`() = withTemp { path ->
@@ -145,7 +158,9 @@ import elide.testing.annotations.TestCase
     assertThrows<IllegalArgumentException>(Values.profileAlreadyExistsException("new")) { secrets.createProfile("new") }
     secrets.removeProfile("test")
     assertEquals(setOf("new"), secrets.listProfiles())
-    assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("test")) { secrets.removeProfile("test") }
+    assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("test")) {
+      secrets.removeProfile("test")
+    }
   }
 
   @Test
@@ -217,7 +232,7 @@ import elide.testing.annotations.TestCase
   fun `test remote as user`() = withTemp { path ->
     createEnvironment(path, managementFiles)
 
-    //copy remote files.
+    // copy remote files.
     val remoteDir = Files.createDirectory(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH))
     copyFiles(remoteDir, remoteFiles)
     queuePrompt(secretPass)
@@ -272,7 +287,17 @@ import elide.testing.annotations.TestCase
     // initialize secrets from remote.
     // secrets.init() asks for encryption mode, passphrase twice, if secrets should be initialized locally,
     // remote type, directory, if project should be pulled as superuser, access file and access file passphrase.
-    queuePrompts(EncryptionMode.PASSPHRASE, secretPass, secretPass, false, "project", ".secrets", false, "access", "sos")
+    queuePrompts(
+      EncryptionMode.PASSPHRASE,
+      secretPass,
+      secretPass,
+      false,
+      "project",
+      ".secrets",
+      false,
+      "access",
+      "sos",
+    )
     secrets.init(path, null)
 
     secrets.loadProfile("test")

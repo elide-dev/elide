@@ -24,6 +24,7 @@ import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import elide.runtime.Logger
 import elide.runtime.Logging
+import elide.secrets.Utils.hashKey
 
 /** @author Lauri Heino <datafox> */
 @Singleton
@@ -31,6 +32,7 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
   override val initialized: Boolean
     get() = SecretsState.initialized
   private val logger: Logger = Logging.of(SecretsImpl::class)
+  private var passphraseOverride: String? = null
 
   override suspend fun init(path: Path, manifest: ElidePackageManifest?) {
     SecretsState.init(false, Utils.path(path), manifest)
@@ -40,10 +42,8 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
         when (SecretsState.metadata.localEncryption) {
           EncryptionMode.PASSPHRASE ->
             UserKey(
-              encryption.hashKeySHA256(
-                Utils.passphrase()?.encodeToByteString()
-                  ?: throw IllegalStateException(Values.PASSPHRASE_READ_EXCEPTION)
-              )
+              (passphraseOverride ?: Utils.passphrase())?.hashKey(encryption)
+                ?: throw IllegalStateException(Values.PASSPHRASE_READ_EXCEPTION)
             )
           EncryptionMode.GPG -> UserKey(SecretsState.metadata.fingerprint!!)
         }
@@ -74,6 +74,9 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
 
   override fun getBinarySecret(name: String): ByteString? = SecretsState.profile[name]
 
-  override fun listSecrets(): Map<String, KClass<*>> =
-    SecretsState.profile.secrets.map { (key, value) -> key to value.value::class }.toMap()
+  override fun listSecrets(): Map<String, SecretType> = SecretsState.profile.listSecrets()
+
+  internal fun overridePassphrase(passphrase: String?) {
+    passphraseOverride = passphrase
+  }
 }

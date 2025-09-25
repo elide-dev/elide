@@ -36,7 +36,7 @@ internal class ProjectRemote(private val path: Path) : Remote {
 
   override suspend fun update(metadata: ByteString, profiles: Map<String, ByteString>) {
     writeFile(Values.METADATA_FILE, metadata)
-    profiles.forEach { writeFile(it.key, it.value) }
+    profiles.forEach { writeFile(Utils.profileName(it.key), it.value) }
   }
 
   override suspend fun superUpdate(

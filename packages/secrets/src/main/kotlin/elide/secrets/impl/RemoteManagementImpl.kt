@@ -34,6 +34,7 @@ internal class RemoteManagementImpl(
   private val remoteMetadata: RemoteMetadata,
   private var superAccess: SuperAccess,
   private var superKey: UserKey,
+  private val prompts: MutableList<String>,
 ) : RemoteManagement {
   private var access: String? = null
   private val deleted: MutableSet<String> = mutableSetOf()
@@ -46,12 +47,14 @@ internal class RemoteManagementImpl(
       localAndRemote.filter { SecretsState.metadata.profiles[it]!!.hash != remoteMetadata.profiles[it]!!.hash }
     val updated =
       if (mismatchingHashes.isEmpty()) listOf()
-      else
-        KInquirer.promptCheckbox(
-          "These profiles exist locally but are not the same ones as on the remote.\n" +
+      else {
+        println("These profiles exist locally but are not the same ones as on the remote.")
+        prompts.removeFirstOrNull()?.split("\u0000")
+          ?: KInquirer.promptCheckbox(
             "Select the local profiles you want to update from the remote, the rest will be pushed to the remote.",
-          mismatchingHashes,
-        )
+            mismatchingHashes,
+          )
+      }
     val localToBeUpdated = (remoteProfiles subtract localProfiles) union updated
     localToBeUpdated.forEach {
       val key = superAccess.keys[it]!!
@@ -68,12 +71,12 @@ internal class RemoteManagementImpl(
   override fun listAccesses(): Set<String> = superAccess.access.keys
 
   override fun createAccess(name: String) {
-    val mode = Prompts.accessMode()
+    val mode = Prompts.accessMode(prompts)
     superAccess =
       superAccess.addAccess(
         name,
         when (mode) {
-          EncryptionMode.PASSPHRASE -> UserKey(encryption.hashKeySHA256(Prompts.passphrase().encodeToByteString()))
+          EncryptionMode.PASSPHRASE -> UserKey(encryption.hashKeySHA256(Prompts.passphrase(prompts).encodeToByteString()))
           EncryptionMode.GPG -> UserKey(Prompts.gpgPublicKey())
         },
       )
@@ -84,22 +87,25 @@ internal class RemoteManagementImpl(
   }
 
   override fun selectAccess(name: String) {
-    if (name !in superAccess.access) throw IllegalArgumentException("Access $access does not exist.")
+    if (name !in superAccess.access) throw IllegalArgumentException(Values.accessDoesNotExistException(name))
     access = name
   }
 
   override fun addProfile(profile: String) {
-    if (access == null) throw IllegalStateException("No access is selected.")
+    if (access == null) throw IllegalStateException(Values.NO_ACCESS_SELECTED_EXCEPTION)
+    if (profile !in SecretsState.metadata.profiles) throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
     access?.let { superAccess = superAccess.addToAccess(it, profile) }
   }
 
   override fun removeProfile(profile: String) {
-    if (access == null) throw IllegalStateException("No access is selected.")
+    if (access == null) throw IllegalStateException(Values.NO_ACCESS_SELECTED_EXCEPTION)
+    if (profile !in SecretsState.metadata.profiles) throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
+    if (profile !in superAccess.access[access!!]!!.second) throw IllegalArgumentException(Values.profileNotInAccess(profile))
     access?.let { superAccess = superAccess.removeFromAccess(it, profile) }
   }
 
   override fun listProfiles(): Set<String> {
-    if (access == null) throw IllegalStateException("No access is selected.")
+    if (access == null) throw IllegalStateException(Values.NO_ACCESS_SELECTED_EXCEPTION)
     return superAccess.access[access!!]!!.second
   }
 
@@ -112,13 +118,15 @@ internal class RemoteManagementImpl(
     if (profile !in SecretsState.metadata.profiles) throw IllegalArgumentException("Profile does not exist.")
     if (profile in deleted) throw IllegalArgumentException("Profile already deleted.")
     println("Deleting the profile will also delete it from your local secrets!")
-    if (!KInquirer.promptConfirm("Do you want to proceed?")) return
+    if (!(prompts.removeFirstOrNull()?.toBooleanStrict()
+        ?: KInquirer.promptConfirm("Do you want to proceed?"))) return
     val accessesWithProfile = superAccess.access.filter { profile in it.value.second }.keys
     if (accessesWithProfile.isNotEmpty()) {
       println("The following access files contain the profile:")
       println(accessesWithProfile)
       println("If you proceed, the profile will be removed from these access files as well.")
-      if (!KInquirer.promptConfirm("Do you want to proceed?")) return
+      if (!(prompts.removeFirstOrNull()?.toBooleanStrict()
+          ?: KInquirer.promptConfirm("Do you want to proceed?"))) return
       superAccess = superAccess.copy(access = superAccess.access.mapValues {
         if (it.key !in accessesWithProfile) it.value else it.value.copy(second = it.value.second - profile)
       })
@@ -129,7 +137,7 @@ internal class RemoteManagementImpl(
 
   override fun restoreProfile(profile: String) {
     if (access != null) throw IllegalStateException("An access is selected.")
-    if (profile !in deleted) throw IllegalArgumentException("Profile is not deleted.")
+    if (profile !in deleted) throw IllegalStateException(Values.PROFILE_NOT_DELETED_EXCEPTION)
     deleted.remove(profile)
     superAccess = superAccess.addKey(files.readKey(profile))
   }

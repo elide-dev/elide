@@ -20,49 +20,49 @@ import elide.secrets.dto.persisted.EncryptionMode
 
 /** @author Lauri Heino <datafox> */
 internal object Prompts {
-  fun passphrase(): String {
+  fun passphrase(prompts: MutableList<String>): String {
     checkInteractive()
     @Suppress("unused")
     for (i in 0 until Values.INVALID_PASSPHRASE_TRIES) {
-      val pass = KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_PROMPT)
-      val repeat = KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_REPEAT_PROMPT)
+      val pass = prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_PROMPT)
+      val repeat = prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_REPEAT_PROMPT)
       if (pass == repeat) return pass
       println(Values.PASSPHRASES_NOT_IDENTICAL_MESSAGE)
     }
     throw IllegalArgumentException(Values.MISMATCHING_PASSPHRASES_EXCEPTION)
   }
 
-  fun localUserKeyMode(): EncryptionMode {
+  fun localUserKeyMode(prompts: MutableList<String>): EncryptionMode {
     checkInteractive()
-    return KInquirer.promptListObject(
+    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) } ?: KInquirer.promptListObject(
       Values.LOCAL_STORAGE_ENCRYPTION_PROMPT,
       EncryptionMode.entries.choices { displayName },
     )
   }
 
-  fun validateLocalPassphrase(validator: (String) -> Boolean): String {
+  fun validateLocalPassphrase(prompts: MutableList<String>, validator: (String) -> Boolean): String {
     checkInteractive()
     @Suppress("unused")
     for (i in 0 until Values.INVALID_PASSPHRASE_TRIES) {
-      val pass = KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_PROMPT)
+      val pass = prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_PROMPT)
       if (validator(pass)) return pass
       println(Values.INVALID_PASSPHRASE_MESSAGE)
     }
     throw IllegalArgumentException(Values.INVALID_PASSPHRASE_EXCEPTION)
   }
 
-  fun superKeyMode(): EncryptionMode {
+  fun superKeyMode(prompts: MutableList<String>): EncryptionMode {
     checkInteractive()
     println(Values.SUPER_ACCESS_ENCRYPTION_MESSAGE)
-    return KInquirer.promptListObject(
+    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) } ?: KInquirer.promptListObject(
       Values.GENERIC_CHOICE_PROMPT,
       EncryptionMode.entries.choices { displayName },
     )
   }
 
-  fun accessMode(): EncryptionMode {
+  fun accessMode(prompts: MutableList<String>): EncryptionMode {
     checkInteractive()
-    return KInquirer.promptListObject(
+    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) } ?: KInquirer.promptListObject(
       Values.ACCESS_FILE_ENCRYPTION_PROMPT,
       EncryptionMode.entries.choices { displayName },
     )

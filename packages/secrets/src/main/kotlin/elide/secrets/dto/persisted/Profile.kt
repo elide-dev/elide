@@ -24,13 +24,18 @@ internal interface Profile : Named {
   }
 
   fun listSecrets(): Map<String, SecretType> =
-    secrets.map { (key, value) -> key to when(value.value::class) {
-      String::class -> SecretType.TEXT
-      ByteString::class -> SecretType.BINARY
-      else -> throw IllegalArgumentException("Unknown secret type ${value.value::class}")
-    } }.toMap()
+    secrets
+      .map { (key, value) ->
+        key to
+          when (value.value::class) {
+            String::class -> SecretType.TEXT
+            ByteString::class -> SecretType.BINARY
+            else -> throw IllegalArgumentException("Unknown secret type ${value.value::class}")
+          }
+      }
+      .toMap()
 
-    companion object {
+  companion object {
     inline operator fun <reified T> Profile.get(name: String): T? =
       if (T::class == Secret::class) secrets[name] as? T else secrets[name]?.value as? T
   }

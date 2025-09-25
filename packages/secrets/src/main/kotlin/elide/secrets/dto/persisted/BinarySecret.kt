@@ -12,10 +12,10 @@
  */
 package elide.secrets.dto.persisted
 
-import elide.secrets.Utils
-import elide.secrets.impl.ByteStringSerializer
 import kotlinx.io.bytestring.ByteString
 import kotlinx.serialization.Serializable
+import elide.secrets.Utils
+import elide.secrets.impl.ByteStringSerializer
 
 /**
  * [Secret] containing binary data.

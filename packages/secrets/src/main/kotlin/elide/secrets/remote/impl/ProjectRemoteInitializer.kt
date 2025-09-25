@@ -47,11 +47,12 @@ internal class ProjectRemoteInitializer : RemoteInitializer {
 
   private fun askPath(prompts: MutableList<String>): String {
     println("Elide Secrets in project mode are stored encrypted alongside project files.")
-    return prompts.removeFirstOrNull() ?: KInquirer.promptInput(
-      "Please enter a path relative to the project directory " +
-              "using your system's path separator (\"$SystemPathSeparator\"):",
-      Values.PROJECT_REMOTE_DEFAULT_PATH
-    )
+    return prompts.removeFirstOrNull()
+      ?: KInquirer.promptInput(
+        "Please enter a path relative to the project directory " +
+          "using your system's path separator (\"$SystemPathSeparator\"):",
+        Values.PROJECT_REMOTE_DEFAULT_PATH,
+      )
   }
 
   private fun validatePath(): Path {

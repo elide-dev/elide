@@ -51,10 +51,12 @@ internal class GithubRemoteInitializer(
         ?: askRepository(prompts)
     token = SecretsState.local[Values.GITHUB_TOKEN_SECRET] ?: askToken(prompts)
     val writeAccess = validateConnection(token, repository)
-    SecretsState.updateLocal { addAll(
-      StringSecret(Values.GITHUB_REPOSITORY_SECRET, repository),
-      StringSecret(Values.GITHUB_TOKEN_SECRET, token),
-    )}
+    SecretsState.updateLocal {
+      addAll(
+        StringSecret(Values.GITHUB_REPOSITORY_SECRET, repository),
+        StringSecret(Values.GITHUB_TOKEN_SECRET, token),
+      )
+    }
     return GithubRemote(writeAccess, repository, token, encryption, client, json)
   }
 

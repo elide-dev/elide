@@ -34,10 +34,11 @@ internal object Prompts {
 
   fun localUserKeyMode(prompts: MutableList<String>): EncryptionMode {
     checkInteractive()
-    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) } ?: KInquirer.promptListObject(
-      Values.LOCAL_STORAGE_ENCRYPTION_PROMPT,
-      EncryptionMode.entries.choices { displayName },
-    )
+    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) }
+      ?: KInquirer.promptListObject(
+        Values.LOCAL_STORAGE_ENCRYPTION_PROMPT,
+        EncryptionMode.entries.choices { displayName },
+      )
   }
 
   fun validateLocalPassphrase(prompts: MutableList<String>, validator: (String) -> Boolean): String {
@@ -54,18 +55,20 @@ internal object Prompts {
   fun superKeyMode(prompts: MutableList<String>): EncryptionMode {
     checkInteractive()
     println(Values.SUPER_ACCESS_ENCRYPTION_MESSAGE)
-    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) } ?: KInquirer.promptListObject(
-      Values.GENERIC_CHOICE_PROMPT,
-      EncryptionMode.entries.choices { displayName },
-    )
+    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) }
+      ?: KInquirer.promptListObject(
+        Values.GENERIC_CHOICE_PROMPT,
+        EncryptionMode.entries.choices { displayName },
+      )
   }
 
   fun accessMode(prompts: MutableList<String>): EncryptionMode {
     checkInteractive()
-    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) } ?: KInquirer.promptListObject(
-      Values.ACCESS_FILE_ENCRYPTION_PROMPT,
-      EncryptionMode.entries.choices { displayName },
-    )
+    return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) }
+      ?: KInquirer.promptListObject(
+        Values.ACCESS_FILE_ENCRYPTION_PROMPT,
+        EncryptionMode.entries.choices { displayName },
+      )
   }
 
   fun gpgPrivateKey(): String {

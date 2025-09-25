@@ -12,15 +12,15 @@
  */
 package elide.secrets.remote.impl
 
+import kotlinx.io.bytestring.ByteString
+import kotlinx.io.files.Path
 import elide.secrets.Utils
+import elide.secrets.Utils.delete
 import elide.secrets.Utils.exists
 import elide.secrets.Utils.read
 import elide.secrets.Utils.write
 import elide.secrets.Values
 import elide.secrets.remote.Remote
-import kotlinx.io.bytestring.ByteString
-import kotlinx.io.files.Path
-import elide.secrets.Utils.delete
 
 /** @author Lauri Heino <datafox> */
 internal class ProjectRemote(private val path: Path) : Remote {

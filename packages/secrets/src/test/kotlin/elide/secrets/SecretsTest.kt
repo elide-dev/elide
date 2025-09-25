@@ -1,22 +1,30 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package elide.secrets
 
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlinx.coroutines.runBlocking
 import kotlinx.io.bytestring.encodeToByteString
-import kotlin.test.BeforeTest
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 import elide.annotations.Inject
 import elide.secrets.impl.SecretsImpl
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
 /** @author Lauri Heino <datafox> */
-@TestCase class SecretsTest : AbstractSecretTest() {
+@TestCase
+class SecretsTest : AbstractSecretTest() {
   @Inject private lateinit var secrets: SecretsImpl
 
   @BeforeTest
@@ -63,10 +71,7 @@ import elide.testing.annotations.TestCase
     assertThrows<IllegalStateException>(Values.PASSPHRASE_READ_EXCEPTION) { secrets.init(path, null) }
   }
 
-  @Test
-  fun `test uninitialized secrets`() = withTemp { path ->
-    secrets.init(path, null)
-  }
+  @Test fun `test uninitialized secrets`() = withTemp { path -> secrets.init(path, null) }
 
   private fun createEnvironment(path: Path, passphrase: String?, files: List<String>): Path {
     val secretsDir = Files.createDirectory(path.resolve(Values.DEFAULT_PATH))

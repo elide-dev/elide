@@ -373,6 +373,7 @@ internal class LspCommand : ProjectAwareSubcommand<ToolState, CommandContext>() 
     langs: Set<GuestLanguage>,
     cfg: PolyglotContextBuilder.(Engine) -> Unit,
     shared: Boolean,
+    detached: Boolean,
     block: (() -> PolyglotContext) -> Unit,
   ) {
     val engine = Engine.newBuilder().apply {

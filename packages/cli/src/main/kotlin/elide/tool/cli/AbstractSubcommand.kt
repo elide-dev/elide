@@ -508,6 +508,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
   protected fun resolvePolyglotContext(
     langs: Set<GuestLanguage>,
     shared: Boolean = false,
+    detached: Boolean = true,
     cfg: (PolyglotContextBuilder.(VMEngine) -> Unit) = {},
   ): PolyglotContext {
     logging.debug("Resolving context for current thread")
@@ -520,7 +521,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
 
     // not initialized yet, acquire a new one and store it
     logging.debug("No cached context found for current thread, acquiring new context")
-    return resolveEngine(langs).acquire(shared = shared, cfg).also { created ->
+    return resolveEngine(langs).acquire(shared = shared, detached, cfg).also { created ->
       contextHandle.set(created)
     }
   }
@@ -681,10 +682,11 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
     langs: Set<GuestLanguage>,
     cfg: PolyglotContextBuilder.(VMEngine) -> Unit = {},
     shared: Boolean = true,
+    detached: Boolean = false,
     block: (() -> PolyglotContext) -> Unit,
   ) {
     block.invoke {
-      resolvePolyglotContext(langs, shared, cfg)
+      resolvePolyglotContext(langs, shared, detached, cfg)
     }
   }
 

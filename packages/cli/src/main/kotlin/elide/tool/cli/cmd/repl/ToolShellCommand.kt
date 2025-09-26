@@ -1695,7 +1695,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
       // initialize the server intrinsic and run using the provided source
-      serverAgent.run(source, execProvider) { resolvePolyglotContext(langs) }
+      serverAgent.run(source, execProvider) { resolvePolyglotContext(langs, detached = false) }
       phaser.value.register()
       serverRunning.value = true
     } catch (exc: PolyglotException) {

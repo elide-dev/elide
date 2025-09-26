@@ -122,21 +122,10 @@ import elide.vm.annotations.Polyglot
         if (pattern == null) return@matcher true
 
         // otherwise return true when the pattern matches the requested path
-        val urlStr = request.url.toString()
-        val (matchString, params) = if (urlStr.contains("?")) {
-          // strip query string from the request URI
-          urlStr.substringBefore("?") to urlStr.substringAfter("?")
-        } else {
-          request.url.toString() to null
-        }
-        val jsParams = params?.split("&")?.associate {
-          val (key, value) = it.split("=")
-          key to value
-        }
-        pattern.matchEntire(matchString)?.also { match ->
+        pattern.matchEntire(request.url.path)?.also { match ->
           val requestParams = JsProxy.build {
-            jsParams?.forEach { (key, value) ->
-              put(key, value)
+            request.url.params.keys.forEach { key ->
+              put(key, request.url.params[key])
             }
           }
 

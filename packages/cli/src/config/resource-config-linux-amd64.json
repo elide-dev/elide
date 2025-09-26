@@ -15,8 +15,6 @@
       { "pattern": "Windows" },
       { "pattern": "win32" },
       { "pattern": "Win32" },
-      { "pattern": "\\Q**/*.dll\\E" },
-      { "pattern": "\\Q**/*.dylib\\E" },
       { "pattern": "META-INF/native/libumbrella.*" },
       { "pattern": "META-INF/native/libnetty_tcnative_linux_x86_64.so" },
       { "pattern": "META-INF/native/libumbrella.so" },

@@ -936,7 +936,7 @@ checksum = "b4ae4235e6dac0694637c763029ecea1a2ec9e4e06ec2729bd21ba4d9c863eb7"
 
 [[package]]
 name = "builder"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "bindgen",
  "build_const",
@@ -1894,7 +1894,7 @@ dependencies = [
 
 [[package]]
 name = "deps"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "builder",
  "serde",
@@ -1965,7 +1965,7 @@ dependencies = [
 
 [[package]]
 name = "diag"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "builder",
  "java_native",
@@ -2237,7 +2237,7 @@ dependencies = [
 
 [[package]]
 name = "exec"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "builder",
  "java_native",
@@ -3623,7 +3623,7 @@ checksum = "a037eddb7d28de1d0fc42411f501b53b75838d313908078d6698d064f3029b24"
 
 [[package]]
 name = "js"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "builder",
  "diag",
@@ -3885,7 +3885,7 @@ dependencies = [
 
 [[package]]
 name = "local-ai"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "anyhow",
  "builder",
@@ -4084,7 +4084,7 @@ dependencies = [
 
 [[package]]
 name = "media"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "diag",
  "image",
@@ -4427,7 +4427,7 @@ dependencies = [
 
 [[package]]
 name = "njvm"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "builder",
  "java_native",
@@ -5833,7 +5833,7 @@ dependencies = [
 
 [[package]]
 name = "posix"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "java_native",
  "jni",
@@ -7953,7 +7953,7 @@ dependencies = [
 
 [[package]]
 name = "sqlite"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "bindgen",
  "builder",
@@ -8056,7 +8056,7 @@ dependencies = [
 
 [[package]]
 name = "substrate"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "bindgen",
  "builder",
@@ -8542,7 +8542,7 @@ dependencies = [
 
 [[package]]
 name = "terminal"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "bindgen",
  "builder",
@@ -9024,7 +9024,7 @@ checksum = "8df9b6e13f2d32c91b9bd719c00d1958837bc7dec474d94952798cc8e69eeec3"
 
 [[package]]
 name = "trace"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "builder",
  "java_native",
@@ -11218,7 +11218,7 @@ dependencies = [
 
 [[package]]
 name = "web"
-version = "1.0.0-beta8"
+version = "1.0.0-beta9"
 dependencies = [
  "browserslist-rs 0.19.0",
  "diag",

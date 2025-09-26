@@ -49,7 +49,7 @@ private fun SpotlessExtension.configureSpotlessForProject(conventions: ElideBuil
     removeUnusedImports()
 
     // Use Google's Java formatter.
-    if (conventions.checks.javaFormat) googleJavaFormat()
+    if (conventions.checks.javaFormat) googleJavaFormat(Versions.GOOGLE_JAVA_FORMAT)
 
     // Preserve annotation formatting.
     if (conventions.checks.javaFormat) formatAnnotations()

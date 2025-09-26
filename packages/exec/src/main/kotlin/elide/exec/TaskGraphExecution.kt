@@ -93,7 +93,7 @@ public interface TaskGraphExecution {
   public class Listener internal constructor (
     private val graph: TaskGraph,
     private val scope: ActionScope,
-    private val taskScope: StructuredTaskScope<Any?>,
+    private val taskScope: ActionScope.TaskGraphScope,
     private val latch: CountDownLatch,
   ) : TaskGraphExecution {
     override lateinit var rootJob: Deferred<Unit>

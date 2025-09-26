@@ -192,7 +192,7 @@ jobs:
         uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
         with:
           distribution: "graalvm"
-          java-version: 24
+          java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Signing Keys"
         run: |

@@ -94,7 +94,7 @@ public interface Coordinator {
                 if (task == null) {
                   latch.countDown()
                 } else {
-                  scope.taskScope.fork {
+                  scope.taskScope.scope.fork<Void> {
                     runBlocking(scope.coroutineContext) {
                       task.executeTask(scope)
                     }

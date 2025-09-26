@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.exec
 
 import java.lang.AutoCloseable
@@ -29,7 +28,7 @@ import elide.runtime.Logging
  */
 public sealed interface ActionScope : CoroutineScope, AutoCloseable {
   public val actionContext: Action.ActionContext
-  public val taskScope: StructuredTaskScope<Any?>
+  public val taskScope: TaskGraphScope
   public val allTasks: Sequence<StructuredTaskScope.Subtask<*>>
   public val logging: Logger
   public fun bind(execution: TaskGraphExecution.Listener)
@@ -39,7 +38,7 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
   public class DefaultActionScope internal constructor (
     override val actionContext: Action.ActionContext,
     override val coroutineContext: CoroutineContext,
-    override val taskScope: StructuredTaskScope<Any?>,
+    override val taskScope: TaskGraphScope,
     override val logging: Logger,
   ) : ActionScope {
     // Bound execution scope, if any.
@@ -73,12 +72,10 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
   }
 
   public class TaskGraphScope internal constructor (
-    name: String,
-    fac: ThreadFactory,
-  ) : StructuredTaskScope<Any?>(name, fac) {
-    override fun handleComplete(subtask: Subtask<out Any?>?) {
-      // nothing to do at this time
-    }
+    internal val name: String,
+    internal val fac: ThreadFactory,
+  ) {
+    internal val scope = StructuredTaskScope.open<Any?>()
   }
 
   /** Factories for creating or obtaining an [ActionScope]. */
@@ -118,7 +115,7 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
     @JvmStatic public fun create(
       actions: Action.ActionContext,
       coroutines: CoroutineContext,
-      scope: StructuredTaskScope<Any?>,
+      scope: TaskGraphScope,
     ): ActionScope {
       return DefaultActionScope(actions, coroutines, scope, Logging.of(ActionScope::class))
     }

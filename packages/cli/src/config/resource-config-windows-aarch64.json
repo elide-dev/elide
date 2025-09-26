@@ -12,9 +12,7 @@
       { "pattern": "*darwin*" },
       { "pattern": "*darwin*" },
       { "pattern": "*win32*" },
-      { "pattern": "*Win32*" },
-      { "pattern": "\\Q**/*.so\\E" },
-      { "pattern": "\\Q**/*.dylib\\E" }
+      { "pattern": "*Win32*" }
     ]
   },
   "bundles": [

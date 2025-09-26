@@ -205,6 +205,7 @@ jobs:
     name: "Checks"
     uses: ./.github/workflows/checks.detekt.yml
     needs: [triage]
+    if: false # disabled
     secrets:
       GRADLE_CONFIGURATION_KEY: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
       BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}

@@ -25,7 +25,6 @@ import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOption
-import elide.runtime.gvm.jvm.JvmSourceLoader
 import elide.runtime.plugins.AbstractLanguagePlugin
 
 /**
@@ -79,7 +78,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin
     if (config.enableSourceIntegration) {
       builder.option(
         "java.HostSourceLoader",
-        JvmSourceLoader::class.java.name,
+        "elide.runtime.gvm.jvm.JvmSourceLoader",
       )
     }
     if (config.enableNative) {
@@ -108,7 +107,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin
     }
 
     builder.disableOptions(
-      "java.EnableAgents",
+      "java.EnableNativeAgents",
       "java.EnableManagement",
       "java.ExposeNativeJavaVM",
     )

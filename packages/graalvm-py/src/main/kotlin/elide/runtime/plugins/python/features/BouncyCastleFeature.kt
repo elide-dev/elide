@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,10 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.plugins.python.features
 
 import com.oracle.graal.python.builtins.objects.ssl.CertUtils
+import com.oracle.graal.python.builtins.objects.ssl.LazyBouncyCastleProvider
 import org.graalvm.nativeimage.ImageSingletons
 import org.graalvm.nativeimage.hosted.Feature
 import org.graalvm.nativeimage.hosted.Feature.AfterRegistrationAccess
@@ -152,6 +152,6 @@ public class BouncyCastleFeature : Feature {
   }
 
   override fun beforeAnalysis(access: BeforeAnalysisAccess?) {
-    Security.addProvider(CertUtils.BOUNCYCASTLE_PROVIDER)
+    Security.addProvider(LazyBouncyCastleProvider.initProvider())
   }
 }

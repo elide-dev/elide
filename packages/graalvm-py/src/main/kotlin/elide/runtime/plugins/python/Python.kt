@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,7 +10,6 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.plugins.python
 
 import com.oracle.graal.python.PythonLanguage
@@ -72,7 +71,7 @@ private val BUILTIN_PYTHON_PATHS = listOf(
     )
 
     builder.enableOptions(
-      "python.NativeModules",
+      "python.IsolateNativeModules",
       "python.LazyStrings",
       "python.WithTRegex",
       "python.NoSiteFlag", // @TODO
@@ -86,14 +85,13 @@ private val BUILTIN_PYTHON_PATHS = listOf(
         builder.enableOptions("python.UsePanama")
       }
     }
-    val (engine, nfi) = when (config.pythonEngine) {
+    val engine = when (config.pythonEngine) {
       "default",
-      "java" -> "java" to "nfi"
-      "native" -> "native" to "nfi"
+      "java" -> "java"
+      "native" -> "native"
       else -> error("Unsupported Python engine: ${config.pythonEngine}")
     }
     builder.setOptions(
-      "python.HPyBackend" to nfi,
       "python.PosixModuleBackend" to engine,
       "python.PythonPath" to renderPythonPath(),
     )

@@ -31,7 +31,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.LinkedList
 import java.util.TreeSet
 import kotlin.collections.listOf
 import kotlin.text.split
@@ -165,7 +164,7 @@ val enableJnaJpms = false
 val enableJnaStatic = false
 val enableSbom = oracleGvm
 val enableSbomStrict = false
-val enableJfr = false
+val enableJfr = true
 val enableNmt = false
 val enableHeapDump = false
 val enableJvmstat = false
@@ -198,8 +197,8 @@ val exclusions = listOfNotNull(
 )
 
 // Java Launcher (GraalVM at either EA or LTS)
-val edgeJvmTarget = 24
-val stableJvmTarget = 24
+val edgeJvmTarget = 25
+val stableJvmTarget = 25
 
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val stableJvm = JavaVersion.toVersion(stableJvmTarget)
@@ -251,6 +250,7 @@ val jpmsSvmArgs = listOf(
   "org.graalvm.nativeimage.builder" to "com.oracle.svm.hosted",
   "org.graalvm.nativeimage.builder" to "com.oracle.svm.core",
   "org.graalvm.nativeimage.builder" to "com.oracle.svm.core.util",
+  "jdk.jfr" to "jdk.jfr.internal",
 ).map {
   "--add-exports=${it.first}/${it.second}=ALL-UNNAMED"
 }.plus(
@@ -277,6 +277,7 @@ val jpmsSvmArgs = listOf(
     ("jdk.internal.vm.ci" to "jdk.vm.ci.riscv64") to svmModules,
     ("jdk.internal.vm.ci" to "jdk.vm.ci.runtime") to svmModules,
     ("jdk.internal.vm.ci" to "jdk.vm.ci.services") to svmModules,
+    ("jdk.jfr" to "jdk.jfr.internal") to "org.graalvm.nativeimage.builder,org.graalvm.nativeimage.driver",
     // ("" to "") to "",
   ).map {
     "--add-exports=${it.first.first}/${it.first.second}=${it.second}"
@@ -1164,6 +1165,11 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.handler.codec.http.HttpObjectEncoder",
   "io.netty.handler.pcap.PcapWriteHandler${'$'}WildcardAddressHolder",
   "io.netty.util.internal.NativeLibraryLoader",
+  "io.netty.handler.codec.http.HttpServerExpectContinueHandler",
+  "io.netty.handler.codec.http.HttpObjectAggregator",
+  "io.netty.buffer.Unpooled",
+  "io.netty.buffer.UnpooledByteBufAllocator",
+  "io.netty.buffer.EmptyByteBuf",
 
   // --- Netty: Native Crypto -----
 
@@ -1284,11 +1290,6 @@ val nativeMonitoring = listOfNotNull(
   onlyIf(enableJmx, "threaddump"),
 ).joinToString(",")
 
-val ffmConfigPath = layout.projectDirectory
-  .file("src/main/resources/META-INF/native-image/dev/elide/elide-cli/ffm.json")
-  .asFile
-  .path
-
 val commonNativeArgs = listOfNotNull(
   // Debugging flags:
   // "--verbose",
@@ -1300,7 +1301,6 @@ val commonNativeArgs = listOfNotNull(
   onlyIf(isDebug, "-H:+JNIEnhancedErrorCodes"),
   onlyIf(!enableJit, "-J-Dtruffle.TruffleRuntime=com.oracle.truffle.api.impl.DefaultTruffleRuntime"),
   onlyIf(enableFfm, "-H:+ForeignAPISupport"),
-  onlyIf(enableFfm, "-H:ForeignConfigurationFiles=$ffmConfigPath"),
   onlyIf(dumpPointsTo, "-H:PrintAnalysisCallTreeType=CSV"),
   onlyIf(dumpPointsTo, "-H:+PrintImageObjectTree"),
   onlyIf(enabledFeatures.isNotEmpty(), "--features=${enabledFeatures.joinToString(",")}"),
@@ -1321,6 +1321,8 @@ val commonNativeArgs = listOfNotNull(
   "--link-at-build-time=picocli",
   "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
   onlyIf(nativeMonitoring.isNotEmpty(), "--enable-monitoring=${nativeMonitoring}"),
+  "-J--add-exports=jdk.jfr/jdk.jfr.internal=org.graalvm.nativeimage.driver,org.graalvm.nativeimage.builder",
+  "-J--add-exports=jdk.jfr/jdk.jfr.internal=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jdk=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted=ALL-UNNAMED",
   "-J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.hosted.c=ALL-UNNAMED",
@@ -1850,8 +1852,8 @@ val embeddedSubstrateFlags = listOf(
   // "-H:+AllowDeprecatedBuilderClassesOnImageClasspath",
   "-Dcom.oracle.graalvm.isaot=true",
   "-J-Dcom.oracle.graalvm.isaot=true",
-  "-Dorg.graalvm.version=24.2.2",
-  "-J-Dorg.graalvm.version=24.2.2",
+  "-Dorg.graalvm.version=25.0.0",
+  "-J-Dorg.graalvm.version=25.0.0",
   "--link-at-build-time=com.oracle.svm.driver,com.oracle.svm.driver.metainf",
   "-H:IncludeResources=com/oracle/svm/driver/launcher/.*",
 )
@@ -2756,7 +2758,7 @@ fun spawnEmbeddedSvmCopy(receiver: BuildNativeImageTask): Copy {
     .absolutePath
 
   val graalvmHome = System.getenv("GRAALVM_HOME") ?: System.getenv("JAVA_HOME")
-    ?: "/usr/lib/jvm/gvm.jdk24"  // default
+    ?: "/usr/lib/jvm/gvm.jdk25"  // default
   val graalvmLib = File(graalvmHome, "lib")
 
   return tasks.register("${receiver.name}CopyEmbeddedSvm", Copy::class) {

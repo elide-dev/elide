@@ -74,7 +74,7 @@ val javacArgs = listOf(
 
 // Java Launcher (GraalVM at either EA or LTS)
 val edgeJvmTarget = 25
-val stableJvmTarget = 24
+val stableJvmTarget = 25
 val edgeJvm = JavaVersion.toVersion(edgeJvmTarget)
 val stableJvm = JavaVersion.toVersion(stableJvmTarget)
 val selectedJvmTarget = if (enableEdge) edgeJvmTarget else stableJvmTarget

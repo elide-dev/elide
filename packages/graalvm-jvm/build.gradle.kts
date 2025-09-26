@@ -25,6 +25,7 @@ val gvmJarsRoot = rootProject.layout.projectDirectory.dir("third_party/oracle")
 
 val patchedLibs = files(
   gvmJarsRoot.file("espresso.jar"),
+  gvmJarsRoot.file("espresso-shared.jar"),
   gvmJarsRoot.file("truffle-api.jar"),
 )
 

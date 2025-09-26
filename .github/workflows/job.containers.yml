@@ -189,11 +189,11 @@ jobs:
           persist-credentials: false
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
-      - name: "Setup: GraalVM (Java 24)"
+      - name: "Setup: GraalVM (Java 25)"
         uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
         with:
           distribution: "graalvm"
-          java-version: "24"
+          java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
@@ -301,11 +301,11 @@ jobs:
           persist-credentials: false
       - name: "Setup: Buildless"
         uses: buildless/setup@30e82389418c7f17046606183bc4c78b2c8913e0 # v1.0.2
-      - name: "Setup: GraalVM (Java 24)"
+      - name: "Setup: GraalVM (Java 25)"
         uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
         with:
           distribution: "graalvm"
-          java-version: "24"
+          java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: QEMU"
         uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0

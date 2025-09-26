@@ -45,9 +45,12 @@ import elide.runtime.feature.FrameworkFeature
       "$javaHome/lib/svm/builder/pointsto.jar",
       "$javaHome/lib/svm/builder/svm-enterprise.jar",
       "$javaHome/lib/svm/builder/svm-foreign.jar",
+      "$javaHome/lib/svm/builder/svm-configure.jar",
       "$javaHome/lib/svm/builder/svm.jar",
-      "$javaHome/lib/svm/builder/svm.jar",
+      "$javaHome/lib/svm/builder/espresso-svm.jar",
+      "$javaHome/lib/svm/builder/reporter.jar",
       "$javaHome/lib/svm/library-support.jar",
+      "$javaHome/lib/svm/builder/svm-capnproto-runtime.jar",
       "$javaHome/lib/truffle/builder/truffle-enterprise-svm.jar",
       "$javaHome/lib/truffle/builder/truffle-runtime-svm.jar",
     ).flatMap {

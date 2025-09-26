@@ -39,7 +39,7 @@ private const val KOTLIN_MIME_TYPE = "application/x-kotlin"
   name = KOTLIN_NAME,
   implementationName = KOTLIN_IMPL,
   version = KOTLIN_IMPL_VERSION,
-  dependentLanguages = [EspressoLanguage.ID],
+  dependentLanguages = ["java"],
   defaultMimeType = KOTLIN_MIME_TYPE,
   website = "https://docs.elide.dev",
   fileTypeDetectors = [KotlinFileTypeDetector::class],
@@ -56,7 +56,7 @@ public class KotlinLanguage : TruffleLanguage<EspressoContext>() {
 
   override fun createContext(currentEnv: Env): EspressoContext {
     CompilerAsserts.neverPartOfCompilation()
-    val javaInfo: LanguageInfo = requireNotNull(currentEnv.internalLanguages[EspressoLanguage.ID]) {
+    val javaInfo: LanguageInfo = requireNotNull(currentEnv.internalLanguages["java"]) {
       "Failed to initialize Espresso; required for Kotlin. Crashing!"
     }
     currentEnv.initializeLanguage(javaInfo)

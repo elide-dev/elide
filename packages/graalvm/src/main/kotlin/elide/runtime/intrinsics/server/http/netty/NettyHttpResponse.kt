@@ -234,7 +234,9 @@ private val NETTY_HTTP_RESPONSE_PROPS_AND_METHODS = arrayOf(
 
   companion object {
     @JvmStatic fun from(res: Response, ctx: ChannelHandlerContext, includeDefaults: Boolean = true): NettyHttpResponse {
-      TODO("not yet implemented")
+      // temporary implementation; the response parameter can be safely ignored for now because it's always a new
+      // empty response, there is nothing that needs to be copied over to the new response
+      return NettyHttpResponse(ctx)
     }
   }
 }

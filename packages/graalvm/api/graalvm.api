@@ -42,7 +42,7 @@ public final class elide/runtime/core/internals/graalvm/GraalVMContext : elide/r
 public final class elide/runtime/core/internals/graalvm/GraalVMEngine : elide/runtime/core/PolyglotEngine {
 	public static final field Companion Lelide/runtime/core/internals/graalvm/GraalVMEngine$Companion;
 	public synthetic fun <init> (Lelide/runtime/core/internals/MutableEngineLifecycle;Lelide/runtime/core/internals/graalvm/GraalVMConfiguration;Lorg/graalvm/polyglot/Engine;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun acquire (ZLkotlin/jvm/functions/Function2;)Lelide/runtime/core/PolyglotContext;
+	public fun acquire (ZZLkotlin/jvm/functions/Function2;)Lelide/runtime/core/PolyglotContext;
 	public static final fun create (Lelide/runtime/core/internals/graalvm/GraalVMConfiguration;Lelide/runtime/core/internals/MutableEngineLifecycle;)Lelide/runtime/core/internals/graalvm/GraalVMEngine;
 	public fun unwrap ()Lorg/graalvm/polyglot/Engine;
 }

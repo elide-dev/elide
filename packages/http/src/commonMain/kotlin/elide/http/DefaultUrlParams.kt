@@ -20,6 +20,7 @@ internal expect fun String.decodeUrlSegment(): String
 @JvmRecord internal data class DefaultUrlParams (private val pairs: Sequence<Pair<String, String>>): Params {
   override val size: UInt get() = pairs.count().toUInt()
   override val sizeDistinct: UInt get() = pairs.groupBy { it.first }.count().toUInt()
+  override val keys: Sequence<String> get() = pairs.map { it.first }
   override fun contains(key: ParamName): Boolean = pairs.firstOrNull { it.first == key.name } != null
   override fun contains(key: String): Boolean = pairs.firstOrNull { it.first == key } != null
   override fun get(key: ParamName): ParamValue? = ParamValue.ofNullable(

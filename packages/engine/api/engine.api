@@ -222,9 +222,9 @@ public final class elide/runtime/core/PolyglotContextKt {
 
 public abstract interface class elide/runtime/core/PolyglotEngine {
 	public fun acquire (Lkotlin/jvm/functions/Function2;)Lelide/runtime/core/PolyglotContext;
-	public abstract fun acquire (ZLkotlin/jvm/functions/Function2;)Lelide/runtime/core/PolyglotContext;
+	public abstract fun acquire (ZZLkotlin/jvm/functions/Function2;)Lelide/runtime/core/PolyglotContext;
 	public static synthetic fun acquire$default (Lelide/runtime/core/PolyglotEngine;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lelide/runtime/core/PolyglotContext;
-	public static synthetic fun acquire$default (Lelide/runtime/core/PolyglotEngine;ZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lelide/runtime/core/PolyglotContext;
+	public static synthetic fun acquire$default (Lelide/runtime/core/PolyglotEngine;ZZLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lelide/runtime/core/PolyglotContext;
 	public abstract fun unwrap ()Lorg/graalvm/polyglot/Engine;
 }
 

@@ -31,6 +31,9 @@ public sealed interface Params {
   /** Count of parameters within this URL params container, ignoring duplicated keys. */
   public val sizeDistinct: UInt
 
+  /** A sequence of all the parameter keys in this map. */
+  public val keys: Sequence<String>
+
   /**
    * Indicate whether these parameters contain the provided [key].
    *
@@ -66,6 +69,7 @@ public sealed interface Params {
   /** Represents an empty suite of URL params. */
   public data object Empty : Params {
     override fun toString(): String = "Params.Empty"
+    override val keys: Sequence<String> = emptySequence()
     override val size: UInt get() = 0u
     override val sizeDistinct: UInt get() = 0u
     override fun contains(key: ParamName): Boolean = false

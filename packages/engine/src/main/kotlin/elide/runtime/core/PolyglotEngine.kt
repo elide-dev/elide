@@ -31,9 +31,9 @@ public interface PolyglotEngine {
 
   /** Acquire a new [PolyglotContext]. The returned context has all plugins applied on creation. */
   public fun acquire(cfg: Context.Builder.(Engine) -> Unit = {}): PolyglotContext {
-    return acquire(shared = true, cfg = cfg)
+    return acquire(shared = true, detached = false, cfg = cfg)
   }
 
   /** Acquire a new [PolyglotContext]. The returned context has all plugins applied on creation. */
-  public fun acquire(shared: Boolean, cfg: Context.Builder.(Engine) -> Unit = {}): PolyglotContext
+  public fun acquire(shared: Boolean, detached: Boolean, cfg: Context.Builder.(Engine) -> Unit = {}): PolyglotContext
 }

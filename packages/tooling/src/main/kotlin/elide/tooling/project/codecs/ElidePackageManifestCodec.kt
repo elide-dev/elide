@@ -221,7 +221,7 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
           // TODO this is hacky
           index != 0 -> line
           else -> if (line != "amends \"./packages/cli/src/main/pkl/Project.pkl\"") line else {
-            "amends \"elide:Project.pkl\""
+            "amends \"elide:project.pkl\""
           }
         }
       }.joinToString("\n")

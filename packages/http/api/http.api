@@ -537,6 +537,7 @@ public abstract interface class elide/http/Params {
 	public abstract fun contains (Ljava/lang/String;)Z
 	public abstract fun get (Lelide/http/ParamName;)Lelide/http/ParamValue;
 	public abstract fun get (Ljava/lang/String;)Lelide/http/ParamValue;
+	public abstract fun getKeys ()Lkotlin/sequences/Sequence;
 	public abstract fun getSize-pVg5ArA ()I
 	public abstract fun getSizeDistinct-pVg5ArA ()I
 	public static fun parse (Ljava/lang/String;)Lelide/http/Params;
@@ -553,6 +554,7 @@ public final class elide/http/Params$Empty : elide/http/Params {
 	public fun equals (Ljava/lang/Object;)Z
 	public fun get (Lelide/http/ParamName;)Lelide/http/ParamValue;
 	public fun get (Ljava/lang/String;)Lelide/http/ParamValue;
+	public fun getKeys ()Lkotlin/sequences/Sequence;
 	public fun getSize-pVg5ArA ()I
 	public fun getSizeDistinct-pVg5ArA ()I
 	public fun hashCode ()I

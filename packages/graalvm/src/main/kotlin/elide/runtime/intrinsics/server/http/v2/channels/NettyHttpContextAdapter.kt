@@ -19,7 +19,7 @@ import io.netty.channel.ChannelPromise
 import io.netty.handler.codec.http.*
 import elide.runtime.intrinsics.server.http.v2.HttpContext
 import elide.runtime.intrinsics.server.http.v2.HttpContextFactory
-import elide.runtime.intrinsics.server.http.v2.HttpHandlerPipeline
+import elide.runtime.intrinsics.server.http.v2.HttpContextHandler
 
 /**
  * A channel handler that creates [HttpContext] instances for incoming HTTP requests and manages async IO using
@@ -34,7 +34,7 @@ import elide.runtime.intrinsics.server.http.v2.HttpHandlerPipeline
  */
 internal class NettyHttpContextAdapter(
   private val contextFactory: HttpContextFactory<HttpContext>,
-  private val handlerPipeline: HttpHandlerPipeline,
+  private val contextHandler: HttpContextHandler,
 ) : ChannelDuplexHandler() {
   /** Reference to the context for the HTTP request currently being handled. */
   private var activeContext: HttpContext? = null
@@ -98,7 +98,7 @@ internal class NettyHttpContextAdapter(
       responseSink = responseSink,
     ).also { activeContext = it }
 
-    handlerPipeline.handle(httpContext, channelContext).addListener {
+    contextHandler.handle(httpContext, ChannelScope(channelContext)).addListener {
       // send the response header, then the body
       channelContext.channel().writeAndFlush(httpContext.response)
     }

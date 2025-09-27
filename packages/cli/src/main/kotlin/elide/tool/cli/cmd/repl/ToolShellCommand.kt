@@ -151,6 +151,9 @@ import elide.tooling.testing.*
 // Whether to use Espresso as the JVM engine by default.
 private const val USE_TRUFFLE_JVM_DEFAULT = false
 
+// Whether to use the JVM source loader for testing. Required for coverage.
+private const val ENABLE_SOURCE_LOADER_JVM = false
+
 /**
  * Type alias for an accessor method which allows an optional builder amendment.
  */
@@ -1815,14 +1818,15 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
         val testResults = session.testResults.onEach {
           // print test results
-          val message = when (val outcome = it.outcome) {
-            TestOutcome.Skipped -> formatMaybe(
+          val (outcome, message) = when (val outcome = it.outcome) {
+            TestOutcome.Skipped -> outcome to formatMaybe(
               "⊝  ${it.test.displayName}",
               TextColors.yellow + TextStyles.dim,
               false,
             )
 
-            TestOutcome.Success -> "✔  ${it.test.displayName}"
+            TestOutcome.Success -> outcome to "✔  ${it.test.displayName}"
+
             is TestOutcome.Error -> {
               val reason = outcome.reason
               val msg = when {
@@ -1830,7 +1834,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
                 reason != null -> reason.toString()
                 else -> "Unknown error"
               }
-              formatMaybe(
+              outcome to formatMaybe(
                 "!  ${it.test.displayName}\n$msg",
                 TextStyles.bold + TextColors.red,
                 false,
@@ -1844,7 +1848,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
                 reason != null -> reason.toString()
                 else -> "Unknown error"
               }
-              formatMaybe(
+              outcome to formatMaybe(
                 "✗  ${it.test.displayName}\n$msg",
                 TextStyles.bold + TextColors.red,
                 false,
@@ -1852,7 +1856,29 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             }
           }
 
+          // main test result line
           output { append(message) }
+
+          // detail line (why it was skipped, why it failed, what error occurred)
+          when (outcome) {
+            is TestOutcome.Success,
+            is TestOutcome.Skipped -> null
+            is TestOutcome.Error -> outcome.reason
+            is TestOutcome.Failure -> outcome.reason
+          }?.let { reason ->
+            when (reason) {
+              is Throwable -> {
+                val stacktrace = reason.stackTraceToString()
+                stacktrace.lineSequence().map { line ->
+                  line.prependIndent("    ")
+                }.joinToString("\n")
+
+                output {
+                  append(formatMaybe(stacktrace, TextColors.red, false))
+                }
+              }
+            }
+          }
         }.toList()
 
         val runResult = session.result.await()
@@ -2396,7 +2422,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     configure(Jvm) {
       logging.debug("Configuring JVM")
       resourcesPath = gvmResources
-      enableSourceIntegration = testMode()  // we need coverage in test mode, which needs the source loader
+      if (ENABLE_SOURCE_LOADER_JVM) {
+        enableSourceIntegration = testMode()  // we need coverage in test mode, which needs the source loader
+      }
       multithreading = !langs.contains(JS)
       testing = testMode()
       runnableJarPath?.let { entrypointJar = it }

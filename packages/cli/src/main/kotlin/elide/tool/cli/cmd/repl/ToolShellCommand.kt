@@ -114,6 +114,7 @@ import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.cli.output.TOOL_LOGGER_APPENDER
 import elide.tool.cli.output.TOOL_LOGGER_NAME
 import elide.tool.err.ErrPrinter
+import elide.tool.err.ErrorHandler.ErrorUtils.buildStacktrace
 import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
 import elide.tool.exec.SubprocessRunner.subprocess
@@ -1826,7 +1827,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             is TestOutcome.Error -> {
               val reason = outcome.reason
               val msg = when {
-                reason is Throwable && reason.message != null -> reason.message
+                reason is Throwable -> reason.buildStacktrace()
                 reason != null -> reason.toString()
                 else -> "Unknown error"
               }
@@ -1840,7 +1841,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             is TestOutcome.Failure -> {
               val reason = outcome.reason
               val msg = when {
-                reason is Throwable && reason.message != null -> reason.message
+                reason is Throwable -> reason.buildStacktrace()
                 reason != null -> reason.toString()
                 else -> "Unknown error"
               }

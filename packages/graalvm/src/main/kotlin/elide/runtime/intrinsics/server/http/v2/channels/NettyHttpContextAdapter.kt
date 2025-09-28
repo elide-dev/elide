@@ -13,10 +13,13 @@
 
 package elide.runtime.intrinsics.server.http.v2.channels
 
+import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelDuplexHandler
+import io.netty.channel.ChannelFutureListener
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
 import io.netty.handler.codec.http.*
+import io.netty.util.ReferenceCountUtil
 import elide.runtime.intrinsics.server.http.v2.HttpContext
 import elide.runtime.intrinsics.server.http.v2.HttpContextFactory
 import elide.runtime.intrinsics.server.http.v2.HttpContextHandler
@@ -47,6 +50,9 @@ internal class NettyHttpContextAdapter(
   private inline val activeSink: NettyContextSink?
     get() = activeContext?.responseBody as NettyContextSink?
 
+  /** Track whether inbound content should be dropped (e.g., after expectation failure). */
+  private var ignoringContent: Boolean = false
+
   override fun channelActive(ctx: ChannelHandlerContext) {
     // we need to set reads to manual so we can enforce backpressure
     ctx.channel().config().isAutoRead = false
@@ -54,11 +60,20 @@ internal class NettyHttpContextAdapter(
   }
 
   override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
+    if (ignoringContent) {
+      if (msg is HttpContent) {
+        ReferenceCountUtil.release(msg)
+        if (msg is LastHttpContent) ignoringContent = false
+        return
+      }
+      ignoringContent = false
+    }
+
     when (msg) {
       // if the message is a request, create a new context for it and set it as current
       is HttpRequest -> handleIncoming(ctx, msg)
       // if it's a content chunk, pass it to the current request's source
-      is HttpContent -> activeSource?.handleRead(msg)
+      is HttpContent -> activeSource?.handleRead(msg) ?: ReferenceCountUtil.release(msg)
       // otherwise let the next handler use it
       else -> super.channelRead(ctx, msg)
     }
@@ -88,6 +103,11 @@ internal class NettyHttpContextAdapter(
   private fun handleIncoming(channelContext: ChannelHandlerContext, request: HttpRequest) {
     closeCurrent(channelContext)
 
+    if (!handleExpectations(channelContext, request)) {
+      channelContext.channel().read()
+      return
+    }
+
     val requestSource = NettyContextSource(channelContext)
     val responseSink = NettyContextSink(channelContext)
 
@@ -98,9 +118,21 @@ internal class NettyHttpContextAdapter(
       responseSink = responseSink,
     ).also { activeContext = it }
 
-    contextHandler.handle(httpContext, ChannelScope(channelContext)).addListener {
-      // send the response header, then the body
-      channelContext.channel().writeAndFlush(httpContext.response)
+    val completion = runCatching {
+      contextHandler.handle(httpContext, ChannelScope(channelContext))
+    }.getOrElse {
+      val response = DefaultFullHttpResponse(request.protocolVersion(), HttpResponseStatus.INTERNAL_SERVER_ERROR)
+      channelContext.channel().writeAndFlush(response)
+
+      return
+    }
+
+    completion.addListener {
+      val response = if (it.isSuccess) httpContext.response
+      else DefaultFullHttpResponse(request.protocolVersion(), HttpResponseStatus.INTERNAL_SERVER_ERROR)
+
+      // send the response header, the body will be sent automatically after
+      channelContext.channel().writeAndFlush(response)
     }
   }
 
@@ -110,17 +142,61 @@ internal class NettyHttpContextAdapter(
    */
   private fun closeCurrent(channelContext: ChannelHandlerContext) {
     val currentRequest = activeContext?.request ?: return
+    if (!HttpUtil.isKeepAlive(currentRequest)) channelContext.close()
 
-    val keepAlive = when (currentRequest.headers().get(HttpHeaderNames.CONNECTION)) {
-      null -> currentRequest.protocolVersion().isKeepAliveDefault
-      "close" -> false
-      else -> true
-    }
-
-    if (!keepAlive) channelContext.close()
-
+    activeContext?.close()
     activeSink?.close()
     activeSource?.close()
     activeContext = null
+    ignoringContent = false
+  }
+
+  private fun handleExpectations(
+    channelContext: ChannelHandlerContext,
+    request: HttpRequest,
+  ): Boolean {
+    val response = when {
+      isUnsupportedExpectation(request) -> {
+        channelContext.pipeline().fireUserEventTriggered(HttpExpectationFailedEvent.INSTANCE)
+        EXPECTATION_FAILED_RESPONSE.retainedDuplicate()
+      }
+
+      HttpUtil.is100ContinueExpected(request) -> CONTINUE_RESPONSE.retainedDuplicate()
+      else -> null
+    } ?: return true
+
+    request.headers().remove(HttpHeaderNames.EXPECT)
+
+    val shouldContinue = response.status().codeClass() != HttpStatusClass.CLIENT_ERROR
+    if (!shouldContinue) ignoringContent = true
+
+    channelContext.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE_ON_FAILURE)
+
+    return shouldContinue
+  }
+
+  private fun isUnsupportedExpectation(message: HttpMessage): Boolean {
+    if (!isExpectHeaderValid(message)) return false
+
+    val expectValue = message.headers().get(HttpHeaderNames.EXPECT)
+    return expectValue != null && !HttpHeaderValues.CONTINUE.toString().equals(expectValue, ignoreCase = true)
+  }
+
+  private fun isExpectHeaderValid(message: HttpMessage): Boolean {
+    return message is HttpRequest && message.protocolVersion() >= HttpVersion.HTTP_1_1
+  }
+
+  companion object {
+    private val CONTINUE_RESPONSE: FullHttpResponse = DefaultFullHttpResponse(
+      HttpVersion.HTTP_1_1,
+      HttpResponseStatus.CONTINUE,
+      Unpooled.EMPTY_BUFFER,
+    ).apply { HttpUtil.setContentLength(this, 0) }
+
+    private val EXPECTATION_FAILED_RESPONSE: FullHttpResponse = DefaultFullHttpResponse(
+      HttpVersion.HTTP_1_1,
+      HttpResponseStatus.EXPECTATION_FAILED,
+      Unpooled.EMPTY_BUFFER,
+    ).apply { HttpUtil.setContentLength(this, 0) }
   }
 }

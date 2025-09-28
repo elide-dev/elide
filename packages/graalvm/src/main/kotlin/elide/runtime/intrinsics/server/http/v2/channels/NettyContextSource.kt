@@ -45,12 +45,14 @@ internal class NettyContextSource(private val attachedContext: ChannelHandlerCon
       check(attachedHandle.get() == this) { "Consumer is released or source is already closed" }
       if (!pulled.compareAndSet(false, true)) return
 
-      // pull from the buffer first, schedule delivery for later to avoid going too deep into
-      // the stack due to repeated pull calls
+      // pull from the buffer first, schedule delivery
       buffer.removeFirstOrNull()?.let { content ->
-        attachedContext.executor().submit { consumer.consume(content, this) }
-        pulled.set(false)
+        attachedContext.executor().submit {
+          consumer.consume(content, this)
+          if (closed.get() && buffer.isEmpty()) release()
+        }
 
+        pulled.set(false)
         return
       }
 
@@ -100,7 +102,7 @@ internal class NettyContextSource(private val attachedContext: ChannelHandlerCon
   }
 
   override fun sink(consumer: Consumer) {
-    check(!closed.get()) { "Source is already closed" }
+    check(!closed.get() || buffer.isNotEmpty()) { "Source is closed" }
 
     val handle = ContextBoundHandle(consumer)
     check(attachedHandle.compareAndSet(null, handle)) { "Source already has an attached consumer" }
@@ -113,6 +115,6 @@ internal class NettyContextSource(private val attachedContext: ChannelHandlerCon
 
   override fun close() {
     if (!closed.compareAndSet(false, true)) return
-    release()
+    if (buffer.isEmpty()) release()
   }
 }

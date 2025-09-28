@@ -13,14 +13,13 @@
 
 package elide.runtime.intrinsics.server.http.v2
 
-import io.netty.channel.ChannelHandlerContext
-import io.netty.handler.codec.http.HttpRequest
+import io.netty.handler.codec.http.HttpContent
 
-public interface HttpContextFactory<out C : HttpContext> {
-  public fun newContext(
-    incomingRequest: HttpRequest,
-    channelContext: ChannelHandlerContext,
-    requestSource: HttpContentSource,
-    responseSink: HttpContentSink,
-  ): C
+class CollectionProducer(data: Iterable<HttpContent>) : HttpContentSink.Producer {
+  private val iterator = data.iterator()
+
+  override fun pull(handle: HttpContentSink.Handle) {
+    if (iterator.hasNext()) handle.push(iterator.next())
+    if (!iterator.hasNext()) handle.release(true)
+  }
 }

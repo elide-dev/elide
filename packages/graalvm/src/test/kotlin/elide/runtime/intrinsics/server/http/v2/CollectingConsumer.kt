@@ -13,14 +13,26 @@
 
 package elide.runtime.intrinsics.server.http.v2
 
-import io.netty.channel.ChannelHandlerContext
-import io.netty.handler.codec.http.HttpRequest
+import io.netty.handler.codec.http.HttpContent
 
-public interface HttpContextFactory<out C : HttpContext> {
-  public fun newContext(
-    incomingRequest: HttpRequest,
-    channelContext: ChannelHandlerContext,
-    requestSource: HttpContentSource,
-    responseSink: HttpContentSink,
-  ): C
+class CollectingConsumer<T>(
+  private val autoRelease: Boolean = true,
+  private val transform: (HttpContent) -> T,
+) : HttpContentSource.Consumer {
+  private val chunks = mutableListOf<T>()
+  private var done = false
+
+  override fun consume(content: HttpContent, handle: HttpContentSource.Handle) {
+    chunks.add(transform(content))
+    if (autoRelease) content.release()
+  }
+
+  override fun released() {
+    done = true
+  }
+
+  fun collect(): List<T> {
+    assert(done) { "Consumer has not finished consuming content" }
+    return chunks
+  }
 }

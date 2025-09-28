@@ -21,31 +21,31 @@ import io.netty.handler.codec.http.HttpResponse
  * Implementations are expected to interact with the low-level Netty types to provide the APIs expected by specific
  * languages and frameworks.
  */
-public abstract class HttpContext : AutoCloseable {
+public interface HttpContext : AutoCloseable {
   /**
    * Incoming request decoded by the HTTP engine. The [request] object is immutable and provides access to the headers,
    * method, URI, and other basic fields, and optionally a handle to read the incoming request's body.
    */
-  public abstract val request: HttpRequest
+  public val request: HttpRequest
 
   /**
    * A source for reading the incoming request's body; if the request does not have a body, this source will be empty.
    */
-  public abstract val requestBody: HttpContentSource
+  public val requestBody: HttpContentSource
 
   /** Outgoing [response] object, built as the context passes through middleware on its way to and from the handler. */
-  public abstract val response: HttpResponse
+  public val response: HttpResponse
 
   /**
-   * A sink for writing the outgoing response's body; to send an empty response, simply close the sink without writing
-   * any data to it.
+   * A sink for writing the outgoing response's body; to send an empty response, close the sink without writing any
+   * data to it.
    */
-  public abstract val responseBody: HttpContentSink
+  public val responseBody: HttpContentSink
 
   /**
-   * Arbitrary type-safe storage for values bound to this context, can be used to store framework-specific data and
-   * cache values.
+   * Arbitrary type-safe storage for values bound to this context used to store framework-specific data and cached
+   * values.
    */
-  public abstract val session: HttpSession
+  public val session: HttpSession
 }
 

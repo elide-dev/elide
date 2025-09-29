@@ -2770,7 +2770,11 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         projectResolution.join()
 
         val secrets = beanContext.getBean(Secrets::class.java)
-        secrets.init(projectPath, activeProject.value?.manifest)
+        try {
+          secrets.init(projectPath, activeProject.value?.manifest)
+        } catch (t: Throwable) {
+          logging.warn { "Secrets were not initialized with message: ${t.message}" }
+        }
         if(secrets.initialized) {
           if (secrets.getProfile() == null) {
             val profiles = secrets.listProfiles()

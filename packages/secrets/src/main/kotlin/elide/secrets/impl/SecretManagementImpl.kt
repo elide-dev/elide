@@ -47,8 +47,9 @@ internal class SecretManagementImpl(
   private val cbor: BinaryFormat,
   private val remoteInitializers: List<RemoteInitializer>,
 ) : SecretManagement {
+  private var _initialized: Boolean = false
   override val initialized: Boolean
-    get() = secrets.initialized
+    get() = _initialized
 
   private var localCopy: LocalProfile? = null
   private val prompts: MutableList<String> = mutableListOf()
@@ -70,6 +71,7 @@ internal class SecretManagementImpl(
         }
       SecretsState.local = files.readLocal()
     } else createData()
+    _initialized = true
   }
 
   override suspend fun initNonInteractive(path: Path, manifest: ElidePackageManifest) {

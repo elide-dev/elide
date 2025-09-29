@@ -31,8 +31,9 @@ import elide.tooling.project.manifest.ElidePackageManifest
  */
 @Singleton
 internal class SecretsImpl(private val encryption: Encryption, private val files: FileManagement) : Secrets {
+  private var _initialized: Boolean = false
   override val initialized: Boolean
-    get() = SecretsState.initialized
+    get() = _initialized
 
   private val logger: Logger = Logging.of(SecretsImpl::class)
   private var passphraseOverride: String? = null
@@ -55,6 +56,7 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
       SecretsState.local = files.readLocal()
       val profileName = System.getenv(Values.PROFILE_OVERRIDE_ENVIRONMENT_VARIABLE) ?: manifest?.secrets?.profile
       profileName?.let { loadProfile(it) }
+      _initialized = true
     } else logger.warn(Values.SECRETS_NOT_INITIALIZED_WARNING)
   }
 

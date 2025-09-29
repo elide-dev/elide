@@ -47,6 +47,7 @@ internal class SecretsJsModule(private val secretAccess: Provider<Secrets>) : Ab
 
 internal class GuestSecrets(private val secretAccess: Secrets) : ReadOnlyProxyObject, SecretsAPI {
   override fun get(name: Value): Value {
+    if (!secretAccess.initialized || secretAccess.getProfile() == null) throw JsError.of("Secrets were not initialized properly.")
     val secret = secretAccess.getSecret(name.asString())
     return Context.getCurrent().asValue(if (secret is ByteString) secret.toByteArray() else secret)
   }
@@ -57,7 +58,7 @@ internal class GuestSecrets(private val secretAccess: Secrets) : ReadOnlyProxyOb
     when (key) {
       SECRETS_GET ->
         ProxyExecutable { args ->
-          if (args.size != 1) throw JsError.typeError("Invalid number of arguments to `secrets.get`")
+          if (args.size != 1) throw JsError.typeError("Invalid number of arguments to `secrets.get`.")
           get(args[0])
         }
       else -> null

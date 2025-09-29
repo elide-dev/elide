@@ -30,7 +30,7 @@ import elide.secrets.remote.impl.GithubRemote.Companion.get
 import elide.tooling.project.manifest.ElidePackageManifest
 
 /**
- * Initializer for connecting to GitHub.
+ * Initializer for [GithubRemote].
  *
  * @author Lauri Heino <datafox>
  */
@@ -44,12 +44,29 @@ internal class GithubRemoteInitializer(
   private lateinit var token: String
   override val name: String = ElidePackageManifest.SecretsRemote.GITHUB.symbol
 
-  override suspend fun initialize(prompts: MutableList<String>): GithubRemote {
+  override suspend fun init(prompts: MutableList<String>): GithubRemote {
     repository =
       SecretsState.manifest?.secrets?.github?.repository
         ?: SecretsState.local[Values.GITHUB_REPOSITORY_SECRET]
         ?: askRepository(prompts)
     token = SecretsState.local[Values.GITHUB_TOKEN_SECRET] ?: askToken(prompts)
+    val writeAccess = validateConnection(token, repository)
+    SecretsState.updateLocal {
+      addAll(
+        StringSecret(Values.GITHUB_REPOSITORY_SECRET, repository),
+        StringSecret(Values.GITHUB_TOKEN_SECRET, token),
+      )
+    }
+    return GithubRemote(writeAccess, repository, token, encryption, client, json)
+  }
+
+  override suspend fun initNonInteractive(): GithubRemote {
+    repository =
+      SecretsState.manifest?.secrets?.github?.repository
+        ?: throw IllegalStateException(Values.GITHUB_REPOSITORY_NOT_SPECIFIED_EXCEPTION)
+    token =
+      System.getenv(Values.GITHUB_TOKEN_ENVIRONMENT_VARIABLE)
+        ?: throw IllegalStateException(Values.GITHUB_TOKEN_READ_EXCEPTION)
     val writeAccess = validateConnection(token, repository)
     SecretsState.updateLocal {
       addAll(

@@ -12,7 +12,11 @@
  */
 package elide.secrets.dto.persisted
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Interface for a class that has a name.
+ *
+ * @author Lauri Heino <datafox>
+ */
 internal interface Named {
   val name: String
 }

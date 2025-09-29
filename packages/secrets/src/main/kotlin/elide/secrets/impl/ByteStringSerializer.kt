@@ -19,6 +19,11 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * [KSerializer] for a [ByteString].
+ *
+ * @author Lauri Heino <datafox>
+ */
 internal class ByteStringSerializer : KSerializer<ByteString> {
   override val descriptor: SerialDescriptor = ByteArraySerializer().descriptor
 

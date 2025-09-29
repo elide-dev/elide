@@ -21,7 +21,11 @@ import elide.secrets.dto.persisted.*
 import elide.secrets.remote.Remote
 import elide.tooling.project.manifest.ElidePackageManifest
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Shared state of secrets.
+ *
+ * @author Lauri Heino <datafox>
+ */
 internal object SecretsState {
   private val interactiveFlow: MutableStateFlow<Boolean?> = MutableStateFlow(null)
   private val pathFlow: MutableStateFlow<Path?> = MutableStateFlow(null)

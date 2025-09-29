@@ -19,28 +19,39 @@ import elide.tooling.project.manifest.ElidePackageManifest
 /**
  * Common access to secrets.
  *
+ * @property initialized `true` if [init] has been called and has successfully initialized secrets.
  * @author Lauri Heino <datafox>
  */
 public sealed interface SecretsCommon {
   public val initialized: Boolean
 
+  /** Initializes secrets for use. */
   public suspend fun init(path: Path, manifest: ElidePackageManifest?)
 
+  /** Lists all profiles that exist locally. */
   public fun listProfiles(): Set<String>
 
+  /** Loads a profile for use. */
   public fun loadProfile(profile: String)
 
+  /** Returns name of the currently loaded profile or `null` if none is loaded. */
   public fun getProfile(): String?
 
+  /** Unloads a profile from use. */
   public fun unloadProfile()
 
+  /** Lists all environment variables in the currently loaded profile. */
   public fun getEnv(): Map<String, String>
 
+  /** Returns a secret from the currently loaded profile. */
   public fun getSecret(name: String): Any?
 
+  /** Returns a string secret from the currently loaded profile. */
   public fun getStringSecret(name: String): String?
 
+  /** Returns a string secret from the currently loaded profile. */
   public fun getBinarySecret(name: String): ByteString?
 
+  /** Lists all secret names and their types in the currently loaded profile. */
   public fun listSecrets(): Map<String, SecretType>
 }

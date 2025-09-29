@@ -18,7 +18,7 @@ import elide.secrets.Utils
 import elide.secrets.impl.ByteStringSerializer
 
 /**
- * Remote access keys for secrets.
+ * Access key for secrets.
  *
  * @author Lauri Heino <datafox>
  */

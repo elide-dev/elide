@@ -45,10 +45,9 @@ internal class EncryptionImpl : Encryption {
   override fun decryptAES(key: ByteString, encrypted: ByteString): ByteString {
     val out = ByteArray(encrypted.size - Values.IV_SIZE)
     val cipher = createCipher()
-    cipher.init(
-      false,
-      ParametersWithIV(KeyParameter(key.toByteArray()), encrypted.toByteArray(0, Values.IV_SIZE), 0, Values.IV_SIZE),
-    )
+    val parameters =
+      ParametersWithIV(KeyParameter(key.toByteArray()), encrypted.toByteArray(0, Values.IV_SIZE), 0, Values.IV_SIZE)
+    cipher.init(false, parameters)
     cipher.processBytes(encrypted.toByteArray(Values.IV_SIZE), 0, out.size, out, 0)
     return ByteString(out)
   }
@@ -56,7 +55,8 @@ internal class EncryptionImpl : Encryption {
   override fun hashKeySHA256(data: ByteString): ByteString {
     val parameterGenerator = PKCS5S2ParametersGenerator(SHA256Digest())
     parameterGenerator.init(data.toByteArray(), null, Values.HASH_ITERATIONS)
-    return ByteString((parameterGenerator.generateDerivedParameters(Values.KEY_SIZE * 8) as KeyParameter).key)
+    val parameter = parameterGenerator.generateDerivedParameters(Values.KEY_SIZE * 8) as KeyParameter
+    return ByteString(parameter.key)
   }
 
   override fun hashDataSHA1(data: ByteString): ByteString {

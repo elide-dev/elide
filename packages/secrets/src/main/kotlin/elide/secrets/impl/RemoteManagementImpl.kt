@@ -25,6 +25,11 @@ import elide.secrets.Utils.encrypt
 import elide.secrets.Utils.serialize
 import elide.secrets.dto.persisted.*
 
+/**
+ * Implementation of [RemoteManagement].
+ *
+ * @author Lauri Heino <datafox>
+ */
 internal class RemoteManagementImpl(
   private val secrets: Secrets,
   private val files: FileManagement,
@@ -48,12 +53,9 @@ internal class RemoteManagementImpl(
     val updated =
       if (mismatchingHashes.isEmpty()) listOf()
       else {
-        println("These profiles exist locally but are not the same ones as on the remote.")
+        println(Values.PROFILE_MISMATCH_MESSAGE)
         prompts.removeFirstOrNull()?.split("\u0000")
-          ?: KInquirer.promptCheckbox(
-            "Select the local profiles you want to update from the remote, the rest will be pushed to the remote.",
-            mismatchingHashes,
-          )
+          ?: KInquirer.promptCheckbox(Values.PROFILES_TO_UPDATE_PROMPT, mismatchingHashes)
       }
     val localToBeUpdated = (remoteProfiles subtract localProfiles) union updated
     localToBeUpdated.forEach {
@@ -83,7 +85,7 @@ internal class RemoteManagementImpl(
       )
   }
 
-  override fun removeAccess(name: String) {
+  override fun deleteAccess(name: String) {
     superAccess = superAccess.removeAccess(name)
   }
 
@@ -104,7 +106,7 @@ internal class RemoteManagementImpl(
     if (profile !in SecretsState.metadata.profiles)
       throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
     if (profile !in superAccess.access[access!!]!!.second)
-      throw IllegalArgumentException(Values.profileNotInAccess(profile))
+      throw IllegalArgumentException(Values.profileNotInAccessException(profile))
     access?.let { superAccess = superAccess.removeFromAccess(it, profile) }
   }
 
@@ -118,17 +120,17 @@ internal class RemoteManagementImpl(
   }
 
   override fun deleteProfile(profile: String) {
-    if (access != null) throw IllegalStateException("An access is selected.")
-    if (profile !in SecretsState.metadata.profiles) throw IllegalArgumentException("Profile does not exist.")
-    if (profile in deleted) throw IllegalArgumentException("Profile already deleted.")
-    println("Deleting the profile will also delete it from your local secrets!")
-    if (!(prompts.removeFirstOrNull()?.toBooleanStrict() ?: KInquirer.promptConfirm("Do you want to proceed?"))) return
+    if (access != null) throw IllegalStateException(Values.ACCESS_SELECTED_EXCEPTION)
+    if (profile !in SecretsState.metadata.profiles)
+      throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
+    if (profile in deleted) throw IllegalArgumentException(Values.PROFILE_ALREADY_DELETED_EXCEPTION)
+    println(Values.DELETE_PROFILES_MESSAGE)
+    if (!(prompts.removeFirstOrNull()?.toBooleanStrict() ?: KInquirer.promptConfirm(Values.GENERIC_PROCEED_PROMPT)))
+      return
     val accessesWithProfile = superAccess.access.filter { profile in it.value.second }.keys
     if (accessesWithProfile.isNotEmpty()) {
-      println("The following access files contain the profile:")
-      println(accessesWithProfile)
-      println("If you proceed, the profile will be removed from these access files as well.")
-      if (!(prompts.removeFirstOrNull()?.toBooleanStrict() ?: KInquirer.promptConfirm("Do you want to proceed?")))
+      println(Values.accessesWithProfileMessage(accessesWithProfile.joinToString()))
+      if (!(prompts.removeFirstOrNull()?.toBooleanStrict() ?: KInquirer.promptConfirm(Values.GENERIC_PROCEED_PROMPT)))
         return
       superAccess =
         superAccess.copy(
@@ -143,7 +145,7 @@ internal class RemoteManagementImpl(
   }
 
   override fun restoreProfile(profile: String) {
-    if (access != null) throw IllegalStateException("An access is selected.")
+    if (access != null) throw IllegalStateException(Values.ACCESS_SELECTED_EXCEPTION)
     if (profile !in deleted) throw IllegalStateException(Values.PROFILE_NOT_DELETED_EXCEPTION)
     deleted.remove(profile)
     superAccess = superAccess.addKey(files.readKey(profile))
@@ -177,6 +179,7 @@ internal class RemoteManagementImpl(
       superBytes,
       accesses,
       deleted intersect remoteMetadata.profiles.keys,
+      remoteMetadata.access.keys subtract superAccess.access.keys,
     )
     deleted.forEach { files.removeProfile(it) }
     SecretsState.updateMetadata { removeAll(deleted) }

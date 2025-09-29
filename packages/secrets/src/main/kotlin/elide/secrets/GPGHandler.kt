@@ -16,7 +16,11 @@ import java.io.OutputStream
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.decodeToString
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Runner for the `gpg` binary.
+ *
+ * @author Lauri Heino <datafox>
+ */
 internal object GPGHandler {
   fun gpgKeys(): Map<String, String> = gpgKeys(false)
 

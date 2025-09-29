@@ -38,6 +38,9 @@ import elide.secrets.remote.Remote
  * @property writeAccess `true` if writing to this remote is permitted.
  * @property repository connected repository name in format `organization/repository`.
  * @property token GitHub personal access token.
+ * @property encryption [Encryption] instance.
+ * @property client [HttpClient] instance.
+ * @property json [Json] instance.
  * @author Lauri Heino <datafox>
  */
 internal class GithubRemote(
@@ -58,18 +61,17 @@ internal class GithubRemote(
 
   @OptIn(ExperimentalStdlibApi::class)
   override suspend fun update(metadata: ByteString, profiles: Map<String, ByteString>) {
-    val currentMetadataBytes =
-      getMetadata() ?: throw IllegalStateException("Remote not initialized, use remote management instead")
+    val currentMetadataBytes = getMetadata() ?: throw IllegalStateException(Values.REMOTE_NOT_INITIALIZED_EXCEPTION)
     val currentMetadata: RemoteMetadata = currentMetadataBytes.deserialize(json)
     val branch = createBranch()
     profiles.forEach { (name, bytes) ->
       val sha = currentMetadata.profiles[name]?.hash ?: ""
-      writeFile(Utils.profileName(name), bytes, "Changed profile $name", sha, branch)
+      writeFile(Utils.profileName(name), bytes, Values.changedProfileCommit(name), sha, branch)
     }
     writeFile(
       Values.METADATA_FILE,
       metadata,
-      "Changed metadata",
+      Values.CHANGED_METADATA_COMMIT,
       encryption.hashGitDataSHA1(currentMetadataBytes).toHexString(),
       branch,
     )
@@ -83,6 +85,7 @@ internal class GithubRemote(
     superAccess: ByteString,
     access: Map<String, ByteString>,
     deletedProfiles: Set<String>,
+    deletedAccesses: Set<String>,
   ) {
     val currentMetadataBytes = getMetadata()
     val currentMetadata: RemoteMetadata? = currentMetadataBytes?.deserialize(json)
@@ -90,21 +93,24 @@ internal class GithubRemote(
     val branch = if (currentMetadataBytes == null) "" else createBranch()
     profiles.forEach { (name, bytes) ->
       val sha = currentMetadata?.profiles[name]?.hash ?: ""
-      writeFile(Utils.profileName(name), bytes, "Changed profile $name", sha, branch)
+      writeFile(Utils.profileName(name), bytes, Values.changedProfileCommit(name), sha, branch)
     }
     access.forEach { (name, bytes) ->
       val sha = currentMetadata?.access[name]?.hash ?: ""
-      writeFile(Utils.accessName(name), bytes, "Changed access $name", sha, branch)
+      writeFile(Utils.accessName(name), bytes, Values.changedAccessCommit(name), sha, branch)
     }
     currentMetadata?.run {
       deletedProfiles.forEach {
-        deleteFile(Utils.profileName(it), "Deleted profile $it", this.profiles[it]!!.hash, branch)
+        deleteFile(Utils.profileName(it), Values.deletedProfileCommit(it), this.profiles[it]!!.hash, branch)
+      }
+      deletedAccesses.forEach {
+        deleteFile(Utils.accessName(it), Values.deletedAccessCommit(it), this.access[it]!!.hash, branch)
       }
     }
     val superSha = currentSuperBytes?.let { encryption.hashGitDataSHA1(it) }?.toHexString() ?: ""
-    writeFile(Values.SUPER_ACCESS_FILE, superAccess, "Changed super access", superSha, branch)
+    writeFile(Values.SUPER_ACCESS_FILE, superAccess, Values.CHANGED_SUPER_ACCESS_COMMIT, superSha, branch)
     val metadataSha = currentMetadataBytes?.let { encryption.hashGitDataSHA1(it) }?.toHexString() ?: ""
-    writeFile(Values.METADATA_FILE, metadata, "Changed metadata", metadataSha, branch)
+    writeFile(Values.METADATA_FILE, metadata, Values.CHANGED_METADATA_COMMIT, metadataSha, branch)
     if (branch.isNotBlank()) merge(branch)
   }
 
@@ -170,7 +176,7 @@ internal class GithubRemote(
     client.post<GithubMergeRequest, GithubMergeResponse>(
       "repos/$repository/merges",
       token,
-      GithubMergeRequest("main", branch, "Merge branch $branch"),
+      GithubMergeRequest("main", branch, Values.mergeBranchCommit(branch)),
       HttpStatusCode.Created,
     )
   }

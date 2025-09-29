@@ -30,7 +30,11 @@ import elide.secrets.Utils.serialize
 import elide.secrets.Utils.write
 import elide.secrets.dto.persisted.*
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Implementation of [FileManagement].
+ *
+ * @author Lauri Heino <datafox>
+ */
 @Singleton
 internal class FileManagementImpl(
   private val encryption: Encryption,

@@ -95,8 +95,6 @@ internal object Utils {
 
   fun Path.delete() = SystemFileSystem.delete(this)
 
-  fun passphrase(): String? = System.getenv(Values.PASSPHRASE_ENVIRONMENT_VARIABLE)
-
   fun profileName(profile: String): String = "${Values.PROFILE_FILE_PREFIX}$profile${Values.PROFILE_FILE_EXTENSION}"
 
   fun keyName(profile: String): String = "${Values.PROFILE_FILE_PREFIX}$profile${Values.KEY_FILE_EXTENSION}"

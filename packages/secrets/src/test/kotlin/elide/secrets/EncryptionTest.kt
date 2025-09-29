@@ -20,7 +20,11 @@ import elide.secrets.impl.EncryptionImpl
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Tests for [Encryption].
+ *
+ * @author Lauri Heino <datafox>
+ */
 @TestCase
 class EncryptionTest {
   @Inject private lateinit var encryption: EncryptionImpl

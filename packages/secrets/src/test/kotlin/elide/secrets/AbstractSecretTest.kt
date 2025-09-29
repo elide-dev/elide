@@ -17,7 +17,11 @@ import java.nio.file.Path
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Common methods for tests.
+ *
+ * @author Lauri Heino <datafox>
+ */
 abstract class AbstractSecretTest {
   @BeforeTest
   fun `reset state`() {

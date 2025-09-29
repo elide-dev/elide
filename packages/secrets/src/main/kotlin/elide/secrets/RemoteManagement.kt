@@ -18,29 +18,42 @@ package elide.secrets
  * @author Lauri Heino <datafox>
  */
 public interface RemoteManagement {
+  /** Initializes remote management, syncing state with the remote. */
   public suspend fun init()
 
+  /** Lists names of all registered access files. */
   public fun listAccesses(): Set<String>
 
+  /** Creates a new access file. */
   public fun createAccess(name: String)
 
-  public fun removeAccess(name: String)
+  /** Deletes an access file. */
+  public fun deleteAccess(name: String)
 
+  /** Selects an access file for editing. */
   public fun selectAccess(name: String)
 
+  /** Adds a profile to the selected access file. */
   public fun addProfile(profile: String)
 
+  /** Removes a profile from the selected access file. */
   public fun removeProfile(profile: String)
 
+  /** Lists profiles in the selected access file. */
   public fun listProfiles(): Set<String>
 
+  /** Deselects the selected access file. */
   public fun deselectAccess()
 
+  /** Deletes a profile completely. */
   public fun deleteProfile(profile: String)
 
+  /** Restores a profile deleted in this [RemoteManagement]'s lifetime. */
   public fun restoreProfile(profile: String)
 
+  /** Lists profiles deleted in this [RemoteManagement]'s lifetime. */
   public fun deletedProfiles(): Set<String>
 
+  /** Pushes changes to the remote. Do not use this [RemoteManagement] instance after calling. */
   public suspend fun push()
 }

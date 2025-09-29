@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 import elide.secrets.Utils
 
 /**
- * Metadata for secrets.
+ * Metadata for remotely stored secrets.
  *
  * @author Lauri Heino <datafox>
  */

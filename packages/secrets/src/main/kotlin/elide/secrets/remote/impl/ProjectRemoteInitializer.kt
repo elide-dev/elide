@@ -16,7 +16,6 @@ import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptInput
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
-import kotlinx.io.files.SystemPathSeparator
 import elide.annotations.Singleton
 import elide.secrets.SecretsState
 import elide.secrets.Values

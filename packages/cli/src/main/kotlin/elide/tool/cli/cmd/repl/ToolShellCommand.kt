@@ -2764,7 +2764,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     val effectiveInitLangs = onByDefaultLangs + projectLangs
 
-    //Initialize secrets
+    // initialize secrets
     val secretsResolution = launch {
       run {
         projectResolution.join()

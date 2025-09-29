@@ -284,6 +284,10 @@ internal class SecretManagementImpl(
 
   internal fun queuePrompt(bool: Boolean) = prompts.add(bool.toString())
 
+  internal fun resetInitialized() {
+    _initialized = false
+  }
+
   @OptIn(ExperimentalStdlibApi::class)
   private suspend fun createData() {
     println(Values.WELCOME_MESSAGE)

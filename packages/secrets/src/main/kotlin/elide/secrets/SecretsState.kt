@@ -36,9 +36,6 @@ internal object SecretsState {
   internal val profileFlow: MutableStateFlow<Pair<SecretProfile, SecretKey>?> = MutableStateFlow(null)
   internal val remoteFlow: MutableStateFlow<Remote?> = MutableStateFlow(null)
 
-  internal val initialized: Boolean
-    get() = interactiveFlow.value != null
-
   internal inline val interactive: Boolean
     get() = interactiveFlow.value!!
 
@@ -90,12 +87,7 @@ internal object SecretsState {
       remoteFlow.value = value
     }
 
-  private val logger: Logger = Logging.of(SecretsState::class)
-
   internal fun init(interactive: Boolean, path: Path, manifest: ElidePackageManifest?) {
-    if (initialized) {
-      logger.warn(Values.SECRETS_STATE_INITIALIZED_WARNING)
-    }
     interactiveFlow.value = interactive
     pathFlow.value = path
     manifestFlow.value = manifest

@@ -16,7 +16,11 @@ package elide.runtime.intrinsics.server.http.v2
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.http.HttpRequest
 
-public interface HttpContextFactory<out C : HttpContext> {
+/**
+ * A provider for [HttpContext] instances; implementations are expected to condense an incoming Netty request and
+ * associated state into a single context that can be used to dispatch handlers.
+ */
+public fun interface HttpContextFactory<out C : HttpContext> {
   public fun newContext(
     incomingRequest: HttpRequest,
     channelContext: ChannelHandlerContext,

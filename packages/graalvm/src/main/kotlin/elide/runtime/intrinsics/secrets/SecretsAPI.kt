@@ -17,8 +17,16 @@ import org.graalvm.polyglot.proxy.ProxyObject
 import elide.annotations.API
 import elide.vm.annotations.Polyglot
 
-/** @author Lauri Heino <datafox> */
+/**
+ * # API for accessing secrets.
+ *
+ * @author Lauri Heino <datafox>
+ */
 @API public interface SecretsAPI : ProxyObject {
+  /**
+   * Returns the secret associated with [name], `null` if none exists or throws an exception if secrets were not
+   * initialized properly or [name] is not a string.
+   */
   @Polyglot public fun get(
     name: Value,
   ): Value

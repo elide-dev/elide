@@ -18,6 +18,7 @@ import java.nio.file.Path
 import kotlinx.io.bytestring.encodeToByteString
 import kotlin.io.path.exists
 import kotlin.io.path.readText
+import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
@@ -51,6 +52,11 @@ class ManagementTest : AbstractSecretTest() {
       "management/remote/secrets-other.db",
       "management/remote/secrets-test.db",
     )
+
+  @BeforeTest
+  fun `reset management state`() {
+    secrets.resetInitialized()
+  }
 
   @Test
   fun `test calls to secrets`() = withTemp { path ->

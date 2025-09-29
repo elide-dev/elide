@@ -87,4 +87,8 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
   internal fun overridePassphrase(passphrase: String?) {
     passphraseOverride = passphrase
   }
+
+  internal fun resetInitialized() {
+    _initialized = false
+  }
 }

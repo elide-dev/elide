@@ -32,8 +32,9 @@ class SecretsTest : AbstractSecretTest() {
   @Inject private lateinit var secrets: SecretsImpl
 
   @BeforeTest
-  fun `reset passphrase override`() {
+  fun `reset secrets state`() {
     secrets.overridePassphrase(null)
+    secrets.resetInitialized()
   }
 
   @Test

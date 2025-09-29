@@ -1808,6 +1808,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueue",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueIoHandler",
     "--initialize-at-run-time=io.netty.channel.kqueue.AbstractKQueueChannel",
+    "--initialize-at-run-time=io.netty.internal.tcnative.CertificateCompressionAlgo",
   ).plus(
     listOfNotNull(
       onlyIf(enableStatic, "--libc=musl"),

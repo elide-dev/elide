@@ -27,11 +27,18 @@ import elide.secrets.dto.persisted.EncryptionMode
 import elide.secrets.impl.SecretManagementImpl
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
+import elide.tooling.project.codecs.PackageManifestCodec
+import elide.tooling.project.manifest.ElidePackageManifest
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Tests for [SecretManagement].
+ *
+ * @author Lauri Heino <datafox>
+ */
 @TestCase
 class ManagementTest : AbstractSecretTest() {
   @Inject private lateinit var secrets: SecretManagementImpl
+  @Inject private lateinit var parser: PackageManifestCodec<ElidePackageManifest>
 
   private val managementFiles =
     secretFiles.map { "management/$it" } +
@@ -102,13 +109,13 @@ class ManagementTest : AbstractSecretTest() {
     assertEquals(secretTypes, secrets.listSecrets())
 
     // replace "test" value.
-    secrets.setStringSecret("test", "different")
+    secrets.setTextSecret("test", "different")
     assertEquals("different", secrets.getSecret("test"))
     assertEquals(secretTypes, secrets.listSecrets())
 
     // create new environment variable secret.
     assertEquals(mapOf("ENV_VAR" to "environment"), secrets.getEnv())
-    secrets.setStringSecret("new", "something", "SOME_VAR")
+    secrets.setTextSecret("new", "something", "SOME_VAR")
     var secretTypes = secretTypes + ("new" to SecretType.TEXT)
     assertEquals(secretTypes, secrets.listSecrets())
     assertEquals(mapOf("ENV_VAR" to "environment", "SOME_VAR" to "something"), secrets.getEnv())
@@ -144,7 +151,7 @@ class ManagementTest : AbstractSecretTest() {
 
     // load new profile and write secret.
     secrets.loadProfile("new")
-    secrets.setStringSecret("test", "test")
+    secrets.setTextSecret("test", "test")
     secrets.writeChanges()
     secrets.unloadProfile()
 
@@ -153,13 +160,13 @@ class ManagementTest : AbstractSecretTest() {
     assertEquals("test", secrets.getSecret("test"))
 
     // remove profile.
-    assertThrows<IllegalStateException>(Values.REMOVED_PROFILE_NOT_SELECTED_EXCEPTION) { secrets.removeProfile("test") }
+    assertThrows<IllegalStateException>(Values.REMOVED_PROFILE_NOT_SELECTED_EXCEPTION) { secrets.deleteProfile("test") }
     secrets.unloadProfile()
     assertThrows<IllegalArgumentException>(Values.profileAlreadyExistsException("new")) { secrets.createProfile("new") }
-    secrets.removeProfile("test")
+    secrets.deleteProfile("test")
     assertEquals(setOf("new"), secrets.listProfiles())
     assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("test")) {
-      secrets.removeProfile("test")
+      secrets.deleteProfile("test")
     }
   }
 
@@ -194,7 +201,7 @@ class ManagementTest : AbstractSecretTest() {
     // select access, remove profile from it and add it back.
     remote.selectAccess("test")
     remote.removeProfile("test")
-    assertThrows<IllegalArgumentException>(Values.profileNotInAccess("test")) { remote.removeProfile("test") }
+    assertThrows<IllegalArgumentException>(Values.profileNotInAccessException("test")) { remote.removeProfile("test") }
     assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("nope")) { remote.removeProfile("nope") }
     remote.addProfile("test")
     remote.deselectAccess()
@@ -269,7 +276,7 @@ class ManagementTest : AbstractSecretTest() {
     secrets.pushToRemote()
 
     // remove profile and pull it back.
-    secrets.removeProfile("test")
+    secrets.deleteProfile("test")
     secrets.pullFromRemote()
     secrets.loadProfile("test")
     assertEquals(mapOf("another" to SecretType.TEXT), secrets.listSecrets())
@@ -308,6 +315,23 @@ class ManagementTest : AbstractSecretTest() {
     secrets.loadProfile("other")
     assertEquals(mapOf(), secrets.listSecrets())
     secrets.unloadProfile()
+  }
+
+  @Test
+  fun `initialize from remote non-interactively`() = withTemp { path ->
+    // copy remote files.
+    val remoteDir = Files.createDirectory(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH))
+    copyFiles(remoteDir, remoteFiles)
+    val stream = ManagementTest::class.java.getResourceAsStream("management/elide.pkl")!!
+    val manifest = parser.parse(stream)
+
+    // these prompts replace environment variables.
+    queuePrompts(secretPass, "access", "sos")
+    secrets.initNonInteractive(path, manifest)
+    secrets.loadProfile("test")
+    assertEquals(mapOf("secret" to SecretType.TEXT, "another" to SecretType.TEXT), secrets.listSecrets())
+    assertEquals("stuff", secrets.getStringSecret("secret"))
+    assertEquals("yep", secrets.getStringSecret("another"))
   }
 
   private fun createEnvironment(path: Path, files: List<String>): Path {

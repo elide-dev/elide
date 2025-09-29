@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
 import elide.secrets.impl.ByteStringSerializer
 
 /**
- * Encryption key for secrets.
+ * Encryption key for secrets. May contain a hashed passphrase or a GPG fingerprint.
  *
  * @author Lauri Heino <datafox>
  */

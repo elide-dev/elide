@@ -15,7 +15,11 @@ package elide.secrets.dto.persisted
 import kotlinx.io.bytestring.ByteString
 import elide.secrets.SecretType
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Interface and default methods for a secret profile (collection of secrets).
+ *
+ * @author Lauri Heino <datafox>
+ */
 internal interface Profile : Named {
   val secrets: Map<String, Secret<*>>
 

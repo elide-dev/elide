@@ -18,7 +18,11 @@ import com.github.kinquirer.components.promptListObject
 import elide.secrets.Utils.choices
 import elide.secrets.dto.persisted.EncryptionMode
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Tools around [KInquirer] prompts.
+ *
+ * @author Lauri Heino <datafox>
+ */
 internal object Prompts {
   fun passphrase(prompts: MutableList<String>): String {
     checkInteractive()

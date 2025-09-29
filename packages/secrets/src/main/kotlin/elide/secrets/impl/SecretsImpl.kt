@@ -24,7 +24,11 @@ import elide.secrets.dto.persisted.Profile.Companion.get
 import elide.secrets.dto.persisted.UserKey
 import elide.tooling.project.manifest.ElidePackageManifest
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Implementation of [Secrets].
+ *
+ * @author Lauri Heino <datafox>
+ */
 @Singleton
 internal class SecretsImpl(private val encryption: Encryption, private val files: FileManagement) : Secrets {
   override val initialized: Boolean
@@ -39,15 +43,18 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
       SecretsState.metadata = files.readMetadata()
       SecretsState.userKey =
         when (SecretsState.metadata.localEncryption) {
-          EncryptionMode.PASSPHRASE ->
-            UserKey(
-              (passphraseOverride ?: Utils.passphrase())?.hashKey(encryption)
+          EncryptionMode.PASSPHRASE -> {
+            val pass =
+              passphraseOverride
+                ?: System.getenv(Values.PASSPHRASE_ENVIRONMENT_VARIABLE)
                 ?: throw IllegalStateException(Values.PASSPHRASE_READ_EXCEPTION)
-            )
+            UserKey(pass.hashKey(encryption))
+          }
           EncryptionMode.GPG -> UserKey(SecretsState.metadata.fingerprint!!)
         }
       SecretsState.local = files.readLocal()
-      manifest?.secrets?.profile?.let { loadProfile(it) }
+      val profileName = System.getenv(Values.PROFILE_OVERRIDE_ENVIRONMENT_VARIABLE) ?: manifest?.secrets?.profile
+      profileName?.let { loadProfile(it) }
     } else logger.warn(Values.SECRETS_NOT_INITIALIZED_WARNING)
   }
 

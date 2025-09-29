@@ -39,5 +39,6 @@ internal interface Remote {
     superAccess: ByteString,
     access: Map<String, ByteString>,
     deletedProfiles: Set<String>,
+    deletedAccesses: Set<String>,
   )
 }

@@ -22,7 +22,11 @@ import elide.secrets.impl.SecretsImpl
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Tests for [Secrets].
+ *
+ * @author Lauri Heino <datafox>
+ */
 @TestCase
 class SecretsTest : AbstractSecretTest() {
   @Inject private lateinit var secrets: SecretsImpl

@@ -12,8 +12,8 @@
  */
 package elide.secrets.dto.persisted
 
-import kotlinx.serialization.Serializable
 import elide.secrets.Utils
+import kotlinx.serialization.Serializable
 
 /**
  * [Secret] containing string data.

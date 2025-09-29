@@ -26,7 +26,7 @@ import elide.secrets.remote.RemoteInitializer
 import elide.tooling.project.manifest.ElidePackageManifest
 
 /**
- * Initializer for storing remote secrets alongside project files.
+ * Initializer for [ProjectRemote].
  *
  * @author Lauri Heino <datafox>
  */
@@ -35,11 +35,20 @@ internal class ProjectRemoteInitializer : RemoteInitializer {
   private lateinit var path: String
   override val name: String = ElidePackageManifest.SecretsRemote.PROJECT.symbol
 
-  override suspend fun initialize(prompts: MutableList<String>): ProjectRemote {
+  override suspend fun init(prompts: MutableList<String>): ProjectRemote {
     path =
       SecretsState.manifest?.secrets?.project?.path
         ?: SecretsState.local[Values.PROJECT_REMOTE_PATH_SECRET]
         ?: askPath(prompts)
+    val realPath = validatePath()
+    SecretsState.updateLocal { add(StringSecret(Values.PROJECT_REMOTE_PATH_SECRET, path)) }
+    return ProjectRemote(realPath)
+  }
+
+  override suspend fun initNonInteractive(): ProjectRemote {
+    path =
+      SecretsState.manifest?.secrets?.project?.path
+        ?: throw IllegalStateException(Values.PROJECT_REMOTE_PATH_NOT_SPECIFIED_EXCEPTION)
     val realPath = validatePath()
     SecretsState.updateLocal { add(StringSecret(Values.PROJECT_REMOTE_PATH_SECRET, path)) }
     return ProjectRemote(realPath)

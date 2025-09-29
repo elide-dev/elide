@@ -22,7 +22,13 @@ import elide.secrets.Utils.write
 import elide.secrets.Values
 import elide.secrets.remote.Remote
 
-/** @author Lauri Heino <datafox> */
+/**
+ * [Remote] for storing secrets inside the project repository.
+ *
+ * @property path path to the directory containing shared secrets.
+ * @property writeAccess `true` if writing to this remote is permitted.
+ * @author Lauri Heino <datafox>
+ */
 internal class ProjectRemote(private val path: Path) : Remote {
   override val writeAccess: Boolean = true
 
@@ -45,12 +51,14 @@ internal class ProjectRemote(private val path: Path) : Remote {
     superAccess: ByteString,
     access: Map<String, ByteString>,
     deletedProfiles: Set<String>,
+    deletedAccesses: Set<String>,
   ) {
     writeFile(Values.METADATA_FILE, metadata)
     profiles.forEach { writeFile(Utils.profileName(it.key), it.value) }
     writeFile(Values.SUPER_ACCESS_FILE, superAccess)
     access.forEach { writeFile(Utils.accessName(it.key), it.value) }
     deletedProfiles.forEach { deleteFile(Utils.profileName(it)) }
+    deletedAccesses.forEach { deleteFile(Utils.accessName(it)) }
   }
 
   private fun getFile(path: String): ByteString? = Path(this.path, path).run { if (exists()) read() else null }

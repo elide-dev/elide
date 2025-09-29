@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
 import elide.secrets.Utils
 
 /**
- * Metadata for a [LocalProfile].
+ * Metadata for a [Profile].
  *
  * @author Lauri Heino <datafox>
  */

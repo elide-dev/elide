@@ -12,7 +12,11 @@
  */
 package elide.secrets
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Types of [elide.secrets.dto.persisted.Secret].
+ *
+ * @author Lauri Heino <datafox>
+ */
 public enum class SecretType(public val displayName: String) {
   TEXT("Text"),
   BINARY("Binary"),

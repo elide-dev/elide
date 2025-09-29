@@ -14,9 +14,10 @@ package elide.secrets.dto.persisted
 
 import kotlinx.serialization.Serializable
 import elide.secrets.Utils
+import elide.secrets.Values
 
 /**
- * Remote access keys for secrets.
+ * Remote access keys for all secrets and access files.
  *
  * @author Lauri Heino <datafox>
  */
@@ -25,7 +26,7 @@ internal data class SuperAccess(
   val keys: Map<String, SecretKey>,
   val access: Map<String, Pair<UserKey, Set<String>>>,
 ) : Named {
-  override val name = "super"
+  override val name = Values.SUPER_ACCESS_METADATA_NAME
 
   init {
     Utils.checkNames(keys, "Key")

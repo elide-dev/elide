@@ -13,40 +13,63 @@
 package elide.secrets
 
 import kotlinx.io.bytestring.ByteString
+import kotlinx.io.files.FileNotFoundException
 import elide.secrets.dto.persisted.LocalMetadata
 import elide.secrets.dto.persisted.LocalProfile
 import elide.secrets.dto.persisted.SecretKey
 import elide.secrets.dto.persisted.SecretProfile
 
-/** @author Lauri Heino <datafox> */
+/**
+ * Local secret file operations.
+ *
+ * @author Lauri Heino <datafox>
+ */
 internal interface FileManagement {
+  /** Returns true if the metadata file exists. */
   fun metadataExists(): Boolean
 
-  fun readMetadata(): LocalMetadata
+  /** Reads local metadata or throws [FileNotFoundException] if the file does not exist. */
+  @Throws(FileNotFoundException::class) fun readMetadata(): LocalMetadata
 
+  /** Writes local metadata from [SecretsState], creating a new file if one does not exist, and returns its bytes. */
   fun writeMetadata(): ByteString
 
+  /** Returns `true` if the local secrets file exists. */
   fun localExists(): Boolean
 
-  fun readLocal(): LocalProfile
+  /** Reads local secrets or throws [FileNotFoundException] if the file does not exist. */
+  @Throws(FileNotFoundException::class) fun readLocal(): LocalProfile
 
+  /** Writes local secrets from [SecretsState], creating a new file if one does not exist, and returns its bytes. */
   fun writeLocal(): ByteString
 
-  fun canDecryptLocal(passphrase: String): Boolean
+  /**
+   * Reads the local secrets file or throws [FileNotFoundException] if the file does not exist, then returns `true` if
+   * the file can be decrypted with [passphrase].
+   */
+  @Throws(FileNotFoundException::class) fun canDecryptLocal(passphrase: String): Boolean
 
+  /** Returns `true` if a file for [profile] exists. */
   fun profileExists(profile: String): Boolean
 
-  fun readProfile(profile: String): Pair<SecretProfile, SecretKey>
+  /** Reads a [profile] and its key or throws [FileNotFoundException] if either of the files does not exist. */
+  @Throws(FileNotFoundException::class) fun readProfile(profile: String): Pair<SecretProfile, SecretKey>
 
+  /** Writes [profile] and [key], creating new files if they do not exist, and returns the profile's bytes. */
   fun writeProfile(profile: SecretProfile, key: SecretKey): ByteString
 
+  /** Writes [data] to the file of [profile], creating a new file if one does not exist. */
   fun writeProfileBytes(profile: String, data: ByteString)
 
+  /** Writes [key], creating a new file if one does not exist. */
   fun writeKey(key: SecretKey)
 
-  fun removeProfile(profile: String)
+  /** Deletes [profile] and its key or throws [FileNotFoundException] if either of the files does not exist. */
+  @Throws(FileNotFoundException::class) fun removeProfile(profile: String)
 
-  fun profileBytes(profile: String): ByteString
+  /** Reads bytes of a [profile] or throws [FileNotFoundException] if the file does not exist. */
+  @Throws(FileNotFoundException::class) fun profileBytes(profile: String): ByteString
 
-  fun readKey(profile: String): SecretKey
+  /** Reads [profile]'s or throws [FileNotFoundException] if the file does not exist. */
+  @Throws(FileNotFoundException::class) fun readKey(profile: String): SecretKey
 }

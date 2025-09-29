@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 import elide.secrets.Utils
 
 /**
- * Collection for [Secrets][Secret].
+ * Collection for local [Secrets][Secret].
  *
  * @author Lauri Heino <datafox>
  */

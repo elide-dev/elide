@@ -12,6 +12,8 @@
  */
 package elide.secrets
 
+import kotlinx.io.files.SystemPathSeparator
+
 /**
  * Internal constants for secrets.
  *
@@ -67,7 +69,7 @@ internal object Values {
       "Please note that for GPG-encrypted access files, only the ones that you have " +
       "a private key for on this system will be displayed."
   const val PASSPHRASES_NOT_IDENTICAL_MESSAGE = "Passphrases were not identical."
-  const val INVALID_PASSPHRASE_MESSAGE = "Passphrases were not identical."
+  const val INVALID_PASSPHRASE_MESSAGE = "Invalid passphrase."
   const val SUPER_ACCESS_ENCRYPTION_MESSAGE =
     "How do you want to encrypt the remote super access file?\n" +
       "Please note that this file will be able to decrypt all secrets!"
@@ -79,6 +81,7 @@ internal object Values {
       "https://github.com/settings/personal-access-tokens and generate a new token.\n" +
       "The token must at least have read access to \"Contents\" of the repository.\n" +
       "Optional write access to \"Contents\" allows you to update the remote secrets."
+  const val PROJECT_REMOTE_PATH_MESSAGE = "Elide Secrets in project mode are stored encrypted alongside project files."
   const val NO_CHANGED_PROFILES_MESSAGE = "No profiles have been updated on the remote"
   const val PROFILE_MISMATCH_MESSAGE = "These profiles exist locally but are not the same ones as on the remote."
   const val DELETE_PROFILES_MESSAGE = "Deleting the profile will also delete it from your local secrets!"
@@ -107,6 +110,8 @@ internal object Values {
   const val GITHUB_REMOTE_TOKEN_PROMPT = "Please enter your personal access token:"
   const val PROFILES_TO_UPDATE_PROMPT =
     "Select the local profiles you want to update from the remote, the rest will be pushed to the remote:"
+  val PROJECT_REMOTE_PATH_PROMPT = "Please enter a path relative to the " +
+          "project directory using your system's path separator (\"$SystemPathSeparator\"):"
 
   // interactive prompt options
   const val INITIALIZE_PROJECT_OPTION = "Initialize a new project"

@@ -14,7 +14,6 @@
 package elide.runtime.intrinsics.server.http.v2.flask
 
 import org.graalvm.polyglot.Source
-import org.graalvm.polyglot.Value
 import elide.runtime.core.EntrypointRegistry
 import elide.runtime.core.SharedContextFactory
 import elide.runtime.intrinsics.server.http.v2.GuestHandlerStackManager
@@ -22,12 +21,12 @@ import elide.runtime.intrinsics.server.http.v2.GuestHandlerStackManager
 public class FlaskHandlerStackManager(
   override val entrypointProvider: EntrypointRegistry,
   private val contextProvider: SharedContextFactory,
-) : GuestHandlerStackManager<MutableList<Value>>() {
-  override fun initializeStack(stack: MutableList<Value>, entrypoint: Source) {
+) : GuestHandlerStackManager<FlaskRouter>() {
+  override fun initializeStack(stack: FlaskRouter, entrypoint: Source) {
     contextProvider.acquire()?.eval(entrypoint) ?: error("No context provider available")
   }
 
-  override fun newStack(): MutableList<Value> {
-    return mutableListOf()
+  override fun newStack(): FlaskRouter {
+    return FlaskRouter()
   }
 }

@@ -1,0 +1,111 @@
+/*
+ *  Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ *  Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ *  with the License. You may obtain a copy of the License at
+ *
+ *    https://opensource.org/license/mit/
+ *
+ *  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *  License for the specific language governing permissions and limitations under the License.
+ */
+
+package elide.runtime.intrinsics.server.http.v2.flask
+
+import io.netty.handler.codec.http.HttpMethod
+import io.netty.handler.codec.http.HttpRequest
+import org.graalvm.polyglot.Value
+
+public class FlaskRouter {
+  private enum class RouteVariableType {
+    STRING,
+    INT,
+    FLOAT,
+    PATH,
+    UUID,
+  }
+
+  internal sealed interface MatcherResult {
+    data object NoMatch : MatcherResult
+    data object MethodNotAllowed : MatcherResult
+    @JvmInline value class MissingVariable(val name: String) : MatcherResult
+    @JvmInline value class InvalidVariable(val name: String) : MatcherResult
+
+    data class Match(
+      val handler: Value,
+      val parameters: Map<String, Any>,
+    ) : MatcherResult
+  }
+
+  private fun interface Matcher {
+    fun match(request: HttpRequest): MatcherResult
+  }
+
+  private val stack = mutableListOf<Matcher>()
+
+  internal fun match(request: HttpRequest): MatcherResult {
+    return stack.firstNotNullOfOrNull { matcher ->
+      matcher.match(request).takeUnless { it == MatcherResult.NoMatch }
+    } ?: MatcherResult.NoMatch
+  }
+
+  internal fun register(pattern: String, methods: Array<HttpMethod>, handler: Value) {
+    stack.add(compileMatcher(pattern, methods, handler))
+  }
+
+  private companion object {
+    private val pathVariableRegex = Regex("<(?:(\\w+):)?([a-zA-Z_]+)>")
+
+    private fun compileMatcher(pattern: String, methods: Array<HttpMethod>, handler: Value): Matcher {
+      val pathVariables = mutableMapOf<String, RouteVariableType>()
+
+      val matcherRegex = pattern.replace(pathVariableRegex) {
+        val type = when (it.groups[1]?.value) {
+          "int" -> RouteVariableType.INT
+          "float" -> RouteVariableType.FLOAT
+          "uuid" -> RouteVariableType.UUID
+          "path" -> RouteVariableType.PATH
+          "string", null -> RouteVariableType.STRING
+          else -> error("Unsupported variable type: ${it.groups[1]?.value}")
+        }
+
+        val name = it.groups[2]?.value ?: error("Invalid path variable")
+        pathVariables[name] = type
+
+        if (type == RouteVariableType.PATH) "(?<$name>[a-zA-Z0-9_\\-/]+)"
+        else "(?<$name>[a-zA-Z0-9_\\-]+)"
+      }.let {
+        // when the canonical path uses a trailing slash, it should also match requests without it
+        if (it.endsWith("/")) "$it?" else it
+      }.let {
+        Regex(it)
+      }
+
+      return Matcher { request ->
+        if (request.method() !in methods) return@Matcher MatcherResult.NoMatch
+
+        val routeMatch = matcherRegex.matchEntire(request.uri())
+          ?: return@Matcher MatcherResult.NoMatch
+
+        val parameters = buildMap {
+          pathVariables.forEach { (name, type) ->
+            val value = routeMatch.groups[name]?.value
+              ?: return@Matcher MatcherResult.MissingVariable(name)
+
+            val mappedValue: Any? = when (type) {
+              RouteVariableType.INT -> value.toIntOrNull()
+              RouteVariableType.FLOAT -> value.toFloatOrNull()
+              else -> value
+            }
+
+            if (mappedValue == null) return@Matcher MatcherResult.InvalidVariable(name)
+            put(name, mappedValue)
+          }
+        }
+
+        MatcherResult.Match(handler, parameters)
+      }
+    }
+  }
+}

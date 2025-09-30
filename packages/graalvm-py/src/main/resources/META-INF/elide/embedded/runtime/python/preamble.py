@@ -37,9 +37,12 @@ def __init__interop():
   def polyglot_decorator(name = None):
     return bind_factory(name)
 
+  flask_global = polyglot.import_value("_ElideFlask")
+
   POLYGLOT_MODULE = "polyglot"
   POLYGLOT_DECORATOR = "poly"
   BIND_DECORATOR = "bind"
+  FLASK_GLOBAL = "Flask"
   MODULE_NAME = "elide"
 
   class ElideModule(ModuleType):
@@ -63,6 +66,8 @@ def __init__interop():
         return polyglot
       if name == POLYGLOT_DECORATOR:
         return polyglot_decorator
+      if name == FLASK_GLOBAL:
+        return flask_global
       raise AttributeError(f"module '{MODULE_NAME}' has no attribute '{name}'")
 
     def __dir__(self):

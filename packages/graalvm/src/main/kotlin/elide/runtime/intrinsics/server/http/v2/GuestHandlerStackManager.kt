@@ -15,7 +15,7 @@ package elide.runtime.intrinsics.server.http.v2
 
 import org.graalvm.polyglot.Source
 import java.util.concurrent.locks.ReentrantLock
-import elide.runtime.core.EntrypointProvider
+import elide.runtime.core.EntrypointRegistry
 
 /**
  * Manages thread-local or shared instances of handler stack types for HTTP intrinsics. Use [withStack] to access an
@@ -80,7 +80,7 @@ public abstract class GuestHandlerStackManager<S> {
   }
 
   /** Entrypoint provider used to resolve the source handed to [initializeStack] in thread-local mode. */
-  protected abstract val entrypointProvider: EntrypointProvider
+  protected abstract val entrypointProvider: EntrypointRegistry
 
   /**
    * Initialize a [stack] instance in the current thread, given the current active [entrypoint]. Implementations can

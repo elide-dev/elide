@@ -64,10 +64,10 @@ internal sealed interface NettyTransport<T : ServerSocketChannel> {
       IOUring.isAvailable() -> IOUringTransport
 
       // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
-      Epoll.isAvailable() -> EpollTransport
+      // Epoll.isAvailable() -> EpollTransport
 
       // next up, opt for `kqueue` on Unix-like systems
-      KQueue.isAvailable() -> KQueueTransport
+      // KQueue.isAvailable() -> KQueueTransport
 
       // otherwise, fallback to NIO
       else -> NioTransport

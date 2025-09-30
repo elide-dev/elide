@@ -20,6 +20,7 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
 import io.netty.handler.codec.http.*
 import io.netty.util.ReferenceCountUtil
+import elide.runtime.Logging
 import elide.runtime.intrinsics.server.http.v2.HttpContext
 import elide.runtime.intrinsics.server.http.v2.HttpContextFactory
 import elide.runtime.intrinsics.server.http.v2.HttpContextHandler
@@ -94,7 +95,7 @@ internal class NettyHttpContextAdapter(
     }
 
     if (!shouldPullAfter) closeCurrent(ctx)
-    else promise.addListener { activeSink?.maybePull() }
+    else promise.addListener { if (activeSink?.maybePull() != true) closeCurrent(ctx) }
 
     super.write(ctx, msg, promise)
   }
@@ -121,6 +122,7 @@ internal class NettyHttpContextAdapter(
     val completion = runCatching {
       contextHandler.handle(httpContext, ChannelScope(channelContext))
     }.getOrElse {
+      logging.warn("Request handler crashed", it)
       val response = DefaultFullHttpResponse(request.protocolVersion(), HttpResponseStatus.INTERNAL_SERVER_ERROR)
       channelContext.channel().writeAndFlush(response)
 
@@ -128,8 +130,10 @@ internal class NettyHttpContextAdapter(
     }
 
     completion.addListener {
-      val response = if (it.isSuccess) httpContext.response
-      else DefaultFullHttpResponse(request.protocolVersion(), HttpResponseStatus.INTERNAL_SERVER_ERROR)
+      val response = if (it.isSuccess) httpContext.response else {
+        logging.warn("Request handler error", it.cause())
+        DefaultFullHttpResponse(request.protocolVersion(), HttpResponseStatus.INTERNAL_SERVER_ERROR)
+      }
 
       // send the response header, the body will be sent automatically after
       channelContext.channel().writeAndFlush(response)
@@ -142,7 +146,8 @@ internal class NettyHttpContextAdapter(
    */
   private fun closeCurrent(channelContext: ChannelHandlerContext) {
     val currentRequest = activeContext?.request ?: return
-    if (!HttpUtil.isKeepAlive(currentRequest)) channelContext.close()
+    if (!HttpUtil.isKeepAlive(currentRequest))
+      channelContext.close()
 
     activeContext?.close()
     activeSink?.close()
@@ -158,10 +163,10 @@ internal class NettyHttpContextAdapter(
     val response = when {
       isUnsupportedExpectation(request) -> {
         channelContext.pipeline().fireUserEventTriggered(HttpExpectationFailedEvent.INSTANCE)
-        EXPECTATION_FAILED_RESPONSE.retainedDuplicate()
+        expectationFailedResponse()
       }
 
-      HttpUtil.is100ContinueExpected(request) -> CONTINUE_RESPONSE.retainedDuplicate()
+      HttpUtil.is100ContinueExpected(request) -> continueResponse()
       else -> null
     } ?: return true
 
@@ -187,13 +192,15 @@ internal class NettyHttpContextAdapter(
   }
 
   companion object {
-    private val CONTINUE_RESPONSE: FullHttpResponse = DefaultFullHttpResponse(
+    private val logging by lazy { Logging.of(NettyHttpContextAdapter::class) }
+
+    private fun continueResponse(): FullHttpResponse = DefaultFullHttpResponse(
       HttpVersion.HTTP_1_1,
       HttpResponseStatus.CONTINUE,
       Unpooled.EMPTY_BUFFER,
     ).apply { HttpUtil.setContentLength(this, 0) }
 
-    private val EXPECTATION_FAILED_RESPONSE: FullHttpResponse = DefaultFullHttpResponse(
+    private fun expectationFailedResponse(): FullHttpResponse = DefaultFullHttpResponse(
       HttpVersion.HTTP_1_1,
       HttpResponseStatus.EXPECTATION_FAILED,
       Unpooled.EMPTY_BUFFER,

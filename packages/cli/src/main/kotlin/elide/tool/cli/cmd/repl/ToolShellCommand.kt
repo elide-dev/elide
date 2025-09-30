@@ -80,10 +80,13 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 import elide.annotations.Inject
 import elide.runtime.LogLevel
+import elide.runtime.core.EntrypointRegistry
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
+import elide.runtime.core.RuntimeLatch
+import elide.runtime.core.SharedContextFactory
 import elide.runtime.core.extensions.attach
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.Engine
@@ -319,6 +322,15 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   // Event listeners for the vfs
   @Inject internal lateinit var registeredVfsListeners: Stream<VfsListener>
+
+  // Lazy mutable entrypoint registry
+  @Inject internal lateinit var entrypointProvider: EntrypointRegistry
+
+  // Lazy mutable context factory
+  @Inject internal lateinit var sharedContextProvider: SharedContextFactory
+
+  // Global latch used to wait for background tasks
+  @Inject internal lateinit var runtimeLatch: RuntimeLatch
 
   // Intrinsics manager
   private val intrinsicsManager: Supplier<IntrinsicsManager>
@@ -560,6 +572,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       code,
       source,
     )
+
+    entrypointProvider.record(source)
+    sharedContextProvider.record { ctxAccessor().unwrap() }
 
     val ctx = ctxAccessor.invoke()
     logging.trace("Code chunk built. Evaluating")
@@ -1690,6 +1705,8 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     source: Source,
     execProvider: GuestExecutorProvider,
   ) {
+    entrypointProvider.record(source)
+
     try {
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
@@ -1705,6 +1722,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   @Suppress("TooGenericExceptionCaught")
   private fun execWrapped(label: String, ctxAccessor: ContextAccessor, source: Source) {
+    entrypointProvider.record(source)
+    sharedContextProvider.record { ctxAccessor().unwrap() }
+
     // parse the source
     val ctx = ctxAccessor.invoke()
     val parsed = try {
@@ -1724,6 +1744,8 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     // execute the script
     parsed.execute()
+
+    runtimeLatch.await()
   }
 
   // Format a string with colorized output, maybe (i.e. if pretty-mode is enabled, and we have a compatible terminal).
@@ -2005,7 +2027,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         guestExec,
       )
 
-      // otherwise, it's a normal test run.
+      // otherwise, it's a normal run.
       else -> try {
         // enter VM context
         logging.trace("Entered VM for script execution ('${primaryLanguage.id}'). Consuming script from: '$label'")

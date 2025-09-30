@@ -12,15 +12,13 @@
  */
 package elide.runtime.gvm.intrinsics
 
-import java.util.LinkedList
 import java.util.stream.Stream
-import kotlin.streams.asSequence
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.IntrinsicsResolver
 
 /** Implementation of an intrinsics resolver which is backed by one or more foreign resolvers. */
-public class CompoundIntrinsicsResolver private constructor (
+public class CompoundIntrinsicsResolver private constructor(
   private val resolvers: Stream<IntrinsicsResolver>
 ) : IntrinsicsResolver {
   public companion object {
@@ -29,17 +27,15 @@ public class CompoundIntrinsicsResolver private constructor (
       CompoundIntrinsicsResolver(list)
   }
 
-  private lateinit var cached: Collection<GuestIntrinsic>
+  private val cachedResolvers by lazy { resolvers.toList() }
+  private val cachedIntrinsics = mutableMapOf<GuestLanguage, Collection<GuestIntrinsic>>()
 
   override fun generate(language: GuestLanguage, internals: Boolean): Sequence<GuestIntrinsic> {
-    if (!::cached.isInitialized) {
-      cached = LinkedList()
-
-      return resolvers
+    return cachedIntrinsics.getOrPut(language) {
+      cachedResolvers
         .asSequence()
         .flatMap { it.resolve(language) }
-        .onEach { cached += it }
-    }
-    return cached.asSequence()
+        .toList()
+    }.asSequence()
   }
 }

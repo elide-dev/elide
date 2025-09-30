@@ -14,13 +14,16 @@
 package elide.runtime.intrinsics.server.http.v2
 
 import io.netty.bootstrap.ServerBootstrap
+import io.netty.channel.Channel
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.ChannelOption
+import io.netty.channel.EventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.codec.http.HttpServerCodec
 import java.net.InetSocketAddress
 import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.Logging
+import elide.runtime.core.RuntimeLatch
 import elide.runtime.intrinsics.server.http.netty.NettyTransport
 import elide.runtime.intrinsics.server.http.v2.channels.NettyHttpContextAdapter
 
@@ -30,20 +33,15 @@ import elide.runtime.intrinsics.server.http.v2.channels.NettyHttpContextAdapter
  * Implementations are expected to add guest-accessible members to control the server's lifecycle and call the methods
  * in this base class from there.
  */
-public abstract class AbstractHttpIntrinsic {
+public abstract class AbstractHttpIntrinsic : AutoCloseable {
   private val serverRunning = AtomicBoolean(false)
-  private val ownerThread = ThreadLocal<Boolean>()
+  private var eventLoopGroup: EventLoopGroup? = null
+  private var serverChannel: Channel? = null
+
+  protected abstract val runtimeLatch: RuntimeLatch
 
   /** Whether the server is currently running and accepting requests. */
   protected val isRunning: Boolean get() = serverRunning.get()
-
-  /**
-   * Whether the current thread is the owner of the intrinsic itself, that is, the thread on which the server was
-   * originally created. This sets it apart from "mirror" threads that are spun up during request handling.
-   *
-   * Operations that affect the lifecycle of the server must only run on the owner thread.
-   */
-  protected val isOwnerThread: Boolean get() = ownerThread.get() ?: false
 
   /**
    * Create a new handler instance to be added to a Netty channel. Handlers are only added to a single channel at a
@@ -60,9 +58,6 @@ public abstract class AbstractHttpIntrinsic {
   /**
    * Bind to the given [port] and begin accepting requests. Calling this method multiple times or from a non-owner
    * thread has no effect.
-   *
-   * Successfully calling this method will result in the calling thread being labeled as the [owner][isOwnerThread]
-   * thread.
    */
   internal fun bind(port: Int, transport: NettyTransport<*> = NettyTransport.resolve()) {
     logging.debug("Starting server")
@@ -72,13 +67,6 @@ public abstract class AbstractHttpIntrinsic {
       logging.debug("Server already running, ignoring bind call")
       return
     }
-
-    if (!ownerThread.get()) {
-      logging.debug("Bind called from a mirror thread, ignoring")
-      return
-    }
-
-    ownerThread.set(true)
 
     // acquire platform-specific Netty components
     logging.debug { "Using transport: $transport" }
@@ -92,6 +80,8 @@ public abstract class AbstractHttpIntrinsic {
       logging.debug { "Applying options from $transport" }
       transport.bootstrap(this)
 
+      eventLoopGroup = config().group()
+
       // attach custom handler pipeline and configure client channels
       childHandler(channelInitializer())
       childOption(ChannelOption.SO_REUSEADDR, true)
@@ -99,14 +89,30 @@ public abstract class AbstractHttpIntrinsic {
 
       // start listening
       val address = InetSocketAddress(port)
-      bind(address).sync().channel()
+      serverChannel = bind(address).sync().channel()
 
       logging.debug { "Server listening at $address" }
+      runtimeLatch.retain()
     }
+  }
+
+  override fun close() {
+    if (!serverRunning.compareAndSet(true, false)) return
+    logging.debug { "Closing server" }
+
+    runCatching { serverChannel?.close()?.sync() }
+    serverChannel = null
+
+    runCatching { eventLoopGroup?.shutdownGracefully()?.sync() }
+    eventLoopGroup = null
+
+    runtimeLatch.release()
   }
 
   private fun channelInitializer() = object : ChannelInitializer<SocketChannel>() {
     override fun initChannel(ch: SocketChannel) {
+      logging.debug { "Initializing channel: $ch" }
+
       val contextHandler = NettyHttpContextAdapter(
         contextFactory = acquireFactory(),
         contextHandler = acquireHandler(),

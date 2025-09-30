@@ -13,32 +13,26 @@
 
 package elide.runtime.core
 
-import org.graalvm.polyglot.Source
+import org.graalvm.polyglot.Context
 import java.util.concurrent.atomic.AtomicReference
 import elide.annotations.Singleton
 
-/**
- * Shared registry that allows components to access the last entrypoint source evaluated by the runtime.
- *
- * An entry point must be registered by calling [record], after which it will be available through [acquire]. Consumers
- * should always check whether entry point information is [available] before attempting to use it.
- */
-@Singleton public class EntrypointProvider {
-  private val activeEntrypoint = AtomicReference<Source>()
+@Singleton public class SharedContextFactory {
+  private val activeEntrypoint = AtomicReference<() -> Context>()
 
   /** Whether an entrypoint source was previously [recorded][record]. */
   public val available: Boolean get() = activeEntrypoint.get() != null
 
   /**
-   * Record a specific entrypoint [source], making it available for [acquire] calls. This method should only be called
+   * Record a specific context [producer], making it available for [acquire] calls. This method should only be called
    * by code that controls the evaluation of guest code, not by consumers of entrypoint information.
    */
-  public fun record(source: Source) {
-    activeEntrypoint.set(source)
+  public fun record(producer: () -> Context) {
+    activeEntrypoint.set(producer)
   }
 
   /** Retrieve the current active entrypoint [recorded][record] by the runtime, or `null` if not available. */
-  public fun acquire(): Source? {
-    return activeEntrypoint.get()
+  public fun acquire(): Context? {
+    return activeEntrypoint.get()?.invoke()
   }
 }

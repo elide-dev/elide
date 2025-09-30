@@ -17,10 +17,13 @@ package elide.runtime.gvm.intrinsics
 import com.oracle.truffle.api.CompilerDirectives
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Replaces
-import java.util.Optional
+import java.util.*
 import jakarta.inject.Provider
 import jakarta.inject.Singleton
 import elide.runtime.core.DelicateElideApi
+import elide.runtime.core.EntrypointRegistry
+import elide.runtime.core.RuntimeLatch
+import elide.runtime.core.SharedContextFactory
 import elide.runtime.exec.GuestExecutor
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.GuestLanguage
@@ -45,12 +48,9 @@ import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.IntrinsicsResolver
 import elide.runtime.intrinsics.ai.ElideLLMModule
 import elide.runtime.intrinsics.js.err.ValueErrorIntrinsic
+import elide.runtime.intrinsics.server.http.v2.flask.FlaskHttpIntrinsic
 import elide.runtime.intrinsics.testing.TestingRegistrar
-import elide.runtime.javascript.BrowserStubs
-import elide.runtime.javascript.MessageChannelBuiltin
-import elide.runtime.javascript.NavigatorBuiltin
-import elide.runtime.javascript.QueueMicrotaskCallable
-import elide.runtime.javascript.StructuredCloneBuiltin
+import elide.runtime.javascript.*
 import elide.runtime.node.asserts.NodeAssertModule
 import elide.runtime.node.asserts.NodeAssertStrictModule
 import elide.runtime.node.buffer.NodeBufferModule
@@ -88,17 +88,23 @@ import elide.runtime.plugins.env.EnvConfig
 
 /** Implements build-time intrinsic prep. */
 @Replaces(BuiltinIntrinsicsResolver::class)
-@Context @Singleton public class BuildTimeIntrinsicsResolver (
+@Context @Singleton public class BuildTimeIntrinsicsResolver(
   guestExec: GuestExecutor,
   envConfigProvider: Optional<EnvConfig?>,
   vfsInitializerListener: VfsInitializerListener,
   testRegistrar: TestingRegistrar,
+  entrypoint: EntrypointRegistry,
+  contextFactory: SharedContextFactory,
+  latch: RuntimeLatch,
 ) : IntrinsicsResolver {
   init {
     exec = guestExec
     envConfigSupplier = Provider { envConfigProvider.orElse(null) }
     listener = vfsInitializerListener
     registrar = testRegistrar
+    entrypointProvider = entrypoint
+    contextProvider = contextFactory
+    runtimeLatch = latch
   }
 
   public companion object {
@@ -106,6 +112,9 @@ import elide.runtime.plugins.env.EnvConfig
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var envConfigSupplier: Provider<EnvConfig?>
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var listener: VfsInitializerListener
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var registrar: TestingRegistrar
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var entrypointProvider: EntrypointRegistry
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var contextProvider: SharedContextFactory
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeLatch: RuntimeLatch
     @JvmStatic private val execProvider = GuestExecutorProvider { exec }
     @JvmStatic private val timerExecutor = JsTimerExecutorProviderImpl()
     @JvmStatic private val vfsListenerProvider = Provider { listener }
@@ -166,6 +175,12 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val transformStream = TransformStreamIntrinsic()
     @JvmStatic private val browserStubs = BrowserStubs()
 
+    @JvmStatic private val flask = FlaskHttpIntrinsic(
+      runtimeLatchProvider = { runtimeLatch },
+      entrypointProvider = { entrypointProvider },
+      contextProvider = { contextProvider },
+    )
+
     // All built-ins and intrinsics.
     @JvmStatic private val all = arrayOf(
       assert,
@@ -223,6 +238,7 @@ import elide.runtime.plugins.env.EnvConfig
       elideLlm,
       util,
       browserStubs,
+      flask,
     )
   }
 

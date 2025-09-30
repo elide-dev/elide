@@ -27,6 +27,12 @@
       "files": ["README.md", "elide.pkl", "src/main/kotlin/sample/main.kt", "src/test/kotlin/sample/testGreeting.kt"]
     },
     {
+      "name": "flask",
+      "description": "Python Flask server project, powered by Elide",
+      "languages": ["Python"],
+      "files": ["README.md", "elide.pkl", "app.py"]
+    },
+    {
       "name": "web-static-worker",
       "description": "Static website built with Elide and shipped with Cloudflare Workers",
       "languages": ["Markdown"],

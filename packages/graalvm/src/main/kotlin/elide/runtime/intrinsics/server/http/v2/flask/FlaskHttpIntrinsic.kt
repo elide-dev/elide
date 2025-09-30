@@ -179,6 +179,23 @@ import elide.runtime.intrinsics.server.http.v2.*
       throw FlaskHttpException(code ?: 500)
     }
 
+    "url_for" -> ProxyExecutable { args ->
+      val endpoint = args.firstOrNull()?.takeIf { it.isString }?.asString()
+        ?: error("Invalid argument provided to `url_for`: expected a string, got ${args.firstOrNull()}")
+
+      val variables = args.getOrNull(1)?.takeIf { it.hasHashEntries() }?.let { hash ->
+        buildMap {
+          val iterator = hash.hashEntriesIterator
+          while (iterator.hasIteratorNextElement()) {
+            val element = iterator.iteratorNextElement
+            put(element.getArrayElement(0).asString(), element.getArrayElement(1))
+          }
+        }
+      } ?: emptyMap()
+
+      stackManager.withStack { it.urlFor(endpoint, variables) }
+    }
+
     else -> null
   }
 
@@ -197,6 +214,7 @@ import elide.runtime.intrinsics.server.http.v2.*
     private val MODULE_MEMBER_KEYS = arrayOf(
       "request",
       "abort",
+      "url_for",
     )
   }
 }

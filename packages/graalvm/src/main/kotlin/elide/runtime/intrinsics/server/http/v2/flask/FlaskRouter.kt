@@ -16,6 +16,7 @@ package elide.runtime.intrinsics.server.http.v2.flask
 import io.netty.handler.codec.http.HttpMethod
 import io.netty.handler.codec.http.HttpRequest
 import org.graalvm.polyglot.Value
+import java.net.URLEncoder
 
 public class FlaskRouter {
   private enum class RouteVariableType {
@@ -38,11 +39,68 @@ public class FlaskRouter {
     ) : MatcherResult
   }
 
-  private fun interface Matcher {
-    fun match(request: HttpRequest): MatcherResult
+  private class Matcher(
+    val rule: String,
+    val pattern: Regex,
+    val handler: Value,
+    val variableTypes: Map<String, RouteVariableType>,
+    val methods: Array<HttpMethod>,
+  ) {
+    fun reifyPath(variables: Map<String, Any>): String = buildString {
+      val applied = mutableSetOf<String>()
+
+      val baseUrl = rule.replace(untypedVariableRegex) {
+        val name = it.groups[1]?.value ?: error("Internal error: failed to resolve variable name")
+        val value = variables[name] ?: error("Missing value for path variable $name")
+
+        applied.add(name)
+        URLEncoder.encode(value.toString(), Charsets.UTF_8)
+      }
+
+      append(baseUrl)
+      if (applied.size < variables.size) {
+        append("?")
+        for ((name, value) in variables) if (name !in applied) {
+          append(URLEncoder.encode(name, Charsets.UTF_8))
+          append("=")
+          append(URLEncoder.encode(value.toString(), Charsets.UTF_8))
+          append("&")
+        }
+      }
+    }
+
+    fun match(request: HttpRequest): MatcherResult {
+      if (request.method() !in methods) return MatcherResult.NoMatch
+
+      val routeMatch = pattern.matchEntire(request.uri().substringBefore('?'))
+        ?: return MatcherResult.NoMatch
+
+      val parameters = buildMap {
+        variableTypes.forEach { (name, type) ->
+          val value = routeMatch.groups[name]?.value
+            ?: return MatcherResult.MissingVariable(name)
+
+          val mappedValue: Any? = when (type) {
+            RouteVariableType.INT -> value.toIntOrNull()
+            RouteVariableType.FLOAT -> value.toFloatOrNull()
+            else -> value
+          }
+
+          if (mappedValue == null) return MatcherResult.InvalidVariable(name)
+          put(name, mappedValue)
+        }
+      }
+
+      return MatcherResult.Match(handler, parameters)
+    }
   }
 
   private val stack = mutableMapOf<String, Matcher>()
+
+  internal fun urlFor(endpoint: String, variables: Map<String, Any>): String {
+    val matcher = stack[endpoint] ?: error("Endpoint $endpoint is not registered")
+    return matcher.reifyPath(variables)
+  }
 
   internal fun match(request: HttpRequest): MatcherResult {
     return stack.values.firstNotNullOfOrNull { matcher ->
@@ -57,11 +115,12 @@ public class FlaskRouter {
 
   private companion object {
     private val pathVariableRegex = Regex("<(?:(\\w+):)?([a-zA-Z_]+)>")
+    private val untypedVariableRegex = Regex("<(?:\\w+:)?([a-zA-Z_]+)>")
 
-    private fun compileMatcher(pattern: String, methods: Array<HttpMethod>, handler: Value): Matcher {
+    private fun compileMatcher(rule: String, methods: Array<HttpMethod>, handler: Value): Matcher {
       val pathVariables = mutableMapOf<String, RouteVariableType>()
 
-      val matcherRegex = pattern.replace(pathVariableRegex) {
+      val pattern = rule.replace(pathVariableRegex) {
         val type = when (it.groups[1]?.value) {
           "int" -> RouteVariableType.INT
           "float" -> RouteVariableType.FLOAT
@@ -83,30 +142,7 @@ public class FlaskRouter {
         Regex(it)
       }
 
-      return Matcher { request ->
-        if (request.method() !in methods) return@Matcher MatcherResult.NoMatch
-
-        val routeMatch = matcherRegex.matchEntire(request.uri().substringBefore('?'))
-          ?: return@Matcher MatcherResult.NoMatch
-
-        val parameters = buildMap {
-          pathVariables.forEach { (name, type) ->
-            val value = routeMatch.groups[name]?.value
-              ?: return@Matcher MatcherResult.MissingVariable(name)
-
-            val mappedValue: Any? = when (type) {
-              RouteVariableType.INT -> value.toIntOrNull()
-              RouteVariableType.FLOAT -> value.toFloatOrNull()
-              else -> value
-            }
-
-            if (mappedValue == null) return@Matcher MatcherResult.InvalidVariable(name)
-            put(name, mappedValue)
-          }
-        }
-
-        MatcherResult.Match(handler, parameters)
-      }
+      return Matcher(rule, pattern, handler, pathVariables, methods)
     }
   }
 }

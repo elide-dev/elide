@@ -31,18 +31,20 @@ import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.serialization.GuestValueSerializer
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
+import elide.runtime.gvm.GuestLanguage as GVMGuestLanguage
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.server.http.v2.*
+import elide.runtime.plugins.python.flask.FlaskAPI
 
 private const val ROUTE_METHOD = "route"
 private const val BIND_METHOD = "bind"
-private const val FLASK_INTRINSIC = "_ElideFlaskIntrinsic"
 
 @Singleton public class FlaskHttpIntrinsic(
   private val runtimeLatchProvider: Provider<RuntimeLatch>,
   entrypointProvider: Provider<EntrypointRegistry>,
   contextProvider: Provider<SharedContextFactory>,
-) : AbstractHttpIntrinsic(), ProxyExecutable, ProxyObject, GuestIntrinsic {
+) : AbstractHttpIntrinsic(), ProxyExecutable, ProxyObject, GuestIntrinsic, FlaskAPI {
   override val runtimeLatch: RuntimeLatch get() = runtimeLatchProvider.get()
   private val requestAccessor = FlaskRequestAccessor()
 
@@ -146,16 +148,16 @@ private const val FLASK_INTRINSIC = "_ElideFlaskIntrinsic"
       )
     }
 
-  override fun language(): GuestLanguage = GraalVMGuest.PYTHON
+  override fun language(): GVMGuestLanguage = GraalVMGuest.PYTHON
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    bindings[FLASK_INTRINSIC.asPublicJsSymbol()] = this
+    bindings[FlaskAPI.FLASK_INTRINSIC.asJsSymbol()] = this
   }
 
-  override fun symbolicName(): String = FLASK_INTRINSIC
+  override fun symbolicName(): String = FlaskAPI.FLASK_INTRINSIC
 
   @Deprecated("Use symbolicName instead")
-  override fun displayName(): String = FLASK_INTRINSIC
+  override fun displayName(): String = FlaskAPI.FLASK_INTRINSIC
   override fun getMember(key: String?): Any? = when (key) {
     "request" -> requestAccessor
     "abort" -> ProxyExecutable { args ->

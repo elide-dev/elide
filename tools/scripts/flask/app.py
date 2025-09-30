@@ -5,7 +5,7 @@ request = __elide_flask.request
 abort = __elide_flask.abort
 
 def url_for(endpoint, **variables):
-    __elide_flask.url_for(endpoint)
+    return __elide_flask.url_for(endpoint, variables)
 
 _flask_class = __elide_flask
 
@@ -78,8 +78,8 @@ def hello_world(name=None):
 
 @app.get("/pointer")
 def point():
-    # target = url_for('hello_world', name='Dario', flair='true')
-    target = "/hello"
+    #target = "/hello"
+    target = url_for('hello_world', name='Dario', flair='true')
     return f"<p>You should go to {target}</p>"
 
 @app.post("/hello/")

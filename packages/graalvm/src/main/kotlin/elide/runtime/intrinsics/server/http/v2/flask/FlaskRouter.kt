@@ -59,12 +59,15 @@ public class FlaskRouter {
 
       append(baseUrl)
       if (applied.size < variables.size) {
-        append("?")
+        var queryParams = 0
         for ((name, value) in variables) if (name !in applied) {
+          if (queryParams > 0) append("&")
+          else append("?")
+          
+          queryParams++
           append(URLEncoder.encode(name, Charsets.UTF_8))
           append("=")
           append(URLEncoder.encode(value.toString(), Charsets.UTF_8))
-          append("&")
         }
       }
     }

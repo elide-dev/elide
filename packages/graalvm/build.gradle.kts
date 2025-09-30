@@ -17,7 +17,6 @@
   "MagicNumber"
 )
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -476,6 +475,7 @@ dependencies {
   api(projects.packages.graalvmTs)
   api(projects.packages.graalvmJs)
   api(projects.packages.graalvmWasm)
+  api(projects.packages.graalvmPy)
 
   // GraalVM / Truffle
   api(libs.graalvm.truffle.api)

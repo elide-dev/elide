@@ -13,15 +13,21 @@
 
 package elide.runtime.plugins.python
 
+import io.micronaut.context.BeanContext
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
+import elide.testing.annotations.TestCase
 
+@TestCase
 @OptIn(DelicateElideApi::class)
 internal class PythonPluginTest {
+  @Inject lateinit var beanContext: BeanContext
+
   @Test fun testExecution() {
-    val engine = PolyglotEngine { configure(Python) }
+    val engine = PolyglotEngine(beanContext) { configure(Python) }
     val context = engine.acquire()
 
     val result = context.python("""

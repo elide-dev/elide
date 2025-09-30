@@ -19,6 +19,7 @@ import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.python.embedding.GraalPythonFilesystem
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
+import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.ContextFinalized
@@ -55,16 +56,20 @@ private const val ENABLE_PYTHON_VFS = false
     // @TODO don't do this
     context.enter()
     try {
-      context.unwrap().polyglotBindings.putMember(
-        // @TODO don't do this either
-        // results in:
-        // `__Elide_FlaskIntrinsic__`
-        arrayOf("", "", "Elide", FlaskAPI.FLASK_INTRINSIC, "", "").joinToString("_"),
-        requireNotNull(scope.beanContext.getBean<FlaskAPI>(FlaskAPI::class.java)) {
-          "Failed to locate Flask API implementation"
-        },
-      )
-      context.evaluate(pythonInitSrc)
+      when (val flask = scope.beanContext.getBean<FlaskAPI>(FlaskAPI::class.java)) {
+        null -> logging.warn { "Failed to load Flask intrinsic" }
+        else -> context.unwrap().polyglotBindings.putMember(
+          // @TODO don't do this either
+          // results in:
+          // `__Elide_FlaskIntrinsic__`
+          arrayOf("", "", "Elide", FlaskAPI.FLASK_INTRINSIC, "", "").joinToString("_"),
+          flask,
+        )
+      }
+
+      scope.deferred {
+        context.evaluate(pythonInitSrc)
+      }
     } finally {
       context.leave()
     }
@@ -146,6 +151,10 @@ private const val ENABLE_PYTHON_VFS = false
     private const val GPY_LIST_SEPARATOR = "🏆"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
+
+    private val logging by lazy {
+      Logging.of(Python::class)
+    }
 
     @JvmStatic private val pythonInitSrc: Source = requireNotNull(
       PythonLang::class.java.classLoader.getResourceAsStream("META-INF/elide/embedded/runtime/python/init.py")

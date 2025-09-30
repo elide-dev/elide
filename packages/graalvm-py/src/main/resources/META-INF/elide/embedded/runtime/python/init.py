@@ -15,8 +15,8 @@ def _private_symbol_name(name):
 def __init__interop():
   import sys
   import polyglot
-  import importlib.abc
-  import importlib.util
+  # import importlib.abc
+  # import importlib.util
   from types import ModuleType
 
   registered_py_symbols = {}
@@ -78,22 +78,22 @@ def __init__interop():
     def __dir__(self):
       return [BIND_DECORATOR, POLYGLOT_MODULE, POLYGLOT_DECORATOR, FLASK_GLOBAL]
 
-  class ElideModuleFinder(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, _path, _target = None):
-      if fullname == MODULE_NAME:
-        loader = ElideModuleLoader()
-        return importlib.util.spec_from_loader(fullname, loader)
-      return None
-
-  class ElideModuleLoader(importlib.abc.Loader):
-    def create_module(self, _spec):
-      return elide_module
-
-    def exec_module(self, module):
-      pass
+  # class ElideModuleFinder(importlib.abc.MetaPathFinder):
+  #   def find_spec(self, fullname, _path, _target = None):
+  #     if fullname == MODULE_NAME:
+  #       loader = ElideModuleLoader()
+  #       return importlib.util.spec_from_loader(fullname, loader)
+  #     return None
+  #
+  # class ElideModuleLoader(importlib.abc.Loader):
+  #   def create_module(self, _spec):
+  #     return elide_module
+  #
+  #   def exec_module(self, module):
+  #     pass
 
   elide_module = ElideModule()
-  sys.meta_path.insert(0, ElideModuleFinder())
+  # sys.meta_path.insert(0, ElideModuleFinder())
   sys.modules[MODULE_NAME] = elide_module
 
 def __init_elide_env():

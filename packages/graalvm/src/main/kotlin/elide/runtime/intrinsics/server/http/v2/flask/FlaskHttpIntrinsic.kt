@@ -21,6 +21,7 @@ import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
 import jakarta.inject.Provider
+import kotlinx.serialization.json.Json
 import elide.annotations.Singleton
 import elide.runtime.Logging
 import elide.runtime.core.EntrypointRegistry
@@ -28,6 +29,7 @@ import elide.runtime.core.RuntimeLatch
 import elide.runtime.core.SharedContextFactory
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestLanguage
+import elide.runtime.gvm.internals.serialization.GuestValueSerializer
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.server.http.v2.*
@@ -112,27 +114,7 @@ import elide.runtime.intrinsics.server.http.v2.*
           try {
             @Suppress("UNCHECKED_CAST")
             val result = match.handler.execute(ProxyHashMap.from(match.parameters as Map<Any, Any>))
-
-            // map return value here (e.g., use a String return value to create the response body)
-            // ...
-
-            // if the guest handler is async, schedule for execution and return a handle
-            // otherwise finalize handling and send the response
-            val content = Unpooled.copiedBuffer(result.asString(), Charsets.UTF_8)
-            httpContext.response.headers().apply {
-              set(HttpHeaderNames.CONTENT_LENGTH, content.writerIndex().toString())
-              set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=utf-8")
-            }
-
-            httpContext.response.status = HttpResponseStatus.OK
-            httpContext.responseBody.source(
-              object : HttpContentSink.Producer {
-                override fun pull(handle: HttpContentSink.Handle) {
-                  handle.push(DefaultLastHttpContent(content))
-                  handle.release(true)
-                }
-              },
-            )
+            applyHandlerResponse(result, httpContext as FlaskHttpContext)
           } catch (e: PolyglotException) {
             if (!e.isHostException) throw e
             val cause = e.asHostException() as? FlaskHttpException ?: throw e
@@ -203,8 +185,148 @@ import elide.runtime.intrinsics.server.http.v2.*
   override fun hasMember(key: String?): Boolean = key in MODULE_MEMBER_KEYS
   override fun putMember(key: String?, value: Value?): Unit = error("Modifying the Flask intrinsic is not allowed")
 
+  private fun encodeValueAsJSON(value: Value): String {
+    return FlaskJson.encodeToString(GuestValueSerializer, value)
+  }
+
+  private fun mapContentChunk(value: Value): HttpContent {
+    return when {
+      // string content
+      value.isString -> {
+        val content = Unpooled.copiedBuffer(value.asString(), Charsets.UTF_8)
+        DefaultHttpContent(content)
+      }
+
+      // bytes object
+      value.hasBufferElements() -> {
+        val bytes = ByteArray(value.bufferSize.toInt())
+        value.readBuffer(0L, bytes, 0, bytes.size)
+
+        DefaultHttpContent(Unpooled.wrappedBuffer(bytes))
+      }
+
+      else -> error("Value type is not supported as response body: $value")
+    }
+  }
+
+  private fun applyHandlerResponse(
+    returnValue: Value,
+    httpContext: FlaskHttpContext,
+    overrideStatus: Boolean = true,
+  ) {
+    // map return value
+    when {
+      // simple string value, mark as plaintext and encode it into a buffer
+      returnValue.isString -> {
+        if (overrideStatus) httpContext.response.status = HttpResponseStatus.OK
+
+        val content = Unpooled.copiedBuffer(returnValue.asString(), Charsets.UTF_8)
+        httpContext.response.headers().apply {
+          set(HttpHeaderNames.CONTENT_LENGTH, content.writerIndex().toString())
+          set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=utf-8")
+        }
+
+        httpContext.responseBody.source(DefaultLastHttpContent(content))
+      }
+
+      // an iterator should be used for a streaming response
+      returnValue.isIterator -> {
+        httpContext.response.headers().apply {
+          set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=utf-8")
+          set(HttpHeaderNames.TRANSFER_ENCODING, "chunked")
+        }
+
+        httpContext.responseBody.source {
+          if (!returnValue.hasIteratorNextElement()) {
+            it.push(DefaultLastHttpContent(Unpooled.EMPTY_BUFFER.retainedDuplicate()))
+            it.release(close = true)
+
+            return@source
+          }
+
+          it.push(mapContentChunk(returnValue.iteratorNextElement))
+        }
+      }
+
+      // a tuple can be (response, status), (response, headers), or (response, status, headers)
+      returnValue.hasArrayElements() && returnValue.metaObject?.metaSimpleName == "tuple" -> {
+        val status: HttpResponseStatus
+        val headers: Value?
+
+        when (returnValue.arraySize) {
+          2L -> returnValue.getArrayElement(1).let {
+            when {
+              it.isNumber -> {
+                status = it.takeIf { code -> code.isNumber && code.fitsInInt() }
+                  ?.let { code -> HttpResponseStatus.valueOf(code.asInt()) }
+                  ?: error("Invalid status code in response tuple: ${returnValue.getArrayElement(1)}")
+
+                headers = null
+              }
+
+              it.hasHashEntries() || it.hasArrayElements() -> {
+                headers = it
+                status = HttpResponseStatus.OK
+              }
+
+              else -> error("Invalid response tuple: expected status or headers, got $it")
+            }
+          }
+
+          3L -> {
+            status = returnValue.getArrayElement(1).takeIf { it.isNumber && it.fitsInInt() }
+              ?.let { HttpResponseStatus.valueOf(it.asInt()) }
+              ?: error("Invalid status code in response tuple: ${returnValue.getArrayElement(1)}")
+
+            headers = returnValue.getArrayElement(2)
+          }
+
+          // invalid tuple
+          else -> error("Invalid response tuple: expected 2 or 3 elements, got ${returnValue.arraySize}")
+        }
+
+        if (overrideStatus) httpContext.response.status = status
+
+        if (headers != null) when {
+          headers.hasHashEntries() -> {
+            val iterator = headers.hashEntriesIterator
+            while (iterator.hasIteratorNextElement()) iterator.iteratorNextElement.let {
+              httpContext.response.headers().add(
+                /* name = */ it.getArrayElement(0).asString(),
+                /* value = */ it.getArrayElement(1).toString(),
+              )
+            }
+          }
+
+          else -> error("Invalid headers provided to response tuple: expected a dict, got $headers")
+        }
+
+        // the first element is always the response itself
+        applyHandlerResponse(returnValue.getArrayElement(0), httpContext, overrideStatus = false)
+      }
+
+      // a list should be serialized as JSON
+      returnValue.hasHashEntries() || (returnValue.hasArrayElements() && returnValue.metaSimpleName == "list") -> {
+        val content = Unpooled.copiedBuffer(encodeValueAsJSON(returnValue), Charsets.UTF_8)
+
+        if (overrideStatus) httpContext.response.status = HttpResponseStatus.OK
+        httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.writerIndex())
+        httpContext.response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/json; charset=utf-8")
+
+        httpContext.responseBody.source(DefaultLastHttpContent(content))
+      }
+
+      else -> {
+        // use defaults
+        httpContext.response.status = HttpResponseStatus.OK
+        httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
+      }
+    }
+  }
+
   private companion object {
     private val logging by lazy { Logging.of(FlaskHttpIntrinsic::class) }
+    private val FlaskJson by lazy { Json }
 
     private val INSTANCE_MEMBER_KEYS = arrayOf(
       "bind",

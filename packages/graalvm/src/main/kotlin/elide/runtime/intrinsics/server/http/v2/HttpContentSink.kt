@@ -91,4 +91,25 @@ public interface HttpContentSink {
    * resources being disposed of, among other side effects (e.g., flushing an underlying network channel).
    */
   public fun close()
+
+  public companion object {
+    @JvmStatic public fun singleValueProducer(value: HttpContent): Producer = object : Producer {
+      override fun pull(handle: Handle) {
+        handle.push(value)
+        handle.release(close = true)
+      }
+    }
+  }
+}
+
+public fun HttpContentSink.source(value: HttpContent) {
+  source(HttpContentSink.singleValueProducer(value))
+}
+
+public fun HttpContentSink.source(onPull: (HttpContentSink.Handle) -> Unit) {
+  source(
+    object : HttpContentSink.Producer {
+      override fun pull(handle: HttpContentSink.Handle) = onPull(handle)
+    },
+  )
 }

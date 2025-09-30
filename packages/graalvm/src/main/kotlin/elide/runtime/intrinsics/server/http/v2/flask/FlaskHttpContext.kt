@@ -38,10 +38,6 @@ public class FlaskHttpContext(
       .mapValues { it.value.firstOrNull() }
   }
 
-  @Polyglot public fun status(code: Int) {
-    response.status = HttpResponseStatus.valueOf(code)
-  }
-
   override fun close() {
     // noop
   }

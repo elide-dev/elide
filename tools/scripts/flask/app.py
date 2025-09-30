@@ -90,6 +90,26 @@ def hello_world_post():
 def bye_world():
   return "<p>Goodbye, World!</p>"
 
+@app.get("/content")
+def response_content():
+    # gen = (f"Chunk {x}\n" for x in range(5))
+    # return (gen, 201, {"Server": "Elide"})
+    json = {
+        "Hello": "World",
+        "messages": [
+            "This is a message",
+            "This is another message",
+            ["This", "one", "is", "a", "list"],
+            {
+                "This": "other",
+                "one": "is",
+                "an": "object"
+            }
+        ]
+    }
+
+    return (json, 201, {"Server": "Elide"})
+
 # start the server, required for now
 app.bind()
 

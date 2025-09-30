@@ -69,7 +69,7 @@ internal class NettyContextSink(private val attachedContext: ChannelHandlerConte
     if (closed.get()) return false
     attachedHandle.get()?.maybePull()
 
-    return closed.get()
+    return !closed.get()
   }
 
   override fun source(producer: Producer) {

@@ -9,6 +9,9 @@
 #  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations under the License.
 
+def _private_symbol_name(name):
+    return "__Elide_%s__" % name
+
 def __init__interop():
   import sys
   import polyglot
@@ -37,11 +40,15 @@ def __init__interop():
   def polyglot_decorator(name = None):
     return bind_factory(name)
 
+  def flask_factory(name):
+    import pdb; pdb.set_trace()
+    return polyglot.import_value(_private_symbol_name(FLASK_ENTRY))(name)
+
   POLYGLOT_MODULE = "polyglot"
   POLYGLOT_DECORATOR = "poly"
   BIND_DECORATOR = "bind"
   FLASK_GLOBAL = "Flask"
-  FLASK_ENTRY = "_ElideFlaskIntrinsic"
+  FLASK_ENTRY = "FlaskIntrinsic"
   MODULE_NAME = "elide"
 
   class ElideModule(ModuleType):
@@ -66,9 +73,7 @@ def __init__interop():
       if name == POLYGLOT_DECORATOR:
         return polyglot_decorator
       if name == FLASK_GLOBAL:
-        flask_out = globals()[FLASK_ENTRY]
-        if flask_out is None:
-            raise AttributeError(f"flask shim failed to load")
+        return flask_factory
       raise AttributeError(f"module '{MODULE_NAME}' has no attribute '{name}'")
 
     def __dir__(self):
@@ -92,18 +97,10 @@ def __init__interop():
   sys.meta_path.insert(0, ElideModuleFinder())
   sys.modules[MODULE_NAME] = elide_module
 
-def __init_flask_interop():
-  class _ElideFlask(object):
-    """Handles guest-side shims for Flask."""
-    @classmethod
-    def install(cls):
-      """Install Flask shim support."""
-      pass
-
-  # Install unconditionally.
-  _ElideFlask.install()
-
 def __init_elide_env():
+  import polyglot
+  APP_ENV = "app_env"
+
   # noinspection PyPep8Naming
   class _Elide_ApplicationEnvironment(object):
       """Handler for resolving application-level environment, and withholding system environment, as needed."""
@@ -112,8 +109,7 @@ def __init_elide_env():
       __virtual_env = {}
 
       def __init__(self):
-          import polyglot
-          data = polyglot.import_value("__Elide_app_env__")
+          data = polyglot.import_value(_private_symbol_name(APP_ENV))
           if data is not None:
               self.__app_environ = {x: data[x] for x in data}
 
@@ -181,5 +177,4 @@ def __init_elide_env():
   _Elide_ApplicationEnvironment.install()
 
 __init_elide_env()
-__init_flask_interop()
 __init__interop()

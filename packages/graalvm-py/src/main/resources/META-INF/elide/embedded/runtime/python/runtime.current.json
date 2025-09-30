@@ -6,9 +6,7 @@
   ],
   "artifacts": [],
   "scripts": [
-    { "path": "environment.py" },
-    { "path": "flask.py" },
-    { "path": "preamble.py" }
+    { "path": "init.py" }
   ],
   "bundles": []
 }

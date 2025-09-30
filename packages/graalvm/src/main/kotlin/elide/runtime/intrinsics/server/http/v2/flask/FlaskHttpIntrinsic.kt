@@ -34,6 +34,10 @@ import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.server.http.v2.*
 
+private const val ROUTE_METHOD = "route"
+private const val BIND_METHOD = "bind"
+private const val FLASK_INTRINSIC = "_ElideFlaskIntrinsic"
+
 @Singleton public class FlaskHttpIntrinsic(
   private val runtimeLatchProvider: Provider<RuntimeLatch>,
   entrypointProvider: Provider<EntrypointRegistry>,
@@ -44,18 +48,17 @@ import elide.runtime.intrinsics.server.http.v2.*
 
   public inner class FlaskAppInstance(@Suppress("unused") private val root: String) : ProxyObject {
     override fun getMember(key: String?): Any? = when (key) {
-      "route" -> ProxyExecutable { args /* (name, rule, methods, handler) */ ->
+      ROUTE_METHOD -> ProxyExecutable { args /* (name, rule, methods, handler) */ ->
         val (endpoint, pattern, methods, handler) = args
         stackManager.withStack {
           val mappedMethods = Array(methods.arraySize.toInt()) { method ->
             HttpMethod.valueOf(methods.getArrayElement(method.toLong()).asString())
           }
-
           it.register(endpoint.asString(), pattern.asString(), mappedMethods, handler)
         }
       }
 
-      "bind" -> ProxyExecutable {
+      BIND_METHOD -> ProxyExecutable {
         bind(3000)
       }
 
@@ -146,13 +149,13 @@ import elide.runtime.intrinsics.server.http.v2.*
   override fun language(): GuestLanguage = GraalVMGuest.PYTHON
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    bindings["__elide_flask".asPublicJsSymbol()] = this
+    bindings[FLASK_INTRINSIC.asPublicJsSymbol()] = this
   }
 
-  override fun symbolicName(): String = "flask"
+  override fun symbolicName(): String = FLASK_INTRINSIC
 
   @Deprecated("Use symbolicName instead")
-  override fun displayName(): String = "flask"
+  override fun displayName(): String = FLASK_INTRINSIC
   override fun getMember(key: String?): Any? = when (key) {
     "request" -> requestAccessor
     "abort" -> ProxyExecutable { args ->
@@ -329,8 +332,8 @@ import elide.runtime.intrinsics.server.http.v2.*
     private val FlaskJson by lazy { Json }
 
     private val INSTANCE_MEMBER_KEYS = arrayOf(
-      "bind",
-      "route",
+      BIND_METHOD,
+      ROUTE_METHOD,
     )
 
     private val MODULE_MEMBER_KEYS = arrayOf(

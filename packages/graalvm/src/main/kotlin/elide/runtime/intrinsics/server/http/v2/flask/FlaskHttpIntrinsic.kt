@@ -51,7 +51,15 @@ private const val BIND_METHOD = "bind"
   public inner class FlaskAppInstance(@Suppress("unused") private val root: String) : ProxyObject {
     override fun getMember(key: String?): Any? = when (key) {
       ROUTE_METHOD -> ProxyExecutable { args /* (name, rule, methods, handler) */ ->
-        val (endpoint, pattern, methods, handler) = args
+        val endpoint = args.getOrNull(0)?.takeIf { it.isString }
+          ?: error("Invalid route; pass a string to @app.route")
+        val pattern = args.getOrNull(1)?.takeIf { it.isString }
+          ?: error("Expected route pattern; check guest wrapper")
+        val methods = args.getOrNull(2)?.takeIf { it.hasArrayElements() }
+          ?: error("Expected methods; check guest wrapper")
+        val handler = requireNotNull(args.last()) { "no handler provided; check guest wrapper" }
+        require(handler.canExecute()) { "guest python handler is not executable" }
+
         stackManager.withStack {
           val mappedMethods = Array(methods.arraySize.toInt()) { method ->
             HttpMethod.valueOf(methods.getArrayElement(method.toLong()).asString())

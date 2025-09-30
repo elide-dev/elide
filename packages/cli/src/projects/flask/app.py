@@ -8,7 +8,7 @@ app = Flask(__name__)
 def hello_world():
   return "<p>Hello, World!</p>"
 
-print(f"Starting server worker at http://localhost:3000")
+# print(f"Starting server worker at http://localhost:3000")
 
 # start the server, required for now
-app.bind()
+# app.bind()

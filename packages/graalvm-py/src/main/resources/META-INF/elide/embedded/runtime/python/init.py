@@ -9,15 +9,24 @@
 #  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations under the License.
 
+request = None
+abort = None
+url_for = None
+
 def _private_symbol_name(name):
     return "__Elide_%s__" % name
 
 def __init__interop():
   import sys
   import polyglot
-  # import importlib.abc
-  # import importlib.util
   from types import ModuleType
+
+  POLYGLOT_MODULE = "polyglot"
+  POLYGLOT_DECORATOR = "poly"
+  BIND_DECORATOR = "bind"
+  FLASK_GLOBAL = "Flask"
+  FLASK_ENTRY = "FlaskIntrinsic"
+  MODULE_NAME = "elide"
 
   registered_py_symbols = {}
   def bind_factory(name = None):
@@ -41,14 +50,66 @@ def __init__interop():
     return bind_factory(name)
 
   def flask_factory(name):
-    return polyglot.import_value(_private_symbol_name(FLASK_ENTRY))(name)
+    elide_flask = polyglot.import_value(_private_symbol_name(FLASK_ENTRY))
 
-  POLYGLOT_MODULE = "polyglot"
-  POLYGLOT_DECORATOR = "poly"
-  BIND_DECORATOR = "bind"
-  FLASK_GLOBAL = "Flask"
-  FLASK_ENTRY = "FlaskIntrinsic"
-  MODULE_NAME = "elide"
+    global request, abort, url_for
+    request = elide_flask.request
+    abort = elide_flask.abort
+
+    def url_for_flask(endpoint, **variables):
+      return elide_flask.url_for(endpoint, variables)
+    url_for = url_for_flask
+
+    _flask_class = elide_flask
+
+    class FlaskBridge:
+      def __init__(self, name: str):
+        self.bridge = _flask_class(name)
+
+      def route(self, rule: str, **options):
+        def handler_wrapper(handler):
+          methods = options["methods"] if options["methods"] is not None else ["GET"]
+
+          if hasattr(handler, "_elide_flask_handler"):
+            # already wrapped, just register it
+            self.bridge.route(handler.__name__, rule, methods, handler)
+            return handler
+
+          # not wrapped yet
+          def dispatcher(args):
+            return handler(**args)
+
+          dispatcher._elide_flask_handler = True
+          self.bridge.route(handler.__name__, rule, methods, dispatcher)
+
+          return dispatcher
+        return handler_wrapper
+
+      def head(self, rule: str):
+        return self.route(rule, methods=["HEAD"])
+
+      def options(self, rule: str):
+        return self.route(rule, methods=["OPTIONS"])
+
+      def get(self, rule: str):
+        return self.route(rule, methods=["GET"])
+
+      def post(self, rule: str):
+        return self.route(rule, methods=["POST"])
+
+      def put(self, rule: str):
+        return self.route(rule, methods=["PUT"])
+
+      def patch(self, rule: str):
+        return self.route(rule, methods=["PATCH"])
+
+      def delete(self, rule: str):
+        return self.route(rule, methods=["DELETE"])
+
+      def bind(self):
+        self.bridge.bind()
+
+    return FlaskBridge(name)
 
   class ElideModule(ModuleType):
     """Module for Elide integration with Python."""
@@ -78,23 +139,9 @@ def __init__interop():
     def __dir__(self):
       return [BIND_DECORATOR, POLYGLOT_MODULE, POLYGLOT_DECORATOR, FLASK_GLOBAL]
 
-  # class ElideModuleFinder(importlib.abc.MetaPathFinder):
-  #   def find_spec(self, fullname, _path, _target = None):
-  #     if fullname == MODULE_NAME:
-  #       loader = ElideModuleLoader()
-  #       return importlib.util.spec_from_loader(fullname, loader)
-  #     return None
-  #
-  # class ElideModuleLoader(importlib.abc.Loader):
-  #   def create_module(self, _spec):
-  #     return elide_module
-  #
-  #   def exec_module(self, module):
-  #     pass
-
   elide_module = ElideModule()
-  # sys.meta_path.insert(0, ElideModuleFinder())
   sys.modules[MODULE_NAME] = elide_module
+  __init_elide_env()
 
 def __init_elide_env():
   import polyglot
@@ -175,5 +222,4 @@ def __init_elide_env():
   # Install unconditionally.
   _Elide_ApplicationEnvironment.install()
 
-__init_elide_env()
 __init__interop()

@@ -12,6 +12,7 @@
  */
 package elide.runtime.core
 
+import io.micronaut.context.BeanContext
 import java.net.URL
 import java.util.concurrent.Future
 
@@ -119,6 +120,12 @@ public interface EnginePlugin<Config : Any, Instance : Any> {
      * attached to the engine.
      */
     public val lifecycle: EngineLifecycle
+
+    /**
+     * Bean context which is active for this installation scope; injected instances of types can be obtained safely
+     * through the bean context.
+     */
+    public val beanContext: BeanContext
 
     /**
      * The general configuration scope, used for retrieving installed plugins, as well as installing additional ones.

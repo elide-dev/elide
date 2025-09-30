@@ -17,6 +17,7 @@ import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
+import io.micronaut.context.BeanContext
 import lukfor.progress.TaskServiceBuilder
 import lukfor.progress.executors.ITaskExecutor
 import lukfor.progress.tasks.ITaskRunnable
@@ -343,6 +344,9 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
   // Triggers for telemetry.
   @Inject internal lateinit var telemetry: TelemetryTriggers
 
+  // Injection context.
+  @Inject private lateinit var beanContext: BeanContext
+
   // Telemetry options which apply to all commands.
   @CommandLine.ArgGroup(
     heading = "%nTelemetry Options:%n",
@@ -425,7 +429,7 @@ fun AbstractTool.EmbeddedToolError.render(logging: Logger, ctx: AbstractSubcomma
    *
    * @return A new, exclusive [PolyglotEngine] instance.
    */
-  private fun createEngine(langs: Set<GuestLanguage>): PolyglotEngine = PolyglotEngine {
+  private fun createEngine(langs: Set<GuestLanguage>): PolyglotEngine = PolyglotEngine(beanContext) {
     // allow subclasses to customize the engine
     configureEngine(langs)
   }

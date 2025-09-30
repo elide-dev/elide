@@ -27,6 +27,7 @@ import elide.annotations.Singleton
   }
 
   public fun await() {
+    if (latch.unarrivedParties == 0) return
     latch.awaitAdvance(latch.phase)
   }
 }

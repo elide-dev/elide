@@ -13,6 +13,7 @@
 
 package elide.runtime.intrinsics.server.http.v2.flask
 
+import com.oracle.truffle.api.CompilerDirectives
 import io.netty.buffer.Unpooled
 import io.netty.handler.codec.http.*
 import org.graalvm.polyglot.PolyglotException
@@ -76,6 +77,7 @@ private const val BIND_METHOD = "bind"
     FlaskHandlerStackManager(entrypointProvider.get(), contextProvider.get())
   }
 
+  @CompilerDirectives.TruffleBoundary
   override fun execute(vararg arguments: Value?): FlaskAppInstance {
     // accept the application root as an argument
     val root = arguments.firstOrNull()?.takeIf { it.isString }?.asString()

@@ -41,7 +41,6 @@ def __init__interop():
     return bind_factory(name)
 
   def flask_factory(name):
-    import pdb; pdb.set_trace()
     return polyglot.import_value(_private_symbol_name(FLASK_ENTRY))(name)
 
   POLYGLOT_MODULE = "polyglot"

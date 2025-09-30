@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
+import elide.runtime.core.EngineLifecycleEvent.ContextFinalized
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
@@ -32,6 +33,7 @@ import elide.runtime.core.extensions.setOptions
 import elide.runtime.lang.python.PythonLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
+import elide.runtime.plugins.python.flask.FlaskAPI
 import elide.runtime.vfs.LanguageVFS.LanguageVFSInfo
 import elide.runtime.vfs.registerLanguageVfs
 
@@ -40,16 +42,32 @@ private const val ENABLE_PYTHON_VFS = false
 
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
+  private val scope: InstallationScope,
   @Suppress("unused") private val resources: LanguagePluginManifest? = null,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
+  }
 
-    // run embedded initialization code
+  private fun finalizeContext(context: PolyglotContext) {
+    // special case: inject flask
+    // @TODO don't do this
     context.enter()
-    context.evaluate(pythonInitSrc)
-    context.leave()
+    try {
+      context.unwrap().polyglotBindings.putMember(
+        // @TODO don't do this either
+        // results in:
+        // `__Elide_FlaskIntrinsic__`
+        arrayOf("", "", "Elide", FlaskAPI.FLASK_INTRINSIC, "", "").joinToString("_"),
+        requireNotNull(scope.beanContext.getBean<FlaskAPI>(FlaskAPI::class.java)) {
+          "Failed to locate Flask API implementation"
+        },
+      )
+      context.evaluate(pythonInitSrc)
+    } finally {
+      context.leave()
+    }
   }
 
   private fun resolveGraalPythonVersions(): Pair<String, String> {
@@ -152,22 +170,22 @@ private const val ENABLE_PYTHON_VFS = false
       configureSharedBindings(scope, config)
 
       val resources = resolveEmbeddedManifest(scope)
-      val instance = Python(config, resources)
+      val instance = Python(config, scope, resources)
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
-      if (ENABLE_PYTHON_VFS) {
-        registerLanguageVfs(PYTHON_LANGUAGE_ID) {
-          object : LanguageVFSInfo {
-            override val router: (Path) -> Boolean get() = { path ->
-              val str = path.toString()
-              str.startsWith("<frozen ") || str.contains("/python-home/")
-            }
+      scope.lifecycle.on(ContextFinalized, instance::finalizeContext)
 
-            override val fsProvider: () -> FileSystem get() = {
-              GraalPythonFilesystem.delegate()
-            }
+      if (ENABLE_PYTHON_VFS) registerLanguageVfs(PYTHON_LANGUAGE_ID) {
+        object : LanguageVFSInfo {
+          override val router: (Path) -> Boolean get() = { path ->
+            val str = path.toString()
+            str.startsWith("<frozen ") || str.contains("/python-home/")
+          }
+
+          override val fsProvider: () -> FileSystem get() = {
+            GraalPythonFilesystem.delegate()
           }
         }
       }

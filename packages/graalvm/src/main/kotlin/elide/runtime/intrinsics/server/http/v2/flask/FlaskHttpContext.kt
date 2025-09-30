@@ -16,6 +16,8 @@ package elide.runtime.intrinsics.server.http.v2.flask
 import io.netty.handler.codec.http.HttpRequest
 import io.netty.handler.codec.http.HttpResponse
 import io.netty.handler.codec.http.HttpResponseStatus
+import io.netty.handler.codec.http.QueryStringDecoder
+import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMultiMap
 import elide.runtime.intrinsics.server.http.v2.HttpContentSink
 import elide.runtime.intrinsics.server.http.v2.HttpContentSource
 import elide.runtime.intrinsics.server.http.v2.HttpContext
@@ -29,6 +31,13 @@ public class FlaskHttpContext(
   override val responseBody: HttpContentSink,
   override val session: HttpSession
 ) : HttpContext {
+  internal val queryParams: Map<String, String?> by lazy {
+    // TODO(@darvld): replace with a proper multi-map
+    QueryStringDecoder.builder().build(request.uri())
+      .parameters()
+      .mapValues { it.value.firstOrNull() }
+  }
+
   @Polyglot public fun status(code: Int) {
     response.status = HttpResponseStatus.valueOf(code)
   }

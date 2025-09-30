@@ -13,7 +13,6 @@
 
 package elide.runtime.intrinsics.server.http.v2.flask
 
-import io.netty.handler.codec.http.DefaultHttpRequest
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.intrinsics.server.http.v2.HttpContext
@@ -29,14 +28,15 @@ internal class FlaskRequestAccessor : ProxyObject {
     localContext.remove()
   }
 
-  private inline fun <R> withContext(block: HttpContext.() -> R): R {
+  private inline fun <R> withContext(block: FlaskHttpContext.() -> R): R {
     val context = checkNotNull(localContext.get()) { "No active request context" }
-    return block(context)
+    return block(context as FlaskHttpContext)
   }
 
   override fun getMember(key: String?): Any? = when (key) {
-    "method" -> withContext {
-      request.method().name()
+    "method" -> withContext { request.method().name() }
+    "args" -> withContext {
+      queryParams
     }
 
     "path" -> withContext { request.uri() }
@@ -50,6 +50,6 @@ internal class FlaskRequestAccessor : ProxyObject {
   }
 
   private companion object {
-    private val MEMBER_KEYS = arrayOf("method", "path")
+    private val MEMBER_KEYS = arrayOf("method", "path", "args")
   }
 }

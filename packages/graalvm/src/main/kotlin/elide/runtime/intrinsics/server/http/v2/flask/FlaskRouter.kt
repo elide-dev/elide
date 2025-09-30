@@ -42,16 +42,17 @@ public class FlaskRouter {
     fun match(request: HttpRequest): MatcherResult
   }
 
-  private val stack = mutableListOf<Matcher>()
+  private val stack = mutableMapOf<String, Matcher>()
 
   internal fun match(request: HttpRequest): MatcherResult {
-    return stack.firstNotNullOfOrNull { matcher ->
+    return stack.values.firstNotNullOfOrNull { matcher ->
       matcher.match(request).takeUnless { it == MatcherResult.NoMatch }
     } ?: MatcherResult.NoMatch
   }
 
-  internal fun register(pattern: String, methods: Array<HttpMethod>, handler: Value) {
-    stack.add(compileMatcher(pattern, methods, handler))
+  internal fun register(endpoint: String, pattern: String, methods: Array<HttpMethod>, handler: Value) {
+    if (stack.containsKey(endpoint)) error("Endpoint $endpoint is already registered")
+    stack[endpoint] = compileMatcher(pattern, methods, handler)
   }
 
   private companion object {
@@ -85,7 +86,7 @@ public class FlaskRouter {
       return Matcher { request ->
         if (request.method() !in methods) return@Matcher MatcherResult.NoMatch
 
-        val routeMatch = matcherRegex.matchEntire(request.uri())
+        val routeMatch = matcherRegex.matchEntire(request.uri().substringBefore('?'))
           ?: return@Matcher MatcherResult.NoMatch
 
         val parameters = buildMap {

@@ -15,8 +15,10 @@ package elide.runtime.intrinsics.server.http.v2.flask
 
 import io.netty.buffer.Unpooled
 import io.netty.handler.codec.http.*
+import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
 import jakarta.inject.Provider
 import elide.annotations.Singleton
@@ -34,47 +36,21 @@ import elide.runtime.intrinsics.server.http.v2.*
   private val runtimeLatchProvider: Provider<RuntimeLatch>,
   entrypointProvider: Provider<EntrypointRegistry>,
   contextProvider: Provider<SharedContextFactory>,
-) : AbstractHttpIntrinsic(), ProxyExecutable, GuestIntrinsic {
+) : AbstractHttpIntrinsic(), ProxyExecutable, ProxyObject, GuestIntrinsic {
   override val runtimeLatch: RuntimeLatch get() = runtimeLatchProvider.get()
   private val requestAccessor = FlaskRequestAccessor()
 
-  public inner class FlaskAppInstance(private val root: String) : ProxyObject {
-    private fun patternParam(args: Array<Value>): String {
-      return args.first().takeIf { it.isString }?.asString()
-        ?: error("Expected a string argument for the routing path")
-    }
-
-    private fun registerHandler(pattern: String, methods: Array<HttpMethod>): ProxyExecutable {
-      // inner decorator
-      return ProxyExecutable { innerArgs ->
-        // the inner decorator receives the handler function itself and returns yet another function
-        val handler = innerArgs.first()
-        check(handler.canExecute()) { "Expected function as route handler" }
-
-        stackManager.withStack { it.register(pattern, methods, handler) }
-        ProxyExecutable(handler::execute)
-      }
-    }
-
+  public inner class FlaskAppInstance(@Suppress("unused") private val root: String) : ProxyObject {
     override fun getMember(key: String?): Any? = when (key) {
-      "route", "get" -> ProxyExecutable { args ->
-        registerHandler(patternParam(args), arrayOf(HttpMethod.GET, HttpMethod.HEAD))
-      }
+      "route" -> ProxyExecutable { args /* (name, rule, methods, handler) */ ->
+        val (endpoint, pattern, methods, handler) = args
+        stackManager.withStack {
+          val mappedMethods = Array(methods.arraySize.toInt()) { method ->
+            HttpMethod.valueOf(methods.getArrayElement(method.toLong()).asString())
+          }
 
-      "post" -> ProxyExecutable { args ->
-        registerHandler(patternParam(args), arrayOf(HttpMethod.POST))
-      }
-
-      "put" -> ProxyExecutable { args ->
-        registerHandler(patternParam(args), arrayOf(HttpMethod.PUT))
-      }
-
-      "patch" -> ProxyExecutable { args ->
-        registerHandler(patternParam(args), arrayOf(HttpMethod.PATCH))
-      }
-
-      "delete" -> ProxyExecutable { args ->
-        registerHandler(patternParam(args), arrayOf(HttpMethod.DELETE))
+          it.register(endpoint.asString(), pattern.asString(), mappedMethods, handler)
+        }
       }
 
       "bind" -> ProxyExecutable {
@@ -131,38 +107,44 @@ import elide.runtime.intrinsics.server.http.v2.*
         }
 
         is FlaskRouter.MatcherResult.Match -> {
-          // TODO: add matched path variables to the context
           requestAccessor.push(httpContext)
 
-          val result = try {
-            match.handler.execute()
+          try {
+            @Suppress("UNCHECKED_CAST")
+            val result = match.handler.execute(ProxyHashMap.from(match.parameters as Map<Any, Any>))
+
+            // map return value here (e.g., use a String return value to create the response body)
+            // ...
+
+            // if the guest handler is async, schedule for execution and return a handle
+            // otherwise finalize handling and send the response
+            val content = Unpooled.copiedBuffer(result.asString(), Charsets.UTF_8)
+            httpContext.response.headers().apply {
+              set(HttpHeaderNames.CONTENT_LENGTH, content.writerIndex().toString())
+              set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=utf-8")
+            }
+
+            httpContext.response.status = HttpResponseStatus.OK
+            httpContext.responseBody.source(
+              object : HttpContentSink.Producer {
+                override fun pull(handle: HttpContentSink.Handle) {
+                  handle.push(DefaultLastHttpContent(content))
+                  handle.release(true)
+                }
+              },
+            )
+          } catch (e: PolyglotException) {
+            if (!e.isHostException) throw e
+            val cause = e.asHostException() as? FlaskHttpException ?: throw e
+
+            httpContext.response.status = HttpResponseStatus.valueOf(cause.code)
+            httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
+            httpContext.responseBody.close()
           } finally {
             requestAccessor.pop()
           }
-
-          // map return value here (e.g., use a String return value to create the response body)
-          // ...
-
-          // if the guest handler is async, schedule for execution and return a handle
-          // otherwise finalize handling and send the response
-          val content = Unpooled.copiedBuffer(result.asString(), Charsets.UTF_8)
-          httpContext.response.headers().apply {
-            set(HttpHeaderNames.CONTENT_LENGTH, content.writerIndex().toString())
-            set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=utf-8")
-          }
-
-          httpContext.response.status = HttpResponseStatus.OK
-          httpContext.responseBody.source(
-            object : HttpContentSink.Producer {
-              override fun pull(handle: HttpContentSink.Handle) {
-                handle.push(DefaultLastHttpContent(content))
-                handle.release(true)
-              }
-            },
-          )
         }
       }
-
 
       handlerScope.newSucceededFuture()
     }
@@ -182,14 +164,27 @@ import elide.runtime.intrinsics.server.http.v2.*
   override fun language(): GuestLanguage = GraalVMGuest.PYTHON
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
-    bindings["Flask".asPublicJsSymbol()] = this
-    bindings["request".asPublicJsSymbol()] = requestAccessor
+    bindings["__elide_flask".asPublicJsSymbol()] = this
   }
 
-  override fun symbolicName(): String = "Flask"
+  override fun symbolicName(): String = "flask"
 
   @Deprecated("Use symbolicName instead")
-  override fun displayName(): String = "Flask"
+  override fun displayName(): String = "flask"
+  override fun getMember(key: String?): Any? = when (key) {
+    "request" -> requestAccessor
+    "abort" -> ProxyExecutable { args ->
+      val code = args.firstOrNull()?.takeIf { it.isNumber }?.asInt()
+      if (code == null) logging.warn { "Invalid argument provided to `abort`: expected an int, got $code" }
+      throw FlaskHttpException(code ?: 500)
+    }
+
+    else -> null
+  }
+
+  override fun getMemberKeys(): Any = MODULE_MEMBER_KEYS
+  override fun hasMember(key: String?): Boolean = key in MODULE_MEMBER_KEYS
+  override fun putMember(key: String?, value: Value?): Unit = error("Modifying the Flask intrinsic is not allowed")
 
   private companion object {
     private val logging by lazy { Logging.of(FlaskHttpIntrinsic::class) }
@@ -197,11 +192,11 @@ import elide.runtime.intrinsics.server.http.v2.*
     private val INSTANCE_MEMBER_KEYS = arrayOf(
       "bind",
       "route",
-      "get",
-      "post",
-      "put",
-      "patch",
-      "delete",
+    )
+
+    private val MODULE_MEMBER_KEYS = arrayOf(
+      "request",
+      "abort",
     )
   }
 }

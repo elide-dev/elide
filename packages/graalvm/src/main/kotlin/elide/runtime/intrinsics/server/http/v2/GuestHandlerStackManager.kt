@@ -41,6 +41,10 @@ public abstract class GuestHandlerStackManager<S> {
   private inner class ThreadLocalStackAccessor : StackAccessor<S> {
     private val localStack: ThreadLocal<S> = ThreadLocal()
 
+    init {
+      localStack.set(newStack())
+    }
+
     override fun acquire(): S {
       localStack.get()?.let { return it }
 

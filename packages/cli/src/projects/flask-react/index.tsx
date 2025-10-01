@@ -1,6 +1,6 @@
 import { renderToString } from "react-dom/server";
 import React from "react";
-console.log(process.env);
+
 type SnippetKey = "bash" | "python" | "tsx";
 
 const BASH_SNIPPET = `$ elide app.py`;
@@ -153,11 +153,11 @@ function App(props: {
   );
 }
 
-export default async function render(props): Promise<string> {
+export default async function render({ get_user_agent }): Promise<string> {
   return renderToString(
     <App
       nowISO={new Date().toISOString()}
-      ua={props.user_agent ?? ""}
+      ua={get_user_agent() ?? ""}
       reqId={Date.now()}
       pid={process.pid}
     />,

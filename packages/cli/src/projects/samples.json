@@ -30,7 +30,14 @@
       "name": "flask",
       "description": "Python Flask server project, powered by Elide",
       "languages": ["Python"],
-      "files": ["README.md", "elide.pkl", "app.py"]
+      "hasTests": false,
+      "hasDependencies": false,
+      "files": ["README.md", "elide.pkl", "app.py"],
+      "features": {
+        "build": false,
+        "test": false,
+        "install": false
+      }
     },
     {
       "name": "web-static-worker",

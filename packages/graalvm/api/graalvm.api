@@ -43,6 +43,7 @@ public final class elide/runtime/core/EntrypointRegistry {
 public final class elide/runtime/core/RuntimeLatch {
 	public fun <init> ()V
 	public final fun await ()V
+	public final fun onAwait (Lkotlin/jvm/functions/Function0;)V
 	public final fun release ()V
 	public final fun retain ()V
 }

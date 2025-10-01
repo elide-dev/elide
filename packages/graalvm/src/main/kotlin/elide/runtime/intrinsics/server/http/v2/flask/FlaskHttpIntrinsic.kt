@@ -28,14 +28,12 @@ import elide.runtime.core.EntrypointRegistry
 import elide.runtime.core.RuntimeLatch
 import elide.runtime.core.SharedContextFactory
 import elide.runtime.gvm.GraalVMGuest
-import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.internals.serialization.GuestValueSerializer
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
-import elide.runtime.gvm.GuestLanguage as GVMGuestLanguage
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.server.http.v2.*
 import elide.runtime.plugins.python.flask.FlaskAPI
+import elide.runtime.gvm.GuestLanguage as GVMGuestLanguage
 
 private const val ROUTE_METHOD = "route"
 private const val BIND_METHOD = "bind"
@@ -192,6 +190,42 @@ private const val BIND_METHOD = "bind"
       stackManager.withStack { it.urlFor(endpoint, variables) }
     }
 
+    "make_response" -> ProxyExecutable { args ->
+      val response: FlaskResponseObject = when (args.size) {
+        0 -> FlaskResponseObject()
+        1 -> FlaskResponseObject(args.first())
+        2 -> when {
+          args[1].isNumber && args[1].fitsInInt() -> FlaskResponseObject(
+            content = args.first(),
+            status = HttpResponseStatus.valueOf(args[1].asInt()),
+          )
+
+          args[1].hasHashEntries() -> FlaskResponseObject(
+            args.first(),
+            headers = mutableMapOf<String, String>().apply {
+              val entries = args[1].hashEntriesIterator
+              while (entries.hasIteratorNextElement()) entries.iteratorNextElement.let {
+                put(it.getArrayElement(0).asString(), it.getArrayElement(1).asString())
+              }
+            },
+          )
+
+          else -> error("Invalid arguments provided to `make_response`: ${args[1]} is not a valid status or headers")
+        }
+
+        3 -> FlaskResponseObject(args[0], status = HttpResponseStatus.valueOf(args[1].asInt())).apply {
+          val entries = args[2].hashEntriesIterator
+          while (entries.hasIteratorNextElement()) entries.iteratorNextElement.let {
+            headers.put(it.getArrayElement(0).asString(), it.getArrayElement(1).asString())
+          }
+        }
+
+        else -> error("Invalid arguments provided to `make_response`: expected 0 or 1 argument, got ${args.size}")
+      }
+
+      response
+    }
+
     else -> null
   }
 
@@ -330,9 +364,20 @@ private const val BIND_METHOD = "bind"
         httpContext.responseBody.source(DefaultLastHttpContent(content))
       }
 
+      returnValue.isProxyObject -> {
+        // assume it is a Flask response object
+        val response = runCatching { returnValue.asProxyObject<FlaskResponseObject>() }
+          .getOrNull()
+          ?: error("Invalid Flask response object provided: $returnValue")
+
+        httpContext.response.status = response.status
+        response.headers.forEach { (name, value) -> httpContext.response.headers().add(name, value) }
+        applyHandlerResponse(response.content, httpContext, overrideStatus = false)
+      }
+
       else -> {
         // use defaults
-        httpContext.response.status = HttpResponseStatus.OK
+        if (overrideStatus) httpContext.response.status = HttpResponseStatus.OK
         httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
       }
     }
@@ -351,6 +396,7 @@ private const val BIND_METHOD = "bind"
       "request",
       "abort",
       "url_for",
+      "make_response",
     )
   }
 }

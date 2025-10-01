@@ -12,6 +12,7 @@
 request = None
 abort = None
 url_for = None
+make_response = None
 
 def _private_symbol_name(name):
     return "__Elide_%s__" % name
@@ -24,8 +25,15 @@ def __init__interop():
   POLYGLOT_MODULE = "polyglot"
   POLYGLOT_DECORATOR = "poly"
   BIND_DECORATOR = "bind"
-  FLASK_GLOBAL = "Flask"
+
   FLASK_ENTRY = "FlaskIntrinsic"
+  FLASK_GLOBAL = "Flask"
+  FLASK_ABORT = "abort"
+  FLASK_REQUEST = "request"
+  FLASK_URL_FOR = "url_for"
+  FLASK_MAKE_RESPONSE = "make_response"
+  FLASK_REDIRECT = "redirect"
+
   MODULE_NAME = "elide"
 
   registered_py_symbols = {}
@@ -49,17 +57,20 @@ def __init__interop():
   def polyglot_decorator(name = None):
     return bind_factory(name)
 
+  def flask_binding():
+    return polyglot.import_value(_private_symbol_name(FLASK_ENTRY))
+
+  def redirect(target):
+    response = flask_binding().make_response()
+    response.status = 302
+    response.headers["Location"] = target
+    return response
+
+  def url_for(endpoint, **variables):
+    return flask_binding().url_for(endpoint, variables)
+
   def flask_factory(name):
-    elide_flask = polyglot.import_value(_private_symbol_name(FLASK_ENTRY))
-
-    global request, abort, url_for
-    request = elide_flask.request
-    abort = elide_flask.abort
-
-    def url_for_flask(endpoint, **variables):
-      return elide_flask.url_for(endpoint, variables)
-    url_for = url_for_flask
-
+    elide_flask = flask_binding()
     _flask_class = elide_flask
 
     class FlaskBridge:
@@ -133,6 +144,16 @@ def __init__interop():
         return polyglot_decorator
       if name == FLASK_GLOBAL:
         return flask_factory
+      if name == FLASK_ABORT:
+        return flask_binding().request.abort
+      if name == FLASK_REQUEST:
+        return flask_binding().request
+      if name == FLASK_URL_FOR:
+        return url_for
+      if name == FLASK_MAKE_RESPONSE:
+        return flask_binding().make_response
+      if name == FLASK_REDIRECT:
+        return redirect
       raise AttributeError(f"module '{MODULE_NAME}' has no attribute '{name}'")
 
     def __dir__(self):

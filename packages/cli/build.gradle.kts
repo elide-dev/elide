@@ -124,7 +124,7 @@ val enableAllLocales = false
 val enableLocaleSupport = false
 val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
-val enableNativeTransportV2 = false
+val enableNativeTransportV2 = true
 val enableSqliteStatic = true
 val enableStatic = findProperty("elide.static") == "true"
 val enableStaticJni = true
@@ -1750,6 +1750,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
   "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
   "-H:NativeLinkerOption=$nativesPath/libweb.a",
+  onlyIf(enableNativeTransportV2, "-H:NativeLinkerOption=$nativesPath/libtransport.a"),
   "-H:NativeLinkerOption=-lm",
   "-H:NativeLinkerOption=-lstdc++",
 ).plus(if (oracleGvm) listOf(
@@ -1788,6 +1789,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=$nativesPath/libterminal.a",
     "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
     "-H:NativeLinkerOption=$nativesPath/libweb.a",
+    onlyIf(enableNativeTransportV2, "-H:NativeLinkerOption=$nativesPath/libtransport.a"),
     "-H:NativeLinkerOption=-lm",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",
@@ -1797,13 +1799,11 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:ExcludeResources=META-INF/native/libnetty_transport_native_epoll_x86_64.so",
     "-H:ExcludeResources=META-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
-    "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventArray",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueue",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueIoHandler",
     "--initialize-at-run-time=io.netty.channel.kqueue.AbstractKQueueChannel",
-    onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
   ).plus(
     listOfNotNull(
       onlyIf(enableStatic, "--libc=musl"),

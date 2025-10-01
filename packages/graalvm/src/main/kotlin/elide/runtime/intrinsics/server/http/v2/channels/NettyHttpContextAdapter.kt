@@ -99,6 +99,11 @@ internal class NettyHttpContextAdapter(
     super.write(ctx, msg, promise)
   }
 
+  override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable?) {
+    logging.error("Unhandled exception in HTTP context", cause)
+    closeCurrent(ctx)
+  }
+
   /** Handle a new incoming [request], closing the current one if active and initializing a new context. */
   private fun handleIncoming(channelContext: ChannelHandlerContext, request: HttpRequest) {
     closeCurrent(channelContext)

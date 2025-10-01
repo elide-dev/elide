@@ -68,8 +68,7 @@ def __init__interop():
 
       def route(self, rule: str, **options):
         def handler_wrapper(handler):
-          methods = options["methods"] if options["methods"] is not None else ["GET"]
-
+          methods = options.get("methods", ["GET"])
           if hasattr(handler, "_elide_flask_handler"):
             # already wrapped, just register it
             self.bridge.route(handler.__name__, rule, methods, handler)

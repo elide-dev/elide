@@ -1,0 +1,15 @@
+amends "elide:project.pkl"
+
+name = "flask-react"
+
+dependencies {
+  pip {
+    packages { "flask" }
+  }
+  npm {
+    packages {
+        "react@18.3.1"
+        "react-dom@18.3.1"
+    }
+  }
+}

@@ -12,11 +12,17 @@
  */
 package elide.runtime.core
 
+import java.util.*
 import java.util.concurrent.Phaser
 import elide.annotations.Singleton
 
 @Singleton public class RuntimeLatch {
   private val latch = Phaser()
+  private val awaitListeners = Collections.synchronizedList(mutableListOf<() -> Unit>())
+
+  public fun onAwait(block: () -> Unit) {
+    awaitListeners.add(block)
+  }
 
   public fun retain() {
     latch.register()
@@ -27,6 +33,8 @@ import elide.annotations.Singleton
   }
 
   public fun await() {
+    awaitListeners.forEach { it.invoke() }
+
     if (latch.unarrivedParties == 0) return
     latch.awaitAdvance(latch.phase)
   }

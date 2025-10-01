@@ -43,10 +43,15 @@ private const val BIND_METHOD = "bind"
   entrypointProvider: Provider<EntrypointRegistry>,
   contextProvider: Provider<SharedContextFactory>,
 ) : AbstractHttpIntrinsic(), ProxyExecutable, ProxyObject, GuestIntrinsic, FlaskAPI {
-  override val runtimeLatch: RuntimeLatch get() = runtimeLatchProvider.get()
+  override val runtimeLatch: RuntimeLatch by lazy { runtimeLatchProvider.get() }
   private val requestAccessor = FlaskRequestAccessor()
 
   public inner class FlaskAppInstance(@Suppress("unused") private val root: String) : ProxyObject {
+    init {
+      // automatically bind when the runtime is ready to wait for long tasks
+      runtimeLatch.onAwait { bind(3000) }
+    }
+
     override fun getMember(key: String?): Any? = when (key) {
       ROUTE_METHOD -> ProxyExecutable { args /* (name, rule, methods, handler) */ ->
         val endpoint = args.getOrNull(0)?.takeIf { it.isString }

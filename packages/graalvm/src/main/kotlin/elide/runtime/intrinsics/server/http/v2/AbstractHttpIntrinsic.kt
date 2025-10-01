@@ -90,7 +90,7 @@ public abstract class AbstractHttpIntrinsic : AutoCloseable {
       val address = InetSocketAddress(port)
       serverChannel = bind(address).sync().channel()
 
-      logging.debug { "Server listening at $address" }
+      logging.info { "Server listening at $address" }
       runtimeLatch.retain()
     }
   }

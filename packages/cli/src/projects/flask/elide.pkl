@@ -3,15 +3,7 @@ amends "elide:project.pkl"
 name = "flask"
 
 dependencies {
-  npm {
-    packages {
-      "react@18"
-    }
-  }
   pip {
-    packages {
-      new { name = "flask" }
-    }
+    packages { "flask" }
   }
 }
-

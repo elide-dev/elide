@@ -5306,7 +5306,10 @@
       ]
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$PipPackage"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$PipPackage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PklSettings"

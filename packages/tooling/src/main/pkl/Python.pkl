@@ -10,13 +10,15 @@ class PipPackageSpec {
   name: String
 }
 
+typealias PipPackageSpecOrString = PipPackageSpec | String
+
 /// Configuration for Python dependency resolution using Pip.
 class PipDependencies {
   /// A list of Pip packages to be resolved for this project.
-  packages: Listing<PipPackageSpec> = new {}
+  packages: Listing<PipPackageSpecOrString> = new {}
 
   /// A list of optional Pip packages to be resolved by consumers of this project
-  optionalPackages: Mapping<String, Listing<PipPackageSpec>> = new {}
+  optionalPackages: Mapping<String, Listing<PipPackageSpecOrString>> = new {}
 
   /// Foreign manifest(s) to import (for example, requirements files).
   from: String | Listing<common.FilePath> = new Listing<common.FilePath> {}

@@ -21,6 +21,7 @@ import kotlin.jvm.Throws
 import elide.core.api.Symbolic
 import elide.tooling.project.ElideProject
 import elide.tooling.deps.DependencyEcosystem.*
+import elide.tooling.project.manifest.ElidePackageManifest
 
 /**
  * # Package Spec
@@ -687,6 +688,11 @@ import elide.tooling.deps.DependencyEcosystem.*
     version: Version,
     string: String,
   ) : SpecializedPackageSpec(PyPI, version, string) {
+    internal fun asPipPackage(): ElidePackageManifest.PipPackage = ElidePackageManifest.PipPackage(
+      name = module,
+      version = version.formatted,
+    )
+
     // Parser for Maven package specs.
     public companion object: SpecializedPackageSpecParser<PipPackageSpec>() {
       // Parse pip-style versions.

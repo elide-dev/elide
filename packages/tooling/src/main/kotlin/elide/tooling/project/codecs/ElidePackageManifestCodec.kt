@@ -142,7 +142,7 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
       ).addConversion(
         // convert string pip deps
         Conversion.of(PClassInfo.String, PipPackage::class.java, StrConverter {
-          PackageSpec.PipPackageSpec.parse(it)
+          PackageSpec.PipPackageSpec.parse(it).asPipPackage()
         })
       ).addConversion(
         // convert int jvm target specs to jvm target

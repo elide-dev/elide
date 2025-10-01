@@ -25,7 +25,7 @@ ENABLE_SCCACHE ?= yes
 ELIDE_ROOT ?= $(realpath $(shell pwd)/..)
 MACOS_MIN_VERSION ?= 12.3
 
-NATIVE_TOOLS ?= sqlite apr
+NATIVE_TOOLS ?= boringssl sqlite apr
 LANGS ?= pkl
 
 ifeq ($(RELEASE),yes)
@@ -199,7 +199,7 @@ apr: apache/apr/.libs
 
 CFLAGS_APR ?=
 CFLAGS_APR +=$(CFLAGS_BASE) -w
-LDFLAGS_APR ?=-L$(ELIDE_ROOT)/third_party/google/boringssl/build  -lssl -lcrypto
+LDFLAGS_APR ?=-L$(ELIDE_ROOT)/third_party/google/boringssl/build -lssl -lcrypto
 LDFLAGS_APR +=$(LDFLAGS_BASE)
 
 # APR does not link with LLD.

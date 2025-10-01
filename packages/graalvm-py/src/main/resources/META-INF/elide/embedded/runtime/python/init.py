@@ -33,6 +33,7 @@ def __init__interop():
   FLASK_URL_FOR = "url_for"
   FLASK_MAKE_RESPONSE = "make_response"
   FLASK_REDIRECT = "redirect"
+  FLASK_REACT = "react"
 
   MODULE_NAME = "elide"
 
@@ -59,6 +60,15 @@ def __init__interop():
 
   def flask_binding():
     return polyglot.import_value(_private_symbol_name(FLASK_ENTRY))
+
+  def react(source_path: str):
+    flask = flask_binding()
+    entrypoint = flask.react_template(source_path)
+
+    def render(**params):
+      return entrypoint(params)
+
+    return render
 
   def redirect(target):
     response = flask_binding().make_response()
@@ -154,6 +164,8 @@ def __init__interop():
         return flask_binding().make_response
       if name == FLASK_REDIRECT:
         return redirect
+      if name == FLASK_REACT:
+        return react
       raise AttributeError(f"module '{MODULE_NAME}' has no attribute '{name}'")
 
     def __dir__(self):

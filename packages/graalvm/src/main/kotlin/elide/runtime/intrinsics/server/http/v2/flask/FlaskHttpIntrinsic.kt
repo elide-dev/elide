@@ -181,6 +181,16 @@ private const val BIND_METHOD = "bind"
   @Deprecated("Use symbolicName instead")
   override fun displayName(): String = FlaskAPI.FLASK_INTRINSIC
   override fun getMember(key: String?): Any? = when (key) {
+    "react_template" -> ProxyExecutable { args ->
+      val relativePath = args.firstOrNull()?.takeIf { it.isString }?.asString()
+        ?: error("Expected a string argument for `react`")
+
+      val scriptPath = applicationRoot?.resolve(relativePath)
+        ?: error("No location info available for the current application")
+
+      FlaskReactTemplate(scriptPath)
+    }
+
     "request" -> requestAccessor
     "abort" -> ProxyExecutable { args ->
       val code = args.firstOrNull()?.takeIf { it.isNumber }?.asInt()
@@ -379,6 +389,17 @@ private const val BIND_METHOD = "bind"
         httpContext.responseBody.source(DefaultLastHttpContent(content))
       }
 
+      returnValue.isHostObject -> {
+        // it could be a content producer
+        val producer = runCatching { returnValue.asHostObject<HttpContentSink.Producer>() }
+          .getOrNull()
+          ?: error("Invalid Flask response object provided: $returnValue")
+
+        if (overrideStatus) httpContext.response.status = HttpResponseStatus.OK
+        httpContext.response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, "chunked")
+        httpContext.responseBody.source(producer)
+      }
+
       returnValue.isProxyObject -> {
         // assume it is a Flask response object
         val response = runCatching { returnValue.asProxyObject<FlaskResponseObject>() }
@@ -412,6 +433,7 @@ private const val BIND_METHOD = "bind"
       "abort",
       "url_for",
       "make_response",
+      "react_template",
     )
   }
 }

@@ -25,15 +25,18 @@ import org.graalvm.buildtools.gradle.tasks.GenerateResourcesConfigFile
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
-import org.gradle.kotlin.dsl.provideDelegate
+import org.gradle.api.tasks.AbstractCopyTask
+import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.Delete
+import org.gradle.api.tasks.Exec
+import org.gradle.api.tasks.JavaExec
+import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_23
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.TreeSet
-import kotlin.collections.listOf
-import kotlin.text.split
+import java.util.*
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.toolchain.host.Criteria
 import elide.toolchain.host.TargetCriteria
@@ -313,6 +316,7 @@ val jvmRuntimeArgs = listOf(
 
 val nativeEnabledModules = listOf(
   "org.graalvm.truffle",
+  "io.netty.common",
   "ALL-UNNAMED",
 )
 
@@ -492,6 +496,7 @@ dependencies {
   svmModulePath(patchedLibs)
   svmModulePath(libs.graalvm.svm)
   svmModulePath(libs.graalvm.shadowed.json)
+  svmModulePath(mn.netty.common)
   jvmOnly(patchedLibs)
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 
@@ -1319,7 +1324,7 @@ val commonNativeArgs = listOfNotNull(
   "--link-at-build-time=dev.elide",
   "--link-at-build-time=org.pkl",
   "--link-at-build-time=picocli",
-  "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
+  "--enable-native-access=org.graalvm.truffle,io.netty.common,ALL-UNNAMED",
   onlyIf(nativeMonitoring.isNotEmpty(), "--enable-monitoring=${nativeMonitoring}"),
   "-J--add-exports=jdk.jfr/jdk.jfr.internal=org.graalvm.nativeimage.driver,org.graalvm.nativeimage.builder",
   "-J--add-exports=jdk.jfr/jdk.jfr.internal=ALL-UNNAMED",
@@ -1335,6 +1340,8 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
   "-J--add-exports=jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-opens=io.netty.common/io.netty.util=org.graalvm.nativeimage.builder",
+  "--add-opens=io.netty.common/io.netty.util.internal.svm=org.graalvm.nativeimage.builder",
   "-H:+PreserveFramePointer",
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
@@ -1618,6 +1625,7 @@ val supportedLocales = listOf(
 )
 
 val jvmDefs = mutableMapOf(
+  "sun.misc.unsafe.memory.access" to "allow",
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
   "elide.root" to rootPath,
@@ -1640,6 +1648,7 @@ val jvmDefs = mutableMapOf(
   "jdk.image.use.jvm.map" to "false",
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
+  "io.netty.noUnsafe" to "false",
   "io.netty.allocator.type" to "adaptive",
   "io.netty.native.deleteLibAfterLoading" to "false",
   "io.netty.native.detectNativeLibraryDuplicates" to "false",

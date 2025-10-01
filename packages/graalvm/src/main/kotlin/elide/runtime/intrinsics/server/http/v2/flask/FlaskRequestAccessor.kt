@@ -12,15 +12,28 @@
  */
 package elide.runtime.intrinsics.server.http.v2.flask
 
+import io.netty.handler.codec.http.HttpHeaders
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.intrinsics.server.http.v2.HttpContext
 
 internal class FlaskRequestAccessor : ProxyObject {
+  @JvmInline private value class HeaderMapProxy(val headers: HttpHeaders) : ProxyHashMap {
+    override fun getHashSize(): Long = headers.size().toLong()
+    override fun hasHashEntry(key: Value?): Boolean = headers.contains(key?.asString())
+    override fun getHashValue(key: Value?): Any? = headers.get(key?.asString())
+
+    override fun putHashEntry(key: Value?, value: Value?): Unit =
+      error("Modifying the request's headers is not allowed")
+
+    override fun getHashEntriesIterator(): Any? = headers.entries()
+  }
+
   private val localContext = ThreadLocal<FlaskHttpContext>()
 
   internal fun push(context: HttpContext) {
-    localContext.set(context  as FlaskHttpContext)
+    localContext.set(context as FlaskHttpContext)
   }
 
   internal fun pop() {
@@ -38,6 +51,8 @@ internal class FlaskRequestAccessor : ProxyObject {
       queryParams
     }
 
+    "headers" -> withContext { HeaderMapProxy(request.headers()) }
+
     "path" -> withContext { request.uri() }
     else -> null
   }
@@ -49,6 +64,6 @@ internal class FlaskRequestAccessor : ProxyObject {
   }
 
   private companion object {
-    private val MEMBER_KEYS = arrayOf("method", "path", "args")
+    private val MEMBER_KEYS = arrayOf("method", "path", "args", "headers")
   }
 }

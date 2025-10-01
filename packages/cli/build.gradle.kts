@@ -177,7 +177,7 @@ val jniDebug = false
 val libcTarget = (findProperty("elide.targetLibc") as? String) ?: (if (enableStatic) "musl" else "glibc")
 val dumpPointsTo = false
 val elideTarget = TargetInfo.current(project)
-val fallbackGc = findProperty("elide.gc") ?: "serial"
+val effectiveGc = findProperty("elide.gc") ?: "serial"
 val defaultArchTarget = when {
   TargetCriteria.allOf(elideTarget, Criteria.Amd64) -> "x86-64-v3"
   TargetCriteria.allOf(elideTarget, Criteria.MacArm64) -> "armv8.1-a"
@@ -1721,7 +1721,7 @@ val pklArgs: List<String> = listOf(
 val defaultPlatformArgs: List<String> = listOf()
 
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "--gc=$fallbackGc",
+  "--gc=$effectiveGc",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
@@ -1734,8 +1734,8 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:-AuxiliaryEngineCache",
 ) else emptyList())
 
-val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "--gc=$fallbackGc",
+val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
+  "--gc=$effectiveGc",
   "-R:MaximumHeapSizePercent=80",
   "--initialize-at-build-time=sun.awt.resources.awtosx",
   "-H:NativeLinkerOption=-flto",
@@ -1826,9 +1826,9 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:-AuxiliaryEngineCache",
     "-Delide.vm.engine.preinitialize=false",
   ) else listOfNotNull(
-    "--gc=$fallbackGc",
+    "--gc=$effectiveGc",
     "-R:MaximumHeapSizePercent=80",
-    onlyIf(fallbackGc == "serial", "-H:InitialCollectionPolicy=Adaptive"),
+    onlyIf(effectiveGc == "serial", "-H:InitialCollectionPolicy=Adaptive"),
   ).plus(if (oracleGvm && enableAuxCache && !enableG1) listOf(
     "-H:+AuxiliaryEngineCache",
     "-Delide.vm.engine.preinitialize=true",

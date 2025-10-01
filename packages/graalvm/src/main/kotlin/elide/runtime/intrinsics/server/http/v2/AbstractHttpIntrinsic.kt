@@ -58,13 +58,13 @@ public abstract class AbstractHttpIntrinsic : AutoCloseable {
    * Bind to the given [port] and begin accepting requests. Calling this method multiple times or from a non-owner
    * thread has no effect.
    */
-  internal fun bind(port: Int, transport: NettyTransport<*> = NettyTransport.resolve()) {
+  internal fun bind(port: Int, transport: NettyTransport<*> = NettyTransport.resolve()): Boolean {
     logging.debug("Starting server")
 
     // allow this call only once
     if (!serverRunning.compareAndSet(false, true)) {
       logging.debug("Server already running, ignoring bind call")
-      return
+      return false
     }
 
     // acquire platform-specific Netty components
@@ -93,6 +93,8 @@ public abstract class AbstractHttpIntrinsic : AutoCloseable {
       logging.info { "Server listening at $address" }
       runtimeLatch.retain()
     }
+
+    return true
   }
 
   override fun close() {

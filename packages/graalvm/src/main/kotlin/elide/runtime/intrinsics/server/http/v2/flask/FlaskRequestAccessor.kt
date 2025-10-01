@@ -17,10 +17,10 @@ import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.intrinsics.server.http.v2.HttpContext
 
 internal class FlaskRequestAccessor : ProxyObject {
-  private val localContext = ThreadLocal<HttpContext>()
+  private val localContext = ThreadLocal<FlaskHttpContext>()
 
   internal fun push(context: HttpContext) {
-    localContext.set(context)
+    localContext.set(context  as FlaskHttpContext)
   }
 
   internal fun pop() {
@@ -29,7 +29,7 @@ internal class FlaskRequestAccessor : ProxyObject {
 
   private inline fun <R> withContext(block: FlaskHttpContext.() -> R): R {
     val context = checkNotNull(localContext.get()) { "No active request context" }
-    return block(context as FlaskHttpContext)
+    return block(context)
   }
 
   override fun getMember(key: String?): Any? = when (key) {

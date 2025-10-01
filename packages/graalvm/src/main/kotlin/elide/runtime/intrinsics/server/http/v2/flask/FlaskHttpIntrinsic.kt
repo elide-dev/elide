@@ -22,6 +22,7 @@ import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
 import jakarta.inject.Provider
 import kotlinx.serialization.json.Json
+import kotlin.io.path.Path
 import elide.annotations.Singleton
 import elide.runtime.Logging
 import elide.runtime.core.EntrypointRegistry
@@ -32,6 +33,7 @@ import elide.runtime.gvm.internals.serialization.GuestValueSerializer
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.server.http.v2.*
+import elide.runtime.intrinsics.server.http.v2.flask.FlaskStaticAssetsRouter.serveStaticAsset
 import elide.runtime.plugins.python.flask.FlaskAPI
 import elide.runtime.gvm.GuestLanguage as GVMGuestLanguage
 
@@ -44,9 +46,11 @@ private const val BIND_METHOD = "bind"
   contextProvider: Provider<SharedContextFactory>,
 ) : AbstractHttpIntrinsic(), ProxyExecutable, ProxyObject, GuestIntrinsic, FlaskAPI {
   override val runtimeLatch: RuntimeLatch by lazy { runtimeLatchProvider.get() }
+  private val applicationRoot by lazy { entrypointProvider.get()?.acquire()?.path?.let { Path(it) }?.parent }
+
   private val requestAccessor = FlaskRequestAccessor()
 
-  public inner class FlaskAppInstance(@Suppress("unused") private val root: String) : ProxyObject {
+  public inner class FlaskAppInstance(internal val name: String) : ProxyObject {
     init {
       // automatically bind when the runtime is ready to wait for long tasks
       runtimeLatch.onAwait { bind(3000) }
@@ -97,6 +101,12 @@ private const val BIND_METHOD = "bind"
   }
 
   override fun acquireHandler(): HttpContextHandler = HttpContextHandler { httpContext, handlerScope ->
+    // early for static asset requests
+    applicationRoot?.let { root ->
+      if (serveStaticAsset(root, httpContext as FlaskHttpContext))
+        return@HttpContextHandler handlerScope.newSucceededFuture()
+    }
+
     // resolve thread-local or shared routing stack
     stackManager.withStack { stack ->
       // map context to arguments expected by guest code here

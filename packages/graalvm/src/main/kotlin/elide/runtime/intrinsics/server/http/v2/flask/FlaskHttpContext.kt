@@ -14,21 +14,18 @@ package elide.runtime.intrinsics.server.http.v2.flask
 
 import io.netty.handler.codec.http.HttpRequest
 import io.netty.handler.codec.http.HttpResponse
-import io.netty.handler.codec.http.HttpResponseStatus
 import io.netty.handler.codec.http.QueryStringDecoder
-import elide.runtime.gvm.internals.intrinsics.js.struct.map.JsMultiMap
 import elide.runtime.intrinsics.server.http.v2.HttpContentSink
 import elide.runtime.intrinsics.server.http.v2.HttpContentSource
 import elide.runtime.intrinsics.server.http.v2.HttpContext
 import elide.runtime.intrinsics.server.http.v2.HttpSession
-import elide.vm.annotations.Polyglot
 
 public class FlaskHttpContext(
   override val request: HttpRequest,
   override val requestBody: HttpContentSource,
   override val response: HttpResponse,
   override val responseBody: HttpContentSink,
-  override val session: HttpSession
+  override val session: HttpSession,
 ) : HttpContext {
   internal val queryParams: Map<String, String?> by lazy {
     // TODO(@darvld): replace with a proper multi-map

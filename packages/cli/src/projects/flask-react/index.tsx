@@ -153,11 +153,11 @@ function App(props: {
   );
 }
 
-export default async function render({ get_user_agent }): Promise<string> {
+export default async function render({ user_agent }): Promise<string> {
   return renderToString(
     <App
       nowISO={new Date().toISOString()}
-      ua={get_user_agent() ?? ""}
+      ua={user_agent ?? ""}
       reqId={Date.now()}
       pid={process.pid}
     />,

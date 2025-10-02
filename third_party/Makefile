@@ -66,7 +66,7 @@ CMAKE_INSTALL = $(NINJA) install
 endif
 endif
 
-REQUIRED ?= sqlite
+REQUIRED ?= sqlite boringssl apr
 
 CCACHE ?= $(shell which ccache)
 SCCACHE ?= $(shell which sccache)

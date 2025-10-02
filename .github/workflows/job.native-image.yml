@@ -232,7 +232,7 @@ jobs:
             elide-v3-
       - name: "Setup: Packages"
         if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
-        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev
+        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev libtool
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0
         with:

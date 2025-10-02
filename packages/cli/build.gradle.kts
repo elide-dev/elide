@@ -98,7 +98,8 @@ val isDebug = !isRelease && (
 val hostIsLinux = HostManager.hostIsLinux
 val hostIsMac = HostManager.hostIsMac
 val hostIsWindows = HostManager.hostIsMingw
-val nativesType = if (!isRelease) "debug" else "release"
+val nativesType = "debug"
+//val nativesType = if (!isRelease) "debug" else "release"
 val archTripleToken = (findProperty("elide.arch") as? String)
   ?: if (System.getProperty("os.arch") == "aarch64") "aarch64" else "x86_64"
 val muslTarget = "$archTripleToken-unknown-linux-musl"
@@ -1556,7 +1557,7 @@ val releaseCFlags: List<String> = listOf(
   "-O$nativeOptMode",
   "-fPIC",
   "-fPIE",
-  "-flto",
+  //"-flto",
 ).plus(
   listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang && !HostManager.hostIsMac && !enableStatic)
 ).plus(

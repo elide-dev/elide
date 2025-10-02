@@ -102,7 +102,7 @@ internal class NettyHttpContextAdapter(
 
   override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable?) {
     if (cause !is SocketException) logging.error("Unhandled exception in HTTP context", cause)
-    else logging.error("Unhandled socket exception", cause)
+    else logging.debug("Unhandled socket exception", cause)
 
     closeCurrent(ctx)
   }

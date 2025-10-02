@@ -19,6 +19,7 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
 import io.netty.handler.codec.http.*
 import io.netty.util.ReferenceCountUtil
+import java.net.SocketException
 import elide.runtime.Logging
 import elide.runtime.intrinsics.server.http.v2.HttpContext
 import elide.runtime.intrinsics.server.http.v2.HttpContextFactory
@@ -100,7 +101,9 @@ internal class NettyHttpContextAdapter(
   }
 
   override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable?) {
-    logging.error("Unhandled exception in HTTP context", cause)
+    if (cause !is SocketException) logging.error("Unhandled exception in HTTP context", cause)
+    else logging.error("Unhandled socket exception", cause)
+
     closeCurrent(ctx)
   }
 

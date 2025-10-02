@@ -166,6 +166,8 @@ def __init__interop():
         return redirect
       if name == FLASK_REACT:
         return react
+      if name == "wsgi":
+        return flask_binding().wsgi
       raise AttributeError(f"module '{MODULE_NAME}' has no attribute '{name}'")
 
     def __dir__(self):

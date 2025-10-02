@@ -19,6 +19,8 @@ import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.python.embedding.GraalPythonFilesystem
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
@@ -86,6 +88,9 @@ private const val ENABLE_PYTHON_VFS = false
   }
 
   private fun renderPythonPath(): String = sequence {
+    System.getenv("VIRTUAL_ENV")?.let {
+      yield(Path(it).resolve(SITE_PACKAGES_PATH).absolutePathString())
+    }
     yieldAll(config.additionalPythonPaths)
   }.joinToString(":")
 
@@ -149,6 +154,7 @@ private const val ENABLE_PYTHON_VFS = false
     private const val ENABLE_EXPERIMENTAL = true
     private const val ENABLE_PANAMA = true
     private const val GPY_LIST_SEPARATOR = "🏆"
+    private const val SITE_PACKAGES_PATH = "lib/python3.10/site-packages"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 

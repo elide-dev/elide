@@ -1,0 +1,11 @@
+amends "elide:project.pkl"
+
+name = "wsgi-flask"
+
+scripts {}
+
+dependencies {
+    pip {
+        packages { "flask" }
+    }
+}

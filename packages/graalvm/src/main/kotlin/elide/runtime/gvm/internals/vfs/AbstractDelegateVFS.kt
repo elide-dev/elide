@@ -29,6 +29,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.io.path.exists
+import kotlin.io.path.notExists
 import elide.runtime.LogLevel
 import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.runtime.vfs.GuestVFS
@@ -101,6 +103,13 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
 
   // Whether to suppress file-not-found exceptions.
   private val suppressNotFound: AtomicBoolean = AtomicBoolean(false)
+
+  private val defaultTempDirectory by lazy {
+    // FIXME(@darvld): copy implementation to use the backing FS instead of the default!
+    backing.getPath("./.temp").also {
+      if(it.notExists()) backing.provider().createDirectory(it)
+    }
+  }
 
   // Debug log messages for the current VFS implementation.
   protected fun debugLog(message: () -> String) {
@@ -331,7 +340,7 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
 
   override fun getTempDirectory(): Path {
     debugLog { "Fetching temp directory path" }
-    TODO("not yet implemented")
+    return defaultTempDirectory
   }
 
   override fun isSameFile(path1: Path, path2: Path, vararg options: LinkOption): Boolean {
@@ -370,6 +379,9 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
       }
       AccessResponse.deny("Filesystem is in read-only mode")
     } else {
+      if (request.path.notExists())
+        throw NoSuchFileException(request.path.toString())
+
       debugLog {
         "Delegating policy check to attached policy"
       }

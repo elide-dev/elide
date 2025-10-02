@@ -56,6 +56,10 @@ internal class HybridVfs private constructor(
   override fun allowsHostFileAccess(): Boolean = true
   override fun allowsHostSocketAccess(): Boolean = false
 
+  override fun getTempDirectory(): Path? {
+    return backing.tempDirectory
+  }
+
   override fun parsePath(uri: URI?): Path {
     return backing.parsePath(uri)
   }

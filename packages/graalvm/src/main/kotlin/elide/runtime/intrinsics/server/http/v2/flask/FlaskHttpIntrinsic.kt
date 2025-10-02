@@ -268,6 +268,31 @@ private const val BIND_METHOD = "bind"
       response
     }
 
+    "wsgi" -> ProxyExecutable { args ->
+      val app = args.first()
+
+      val environ = mapOf(
+        "REQUEST_METHOD" to "GET",
+        "SCRIPT_NAME" to "",
+        "PATH_INFO" to "/",
+        "SERVER_NAME" to "localhost",
+        "SERVER_PORT" to "3000",
+        "SERVER_PROTOCOL" to "HTTP/1.1",
+        "HTTP_ACCEPT" to "*/*",
+        "wsgi.version" to listOf(1, 0),
+        "wsgi.url_scheme" to "http",
+        "wsgi.multithread" to false,
+        "wsgi.multiprocess" to false,
+        "wsgi.run_once" to true,
+      )
+
+      val startResponse = ProxyExecutable {
+        logging.warn("Start response with ${it.joinToString()}")
+      }
+
+      app.execute(environ, startResponse)
+    }
+
     else -> null
   }
 
@@ -451,6 +476,7 @@ private const val BIND_METHOD = "bind"
       "url_for",
       "make_response",
       "react_template",
+      "wsgi"
     )
   }
 }

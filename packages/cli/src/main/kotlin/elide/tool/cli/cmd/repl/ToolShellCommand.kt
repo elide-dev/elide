@@ -1149,23 +1149,21 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         "${language.label} syntax is incomplete",
       )
 
-      exc.isHostException || exc.message?.contains("HostException: ") == true -> {
-        when (exc.asHostException()) {
-          // guest error thrown from host-side logic
-          is GuestError -> displayFormattedError(
-            exc,
-            msg ?: exc.message ?: "An error was thrown",
-            stacktrace = !isInteractive(),
-          )
+      exc.isHostException -> when (val hostExc = exc.asHostException()) {
+        // guest error thrown from host-side logic
+        is GuestError -> displayFormattedError(
+          exc,
+          msg ?: exc.message ?: "An error was thrown",
+          stacktrace = !isInteractive(),
+        )
 
-          else -> displayFormattedError(
-            exc.asHostException(),
-            msg ?: exc.asHostException().message ?: "A runtime error was thrown",
-            advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
-            stacktrace = true,
-            internal = true,
-          )
-        }
+        else -> displayFormattedError(
+          hostExc,
+          msg ?: hostExc.message ?: "A runtime error was thrown",
+          advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
+          stacktrace = true,
+          internal = true,
+        )
       }
 
       // if this is a guest-side exception, throw it

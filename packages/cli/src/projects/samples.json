@@ -40,6 +40,18 @@
       }
     },
     {
+      "name": "flask-react",
+      "description": "Polyglot Elide app using Flask and React",
+      "languages": ["Python", "JavaScript", "TypeScript"],
+      "hasTests": false,
+      "files": ["README.md", "elide.pkl", "app.py", "index.tsx", "static/elide-logo.svg", "static/styles.css"],
+      "features": {
+        "build": false,
+        "test": false,
+        "install": true
+      }
+    },
+    {
       "name": "web-static-worker",
       "description": "Static website built with Elide and shipped with Cloudflare Workers",
       "languages": ["Markdown"],

@@ -19,6 +19,7 @@ CUSTOM_ZLIB ?= no
 NATIVE ?= no
 RELEASE ?= no
 MUSL ?= no
+TESTS ?= no
 USE_NINJA ?= yes
 ENABLE_CCACHE ?= no
 ENABLE_SCCACHE ?= yes
@@ -250,7 +251,9 @@ google/boringssl/build:
 		&& $(BORINGSSL_PREFIX) $(CMAKE_BUILD) \
 		&& echo "BoringSSL is ready."
 ifeq ($(MUSL),no)
+ifeq ($(TESTS),yes)
 	$(RULE)cd google/boringssl/build && ./ssl_test && echo "BoringSSL test complete."
+endif
 endif
 
 CFLAGS_ZLIB ?=

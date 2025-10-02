@@ -15,6 +15,8 @@ package elide.runtime.intrinsics.server.http.v2
 import org.graalvm.polyglot.Source
 import java.util.concurrent.locks.ReentrantLock
 import elide.runtime.core.EntrypointRegistry
+import elide.runtime.exec.ContextAwareExecutor
+import elide.runtime.exec.ContextAwareExecutor.ContextLocal
 
 /**
  * Manages thread-local or shared instances of handler stack types for HTTP intrinsics. Use [withStack] to access an
@@ -27,7 +29,7 @@ import elide.runtime.core.EntrypointRegistry
  * default to a shared stack instance guarded by a reentrant lock; otherwise, it will use thread-local stack instances
  * that are lazily initialized.
  */
-public abstract class GuestHandlerStackManager<S> {
+public abstract class GuestHandlerStackManager<S>(executor: ContextAwareExecutor) {
   private interface StackAccessor<S> {
     fun acquire(): S
     fun release(held: S)
@@ -37,14 +39,17 @@ public abstract class GuestHandlerStackManager<S> {
    * Uses per-thread stack instances via [ThreadLocal]. New instances are configured with [initializeStack] lazily on
    * [acquire].
    */
-  private inner class ThreadLocalStackAccessor : StackAccessor<S> {
-    private val localStack: ThreadLocal<S> = ThreadLocal()
-
-    init {
-      localStack.set(newStack())
-    }
+  private inner class ContextAwareStackAccessor(executor: ContextAwareExecutor) : StackAccessor<S> {
+    private val localStack: ContextLocal<S> = executor.ContextLocal()
+    private val sharedStack by lazy { newStack() }
+    private val sharedLock = ReentrantLock()
 
     override fun acquire(): S {
+      if (!localStack.bound) {
+        sharedLock.lock()
+        return sharedStack
+      }
+
       localStack.get()?.let { return it }
 
       val stack = newStack()
@@ -55,7 +60,7 @@ public abstract class GuestHandlerStackManager<S> {
     }
 
     override fun release(held: S) {
-      // noop
+      if (!localStack.bound && held === sharedStack) sharedLock.unlock()
     }
   }
 
@@ -79,7 +84,7 @@ public abstract class GuestHandlerStackManager<S> {
 
   /** Lazy accessor implementation, allows late registration of the entrypoint. */
   private val accessor by lazy {
-    if (entrypointProvider.available) ThreadLocalStackAccessor() else SharedStackAccessor()
+    if (entrypointProvider.available) ContextAwareStackAccessor(executor) else SharedStackAccessor()
   }
 
   /** Entrypoint provider used to resolve the source handed to [initializeStack] in thread-local mode. */

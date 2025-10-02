@@ -20,6 +20,7 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyObject
+import java.util.concurrent.Executors
 import jakarta.inject.Provider
 import kotlinx.serialization.json.Json
 import kotlin.io.path.Path
@@ -28,6 +29,7 @@ import elide.runtime.Logging
 import elide.runtime.core.EntrypointRegistry
 import elide.runtime.core.RuntimeLatch
 import elide.runtime.core.SharedContextFactory
+import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.internals.serialization.GuestValueSerializer
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -45,11 +47,6 @@ private const val BIND_METHOD = "bind"
   entrypointProvider: Provider<EntrypointRegistry>,
   contextProvider: Provider<SharedContextFactory>,
 ) : AbstractHttpIntrinsic(), ProxyExecutable, ProxyObject, GuestIntrinsic, FlaskAPI {
-  override val runtimeLatch: RuntimeLatch by lazy { runtimeLatchProvider.get() }
-  private val applicationRoot by lazy { entrypointProvider.get()?.acquire()?.path?.let { Path(it) }?.parent }
-
-  private val requestAccessor = FlaskRequestAccessor()
-
   public inner class FlaskAppInstance(internal val name: String) : ProxyObject {
     init {
       // automatically bind when the runtime is ready to wait for long tasks
@@ -87,27 +84,22 @@ private const val BIND_METHOD = "bind"
     override fun putMember(key: String?, value: Value?): Unit = error("Modifying the flask app object is not allowed")
   }
 
-  private val stackManager by lazy {
-    FlaskHandlerStackManager(entrypointProvider.get(), contextProvider.get())
-  }
+  override val runtimeLatch: RuntimeLatch by lazy { runtimeLatchProvider.get() }
 
-  @CompilerDirectives.TruffleBoundary
-  override fun execute(vararg arguments: Value?): FlaskAppInstance {
-    // accept the application root as an argument
-    val root = arguments.firstOrNull()?.takeIf { it.isString }?.asString()
-      ?: error("The application package name must be specified")
+  private val applicationRoot by lazy { entrypointProvider.get()?.acquire()?.path?.let { Path(it) }?.parent }
 
-    return FlaskAppInstance(root)
-  }
+  private val requestAccessor = FlaskRequestAccessor()
 
-  override fun acquireHandler(): HttpContextHandler = HttpContextHandler { httpContext, handlerScope ->
-    // early for static asset requests
-    applicationRoot?.let { root ->
-      if (serveStaticAsset(root, httpContext as FlaskHttpContext))
-        return@HttpContextHandler handlerScope.newSucceededFuture()
-    }
+  private val handlerExecutor = ContextAwareExecutor(
+    maxContextPoolSize = Runtime.getRuntime().availableProcessors(),
+    baseExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()),
+    contextFactory = { contextProvider.get().acquire()!! },
+  )
 
-    // resolve thread-local or shared routing stack
+  private val stackManager by lazy { FlaskHandlerStackManager(entrypointProvider.get(), handlerExecutor) }
+
+  // resolve thread-local or shared routing stack
+  private fun handleRouting(httpContext: FlaskHttpContext) {
     stackManager.withStack { stack ->
       // map context to arguments expected by guest code here
       when (val match = stack.match(httpContext.request)) {
@@ -141,7 +133,7 @@ private const val BIND_METHOD = "bind"
           try {
             @Suppress("UNCHECKED_CAST")
             val result = match.handler.execute(ProxyHashMap.from(match.parameters as Map<Any, Any>))
-            applyHandlerResponse(result, httpContext as FlaskHttpContext)
+            applyHandlerResponse(result, httpContext)
           } catch (e: PolyglotException) {
             if (!e.isHostException) throw e
             val cause = e.asHostException() as? FlaskHttpException ?: throw e
@@ -154,9 +146,34 @@ private const val BIND_METHOD = "bind"
           }
         }
       }
-
-      handlerScope.newSucceededFuture()
     }
+  }
+
+  @CompilerDirectives.TruffleBoundary
+  override fun execute(vararg arguments: Value?): FlaskAppInstance {
+    // accept the application root as an argument
+    val root = arguments.firstOrNull()?.takeIf { it.isString }?.asString()
+      ?: error("The application package name must be specified")
+
+    return FlaskAppInstance(root)
+  }
+
+  override fun acquireHandler(): HttpContextHandler = HttpContextHandler { httpContext, handlerScope ->
+    // early for static asset requests
+    applicationRoot?.let { root ->
+      if (serveStaticAsset(root, httpContext as FlaskHttpContext))
+        return@HttpContextHandler handlerScope.newSucceededFuture()
+    }
+
+    val completion = handlerScope.newPromise()
+
+    handlerExecutor.execute {
+      runCatching { handleRouting(httpContext as FlaskHttpContext) }
+        .onFailure { completion.setFailure(it) }
+        .onSuccess { completion.setSuccess() }
+    }
+
+    completion
   }
 
   override fun acquireFactory(): HttpContextFactory<*> =
@@ -188,7 +205,7 @@ private const val BIND_METHOD = "bind"
       val scriptPath = applicationRoot?.resolve(relativePath)
         ?: error("No location info available for the current application")
 
-      FlaskReactTemplate(scriptPath)
+      FlaskReactTemplate(scriptPath, handlerExecutor)
     }
 
     "request" -> requestAccessor

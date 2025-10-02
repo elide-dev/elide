@@ -12,17 +12,18 @@
  */
 package elide.runtime.intrinsics.server.http.v2.flask
 
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import elide.runtime.core.EntrypointRegistry
-import elide.runtime.core.SharedContextFactory
+import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.intrinsics.server.http.v2.GuestHandlerStackManager
 
 public class FlaskHandlerStackManager(
   override val entrypointProvider: EntrypointRegistry,
-  private val contextProvider: SharedContextFactory,
-) : GuestHandlerStackManager<FlaskRouter>() {
+  executor: ContextAwareExecutor
+) : GuestHandlerStackManager<FlaskRouter>(executor) {
   override fun initializeStack(stack: FlaskRouter, entrypoint: Source) {
-    contextProvider.acquire()?.eval(entrypoint) ?: error("No context provider available")
+    Context.getCurrent().eval(entrypoint) ?: error("No context provider available")
   }
 
   override fun newStack(): FlaskRouter {

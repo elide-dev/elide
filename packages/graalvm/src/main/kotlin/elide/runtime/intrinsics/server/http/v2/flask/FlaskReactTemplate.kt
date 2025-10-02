@@ -22,10 +22,14 @@ import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.getOrSet
 import elide.runtime.Logging
+import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.server.http.v2.HttpContentSink
 
-internal class FlaskReactTemplate(private val source: Path) : ProxyExecutable {
+internal class FlaskReactTemplate(
+  private val source: Path,
+  private val executor: ContextAwareExecutor,
+) : ProxyExecutable {
   private val sourceScript by lazy {
     Source.newBuilder("ts", source.toFile())
       .build()
@@ -50,21 +54,24 @@ internal class FlaskReactTemplate(private val source: Path) : ProxyExecutable {
       else return result.asString()
     }
 
+    val pinnedContext = executor.pinContext()!!
     return object : HttpContentSink.Producer {
       private val pulled = AtomicReference<HttpContentSink.Handle>()
 
       override fun pull(handle: HttpContentSink.Handle) {
-        if (!promise.isDone) pulled.set(handle)
-        promise.then(
-          onFulfilled = { rendered ->
-            pulled.get()?.push(DefaultLastHttpContent(Unpooled.copiedBuffer(rendered, Charsets.UTF_8)))
-            handle.release(close = true)
-          },
-          onCatch = {
-            logging.error("Failed to render React template: $it")
-            handle.release(close = true)
-          },
-        )
+        executor.execute(pinnedContext) {
+          if (!promise.isDone) pulled.set(handle)
+          promise.then(
+            onFulfilled = { rendered ->
+              pulled.get()?.push(DefaultLastHttpContent(Unpooled.copiedBuffer(rendered, Charsets.UTF_8)))
+              handle.release(close = true)
+            },
+            onCatch = {
+              logging.error("Failed to render React template: $it")
+              handle.release(close = true)
+            },
+          )
+        }
       }
 
       override fun released() {

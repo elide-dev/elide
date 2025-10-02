@@ -1,6 +1,12 @@
 {
   "reflection": [
     {
+      "type": "sun.nio.ch.EPollSelectorImpl",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "Main",
       "methods": [
         {

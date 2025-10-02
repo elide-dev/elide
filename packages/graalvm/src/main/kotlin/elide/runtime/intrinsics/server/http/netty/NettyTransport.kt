@@ -30,6 +30,7 @@ import io.netty.incubator.channel.uring.IOUring
 import io.netty.incubator.channel.uring.IOUringEventLoopGroup
 import io.netty.incubator.channel.uring.IOUringServerSocketChannel
 import kotlin.reflect.KClass
+import elide.runtime.Logging
 import elide.runtime.intrinsics.server.http.netty.NettyTransport.Companion.resolve
 
 /**
@@ -51,23 +52,28 @@ internal sealed interface NettyTransport<T : ServerSocketChannel> {
     try {
       scope.group(eventLoopGroup())
       scope.channel(socketChannel().java)
-    } catch (_: UnsatisfiedLinkError) {
+    } catch (err: UnsatisfiedLinkError) {
+      logging.warn { "Falling back to NIO; native transport could not load: '${err.message}'" }
       scope.group(NioEventLoopGroup())
       scope.channel(NioServerSocketChannel::class.java)
     }
   }
 
   companion object {
+    private val logging by lazy {
+      Logging.of(NettyTransport::class)
+    }
+
     /** Resolve a [NettyTransport] implementation for the current platform. */
     internal fun resolve(): NettyTransport<*> = when {
       // prefer `io_uring` if available (Linux-only, modern kernels)
       IOUring.isAvailable() -> IOUringTransport
 
       // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
-      // Epoll.isAvailable() -> EpollTransport
+      Epoll.isAvailable() -> EpollTransport
 
       // next up, opt for `kqueue` on Unix-like systems
-      // KQueue.isAvailable() -> KQueueTransport
+      KQueue.isAvailable() -> KQueueTransport
 
       // otherwise, fallback to NIO
       else -> NioTransport

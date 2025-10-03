@@ -80,13 +80,8 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 import elide.annotations.Inject
 import elide.runtime.LogLevel
-import elide.runtime.core.EntrypointRegistry
-import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotEngine
-import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.core.*
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
-import elide.runtime.core.RuntimeLatch
-import elide.runtime.core.SharedContextFactory
 import elide.runtime.core.extensions.attach
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.Engine
@@ -96,6 +91,7 @@ import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
 import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.runtime.intrinsics.server.http.HttpServerAgent
+import elide.runtime.intrinsics.server.http.v2.wsgi.ElideWsgiServerBuilder
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.plugins.Coverage
 import elide.runtime.plugins.jvm.Jvm
@@ -106,6 +102,7 @@ import elide.runtime.runner.JvmRunner
 import elide.runtime.runner.RunnerOutcome
 import elide.runtime.runner.Runners
 import elide.tool.cli.*
+import elide.tool.cli.GuestLanguage
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cmd.builder.emitCommand
 import elide.tool.cli.cmd.runner.*
@@ -1149,23 +1146,21 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         "${language.label} syntax is incomplete",
       )
 
-      exc.isHostException || exc.message?.contains("HostException: ") == true -> {
-        when (exc.asHostException()) {
-          // guest error thrown from host-side logic
-          is GuestError -> displayFormattedError(
-            exc,
-            msg ?: exc.message ?: "An error was thrown",
-            stacktrace = !isInteractive(),
-          )
+      exc.isHostException -> when (val hostExc = exc.asHostException()) {
+        // guest error thrown from host-side logic
+        is GuestError -> displayFormattedError(
+          exc,
+          msg ?: exc.message ?: "An error was thrown",
+          stacktrace = !isInteractive(),
+        )
 
-          else -> displayFormattedError(
-            exc.asHostException(),
-            msg ?: exc.asHostException().message ?: "A runtime error was thrown",
-            advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
-            stacktrace = true,
-            internal = true,
-          )
-        }
+        else -> displayFormattedError(
+          hostExc,
+          msg ?: hostExc.message ?: "A runtime error was thrown",
+          advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
+          stacktrace = true,
+          internal = true,
+        )
       }
 
       // if this is a guest-side exception, throw it
@@ -1576,7 +1571,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   }
 
   // Detect whether we are running in `serve` mode (with alias `start`).
-  private fun serveMode(): Boolean = _isServeMode
+  private fun serveMode(): Boolean {
+    return _isServeMode || activeProject.value?.manifest?.python?.wsgi?.let { it.app != null || it.factory != null } == true
+  }
 
   private val _isTestMode by lazy {
     commandSpecifiesTest ||
@@ -1704,17 +1701,45 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     language: GuestLanguage,
     source: Source,
     execProvider: GuestExecutorProvider,
+    contextAccessor: ContextAccessor,
   ) {
     entrypointProvider.record(source)
+    sharedContextProvider.record { contextAccessor().unwrap() }
 
     try {
-      // enter VM context
-      logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
+      when (language) {
+        JS, TYPESCRIPT -> {
+          // enter VM context
+          logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
-      // initialize the server intrinsic and run using the provided source
-      serverAgent.run(source, execProvider) { resolvePolyglotContext(langs, detached = false) }
-      phaser.value.register()
-      serverRunning.value = true
+          // initialize the server intrinsic and run using the provided source
+          serverAgent.run(source, execProvider) { resolvePolyglotContext(langs, detached = false) }
+          phaser.value.register()
+          serverRunning.value = true
+        }
+
+        PYTHON -> {
+          logging.trace("Running WSGI server")
+          val wsgi = activeProject.value?.manifest?.python?.wsgi
+            ?: error("No available WSGI configuration in manifest")
+
+          val bindingArgs = if (wsgi.app != null) null else wsgi.args
+          val bindingName = wsgi.app
+            ?: wsgi.factory
+            ?: error("Serve mode should only be active if the app or factory binding is specified")
+
+          beanContext.getBean(ElideWsgiServerBuilder::class.java).bind(
+            bindingName = bindingName,
+            bindingArgs = bindingArgs,
+            contextPoolSize = wsgi.workers ?: ElideWsgiServerBuilder.defaultContextPoolSize(),
+            port = wsgi.port ?: ElideWsgiServerBuilder.DEFAULT_PORT,
+          )
+        }
+
+        else -> error("Cannot run embedded server for language $language")
+      }
+
+      runtimeLatch.await()
     } catch (exc: PolyglotException) {
       processUserCodeError(language, exc)?.let { throw it }
     }
@@ -2016,6 +2041,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         primaryLanguage,
         source,
         guestExec,
+        ctxAccessor
       )
 
       // in test mode, read the sources with test APIs/registration/execution enabled.
@@ -2690,11 +2716,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     // resolve project configuration (async)
     val projectResolution = launch {
-      runCatching {
-        projectManager.resolveProject(projectPath)
-      }.getOrNull()?.let {
-        activeProject.value = it
-      }
+      // TODO: we should surface manifest parsing errors instead of failing silently
+      runCatching { projectManager.resolveProject(projectPath) }
+        .onFailure { cause -> logging.debug("Failed to resolve project manifest", cause) }
+        .onSuccess { activeProject.value = it }
     }
     val lockfileResolution = launch {
       runCatching {

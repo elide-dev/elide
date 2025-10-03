@@ -476,6 +476,15 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class PythonSettings(
     val debug: Boolean = false,
+    val wsgi: WsgiSettings = WsgiSettings(),
+  )
+
+  @JvmRecord @Serializable public data class WsgiSettings(
+    val app: String? = null,
+    val factory: String? = null,
+    val args: List<String>? = null,
+    val port: Int? = null,
+    val workers: Int? = null,
   )
 
   @JvmRecord @Serializable public data class RubySettings(

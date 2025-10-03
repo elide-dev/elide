@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 import kotlin.io.path.*
 import elide.annotations.Inject
@@ -104,7 +105,7 @@ internal class DefaultProjectManager @Inject constructor(
 
     // prefer an Elide manifest if present
     val manifests = manifests.get()
-    return coroutineScope {
+    return supervisorScope {
       val elideManifestOp = async(IO) {
         manifests.resolve(root).takeIf { it.isRegularFile() }?.let { manifestFile ->
           manifestFile.inputStream().use { manifests.parse(it, ProjectEcosystem.Elide) }
@@ -121,7 +122,7 @@ internal class DefaultProjectManager @Inject constructor(
 
       var elideManifest: ElidePackageManifest? = async(IO) {
         listOf(elideManifestOp, rootManifestOp).awaitAll()
-        var current: ElidePackageManifest? = elideManifestOp.await()
+        val current: ElidePackageManifest? = elideManifestOp.await()
         val root: ElidePackageManifest? = rootManifestOp.await()
         when {
           current != null && root == null -> current

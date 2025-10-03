@@ -29,7 +29,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import elide.runtime.LogLevel
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.notExists
 import elide.runtime.gvm.cfg.GuestIOConfiguration
 import elide.runtime.vfs.GuestVFS
 
@@ -102,11 +103,16 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
   // Whether to suppress file-not-found exceptions.
   private val suppressNotFound: AtomicBoolean = AtomicBoolean(false)
 
+  private val defaultTempDirectory by lazy {
+    // FIXME(@darvld): copy implementation to use the backing FS instead of the default!
+    backing.getPath(Files.createTempDirectory("elide-vfs").absolutePathString()).also {
+      if(it.notExists()) backing.provider().createDirectory(it)
+    }
+  }
+
   // Debug log messages for the current VFS implementation.
   protected fun debugLog(message: () -> String) {
-    if (logging.isEnabled(LogLevel.DEBUG)) {
-      logging.debug("VFS: ${message()}")
-    }
+    logging.trace("VFS: ${message()}")
   }
 
   /**
@@ -331,7 +337,7 @@ public abstract class AbstractDelegateVFS<VFS> protected constructor (
 
   override fun getTempDirectory(): Path {
     debugLog { "Fetching temp directory path" }
-    TODO("not yet implemented")
+    return defaultTempDirectory
   }
 
   override fun isSameFile(path1: Path, path2: Path, vararg options: LinkOption): Boolean {

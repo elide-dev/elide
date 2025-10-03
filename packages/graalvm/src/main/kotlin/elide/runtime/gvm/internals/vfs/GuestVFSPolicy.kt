@@ -13,6 +13,7 @@
 package elide.runtime.gvm.internals.vfs
 
 import io.micronaut.context.annotation.ConfigurationProperties
+import kotlin.io.path.exists
 
 /**
  * Micronaut-compatible configuration for guest virtual file-system (VFS) security policy.
@@ -34,7 +35,8 @@ public interface GuestVFSPolicy {
 
   /** @return Response for an access check against the provided [request]. */
   @Suppress("UNUSED_PARAMETER") public fun evaluateForPath(request: AccessRequest): AccessResponse {
-    // TODO(sgammon): temporarily allow all
-    return AccessResponse.allow()
+    // TODO(sgammon): temporarily allow all existing
+    return if (request.path.exists()) AccessResponse.allow()
+    else AccessResponse.deny("File does not exist")
   }
 }

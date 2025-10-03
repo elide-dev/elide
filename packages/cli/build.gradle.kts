@@ -125,10 +125,10 @@ val enableAllLocales = false
 val enableLocaleSupport = false
 val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
-val enableNativeTransportV2 = true
+val enableNativeTransportV2 = false
 val enableSqliteStatic = true
 val enableStatic = findProperty("elide.static") == "true"
-val enableStaticJni = true
+val enableStaticJni = false
 val preferShared = false
 val enableToolchains = false
 val forceFfm = false
@@ -1739,6 +1739,12 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
   "--gc=$effectiveGc",
   "-R:MaximumHeapSizePercent=80",
   "--initialize-at-build-time=sun.awt.resources.awtosx",
+  "--initialize-at-run-time=io.netty.channel.kqueue.Native",
+  "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop",
+  "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventArray",
+  "--initialize-at-run-time=io.netty.channel.kqueue.KQueue",
+  "--initialize-at-run-time=io.netty.channel.kqueue.KQueueIoHandler",
+  "--initialize-at-run-time=io.netty.channel.kqueue.AbstractKQueueChannel",
   "-H:NativeLinkerOption=-flto",
   "-H:NativeLinkerOption=$nativesPath/libdiag.a",
   "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.a",
@@ -2975,4 +2981,8 @@ tasks.prepareNativeOptimizations.configure {
 
 tasks.assemble.configure {
   if (enableCliDocs) dependsOn(tasks.named("cliDocs"))
+}
+
+tasks.named("nativeCompileResourcesTar").configure {
+  dependsOn(tasks.named("nativeCompileCopyNativeLibs"))
 }

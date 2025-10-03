@@ -1,0 +1,4 @@
+.dev/
+!.dev/elide.lock*
+node_modules
+node_modules/

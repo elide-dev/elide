@@ -77,7 +77,8 @@ public class ContextAwareExecutor(
   public val onDispatchThread: Boolean
     get() = currentContextHolder.get() != null
 
-  public fun pinContext(): Context? = currentContextHolder.get()?.context
+  public fun pinContext(): Context = currentContextHolder.get()?.context
+    ?: error("No active context, cannot pin")
 
   override fun isShutdown(): Boolean = baseExecutor.isShutdown
   override fun isTerminated(): Boolean = baseExecutor.isTerminated

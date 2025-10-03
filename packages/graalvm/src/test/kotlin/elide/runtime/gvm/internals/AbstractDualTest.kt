@@ -315,7 +315,7 @@ abstract class AbstractDualTest<Generator : CodeGenerator> {
 
   /** A [PolyglotEngine] used to acquire context instances for testing, configurable trough [configureEngine]. */
   protected val engine: PolyglotEngine by lazy {
-    PolyglotEngine {
+    PolyglotEngine(beanContext) {
       configure(Environment)
       configureEngine(this) // provided by implementations
 

@@ -232,7 +232,7 @@ jobs:
             elide-v3-
       - name: "Setup: Packages"
         if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
-        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev
+        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev libtool libtool-bin
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0
         with:
@@ -249,6 +249,10 @@ jobs:
           distribution: "graalvm"
           java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        with:
+          version: "10.6.2"
       - name: "Setup: Node"
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
@@ -257,10 +261,6 @@ jobs:
         uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
         with:
           bun-version: "1.2.14"
-      - name: "Setup: PNPM"
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-        with:
-          version: "10.6.2"
       - name: "Setup: uv"
         uses: astral-sh/setup-uv@7edac99f961f18b581bbd960d59d049f04c0002f # v6.4.1
       - name: "Setup: Dependencies"

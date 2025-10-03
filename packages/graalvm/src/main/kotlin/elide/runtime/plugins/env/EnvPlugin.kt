@@ -33,8 +33,6 @@ import elide.vm.annotations.Polyglot
  * @see EnvConfig
  */
 @DelicateElideApi public class Environment private constructor(public val config: EnvConfig) {
-  @Volatile private var envInstalled = false
-
   /** Collect the configured environment variables and keep the ones currently present. */
   private val effectiveEnvironment: Map<String, String> by lazy {
     config.app.isolatedEnvironmentVariables
@@ -98,10 +96,7 @@ import elide.vm.annotations.Polyglot
    */
   public fun configure(scope: InstallationScope, context: PolyglotContext, language: GuestLanguage) {
     scope.deferred {
-      if (!envInstalled) {
-        envInstalled = true
-        context.bindings(language).putMember(APP_ENV_BIND_PATH, proxiedEnvMap)
-      }
+      context.bindings(language).putMember(APP_ENV_BIND_PATH, proxiedEnvMap)
     }
   }
 
@@ -138,6 +133,7 @@ import elide.vm.annotations.Polyglot
      */
     @JvmStatic public fun forLanguage(languageId: String, context: Context): PolyglotValue {
       return context.getBindings(languageId).getMember(APP_ENV_BIND_PATH)
+        ?: error("Environment binding is not available for language $languageId in this context")
     }
   }
 }

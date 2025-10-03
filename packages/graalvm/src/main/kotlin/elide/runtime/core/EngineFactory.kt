@@ -12,6 +12,7 @@
  */
 package elide.runtime.core
 
+import io.micronaut.context.BeanContext
 import elide.runtime.core.internals.MutableEngineLifecycle
 import elide.runtime.core.internals.graalvm.GraalVMConfiguration
 import elide.runtime.core.internals.graalvm.GraalVMEngine
@@ -38,8 +39,13 @@ import elide.runtime.core.internals.graalvm.GraalVMEngine
  * Plugins can interact with each other within the configuration scope, which can be used to establish dependencies
  * between them: for example, the JavaScript plugin may depend on the VFS plugin to load core intrinsics from a bundle.
  */
-@DelicateElideApi public fun PolyglotEngine(configure: PolyglotEngineConfiguration.() -> Unit = { }): PolyglotEngine {
+@DelicateElideApi public fun PolyglotEngine(
+  beanContext: BeanContext? = null,
+  configure: PolyglotEngineConfiguration.() -> Unit = { }
+): PolyglotEngine {
   val lifecycle = MutableEngineLifecycle()
-  val configuration = GraalVMConfiguration(lifecycle).apply(configure)
+  val configuration = GraalVMConfiguration(lifecycle) {
+    requireNotNull(beanContext) { "no active bean context" }
+  }.apply(configure)
   return GraalVMEngine.create(configuration, lifecycle)
 }

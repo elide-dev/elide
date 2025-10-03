@@ -35,6 +35,7 @@ import java.util.Optional
 import kotlin.io.path.Path
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
+import elide.tooling.deps.PackageSpec
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.*
@@ -135,8 +136,13 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         })
       ).addConversion(
         // convert string maven uris to repositories
-        Conversion.of(PClassInfo.String, MavenRepository ::class.java, StrConverter {
+        Conversion.of(PClassInfo.String, MavenRepository::class.java, StrConverter {
           MavenRepository.parse(it)
+        })
+      ).addConversion(
+        // convert string pip deps
+        Conversion.of(PClassInfo.String, PipPackage::class.java, StrConverter {
+          PackageSpec.PipPackageSpec.parse(it).asPipPackage()
         })
       ).addConversion(
         // convert int jvm target specs to jvm target

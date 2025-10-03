@@ -336,6 +336,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class PipPackage(
     val name: String,
+    val version: String? = null,
   ) : DependencyEcosystemConfig.PackageSpec
 
   @JvmRecord @Serializable public data class GemDependencies(

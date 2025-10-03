@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,18 +10,23 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.plugins.python
 
+import io.micronaut.context.BeanContext
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import elide.annotations.Inject
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.PolyglotEngine
+import elide.testing.annotations.TestCase
 
+@TestCase
 @OptIn(DelicateElideApi::class)
 internal class PythonPluginTest {
+  @Inject lateinit var beanContext: BeanContext
+
   @Test fun testExecution() {
-    val engine = PolyglotEngine { configure(Python) }
+    val engine = PolyglotEngine(beanContext) { configure(Python) }
     val context = engine.acquire()
 
     val result = context.python("""

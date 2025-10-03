@@ -18,7 +18,7 @@
 resolver = "2"
 members = ["crates/*", "tools/umbrella"]
 
-exclude = ["crates/build", "crates/transport", "third_party", "runtime", "crates/entry"]
+exclude = ["crates/build", "third_party", "runtime", "crates/entry"]
 
 [workspace.package]
 license = "MIT"

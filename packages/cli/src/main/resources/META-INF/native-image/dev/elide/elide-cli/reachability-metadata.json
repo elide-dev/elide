@@ -1,6 +1,12 @@
 {
   "reflection": [
     {
+      "type": "sun.nio.ch.EPollSelectorImpl",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "Main",
       "methods": [
         {
@@ -5306,7 +5312,10 @@
       ]
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$PipPackage"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$PipPackage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PklSettings"

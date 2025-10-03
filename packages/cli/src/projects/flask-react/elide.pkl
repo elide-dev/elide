@@ -1,0 +1,17 @@
+amends "elide:project.pkl"
+
+name = "flask-react"
+
+local reactVersion = "18.3.1"
+
+dependencies {
+  pip {
+    packages { "flask" }
+  }
+  npm {
+    packages {
+        "react@\(reactVersion)"
+        "react-dom@\(reactVersion)"
+    }
+  }
+}

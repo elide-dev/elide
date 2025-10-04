@@ -67,7 +67,14 @@ internal class SecretManagementImpl(
                 ?: Prompts.validateLocalPassphrase(prompts) { files.canDecryptLocal(it) }
             UserKey(pass.hashKey(encryption))
           }
-          EncryptionMode.GPG -> UserKey(SecretsState.metadata.fingerprint!!)
+          EncryptionMode.GPG -> {
+            val fingerprint = SecretsState.metadata.fingerprint!!
+            val privateKeys = GPGHandler.gpgPrivateKeys()
+            if (fingerprint !in privateKeys.values) {
+              println(Values.GPG_KEY_REVOKED_MISSING_MESSAGE)
+            }
+            UserKey(fingerprint)
+          }
         }
       SecretsState.local = files.readLocal()
     } else createData()
@@ -194,6 +201,47 @@ internal class SecretManagementImpl(
     files.writeMetadata()
   }
 
+  override fun changeEncryption() {
+    val mode = Prompts.localUserKeyMode(prompts)
+    val keys = SecretsState.metadata.profiles.keys.map { files.readKey(it) }
+    SecretsState.userKey =
+      when (mode) {
+        EncryptionMode.PASSPHRASE -> UserKey(Prompts.passphrase(prompts).hashKey(encryption))
+        EncryptionMode.GPG -> UserKey(Prompts.gpgPrivateKey())
+      }
+    SecretsState.updateMetadata { updateKey(SecretsState.userKey) }
+    keys.forEach { files.writeKey(it) }
+    files.writeLocal()
+    files.writeMetadata()
+  }
+
+  override suspend fun pullFromRemote() {
+    if (SecretsState.profileFlow.value != null) throw IllegalStateException(Values.PROFILE_LOADED_PULL_EXCEPTION)
+    if (SecretsState.remoteFlow.value == null) initRemote()
+    val accessName: String =
+      SecretsState.local[Values.SELECTED_REMOTE_ACCESS_SECRET]
+        ?: throw IllegalArgumentException(Values.REMOTE_MANAGEMENT_ONLY_EXCEPTION)
+    val remoteMetadata: RemoteMetadata = SecretsState.remote.getMetadata()!!.deserialize(json)
+    val accessMetadata = remoteMetadata.access[accessName]!!
+    val (access, _) = getAccess(accessMetadata)
+    val localProfiles = SecretsState.metadata.profiles
+    val remoteProfiles = remoteMetadata.profiles.filterKeys { it in access.keys }
+    val changed = remoteProfiles.filterValues { it.name !in localProfiles || it.hash != localProfiles[it.name]!!.hash }
+    val newProfiles =
+      changed.map {
+        val key = access.keys[it.key]!!
+        val profileBytes = SecretsState.remote.getProfile(it.key)!!
+        profileBytes.decrypt(key, encryption).deserialize<SecretProfile>(cbor)
+        profileBytes to key
+      }
+    SecretsState.updateMetadata { copy(profiles = profiles + changed) }
+    newProfiles.forEach {
+      files.writeProfileBytes(it.second.name, it.first)
+      files.writeKey(it.second)
+    }
+    files.writeMetadata()
+  }
+
   override suspend fun pushToRemote() {
     if (SecretsState.profileFlow.value != null) throw IllegalStateException(Values.PROFILE_LOADED_PUSH_EXCEPTION)
     if (SecretsState.remoteFlow.value == null) initRemote()
@@ -225,33 +273,6 @@ internal class SecretManagementImpl(
           }
       )
     SecretsState.remote.update(newMetadata.serialize(json), changedPushed.mapValues { files.profileBytes(it.key) })
-  }
-
-  override suspend fun pullFromRemote() {
-    if (SecretsState.profileFlow.value != null) throw IllegalStateException(Values.PROFILE_LOADED_PULL_EXCEPTION)
-    if (SecretsState.remoteFlow.value == null) initRemote()
-    val accessName: String =
-      SecretsState.local[Values.SELECTED_REMOTE_ACCESS_SECRET]
-        ?: throw IllegalArgumentException(Values.REMOTE_MANAGEMENT_ONLY_EXCEPTION)
-    val remoteMetadata: RemoteMetadata = SecretsState.remote.getMetadata()!!.deserialize(json)
-    val accessMetadata = remoteMetadata.access[accessName]!!
-    val (access, _) = getAccess(accessMetadata)
-    val localProfiles = SecretsState.metadata.profiles
-    val remoteProfiles = remoteMetadata.profiles.filterKeys { it in access.keys }
-    val changed = remoteProfiles.filterValues { it.name !in localProfiles || it.hash != localProfiles[it.name]!!.hash }
-    val newProfiles =
-      changed.map {
-        val key = access.keys[it.key]!!
-        val profileBytes = SecretsState.remote.getProfile(it.key)!!
-        profileBytes.decrypt(key, encryption).deserialize<SecretProfile>(cbor)
-        profileBytes to key
-      }
-    SecretsState.updateMetadata { copy(profiles = profiles + changed) }
-    newProfiles.forEach {
-      files.writeProfileBytes(it.second.name, it.first)
-      files.writeKey(it.second)
-    }
-    files.writeMetadata()
   }
 
   override suspend fun manageRemote(): RemoteManagement {
@@ -343,14 +364,7 @@ internal class SecretManagementImpl(
       profileBytes.decrypt(key, encryption).deserialize<SecretProfile>(cbor)
       files.writeProfileBytes(name, profileBytes)
       files.writeKey(key)
-      SecretsState.updateMetadata {
-        add(
-          ProfileMetadata(
-            name,
-            encryption.hashGitDataSHA1(profileBytes),
-          )
-        )
-      }
+      SecretsState.updateMetadata { add(ProfileMetadata(name, encryption.hashGitDataSHA1(profileBytes))) }
     }
     SecretsState.updateLocal {
       addAll(

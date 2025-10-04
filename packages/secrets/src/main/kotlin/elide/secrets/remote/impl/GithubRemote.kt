@@ -27,6 +27,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 import elide.secrets.Encryption
 import elide.secrets.Utils
 import elide.secrets.Utils.deserialize
+import elide.secrets.Utils.hash
 import elide.secrets.Values
 import elide.secrets.dto.api.github.*
 import elide.secrets.dto.persisted.RemoteMetadata
@@ -107,9 +108,9 @@ internal class GithubRemote(
         deleteFile(Utils.accessName(it), Values.deletedAccessCommit(it), this.access[it]!!.hash, branch)
       }
     }
-    val superSha = currentSuperBytes?.let { encryption.hashGitDataSHA1(it) }?.toHexString() ?: ""
+    val superSha = currentSuperBytes?.hash(encryption) ?: ""
     writeFile(Values.SUPER_ACCESS_FILE, superAccess, Values.CHANGED_SUPER_ACCESS_COMMIT, superSha, branch)
-    val metadataSha = currentMetadataBytes?.let { encryption.hashGitDataSHA1(it) }?.toHexString() ?: ""
+    val metadataSha = currentMetadataBytes?.hash(encryption) ?: ""
     writeFile(Values.METADATA_FILE, metadata, Values.CHANGED_METADATA_COMMIT, metadataSha, branch)
     if (branch.isNotBlank()) merge(branch)
   }

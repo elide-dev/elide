@@ -45,6 +45,6 @@ internal object GPGHandler {
       list?.add(line)
     }
     list?.let { keyLines.add(it) }
-    return keyLines.associate { it[2].substringAfter("] ") to it[1].trim() }
+    return keyLines.associate { it[2].substringAfter("] ") to it[1].trim().lowercase() }
   }
 }

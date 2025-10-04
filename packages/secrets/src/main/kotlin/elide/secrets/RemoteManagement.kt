@@ -42,8 +42,14 @@ public interface RemoteManagement {
   /** Lists profiles in the selected access file. */
   public fun listProfiles(): Set<String>
 
+  /** Prompts user on a new encryption mode for the selected access file. */
+  public fun changeEncryption()
+
   /** Deselects the selected access file. */
   public fun deselectAccess()
+
+  /** Generates new keys for specified profiles. */
+  public fun rekeyProfile(profile: String)
 
   /** Deletes a profile completely. */
   public fun deleteProfile(profile: String)

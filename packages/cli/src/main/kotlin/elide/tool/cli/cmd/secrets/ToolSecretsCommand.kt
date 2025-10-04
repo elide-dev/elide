@@ -80,6 +80,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
         MainMenuOptions.LIST -> println(secrets.listProfiles().joinToString())
         MainMenuOptions.SELECT -> selectProfile()
         MainMenuOptions.REMOVE -> removeProfile()
+        MainMenuOptions.CHANGE -> secrets.changeEncryption()
         MainMenuOptions.PULL -> secrets.pullFromRemote()
         MainMenuOptions.PUSH -> secrets.pushToRemote()
         MainMenuOptions.MANAGE -> manageRemoteMenu(secrets.manageRemote())
@@ -245,6 +246,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
         ManageRemoteOptions.LIST -> println(remote.listAccesses())
         ManageRemoteOptions.SELECT -> selectAccess(remote)
         ManageRemoteOptions.REMOVE -> removeAccess(remote)
+        ManageRemoteOptions.REKEY -> rekeyProfiles(remote)
         ManageRemoteOptions.DELETE -> deleteProfile(remote)
         ManageRemoteOptions.RESTORE -> restoreProfile(remote)
         ManageRemoteOptions.PUSH -> {
@@ -283,6 +285,15 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     }
   }
 
+  private fun rekeyProfiles(remote: RemoteManagement) {
+    val profiles = secrets.listProfiles()
+    if (profiles.isEmpty()) {
+      println("No profiles found")
+    } else {
+      KInquirer.promptCheckbox("Please select profiles to rekey:", profiles.toList()).forEach { remote.rekeyProfile(it) }
+    }
+  }
+
   private fun deleteProfile(remote: RemoteManagement) {
     remote.deleteProfile(
       KInquirer.promptList(
@@ -313,6 +324,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
         EditAccessOptions.ADD -> addProfileToAccess(remote)
         EditAccessOptions.LIST -> println(remote.listProfiles().joinToString())
         EditAccessOptions.REMOVE -> removeProfileFromAccess(remote)
+        EditAccessOptions.CHANGE -> remote.changeEncryption()
         EditAccessOptions.DESELECT -> {
           remote.deselectAccess()
           running = false
@@ -346,6 +358,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     LIST("List profiles"),
     SELECT("Select a profile to edit"),
     REMOVE("Remove a profile"),
+    CHANGE("Change encryption details"),
     PULL("Pull changes from remote"),
     PUSH("Push changes to remote"),
     MANAGE("Manage remote as a superuser"),
@@ -367,6 +380,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     LIST("List access files"),
     SELECT("Select an access file"),
     REMOVE("Remove an access file"),
+    REKEY("Regenerate profile keys"),
     DELETE("Delete a profile"),
     RESTORE("Restore a deleted profile"),
     PUSH("Push changes to remote and go to the main menu"),
@@ -377,6 +391,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     ADD("Add a profile to the access file"),
     LIST("List profiles in the access file"),
     REMOVE("Remove a profile from the access file"),
+    CHANGE("Change encryption details"),
     DESELECT("Return to the remote management menu"),
   }
 }

@@ -52,6 +52,9 @@ public interface SecretManagement : SecretsCommon {
   /** Writes changes to the loaded profile. */
   public fun writeChanges()
 
+  /** Prompts user on a new encryption mode and re-encrypts local secrets and key files. */
+  public fun changeEncryption()
+
   /**
    * Pulls changes from a remote. Only works if the current secrets have been initialized from a remote as a normal
    * user.
@@ -63,10 +66,7 @@ public interface SecretManagement : SecretsCommon {
    */
   public suspend fun pushToRemote()
 
-  /**
-   * Returns a [RemoteManagement] for managing remote secrets as a superuser. Only works if the current secrets have
-   * been initialized locally, or from a remote as a superuser.
-   */
+  /** Returns a [RemoteManagement] for managing remote secrets as a superuser. */
   public suspend fun manageRemote(): RemoteManagement
 
   /** Creates or replaces a binary secret in the loaded profile. */

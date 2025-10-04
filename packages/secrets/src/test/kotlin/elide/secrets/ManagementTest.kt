@@ -15,12 +15,15 @@ package elide.secrets
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.Files
 import java.nio.file.Path
+import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.encodeToByteString
 import kotlin.io.path.exists
+import kotlin.io.path.readBytes
 import kotlin.io.path.readText
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import elide.annotations.Inject
@@ -104,7 +107,7 @@ class ManagementTest : AbstractSecretTest() {
 
   @Test
   fun `test managing secrets`() = withTemp { path ->
-    createEnvironment(path, secretFiles)
+    val secretsDir = createEnvironment(path, secretFiles)
 
     queuePrompt(secretPass)
     secrets.init(path, null)
@@ -142,6 +145,16 @@ class ManagementTest : AbstractSecretTest() {
     secrets.removeSecret("nope")
     assertEquals(secretTypes, secrets.listSecrets())
     assertEquals(mapOf("SOME_VAR" to "something"), secrets.getEnv())
+    secrets.unloadProfile()
+
+    // change passphrase
+    val oldProfile = ByteString(secretsDir.resolve("secrets-test.db").readBytes())
+    val oldKey = ByteString(secretsDir.resolve("secrets-test.key").readBytes())
+    // secrets.changeEncryption() asks for encryption mode and passphrase twice.
+    queuePrompts(EncryptionMode.PASSPHRASE, "sas", "sas")
+    secrets.changeEncryption()
+    assertEquals(oldProfile, ByteString(secretsDir.resolve("secrets-test.db").readBytes()))
+    assertNotEquals(oldKey, ByteString(secretsDir.resolve("secrets-test.key").readBytes()))
   }
 
   @Test
@@ -196,6 +209,11 @@ class ManagementTest : AbstractSecretTest() {
     remote.selectAccess("test")
     remote.addProfile("test")
     assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("nope")) { remote.addProfile("nope") }
+
+    // change access passphrase
+    // remote.changeEncryption() asks for encryption mode and passphrase twice.
+    queuePrompts(EncryptionMode.PASSPHRASE, "sas", "sas")
+    remote.changeEncryption()
     remote.deselectAccess()
 
     // try to remove profile but cancel the action.
@@ -232,6 +250,9 @@ class ManagementTest : AbstractSecretTest() {
     remote.addProfile("test")
     assertEquals(setOf("test"), remote.listProfiles())
     remote.deselectAccess()
+
+    // regenerate profile key
+    remote.rekeyProfile("test")
 
     // push changes and check for files
     remote.push()

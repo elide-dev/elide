@@ -84,6 +84,9 @@ internal object Utils {
 
   fun String.hashKey(encryption: Encryption): ByteString = encryption.hashKeySHA256(encodeToByteString())
 
+  @OptIn(ExperimentalStdlibApi::class)
+  fun ByteString.hash(encryption: Encryption): String = encryption.hashGitDataSHA1(this).toHexString()
+
   fun Path.exists(): Boolean = SystemFileSystem.exists(this)
 
   fun Path.read(): ByteString = SystemFileSystem.source(this).buffered().use { it.readByteString() }

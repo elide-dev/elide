@@ -85,6 +85,8 @@ internal object Values {
   const val NO_CHANGED_PROFILES_MESSAGE = "No profiles have been updated on the remote"
   const val PROFILE_MISMATCH_MESSAGE = "These profiles exist locally but are not the same ones as on the remote."
   const val DELETE_PROFILES_MESSAGE = "Deleting the profile will also delete it from your local secrets!"
+  const val GPG_KEY_REVOKED_MISSING_MESSAGE =
+    "GPG private key is expired, revoked or not present. If secrets load correctly, please update your encryption mode!"
 
   fun accessesWithProfileMessage(accesses: String) =
     "The following access files contain the profile:\n$accesses\n" +

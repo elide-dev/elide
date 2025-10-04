@@ -37,7 +37,7 @@ internal data class LocalMetadata(
     name,
     profiles.associateBy { it.name },
     key.mode,
-    if (key.mode == EncryptionMode.GPG) key.key.toHexString() else null,
+    fingerprint(key),
   )
 
   init {
@@ -55,5 +55,14 @@ internal data class LocalMetadata(
 
   fun removeAll(profiles: Iterable<String>): LocalMetadata {
     return copy(profiles = this.profiles - profiles)
+  }
+
+  fun updateKey(key: UserKey): LocalMetadata {
+    return copy(localEncryption = key.mode, fingerprint = fingerprint(key))
+  }
+
+  companion object {
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun fingerprint(key: UserKey): String? = if (key.mode == EncryptionMode.GPG) key.key.toHexString() else null
   }
 }

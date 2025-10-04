@@ -22,6 +22,7 @@ import elide.secrets.*
 import elide.secrets.Utils.decrypt
 import elide.secrets.Utils.deserialize
 import elide.secrets.Utils.encrypt
+import elide.secrets.Utils.hash
 import elide.secrets.Utils.serialize
 import elide.secrets.dto.persisted.*
 
@@ -43,6 +44,7 @@ internal class RemoteManagementImpl(
 ) : RemoteManagement {
   private var access: String? = null
   private val deleted: MutableSet<String> = mutableSetOf()
+  private val rekeyed: MutableSet<String> = mutableSetOf()
 
   override suspend fun init() {
     val localProfiles = secrets.listProfiles()
@@ -115,8 +117,24 @@ internal class RemoteManagementImpl(
     return superAccess.access[access!!]!!.second
   }
 
+  override fun changeEncryption() {
+    if (access == null) throw IllegalStateException(Values.NO_ACCESS_SELECTED_EXCEPTION)
+    val mode = Prompts.accessMode(prompts)
+    superAccess = superAccess.copy(access = superAccess.access.mapValues {
+      if (it.key == access) it.value.copy(first = when (mode) {
+        EncryptionMode.PASSPHRASE ->
+          UserKey(encryption.hashKeySHA256(Prompts.passphrase(prompts).encodeToByteString()))
+        EncryptionMode.GPG -> UserKey(Prompts.gpgPublicKey())
+      }) else it.value
+    })
+  }
+
   override fun deselectAccess() {
     access = null
+  }
+
+  override fun rekeyProfile(profile: String) {
+    rekeyed.add(profile)
   }
 
   override fun deleteProfile(profile: String) {
@@ -154,6 +172,7 @@ internal class RemoteManagementImpl(
   override fun deletedProfiles(): Set<String> = deleted
 
   override suspend fun push() {
+    if (rekeyed.isNotEmpty()) rekeyProfiles()
     val superBytes = superAccess.serialize(cbor).encrypt(superKey, encryption)
     val accesses =
       superAccess.access.mapValues {
@@ -183,6 +202,19 @@ internal class RemoteManagementImpl(
     )
     deleted.forEach { files.removeProfile(it) }
     SecretsState.updateMetadata { removeAll(deleted) }
+    files.writeMetadata()
+  }
+
+  private fun rekeyProfiles() {
+    val hashes = rekeyed.associateWith {
+      val (profile, _) = files.readProfile(it)
+      val key = SecretKey(it, Utils.generateBytes(Values.KEY_SIZE))
+      val profileBytes = files.writeProfile(profile, key)
+      profileBytes.hash(encryption)
+    }
+    SecretsState.updateMetadata { copy(profiles = profiles.mapValues {
+      if (it.key in hashes) it.value.copy(hash = hashes[it.key]!!) else it.value
+    }) }
     files.writeMetadata()
   }
 }

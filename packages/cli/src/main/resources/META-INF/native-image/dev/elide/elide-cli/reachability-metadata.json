@@ -3212,7 +3212,7 @@
       ]
     },
     {
-      "type": "elide.runtime.secrets.$SecretsJsModule$Definition",
+      "type": "elide.runtime.secrets.$SecretsJsIntrinsic$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -3221,7 +3221,25 @@
       ]
     },
     {
-      "type": "elide.runtime.secrets.$SecretsJsModule$Introspection",
+      "type": "elide.runtime.secrets.$SecretsJsIntrinsic$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.secrets.$SecretsPythonIntrinsic$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.secrets.$SecretsPythonIntrinsic$Introspection",
       "methods": [
         {
           "name": "<init>",

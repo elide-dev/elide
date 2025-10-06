@@ -1,4 +1,4 @@
-FROM debian:sid-slim@sha256:7e8e5af19ae9e22c326f52aa30a65dd635c0e45430e322fc2aa64455c9ad624c AS base
+FROM debian:sid-slim@sha256:3e62bb802f97815491469a127cfef29a8266977b8fde5f0c09541d761b36a6a2 AS base
 
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime with Bash"

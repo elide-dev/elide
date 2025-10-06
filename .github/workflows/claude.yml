@@ -70,7 +70,7 @@ jobs:
           fi
       - name: "Run: Claude"
         id: claude
-        uses: anthropics/claude-code-action@7ed3b616d54fd445625b77b219342949146bae9e # beta
+        uses: anthropics/claude-code-action@90d189f3abd48655ec3e2c67c552cc23e92d6028 # beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           custom_instructions: |

@@ -405,6 +405,8 @@ public val javac: Tool.CommandLineTool = Tool.describe(
         !it.startsWith("-") && (it != outSpec)
       }.map {
         Paths.get(it)
+      }.filter {
+        it.exists()
       }
       return Triple(sources.asSequence(), outSpec, argsList)
     }

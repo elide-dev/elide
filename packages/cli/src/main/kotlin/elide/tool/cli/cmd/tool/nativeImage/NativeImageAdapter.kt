@@ -151,7 +151,12 @@ import elide.tooling.project.ElideProject
             listOf(it)
           }
         }
-        val outSpecPositionMinusOne = argsList.indexOf("-H:Path")
+        val outSpecPositionMinusOne = (
+          when (val idx = argsList.indexOf("-H:Path")) {
+            -1 -> argsList.indexOf("-o")
+            else -> idx
+          }
+        )
         val outSpec = if (outSpecPositionMinusOne < 0) {
           // come up with an output path; use `.dev/artifacts/native-image` by default
           // @TODO resolve from config

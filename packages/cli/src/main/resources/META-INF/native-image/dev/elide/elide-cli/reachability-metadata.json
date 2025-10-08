@@ -11167,14 +11167,8 @@
     {
       "type": "org.jetbrains.kotlin.cli.common.arguments.CommonToolArguments",
       "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "setSuppressWarnings",
-          "parameterTypes": [
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "org.jetbrains.kotlin.cli.common.arguments.Freezable",

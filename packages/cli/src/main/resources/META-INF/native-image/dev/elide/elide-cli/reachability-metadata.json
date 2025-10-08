@@ -12960,6 +12960,9 @@
   ],
   "resources": [
     {
+      "glob": "/org/jetbrains/kotlin/**/*.class"
+    },
+    {
       "glob": "/META-INF/elide/samples/**/*"
     },
     {

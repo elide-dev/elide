@@ -604,6 +604,9 @@ dependencies {
   // TODO: patched
   // implementation(libs.graalvm.tools.coverage)
 
+  // Secrets
+  implementation(projects.packages.secrets)
+
   // KotlinX
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)
@@ -1805,6 +1808,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueue",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueIoHandler",
     "--initialize-at-run-time=io.netty.channel.kqueue.AbstractKQueueChannel",
+    "--initialize-at-run-time=io.netty.internal.tcnative.CertificateCompressionAlgo",
   ).plus(
     listOfNotNull(
       onlyIf(enableStatic, "--libc=musl"),

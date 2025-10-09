@@ -66,6 +66,15 @@ public final class elide/runtime/plugins/python/flask/FlaskAPI$Companion {
 	public static final field FLASK_INTRINSIC Ljava/lang/String;
 }
 
+public abstract interface class elide/runtime/plugins/python/secrets/SecretsPythonAPI {
+	public static final field Companion Lelide/runtime/plugins/python/secrets/SecretsPythonAPI$Companion;
+	public static final field SECRETS_INTRINSIC Ljava/lang/String;
+}
+
+public final class elide/runtime/plugins/python/secrets/SecretsPythonAPI$Companion {
+	public static final field SECRETS_INTRINSIC Ljava/lang/String;
+}
+
 public final class org/graalvm/python/embedding/GraalPythonFilesystem {
 	public static final field INSTANCE Lorg/graalvm/python/embedding/GraalPythonFilesystem;
 	public final fun delegate ()Lorg/graalvm/polyglot/io/FileSystem;

@@ -1,0 +1,80 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+package elide.secrets.impl
+
+import org.bouncycastle.crypto.digests.SHA1Digest
+import org.bouncycastle.crypto.digests.SHA256Digest
+import org.bouncycastle.crypto.engines.AESEngine
+import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator
+import org.bouncycastle.crypto.modes.SICBlockCipher
+import org.bouncycastle.crypto.params.KeyParameter
+import org.bouncycastle.crypto.params.ParametersWithIV
+import kotlinx.io.bytestring.ByteString
+import elide.annotations.Singleton
+import elide.secrets.Encryption
+import elide.secrets.GPGHandler
+import elide.secrets.SecretUtils
+import elide.secrets.SecretValues
+
+/**
+ * Implementation of [Encryption], using `AES` for encryption and `SHA-256` for hashing.
+ *
+ * @author Lauri Heino <datafox>
+ */
+@Singleton
+internal class EncryptionImpl : Encryption {
+  override fun encryptAES(key: ByteString, data: ByteString): ByteString {
+    val iv: ByteArray = SecretUtils.generateBytes(SecretValues.IV_SIZE).toByteArray()
+    val out: ByteArray = iv.copyOf(SecretValues.IV_SIZE + data.size)
+    val cipher = createCipher()
+    cipher.init(true, ParametersWithIV(KeyParameter(key.toByteArray()), iv))
+    cipher.processBytes(data.toByteArray(), 0, data.size, out, SecretValues.IV_SIZE)
+    return ByteString(out)
+  }
+
+  override fun decryptAES(key: ByteString, encrypted: ByteString): ByteString {
+    val out = ByteArray(encrypted.size - SecretValues.IV_SIZE)
+    val cipher = createCipher()
+    val parameters =
+      ParametersWithIV(
+        KeyParameter(key.toByteArray()),
+        encrypted.toByteArray(0, SecretValues.IV_SIZE),
+        0,
+        SecretValues.IV_SIZE,
+      )
+    cipher.init(false, parameters)
+    cipher.processBytes(encrypted.toByteArray(SecretValues.IV_SIZE), 0, out.size, out, 0)
+    return ByteString(out)
+  }
+
+  override fun hashKeySHA256(data: ByteString): ByteString {
+    val parameterGenerator = PKCS5S2ParametersGenerator(SHA256Digest())
+    parameterGenerator.init(data.toByteArray(), null, SecretValues.HASH_ITERATIONS)
+    val parameter = parameterGenerator.generateDerivedParameters(SecretValues.KEY_SIZE * 8) as KeyParameter
+    return ByteString(parameter.key)
+  }
+
+  override fun hashDataSHA1(data: ByteString): ByteString {
+    val digest = SHA1Digest()
+    digest.update(data.toByteArray(), 0, data.size)
+    val out = ByteArray(digest.digestSize)
+    digest.doFinal(out, 0)
+    return ByteString(out)
+  }
+
+  override fun encryptGPG(id: String, data: ByteString): ByteString = GPGHandler.runGPG(data, "-e", "-r", id)
+
+  override fun decryptGPG(id: String, encrypted: ByteString): ByteString = GPGHandler.runGPG(encrypted, "-d", "-u", id)
+
+  private fun createCipher() = SICBlockCipher.newInstance(AESEngine.newInstance())
+}

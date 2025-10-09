@@ -639,6 +639,10 @@ kotlinx-io-bytestring-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-i
 kotlinx-knit = { group = "org.jetbrains.kotlinx", name = "kotlinx-knit", version.ref = "kotlinx-knit" }
 kotlinx-metadata-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-metadata-jvm", version.ref = "kotlinx-metadata-jvm" }
 kotlinx-nodejs = { group = "org.jetbrains.kotlinx", name = "kotlinx-nodejs", version.ref = "kotlinx-nodejs" }
+kotlinx-serialization-cbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-cbor-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor-js", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-cbor-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-cbor-wasm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor-wasm", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-js", version.ref = "kotlinx-serialization" }
 kotlinx-serialization-core-jvm = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core-jvm", version.ref = "kotlinx-serialization" }
@@ -691,6 +695,10 @@ kotlinx-wrappers-web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 ksp-cmdline = { group = "com.google.devtools.ksp", name = "symbol-processing-cmdline", version.ref = "ksp" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-server-core = { group = "io.ktor", name = "ktor-server-core", version.ref = "ktor" }
 ktor-server-cio = { group = "io.ktor", name = "ktor-server-cio", version.ref = "ktor" }
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
@@ -1023,4 +1031,10 @@ ktor-server = [
   "ktor-server-sessions",
   "ktor-server-hsts",
   "ktor-server-websockets",
+]
+
+ktor-client = [
+  "ktor-client-core",
+  "ktor-client-contentNegotiation",
+  "ktor-serialization-kotlinx-json",
 ]

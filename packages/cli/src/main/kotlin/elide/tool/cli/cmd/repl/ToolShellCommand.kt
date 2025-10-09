@@ -105,6 +105,7 @@ import elide.runtime.precompiler.Precompiler
 import elide.runtime.runner.JvmRunner
 import elide.runtime.runner.RunnerOutcome
 import elide.runtime.runner.Runners
+import elide.secrets.Secrets
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cmd.builder.emitCommand
@@ -2454,6 +2455,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     appEnvironment.apply(
       project,
       this,
+    beanContext.getBean(Secrets::class.java).getEnv(),
       host = accessControl.allowAll || accessControl.allowEnv,
       dotenv = appEnvironment.dotenv,
     )
@@ -2762,6 +2764,27 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     val effectiveInitLangs = onByDefaultLangs + projectLangs
 
+    // initialize secrets
+    val secretsResolution = launch {
+      run {
+        projectResolution.join()
+
+        val secrets = beanContext.getBean(Secrets::class.java)
+        try {
+          secrets.init(projectPath, activeProject.value?.manifest)
+        } catch (t: Throwable) {
+          logging.warn { "Secrets were not initialized with message: ${t.message}" }
+        }
+        if(secrets.initialized) {
+          if (secrets.getProfile() == null) {
+            val profiles = secrets.listProfiles()
+            if (profiles.size != 1) logging.warn { "No secret profile will be loaded" }
+            else secrets.loadProfile(profiles.first())
+          }
+        }
+      }
+    }
+
     // if no entrypoint was specified, attempt to use the one in the project manifest, or try resolving the runnable as
     // a script name in either `elide.pkl` or a foreign manifest.
     when (val tgt = runnable) {
@@ -2892,6 +2915,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     try {
       projectResolution.join()
       lockfileResolution.join()
+      secretsResolution.join()
 
       resolveEngine(effectiveInitLangs).unwrap().use {
         withDeferredContext(effectiveInitLangs) {

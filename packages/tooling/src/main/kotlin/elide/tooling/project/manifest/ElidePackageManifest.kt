@@ -57,6 +57,7 @@ public data class ElidePackageManifest(
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
   val web: WebSettings? = null,
+  val secrets: SecretSettings? = null,
 ) : PackageManifest {
   @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
 
@@ -590,6 +591,34 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class LockfileSettings(
     val enabled: Boolean = true,
     val format: String = "auto",
+  )
+
+  @Serializable public enum class SecretsRemote(override val symbol: String) : Symbolic<String> {
+    PROJECT("project"),
+    GITHUB("github");
+
+    public companion object : Symbolic.SealedResolver<String, SecretsRemote> {
+      override fun resolve(symbol: String): SecretsRemote = when (symbol.lowercase().trim()) {
+        "project" -> PROJECT
+        "github" -> GITHUB
+        else -> throw unresolved(symbol)
+      }
+    }
+  }
+
+  @JvmRecord @Serializable public data class ProjectRemoteSettings(
+    val path: String? = null,
+  )
+
+  @JvmRecord @Serializable public data class GithubRemoteSettings(
+    val repository: String? = null,
+  )
+
+  @JvmRecord @Serializable public data class SecretSettings(
+    val profile: String? = null,
+    val remote: SecretsRemote? = null,
+    val project: ProjectRemoteSettings? = null,
+    val github: GithubRemoteSettings? = null,
   )
 }
 

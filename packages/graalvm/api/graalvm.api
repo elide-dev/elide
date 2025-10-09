@@ -10222,7 +10222,7 @@ public final class elide/runtime/plugins/vfs/VfsPluginKt {
 	public static final fun vfs (Lelide/runtime/core/PolyglotEngineConfiguration;Lkotlin/jvm/functions/Function1;)V
 }
 
-public synthetic class elide/runtime/secrets/$SecretsPythonIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+public synthetic class elide/runtime/secrets/$SecretsIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
@@ -10233,7 +10233,7 @@ public synthetic class elide/runtime/secrets/$SecretsPythonIntrinsic$Definition 
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
-public final synthetic class elide/runtime/secrets/$SecretsPythonIntrinsic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+public final synthetic class elide/runtime/secrets/$SecretsIntrinsic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z

@@ -25,10 +25,10 @@ import kotlinx.serialization.json.Json
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import elide.secrets.Encryption
-import elide.secrets.Utils
-import elide.secrets.Utils.deserialize
-import elide.secrets.Utils.hash
-import elide.secrets.Values
+import elide.secrets.SecretUtils
+import elide.secrets.SecretUtils.deserialize
+import elide.secrets.SecretUtils.hash
+import elide.secrets.SecretValues
 import elide.secrets.dto.api.github.*
 import elide.secrets.dto.persisted.RemoteMetadata
 import elide.secrets.remote.Remote
@@ -52,27 +52,28 @@ internal class GithubRemote(
   private val client: HttpClient,
   private val json: Json,
 ) : Remote {
-  override suspend fun getMetadata(): ByteString? = getFile(Values.METADATA_FILE)
+  override suspend fun getMetadata(): ByteString? = getFile(SecretValues.METADATA_FILE)
 
-  override suspend fun getProfile(profile: String): ByteString? = getFile(Utils.profileName(profile))
+  override suspend fun getProfile(profile: String): ByteString? = getFile(SecretUtils.profileName(profile))
 
-  override suspend fun getAccess(access: String): ByteString? = getFile(Utils.accessName(access))
+  override suspend fun getAccess(access: String): ByteString? = getFile(SecretUtils.accessName(access))
 
-  override suspend fun getSuperAccess(): ByteString? = getFile(Values.SUPER_ACCESS_FILE)
+  override suspend fun getSuperAccess(): ByteString? = getFile(SecretValues.SUPER_ACCESS_FILE)
 
   @OptIn(ExperimentalStdlibApi::class)
   override suspend fun update(metadata: ByteString, profiles: Map<String, ByteString>) {
-    val currentMetadataBytes = getMetadata() ?: throw IllegalStateException(Values.REMOTE_NOT_INITIALIZED_EXCEPTION)
+    val currentMetadataBytes =
+      getMetadata() ?: throw IllegalStateException(SecretValues.REMOTE_NOT_INITIALIZED_EXCEPTION)
     val currentMetadata: RemoteMetadata = currentMetadataBytes.deserialize(json)
     val branch = createBranch()
     profiles.forEach { (name, bytes) ->
       val sha = currentMetadata.profiles[name]?.hash ?: ""
-      writeFile(Utils.profileName(name), bytes, Values.changedProfileCommit(name), sha, branch)
+      writeFile(SecretUtils.profileName(name), bytes, SecretValues.changedProfileCommit(name), sha, branch)
     }
     writeFile(
-      Values.METADATA_FILE,
+      SecretValues.METADATA_FILE,
       metadata,
-      Values.CHANGED_METADATA_COMMIT,
+      SecretValues.CHANGED_METADATA_COMMIT,
       encryption.hashGitDataSHA1(currentMetadataBytes).toHexString(),
       branch,
     )
@@ -94,24 +95,24 @@ internal class GithubRemote(
     val branch = if (currentMetadataBytes == null) "" else createBranch()
     profiles.forEach { (name, bytes) ->
       val sha = currentMetadata?.profiles[name]?.hash ?: ""
-      writeFile(Utils.profileName(name), bytes, Values.changedProfileCommit(name), sha, branch)
+      writeFile(SecretUtils.profileName(name), bytes, SecretValues.changedProfileCommit(name), sha, branch)
     }
     access.forEach { (name, bytes) ->
       val sha = currentMetadata?.access[name]?.hash ?: ""
-      writeFile(Utils.accessName(name), bytes, Values.changedAccessCommit(name), sha, branch)
+      writeFile(SecretUtils.accessName(name), bytes, SecretValues.changedAccessCommit(name), sha, branch)
     }
     currentMetadata?.run {
       deletedProfiles.forEach {
-        deleteFile(Utils.profileName(it), Values.deletedProfileCommit(it), this.profiles[it]!!.hash, branch)
+        deleteFile(SecretUtils.profileName(it), SecretValues.deletedProfileCommit(it), this.profiles[it]!!.hash, branch)
       }
       deletedAccesses.forEach {
-        deleteFile(Utils.accessName(it), Values.deletedAccessCommit(it), this.access[it]!!.hash, branch)
+        deleteFile(SecretUtils.accessName(it), SecretValues.deletedAccessCommit(it), this.access[it]!!.hash, branch)
       }
     }
     val superSha = currentSuperBytes?.hash(encryption) ?: ""
-    writeFile(Values.SUPER_ACCESS_FILE, superAccess, Values.CHANGED_SUPER_ACCESS_COMMIT, superSha, branch)
+    writeFile(SecretValues.SUPER_ACCESS_FILE, superAccess, SecretValues.CHANGED_SUPER_ACCESS_COMMIT, superSha, branch)
     val metadataSha = currentMetadataBytes?.hash(encryption) ?: ""
-    writeFile(Values.METADATA_FILE, metadata, Values.CHANGED_METADATA_COMMIT, metadataSha, branch)
+    writeFile(SecretValues.METADATA_FILE, metadata, SecretValues.CHANGED_METADATA_COMMIT, metadataSha, branch)
     if (branch.isNotBlank()) merge(branch)
   }
 
@@ -177,7 +178,7 @@ internal class GithubRemote(
     client.post<GithubMergeRequest, GithubMergeResponse>(
       "repos/$repository/merges",
       token,
-      GithubMergeRequest("main", branch, Values.mergeBranchCommit(branch)),
+      GithubMergeRequest("main", branch, SecretValues.mergeBranchCommit(branch)),
       HttpStatusCode.Created,
     )
   }
@@ -192,7 +193,7 @@ internal class GithubRemote(
       block: HttpRequestBuilder.() -> Unit = {},
     ): Pair<HttpResponse, T?> {
       val response: HttpResponse =
-        put("${Values.GITHUB_API_URL}$path") {
+        put("${SecretValues.GITHUB_API_URL}$path") {
           headers(token)
           setBody(body)
           block()
@@ -208,7 +209,7 @@ internal class GithubRemote(
       block: HttpRequestBuilder.() -> Unit = {},
     ): Pair<HttpResponse, T?> {
       val response: HttpResponse =
-        delete("${Values.GITHUB_API_URL}$path") {
+        delete("${SecretValues.GITHUB_API_URL}$path") {
           headers(token)
           setBody(body)
           block()
@@ -223,7 +224,7 @@ internal class GithubRemote(
       block: HttpRequestBuilder.() -> Unit = {},
     ): Pair<HttpResponse, T?> {
       val response: HttpResponse =
-        get("${Values.GITHUB_API_URL}$path") {
+        get("${SecretValues.GITHUB_API_URL}$path") {
           headers(token)
           block()
         }
@@ -250,7 +251,7 @@ internal class GithubRemote(
       block: HttpRequestBuilder.() -> Unit = {},
     ): Pair<HttpResponse, T?> {
       val response: HttpResponse =
-        post("${Values.GITHUB_API_URL}$path") {
+        post("${SecretValues.GITHUB_API_URL}$path") {
           headers(token)
           setBody(body)
           block()

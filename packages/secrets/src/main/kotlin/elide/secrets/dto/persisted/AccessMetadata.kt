@@ -15,7 +15,7 @@ package elide.secrets.dto.persisted
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.toHexString
 import kotlinx.serialization.Serializable
-import elide.secrets.Utils
+import elide.secrets.SecretUtils
 
 /**
  * Metadata for a [SecretAccess].
@@ -37,6 +37,6 @@ internal data class AccessMetadata(
   ) : this(name, hash.toHexString(), key.mode, if (key.mode == EncryptionMode.GPG) key.key.toHexString() else null)
 
   init {
-    Utils.checkName(name, "Access")
+    SecretUtils.checkName(name, "Access")
   }
 }

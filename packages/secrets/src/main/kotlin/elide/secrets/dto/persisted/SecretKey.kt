@@ -14,7 +14,7 @@ package elide.secrets.dto.persisted
 
 import kotlinx.io.bytestring.ByteString
 import kotlinx.serialization.Serializable
-import elide.secrets.Utils
+import elide.secrets.SecretUtils
 import elide.secrets.impl.ByteStringSerializer
 
 /**
@@ -28,6 +28,6 @@ internal data class SecretKey(
   @Serializable(with = ByteStringSerializer::class) val key: ByteString,
 ) : Named {
   init {
-    Utils.checkName(name, "Key")
+    SecretUtils.checkName(name, "Key")
   }
 }

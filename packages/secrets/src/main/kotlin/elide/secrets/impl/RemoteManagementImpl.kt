@@ -19,11 +19,11 @@ import kotlinx.io.bytestring.encodeToByteString
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.json.Json
 import elide.secrets.*
-import elide.secrets.Utils.decrypt
-import elide.secrets.Utils.deserialize
-import elide.secrets.Utils.encrypt
-import elide.secrets.Utils.hash
-import elide.secrets.Utils.serialize
+import elide.secrets.SecretUtils.decrypt
+import elide.secrets.SecretUtils.deserialize
+import elide.secrets.SecretUtils.encrypt
+import elide.secrets.SecretUtils.hash
+import elide.secrets.SecretUtils.serialize
 import elide.secrets.dto.persisted.*
 
 /**
@@ -55,9 +55,9 @@ internal class RemoteManagementImpl(
     val updated =
       if (mismatchingHashes.isEmpty()) listOf()
       else {
-        println(Values.PROFILE_MISMATCH_MESSAGE)
+        println(SecretValues.PROFILE_MISMATCH_MESSAGE)
         prompts.removeFirstOrNull()?.split("\u0000")
-          ?: KInquirer.promptCheckbox(Values.PROFILES_TO_UPDATE_PROMPT, mismatchingHashes)
+          ?: KInquirer.promptCheckbox(SecretValues.PROFILES_TO_UPDATE_PROMPT, mismatchingHashes)
       }
     val localToBeUpdated = (remoteProfiles subtract localProfiles) union updated
     localToBeUpdated.forEach {
@@ -75,14 +75,15 @@ internal class RemoteManagementImpl(
   override fun listAccesses(): Set<String> = superAccess.access.keys
 
   override fun createAccess(name: String) {
-    val mode = Prompts.accessMode(prompts)
+    val mode = SecretPrompts.accessMode(prompts)
     superAccess =
       superAccess.addAccess(
         name,
         when (mode) {
           EncryptionMode.PASSPHRASE ->
-            UserKey(encryption.hashKeySHA256(Prompts.passphrase(prompts).encodeToByteString()))
-          EncryptionMode.GPG -> UserKey(Prompts.gpgPublicKey())
+            UserKey(encryption.hashKeySHA256(SecretPrompts.passphrase(prompts).encodeToByteString()))
+
+          EncryptionMode.GPG -> UserKey(SecretPrompts.gpgPublicKey())
         },
       )
   }
@@ -92,41 +93,46 @@ internal class RemoteManagementImpl(
   }
 
   override fun selectAccess(name: String) {
-    if (name !in superAccess.access) throw IllegalArgumentException(Values.accessDoesNotExistException(name))
+    if (name !in superAccess.access) throw IllegalArgumentException(SecretValues.accessDoesNotExistException(name))
     access = name
   }
 
   override fun addProfile(profile: String) {
-    if (access == null) throw IllegalStateException(Values.NO_ACCESS_SELECTED_EXCEPTION)
+    if (access == null) throw IllegalStateException(SecretValues.NO_ACCESS_SELECTED_EXCEPTION)
     if (profile !in SecretsState.metadata.profiles)
-      throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
+      throw IllegalArgumentException(SecretValues.profileDoesNotExistException(profile))
     access?.let { superAccess = superAccess.addToAccess(it, profile) }
   }
 
   override fun removeProfile(profile: String) {
-    if (access == null) throw IllegalStateException(Values.NO_ACCESS_SELECTED_EXCEPTION)
+    if (access == null) throw IllegalStateException(SecretValues.NO_ACCESS_SELECTED_EXCEPTION)
     if (profile !in SecretsState.metadata.profiles)
-      throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
+      throw IllegalArgumentException(SecretValues.profileDoesNotExistException(profile))
     if (profile !in superAccess.access[access!!]!!.second)
-      throw IllegalArgumentException(Values.profileNotInAccessException(profile))
+      throw IllegalArgumentException(SecretValues.profileNotInAccessException(profile))
     access?.let { superAccess = superAccess.removeFromAccess(it, profile) }
   }
 
   override fun listProfiles(): Set<String> {
-    if (access == null) throw IllegalStateException(Values.NO_ACCESS_SELECTED_EXCEPTION)
+    if (access == null) throw IllegalStateException(SecretValues.NO_ACCESS_SELECTED_EXCEPTION)
     return superAccess.access[access!!]!!.second
   }
 
   override fun changeEncryption() {
-    if (access == null) throw IllegalStateException(Values.NO_ACCESS_SELECTED_EXCEPTION)
-    val mode = Prompts.accessMode(prompts)
-    superAccess = superAccess.copy(access = superAccess.access.mapValues {
-      if (it.key == access) it.value.copy(first = when (mode) {
-        EncryptionMode.PASSPHRASE ->
-          UserKey(encryption.hashKeySHA256(Prompts.passphrase(prompts).encodeToByteString()))
-        EncryptionMode.GPG -> UserKey(Prompts.gpgPublicKey())
-      }) else it.value
-    })
+    if (access == null) throw IllegalStateException(SecretValues.NO_ACCESS_SELECTED_EXCEPTION)
+    val mode = SecretPrompts.accessMode(prompts)
+    superAccess = superAccess.copy(
+      access = superAccess.access.mapValues {
+        if (it.key == access) it.value.copy(
+          first = when (mode) {
+            EncryptionMode.PASSPHRASE ->
+              UserKey(encryption.hashKeySHA256(SecretPrompts.passphrase(prompts).encodeToByteString()))
+
+            EncryptionMode.GPG -> UserKey(SecretPrompts.gpgPublicKey())
+          },
+        ) else it.value
+      },
+    )
   }
 
   override fun deselectAccess() {
@@ -138,17 +144,21 @@ internal class RemoteManagementImpl(
   }
 
   override fun deleteProfile(profile: String) {
-    if (access != null) throw IllegalStateException(Values.ACCESS_SELECTED_EXCEPTION)
+    if (access != null) throw IllegalStateException(SecretValues.ACCESS_SELECTED_EXCEPTION)
     if (profile !in SecretsState.metadata.profiles)
-      throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
-    if (profile in deleted) throw IllegalArgumentException(Values.PROFILE_ALREADY_DELETED_EXCEPTION)
-    println(Values.DELETE_PROFILES_MESSAGE)
-    if (!(prompts.removeFirstOrNull()?.toBooleanStrict() ?: KInquirer.promptConfirm(Values.GENERIC_PROCEED_PROMPT)))
+      throw IllegalArgumentException(SecretValues.profileDoesNotExistException(profile))
+    if (profile in deleted) throw IllegalArgumentException(SecretValues.PROFILE_ALREADY_DELETED_EXCEPTION)
+    println(SecretValues.DELETE_PROFILES_MESSAGE)
+    if (!(prompts.removeFirstOrNull()?.toBooleanStrict()
+        ?: KInquirer.promptConfirm(SecretValues.GENERIC_PROCEED_PROMPT))
+    )
       return
     val accessesWithProfile = superAccess.access.filter { profile in it.value.second }.keys
     if (accessesWithProfile.isNotEmpty()) {
-      println(Values.accessesWithProfileMessage(accessesWithProfile.joinToString()))
-      if (!(prompts.removeFirstOrNull()?.toBooleanStrict() ?: KInquirer.promptConfirm(Values.GENERIC_PROCEED_PROMPT)))
+      println(SecretValues.accessesWithProfileMessage(accessesWithProfile.joinToString()))
+      if (!(prompts.removeFirstOrNull()?.toBooleanStrict()
+          ?: KInquirer.promptConfirm(SecretValues.GENERIC_PROCEED_PROMPT))
+      )
         return
       superAccess =
         superAccess.copy(
@@ -163,8 +173,8 @@ internal class RemoteManagementImpl(
   }
 
   override fun restoreProfile(profile: String) {
-    if (access != null) throw IllegalStateException(Values.ACCESS_SELECTED_EXCEPTION)
-    if (profile !in deleted) throw IllegalStateException(Values.PROFILE_NOT_DELETED_EXCEPTION)
+    if (access != null) throw IllegalStateException(SecretValues.ACCESS_SELECTED_EXCEPTION)
+    if (profile !in deleted) throw IllegalStateException(SecretValues.PROFILE_NOT_DELETED_EXCEPTION)
     deleted.remove(profile)
     superAccess = superAccess.addKey(files.readKey(profile))
   }
@@ -184,7 +194,7 @@ internal class RemoteManagementImpl(
       remoteMetadata.copy(
         profiles = remoteMetadata.profiles + SecretsState.metadata.profiles - deleted,
         superAccess =
-          AccessMetadata(Values.SUPER_ACCESS_METADATA_NAME, encryption.hashGitDataSHA1(superBytes), superKey),
+          AccessMetadata(SecretValues.SUPER_ACCESS_METADATA_NAME, encryption.hashGitDataSHA1(superBytes), superKey),
         access =
           accesses
             .map { AccessMetadata(it.key, encryption.hashGitDataSHA1(it.value), superAccess.access[it.key]!!.first) }
@@ -208,7 +218,7 @@ internal class RemoteManagementImpl(
   private fun rekeyProfiles() {
     val hashes = rekeyed.associateWith {
       val (profile, _) = files.readProfile(it)
-      val key = SecretKey(it, Utils.generateBytes(Values.KEY_SIZE))
+      val key = SecretKey(it, SecretUtils.generateBytes(SecretValues.KEY_SIZE))
       val profileBytes = files.writeProfile(profile, key)
       profileBytes.hash(encryption)
     }

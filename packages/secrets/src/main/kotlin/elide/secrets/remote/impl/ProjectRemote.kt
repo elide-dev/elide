@@ -14,12 +14,12 @@ package elide.secrets.remote.impl
 
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.files.Path
-import elide.secrets.Utils
-import elide.secrets.Utils.delete
-import elide.secrets.Utils.exists
-import elide.secrets.Utils.read
-import elide.secrets.Utils.write
-import elide.secrets.Values
+import elide.secrets.SecretUtils
+import elide.secrets.SecretUtils.delete
+import elide.secrets.SecretUtils.exists
+import elide.secrets.SecretUtils.read
+import elide.secrets.SecretUtils.write
+import elide.secrets.SecretValues
 import elide.secrets.remote.Remote
 
 /**
@@ -32,17 +32,17 @@ import elide.secrets.remote.Remote
 internal class ProjectRemote(private val path: Path) : Remote {
   override val writeAccess: Boolean = true
 
-  override suspend fun getMetadata(): ByteString? = getFile(Values.METADATA_FILE)
+  override suspend fun getMetadata(): ByteString? = getFile(SecretValues.METADATA_FILE)
 
-  override suspend fun getProfile(profile: String): ByteString? = getFile(Utils.profileName(profile))
+  override suspend fun getProfile(profile: String): ByteString? = getFile(SecretUtils.profileName(profile))
 
-  override suspend fun getAccess(access: String): ByteString? = getFile(Utils.accessName(access))
+  override suspend fun getAccess(access: String): ByteString? = getFile(SecretUtils.accessName(access))
 
-  override suspend fun getSuperAccess(): ByteString? = getFile(Values.SUPER_ACCESS_FILE)
+  override suspend fun getSuperAccess(): ByteString? = getFile(SecretValues.SUPER_ACCESS_FILE)
 
   override suspend fun update(metadata: ByteString, profiles: Map<String, ByteString>) {
-    writeFile(Values.METADATA_FILE, metadata)
-    profiles.forEach { writeFile(Utils.profileName(it.key), it.value) }
+    writeFile(SecretValues.METADATA_FILE, metadata)
+    profiles.forEach { writeFile(SecretUtils.profileName(it.key), it.value) }
   }
 
   override suspend fun superUpdate(
@@ -53,12 +53,12 @@ internal class ProjectRemote(private val path: Path) : Remote {
     deletedProfiles: Set<String>,
     deletedAccesses: Set<String>,
   ) {
-    writeFile(Values.METADATA_FILE, metadata)
-    profiles.forEach { writeFile(Utils.profileName(it.key), it.value) }
-    writeFile(Values.SUPER_ACCESS_FILE, superAccess)
-    access.forEach { writeFile(Utils.accessName(it.key), it.value) }
-    deletedProfiles.forEach { deleteFile(Utils.profileName(it)) }
-    deletedAccesses.forEach { deleteFile(Utils.accessName(it)) }
+    writeFile(SecretValues.METADATA_FILE, metadata)
+    profiles.forEach { writeFile(SecretUtils.profileName(it.key), it.value) }
+    writeFile(SecretValues.SUPER_ACCESS_FILE, superAccess)
+    access.forEach { writeFile(SecretUtils.accessName(it.key), it.value) }
+    deletedProfiles.forEach { deleteFile(SecretUtils.profileName(it)) }
+    deletedAccesses.forEach { deleteFile(SecretUtils.accessName(it)) }
   }
 
   private fun getFile(path: String): ByteString? = Path(this.path, path).run { if (exists()) read() else null }

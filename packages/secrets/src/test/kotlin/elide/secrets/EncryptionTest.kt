@@ -31,7 +31,7 @@ class EncryptionTest {
 
   @Test
   fun `test encryption`() {
-    val key = Utils.generateBytes(Values.KEY_SIZE)
+    val key = SecretUtils.generateBytes(SecretValues.KEY_SIZE)
     val data = "test data".encodeToByteString()
     val encrypted = encryption.encryptAES(key, data)
     val decrypted = encryption.decryptAES(key, encrypted)

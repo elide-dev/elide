@@ -12,8 +12,8 @@
  */
 package elide.secrets.dto.persisted
 
-import elide.secrets.Utils
 import kotlinx.serialization.Serializable
+import elide.secrets.SecretUtils
 
 /**
  * [Secret] containing string data.
@@ -24,6 +24,6 @@ import kotlinx.serialization.Serializable
 internal data class StringSecret(override val name: String, override val value: String, val env: String? = null) :
   Secret<String> {
   init {
-    Utils.checkName(name, "Secret")
+    SecretUtils.checkName(name, "Secret")
   }
 }

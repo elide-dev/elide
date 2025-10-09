@@ -13,7 +13,7 @@
 package elide.secrets.dto.persisted
 
 import kotlinx.serialization.Serializable
-import elide.secrets.Utils
+import elide.secrets.SecretUtils
 
 /**
  * Remote access keys for secrets.
@@ -23,7 +23,7 @@ import elide.secrets.Utils
 @Serializable
 internal data class SecretAccess(override val name: String, val keys: Map<String, SecretKey>) : Named {
   init {
-    Utils.checkName(name, "Access")
-    Utils.checkNames(keys, "Key")
+    SecretUtils.checkName(name, "Access")
+    SecretUtils.checkNames(keys, "Key")
   }
 }

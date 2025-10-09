@@ -20,7 +20,14 @@ import elide.secrets.dto.persisted.Named
  * @author Lauri Heino <datafox>
  */
 internal interface RemoteInitializer : Named {
+  /**
+   * Interactively asks for [Remote] details and initializes a connection.
+   */
   suspend fun init(prompts: MutableList<String>): Remote
 
+  /**
+   * Non-interactively initializes a connection. May depend on `elide.pkl` manifest configuration and host-side
+   * environment variables.
+   */
   suspend fun initNonInteractive(): Remote
 }

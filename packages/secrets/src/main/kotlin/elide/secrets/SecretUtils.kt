@@ -38,7 +38,7 @@ import elide.secrets.dto.persisted.UserKey
  *
  * @author Lauri Heino <datafox>
  */
-internal object Utils {
+internal object SecretUtils {
   /** Generates [size] bytes. */
   fun generateBytes(size: Int): ByteString = ByteString(ByteArray(size).apply { SecureRandom().nextBytes(this) })
 
@@ -98,11 +98,12 @@ internal object Utils {
 
   fun Path.delete() = SystemFileSystem.delete(this)
 
-  fun profileName(profile: String): String = "${Values.PROFILE_FILE_PREFIX}$profile${Values.PROFILE_FILE_EXTENSION}"
+  fun profileName(profile: String): String =
+    "${SecretValues.PROFILE_FILE_PREFIX}$profile${SecretValues.PROFILE_FILE_EXTENSION}"
 
-  fun keyName(profile: String): String = "${Values.PROFILE_FILE_PREFIX}$profile${Values.KEY_FILE_EXTENSION}"
+  fun keyName(profile: String): String = "${SecretValues.PROFILE_FILE_PREFIX}$profile${SecretValues.KEY_FILE_EXTENSION}"
 
-  fun accessName(access: String): String = "$access${Values.ACCESS_FILE_EXTENSION}"
+  fun accessName(access: String): String = "$access${SecretValues.ACCESS_FILE_EXTENSION}"
 
   inline fun <T> Collection<T>.choices(block: T.() -> String): List<Choice<T>> = map { Choice(it.block(), it) }
 
@@ -115,7 +116,7 @@ internal object Utils {
     Choice(it.value.block(it.key), it.value)
   }
 
-  fun defaultPath(): Path = Path(System.getProperty("user.dir"), Values.DEFAULT_PATH)
+  fun defaultPath(): Path = Path(System.getProperty("user.dir"), SecretValues.DEFAULT_PATH)
 
-  fun path(path: java.nio.file.Path): Path = Path(path.absolutePathString(), Values.DEFAULT_PATH)
+  fun path(path: java.nio.file.Path): Path = Path(path.absolutePathString(), SecretValues.DEFAULT_PATH)
 }

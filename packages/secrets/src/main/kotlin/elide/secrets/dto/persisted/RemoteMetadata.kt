@@ -13,7 +13,7 @@
 package elide.secrets.dto.persisted
 
 import kotlinx.serialization.Serializable
-import elide.secrets.Utils
+import elide.secrets.SecretUtils
 
 /**
  * Metadata for remotely stored secrets.
@@ -29,9 +29,9 @@ internal data class RemoteMetadata(
 ) : SecretMetadata {
 
   init {
-    Utils.checkName(name, "Project")
-    Utils.checkNames(profiles, "Profile")
-    Utils.checkNames(access, "Access")
+    SecretUtils.checkName(name, "Project")
+    SecretUtils.checkNames(profiles, "Profile")
+    SecretUtils.checkNames(access, "Access")
   }
 
   fun add(profile: ProfileMetadata): RemoteMetadata {

@@ -17,8 +17,8 @@ import com.github.kinquirer.components.promptInput
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import elide.annotations.Singleton
+import elide.secrets.SecretValues
 import elide.secrets.SecretsState
-import elide.secrets.Values
 import elide.secrets.dto.persisted.Profile.Companion.get
 import elide.secrets.dto.persisted.StringSecret
 import elide.secrets.remote.RemoteInitializer
@@ -37,28 +37,28 @@ internal class ProjectRemoteInitializer : RemoteInitializer {
   override suspend fun init(prompts: MutableList<String>): ProjectRemote {
     path =
       SecretsState.manifest?.secrets?.project?.path
-        ?: SecretsState.local[Values.PROJECT_REMOTE_PATH_SECRET]
+        ?: SecretsState.local[SecretValues.PROJECT_REMOTE_PATH_SECRET]
         ?: askPath(prompts)
     val realPath = validatePath()
-    SecretsState.updateLocal { add(StringSecret(Values.PROJECT_REMOTE_PATH_SECRET, path)) }
+    SecretsState.updateLocal { add(StringSecret(SecretValues.PROJECT_REMOTE_PATH_SECRET, path)) }
     return ProjectRemote(realPath)
   }
 
   override suspend fun initNonInteractive(): ProjectRemote {
     path =
       SecretsState.manifest?.secrets?.project?.path
-        ?: throw IllegalStateException(Values.PROJECT_REMOTE_PATH_NOT_SPECIFIED_EXCEPTION)
+        ?: throw IllegalStateException(SecretValues.PROJECT_REMOTE_PATH_NOT_SPECIFIED_EXCEPTION)
     val realPath = validatePath()
-    SecretsState.updateLocal { add(StringSecret(Values.PROJECT_REMOTE_PATH_SECRET, path)) }
+    SecretsState.updateLocal { add(StringSecret(SecretValues.PROJECT_REMOTE_PATH_SECRET, path)) }
     return ProjectRemote(realPath)
   }
 
   private fun askPath(prompts: MutableList<String>): String {
-    println(Values.PROJECT_REMOTE_PATH_MESSAGE)
+    println(SecretValues.PROJECT_REMOTE_PATH_MESSAGE)
     return prompts.removeFirstOrNull()
       ?: KInquirer.promptInput(
-        Values.PROJECT_REMOTE_PATH_PROMPT,
-        Values.PROJECT_REMOTE_DEFAULT_PATH,
+        SecretValues.PROJECT_REMOTE_PATH_PROMPT,
+        SecretValues.PROJECT_REMOTE_DEFAULT_PATH,
       )
   }
 

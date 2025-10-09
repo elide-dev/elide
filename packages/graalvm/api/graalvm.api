@@ -10222,24 +10222,6 @@ public final class elide/runtime/plugins/vfs/VfsPluginKt {
 	public static final fun vfs (Lelide/runtime/core/PolyglotEngineConfiguration;Lkotlin/jvm/functions/Function1;)V
 }
 
-public synthetic class elide/runtime/secrets/$SecretsJsIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
-	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
-	public fun isContextScope ()Z
-	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
-	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
-	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final synthetic class elide/runtime/secrets/$SecretsJsIntrinsic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
-	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
-	public fun <init> ()V
-	public fun hasBuilder ()Z
-	public fun isBuildable ()Z
-}
-
 public synthetic class elide/runtime/secrets/$SecretsPythonIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V

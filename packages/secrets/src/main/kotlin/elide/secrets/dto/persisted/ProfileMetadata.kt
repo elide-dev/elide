@@ -15,7 +15,7 @@ package elide.secrets.dto.persisted
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.bytestring.toHexString
 import kotlinx.serialization.Serializable
-import elide.secrets.Utils
+import elide.secrets.SecretUtils
 
 /**
  * Metadata for a [Profile].
@@ -31,6 +31,6 @@ internal data class ProfileMetadata(override val name: String, val hash: String)
   ) : this(name, hash.toHexString())
 
   init {
-    Utils.checkName(name, "Profile")
+    SecretUtils.checkName(name, "Profile")
   }
 }

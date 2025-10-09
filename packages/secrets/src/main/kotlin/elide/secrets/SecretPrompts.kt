@@ -15,7 +15,7 @@ package elide.secrets
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptInputPassword
 import com.github.kinquirer.components.promptListObject
-import elide.secrets.Utils.choices
+import elide.secrets.SecretUtils.choices
 import elide.secrets.dto.persisted.EncryptionMode
 
 /**
@@ -23,24 +23,25 @@ import elide.secrets.dto.persisted.EncryptionMode
  *
  * @author Lauri Heino <datafox>
  */
-internal object Prompts {
+internal object SecretPrompts {
   fun passphrase(prompts: MutableList<String>): String {
     checkInteractive()
     @Suppress("unused")
-    for (i in 0 until Values.INVALID_PASSPHRASE_TRIES) {
-      val pass = prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_PROMPT)
-      val repeat = prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_REPEAT_PROMPT)
+    for (i in 0 until SecretValues.INVALID_PASSPHRASE_TRIES) {
+      val pass = prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(SecretValues.ENTER_PASSPHRASE_PROMPT)
+      val repeat =
+        prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(SecretValues.ENTER_PASSPHRASE_REPEAT_PROMPT)
       if (pass == repeat) return pass
-      println(Values.PASSPHRASES_NOT_IDENTICAL_MESSAGE)
+      println(SecretValues.PASSPHRASES_NOT_IDENTICAL_MESSAGE)
     }
-    throw IllegalArgumentException(Values.MISMATCHING_PASSPHRASES_EXCEPTION)
+    throw IllegalArgumentException(SecretValues.MISMATCHING_PASSPHRASES_EXCEPTION)
   }
 
   fun localUserKeyMode(prompts: MutableList<String>): EncryptionMode {
     checkInteractive()
     return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) }
       ?: KInquirer.promptListObject(
-        Values.LOCAL_STORAGE_ENCRYPTION_PROMPT,
+        SecretValues.LOCAL_STORAGE_ENCRYPTION_PROMPT,
         EncryptionMode.entries.choices { displayName },
       )
   }
@@ -48,20 +49,20 @@ internal object Prompts {
   fun validateLocalPassphrase(prompts: MutableList<String>, validator: (String) -> Boolean): String {
     checkInteractive()
     @Suppress("unused")
-    for (i in 0 until Values.INVALID_PASSPHRASE_TRIES) {
-      val pass = prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(Values.ENTER_PASSPHRASE_PROMPT)
+    for (i in 0 until SecretValues.INVALID_PASSPHRASE_TRIES) {
+      val pass = prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(SecretValues.ENTER_PASSPHRASE_PROMPT)
       if (validator(pass)) return pass
-      println(Values.INVALID_PASSPHRASE_MESSAGE)
+      println(SecretValues.INVALID_PASSPHRASE_MESSAGE)
     }
-    throw IllegalArgumentException(Values.INVALID_PASSPHRASE_EXCEPTION)
+    throw IllegalArgumentException(SecretValues.INVALID_PASSPHRASE_EXCEPTION)
   }
 
   fun superKeyMode(prompts: MutableList<String>): EncryptionMode {
     checkInteractive()
-    println(Values.SUPER_ACCESS_ENCRYPTION_MESSAGE)
+    println(SecretValues.SUPER_ACCESS_ENCRYPTION_MESSAGE)
     return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) }
       ?: KInquirer.promptListObject(
-        Values.GENERIC_CHOICE_PROMPT,
+        SecretValues.GENERIC_CHOICE_PROMPT,
         EncryptionMode.entries.choices { displayName },
       )
   }
@@ -70,7 +71,7 @@ internal object Prompts {
     checkInteractive()
     return prompts.removeFirstOrNull()?.let { EncryptionMode.valueOf(it) }
       ?: KInquirer.promptListObject(
-        Values.ACCESS_FILE_ENCRYPTION_PROMPT,
+        SecretValues.ACCESS_FILE_ENCRYPTION_PROMPT,
         EncryptionMode.entries.choices { displayName },
       )
   }
@@ -78,16 +79,16 @@ internal object Prompts {
   fun gpgPrivateKey(): String {
     checkInteractive()
     val keys = GPGHandler.gpgPrivateKeys()
-    return KInquirer.promptListObject(Values.GPG_PRIVATE_KEY_PROMPT, keys.choices { "$it (${substring(0, 8)})" })
+    return KInquirer.promptListObject(SecretValues.GPG_PRIVATE_KEY_PROMPT, keys.choices { "$it (${substring(0, 8)})" })
   }
 
   fun gpgPublicKey(): String {
     checkInteractive()
     val keys = GPGHandler.gpgKeys()
-    return KInquirer.promptListObject(Values.GPG_PUBLIC_KEY_PROMPT, keys.choices { "$it (${substring(0, 8)})" })
+    return KInquirer.promptListObject(SecretValues.GPG_PUBLIC_KEY_PROMPT, keys.choices { "$it (${substring(0, 8)})" })
   }
 
   private fun checkInteractive() {
-    if (!SecretsState.interactive) throw IllegalStateException(Values.NOT_IN_INTERACTIVE_MODE_EXCEPTION)
+    if (!SecretsState.interactive) throw IllegalStateException(SecretValues.NOT_IN_INTERACTIVE_MODE_EXCEPTION)
   }
 }

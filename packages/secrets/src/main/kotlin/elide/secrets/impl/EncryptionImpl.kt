@@ -23,8 +23,8 @@ import kotlinx.io.bytestring.ByteString
 import elide.annotations.Singleton
 import elide.secrets.Encryption
 import elide.secrets.GPGHandler
-import elide.secrets.Utils
-import elide.secrets.Values
+import elide.secrets.SecretUtils
+import elide.secrets.SecretValues
 
 /**
  * Implementation of [Encryption], using `AES` for encryption and `SHA-256` for hashing.
@@ -34,28 +34,33 @@ import elide.secrets.Values
 @Singleton
 internal class EncryptionImpl : Encryption {
   override fun encryptAES(key: ByteString, data: ByteString): ByteString {
-    val iv: ByteArray = Utils.generateBytes(Values.IV_SIZE).toByteArray()
-    val out: ByteArray = iv.copyOf(Values.IV_SIZE + data.size)
+    val iv: ByteArray = SecretUtils.generateBytes(SecretValues.IV_SIZE).toByteArray()
+    val out: ByteArray = iv.copyOf(SecretValues.IV_SIZE + data.size)
     val cipher = createCipher()
     cipher.init(true, ParametersWithIV(KeyParameter(key.toByteArray()), iv))
-    cipher.processBytes(data.toByteArray(), 0, data.size, out, Values.IV_SIZE)
+    cipher.processBytes(data.toByteArray(), 0, data.size, out, SecretValues.IV_SIZE)
     return ByteString(out)
   }
 
   override fun decryptAES(key: ByteString, encrypted: ByteString): ByteString {
-    val out = ByteArray(encrypted.size - Values.IV_SIZE)
+    val out = ByteArray(encrypted.size - SecretValues.IV_SIZE)
     val cipher = createCipher()
     val parameters =
-      ParametersWithIV(KeyParameter(key.toByteArray()), encrypted.toByteArray(0, Values.IV_SIZE), 0, Values.IV_SIZE)
+      ParametersWithIV(
+        KeyParameter(key.toByteArray()),
+        encrypted.toByteArray(0, SecretValues.IV_SIZE),
+        0,
+        SecretValues.IV_SIZE,
+      )
     cipher.init(false, parameters)
-    cipher.processBytes(encrypted.toByteArray(Values.IV_SIZE), 0, out.size, out, 0)
+    cipher.processBytes(encrypted.toByteArray(SecretValues.IV_SIZE), 0, out.size, out, 0)
     return ByteString(out)
   }
 
   override fun hashKeySHA256(data: ByteString): ByteString {
     val parameterGenerator = PKCS5S2ParametersGenerator(SHA256Digest())
-    parameterGenerator.init(data.toByteArray(), null, Values.HASH_ITERATIONS)
-    val parameter = parameterGenerator.generateDerivedParameters(Values.KEY_SIZE * 8) as KeyParameter
+    parameterGenerator.init(data.toByteArray(), null, SecretValues.HASH_ITERATIONS)
+    val parameter = parameterGenerator.generateDerivedParameters(SecretValues.KEY_SIZE * 8) as KeyParameter
     return ByteString(parameter.key)
   }
 

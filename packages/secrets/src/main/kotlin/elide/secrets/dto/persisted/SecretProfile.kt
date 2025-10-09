@@ -13,7 +13,7 @@
 package elide.secrets.dto.persisted
 
 import kotlinx.serialization.Serializable
-import elide.secrets.Utils
+import elide.secrets.SecretUtils
 
 /**
  * Collection for [Secrets][Secret].
@@ -25,8 +25,8 @@ internal data class SecretProfile(override val name: String, override val secret
   constructor(name: String) : this(name, emptyMap())
 
   init {
-    Utils.checkName(name, "Profile")
-    Utils.checkNames(secrets, "Secret")
+    SecretUtils.checkName(name, "Profile")
+    SecretUtils.checkNames(secrets, "Secret")
   }
 
   fun add(secret: Secret<*>): SecretProfile {

@@ -90,7 +90,7 @@ class ManagementTest : AbstractSecretTest() {
     assertEquals(setOf("test"), secrets.listProfiles())
     assertNull(secrets.getProfile())
     assertThrows<NullPointerException> { secrets.listSecrets() }
-    assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("nope")) { secrets.loadProfile("nope") }
+    assertThrows<IllegalArgumentException>(SecretValues.profileDoesNotExistException("nope")) { secrets.loadProfile("nope") }
   }
 
   @Test
@@ -101,7 +101,7 @@ class ManagementTest : AbstractSecretTest() {
     secrets.init(path, null)
     assertEquals(
       "{\"name\":\"test\",\"profiles\":{},\"localEncryption\":\"PASSPHRASE\"}",
-      path.resolve(Values.DEFAULT_PATH).resolve(Values.METADATA_FILE).readText(),
+      path.resolve(SecretValues.DEFAULT_PATH).resolve(SecretValues.METADATA_FILE).readText(),
     )
   }
 
@@ -179,12 +179,12 @@ class ManagementTest : AbstractSecretTest() {
     assertEquals("test", secrets.getSecret("test"))
 
     // remove profile.
-    assertThrows<IllegalStateException>(Values.REMOVED_PROFILE_NOT_SELECTED_EXCEPTION) { secrets.deleteProfile("test") }
+    assertThrows<IllegalStateException>(SecretValues.REMOVED_PROFILE_NOT_SELECTED_EXCEPTION) { secrets.deleteProfile("test") }
     secrets.unloadProfile()
-    assertThrows<IllegalArgumentException>(Values.profileAlreadyExistsException("new")) { secrets.createProfile("new") }
+    assertThrows<IllegalArgumentException>(SecretValues.profileAlreadyExistsException("new")) { secrets.createProfile("new") }
     secrets.deleteProfile("test")
     assertEquals(setOf("new"), secrets.listProfiles())
-    assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("test")) {
+    assertThrows<IllegalArgumentException>(SecretValues.profileDoesNotExistException("test")) {
       secrets.deleteProfile("test")
     }
   }
@@ -199,8 +199,8 @@ class ManagementTest : AbstractSecretTest() {
     // encryption mode and passphrase twice.
     queuePrompts("project", ".secrets", EncryptionMode.PASSPHRASE, "sos", "sos")
     val remote = secrets.manageRemote()
-    assertThrows<IllegalArgumentException>(Values.accessDoesNotExistException("test")) { remote.selectAccess("test") }
-    assertThrows<IllegalStateException>(Values.NO_ACCESS_SELECTED_EXCEPTION) { remote.addProfile("test") }
+    assertThrows<IllegalArgumentException>(SecretValues.accessDoesNotExistException("test")) { remote.selectAccess("test") }
+    assertThrows<IllegalStateException>(SecretValues.NO_ACCESS_SELECTED_EXCEPTION) { remote.addProfile("test") }
 
     // create new access file and add a profile to it.
     // remote.createAccess() asks for encryption mode and passphrase twice.
@@ -208,7 +208,7 @@ class ManagementTest : AbstractSecretTest() {
     remote.createAccess("test")
     remote.selectAccess("test")
     remote.addProfile("test")
-    assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("nope")) { remote.addProfile("nope") }
+    assertThrows<IllegalArgumentException>(SecretValues.profileDoesNotExistException("nope")) { remote.addProfile("nope") }
 
     // change access passphrase
     // remote.changeEncryption() asks for encryption mode and passphrase twice.
@@ -225,8 +225,8 @@ class ManagementTest : AbstractSecretTest() {
     // select access, remove profile from it and add it back.
     remote.selectAccess("test")
     remote.removeProfile("test")
-    assertThrows<IllegalArgumentException>(Values.profileNotInAccessException("test")) { remote.removeProfile("test") }
-    assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("nope")) { remote.removeProfile("nope") }
+    assertThrows<IllegalArgumentException>(SecretValues.profileNotInAccessException("test")) { remote.removeProfile("test") }
+    assertThrows<IllegalArgumentException>(SecretValues.profileDoesNotExistException("nope")) { remote.removeProfile("nope") }
     remote.addProfile("test")
     remote.deselectAccess()
 
@@ -244,7 +244,7 @@ class ManagementTest : AbstractSecretTest() {
 
     // restore profile and add it back to access.
     remote.restoreProfile("test")
-    assertThrows<IllegalStateException>(Values.PROFILE_NOT_DELETED_EXCEPTION) { remote.restoreProfile("test") }
+    assertThrows<IllegalStateException>(SecretValues.PROFILE_NOT_DELETED_EXCEPTION) { remote.restoreProfile("test") }
     remote.selectAccess("test")
     assertEquals(setOf(), remote.listProfiles())
     remote.addProfile("test")
@@ -256,10 +256,10 @@ class ManagementTest : AbstractSecretTest() {
 
     // push changes and check for files
     remote.push()
-    assertTrue(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH).resolve(Values.METADATA_FILE).exists())
-    assertTrue(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH).resolve(Values.SUPER_ACCESS_FILE).exists())
-    assertTrue(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH).resolve(Utils.accessName("test")).exists())
-    assertTrue(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH).resolve(Utils.profileName("test")).exists())
+    assertTrue(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH).resolve(SecretValues.METADATA_FILE).exists())
+    assertTrue(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH).resolve(SecretValues.SUPER_ACCESS_FILE).exists())
+    assertTrue(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH).resolve(SecretUtils.accessName("test")).exists())
+    assertTrue(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH).resolve(SecretUtils.profileName("test")).exists())
   }
 
   @Test
@@ -267,7 +267,7 @@ class ManagementTest : AbstractSecretTest() {
     createEnvironment(path, managementFiles)
 
     // copy remote files.
-    val remoteDir = Files.createDirectory(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH))
+    val remoteDir = Files.createDirectory(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH))
     copyFiles(remoteDir, remoteFiles)
     queuePrompt(secretPass)
     secrets.init(path, null)
@@ -315,7 +315,7 @@ class ManagementTest : AbstractSecretTest() {
   @Test
   fun `initialize from remote`() = withTemp { path ->
     // copy remote files.
-    val remoteDir = Files.createDirectory(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH))
+    val remoteDir = Files.createDirectory(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH))
     copyFiles(remoteDir, remoteFiles)
 
     // initialize secrets from remote.
@@ -347,7 +347,7 @@ class ManagementTest : AbstractSecretTest() {
   @Test
   fun `initialize from remote non-interactively`() = withTemp { path ->
     // copy remote files.
-    val remoteDir = Files.createDirectory(path.resolve(Values.PROJECT_REMOTE_DEFAULT_PATH))
+    val remoteDir = Files.createDirectory(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH))
     copyFiles(remoteDir, remoteFiles)
     val stream = ManagementTest::class.java.getResourceAsStream("management/elide.pkl")!!
     val manifest = parser.parse(stream)
@@ -362,7 +362,7 @@ class ManagementTest : AbstractSecretTest() {
   }
 
   private fun createEnvironment(path: Path, files: List<String>): Path {
-    val secretsDir = Files.createDirectory(path.resolve(Values.DEFAULT_PATH))
+    val secretsDir = Files.createDirectory(path.resolve(SecretValues.DEFAULT_PATH))
     copyFiles(secretsDir, files)
     return secretsDir
   }

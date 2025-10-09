@@ -12,23 +12,22 @@
  */
 package elide.runtime.secrets
 
-import com.oracle.truffle.api.CompilerDirectives
-import elide.secrets.Secrets
+import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
+import jakarta.inject.Provider
+import kotlinx.io.bytestring.ByteString
+import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.js.JsError
+import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.secrets.SecretsAPI
-import jakarta.inject.Provider
-import kotlinx.io.bytestring.ByteString
-import org.graalvm.polyglot.Context
-import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.proxy.ProxyExecutable
-import elide.runtime.gvm.GuestLanguage
-import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.plugins.python.secrets.SecretsPythonAPI
+import elide.secrets.Secrets
 
 private const val SECRETS_MODULE = "secrets"
 private const val SECRETS_INTRINSIC = "SecretsIntrinsic"
@@ -36,28 +35,15 @@ private const val SECRETS_GET = "get"
 
 private val moduleMembers = arrayOf(SECRETS_GET)
 
-internal sealed class SecretsModule(secretAccess: Provider<Secrets>) : GuestIntrinsic {
-  protected val secrets by lazy { GuestSecrets.create(secretAccess.get()) }
+@Intrinsic
+internal class SecretsIntrinsic(secretAccess: Provider<Secrets>) :
+  GuestIntrinsic, ReadOnlyProxyObject, SecretsPythonAPI {
+  private val secrets by lazy { GuestSecrets.create(secretAccess.get()) }
 
   override fun symbolicName() = SECRETS_MODULE
 
-  @Deprecated("Use symbolicName instead")
-  override fun displayName() = SECRETS_MODULE
-}
+  @Suppress("OVERRIDE_DEPRECATION") override fun displayName() = SECRETS_MODULE
 
-@Intrinsic
-internal class SecretsJsIntrinsic(secretAccess: Provider<Secrets>) : SecretsModule(secretAccess) {
-  override fun language(): GuestLanguage = GuestLanguage.JAVASCRIPT
-
-  override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) = Unit
-
-  init {
-    ModuleRegistry.deferred(ModuleInfo.of(SECRETS_MODULE)) { secrets }
-  }
-}
-
-@Intrinsic
-internal class SecretsPythonIntrinsic(secretAccess: Provider<Secrets>) : ReadOnlyProxyObject, SecretsModule(secretAccess), SecretsPythonAPI {
   override fun language(): GuestLanguage = GuestLanguage.PYTHON
 
   override fun install(bindings: GuestIntrinsic.MutableIntrinsicBindings) {
@@ -67,6 +53,10 @@ internal class SecretsPythonIntrinsic(secretAccess: Provider<Secrets>) : ReadOnl
   override fun getMemberKeys(): Array<String> = secrets.memberKeys
 
   override fun getMember(key: String?): Any? = secrets.getMember(key)
+
+  init {
+    ModuleRegistry.deferred(ModuleInfo.of(SECRETS_MODULE)) { secrets }
+  }
 }
 
 internal class GuestSecrets(private val secretAccess: Secrets) : ReadOnlyProxyObject, SecretsAPI {

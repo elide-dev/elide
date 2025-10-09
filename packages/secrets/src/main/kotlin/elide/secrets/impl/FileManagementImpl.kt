@@ -21,13 +21,13 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import elide.annotations.Singleton
 import elide.secrets.*
-import elide.secrets.Utils.decrypt
-import elide.secrets.Utils.deserialize
-import elide.secrets.Utils.encrypt
-import elide.secrets.Utils.exists
-import elide.secrets.Utils.read
-import elide.secrets.Utils.serialize
-import elide.secrets.Utils.write
+import elide.secrets.SecretUtils.decrypt
+import elide.secrets.SecretUtils.deserialize
+import elide.secrets.SecretUtils.encrypt
+import elide.secrets.SecretUtils.exists
+import elide.secrets.SecretUtils.read
+import elide.secrets.SecretUtils.serialize
+import elide.secrets.SecretUtils.write
 import elide.secrets.dto.persisted.*
 
 /**
@@ -98,11 +98,11 @@ internal class FileManagementImpl(
   override fun readKey(profile: String): SecretKey =
     keyPath(profile).read().decrypt(SecretsState.userKey, encryption).deserialize(cbor)
 
-  private fun localMetadataPath(): Path = Path(SecretsState.path, Values.METADATA_FILE)
+  private fun localMetadataPath(): Path = Path(SecretsState.path, SecretValues.METADATA_FILE)
 
-  private fun localProfilePath(): Path = Path(SecretsState.path, Values.LOCAL_FILE)
+  private fun localProfilePath(): Path = Path(SecretsState.path, SecretValues.LOCAL_FILE)
 
-  private fun profilePath(profile: String): Path = Path(SecretsState.path, Utils.profileName(profile))
+  private fun profilePath(profile: String): Path = Path(SecretsState.path, SecretUtils.profileName(profile))
 
-  private fun keyPath(profile: String): Path = Path(SecretsState.path, Utils.keyName(profile))
+  private fun keyPath(profile: String): Path = Path(SecretsState.path, SecretUtils.keyName(profile))
 }

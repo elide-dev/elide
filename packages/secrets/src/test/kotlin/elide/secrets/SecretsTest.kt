@@ -67,19 +67,19 @@ class SecretsTest : AbstractSecretTest() {
     assertEquals(setOf("test"), secrets.listProfiles())
     assertNull(secrets.getProfile())
     assertThrows<NullPointerException> { secrets.listSecrets() }
-    assertThrows<IllegalArgumentException>(Values.profileDoesNotExistException("nope")) { secrets.loadProfile("nope") }
+    assertThrows<IllegalArgumentException>(SecretValues.profileDoesNotExistException("nope")) { secrets.loadProfile("nope") }
   }
 
   @Test
   fun `test no passphrase`() = withTemp { path ->
     createEnvironment(path, null, secretFiles)
-    assertThrows<IllegalStateException>(Values.PASSPHRASE_READ_EXCEPTION) { secrets.init(path, null) }
+    assertThrows<IllegalStateException>(SecretValues.PASSPHRASE_READ_EXCEPTION) { secrets.init(path, null) }
   }
 
   @Test fun `test uninitialized secrets`() = withTemp { path -> secrets.init(path, null) }
 
   private fun createEnvironment(path: Path, passphrase: String?, files: List<String>): Path {
-    val secretsDir = Files.createDirectory(path.resolve(Values.DEFAULT_PATH))
+    val secretsDir = Files.createDirectory(path.resolve(SecretValues.DEFAULT_PATH))
     copyFiles(secretsDir, files)
     secrets.overridePassphrase(passphrase)
     return secretsDir

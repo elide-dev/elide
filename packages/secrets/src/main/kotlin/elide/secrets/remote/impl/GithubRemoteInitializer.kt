@@ -20,8 +20,8 @@ import io.ktor.http.*
 import kotlinx.serialization.json.Json
 import elide.annotations.Singleton
 import elide.secrets.Encryption
+import elide.secrets.SecretValues
 import elide.secrets.SecretsState
-import elide.secrets.Values
 import elide.secrets.dto.api.github.GithubRepositoryResponse
 import elide.secrets.dto.persisted.Profile.Companion.get
 import elide.secrets.dto.persisted.StringSecret
@@ -47,14 +47,14 @@ internal class GithubRemoteInitializer(
   override suspend fun init(prompts: MutableList<String>): GithubRemote {
     repository =
       SecretsState.manifest?.secrets?.github?.repository
-        ?: SecretsState.local[Values.GITHUB_REPOSITORY_SECRET]
+        ?: SecretsState.local[SecretValues.GITHUB_REPOSITORY_SECRET]
         ?: askRepository(prompts)
-    token = SecretsState.local[Values.GITHUB_TOKEN_SECRET] ?: askToken(prompts)
+    token = SecretsState.local[SecretValues.GITHUB_TOKEN_SECRET] ?: askToken(prompts)
     val writeAccess = validateConnection(token, repository)
     SecretsState.updateLocal {
       addAll(
-        StringSecret(Values.GITHUB_REPOSITORY_SECRET, repository),
-        StringSecret(Values.GITHUB_TOKEN_SECRET, token),
+        StringSecret(SecretValues.GITHUB_REPOSITORY_SECRET, repository),
+        StringSecret(SecretValues.GITHUB_TOKEN_SECRET, token),
       )
     }
     return GithubRemote(writeAccess, repository, token, encryption, client, json)
@@ -63,35 +63,35 @@ internal class GithubRemoteInitializer(
   override suspend fun initNonInteractive(): GithubRemote {
     repository =
       SecretsState.manifest?.secrets?.github?.repository
-        ?: throw IllegalStateException(Values.GITHUB_REPOSITORY_NOT_SPECIFIED_EXCEPTION)
+        ?: throw IllegalStateException(SecretValues.GITHUB_REPOSITORY_NOT_SPECIFIED_EXCEPTION)
     token =
-      System.getenv(Values.GITHUB_TOKEN_ENVIRONMENT_VARIABLE)
-        ?: throw IllegalStateException(Values.GITHUB_TOKEN_READ_EXCEPTION)
+      System.getenv(SecretValues.GITHUB_TOKEN_ENVIRONMENT_VARIABLE)
+        ?: throw IllegalStateException(SecretValues.GITHUB_TOKEN_READ_EXCEPTION)
     val writeAccess = validateConnection(token, repository)
     SecretsState.updateLocal {
       addAll(
-        StringSecret(Values.GITHUB_REPOSITORY_SECRET, repository),
-        StringSecret(Values.GITHUB_TOKEN_SECRET, token),
+        StringSecret(SecretValues.GITHUB_REPOSITORY_SECRET, repository),
+        StringSecret(SecretValues.GITHUB_TOKEN_SECRET, token),
       )
     }
     return GithubRemote(writeAccess, repository, token, encryption, client, json)
   }
 
   private fun askRepository(prompts: MutableList<String>): String {
-    println(Values.GITHUB_REMOTE_REPOSITORY_MESSAGE)
-    return prompts.removeFirstOrNull() ?: KInquirer.promptInput(Values.GITHUB_REMOTE_REPOSITORY_PROMPT)
+    println(SecretValues.GITHUB_REMOTE_REPOSITORY_MESSAGE)
+    return prompts.removeFirstOrNull() ?: KInquirer.promptInput(SecretValues.GITHUB_REMOTE_REPOSITORY_PROMPT)
   }
 
   private fun askToken(prompts: MutableList<String>): String {
-    println(Values.GITHUB_REMOTE_TOKEN_MESSAGE)
-    return prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(Values.GITHUB_REMOTE_TOKEN_PROMPT)
+    println(SecretValues.GITHUB_REMOTE_TOKEN_MESSAGE)
+    return prompts.removeFirstOrNull() ?: KInquirer.promptInputPassword(SecretValues.GITHUB_REMOTE_TOKEN_PROMPT)
   }
 
   private suspend fun validateConnection(token: String, repository: String): Boolean {
     val (_, content) = client.get<GithubRepositoryResponse>("repos/$repository", token, HttpStatusCode.OK)
-    if (!content!!.private) throw IllegalArgumentException(Values.GITHUB_REMOTE_REPOSITORY_NOT_PRIVATE_EXCEPTION)
+    if (!content!!.private) throw IllegalArgumentException(SecretValues.GITHUB_REMOTE_REPOSITORY_NOT_PRIVATE_EXCEPTION)
     if (!content.permissions.read)
-      throw IllegalArgumentException(Values.GITHUB_REMOTE_REPOSITORY_NO_READ_ACCESS_EXCEPTION)
+      throw IllegalArgumentException(SecretValues.GITHUB_REMOTE_REPOSITORY_NO_READ_ACCESS_EXCEPTION)
     return content.permissions.write
   }
 }

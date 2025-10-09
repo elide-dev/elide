@@ -18,7 +18,7 @@ import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
 import elide.secrets.*
-import elide.secrets.Utils.hashKey
+import elide.secrets.SecretUtils.hashKey
 import elide.secrets.dto.persisted.EncryptionMode
 import elide.secrets.dto.persisted.Profile.Companion.get
 import elide.secrets.dto.persisted.UserKey
@@ -39,7 +39,7 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
   private var passphraseOverride: String? = null
 
   override suspend fun init(path: Path, manifest: ElidePackageManifest?) {
-    SecretsState.init(false, Utils.path(path), manifest)
+    SecretsState.init(false, SecretUtils.path(path), manifest)
     if (files.metadataExists() && files.localExists()) {
       SecretsState.metadata = files.readMetadata()
       SecretsState.userKey =
@@ -47,24 +47,24 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
           EncryptionMode.PASSPHRASE -> {
             val pass =
               passphraseOverride
-                ?: System.getenv(Values.PASSPHRASE_ENVIRONMENT_VARIABLE)
-                ?: throw IllegalStateException(Values.PASSPHRASE_READ_EXCEPTION)
+                ?: System.getenv(SecretValues.PASSPHRASE_ENVIRONMENT_VARIABLE)
+                ?: throw IllegalStateException(SecretValues.PASSPHRASE_READ_EXCEPTION)
             UserKey(pass.hashKey(encryption))
           }
           EncryptionMode.GPG -> UserKey(SecretsState.metadata.fingerprint!!)
         }
       SecretsState.local = files.readLocal()
-      val profileName = System.getenv(Values.PROFILE_OVERRIDE_ENVIRONMENT_VARIABLE) ?: manifest?.secrets?.profile
+      val profileName = System.getenv(SecretValues.PROFILE_OVERRIDE_ENVIRONMENT_VARIABLE) ?: manifest?.secrets?.profile
       profileName?.let { loadProfile(it) }
       _initialized = true
-    } else logger.warn(Values.SECRETS_NOT_INITIALIZED_WARNING)
+    } else logger.warn(SecretValues.SECRETS_NOT_INITIALIZED_WARNING)
   }
 
   override fun listProfiles(): Set<String> = SecretsState.metadata.profiles.keys
 
   override fun loadProfile(profile: String) {
     if (profile !in SecretsState.metadata.profiles)
-      throw IllegalArgumentException(Values.profileDoesNotExistException(profile))
+      throw IllegalArgumentException(SecretValues.profileDoesNotExistException(profile))
     SecretsState.profilePair = files.readProfile(profile)
   }
 

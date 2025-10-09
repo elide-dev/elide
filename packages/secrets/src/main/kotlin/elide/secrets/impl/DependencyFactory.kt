@@ -23,7 +23,7 @@ import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.json.Json
 import elide.annotations.Component
 import elide.annotations.Factory
-import elide.secrets.Values
+import elide.secrets.SecretValues
 
 /**
  * Factory for external dependencies.
@@ -39,8 +39,8 @@ internal class DependencyFactory {
     HttpClient(CIO) {
       install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
       install(HttpTimeout) {
-        requestTimeoutMillis = Values.CLIENT_TIMEOUT
-        connectTimeoutMillis = Values.CLIENT_TIMEOUT
+        requestTimeoutMillis = SecretValues.CLIENT_TIMEOUT
+        connectTimeoutMillis = SecretValues.CLIENT_TIMEOUT
       }
     }
 }

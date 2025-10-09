@@ -13,7 +13,7 @@
 package elide.secrets.dto.persisted
 
 import kotlinx.serialization.Serializable
-import elide.secrets.Utils
+import elide.secrets.SecretUtils
 
 /**
  * Collection for local [Secrets][Secret].
@@ -27,7 +27,7 @@ internal data class LocalProfile(override val secrets: Map<String, Secret<*>>) :
   constructor() : this(emptyMap())
 
   init {
-    Utils.checkNames(secrets, "Secret")
+    SecretUtils.checkNames(secrets, "Secret")
   }
 
   fun add(secret: Secret<*>): LocalProfile {

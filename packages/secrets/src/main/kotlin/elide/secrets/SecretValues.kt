@@ -19,7 +19,7 @@ import kotlinx.io.files.SystemPathSeparator
  *
  * @author Lauri Heino <datafox>
  */
-internal object Values {
+internal object SecretValues {
   // cryptographic constants
   const val KEY_SIZE = 32
   const val IV_SIZE = 16

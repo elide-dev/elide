@@ -14,7 +14,7 @@ package elide.secrets.dto.persisted
 
 import kotlinx.io.bytestring.toHexString
 import kotlinx.serialization.Serializable
-import elide.secrets.Utils
+import elide.secrets.SecretUtils
 
 /**
  * Metadata for locally stored secrets.
@@ -41,8 +41,8 @@ internal data class LocalMetadata(
   )
 
   init {
-    Utils.checkName(name, "Project")
-    Utils.checkNames(profiles, "Profile")
+    SecretUtils.checkName(name, "Project")
+    SecretUtils.checkNames(profiles, "Profile")
   }
 
   fun add(profile: ProfileMetadata): LocalMetadata {

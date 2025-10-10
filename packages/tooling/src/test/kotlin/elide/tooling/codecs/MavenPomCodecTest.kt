@@ -29,8 +29,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import elide.tooling.project.codecs.MavenPomManifestCodec
+import elide.tooling.project.codecs.PackageManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.MavenPomManifest
+
+internal val defaultManifestState = object: PackageManifestCodec.ManifestBuildState {
+  override val isDebug: Boolean get() = false
+  override val isRelease: Boolean get() = false
+}
 
 @MicronautTest class MavenPomCodecTest {
   @Inject lateinit var codec: MavenPomManifestCodec
@@ -67,7 +73,7 @@ import elide.tooling.project.manifest.MavenPomManifest
   @Test fun `should read manifest file`() {
     val resource = sampleManifestResource()
     val ref = SampleManifest.model
-    val pom = codec.parseAsFile(resource.toPath()).model
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState).model
 
     assertEquals(ref.groupId, pom.groupId)
     assertEquals(ref.artifactId, pom.artifactId)

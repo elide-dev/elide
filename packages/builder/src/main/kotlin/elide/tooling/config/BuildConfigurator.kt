@@ -23,6 +23,8 @@ import elide.exec.TaskGraphBuilder
 import elide.tooling.BuildMode
 import elide.tooling.project.ElideConfiguredProject
 import elide.tooling.project.ElideProject
+import elide.tooling.project.codecs.PackageManifestCodec
+import elide.tooling.project.codecs.PackageManifestCodec.ManifestBuildState
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.registry.ResolverRegistry
 
@@ -280,6 +282,8 @@ public fun interface BuildConfigurator : ProjectConfigurator {
   }
 
   public interface ElideBuildState {
+    public val debug: Boolean
+    public val release: Boolean
     public val beanContext: BeanContext
     public val project: ElideConfiguredProject
     public val console: BuildConsoleController
@@ -288,6 +292,11 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     public val manifest: ElidePackageManifest
     public val resourcesPath: Path
     public val config: BuildConfiguration
+
+    public fun forManifest(): ManifestBuildState = object: ManifestBuildState {
+      override val isDebug: Boolean get() = debug
+      override val isRelease: Boolean get() = release
+    }
   }
 
   /**

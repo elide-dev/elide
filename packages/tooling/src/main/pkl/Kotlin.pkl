@@ -46,6 +46,12 @@ abstract class KotlinCompilerOptions {
   /// Explicitly set a language version for Kotlin Compiler invocations; this should typically be left at the default,
   /// which allows Elide to align language version options.
   languageVersion: KotlinLanguageLevel = "auto"
+
+  /// Include Kotlin runtime classes within the output artifact.
+  includeRuntime: Boolean = false
+
+  /// Don't automatically include the Kotlin Standard Library on the classpath.
+  noStdlib: Boolean = false
 }
 
 /// Configures the Kotlin compiler when targeting JVM.
@@ -101,6 +107,9 @@ class KotlinFeatureOptions {
 
   /// Whether to automatically calculate classpaths for Kotlin projects.
   autoClasspath: Boolean = true
+
+  /// Whether to enable Kotlin's reflection features.
+  reflection: Boolean = true
 }
 
 /// Specifies settings which apply to Kotlin projects.

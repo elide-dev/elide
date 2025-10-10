@@ -29,7 +29,7 @@ public class PythonRequirementsManifestCodec : PackageManifestCodec<PythonRequir
     return path.nameWithoutExtension == DEFAULT_NAME && path.extension == DEFAULT_EXTENSION
   }
 
-  override fun parse(source: InputStream): PythonRequirementsManifest {
+  override fun parse(source: InputStream, state: PackageManifestCodec.ManifestBuildState): PythonRequirementsManifest {
     return source.bufferedReader().useLines {
       PythonRequirementsManifest(it.toList())
     }

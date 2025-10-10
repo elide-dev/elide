@@ -26,6 +26,7 @@ import java.util.*
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
+import kotlin.io.path.extension
 import kotlin.io.path.isWritable
 import elide.exec.ActionScope
 import elide.exec.Task
@@ -160,13 +161,22 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       .resolve("classes") // `.../classes/...`
       .resolve(if (tests) "main" else srcSet.name) // `.../classes/main/...`
 
+    val codegenClassesOutput = state.layout.artifacts
+      .resolve("jvm") // `.dev/artifacts/jvm/...`
+      .resolve("classes") // `.../classes/...`
+      .resolve("codegen") // `.../classes/codegen/...`
+
     val testClassesOutput = if (!tests) null else state.layout.artifacts
       .resolve("jvm") // `.dev/artifacts/jvm/...`
       .resolve("classes") // `.../classes/...`
       .resolve("test") // `.../classes/main/...`
 
     val classOutput = if (tests) testClassesOutput!! else mainClassesOutput
-    val mountedInput = if (tests) mainClassesOutput else null
+    val mountedInputs = buildList {
+      add(mainClassesOutput)
+      add(codegenClassesOutput)
+      if (tests) add(testClassesOutput)
+    }
 
     logging.debug { "Java compiler task dependencies: $dependencies" }
     logging.debug { "Java main classpath: $compileClasspath" }
@@ -270,14 +280,11 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       )
     }
 
-    // main classes should be on classpath in tests mode
-    if (tests) {
-      staticDeps.prepend(mainClassesOutput)
-    }
-
     // prepare compiler configuration
     val env = Environment.host()
-    val inputs = JavaCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
+    val inputs = JavaCompiler.sources(
+      srcSet.paths.filter { it.path.extension == "java" }.map { it.path.absolute() }.asSequence()
+    )
     val commonSourceRoot = calculateCommonSourceRoot(inputs)
 
     val args = Arguments.empty().toMutable().apply {
@@ -307,7 +314,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
         compileClasspath?.let { add(it) }
         add(staticDeps)
         additionalDeps?.let { add(it) }
-        mountedInput?.let { prepend(it) }
+        mountedInputs.filterNotNull().filter { it.exists() }.forEach { prepend(it) }
       }.let {
         add(it)
       }
@@ -381,7 +388,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
   }.describedBy {
     val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
     val suiteTag = if (srcSet.name == "main") "" else " (suite '${srcSet.name}')"
-    "Compiling ${srcSet.paths.size} Java $pluralized$suiteTag"
+    "Compiling ${srcSet.paths.filter { it.path.extension == "java" }.size} Java $pluralized$suiteTag"
   }.also { javac ->
     config.taskGraph.apply {
       addNode(javac)
@@ -548,24 +555,30 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
     val kotlincOpts = state.manifest.kotlin?.compilerOptions ?: KotlinJvmCompilerOptions()
     val args = Arguments.empty().toMutable().apply {
-      // @TODO eliminate this
-      add("-Xskip-prerelease-check")
-
       // apply arguments
       addAllStrings(kotlincOpts.collect().toList())
     }.build()
 
     logging.debug { "Kotlin compiler args: '${args.asArgumentList().joinToString(" ")}'" }
 
+    val effectiveJvmTarget = (
+      state.manifest.kotlin?.compilerOptions?.jvmTarget
+      ?: state.manifest.jvm?.target
+      ?: ElidePackageManifest.JvmTarget.DEFAULT
+    )
+
     // prepare compiler configuration
     val env = Environment.host()
-    val inputs = KotlinCompiler.sources(srcSet.paths.map { it.path.absolute() }.asSequence())
+    val inputs = KotlinCompiler.sources(
+      srcSet.paths.map { it.path.absolute() }.asSequence()
+    )
     val outputs = KotlinCompiler.classesDir(kotlincClassesOutput)
     val effectiveKnownPlugins: MutableList<KotlinCompilerConfig.KotlinPluginConfig> = LinkedList()
     val compiler = KotlinCompiler.create(args, env, inputs, outputs, projectRoot = state.project.root) {
       // add classpath and let caller amend args as needed
       classpathAsList = finalizedClasspath.paths.map { it.path.toFile() }
-      incrementalCompilation = state.manifest.kotlin?.features?.incremental ?: true
+      incrementalCompilation = state.manifest.kotlin?.features?.incremental != false
+      jvmTarget = effectiveJvmTarget.argValue
 
       // handle built-in plugins
       if (state.manifest.kotlin?.features?.enableDefaultPlugins != false) {
@@ -604,7 +617,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       if (tests) "tests" else "sources"
     }
     val suiteTag = if (srcSet.name == "main" || srcSet.name == "test") "" else " (suite '${srcSet.name}')"
-    "Compiling ${srcSet.paths.size} Kotlin $pluralized$suiteTag"
+    "Compiling ${srcSet.paths.filter { it.path.extension == "kt" }.size} Kotlin $pluralized$suiteTag"
   }.also { kotlinc ->
     config.taskGraph.apply {
       addNode(kotlinc)
@@ -692,6 +705,26 @@ internal class JvmBuildConfigurator : BuildConfigurator {
                 state,
                 config,
                 srcSet,
+                additionalDeps = buildList {
+                  val mainClassesOutput = state.layout.artifacts
+                    .resolve("jvm") // `.dev/artifacts/jvm/...`
+                    .resolve("classes") // `.../classes/...`
+                    .resolve("main") // `.../classes/main/...`
+
+                  if (mainClassesOutput.exists()) add(mainClassesOutput)
+
+                  val codegenClassesOutput = state.layout.artifacts
+                    .resolve("jvm") // `.dev/artifacts/jvm/...`
+                    .resolve("classes") // `.../classes/...`
+                    .resolve("codegen") // `.../classes/codegen/...`
+
+                  if (codegenClassesOutput.exists()) add(codegenClassesOutput)
+                }.takeIf { it.isNotEmpty() }?.let {
+                  Classpath.from(it)
+                },
+                dependencies = buildList {
+                  addAll(javacs)
+                }
               )
             }
           }
@@ -709,7 +742,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
                 tests = true,
               ).describedBy {
                 val pluralized = if (srcSet.paths.size == 1) "source file" else "sources"
-                "Compiling ${srcSet.paths.size} Java test $pluralized"
+                "Compiling ${srcSet.paths.filter { it.path.extension == "java" }.size} Java test $pluralized"
               }.also { javacTest ->
                 addNode(javacTest)
                 if (javacs.isNotEmpty()) {

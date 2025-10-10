@@ -14,6 +14,7 @@ package elide.tooling.jvm
 
 import java.nio.file.Path
 import elide.tooling.Classpath
+import elide.tooling.project.ElideConfiguredProject
 
 /**
  * # JVM Libraries
@@ -57,10 +58,8 @@ public object JvmLibraries {
   public const val ELIDE_CORE: String = "dev.elide:elide-base-jvm"
   public const val ELIDE_TEST: String = "dev.elide:elide-test-jvm"
 
-  internal val baseCoordinates = arrayOf(
-    jarNamed("kotlin-stdlib"),
-    jarNamed("kotlin-reflect"),
-  )
+  internal val kotlinStdlib = jarNamed("kotlin-stdlib")
+  internal val kotlinReflect = jarNamed("kotlin-reflect")
 
   internal val baseKotlinxCoordinates = arrayOf(
     KOTLINX_HTML to EMBEDDED_KOTLINX_HTML_VERSION,
@@ -126,6 +125,16 @@ public object JvmLibraries {
     return resolveJarFor(path, jarNameFor(coordinate, elideVersion))
   }
 
+  public fun builtinClasspath(project: ElideConfiguredProject, tests: Boolean = false): Classpath {
+    return builtinClasspath(
+      project.resourcesPath,
+      tests = tests,
+      kotlinx = project.manifest.kotlin?.features?.kotlinx != false,
+      reflection = project.manifest.kotlin?.features?.reflection != false,
+      stdlib = project.manifest.kotlin?.compilerOptions?.noStdlib != true,
+    )
+  }
+
   public fun builtinClasspath(
     path: Path,
     elideVersion: String = ELIDE_VERSION,
@@ -133,6 +142,8 @@ public object JvmLibraries {
     kotlin: Boolean = true,
     kotlinx: Boolean = true,
     elide: Boolean = true,
+    reflection: Boolean = true,
+    stdlib: Boolean = true,
   ): Classpath {
     return Classpath.from(
       buildList {
@@ -142,11 +153,10 @@ public object JvmLibraries {
             addAll(elideTestCoordinates.map { resolveElideJarFor(path, it, elideVersion) })
           }
         }
-        if (kotlin || tests) addAll(
-          baseCoordinates.map {
-            resolveJarFor(path, it)
-          },
-        )
+        if (kotlin || tests) {
+          if (stdlib) add(resolveJarFor(path, kotlinStdlib))
+          if (reflection) add(resolveJarFor(path, kotlinReflect))
+        }
         if (kotlinx) baseKotlinxCoordinates.forEach { (coordinate, version) ->
           add(resolveJarFor(path, coordinate, version))
         }

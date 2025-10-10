@@ -19,14 +19,19 @@ import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 
 public interface PackageManifestCodec<T : PackageManifest> {
+  public interface ManifestBuildState {
+    public val isRelease: Boolean get() = false
+    public val isDebug: Boolean get() = false
+  }
+
   public fun defaultPath(): Path
 
   public fun supported(path: Path): Boolean
 
-  public fun parse(source: InputStream): T
+  public fun parse(source: InputStream, state: ManifestBuildState): T
 
-  public fun parseAsFile(path: Path): T {
-    return parse(source = path.toFile().inputStream())
+  public fun parseAsFile(path: Path, state: ManifestBuildState): T {
+    return parse(source = path.toFile().inputStream(), state)
   }
 
   public fun write(manifest: T, output: OutputStream)

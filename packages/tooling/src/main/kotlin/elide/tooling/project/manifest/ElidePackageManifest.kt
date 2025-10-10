@@ -28,6 +28,7 @@ private const val DEFAULT_JAVA_TARGET = 21u
 // Optimization level strings.
 private const val OPTIMIZATION_LEVEL_AUTO = "auto"
 private const val OPTIMIZATION_LEVEL_BUILD = "b"
+private const val OPTIMIZATION_LEVEL_SIZE = "s"
 private const val OPTIMIZATION_LEVEL_ZERO = "0"
 private const val OPTIMIZATION_LEVEL_ONE = "1"
 private const val OPTIMIZATION_LEVEL_TWO = "2"
@@ -528,9 +529,16 @@ public data class ElidePackageManifest(
     val runtime: List<String> = emptyList(),
   )
 
+  @JvmRecord @Serializable public data class NativeImageExclusions(
+    val all: List<MavenPackage> = emptyList(),
+    val classpath: List<MavenPackage> = emptyList(),
+    val modulepath: List<MavenPackage> = emptyList(),
+  )
+
   @Serializable public enum class OptimizationLevel(override val symbol: String) : Symbolic<String> {
     AUTO(OPTIMIZATION_LEVEL_AUTO),
     BUILD(OPTIMIZATION_LEVEL_BUILD),
+    SIZE(OPTIMIZATION_LEVEL_SIZE),
     ZERO(OPTIMIZATION_LEVEL_ZERO),
     ONE(OPTIMIZATION_LEVEL_ONE),
     TWO(OPTIMIZATION_LEVEL_TWO),
@@ -541,6 +549,7 @@ public data class ElidePackageManifest(
       override fun resolve(symbol: String): OptimizationLevel = when (symbol.lowercase().trim()) {
         OPTIMIZATION_LEVEL_AUTO -> AUTO
         OPTIMIZATION_LEVEL_BUILD -> BUILD
+        OPTIMIZATION_LEVEL_SIZE -> SIZE
         OPTIMIZATION_LEVEL_ZERO -> ZERO
         OPTIMIZATION_LEVEL_ONE -> ONE
         OPTIMIZATION_LEVEL_TWO -> TWO

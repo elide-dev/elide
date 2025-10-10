@@ -617,7 +617,7 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       if (tests) "tests" else "sources"
     }
     val suiteTag = if (srcSet.name == "main" || srcSet.name == "test") "" else " (suite '${srcSet.name}')"
-    "Compiling ${srcSet.paths.filter { it.path.extension == "kt" }.size} Kotlin $pluralized$suiteTag"
+    "Compiling ${srcSet.paths.size} Kotlin $pluralized$suiteTag"
   }.also { kotlinc ->
     config.taskGraph.apply {
       addNode(kotlinc)
@@ -679,7 +679,9 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       logging.debug { "Java or Kotlin sources detected; preparing JVM build tooling" }
       config.actionScope.apply {
         config.taskGraph.apply {
-          val javacs = if (javaSrcSet.isEmpty()) {
+          val javacs = if (javaSrcSet.isEmpty() || kotlinSrcSet.isNotEmpty()) {
+            // we don't want javac to run before kotlinc because of java/kotlin class inter-dependencies; so, if both
+            // are present, we want to run kotlinc instead, passing all sources to it.
             emptyList()
           } else {
             // skip all tests for now (these come last, and depend on mains)

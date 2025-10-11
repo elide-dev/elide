@@ -296,3 +296,11 @@ function browser(_browser: _web.Browser, _version: String) = new _web.CssTarget 
 function staticSite(_srcPath: _common.FilePath) = new _web.StaticSite {
   srcs = _srcPath
 }
+
+/// Create a local JAR dependency as a Maven artifact.
+function localJar(_group: _jvm.MavenGroup, _pkg: _jvm.MavenModule, _path: _common.FilePath) = new _jvm.MavenPackageSpec {
+  group = _group
+  name = _pkg
+  coordinate = "\(_group):\(_pkg)"
+  path = _path
+}

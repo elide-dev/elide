@@ -122,6 +122,9 @@ class MavenPackageSpec extends MavenCoordinateSpec {
   /// Full Maven coordinate for the package; if specified, this is preferred to the group and name.
   coordinate: MavenCoordinate?
 
+  /// Local path to a JAR file to use in place of a resolved artifact for this dependency; project-root-relative.
+  path: common.FilePath?
+
   /// Name of a custom repository to pull this dependency from.
   repository: common.RepositoryName?
 }

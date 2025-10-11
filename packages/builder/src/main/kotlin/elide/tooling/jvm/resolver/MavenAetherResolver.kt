@@ -152,6 +152,44 @@ public class MavenAetherResolver internal constructor (
     }
   }
 
+  @JvmRecord private data class InjectedJarArtifact private constructor (
+    private val pkg: MavenPackage,
+    private val allFiles: List<File>,
+    private val versionOverride: String? = null,
+  ) : ResolvedArtifact {
+    override val files: List<File> get() = allFiles
+
+    override val artifact: Artifact get() = object: Artifact {
+      override fun getGroupId(): String? = pkg.group
+      override fun getArtifactId(): String? = pkg.name
+      override fun getVersion(): String? = pkg.version
+      override fun setVersion(version: String?): Artifact? = object: Artifact by this {
+        override fun getVersion(): String? = version
+      }
+
+      override fun getBaseVersion(): String? = null
+      override fun isSnapshot(): Boolean = false
+      override fun getClassifier(): String? = pkg.classifier
+      override fun getExtension(): String? = null
+      override fun getFile(): File? = files.firstOrNull()
+
+      override fun setFile(file: File?): Artifact? {
+        TODO("Not yet implemented: Injected artifact `setFile`")
+      }
+
+      override fun getProperty(key: String?, defaultValue: String?): String? = null
+      override fun getProperties(): Map<String?, String?>? = null
+
+      override fun setProperties(properties: Map<String?, String?>?): Artifact? {
+        TODO("Not yet implemented: Injected artifact `setProperties`")
+      }
+    }
+
+    companion object {
+      @JvmStatic fun of(pkg: MavenPackage, files: List<File>): InjectedJarArtifact = InjectedJarArtifact(pkg, files)
+    }
+  }
+
   // Whether this resolver has initialized yet.
   private val initialized = atomic(false)
 
@@ -172,6 +210,9 @@ public class MavenAetherResolver internal constructor (
 
   // Registry of all witnessed Maven dependencies.
   private val registry = ConcurrentSkipListMap<String, Pair<MavenPackage, MultiPathUsage>>()
+
+  // Locally-provided Maven dependencies.
+  private val localPackages = ConcurrentSkipListMap<String, Pair<MavenPackage, MultiPathUsage>>()
 
   // Globally-excluded dependencies.
   private val globalExclusions = ConcurrentSkipListSet<MavenPackage>()
@@ -357,8 +398,12 @@ public class MavenAetherResolver internal constructor (
     val packages = registry.values.flatMap { (pkg, usage) ->
       logging.trace { "- Adding Maven package: ${pkg.coordinate}" }
       val coord = pkg.resolvedCoordinate()
+      if (pkg.coordinate in localPackages) {
+        // skip: we have this JAR locally, so we have no need to fetch it via maven
+        return@flatMap emptyList()
+      }
       val artifact = DefaultArtifact(coord)
-      buildList{
+      buildList {
         // always fetch gradle metadata, if present
         // add(Dependency(SubArtifact(artifact, "", "module"), "metadata", true))
 
@@ -409,13 +454,16 @@ public class MavenAetherResolver internal constructor (
       registryPackageMap.getOrDefault(pkg, mutableListOf()).also {
         it.add(manifest)
       }
-      when (val repo = pkg.repository.ifBlank { null }) {
-        // will resolve from default sources (central, et al)
-        null -> {}
+      when (pkg.path?.takeIf { it.isNotEmpty() }) {
+        null -> when (val repo = pkg.repository?.ifBlank { null }) {
+          // will resolve from default sources (central, et al)
+          null -> {}
 
-        else -> if (repo !in repositories) {
-          error("Unknown Maven repository: '$repo', for package '${pkg.coordinate}'")
+          else -> if (repo !in repositories) {
+            error("Unknown Maven repository: '$repo', for package '${pkg.coordinate}'")
+          }
         }
+        else -> localPackages[pkg.coordinate] = pkg to usage
       }
     }
   }
@@ -525,6 +573,19 @@ public class MavenAetherResolver internal constructor (
     logging.trace { "Finalized dependencies: $renderedDependencies" }
     logging.debug { "Resolved classpath: $renderedClasspath" }
 
+    // handle local jar overrides
+    localPackages.forEach { localPkg ->
+      packageArtifacts[localPkg.value.first] = InjectedJarArtifact.of(
+        localPkg.value.first,
+        listOf(
+          config.projectRoot.resolve(requireNotNull(localPkg.value.first.path) {
+            "No path provided for local JAR: ${localPkg.key}"
+          }).toFile()
+        )
+      )
+    }
+
+    // then rendered dependencies from the resolver
     renderedDependencies.forEach { dependency ->
       try {
         // @TODO cannot associate with source sets this early

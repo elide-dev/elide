@@ -25,6 +25,7 @@ import kotlinx.serialization.encodeToString
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.GradleCatalogManifest
+import elide.tooling.project.manifest.GradleCatalogManifest.NoVersion
 
 @ManifestCodec(ProjectEcosystem.GradleCatalog)
 public class GradleCatalogCodec : PackageManifestCodec<GradleCatalogManifest> {
@@ -42,14 +43,14 @@ public class GradleCatalogCodec : PackageManifestCodec<GradleCatalogManifest> {
     return GradleCatalogManifest.CatalogLibraryGroupName(
       group = lib.group,
       name = lib.name,
-      version = lib.version.let { GradleCatalogManifest.VersionSpec(it) },
+      version = lib.version?.let { GradleCatalogManifest.VersionSpec(it) } ?: NoVersion,
     )
   }
 
   override fun defaultPath(): Path = Path.of("gradle/$DEFAULT_NAME")
   override fun supported(path: Path): Boolean = path.fileName.toString().endsWith(".versions.toml")
 
-  override fun parse(source: InputStream): GradleCatalogManifest {
+  override fun parse(source: InputStream, state: PackageManifestCodec.ManifestBuildState): GradleCatalogManifest {
     return source.bufferedReader(StandardCharsets.UTF_8).use { reader ->
       GradleCatalog.decodeFromString<GradleCatalogManifest>(reader.readText())
     }

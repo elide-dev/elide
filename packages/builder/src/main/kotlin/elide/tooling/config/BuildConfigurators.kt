@@ -138,6 +138,8 @@ public object BuildConfigurators {
       override val projectRoot: Path get() = to.projectRoot
     }
     val state = object : ElideBuildState {
+      override val debug: Boolean get() = to.settings.debug
+      override val release: Boolean get() = to.settings.release
       override val beanContext: BeanContext get() = beanContext
       override val project: ElideConfiguredProject get() = project
       override val console: BuildConsoleController get() = TODO("Not yet implemented")

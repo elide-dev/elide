@@ -4,6 +4,7 @@ module elide.nativeImage
 
 import "Base.pkl" as _common
 import "Artifacts.pkl" as _artifacts
+import "Jvm.pkl" as _jvm
 
 /// Flag for the Native Image compiler.
 typealias NativeImageFlag = String
@@ -53,6 +54,25 @@ class ProfileGuidedOptimization {
   profiles: Listing<_common.FileName> = new {}
 }
 
+/// Specifies classes and modules to be excluded when building a Native Image.
+class NativeImageExclusions {
+  /// Exclusions from all paths.
+  all: Listing<_jvm.MavenPackageDependency> = new {
+    "org.graalvm.compiler:compiler"
+    "org.graalvm.espresso:espresso-svm"
+    "org.graalvm.nativeimage:native-image-base"
+    "org.graalvm.nativeimage:objectfile"
+    "org.graalvm.nativeimage:pointsto"
+    "org.graalvm.nativeimage:svm"
+  }
+
+  /// Classpath exclusions to apply.
+  classpath: Listing<_jvm.MavenPackageDependency> = new {}
+
+  /// Modulepath exclusions to apply.
+  modulepath: Listing<_jvm.MavenPackageDependency> = new {}
+}
+
 /// Specifies the layout of options for a Native Image.
 open class NativeImageOptions {
   /// Whether to activate verbose output.
@@ -64,6 +84,9 @@ open class NativeImageOptions {
   /// Class initialization options.
   classInit: NativeImageClassInit = new {}
 
+  /// Exclusions to apply to classpath and modulepath calculations.
+  exclusions: NativeImageExclusions = new {}
+
   /// Optimization level for the Native Image.
   optimization: OptimizationLevel = "auto"
 
@@ -72,6 +95,15 @@ open class NativeImageOptions {
 
   /// Extra flags to pass to the Native Image compiler; added to all project targets.
   flags: Listing<NativeImageFlag> = new {}
+
+  /// Extra flags to pass to the native C compiler; added to all project targets.
+  cflags: Listing<String> = new {}
+
+  /// Extra flags to pass to the native linker; added to all project targets.
+  ldflags: Listing<String> = new {}
+
+  /// Definitions of system properties to pass during the Native Image build.
+  defs: Mapping<String, String> = new {}
 }
 
 /// Configures Native Image generation settings, project-wide.

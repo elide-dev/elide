@@ -64,7 +64,7 @@ import elide.tooling.project.manifest.PyProjectManifest
     val resource = sampleManifestResource()
     assertEquals(
       expected = SampleManifest,
-      actual = codec.parse(resource),
+      actual = codec.parse(resource, defaultManifestState),
     )
   }
 

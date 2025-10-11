@@ -62,7 +62,7 @@ import elide.tooling.project.manifest.GradleCatalogManifest
     val resource = sampleManifestResource()
     assertEquals(
       expected = SampleManifest,
-      actual = codec.parse(resource),
+      actual = codec.parse(resource, defaultManifestState),
     )
   }
 

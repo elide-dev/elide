@@ -1,0 +1,49 @@
+/// Describes dynamic build-time state made available by Elide.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.state
+
+/// Operating system family for a given context.
+typealias OsFamily = "linux" | "macos" | "windows"
+
+/// Default OS family.
+const defaultOsFamily: OsFamily = "linux"
+
+/// Architecture family for a given context.
+typealias ArchFamily = "amd64" | "arm64"
+
+/// LibC distribution to select for a given context.
+typealias LibcFamily = "auto" | "glibc" | "musl" | "bionic"
+
+/// Default architecture family.
+const defaultArchFamily: ArchFamily = "amd64"
+
+/// Triple describing a machine fingerprint in some context.
+open class MachineTriple {
+  /// Operating system family for a given context.
+  os: OsFamily = defaultOsFamily
+
+  /// Architecture family for a given context.
+  arch: ArchFamily = defaultArchFamily
+
+  /// LibC distribution info for a given context.
+  libc: LibcFamily = "auto"
+}
+
+/// Settings and state which apply to the host machine.
+class HostMachine extends MachineTriple {}
+
+/// Settings and state which apply to the target machine.
+class TargetMachine extends MachineTriple {}
+
+/// Shape class for build-time state; provided as defaults within the base Pkl context, and then overridden by Elide's
+/// internals at runtime according to state values.
+class BuildTimeState {
+  /// Whether this is a release build.
+  release: Boolean = read("prop:elide.build.state.release") == "true"
+
+  /// Host machine information.
+  host: HostMachine = new HostMachine {}
+
+  /// Target machine information.
+  target: TargetMachine = new TargetMachine {}
+}

@@ -219,9 +219,10 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class MavenPackage(
     val group: String = "",
     val name: String = "",
-    val version: String = "",
-    val classifier: String = "",
-    val repository: String = "",
+    val version: String? = "",
+    val classifier: String? = "",
+    val repository: String? = "",
+    val path: String? = "",
     val coordinate: String,
   ) : DependencyEcosystemConfig.PackageSpec, Comparable<MavenPackage> {
     public companion object {
@@ -279,9 +280,9 @@ public data class ElidePackageManifest(
     override fun hashCode(): Int {
       var result = group.ifBlank { null }?.hashCode() ?: 0
       result = 31 * result + (name.ifBlank { null }?.hashCode() ?: 0)
-      result = 31 * result + (version.ifBlank { null }?.hashCode() ?: 0)
+      result = 31 * result + (version?.ifBlank { null }?.hashCode() ?: 0)
       result = 31 * result + coordinate.hashCode()
-      result = 31 * result + (repository.ifBlank { null }?.hashCode() ?: 0)
+      result = 31 * result + (repository?.ifBlank { null }?.hashCode() ?: 0)
       return result
     }
   }

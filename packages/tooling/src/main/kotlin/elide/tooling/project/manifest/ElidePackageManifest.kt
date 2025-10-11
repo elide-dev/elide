@@ -465,7 +465,7 @@ public data class ElidePackageManifest(
   ) {
     public fun collect(): Sequence<String> = sequence {
       // opt-ins
-      optIn.forEach { yield("-Xopt-in=$it") }
+      optIn.forEach { yield("-opt-in=$it") }
 
       // compiler options
       if (progressiveMode) yield("-progressive")

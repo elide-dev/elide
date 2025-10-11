@@ -27,6 +27,8 @@ import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.exists
 import kotlin.io.path.extension
+import kotlin.io.path.isDirectory
+import kotlin.io.path.isRegularFile
 import kotlin.io.path.isWritable
 import elide.exec.ActionScope
 import elide.exec.Task
@@ -576,7 +578,15 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     val effectiveKnownPlugins: MutableList<KotlinCompilerConfig.KotlinPluginConfig> = LinkedList()
     val compiler = KotlinCompiler.create(args, env, inputs, outputs, projectRoot = state.project.root) {
       // add classpath and let caller amend args as needed
-      classpathAsList = finalizedClasspath.paths.map { it.path.toFile() }
+      classpathAsList = finalizedClasspath.paths.filter {
+        it.path.isDirectory() || (it.path.isRegularFile() && it.path.extension in sortedSetOf(
+          "jar",
+          "zip",
+          "klib",
+          "jmod",
+        ))
+      }.map { it.path.toFile() }
+
       incrementalCompilation = state.manifest.kotlin?.features?.incremental != false
       jvmTarget = effectiveJvmTarget.argValue
 

@@ -340,6 +340,7 @@ public abstract interface class elide/tooling/ClasspathProvider {
 
 public abstract interface class elide/tooling/ClasspathSpec : java/util/function/Predicate {
 	public static final field Companion Lelide/tooling/ClasspathSpec$Companion;
+	public fun getModuleInclusion ()Lelide/tooling/ModuleInclusion;
 	public fun getName ()Ljava/lang/String;
 	public fun getUsage ()Lelide/tooling/MultiPathUsage;
 	public fun test (Lelide/tooling/ClasspathSpec;)Z
@@ -348,6 +349,9 @@ public abstract interface class elide/tooling/ClasspathSpec : java/util/function
 
 public final class elide/tooling/ClasspathSpec$Companion {
 	public final fun getCompile ()Lelide/tooling/ClasspathSpec;
+	public final fun getCompileAll ()Lelide/tooling/ClasspathSpec;
+	public final fun getCompileClasspath ()Lelide/tooling/ClasspathSpec;
+	public final fun getCompileModules ()Lelide/tooling/ClasspathSpec;
 	public final fun getRuntime ()Lelide/tooling/ClasspathSpec;
 	public final fun getTestCompile ()Lelide/tooling/ClasspathSpec;
 	public final fun getTestRuntime ()Lelide/tooling/ClasspathSpec;
@@ -720,6 +724,15 @@ public final class elide/tooling/JvmMultiPathEntryType : java/lang/Enum {
 	public static fun values ()[Lelide/tooling/JvmMultiPathEntryType;
 }
 
+public final class elide/tooling/ModuleInclusion : java/lang/Enum {
+	public static final field ExcludeModules Lelide/tooling/ModuleInclusion;
+	public static final field ModulesOnly Lelide/tooling/ModuleInclusion;
+	public static final field NoTransform Lelide/tooling/ModuleInclusion;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lelide/tooling/ModuleInclusion;
+	public static fun values ()[Lelide/tooling/ModuleInclusion;
+}
+
 public final class elide/tooling/Modulepath : elide/tooling/MultiPath$MultiPathContainer {
 	public static final field Companion Lelide/tooling/Modulepath$Companion;
 	public synthetic fun <init> (Lelide/tooling/JvmMultiPathContainer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -774,6 +787,14 @@ public final class elide/tooling/Modulepath$Companion {
 	public final fun empty ()Lelide/tooling/Modulepath;
 	public final fun from (Ljava/util/Collection;)Lelide/tooling/Modulepath;
 	public final fun of (Ljava/nio/file/Path;[Ljava/nio/file/Path;)Lelide/tooling/Modulepath;
+}
+
+public abstract interface class elide/tooling/ModulepathProvider {
+	public abstract fun modulepath (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/tooling/ModulepathsProvider {
+	public abstract fun modulepathProvider (Lelide/tooling/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/tooling/MultiPath : elide/tooling/Argument {
@@ -863,6 +884,25 @@ public abstract interface class elide/tooling/MultiPathUsage : java/lang/Compara
 
 public final class elide/tooling/MultiPathUsage$Compile : elide/tooling/MultiPathUsage {
 	public static final field INSTANCE Lelide/tooling/MultiPathUsage$Compile;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getOrder-pVg5ArA ()I
+	public fun getScope ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/MultiPathUsage$Dev : elide/tooling/MultiPathUsage {
+	public static final field INSTANCE Lelide/tooling/MultiPathUsage$Dev;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getOrder-pVg5ArA ()I
+	public fun getScope ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun includes ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/tooling/MultiPathUsage$Modules : elide/tooling/MultiPathUsage {
+	public static final field INSTANCE Lelide/tooling/MultiPathUsage$Modules;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getOrder-pVg5ArA ()I
 	public fun getScope ()Ljava/lang/String;
@@ -1821,8 +1861,10 @@ public final class elide/tooling/jvm/JvmLibraries {
 	public static final field KOTLIN_TEST Ljava/lang/String;
 	public static final field KOTLIN_TEST_JUNIT5 Ljava/lang/String;
 	public static final field OPENTEST Ljava/lang/String;
-	public final fun builtinClasspath (Ljava/nio/file/Path;Ljava/lang/String;ZZZZ)Lelide/tooling/Classpath;
-	public static synthetic fun builtinClasspath$default (Lelide/tooling/jvm/JvmLibraries;Ljava/nio/file/Path;Ljava/lang/String;ZZZZILjava/lang/Object;)Lelide/tooling/Classpath;
+	public final fun builtinClasspath (Lelide/tooling/project/ElideConfiguredProject;Z)Lelide/tooling/Classpath;
+	public final fun builtinClasspath (Ljava/nio/file/Path;Ljava/lang/String;ZZZZZZ)Lelide/tooling/Classpath;
+	public static synthetic fun builtinClasspath$default (Lelide/tooling/jvm/JvmLibraries;Lelide/tooling/project/ElideConfiguredProject;ZILjava/lang/Object;)Lelide/tooling/Classpath;
+	public static synthetic fun builtinClasspath$default (Lelide/tooling/jvm/JvmLibraries;Ljava/nio/file/Path;Ljava/lang/String;ZZZZZZILjava/lang/Object;)Lelide/tooling/Classpath;
 	public final fun elideJarNameFor (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 	public final fun getTestCoordinates ()[Lkotlin/Pair;
 	public final fun jarNameFor (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
@@ -2375,6 +2417,8 @@ public final class elide/tooling/lockfile/ElideLockfile$MavenUsage$Companion {
 public final class elide/tooling/lockfile/ElideLockfile$MavenUsageType : java/lang/Enum, java/io/Serializable {
 	public static final field COMPILE Lelide/tooling/lockfile/ElideLockfile$MavenUsageType;
 	public static final field Companion Lelide/tooling/lockfile/ElideLockfile$MavenUsageType$Companion;
+	public static final field DEV_ONLY Lelide/tooling/lockfile/ElideLockfile$MavenUsageType;
+	public static final field MODULES Lelide/tooling/lockfile/ElideLockfile$MavenUsageType;
 	public static final field PROCESSORS Lelide/tooling/lockfile/ElideLockfile$MavenUsageType;
 	public static final field RUNTIME Lelide/tooling/lockfile/ElideLockfile$MavenUsageType;
 	public static final field TEST Lelide/tooling/lockfile/ElideLockfile$MavenUsageType;
@@ -2645,6 +2689,7 @@ public abstract interface class elide/tooling/project/ElideProjectLoader {
 }
 
 public abstract interface class elide/tooling/project/PackageManifestService {
+	public abstract fun configure (Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)V
 	public abstract fun encode (Lelide/tooling/project/manifest/PackageManifest;Ljava/io/OutputStream;)V
 	public abstract fun export (Lelide/tooling/project/manifest/ElidePackageManifest;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;
 	public abstract fun merge (Ljava/lang/Iterable;)Lelide/tooling/project/manifest/ElidePackageManifest;
@@ -3159,8 +3204,8 @@ public final class elide/tooling/project/codecs/ElidePackageManifestCodec : elid
 	public fun defaultPath ()Ljava/nio/file/Path;
 	public fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public synthetic fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
-	public fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/ElidePackageManifest;
-	public synthetic fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/ElidePackageManifest;
+	public synthetic fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun supported (Ljava/nio/file/Path;)Z
 	public fun toElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public synthetic fun toElidePackage (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
@@ -3197,8 +3242,8 @@ public final class elide/tooling/project/codecs/GradleCatalogCodec : elide/tooli
 	public fun defaultPath ()Ljava/nio/file/Path;
 	public fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/GradleCatalogManifest;
 	public synthetic fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
-	public fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/GradleCatalogManifest;
-	public synthetic fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/GradleCatalogManifest;
+	public synthetic fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun supported (Ljava/nio/file/Path;)Z
 	public fun toElidePackage (Lelide/tooling/project/manifest/GradleCatalogManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public synthetic fun toElidePackage (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
@@ -3217,10 +3262,10 @@ public final class elide/tooling/project/codecs/MavenPomManifestCodec : elide/to
 	public fun defaultPath ()Ljava/nio/file/Path;
 	public fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/MavenPomManifest;
 	public synthetic fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
-	public fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/MavenPomManifest;
-	public synthetic fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PackageManifest;
-	public fun parseAsFile (Ljava/nio/file/Path;)Lelide/tooling/project/manifest/MavenPomManifest;
-	public synthetic fun parseAsFile (Ljava/nio/file/Path;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/MavenPomManifest;
+	public synthetic fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parseAsFile (Ljava/nio/file/Path;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/MavenPomManifest;
+	public synthetic fun parseAsFile (Ljava/nio/file/Path;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun supported (Ljava/nio/file/Path;)Z
 	public fun toElidePackage (Lelide/tooling/project/manifest/MavenPomManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public synthetic fun toElidePackage (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
@@ -3240,8 +3285,8 @@ public final class elide/tooling/project/codecs/NodeManifestCodec : elide/toolin
 	public fun defaultPath ()Ljava/nio/file/Path;
 	public fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/NodePackageManifest;
 	public synthetic fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
-	public fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/NodePackageManifest;
-	public synthetic fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/NodePackageManifest;
+	public synthetic fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun supported (Ljava/nio/file/Path;)Z
 	public fun toElidePackage (Lelide/tooling/project/manifest/NodePackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public synthetic fun toElidePackage (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
@@ -3252,11 +3297,16 @@ public final class elide/tooling/project/codecs/NodeManifestCodec : elide/toolin
 public abstract interface class elide/tooling/project/codecs/PackageManifestCodec {
 	public abstract fun defaultPath ()Ljava/nio/file/Path;
 	public abstract fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
-	public abstract fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PackageManifest;
-	public fun parseAsFile (Ljava/nio/file/Path;)Lelide/tooling/project/manifest/PackageManifest;
+	public abstract fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parseAsFile (Ljava/nio/file/Path;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
 	public abstract fun supported (Ljava/nio/file/Path;)Z
 	public abstract fun toElidePackage (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public abstract fun write (Lelide/tooling/project/manifest/PackageManifest;Ljava/io/OutputStream;)V
+}
+
+public abstract interface class elide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState {
+	public fun isDebug ()Z
+	public fun isRelease ()Z
 }
 
 public final class elide/tooling/project/codecs/PyProjectManifestCodec : elide/tooling/project/codecs/PackageManifestCodec {
@@ -3267,8 +3317,8 @@ public final class elide/tooling/project/codecs/PyProjectManifestCodec : elide/t
 	public fun defaultPath ()Ljava/nio/file/Path;
 	public synthetic fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PyProjectManifest;
-	public synthetic fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PackageManifest;
-	public fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PyProjectManifest;
+	public synthetic fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PyProjectManifest;
 	public fun supported (Ljava/nio/file/Path;)Z
 	public synthetic fun toElidePackage (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public fun toElidePackage (Lelide/tooling/project/manifest/PyProjectManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
@@ -3283,8 +3333,8 @@ public final class elide/tooling/project/codecs/PythonRequirementsManifestCodec 
 	public fun defaultPath ()Ljava/nio/file/Path;
 	public synthetic fun fromElidePackage (Lelide/tooling/project/manifest/ElidePackageManifest;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun fromElidePackage-wYB4BT0 (Lelide/tooling/project/manifest/ElidePackageManifest;)Ljava/util/List;
-	public synthetic fun parse (Ljava/io/InputStream;)Lelide/tooling/project/manifest/PackageManifest;
-	public fun parse-wYB4BT0 (Ljava/io/InputStream;)Ljava/util/List;
+	public synthetic fun parse (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Lelide/tooling/project/manifest/PackageManifest;
+	public fun parse-h3YuEeQ (Ljava/io/InputStream;Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)Ljava/util/List;
 	public fun supported (Ljava/nio/file/Path;)Z
 	public synthetic fun toElidePackage (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public fun toElidePackage-2GSRwKQ (Ljava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest;
@@ -3917,11 +3967,13 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JavaScrip
 public final class elide/tooling/project/manifest/ElidePackageManifest$JvmFeatures : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures$Companion;
 	public fun <init> ()V
-	public fun <init> (Z)V
-	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZ)V
+	public synthetic fun <init> (ZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun automodules ()Z
 	public final fun component1 ()Z
-	public final fun copy (Z)Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;ZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;
+	public final fun component2 ()Z
+	public final fun copy (ZZ)Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;ZZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JvmFeatures;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public final fun testing ()Z
@@ -4101,11 +4153,12 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JvmTestin
 public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (ZZZZZZZZZZ)V
-	public synthetic fun <init> (ZZZZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZZZZZZZZZZZ)V
+	public synthetic fun <init> (ZZZZZZZZZZZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun autoClasspath ()Z
 	public final fun component1 ()Z
 	public final fun component10 ()Z
+	public final fun component11 ()Z
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -4114,8 +4167,8 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFea
 	public final fun component7 ()Z
 	public final fun component8 ()Z
 	public final fun component9 ()Z
-	public final fun copy (ZZZZZZZZZZ)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;ZZZZZZZZZZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
+	public final fun copy (ZZZZZZZZZZZ)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;ZZZZZZZZZZZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinFeatureOptions;
 	public final fun coroutines ()Z
 	public final fun enableDefaultPlugins ()Z
 	public fun equals (Ljava/lang/Object;)Z
@@ -4125,6 +4178,7 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFea
 	public final fun injection ()Z
 	public final fun kotlinx ()Z
 	public final fun redaction ()Z
+	public final fun reflection ()Z
 	public final fun serialization ()Z
 	public final fun testing ()Z
 	public fun toString ()Ljava/lang/String;
@@ -4147,16 +4201,18 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinFea
 public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (Ljava/util/List;ZZZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;)V
-	public synthetic fun <init> (Ljava/util/List;ZZZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/util/List;ZZZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZZZLelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;)V
+	public synthetic fun <init> (Ljava/util/List;ZZZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZZZLelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun allWarningsAsErrors ()Z
 	public final fun apiVersion ()Ljava/lang/String;
 	public final fun collect ()Lkotlin/sequences/Sequence;
 	public final fun component1 ()Ljava/util/List;
 	public final fun component10 ()Z
-	public final fun component11 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
+	public final fun component11 ()Z
 	public final fun component12 ()Z
-	public final fun component13 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;
+	public final fun component13 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
+	public final fun component14 ()Z
+	public final fun component15 ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;
 	public final fun component2 ()Z
 	public final fun component3 ()Z
 	public final fun component4 ()Z
@@ -4165,17 +4221,19 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$KotlinJvm
 	public final fun component7 ()Ljava/util/List;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/lang/String;
-	public final fun copy (Ljava/util/List;ZZZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;Ljava/util/List;ZZZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;
+	public final fun copy (Ljava/util/List;ZZZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZZZLelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;Ljava/util/List;ZZZZZLjava/util/List;Ljava/lang/String;Ljava/lang/String;ZZZLelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;ZLelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$KotlinJvmCompilerOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun extraWarnings ()Z
 	public final fun freeCompilerArgs ()Ljava/util/List;
 	public fun hashCode ()I
+	public final fun includeRuntime ()Z
 	public final fun javaParameters ()Z
 	public final fun jvmTarget ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTarget;
 	public final fun jvmTargetValidationMode ()Lelide/tooling/project/manifest/ElidePackageManifest$JvmTargetValidationMode;
 	public final fun languageVersion ()Ljava/lang/String;
 	public final fun noJdk ()Z
+	public final fun noStdlib ()Z
 	public final fun optIn ()Ljava/util/List;
 	public final fun progressiveMode ()Z
 	public final fun suppressWarnings ()Z
@@ -4323,29 +4381,39 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenCoor
 public final class elide/tooling/project/manifest/ElidePackageManifest$MavenDependencies : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$DependencyEcosystemConfig {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies$Companion;
 	public fun <init> ()V
-	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;)V
-	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;)V
+	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun allPackages ()Lkotlin/sequences/Sequence;
 	public final fun catalogs ()Ljava/util/List;
+	public final fun compileOnly ()Ljava/util/List;
 	public final fun component1 ()Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;
+	public final fun component10 ()Ljava/util/List;
+	public final fun component11 ()Ljava/util/Map;
+	public final fun component12 ()Z
+	public final fun component13 ()Ljava/util/List;
 	public final fun component2 ()Ljava/util/List;
 	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Ljava/util/List;
 	public final fun component5 ()Ljava/util/List;
-	public final fun component6 ()Ljava/util/Map;
-	public final fun component7 ()Z
+	public final fun component6 ()Ljava/util/List;
+	public final fun component7 ()Ljava/util/List;
 	public final fun component8 ()Ljava/util/List;
+	public final fun component9 ()Ljava/util/List;
 	public final fun coordinates ()Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;
-	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
+	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;Lelide/tooling/project/manifest/ElidePackageManifest$MavenCoordinates;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ZLjava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenDependencies;
+	public final fun devPackages ()Ljava/util/List;
 	public final fun enableDefaultRepositories ()Z
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun exclusions ()Ljava/util/List;
 	public final fun from ()Ljava/util/List;
 	public final fun hasPackages ()Z
 	public fun hashCode ()I
+	public final fun modules ()Ljava/util/List;
 	public final fun packages ()Ljava/util/List;
 	public final fun processors ()Ljava/util/List;
 	public final fun repositories ()Ljava/util/Map;
+	public final fun runtimeOnly ()Ljava/util/List;
 	public final fun testPackages ()Ljava/util/List;
 	public fun toString ()Ljava/lang/String;
 }
@@ -4366,8 +4434,8 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenDepe
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$MavenPackage : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$DependencyEcosystemConfig$PackageSpec, java/lang/Comparable {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun classifier ()Ljava/lang/String;
 	public fun compareTo (Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;)I
 	public synthetic fun compareTo (Ljava/lang/Object;)I
@@ -4377,14 +4445,16 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$MavenPack
 	public final fun component4 ()Ljava/lang/String;
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
 	public final fun coordinate ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun group ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun name ()Ljava/lang/String;
 	public static final fun parse (Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$MavenPackage;
+	public final fun path ()Ljava/lang/String;
 	public final fun repository ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 	public final fun version ()Ljava/lang/String;
@@ -4578,6 +4648,38 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NativeIma
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions : java/lang/Record {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun all ()Ljava/util/List;
+	public final fun classpath ()Ljava/util/List;
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;Ljava/util/List;Ljava/util/List;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public final fun modulepath ()Ljava/util/List;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime$Companion;
 	public fun <init> ()V
@@ -4611,20 +4713,28 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$NativeIma
 public final class elide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions$Companion;
 	public fun <init> ()V
-	public fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;Ljava/util/List;)V
-	public synthetic fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;)V
+	public synthetic fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun cflags ()Ljava/util/List;
 	public final fun classInit ()Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;
 	public final fun component1 ()Z
+	public final fun component10 ()Ljava/util/Map;
 	public final fun component2 ()Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;
 	public final fun component3 ()Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;
-	public final fun component4 ()Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;
-	public final fun component5 ()Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;
-	public final fun component6 ()Ljava/util/List;
-	public final fun copy (ZLelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;Ljava/util/List;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;ZLelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;Ljava/util/List;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;
+	public final fun component4 ()Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;
+	public final fun component5 ()Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;
+	public final fun component6 ()Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;
+	public final fun component7 ()Ljava/util/List;
+	public final fun component8 ()Ljava/util/List;
+	public final fun component9 ()Ljava/util/List;
+	public final fun copy (ZLelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;ZLelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageClassInit;Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/util/Map;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageOptions;
+	public final fun defs ()Ljava/util/Map;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun exclusions ()Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageExclusions;
 	public final fun flags ()Ljava/util/List;
 	public fun hashCode ()I
+	public final fun ldflags ()Ljava/util/List;
 	public final fun linkAtBuildTime ()Lelide/tooling/project/manifest/ElidePackageManifest$NativeImageLinkAtBuildTime;
 	public final fun optimization ()Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;
 	public final fun pgo ()Lelide/tooling/project/manifest/ElidePackageManifest$ProfileGuidedOptimization;
@@ -4790,6 +4900,7 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$Optimizat
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel$Companion;
 	public static final field FOUR Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;
 	public static final field ONE Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;
+	public static final field SIZE Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;
 	public static final field THREE Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;
 	public static final field TWO Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;
 	public static final field ZERO Lelide/tooling/project/manifest/ElidePackageManifest$OptimizationLevel;

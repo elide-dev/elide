@@ -350,7 +350,7 @@ class ManagementTest : AbstractSecretTest() {
     val remoteDir = Files.createDirectory(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH))
     copyFiles(remoteDir, remoteFiles)
     val stream = ManagementTest::class.java.getResourceAsStream("management/elide.pkl")!!
-    val manifest = parser.parse(stream)
+    val manifest = parser.parse(stream, object: PackageManifestCodec.ManifestBuildState {})
 
     // these prompts replace environment variables.
     queuePrompts(secretPass, "access", "sos")

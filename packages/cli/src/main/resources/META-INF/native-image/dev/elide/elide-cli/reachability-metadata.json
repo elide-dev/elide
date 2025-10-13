@@ -168,6 +168,50 @@
       ]
     },
     {
+      "type": "ch.qos.logback.core.model.AppenderModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.AppenderRefModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.ComponentModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.ImplicitModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.Model",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.NamedComponentModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.NamedModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.PropertyModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.SerializeModelModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.SiftModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.core.model.StatusListenerModel",
+      "serializable": true
+    },
+    {
       "type": "ch.qos.logback.core.pattern.PatternLayoutEncoderBase",
       "methods": [
         {
@@ -674,9 +718,6 @@
       "type": "com.oracle.graal.python.resources.PythonResourceProvider"
     },
     {
-      "type": "com.oracle.svm.core.jdk.resources.NativeImageResourceFileSystemProvider"
-    },
-    {
       "type": "com.oracle.truffle.api.debug.impl.DebuggerInstrumentProvider"
     },
     {
@@ -714,6 +755,9 @@
     },
     {
       "type": "com.oracle.truffle.espresso.resources.runtime.EspressoRuntimeResourceProvider"
+    },
+    {
+      "type": "com.oracle.truffle.espresso.resources.runtime.jdk21.EspressoRuntimeResourceProvider"
     },
     {
       "type": "com.oracle.truffle.espresso.vm.VM$LongCASProbe",
@@ -763,6 +807,9 @@
     },
     {
       "type": "com.oracle.truffle.nfi.backend.libffi.LibFFILanguageProvider"
+    },
+    {
+      "type": "com.oracle.truffle.nfi.backend.panama.PanamaNFILanguageProvider"
     },
     {
       "type": "com.oracle.truffle.nfi.backend.spi.util.ProfiledArrayBuilder$ArraySizeMemento",
@@ -1344,13 +1391,7 @@
       "allPublicMethods": true,
       "allDeclaredConstructors": true,
       "allPublicConstructors": true,
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "jniAccessible": true
     },
     {
       "type": "com.sun.management.GarbageCollectorMXBean"
@@ -1458,6 +1499,24 @@
       "jniAccessible": true
     },
     {
+      "type": "dev.zacsweers.redacted.compiler.RedactedCommandLineProcessor",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "dev.zacsweers.redacted.compiler.RedactedComponentRegistrar",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "double[]"
     },
     {
@@ -1509,6 +1568,33 @@
           "parameterTypes": [
             "java.lang.String"
           ]
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.core.$EntrypointRegistry$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.core.$RuntimeLatch$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.core.$SharedContextFactory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
         }
       ]
     },
@@ -2221,6 +2307,42 @@
     },
     {
       "type": "elide.runtime.intrinsics.js.err.$ValueErrorIntrinsic$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.intrinsics.js.s3.$S3Module$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.intrinsics.js.s3.$S3Module$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.intrinsics.server.http.v2.flask.$FlaskHttpIntrinsic$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.javascript.$BrowserStubs$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -3544,7 +3666,24 @@
     {
       "type": "elide.tool.cli.AbstractSubcommand",
       "allDeclaredFields": true,
-      "allDeclaredMethods": true
+      "allDeclaredMethods": true,
+      "fields": [
+        {
+          "name": "beanContext"
+        },
+        {
+          "name": "commandSpec"
+        },
+        {
+          "name": "commons"
+        },
+        {
+          "name": "elideCli"
+        },
+        {
+          "name": "telemetryOptions"
+        }
+      ]
     },
     {
       "type": "elide.tool.cli.AbstractToolCommand",
@@ -3570,7 +3709,33 @@
     {
       "type": "elide.tool.cli.Elide",
       "allDeclaredFields": true,
-      "allDeclaredMethods": true
+      "allDeclaredMethods": true,
+      "fields": [
+        {
+          "name": "args"
+        },
+        {
+          "name": "commons"
+        },
+        {
+          "name": "help"
+        },
+        {
+          "name": "pitch"
+        },
+        {
+          "name": "playground"
+        },
+        {
+          "name": "projectOptions"
+        },
+        {
+          "name": "srcfile"
+        },
+        {
+          "name": "version"
+        }
+      ]
     },
     {
       "type": "elide.tool.cli.Elide$Completions",
@@ -4800,6 +4965,9 @@
       ]
     },
     {
+      "type": "elide.tooling.js.resolver.NpmResolver"
+    },
+    {
       "type": "elide.tooling.jvm.$JarTool$Introspection",
       "methods": [
         {
@@ -4955,6 +5123,9 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "elide.tooling.project.CompositePackageManifestService"
     },
     {
       "type": "elide.tooling.project.agents.AdviceMcpContributor"
@@ -5158,6 +5329,9 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting$Engine"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting$JvmTestDriver"
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -5173,13 +5347,33 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "elide.tooling.project.manifest.ElidePackageManifest$KotlinJvmCompilerOptions",
+            "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "java.lang.String"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
@@ -5197,13 +5391,53 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$MavenCoordinates",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenPackage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenRepository",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
       "allDeclaredConstructors": true
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenPackage"
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenRepository"
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$McpPrompt",
@@ -5233,31 +5467,91 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageType",
+            "java.lang.String",
+            "java.lang.String",
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageClassInit",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageExclusions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.util.List",
+            "java.util.List",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageLinkAtBuildTime",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageLinkAtBuildTime",
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageClassInit",
+            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageExclusions",
+            "elide.tooling.project.manifest.ElidePackageManifest$OptimizationLevel",
+            "elide.tooling.project.manifest.ElidePackageManifest$ProfileGuidedOptimization",
+            "java.util.List",
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
@@ -5275,7 +5569,18 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NpmDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.util.List",
+            "java.util.List",
+            "java.util.Map",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NpmPackage"
@@ -5293,7 +5598,16 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PipDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.util.List",
+            "java.util.Map"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PipPackage",
@@ -5308,7 +5622,19 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ProfileGuidedOptimization",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "boolean",
+            "boolean",
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ProjectRemoteSettings"
@@ -5355,7 +5681,16 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
@@ -5414,6 +5749,9 @@
       "type": "elide.tooling.web.Browsers"
     },
     {
+      "type": "elide.tooling.web.StaticSiteContributor"
+    },
+    {
       "type": "elide.tooling.web.css.CssNative",
       "jniAccessible": true,
       "methods": [
@@ -5430,37 +5768,7 @@
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true,
-      "jniAccessible": true,
-      "methods": [
-        {
-          "name": "absoluteProjectRoot",
-          "parameterTypes": []
-        },
-        {
-          "name": "enableBundle",
-          "parameterTypes": []
-        },
-        {
-          "name": "enableDebugLogs",
-          "parameterTypes": []
-        },
-        {
-          "name": "enableMinification",
-          "parameterTypes": []
-        },
-        {
-          "name": "enableModules",
-          "parameterTypes": []
-        },
-        {
-          "name": "enableScss",
-          "parameterTypes": []
-        },
-        {
-          "name": "enableSourceMaps",
-          "parameterTypes": []
-        }
-      ]
+      "jniAccessible": true
     },
     {
       "type": "elide.tooling.web.mdx.MdxNative",
@@ -8687,6 +8995,20 @@
         {
           "name": "getClassLoader",
           "parameterTypes": []
+        },
+        {
+          "name": "getDeclaredFields0",
+          "parameterTypes": [
+            "boolean"
+          ]
+        },
+        {
+          "name": "getRecordComponents",
+          "parameterTypes": []
+        },
+        {
+          "name": "isSealed",
+          "parameterTypes": []
         }
       ]
     },
@@ -9476,6 +9798,7 @@
     },
     {
       "type": "javax.management.remote.rmi.RMIServerImpl_Stub",
+      "serializable": true,
       "methods": [
         {
           "name": "<init>",
@@ -9484,12 +9807,6 @@
           ]
         }
       ]
-    },
-    {
-      "type": "jdk.graal.compiler.hotspot.HotSpotGraalJVMCIServiceLocator"
-    },
-    {
-      "type": "jdk.graal.compiler.hotspot.libgraal.truffle.TruffleLibGraalShutdownHook"
     },
     {
       "type": "jdk.internal.jrtfs.JrtFileSystemProvider"
@@ -9551,6 +9868,9 @@
     },
     {
       "type": "kotlin.Any"
+    },
+    {
+      "type": "kotlin.Array"
     },
     {
       "type": "kotlin.Boolean"
@@ -9700,6 +10020,15 @@
       "type": "kotlin.jvm.internal.StringCompanionObject"
     },
     {
+      "type": "kotlin.reflect.KCallable",
+      "methods": [
+        {
+          "name": "getName",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "kotlin.reflect.full.KClasses"
     },
     {
@@ -9719,6 +10048,44 @@
     },
     {
       "type": "kotlin.reflect.jvm.internal.impl.load.java.JavaIncompatibilityRulesOverridabilityCondition"
+    },
+    {
+      "type": "kotlin.reflect.jvm.internal.impl.resolve.scopes.DescriptorKindFilter",
+      "fields": [
+        {
+          "name": "ALL"
+        },
+        {
+          "name": "CALLABLES"
+        },
+        {
+          "name": "CLASSIFIERS"
+        },
+        {
+          "name": "Companion"
+        },
+        {
+          "name": "FUNCTIONS"
+        },
+        {
+          "name": "NON_SINGLETON_CLASSIFIERS"
+        },
+        {
+          "name": "PACKAGES"
+        },
+        {
+          "name": "SINGLETON_CLASSIFIERS"
+        },
+        {
+          "name": "TYPE_ALIASES"
+        },
+        {
+          "name": "VALUES"
+        },
+        {
+          "name": "VARIABLES"
+        }
+      ]
     },
     {
       "type": "kotlin.test.junit5.JUnit5Contributor"
@@ -10125,13 +10492,41 @@
       "type": "org.apache.maven.model.Build",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getOutputDirectory",
+          "parameterTypes": []
+        },
+        {
+          "name": "getSourceDirectory",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTestOutputDirectory",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTestSourceDirectory",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.BuildBase",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getDirectory",
+          "parameterTypes": []
+        },
+        {
+          "name": "getFinalName",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.CiManagement",
@@ -10209,7 +10604,13 @@
       "type": "org.apache.maven.model.IssueManagement",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getUrl",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.License",
@@ -10227,13 +10628,69 @@
       "type": "org.apache.maven.model.Model",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getArtifactId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getBuild",
+          "parameterTypes": []
+        },
+        {
+          "name": "getDescription",
+          "parameterTypes": []
+        },
+        {
+          "name": "getGroupId",
+          "parameterTypes": []
+        },
+        {
+          "name": "getIssueManagement",
+          "parameterTypes": []
+        },
+        {
+          "name": "getName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getOrganization",
+          "parameterTypes": []
+        },
+        {
+          "name": "getPackaging",
+          "parameterTypes": []
+        },
+        {
+          "name": "getParent",
+          "parameterTypes": []
+        },
+        {
+          "name": "getScm",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUrl",
+          "parameterTypes": []
+        },
+        {
+          "name": "getVersion",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.ModelBase",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getReporting",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.Notifier",
@@ -10245,13 +10702,25 @@
       "type": "org.apache.maven.model.Organization",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getName",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.Parent",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getVersion",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.PatternSet",
@@ -10323,7 +10792,13 @@
       "type": "org.apache.maven.model.Reporting",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getOutputDirectory",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.Repository",
@@ -10353,7 +10828,21 @@
       "type": "org.apache.maven.model.Scm",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true
+      "allDeclaredConstructors": true,
+      "methods": [
+        {
+          "name": "getDeveloperConnection",
+          "parameterTypes": []
+        },
+        {
+          "name": "getTag",
+          "parameterTypes": []
+        },
+        {
+          "name": "getUrl",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "org.apache.maven.model.Site",
@@ -11687,7 +12176,21 @@
     },
     {
       "type": "org.jetbrains.kotlin.codegen.serialization.JvmSerializationBindings",
-      "allPublicFields": true
+      "allPublicFields": true,
+      "fields": [
+        {
+          "name": "DELEGATE_METHOD_FOR_PROPERTY"
+        },
+        {
+          "name": "FIELD_FOR_PROPERTY"
+        },
+        {
+          "name": "METHOD_FOR_FUNCTION"
+        },
+        {
+          "name": "SYNTHETIC_METHOD_FOR_PROPERTY"
+        }
+      ]
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.codeInsight.ContainerProvider"
@@ -11758,6 +12261,9 @@
       "type": "org.jetbrains.kotlin.com.intellij.psi.JavaModuleSystem"
     },
     {
+      "type": "org.jetbrains.kotlin.com.intellij.psi.JavaResolveResult[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.com.intellij.psi.LanguageSubstitutors",
       "methods": [
         {
@@ -11774,6 +12280,9 @@
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.psi.PsiElementFinder[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.com.intellij.psi.PsiMethod[]"
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.psi.SingleRootFileViewProvider",
@@ -12568,286 +13077,166 @@
       "type": "org.jetbrains.kotlin.psi.stubs.elements.KtFileElementType"
     },
     {
-      "type": "org.jetbrains.kotlin.resolve.BindingContext",
-      "allPublicFields": true,
+      "type": "org.jetbrains.kotlin.renderer.DescriptorRendererOptionsImpl",
       "fields": [
         {
-          "name": "ABBREVIATED_TYPE"
+          "name": "actualPropertiesInPrimaryConstructor$delegate"
         },
         {
-          "name": "AMBIGUOUS_LABEL_TARGET"
+          "name": "alwaysRenderModifiers$delegate"
         },
         {
-          "name": "AMBIGUOUS_REFERENCE_TARGET"
+          "name": "annotationArgumentsRenderingPolicy$delegate"
         },
         {
-          "name": "ANNOTATION"
+          "name": "annotationFilter$delegate"
         },
         {
-          "name": "AUTO_CREATED_IT"
+          "name": "boldOnlyForNamesInHtml$delegate"
         },
         {
-          "name": "BACKING_FIELD_REQUIRED"
+          "name": "classWithPrimaryConstructor$delegate"
         },
         {
-          "name": "BLOCK"
+          "name": "classifierNamePolicy$delegate"
         },
         {
-          "name": "BOUND_INITIALIZER_VALUE"
+          "name": "debugMode$delegate"
         },
         {
-          "name": "CALL"
+          "name": "defaultParameterValueRenderer$delegate"
         },
         {
-          "name": "CAPTURED_IN_CLOSURE"
+          "name": "eachAnnotationOnNewLine$delegate"
         },
         {
-          "name": "CAST_TYPE_USED_AS_EXPECTED_TYPE"
+          "name": "enhancedTypes$delegate"
         },
         {
-          "name": "CLASS"
+          "name": "excludedAnnotationClasses$delegate"
         },
         {
-          "name": "COLLECTION_LITERAL_CALL"
+          "name": "excludedTypeAnnotationClasses$delegate"
         },
         {
-          "name": "COMPILE_TIME_VALUE"
+          "name": "includeAdditionalModifiers$delegate"
         },
         {
-          "name": "COMPONENT_RESOLVED_CALL"
+          "name": "includePropertyConstant$delegate"
         },
         {
-          "name": "CONSTRAINT_SYSTEM_COMPLETER"
+          "name": "informativeErrorType$delegate"
         },
         {
-          "name": "CONSTRUCTOR"
+          "name": "isLocked"
         },
         {
-          "name": "CONSTRUCTOR_RESOLVED_DELEGATION_CALL"
+          "name": "modifiers$delegate"
         },
         {
-          "name": "CONTRACT_NOT_ALLOWED"
+          "name": "normalizedVisibilities$delegate"
         },
         {
-          "name": "DATAFLOW_INFO_AFTER_CONDITION"
+          "name": "overrideRenderingPolicy$delegate"
         },
         {
-          "name": "DATA_CLASS_COMPONENT_FUNCTION"
+          "name": "parameterNameRenderingPolicy$delegate"
         },
         {
-          "name": "DATA_CLASS_COPY_FUNCTION"
+          "name": "parameterNamesInFunctionalTypes$delegate"
         },
         {
-          "name": "DATA_FLOW_INFO_BEFORE"
+          "name": "presentableUnresolvedTypes$delegate"
         },
         {
-          "name": "DECLARATIONS_TO_DESCRIPTORS"
+          "name": "propertyAccessorRenderingPolicy$delegate"
         },
         {
-          "name": "DECLARATION_TO_DESCRIPTOR"
+          "name": "propertyConstantRenderer$delegate"
         },
         {
-          "name": "DEFERRED_TYPE"
+          "name": "receiverAfterName$delegate"
         },
         {
-          "name": "DELEGATED_PROPERTY_CALL"
+          "name": "renderAbbreviatedTypeComments$delegate"
         },
         {
-          "name": "DELEGATED_PROPERTY_RESOLVED_CALL"
+          "name": "renderCompanionObjectName$delegate"
         },
         {
-          "name": "DELEGATE_EXPRESSION_TO_PROVIDE_DELEGATE_CALL"
+          "name": "renderConstructorDelegation$delegate"
         },
         {
-          "name": "DEPRECATED_SHORT_NAME_ACCESS"
+          "name": "renderConstructorKeyword$delegate"
         },
         {
-          "name": "DESCRIPTOR_TO_CONTEXT_RECEIVER_MAP"
+          "name": "renderDefaultAnnotationArguments$delegate"
         },
         {
-          "name": "DOUBLE_COLON_LHS"
+          "name": "renderDefaultModality$delegate"
         },
         {
-          "name": "EMPTY"
+          "name": "renderDefaultVisibility$delegate"
         },
         {
-          "name": "EXHAUSTIVE_WHEN"
+          "name": "renderFunctionContracts$delegate"
         },
         {
-          "name": "EXPECTED_EXPRESSION_TYPE"
+          "name": "renderPrimaryConstructorParametersAsProperties$delegate"
         },
         {
-          "name": "EXPECTED_RETURN_TYPE"
+          "name": "renderTypeExpansions$delegate"
         },
         {
-          "name": "EXPRESSION_EFFECTS"
+          "name": "renderUnabbreviatedType$delegate"
         },
         {
-          "name": "EXPRESSION_TYPE_INFO"
+          "name": "secondaryConstructorsAsPrimary$delegate"
         },
         {
-          "name": "FQNAME_TO_CLASS_DESCRIPTOR"
+          "name": "startFromDeclarationKeyword$delegate"
         },
         {
-          "name": "FUNCTION"
+          "name": "startFromName$delegate"
         },
         {
-          "name": "IMPLICIT_EXHAUSTIVE_WHEN"
+          "name": "textFormat$delegate"
         },
         {
-          "name": "IMPLICIT_RECEIVER_SMARTCAST"
+          "name": "typeNormalizer$delegate"
         },
         {
-          "name": "INDEXED_LVALUE_GET"
+          "name": "uninferredTypeParameterAsName$delegate"
         },
         {
-          "name": "INDEXED_LVALUE_SET"
+          "name": "unitReturnType$delegate"
         },
         {
-          "name": "IS_CONTRACT_DECLARATION_BLOCK"
+          "name": "valueParametersHandler$delegate"
         },
         {
-          "name": "IS_DEFINITELY_NOT_ASSIGNED_IN_CONSTRUCTOR"
+          "name": "verbose$delegate"
         },
         {
-          "name": "IS_UNINITIALIZED"
+          "name": "withDefinedIn$delegate"
         },
         {
-          "name": "LABEL_TARGET"
+          "name": "withSourceFileForTopLevel$delegate"
         },
         {
-          "name": "LAMBDA_INVOCATIONS"
+          "name": "withoutReturnType$delegate"
         },
         {
-          "name": "LEAKING_THIS"
+          "name": "withoutSuperTypes$delegate"
         },
         {
-          "name": "LEXICAL_SCOPE"
-        },
-        {
-          "name": "LOOP_RANGE_HAS_NEXT_RESOLVED_CALL"
-        },
-        {
-          "name": "LOOP_RANGE_ITERATOR_RESOLVED_CALL"
-        },
-        {
-          "name": "LOOP_RANGE_NEXT_RESOLVED_CALL"
-        },
-        {
-          "name": "MARKED_EQUALIY_CALL_PROPER_IN_BUILDER_INFERENCE"
-        },
-        {
-          "name": "MUST_BE_LATEINIT"
-        },
-        {
-          "name": "NEW_INFERENCE_CATCH_EXCEPTION_PARAMETER"
-        },
-        {
-          "name": "NEW_INFERENCE_IS_LAMBDA_FOR_OVERLOAD_RESOLUTION_INLINE"
-        },
-        {
-          "name": "NEW_INFERENCE_LAMBDA_INFO"
-        },
-        {
-          "name": "ONLY_RESOLVED_CALL"
-        },
-        {
-          "name": "PACKAGE_TO_FILES"
-        },
-        {
-          "name": "PARTIAL_CALL_RESOLUTION_CONTEXT"
-        },
-        {
-          "name": "PRELIMINARY_VISITOR"
-        },
-        {
-          "name": "PRIMARY_CONSTRUCTOR_PARAMETER"
-        },
-        {
-          "name": "PRIMITIVE_NUMERIC_COMPARISON_INFO"
-        },
-        {
-          "name": "PROCESSED"
-        },
-        {
-          "name": "PROPERTY_ACCESSOR"
-        },
-        {
-          "name": "PROVIDE_DELEGATE_CALL"
-        },
-        {
-          "name": "PROVIDE_DELEGATE_RESOLVED_CALL"
-        },
-        {
-          "name": "QUALIFIER"
-        },
-        {
-          "name": "REFERENCE_TARGET"
-        },
-        {
-          "name": "RESOLVED_CALL"
-        },
-        {
-          "name": "SCRIPT"
-        },
-        {
-          "name": "SCRIPT_SCOPE"
-        },
-        {
-          "name": "SHORT_REFERENCE_TO_COMPANION_OBJECT"
-        },
-        {
-          "name": "SMARTCAST"
-        },
-        {
-          "name": "SMARTCAST_NULL"
-        },
-        {
-          "name": "SUPER_EXPRESSION_FROM_ANY_MIGRATION"
-        },
-        {
-          "name": "THIS_REFERENCE_TARGET"
-        },
-        {
-          "name": "THIS_TYPE_FOR_SUPER_EXPRESSION"
-        },
-        {
-          "name": "TYPE"
-        },
-        {
-          "name": "TYPE_ALIAS"
-        },
-        {
-          "name": "TYPE_PARAMETER"
-        },
-        {
-          "name": "UNSTABLE_SMARTCAST"
-        },
-        {
-          "name": "UNUSED_MAIN_PARAMETER"
-        },
-        {
-          "name": "USED_AS_EXPRESSION"
-        },
-        {
-          "name": "USED_AS_RESULT_OF_LAMBDA"
-        },
-        {
-          "name": "VALUE_PARAMETER"
-        },
-        {
-          "name": "VALUE_PARAMETER_AS_PROPERTY"
-        },
-        {
-          "name": "VARIABLE"
-        },
-        {
-          "name": "VARIABLE_REASSIGNMENT"
-        },
-        {
-          "name": "_static_initializer"
+          "name": "withoutTypeParameters$delegate"
         }
       ]
+    },
+    {
+      "type": "org.jetbrains.kotlin.resolve.BindingContext",
+      "allPublicFields": true
     },
     {
       "type": "org.jetbrains.kotlin.resolve.calls.checkers.AbstractClassInstantiationChecker"
@@ -13400,11 +13789,24 @@
     },
     {
       "type": "picocli.AutoComplete$GenerateCompletion",
-      "allDeclaredFields": true
+      "allDeclaredFields": true,
+      "fields": [
+        {
+          "name": "spec"
+        }
+      ]
     },
     {
       "type": "picocli.CommandLine$AutoHelpMixin",
-      "allDeclaredFields": true
+      "allDeclaredFields": true,
+      "fields": [
+        {
+          "name": "helpRequested"
+        },
+        {
+          "name": "versionRequested"
+        }
+      ]
     },
     {
       "type": "reactor.core.publisher.FlatMapTracker",
@@ -13593,6 +13995,11 @@
     {
       "type": "sun.misc.Unsafe",
       "allDeclaredFields": true,
+      "fields": [
+        {
+          "name": "theUnsafe"
+        }
+      ],
       "methods": [
         {
           "name": "arrayBaseOffset",
@@ -13783,6 +14190,15 @@
     },
     {
       "type": "sun.security.provider.JavaKeyStore$JKS",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.MD5",
       "methods": [
         {
           "name": "<init>",
@@ -14110,6 +14526,15 @@
       ]
     },
     {
+      "type": "sun.text.resources.cldr.FormatData"
+    },
+    {
+      "type": "sun.text.resources.cldr.FormatData_en"
+    },
+    {
+      "type": "sun.text.resources.cldr.FormatData_en_US"
+    },
+    {
       "type": "sun.util.logging.resources.logging"
     },
     {
@@ -14268,5 +14693,32 @@
     {
       "type": "javax.management.remote.rmi.RMIServerImpl_Stub"
     }
-  ]
+  ],
+  "foreign": {
+    "downcalls": [
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      }
+    ]
+  }
 }

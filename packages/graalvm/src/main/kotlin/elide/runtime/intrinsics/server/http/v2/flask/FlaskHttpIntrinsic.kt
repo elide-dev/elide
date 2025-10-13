@@ -10,11 +10,14 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:Suppress("MnInjectionPoints")
+
 package elide.runtime.intrinsics.server.http.v2.flask
 
 import com.oracle.truffle.api.CompilerDirectives
 import io.netty.buffer.Unpooled
 import io.netty.handler.codec.http.*
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
@@ -26,8 +29,9 @@ import kotlin.io.path.Path
 import elide.annotations.Singleton
 import elide.runtime.Logging
 import elide.runtime.core.EntrypointRegistry
+import elide.runtime.core.RuntimeExecutor
 import elide.runtime.core.RuntimeLatch
-import elide.runtime.core.SharedContextFactory
+import elide.runtime.exec.ContextLocal
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.internals.serialization.GuestValueSerializer
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
@@ -41,14 +45,18 @@ private const val ROUTE_METHOD = "route"
 private const val BIND_METHOD = "bind"
 
 @Singleton public class FlaskHttpIntrinsic(
-  private val runtimeLatchProvider: Provider<RuntimeLatch>,
+  runtimeLatch: Provider<RuntimeLatch>,
   entrypointProvider: Provider<EntrypointRegistry>,
-  contextProvider: Provider<SharedContextFactory>,
+  runtimeExecutor: Provider<RuntimeExecutor>,
 ) : AbstractHttpIntrinsic(), ProxyExecutable, ProxyObject, GuestIntrinsic, FlaskAPI {
-  override val runtimeLatch: RuntimeLatch by lazy { runtimeLatchProvider.get() }
-  private val applicationRoot by lazy { entrypointProvider.get()?.acquire()?.path?.let { Path(it) }?.parent }
+  override val runtimeLatch: RuntimeLatch by lazy { runtimeLatch.get() }
+
+  private val entrypointRegistry by lazy { entrypointProvider.get() }
+  private val applicationRoot by lazy { entrypointProvider.get().acquire()?.path?.let { Path(it) }?.parent }
 
   private val requestAccessor = FlaskRequestAccessor()
+  private val handlerExecutor by lazy { runtimeExecutor.get().acquire() }
+  private val localFlaskRouter = ContextLocal<FlaskRouter>()
 
   public inner class FlaskAppInstance(internal val name: String) : ProxyObject {
     init {
@@ -58,6 +66,9 @@ private const val BIND_METHOD = "bind"
 
     override fun getMember(key: String?): Any? = when (key) {
       ROUTE_METHOD -> ProxyExecutable { args /* (name, rule, methods, handler) */ ->
+        // TODO(@darvld): remove once all guest dispatch is mediated by the executor
+        if (!handlerExecutor.onDispatchThread) return@ProxyExecutable null
+
         val endpoint = args.getOrNull(0)?.takeIf { it.isString }
           ?: error("Invalid route; pass a string to @app.route")
         val pattern = args.getOrNull(1)?.takeIf { it.isString }
@@ -67,12 +78,15 @@ private const val BIND_METHOD = "bind"
         val handler = requireNotNull(args.last()) { "no handler provided; check guest wrapper" }
         require(handler.canExecute()) { "guest python handler is not executable" }
 
-        stackManager.withStack {
-          val mappedMethods = Array(methods.arraySize.toInt()) { method ->
-            HttpMethod.valueOf(methods.getArrayElement(method.toLong()).asString())
-          }
-          it.register(endpoint.asString(), pattern.asString(), mappedMethods, handler)
+        val router = localFlaskRouter.current() ?: FlaskRouter().also {
+          handlerExecutor.setContextLocal(localFlaskRouter, it)
         }
+
+        val mappedMethods = Array(methods.arraySize.toInt()) { method ->
+          HttpMethod.valueOf(methods.getArrayElement(method.toLong()).asString())
+        }
+
+        router.register(endpoint.asString(), pattern.asString(), mappedMethods, handler)
       }
 
       BIND_METHOD -> ProxyExecutable {
@@ -85,10 +99,6 @@ private const val BIND_METHOD = "bind"
     override fun getMemberKeys(): Any = INSTANCE_MEMBER_KEYS
     override fun hasMember(key: String?): Boolean = key != null && key in INSTANCE_MEMBER_KEYS
     override fun putMember(key: String?, value: Value?): Unit = error("Modifying the flask app object is not allowed")
-  }
-
-  private val stackManager by lazy {
-    FlaskHandlerStackManager(entrypointProvider.get(), contextProvider.get())
   }
 
   @CompilerDirectives.TruffleBoundary
@@ -108,55 +118,69 @@ private const val BIND_METHOD = "bind"
     }
 
     // resolve thread-local or shared routing stack
-    stackManager.withStack { stack ->
-      // map context to arguments expected by guest code here
-      when (val match = stack.match(httpContext.request)) {
-        FlaskRouter.MatcherResult.NoMatch -> {
-          httpContext.response.status = HttpResponseStatus.NOT_FOUND
-          httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
-          httpContext.responseBody.close()
-        }
+    val sendResponse = handlerScope.newPromise()
+    handlerExecutor.execute {
+      val stack = localFlaskRouter.current() ?: FlaskRouter().also {
+        handlerExecutor.setContextLocal(localFlaskRouter, it)
 
-        FlaskRouter.MatcherResult.MethodNotAllowed -> {
-          httpContext.response.status = HttpResponseStatus.METHOD_NOT_ALLOWED
-          httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
-          httpContext.responseBody.close()
-        }
-
-        is FlaskRouter.MatcherResult.MissingVariable -> {
-          httpContext.response.status = HttpResponseStatus.BAD_REQUEST
-          httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
-          httpContext.responseBody.close()
-        }
-
-        is FlaskRouter.MatcherResult.InvalidVariable -> {
-          httpContext.response.status = HttpResponseStatus.BAD_REQUEST
-          httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
-          httpContext.responseBody.close()
-        }
-
-        is FlaskRouter.MatcherResult.Match -> {
-          requestAccessor.push(httpContext)
-
-          try {
-            @Suppress("UNCHECKED_CAST")
-            val result = match.handler.execute(ProxyHashMap.from(match.parameters as Map<Any, Any>))
-            applyHandlerResponse(result, httpContext as FlaskHttpContext)
-          } catch (e: PolyglotException) {
-            if (!e.isHostException) throw e
-            val cause = e.asHostException() as? FlaskHttpException ?: throw e
-
-            httpContext.response.status = HttpResponseStatus.valueOf(cause.code)
-            httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
-            httpContext.responseBody.close()
-          } finally {
-            requestAccessor.pop()
-          }
-        }
+        // initialize the stack for this context
+        val source = entrypointRegistry.acquire() ?: error("No entrypoint available")
+        Context.getCurrent().eval(source)
       }
 
-      handlerScope.newSucceededFuture()
+      runCatching {
+        // map context to arguments expected by guest code here
+        when (val match = stack.match(httpContext.request)) {
+          FlaskRouter.MatcherResult.NoMatch -> {
+            httpContext.response.status = HttpResponseStatus.NOT_FOUND
+            httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
+            httpContext.responseBody.close()
+          }
+
+          FlaskRouter.MatcherResult.MethodNotAllowed -> {
+            httpContext.response.status = HttpResponseStatus.METHOD_NOT_ALLOWED
+            httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
+            httpContext.responseBody.close()
+          }
+
+          is FlaskRouter.MatcherResult.MissingVariable -> {
+            httpContext.response.status = HttpResponseStatus.BAD_REQUEST
+            httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
+            httpContext.responseBody.close()
+          }
+
+          is FlaskRouter.MatcherResult.InvalidVariable -> {
+            httpContext.response.status = HttpResponseStatus.BAD_REQUEST
+            httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
+            httpContext.responseBody.close()
+          }
+
+          is FlaskRouter.MatcherResult.Match -> {
+            requestAccessor.push(httpContext)
+
+            try {
+              @Suppress("UNCHECKED_CAST")
+              val result = match.handler.execute(ProxyHashMap.from(match.parameters as Map<Any, Any>))
+              applyHandlerResponse(result, httpContext as FlaskHttpContext)
+            } catch (e: PolyglotException) {
+              if (!e.isHostException) throw e
+              val cause = e.asHostException() as? FlaskHttpException ?: throw e
+
+              httpContext.response.status = HttpResponseStatus.valueOf(cause.code)
+              httpContext.response.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0)
+              httpContext.responseBody.close()
+            } finally {
+              requestAccessor.pop()
+            }
+          }
+        }
+      }.fold(
+        onSuccess = { sendResponse.setSuccess() },
+        onFailure = { sendResponse.setFailure(it) },
+      )
     }
+
+    sendResponse
   }
 
   override fun acquireFactory(): HttpContextFactory<*> =
@@ -199,6 +223,9 @@ private const val BIND_METHOD = "bind"
     }
 
     "url_for" -> ProxyExecutable { args ->
+      // TODO(@darvld): remove once all guest dispatch is mediated by the executor
+      if (!handlerExecutor.onDispatchThread) return@ProxyExecutable null
+
       val endpoint = args.firstOrNull()?.takeIf { it.isString }?.asString()
         ?: error("Invalid argument provided to `url_for`: expected a string, got ${args.firstOrNull()}")
 
@@ -212,7 +239,7 @@ private const val BIND_METHOD = "bind"
         }
       } ?: emptyMap()
 
-      stackManager.withStack { it.urlFor(endpoint, variables) }
+      localFlaskRouter.current()?.urlFor(endpoint, variables)
     }
 
     "make_response" -> ProxyExecutable { args ->

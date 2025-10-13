@@ -802,7 +802,7 @@ slf4j-jdk14 = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j"
 slf4j-jul = { group = "org.slf4j", name = "jul-to-slf4j", version.ref = "slf4j" }
 slf4j-log4j-bridge = { group = "org.slf4j", name = "log4j-over-slf4j", version.ref = "slf4j" }
 snakeyaml-core = { group = "org.yaml", name = "snakeyaml", version.ref = "snakeyaml-core" }
-snakeyaml-engine = { group = "org.yaml", name = "snakeyaml-engine", version.ref = "snakeyaml-engine" }
+snakeyaml-engine = { group = "org.snakeyaml", name = "snakeyaml-engine", version.ref = "snakeyaml-engine" }
 snappy = { group = "org.xerial.snappy", name = "snappy-java", version.ref = "snappy" }
 smartexception = { group = "com.arthenica", name = "smart-exception-java9", version.ref = "smartexception" }
 sqlcommenter-hibernate = { group = "com.google.cloud", name = "sqlcommenter-hibernate", version.ref = "sqlcommenter" }

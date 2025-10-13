@@ -359,6 +359,7 @@ where options include:
       inputs as NativeImageInputs.Paths,
       projectInfo,
     )
+    mut.add("-H:-UnlockExperimentalVMOptions")  // lock it back up
     val argList = mut.asArgumentStrings(renderCtx).toList()
     debugLog("Arg list ready of size=${argList.size}")
 

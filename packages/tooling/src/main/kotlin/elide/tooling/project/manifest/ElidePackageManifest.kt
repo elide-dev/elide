@@ -314,15 +314,34 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class MavenDependencies(
     val coordinates: MavenCoordinates? = null,
     val packages: List<MavenPackage> = emptyList(),
+    val modules: List<MavenPackage> = emptyList(),
+    val devPackages: List<MavenPackage> = emptyList(),
     val testPackages: List<MavenPackage> = emptyList(),
+    val compileOnly: List<MavenPackage> = emptyList(),
+    val runtimeOnly: List<MavenPackage> = emptyList(),
     val processors: List<MavenPackage> = emptyList(),
+    val exclusions: List<MavenPackage> = emptyList(),
     val catalogs: List<GradleCatalog> = emptyList(),
     val repositories: Map<String, MavenRepository> = emptyMap(),
     val enableDefaultRepositories: Boolean = true,
     val from: List<String> = emptyList(),
   ) : DependencyEcosystemConfig {
-    public fun hasPackages(): Boolean = packages.isNotEmpty() || testPackages.isNotEmpty()
-    public fun allPackages(): Sequence<MavenPackage> = (packages.asSequence() + testPackages.asSequence()).distinct()
+    public fun hasPackages(): Boolean = (
+      packages.isNotEmpty() ||
+      devPackages.isNotEmpty() ||
+      testPackages.isNotEmpty() ||
+      modules.isNotEmpty() ||
+      compileOnly.isNotEmpty() ||
+      runtimeOnly.isNotEmpty()
+    )
+    public fun allPackages(): Sequence<MavenPackage> = sequence<MavenPackage> {
+      yieldAll(packages.asSequence())
+      yieldAll(modules.asSequence())
+      yieldAll(compileOnly.asSequence())
+      yieldAll(runtimeOnly.asSequence())
+      yieldAll(testPackages.asSequence())
+      yieldAll(devPackages.asSequence())
+    }.distinct()
   }
 
   @JvmRecord @Serializable public data class PipDependencies(
@@ -376,6 +395,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class JvmFeatures(
     val testing: Boolean = true,
+    val automodules: Boolean = true,
   )
 
   @JvmRecord @Serializable public data class JvmTesting(
@@ -432,6 +452,8 @@ public data class ElidePackageManifest(
     val freeCompilerArgs: List<String> = emptyList(),
     val apiVersion: String = "auto",
     val languageVersion: String = "auto",
+    val includeRuntime: Boolean = false,
+    val noStdlib: Boolean = false,
 
     // JVM Options
     val javaParameters: Boolean = false,
@@ -451,6 +473,13 @@ public data class ElidePackageManifest(
       if (verbose) yield("-verbose")
       if (apiVersion != "auto") yield("-api-version=$apiVersion")
       if (languageVersion != "auto") yield("-language-version=$languageVersion")
+      if (includeRuntime) yield("-include-runtime")
+      if (noStdlib) yield("-no-stdlib")
+      when (val tgt = jvmTarget) {
+        null -> {}
+        else -> yield("-jvm-target=${tgt.argValue}")
+      }
+
       if (freeCompilerArgs.isNotEmpty()) yieldAll(freeCompilerArgs)
     }
   }
@@ -466,6 +495,7 @@ public data class ElidePackageManifest(
     val coroutines: Boolean = kotlinx,
     val redaction: Boolean = enableDefaultPlugins && experimental,
     val autoClasspath: Boolean = true,
+    val reflection: Boolean = true,
   )
 
   @JvmRecord @Serializable public data class KotlinSettings(
@@ -533,9 +563,13 @@ public data class ElidePackageManifest(
     val verbose: Boolean = false,
     val linkAtBuildTime: NativeImageLinkAtBuildTime = NativeImageLinkAtBuildTime(),
     val classInit: NativeImageClassInit = NativeImageClassInit(),
+    val exclusions: NativeImageExclusions = NativeImageExclusions(),
     val optimization: OptimizationLevel = OptimizationLevel.AUTO,
     val pgo: ProfileGuidedOptimization = ProfileGuidedOptimization(),
     val flags: List<String> = emptyList(),
+    val cflags: List<String> = emptyList(),
+    val ldflags: List<String> = emptyList(),
+    val defs: Map<String, String> = emptyMap(),
   )
 
   @JvmRecord @Serializable public data class NativeImageSettings(
@@ -645,9 +679,15 @@ public fun GemDependencies.merge(other: GemDependencies): GemDependencies {
 public fun MavenDependencies.merge(other: MavenDependencies): MavenDependencies {
   return MavenDependencies(
     packages = packages.union(other.packages).toList(),
+    modules = modules.union(other.modules).toList(),
+    devPackages = devPackages.union(other.devPackages).toList(),
     testPackages = testPackages.union(other.testPackages).toList(),
+    compileOnly = compileOnly.union(other.compileOnly).toList(),
+    runtimeOnly = runtimeOnly.union(other.runtimeOnly).toList(),
     processors = processors.union(other.processors).toList(),
+    exclusions = exclusions.union(other.exclusions).toList(),
     repositories = repositories.plus(other.repositories),
+    catalogs = catalogs.union(other.catalogs).toList(),
   )
 }
 

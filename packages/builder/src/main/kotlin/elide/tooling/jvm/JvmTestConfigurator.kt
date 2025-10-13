@@ -65,7 +65,7 @@ internal class JvmTestConfigurator : TestConfigurator {
       val scanResult = classgraph.scanResult()
 
       val urls = scanResult.classpathURLs.toTypedArray()
-      val builtin = JvmLibraries.builtinClasspath(project.resourcesPath, tests = true)
+      val builtin = JvmLibraries.builtinClasspath(project, tests = true)
         .map { it.path.toUri().toURL() }
         .toTypedArray()
 

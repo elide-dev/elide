@@ -62,7 +62,7 @@ class MavenLockfileResolverTest {
     )
     assertNotNull(resolver)
 
-    val compileClasspath = resolver.classpathProvider(ClasspathSpec.Compile)?.classpath()
+    val compileClasspath = resolver.classpathProvider(ClasspathSpec.CompileClasspath)?.classpath()
     assertNotNull(compileClasspath)
     assertTrue(compileClasspath.isNotEmpty())
   }

@@ -250,6 +250,7 @@ val jpmsSvmArgs = listOf(
   "jdk.internal.vm.ci" to "jdk.vm.ci.code",
   "jdk.graal.compiler" to "jdk.graal.compiler.util",
   "jdk.graal.compiler" to "jdk.graal.compiler.serviceprovider",
+  "jdk.graal.compiler" to "jdk.graal.compiler.util.json",
   "java.base" to "jdk.internal.jimage",
   "org.graalvm.nativeimage.builder" to "com.oracle.svm.hosted",
   "org.graalvm.nativeimage.builder" to "com.oracle.svm.core",
@@ -270,6 +271,7 @@ val jpmsSvmArgs = listOf(
     ("jdk.internal.vm.ci" to "jdk.vm.ci.meta") to "org.graalvm.nativeimage.pointsto",
     ("jdk.internal.vm.ci" to "jdk.vm.ci.code") to "org.graalvm.nativeimage.pointsto",
     ("java.base" to "jdk.internal.jimage") to "org.graalvm.nativeimage.driver",
+    ("jdk.graal.compiler" to "jdk.graal.compiler.util.json") to "com.oracle.graal.reporter",
     ("java.base" to "jdk.internal.misc") to svmModules,
     ("jdk.internal.vm.ci" to "jdk.vm.ci.aarch64") to svmModules,
     ("jdk.internal.vm.ci" to "jdk.vm.ci.amd64") to svmModules,
@@ -1189,6 +1191,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.internal.tcnative.SSLContext",
   "io.netty.internal.tcnative.SSLSession",
   "io.netty.internal.tcnative.AsyncSSLPrivateKeyMethod",
+  "io.netty.internal.tcnative.CertificateCompressionAlgo",
   "io.netty.handler.ssl.BouncyCastleAlpnSslUtils",
 
   // --- BouncyCastle -----
@@ -1343,6 +1346,7 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
   "-J--add-exports=jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED",
+  "-J--add-exports=jdk.graal.compiler/jdk.graal.compiler.util.json=com.oracle.graal.reporter",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
   "--add-opens=io.netty.common/io.netty.util=org.graalvm.nativeimage.builder",
   "--add-opens=io.netty.common/io.netty.util.internal.svm=org.graalvm.nativeimage.builder",
@@ -2782,6 +2786,7 @@ fun spawnEmbeddedSvmCopy(receiver: BuildNativeImageTask): Copy {
         "**/truffle/**/*.jar",
         "**/svm/**/*.jar",
         "**/svm/clibraries/*/**/*.*",
+        "**/macros/**",
       )
       exclude(
         "**/svm-wasm/**",

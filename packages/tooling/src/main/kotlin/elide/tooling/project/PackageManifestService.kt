@@ -16,6 +16,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
 import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.codecs.PackageManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 
@@ -26,6 +27,8 @@ import elide.tooling.project.manifest.PackageManifest
  * file or type.
  */
 public interface PackageManifestService {
+  public fun configure(state: PackageManifestCodec.ManifestBuildState)
+
   public fun resolve(root: Path, ecosystem: ProjectEcosystem = ProjectEcosystem.Elide): Path
 
   public fun parse(source: Path): PackageManifest

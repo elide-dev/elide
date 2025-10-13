@@ -161,11 +161,26 @@ class MavenDependencies {
   /// A list of Maven package dependencies to be resolved for this project.
   packages: Listing<MavenPackageDependency> = new {}
 
+  /// A list of Maven packages to make available at dev-time only.
+  devPackages: Listing<MavenPackageDependency> = new {}
+
+  /// A list of dependencies to include specifically on the module path.
+  modules: Listing<MavenPackageDependency> = new {}
+
+  /// A list of Maven packages to be resolved as compile-time only dependencies.
+  compileOnly: Listing<MavenPackageDependency> = new {}
+
+  /// A list of Maven package dependencies to be resolved as runtime dependencies.
+  runtimeOnly: Listing<MavenPackageDependency> = new {}
+
   /// A list of Maven package dependencies to be resolved as processor dependencies.
   processors: Listing<MavenPackageDependency> = new {}
 
   /// A list of Maven package dependencies to be resolved for this project.
   testPackages: Listing<MavenPackageDependency> = new {}
+
+  /// A list of Maven package dependencies to be excluded from resolution and classpath calculations.
+  exclusions: Listing<MavenPackageDependency> = new {}
 
   /// A list of Gradle dependency catalogs to be resolved for this project.
   catalogs: Listing<GradleCatalog> = new {}
@@ -230,6 +245,9 @@ function app(_entrypoint: common.FilePath | String) = new Jar {
 class JvmFeatures {
   /// Automatically provide test dependencies for JVM projects, like JUnit.
   testing: Boolean = true
+
+  /// Whether auto-modules are enabled (JDK 9+ modulepath handling).
+  automodules: Boolean = true
 }
 
 /// Controls settings relating to the Java compiler.
@@ -269,6 +287,9 @@ class JvmSettings {
 
   /// Runtime JVM flags.
   flags: Listing<String> = new {}
+
+  /// Runtime definitions (system properties).
+  defs: Mapping<String, String> = new {}
 }
 
 /// Options for running JVM tests.

@@ -35,7 +35,7 @@ public class PyProjectManifestCodec : PackageManifestCodec<PyProjectManifest> {
     return path.nameWithoutExtension == DEFAULT_NAME && path.extension == DEFAULT_EXTENSION
   }
 
-  override fun parse(source: InputStream): PyProjectManifest {
+  override fun parse(source: InputStream, state: PackageManifestCodec.ManifestBuildState): PyProjectManifest {
     val text = source.bufferedReader().use { it.readText() }
     return ManifestToml.decodeFromString(text)
   }

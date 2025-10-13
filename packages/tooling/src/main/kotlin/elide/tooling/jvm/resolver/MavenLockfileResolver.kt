@@ -83,6 +83,8 @@ public class MavenLockfileResolver internal constructor (
         MavenUsageType.TEST_PROCESSORS -> MultiPathUsage.TestProcessors
         MavenUsageType.RUNTIME -> MultiPathUsage.Runtime
         MavenUsageType.TEST_RUNTIME -> MultiPathUsage.TestRuntime
+        MavenUsageType.MODULES -> MultiPathUsage.Modules
+        MavenUsageType.DEV_ONLY -> MultiPathUsage.Dev
       }
       registryByUsage.getOrPut(mpUsage) { mutableListOf() }.also {
         it.add(entry)

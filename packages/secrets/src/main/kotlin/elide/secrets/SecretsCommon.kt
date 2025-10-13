@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+package elide.secrets
+
+import java.nio.file.Path
+import kotlinx.io.bytestring.ByteString
+import elide.tooling.project.manifest.ElidePackageManifest
+
+/**
+ * Common access to secrets.
+ *
+ * @property initialized `true` if [init] has been called and has successfully initialized secrets.
+ * @author Lauri Heino <datafox>
+ */
+public sealed interface SecretsCommon {
+  public val initialized: Boolean
+
+  /** Initializes secrets for use. */
+  public suspend fun init(path: Path, manifest: ElidePackageManifest?)
+
+  /** Lists all profiles that exist locally. */
+  public fun listProfiles(): Set<String>
+
+  /** Loads a profile for use. */
+  public fun loadProfile(profile: String)
+
+  /** Returns name of the currently loaded profile or `null` if none is loaded. */
+  public fun getProfile(): String?
+
+  /** Unloads a profile from use. */
+  public fun unloadProfile()
+
+  /** Lists all environment variables in the currently loaded profile. */
+  public fun getEnv(): Map<String, String>
+
+  /** Returns a secret from the currently loaded profile. */
+  public fun getSecret(name: String): Any?
+
+  /** Returns a string secret from the currently loaded profile. */
+  public fun getStringSecret(name: String): String?
+
+  /** Returns a string secret from the currently loaded profile. */
+  public fun getBinarySecret(name: String): ByteString?
+
+  /** Lists all secret names and their types in the currently loaded profile. */
+  public fun listSecrets(): Map<String, SecretType>
+}

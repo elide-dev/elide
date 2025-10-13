@@ -35,6 +35,7 @@ import elide.runtime.lang.python.PythonLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 import elide.runtime.plugins.python.flask.FlaskAPI
+import elide.runtime.plugins.python.secrets.SecretsPythonAPI
 import elide.runtime.vfs.LanguageVFS.LanguageVFSInfo
 import elide.runtime.vfs.registerLanguageVfs
 
@@ -52,18 +53,28 @@ private const val ENABLE_PYTHON_VFS = false
   }
 
   private fun finalizeContext(context: PolyglotContext) {
-    // special case: inject flask
+    // special case: inject flask and secrets
     // @TODO don't do this
     context.enter()
     try {
       when (val flask = scope.beanContext.getBean<FlaskAPI>(FlaskAPI::class.java)) {
         null -> logging.warn { "Failed to load Flask intrinsic" }
-        else -> context.unwrap().polyglotBindings.putMember(
+        else -> context.unwrap().polyglotBindings.apply {}.putMember(
           // @TODO don't do this either
           // results in:
           // `__Elide_FlaskIntrinsic__`
           arrayOf("", "", "Elide", FlaskAPI.FLASK_INTRINSIC, "", "").joinToString("_"),
           flask,
+        )
+      }
+      when (val secrets = scope.beanContext.getBean<SecretsPythonAPI>(SecretsPythonAPI::class.java)) {
+        null -> logging.warn { "Failed to load Secrets intrinsic" }
+        else -> context.unwrap().polyglotBindings.apply {}.putMember(
+          // @TODO don't do this either
+          // results in:
+          // `__Elide_SecretsIntrinsic__`
+          arrayOf("", "", "Elide", SecretsPythonAPI.SECRETS_INTRINSIC, "", "").joinToString("_"),
+          secrets,
         )
       }
 

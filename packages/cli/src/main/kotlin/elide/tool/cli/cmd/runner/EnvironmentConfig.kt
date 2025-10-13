@@ -45,6 +45,7 @@ import elide.tooling.project.ElideProject
   internal fun apply(
     project: ElideProject?,
     config: PolyglotEngineConfiguration,
+    secretsEnv: Map<String, String>,
     host: Boolean = false,
     dotenv: Boolean = true,
   ) = config.environment {
@@ -59,7 +60,10 @@ import elide.tooling.project.ElideProject
       mapToHostEnv(it.key)
     }
 
-    // apply project-level environment variables first (if applicable)
+    // apply secret environment variables first
+    secretsEnv.forEach { environment(it.key, it.value) }
+
+    // apply project-level environment variables (if applicable)
     project?.env?.vars?.forEach {
       if (it.value.isPresent) {
         if (it.value.source == EnvVariableSource.DOTENV && !dotenv) {

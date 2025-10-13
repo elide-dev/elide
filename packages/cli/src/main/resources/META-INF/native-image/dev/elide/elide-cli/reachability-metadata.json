@@ -327,6 +327,14 @@
       ]
     },
     {
+      "type": "boolean[]",
+      "jniAccessible": true
+    },
+    {
+      "type": "byte[]",
+      "jniAccessible": true
+    },
+    {
       "type": "ch.qos.logback.classic.encoder.PatternLayoutEncoder",
       "methods": [
         {
@@ -352,6 +360,26 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "ch.qos.logback.classic.model.ConfigurationModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.classic.model.ContextNameModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.classic.model.LoggerContextListenerModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.classic.model.LoggerModel",
+      "serializable": true
+    },
+    {
+      "type": "ch.qos.logback.classic.model.RootLoggerModel",
+      "serializable": true
     },
     {
       "type": "ch.qos.logback.classic.sift.MDCBasedDiscriminator",
@@ -863,6 +891,9 @@
     {
       "type": "com.google.common.collect.ImmutableMap",
       "allDeclaredFields": true
+    },
+    {
+      "type": "com.google.common.collect.ImmutableMapEntry[]"
     },
     {
       "type": "com.google.common.collect.ImmutableSortedMap",
@@ -3181,6 +3212,24 @@
       ]
     },
     {
+      "type": "elide.runtime.secrets.$SecretsIntrinsic$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.secrets.$SecretsIntrinsic$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "elide.runtime.telemetry.client.$DefaultTelemetryClient$Definition",
       "methods": [
         {
@@ -3203,6 +3252,266 @@
       "fields": [
         {
           "name": "telemetryEnabled$volatile"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubCommitsRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubCommitsRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubCommitsResponse",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubCommitsResponse$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubCreateRefRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubCreateRefRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubCreateRefResponse",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubCreateRefResponse$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubDeleteFileRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubDeleteFileRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubFileResponse",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubFileResponse$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubMergeRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubMergeRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubMergeResponse",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubMergeResponse$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubRepositoryResponse",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubRepositoryResponse$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubUploadFileRequest",
+      "fields": [
+        {
+          "name": "Companion"
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.dto.api.github.GithubUploadFileRequest$Companion",
+      "methods": [
+        {
+          "name": "serializer",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.impl.$DependencyFactory$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.impl.$DependencyFactory$GetCbor1$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.impl.$DependencyFactory$GetHttpClient2$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.impl.$DependencyFactory$GetJson0$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.impl.$EncryptionImpl$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.impl.$FileManagementImpl$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.impl.$SecretManagementImpl$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.impl.$SecretsImpl$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.remote.impl.$GithubRemoteInitializer$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.secrets.remote.impl.$ProjectRemoteInitializer$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
         }
       ]
     },
@@ -3836,6 +4145,28 @@
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tool.cli.cmd.secrets.$ToolSecretsCommand$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.secrets.$ToolSecretsCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.secrets.ToolSecretsCommand",
+      "allDeclaredFields": true
     },
     {
       "type": "elide.tool.cli.cmd.tool.$ToolInvokeCommand$Definition",
@@ -4726,57 +5057,9 @@
             "elide.tooling.project.manifest.ElidePackageManifest$DevSettings",
             "java.util.Map",
             "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$DevSettings",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
             "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$WebSettings"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings"
+            "elide.tooling.project.manifest.ElidePackageManifest$WebSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$SecretSettings"
           ]
         }
       ]
@@ -4788,49 +5071,19 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ContainerImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CssSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$CssTarget",
@@ -4842,18 +5095,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DependencyResolution",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$NpmDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$PipDependencies",
-            "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DevServerSettings",
@@ -4865,59 +5107,27 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$DevSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
-            "elide.tooling.project.manifest.ElidePackageManifest$LspSettings"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
-            "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$McpSettings"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
-            "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$McpSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$DevServerSettings"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GemDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$GemPackage"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$GithubRemoteSettings",
       "methods": [
         {
           "name": "<init>",
           "parameterTypes": [
-            "java.util.List",
-            "java.util.List"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.List"
+            "java.lang.String"
           ]
         }
       ]
-    },
-    {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$GemPackage"
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GradleCatalog"
@@ -4926,21 +5136,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$Jar",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "elide.tooling.project.manifest.ElidePackageManifest$JarOptions",
-            "java.util.List",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JarOptions",
@@ -4962,31 +5158,13 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaCompilerSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaLanguage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaCompilerSettings"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JavaScriptSettings",
@@ -4998,34 +5176,13 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmFeatures",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
-            "java.lang.String",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmFeatures",
-            "elide.tooling.project.manifest.ElidePackageManifest$JavaLanguage",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget"
@@ -5046,81 +5203,25 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinJvmCompilerOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "boolean",
-            "java.util.List",
-            "java.lang.String",
-            "java.lang.String",
-            "boolean",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTarget",
-            "boolean",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTargetValidationMode"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$KotlinSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinJvmCompilerOptions",
-            "elide.tooling.project.manifest.ElidePackageManifest$KotlinFeatureOptions"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$LockfileSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "java.lang.String"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$LspSettings",
@@ -5138,34 +5239,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$MavenCoordinates",
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "boolean",
-            "java.util.List"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$MavenCoordinates",
-            "java.util.List",
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "boolean",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$MavenPackage"
@@ -5201,17 +5275,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImage",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
-            "java.util.List",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageClassInit",
@@ -5229,16 +5293,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NativeImageSettings",
@@ -5256,33 +5311,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NpmDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.List",
-            "java.util.Map",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$NpmPackage"
@@ -5300,16 +5329,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PipDependencies",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.util.List",
-            "java.util.Map"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$PipPackage",
@@ -5327,6 +5347,9 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ProjectRemoteSettings"
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -5339,51 +5362,36 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$RubySettings"
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$SecretSettings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "elide.tooling.project.manifest.ElidePackageManifest$SecretsRemote",
+            "elide.tooling.project.manifest.ElidePackageManifest$ProjectRemoteSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$GithubRemoteSettings"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$SecretsRemote"
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$SourceSet"
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$StaticSite",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List",
-            "java.lang.String",
-            "java.util.List",
-            "java.util.List"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TestingSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings"
-          ]
-        },
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$CoverageSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$JvmTesting"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$TypeScriptSettings",
@@ -5395,17 +5403,7 @@
       "type": "elide.tooling.project.manifest.ElidePackageManifest$WebSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "boolean",
-            "elide.tooling.project.manifest.ElidePackageManifest$CssSettings",
-            "elide.tooling.web.Browsers"
-          ]
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.reporting.TestReportProcessor$Factory"
@@ -5452,6 +5450,18 @@
       "type": "elide.tooling.web.Browsers"
     },
     {
+      "type": "elide.tooling.web.css.CssNative",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "reportCssError",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
       "type": "elide.tooling.web.css.CssOptions",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -5462,6 +5472,48 @@
     },
     {
       "type": "io.grpc.override.ContextStorageOverride"
+    },
+    {
+      "type": "io.ktor.client.HttpClient"
+    },
+    {
+      "type": "io.ktor.client.HttpClientConfig"
+    },
+    {
+      "type": "io.ktor.client.call.HttpClientCall"
+    },
+    {
+      "type": "io.ktor.client.content.ProgressListener"
+    },
+    {
+      "type": "io.ktor.client.engine.HttpClientEngineBase"
+    },
+    {
+      "type": "io.ktor.client.engine.HttpClientEngineCapability"
+    },
+    {
+      "type": "io.ktor.client.engine.HttpClientEngineConfig"
+    },
+    {
+      "type": "io.ktor.client.engine.cio.Endpoint"
+    },
+    {
+      "type": "io.ktor.client.plugins.HttpSend"
+    },
+    {
+      "type": "io.ktor.client.plugins.HttpTimeoutConfig"
+    },
+    {
+      "type": "io.ktor.client.plugins.api.ClientPluginImpl"
+    },
+    {
+      "type": "io.ktor.client.plugins.api.ClientPluginInstance"
+    },
+    {
+      "type": "io.ktor.client.request.ResponseAdapter"
+    },
+    {
+      "type": "io.ktor.http.ContentType"
     },
     {
       "type": "io.ktor.http.HttpStatusCode"
@@ -5509,12 +5561,21 @@
       ]
     },
     {
+      "type": "io.ktor.network.selector.SelectInterest[]"
+    },
+    {
       "type": "io.ktor.network.selector.SelectableBase",
       "fields": [
         {
           "name": "_interestedOps"
         }
       ]
+    },
+    {
+      "type": "io.ktor.network.sockets.SocketBase"
+    },
+    {
+      "type": "io.ktor.serialization.kotlinx.json.KotlinxSerializationJsonExtensionProvider"
     },
     {
       "type": "io.ktor.server.application.PluginInstance"
@@ -6870,6 +6931,18 @@
       ]
     },
     {
+      "type": "io.micronaut.jackson.core.env.CloudFoundryVcapApplicationPropertySourceLoader"
+    },
+    {
+      "type": "io.micronaut.jackson.core.env.CloudFoundryVcapServicesPropertySourceLoader"
+    },
+    {
+      "type": "io.micronaut.jackson.core.env.EnvJsonPropertySourceLoader"
+    },
+    {
+      "type": "io.micronaut.jackson.core.env.JsonPropertySourceLoader"
+    },
+    {
       "type": "io.micronaut.json.$JsonObjectSerializer$Definition",
       "methods": [
         {
@@ -8028,6 +8101,10 @@
       ]
     },
     {
+      "type": "io.netty.channel.ChannelException",
+      "jniAccessible": true
+    },
+    {
       "type": "io.netty.channel.ChannelOutboundBuffer",
       "fields": [
         {
@@ -8064,7 +8141,16 @@
       "type": "io.netty.channel.DefaultChannelPipeline$TailContext"
     },
     {
-      "type": "io.netty.channel.DefaultFileRegion"
+      "type": "io.netty.channel.DefaultFileRegion",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "file"
+        },
+        {
+          "name": "transferred"
+        }
+      ]
     },
     {
       "type": "io.netty.channel.epoll.EpollServerSocketChannel",
@@ -8076,16 +8162,113 @@
       ]
     },
     {
-      "type": "io.netty.channel.epoll.NativeDatagramPacketArray$NativeDatagramPacket"
+      "type": "io.netty.channel.epoll.LinuxSocket",
+      "jniAccessible": true
     },
     {
-      "type": "io.netty.channel.unix.DatagramSocketAddress"
+      "type": "io.netty.channel.epoll.Native",
+      "jniAccessible": true
     },
     {
-      "type": "io.netty.channel.unix.DomainDatagramSocketAddress"
+      "type": "io.netty.channel.epoll.NativeDatagramPacketArray$NativeDatagramPacket",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "count"
+        },
+        {
+          "name": "memoryAddress"
+        },
+        {
+          "name": "recipientAddr"
+        },
+        {
+          "name": "recipientAddrLen"
+        },
+        {
+          "name": "recipientPort"
+        },
+        {
+          "name": "recipientScopeId"
+        },
+        {
+          "name": "segmentSize"
+        },
+        {
+          "name": "senderAddr"
+        },
+        {
+          "name": "senderAddrLen"
+        },
+        {
+          "name": "senderPort"
+        },
+        {
+          "name": "senderScopeId"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.epoll.NativeStaticallyReferencedJniMethods",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.channel.kqueue.BsdSocket",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.channel.kqueue.KQueueEventArray",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.channel.kqueue.KQueueStaticallyReferencedJniMethods",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.channel.kqueue.Native",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.channel.unix.Buffer",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.channel.unix.DatagramSocketAddress",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "byte[]",
+            "int",
+            "int",
+            "int",
+            "io.netty.channel.unix.DatagramSocketAddress"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.unix.DomainDatagramSocketAddress",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "byte[]",
+            "int",
+            "io.netty.channel.unix.DomainDatagramSocketAddress"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.unix.ErrorsStaticallyReferencedJniMethods",
+      "jniAccessible": true
     },
     {
       "type": "io.netty.channel.unix.FileDescriptor",
+      "jniAccessible": true,
       "fields": [
         {
           "name": "state"
@@ -8093,7 +8276,26 @@
       ]
     },
     {
-      "type": "io.netty.channel.unix.PeerCredentials"
+      "type": "io.netty.channel.unix.LimitsStaticallyReferencedJniMethods",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.channel.unix.PeerCredentials",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "int",
+            "int",
+            "int[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.channel.unix.Socket",
+      "jniAccessible": true
     },
     {
       "type": "io.netty.handler.codec.http.HttpServerCodec"
@@ -8105,22 +8307,123 @@
       "type": "io.netty.handler.timeout.WriteTimeoutHandler"
     },
     {
+      "type": "io.netty.incubator.channel.uring.LinuxSocket",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.incubator.channel.uring.Native",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.internal.tcnative.Buffer",
+      "jniAccessible": true
+    },
+    {
       "type": "io.netty.internal.tcnative.CertificateCallback"
     },
     {
-      "type": "io.netty.internal.tcnative.CertificateCallbackTask"
+      "type": "io.netty.internal.tcnative.CertificateCallbackTask",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "byte[]",
+            "byte[][]",
+            "io.netty.internal.tcnative.CertificateCallback"
+          ]
+        }
+      ]
     },
     {
-      "type": "io.netty.internal.tcnative.SSLPrivateKeyMethodDecryptTask"
+      "type": "io.netty.internal.tcnative.CertificateVerifierTask",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "byte[][]",
+            "java.lang.String",
+            "io.netty.internal.tcnative.CertificateVerifier"
+          ]
+        }
+      ]
     },
     {
-      "type": "io.netty.internal.tcnative.SSLPrivateKeyMethodSignTask"
+      "type": "io.netty.internal.tcnative.Library",
+      "jniAccessible": true
     },
     {
-      "type": "io.netty.internal.tcnative.SSLPrivateKeyMethodTask"
+      "type": "io.netty.internal.tcnative.NativeStaticallyReferencedJniMethods",
+      "jniAccessible": true
     },
     {
-      "type": "io.netty.internal.tcnative.SSLTask"
+      "type": "io.netty.internal.tcnative.SSL",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.internal.tcnative.SSLContext",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.internal.tcnative.SSLPrivateKeyMethodDecryptTask",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "byte[]",
+            "io.netty.internal.tcnative.AsyncSSLPrivateKeyMethod"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.internal.tcnative.SSLPrivateKeyMethodSignTask",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "int",
+            "byte[]",
+            "io.netty.internal.tcnative.AsyncSSLPrivateKeyMethod"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.internal.tcnative.SSLPrivateKeyMethodTask",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "resultBytes"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.internal.tcnative.SSLSession",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.internal.tcnative.SSLTask",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "complete"
+        },
+        {
+          "name": "returnValue"
+        }
+      ]
     },
     {
       "type": "io.netty.util.AbstractReferenceCounted",
@@ -8295,19 +8598,35 @@
       "type": "java.io.File"
     },
     {
-      "type": "java.io.FileDescriptor"
+      "type": "java.io.FileDescriptor",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "fd"
+        }
+      ]
     },
     {
-      "type": "java.io.IOException"
+      "type": "java.io.IOException",
+      "jniAccessible": true
     },
     {
       "type": "java.io.Serializable"
     },
     {
       "type": "java.lang.Boolean",
+      "jniAccessible": true,
       "fields": [
         {
           "name": "TYPE"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getBoolean",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         }
       ]
     },
@@ -8331,10 +8650,33 @@
       ]
     },
     {
+      "type": "java.lang.Class",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "getCanonicalName",
+          "parameterTypes": []
+        },
+        {
+          "name": "getClassLoader",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "java.lang.ClassLoader",
+      "jniAccessible": true,
       "fields": [
         {
           "name": "classLoaderValueMap"
+        }
+      ],
+      "methods": [
+        {
+          "name": "loadClass",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
         }
       ]
     },
@@ -8362,7 +8704,8 @@
       "type": "java.lang.Enum"
     },
     {
-      "type": "java.lang.Exception"
+      "type": "java.lang.Exception",
+      "jniAccessible": true
     },
     {
       "type": "java.lang.Float",
@@ -8373,7 +8716,8 @@
       ]
     },
     {
-      "type": "java.lang.IllegalArgumentException"
+      "type": "java.lang.IllegalArgumentException",
+      "jniAccessible": true
     },
     {
       "type": "java.lang.Integer",
@@ -8395,7 +8739,8 @@
       ]
     },
     {
-      "type": "java.lang.NullPointerException"
+      "type": "java.lang.NullPointerException",
+      "jniAccessible": true
     },
     {
       "type": "java.lang.Number"
@@ -8405,7 +8750,11 @@
       "allDeclaredFields": true
     },
     {
-      "type": "java.lang.OutOfMemoryError"
+      "type": "java.lang.Object[]"
+    },
+    {
+      "type": "java.lang.OutOfMemoryError",
+      "jniAccessible": true
     },
     {
       "type": "java.lang.ProcessHandle",
@@ -8464,7 +8813,8 @@
       ]
     },
     {
-      "type": "java.lang.RuntimeException"
+      "type": "java.lang.RuntimeException",
+      "jniAccessible": true
     },
     {
       "type": "java.lang.Short",
@@ -8479,18 +8829,60 @@
     },
     {
       "type": "java.lang.String",
+      "jniAccessible": true,
       "fields": [
         {
           "name": "TYPE"
         }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "byte[]"
+          ]
+        },
+        {
+          "name": "getBytes",
+          "parameterTypes": []
+        },
+        {
+          "name": "lastIndexOf",
+          "parameterTypes": [
+            "int"
+          ]
+        },
+        {
+          "name": "substring",
+          "parameterTypes": [
+            "int"
+          ]
+        }
       ]
     },
     {
+      "type": "java.lang.String[]"
+    },
+    {
       "type": "java.lang.System",
+      "jniAccessible": true,
       "methods": [
         {
           "name": "console",
           "parameterTypes": []
+        },
+        {
+          "name": "getProperty",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setProperty",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String"
+          ]
         }
       ]
     },
@@ -8509,7 +8901,14 @@
       ]
     },
     {
-      "type": "java.lang.Throwable"
+      "type": "java.lang.Throwable",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "toString",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "java.lang.Void",
@@ -8639,10 +9038,21 @@
       "type": "java.math.BigInteger"
     },
     {
-      "type": "java.net.InetSocketAddress"
+      "type": "java.net.InetSocketAddress",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "int"
+          ]
+        }
+      ]
     },
     {
-      "type": "java.net.PortUnreachableException"
+      "type": "java.net.PortUnreachableException",
+      "jniAccessible": true
     },
     {
       "type": "java.net.StandardSocketOptions"
@@ -8663,9 +9073,26 @@
     },
     {
       "type": "java.nio.Buffer",
+      "jniAccessible": true,
       "fields": [
         {
           "name": "address"
+        },
+        {
+          "name": "limit"
+        },
+        {
+          "name": "position"
+        }
+      ],
+      "methods": [
+        {
+          "name": "limit",
+          "parameterTypes": []
+        },
+        {
+          "name": "position",
+          "parameterTypes": []
         }
       ]
     },
@@ -8681,10 +9108,18 @@
       ]
     },
     {
-      "type": "java.nio.DirectByteBuffer"
+      "type": "java.nio.DirectByteBuffer",
+      "jniAccessible": true
     },
     {
-      "type": "java.nio.channels.ClosedChannelException"
+      "type": "java.nio.channels.ClosedChannelException",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "java.nio.channels.FileChannel"
@@ -8694,6 +9129,14 @@
     },
     {
       "type": "java.nio.file.Paths"
+    },
+    {
+      "type": "java.rmi.server.RemoteObject",
+      "serializable": true
+    },
+    {
+      "type": "java.rmi.server.RemoteStub",
+      "serializable": true
     },
     {
       "type": "java.security.AccessController",
@@ -8810,6 +9253,7 @@
     },
     {
       "type": "java.util.ArrayList",
+      "serializable": true,
       "methods": [
         {
           "name": "<init>",
@@ -8822,6 +9266,18 @@
           "parameterTypes": [
             "int",
             "float"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.util.Arrays",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "asList",
+          "parameterTypes": [
+            "java.lang.Object[]"
           ]
         }
       ]
@@ -8861,6 +9317,9 @@
     },
     {
       "type": "java.util.Map"
+    },
+    {
+      "type": "java.util.Map$Entry[]"
     },
     {
       "type": "java.util.Map.Entry"
@@ -9036,13 +9495,7 @@
       "type": "jdk.javadoc.doclet.StandardDoclet",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": []
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "jdk.management.VirtualThreadSchedulerMXBean"
@@ -9070,6 +9523,9 @@
     },
     {
       "type": "kotlin.Boolean"
+    },
+    {
+      "type": "kotlin.ByteArray"
     },
     {
       "type": "kotlin.Function"
@@ -9151,6 +9607,9 @@
     },
     {
       "type": "kotlin.collections.Map"
+    },
+    {
+      "type": "kotlin.collections.MutableMap"
     },
     {
       "type": "kotlin.coroutines.Continuation"
@@ -9318,6 +9777,9 @@
       ]
     },
     {
+      "type": "kotlinx.coroutines.InvokeOnCancelling"
+    },
+    {
       "type": "kotlinx.coroutines.JobSupport",
       "fields": [
         {
@@ -9384,6 +9846,9 @@
     },
     {
       "type": "kotlinx.coroutines.flow.Flow"
+    },
+    {
+      "type": "kotlinx.coroutines.flow.StateFlowImpl"
     },
     {
       "type": "kotlinx.coroutines.internal.ConcurrentLinkedListNode",
@@ -9524,7 +9989,18 @@
       ]
     },
     {
+      "type": "kotlinx.io.RefCountingCopyTracker"
+    },
+    {
       "type": "kotlinx.serialization.internal.SerializationConstructorMarker"
+    },
+    {
+      "type": "long[]",
+      "jniAccessible": true
+    },
+    {
+      "type": "long[][]",
+      "jniAccessible": true
     },
     {
       "type": "nonapi.io.github.classgraph.classloaderhandler.AntClassLoaderHandler"
@@ -9618,25 +10094,13 @@
       "type": "org.apache.maven.model.Build",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "getOutputDirectory",
-          "parameterTypes": []
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "org.apache.maven.model.BuildBase",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "getDirectory",
-          "parameterTypes": []
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "org.apache.maven.model.CiManagement",
@@ -9732,21 +10196,7 @@
       "type": "org.apache.maven.model.Model",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
-      "allDeclaredConstructors": true,
-      "methods": [
-        {
-          "name": "getArtifactId",
-          "parameterTypes": []
-        },
-        {
-          "name": "getBuild",
-          "parameterTypes": []
-        },
-        {
-          "name": "getVersion",
-          "parameterTypes": []
-        }
-      ]
+      "allDeclaredConstructors": true
     },
     {
       "type": "org.apache.maven.model.ModelBase",
@@ -11142,6 +11592,9 @@
       "type": "org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension"
     },
     {
+      "type": "org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.backend.jvm.extensions.ClassBuilderExtensionAdapter",
       "methods": [
         {
@@ -11154,6 +11607,9 @@
     },
     {
       "type": "org.jetbrains.kotlin.backend.jvm.extensions.ClassGeneratorExtension"
+    },
+    {
+      "type": "org.jetbrains.kotlin.backend.jvm.extensions.ClassGeneratorExtension[]"
     },
     {
       "type": "org.jetbrains.kotlin.cli.common.ModuleVisibilityHelperImpl"
@@ -11190,7 +11646,13 @@
       "type": "org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension"
     },
     {
+      "type": "org.jetbrains.kotlin.codegen.extensions.ClassBuilderInterceptorExtension[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.codegen.extensions.ClassFileFactoryFinalizerExtension"
+    },
+    {
+      "type": "org.jetbrains.kotlin.codegen.extensions.ClassFileFactoryFinalizerExtension[]"
     },
     {
       "type": "org.jetbrains.kotlin.codegen.serialization.JvmSerializationBindings",
@@ -11201,6 +11663,9 @@
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.lang.jvm.facade.JvmElementProvider"
+    },
+    {
+      "type": "org.jetbrains.kotlin.com.intellij.lang.jvm.facade.JvmElementProvider[]"
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.openapi.application.ApplicationManager",
@@ -11218,6 +11683,9 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "org.jetbrains.kotlin.com.intellij.openapi.editor.event.DocumentListener[]"
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.openapi.extensions.impl.ExtensionPointImpl",
@@ -11265,7 +11733,13 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.com.intellij.psi.PsiDirectory[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.com.intellij.psi.PsiElementFinder"
+    },
+    {
+      "type": "org.jetbrains.kotlin.com.intellij.psi.PsiElementFinder[]"
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.psi.SingleRootFileViewProvider",
@@ -11277,6 +11751,10 @@
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.psi.augment.PsiAugmentProvider"
+    },
+    {
+      "type": "org.jetbrains.kotlin.com.intellij.psi.augment.PsiAugmentProvider[]",
+      "unsafeAllocated": true
     },
     {
       "type": "org.jetbrains.kotlin.com.intellij.psi.compiled.ClassFileDecompilers",
@@ -11338,6 +11816,9 @@
       "type": "org.jetbrains.kotlin.com.intellij.util.KeyedLazyInstanceEP"
     },
     {
+      "type": "org.jetbrains.kotlin.com.intellij.util.KeyedLazyInstanceEP[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.com.intellij.util.QueryExecutor"
     },
     {
@@ -11372,7 +11853,13 @@
       "type": "org.jetbrains.kotlin.extensions.CompilerConfigurationExtension"
     },
     {
+      "type": "org.jetbrains.kotlin.extensions.CompilerConfigurationExtension[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.extensions.PreprocessedVirtualFileFactoryExtension"
+    },
+    {
+      "type": "org.jetbrains.kotlin.extensions.PreprocessedVirtualFileFactoryExtension[]"
     },
     {
       "type": "org.jetbrains.kotlin.extensions.ProcessSourcesBeforeCompilingExtension"
@@ -11384,7 +11871,14 @@
       "type": "org.jetbrains.kotlin.fir.extensions.FirAnalysisHandlerExtension"
     },
     {
+      "type": "org.jetbrains.kotlin.fir.extensions.FirAnalysisHandlerExtension[]",
+      "unsafeAllocated": true
+    },
+    {
       "type": "org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter"
+    },
+    {
+      "type": "org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter[]"
     },
     {
       "type": "org.jetbrains.kotlin.load.java.ErasedOverridabilityCondition"
@@ -11414,13 +11908,25 @@
       "type": "org.jetbrains.kotlin.psi.KtAnnotationEntry"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtAnnotationEntry[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtAnnotationUseSiteTarget"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtAnnotationUseSiteTarget[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtAnnotation[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtArrayAccessExpression"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtBackingField"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtBackingField[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtBinaryExpression"
@@ -11430,6 +11936,9 @@
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtBlockStringTemplateEntry"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtBlockStringTemplateEntry[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtBreakExpression"
@@ -11458,19 +11967,40 @@
       "type": "org.jetbrains.kotlin.psi.KtClassBody"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtClassBody[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtClassInitializer"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtClassInitializer[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtClassLiteralExpression"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtClassLiteralExpression[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtClass[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtCollectionLiteralExpression"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtCollectionLiteralExpression[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtConstantExpression"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtConstantExpression[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtConstructorCalleeExpression"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtConstructorCalleeExpression[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtConstructorDelegationCall"
@@ -11491,6 +12021,12 @@
       "type": "org.jetbrains.kotlin.psi.KtContextReceiverList"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtContextReceiverList[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtContextReceiver[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtContinueExpression"
     },
     {
@@ -11500,10 +12036,22 @@
       "type": "org.jetbrains.kotlin.psi.KtContractEffectList"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtContractEffectList[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtContractEffect[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtDeclarationModifierList"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtDeclarationModifierList[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtDelegatedSuperTypeEntry"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtDelegatedSuperTypeEntry[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtDestructuringDeclaration"
@@ -11518,16 +12066,34 @@
       "type": "org.jetbrains.kotlin.psi.KtDotQualifiedExpression"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtDotQualifiedExpression[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtDynamicType"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtDynamicType[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtEnumEntrySuperclassReferenceExpression"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtEnumEntrySuperclassReferenceExpression[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtEscapeStringTemplateEntry"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtEscapeStringTemplateEntry[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtExpression[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtFileAnnotationList"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtFileAnnotationList[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtFinallySection"
@@ -11545,13 +12111,25 @@
       "type": "org.jetbrains.kotlin.psi.KtFunctionTypeReceiver"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtFunctionTypeReceiver[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtFunctionType[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtIfExpression"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtImportAlias"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtImportAlias[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtImportDirective"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtImportDirective[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtImportList",
@@ -11565,10 +12143,19 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtImportList[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtInitializerList"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtInitializerList[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtIntersectionType"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtIntersectionType[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtIsExpression"
@@ -11583,6 +12170,9 @@
       "type": "org.jetbrains.kotlin.psi.KtLambdaArgument"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtLambdaArgument[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry",
       "methods": [
         {
@@ -11592,6 +12182,12 @@
           ]
         }
       ]
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtLiteralStringTemplateEntry[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtModifierList[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtNameReferenceExpression",
@@ -11605,6 +12201,9 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtNameReferenceExpression[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtNamedFunction",
       "methods": [
         {
@@ -11616,10 +12215,19 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtNamedFunction[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtNullableType"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtNullableType[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtObjectDeclaration"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtObjectDeclaration[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtObjectLiteralExpression"
@@ -11639,6 +12247,9 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtPackageDirective[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtParameter"
     },
     {
@@ -11653,6 +12264,12 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtParameterList[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtParameter[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtParenthesizedExpression"
     },
     {
@@ -11665,13 +12282,22 @@
       "type": "org.jetbrains.kotlin.psi.KtPrimaryConstructor"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtPrimaryConstructor[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtProperty"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtPropertyAccessor"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtPropertyAccessor[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtPropertyDelegate"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtProperty[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtReturnExpression"
@@ -11702,13 +12328,28 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtScript[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtSecondaryConstructor"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtSecondaryConstructor[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtSimpleNameStringTemplateEntry"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtSimpleNameStringTemplateEntry[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtStringInterpolationPrefix"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtStringInterpolationPrefix[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtStringTemplateEntry[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtStringTemplateExpression",
@@ -11722,16 +12363,28 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtStringTemplateExpression[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtSuperExpression"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtSuperTypeCallEntry"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtSuperTypeCallEntry[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtSuperTypeEntry"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtSuperTypeEntry[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtSuperTypeList"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtSuperTypeList[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtThisExpression"
@@ -11746,7 +12399,13 @@
       "type": "org.jetbrains.kotlin.psi.KtTypeAlias"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtTypeAlias[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtTypeArgumentList"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtTypeArgumentList[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtTypeConstraint"
@@ -11755,19 +12414,40 @@
       "type": "org.jetbrains.kotlin.psi.KtTypeConstraintList"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtTypeConstraintList[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtTypeConstraint[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtTypeParameter"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtTypeParameterList"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtTypeParameterList[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtTypeParameter[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtTypeProjection"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtTypeProjection[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtTypeReference"
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtTypeReference[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtUserType"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtUserType[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtValueArgument",
@@ -11792,7 +12472,16 @@
       ]
     },
     {
+      "type": "org.jetbrains.kotlin.psi.KtValueArgumentList[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.psi.KtValueArgumentName"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtValueArgumentName[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.psi.KtValueArgument[]"
     },
     {
       "type": "org.jetbrains.kotlin.psi.KtWhenConditionInRange"
@@ -12331,6 +13020,42 @@
       ]
     },
     {
+      "type": "short[]"
+    },
+    {
+      "type": "sun.launcher.LauncherHelper",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "isStaticMain"
+        },
+        {
+          "name": "noArgMain"
+        }
+      ],
+      "methods": [
+        {
+          "name": "checkAndLoadMain",
+          "parameterTypes": [
+            "boolean",
+            "int",
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "getApplicationClass",
+          "parameterTypes": []
+        },
+        {
+          "name": "makePlatformString",
+          "parameterTypes": [
+            "boolean",
+            "byte[]"
+          ]
+        }
+      ]
+    },
+    {
       "type": "sun.management.ClassLoadingImpl"
     },
     {
@@ -12865,6 +13590,9 @@
     },
     {
       "type": "sun.util.logging.resources.logging"
+    },
+    {
+      "type": "sun.util.resources.cldr.CalendarData"
     },
     {
       "type": {

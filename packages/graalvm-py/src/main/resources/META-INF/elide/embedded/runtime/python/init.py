@@ -35,6 +35,10 @@ def __init__interop():
   FLASK_REDIRECT = "redirect"
   FLASK_REACT = "react"
 
+  SECRETS_ENTRY = "SecretsIntrinsic"
+  SECRETS_GLOBAL = "secrets"
+  SECRETS_GET = "get"
+
   MODULE_NAME = "elide"
 
   registered_py_symbols = {}
@@ -131,6 +135,9 @@ def __init__interop():
 
     return FlaskBridge(name)
 
+  def secrets_binding():
+    return polyglot.import_value(_private_symbol_name(SECRETS_ENTRY))
+
   class ElideModule(ModuleType):
     """Module for Elide integration with Python."""
 
@@ -166,10 +173,12 @@ def __init__interop():
         return redirect
       if name == FLASK_REACT:
         return react
+      if name == SECRETS_GLOBAL:
+        return secrets_binding()
       raise AttributeError(f"module '{MODULE_NAME}' has no attribute '{name}'")
 
     def __dir__(self):
-      return [BIND_DECORATOR, POLYGLOT_MODULE, POLYGLOT_DECORATOR, FLASK_GLOBAL]
+      return [BIND_DECORATOR, POLYGLOT_MODULE, POLYGLOT_DECORATOR, FLASK_GLOBAL, SECRETS_GLOBAL]
 
   elide_module = ElideModule()
   sys.modules[MODULE_NAME] = elide_module

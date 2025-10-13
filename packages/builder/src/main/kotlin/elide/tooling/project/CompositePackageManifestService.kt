@@ -18,6 +18,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
 import jakarta.inject.Provider
+import kotlinx.atomicfu.atomic
 import elide.annotations.Inject
 import elide.annotations.Singleton
 import elide.tooling.project.codecs.ManifestCodec
@@ -53,6 +54,9 @@ public class CompositePackageManifestService @Inject constructor (
   private val pythonRequirementsCodec by lazy { pythonRequirementsCodecProvider.get() }
   private val mavenPomCodec by lazy { mavenPomCodecProvider.get() }
   private val gradleCatalogCodec by lazy { gradleCatalogCodecProvider.get() }
+  private val buildHintState = atomic<PackageManifestCodec.ManifestBuildState>(
+    object: PackageManifestCodec.ManifestBuildState {}
+  )
 
   private val allCodecs by lazy {
     sequenceOf(
@@ -86,16 +90,20 @@ public class CompositePackageManifestService @Inject constructor (
     is GradleCatalogManifest -> gradleCatalogCodec
   } as PackageManifestCodec<PackageManifest>
 
+  override fun configure(state: PackageManifestCodec.ManifestBuildState) {
+    buildHintState.value = state
+  }
+
   override fun resolve(root: Path, ecosystem: ProjectEcosystem): Path {
     return root.resolve(codecForEcosystem(ecosystem).defaultPath())
   }
 
   override fun parse(source: Path): PackageManifest {
-    return allCodecs.first { it.supported(source) }.parseAsFile(source)
+    return allCodecs.first { it.supported(source) }.parseAsFile(source, buildHintState.value)
   }
 
   override fun parse(source: InputStream, ecosystem: ProjectEcosystem): PackageManifest {
-    return codecForEcosystem(ecosystem).parse(source)
+    return codecForEcosystem(ecosystem).parse(source, buildHintState.value)
   }
 
   override fun merge(manifests: Iterable<PackageManifest>): ElidePackageManifest {

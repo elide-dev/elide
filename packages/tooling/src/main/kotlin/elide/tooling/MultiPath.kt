@@ -722,6 +722,21 @@ public fun interface ClasspathProvider {
 }
 
 /**
+ * ## Modulepath Provider
+ *
+ * Defers calculations to assemble a modulepath until the modulepath is needed. Expected to provide a fully assembled
+ * [Modulepath] as a result.
+ */
+public fun interface ModulepathProvider {
+  /**
+   * Provide the [Modulepath] associated with this object, or provide this object as a [Modulepath].
+   *
+   * @return Classpath instance.
+   */
+  public suspend fun modulepath(): Modulepath
+}
+
+/**
  * ## Multi-path Usage
  *
  * Describes usage types of a classpath or modulepath.
@@ -761,15 +776,35 @@ public sealed interface MultiPathUsage : Comparable<MultiPathUsage> {
     override fun includes(): List<MultiPathUsage> = listOf(Compile)
     override val scope: String get() = "test"
   }
+  public data object Dev : MultiPathUsage {
+    override val order: UInt get() = 2u
+    override fun includes(): List<MultiPathUsage> = listOf(Compile)
+    override val scope: String get() = "dev"
+  }
   public data object TestRuntime : MultiPathUsage {
     override val order: UInt get() = 3u
     override fun includes(): List<MultiPathUsage> = listOf(Compile, Runtime)
     override val scope: String get() = "test"
   }
+  public data object Modules : MultiPathUsage {
+    override val order: UInt get() = 0u
+    override val scope: String get() = "modules"
+  }
 
   override fun compareTo(other: MultiPathUsage): Int {
     return order.compareTo(other.order)
   }
+}
+
+/**
+ * ## Module Inclusion
+ *
+ * Specifies the module inclusion mode for a classpath spec.
+ */
+public enum class ModuleInclusion {
+  NoTransform,
+  ExcludeModules,
+  ModulesOnly,
 }
 
 /**
@@ -780,8 +815,25 @@ public sealed interface MultiPathUsage : Comparable<MultiPathUsage> {
  */
 public interface ClasspathSpec : Predicate<ClasspathSpec> {
   public companion object {
-    public val Compile: ClasspathSpec = object : ClasspathSpec {
+    public val CompileAll: ClasspathSpec = object : ClasspathSpec {
       override val usage: MultiPathUsage get() = MultiPathUsage.Compile
+      override val moduleInclusion: ModuleInclusion get() = ModuleInclusion.NoTransform
+    }
+
+    public val CompileClasspath: ClasspathSpec = object : ClasspathSpec {
+      override val usage: MultiPathUsage get() = MultiPathUsage.Compile
+      override val moduleInclusion: ModuleInclusion get() = ModuleInclusion.ExcludeModules
+    }
+
+    @Deprecated(
+      "Use `CompileAll`, `CompileClasspath`, or `CompileModules` instead",
+      ReplaceWith("CompileAll")
+    )
+    public val Compile: ClasspathSpec = CompileAll
+
+    public val CompileModules: ClasspathSpec = object : ClasspathSpec {
+      override val usage: MultiPathUsage get() = MultiPathUsage.Compile
+      override val moduleInclusion: ModuleInclusion get() = ModuleInclusion.ModulesOnly
     }
 
     public val Runtime: ClasspathSpec = object : ClasspathSpec {
@@ -801,6 +853,11 @@ public interface ClasspathSpec : Predicate<ClasspathSpec> {
    * Name of the classpath, if applicable.
    */
   public val name: String? get() = null
+
+  /**
+   * Handling logic for modules.
+   */
+  public val moduleInclusion: ModuleInclusion get() = ModuleInclusion.NoTransform
 
   /**
    * Usage type for the classpath.
@@ -833,6 +890,23 @@ public fun interface ClasspathsProvider {
    * @return Classpath provider instance.
    */
   public suspend fun classpathProvider(spec: ClasspathSpec?): ClasspathProvider?
+}
+
+/**
+ * ## Modulepaths Provider
+ *
+ * Defers calculations to assemble a module path until the path is needed. Expected to provide a fully assembled
+ * [Modulepath] as a result of a request via a [ClasspathSpec].
+ */
+public fun interface ModulepathsProvider {
+  /**
+   * Provide the [Modulepath] resolving from the provided [spec].
+   *
+   * @param spec Specifies the filter to apply; if not provided (`null`), all visible paths are returned as one
+   *   modulepath provider.
+   * @return Modulepath provider instance.
+   */
+  public suspend fun modulepathProvider(spec: ClasspathSpec?): ModulepathProvider?
 }
 
 /**

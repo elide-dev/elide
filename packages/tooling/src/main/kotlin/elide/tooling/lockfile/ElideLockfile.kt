@@ -673,6 +673,8 @@ private const val FILE_DIGEST_ALG = DEFAULT_DIGEST_ALGORITHM
     TEST_PROCESSORS,
     TEST,
     TEST_RUNTIME,
+    DEV_ONLY,
+    MODULES,
   }
 
   /** Holds Maven usage types/mappings for dependencies; needed for classpath assembly. */

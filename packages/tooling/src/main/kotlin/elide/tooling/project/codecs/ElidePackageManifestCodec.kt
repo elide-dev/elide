@@ -37,6 +37,7 @@ import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
 import elide.tooling.deps.PackageSpec
 import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.codecs.PackageManifestCodec.ManifestBuildState
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.*
 import elide.tooling.web.Browsers
@@ -219,7 +220,16 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
     return path.nameWithoutExtension == DEFAULT_NAME && path.extension == DEFAULT_EXTENSION
   }
 
-  override fun parse(source: InputStream): ElidePackageManifest {
+  private fun propKey(name: String): String = "elide.build.state.$name"
+
+  private fun safeBuildEnv(): Map<String, String> = System.getenv()
+
+  private fun buildStateProperties(state: ManifestBuildState): Map<String, String> = buildMap {
+    put(propKey("release"), state.isRelease.toString())
+    put(propKey("debug"), state.isDebug.toString())
+  }
+
+  override fun parse(source: InputStream, state: ManifestBuildState): ElidePackageManifest {
     return source.bufferedReader().use {
       it.lineSequence().mapIndexed { index, line ->
         // fix: special case elide's import of its own pkl project structure.
@@ -234,9 +244,12 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
     }.let { text ->
       ConfigEvaluatorBuilder
         .preconfigured()
+        .setEnvironmentVariables(emptyMap())  // zero-out build-time environment
+        .setEnvironmentVariables(safeBuildEnv())
         .apply {
           evaluatorBuilder.resourceReaders.add(ElidePklResourceReader())
           evaluatorBuilder.moduleKeyFactories.add(ElidePklModuleKeyFactory())
+          evaluatorBuilder.addExternalProperties(buildStateProperties(state))
         }
         .build()
         .setValueMapper(valueMapper)

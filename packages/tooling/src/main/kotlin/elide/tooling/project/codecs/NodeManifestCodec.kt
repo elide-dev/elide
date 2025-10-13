@@ -33,7 +33,7 @@ import elide.tooling.project.manifest.NodePackageManifest
   }
 
   @OptIn(ExperimentalSerializationApi::class)
-  override fun parse(source: InputStream): NodePackageManifest {
+  override fun parse(source: InputStream, state: PackageManifestCodec.ManifestBuildState): NodePackageManifest {
     return PackageJson.decodeFromStream<NodePackageManifest>(source)
   }
 

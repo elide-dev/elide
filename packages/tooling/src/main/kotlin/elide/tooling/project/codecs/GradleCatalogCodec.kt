@@ -49,7 +49,7 @@ public class GradleCatalogCodec : PackageManifestCodec<GradleCatalogManifest> {
   override fun defaultPath(): Path = Path.of("gradle/$DEFAULT_NAME")
   override fun supported(path: Path): Boolean = path.fileName.toString().endsWith(".versions.toml")
 
-  override fun parse(source: InputStream): GradleCatalogManifest {
+  override fun parse(source: InputStream, state: PackageManifestCodec.ManifestBuildState): GradleCatalogManifest {
     return source.bufferedReader(StandardCharsets.UTF_8).use { reader ->
       GradleCatalog.decodeFromString<GradleCatalogManifest>(reader.readText())
     }

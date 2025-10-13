@@ -26,6 +26,7 @@ import "NativeImage.pkl" as _nativeImage
 import "HuggingFace.pkl" as _huggingface
 import "Testing.pkl" as _testing
 import "Pkl.pkl" as _pkl
+import "State.pkl" as _state
 
 /// Name of a script within the project's configuration.
 typealias ScriptName = String
@@ -227,6 +228,13 @@ web: _web.WebSettings?
 
 /// Settings which govern how secrets are handled.
 secrets: _secrets.SecretsSettings?
+
+//
+// ------ State -----------------------------------------------------------------------------------------------------
+//
+
+/// Build-time state.
+state: _state.BuildTimeState = new {}
 
 //
 // ------ Execution -------------------------------------------------------------------------------------------------

@@ -182,13 +182,16 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildWork
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$ElideBuildState {
+	public fun forManifest ()Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;
 	public abstract fun getBeanContext ()Lio/micronaut/context/BeanContext;
 	public abstract fun getConfig ()Lelide/tooling/config/BuildConfigurator$BuildConfiguration;
 	public abstract fun getConsole ()Lelide/tooling/config/BuildConfigurator$BuildConsoleController;
+	public abstract fun getDebug ()Z
 	public abstract fun getEvents ()Lelide/tooling/config/BuildConfigurator$BuildEventController;
 	public abstract fun getLayout ()Lelide/tooling/config/BuildConfigurator$ProjectDirectories;
 	public abstract fun getManifest ()Lelide/tooling/project/manifest/ElidePackageManifest;
 	public abstract fun getProject ()Lelide/tooling/project/ElideConfiguredProject;
+	public abstract fun getRelease ()Z
 	public abstract fun getResourcesPath ()Ljava/nio/file/Path;
 }
 
@@ -2362,11 +2365,12 @@ public abstract interface class elide/tooling/jvm/resolver/AetherProjectProvider
 	public abstract fun buildState ()Lelide/tooling/config/BuildConfigurator$ElideBuildState;
 }
 
-public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/tooling/ClasspathsProvider, elide/tooling/deps/DependencyResolver$MavenResolver, java/lang/AutoCloseable {
+public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/tooling/ClasspathsProvider, elide/tooling/ModulepathsProvider, elide/tooling/deps/DependencyResolver$MavenResolver, java/lang/AutoCloseable {
 	public static final field Companion Lelide/tooling/jvm/resolver/MavenAetherResolver$Companion;
 	public fun classpathProvider (Lelide/tooling/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun close ()V
 	public fun contribute (Ljava/nio/file/Path;Lelide/tooling/project/ElideProject;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun modulepathProvider (Lelide/tooling/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun resolve (Lkotlinx/coroutines/CoroutineScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun seal (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -2621,6 +2625,7 @@ public synthetic class elide/tooling/project/$CompositePackageManifestService$De
 
 public final class elide/tooling/project/CompositePackageManifestService : elide/tooling/project/PackageManifestService {
 	public fun <init> (Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;)V
+	public fun configure (Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)V
 	public fun encode (Lelide/tooling/project/manifest/PackageManifest;Ljava/io/OutputStream;)V
 	public fun export (Lelide/tooling/project/manifest/ElidePackageManifest;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun merge (Ljava/lang/Iterable;)Lelide/tooling/project/manifest/ElidePackageManifest;

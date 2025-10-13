@@ -74,7 +74,7 @@ internal class JsBuildConfigurator : BuildConfigurator {
         val existingManifest = state.layout.projectRoot.resolve("package.json").takeIf { it.exists() }
       ) {
         null -> Provider { npmManifestCodec.fromElidePackage(state.manifest) }
-        else -> Provider { npmManifestCodec.parseAsFile(existingManifest) }
+        else -> Provider { npmManifestCodec.parseAsFile(existingManifest, state.forManifest()) }
       }
 
       when (val existing = config.resolvers[DependencyResolver.NpmResolver::class]) {

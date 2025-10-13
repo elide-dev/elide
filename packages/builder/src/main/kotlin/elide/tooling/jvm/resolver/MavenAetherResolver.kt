@@ -56,6 +56,9 @@ import elide.tooling.Classpath
 import elide.tooling.ClasspathProvider
 import elide.tooling.ClasspathSpec
 import elide.tooling.ClasspathsProvider
+import elide.tooling.Modulepath
+import elide.tooling.ModulepathProvider
+import elide.tooling.ModulepathsProvider
 import elide.tooling.MultiPathUsage
 import elide.tooling.config.BuildConfigurator.*
 import elide.tooling.deps.DependencyResolver
@@ -119,7 +122,8 @@ public class MavenAetherResolver internal constructor (
   private val session: DefaultRepositorySystemSession,
 ) : DependencyResolver.MavenResolver,
     AutoCloseable,
-    ClasspathsProvider {
+    ClasspathsProvider,
+    ModulepathsProvider {
   @JvmRecord private data class SourceSetSuite(
     val name: String,
     val type: MultiPathUsage,
@@ -168,6 +172,9 @@ public class MavenAetherResolver internal constructor (
 
   // Registry of all witnessed Maven dependencies.
   private val registry = ConcurrentSkipListMap<String, Pair<MavenPackage, MultiPathUsage>>()
+
+  // Globally-excluded dependencies.
+  private val globalExclusions = ConcurrentSkipListSet<MavenPackage>()
 
   // Registry of Maven dependencies by suite type.
   private val registryByType = ConcurrentSkipListMap<SourceSetSuite, MutableList<MavenPackage>>()
@@ -426,10 +433,18 @@ public class MavenAetherResolver internal constructor (
     }
 
     val packages = state.manifest.dependencies.maven.packages
+    val mods = state.manifest.dependencies.maven.modules
+    val devPackages = state.manifest.dependencies.maven.devPackages
+    val compileOnly = state.manifest.dependencies.maven.compileOnly
+    val runtimeOnly = state.manifest.dependencies.maven.runtimeOnly
     val testPackages = state.manifest.dependencies.maven.testPackages
     val processors = state.manifest.dependencies.maven.processors
     val repos = state.manifest.dependencies.maven.repositories
+    val exclusions = state.manifest.dependencies.maven.exclusions
 
+    if (exclusions.isNotEmpty()) {
+      globalExclusions.addAll(exclusions)
+    }
     if (packages.isNotEmpty() || testPackages.isNotEmpty()) {
       repos.forEach { repo ->
         if (repo.key !in repositories) {
@@ -441,13 +456,13 @@ public class MavenAetherResolver internal constructor (
         "main",
         state.manifest,
         MultiPathUsage.Compile,
-        packages,
+        packages + compileOnly,
       )
       registerPackages(
         "main-runtime",
         state.manifest,
         MultiPathUsage.Runtime,
-        packages,
+        packages + runtimeOnly,
       )
       registerPackages(
         "test",
@@ -461,12 +476,28 @@ public class MavenAetherResolver internal constructor (
         MultiPathUsage.TestRuntime,
         packages,
       )
+      if (devPackages.isNotEmpty()) {
+        registerPackages(
+          "dev",
+          state.manifest,
+          MultiPathUsage.Dev,
+          devPackages,
+        )
+      }
       if (processors.isNotEmpty()) {
         registerPackages(
           "processors",
           state.manifest,
           MultiPathUsage.Processors,
           processors,
+        )
+      }
+      if (mods.isNotEmpty()) {
+        registerPackages(
+          "modules",
+          state.manifest,
+          MultiPathUsage.Modules,
+          mods,
         )
       }
     }
@@ -578,6 +609,18 @@ public class MavenAetherResolver internal constructor (
     }
   }
 
+  override suspend fun modulepathProvider(spec: ClasspathSpec?): ModulepathProvider? {
+    check(initialized.value) { "Resolver must be initialized before resolving" }
+    check(sealed.value) { "Resolver must be sealed before resolving" }
+    check(resolved.value) { "Resolver must be fully resolved before assembling a modulepath" }
+    logging.debug { "Assembling modulepath for spec: $spec" }
+
+    return ModulepathProvider {
+      // @TODO(sgammon): ("not yet implemented: modulepathProvider")
+      Modulepath.empty()
+    }
+  }
+
   override suspend fun classpathProvider(spec: ClasspathSpec?): ClasspathProvider? {
     check(initialized.value) { "Resolver must be initialized before resolving" }
     check(sealed.value) { "Resolver must be sealed before resolving" }
@@ -601,7 +644,13 @@ public class MavenAetherResolver internal constructor (
 //          } ?: emptyList()
 //        })
         // @TODO don't return all artifacts, only those for the suite
-        Classpath.from(packageArtifacts.flatMap { it.value.files }.map { it.toPath().absolute() })
+        Classpath.from(
+          packageArtifacts
+            .filter { it.key !in globalExclusions }
+            .flatMap { it.value.files }
+            .map { it.toPath().absolute() }
+            .distinct()
+        )
       }
     }
   }
@@ -691,6 +740,8 @@ public class MavenAetherResolver internal constructor (
                   MultiPathUsage.Processors -> ElideLockfile.MavenUsageType.PROCESSORS
                   MultiPathUsage.TestProcessors -> ElideLockfile.MavenUsageType.TEST_PROCESSORS
                   MultiPathUsage.TestRuntime -> ElideLockfile.MavenUsageType.TEST_RUNTIME
+                  MultiPathUsage.Dev -> ElideLockfile.MavenUsageType.DEV_ONLY
+                  MultiPathUsage.Modules -> ElideLockfile.MavenUsageType.MODULES
                 }
               }.toSortedSet(),
             )

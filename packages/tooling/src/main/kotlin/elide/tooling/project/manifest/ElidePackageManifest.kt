@@ -19,6 +19,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
 import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.flags.ProjectFlag
+import elide.tooling.project.flags.ProjectFlagDefinition
 import elide.tooling.project.manifest.ElidePackageManifest.*
 import elide.tooling.web.Browsers
 
@@ -54,6 +56,7 @@ public data class ElidePackageManifest(
   val pkl: PklSettings? = null,
   val nativeImage: NativeImageSettings? = null,
   val dev: DevSettings? = null,
+  val toolchain: ToolchainSettings? = null,
   val sources: Map<String, SourceSet> = emptyMap(),
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
@@ -115,6 +118,16 @@ public data class ElidePackageManifest(
     val lsp: LspSettings? = null,
     val mcp: McpSettings? = null,
     val server: DevServerSettings? = null,
+    val flags: List<ProjectFlagDefinition.FlagInfo> = emptyList(),
+  )
+
+  @Serializable public class NativeToolchainSettings
+
+  @Serializable public class JvmToolchainSettings
+
+  @Serializable public data class ToolchainSettings(
+    val native: NativeToolchainSettings? = null,
+    val jvm: JvmToolchainSettings? = null,
   )
 
   @Serializable public data class Jar(

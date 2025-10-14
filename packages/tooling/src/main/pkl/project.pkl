@@ -3,7 +3,9 @@
 module elide.project
 
 import "Base.pkl" as _common
+import "Builder.pkl" as _builder
 import "Dev.pkl" as _dev
+import "Flags.pkl" as _flags
 import "Sources.pkl" as _srcs
 import "Infra.pkl" as _infra
 import "Ops.pkl" as _ops
@@ -92,6 +94,9 @@ class ElideProject {
 
   /// Development settings for this project.
   dev: _dev.DevSettings
+
+  /// Toolchain settings for this project.
+  toolchain: _builder.ToolchainSettings
 
   /// Artifacts to be produced by this project.
   artifacts: _artifacts.Artifacts
@@ -205,6 +210,9 @@ sources: _srcs.Sources = new {
 /// Development settings for this project.
 dev: _dev.DevSettings = new {}
 
+/// Toolchain settings for this project.
+toolchain: _builder.ToolchainSettings = new {}
+
 /// Artifacts to be produced by this project.
 artifacts: _artifacts.Artifacts = new {}
 
@@ -303,4 +311,16 @@ function localJar(_group: _jvm.MavenGroup, _pkg: _jvm.MavenModule, _path: _commo
   name = _pkg
   coordinate = "\(_group):\(_pkg)"
   path = _path
+}
+
+function boolFlag(flag: String, _defaultValue: Boolean?) = new _flags.ProjectFlag {
+  name = flag
+  type = "boolean"
+  defaultValue = _defaultValue
+}
+
+function stringFlag(flag: String, _defaultValue: String?) = new _flags.ProjectFlag {
+  name = flag
+  type = "string"
+  defaultValue = _defaultValue
 }

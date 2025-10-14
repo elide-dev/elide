@@ -30,7 +30,7 @@ import elide.tool.cli.ProjectAwareSubcommand
 import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.tool.DelegatedToolCommand
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import elide.tooling.AbstractTool
 import elide.tooling.gvm.nativeImage.GRAALVM_VERSION
 import elide.tooling.gvm.nativeImage.NATIVE_IMAGE

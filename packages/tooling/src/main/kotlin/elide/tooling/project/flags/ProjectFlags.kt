@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,12 +10,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+package elide.tooling.project.flags
 
-package elide.tool.project
-
-import java.nio.file.Path
-import elide.tooling.project.ElideProject
-
-internal interface ProjectManager {
-  suspend fun resolveProject(pathOverride: Path? = null): ElideProject?
-}
+/**
+ * # Project Flags
+ *
+ * Utilities for parsing and manipulating [ProjectFlag] values from their project-level definitions; such flags are used
+ * to trigger conditions and provide inputs to an Elide project's build or runtime steps.
+ */
+public object ProjectFlags

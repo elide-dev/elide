@@ -23,7 +23,7 @@ import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import jakarta.inject.Provider

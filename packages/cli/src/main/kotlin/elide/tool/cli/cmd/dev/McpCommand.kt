@@ -25,7 +25,7 @@ import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.options.McpOptions
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import elide.tooling.project.load
 import elide.tooling.project.mcp.ModelContextProtocol
 import elide.tooling.project.mcp.ModelContextProtocol.build

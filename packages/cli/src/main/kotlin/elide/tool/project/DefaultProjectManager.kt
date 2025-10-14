@@ -10,6 +10,8 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
+@file:Suppress("MnInjectionPoints")
+
 package elide.tool.project
 
 import java.nio.file.Path
@@ -30,6 +32,11 @@ import elide.tooling.project.ElideProjectInfo
 import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.ProjectEnvironment
+import elide.tooling.project.ProjectManager
+import elide.tooling.project.codecs.PackageManifestCodec
+import elide.tooling.project.flags.ProjectFlagKey
+import elide.tooling.project.flags.ProjectFlagValue
+import elide.tooling.project.flags.ProjectFlagsContext
 import elide.tooling.project.manifest.ElidePackageManifest
 
 /** Default implementation of [ProjectManager]. */
@@ -92,7 +99,35 @@ internal class DefaultProjectManager @Inject constructor(
     parents.lastOrNull()
   }
 
-  override suspend fun resolveProject(pathOverride: Path?): ElideProject? {
+  private fun ProjectManager.ProjectEvaluatorInputs.parseProjectParams(): ProjectManager.ProjectParams {
+    val probableFlags = params?.filter { it.startsWith("-") } ?: emptyList()
+    val probableTasks = params?.filter { !it.startsWith("-") } ?: emptyList()
+    val flagsToValues = probableFlags.map { flag ->
+      when {
+        flag.startsWith("--no-") || flag.endsWith("=false") ->
+          ProjectFlagKey.of(flag.replace("--no-", "--")) to ProjectFlagValue.False
+        flag.endsWith("=true") -> ProjectFlagKey.of(flag) to ProjectFlagValue.True
+        flag.contains('=') -> flag.split('=', limit = 2).let { segments ->
+          ProjectFlagKey.of(segments.first()) to ProjectFlagValue.StringValue(segments.last())
+        }
+        else -> ProjectFlagKey.of(flag) to ProjectFlagValue.True
+      }
+    }
+    return ProjectManager.ProjectParams(
+      flags = flagsToValues,
+      tasks = probableTasks,
+      debug = debug,
+      release = release,
+    )
+  }
+
+  override suspend fun resolveProject(
+    pathOverride: Path?,
+    inputs: ProjectManager.ProjectEvaluatorInputs,
+  ): ElideProject? {
+    val evalParams = inputs.parseProjectParams()
+    val flagCtx = ProjectFlagsContext.from(evalParams)
+
     val rootBase = when (pathOverride) {
       null -> workdir.get().projectRoot()?.toPath()
       else -> pathOverride
@@ -102,12 +137,22 @@ internal class DefaultProjectManager @Inject constructor(
     val env = readDotEnv(root)
     val rootEnv = workspaceRoot?.let { readDotEnv(it) }
 
-    // prefer an Elide manifest if present
-    val manifests = manifests.get()
+    // prefer an Elide manifest if present; inform the manifest service of flag and project context
+    val manifests = manifests.get().apply {
+      configure(object: PackageManifestCodec.ManifestBuildState {
+        override val isDebug: Boolean get() = false
+        override val isRelease: Boolean get() = false
+        override val flags: ProjectFlagsContext get() = flagCtx
+        override val params: ProjectManager.ProjectParams get() = evalParams
+      })
+    }
+
     return coroutineScope {
       val elideManifestOp = async(IO) {
         manifests.resolve(root).takeIf { it.isRegularFile() }?.let { manifestFile ->
-          manifestFile.inputStream().use { manifests.parse(it, ProjectEcosystem.Elide) }
+          manifestFile.inputStream().use {
+            manifests.parse(it, ProjectEcosystem.Elide)
+          }
         } as ElidePackageManifest?
       }
 

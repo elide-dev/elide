@@ -1,0 +1,30 @@
+/// Describes project builder settings and other related configuration.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.builder
+
+/// Enumerates types of C compilers.
+typealias CCompilerType = "gcc" | "clang" | "msvc" | "zig" | "auto"
+
+/// Enumerates types of standard C libraries.
+typealias LibC = "glibc" | "musl" | "bionic" | "auto"
+
+/// Settings which relate to a project's build; used from the `dev` block.
+class BuilderSettings {}
+
+/// Settings which relate to a project's test runner; used from the `dev` block.
+class TestRunnerSettings {}
+
+/// Settings relating to a project's native toolchain.
+class NativeToolchainSettings {}
+
+/// Settings relating to a project's JVM toolchain, as applicable.
+class JvmToolchainSettings {}
+
+/// Settings which govern a project's toolchain and use of that toolchain.
+class ToolchainSettings {
+  /// Native toolchain settings.
+  native: NativeToolchainSettings = new {}
+
+  /// JVM toolchain settings.
+  jvm: JvmToolchainSettings = new {}
+}

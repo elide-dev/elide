@@ -15,6 +15,8 @@ package elide.tooling.project.codecs
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
+import elide.tooling.project.ProjectManager
+import elide.tooling.project.flags.ProjectFlagsContext
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 
@@ -22,6 +24,8 @@ public interface PackageManifestCodec<T : PackageManifest> {
   public interface ManifestBuildState {
     public val isRelease: Boolean get() = false
     public val isDebug: Boolean get() = false
+    public val flags: ProjectFlagsContext get() = ProjectFlagsContext.EMPTY
+    public val params: ProjectManager.ProjectParams? get() = ProjectManager.ProjectParams.EMPTY
   }
 
   public fun defaultPath(): Path

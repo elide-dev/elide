@@ -125,7 +125,7 @@ import elide.tool.exec.SubprocessRunner.subprocess
 import elide.tool.exec.allProjectPaths
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import elide.tool.server.StaticSiteServer
 import elide.tool.server.StaticSiteServer.buildStaticServer
 import elide.tooling.*

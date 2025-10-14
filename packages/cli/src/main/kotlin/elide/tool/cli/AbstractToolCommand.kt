@@ -14,6 +14,7 @@
 package elide.tool.cli
 
 import com.github.ajalt.clikt.core.BaseCliktCommand
+import com.github.ajalt.mordant.rendering.TextColors
 import java.util.concurrent.Callable
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -25,6 +26,7 @@ import elide.tool.cli.err.AbstractToolError
 import elide.tool.cli.state.CommandOptions
 import elide.tool.cli.state.CommandState
 import elide.tooling.cli.Statics
+import elide.tooling.project.PackageManifestService
 
 typealias CommandScope = CoroutineScope
 
@@ -179,11 +181,26 @@ abstract class AbstractToolCommand<Context>:
           if (err != null && HandledExit.isHandledExit(err)) {
             throw err  // re-throw for outer
           }
-          val stack = err?.stackTrace?.joinToString("\n") ?: "(unknown)"
-          val label = err ?: "(unknown)"
-          logging.error("Uncaught fatal exception: $label\n$stack")
+          val (emitStackAndLog, rethrow) = when (err) {
+            null -> true to true
+            is PackageManifestService.ManifestInvalid -> {
+              if (Statics.noColor) {
+                logging.error(err.message)
+              } else {
+                logging.error(TextColors.red(err.message ?: "Project manifest error"))
+              }
+
+              false to false
+            }
+            else -> true to true
+          }
+          if (emitStackAndLog) {
+            val stack = err?.stackTrace?.joinToString("\n") ?: "(unknown)"
+            val label = err ?: "(unknown)"
+            logging.error("Uncaught fatal exception: $label\n$stack")
+          }
           exit.set(1)
-          if (err != null) throw err
+          if (err != null && rethrow) throw err
         }
       }
     }

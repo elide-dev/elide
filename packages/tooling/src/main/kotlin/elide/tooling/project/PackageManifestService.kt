@@ -46,7 +46,7 @@ public interface PackageManifestService {
     public val valid: Boolean
 
     public fun throwIfFailed(): Unit = when (this) {
-      is ManifestErrors -> error("Failed to load project: ${errors.joinToString(", ")}")
+      is ManifestErrors -> throw errors.first()
       ManifestValid -> Unit
     }
 

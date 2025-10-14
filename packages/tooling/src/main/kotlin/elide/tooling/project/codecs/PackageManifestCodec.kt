@@ -15,6 +15,7 @@ package elide.tooling.project.codecs
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
+import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectManager
 import elide.tooling.project.flags.ProjectFlagsContext
 import elide.tooling.project.manifest.ElidePackageManifest
@@ -43,4 +44,8 @@ public interface PackageManifestCodec<T : PackageManifest> {
   public fun fromElidePackage(source: ElidePackageManifest): T
 
   public fun toElidePackage(source: T): ElidePackageManifest
+
+  public fun enforce(manifest: T, state: ManifestBuildState): PackageManifestService.ManifestValidation {
+    return PackageManifestService.ManifestValidation.manifestOk()
+  }
 }

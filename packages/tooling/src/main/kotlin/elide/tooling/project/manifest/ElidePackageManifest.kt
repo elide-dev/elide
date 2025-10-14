@@ -19,7 +19,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
 import elide.tooling.project.ProjectEcosystem
-import elide.tooling.project.flags.ProjectFlag
 import elide.tooling.project.flags.ProjectFlagDefinition
 import elide.tooling.project.manifest.ElidePackageManifest.*
 import elide.tooling.web.Browsers
@@ -125,9 +124,14 @@ public data class ElidePackageManifest(
 
   @Serializable public class JvmToolchainSettings
 
+  @Serializable public data class EngineSettings(
+    val version: String? = null,
+  )
+
   @Serializable public data class ToolchainSettings(
     val native: NativeToolchainSettings? = null,
     val jvm: JvmToolchainSettings? = null,
+    val engines: Map<String, EngineSettings>? = null,
   )
 
   @Serializable public data class Jar(

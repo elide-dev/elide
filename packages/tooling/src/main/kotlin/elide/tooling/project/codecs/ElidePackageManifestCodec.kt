@@ -28,6 +28,7 @@ import org.pkl.core.module.ModuleKeyFactory
 import org.pkl.core.module.ResolvedModuleKey
 import org.pkl.core.resource.ResourceReader
 import org.pkl.core.util.IoUtils
+import org.semver4j.Semver
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
@@ -36,7 +37,9 @@ import java.util.Optional
 import kotlin.io.path.Path
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
+import elide.runtime.version.ElideVersionInfo
 import elide.tooling.deps.PackageSpec
+import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.codecs.PackageManifestCodec.ManifestBuildState
 import elide.tooling.project.flags.ProjectFlagDefinition
@@ -57,6 +60,14 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
     override fun read(p0: URI): Optional<in Any> {
       TODO("Not yet implemented: Read Elide pkl resource")
     }
+  }
+
+  public data object KnownEngine {
+    public const val ELIDE: String = "elide"
+    public const val JVM: String = "jvm"
+    public const val NODE: String = "node"
+    public const val DENO: String = "deno"
+    public const val BUN: String = "bun"
   }
 
   // Enables resolution of resources from the `flag:` protocol scheme.
@@ -201,6 +212,13 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
           mapper.map(value, ProjectFlagDefinition.FlagInfo::class.java)
         })
       ).addConversion(
+        // string
+        Conversion.of(PClassInfo.String, EngineSettings::class.java, StrConverter {
+          EngineSettings(
+            version = it,
+          )
+        })
+      ).addConversion(
         // convert flag defaults as booleans
         Conversion.of(PClassInfo.Boolean, ProjectFlagValue::class.java,
                       Converter<Boolean, ProjectFlagValue> { value, mapper ->
@@ -342,6 +360,49 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
 
   override fun fromElidePackage(source: ElidePackageManifest): ElidePackageManifest = source.copy()
   override fun toElidePackage(source: ElidePackageManifest): ElidePackageManifest = source.copy()
+
+  private fun invalidVersion(current: String, requirement: String): PackageManifestService.ManifestValidation {
+    return PackageManifestService.ManifestValidation.manifestError(
+      PackageManifestService.ManifestInvalid(
+        buildString {
+          append("Current version of Elide ('$current') does not satisfy project requirement ")
+          append(" ('$requirement').")
+        }
+      )
+    )
+  }
+
+  override fun enforce(
+    manifest: ElidePackageManifest,
+    state: ManifestBuildState
+  ): PackageManifestService.ManifestValidation {
+    return when (
+      val elideRequirement = manifest.toolchain?.engines
+        ?.get(KnownEngine.ELIDE)
+        ?.version
+        ?.replace(">=", "")  // implied
+    ) {
+      null -> { /* nothing to enforce */ PackageManifestService.ManifestValidation.manifestOk() }
+      else -> {
+        val current = (elide.runtime.Runtime.version as ElideVersionInfo)
+        val currentSemver = current.asSemver()
+        val parsed = requireNotNull(Semver.parse(elideRequirement)) {
+          "Failed to parse Elide version requirement: '$elideRequirement'"
+        }
+
+        if (currentSemver.satisfies(elideRequirement)) {
+          when (current.satisfies(parsed)) {
+            // exact match or greater version
+            true -> PackageManifestService.ManifestValidation.manifestOk()
+            false -> invalidVersion(current.asString, elideRequirement)
+          }
+        } else invalidVersion(
+          current.toString(),
+          elideRequirement,
+        )
+      }
+    }
+  }
 
   private companion object {
     const val DEFAULT_EXTENSION = "pkl"

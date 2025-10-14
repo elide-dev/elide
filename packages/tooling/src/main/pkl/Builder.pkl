@@ -13,18 +13,3 @@ class BuilderSettings {}
 
 /// Settings which relate to a project's test runner; used from the `dev` block.
 class TestRunnerSettings {}
-
-/// Settings relating to a project's native toolchain.
-class NativeToolchainSettings {}
-
-/// Settings relating to a project's JVM toolchain, as applicable.
-class JvmToolchainSettings {}
-
-/// Settings which govern a project's toolchain and use of that toolchain.
-class ToolchainSettings {
-  /// Native toolchain settings.
-  native: NativeToolchainSettings = new {}
-
-  /// JVM toolchain settings.
-  jvm: JvmToolchainSettings = new {}
-}

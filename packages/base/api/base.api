@@ -234,6 +234,7 @@ public final class elide/runtime/Logging$Companion {
 public final class elide/runtime/Runtime {
 	public static final field INSTANCE Lelide/runtime/Runtime;
 	public static final field generatedPackage Ljava/lang/String;
+	public final fun getVersion ()Lelide/runtime/version/ElideVersion;
 }
 
 public final class elide/runtime/jvm/JvmLogLevelKt {
@@ -307,6 +308,54 @@ public final class elide/runtime/jvm/Logger : elide/runtime/Logger, org/slf4j/Lo
 	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
 	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public fun warn (Lorg/slf4j/Marker;Ljava/lang/String;[Ljava/lang/Object;)V
+}
+
+public final class elide/runtime/version/ElideReleaseType : java/lang/Enum {
+	public static final field ALPHA Lelide/runtime/version/ElideReleaseType;
+	public static final field BETA Lelide/runtime/version/ElideReleaseType;
+	public static final field DEV Lelide/runtime/version/ElideReleaseType;
+	public static final field RC Lelide/runtime/version/ElideReleaseType;
+	public static final field STABLE Lelide/runtime/version/ElideReleaseType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getRank-pVg5ArA ()I
+	public final fun getTag ()Ljava/lang/String;
+	public final fun satisfies (Lelide/runtime/version/ElideReleaseType;)Z
+	public static fun valueOf (Ljava/lang/String;)Lelide/runtime/version/ElideReleaseType;
+	public static fun values ()[Lelide/runtime/version/ElideReleaseType;
+}
+
+public abstract interface class elide/runtime/version/ElideVersion : java/lang/Comparable {
+	public static final field Companion Lelide/runtime/version/ElideVersion$Companion;
+	public abstract fun alpha-0hXNFcg ()Lkotlin/UInt;
+	public abstract fun beta-0hXNFcg ()Lkotlin/UInt;
+	public abstract fun getAsString ()Ljava/lang/String;
+	public abstract fun releaseCandidate-0hXNFcg ()Lkotlin/UInt;
+	public abstract fun type ()Lelide/runtime/version/ElideReleaseType;
+}
+
+public final class elide/runtime/version/ElideVersion$Companion {
+	public final fun getSelf ()Lelide/runtime/version/ElideVersion;
+}
+
+public final class elide/runtime/version/ElideVersionInfo : elide/runtime/version/ElideVersion {
+	public fun <init> (Ljava/lang/String;)V
+	public fun alpha-0hXNFcg ()Lkotlin/UInt;
+	public final fun asSemver ()Lorg/semver4j/Semver;
+	public fun beta-0hXNFcg ()Lkotlin/UInt;
+	public fun compareTo (Lelide/runtime/version/ElideVersion;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun getAsString ()Ljava/lang/String;
+	public fun releaseCandidate-0hXNFcg ()Lkotlin/UInt;
+	public final fun satisfies (Lorg/semver4j/Semver;)Z
+	public fun toString ()Ljava/lang/String;
+	public fun type ()Lelide/runtime/version/ElideReleaseType;
+}
+
+public final class elide/runtime/version/ElideVersionKt {
+	public static final field ELIDE_VERSION_TAG_ALPHA Ljava/lang/String;
+	public static final field ELIDE_VERSION_TAG_BETA Ljava/lang/String;
+	public static final field ELIDE_VERSION_TAG_DEV Ljava/lang/String;
+	public static final field ELIDE_VERSION_TAG_RC Ljava/lang/String;
 }
 
 public final class elide/struct/MutablePresortedList : elide/struct/api/MutableSortedList {

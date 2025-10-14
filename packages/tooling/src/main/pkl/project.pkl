@@ -325,3 +325,8 @@ function stringFlag(flag: String, _defaultValue: String?) = new _flags.ProjectFl
   type = "string"
   defaultValue = _defaultValue
 }
+
+function mavenRepository(name: String, _coordinate: String) = new _jvm.MavenPackageSpec {
+  coordinate = _coordinate
+  repository = name
+}

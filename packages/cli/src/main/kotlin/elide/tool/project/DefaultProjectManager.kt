@@ -152,6 +152,7 @@ internal class DefaultProjectManager @Inject constructor(
         manifests.resolve(root).takeIf { it.isRegularFile() }?.let { manifestFile ->
           manifestFile.inputStream().use {
             manifests.parse(it, ProjectEcosystem.Elide)
+              .also { manifests.enforce(it).throwIfFailed() }
           }
         } as ElidePackageManifest?
       }
@@ -159,7 +160,9 @@ internal class DefaultProjectManager @Inject constructor(
       val rootManifestOp = async(IO) {
         if (workspaceRoot == null) null else {
           manifests.resolve(workspaceRoot).takeIf { it.isRegularFile() }?.let { manifestFile ->
-            manifestFile.inputStream().use { manifests.parse(it, ProjectEcosystem.Elide) }
+            manifestFile.inputStream()
+              .use { manifests.parse(it, ProjectEcosystem.Elide) }
+              .also { manifests.enforce(it).throwIfFailed() }
           } as ElidePackageManifest?
         }
       }

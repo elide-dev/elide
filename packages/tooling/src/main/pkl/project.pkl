@@ -5,6 +5,7 @@ module elide.project
 import "Base.pkl" as _common
 import "Builder.pkl" as _builder
 import "Dev.pkl" as _dev
+import "Toolchain.pkl" as _toolchain
 import "Flags.pkl" as _flags
 import "Sources.pkl" as _srcs
 import "Infra.pkl" as _infra
@@ -96,7 +97,7 @@ class ElideProject {
   dev: _dev.DevSettings
 
   /// Toolchain settings for this project.
-  toolchain: _builder.ToolchainSettings
+  toolchain: _toolchain.ToolchainSettings
 
   /// Artifacts to be produced by this project.
   artifacts: _artifacts.Artifacts
@@ -211,7 +212,7 @@ sources: _srcs.Sources = new {
 dev: _dev.DevSettings = new {}
 
 /// Toolchain settings for this project.
-toolchain: _builder.ToolchainSettings = new {}
+toolchain: _toolchain.ToolchainSettings = new {}
 
 /// Artifacts to be produced by this project.
 artifacts: _artifacts.Artifacts = new {}

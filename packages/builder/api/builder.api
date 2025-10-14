@@ -2627,6 +2627,7 @@ public final class elide/tooling/project/CompositePackageManifestService : elide
 	public fun <init> (Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;)V
 	public fun configure (Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)V
 	public fun encode (Lelide/tooling/project/manifest/PackageManifest;Ljava/io/OutputStream;)V
+	public fun enforce (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/PackageManifestService$ManifestValidation;
 	public fun export (Lelide/tooling/project/manifest/ElidePackageManifest;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun merge (Ljava/lang/Iterable;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public fun parse (Ljava/io/InputStream;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;

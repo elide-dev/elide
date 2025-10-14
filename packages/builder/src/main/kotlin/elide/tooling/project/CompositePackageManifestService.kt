@@ -99,11 +99,15 @@ public class CompositePackageManifestService @Inject constructor (
   }
 
   override fun parse(source: Path): PackageManifest {
-    return allCodecs.first { it.supported(source) }.parseAsFile(source, buildHintState.value)
+    return allCodecs.first { it.supported(source) }.parseAsFile(source, buildHintState.value).also {
+      enforce(it)
+    }
   }
 
   override fun parse(source: InputStream, ecosystem: ProjectEcosystem): PackageManifest {
-    return codecForEcosystem(ecosystem).parse(source, buildHintState.value)
+    return codecForEcosystem(ecosystem).parse(source, buildHintState.value).also {
+      enforce(it)
+    }
   }
 
   override fun merge(manifests: Iterable<PackageManifest>): ElidePackageManifest {
@@ -114,11 +118,20 @@ public class CompositePackageManifestService @Inject constructor (
   }
 
   override fun export(manifest: ElidePackageManifest, ecosystem: ProjectEcosystem): PackageManifest {
-    return codecForEcosystem(ecosystem).fromElidePackage(manifest)
+    return codecForEcosystem(ecosystem).fromElidePackage(manifest).also {
+      enforce(it)
+    }
   }
 
   override fun encode(manifest: PackageManifest, output: OutputStream) {
     val codec = codecForManifest(manifest)
     codec.write(manifest, output)
+  }
+
+  override fun enforce(manifest: PackageManifest): PackageManifestService.ManifestValidation {
+    return codecForEcosystem(manifest.ecosystem).enforce(
+      manifest,
+      buildHintState.value,
+    )
   }
 }

@@ -1,0 +1,38 @@
+/// Toolchain settings and related types.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.toolchain
+
+import "Base.pkl" as _common
+
+/// Settings relating to a project's native toolchain.
+class NativeToolchainSettings {}
+
+/// Settings relating to a project's JVM toolchain, as applicable.
+class JvmToolchainSettings {}
+
+/// Known engine names.
+typealias KnownEngine = "elide" | "node" | "jvm" | "deno" | "bun"
+
+/// Known or custom engine name.
+typealias EngineName = KnownEngine | String
+
+/// Mapping of engines to their settings; a simple string semver or range is suitable as well.
+typealias Engines = Mapping<EngineName, EngineSettings | _common.SemanticVersion | _common.SemanticVersionRange | String>
+
+/// Settings which govern engine behavior, selection, and configuration.
+open class EngineSettings {
+  /// Version or version range to accept.
+  version: _common.SemanticVersion | _common.SemanticVersionRange | String
+}
+
+/// Settings which govern a project's toolchain and use of that toolchain.
+class ToolchainSettings {
+  /// Native toolchain settings.
+  native: NativeToolchainSettings = new {}
+
+  /// JVM toolchain settings.
+  jvm: JvmToolchainSettings = new {}
+
+  /// Engine settings.
+  engines: Engines = new {}
+}

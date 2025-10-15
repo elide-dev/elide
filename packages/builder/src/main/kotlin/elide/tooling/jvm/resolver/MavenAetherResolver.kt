@@ -610,7 +610,10 @@ public class MavenAetherResolver internal constructor (
         if (pkg in packageArtifacts) {
           // do we already have this at the same version?
           val existing = requireNotNull(packageArtifacts[pkg])
-          if (existing.artifact.file == artifact.file || existing is ResolvedJarArtifact) {
+          if (
+            existing.artifact.file == artifact.file ||
+            existing is ResolvedJarArtifact ||
+            existing is InjectedJarArtifact) {
             return@forEach // we already have this
           }
           error(

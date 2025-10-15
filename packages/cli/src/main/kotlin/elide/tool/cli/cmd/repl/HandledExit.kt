@@ -27,7 +27,15 @@ internal class HandledExit private constructor (
     }
 
     @JvmStatic fun notify(exitCode: Int, message: String? = null, cause: Throwable? = null): Nothing {
-      throw HandledExit(
+      throw create(
+        exitCode = exitCode,
+        message = message,
+        cause = cause,
+      )
+    }
+
+    @JvmStatic fun create(exitCode: Int, message: String? = null, cause: Throwable? = null): HandledExit {
+      return HandledExit(
         exitCode = exitCode,
         causeMessage = message,
         cause = cause,

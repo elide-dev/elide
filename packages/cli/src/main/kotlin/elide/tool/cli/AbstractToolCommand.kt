@@ -181,18 +181,19 @@ abstract class AbstractToolCommand<Context>:
           if (err != null && HandledExit.isHandledExit(err)) {
             throw err  // re-throw for outer
           }
-          val (emitStackAndLog, rethrow) = when (err) {
-            null -> true to true
+          val (emitStackAndLog, rethrow, subject) = when (err) {
+            null -> Triple(true, true, err)
             is PackageManifestService.ManifestInvalid -> {
               if (Statics.noColor) {
-                logging.error(err.message)
+                Statics.terminal.println(err.message)
               } else {
-                logging.error(TextColors.red(err.message ?: "Project manifest error"))
+                Statics.terminal.println(TextColors.red(err.message ?: "Project manifest error"))
               }
 
-              false to false
+              // exit with code 3; do not provide a cause message otherwise it will be logged
+              Triple(false, false, HandledExit.create(3))
             }
-            else -> true to true
+            else -> Triple(true, true, err)
           }
           if (emitStackAndLog) {
             val stack = err?.stackTrace?.joinToString("\n") ?: "(unknown)"
@@ -200,7 +201,7 @@ abstract class AbstractToolCommand<Context>:
             logging.error("Uncaught fatal exception: $label\n$stack")
           }
           exit.set(1)
-          if (err != null && rethrow) throw err
+          if (err != null && rethrow) throw (subject ?: err)
         }
       }
     }

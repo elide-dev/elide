@@ -164,7 +164,7 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
         when (val flagDefault = flag.defaultValue) {
           ProjectFlagValue.NoValue -> append(": ")
           ProjectFlagValue.True -> append(" (default: `true`): ")
-          ProjectFlagValue.False -> append(" (defualt: `false`): ")
+          ProjectFlagValue.False -> append(" (default: `false`): ")
           is ProjectFlagValue.StringValue -> append(" (default: `${flagDefault.value}`): ")
         }
         append(description)

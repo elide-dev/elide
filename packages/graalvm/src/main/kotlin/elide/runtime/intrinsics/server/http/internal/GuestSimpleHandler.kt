@@ -36,8 +36,8 @@ import elide.runtime.intrinsics.server.http.HttpResponse
       return value.execute(wrapped, responder, context).let { result ->
         when {
           result.isBoolean -> result.asBoolean()
-          // don't forward by default
-          else -> false
+          // treat non-boolean return as handled (no fallthrough)
+          else -> true
         }
       }
     }

@@ -60,7 +60,7 @@ public interface PackageManifestService {
     public constructor(message: String): super(message)
   }
   public data object ManifestValid : ManifestValidation {
-    override val valid: Boolean get() = false
+    override val valid: Boolean get() = true
   }
   public class ManifestErrors(public val errors: List<ManifestInvalid>): ManifestValidation {
     override val valid: Boolean get() = false

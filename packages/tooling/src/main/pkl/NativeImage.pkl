@@ -93,6 +93,9 @@ open class NativeImageOptions {
   /// PGO (Profiling Guided Optimization) settings.
   pgo: ProfileGuidedOptimization = new {}
 
+  /// Enabled compiler features.
+  features: Listing<_jvm.JvmClass> = new {}
+
   /// Extra flags to pass to the Native Image compiler; added to all project targets.
   flags: Listing<NativeImageFlag> = new {}
 

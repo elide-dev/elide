@@ -597,6 +597,7 @@ public data class ElidePackageManifest(
     val cflags: List<String> = emptyList(),
     val ldflags: List<String> = emptyList(),
     val defs: Map<String, String> = emptyMap(),
+    val features: List<String> = emptyList(),
   )
 
   @JvmRecord @Serializable public data class NativeImageSettings(

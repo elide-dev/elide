@@ -47,7 +47,7 @@ import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.project.ElideProject
 import elide.tooling.project.manifest.ElidePackageManifest.*
 
-private val EMBEDDED_GVM_VERSION = "25.0.0"
+private const val EMBEDDED_GVM_VERSION = "25.0.0"
 
 private val withheldNativeJarNames = sortedSetOf(
   "svm-$EMBEDDED_GVM_VERSION.jar",
@@ -220,6 +220,10 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
         addAllStrings(artifact.options.defs.map {
           "-D${it.key}=${it.value}"
         })
+
+        artifact.options.features.forEach {
+          add("--feature=$it")
+        }
 
         // add user's extra compile flags
         addAllStrings(artifact.options.flags)

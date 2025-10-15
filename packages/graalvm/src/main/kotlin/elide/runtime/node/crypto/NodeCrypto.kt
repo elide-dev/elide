@@ -12,6 +12,7 @@
  */
 package elide.runtime.node.crypto
 
+import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
@@ -22,9 +23,13 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.node.CryptoAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import elide.vm.annotations.Polyglot
 
 // Internal symbol where the Node built-in module is installed.
 private const val CRYPTO_MODULE_SYMBOL = "node_${NodeModuleName.CRYPTO}"
+
+// Functiopn name for randomUUID
+private const val F_RANDOM_UUID = "randomUUID"
 
 // Installs the Node crypto module into the intrinsic bindings.
 @Intrinsic internal class NodeCryptoModule : AbstractNodeBuiltinModule() {
@@ -45,10 +50,32 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
 
   internal companion object {
     @JvmStatic fun create(): NodeCrypto = NodeCrypto()
+
+    // Module members
+    private val moduleMembers = arrayOf(
+      F_RANDOM_UUID,
+    ).apply { sort() }
   }
 
-  // @TODO not yet implemented
+  // Implement the CryptoAPI method
+  @Polyglot override fun randomUUID(options: Value?): String{
+    // Note `options` parameter exists for Node.js compatibility but is currently ignored
+    // It supports { disableEntropyCache: boolean } which is not applicable to our implementation
+    return java.util.UUID.randomUUID().toString()
+  }
 
-  override fun getMemberKeys(): Array<String> = emptyArray()
-  override fun getMember(key: String?): Any? = null
+  // ProxyObject implementation
+  override fun getMemberKeys(): Array<String> = moduleMembers
+
+  override fun hasMember(key: String): Boolean = 
+    moduleMembers.binarySearch(key) >= 0
+
+  override fun getMember(key: String): Any? = when (key) {
+    F_RANDOM_UUID -> ProxyExecutable { args ->
+      // Node.js signature: randomUUID([options])
+      val options = args.getOrNull(0)
+      randomUUID(options)
+    }
+    else -> null
+  }
 }

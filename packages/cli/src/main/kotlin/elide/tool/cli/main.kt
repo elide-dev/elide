@@ -33,6 +33,7 @@ import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.tool.cli.Elide.Companion.installStatics
 import elide.tool.cli.cmd.repl.HandledExit
 import elide.tooling.cli.Statics
+import elide.tooling.project.PackageManifestService
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
 private const val ENABLE_CLI_ENTRY_V2 = false
@@ -109,12 +110,12 @@ private inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI_ENTRY_V
           } catch (_: PrintHelpMessage) {
             try {
               sorryIHaveToFactory(args).usage(System.out)
+              0
             } catch (err: Throwable) {
               println("Failed to print help message: ${err.message}")
               err.printStackTrace()
               exitProcess(1)
             }
-            0
           } catch (err: RuntimeException) {
             println("Uncaught error while running command: ${err.message}")
             err.printStackTrace()

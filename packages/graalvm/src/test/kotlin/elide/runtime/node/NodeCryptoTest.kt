@@ -13,6 +13,10 @@
 package elide.runtime.node
 
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.runtime.node.crypto.NodeCryptoModule
@@ -98,5 +102,100 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(crypto)
+  }
+
+  @Test fun `randomUUID should return a string`() = conforms {
+    val uuid = crypto.provide().randomUUID(null)
+    assertIs<String>(uuid, "randomUUID should return a String")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const uuid = crypto.randomUUID();
+    assert.equal(typeof uuid, "string");
+    """
+  }
+
+  @Test fun `randomUUID should return lowercase format`() = conforms {
+    val uuid = crypto.provide().randomUUID(null)
+    assertEquals(uuid, uuid.lowercase(), "UUID should be in lowercase format")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const uuid = crypto.randomUUID();
+    assert.equal(uuid, uuid.toLowerCase(), "UUID should be lowercase");
+    """
+  }
+
+  @Test fun `randomUUID should return valid UUID v4 format`() = conforms {
+    val uuid = crypto.provide().randomUUID(null)
+
+    // UUID v4 format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+    // where y is one of [8,9,a,b]
+    val uuidRegex = Regex("^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+    assertTrue(
+      uuidRegex.matches(uuid),
+      "UUID should match v4 format: $uuid"
+    )
+    assertEquals(36, uuid.length, "UUID should be 36 characters long")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const uuid = crypto.randomUUID();
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+
+    assert.equal(uuid.length, 36, "UUID should be 36 characters");
+    assert.ok(uuidRegex.test(uuid), "UUID should match v4 format: " + uuid);
+    """
+  }
+
+  @Test fun `randomUUID should generate unique values`() = conforms {
+    val uuid1 = crypto.provide().randomUUID(null)
+    val uuid2 = crypto.provide().randomUUID(null)
+    val uuid3 = crypto.provide().randomUUID(null)
+
+    assertNotEquals(uuid1, uuid2, "UUIDS should be unique")
+    assertNotEquals(uuid2, uuid3, "UUIDS should be unique")
+    assertNotEquals(uuid1, uuid3, "UUIDS should be unique")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const uuid1 = crypto.randomUUID();
+    const uuid2 = crypto.randomUUID();
+    const uuid3 = crypto.randomUUID();
+
+    assert.notEqual(uuid1, uuid2, "UUIDs should be unique");
+    assert.notEqual(uuid2, uuid3, "UUIDs should be unique");
+    assert.notEqual(uuid1, uuid3, "UUIDs should be unique");
+    """
+  }
+
+  @Test fun `randomUUID should accept optional options parameter`() = conforms {
+    // Options parameter is accepted but currently ignored
+    val uuid = crypto.provide().randomUUID(null)
+    assertNotNull(uuid)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const uuid1 = crypto.randomUUID({ disableEntropyCache: true });
+    const uuid2 = crypto.randomUUID({ disableEntropyCache: false });
+
+    assert.equal(typeof uuid1, "string");
+    assert.equal(typeof uuid2, "string");
+    """
   }
 }

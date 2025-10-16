@@ -10,8 +10,6 @@ set +x
 # --publish: Publish the built artifacts to the remote repositories and package managers.
 # --help: Show a help message.
 
-source ./tools/scripts/release/commons.sh
-
 #
 dry=true
 publish=false
@@ -36,6 +34,7 @@ buildMode=dev
 
 if [[ "$@" == *"--help"* ]]; then
   help=true
+  dev=false
 fi
 
 # render help message and exit if requested.
@@ -53,27 +52,75 @@ if [[ "$help" == true ]]; then
   exit 0
 fi
 
-
 if [[ "$@" == *"--publish"* ]]; then
   publish=true
   release=true
-  dry=false
 fi
 
  if [[ "$@" == *"--release"* ]]; then
    release=true
-   dry=false
 fi
 
-if[["$release"==true]]; then
+if [[ "$release" == true ]]; then
     stamp=true
     publishTask=publishAllElidePublications
     provenance=true
     pgo=true
     nativeTask=nativeOptimizedCompile
+    buildMode=release
 fi
 
-if [["$dry"==true]]; then
+if [[ "$dry" == true ]]; then
   publishTask=publishAllPublicationsToStageRepository
   provenance=false
 fi
+
+# Build Options, NPM and Gradle
+if [[ "$provenance" == true ]]; then
+  NPM_ARGS="$NPM_ARGS --provenance"
+fi
+
+# in release mode, tell gradle to build the docs and enable signing
+if [[ "$release" == true ]]; then
+  GRADLE_PROPS="$GRADLE_PROPS -Pelide.buildDocs=true -PenableSigning=true"
+  if [[ "$dry" != true ]]; then
+    GRADLE_PROPS="$GRADLE_PROPS -PenableSigstore=true"
+  fi
+else
+  GRADLE_PROPS="$GRADLE_PROPS -Pelide.buildDocs=false -PenableSigning=false -PenableSigstore=false"
+fi
+
+ELIDE_TOOLS_REPO="elide:elide-tools"
+ELIDE_MAVEN_REPO="elide:elide-maven"
+GRADLE_PROPS="-Pelide.release=$release -Pelide.buildMode=$buildMode -Pelide.stamp=$stamp -Pelide.pgo=$pgo $GRADLE_PROPS"
+GRADLE_ARGS="--no-configuration-cache"
+PUBLISH_TARGETS=":packages:core:$publishTask :packages:base:$publishTask :packages:test:$publishTask :packages:tooling:$publishTask :packages:builder:$publishTask :packages:graalvm:$publishTask :packages:server:$publishTask :packages:http:$publishTask :packages:graalvm-java:$publishTask :packages:graalvm-js:$publishTask :packages:graalvm-jvm:$publishTask :packages:graalvm-kt:$publishTask :packages:graalvm-llvm:$publishTask :packages:graalvm-py:$publishTask :packages:graalvm-rb:$publishTask :packages:graalvm-ts:$publishTask :packages:graalvm-wasm:$publishTask :packages:engine:$publishTask"
+
+## Assemble libraries
+set -x;
+./gradlew \
+  $GRADLE_ARGS \
+  $GRADLE_PROPS \
+  assemble;
+set +x;
+
+## Build native image
+set -x;
+  ./gradlew \
+    $GRADLE_ARGS \
+    $GRADLE_PROPS \
+    :packages:cli:$nativeTask;
+set +x;
+
+source ./tools/scripts/release/commons.sh
+
+## Build release packages
+export ELIDE_VERSION="$version";
+export ELIDE_PLATFORM="$platform";
+export ELIDE_ARCH="$arch";
+
+
+
+echo ""
+echo "Done."
+exit 0

@@ -113,6 +113,7 @@ val commandMain = "elide.tool.cli.Elide"
 val enablePkl = true
 val enableJs = true
 val enableJsIsolate = false
+val enableObfuscation = false
 val enableTs = true
 val enablePython = true
 val enablePythonDynamic = true
@@ -127,6 +128,7 @@ val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
 val enableNativeTransportV2 = true
 val enableSqliteStatic = true
+val nativeTargetFamily = "wasm"
 val enableStatic = findProperty("elide.static") == "true"
 val enableStaticJni = true
 val preferShared = false
@@ -191,6 +193,11 @@ val nativeOptMode = when (val explicit = optMode) {
   "b" -> "0"
   else -> explicit
 }
+
+val obfuscationArgs = listOfNotNull(
+  onlyIf(enableObfuscation, "-Delide.enterprise=true"),
+  onlyIf(enableObfuscation, "-H:AdvancedObfuscation=export-mapping"),
+)
 
 val elideBinaryArch = project.properties["elide.march"] as? String ?: defaultArchTarget
 logger.lifecycle("Building for architecture '$elideBinaryArch' (default: '$defaultArchTarget')")
@@ -802,6 +809,7 @@ val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+TrackPrimitiveValues",
   "-H:+UsePredicates",
   "-H:+AllowUnsafeAllocationOfAllInstantiatedTypes",  // fix: oracle/graal#10912
+  onlyIf(!enableJit, "-H:+JDWP"),
   onlyIf(oracleGvm && enableAuxCache, "-H:ReservedAuxiliaryImageBytes=${8 * 1024 * 1024}"),
   onlyIf(enableExperimentalLlvmBackend, "-H:CompilerBackend=llvm"),
   onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
@@ -827,6 +835,10 @@ val stagedNativeArgs: List<String> = listOfNotNull(
   // "-H:+UseExperimentalReachabilityAnalysis",  // not supported by truffle feature
   // "-H:+UseReachabilityMethodSummaries",  // not supported by truffle feature
   // "-H:+VMContinuations",  // not supported with runtime compilation
+).plus(
+  if (nativeTargetFamily == "wasm") {
+    listOf("--tool:svm-wasm")
+  } else emptyList()
 )
 
 val deprecatedNativeArgs = listOf(
@@ -1457,6 +1469,8 @@ val commonNativeArgs = listOfNotNull(
   }.map {
     "-H:CLibraryPath=$it"
   }
+).plus(
+  obfuscationArgs
 ).plus(
   commonGvmArgs.onlyIf(oracleGvm)
 ).plus(

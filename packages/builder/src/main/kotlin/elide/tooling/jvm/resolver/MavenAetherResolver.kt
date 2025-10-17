@@ -24,6 +24,8 @@ import org.eclipse.aether.artifact.Artifact
 import org.eclipse.aether.artifact.DefaultArtifact
 import org.eclipse.aether.collection.CollectRequest
 import org.eclipse.aether.graph.Dependency
+import org.eclipse.aether.graph.DependencyFilter
+import org.eclipse.aether.graph.DependencyNode
 import org.eclipse.aether.repository.LocalRepository
 import org.eclipse.aether.repository.RemoteRepository
 import org.eclipse.aether.repository.RepositoryPolicy
@@ -431,6 +433,10 @@ public class MavenAetherResolver internal constructor (
     }
   }
 
+  private fun registerGlobalExclusions(packages: Iterable<MavenPackage>) {
+    globalExclusions.addAll(packages)
+  }
+
   private fun registerPackages(
     name: String,
     manifest: ElidePackageManifest,
@@ -490,9 +496,6 @@ public class MavenAetherResolver internal constructor (
     val repos = state.manifest.dependencies.maven.repositories
     val exclusions = state.manifest.dependencies.maven.exclusions
 
-    if (exclusions.isNotEmpty()) {
-      globalExclusions.addAll(exclusions)
-    }
     if (packages.isNotEmpty() || testPackages.isNotEmpty()) {
       repos.forEach { repo ->
         if (repo.key !in repositories) {
@@ -500,6 +503,9 @@ public class MavenAetherResolver internal constructor (
           repositories[repo.key] = repo.value
         }
       }
+      if (exclusions.isNotEmpty()) registerGlobalExclusions(
+        exclusions,
+      )
       registerPackages(
         "main",
         state.manifest,
@@ -629,6 +635,28 @@ public class MavenAetherResolver internal constructor (
     }
   }
 
+  private fun checkIsExcluded(node: DependencyNode): Boolean {
+    if (node.artifact == null) {
+      return true  // not loaded yet, or a symbolic artifact, like a pom-only dist
+    }
+    val coord = buildString {
+      append(node.artifact.groupId)
+      append(':')
+      append(node.artifact.artifactId)
+    }
+    val globallyExcluded = globalExclusions.contains(MavenPackage(
+      group = node.artifact.groupId,
+      name = node.artifact.artifactId,
+      classifier = node.artifact.classifier,
+      coordinate = coord,
+    ))
+    return when {
+      // global exclusions take precedence
+      globallyExcluded -> true
+      else -> false  // not excluded by default
+    }
+  }
+
   override suspend fun resolve(scope: CoroutineScope): Sequence<Job> {
     check(initialized.value) { "Resolver must be initialized before resolving" }
     check(sealed.value) { "Resolver must be sealed before resolving" }
@@ -645,7 +673,11 @@ public class MavenAetherResolver internal constructor (
 
     return sequence {
       yield(scope.async {
-        val dependencyRequest = DependencyRequest(graph, null)
+        val dependencyRequest = DependencyRequest(graph, object: DependencyFilter {
+          override fun accept(node: DependencyNode, parents: List<DependencyNode>): Boolean {
+            return parents.isEmpty() || !checkIsExcluded(node)
+          }
+        })
         val dependencyResult = system.resolveDependencies(session, dependencyRequest)
         logging.debug { "Maven dependency resolution result: $dependencyResult" }
         var errors = mutableListOf<Throwable>()
@@ -699,18 +731,23 @@ public class MavenAetherResolver internal constructor (
           override val usage: MultiPathUsage? get() = it.type
         })
       }
-    }.let { _ ->
+    }.let { suite ->
       ClasspathProvider {
-        // assemble a class-path from all resolved artifacts for a given spec
-//        Classpath.from((registryByType[suite] ?: emptyList()).flatMap { pkg ->
-//          packageArtifacts[pkg]?.files?.map {
-//            it.toPath()
-//          } ?: emptyList()
-//        })
-        // @TODO don't return all artifacts, only those for the suite
         Classpath.from(
           packageArtifacts
             .filter { it.key !in globalExclusions }
+            .filter {
+              when (spec) {
+                null -> true
+                else -> when (val usage = registry["${it.key.coordinate}:${it.key.version}"]?.second) {
+                  null -> spec.usage == MultiPathUsage.Compile  // can't prove it's for this; include for compile
+                  else -> spec.test(object: ClasspathSpec {
+                    override val name: String? get() = suite?.name
+                    override val usage: MultiPathUsage? get() = usage
+                  })
+                }
+              }
+            }
             .flatMap { it.value.files }
             .map { it.toPath().absolute() }
             .distinct()

@@ -1,18 +1,18 @@
 public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig : elide/runtime/precompiler/Precompiler$Configuration {
 	public static final field Companion Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion;
-	public fun <init> (Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/util/List;ZLjava/util/Set;)V
-	public synthetic fun <init> (Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/util/List;ZLjava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/util/List;ZLjava/util/List;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/util/List;ZLjava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lorg/jetbrains/kotlin/config/ApiVersion;
 	public final fun component2 ()Lorg/jetbrains/kotlin/config/LanguageVersion;
 	public final fun component3 ()Ljava/util/List;
 	public final fun component4 ()Z
-	public final fun component5 ()Ljava/util/Set;
-	public final fun copy (Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/util/List;ZLjava/util/Set;)Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
-	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/util/List;ZLjava/util/Set;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
+	public final fun component5 ()Ljava/util/List;
+	public final fun copy (Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/util/List;ZLjava/util/List;)Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
+	public static synthetic fun copy$default (Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;Lorg/jetbrains/kotlin/config/ApiVersion;Lorg/jetbrains/kotlin/config/LanguageVersion;Ljava/util/List;ZLjava/util/List;ILjava/lang/Object;)Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getApiVersion ()Lorg/jetbrains/kotlin/config/ApiVersion;
-	public final fun getBuiltinPlugins ()Ljava/util/Set;
-	public static final fun getDefaultPlugins (Z)Ljava/util/Set;
+	public final fun getBuiltinPlugins ()Ljava/util/List;
+	public static final fun getDefaultPlugins (Z)Ljava/util/List;
 	public final fun getLanguageVersion ()Lorg/jetbrains/kotlin/config/LanguageVersion;
 	public final fun getPlugins ()Ljava/util/List;
 	public final fun getTestMode ()Z
@@ -22,11 +22,12 @@ public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig : elide/runtime
 
 public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion {
 	public final fun getDEFAULT ()Lelide/runtime/gvm/kotlin/KotlinCompilerConfig;
-	public final fun getDefaultPlugins (Z)Ljava/util/Set;
-	public static synthetic fun getDefaultPlugins$default (Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion;ZILjava/lang/Object;)Ljava/util/Set;
+	public final fun getDefaultPlugins (Z)Ljava/util/List;
+	public static synthetic fun getDefaultPlugins$default (Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion;ZILjava/lang/Object;)Ljava/util/List;
 }
 
 public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin : java/lang/Enum, elide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinPluginConfig {
+	public static final field KAPT Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin;
 	public static final field POWER_ASSERT Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin;
 	public static final field REDACTED Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin;
 	public static final field SERIALIZATION Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin;

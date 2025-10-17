@@ -128,7 +128,7 @@ val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
 val enableNativeTransportV2 = true
 val enableSqliteStatic = true
-val nativeTargetFamily = "wasm"
+val nativeTargetFamily = "native"
 val enableStatic = findProperty("elide.static") == "true"
 val enableStaticJni = true
 val preferShared = false

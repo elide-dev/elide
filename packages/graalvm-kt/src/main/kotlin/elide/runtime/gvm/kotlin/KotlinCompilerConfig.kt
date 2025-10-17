@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.config.ApiVersion
 import org.jetbrains.kotlin.config.LanguageVersion
 import java.nio.file.Path
-import java.util.EnumSet
 import kotlin.collections.orEmpty
 import kotlin.collections.toMutableList
 import kotlin.io.path.absolutePathString
@@ -24,9 +23,13 @@ import elide.runtime.precompiler.Precompiler
 import elide.tooling.jvm.JvmLibraries
 
 // Constant plugin names.
+private const val KAPT_PLUGIN_NAME = "kotlin-annotation-processing-embeddable"
 private const val SERIALIZATION_PLUGIN_NAME = "kotlin-serialization-compiler-plugin-embeddable"
 private const val POWERASSERT_PLUGIN_NAME = "kotlin-power-assert-compiler-plugin-embeddable"
 private const val REDACTED_PLUGIN_NAME = "redacted-compiler-plugin"
+
+// Whether to use legacy plugin flags to kotlinc.
+private const val DEFAULT_USE_LEGACY_PLUGIN_MOUNT = true
 
 /**
  * Configures the Kotlin compiler which is embedded within Elide.
@@ -44,7 +47,7 @@ public data class KotlinCompilerConfig(
   public val languageVersion: LanguageVersion,
   public val plugins: List<KotlinPluginConfig> = emptyList(),
   public val testMode: Boolean = false,
-  public val builtinPlugins: Set<KotlinBuiltinPlugin> = if (testMode) DEFAULT_PLUGINS_TEST else DEFAULT_PLUGINS,
+  public val builtinPlugins: List<KotlinBuiltinPlugin> = if (testMode) DEFAULT_PLUGINS_TEST else DEFAULT_PLUGINS,
 ) : Precompiler.Configuration {
   /**
    * Configures a Kotlin compiler plugin.
@@ -58,6 +61,22 @@ public data class KotlinCompilerConfig(
    */
   @Suppress("MaxLineLength")
   public enum class KotlinBuiltinPlugin : KotlinPluginConfig {
+    KAPT {
+      override fun apply(args: K2JVMCompilerArguments, root: Path) {
+        val artifact = root
+          .resolve("kotlin")
+          .resolve(KotlinLanguage.VERSION)
+          .resolve("lib")
+          .resolve("$KAPT_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar")
+
+        initializePlugin(
+          "org.jetbrains.kotlin.kapt3",
+          args = args,
+          artifact = artifact,
+        )
+      }
+    },
+
     SERIALIZATION {
       override fun apply(args: K2JVMCompilerArguments, root: Path) {
         val artifact = root
@@ -67,6 +86,7 @@ public data class KotlinCompilerConfig(
           .resolve("$SERIALIZATION_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar")
 
         initializePlugin(
+          "kotlinx.serialization",
           args = args,
           artifact = artifact,
         )
@@ -82,6 +102,7 @@ public data class KotlinCompilerConfig(
           .resolve("$POWERASSERT_PLUGIN_NAME-${KotlinLanguage.VERSION}.jar")
 
         initializePlugin(
+          "kotlin-power-assert",
           args = args,
           artifact = artifact,
           options = powerAssertSymbols.map { "function" to it }.toList(),
@@ -98,6 +119,7 @@ public data class KotlinCompilerConfig(
           .resolve("$REDACTED_PLUGIN_NAME-${JvmLibraries.EMBEDDED_REDACTED_VERSION}.jar")
 
         initializePlugin(
+          "dev.zacsweers.redacted.compiler",
           args = args,
           artifact = artifact,
           options = buildList {
@@ -112,21 +134,41 @@ public data class KotlinCompilerConfig(
 
     private companion object {
       @JvmStatic private fun initializePlugin(
+        pluginId: String,
         args: K2JVMCompilerArguments,
         artifact: Path,
-        options: List<Pair<String, String>> = emptyList()
+        options: List<Pair<String, String>> = emptyList(),
+        useLegacyMount: Boolean = DEFAULT_USE_LEGACY_PLUGIN_MOUNT,
       ) {
-        args.pluginConfigurations = (args
-          .pluginConfigurations
-          .orEmpty()
-          .toMutableList() + buildString {
-            append(artifact.absolutePathString())
-            if (options.isNotEmpty()) {
-              append("=")
-              append(options.joinToString(",") { "${it.first}=${it.second}" })
+        if (useLegacyMount) {
+          args.pluginClasspaths = (
+            args.pluginClasspaths
+              .orEmpty()
+              .toMutableList() + artifact.absolutePathString()
+          ).toTypedArray()
+
+          if (options.isNotEmpty()) args.pluginOptions = (
+            args.pluginOptions
+              .orEmpty()
+              .toMutableList() + buildList {
+                options.forEach { (key, value) ->
+                  add("plugin:$pluginId:$key=$value")
+                }
+              }
+          ).toTypedArray()
+        } else {
+          args.pluginConfigurations = (args
+            .pluginConfigurations
+            .orEmpty()
+            .toMutableList() + buildString {
+              append(artifact.absolutePathString())
+              if (options.isNotEmpty()) {
+                append("=")
+                append(options.joinToString(",") { "${it.first}=${it.second}" })
+              }
             }
-          }
-        ).toTypedArray()
+          ).toTypedArray()
+        }
       }
     }
   }
@@ -136,17 +178,18 @@ public data class KotlinCompilerConfig(
     public val DEFAULT: KotlinCompilerConfig = KotlinPrecompiler.currentConfig()
 
     /** Default suite of Kotlin plugins to enable. */
-    private val DEFAULT_PLUGINS: Set<KotlinBuiltinPlugin> = EnumSet.of(
+    private val DEFAULT_PLUGINS: List<KotlinBuiltinPlugin> = listOf(
       KotlinBuiltinPlugin.SERIALIZATION,
+      KotlinBuiltinPlugin.KAPT,
       KotlinBuiltinPlugin.REDACTED,
     )
 
     /** Default suite of Kotlin plugins to enable in test mode. */
-    private val DEFAULT_PLUGINS_TEST: Set<KotlinBuiltinPlugin> = DEFAULT_PLUGINS + EnumSet.of(
+    private val DEFAULT_PLUGINS_TEST: List<KotlinBuiltinPlugin> = DEFAULT_PLUGINS + listOf(
       KotlinBuiltinPlugin.POWER_ASSERT,
     )
 
-    @JvmStatic public fun getDefaultPlugins(test: Boolean = false): Set<KotlinBuiltinPlugin> {
+    @JvmStatic public fun getDefaultPlugins(test: Boolean = false): List<KotlinBuiltinPlugin> {
       return if (test) DEFAULT_PLUGINS_TEST else DEFAULT_PLUGINS
     }
 

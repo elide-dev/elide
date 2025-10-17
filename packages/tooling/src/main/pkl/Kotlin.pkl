@@ -73,7 +73,7 @@ class KotlinCompilerJvmOptions extends KotlinCompilerOptions {
 /// Specifies Kotlin-related features and options within Elide.
 class KotlinFeatureOptions {
   /// Enable or disable annotation processing with kapt.
-  kapt: Boolean = false
+  kapt: Boolean = true
 
   /// Enable or disable annotation processing with KSP.
   ksp: Boolean = false

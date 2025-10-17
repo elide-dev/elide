@@ -23,8 +23,13 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlin.io.path.absolute
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.extension
 import kotlin.io.path.isDirectory
@@ -421,7 +426,8 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
     val processorClasspath = resolver?.classpathProvider(
       object : ClasspathSpec {
-        override val usage: MultiPathUsage = if (tests) MultiPathUsage.TestProcessors else MultiPathUsage.Processors
+        override val usage: MultiPathUsage =
+          if (tests) MultiPathUsage.TestProcessors else MultiPathUsage.Processors
       },
     )?.classpath()
 
@@ -464,6 +470,15 @@ internal class JvmBuildConfigurator : BuildConfigurator {
           )
         )
       }
+    }
+    if (state.manifest.kotlin?.features?.kapt != false) {
+      staticDeps.add(
+        builtinKotlinJarPath(
+          state,
+          JvmLibraries.KOTLIN_KAPT_RUNTIME,
+          KotlinLanguage.VERSION,
+        )
+      )
     }
     if (state.manifest.kotlin?.features?.kotlinx != false) {
       if (state.manifest.kotlin?.features?.coroutines != false) {
@@ -559,6 +574,41 @@ internal class JvmBuildConfigurator : BuildConfigurator {
     val args = Arguments.empty().toMutable().apply {
       // apply arguments
       addAllStrings(kotlincOpts.collect().toList())
+
+      if (state.manifest.kotlin?.features?.kapt == true && processorClasspath?.isNotEmpty() == true) {
+        val kapt3 = "org.jetbrains.kotlin.kapt3"
+        val kaptOutBase = state.layout.artifacts.resolve("codegen").resolve("kapt")
+        val kaptSources = kaptOutBase.resolve("sources")
+        val kaptClasses = kaptOutBase.resolve("classes")
+        val kaptStubs = kaptOutBase.resolve("stubs")
+        coroutineScope {
+          listOf(kaptSources, kaptClasses, kaptStubs).map {
+            async(Dispatchers.IO) {
+              it.createDirectories()
+            }
+          }.awaitAll()
+        }
+        add("-P")
+        add("plugin:$kapt3:aptMode=stubsAndApt")
+        add("-P")
+        add("plugin:$kapt3:correctErrorTypes=true")
+        add("-P")
+        add("plugin:$kapt3:sources=${kaptSources.absolutePathString()}")
+        add("-P")
+        add("plugin:$kapt3:classes=${kaptClasses.absolutePathString()}")
+        add("-P")
+        add("plugin:$kapt3:stubs=${kaptStubs.absolutePathString()}")
+        if (state.manifest.kotlin?.compilerOptions?.freeCompilerArgs?.contains("-Xjvm-enable-preview") == true) {
+          // preview mode must match for kapt
+          add("-P")
+          add("plugin:$kapt3:javacOption=--enable-preview=true")
+        }
+        processorClasspath.forEach { item ->
+          add("-P")
+          add("plugin:$kapt3:apclasspath=${item.path.absolutePathString()}")
+        }
+      }
+      // add kapt classpath
     }.build()
 
     logging.debug { "Kotlin compiler args: '${args.asArgumentList().joinToString(" ")}'" }

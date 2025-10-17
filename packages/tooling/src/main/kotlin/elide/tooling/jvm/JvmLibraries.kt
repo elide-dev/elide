@@ -44,6 +44,7 @@ public object JvmLibraries {
   public const val JUNIT_PLATFORM_CONSOLE: String = "org.junit.platform:junit-platform-console"
   public const val JUNIT_JUPITER_PARAMS: String = "org.junit.jupiter:junit-jupiter-params"
   public const val OPENTEST: String = "org.opentest4j:opentest4j"
+  public const val KOTLIN_KAPT_RUNTIME: String = "org.jetbrains.kotlin:kotlin-annotation-processing-runtime"
   public const val KOTLIN_TEST: String = "org.jetbrains.kotlin:kotlin-test"
   public const val KOTLIN_TEST_JUNIT5: String = "org.jetbrains.kotlin:kotlin-test-junit5"
   public const val KOTLINX_HTML: String = "org.jetbrains.kotlinx:kotlinx-html-jvm"

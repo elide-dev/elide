@@ -507,6 +507,8 @@ public data class ElidePackageManifest(
     val injection: Boolean = true,
     val testing: Boolean = true,
     val kotlinx: Boolean = true,
+    val kapt: Boolean = true,
+    val ksp: Boolean = true,
     val enableDefaultPlugins: Boolean = true,
     val experimental: Boolean = true,
     val incremental: Boolean = true,

@@ -426,7 +426,7 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
       test: Boolean = false,
       enableSerialization: Boolean = true,
       enablePowerAssert: Boolean = test,
-    ): Set<KotlinBuiltinPlugin> {
+    ): List<KotlinBuiltinPlugin> {
       val defaultPlugins = KotlinCompilerConfig.getDefaultPlugins(test = test)
       defaultPlugins.forEach { plugin ->
         if (plugin == KotlinBuiltinPlugin.SERIALIZATION && !enableSerialization) {

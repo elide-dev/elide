@@ -1491,6 +1491,15 @@
       ]
     },
     {
+      "type": "com.sun.tools.javac.util.Context",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "dev.elide.cli.bridge.CliNativeBridge",
       "allDeclaredMethods": true,
       "allPublicMethods": true,
@@ -12101,6 +12110,9 @@
       "type": "org.jetbrains.kotlin.extensions.CollectAdditionalSourcesExtension"
     },
     {
+      "type": "org.jetbrains.kotlin.extensions.CollectAdditionalSourcesExtension[]"
+    },
+    {
       "type": "org.jetbrains.kotlin.extensions.CompilerConfigurationExtension"
     },
     {
@@ -12114,6 +12126,9 @@
     },
     {
       "type": "org.jetbrains.kotlin.extensions.ProcessSourcesBeforeCompilingExtension"
+    },
+    {
+      "type": "org.jetbrains.kotlin.extensions.ProcessSourcesBeforeCompilingExtension[]"
     },
     {
       "type": "org.jetbrains.kotlin.extensions.StorageComponentContainerContributor"
@@ -12130,6 +12145,9 @@
     },
     {
       "type": "org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter[]"
+    },
+    {
+      "type": "org.jetbrains.kotlin.kapt.base.javac.KaptJavaFileManager"
     },
     {
       "type": "org.jetbrains.kotlin.load.java.ErasedOverridabilityCondition"

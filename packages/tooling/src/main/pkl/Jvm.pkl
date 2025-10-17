@@ -5,6 +5,7 @@ module elide.jvm
 import "Base.pkl" as common
 import "Artifacts.pkl" as artifacts
 import "Sources.pkl" as sources
+import "Java.pkl" as _java
 
 /// JVM target levels as integers.
 typealias JvmTargetLevel = "latest" | "stable" | "auto" | Float(1.8) | Float(1.9) | Int8(isBetween(8, 29))
@@ -253,11 +254,6 @@ class JvmFeatures {
   automodules: Boolean = true
 }
 
-/// Controls settings relating to the Java compiler.
-class JavaCompiler {
-  /// Extra flags to pass to the Java compiler.
-  flags: Listing<String> = new {}
-}
 
 /// Controls settings relating to the Java language.
 class JavaLanguage {
@@ -268,7 +264,7 @@ class JavaLanguage {
   release: JvmTarget = "auto"
 
   /// Configuration for the Java compiler.
-  compiler: JavaCompiler = new {}
+  compiler: _java.JavaCompiler = new {}
 }
 
 /// Specifies settings which apply to JVM targets.

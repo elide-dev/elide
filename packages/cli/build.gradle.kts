@@ -244,6 +244,8 @@ val svmModules = "com.oracle.graal.graal_enterprise,com.oracle.svm.svm_enterpris
 
 // JPMS add-on arguments for SVM builder stuff
 val jpmsSvmArgs = listOf(
+  "jdk.compiler" to "com.sun.tools.javac.util",
+  "jdk.compiler" to "com.sun.tools.javac.parser",
   "jdk.graal.compiler" to "jdk.graal.compiler.options",
   "java.base" to "jdk.internal.module",
   "jdk.internal.vm.ci" to "jdk.vm.ci.meta",

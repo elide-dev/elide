@@ -1,7 +1,7 @@
 amends "elide:project.pkl"
 
-name = "elide-test-mavenjvm"
-description = "Example project using Elide with Java and a Maven POM."
+name = "elide-test-java"
+description = "Example project using Elide with Java."
 
 entrypoint {
   "src/main/java/sample/Hello.java"

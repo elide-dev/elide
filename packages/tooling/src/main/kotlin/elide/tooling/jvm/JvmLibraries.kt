@@ -24,14 +24,14 @@ import elide.tooling.project.ElideConfiguredProject
 public object JvmLibraries {
   // @TODO: don't hard-code any of this
   public const val ELIDE_VERSION: String = "1.0.0-beta10-rc9"
-  public const val EMBEDDED_KOTLIN: String = "2.2.20"
+  public const val EMBEDDED_KOTLIN: String = "2.2.21-RC2"
 
   public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
   public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"
   public const val EMBEDDED_APIGUARDIAN_VERSION: String = "1.1.2"
   public const val EMBEDDED_OPENTEST_VERSION: String = "1.3.0"
   public const val EMBEDDED_KOTLINX_HTML_VERSION: String = "0.12.0"
-  public const val EMBEDDED_KOTLINX_CSS_VERSION: String = "2025.7.7"
+  public const val EMBEDDED_KOTLINX_CSS_VERSION: String = "2025.10.8"
   public const val EMBEDDED_KOTLINX_IO_VERSION: String = "0.8.0"
   public const val EMBEDDED_COROUTINES_VERSION: String = "1.10.2"
   public const val EMBEDDED_SERIALIZATION_VERSION: String = "1.9.0"

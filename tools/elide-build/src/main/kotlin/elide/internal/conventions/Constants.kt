@@ -84,7 +84,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.2.20"
+    const val KOTLIN_SDK_PIN = "2.2.21-RC2"
 
     /** Constant: pinned version of Kotlin Coroutines. */
     const val COROUTINES = "1.10.2"
@@ -99,7 +99,7 @@ public object Constants {
     const val GROOVY = "4.0.18"
 
     /** Constant: defines the Jacoco version in use. */
-    const val JACOCO = "0.8.13"
+    const val JACOCO = "0.8.14"
 
     /** Constant: pinned version of Buf. */
     const val BUF = "1.28.1"
@@ -120,10 +120,10 @@ public object Constants {
     const val JVM_DEFAULT = "21"
 
     /** Property: JVM bytecode target expected for the toolchain. */
-    const val JVM_TOOLCHAIN_DEFAULT = "24"
+    const val JVM_TOOLCHAIN_DEFAULT = "25"
 
     /** GraalVM metadata repository version. */
-    const val GRAALVM_METADATA = "0.3.26"
+    const val GRAALVM_METADATA = "0.3.28"
 
     /** Version to pin for Diktat. */
     const val DIKTAT = "2.0.0"
@@ -156,7 +156,7 @@ public object Constants {
     const val JLINE = "3.28.0"
 
     /** Okio version. */
-    const val OKIO = "3.15.0"
+    const val OKIO = "3.16.2"
 
     /** GraalVM version. */
     const val GRAALVM = "25.0.0"

@@ -1,14 +1,18 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
-org.graalvm.compiler:compiler:24.2.2=compileClasspath
-org.graalvm.nativeimage:native-image-base:24.2.2=compileClasspath
-org.graalvm.nativeimage:objectfile:24.2.2=compileClasspath
-org.graalvm.nativeimage:pointsto:24.2.2=compileClasspath
-org.graalvm.nativeimage:svm:24.2.2=compileClasspath
-org.graalvm.sdk:collections:24.2.2=compileClasspath
-org.graalvm.sdk:nativeimage:24.2.2=compileClasspath
-org.graalvm.sdk:word:24.2.2=compileClasspath
-org.graalvm.truffle:truffle-compiler:24.2.2=compileClasspath
-org.slf4j:slf4j-api:2.0.16=compileClasspath,runtimeClasspath
+org.graalvm.compiler:compiler:25.0.0=compileClasspath
+org.graalvm.espresso:espresso-svm:25.0.0=compileClasspath
+org.graalvm.nativeimage:native-image-base:25.0.0=compileClasspath
+org.graalvm.nativeimage:objectfile:25.0.0=compileClasspath
+org.graalvm.nativeimage:pointsto:25.0.0=compileClasspath
+org.graalvm.nativeimage:svm-capnproto-runtime:25.0.0=compileClasspath
+org.graalvm.nativeimage:svm-configure:25.0.0=compileClasspath
+org.graalvm.nativeimage:svm:25.0.0=compileClasspath
+org.graalvm.sdk:collections:25.0.0=compileClasspath
+org.graalvm.sdk:nativeimage-libgraal:25.0.0=compileClasspath
+org.graalvm.sdk:nativeimage:25.0.0=compileClasspath
+org.graalvm.sdk:word:25.0.0=compileClasspath
+org.graalvm.truffle:truffle-compiler:25.0.0=compileClasspath
+org.slf4j:slf4j-api:2.0.17=compileClasspath,runtimeClasspath
 empty=

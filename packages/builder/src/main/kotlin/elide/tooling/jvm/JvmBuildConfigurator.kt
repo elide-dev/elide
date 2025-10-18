@@ -572,6 +572,9 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
     val kotlincOpts = state.manifest.kotlin?.compilerOptions ?: KotlinJvmCompilerOptions()
     val args = Arguments.empty().toMutable().apply {
+      // @TODO eliminate this
+      add("-Xskip-prerelease-check")
+
       // apply arguments
       addAllStrings(kotlincOpts.collect().toList())
 

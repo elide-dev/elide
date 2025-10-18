@@ -35,7 +35,7 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
   override val initialized: Boolean
     get() = _initialized
 
-  private val logger: Logger = Logging.of(SecretsImpl::class)
+  private val logger: Logger = Logging.of(Secrets::class)
   private var passphraseOverride: String? = null
 
   override suspend fun init(path: Path, manifest: ElidePackageManifest?) {

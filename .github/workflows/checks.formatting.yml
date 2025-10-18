@@ -131,7 +131,7 @@ jobs:
       - name: "Setup: Elide"
         uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
         with:
-          version: "1.0.0-beta9"
+          version: "1.0.0-beta10"
       - name: "Setup: Dependencies"
         run: pnpm install --no-lockfile --no-frozen-lockfile
       - name: "Setup: Rust"

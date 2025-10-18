@@ -11,14 +11,14 @@
       "name": "java",
       "description": "Pure-Java project with Elide",
       "languages": ["Java"],
-      "files": ["elide.pkl", "src/main/java/sample/Hello.java", "src/test/sample/HelloTest.java"]
+      "files": ["elide.pkl", "src/main/java/sample/Hello.java", "src/test/java/sample/HelloTest.java"]
     },
     {
       "name": "mavenjvm",
       "description": "Maven/Java project with Elide",
       "languages": ["Java"],
       "noManifest": true,
-      "files": ["pom.xml", "src/main/java/sample/Hello.java", "src/main/test/sample/HelloTest.java"]
+      "files": ["pom.xml", "src/main/java/sample/Hello.java", "src/test/java/sample/HelloTest.java"]
     },
     {
       "name": "containers",

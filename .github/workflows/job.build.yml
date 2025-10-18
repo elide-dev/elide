@@ -140,7 +140,7 @@ name: Framework
 
 env:
   RUST_BACKTRACE: full
-  ELIDE_VERSION: "1.0.0-beta9"
+  ELIDE_VERSION: "1.0.0-beta10"
   SCCACHE_DIRECT: "true"
   RUSTC_WRAPPER: "sccache"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -249,7 +249,7 @@ jobs:
       - name: "Setup: Elide"
         uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
         with:
-          version: "1.0.0-beta9"
+          version: "1.0.0-beta10"
       - name: "Setup: uv"
         uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
       - name: "Setup: Dependencies"

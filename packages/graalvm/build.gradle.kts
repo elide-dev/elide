@@ -782,6 +782,19 @@ val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
   outputs.dir(targetDir)
 }
 
+val buildRustNativesForHostDebug by tasks.registering(Exec::class) {
+  workingDir(rootDir)
+  dependsOn("buildThirdPartyNatives")
+
+  executable = "cargo"
+  args(baseCargoFlags)
+  environment("JAVA_HOME", System.getProperty("java.home"))
+  environment("MACOSX_DEPLOYMENT_TARGET", "15.0")
+
+  outputs.upToDateWhen { true }
+  outputs.dir(targetDir)
+}
+
 val buildRustNativesForHost by tasks.registering(Exec::class) {
   workingDir(rootDir)
   dependsOn("buildThirdPartyNatives")

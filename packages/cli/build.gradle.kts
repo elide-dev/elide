@@ -2411,11 +2411,14 @@ tasks {
 
   processResources {
     dependsOn(
-      ":packages:graalvm:buildRustNativesForHost",
+      ":packages:graalvm:buildRustNativesForHostDebug",
       prepKotlinResources,
       packSamples,
       allSamplePackTasks,
     )
+    if (nativesType == "release") {
+      dependsOn(":packages:graalvm:buildRustNativesForHostRelease")
+    }
     filterResources()
 
     from(builtSamples) {

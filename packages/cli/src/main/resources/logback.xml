@@ -105,6 +105,7 @@
   <logger name="elide.tooling.jvm.JvmBuildConfigurator" level="warn" />
   <logger name="elide.tooling.AbstractTool" level="warn" />
   <logger name="elide.exec.ActionScope" level="warn" />
+  <logger name="elide.secrets.Secrets" level="warn" />
   <logger name="io.micronaut.context.env.DefaultEnvironment" level="off" />
   <logger name="elide.tooling.jvm.JavaCompiler" level="warn" />
 

@@ -54,7 +54,7 @@ private fun DokkaTask.configureDokkaForProject(conventions: ElideBuildExtension,
     val projectVersion = project.version as String
     pluginConfiguration<VersioningPlugin, VersioningConfiguration> {
       version = projectVersion
-      versionsOrdering = listOf("1.0.0-beta7")
+      versionsOrdering = listOf("1.0.0-beta10")
       olderVersionsDir = project.file("project/docs/versions")
       olderVersions = emptyList()
       renderVersionsNavigationOnAllPages = true

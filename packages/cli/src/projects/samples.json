@@ -18,7 +18,7 @@
       "description": "Maven/Java project with Elide",
       "languages": ["Java"],
       "noManifest": true,
-      "files": ["pom.xml", "src/main/java/sample/Hello.java", "src/test/java/sample/HelloTest.java"]
+      "files": ["pom.xml", "src/main/java/sample/Hello.java"]
     },
     {
       "name": "containers",

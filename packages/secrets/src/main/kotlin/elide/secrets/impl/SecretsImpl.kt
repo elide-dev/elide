@@ -57,7 +57,7 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
       val profileName = System.getenv(SecretValues.PROFILE_OVERRIDE_ENVIRONMENT_VARIABLE) ?: manifest?.secrets?.profile
       profileName?.let { loadProfile(it) }
       _initialized = true
-    } else logger.warn(SecretValues.SECRETS_NOT_INITIALIZED_WARNING)
+    } else logger.debug(SecretValues.SECRETS_NOT_INITIALIZED_WARNING)
   }
 
   override fun listProfiles(): Set<String> = SecretsState.metadata.profiles.keys

@@ -1195,6 +1195,11 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.buffer.Unpooled",
   "io.netty.buffer.UnpooledByteBufAllocator",
   "io.netty.buffer.EmptyByteBuf",
+  "io.netty.channel.kqueue.KQueueEventArray",
+  "io.netty.channel.kqueue.Native",
+  "io.netty.channel.kqueue.KQueue",
+  "io.netty.channel.kqueue.KQueueIoHandler",
+  "io.netty.channel.kqueue.KQueueEventLoop",
 
   // --- Netty: Native Crypto -----
 
@@ -2406,11 +2411,14 @@ tasks {
 
   processResources {
     dependsOn(
-      ":packages:graalvm:buildRustNativesForHost",
+      ":packages:graalvm:buildRustNativesForHostDebug",
       prepKotlinResources,
       packSamples,
       allSamplePackTasks,
     )
+    if (nativesType == "release") {
+      dependsOn(":packages:graalvm:buildRustNativesForHostRelease")
+    }
     filterResources()
 
     from(builtSamples) {

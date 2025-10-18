@@ -572,6 +572,9 @@ internal class JvmBuildConfigurator : BuildConfigurator {
 
     val kotlincOpts = state.manifest.kotlin?.compilerOptions ?: KotlinJvmCompilerOptions()
     val args = Arguments.empty().toMutable().apply {
+      // @TODO eliminate this
+      add("-Xskip-prerelease-check")
+
       // apply arguments
       addAllStrings(kotlincOpts.collect().toList())
 
@@ -638,7 +641,10 @@ internal class JvmBuildConfigurator : BuildConfigurator {
       }.map { it.path.toFile() }
 
       incrementalCompilation = state.manifest.kotlin?.features?.incremental != false
-      jvmTarget = effectiveJvmTarget.argValue
+      jvmTarget = when (val tgt = effectiveJvmTarget.argValue) {
+        "auto" -> ElidePackageManifest.JvmTarget.DEFAULT.argValue
+        else -> tgt
+      }
 
       // handle built-in plugins
       if (state.manifest.kotlin?.features?.enableDefaultPlugins != false) {

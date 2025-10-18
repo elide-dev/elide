@@ -117,6 +117,7 @@ val copyNative by tasks.registering(Copy::class) {
   inputs.file(sqliteJdbcLib)
   outputs.file(libFileName)
   dependsOn(":packages:graalvm:buildRustNativesForHost")
+  dependsOn(":packages:graalvm:buildRustNativesForHostDebug")
 }
 
 val nativeResources: String =

@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Codespace"
 LABEL org.opencontainers.image.description="Elide runtime within a GitHub Codespace"
-LABEL org.opencontainers.image.version=1.0.0-beta1
+LABEL org.opencontainers.image.version=1.0.0-beta10
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=mcr.microsoft.com/devcontainers/base
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/.devcontainer/Elide.devcontainer

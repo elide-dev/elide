@@ -58,7 +58,7 @@
       "files": [
         "README.md",
         "elide.pkl",
-        "package-lock.kdl",
+
         "wrangler.toml",
         "src/example.mjs",
         "src/favicon.ico",

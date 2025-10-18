@@ -3,7 +3,7 @@ FROM debian:sid-slim@sha256:3e62bb802f97815491469a127cfef29a8266977b8fde5f0c0954
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime with Bash"
 LABEL org.opencontainers.image.description="Elide runtime CLI as a container image, with Bash and several tools"
-LABEL org.opencontainers.image.version=1.0.0-beta9
+LABEL org.opencontainers.image.version=1.0.0-beta10
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=debian:sid-slim
 LABEL org.opencontainers.image.base.digest=sha256:7e8e5af19ae9e22c326f52aa30a65dd635c0e45430e322fc2aa64455c9ad624c
@@ -28,7 +28,7 @@ RUN apt-get update \
 
 USER dev
 
-ENV ELIDE_VERSION=1.0.0-beta9
+ENV ELIDE_VERSION=1.0.0-beta10
 
 RUN ELIDE_ARCH=$(uname -m) \
     && if [ "$ELIDE_ARCH" = "x86_64" ]; then \

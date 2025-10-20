@@ -51,7 +51,7 @@ jobs:
         with:
           node-version: 23
       - name: "Setup: Bun"
-        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
+        uses: step-security/setup-bun@81c6b5758214d7e8b68a403c6a55a040e9b8879a # v2.0.3
         with:
           bun-version: "1.2.14"
       - name: "Setup: PNPM"

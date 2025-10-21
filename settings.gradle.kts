@@ -207,6 +207,7 @@ include(
   ":packages:http",
   ":packages:local-ai",
   ":packages:platform",
+  ":packages:progress",
   ":packages:runner",
   ":packages:secrets",
   ":packages:server",

@@ -28,4 +28,3 @@ fi
 if [ "$arch" = "x86_64" ]; then
   arch="amd64"
 fi
-platform="$platform-$arch"

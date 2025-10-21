@@ -40,7 +40,6 @@ fi
 if [[ "$@" == *"--publish"* ]]; then
   publish=true
   release=true
-  dry=false
 fi
 
  if [[ "$@" == *"--release"* ]]; then
@@ -54,10 +53,6 @@ if [[ "$release" == true ]]; then
     pgo=true
     nativeTask=nativeOptimizedCompile
     buildMode=release
-fi
-
-if [[ "$dry" == true ]]; then
-  publishTask=publishAllPublicationsToStageRepository
 fi
 
 # in release mode, tell gradle to build the docs and enable signing

@@ -13,8 +13,7 @@
 #
 
 set -euo pipefail
-source tools/scripts/release/version-set.sh
-source tools/scripts/release/platform-set.sh
+source tools/scripts/release/commons.sh
 
 set +x
 
@@ -77,7 +76,7 @@ fi
 
 echo "- Stamping releases (variant: $variant / platform: $platform)..."
 
-if [ "$hostPlatform" = "darwin" ]; then
+if [ "$(uname -o)" = "Darwin" ]; then
   SHA256SUM="gsha256sum"
   SHA512SUM="gsha512sum"
 else

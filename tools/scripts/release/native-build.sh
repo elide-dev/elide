@@ -22,7 +22,6 @@ set +x
 # --release: Builds in local release mode.
 # --publish: Publish the built artifacts to the remote repositories and package managers.
 # --help: Show a help message.
-
 dry=true
 publish=false
 release=false
@@ -30,14 +29,8 @@ release=false
 stamp=false
 clean=false
 pgo=false
-provenance=false
 help=false
-clean=true
-thirdParty=true
 nativeTask=nativeCompile
-platform="$(uname -s | tr '[:upper:]' '[:lower:]')"
-arch="$(uname -m | sed 's/x86_64/amd64/')"
-
 publishTask=publishAllPublicationsToStageRepository
 
 if [["$@" == *"--dry"*]]; then
@@ -53,10 +46,6 @@ fi
  if [[ "$@" == *"--release"* ]]; then
    release=true
    clean=true
-fi
-
-if [[ "$@" == *"--version"* ]]; then
-  version=$(echo "$@" | grep -oP '(?<=--version\s)[^\s]+')
 fi
 
 if [[ "$release" == true ]]; then
@@ -112,3 +101,5 @@ set -x;
     $GRADLE_PROPS \
     :packages:cli:$nativeTask;
 set +x;
+
+exit 0

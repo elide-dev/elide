@@ -1,9 +1,25 @@
+public final class elide/progress/AppendOutput : elide/progress/TaskEvent {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/progress/AppendOutput;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getOutput ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
 public abstract interface class elide/progress/Progress {
 	public static final field Companion Lelide/progress/Progress$Companion;
 	public abstract fun addTask (Ljava/lang/String;ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun addTask$default (Lelide/progress/Progress;Ljava/lang/String;ILjava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getRunning ()Z
 	public abstract fun getTask (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getTaskFlow (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getTasks ()Ljava/util/List;
 	public abstract fun start (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun stop (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -16,46 +32,99 @@ public final class elide/progress/Progress$Companion {
 }
 
 public abstract interface class elide/progress/ProgressManager {
-	public abstract fun addTask (Ljava/lang/String;ILjava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun addTask$default (Lelide/progress/ProgressManager;Ljava/lang/String;ILjava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun getProgress ()Lelide/progress/Progress;
-	public abstract fun start (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun stop (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun register (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/CoroutineScope;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun register (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun register$default (Lelide/progress/ProgressManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/CoroutineScope;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun register$default (Lelide/progress/ProgressManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun stop (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun stopAll (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun track (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
-public abstract interface class elide/progress/TaskCallback {
-	public fun appendOutput (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun appendOutput (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun fail (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun fail$default (Lelide/progress/TaskCallback;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public abstract fun getIndex ()I
-	public abstract fun getProgress ()Lelide/progress/Progress;
-	public abstract fun getTask ()Lelide/progress/TrackedTask;
-	public fun setPosition (ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun setPosition (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun setStatus (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun setStatus (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun stop (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun subscribe (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/CoroutineScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class elide/progress/TaskEvent {
-	public fun <init> ()V
-	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Z)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ljava/lang/Integer;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun component4 ()Z
-	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Z)Lelide/progress/TaskEvent;
-	public static synthetic fun copy$default (Lelide/progress/TaskEvent;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;ZILjava/lang/Object;)Lelide/progress/TaskEvent;
+public final class elide/progress/ProgressPosition : elide/progress/TaskEvent {
+	public static final synthetic fun box-impl (I)Lelide/progress/ProgressPosition;
+	public static fun constructor-impl (I)I
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getFailed ()Z
-	public final fun getMessage ()Ljava/lang/String;
-	public final fun getPosition ()Ljava/lang/Integer;
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getPosition ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class elide/progress/StatusMessage : elide/progress/TaskEvent {
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/progress/StatusMessage;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
 	public final fun getStatus ()Ljava/lang/String;
 	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
 	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/progress/TaskCompleted : elide/progress/TaskEvent {
+	public static final synthetic fun box-impl (Z)Lelide/progress/TaskCompleted;
+	public static fun constructor-impl (Z)Z
+	public static synthetic fun constructor-impl$default (ZILkotlin/jvm/internal/DefaultConstructorMarker;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ZLjava/lang/Object;)Z
+	public static final fun equals-impl0 (ZZ)Z
+	public final fun getCompleted ()Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Z)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Z)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Z
+}
+
+public abstract interface class elide/progress/TaskEvent {
+}
+
+public final class elide/progress/TaskEventKt {
+	public static final fun emitCompleted (Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun emitFailed (Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun emitOutput (Lkotlinx/coroutines/flow/FlowCollector;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun emitProgress (Lkotlinx/coroutines/flow/FlowCollector;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun emitStarted (Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun emitStatus (Lkotlinx/coroutines/flow/FlowCollector;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/progress/TaskFailed : elide/progress/TaskEvent {
+	public static final synthetic fun box-impl (Z)Lelide/progress/TaskFailed;
+	public static fun constructor-impl (Z)Z
+	public static synthetic fun constructor-impl$default (ZILkotlin/jvm/internal/DefaultConstructorMarker;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ZLjava/lang/Object;)Z
+	public static final fun equals-impl0 (ZZ)Z
+	public final fun getFailed ()Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Z)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Z)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Z
+}
+
+public final class elide/progress/TaskStarted : elide/progress/TaskEvent {
+	public static final synthetic fun box-impl (Z)Lelide/progress/TaskStarted;
+	public static fun constructor-impl (Z)Z
+	public static synthetic fun constructor-impl$default (ZILkotlin/jvm/internal/DefaultConstructorMarker;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ZLjava/lang/Object;)Z
+	public static final fun equals-impl0 (ZZ)Z
+	public final fun getStarted ()Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Z)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Z)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Z
 }
 
 public final class elide/progress/TaskState : java/lang/Enum {

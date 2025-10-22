@@ -21,8 +21,8 @@ name: Release
           type: boolean
           default: true
     push:
-      tags:
-        - 'v*'
+      branches:
+        - "chore/release-pipeline"
 
 # Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:

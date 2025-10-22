@@ -15,17 +15,15 @@ package elide.progress.impl
 import com.github.ajalt.mordant.animation.Animation
 import com.github.ajalt.mordant.animation.animation
 import com.github.ajalt.mordant.terminal.Terminal
-import elide.progress.Progress
-import elide.progress.ProgressRenderer
-import elide.progress.ProgressState
-import elide.progress.TrackedTask
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import elide.progress.Progress
+import elide.progress.ProgressRenderer
+import elide.progress.ProgressState
+import elide.progress.TrackedTask
 
 /**
  * Implementation of [Progress].
@@ -37,45 +35,41 @@ internal class ProgressImpl(
   private val terminal: Terminal,
   tasks: List<TrackedTask> = emptyList()
 ) : Progress {
-  private val _tasks: MutableList<MutableStateFlow<TrackedTask>> = tasks.map { MutableStateFlow(it) }.toMutableList()
-  private var animation: Animation<ProgressState>? = null
-  private val taskLock: Mutex = Mutex()
-  private val animationLock: Mutex = Mutex()
-  override val tasks: List<TrackedTask> get() = runBlocking { taskLock.withLock { _tasks.map { it.value } } }
-  override val running: Boolean get() = runBlocking { animationLock.withLock { animation != null } }
+  private val _tasks: MutableList<MutableStateFlow<TrackedTask>> =
+    CopyOnWriteArrayList(tasks.map { MutableStateFlow(it) })
+  private var animation: MutableStateFlow<Animation<ProgressState>?> = MutableStateFlow(null)
+  override val tasks: List<TrackedTask> get() = _tasks.map { it.value }
+
+  override val running: Boolean get() = animation.value != null
 
   override suspend fun start() {
-    animationLock.withLock {
-      if (animation != null) throw IllegalStateException("Already started")
-      animation = terminal.animation { ProgressRenderer.render(it) }
-    }
+    if (animation.value != null) throw IllegalStateException("Already started")
+    animation.value = terminal.animation { ProgressRenderer.render(it) }
     updateAnimation()
   }
 
-  override suspend fun stop() =
-    animationLock.withLock {
-      animation?.stop() ?: throw IllegalStateException("Not started")
-      animation = null
-    }
+  override suspend fun stop() {
+    animation.value?.stop() ?: throw IllegalStateException("Already stopped")
+    animation.value = null
+  }
 
-  override suspend fun getTask(index: Int): TrackedTask = taskLock.withLock { _tasks[index] }.value
+  override suspend fun getTask(index: Int): TrackedTask = _tasks[index].value
 
-  override suspend fun getTaskFlow(index: Int): StateFlow<TrackedTask> =
-    taskLock.withLock { _tasks[index].asStateFlow() }
+  override suspend fun getTaskFlow(index: Int): StateFlow<TrackedTask> = _tasks[index].asStateFlow()
 
   override suspend fun addTask(name: String, target: Int, status: String): Int {
-    val task = TrackedTask(name, target, status)
-    val index = taskLock.withLock { _tasks.size.apply { _tasks.add(MutableStateFlow(task)) } }
+    val stateFlow = MutableStateFlow(TrackedTask(name, target, status))
+    _tasks.add(stateFlow)
     updateAnimation()
-    return index
+    return _tasks.indexOf(stateFlow)
   }
 
   override suspend fun updateTask(index: Int, block: TrackedTask.() -> TrackedTask) {
-    taskLock.withLock { _tasks[index] }.update(block)
+    _tasks[index].update(block)
     updateAnimation()
   }
 
-  private suspend fun updateAnimation() {
-    animationLock.withLock { animation }?.update(ProgressState(name, taskLock.withLock { _tasks.map { it.value } }))
+  private fun updateAnimation() {
+    animation.value?.update(ProgressState(name, tasks))
   }
 }

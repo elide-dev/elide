@@ -38,8 +38,8 @@ dependencies {
   api(projects.packages.base)
   api(projects.packages.core)
   api(projects.packages.tooling)
-
   api(projects.packages.terminal)
+
   api(libs.bundles.mordant)
 
   testImplementation(projects.packages.test)

@@ -13,7 +13,6 @@
 package elide.progress
 
 import kotlin.experimental.ExperimentalTypeInference
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
@@ -37,7 +36,6 @@ public interface ProgressManager {
     name: String,
     target: Int = 1,
     status: String = "",
-    scope: CoroutineScope,
     events: Flow<TaskEvent>,
   ): StateFlow<TrackedTask>
 
@@ -49,18 +47,17 @@ public interface ProgressManager {
 
   /** Stops all tasks and rendering the animation. */
   public suspend fun stopAll()
-
-  /**
-   * Adds a new task with [id] to the [progress] that listens to [flow] { [block] } and returns a [StateFlow] for the
-   * state of that task. If [target] is `1`, the task is rendered as indeterminate.
-   */
-  @OptIn(ExperimentalTypeInference::class)
-  public suspend fun register(
-    id: String,
-    name: String,
-    target: Int = 1,
-    status: String = "",
-    scope: CoroutineScope,
-    @BuilderInference block: suspend FlowCollector<TaskEvent>.() -> Unit
-  ): StateFlow<TrackedTask> = register(id, name, target, status, scope, flow(block))
 }
+
+/**
+ * Adds a new task with [id] to the [Progress] that listens to [flow] { [block] } and returns a [StateFlow] for the
+ * state of that task. If [target] is `1`, the task is rendered as indeterminate.
+ */
+@OptIn(ExperimentalTypeInference::class)
+public suspend fun ProgressManager.register(
+  id: String,
+  name: String,
+  target: Int = 1,
+  status: String = "",
+  @BuilderInference block: suspend FlowCollector<TaskEvent>.() -> Unit
+): StateFlow<TrackedTask> = register(id, name, target, status, flow(block))

@@ -13,10 +13,12 @@
 package elide.progress
 
 import org.junit.jupiter.api.assertThrows
+import java.util.concurrent.ConcurrentLinkedQueue
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -33,61 +35,87 @@ import elide.testing.annotations.TestCase
 class ProgressManagerTest : ProgressTestBase() {
   @Test
   fun `progress manager test`() {
-    val manager = Progress.managed("managed test progress", mockTerminal)
+    val manager: ProgressManager
     runBlocking {
-      coroutineScope {
-        val flow: MutableSharedFlow<TaskEvent> = MutableSharedFlow()
-        val task: StateFlow<TrackedTask> = manager.register("task1", "task 1", 30, "", this, flow)
-        assertThrows<IllegalArgumentException> { manager.register("task1", "task 1", 30, "", this, flow) }
-        assertThrows<IllegalArgumentException> { manager.register("task", "task", -1, "", this, flow) }
-        assertEquals(-1, task.value.position)
-        flow.emit(TaskStarted(false))
-        assertEquals(-1, task.value.position)
-        flow.emitStarted()
-        assertEquals(0, task.value.position)
-        flow.emitStarted()
-        assertEquals(0, task.value.position)
-        flow.emitProgress(1)
-        assertEquals(1, task.value.position)
-        flow.emitProgress(15)
-        assertEquals(15, task.value.position)
-        flow.emitProgress(1)
-        assertEquals(15, task.value.position)
-        flow.emitStatus("status message")
-        assertEquals("status message", task.value.status)
-        assertEquals(0, task.value.output.size)
-        flow.emitOutput("console output")
-        assertEquals(1, task.value.output.size)
-        assertEquals("console output", task.value.output.values.first())
-        flow.emitOutput("more console output")
-        assertEquals(2, task.value.output.size)
-        assertFalse(task.value.failed)
-        flow.emit(TaskFailed(false))
-        assertFalse(task.value.failed)
-        flow.emitFailed()
-        assertTrue(task.value.failed)
-        assertEquals(15, task.value.position)
-        flow.emit(TaskCompleted(false))
-        assertEquals(15, task.value.position)
-        flow.emitCompleted()
-        assertEquals(30, task.value.position)
-        manager.register("task2", "task 2", 30, "", this) { flow.emitCompleted() }
-        assertTrue(manager.progress.running)
-        runBlocking { manager.stop("task1") }
-        assertFalse(manager.progress.running)
-        manager.register("task3", "task 3", 30, "", this, MutableSharedFlow())
-        manager.register("task4", "task 4", 30, "", this, MutableSharedFlow())
-        assertTrue(manager.progress.running)
-        manager.stopAll()
-        assertFalse(manager.progress.running)
-        val task5 = manager.register("task5", "task 5", 30, "", this) { throw IllegalArgumentException("test") }
-        assertEquals(30, task5.value.position)
-        assertTrue(task5.value.failed)
-        val task6 = manager.register("task6", "task 6", 30, "", this) { throw CancellationException("test") }
-        assertEquals(-1, task6.value.position)
-        assertFalse(task6.value.failed)
+      manager = Progress.managed("managed test progress", mockTerminal)
+      val flow: MutableSharedFlow<TaskEvent> = MutableSharedFlow()
+      val task: StateFlow<TrackedTask> = manager.register("task1", "task 1", 30, "", flow)
+      assertThrows<IllegalArgumentException> { manager.register("task1", "task 1", 30, "", flow) }
+      assertThrows<IllegalArgumentException> { manager.register("task", "task", -1, "", flow) }
+      assertEquals(-1, task.value.position)
+      val taskAssertions =
+        ConcurrentLinkedQueue(
+          assertions {
+            +Assertion(-1) { position }
+            +Assertion(0) { position }
+            +Assertion(1) { position }
+            +Assertion(15) { position }
+            +listOf(Assertion("status message") { status }, Assertion(0) { output.size })
+            +listOf(Assertion(1) { output.size }, Assertion("console output") { output.values.first() })
+            +listOf(Assertion(2) { output.size }, Assertion(false) { failed })
+            +listOf(Assertion(true) { failed }, Assertion(15) { position })
+            +Assertion(30) { position }
+          },
+        )
+      launch {
+        task.collect { task ->
+          taskAssertions.remove().forEach { assertEquals(it.expected, it.actual(task)) }
+          if (taskAssertions.isEmpty()) cancel()
+        }
+      }
+      flow.emit(TaskStarted(false))
+      flow.emitStarted()
+      flow.emitStarted()
+      flow.emitProgress(1)
+      flow.emitProgress(15)
+      flow.emitProgress(1)
+      flow.emitStatus("status message")
+      flow.emitOutput("console output")
+      flow.emitOutput("more console output")
+      flow.emit(TaskFailed(false))
+      flow.emitFailed()
+      flow.emit(TaskCompleted(false))
+      flow.emitCompleted()
+      manager.register("task2", "task 2", 30, "") { flow.emitCompleted() }
+      manager.stop("task1")
+      manager.register("task3", "task 3", 30, "", MutableSharedFlow())
+      manager.register("task4", "task 4", 30, "", MutableSharedFlow())
+      manager.stopAll()
+      val task5 = manager.register("task5", "task 5", 30, "") { throw IllegalArgumentException("test") }
+      launch {
+        task5.collect { task ->
+          assertEquals(30, task.position)
+          assertTrue(task.failed)
+          cancel()
+        }
+      }
+      val task6 = manager.register("task6", "task 6", 30, "") { throw CancellationException("test") }
+      launch {
+        task6.collect { task ->
+          assertEquals(-1, task.position)
+          assertFalse(task.failed)
+          cancel()
+        }
       }
     }
     assertFalse(manager.progress.running)
+  }
+
+  private data class Assertion<R>(val expected: R, val actual: TrackedTask.() -> R)
+
+  private class AssertionBuilder() {
+    val list: MutableList<List<Assertion<*>>> = mutableListOf()
+
+    operator fun <T> Assertion<T>.unaryPlus() {
+      list.add(listOf(this))
+    }
+
+    operator fun List<Assertion<*>>.unaryPlus() {
+      list.add(this)
+    }
+  }
+
+  private fun assertions(block: AssertionBuilder.() -> Unit): List<List<Assertion<*>>> {
+    return AssertionBuilder().apply(block).list.toList()
   }
 }

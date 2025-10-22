@@ -33,13 +33,16 @@ public final class elide/progress/Progress$Companion {
 
 public abstract interface class elide/progress/ProgressManager {
 	public abstract fun getProgress ()Lelide/progress/Progress;
-	public fun register (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/CoroutineScope;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun register (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun register$default (Lelide/progress/ProgressManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/CoroutineScope;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static synthetic fun register$default (Lelide/progress/ProgressManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun register (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun register$default (Lelide/progress/ProgressManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlinx/coroutines/flow/Flow;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun stop (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun stopAll (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun track (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/progress/ProgressManagerKt {
+	public static final fun register (Lelide/progress/ProgressManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun register$default (Lelide/progress/ProgressManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class elide/progress/ProgressPosition : elide/progress/TaskEvent {

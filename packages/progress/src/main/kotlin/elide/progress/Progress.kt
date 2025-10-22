@@ -45,7 +45,7 @@ public interface Progress {
   /** Adds a new task and returns its index. If [target] is `1`, the task is rendered as indeterminate. */
   public suspend fun addTask(name: String, target: Int = 1, status: String = ""): Int
 
-  /** Updates a task with the specified index. */
+  /** Updates the state of a task at [index]. */
   public suspend fun updateTask(index: Int, block: TrackedTask.() -> TrackedTask)
 
   public companion object {

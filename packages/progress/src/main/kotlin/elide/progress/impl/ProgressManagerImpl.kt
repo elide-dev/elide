@@ -14,17 +14,14 @@ package elide.progress.impl
 
 import com.github.ajalt.mordant.terminal.Terminal
 import elide.progress.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 /**
  * Implementation of [ProgressManager].
@@ -33,59 +30,51 @@ import kotlinx.coroutines.sync.withLock
  */
 internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressManager {
   override val progress: Progress = ProgressImpl(name, terminal, emptyList())
-  private val tasks: MutableMap<String, TaskData> = mutableMapOf()
-  private val taskLock: Mutex = Mutex()
+  private val tasks: MutableMap<String, TaskData> = ConcurrentHashMap()
+  private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
   override suspend fun register(
     id: String,
     name: String,
     target: Int,
     status: String,
-    scope: CoroutineScope,
     events: Flow<TaskEvent>,
   ): StateFlow<TrackedTask> {
     if (target <= 0) throw IllegalArgumentException("Target must be a non-zero positive integer")
-    taskLock.withLock {
-      if (id in tasks) throw IllegalArgumentException("Task with id \"$id\" is already registered.")
-      TaskData(progress.addTask(name, target, status)).apply {
-        tasks.put(id, this)
-        job = scope.launchJob(this, events)
-      }
-    }
+    if (id in tasks) throw IllegalArgumentException("Task with id \"$id\" is already registered.")
+    tasks.put(id, launchJob(id, progress.addTask(name, target, status), events))
     if (!progress.running) progress.start()
     return track(id)!!
   }
 
-  override suspend fun track(id: String): StateFlow<TrackedTask>? =
-    taskLock.withLock { tasks[id] }?.let { progress.getTaskFlow(it.index) }
+  override suspend fun track(id: String): StateFlow<TrackedTask>? = tasks[id]?.let { progress.getTaskFlow(it.index) }
 
   override suspend fun stop(id: String) {
-    taskLock.withLock {
-      tasks[id]?.apply {
-        job.cancel()
-        stopTask(this)
-      }
+    tasks[id]?.apply {
+      job.cancel()
+      stopTask(this)
     }
   }
 
   override suspend fun stopAll() {
-    taskLock.withLock {
-      tasks.values.forEach {
-        it.job.cancel()
-        it.running = false
-      }
+    tasks.values.forEach {
+      it.job.cancel()
+      it.running = false
     }
     progress.stop()
   }
 
-  private fun CoroutineScope.launchJob(data: TaskData, events: Flow<TaskEvent>): Job = launch {
-    events.catch {
-      if (it is CancellationException) throw it
-      progress.updateTask(data.index) { copy(failed = true) }
-    }.onCompletion { throwable ->
-      if (throwable == null) progress.updateTask(data.index) { copy(position = target) }
-      taskLock.withLock { stopTask(data) }
-    }.collect { collectEvent(data, it) }
+  private fun launchJob(id: String, index: Int, events: Flow<TaskEvent>): TaskData {
+    val job = scope.launch {
+      events.catch {
+        if (it is CancellationException) throw it
+        progress.updateTask(index) { copy(failed = true) }
+      }.onCompletion { throwable ->
+        if (throwable == null) progress.updateTask(index) { copy(position = target) }
+        stopTask(id)
+      }.collect { collectEvent(index, it) }
+    }
+    return TaskData(index, job)
   }
 
   private suspend fun stopTask(data: TaskData) {
@@ -93,17 +82,21 @@ internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressM
     if (progress.running && tasks.values.none { it.running }) progress.stop()
   }
 
-  private suspend fun collectEvent(data: TaskData, task: TaskEvent) {
+  private suspend fun stopTask(id: String) {
+    tasks[id]?.let { stopTask(it) }
+  }
+
+  private suspend fun collectEvent(index: Int, task: TaskEvent) {
     when (task) {
-      is StatusMessage -> progress.updateTask(data.index) { copy(status = task.status) }
-      is ProgressPosition -> updatePosition(data.index, task.position)
+      is StatusMessage -> progress.updateTask(index) { copy(status = task.status) }
+      is ProgressPosition -> updatePosition(index, task.position)
       is AppendOutput -> {
         val time = Clock.System.now().toEpochMilliseconds()
-        progress.updateTask(data.index) { copy(output = this.output + (time to task.output)) }
+        progress.updateTask(index) { copy(output = this.output + (time to task.output)) }
       }
-      is TaskStarted -> if(task.started) updatePosition(data.index, 0)
-      is TaskCompleted -> if (task.completed) updatePosition(data.index, Int.MAX_VALUE)
-      is TaskFailed -> if (task.failed) progress.updateTask(data.index) { copy(failed = true) }
+      is TaskStarted -> if (task.started) updatePosition(index, 0)
+      is TaskCompleted -> if (task.completed) updatePosition(index, Int.MAX_VALUE)
+      is TaskFailed -> if (task.failed) progress.updateTask(index) { copy(failed = true) }
     }
   }
 
@@ -113,7 +106,5 @@ internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressM
     }
   }
 
-  private data class TaskData(val index: Int, var running: Boolean = true) {
-    lateinit var job: Job
-  }
+  private data class TaskData(val index: Int, val job: Job, var running: Boolean = true)
 }

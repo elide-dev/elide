@@ -35,9 +35,10 @@ public data class TrackedTask(
 ) {
   val started: Boolean get() = position >= 0
   val finished: Boolean get() = position == target
-  val state: TaskState get() =
-      if (failed) TaskState.FAILED
-      else if (!started) TaskState.NOT_STARTED
-      else if (!finished) TaskState.RUNNING
-      else TaskState.COMPLETED
+  val state: TaskState get() = when {
+    failed -> TaskState.FAILED
+    !started -> TaskState.NOT_STARTED
+    !finished -> TaskState.RUNNING
+    else -> TaskState.COMPLETED
+  }
 }

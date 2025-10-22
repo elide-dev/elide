@@ -37,6 +37,7 @@ interface ProgressManager {
     target: Int = 1,
     status: String = "",
     events: Flow<TaskEvent>,
+    onCompletion: suspend (TrackedTask) -> Unit = {},
   ): StateFlow<TrackedTask>
 
   /** Returns a [StateFlow] for the state of the task with [id], or `null` if no task is registered. */
@@ -59,5 +60,6 @@ suspend fun ProgressManager.register(
   name: String,
   target: Int = 1,
   status: String = "",
+  onCompletion: suspend (TrackedTask) -> Unit = {},
   @BuilderInference block: suspend FlowCollector<TaskEvent>.() -> Unit
-): StateFlow<TrackedTask> = register(id, name, target, status, flow(block))
+): StateFlow<TrackedTask> = register(id, name, target, status, flow(block), onCompletion)

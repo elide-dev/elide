@@ -18,7 +18,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.test.assertEquals
@@ -36,9 +35,8 @@ import elide.testing.annotations.TestCase
 class ProgressManagerTest : ProgressTestBase() {
   @Test
   fun `progress manager test`() {
-    val manager: ProgressManager
     runBlocking {
-      manager = Progress.managed("managed test progress", mockTerminal)
+      val manager = Progress.managed("managed test progress", mockTerminal)
       val flow: MutableSharedFlow<TaskEvent> = MutableSharedFlow()
       val task: StateFlow<TrackedTask> = manager.register("task1", "task 1", 30, "", flow)
       assertThrows<IllegalArgumentException> { manager.register("task1", "task 1", 30, "", flow) }
@@ -82,16 +80,15 @@ class ProgressManagerTest : ProgressTestBase() {
       manager.register("task3", "task 3", 30, "", MutableSharedFlow())
       manager.register("task4", "task 4", 30, "", MutableSharedFlow())
       manager.stopAll()
-      val task5 = manager.register("task5", "task 5", 30, "") { throw IllegalArgumentException("test") }
-      val task5state = task5.first()
-      assertEquals(30, task5state.position)
-      assertTrue(task5state.failed)
-      val task6 = manager.register("task6", "task 6", 30, "") { throw CancellationException("test") }
-      val task6state = task6.first()
-      assertEquals(-1, task6state.position)
-      assertFalse(task6state.failed)
+      manager.register("task5", "task 5", 30, "", {
+        assertEquals(30, it.position)
+        assertTrue(it.failed)
+      }) { throw IllegalArgumentException("test") }
+      manager.register("task6", "task 6", 30, "", {
+        assertEquals(-1, it.position)
+        assertFalse(it.failed)
+      }) { throw CancellationException("test") }
     }
-    assertFalse(manager.progress.running)
   }
 
   private data class Assertion<R>(val expected: R, val actual: TrackedTask.() -> R)

@@ -48,10 +48,11 @@ internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressM
     target: Int,
     status: String,
     events: Flow<TaskEvent>,
+    onCompletion: suspend (TrackedTask) -> Unit,
   ): StateFlow<TrackedTask> {
     if (target <= 0) throw IllegalArgumentException("Target must be a non-zero positive integer")
     if (id in tasks) throw IllegalArgumentException("Task with id \"$id\" is already registered.")
-    tasks.put(id, launchJob(id, progress.addTask(name, target, status), events))
+    tasks.put(id, launchJob(id, progress.addTask(name, target, status), events, onCompletion))
     if (!progress.running) progress.start()
     return track(id)!!
   }
@@ -73,7 +74,7 @@ internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressM
     progress.stop()
   }
 
-  private fun launchJob(id: String, index: Int, events: Flow<TaskEvent>): TaskData {
+  private fun launchJob(id: String, index: Int, events: Flow<TaskEvent>, onCompletion: suspend (TrackedTask) -> Unit): TaskData {
     val job = scope.launch {
       events.catch {
         if (it is CancellationException) throw it
@@ -81,6 +82,7 @@ internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressM
       }.onCompletion { throwable ->
         if (throwable == null) progress.updateTask(index) { copy(position = target) }
         stopTask(id)
+        onCompletion(progress.getTask(index))
       }.collect { collectEvent(index, it) }
     }
     return TaskData(index, job)

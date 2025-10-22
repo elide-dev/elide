@@ -10,10 +10,9 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.progress.impl
+package elide.tool.cli.progress.impl
 
 import com.github.ajalt.mordant.terminal.Terminal
-import elide.progress.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Clock
@@ -22,6 +21,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
+import elide.tool.cli.progress.AppendOutput
+import elide.tool.cli.progress.Progress
+import elide.tool.cli.progress.ProgressManager
+import elide.tool.cli.progress.ProgressPosition
+import elide.tool.cli.progress.StatusMessage
+import elide.tool.cli.progress.TaskCompleted
+import elide.tool.cli.progress.TaskEvent
+import elide.tool.cli.progress.TaskFailed
+import elide.tool.cli.progress.TaskStarted
+import elide.tool.cli.progress.TrackedTask
 
 /**
  * Implementation of [ProgressManager].

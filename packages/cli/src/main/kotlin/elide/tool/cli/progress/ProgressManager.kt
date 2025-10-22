@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.progress
+package elide.tool.cli.progress
 
 import kotlin.experimental.ExperimentalTypeInference
 import kotlinx.coroutines.flow.Flow
@@ -24,14 +24,14 @@ import kotlinx.coroutines.flow.flow
  * @property progress [Progress] instance managed by this progress manager.
  * @author Lauri Heino <datafox>
  */
-public interface ProgressManager {
-  public val progress: Progress
+interface ProgressManager {
+  val progress: Progress
 
   /**
    * Adds a new task with [id] to the [progress] that listens to [events] and returns a [StateFlow] for the state of
    * that task. If [target] is `1`, the task is rendered as indeterminate.
    */
-  public suspend fun register(
+  suspend fun register(
     id: String,
     name: String,
     target: Int = 1,
@@ -40,13 +40,13 @@ public interface ProgressManager {
   ): StateFlow<TrackedTask>
 
   /** Returns a [StateFlow] for the state of the task with [id], or `null` if no task is registered. */
-  public suspend fun track(id: String): StateFlow<TrackedTask>?
+  suspend fun track(id: String): StateFlow<TrackedTask>?
 
   /** Stops the task with [id] and stops rendering the animation if no tasks are running. */
-  public suspend fun stop(id: String)
+  suspend fun stop(id: String)
 
   /** Stops all tasks and rendering the animation. */
-  public suspend fun stopAll()
+  suspend fun stopAll()
 }
 
 /**
@@ -54,7 +54,7 @@ public interface ProgressManager {
  * state of that task. If [target] is `1`, the task is rendered as indeterminate.
  */
 @OptIn(ExperimentalTypeInference::class)
-public suspend fun ProgressManager.register(
+suspend fun ProgressManager.register(
   id: String,
   name: String,
   target: Int = 1,

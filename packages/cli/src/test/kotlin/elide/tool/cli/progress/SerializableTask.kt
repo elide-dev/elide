@@ -10,11 +10,23 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.progress
+package elide.tool.cli.progress
+
+import kotlinx.serialization.Serializable
 
 /**
- * Immutable state of a progress animation.
+ * Serializable copy of [TrackedTask] for testing.
  *
  * @author Lauri Heino <datafox>
  */
-internal data class ProgressState(val name: String, val tasks: List<TrackedTask>)
+@Serializable
+data class SerializableTask(
+  val name: String,
+  val target: Int,
+  val status: String = "",
+  val position: Int = -1,
+  val output: Map<Long, String> = mapOf(),
+  val failed: Boolean = false,
+) {
+  fun convert(): TrackedTask = TrackedTask(name, target, status, position, output, failed)
+}

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.progress
+package elide.tool.cli.progress
 
 import kotlinx.coroutines.flow.FlowCollector
 
@@ -19,40 +19,40 @@ import kotlinx.coroutines.flow.FlowCollector
  *
  * @author Lauri Heino <datafox>
  */
-public sealed interface TaskEvent
+sealed interface TaskEvent
 
 /** Value class for an event that updates a task's status message. */
-@JvmInline public value class StatusMessage(public val status: String) : TaskEvent
+@JvmInline value class StatusMessage(val status: String) : TaskEvent
 
 /** Value class for an event that updates a task's progress bar. */
-@JvmInline public value class ProgressPosition(public val position: Int) : TaskEvent
+@JvmInline value class ProgressPosition(val position: Int) : TaskEvent
 
 /** Value class for an event that appends to a task's console. */
-@JvmInline public value class AppendOutput(public val output: String) : TaskEvent
+@JvmInline value class AppendOutput(val output: String) : TaskEvent
 
 /** Value class for an event that starts a task (sets position to `0` if it is `-1`). */
-@JvmInline public value class TaskStarted(public val started: Boolean = true) : TaskEvent
+@JvmInline value class TaskStarted(val started: Boolean = true) : TaskEvent
 
 /** Value class for an event that fails a task. */
-@JvmInline public value class TaskFailed(public val failed: Boolean = true) : TaskEvent
+@JvmInline value class TaskFailed(val failed: Boolean = true) : TaskEvent
 
 /** Value class for an event that completes a task (sets position to target). */
-@JvmInline public value class TaskCompleted(public val completed: Boolean = true) : TaskEvent
+@JvmInline value class TaskCompleted(val completed: Boolean = true) : TaskEvent
 
 /** Updates a task's status message. */
-public suspend fun FlowCollector<TaskEvent>.emitStatus(status: String): Unit = emit(StatusMessage(status))
+suspend fun FlowCollector<TaskEvent>.emitStatus(status: String): Unit = emit(StatusMessage(status))
 
 /** Updates a task's progress bar. */
-public suspend fun FlowCollector<TaskEvent>.emitProgress(position: Int): Unit = emit(ProgressPosition(position))
+suspend fun FlowCollector<TaskEvent>.emitProgress(position: Int): Unit = emit(ProgressPosition(position))
 
 /** Appends to a task's console. */
-public suspend fun FlowCollector<TaskEvent>.emitOutput(output: String): Unit = emit(AppendOutput(output))
+suspend fun FlowCollector<TaskEvent>.emitOutput(output: String): Unit = emit(AppendOutput(output))
 
 /** Starts a task (sets position to `0` if it is `-1`). */
-public suspend fun FlowCollector<TaskEvent>.emitStarted(): Unit = emit(TaskStarted())
+suspend fun FlowCollector<TaskEvent>.emitStarted(): Unit = emit(TaskStarted())
 
 /** Fails a task. */
-public suspend fun FlowCollector<TaskEvent>.emitFailed(): Unit = emit(TaskFailed())
+suspend fun FlowCollector<TaskEvent>.emitFailed(): Unit = emit(TaskFailed())
 
 /** Completes a task (sets position to target). */
-public suspend fun FlowCollector<TaskEvent>.emitCompleted(): Unit = emit(TaskCompleted())
+suspend fun FlowCollector<TaskEvent>.emitCompleted(): Unit = emit(TaskCompleted())

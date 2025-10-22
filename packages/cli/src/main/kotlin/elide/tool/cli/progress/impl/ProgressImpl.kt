@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.progress.impl
+package elide.tool.cli.progress.impl
 
 import com.github.ajalt.mordant.animation.Animation
 import com.github.ajalt.mordant.animation.animation
@@ -20,10 +20,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import elide.progress.Progress
-import elide.progress.ProgressRenderer
-import elide.progress.ProgressState
-import elide.progress.TrackedTask
+import elide.tool.cli.progress.Progress
+import elide.tool.cli.progress.ProgressRenderer
+import elide.tool.cli.progress.ProgressState
+import elide.tool.cli.progress.TrackedTask
 
 /**
  * Implementation of [Progress].
@@ -39,7 +39,6 @@ internal class ProgressImpl(
     CopyOnWriteArrayList(tasks.map { MutableStateFlow(it) })
   private var animation: MutableStateFlow<Animation<ProgressState>?> = MutableStateFlow(null)
   override val tasks: List<TrackedTask> get() = _tasks.map { it.value }
-
   override val running: Boolean get() = animation.value != null
 
   override suspend fun start() {

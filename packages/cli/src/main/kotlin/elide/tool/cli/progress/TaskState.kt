@@ -10,22 +10,17 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.progress
-
-import kotlinx.serialization.json.Json
+package elide.tool.cli.progress
 
 /**
- * Abstract base for progress tests.
+ * Possible states of a [TrackedTask].
  *
+ * @property displayName Text that should be displayed for the given state.
  * @author Lauri Heino <datafox>
  */
-abstract class ProgressTestBase {
-  val mockTerminal by lazy { MockTerminal(80) }
-  val json by lazy { Json(Json.Default) { prettyPrint = true } }
-
-  inline fun <reified T> readJson(fileName: String): T =
-    requireNotNull(javaClass.getResourceAsStream(fileName))
-      .bufferedReader()
-      .use { it.readText() }
-      .let { json.decodeFromString(it) }
+enum class TaskState(val displayName: String) {
+  NOT_STARTED("not started"),
+  RUNNING("running"),
+  COMPLETED("completed"),
+  FAILED("failed"),
 }

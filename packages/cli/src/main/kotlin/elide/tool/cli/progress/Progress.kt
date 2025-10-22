@@ -10,11 +10,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.progress
+package elide.tool.cli.progress
 
 import com.github.ajalt.mordant.terminal.Terminal
-import elide.progress.impl.ProgressImpl
-import elide.progress.impl.ProgressManagerImpl
+import elide.tool.cli.progress.impl.ProgressImpl
+import elide.tool.cli.progress.impl.ProgressManagerImpl
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -25,37 +25,37 @@ import kotlinx.coroutines.flow.StateFlow
  * @property running `true` if the progress animation is being rendered.
  * @author Lauri Heino <datafox>
  */
-public interface Progress {
-  public val name: String
-  public val tasks: List<TrackedTask>
-  public val running: Boolean
+interface Progress {
+  val name: String
+  val tasks: List<TrackedTask>
+  val running: Boolean
 
   /** Starts rendering the animation. */
-  public suspend fun start()
+  suspend fun start()
 
   /** Stops rendering the animation. */
-  public suspend fun stop()
+  suspend fun stop()
 
   /** Returns the state of a task at [index]. */
-  public suspend fun getTask(index: Int): TrackedTask
+  suspend fun getTask(index: Int): TrackedTask
 
   /** Returns the [StateFlow] of a task at [index]. */
-  public suspend fun getTaskFlow(index: Int): StateFlow<TrackedTask>
+  suspend fun getTaskFlow(index: Int): StateFlow<TrackedTask>
 
   /** Adds a new task and returns its index. If [target] is `1`, the task is rendered as indeterminate. */
-  public suspend fun addTask(name: String, target: Int = 1, status: String = ""): Int
+  suspend fun addTask(name: String, target: Int = 1, status: String = ""): Int
 
   /** Updates the state of a task at [index]. */
-  public suspend fun updateTask(index: Int, block: TrackedTask.() -> TrackedTask)
+  suspend fun updateTask(index: Int, block: TrackedTask.() -> TrackedTask)
 
-  public companion object {
+  companion object {
     /** Creates a new progress animation that renders to [terminal]. */
-    public fun create(name: String, terminal: Terminal, tasks: MutableList<TrackedTask>.() -> Unit): Progress =
+    fun create(name: String, terminal: Terminal, tasks: MutableList<TrackedTask>.() -> Unit): Progress =
       ProgressImpl(name, terminal, mutableListOf<TrackedTask>().apply(tasks))
 
     /**
      * Creates a new [ProgressManager] for higher level management of a progress animation that renders to [terminal].
      */
-    public fun managed(name: String, terminal: Terminal): ProgressManager = ProgressManagerImpl(name, terminal)
+    fun managed(name: String, terminal: Terminal): ProgressManager = ProgressManagerImpl(name, terminal)
   }
 }

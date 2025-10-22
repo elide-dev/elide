@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.progress
+package elide.tool.cli.progress
 
 /**
  * Immutable state of a task in a progress animation.
@@ -25,7 +25,7 @@ package elide.progress
  * @property state current state of this task.
  * @author Lauri Heino <datafox>
  */
-public data class TrackedTask(
+data class TrackedTask(
   val name: String,
   val target: Int,
   val status: String = "",

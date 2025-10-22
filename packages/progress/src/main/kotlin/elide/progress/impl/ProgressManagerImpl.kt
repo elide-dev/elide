@@ -13,11 +13,18 @@
 package elide.progress.impl
 
 import com.github.ajalt.mordant.terminal.Terminal
+import elide.progress.*
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import elide.progress.Progress
-import elide.progress.ProgressManager
-import elide.progress.TaskCallback
 
 /**
  * Implementation of [ProgressManager].
@@ -26,19 +33,87 @@ import elide.progress.TaskCallback
  */
 internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressManager {
   override val progress: Progress = ProgressImpl(name, terminal, emptyList())
-  private val callbacks: MutableList<TaskCallbackImpl> = mutableListOf()
-  private val callbackLock: Mutex = Mutex()
+  private val tasks: MutableMap<String, TaskData> = mutableMapOf()
+  private val taskLock: Mutex = Mutex()
 
-  override suspend fun addTask(name: String, target: Int, status: String): TaskCallback {
+  override suspend fun register(
+    id: String,
+    name: String,
+    target: Int,
+    status: String,
+    scope: CoroutineScope,
+    events: Flow<TaskEvent>,
+  ): StateFlow<TrackedTask> {
     if (target <= 0) throw IllegalArgumentException("Target must be a non-zero positive integer")
-    val task = progress.addTask(name, target, status)
-    return TaskCallbackImpl(progress, task).apply { callbackLock.withLock { callbacks.add(this) } }
+    taskLock.withLock {
+      if (id in tasks) throw IllegalArgumentException("Task with id \"$id\" is already registered.")
+      TaskData(progress.addTask(name, target, status)).apply {
+        tasks.put(id, this)
+        job = scope.launchJob(this, events)
+      }
+    }
+    if (!progress.running) progress.start()
+    return track(id)!!
   }
 
-  override suspend fun start() = progress.start()
+  override suspend fun track(id: String): StateFlow<TrackedTask>? =
+    taskLock.withLock { tasks[id] }?.let { progress.getTaskFlow(it.index) }
 
-  override suspend fun stop() {
-    callbackLock.withLock { callbacks.forEach { it.stop() } }
+  override suspend fun stop(id: String) {
+    taskLock.withLock {
+      tasks[id]?.apply {
+        job.cancel()
+        stopTask(this)
+      }
+    }
+  }
+
+  override suspend fun stopAll() {
+    taskLock.withLock {
+      tasks.values.forEach {
+        it.job.cancel()
+        it.running = false
+      }
+    }
     progress.stop()
+  }
+
+  private fun CoroutineScope.launchJob(data: TaskData, events: Flow<TaskEvent>): Job = launch {
+    events.catch {
+      if (it is CancellationException) throw it
+      progress.updateTask(data.index) { copy(failed = true) }
+    }.onCompletion { throwable ->
+      if (throwable == null) progress.updateTask(data.index) { copy(position = target) }
+      taskLock.withLock { stopTask(data) }
+    }.collect { collectEvent(data, it) }
+  }
+
+  private suspend fun stopTask(data: TaskData) {
+    data.running = false
+    if (progress.running && tasks.values.none { it.running }) progress.stop()
+  }
+
+  private suspend fun collectEvent(data: TaskData, task: TaskEvent) {
+    when (task) {
+      is StatusMessage -> progress.updateTask(data.index) { copy(status = task.status) }
+      is ProgressPosition -> updatePosition(data.index, task.position)
+      is AppendOutput -> {
+        val time = Clock.System.now().toEpochMilliseconds()
+        progress.updateTask(data.index) { copy(output = this.output + (time to task.output)) }
+      }
+      is TaskStarted -> if(task.started) updatePosition(data.index, 0)
+      is TaskCompleted -> if (task.completed) updatePosition(data.index, Int.MAX_VALUE)
+      is TaskFailed -> if (task.failed) progress.updateTask(data.index) { copy(failed = true) }
+    }
+  }
+
+  private suspend fun updatePosition(index: Int, position: Int) {
+    progress.updateTask(index) {
+      Math.clamp(position.toLong(), this.position, target).let { if (it > this.position) copy(position = it) else this }
+    }
+  }
+
+  private data class TaskData(val index: Int, var running: Boolean = true) {
+    lateinit var job: Job
   }
 }

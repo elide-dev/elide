@@ -19,7 +19,7 @@ package elide.progress
  * @property status Current status of the task.
  * @property output Unix timestamps mapped to lines of console output of the task.
  * @property position Current position of the task, or `-1` if the task has not started.
- * @property target Target position of the task.
+ * @property target Target position of the task. If this is `1`, the task is rendered as indeterminate.
  * @property started `true` if the task has started ([position] is not negative).
  * @property finished `true` if the task has finished ([position] is equal to [target]).
  * @property state current state of this task.
@@ -33,14 +33,11 @@ public data class TrackedTask(
   val output: Map<Long, String> = mapOf(),
   val failed: Boolean = false,
 ) {
-  val started: Boolean
-    get() = position >= 0
-
-  val finished: Boolean
-    get() = position == target
-
-  val state: TaskState
-    get() =
+  val started: Boolean get() = position >= 0
+  val finished: Boolean get() = position == target
+  val state: TaskState get() =
       if (failed) TaskState.FAILED
-      else if (!started) TaskState.NOT_STARTED else if (!finished) TaskState.RUNNING else TaskState.COMPLETED
+      else if (!started) TaskState.NOT_STARTED
+      else if (!finished) TaskState.RUNNING
+      else TaskState.COMPLETED
 }

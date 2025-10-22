@@ -12,6 +12,13 @@
  */
 package elide.progress
 
+import kotlin.experimental.ExperimentalTypeInference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
+
 /**
  * A high-level interface for managing a [Progress] animation.
  *
@@ -21,12 +28,39 @@ package elide.progress
 public interface ProgressManager {
   public val progress: Progress
 
-  /** Adds a new task to the [progress] and returns a [TaskCallback] for that task. */
-  public suspend fun addTask(name: String, target: Int, status: String = ""): TaskCallback
+  /**
+   * Adds a new task with [id] to the [progress] that listens to [events] and returns a [StateFlow] for the state of
+   * that task. If [target] is `1`, the task is rendered as indeterminate.
+   */
+  public suspend fun register(
+    id: String,
+    name: String,
+    target: Int = 1,
+    status: String = "",
+    scope: CoroutineScope,
+    events: Flow<TaskEvent>,
+  ): StateFlow<TrackedTask>
 
-  /** Starts rendering the progress animation. */
-  public suspend fun start()
+  /** Returns a [StateFlow] for the state of the task with [id], or `null` if no task is registered. */
+  public suspend fun track(id: String): StateFlow<TrackedTask>?
 
-  /** [Stops][TaskCallback.stop] all [TaskCallback] flow collection jobs and stops rendering the progress animation. */
-  public suspend fun stop()
+  /** Stops the task with [id] and stops rendering the animation if no tasks are running. */
+  public suspend fun stop(id: String)
+
+  /** Stops all tasks and rendering the animation. */
+  public suspend fun stopAll()
+
+  /**
+   * Adds a new task with [id] to the [progress] that listens to [flow] { [block] } and returns a [StateFlow] for the
+   * state of that task. If [target] is `1`, the task is rendered as indeterminate.
+   */
+  @OptIn(ExperimentalTypeInference::class)
+  public suspend fun register(
+    id: String,
+    name: String,
+    target: Int = 1,
+    status: String = "",
+    scope: CoroutineScope,
+    @BuilderInference block: suspend FlowCollector<TaskEvent>.() -> Unit
+  ): StateFlow<TrackedTask> = register(id, name, target, status, scope, flow(block))
 }

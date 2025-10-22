@@ -15,17 +15,20 @@ package elide.progress
 import com.github.ajalt.mordant.terminal.Terminal
 import elide.progress.impl.ProgressImpl
 import elide.progress.impl.ProgressManagerImpl
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * A low-level interface for rendering a progress animation to the console.
  *
  * @property name Name of the main process.
  * @property tasks Current tasks of the progress animation.
+ * @property running `true` if the progress animation is being rendered.
  * @author Lauri Heino <datafox>
  */
 public interface Progress {
   public val name: String
   public val tasks: List<TrackedTask>
+  public val running: Boolean
 
   /** Starts rendering the animation. */
   public suspend fun start()
@@ -33,11 +36,14 @@ public interface Progress {
   /** Stops rendering the animation. */
   public suspend fun stop()
 
-  /** Returns the task with the specified index. */
+  /** Returns the state of a task at [index]. */
   public suspend fun getTask(index: Int): TrackedTask
 
-  /** Adds a new task and returns its index. */
-  public suspend fun addTask(name: String, target: Int, status: String = ""): Int
+  /** Returns the [StateFlow] of a task at [index]. */
+  public suspend fun getTaskFlow(index: Int): StateFlow<TrackedTask>
+
+  /** Adds a new task and returns its index. If [target] is `1`, the task is rendered as indeterminate. */
+  public suspend fun addTask(name: String, target: Int = 1, status: String = ""): Int
 
   /** Updates a task with the specified index. */
   public suspend fun updateTask(index: Int, block: TrackedTask.() -> TrackedTask)

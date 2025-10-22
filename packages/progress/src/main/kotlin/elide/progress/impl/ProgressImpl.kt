@@ -15,15 +15,17 @@ package elide.progress.impl
 import com.github.ajalt.mordant.animation.Animation
 import com.github.ajalt.mordant.animation.animation
 import com.github.ajalt.mordant.terminal.Terminal
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import elide.progress.Progress
 import elide.progress.ProgressRenderer
 import elide.progress.ProgressState
 import elide.progress.TrackedTask
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 /**
  * Implementation of [Progress].
@@ -39,8 +41,8 @@ internal class ProgressImpl(
   private var animation: Animation<ProgressState>? = null
   private val taskLock: Mutex = Mutex()
   private val animationLock: Mutex = Mutex()
-  override val tasks: List<TrackedTask>
-    get() = runBlocking { taskLock.withLock { _tasks.map { it.value } } }
+  override val tasks: List<TrackedTask> get() = runBlocking { taskLock.withLock { _tasks.map { it.value } } }
+  override val running: Boolean get() = runBlocking { animationLock.withLock { animation != null } }
 
   override suspend fun start() {
     animationLock.withLock {
@@ -51,9 +53,15 @@ internal class ProgressImpl(
   }
 
   override suspend fun stop() =
-    animationLock.withLock { animation?.stop() ?: throw IllegalStateException("Not started") }
+    animationLock.withLock {
+      animation?.stop() ?: throw IllegalStateException("Not started")
+      animation = null
+    }
 
   override suspend fun getTask(index: Int): TrackedTask = taskLock.withLock { _tasks[index] }.value
+
+  override suspend fun getTaskFlow(index: Int): StateFlow<TrackedTask> =
+    taskLock.withLock { _tasks[index].asStateFlow() }
 
   override suspend fun addTask(name: String, target: Int, status: String): Int {
     val task = TrackedTask(name, target, status)

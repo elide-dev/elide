@@ -13,9 +13,10 @@
 package elide.tool.cli.progress
 
 import com.github.ajalt.mordant.terminal.Terminal
+import kotlinx.coroutines.flow.StateFlow
+import kotlin.coroutines.CoroutineContext
 import elide.tool.cli.progress.impl.ProgressImpl
 import elide.tool.cli.progress.impl.ProgressManagerImpl
-import kotlinx.coroutines.flow.StateFlow
 
 /**
  * A low-level interface for rendering a progress animation to the console.
@@ -56,6 +57,7 @@ interface Progress {
     /**
      * Creates a new [ProgressManager] for higher level management of a progress animation that renders to [terminal].
      */
-    fun managed(name: String, terminal: Terminal): ProgressManager = ProgressManagerImpl(name, terminal)
+    fun managed(name: String, terminal: Terminal, context: CoroutineContext? = null): ProgressManager =
+      ProgressManagerImpl(name, terminal, context)
   }
 }

@@ -14,33 +14,26 @@ package elide.tool.cli.progress.impl
 
 import com.github.ajalt.mordant.terminal.Terminal
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.coroutines.cancellation.CancellationException
-import kotlin.time.Clock
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
-import elide.tool.cli.progress.AppendOutput
-import elide.tool.cli.progress.Progress
-import elide.tool.cli.progress.ProgressManager
-import elide.tool.cli.progress.ProgressPosition
-import elide.tool.cli.progress.StatusMessage
-import elide.tool.cli.progress.TaskCompleted
-import elide.tool.cli.progress.TaskEvent
-import elide.tool.cli.progress.TaskFailed
-import elide.tool.cli.progress.TaskStarted
-import elide.tool.cli.progress.TrackedTask
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
+import elide.tool.cli.progress.*
 
 /**
  * Implementation of [ProgressManager].
  *
  * @author Lauri Heino <datafox>
  */
-internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressManager {
+internal class ProgressManagerImpl(name: String, terminal: Terminal, context: CoroutineContext? = null) :
+  ProgressManager {
   override val progress: Progress = ProgressImpl(name, terminal, emptyList())
   private val tasks: MutableMap<String, TaskData> = ConcurrentHashMap()
-  private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+  private val scope: CoroutineScope = CoroutineScope((context ?: Dispatchers.IO) + SupervisorJob())
 
   override suspend fun register(
     id: String,
@@ -48,11 +41,10 @@ internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressM
     target: Int,
     status: String,
     events: Flow<TaskEvent>,
-    onCompletion: suspend (TrackedTask) -> Unit,
   ): StateFlow<TrackedTask> {
     if (target <= 0) throw IllegalArgumentException("Target must be a non-zero positive integer")
     if (id in tasks) throw IllegalArgumentException("Task with id \"$id\" is already registered.")
-    tasks.put(id, launchJob(id, progress.addTask(name, target, status), events, onCompletion))
+    tasks.put(id, launchJob(id, progress.addTask(name, target, status), events))
     if (!progress.running) progress.start()
     return track(id)!!
   }
@@ -74,17 +66,17 @@ internal class ProgressManagerImpl(name: String, terminal: Terminal) : ProgressM
     progress.stop()
   }
 
-  private fun launchJob(id: String, index: Int, events: Flow<TaskEvent>, onCompletion: suspend (TrackedTask) -> Unit): TaskData {
-    val job = scope.launch {
-      events.catch {
-        if (it is CancellationException) throw it
-        progress.updateTask(index) { copy(failed = true) }
-      }.onCompletion { throwable ->
-        if (throwable == null) progress.updateTask(index) { copy(position = target) }
-        stopTask(id)
-        onCompletion(progress.getTask(index))
-      }.collect { collectEvent(index, it) }
-    }
+  private fun launchJob(id: String, index: Int, events: Flow<TaskEvent>): TaskData {
+    val job =
+      this@ProgressManagerImpl.scope.launch {
+        events.catch {
+          if (it is CancellationException) throw it
+          progress.updateTask(index) { copy(failed = true) }
+        }.onCompletion { throwable ->
+          if (throwable == null) progress.updateTask(index) { copy(position = target) }
+          stopTask(id)
+        }.collect { collectEvent(index, it) }
+      }
     return TaskData(index, job)
   }
 

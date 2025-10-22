@@ -12,11 +12,11 @@
  */
 package elide.tool.cli.progress
 
-import kotlin.experimental.ExperimentalTypeInference
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlin.experimental.ExperimentalTypeInference
 
 /**
  * A high-level interface for managing a [Progress] animation.
@@ -37,7 +37,6 @@ interface ProgressManager {
     target: Int = 1,
     status: String = "",
     events: Flow<TaskEvent>,
-    onCompletion: suspend (TrackedTask) -> Unit = {},
   ): StateFlow<TrackedTask>
 
   /** Returns a [StateFlow] for the state of the task with [id], or `null` if no task is registered. */
@@ -60,6 +59,5 @@ suspend fun ProgressManager.register(
   name: String,
   target: Int = 1,
   status: String = "",
-  onCompletion: suspend (TrackedTask) -> Unit = {},
   @BuilderInference block: suspend FlowCollector<TaskEvent>.() -> Unit
-): StateFlow<TrackedTask> = register(id, name, target, status, flow(block), onCompletion)
+): StateFlow<TrackedTask> = register(id, name, target, status, flow(block))

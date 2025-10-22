@@ -17,14 +17,11 @@ set +x
 source tools/scripts/release/version-set.sh
 source tools/scripts/release/platform-set.sh
 
-currentVersion=$(cat ./.release)
-releaseOverride="$version"
-version="${releaseOverride:-$currentVersion}"
 cd ./packages/cli/build/native/nativeOptimizedCompile/;
 mkdir -p "release/$platform-$arch/$version"
 cp -fv elide-*.{tgz,txz,zip}* "release/$platform-$arch/$version/"
-cp -fv elide.sbom.json "release/$platform-$arch/$version/"
-cp -fv elide-build-report.html "release/$platform-$arch/$version/elide.build-report.html"
+cp -fv elide.sbom.json "release/$platform-$arch/$version/elide-$version-$platform-$arch.sbom.json"
+cp -fv elide-build-report.html "release/$platform-$arch/$version/elide-$version-$platform-$arch.build-report.html"
 cd -;
 mkdir -p staging/release
 mv "packages/cli/build/native/nativeOptimizedCompile/release" "staging/"

@@ -14,7 +14,7 @@
 #
 
 set -euo pipefail
-source tools/scripts/release/commons.sh
+source tools/scripts/release-old/commons.sh
 
 set +x
 

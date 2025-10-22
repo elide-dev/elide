@@ -32,8 +32,10 @@ pgo=false
 help=false
 nativeTask=nativeCompile
 publishTask=publishAllPublicationsToStageRepository
+GRADLE_PROPS=""
+buildMode=dev
 
-if [["$@" == *"--dry"*]]; then
+if [[ "$@" == *"--dry"* ]]; then
   dry=true
 fi
 

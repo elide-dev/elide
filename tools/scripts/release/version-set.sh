@@ -23,5 +23,5 @@ if [ ! -x "$elideBin" ]; then
 fi
 
 # load from `ELIDE_VERSION` or default to `./.release`
-releaseVersion=$($elideBin --version)
-version="${ELIDE_VERSION:-$releaseVersion}"
+version=$($elideBin --version)
+ELIDE_VERSION="$version"

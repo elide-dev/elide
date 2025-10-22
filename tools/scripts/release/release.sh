@@ -69,15 +69,15 @@ echo " Creating a release for $platform-$arch."
 echo "┌─────────────────────────────────────────────────┐"
 echo "╵ Cooking a native build                          ╵"
 echo "└─────────────────────────────────────────────────┘"
-bash ./native-build.sh $RELEASE_PARAMS
+bash ./tools/scripts/release/native-build.sh $RELEASE_PARAMS
 echo "┌─────────────────────────────────────────────────┐"
 echo "╵ Packaging and signing the release.              ╵"
 echo "└─────────────────────────────────────────────────┘"
-bash ./package-release.sh $RELEASE_PARAMS
+bash ./tools/scripts/release/package-release.sh $RELEASE_PARAMS
 echo "┌─────────────────────────────────────────────────┐"
 echo "╵ Staging the release.                            ╵"
 echo "└─────────────────────────────────────────────────┘"
-bash ./package-release.sh $RELEASE_PARAMS
+bash ./tools/scripts/release/package-release.sh $RELEASE_PARAMS
 
 source tools/scripts/release/version-set.sh
 echo "┌─────────────────────────────────────────────────┐"

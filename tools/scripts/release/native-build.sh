@@ -60,7 +60,6 @@ fi
 # in release mode, tell gradle to build the docs and enable signing
 if [[ "$release" == true ]]; then
   GRADLE_PROPS="$GRADLE_PROPS -Pelide.buildDocs=true -PenableSigning=true"
-  PACKAGE_ARGS="$PACKAGE_ARGS --release --stamp"
   if [[ "$dry" != true ]]; then
     GRADLE_PROPS="$GRADLE_PROPS -PenableSigstore=true"
   fi

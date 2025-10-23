@@ -21,8 +21,8 @@ name: Release
           type: boolean
           default: true
     push:
-      tags:
-        - 'v*'
+      branches:
+        - chore/release-pipeline
 
 # Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:
@@ -45,24 +45,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["Linux"]
-        arch: ["amd64"]
-        runner: ["${{ inputs.runner_large }}"]
-        labs: [false]
-        tag: [linux-amd64]
         include:
           - os: Linux
-            runner: ${{ inputs.runner_large }}
+            runner: ubuntu-cipool
             arch: amd64
             labs: false
             tag: linux-amd64
-            provenance: [true]
-          - os: macOS
-            runner: ${{ inputs.runner_large_macos }}
-            arch: amd64
-            labs: false
-            tag: darwin-amd64
-            provenance: [true]
+#          - os: macOS
+#            runner: ${{ inputs.runner_large_macos }}
+#            arch: amd64
+#            labs: false
+#            tag: darwin-amd64
+#            provenance: [true]
     permissions:
       contents: write
       id-token: write
@@ -108,7 +102,7 @@ jobs:
             elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-v3-
       - name: "Setup: Packages"
-        if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
+        if: contains(matrix.runner, 'ubuntu') || contains(matrix.runner, 'linux')
         run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev
       - name: "Setup: Rust"
         uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0

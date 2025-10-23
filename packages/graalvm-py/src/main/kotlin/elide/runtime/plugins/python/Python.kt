@@ -19,6 +19,8 @@ import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.python.embedding.GraalPythonFilesystem
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
+import kotlin.io.path.Path
+import kotlin.io.path.absolutePathString
 import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
@@ -26,9 +28,11 @@ import elide.runtime.core.EngineLifecycleEvent.ContextFinalized
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
+import elide.runtime.core.HostPlatform
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
+import elide.runtime.core.extensions.enableOption
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
 import elide.runtime.lang.python.PythonLang
@@ -96,18 +100,27 @@ private const val ENABLE_PYTHON_VFS = false
     return parsedLangVersion to "$graalvmMajor.$graalvmMinor"
   }
 
-  private fun renderPythonPath(): String = sequence {
+  private fun renderPythonPath(pythonVersion: String): String = sequence {
+    System.getenv(VENV_PATH_VAR)?.let {
+      yield(Path(it).resolve(virtualEnvPackagesPath(pythonVersion)).absolutePathString())
+    }
     yieldAll(config.additionalPythonPaths)
   }.joinToString(":")
 
   private fun configureContext(builder: PolyglotContextBuilder) {
+    val (pythonVersion, graalPyVersion) = resolveGraalPythonVersions()
+    logging.debug("Configuring Python context (using Python $pythonVersion, GraalPy $graalPyVersion)")
+
     builder.disableOptions(
       "python.EmulateJython",
       "python.DontWriteBytecodeFlag",
     )
 
+    if(HostPlatform.resolve().os != HostPlatform.OperatingSystem.DARWIN) {
+      builder.enableOption("python.IsolateNativeModules")
+    }
+
     builder.enableOptions(
-      "python.IsolateNativeModules",
       "python.LazyStrings",
       "python.WithTRegex",
       "python.NoSiteFlag", // @TODO
@@ -129,12 +142,10 @@ private const val ENABLE_PYTHON_VFS = false
     }
     builder.setOptions(
       "python.PosixModuleBackend" to engine,
-      "python.PythonPath" to renderPythonPath(),
+      "python.PythonPath" to renderPythonPath(pythonVersion),
     )
     config.resourcesPath?.let {
       if (ImageInfo.inImageCode()) {
-        val (pythonVersion, graalPyVersion) = resolveGraalPythonVersions()
-
         builder.setOptions(
           "python.CoreHome" to "$it/python/python-home/lib/graalpy$graalPyVersion",
           "python.SysPrefix" to "$it/python/python-home/lib/graalpy$graalPyVersion",
@@ -160,11 +171,16 @@ private const val ENABLE_PYTHON_VFS = false
     private const val ENABLE_EXPERIMENTAL = true
     private const val ENABLE_PANAMA = true
     private const val GPY_LIST_SEPARATOR = "🏆"
+    private const val VENV_PATH_VAR = "VIRTUAL_ENV"
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
     private val logging by lazy {
       Logging.of(Python::class)
+    }
+
+    @JvmStatic private fun virtualEnvPackagesPath(pythonVersion: String): String {
+      return "lib/python$pythonVersion/site-packages"
     }
 
     @JvmStatic private val pythonInitSrc: Source = requireNotNull(

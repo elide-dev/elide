@@ -32,7 +32,7 @@ import elide.runtime.intrinsics.server.http.v2.channels.NettyHttpContextAdapter
  * Implementations are expected to add guest-accessible members to control the server's lifecycle and call the methods
  * in this base class from there.
  */
-public abstract class AbstractHttpIntrinsic : AutoCloseable {
+public abstract class HttpServer : AutoCloseable {
   private val serverRunning = AtomicBoolean(false)
   private var eventLoopGroup: EventLoopGroup? = null
   private var serverChannel: Channel? = null
@@ -58,7 +58,13 @@ public abstract class AbstractHttpIntrinsic : AutoCloseable {
    * Bind to the given [port] and begin accepting requests. Calling this method multiple times or from a non-owner
    * thread has no effect.
    */
-  internal fun bind(port: Int, transport: NettyTransport<*> = NettyTransport.resolve()): Boolean {
+  public fun bind(port: Int): Boolean = bind(port, NettyTransport.resolve())
+
+  /**
+   * Bind to the given [port] and begin accepting requests using the specified [transport]. Calling this method
+   * multiple times or from a non-owner thread has no effect.
+   */
+  internal fun bind(port: Int, transport: NettyTransport<*>): Boolean {
     logging.debug("Starting server")
 
     // allow this call only once
@@ -124,7 +130,7 @@ public abstract class AbstractHttpIntrinsic : AutoCloseable {
   }
 
   public companion object {
-    private val logging by lazy { Logging.of(AbstractHttpIntrinsic::class) }
+    private val logging by lazy { Logging.of(HttpServer::class) }
 
     /** Backlog size for the server socket. */
     private const val DEFAULT_SERVER_BACKLOG = 8192

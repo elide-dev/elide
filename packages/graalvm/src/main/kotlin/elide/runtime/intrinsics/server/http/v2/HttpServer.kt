@@ -118,8 +118,6 @@ public abstract class HttpServer : AutoCloseable {
 
   private fun channelInitializer() = object : ChannelInitializer<SocketChannel>() {
     override fun initChannel(ch: SocketChannel) {
-      logging.debug { "Initializing channel: $ch" }
-
       val contextHandler = NettyHttpContextAdapter(
         contextFactory = acquireFactory(),
         contextHandler = acquireHandler(),

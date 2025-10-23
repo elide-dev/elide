@@ -19,8 +19,6 @@
 package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.LoggerContext
-import elide.runtime.core.RuntimeExecutor
-import elide.runtime.core.RuntimeLatch
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import com.github.ajalt.mordant.rendering.TextColors
@@ -74,101 +72,16 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
-import kotlin.collections.ArrayList
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.MutableSet
-import kotlin.collections.Set
-import kotlin.collections.addAll
-import kotlin.collections.any
-import kotlin.collections.buildList
-import kotlin.collections.buildSet
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.contains
-import kotlin.collections.count
-import kotlin.collections.distinct
-import kotlin.collections.drop
-import kotlin.collections.emptyList
-import kotlin.collections.emptySet
-import kotlin.collections.filter
-import kotlin.collections.filterIsInstance
-import kotlin.collections.find
-import kotlin.collections.first
-import kotlin.collections.firstOrNull
-import kotlin.collections.flatMap
-import kotlin.collections.forEach
-import kotlin.collections.getOrNull
-import kotlin.collections.getOrPut
-import kotlin.collections.indexOf
-import kotlin.collections.indexOfFirst
-import kotlin.collections.isNotEmpty
-import kotlin.collections.joinToString
-import kotlin.collections.lastIndex
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.mapIndexed
-import kotlin.collections.mapNotNull
-import kotlin.collections.maxOf
-import kotlin.collections.maxOfOrNull
-import kotlin.collections.mutableMapOf
-import kotlin.collections.plus
-import kotlin.collections.setOf
-import kotlin.collections.sortedMapOf
-import kotlin.collections.toList
-import kotlin.collections.toMutableList
-import kotlin.collections.toMutableSet
-import kotlin.collections.toSortedSet
-import kotlin.collections.toTypedArray
 import kotlin.io.path.*
 import kotlin.math.max
-import kotlin.ranges.until
-import kotlin.sequences.Sequence
-import kotlin.sequences.distinct
-import kotlin.sequences.drop
-import kotlin.sequences.emptySequence
-import kotlin.sequences.filterIsInstance
-import kotlin.sequences.forEach
-import kotlin.sequences.ifEmpty
-import kotlin.sequences.map
-import kotlin.sequences.plus
-import kotlin.sequences.sequence
-import kotlin.sequences.sequenceOf
-import kotlin.sequences.take
-import kotlin.sequences.toList
-import kotlin.sequences.toMutableList
 import kotlin.streams.asSequence
 import kotlin.streams.asStream
-import kotlin.text.StringBuilder
-import kotlin.text.appendLine
-import kotlin.text.buildString
-import kotlin.text.contains
-import kotlin.text.endsWith
-import kotlin.text.ifBlank
-import kotlin.text.isNotBlank
-import kotlin.text.isNotEmpty
-import kotlin.text.isNullOrBlank
-import kotlin.text.lines
-import kotlin.text.lowercase
-import kotlin.text.padEnd
-import kotlin.text.padStart
-import kotlin.text.prependIndent
-import kotlin.text.removePrefix
-import kotlin.text.removeSuffix
-import kotlin.text.repeat
-import kotlin.text.replace
-import kotlin.text.startsWith
-import kotlin.text.trim
-import kotlin.text.trimIndent
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 import elide.annotations.Inject
 import elide.runtime.LogLevel
-import elide.runtime.core.EntrypointRegistry
-import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotEngine
-import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.core.*
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
 import elide.runtime.core.extensions.attach
 import elide.runtime.exec.ContextAwareExecutor
@@ -193,6 +106,7 @@ import elide.runtime.runner.RunnerOutcome
 import elide.runtime.runner.Runners
 import elide.secrets.Secrets
 import elide.tool.cli.*
+import elide.tool.cli.GuestLanguage
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cmd.builder.emitCommand
 import elide.tool.cli.cmd.runner.*
@@ -1812,19 +1726,26 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
         PYTHON -> {
           logging.trace("Running WSGI server")
-          val wsgi = activeProject.value?.manifest?.python?.wsgi
-            ?: error("No available WSGI configuration in manifest")
+          val wsgiOptions = activeProject.value?.manifest?.python?.wsgi
+          val entrypoint = wsgiOptions?.let { wsgi ->
+            // resolve from manifest
+            val bindingArgs = if (wsgi.app != null) null else wsgi.args
+            val bindingName = wsgi.app
+              ?: wsgi.factory
+              ?: error("Serve mode should only be active if the app or factory binding is specified")
 
-          val bindingArgs = if (wsgi.app != null) null else wsgi.args
-          val bindingName = wsgi.app
-            ?: wsgi.factory
-            ?: error("Serve mode should only be active if the app or factory binding is specified")
+            WsgiEntrypoint(source, bindingName, bindingArgs)
+          } ?: serverSettings.wsgi?.let {
+            // resolve from CLI arguments
+            WsgiEntrypoint.from(it, source)
+          }
+          ?: error("No available WSGI configuration in manifest or CLI arguments")
 
           ElideWsgiServer(
-            entrypoint = WsgiEntrypoint(source, bindingName, bindingArgs),
+            entrypoint = entrypoint,
             executor = runtimeExecutor.acquire(),
             runtimeLatch = runtimeLatch,
-          ).bind(wsgi.port ?: ElideWsgiServer.DEFAULT_PORT)
+          ).bind(serverSettings.port ?: wsgiOptions?.port ?: ElideWsgiServer.DEFAULT_PORT)
         }
 
         else -> error("Cannot run embedded server for language $language")
@@ -2568,7 +2489,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     appEnvironment.apply(
       project,
       this,
-    beanContext.getBean(Secrets::class.java).getEnv(),
+      beanContext.getBean(Secrets::class.java).getEnv(),
       host = accessControl.allowAll || accessControl.allowEnv,
       dotenv = appEnvironment.dotenv,
     )
@@ -2887,7 +2808,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         } catch (t: Throwable) {
           logging.warn { "Secrets were not initialized with message: ${t.message}" }
         }
-        if(secrets.initialized) {
+        if (secrets.initialized) {
           if (secrets.getProfile() == null) {
             val profiles = secrets.listProfiles()
             if (profiles.size != 1) logging.warn { "No secret profile will be loaded" }

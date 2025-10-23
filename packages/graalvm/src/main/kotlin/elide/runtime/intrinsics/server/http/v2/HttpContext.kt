@@ -47,5 +47,9 @@ public interface HttpContext : AutoCloseable {
    * values.
    */
   public val session: HttpSession
+
+  override fun close() {
+    // noop
+  }
 }
 

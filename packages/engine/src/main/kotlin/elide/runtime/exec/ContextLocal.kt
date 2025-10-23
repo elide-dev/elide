@@ -71,3 +71,11 @@ public sealed interface ContextLocal<out T> {
 /** Creates a new empty [ContextLocal] value. */
 @OptIn(InternalExecutorApi::class)
 public fun <T> ContextLocal(): ContextLocal<T> = ContextLocalImpl()
+
+/**
+ * Returns the current value for this context-local, or the result of calling [default] if no value is set for the
+ * current context. The result of [default] is stored for the current context.
+ */
+@ContextAware public inline fun <T> ContextLocal<T>.compute(executor: ContextAwareExecutor, default: () -> T): T {
+  return current() ?: default().also { executor.setContextLocal(this, it) }
+}

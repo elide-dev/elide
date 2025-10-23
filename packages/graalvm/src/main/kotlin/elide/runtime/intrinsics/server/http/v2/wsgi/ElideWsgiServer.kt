@@ -21,6 +21,7 @@ import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyHashMap
+import java.net.InetSocketAddress
 import kotlin.time.TimeSource
 import elide.runtime.Logging
 import elide.runtime.core.RuntimeLatch
@@ -132,12 +133,15 @@ public class ElideWsgiServer(
 
   override fun acquireFactory(): HttpContextFactory<*> =
     HttpContextFactory<HttpContext> { incomingRequest, _, requestSource, responseSink ->
+      val contentLength = HttpUtil.getContentLength(incomingRequest, Long.MAX_VALUE)
+
       WsgiHttpContext(
         request = incomingRequest,
         requestBody = requestSource,
         response = DefaultHttpResponse(incomingRequest.protocolVersion(), HttpResponseStatus.NOT_FOUND),
         responseBody = responseSink,
         session = HttpSession(),
+        input = WsgiInputStream(executor = executor, limit = contentLength),
       )
     }
 
@@ -146,16 +150,20 @@ public class ElideWsgiServer(
     context: WsgiHttpContext,
     startResponse: ChannelPromise,
   ) {
+    val address = serverChannel?.localAddress() as? InetSocketAddress
+    context.requestBody.sink(context.input)
+
     val environ = context.toWsgiEnviron(
-      input = System.`in`,
-      errors = System.err,
+      input = context.input,
+      errors = WsgiErrorStream(log),
       version = 1 to 0,
       multithread = true,
       multiprocess = false,
       runOnce = false,
-      urlScheme = "http",
-      defaultHost = "localhost",
-      defaultPort = 3000,
+      urlScheme = "http", // TODO: HTTPS is not yet supported
+      defaultHost = address?.hostName.orEmpty(),
+      defaultPort = address?.port ?: DEFAULT_PORT,
+      scriptName = entrypoint.source.name,
     )
 
     @Suppress("UNCHECKED_CAST")

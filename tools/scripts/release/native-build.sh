@@ -92,6 +92,12 @@ set +x;
 
 ## Build native image
 set -x;
+./gradlew \
+  :packages:cli:nativeOptimizedCompile -Pelide.buildMode=release -Pelide.pgo=true -Pelide.release=true -Pelide.opt=4 -Pelide.debug=false -Pelide.stamp=true -Pelide.static=false
+set +x;
+
+## Build native image
+set -x;
   ./gradlew \
     $GRADLE_ARGS \
     $GRADLE_PROPS \

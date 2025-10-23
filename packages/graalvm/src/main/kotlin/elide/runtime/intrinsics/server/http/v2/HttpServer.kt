@@ -35,7 +35,9 @@ import elide.runtime.intrinsics.server.http.v2.channels.NettyHttpContextAdapter
 public abstract class HttpServer : AutoCloseable {
   private val serverRunning = AtomicBoolean(false)
   private var eventLoopGroup: EventLoopGroup? = null
-  private var serverChannel: Channel? = null
+
+  protected var serverChannel: Channel? = null
+  private set
 
   protected abstract val runtimeLatch: RuntimeLatch
 

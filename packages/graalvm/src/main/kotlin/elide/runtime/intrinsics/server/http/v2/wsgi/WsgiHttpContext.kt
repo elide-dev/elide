@@ -13,24 +13,31 @@
 
 package elide.runtime.intrinsics.server.http.v2.wsgi
 
+import io.netty.handler.codec.http.HttpHeaderNames
+import io.netty.handler.codec.http.HttpRequest
+import io.netty.handler.codec.http.HttpResponse
+import io.netty.util.AsciiString
+import elide.runtime.Logger
+import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.intrinsics.server.http.v2.HttpContentSink
 import elide.runtime.intrinsics.server.http.v2.HttpContentSource
 import elide.runtime.intrinsics.server.http.v2.HttpContext
 import elide.runtime.intrinsics.server.http.v2.HttpSession
 import elide.runtime.intrinsics.server.http.v2.wsgi.WsgiHttpContext.Companion.headerMultiValueString
 import elide.runtime.intrinsics.server.http.v2.wsgi.WsgiHttpContext.Companion.headerVariableName
-import io.netty.handler.codec.http.HttpHeaderNames
-import io.netty.handler.codec.http.HttpRequest
-import io.netty.handler.codec.http.HttpResponse
-import io.netty.util.AsciiString
 
-public class WsgiHttpContext(
+public class WsgiHttpContext internal constructor(
   override val request: HttpRequest,
   override val requestBody: HttpContentSource,
   override val response: HttpResponse,
   override val responseBody: HttpContentSink,
-  override val session: HttpSession
+  override val session: HttpSession,
+  public val input: WsgiInputStream,
 ) : HttpContext {
+  override fun close() {
+    input.dispose()
+  }
+
   public companion object {
     public const val HEADER_VALUE_SEPARATOR: String = ";"
 
@@ -51,9 +58,9 @@ public class WsgiHttpContext(
   }
 }
 
-public fun HttpContext.toWsgiEnviron(
-  input: Any,
-  errors: Any,
+internal fun HttpContext.toWsgiEnviron(
+  input: WsgiInputStream,
+  errors: WsgiErrorStream,
   version: Pair<Int, Int>,
   multithread: Boolean,
   multiprocess: Boolean,
@@ -61,6 +68,7 @@ public fun HttpContext.toWsgiEnviron(
   urlScheme: String,
   defaultHost: String,
   defaultPort: Int,
+  scriptName: String,
 ): MutableMap<String, Any> = mutableMapOf<String, Any>().apply {
   // base wsgi environ
   put("wsgi.input", input)
@@ -73,12 +81,14 @@ public fun HttpContext.toWsgiEnviron(
 
   // CGI variables
   put("REQUEST_METHOD", request.method().name())
-  put("SCRIPT_NAME", "") // TODO
+  put("SCRIPT_NAME", scriptName)
   put("PATH_INFO", request.uri().substringBefore('?'))
   put("QUERY_STRING", request.uri().substringAfter('?'))
   put("SERVER_NAME", defaultHost)
   put("SERVER_PORT", defaultPort.toString())
   put("SERVER_PROTOCOL", request.protocolVersion().text())
+  put("CONTENT_TYPE", request.headers().get(HttpHeaderNames.CONTENT_TYPE).orEmpty())
+  put("CONTENT_LENGTH", request.headers().get(HttpHeaderNames.CONTENT_LENGTH).orEmpty())
 
   // headers
   val requestHeaders = request.headers()

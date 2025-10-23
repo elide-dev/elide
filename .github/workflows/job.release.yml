@@ -186,13 +186,13 @@ jobs:
           cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
           gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
-      - name: "Artifact: Build Outputs"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        if: ${{ env.TEST_MODE == 'false' }}
-        id: build-artifact
-        with:
-          name: elide-${{env.ELIDE_VERSION}}-${{ matrix.os }}-${{ matrix.arch }}
-          path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
+#      - name: "Artifact: Build Outputs"
+#        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+#        if: ${{ env.TEST_MODE == 'false' }}
+#        id: build-artifact
+#        with:
+#          name: elide-${{env.ELIDE_VERSION}}-${{ matrix.os }}-${{ matrix.arch }}
+#          path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
       - name: "Get Version"
         run: |
           source ./tools/scripts/release/version-setter.sh
@@ -206,11 +206,11 @@ jobs:
       - name: "🛠 Release: Stage"
         run:
           bash ./tools/scripts/release/stage-release.sh
-      - name: "Artifact: Release Package"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        if: ${{ env.TEST_MODE == 'false' }}
-        id: pack-artifact
-        with:
-          name: elide-${{env.ELIDE_VERSION}}-${{ matrix.os }}-${{ matrix.arch }}.zip
-          path: staging/**/*.*
+#      - name: "Artifact: Release Package"
+#        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+#        if: ${{ env.TEST_MODE == 'false' }}
+#        id: pack-artifact
+#        with:
+#          name: elide-${{env.ELIDE_VERSION}}-${{ matrix.os }}-${{ matrix.arch }}.zip
+#          path: staging/**/*.*
 

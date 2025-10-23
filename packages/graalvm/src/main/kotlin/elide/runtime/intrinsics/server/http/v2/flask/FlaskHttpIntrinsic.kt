@@ -48,7 +48,7 @@ private const val BIND_METHOD = "bind"
   runtimeLatch: Provider<RuntimeLatch>,
   entrypointProvider: Provider<EntrypointRegistry>,
   runtimeExecutor: Provider<RuntimeExecutor>,
-) : AbstractHttpIntrinsic(), ProxyExecutable, ProxyObject, GuestIntrinsic, FlaskAPI {
+) : HttpServer(), ProxyExecutable, ProxyObject, GuestIntrinsic, FlaskAPI {
   override val runtimeLatch: RuntimeLatch by lazy { runtimeLatch.get() }
 
   private val entrypointRegistry by lazy { entrypointProvider.get() }

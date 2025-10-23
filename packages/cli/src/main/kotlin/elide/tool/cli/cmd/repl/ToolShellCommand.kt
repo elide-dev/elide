@@ -19,6 +19,8 @@
 package elide.tool.cli.cmd.repl
 
 import ch.qos.logback.classic.LoggerContext
+import elide.runtime.core.RuntimeExecutor
+import elide.runtime.core.RuntimeLatch
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import com.github.ajalt.mordant.rendering.TextColors
@@ -31,7 +33,6 @@ import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import io.micronaut.core.io.IOUtils
 import org.graalvm.nativeimage.ImageInfo
-import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.PolyglotException
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
@@ -73,10 +74,92 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.MutableList
+import kotlin.collections.MutableSet
+import kotlin.collections.Set
+import kotlin.collections.addAll
+import kotlin.collections.any
+import kotlin.collections.buildList
+import kotlin.collections.buildSet
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.contains
+import kotlin.collections.count
+import kotlin.collections.distinct
+import kotlin.collections.drop
+import kotlin.collections.emptyList
+import kotlin.collections.emptySet
+import kotlin.collections.filter
+import kotlin.collections.filterIsInstance
+import kotlin.collections.find
+import kotlin.collections.first
+import kotlin.collections.firstOrNull
+import kotlin.collections.flatMap
+import kotlin.collections.forEach
+import kotlin.collections.getOrNull
+import kotlin.collections.getOrPut
+import kotlin.collections.indexOf
+import kotlin.collections.indexOfFirst
+import kotlin.collections.isNotEmpty
+import kotlin.collections.joinToString
+import kotlin.collections.lastIndex
+import kotlin.collections.listOf
+import kotlin.collections.map
+import kotlin.collections.mapIndexed
+import kotlin.collections.mapNotNull
+import kotlin.collections.maxOf
+import kotlin.collections.maxOfOrNull
+import kotlin.collections.mutableMapOf
+import kotlin.collections.plus
+import kotlin.collections.setOf
+import kotlin.collections.sortedMapOf
+import kotlin.collections.toList
+import kotlin.collections.toMutableList
+import kotlin.collections.toMutableSet
+import kotlin.collections.toSortedSet
+import kotlin.collections.toTypedArray
 import kotlin.io.path.*
 import kotlin.math.max
+import kotlin.ranges.until
+import kotlin.sequences.Sequence
+import kotlin.sequences.distinct
+import kotlin.sequences.drop
+import kotlin.sequences.emptySequence
+import kotlin.sequences.filterIsInstance
+import kotlin.sequences.forEach
+import kotlin.sequences.ifEmpty
+import kotlin.sequences.map
+import kotlin.sequences.plus
+import kotlin.sequences.sequence
+import kotlin.sequences.sequenceOf
+import kotlin.sequences.take
+import kotlin.sequences.toList
+import kotlin.sequences.toMutableList
 import kotlin.streams.asSequence
 import kotlin.streams.asStream
+import kotlin.text.StringBuilder
+import kotlin.text.appendLine
+import kotlin.text.buildString
+import kotlin.text.contains
+import kotlin.text.endsWith
+import kotlin.text.ifBlank
+import kotlin.text.isNotBlank
+import kotlin.text.isNotEmpty
+import kotlin.text.isNullOrBlank
+import kotlin.text.lines
+import kotlin.text.lowercase
+import kotlin.text.padEnd
+import kotlin.text.padStart
+import kotlin.text.prependIndent
+import kotlin.text.removePrefix
+import kotlin.text.removeSuffix
+import kotlin.text.repeat
+import kotlin.text.replace
+import kotlin.text.startsWith
+import kotlin.text.trim
+import kotlin.text.trimIndent
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
@@ -87,11 +170,8 @@ import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
-import elide.runtime.core.RuntimeExecutor
-import elide.runtime.core.RuntimeLatch
 import elide.runtime.core.extensions.attach
 import elide.runtime.exec.ContextAwareExecutor
-import elide.runtime.exec.ContextLocal
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.Engine
 import elide.runtime.gvm.GraalVMGuest
@@ -100,7 +180,8 @@ import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
 import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.runtime.intrinsics.server.http.HttpServerAgent
-import elide.runtime.intrinsics.testing.TestEntrypoint
+import elide.runtime.intrinsics.server.http.v2.wsgi.ElideWsgiServer
+import elide.runtime.intrinsics.server.http.v2.wsgi.WsgiEntrypoint
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.plugins.Coverage
 import elide.runtime.plugins.jvm.Jvm
@@ -130,7 +211,6 @@ import elide.tool.exec.SubprocessRunner.subprocess
 import elide.tool.exec.allProjectPaths
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
-import elide.tooling.project.ProjectManager
 import elide.tool.server.StaticSiteServer
 import elide.tool.server.StaticSiteServer.buildStaticServer
 import elide.tooling.*
@@ -148,6 +228,7 @@ import elide.tooling.lockfile.*
 import elide.tooling.project.ElideProject
 import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.ProjectManager
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.StaticSite
 import elide.tooling.project.manifest.NodePackageManifest
@@ -1155,23 +1236,21 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         "${language.label} syntax is incomplete",
       )
 
-      exc.isHostException || exc.message?.contains("HostException: ") == true -> {
-        when (exc.asHostException()) {
-          // guest error thrown from host-side logic
-          is GuestError -> displayFormattedError(
-            exc,
-            msg ?: exc.message ?: "An error was thrown",
-            stacktrace = !isInteractive(),
-          )
+      exc.isHostException -> when (val hostExc = exc.asHostException()) {
+        // guest error thrown from host-side logic
+        is GuestError -> displayFormattedError(
+          exc,
+          msg ?: exc.message ?: "An error was thrown",
+          stacktrace = !isInteractive(),
+        )
 
-          else -> displayFormattedError(
-            exc.asHostException(),
-            msg ?: exc.asHostException().message ?: "A runtime error was thrown",
-            advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
-            stacktrace = true,
-            internal = true,
-          )
-        }
+        else -> displayFormattedError(
+          hostExc,
+          msg ?: hostExc.message ?: "A runtime error was thrown",
+          advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
+          stacktrace = true,
+          internal = true,
+        )
       }
 
       // if this is a guest-side exception, throw it
@@ -1582,13 +1661,19 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   }
 
   // Detect whether we are running in `serve` mode (with alias `start`).
-  private fun serveMode(): Boolean = _isServeMode
+  private fun serveMode(): Boolean {
+    return _isServeMode || activeProject.value?.isWsgiEnabled() == true
+  }
 
   private val _isTestMode by lazy {
     commandSpecifiesTest ||
             actionHint?.lowercase()?.trim().let {
               it != null && it == "test" || it == "tests"
             }
+  }
+
+  private fun ElideProject.isWsgiEnabled(): Boolean {
+    return manifest.python?.wsgi?.let { it.app != null || it.factory != null } == true
   }
 
   // Detect whether we are running in `test` mode (with alias `test` or `tests`).
@@ -1714,13 +1799,38 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     entrypointProvider.record(source)
 
     try {
-      // enter VM context
-      logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
+      when (language) {
+        JS, TYPESCRIPT -> {
+          // enter VM context
+          logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
 
-      // initialize the server intrinsic and run using the provided source
-      serverAgent.run(source, execProvider) { resolvePolyglotContext(langs, detached = false) }
-      phaser.value.register()
-      serverRunning.value = true
+          // initialize the server intrinsic and run using the provided source
+          serverAgent.run(source, execProvider) { resolvePolyglotContext(langs, detached = false) }
+          phaser.value.register()
+          serverRunning.value = true
+        }
+
+        PYTHON -> {
+          logging.trace("Running WSGI server")
+          val wsgi = activeProject.value?.manifest?.python?.wsgi
+            ?: error("No available WSGI configuration in manifest")
+
+          val bindingArgs = if (wsgi.app != null) null else wsgi.args
+          val bindingName = wsgi.app
+            ?: wsgi.factory
+            ?: error("Serve mode should only be active if the app or factory binding is specified")
+
+          ElideWsgiServer(
+            entrypoint = WsgiEntrypoint(source, bindingName, bindingArgs),
+            executor = runtimeExecutor.acquire(),
+            runtimeLatch = runtimeLatch,
+          ).bind(wsgi.port ?: ElideWsgiServer.DEFAULT_PORT)
+        }
+
+        else -> error("Cannot run embedded server for language $language")
+      }
+
+      runtimeLatch.await()
     } catch (exc: PolyglotException) {
       processUserCodeError(language, exc)?.let { throw it }
     }
@@ -2694,11 +2804,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     // resolve project configuration (async)
     val projectResolution = launch {
-      runCatching {
-        projectManager.resolveProject(projectPath)
-      }.getOrNull()?.let {
-        activeProject.value = it
-      }
+      // TODO: we should surface manifest parsing errors instead of failing silently
+      runCatching { projectManager.resolveProject(projectPath) }
+        .onFailure { cause -> logging.debug("Failed to resolve project manifest", cause) }
+        .onSuccess { activeProject.value = it }
     }
     val lockfileResolution = launch {
       runCatching {

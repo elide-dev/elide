@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "elide": {
+            "command": "elide",
+            "args": [
+                "mcp"
+            ],
+            "type": "stdio"
+        }
+    }
+}

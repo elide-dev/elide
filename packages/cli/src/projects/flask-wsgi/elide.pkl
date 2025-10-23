@@ -2,6 +2,8 @@ amends "elide:project.pkl"
 
 name = "wsgi-flask"
 
+local reactVersion = "18.3.1"
+
 python {
   wsgi {
     factory = "make_app"
@@ -14,6 +16,13 @@ python {
 
 dependencies {
   pip {
-      packages { "flask" }
+    packages { "flask" }
+  }
+
+  npm {
+    packages {
+      "react@\(reactVersion)"
+      "react-dom@\(reactVersion)"
+    }
   }
 }

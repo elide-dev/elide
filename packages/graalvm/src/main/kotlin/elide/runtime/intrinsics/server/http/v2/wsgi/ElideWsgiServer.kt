@@ -13,7 +13,6 @@
 
 package elide.runtime.intrinsics.server.http.v2.wsgi
 
-import elide.runtime.intrinsics.server.http.v2.*
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelPromise
 import io.netty.handler.codec.http.*
@@ -27,6 +26,7 @@ import elide.runtime.Logging
 import elide.runtime.core.RuntimeLatch
 import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.exec.ContextLocal
+import elide.runtime.intrinsics.server.http.v2.*
 import elide.runtime.intrinsics.server.http.v2.guest.sourceIterator
 
 /**
@@ -40,7 +40,23 @@ public data class WsgiEntrypoint(
   val source: Source,
   val bindingName: String,
   val bindingArgs: List<String>? = null,
-)
+) {
+  public companion object {
+    private val SPEC_REGEX = Regex("(?<symbol>\\w+)(?:\\((?<args>.+)\\))?")
+
+    /**
+     * Returns a [WsgiEntrypoint] configured from the given import [spec] in the form `<symbol>(<args>)`. Applications
+     * that don't need to specify a factory can use `<symbol>` directly.
+     */
+    @JvmStatic public fun from(spec: String, source: Source): WsgiEntrypoint {
+      val match = SPEC_REGEX.find(spec) ?: error("Invalid WSGI spec: $spec")
+      val symbol = match.groups["symbol"]?.value ?: error("WSGI spec must contain a symbol name")
+
+      val args = match.groups["args"]?.value?.split(",")
+      return WsgiEntrypoint(source, symbol, args)
+    }
+  }
+}
 
 /**
  * A WSGI server implementation that calls a guest application for every incoming request.
@@ -116,19 +132,19 @@ public class ElideWsgiServer(
 
   override fun acquireFactory(): HttpContextFactory<*> =
     HttpContextFactory<HttpContext> { incomingRequest, _, requestSource, responseSink ->
-        WsgiHttpContext(
-            request = incomingRequest,
-            requestBody = requestSource,
-            response = DefaultHttpResponse(incomingRequest.protocolVersion(), HttpResponseStatus.NOT_FOUND),
-            responseBody = responseSink,
-            session = HttpSession(),
-        )
+      WsgiHttpContext(
+        request = incomingRequest,
+        requestBody = requestSource,
+        response = DefaultHttpResponse(incomingRequest.protocolVersion(), HttpResponseStatus.NOT_FOUND),
+        responseBody = responseSink,
+        session = HttpSession(),
+      )
     }
 
   private fun callWsgiApplication(
-      stack: WsgiApplicationStack,
-      context: WsgiHttpContext,
-      startResponse: ChannelPromise,
+    stack: WsgiApplicationStack,
+    context: WsgiHttpContext,
+    startResponse: ChannelPromise,
   ) {
     val environ = context.toWsgiEnviron(
       input = System.`in`,

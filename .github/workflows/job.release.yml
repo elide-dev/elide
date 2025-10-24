@@ -195,7 +195,7 @@ jobs:
 #          path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
       - name: "Get Version"
         run: |
-          source ./tools/scripts/release/version-setter.sh
+          source ./tools/scripts/release/version-set.sh
           echo "ELIDE_VERSION=$ELIDE_VERSION" >> $GITHUB_ENV
       - name: "🛠 Release: Package"
         run: bash ./tools/scripts/release/package-release.sh

@@ -7128,27 +7128,6 @@ public abstract interface class elide/runtime/intrinsics/server/http/HttpServerE
 	public abstract fun start ()V
 }
 
-public abstract class elide/runtime/intrinsics/server/http/v2/AbstractHttpIntrinsic : java/lang/AutoCloseable {
-	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/AbstractHttpIntrinsic$Companion;
-	public fun <init> ()V
-	protected abstract fun acquireFactory ()Lelide/runtime/intrinsics/server/http/v2/HttpContextFactory;
-	protected abstract fun acquireHandler ()Lelide/runtime/intrinsics/server/http/v2/HttpContextHandler;
-	public fun close ()V
-	protected abstract fun getRuntimeLatch ()Lelide/runtime/core/RuntimeLatch;
-	protected final fun isRunning ()Z
-}
-
-public final class elide/runtime/intrinsics/server/http/v2/AbstractHttpIntrinsic$Companion {
-}
-
-public abstract class elide/runtime/intrinsics/server/http/v2/GuestHandlerStackManager {
-	public fun <init> ()V
-	protected abstract fun getEntrypointProvider ()Lelide/runtime/core/EntrypointRegistry;
-	protected abstract fun initializeStack (Ljava/lang/Object;Lorg/graalvm/polyglot/Source;)V
-	protected abstract fun newStack ()Ljava/lang/Object;
-	public final fun withStack (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
-}
-
 public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContentSink {
 	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/HttpContentSink$Companion;
 	public abstract fun close ()V
@@ -7195,6 +7174,7 @@ public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpCont
 }
 
 public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContext : java/lang/AutoCloseable {
+	public fun close ()V
 	public abstract fun getRequest ()Lio/netty/handler/codec/http/HttpRequest;
 	public abstract fun getRequestBody ()Lelide/runtime/intrinsics/server/http/v2/HttpContentSource;
 	public abstract fun getResponse ()Lio/netty/handler/codec/http/HttpResponse;
@@ -7208,6 +7188,21 @@ public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpCont
 
 public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContextHandler {
 	public abstract fun handle-YlPY-8k (Lelide/runtime/intrinsics/server/http/v2/HttpContext;Lio/netty/channel/ChannelHandlerContext;)Lio/netty/channel/ChannelFuture;
+}
+
+public abstract class elide/runtime/intrinsics/server/http/v2/HttpServer : java/lang/AutoCloseable {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/HttpServer$Companion;
+	public fun <init> ()V
+	protected abstract fun acquireFactory ()Lelide/runtime/intrinsics/server/http/v2/HttpContextFactory;
+	protected abstract fun acquireHandler ()Lelide/runtime/intrinsics/server/http/v2/HttpContextHandler;
+	public final fun bind (I)Z
+	public fun close ()V
+	protected abstract fun getRuntimeLatch ()Lelide/runtime/core/RuntimeLatch;
+	protected final fun getServerChannel ()Lio/netty/channel/Channel;
+	protected final fun isRunning ()Z
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/HttpServer$Companion {
 }
 
 public final class elide/runtime/intrinsics/server/http/v2/HttpSession {
@@ -7296,7 +7291,7 @@ public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpExcept
 	public final fun getCode ()I
 }
 
-public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpIntrinsic : elide/runtime/intrinsics/server/http/v2/AbstractHttpIntrinsic, elide/runtime/intrinsics/GuestIntrinsic, elide/runtime/plugins/python/flask/FlaskAPI, org/graalvm/polyglot/proxy/ProxyExecutable, org/graalvm/polyglot/proxy/ProxyObject {
+public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpIntrinsic : elide/runtime/intrinsics/server/http/v2/HttpServer, elide/runtime/intrinsics/GuestIntrinsic, elide/runtime/plugins/python/flask/FlaskAPI, org/graalvm/polyglot/proxy/ProxyExecutable, org/graalvm/polyglot/proxy/ProxyObject {
 	public fun <init> (Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;)V
 	public fun displayName ()Ljava/lang/String;
 	public fun execute ([Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/server/http/v2/flask/FlaskHttpIntrinsic$FlaskAppInstance;
@@ -7320,6 +7315,77 @@ public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpIntrin
 
 public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskRouter {
 	public fun <init> ()V
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/guest/GuestIteratorProducerKt {
+	public static final fun sourceIterator (Lelide/runtime/intrinsics/server/http/v2/HttpContentSink;Lorg/graalvm/polyglot/Value;Lelide/runtime/exec/ContextAwareExecutor;Lkotlin/jvm/functions/Function2;)V
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/wsgi/ElideWsgiServer : elide/runtime/intrinsics/server/http/v2/HttpServer {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/wsgi/ElideWsgiServer$Companion;
+	public static final field DEFAULT_PORT I
+	public fun <init> (Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint;Lelide/runtime/exec/ContextAwareExecutor;Lelide/runtime/core/RuntimeLatch;)V
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/wsgi/ElideWsgiServer$Companion {
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint$Companion;
+	public fun <init> (Lorg/graalvm/polyglot/Source;Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Lorg/graalvm/polyglot/Source;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lorg/graalvm/polyglot/Source;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun copy (Lorg/graalvm/polyglot/Source;Ljava/lang/String;Ljava/util/List;)Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint;
+	public static synthetic fun copy$default (Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint;Lorg/graalvm/polyglot/Source;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint;
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun from (Ljava/lang/String;Lorg/graalvm/polyglot/Source;)Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint;
+	public final fun getBindingArgs ()Ljava/util/List;
+	public final fun getBindingName ()Ljava/lang/String;
+	public final fun getSource ()Lorg/graalvm/polyglot/Source;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint$Companion {
+	public final fun from (Ljava/lang/String;Lorg/graalvm/polyglot/Source;)Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiEntrypoint;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/wsgi/WsgiHttpContext : elide/runtime/intrinsics/server/http/v2/HttpContext {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiHttpContext$Companion;
+	public static final field HEADER_VALUE_SEPARATOR Ljava/lang/String;
+	public fun close ()V
+	public final fun getInput ()Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiInputStream;
+	public fun getRequest ()Lio/netty/handler/codec/http/HttpRequest;
+	public fun getRequestBody ()Lelide/runtime/intrinsics/server/http/v2/HttpContentSource;
+	public fun getResponse ()Lio/netty/handler/codec/http/HttpResponse;
+	public fun getResponseBody ()Lelide/runtime/intrinsics/server/http/v2/HttpContentSink;
+	public fun getSession-pq86gmg ()Ljava/util/Map;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/wsgi/WsgiHttpContext$Companion {
+	public final fun getExcludedHeaderNames ()[Lio/netty/util/AsciiString;
+	public final fun headerMultiValueString (Ljava/lang/Iterable;)Ljava/lang/String;
+	public final fun headerVariableName (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/wsgi/WsgiInputStream : elide/runtime/intrinsics/server/http/v2/HttpContentSource$Consumer, org/graalvm/polyglot/proxy/ProxyObject {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/wsgi/WsgiInputStream$Companion;
+	public fun <init> (Lelide/runtime/exec/ContextAwareExecutor;J)V
+	public fun attached (Lelide/runtime/intrinsics/server/http/v2/HttpContentSource$Handle;)V
+	public fun consume (Lio/netty/handler/codec/http/HttpContent;Lelide/runtime/intrinsics/server/http/v2/HttpContentSource$Handle;)V
+	public final fun dispose ()V
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public synthetic fun getMemberKeys ()Ljava/lang/Object;
+	public fun getMemberKeys ()[Ljava/lang/String;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Ljava/lang/Void;
+	public synthetic fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun released ()V
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/wsgi/WsgiInputStream$Companion {
 }
 
 public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteAPI$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {

@@ -719,6 +719,7 @@ public abstract interface class elide/runtime/exec/ContextLocal {
 
 public final class elide/runtime/exec/ContextLocalKt {
 	public static final fun ContextLocal ()Lelide/runtime/exec/ContextLocal;
+	public static final fun compute (Lelide/runtime/exec/ContextLocal;Lelide/runtime/exec/ContextAwareExecutor;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
 }
 
 public abstract interface class elide/runtime/exec/CoroutineGuestContext : kotlin/coroutines/CoroutineContext$Element {

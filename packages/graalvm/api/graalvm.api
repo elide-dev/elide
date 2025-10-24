@@ -8,6 +8,16 @@ public synthetic class elide/runtime/core/$EntrypointRegistry$Definition : io/mi
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public synthetic class elide/runtime/core/$RuntimeExecutor$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public synthetic class elide/runtime/core/$RuntimeLatch$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -38,6 +48,13 @@ public final class elide/runtime/core/EntrypointRegistry {
 	public final fun acquire ()Lorg/graalvm/polyglot/Source;
 	public final fun getAvailable ()Z
 	public final fun record (Lorg/graalvm/polyglot/Source;)V
+}
+
+public final class elide/runtime/core/RuntimeExecutor {
+	public fun <init> ()V
+	public final fun acquire ()Lelide/runtime/exec/ContextAwareExecutor;
+	public final fun getAvailable ()Z
+	public final fun register (Lelide/runtime/exec/ContextAwareExecutor;)V
 }
 
 public final class elide/runtime/core/RuntimeLatch {
@@ -2359,7 +2376,7 @@ public synthetic class elide/runtime/gvm/intrinsics/$ServiceIntrinsicsResolver$D
 
 public final class elide/runtime/gvm/intrinsics/BuildTimeIntrinsicsResolver : elide/runtime/intrinsics/IntrinsicsResolver {
 	public static final field Companion Lelide/runtime/gvm/intrinsics/BuildTimeIntrinsicsResolver$Companion;
-	public fun <init> (Lelide/runtime/exec/GuestExecutor;Ljava/util/Optional;Lelide/runtime/node/fs/VfsInitializerListener;Lelide/runtime/intrinsics/testing/TestingRegistrar;Lelide/runtime/core/EntrypointRegistry;Lelide/runtime/core/SharedContextFactory;Lelide/runtime/core/RuntimeLatch;)V
+	public fun <init> (Lelide/runtime/exec/GuestExecutor;Ljava/util/Optional;Lelide/runtime/node/fs/VfsInitializerListener;Lelide/runtime/intrinsics/testing/TestingRegistrar;Lelide/runtime/core/EntrypointRegistry;Lelide/runtime/core/RuntimeExecutor;Lelide/runtime/core/RuntimeLatch;)V
 	public fun generate (Lelide/runtime/gvm/GuestLanguage;Z)Lkotlin/sequences/Sequence;
 }
 
@@ -7262,12 +7279,6 @@ public synthetic class elide/runtime/intrinsics/server/http/v2/flask/$FlaskHttpI
 	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
 	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
-}
-
-public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHandlerStackManager : elide/runtime/intrinsics/server/http/v2/GuestHandlerStackManager {
-	public fun <init> (Lelide/runtime/core/EntrypointRegistry;Lelide/runtime/core/SharedContextFactory;)V
-	public synthetic fun initializeStack (Ljava/lang/Object;Lorg/graalvm/polyglot/Source;)V
-	public synthetic fun newStack ()Ljava/lang/Object;
 }
 
 public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpContext : elide/runtime/intrinsics/server/http/v2/HttpContext {

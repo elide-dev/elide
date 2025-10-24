@@ -5472,15 +5472,17 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$ProjectSo
 public final class elide/tooling/project/manifest/ElidePackageManifest$PythonSettings : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings$Companion;
 	public fun <init> ()V
-	public fun <init> (Z)V
-	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;)V
+	public synthetic fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
-	public final fun copy (Z)Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;ZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;
+	public final fun component2 ()Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;
+	public final fun copy (ZLelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;)Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;ZLelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$PythonSettings;
 	public final fun debug ()Z
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+	public final fun wsgi ()Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;
 }
 
 public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$PythonSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -5770,6 +5772,42 @@ public final synthetic class elide/tooling/project/manifest/ElidePackageManifest
 }
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$WebSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$WsgiSettings : java/lang/Record {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/Integer;Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/Integer;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun app ()Ljava/lang/String;
+	public final fun args ()Ljava/util/List;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/lang/Integer;
+	public final fun component5 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/Integer;Ljava/lang/Integer;)Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun factory ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun port ()Ljava/lang/Integer;
+	public fun toString ()Ljava/lang/String;
+	public final fun workers ()Ljava/lang/Integer;
+}
+
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$WsgiSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$WsgiSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$WsgiSettings$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

@@ -25,4 +25,35 @@ class PipDependencies {
 }
 
 /// Configures Python language features and settings.
-class PythonSettings {}
+class PythonSettings {
+  /// Enable additional Python debugging features.
+  debug: Boolean = false
+
+  /// Configure the project to as a WSGI application using Elide's HTTP stack.
+  wsgi: WsgiSettings = new {}
+}
+
+/// Name of the variable or callable to resolve as the WSGI application.
+typealias WsgiApplicationSpec = String
+
+/// Configure Elide's WSGI server stack.
+class WsgiSettings {
+  /// Name of the variable to be used as the WSGI application.
+  ///
+  /// To specify a callable that produces the application instance, use the `factory` field.
+  app: WsgiApplicationSpec? = null
+
+  /// Name of the callable to be used to produce a WSGI application. The `args` will be supplied as positional
+  /// arguments.
+  factory: WsgiApplicationSpec? = null
+
+  /// Optional arguments passed to the `application` entrypoint callable.
+  args: Listing<String> = new {}
+
+  /// Port used to bound the HTTP server.
+  port: Int? = null
+
+  /// Optional number of workers to be used by the server, if unset, a
+  /// reasonable default will be used.
+  workers: Int? = null
+}

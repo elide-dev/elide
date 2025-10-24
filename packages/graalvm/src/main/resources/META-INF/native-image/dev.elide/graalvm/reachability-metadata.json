@@ -1,6 +1,10 @@
 {
   "reflection": [
     {
+      "type": "elide.runtime.intrinsics.server.http.v2.channels.NettyHttpContextAdapter",
+      "allDeclaredMethods": true
+    },
+    {
       "type": "org.jetbrains.kotlin.utils.PathUtil"
     },
     {

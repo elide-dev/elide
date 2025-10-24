@@ -22,8 +22,8 @@ import jakarta.inject.Provider
 import jakarta.inject.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EntrypointRegistry
+import elide.runtime.core.RuntimeExecutor
 import elide.runtime.core.RuntimeLatch
-import elide.runtime.core.SharedContextFactory
 import elide.runtime.exec.GuestExecutor
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.GuestLanguage
@@ -94,7 +94,7 @@ import elide.runtime.plugins.env.EnvConfig
   vfsInitializerListener: VfsInitializerListener,
   testRegistrar: TestingRegistrar,
   entrypoint: EntrypointRegistry,
-  contextFactory: SharedContextFactory,
+  executor: RuntimeExecutor,
   latch: RuntimeLatch,
 ) : IntrinsicsResolver {
   init {
@@ -103,7 +103,7 @@ import elide.runtime.plugins.env.EnvConfig
     listener = vfsInitializerListener
     registrar = testRegistrar
     entrypointProvider = entrypoint
-    contextProvider = contextFactory
+    runtimeExecutor = executor
     runtimeLatch = latch
   }
 
@@ -113,7 +113,7 @@ import elide.runtime.plugins.env.EnvConfig
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var listener: VfsInitializerListener
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var registrar: TestingRegistrar
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var entrypointProvider: EntrypointRegistry
-    @CompilerDirectives.CompilationFinal @Volatile private lateinit var contextProvider: SharedContextFactory
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeExecutor: RuntimeExecutor
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeLatch: RuntimeLatch
     @JvmStatic private val execProvider = GuestExecutorProvider { exec }
     @JvmStatic private val timerExecutor = JsTimerExecutorProviderImpl()
@@ -176,9 +176,9 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val browserStubs = BrowserStubs()
 
     @JvmStatic private val flask = FlaskHttpIntrinsic(
-      runtimeLatchProvider = { runtimeLatch },
+      runtimeLatch = { runtimeLatch },
       entrypointProvider = { entrypointProvider },
-      contextProvider = { contextProvider },
+      runtimeExecutor = { runtimeExecutor },
     )
 
     // All built-ins and intrinsics.

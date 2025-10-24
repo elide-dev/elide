@@ -47,7 +47,7 @@ jobs:
       matrix:
         include:
           - os: Linux
-            runner: ubuntu-cipool
+            runner: ubuntu-latest-32-cores-arm64
             arch: amd64
             labs: false
             tag: linux-amd64

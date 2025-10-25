@@ -18,15 +18,18 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
+import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardCopyOption
+import kotlin.io.path.exists
+import kotlin.io.path.isDirectory
+import kotlin.io.path.readText
+import kotlin.io.path.writeText
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
-import elide.tool.exec.SubprocessRunner.delegateTask
-import elide.tool.exec.SubprocessRunner.subprocess
-import elide.tool.exec.which
 
 @Command(
   name = "db",
@@ -38,7 +41,7 @@ import elide.tool.exec.which
 @ReflectiveAccess
 internal class DbCommand : AbstractSubcommand<ToolState, CommandContext>() {
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    return err("`elide db` requires a subcommand (try: studio)")
+    return CommandResult.err(message = "`elide db` requires a subcommand (try: studio)")
   }
 }
 
@@ -50,6 +53,42 @@ internal class DbCommand : AbstractSubcommand<ToolState, CommandContext>() {
 @Introspected
 @ReflectiveAccess
 internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>() {
+
+  private companion object {
+    private const val STUDIO_RESOURCE_PATH = "db-studio"
+    private const val STUDIO_OUTPUT_DIR = ".db-studio"
+    private const val STUDIO_INDEX_FILE = "index.tsx"
+  }
+
+  private fun copyResourceDirectory(resourcePath: String, targetDir: Path) {
+    val resourceUrl = this::class.java.classLoader.getResource(resourcePath)
+      ?: error("Resource not found: $resourcePath")
+
+    val uri = resourceUrl.toURI()
+    val fileSystem = when (uri.scheme) {
+      "jar" -> FileSystems.newFileSystem(uri, emptyMap<String, Any>())
+      else -> null
+    }
+
+    fileSystem.use {
+      val sourcePath = fileSystem?.getPath(resourcePath) ?: Path.of(uri)
+
+      Files.walk(sourcePath).use { stream ->
+        stream.forEach { source ->
+          val relative = sourcePath.relativize(source)
+          val target = targetDir.resolve(relative.toString())
+
+          when {
+            source.isDirectory() -> Files.createDirectories(target)
+            else -> {
+              Files.createDirectories(target.parent)
+              Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING)
+            }
+          }
+        }
+      }
+    }
+  }
 
   @Parameters(
     index = "0",
@@ -66,39 +105,37 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
   )
   internal var port: Int = 4983
 
-  @Option(
-    names = ["--host"],
-    description = ["Host to bind the database UI to"],
-    defaultValue = "localhost",
-  )
   internal var host: String = "localhost"
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val dbPath = databasePath ?: return err("Database path is required")
-
+    val dbPath = databasePath ?: return CommandResult.err(message = "Database path is required")
     val dbFile = Path.of(dbPath)
-    if (!Files.exists(dbFile)) {
-      return err("Database file not found: $dbPath")
+
+    if (!dbFile.exists()) {
+      return CommandResult.err(message = "Database file not found: $dbPath")
     }
 
     val absoluteDbPath = dbFile.toAbsolutePath().toString()
+    val outputDir = Path.of(STUDIO_OUTPUT_DIR)
 
-    val npxPath = which(Path.of("npx")) ?: return err("npx not found. Please install Node.js.")
+    copyResourceDirectory(STUDIO_RESOURCE_PATH, outputDir)
 
-    val task = subprocess(npxPath) {
-      args.add("@outerbase/studio")
-      args.add("--port")
-      args.add(port.toString())
-      args.add(absoluteDbPath)
-    }
+    val indexFile = outputDir.resolve(STUDIO_INDEX_FILE)
+    val processedContent = indexFile.readText()
+      .replace("__DB_PATH__", absoluteDbPath)
+      .replace("__PORT__", port.toString())
+
+    indexFile.writeText(processedContent)
 
     output {
-      appendLine("Starting database UI on http://$host:$port")
-      appendLine("Database: $absoluteDbPath")
+      appendLine("Generated database studio in: ${outputDir.toAbsolutePath()}")
       appendLine()
-      appendLine("Press Ctrl+C to stop the server")
+      appendLine("To start the database UI, run:")
+      appendLine("elide serve $STUDIO_OUTPUT_DIR/$STUDIO_INDEX_FILE")
+      appendLine()
+      appendLine("Then open: http://$host:$port")
     }
 
-    return delegateTask(task)
+    return CommandResult.success()
   }
 }

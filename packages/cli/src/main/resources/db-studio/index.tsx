@@ -1,7 +1,8 @@
 import { renderToString } from "react-dom/server";
 import { Database } from "elide:sqlite";
-import { HomeView, TableView } from "./App.tsx";
+import { HomeView, SelectionView, TableView } from "./App.tsx";
 import type { TableRow } from "./components/TableDetail.tsx";
+import type { DiscoveredDatabase } from "./components/DatabaseSelector.tsx";
 
 /**
  * Database Studio - Entry Point
@@ -12,23 +13,43 @@ import type { TableRow } from "./components/TableDetail.tsx";
 // Configuration injected by DbStudioCommand.kt
 const port = __PORT__;
 const dbPath = "__DB_PATH__";
+const databases = "__DATABASES__" as unknown as DiscoveredDatabase[];
+const selectionMode = __SELECTION_MODE__;
 
 
 export interface ServerConfig {
   port: number;
-  dbPath: string;
+  dbPath: string | null;
+  databases: DiscoveredDatabase[];
+  selectionMode: boolean;
 }
 
-async function renderHome(dbPath: string): Promise<string> {
+function encodeDbPath(path: string): string {
+  const base64 = btoa(path);
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+function decodeDbPath(encoded: string): string {
+  const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = base64 + '='.repeat((4 - base64.length % 4) % 4);
+  return atob(padded);
+}
+
+function getDatabaseByIndex(index: number): DiscoveredDatabase | null {
+  if (index < 0 || index >= databases.length) return null;
+  return databases[index];
+}
+
+async function renderHome(dbPath: string, dbIndex?: number): Promise<string> {
   const db = new Database(dbPath);
   const query = db.query("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
   const results = query.all();
   const tables = results.map((row: any) => row.name as string);
 
-  return renderToString(<HomeView dbPath={dbPath} tables={tables} />);
+  return renderToString(<HomeView dbPath={dbPath} tables={tables} dbIndex={dbIndex} />);
 }
 
-async function renderTable(dbPath: string, tableName: string): Promise<string> {
+async function renderTable(dbPath: string, tableName: string, dbIndex?: number): Promise<string> {
   const db = new Database(dbPath);
 
   const tablesQuery = db.query("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
@@ -39,7 +60,6 @@ async function renderTable(dbPath: string, tableName: string): Promise<string> {
   const rows = dataQuery.all() as TableRow[];
 
   const schemaQuery = db.query(`SELECT name FROM pragma_table_info('${tableName}') ORDER BY cid`);
-  /* type any here since there's some weird internal issue about symbols not being  resolved to a concrete type */
   const schemaResults = schemaQuery.all() as Array<any>;
   const columns = schemaResults.map((col: any) => col.name as string);
 
@@ -55,22 +75,97 @@ async function renderTable(dbPath: string, tableName: string): Promise<string> {
       rows={rows}
       totalRows={totalRows}
       allTables={allTables}
+      dbIndex={dbIndex}
     />
   );
 }
 
-export function startServer({ port, dbPath }: ServerConfig): void {
+async function renderSelection(databases: DiscoveredDatabase[]): Promise<string> {
+  return renderToString(<SelectionView databases={databases} />);
+}
+
+export function startServer({ port, dbPath, databases, selectionMode }: ServerConfig): void {
   if (!Elide.http) {
     throw new Error("Running under Elide but no server is available: please run with `elide serve`");
   }
 
   Elide.http.router.handle("GET", "/", async (request, response) => {
     try {
-      const html = await renderHome(dbPath);
+      if (!selectionMode && dbPath) {
+        const html = await renderHome(dbPath);
+        response.header("Content-Type", "text/html; charset=utf-8");
+        response.send(200, html);
+        return;
+      }
+
+      const html = await renderSelection(databases);
       response.header("Content-Type", "text/html; charset=utf-8");
       response.send(200, html);
     } catch (err: any) {
-      console.error("Error rendering home page:", err);
+      console.error("Error rendering selection page:", err);
+      response.header("Content-Type", "text/plain");
+      response.send(500, `Error: ${err.message}\n${err.stack}`);
+    }
+  });
+
+  Elide.http.router.handle("GET", "/db/:dbIndex", async (request, response, context) => {
+    try {
+      const dbIndexStr = context?.params?.dbIndex || "";
+      const dbIndex = parseInt(dbIndexStr, 10);
+
+      if (isNaN(dbIndex)) {
+        response.header("Content-Type", "text/plain");
+        response.send(400, "Invalid database index");
+        return;
+      }
+
+      const database = getDatabaseByIndex(dbIndex);
+      if (!database) {
+        response.header("Content-Type", "text/plain");
+        response.send(404, `Database not found at index ${dbIndex}`);
+        return;
+      }
+
+      console.log(`[DEBUG] Rendering home for database: ${database.path}`);
+      const html = await renderHome(database.path, dbIndex);
+      response.header("Content-Type", "text/html; charset=utf-8");
+      response.send(200, html);
+    } catch (err: any) {
+      console.error("Error rendering database home:", err);
+      response.header("Content-Type", "text/plain");
+      response.send(500, `Error: ${err.message}\n${err.stack}`);
+    }
+  });
+
+  Elide.http.router.handle("GET", "/db/:dbIndex/table/:tableName", async (request, response, context) => {
+    try {
+      const dbIndexStr = context?.params?.dbIndex || "";
+      const dbIndex = parseInt(dbIndexStr, 10);
+
+      if (isNaN(dbIndex)) {
+        response.header("Content-Type", "text/plain");
+        response.send(400, "Invalid database index");
+        return;
+      }
+
+      const database = getDatabaseByIndex(dbIndex);
+      if (!database) {
+        response.header("Content-Type", "text/plain");
+        response.send(404, `Database not found at index ${dbIndex}`);
+        return;
+      }
+
+      const tableName = context?.params?.tableName || "";
+      if (!tableName) {
+        response.send(404, "Table not found");
+        return;
+      }
+
+      const html = await renderTable(database.path, tableName, dbIndex);
+      response.header("Content-Type", "text/html; charset=utf-8");
+      response.send(200, html);
+    } catch (err: any) {
+      console.error("Error rendering table:", err);
       response.header("Content-Type", "text/plain");
       response.send(500, `Error: ${err.message}\n${err.stack}`);
     }
@@ -78,6 +173,12 @@ export function startServer({ port, dbPath }: ServerConfig): void {
 
   Elide.http.router.handle("GET", "/table/:tableName", async (request, response, context) => {
     try {
+      if (!dbPath) {
+        response.header("Content-Type", "text/plain");
+        response.send(500, "No database selected");
+        return;
+      }
+
       const tableName = context?.params?.tableName || "";
       if (!tableName) {
         response.send(404, "Table not found");
@@ -103,10 +204,14 @@ export function startServer({ port, dbPath }: ServerConfig): void {
 
   Elide.http.config.onBind(() => {
     console.log(`Database Studio listening at "http://localhost:${port}"! 🚀`);
-    console.log(`Database: ${dbPath}`);
+    if (selectionMode) {
+      console.log(`Selection mode: ${databases.length} database(s) available`);
+    } else {
+      console.log(`Database: ${dbPath}`);
+    }
   });
 
   Elide.http.start();
 }
 
-startServer({ port, dbPath });
+startServer({ port, dbPath, databases, selectionMode });

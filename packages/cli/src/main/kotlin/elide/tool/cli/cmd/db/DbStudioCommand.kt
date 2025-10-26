@@ -22,10 +22,19 @@ import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
+import java.nio.file.attribute.BasicFileAttributes
 import kotlin.io.path.exists
+import kotlin.io.path.fileSize
+import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.isDirectory
+import kotlin.io.path.isRegularFile
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.name
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
@@ -45,6 +54,15 @@ internal class DbCommand : AbstractSubcommand<ToolState, CommandContext>() {
   }
 }
 
+@Serializable
+data class DiscoveredDatabase(
+  val path: String,
+  val name: String,
+  val size: Long,
+  val lastModified: Long,
+  val isLocal: Boolean = false, // Whether it's in the current working directory
+)
+
 @Command(
   name = "studio",
   description = ["Launch database UI for SQLite databases"],
@@ -58,6 +76,86 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     private const val STUDIO_RESOURCE_PATH = "db-studio"
     private const val STUDIO_OUTPUT_DIR = ".db-studio"
     private const val STUDIO_INDEX_FILE = "index.tsx"
+    private val SQLITE_EXTENSIONS = setOf(".db", ".sqlite", ".sqlite3", ".db3")
+  }
+
+  private fun discoverDatabases(): List<DiscoveredDatabase> {
+    val databases = mutableListOf<DiscoveredDatabase>()
+
+    val cwd = Path.of(System.getProperty("user.dir"))
+
+    searchDirectory(cwd, databases, depth = 0, maxDepth = 0, isLocal = true)
+
+    try {
+      cwd.listDirectoryEntries()
+        .filter { it.isDirectory() }
+        .forEach { subDir ->
+          searchDirectory(subDir, databases, depth = 1, maxDepth = 1, isLocal = true)
+        }
+    } catch (e: Exception) {
+
+    }
+
+    val userHome = Path.of(System.getProperty("user.home"))
+    val osName = System.getProperty("os.name").lowercase()
+
+    val userDataDirs = when {
+      osName.contains("mac") -> listOf(
+        userHome.resolve("Library/Application Support")
+      )
+      osName.contains("win") -> listOf(
+        Path.of(System.getenv("APPDATA") ?: userHome.resolve("AppData/Roaming").toString())
+      )
+      else -> listOf( // Linux/Unix
+        userHome.resolve(".local/share")
+      )
+    }
+
+    userDataDirs.forEach { dir ->
+      if (dir.exists() && dir.isDirectory()) {
+        searchDirectory(dir, databases, depth = 0, maxDepth = 1, isLocal = false)
+      }
+    }
+
+    return databases.sortedWith(
+      compareByDescending<DiscoveredDatabase> { it.isLocal }
+        .thenByDescending { it.lastModified }
+    )
+  }
+
+  private fun searchDirectory(
+    dir: Path,
+    databases: MutableList<DiscoveredDatabase>,
+    depth: Int,
+    maxDepth: Int,
+    isLocal: Boolean
+  ) {
+    try {
+      dir.listDirectoryEntries().forEach { file ->
+        when {
+          file.isRegularFile() && SQLITE_EXTENSIONS.any { file.name.endsWith(it, ignoreCase = true) } -> {
+            try {
+              databases.add(
+                DiscoveredDatabase(
+                  path = file.toAbsolutePath().toString(),
+                  name = file.name,
+                  size = file.fileSize(),
+                  lastModified = file.getLastModifiedTime().toMillis(),
+                  isLocal = isLocal,
+                )
+              )
+            } catch (e: Exception) {
+              // Silently ignore files we can't read
+            }
+          }
+          file.isDirectory() && depth < maxDepth -> {
+            searchDirectory(file, databases, depth + 1, maxDepth, isLocal)
+          }
+        }
+      }
+    } catch (e: Exception) {
+      // Silently ignore permission errors
+    }
   }
 
   private fun copyResourceDirectory(resourcePath: String, targetDir: Path) {
@@ -108,22 +206,45 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
   internal var host: String = "localhost"
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val dbPath = databasePath ?: return CommandResult.err(message = "Database path is required")
-    val dbFile = Path.of(dbPath)
-
-    if (!dbFile.exists()) {
-      return CommandResult.err(message = "Database file not found: $dbPath")
-    }
-
-    val absoluteDbPath = dbFile.toAbsolutePath().toString()
     val outputDir = Path.of(STUDIO_OUTPUT_DIR)
-
     copyResourceDirectory(STUDIO_RESOURCE_PATH, outputDir)
 
     val indexFile = outputDir.resolve(STUDIO_INDEX_FILE)
-    val processedContent = indexFile.readText()
-      .replace("__DB_PATH__", absoluteDbPath)
-      .replace("__PORT__", port.toString())
+    val baseContent = indexFile.readText()
+
+    // Handle database selection mode vs direct database path
+    val processedContent = if (databasePath == null) {
+      // Discovery mode: find available databases
+      val discovered = discoverDatabases()
+
+      if (discovered.isEmpty()) {
+        return CommandResult.err(message = "No SQLite databases found in current directory or user data directories")
+      }
+
+      val json = Json { prettyPrint = false }
+      val databasesJson = json.encodeToString(discovered)
+
+      baseContent
+        .replace("\"__DB_PATH__\"", "null")
+        .replace("__PORT__", port.toString())
+        .replace("\"__DATABASES__\"", databasesJson)
+        .replace("__SELECTION_MODE__", "true")
+    } else {
+      // Direct path mode: use provided database
+      val dbFile = Path.of(databasePath!!)
+
+      if (!dbFile.exists()) {
+        return CommandResult.err(message = "Database file not found: $databasePath")
+      }
+
+      val absoluteDbPath = dbFile.toAbsolutePath().toString()
+
+      baseContent
+        .replace("\"__DB_PATH__\"", "\"$absoluteDbPath\"")
+        .replace("__PORT__", port.toString())
+        .replace("\"__DATABASES__\"", "[]")
+        .replace("__SELECTION_MODE__", "false")
+    }
 
     indexFile.writeText(processedContent)
 

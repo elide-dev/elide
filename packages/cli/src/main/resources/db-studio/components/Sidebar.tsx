@@ -1,17 +1,19 @@
-import { ElideLogoGray } from "./ElideLogoGray.tsx";
-
 export type SidebarProps = {
   tables: string[];
   activeTable?: string;
+  dbIndex?: number;
 }
 
-export function Sidebar({ tables, activeTable }: SidebarProps) {
+export function Sidebar({ tables, activeTable, dbIndex }: SidebarProps) {
+  const getTableLink = (tableName: string) => {
+    if (dbIndex !== undefined) {
+      return `/db/${dbIndex}/table/${tableName}`;
+    }
+    return `/table/${tableName}`;
+  };
+
   return (
     <div className="sidebar">
-      <div className="sidebar-header">
-        <ElideLogoGray />
-        <span className="sidebar-title">Database Studio</span>
-      </div>
       <div className="sidebar-section">
         {tables.length > 0 ? (
           <>
@@ -20,7 +22,7 @@ export function Sidebar({ tables, activeTable }: SidebarProps) {
               {tables.map((table) => (
                 <li key={table} className="table-item">
                   <a
-                    href={`/table/${table}`}
+                    href={getTableLink(table)}
                     className={table === activeTable ? 'table-link active' : 'table-link'}
                   >
                     <svg className="table-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

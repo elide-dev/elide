@@ -1,4 +1,5 @@
 import { DatabaseStudio } from "./components/DatabaseStudio.tsx";
+import { DatabaseSelector, type DiscoveredDatabase } from "./components/DatabaseSelector.tsx";
 import { TableDetail, type TableRow } from "./components/TableDetail.tsx";
 
 export type AppProps = {
@@ -25,7 +26,8 @@ export function App({ title, children }: AppProps) {
             background: var(--bg-main); min-height: 100vh; color: var(--text-primary);
             line-height: 1.6; overflow: hidden;
           }
-          .app-layout { display: flex; height: 100vh; }
+          .app-container { display: flex; flex-direction: column; height: 100vh; }
+          .app-layout { display: flex; flex: 1; overflow: hidden; }
           .sidebar {
             width: 280px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color);
             display: flex; flex-direction: column; overflow: hidden;
@@ -38,7 +40,34 @@ export function App({ title, children }: AppProps) {
             width: 20px; height: 20px; flex-shrink: 0;
           }
           .sidebar-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
-          .sidebar-section { padding: 1rem 0.5rem; flex: 1; overflow-y: auto; }
+          .top-toolbar {
+            background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+            height: 60px; flex-shrink: 0;
+          }
+          .top-toolbar-left {
+            display: flex; align-items: center; gap: 0.75rem;
+          }
+          .top-toolbar-left svg {
+            width: 20px; height: 20px; flex-shrink: 0;
+          }
+          .top-toolbar-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+          .top-toolbar-right { display: flex; align-items: center; }
+          .back-button {
+            display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem;
+            background: var(--bg-hover); border: 1px solid var(--border-color);
+            border-radius: 6px; color: var(--text-primary); text-decoration: none;
+            font-size: 0.9rem; transition: all 0.15s ease;
+            cursor: pointer;
+          }
+          .back-button:hover {
+            background: var(--accent); border-color: var(--text-muted);
+          }
+          .back-icon {
+            width: 18px; height: 18px; color: var(--text-muted); flex-shrink: 0;
+          }
+          .back-button:hover .back-icon { color: var(--text-primary); }
+          .sidebar-section { padding: 1.5rem 0.5rem 1rem; flex: 1; overflow-y: auto; }
           .section-label {
             padding: 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 600;
             color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;
@@ -49,6 +78,7 @@ export function App({ title, children }: AppProps) {
             display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.75rem;
             color: var(--text-primary); text-decoration: none; border-radius: 6px;
             transition: all 0.15s ease; font-size: 0.9rem;
+            cursor: pointer;
           }
           .table-link:hover { background: var(--bg-hover); color: white; }
           .table-link.active { background: var(--accent); color: white; }
@@ -114,6 +144,82 @@ export function App({ title, children }: AppProps) {
           .data-table td.null { color: var(--text-muted); font-style: italic; }
           .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-muted); }
           .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+
+          /* Database Selector Styles */
+          .selector-container {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            background: var(--bg-main); padding: 2rem;
+          }
+          .selector-content { max-width: 1200px; width: 100%; }
+          .selector-header { text-align: center; margin-bottom: 3rem; }
+          .selector-logo {
+            display: flex; justify-content: center; margin-bottom: 1.5rem;
+          }
+          .selector-logo svg {
+            width: 64px; height: 64px;
+          }
+          .selector-header h1 {
+            font-size: 2.5rem; font-weight: 700; color: var(--text-primary);
+            margin-bottom: 0.75rem;
+          }
+          .selector-subtitle {
+            font-size: 1.1rem; color: var(--text-primary);
+            margin-bottom: 0.5rem;
+          }
+          .selector-count {
+            font-size: 0.9rem; color: var(--text-muted);
+          }
+          .database-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1rem; margin-top: 2rem;
+          }
+          .database-card {
+            background: var(--bg-sidebar); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 1.5rem; display: flex; align-items: center;
+            gap: 1rem; cursor: pointer; transition: all 0.2s ease;
+            text-align: left; width: 100%; text-decoration: none;
+            cursor: pointer;
+          }
+          .database-card:hover {
+            background: var(--bg-hover); border-color: var(--text-muted);
+            transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          }
+          .database-icon {
+            width: 48px; height: 48px; flex-shrink: 0;
+            background: var(--accent); border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+          }
+          .database-icon svg { width: 28px; height: 28px; color: var(--text-primary); }
+          .database-info { flex: 1; min-width: 0; }
+          .database-name {
+            font-size: 1.1rem; font-weight: 600; color: var(--text-primary);
+            margin-bottom: 0.25rem; font-family: Monaco, monospace;
+            display: flex; align-items: center; gap: 0.5rem;
+          }
+          .local-badge {
+            font-size: 0.7rem; font-weight: 600; color: #10b981;
+            background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.15rem 0.5rem; border-radius: 4px;
+            text-transform: uppercase; letter-spacing: 0.05em;
+          }
+          .database-path {
+            font-size: 0.85rem; color: var(--text-muted);
+            font-family: Monaco, monospace; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+          }
+          .database-meta {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);
+          }
+          .meta-divider { opacity: 0.5; }
+          .database-arrow {
+            width: 24px; height: 24px; flex-shrink: 0;
+            color: var(--text-muted); transition: transform 0.2s ease;
+          }
+          .database-card:hover .database-arrow {
+            transform: translateX(4px); color: var(--text-primary);
+          }
+          .database-arrow svg { width: 100%; height: 100%; }
         `}</style>
       </head>
       <body>
@@ -126,12 +232,25 @@ export function App({ title, children }: AppProps) {
 export type HomeViewProps = {
   dbPath: string;
   tables: string[];
+  dbIndex?: number;
 }
 
-export function HomeView({ dbPath, tables }: HomeViewProps) {
+export function HomeView({ dbPath, tables, dbIndex }: HomeViewProps) {
   return (
     <App title="Database Studio · Elide">
-      <DatabaseStudio dbPath={dbPath} tables={tables} />
+      <DatabaseStudio dbPath={dbPath} tables={tables} dbIndex={dbIndex} />
+    </App>
+  );
+}
+
+export type SelectionViewProps = {
+  databases: DiscoveredDatabase[];
+}
+
+export function SelectionView({ databases }: SelectionViewProps) {
+  return (
+    <App title="Select Database · Database Studio · Elide">
+      <DatabaseSelector databases={databases} />
     </App>
   );
 }
@@ -143,9 +262,10 @@ export type TableViewProps = {
   rows: TableRow[];
   totalRows: number;
   allTables: string[];
+  dbIndex?: number;
 }
 
-export function TableView({ dbPath, tableName, columns, rows, totalRows, allTables }: TableViewProps) {
+export function TableView({ dbPath, tableName, columns, rows, totalRows, allTables, dbIndex }: TableViewProps) {
   return (
     <App title={`${tableName} · Database Studio · Elide`}>
       <TableDetail
@@ -155,6 +275,7 @@ export function TableView({ dbPath, tableName, columns, rows, totalRows, allTabl
         rows={rows}
         totalRows={totalRows}
         allTables={allTables}
+        dbIndex={dbIndex}
       />
     </App>
   );

@@ -68,7 +68,8 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
       println("Secrets initialized non-interactively.")
       return CommandResult.success()
     }
-    secrets.init(projectPath, project?.manifest)
+    secrets.preInit(projectPath, project?.manifest)
+    secrets.init()
     return mainMenu()
   }
 

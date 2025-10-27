@@ -19,14 +19,14 @@ import elide.tooling.project.manifest.ElidePackageManifest
 /**
  * Common access to secrets.
  *
- * @property initialized `true` if [init] has been called and has successfully initialized secrets.
+ * @property initialized `true` if `init()` has been called and has successfully initialized secrets.
  * @author Lauri Heino <datafox>
  */
 public sealed interface SecretsCommon {
   public val initialized: Boolean
 
-  /** Initializes secrets for use. */
-  public suspend fun init(path: Path, manifest: ElidePackageManifest?)
+  /** Initializes prerequisite variables for secrets. */
+  public fun preInit(path: Path, manifest: ElidePackageManifest?)
 
   /** Lists all profiles that exist locally. */
   public fun listProfiles(): Set<String>

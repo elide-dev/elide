@@ -17,6 +17,7 @@ import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import jakarta.inject.Provider
 import kotlinx.io.bytestring.ByteString
+import elide.runtime.Logging
 import elide.runtime.gvm.GuestLanguage
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.js.JsError
@@ -80,8 +81,23 @@ internal class GuestSecrets(private val secretAccess: Secrets) : ReadOnlyProxyOb
     }
 
   internal companion object {
+    private val logger = Logging.of(GuestSecrets::class.java)
+
     private var instance: GuestSecrets? = null
 
-    fun create(secretAccess: Secrets) = instance ?: GuestSecrets(secretAccess).apply { instance = this }
+    fun create(secretAccess: Secrets): GuestSecrets {
+      instance?.let { return it }
+      try {
+        secretAccess.init()
+      } catch (t : Throwable) {
+        logger.warn { "Secrets were not initialized with message: ${t.message}" }
+      }
+      if (secretAccess.initialized && secretAccess.getProfile() == null) {
+        val profiles = secretAccess.listProfiles()
+        if (profiles.size != 1) logger.warn { "No secret profile will be loaded" }
+        else secretAccess.loadProfile(profiles.first())
+      }
+      return GuestSecrets(secretAccess).apply { instance = this }
+    }
   }
 }

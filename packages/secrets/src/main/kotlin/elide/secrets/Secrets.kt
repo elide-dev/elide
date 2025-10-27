@@ -17,4 +17,7 @@ package elide.secrets
  *
  * @author Lauri Heino <datafox>
  */
-public interface Secrets : SecretsCommon
+public interface Secrets : SecretsCommon {
+  /** Initializes secrets for use. */
+  public fun init()
+}

@@ -54,8 +54,11 @@ internal class SecretManagementImpl(
   private var localCopy: LocalProfile? = null
   private val prompts: MutableList<String> = mutableListOf()
 
-  override suspend fun init(path: Path, manifest: ElidePackageManifest?) {
+  override fun preInit(path: Path, manifest: ElidePackageManifest?) {
     SecretsState.init(true, SecretUtils.path(path), manifest)
+  }
+
+  override suspend fun init() {
     SystemFileSystem.createDirectories(SecretsState.path)
     if (files.metadataExists() && files.localExists()) {
       SecretsState.metadata = files.readMetadata()

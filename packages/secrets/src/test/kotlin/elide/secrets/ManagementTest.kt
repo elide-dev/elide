@@ -68,7 +68,8 @@ class ManagementTest : AbstractSecretTest() {
 
     assertFalse(secrets.initialized)
     queuePrompt(secretPass)
-    secrets.init(path, null)
+    secrets.preInit(path, null)
+    secrets.init()
     assertTrue(secrets.initialized)
 
     secrets.loadProfile("test")
@@ -98,7 +99,8 @@ class ManagementTest : AbstractSecretTest() {
     // secrets.init() asks for encryption mode, passphrase twice,
     // if secrets should be initialized locally and the project name.
     queuePrompts(EncryptionMode.PASSPHRASE, secretPass, secretPass, true, "test")
-    secrets.init(path, null)
+    secrets.preInit(path, null)
+    secrets.init()
     assertEquals(
       "{\"name\":\"test\",\"profiles\":{},\"localEncryption\":\"PASSPHRASE\"}",
       path.resolve(SecretValues.DEFAULT_PATH).resolve(SecretValues.METADATA_FILE).readText(),
@@ -110,7 +112,8 @@ class ManagementTest : AbstractSecretTest() {
     val secretsDir = createEnvironment(path, secretFiles)
 
     queuePrompt(secretPass)
-    secrets.init(path, null)
+    secrets.preInit(path, null)
+    secrets.init()
 
     // load profile, check for content.
     secrets.loadProfile("test")
@@ -161,7 +164,8 @@ class ManagementTest : AbstractSecretTest() {
   fun `test managing profiles`() = withTemp { path ->
     createEnvironment(path, secretFiles)
     queuePrompt(secretPass)
-    secrets.init(path, null)
+    secrets.preInit(path, null)
+    secrets.init()
 
     // create new profile.
     assertEquals(setOf("test"), secrets.listProfiles())
@@ -193,7 +197,8 @@ class ManagementTest : AbstractSecretTest() {
   fun `test managing remote`() = withTemp { path ->
     createEnvironment(path, secretFiles)
     secrets.queuePrompt(secretPass)
-    secrets.init(path, null)
+    secrets.preInit(path, null)
+    secrets.init()
 
     // secrets.manageRemote() asks for remote type, directory,
     // encryption mode and passphrase twice.
@@ -270,7 +275,8 @@ class ManagementTest : AbstractSecretTest() {
     val remoteDir = Files.createDirectory(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH))
     copyFiles(remoteDir, remoteFiles)
     queuePrompt(secretPass)
-    secrets.init(path, null)
+    secrets.preInit(path, null)
+    secrets.init()
 
     // load profile and remove secret.
     secrets.loadProfile("test")
@@ -332,7 +338,8 @@ class ManagementTest : AbstractSecretTest() {
       "access",
       "sos",
     )
-    secrets.init(path, null)
+    secrets.preInit(path, null)
+    secrets.init()
 
     secrets.loadProfile("test")
     assertEquals(mapOf("secret" to SecretType.TEXT, "another" to SecretType.TEXT), secrets.listSecrets())

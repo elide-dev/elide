@@ -12,8 +12,6 @@
  */
 package elide.secrets.impl
 
-import java.nio.file.Path
-import kotlinx.io.bytestring.ByteString
 import elide.annotations.Singleton
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -23,6 +21,8 @@ import elide.secrets.dto.persisted.EncryptionMode
 import elide.secrets.dto.persisted.Profile.Companion.get
 import elide.secrets.dto.persisted.UserKey
 import elide.tooling.project.manifest.ElidePackageManifest
+import java.nio.file.Path
+import kotlinx.io.bytestring.ByteString
 
 /**
  * Implementation of [Secrets].
@@ -38,8 +38,11 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
   private val logger: Logger = Logging.of(SecretsImpl::class)
   private var passphraseOverride: String? = null
 
-  override suspend fun init(path: Path, manifest: ElidePackageManifest?) {
+  override fun preInit(path: Path, manifest: ElidePackageManifest?) {
     SecretsState.init(false, SecretUtils.path(path), manifest)
+  }
+
+  override fun init() {
     if (files.metadataExists() && files.localExists()) {
       SecretsState.metadata = files.readMetadata()
       SecretsState.userKey =
@@ -54,7 +57,8 @@ internal class SecretsImpl(private val encryption: Encryption, private val files
           EncryptionMode.GPG -> UserKey(SecretsState.metadata.fingerprint!!)
         }
       SecretsState.local = files.readLocal()
-      val profileName = System.getenv(SecretValues.PROFILE_OVERRIDE_ENVIRONMENT_VARIABLE) ?: manifest?.secrets?.profile
+      val profileName =
+        System.getenv(SecretValues.PROFILE_OVERRIDE_ENVIRONMENT_VARIABLE) ?: SecretsState.manifest?.secrets?.profile
       profileName?.let { loadProfile(it) }
       _initialized = true
     } else logger.warn(SecretValues.SECRETS_NOT_INITIALIZED_WARNING)

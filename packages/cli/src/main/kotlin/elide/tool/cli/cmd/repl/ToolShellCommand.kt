@@ -2768,20 +2768,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     val secretsResolution = launch {
       run {
         projectResolution.join()
-
-        val secrets = beanContext.getBean(Secrets::class.java)
-        try {
-          secrets.init(projectPath, activeProject.value?.manifest)
-        } catch (t: Throwable) {
-          logging.warn { "Secrets were not initialized with message: ${t.message}" }
-        }
-        if(secrets.initialized) {
-          if (secrets.getProfile() == null) {
-            val profiles = secrets.listProfiles()
-            if (profiles.size != 1) logging.warn { "No secret profile will be loaded" }
-            else secrets.loadProfile(profiles.first())
-          }
-        }
+        beanContext.getBean(Secrets::class.java).preInit(projectPath, activeProject.value?.manifest)
       }
     }
 

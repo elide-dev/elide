@@ -43,7 +43,8 @@ class SecretsTest : AbstractSecretTest() {
 
     // initialize secrets and check initialization state.
     assertFalse(secrets.initialized)
-    secrets.init(path, null)
+    secrets.preInit(path, null)
+    secrets.init()
     assertTrue(secrets.initialized)
 
     // load profile and test for values.
@@ -73,10 +74,16 @@ class SecretsTest : AbstractSecretTest() {
   @Test
   fun `test no passphrase`() = withTemp { path ->
     createEnvironment(path, null, secretFiles)
-    assertThrows<IllegalStateException>(SecretValues.PASSPHRASE_READ_EXCEPTION) { secrets.init(path, null) }
+    assertThrows<IllegalStateException>(SecretValues.PASSPHRASE_READ_EXCEPTION) {
+      secrets.preInit(path, null)
+      secrets.init()
+    }
   }
 
-  @Test fun `test uninitialized secrets`() = withTemp { path -> secrets.init(path, null) }
+  @Test fun `test uninitialized secrets`() = withTemp { path ->
+    secrets.preInit(path, null)
+    secrets.init()
+  }
 
   private fun createEnvironment(path: Path, passphrase: String?, files: List<String>): Path {
     val secretsDir = Files.createDirectory(path.resolve(SecretValues.DEFAULT_PATH))

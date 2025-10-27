@@ -22,6 +22,9 @@ import elide.tooling.project.manifest.ElidePackageManifest
  * @author Lauri Heino <datafox>
  */
 public interface SecretManagement : SecretsCommon {
+  /** Initializes secrets for use. */
+  public suspend fun init()
+
   /** Initializes secrets state non-interactively using a single profile pulled from a remote. */
   public suspend fun initNonInteractive(path: Path, manifest: ElidePackageManifest)
 

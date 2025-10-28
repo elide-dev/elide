@@ -298,6 +298,8 @@ jobs:
             yarn
       - name: "Setup: Gradle Settings"
         run: cp -fv ./.github/workflows/gradle-ci.properties ~/.gradle/gradle.properties
+      - name: "Setup: Gradle Settings (Globals)"
+        run: cp -fv /home/ci-agent/gradle-ci.properties ~/.gradle/gradle.properties || echo "No global settings."
       - name: "Setup: Cosign"
         if: inputs.pack
         uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0

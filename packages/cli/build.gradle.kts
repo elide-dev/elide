@@ -1749,6 +1749,14 @@ val pklArgs: List<String> = listOf(
 
 val defaultPlatformArgs: List<String> = listOf()
 
+val overrideCpus = (findProperty("dev.elide.native.cpus") as String?)
+  ?.toIntOrNull()
+
+val overrideRam: String? = (findProperty("dev.elide.native.xmx") as String?)
+
+fun nativeBuildCpus(default: Int): Int = overrideCpus ?: default
+fun nativeBuildRam(default: String): String = overrideRam ?: default
+
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "--gc=$effectiveGc",
   "-R:MaximumHeapSizePercent=80",
@@ -1757,7 +1765,8 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
 ) else listOf(
   "-Delide.vm.engine.preinitialize=false",
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx48g",
+  "-J-Xmx${nativeBuildRam("48g")}",
+  "--parallelism=${nativeBuildCpus(Runtime.getRuntime().availableProcessors())}",
 ) else emptyList())).plus(if (oracleGvm) listOf(
   // disabled on windows
   "-H:-AuxiliaryEngineCache",
@@ -1787,7 +1796,8 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
 ) else listOf(
   "-Delide.vm.engine.preinitialize=false",
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx12g",
+  "-J-Xmx${nativeBuildRam("64g")}",
+  "--parallelism=${nativeBuildCpus(Runtime.getRuntime().availableProcessors())}",
 ) else listOf(
   "-J-Xmx64g",
   "--parallelism=12",
@@ -1864,10 +1874,11 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=true",
   ) else emptyList())
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx64g",
+  "-J-Xmx${nativeBuildRam("64g")}",
+  "--parallelism=${nativeBuildCpus(Runtime.getRuntime().availableProcessors())}",
 ) else listOf(
-  "-J-Xmx64g",
-  "--parallelism=32",
+  "-J-Xmx${nativeBuildRam("64g")}",
+  "--parallelism=${nativeBuildCpus(32)}",
 ))
 
 val linuxGvmReleaseFlags = listOf<String>()

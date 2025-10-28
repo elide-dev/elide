@@ -22,7 +22,7 @@ MUSL ?= no
 TESTS ?= no
 USE_NINJA ?= yes
 ENABLE_CCACHE ?= no
-ENABLE_SCCACHE ?= yes
+ENABLE_SCCACHE ?= no
 ELIDE_ROOT ?= $(realpath $(shell pwd)/..)
 MACOS_MIN_VERSION ?= 12.3
 

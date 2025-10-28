@@ -76,7 +76,7 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
         if: ${{ matrix.engine == 'graalvm' }}
         with:
           distribution: "graalvm"

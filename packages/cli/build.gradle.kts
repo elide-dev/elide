@@ -126,7 +126,7 @@ val enableAllLocales = false
 val enableLocaleSupport = false
 val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
-val enableNativeTransportV2 = true
+val enableNativeTransportV2 = false
 val enableSqliteStatic = true
 val nativeTargetFamily = "native"
 val enableStatic = findProperty("elide.static") == "true"

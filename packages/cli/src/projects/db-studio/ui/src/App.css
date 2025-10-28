@@ -1,0 +1,48 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.container {
+  text-align: left;
+}
+
+.container h1 {
+  margin-bottom: 1rem;
+  color: #646cff;
+}
+
+.databases-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.database-card {
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.2s;
+}
+
+.database-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #646cff;
+}
+
+.database-card h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #61dafb;
+}
+
+.database-card p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.database-card strong {
+  color: #888;
+}

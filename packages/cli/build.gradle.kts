@@ -1582,11 +1582,11 @@ val commonCFlags: List<String> = listOf(
 val commonLinkerOptions: List<String> = listOf()
 
 // CFlags for release mode.
-val releaseCFlags: List<String> = listOf(
+val releaseCFlags: List<String> = listOfNotNull(
   "-O$nativeOptMode",
   "-fPIC",
   "-fPIE",
-  //"-flto",
+  onlyIf(enableLto, "-flto"),
 ).plus(
   listOf("-fuse-linker-plugin").onlyIf(enableLto && !enableClang && !isClang && !HostManager.hostIsMac && !enableStatic)
 ).plus(
@@ -1777,7 +1777,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
   "--gc=$effectiveGc",
   "-R:MaximumHeapSizePercent=80",
   "--initialize-at-build-time=sun.awt.resources.awtosx",
-  "-H:NativeLinkerOption=-flto",
+  onlyIf(enableLto, "-H:NativeLinkerOption=-flto"),
   "-H:NativeLinkerOption=$nativesPath/libdiag.a",
   "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.a",
   "-H:NativeLinkerOption=$nativesPath/libumbrella.a",
@@ -1815,7 +1815,7 @@ val muslHome = System.getenv("MUSL_HOME") ?: "/opt/musl/1.2.5/lib"
 val linuxOnlyArgs = defaultPlatformArgs.plus(
   listOfNotNull(
     "-g",  // always generate debug info on linux
-    "-H:NativeLinkerOption=-flto",
+    onlyIf(enableLto, "-H:NativeLinkerOption=-flto"),
     "-H:NativeLinkerOption=-Wl,--gc-sections",
     "-H:NativeLinkerOption=-Wl,--emit-relocs",
     "-H:NativeLinkerOption=$nativesPath/libdiag.a",

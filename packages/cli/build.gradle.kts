@@ -135,6 +135,7 @@ val preferShared = false
 val enableToolchains = false
 val forceFfm = false
 val enableClang = false
+val enableLto = false
 val oracleGvm = true
 val oracleGvmLibs = oracleGvm
 val enableMosaic = false
@@ -1587,7 +1588,7 @@ val releaseCFlags: List<String> = listOf(
   "-fPIE",
   //"-flto",
 ).plus(
-  listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang && !HostManager.hostIsMac && !enableStatic)
+  listOf("-fuse-linker-plugin").onlyIf(enableLto && !enableClang && !isClang && !HostManager.hostIsMac && !enableStatic)
 ).plus(
   // Add protection flags for release.
   when (targetArch) {

@@ -18,11 +18,9 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
-import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
-import java.nio.file.attribute.BasicFileAttributes
 import kotlin.io.path.exists
 import kotlin.io.path.fileSize
 import kotlin.io.path.getLastModifiedTime
@@ -33,7 +31,6 @@ import kotlin.io.path.name
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
@@ -73,7 +70,8 @@ data class DiscoveredDatabase(
 internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>() {
 
   private companion object {
-    private const val STUDIO_RESOURCE_PATH = "db-studio"
+    private const val STUDIO_API_SOURCE = "samples/db-studio/api"
+    private const val STUDIO_UI_SOURCE = "samples/db-studio/ui/dist"
     private const val STUDIO_OUTPUT_DIR = ".db-studio"
     private const val STUDIO_INDEX_FILE = "index.tsx"
     private val SQLITE_EXTENSIONS = setOf(".db", ".sqlite", ".sqlite3", ".db3")
@@ -158,30 +156,21 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     }
   }
 
-  private fun copyResourceDirectory(resourcePath: String, targetDir: Path) {
-    val resourceUrl = this::class.java.classLoader.getResource(resourcePath)
-      ?: error("Resource not found: $resourcePath")
-
-    val uri = resourceUrl.toURI()
-    val fileSystem = when (uri.scheme) {
-      "jar" -> FileSystems.newFileSystem(uri, emptyMap<String, Any>())
-      else -> null
+  private fun copyDirectory(sourcePath: Path, targetDir: Path) {
+    if (!sourcePath.exists() || !sourcePath.isDirectory()) {
+      error("Source directory not found: $sourcePath")
     }
 
-    fileSystem.use {
-      val sourcePath = fileSystem?.getPath(resourcePath) ?: Path.of(uri)
+    Files.walk(sourcePath).use { stream ->
+      stream.forEach { source ->
+        val relative = sourcePath.relativize(source)
+        val target = targetDir.resolve(relative.toString())
 
-      Files.walk(sourcePath).use { stream ->
-        stream.forEach { source ->
-          val relative = sourcePath.relativize(source)
-          val target = targetDir.resolve(relative.toString())
-
-          when {
-            source.isDirectory() -> Files.createDirectories(target)
-            else -> {
-              Files.createDirectories(target.parent)
-              Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING)
-            }
+        when {
+          source.isDirectory() -> Files.createDirectories(target)
+          else -> {
+            Files.createDirectories(target.parent)
+            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING)
           }
         }
       }
@@ -203,58 +192,97 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
   )
   internal var port: Int = 4983
 
+  @Option(
+    names = ["--api-port"],
+    description = ["Port to run the API server on"],
+    defaultValue = "4984",
+  )
+  internal var apiPort: Int = 4984
+
   internal var host: String = "localhost"
 
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val outputDir = Path.of(STUDIO_OUTPUT_DIR)
-    copyResourceDirectory(STUDIO_RESOURCE_PATH, outputDir)
 
-    val indexFile = outputDir.resolve(STUDIO_INDEX_FILE)
+    // Create organized directory structure
+    val apiDir = outputDir.resolve("api")
+    val uiDir = outputDir.resolve("ui")
+    Files.createDirectories(apiDir)
+    Files.createDirectories(uiDir)
+
+    // Copy API server files from samples/db-studio/api to .db-studio/api/
+    val apiSource = Path.of(STUDIO_API_SOURCE)
+    if (!apiSource.exists() || !apiSource.isDirectory()) {
+      return CommandResult.err(
+        message = "API source not found at $STUDIO_API_SOURCE. Ensure samples/db-studio/api exists."
+      )
+    }
+    copyDirectory(apiSource, apiDir)
+
+    // Copy React app UI files from samples/db-studio/ui/dist to .db-studio/ui/
+    val uiSource = Path.of(STUDIO_UI_SOURCE)
+    if (!uiSource.exists() || !uiSource.isDirectory()) {
+      return CommandResult.err(
+        message = "UI build not found at $STUDIO_UI_SOURCE. Please run 'cd samples/db-studio/ui && npm run build' first."
+      )
+    }
+    copyDirectory(uiSource, uiDir)
+
+    val indexFile = apiDir.resolve(STUDIO_INDEX_FILE)
     val baseContent = indexFile.readText()
 
-    // Handle database selection mode vs direct database path
-    val processedContent = if (databasePath == null) {
-      // Discovery mode: find available databases
+    // Always use databases array - either discover or create from single path
+    val databases = if (databasePath == null) {
       val discovered = discoverDatabases()
 
       if (discovered.isEmpty()) {
         return CommandResult.err(message = "No SQLite databases found in current directory or user data directories")
       }
 
-      val json = Json { prettyPrint = false }
-      val databasesJson = json.encodeToString(discovered)
-
-      baseContent
-        .replace("\"__DB_PATH__\"", "null")
-        .replace("__PORT__", port.toString())
-        .replace("\"__DATABASES__\"", databasesJson)
-        .replace("__SELECTION_MODE__", "true")
+      discovered
     } else {
-      // Direct path mode: use provided database
       val dbFile = Path.of(databasePath!!)
 
       if (!dbFile.exists()) {
         return CommandResult.err(message = "Database file not found: $databasePath")
       }
 
-      val absoluteDbPath = dbFile.toAbsolutePath().toString()
-
-      baseContent
-        .replace("\"__DB_PATH__\"", "\"$absoluteDbPath\"")
-        .replace("__PORT__", port.toString())
-        .replace("\"__DATABASES__\"", "[]")
-        .replace("__SELECTION_MODE__", "false")
+      // Create a single-item list with the specified database
+      listOf(
+        DiscoveredDatabase(
+          path = dbFile.toAbsolutePath().toString(),
+          name = dbFile.name,
+          size = dbFile.fileSize(),
+          lastModified = dbFile.getLastModifiedTime().toMillis(),
+          isLocal = true,
+        )
+      )
     }
+
+    val json = Json { prettyPrint = false }
+    val databasesJson = json.encodeToString(databases)
+
+    val processedContent = baseContent
+      .replace("__PORT__", apiPort.toString())
+      .replace("\"__DATABASES__\"", databasesJson)
 
     indexFile.writeText(processedContent)
 
     output {
-      appendLine("Generated database studio in: ${outputDir.toAbsolutePath()}")
+      appendLine("Database Studio files generated in: ${outputDir.toAbsolutePath()}")
       appendLine()
-      appendLine("To start the database UI, run:")
-      appendLine("elide serve $STUDIO_OUTPUT_DIR/$STUDIO_INDEX_FILE")
+      appendLine("To start the Database Studio:")
       appendLine()
-      appendLine("Then open: http://$host:$port")
+      appendLine("  Terminal 1 (API Server on port $apiPort):")
+      appendLine("    cd ${apiDir.toAbsolutePath()}")
+      appendLine("    elide serve $STUDIO_INDEX_FILE")
+      appendLine()
+      appendLine("  Terminal 2 (UI Server on port 8080):")
+      appendLine("    cd ${uiDir.toAbsolutePath()}")
+      appendLine("    elide serve .")
+      appendLine()
+      appendLine("Then open: http://localhost:8080")
+      appendLine()
     }
 
     return CommandResult.success()

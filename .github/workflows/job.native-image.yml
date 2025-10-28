@@ -338,7 +338,7 @@ jobs:
             -Pelide.optMode=${{ inputs.opt }} \
             -Pelide.stamp=${{ inputs.release }} \
             -Pelide.pgo=${{ inputs.pgo }} \
-            -Pelide.static=${{ inputs.static }} \
+            -Pelide.static=${{ inputs.static == true && 'true' || 'false' }} \
             -Pelide.release=${{ inputs.release }} \
             -Pelide.buildMode=${{ inputs.release == true && 'release' || 'dev' }}
       - name: "Setup: Signing Keys"

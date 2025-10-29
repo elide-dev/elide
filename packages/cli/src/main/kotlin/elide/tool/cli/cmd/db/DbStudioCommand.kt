@@ -77,83 +77,48 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     private val SQLITE_EXTENSIONS = setOf(".db", ".sqlite", ".sqlite3", ".db3")
   }
 
-  private fun discoverDatabases(): List<DiscoveredDatabase> {
-    val databases = mutableListOf<DiscoveredDatabase>()
+  // Extension function for SQLite detection
+  private fun Path.isSqliteDatabase(): Boolean =
+    isRegularFile() && SQLITE_EXTENSIONS.any { name.endsWith(it, ignoreCase = true) }
 
-    val cwd = Path.of(System.getProperty("user.dir"))
-
-    searchDirectory(cwd, databases, depth = 0, maxDepth = 0, isLocal = true)
-
-    try {
-      cwd.listDirectoryEntries()
-        .filter { it.isDirectory() }
-        .forEach { subDir ->
-          searchDirectory(subDir, databases, depth = 1, maxDepth = 1, isLocal = true)
-        }
-    } catch (e: Exception) {
-
-    }
-
-    val userHome = Path.of(System.getProperty("user.home"))
-    val osName = System.getProperty("os.name").lowercase()
-
-    val userDataDirs = when {
-      osName.contains("mac") -> listOf(
-        userHome.resolve("Library/Application Support")
-      )
-      osName.contains("win") -> listOf(
-        Path.of(System.getenv("APPDATA") ?: userHome.resolve("AppData/Roaming").toString())
-      )
-      else -> listOf( // Linux/Unix
-        userHome.resolve(".local/share")
-      )
-    }
-
-    userDataDirs.forEach { dir ->
-      if (dir.exists() && dir.isDirectory()) {
-        searchDirectory(dir, databases, depth = 0, maxDepth = 1, isLocal = false)
-      }
-    }
-
-    return databases.sortedWith(
-      compareByDescending<DiscoveredDatabase> { it.isLocal }
-        .thenByDescending { it.lastModified }
+  // Extension function to safely convert Path to DiscoveredDatabase
+  private fun Path.toDiscoveredDatabase(): DiscoveredDatabase? = runCatching {
+    DiscoveredDatabase(
+      path = toAbsolutePath().toString(),
+      name = name,
+      size = fileSize(),
+      lastModified = getLastModifiedTime().toMillis(),
+      isLocal = true,
     )
-  }
+  }.getOrNull()
 
+  // Functional version that returns a list
   private fun searchDirectory(
     dir: Path,
-    databases: MutableList<DiscoveredDatabase>,
     depth: Int,
-    maxDepth: Int,
-    isLocal: Boolean
-  ) {
-    try {
-      dir.listDirectoryEntries().forEach { file ->
-        when {
-          file.isRegularFile() && SQLITE_EXTENSIONS.any { file.name.endsWith(it, ignoreCase = true) } -> {
-            try {
-              databases.add(
-                DiscoveredDatabase(
-                  path = file.toAbsolutePath().toString(),
-                  name = file.name,
-                  size = file.fileSize(),
-                  lastModified = file.getLastModifiedTime().toMillis(),
-                  isLocal = isLocal,
-                )
-              )
-            } catch (e: Exception) {
-              // Silently ignore files we can't read
-            }
-          }
-          file.isDirectory() && depth < maxDepth -> {
-            searchDirectory(file, databases, depth + 1, maxDepth, isLocal)
-          }
-        }
+    maxDepth: Int
+  ): List<DiscoveredDatabase> = runCatching {
+    dir.listDirectoryEntries().flatMap { file ->
+      when {
+        file.isSqliteDatabase() -> listOfNotNull(file.toDiscoveredDatabase())
+        file.isDirectory() && depth < maxDepth -> searchDirectory(file, depth + 1, maxDepth)
+        else -> emptyList()
       }
-    } catch (e: Exception) {
-      // Silently ignore permission errors
     }
+  }.getOrElse { emptyList() }
+
+  private fun discoverDatabases(): List<DiscoveredDatabase> {
+    val cwd = Path.of(System.getProperty("user.dir"))
+
+    // Search current directory and immediate subdirectories
+    val currentDir = searchDirectory(cwd, depth = 0, maxDepth = 0)
+    val subDirs = runCatching {
+      cwd.listDirectoryEntries()
+        .filter { it.isDirectory() }
+        .flatMap { searchDirectory(it, depth = 1, maxDepth = 1) }
+    }.getOrElse { emptyList() }
+
+    return (currentDir + subDirs).sortedByDescending { it.lastModified }
   }
 
   private fun copyDirectory(sourcePath: Path, targetDir: Path) {
@@ -233,7 +198,7 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
       val discovered = discoverDatabases()
 
       if (discovered.isEmpty()) {
-        return CommandResult.err(message = "No SQLite databases found in current directory or user data directories")
+        return CommandResult.err(message = "No SQLite databases found in current directory or user data directories. If you're targeting a database file outside of this directory, provide the path as an argument (e.g. \"elide db studio /my/database/path.db\")")
       }
 
       discovered

@@ -67,10 +67,10 @@ export function startServer({ port, databases, Database }: ServerConfig): void {
   });
 
   /**
-   * GET /api/database/:dbIndex
+   * GET /api/databases/:dbIndex
    * Get metadata for a specific database
    */
-  Elide.http.router.handle("GET", "/api/database/:dbIndex", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
+  Elide.http.router.handle("GET", "/api/databases/:dbIndex", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
     try {
       const dbIndexStr = context?.params?.dbIndex || "";
       const dbIndex = parseInt(dbIndexStr, 10);
@@ -110,10 +110,10 @@ export function startServer({ port, databases, Database }: ServerConfig): void {
   });
 
   /**
-   * GET /api/database/:dbIndex/tables
+   * GET /api/databases/:dbIndex/tables
    * List all tables in a database
    */
-  Elide.http.router.handle("GET", "/api/database/:dbIndex/tables", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
+  Elide.http.router.handle("GET", "/api/databases/:dbIndex/tables", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
     try {
       const dbIndexStr = context?.params?.dbIndex || "";
       const dbIndex = parseInt(dbIndexStr, 10);
@@ -144,10 +144,10 @@ export function startServer({ port, databases, Database }: ServerConfig): void {
   });
 
   /**
-   * GET /api/database/:dbIndex/table/:tableName
+   * GET /api/databases/:dbIndex/tables/:tableName
    * Get data from a specific table
    */
-  Elide.http.router.handle("GET", "/api/database/:dbIndex/table/:tableName", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
+  Elide.http.router.handle("GET", "/api/databases/:dbIndex/tables/:tableName", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
     try {
       const dbIndexStr = context?.params?.dbIndex || "";
       const dbIndex = parseInt(dbIndexStr, 10);
@@ -206,9 +206,9 @@ export function startServer({ port, databases, Database }: ServerConfig): void {
     console.log();
     console.log("API Endpoints:");
     console.log(`  GET /api/databases`);
-    console.log(`  GET /api/database/:dbIndex`);
-    console.log(`  GET /api/database/:dbIndex/tables`);
-    console.log(`  GET /api/database/:dbIndex/table/:tableName`);
+    console.log(`  GET /api/databases/:dbIndex`);
+    console.log(`  GET /api/databases/:dbIndex/tables`);
+    console.log(`  GET /api/databases/:dbIndex/tables/:tableName`);
     console.log(`  GET /health`);
   });
 

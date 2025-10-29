@@ -20,9 +20,6 @@ name: Release
           description: "Test Mode"
           type: boolean
           default: true
-    push:
-      branches:
-        - chore/release-pipeline
 
 # Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:
@@ -39,24 +36,29 @@ jobs:
   ## Job: Library Build
   ##
   release:
-    name: "Release: Native (Debug, ${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
+    name: "Release: Native Build (${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
     runs-on: ${{ matrix.runner }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: Linux
-            runner: ubuntu-latest-32-cores-arm64
+          - runner: minimax-arm64-1
+            arch: arm64
+            labs: false
+            tag: linux-arm64
+          - runner: macsandbox-arm64-1
+            arch: arm64
+            labs: false
+            tag: darwin-arm64
+          - runner: ci-agent-01
             arch: amd64
             labs: false
             tag: linux-amd64
-#          - os: macOS
-#            runner: ${{ inputs.runner_large_macos }}
-#            arch: amd64
-#            labs: false
-#            tag: darwin-amd64
-#            provenance: [true]
+          - runner: unclemax-win1
+            arch: amd64
+            labs: false
+            tag: windows-amd64
     permissions:
       contents: write
       id-token: write
@@ -65,13 +67,16 @@ jobs:
       run:
         shell: bash
 
+    outputs:
+      elide-version: ${{ steps.get-version.outputs.test }}
+
     steps:
-      - name: "Setup: Determine Mode"
+      - name: "Setup: Job Mode"
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "TEST_MODE=${{ inputs.test }}" >> $GITHUB_ENV
           else
-            echo "TEST_MODE=false" >> $GITHUB_ENV
+            echo "TEST_MODE=true" >> $GITHUB_ENV
           fi
 
       - name: "Setup: Harden Runner"
@@ -186,17 +191,12 @@ jobs:
           cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
           gpg --export-secret-keys > ~/.gnupg/secring.gpg
-#      - name: "Artifact: Build Outputs"
-#        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-#        if: ${{ env.TEST_MODE == 'false' }}
-#        id: build-artifact
-#        with:
-#          name: elide-${{env.ELIDE_VERSION}}-${{ matrix.os }}-${{ matrix.arch }}
-#          path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
       - name: "Get Version"
+        id: get-version
         run: |
           source ./tools/scripts/release/version-set.sh
           echo "ELIDE_VERSION=$ELIDE_VERSION" >> $GITHUB_ENV
+          echo "ELIDE_VERSION=$ELIDE_VERSION" >> $GITHUB_OUTPUT
       - name: "🛠 Release: Package"
         run: bash ./tools/scripts/release/package-release.sh
         env:
@@ -206,11 +206,105 @@ jobs:
       - name: "🛠 Release: Stage"
         run:
           bash ./tools/scripts/release/stage-release.sh
-#      - name: "Artifact: Release Package"
-#        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-#        if: ${{ env.TEST_MODE == 'false' }}
-#        id: pack-artifact
-#        with:
-#          name: elide-${{env.ELIDE_VERSION}}-${{ matrix.os }}-${{ matrix.arch }}.zip
-#          path: staging/**/*.*
+      - name: "🛠 Release: Push to Cloud"
+        if: ${{ env.TEST_MODE == 'false' }}
+        run: |
+          bash ./tools/scripts/release/push-to-cloud.sh
+  
 
+  create_release:
+    name: "Release: Create Github Release"
+    runs-on: ubuntu-cipool
+    needs: release
+
+    outputs:
+      release-id: ${{ steps.create_release.outputs.id }}
+
+    permissions:
+      contents: write
+      id-token: write
+
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      if: ${{ env.TEST_MODE == 'false' }}
+      with:
+        draft: false
+        prerelease: false
+        release_name: ${{ needs.release.outputs.elide-version }}
+        tag_name: ${{ github.ref }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+  upload_file_to_release:
+    name: "Release: Upload Artifacts to Github Release"
+    runs-on: ${{ matrix.runner }}
+    needs: [create_release, release]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: minimax-arm64-1
+            arch: arm64
+            labs: false
+            tag: linux-arm64
+          - runner: macsandbox-arm64-1
+            arch: arm64
+            labs: false
+            tag: darwin-arm64
+          - runner: ci-agent-01
+            arch: amd64
+            labs: false
+            tag: linux-amd64
+          - runner: unclemax-win1
+            arch: amd64
+            labs: false
+            tag: windows-amd64
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: "Setup: Job Mode"
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "TEST_MODE=${{ inputs.test }}" >> $GITHUB_ENV
+          else
+            echo "TEST_MODE=true" >> $GITHUB_ENV
+          fi
+
+      - name: "Upload Files to Release"
+        id: upload-artifacts
+        if: ${{ env.TEST_MODE == 'false' }}
+        uses: actions/github-script@v2
+        env:
+          RELEASE_ID: ${{ needs.create_release.outputs.release-id }}
+          VERSION: ${{ needs.release.outputs.elide-version }}
+          PLATFORM: ${{ matrix.tag }}
+        with:
+          script: |
+            console.log('environment', process.versions);
+            const fs = require('fs').promises;
+            const { repo: { owner, repo }, sha } = context;
+            console.log({ owner, repo, sha });
+            
+            const release_id = process.env.RELEASE_ID;
+            const version = process.env.VERSION;
+            const platform = process.env.PLATFORM
+            const staging_path = './staging/release/${platform}/${version}'
+            
+            for (let file of await fs.readdir(staging_path)) {
+              console.log('uploading', file);
+              
+              await github.repos.uploadReleaseAsset({
+                owner, repo,
+                release_id: release_id,
+                name: file,
+                data: await fs.readFile(`${staging_path}/${file}`)
+              });
+          }

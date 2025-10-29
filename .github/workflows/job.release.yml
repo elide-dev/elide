@@ -295,8 +295,8 @@ jobs:
             
             const release_id = process.env.RELEASE_ID;
             const version = process.env.VERSION;
-            const platform = process.env.PLATFORM
-            const staging_path = './staging/release/${platform}/${version}'
+            const platform = process.env.PLATFORM;
+            const staging_path = './staging/release/${platform}/${version};
             
             for (let file of await fs.readdir(staging_path)) {
               console.log('uploading', file);
@@ -307,4 +307,4 @@ jobs:
                 name: file,
                 data: await fs.readFile(`${staging_path}/${file}`)
               });
-          }
+            }

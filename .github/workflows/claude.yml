@@ -41,7 +41,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
+        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
         with:
           distribution: "graalvm"
           java-version: "25"
@@ -70,7 +70,7 @@ jobs:
           fi
       - name: "Run: Claude"
         id: claude
-        uses: anthropics/claude-code-action@7ed3b616d54fd445625b77b219342949146bae9e # beta
+        uses: anthropics/claude-code-action@777ffcbfc9d2e2b07f3cfec41b7c7eadedd1f0dc # beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           custom_instructions: |

@@ -15,7 +15,7 @@ package elide.tooling.project
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
-import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.codecs.PackageManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 
@@ -26,6 +26,8 @@ import elide.tooling.project.manifest.PackageManifest
  * file or type.
  */
 public interface PackageManifestService {
+  public fun configure(state: PackageManifestCodec.ManifestBuildState)
+
   public fun resolve(root: Path, ecosystem: ProjectEcosystem = ProjectEcosystem.Elide): Path
 
   public fun parse(source: Path): PackageManifest
@@ -37,4 +39,30 @@ public interface PackageManifestService {
   public fun export(manifest: ElidePackageManifest, ecosystem: ProjectEcosystem): PackageManifest
 
   public fun encode(manifest: PackageManifest, output: OutputStream)
+
+  public fun enforce(manifest: PackageManifest): ManifestValidation
+
+  public sealed interface ManifestValidation {
+    public val valid: Boolean
+
+    public fun throwIfFailed(): Unit = when (this) {
+      is ManifestErrors -> throw errors.first()
+      ManifestValid -> Unit
+    }
+
+    public companion object {
+      @JvmStatic public fun manifestOk(): ManifestValidation = ManifestValid
+      @JvmStatic public fun manifestError(err: ManifestInvalid): ManifestValidation = ManifestErrors(listOf(err))
+      @JvmStatic public fun manifestErrors(errs: List<ManifestInvalid>): ManifestValidation = ManifestErrors(errs)
+    }
+  }
+  public open class ManifestInvalid : RuntimeException {
+    public constructor(message: String): super(message)
+  }
+  public data object ManifestValid : ManifestValidation {
+    override val valid: Boolean get() = true
+  }
+  public class ManifestErrors(public val errors: List<ManifestInvalid>): ManifestValidation {
+    override val valid: Boolean get() = false
+  }
 }

@@ -25,7 +25,7 @@ import elide.tool.cli.*
 import elide.tool.cli.cfg.ElideCLITool
 import elide.tool.engine.NativeEngine
 import elide.tool.io.RuntimeWorkdirManager
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 
 /** TBD. */
 @Command(

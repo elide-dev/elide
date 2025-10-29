@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -10,9 +10,10 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-
 package elide.runtime.plugins.ruby
 
+import org.graalvm.polyglot.Source
+import java.nio.charset.StandardCharsets
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
@@ -33,7 +34,9 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     config.applyTo(context)
 
     // run embedded initialization code
-    executePreambleScripts(context, rubyPreamble)
+    context.enter()
+    context.evaluate(rubyInitSrc)
+    context.leave()
   }
 
   private fun configureContext(builder: PolyglotContextBuilder) {
@@ -71,10 +74,21 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
     private const val RUBY_PLUGIN_ID = "Ruby"
     override val languageId: String = RUBY_LANGUAGE_ID
     override val key: Key<Ruby> = Key(RUBY_PLUGIN_ID)
-    @JvmStatic private val rubyPreamble = initializePreambleScripts(
-      RUBY_LANGUAGE_ID,
-      "environment.rb",
-    )
+
+    @JvmStatic private val rubyInitSrc: Source = requireNotNull(
+      Ruby::class.java.classLoader.getResourceAsStream("META-INF/elide/embedded/runtime/ruby/environment.rb")
+    ) {
+      "Failed to locate `environment.rb`; please check the classpath"
+    }.bufferedReader(StandardCharsets.UTF_8).use {
+      it.readText().let {
+        Source.newBuilder(RUBY_LANGUAGE_ID, it, "<elide>/environment.rb")
+          .name("environment.rb")
+          .cached(true)
+          .internal(true)
+          .interactive(false)
+          .build()
+      }
+    }
 
     override fun install(scope: InstallationScope, configuration: RubyConfig.() -> Unit): Ruby {
       configureLanguageSupport(scope)

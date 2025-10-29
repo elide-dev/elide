@@ -14,6 +14,7 @@ package elide.tooling.jvm
 
 import java.nio.file.Path
 import elide.tooling.Classpath
+import elide.tooling.project.ElideConfiguredProject
 
 /**
  * # JVM Libraries
@@ -22,15 +23,15 @@ import elide.tooling.Classpath
  */
 public object JvmLibraries {
   // @TODO: don't hard-code any of this
-  public const val ELIDE_VERSION: String = "1.0.0-beta9"
-  public const val EMBEDDED_KOTLIN: String = "2.2.20"
+  public const val ELIDE_VERSION: String = "1.0.0-beta10-rc9"
+  public const val EMBEDDED_KOTLIN: String = "2.2.21-RC2"
 
   public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
   public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"
   public const val EMBEDDED_APIGUARDIAN_VERSION: String = "1.1.2"
   public const val EMBEDDED_OPENTEST_VERSION: String = "1.3.0"
   public const val EMBEDDED_KOTLINX_HTML_VERSION: String = "0.12.0"
-  public const val EMBEDDED_KOTLINX_CSS_VERSION: String = "2025.7.7"
+  public const val EMBEDDED_KOTLINX_CSS_VERSION: String = "2025.10.8"
   public const val EMBEDDED_KOTLINX_IO_VERSION: String = "0.8.0"
   public const val EMBEDDED_COROUTINES_VERSION: String = "1.10.2"
   public const val EMBEDDED_SERIALIZATION_VERSION: String = "1.9.0"
@@ -43,6 +44,7 @@ public object JvmLibraries {
   public const val JUNIT_PLATFORM_CONSOLE: String = "org.junit.platform:junit-platform-console"
   public const val JUNIT_JUPITER_PARAMS: String = "org.junit.jupiter:junit-jupiter-params"
   public const val OPENTEST: String = "org.opentest4j:opentest4j"
+  public const val KOTLIN_KAPT_RUNTIME: String = "org.jetbrains.kotlin:kotlin-annotation-processing-runtime"
   public const val KOTLIN_TEST: String = "org.jetbrains.kotlin:kotlin-test"
   public const val KOTLIN_TEST_JUNIT5: String = "org.jetbrains.kotlin:kotlin-test-junit5"
   public const val KOTLINX_HTML: String = "org.jetbrains.kotlinx:kotlinx-html-jvm"
@@ -57,10 +59,8 @@ public object JvmLibraries {
   public const val ELIDE_CORE: String = "dev.elide:elide-base-jvm"
   public const val ELIDE_TEST: String = "dev.elide:elide-test-jvm"
 
-  internal val baseCoordinates = arrayOf(
-    jarNamed("kotlin-stdlib"),
-    jarNamed("kotlin-reflect"),
-  )
+  internal val kotlinStdlib = jarNamed("kotlin-stdlib")
+  internal val kotlinReflect = jarNamed("kotlin-reflect")
 
   internal val baseKotlinxCoordinates = arrayOf(
     KOTLINX_HTML to EMBEDDED_KOTLINX_HTML_VERSION,
@@ -126,6 +126,16 @@ public object JvmLibraries {
     return resolveJarFor(path, jarNameFor(coordinate, elideVersion))
   }
 
+  public fun builtinClasspath(project: ElideConfiguredProject, tests: Boolean = false): Classpath {
+    return builtinClasspath(
+      project.resourcesPath,
+      tests = tests,
+      kotlinx = project.manifest.kotlin?.features?.kotlinx != false,
+      reflection = project.manifest.kotlin?.features?.reflection != false,
+      stdlib = project.manifest.kotlin?.compilerOptions?.noStdlib != true,
+    )
+  }
+
   public fun builtinClasspath(
     path: Path,
     elideVersion: String = ELIDE_VERSION,
@@ -133,6 +143,8 @@ public object JvmLibraries {
     kotlin: Boolean = true,
     kotlinx: Boolean = true,
     elide: Boolean = true,
+    reflection: Boolean = true,
+    stdlib: Boolean = true,
   ): Classpath {
     return Classpath.from(
       buildList {
@@ -142,11 +154,10 @@ public object JvmLibraries {
             addAll(elideTestCoordinates.map { resolveElideJarFor(path, it, elideVersion) })
           }
         }
-        if (kotlin || tests) addAll(
-          baseCoordinates.map {
-            resolveJarFor(path, it)
-          },
-        )
+        if (kotlin || tests) {
+          if (stdlib) add(resolveJarFor(path, kotlinStdlib))
+          if (reflection) add(resolveJarFor(path, kotlinReflect))
+        }
         if (kotlinx) baseKotlinxCoordinates.forEach { (coordinate, version) ->
           add(resolveJarFor(path, coordinate, version))
         }

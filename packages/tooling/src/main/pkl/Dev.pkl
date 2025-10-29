@@ -3,6 +3,8 @@
 module elide.dev
 
 import "Base.pkl" as _common
+import "Builder.pkl" as _builder
+import "Flags.pkl" as _flags
 import "ci/ContinuousIntegration.pkl" as ci
 
 /// Source platform where the project is hosted.
@@ -78,4 +80,13 @@ class DevSettings {
 
   /// Development server settings for the project.
   server: DevServerSettings?
+
+  /// Settings which govern this project's builder.
+  builder: _builder.BuilderSettings?
+
+  /// Settings which govern this project's test runner.
+  testrunner: _builder.TestRunnerSettings?
+
+  /// Mapping of configured project flags.
+  flags: Listing<_flags.ProjectFlag> = new {}
 }

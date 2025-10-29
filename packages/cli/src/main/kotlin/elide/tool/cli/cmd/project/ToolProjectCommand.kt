@@ -31,9 +31,11 @@ import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.flags.ProjectFlagType
+import elide.tooling.project.flags.ProjectFlagValue
 import elide.tooling.project.manifest.ElidePackageManifest
 
 @Command(
@@ -142,6 +144,33 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
     }
 
     return if (failed) err() else success()
+  }
+
+  // Render project flags to markdown so they can be rendered in the terminal.
+  private fun renderFlagsToMd(manifest: ElidePackageManifest): String = buildString {
+    appendLine("## Flags")
+    appendLine("Pass these when running `elide build` for this project:\n")
+
+    manifest.dev?.flags?.sortedBy { it.name }?.forEach { flag ->
+      flag.description?.let { description ->
+        val boldedName = TextStyles.bold(flag.name.replace("--", ""))
+
+        val label = when (flag.type) {
+          ProjectFlagType.BOOLEAN -> "--[no-]$boldedName"
+          ProjectFlagType.STRING -> "--$boldedName=<value>"
+          else -> {}
+        }
+        append("- `$label`")
+        when (val flagDefault = flag.defaultValue) {
+          ProjectFlagValue.NoValue -> append(": ")
+          ProjectFlagValue.True -> append(" (default: `true`): ")
+          ProjectFlagValue.False -> append(" (default: `false`): ")
+          is ProjectFlagValue.StringValue -> append(" (default: `${flagDefault.value}`): ")
+        }
+        append(description)
+        append("\n")
+      }
+    }
   }
 
   // Render dependencies to markdown so they can be rendered in the terminal.
@@ -280,6 +309,11 @@ internal class ToolProjectCommand : ProjectAwareSubcommand<ToolState, CommandCon
               // next up, scripts
               if (project.manifest.scripts.isNotEmpty()) {
                 Statics.terminal.println(Markdown(renderScriptsToMd(project.manifest)))
+              }
+
+              // next up, flags
+              if (project.manifest.dev?.flags?.isNotEmpty() == true) {
+                Statics.terminal.println(Markdown(renderFlagsToMd(project.manifest)))
               }
 
               // dependencies up next

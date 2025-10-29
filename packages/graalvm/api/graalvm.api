@@ -1,6 +1,58 @@
+public synthetic class elide/runtime/core/$EntrypointRegistry$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/core/$RuntimeLatch$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/runtime/core/$SharedContextFactory$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
 public final class elide/runtime/core/EngineFactoryKt {
-	public static final fun PolyglotEngine (Lkotlin/jvm/functions/Function1;)Lelide/runtime/core/PolyglotEngine;
-	public static synthetic fun PolyglotEngine$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/core/PolyglotEngine;
+	public static final fun PolyglotEngine (Lio/micronaut/context/BeanContext;Lkotlin/jvm/functions/Function1;)Lelide/runtime/core/PolyglotEngine;
+	public static synthetic fun PolyglotEngine$default (Lio/micronaut/context/BeanContext;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/runtime/core/PolyglotEngine;
+}
+
+public final class elide/runtime/core/EntrypointRegistry {
+	public fun <init> ()V
+	public final fun acquire ()Lorg/graalvm/polyglot/Source;
+	public final fun getAvailable ()Z
+	public final fun record (Lorg/graalvm/polyglot/Source;)V
+}
+
+public final class elide/runtime/core/RuntimeLatch {
+	public fun <init> ()V
+	public final fun await ()V
+	public final fun onAwait (Lkotlin/jvm/functions/Function0;)V
+	public final fun release ()V
+	public final fun retain ()V
+}
+
+public final class elide/runtime/core/SharedContextFactory {
+	public fun <init> ()V
+	public final fun acquire ()Lorg/graalvm/polyglot/Context;
+	public final fun getAvailable ()Z
+	public final fun record (Lkotlin/jvm/functions/Function0;)V
 }
 
 public final class elide/runtime/core/extensions/ExecutionListenerKt {
@@ -14,7 +66,7 @@ public final class elide/runtime/core/internals/MutableEngineLifecycle : elide/r
 }
 
 public final class elide/runtime/core/internals/graalvm/GraalVMConfiguration : elide/runtime/core/PolyglotEngineConfiguration {
-	public fun <init> (Lelide/runtime/core/internals/MutableEngineLifecycle;)V
+	public fun <init> (Lelide/runtime/core/internals/MutableEngineLifecycle;Lkotlin/jvm/functions/Function0;)V
 	public fun args ([Ljava/lang/String;)V
 	public fun blockUntilReady ()V
 	public fun configure (Lelide/runtime/core/EnginePlugin;Lkotlin/jvm/functions/Function1;)V
@@ -1229,6 +1281,16 @@ public synthetic class elide/runtime/gvm/internals/js/$JsTimersIntrinsic$Provide
 	public fun load ()Lio/micronaut/inject/BeanDefinition;
 }
 
+public final class elide/runtime/gvm/internals/serialization/GuestValueSerializer : kotlinx/serialization/SerializationStrategy {
+	public static final field INSTANCE Lelide/runtime/gvm/internals/serialization/GuestValueSerializer;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun hashCode ()I
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/graalvm/polyglot/Value;)V
+	public fun toString ()Ljava/lang/String;
+}
+
 public synthetic class elide/runtime/gvm/internals/sqlite/$ElideSqliteModule$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -2297,7 +2359,7 @@ public synthetic class elide/runtime/gvm/intrinsics/$ServiceIntrinsicsResolver$D
 
 public final class elide/runtime/gvm/intrinsics/BuildTimeIntrinsicsResolver : elide/runtime/intrinsics/IntrinsicsResolver {
 	public static final field Companion Lelide/runtime/gvm/intrinsics/BuildTimeIntrinsicsResolver$Companion;
-	public fun <init> (Lelide/runtime/exec/GuestExecutor;Ljava/util/Optional;Lelide/runtime/node/fs/VfsInitializerListener;Lelide/runtime/intrinsics/testing/TestingRegistrar;)V
+	public fun <init> (Lelide/runtime/exec/GuestExecutor;Ljava/util/Optional;Lelide/runtime/node/fs/VfsInitializerListener;Lelide/runtime/intrinsics/testing/TestingRegistrar;Lelide/runtime/core/EntrypointRegistry;Lelide/runtime/core/SharedContextFactory;Lelide/runtime/core/RuntimeLatch;)V
 	public fun generate (Lelide/runtime/gvm/GuestLanguage;Z)Lkotlin/sequences/Sequence;
 }
 
@@ -3617,6 +3679,8 @@ public abstract interface class elide/runtime/intrinsics/js/node/ConsoleAPI : el
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/CryptoAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun randomUUID (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
+	public static synthetic fun randomUUID$default (Lelide/runtime/intrinsics/js/node/CryptoAPI;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/DNSAPI : elide/runtime/intrinsics/js/node/NodeAPI {
@@ -6926,6 +6990,10 @@ public final class elide/runtime/intrinsics/js/typed/UUID$UUIDType : java/lang/E
 	public static fun values ()[Lelide/runtime/intrinsics/js/typed/UUID$UUIDType;
 }
 
+public abstract interface class elide/runtime/intrinsics/secrets/SecretsAPI : org/graalvm/polyglot/proxy/ProxyObject {
+	public abstract fun get (Lorg/graalvm/polyglot/Value;)Lorg/graalvm/polyglot/Value;
+}
+
 public abstract interface class elide/runtime/intrinsics/server/http/ExpressResponseAPI {
 	public abstract fun append (Ljava/lang/String;Ljava/lang/String;)V
 	public static synthetic fun append$default (Lelide/runtime/intrinsics/server/http/ExpressResponseAPI;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)V
@@ -7041,6 +7109,206 @@ public abstract interface class elide/runtime/intrinsics/server/http/HttpServerE
 	public abstract fun getRouter ()Lelide/runtime/intrinsics/server/http/HttpRouter;
 	public abstract fun getRunning ()Z
 	public abstract fun start ()V
+}
+
+public abstract class elide/runtime/intrinsics/server/http/v2/AbstractHttpIntrinsic : java/lang/AutoCloseable {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/AbstractHttpIntrinsic$Companion;
+	public fun <init> ()V
+	protected abstract fun acquireFactory ()Lelide/runtime/intrinsics/server/http/v2/HttpContextFactory;
+	protected abstract fun acquireHandler ()Lelide/runtime/intrinsics/server/http/v2/HttpContextHandler;
+	public fun close ()V
+	protected abstract fun getRuntimeLatch ()Lelide/runtime/core/RuntimeLatch;
+	protected final fun isRunning ()Z
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/AbstractHttpIntrinsic$Companion {
+}
+
+public abstract class elide/runtime/intrinsics/server/http/v2/GuestHandlerStackManager {
+	public fun <init> ()V
+	protected abstract fun getEntrypointProvider ()Lelide/runtime/core/EntrypointRegistry;
+	protected abstract fun initializeStack (Ljava/lang/Object;Lorg/graalvm/polyglot/Source;)V
+	protected abstract fun newStack ()Ljava/lang/Object;
+	public final fun withStack (Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContentSink {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/HttpContentSink$Companion;
+	public abstract fun close ()V
+	public abstract fun release ()V
+	public static fun singleValueProducer (Lio/netty/handler/codec/http/HttpContent;)Lelide/runtime/intrinsics/server/http/v2/HttpContentSink$Producer;
+	public abstract fun source (Lelide/runtime/intrinsics/server/http/v2/HttpContentSink$Producer;)V
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/HttpContentSink$Companion {
+	public final fun singleValueProducer (Lio/netty/handler/codec/http/HttpContent;)Lelide/runtime/intrinsics/server/http/v2/HttpContentSink$Producer;
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContentSink$Handle {
+	public abstract fun push (Lio/netty/handler/codec/http/HttpContent;)V
+	public abstract fun release (Z)V
+	public static synthetic fun release$default (Lelide/runtime/intrinsics/server/http/v2/HttpContentSink$Handle;ZILjava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContentSink$Producer {
+	public abstract fun pull (Lelide/runtime/intrinsics/server/http/v2/HttpContentSink$Handle;)V
+	public fun released ()V
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/HttpContentSinkKt {
+	public static final fun source (Lelide/runtime/intrinsics/server/http/v2/HttpContentSink;Lio/netty/handler/codec/http/HttpContent;)V
+	public static final fun source (Lelide/runtime/intrinsics/server/http/v2/HttpContentSink;Lkotlin/jvm/functions/Function1;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContentSource : java/lang/AutoCloseable {
+	public abstract fun close ()V
+	public abstract fun release ()V
+	public abstract fun sink (Lelide/runtime/intrinsics/server/http/v2/HttpContentSource$Consumer;)V
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContentSource$Consumer {
+	public fun attached (Lelide/runtime/intrinsics/server/http/v2/HttpContentSource$Handle;)V
+	public abstract fun consume (Lio/netty/handler/codec/http/HttpContent;Lelide/runtime/intrinsics/server/http/v2/HttpContentSource$Handle;)V
+	public fun released ()V
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContentSource$Handle {
+	public abstract fun pull ()V
+	public abstract fun release ()V
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContext : java/lang/AutoCloseable {
+	public abstract fun getRequest ()Lio/netty/handler/codec/http/HttpRequest;
+	public abstract fun getRequestBody ()Lelide/runtime/intrinsics/server/http/v2/HttpContentSource;
+	public abstract fun getResponse ()Lio/netty/handler/codec/http/HttpResponse;
+	public abstract fun getResponseBody ()Lelide/runtime/intrinsics/server/http/v2/HttpContentSink;
+	public abstract fun getSession-pq86gmg ()Ljava/util/Map;
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContextFactory {
+	public abstract fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/channel/ChannelHandlerContext;Lelide/runtime/intrinsics/server/http/v2/HttpContentSource;Lelide/runtime/intrinsics/server/http/v2/HttpContentSink;)Lelide/runtime/intrinsics/server/http/v2/HttpContext;
+}
+
+public abstract interface class elide/runtime/intrinsics/server/http/v2/HttpContextHandler {
+	public abstract fun handle-YlPY-8k (Lelide/runtime/intrinsics/server/http/v2/HttpContext;Lio/netty/channel/ChannelHandlerContext;)Lio/netty/channel/ChannelFuture;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/HttpSession {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/HttpSession$Companion;
+	public static final synthetic fun box-impl (Ljava/util/Map;)Lelide/runtime/intrinsics/server/http/v2/HttpSession;
+	public static fun constructor-impl ()Ljava/util/Map;
+	public static final fun contains-TGwmvD8 (Ljava/util/Map;Ljava/lang/String;)Z
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/util/Map;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/util/Map;Ljava/util/Map;)Z
+	public static final fun get-TGwmvD8 (Ljava/util/Map;Ljava/lang/String;)Ljava/lang/Object;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/util/Map;)I
+	public static final fun put-r3jvb9E (Ljava/util/Map;Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;
+	public static final fun remove-TGwmvD8 (Ljava/util/Map;Ljava/lang/String;)Ljava/lang/Object;
+	public static final fun set-r3jvb9E (Ljava/util/Map;Ljava/lang/String;Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/util/Map;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/util/Map;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/HttpSession$Companion {
+	public final fun from--3JBGkM (Ljava/util/Map;)Ljava/util/Map;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/HttpSession$Key {
+	public static final field Companion Lelide/runtime/intrinsics/server/http/v2/HttpSession$Key$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/intrinsics/server/http/v2/HttpSession$Key;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getToken ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/HttpSession$Key$Companion {
+	public final fun unsafe-HZVsV1U (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/channels/ChannelScope {
+	public static final synthetic fun box-impl (Lio/netty/channel/ChannelHandlerContext;)Lelide/runtime/intrinsics/server/http/v2/channels/ChannelScope;
+	public static fun constructor-impl (Lio/netty/channel/ChannelHandlerContext;)Lio/netty/channel/ChannelHandlerContext;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lio/netty/channel/ChannelHandlerContext;Lio/netty/channel/ChannelHandlerContext;)Z
+	public static final fun getAlloc-impl (Lio/netty/channel/ChannelHandlerContext;)Lio/netty/buffer/ByteBufAllocator;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lio/netty/channel/ChannelHandlerContext;)I
+	public static final fun newFailedFuture-impl (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Throwable;)Lio/netty/channel/ChannelFuture;
+	public static synthetic fun newFailedFuture-impl$default (Lio/netty/channel/ChannelHandlerContext;Ljava/lang/Throwable;ILjava/lang/Object;)Lio/netty/channel/ChannelFuture;
+	public static final fun newProgressivePromise-impl (Lio/netty/channel/ChannelHandlerContext;)Lio/netty/channel/ChannelProgressivePromise;
+	public static final fun newPromise-impl (Lio/netty/channel/ChannelHandlerContext;)Lio/netty/channel/ChannelPromise;
+	public static final fun newSucceededFuture-impl (Lio/netty/channel/ChannelHandlerContext;)Lio/netty/channel/ChannelFuture;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lio/netty/channel/ChannelHandlerContext;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lio/netty/channel/ChannelHandlerContext;
+}
+
+public synthetic class elide/runtime/intrinsics/server/http/v2/flask/$FlaskHttpIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHandlerStackManager : elide/runtime/intrinsics/server/http/v2/GuestHandlerStackManager {
+	public fun <init> (Lelide/runtime/core/EntrypointRegistry;Lelide/runtime/core/SharedContextFactory;)V
+	public synthetic fun initializeStack (Ljava/lang/Object;Lorg/graalvm/polyglot/Source;)V
+	public synthetic fun newStack ()Ljava/lang/Object;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpContext : elide/runtime/intrinsics/server/http/v2/HttpContext {
+	public synthetic fun <init> (Lio/netty/handler/codec/http/HttpRequest;Lelide/runtime/intrinsics/server/http/v2/HttpContentSource;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/intrinsics/server/http/v2/HttpContentSink;Ljava/util/Map;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun close ()V
+	public fun getRequest ()Lio/netty/handler/codec/http/HttpRequest;
+	public fun getRequestBody ()Lelide/runtime/intrinsics/server/http/v2/HttpContentSource;
+	public fun getResponse ()Lio/netty/handler/codec/http/HttpResponse;
+	public fun getResponseBody ()Lelide/runtime/intrinsics/server/http/v2/HttpContentSink;
+	public fun getSession-pq86gmg ()Ljava/util/Map;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpException : java/lang/RuntimeException {
+	public fun <init> (I)V
+	public final fun getCode ()I
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpIntrinsic : elide/runtime/intrinsics/server/http/v2/AbstractHttpIntrinsic, elide/runtime/intrinsics/GuestIntrinsic, elide/runtime/plugins/python/flask/FlaskAPI, org/graalvm/polyglot/proxy/ProxyExecutable, org/graalvm/polyglot/proxy/ProxyObject {
+	public fun <init> (Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;)V
+	public fun displayName ()Ljava/lang/String;
+	public fun execute ([Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/server/http/v2/flask/FlaskHttpIntrinsic$FlaskAppInstance;
+	public synthetic fun execute ([Lorg/graalvm/polyglot/Value;)Ljava/lang/Object;
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getMemberKeys ()Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun install (Lelide/runtime/intrinsics/GuestIntrinsic$MutableIntrinsicBindings;)V
+	public fun language ()Lelide/runtime/gvm/GuestLanguage;
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+	public fun symbolicName ()Ljava/lang/String;
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskHttpIntrinsic$FlaskAppInstance : org/graalvm/polyglot/proxy/ProxyObject {
+	public fun <init> (Lelide/runtime/intrinsics/server/http/v2/flask/FlaskHttpIntrinsic;Ljava/lang/String;)V
+	public fun getMember (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getMemberKeys ()Ljava/lang/Object;
+	public fun hasMember (Ljava/lang/String;)Z
+	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
+}
+
+public final class elide/runtime/intrinsics/server/http/v2/flask/FlaskRouter {
+	public fun <init> ()V
 }
 
 public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteAPI$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
@@ -9954,5 +10222,23 @@ public abstract interface class elide/runtime/plugins/vfs/VfsListener {
 
 public final class elide/runtime/plugins/vfs/VfsPluginKt {
 	public static final fun vfs (Lelide/runtime/core/PolyglotEngineConfiguration;Lkotlin/jvm/functions/Function1;)V
+}
+
+public synthetic class elide/runtime/secrets/$SecretsIntrinsic$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isContextScope ()Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final synthetic class elide/runtime/secrets/$SecretsIntrinsic$Introspection : io/micronaut/inject/beans/AbstractInitializableBeanIntrospectionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun hasBuilder ()Z
+	public fun isBuildable ()Z
 }
 

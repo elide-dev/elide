@@ -25,15 +25,18 @@ import org.graalvm.buildtools.gradle.tasks.GenerateResourcesConfigFile
 import org.gradle.api.file.DuplicatesStrategy.EXCLUDE
 import org.gradle.api.internal.plugins.UnixStartScriptGenerator
 import org.gradle.api.internal.plugins.WindowsStartScriptGenerator
-import org.gradle.kotlin.dsl.provideDelegate
+import org.gradle.api.tasks.AbstractCopyTask
+import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.Delete
+import org.gradle.api.tasks.Exec
+import org.gradle.api.tasks.JavaExec
+import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_23
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.HostManager
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.TreeSet
-import kotlin.collections.listOf
-import kotlin.text.split
+import java.util.*
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.toolchain.host.Criteria
 import elide.toolchain.host.TargetCriteria
@@ -95,7 +98,8 @@ val isDebug = !isRelease && (
 val hostIsLinux = HostManager.hostIsLinux
 val hostIsMac = HostManager.hostIsMac
 val hostIsWindows = HostManager.hostIsMingw
-val nativesType = if (!isRelease) "debug" else "release"
+val nativesType = "debug"
+//val nativesType = if (!isRelease) "debug" else "release"
 val archTripleToken = (findProperty("elide.arch") as? String)
   ?: if (System.getProperty("os.arch") == "aarch64") "aarch64" else "x86_64"
 val muslTarget = "$archTripleToken-unknown-linux-musl"
@@ -109,6 +113,7 @@ val commandMain = "elide.tool.cli.Elide"
 val enablePkl = true
 val enableJs = true
 val enableJsIsolate = false
+val enableObfuscation = false
 val enableTs = true
 val enablePython = true
 val enablePythonDynamic = true
@@ -121,8 +126,9 @@ val enableAllLocales = false
 val enableLocaleSupport = false
 val enableCustomCompiler = findProperty("elide.compiler") != null
 val enableNativeCryptoV2 = false
-val enableNativeTransportV2 = false
+val enableNativeTransportV2 = true
 val enableSqliteStatic = true
+val nativeTargetFamily = "native"
 val enableStatic = findProperty("elide.static") == "true"
 val enableStaticJni = true
 val preferShared = false
@@ -174,7 +180,7 @@ val jniDebug = false
 val libcTarget = (findProperty("elide.targetLibc") as? String) ?: (if (enableStatic) "musl" else "glibc")
 val dumpPointsTo = false
 val elideTarget = TargetInfo.current(project)
-val fallbackGc = findProperty("elide.gc") ?: "serial"
+val effectiveGc = findProperty("elide.gc") ?: "serial"
 val defaultArchTarget = when {
   TargetCriteria.allOf(elideTarget, Criteria.Amd64) -> "x86-64-v3"
   TargetCriteria.allOf(elideTarget, Criteria.MacArm64) -> "armv8.1-a"
@@ -187,6 +193,11 @@ val nativeOptMode = when (val explicit = optMode) {
   "b" -> "0"
   else -> explicit
 }
+
+val obfuscationArgs = listOfNotNull(
+  onlyIf(enableObfuscation, "-Delide.enterprise=true"),
+  onlyIf(enableObfuscation, "-H:AdvancedObfuscation=export-mapping"),
+)
 
 val elideBinaryArch = project.properties["elide.march"] as? String ?: defaultArchTarget
 logger.lifecycle("Building for architecture '$elideBinaryArch' (default: '$defaultArchTarget')")
@@ -240,12 +251,15 @@ val svmModules = "com.oracle.graal.graal_enterprise,com.oracle.svm.svm_enterpris
 
 // JPMS add-on arguments for SVM builder stuff
 val jpmsSvmArgs = listOf(
+  "jdk.compiler" to "com.sun.tools.javac.util",
+  "jdk.compiler" to "com.sun.tools.javac.parser",
   "jdk.graal.compiler" to "jdk.graal.compiler.options",
   "java.base" to "jdk.internal.module",
   "jdk.internal.vm.ci" to "jdk.vm.ci.meta",
   "jdk.internal.vm.ci" to "jdk.vm.ci.code",
   "jdk.graal.compiler" to "jdk.graal.compiler.util",
   "jdk.graal.compiler" to "jdk.graal.compiler.serviceprovider",
+  "jdk.graal.compiler" to "jdk.graal.compiler.util.json",
   "java.base" to "jdk.internal.jimage",
   "org.graalvm.nativeimage.builder" to "com.oracle.svm.hosted",
   "org.graalvm.nativeimage.builder" to "com.oracle.svm.core",
@@ -266,6 +280,7 @@ val jpmsSvmArgs = listOf(
     ("jdk.internal.vm.ci" to "jdk.vm.ci.meta") to "org.graalvm.nativeimage.pointsto",
     ("jdk.internal.vm.ci" to "jdk.vm.ci.code") to "org.graalvm.nativeimage.pointsto",
     ("java.base" to "jdk.internal.jimage") to "org.graalvm.nativeimage.driver",
+    ("jdk.graal.compiler" to "jdk.graal.compiler.util.json") to "com.oracle.graal.reporter",
     ("java.base" to "jdk.internal.misc") to svmModules,
     ("jdk.internal.vm.ci" to "jdk.vm.ci.aarch64") to svmModules,
     ("jdk.internal.vm.ci" to "jdk.vm.ci.amd64") to svmModules,
@@ -313,6 +328,7 @@ val jvmRuntimeArgs = listOf(
 
 val nativeEnabledModules = listOf(
   "org.graalvm.truffle",
+  "io.netty.common",
   "ALL-UNNAMED",
 )
 
@@ -492,6 +508,7 @@ dependencies {
   svmModulePath(patchedLibs)
   svmModulePath(libs.graalvm.svm)
   svmModulePath(libs.graalvm.shadowed.json)
+  svmModulePath(mn.netty.common)
   jvmOnly(patchedLibs)
   embeddedKotlin(project(":packages:graalvm-kt", configuration = "embeddedKotlin"))
 
@@ -597,6 +614,9 @@ dependencies {
 
   // TODO: patched
   // implementation(libs.graalvm.tools.coverage)
+
+  // Secrets
+  implementation(projects.packages.secrets)
 
   // KotlinX
   implementation(libs.kotlinx.serialization.core)
@@ -789,6 +809,7 @@ val stagedNativeArgs: List<String> = listOfNotNull(
   "-H:+TrackPrimitiveValues",
   "-H:+UsePredicates",
   "-H:+AllowUnsafeAllocationOfAllInstantiatedTypes",  // fix: oracle/graal#10912
+  onlyIf(!enableJit, "-H:+JDWP"),
   onlyIf(oracleGvm && enableAuxCache, "-H:ReservedAuxiliaryImageBytes=${8 * 1024 * 1024}"),
   onlyIf(enableExperimentalLlvmBackend, "-H:CompilerBackend=llvm"),
   onlyIf(enableExperimental, "-H:+LayeredBaseImageAnalysis"),
@@ -814,6 +835,10 @@ val stagedNativeArgs: List<String> = listOfNotNull(
   // "-H:+UseExperimentalReachabilityAnalysis",  // not supported by truffle feature
   // "-H:+UseReachabilityMethodSummaries",  // not supported by truffle feature
   // "-H:+VMContinuations",  // not supported with runtime compilation
+).plus(
+  if (nativeTargetFamily == "wasm") {
+    listOf("--tool:svm-wasm")
+  } else emptyList()
 )
 
 val deprecatedNativeArgs = listOf(
@@ -1180,6 +1205,7 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.internal.tcnative.SSLContext",
   "io.netty.internal.tcnative.SSLSession",
   "io.netty.internal.tcnative.AsyncSSLPrivateKeyMethod",
+  "io.netty.internal.tcnative.CertificateCompressionAlgo",
   "io.netty.handler.ssl.BouncyCastleAlpnSslUtils",
 
   // --- BouncyCastle -----
@@ -1319,7 +1345,7 @@ val commonNativeArgs = listOfNotNull(
   "--link-at-build-time=dev.elide",
   "--link-at-build-time=org.pkl",
   "--link-at-build-time=picocli",
-  "--enable-native-access=org.graalvm.truffle,ALL-UNNAMED",
+  "--enable-native-access=org.graalvm.truffle,io.netty.common,ALL-UNNAMED",
   onlyIf(nativeMonitoring.isNotEmpty(), "--enable-monitoring=${nativeMonitoring}"),
   "-J--add-exports=jdk.jfr/jdk.jfr.internal=org.graalvm.nativeimage.driver,org.graalvm.nativeimage.builder",
   "-J--add-exports=jdk.jfr/jdk.jfr.internal=ALL-UNNAMED",
@@ -1334,7 +1360,10 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=java.base/jdk.internal.module=ALL-UNNAMED",
   "-J--add-exports=java.base/jdk.internal.jrtfs=ALL-UNNAMED",
   "-J--add-exports=jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED",
+  "-J--add-exports=jdk.graal.compiler/jdk.graal.compiler.util.json=com.oracle.graal.reporter",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
+  "--add-opens=io.netty.common/io.netty.util=org.graalvm.nativeimage.builder",
+  "--add-opens=io.netty.common/io.netty.util.internal.svm=org.graalvm.nativeimage.builder",
   "-H:+PreserveFramePointer",
   "-H:+ReportExceptionStackTraces",
   "-H:+AddAllCharsets",
@@ -1380,8 +1409,8 @@ val commonNativeArgs = listOfNotNull(
   "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/coll/ko.res",
   "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/brkitr/burmesedict.dict",
   "-H:ExcludeResources=org/graalvm/shadowed/com/ibm/icu/impl/data/icudt74b/brkitr/thaidict.dict",
-  "-H:ExcludeResources=META-INF/native/libnetty_transport_native_epoll_aarch_64.so",
-  "-H:ExcludeResources=META-INF/native/libnetty_transport_native_io_uring_x86_64.so",
+  // "-H:ExcludeResources=META-INF/native/libnetty_transport_native_epoll_aarch_64.so",
+  // "-H:ExcludeResources=META-INF/native/libnetty_transport_native_io_uring_x86_64.so",
   "-Delide.strict=true",
   "-Delide.js.vm.enableStreams=true",
   "-Delide.mosaic=$enableMosaic",
@@ -1422,7 +1451,6 @@ val commonNativeArgs = listOfNotNull(
   "-Dnetty.default.allocator.max-order=3",
   "-Dnetty.resource-leak-detector-level=DISABLED",
   "-Djansi.eager=false",
-  "-Djava.util.concurrent.ForkJoinPool.common.parallelism=1",
   "-Dkotlinx.coroutines.scheduler.core.pool.size=2",
   "-Dkotlinx.coroutines.scheduler.max.pool.size=2",
   "-Dkotlinx.coroutines.scheduler.default.name=ElideDefault",
@@ -1441,6 +1469,8 @@ val commonNativeArgs = listOfNotNull(
   }.map {
     "-H:CLibraryPath=$it"
   }
+).plus(
+  obfuscationArgs
 ).plus(
   commonGvmArgs.onlyIf(oracleGvm)
 ).plus(
@@ -1550,7 +1580,7 @@ val releaseCFlags: List<String> = listOf(
   "-O$nativeOptMode",
   "-fPIC",
   "-fPIE",
-  "-flto",
+  //"-flto",
 ).plus(
   listOf("-fuse-linker-plugin").onlyIf(!enableClang && !isClang && !HostManager.hostIsMac && !enableStatic)
 ).plus(
@@ -1618,6 +1648,7 @@ val supportedLocales = listOf(
 )
 
 val jvmDefs = mutableMapOf(
+  "sun.misc.unsafe.memory.access" to "allow",
   "elide.strict" to "true",
   "elide.natives" to nativesPath,
   "elide.root" to rootPath,
@@ -1640,6 +1671,7 @@ val jvmDefs = mutableMapOf(
   "jdk.image.use.jvm.map" to "false",
   "jna.library.path" to nativesPath,
   "jna.boot.library.path" to nativesPath,
+  "io.netty.noUnsafe" to "false",
   "io.netty.allocator.type" to "adaptive",
   "io.netty.native.deleteLibAfterLoading" to "false",
   "io.netty.native.detectNativeLibraryDuplicates" to "false",
@@ -1669,7 +1701,6 @@ val jvmDefs = mutableMapOf(
   "aether.dependencyCollector.pool.artifact" to "hard",
   "aether.dependencyCollector.pool.dependency" to "hard",
   "aether.dependencyCollector.pool.descriptor" to "hard",
-  "java.util.concurrent.ForkJoinPool.common.parallelism" to "2",
   "polyglot.js.esm-eval-returns-exports" to "true",
   // "java.util.concurrent.ForkJoinPool.common.threadFactory" to "",
   // "java.util.concurrent.ForkJoinPool.common.exceptionHandler" to "",
@@ -1714,7 +1745,7 @@ val pklArgs: List<String> = listOf(
 val defaultPlatformArgs: List<String> = listOf()
 
 val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "--gc=$fallbackGc",
+  "--gc=$effectiveGc",
   "-R:MaximumHeapSizePercent=80",
 ).plus(if (oracleGvm) listOf(
   "-Delide.vm.engine.preinitialize=true",
@@ -1727,8 +1758,8 @@ val windowsOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:-AuxiliaryEngineCache",
 ) else emptyList())
 
-val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
-  "--gc=$fallbackGc",
+val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
+  "--gc=$effectiveGc",
   "-R:MaximumHeapSizePercent=80",
   "--initialize-at-build-time=sun.awt.resources.awtosx",
   "-H:NativeLinkerOption=-flto",
@@ -1743,6 +1774,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
   "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
   "-H:NativeLinkerOption=$nativesPath/libweb.a",
+  onlyIf(enableNativeTransportV2, "-H:NativeLinkerOption=$nativesPath/libtransport.a"),
   "-H:NativeLinkerOption=-lm",
   "-H:NativeLinkerOption=-lstdc++",
 ).plus(if (oracleGvm) listOf(
@@ -1781,22 +1813,22 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=$nativesPath/libterminal.a",
     "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
     "-H:NativeLinkerOption=$nativesPath/libweb.a",
+    onlyIf(enableNativeTransportV2, "-H:NativeLinkerOption=$nativesPath/libtransport.a"),
     "-H:NativeLinkerOption=-lm",
     "-H:ExcludeResources=.*dylib",
     "-H:ExcludeResources=.*jnilib",
     "-H:ExcludeResources=.*dll",
     "-H:ExcludeResources=META-INF/native/libsqlitejdbc-linux-amd64.so",
     "-H:ExcludeResources=lib/osx-aarch64/libbrotli.dylib",
-    "-H:ExcludeResources=META-INF/native/libnetty_transport_native_epoll_x86_64.so",
+    // "-H:ExcludeResources=META-INF/native/libnetty_transport_native_epoll_x86_64.so",
     "-H:ExcludeResources=META-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib",
-    "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.Native",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueEventArray",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueue",
     "--initialize-at-run-time=io.netty.channel.kqueue.KQueueIoHandler",
     "--initialize-at-run-time=io.netty.channel.kqueue.AbstractKQueueChannel",
-    onlyIf(enableNativeTransportV2, "io.netty.channel.kqueue.Native"),
+    "--initialize-at-run-time=io.netty.internal.tcnative.CertificateCompressionAlgo",
   ).plus(
     listOfNotNull(
       onlyIf(enableStatic, "--libc=musl"),
@@ -1819,9 +1851,9 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:-AuxiliaryEngineCache",
     "-Delide.vm.engine.preinitialize=false",
   ) else listOfNotNull(
-    "--gc=$fallbackGc",
+    "--gc=$effectiveGc",
     "-R:MaximumHeapSizePercent=80",
-    onlyIf(fallbackGc == "serial", "-H:InitialCollectionPolicy=Adaptive"),
+    onlyIf(effectiveGc == "serial", "-H:InitialCollectionPolicy=Adaptive"),
   ).plus(if (oracleGvm && enableAuxCache && !enableG1) listOf(
     "-H:+AuxiliaryEngineCache",
     "-Delide.vm.engine.preinitialize=true",
@@ -2770,6 +2802,7 @@ fun spawnEmbeddedSvmCopy(receiver: BuildNativeImageTask): Copy {
         "**/truffle/**/*.jar",
         "**/svm/**/*.jar",
         "**/svm/clibraries/*/**/*.*",
+        "**/macros/**",
       )
       exclude(
         "**/svm-wasm/**",

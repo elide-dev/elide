@@ -18,7 +18,7 @@
 resolver = "2"
 members = ["crates/*", "tools/umbrella"]
 
-exclude = ["crates/build", "crates/transport", "third_party", "runtime", "crates/entry"]
+exclude = ["crates/build", "third_party", "runtime", "crates/entry"]
 
 [workspace.package]
 license = "MIT"
@@ -115,7 +115,7 @@ minify-html-onepass = { version = "0.15.0" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
 # orogene = { path = "../orogene", default-features = false, features = ["mimalloc"] }
-orogene = { git = "https://github.com/elide-dev/orogene", rev = "020b9752f360c68b75ab1ffd28e746a3df3efb5b", default-features = false, features = [
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "4e4b918fa708800ae3ebab904be77f21b6428336", default-features = false, features = [
   "mimalloc",
 ] }
 image = { version = "0.25.6", default-features = false, features = [
@@ -165,7 +165,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "6fcb0d05c6c78043f57b9f5b3183519cd195832d", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "4283fd8eb922e4ea23cf9045e57696095d31d6b0", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -173,7 +173,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "6fcb0d05c6c78043f57b9f5
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "2ad924d4cfd8dec87bf1ec4bba3a1cdf584e5bfa" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "ee2649feaa78b847ebcd44daebdce28c2e974842" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "85bd961fd3a98208e170e3265797816aad7c7961" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "7198e531827a8376531c85080f0c593f9dd1635a" }

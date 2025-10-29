@@ -429,7 +429,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
       // `force` implies `assumeYes`
       assumeYes = true
     }
-    if (install && selectedTemplate.hasDependencies) {
+    if (install && (selectedTemplate.hasDependencies && selectedTemplate.features.install)) {
       val doInstall = if (interactive && terminal.terminalInfo.interactive && !assumeYes) {
         KInquirer.promptConfirm("Install dependencies?", default = true)
       } else true
@@ -446,7 +446,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         }
       }
     }
-    if (build && selectedTemplate.hasBuild) {
+    if (build && (selectedTemplate.hasBuild && selectedTemplate.features.build)) {
       val doBuild = if (interactive && terminal.terminalInfo.interactive && !assumeYes) {
         KInquirer.promptConfirm("Build the new project?", default = true)
       } else true
@@ -464,7 +464,7 @@ internal open class InitCommand : ProjectAwareSubcommand<ToolState, CommandConte
         }
       }
     }
-    if (test && selectedTemplate.hasTests) {
+    if (test && (selectedTemplate.hasTests && selectedTemplate.features.test)) {
       val doTest = if (interactive && terminal.terminalInfo.interactive && !assumeYes) {
         KInquirer.promptConfirm("Run new project's tests?", default = true)
       } else true

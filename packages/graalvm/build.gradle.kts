@@ -17,7 +17,6 @@
   "MagicNumber"
 )
 
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import elide.internal.conventions.kotlin.KotlinTarget
 import elide.internal.conventions.native.NativeTarget
 import elide.internal.conventions.publishing.publish
@@ -59,7 +58,7 @@ version = rootProject.version as String
 // - `LD`: Linker
 // - `CFLAGS`: C compiler flags
 
-val oracleGvm = false
+val oracleGvm = true
 val oracleGvmLibs = oracleGvm
 val enableJpms = false
 val enableEdge = false
@@ -82,7 +81,7 @@ val selectedJvm = if (enableEdge) edgeJvm else stableJvm
 val elideTarget = TargetInfo.current(project)
 
 val jvmType: JvmVendorSpec =
-  if (oracleGvm) JvmVendorSpec.matching("Oracle Corporation") else JvmVendorSpec.GRAAL_VM
+  if (oracleGvm) JvmVendorSpec.ORACLE else JvmVendorSpec.GRAAL_VM
 
 val gvmLauncher = javaToolchains.launcherFor {
   languageVersion.set(JavaLanguageVersion.of(selectedJvmTarget))
@@ -476,6 +475,8 @@ dependencies {
   api(projects.packages.graalvmTs)
   api(projects.packages.graalvmJs)
   api(projects.packages.graalvmWasm)
+  api(projects.packages.graalvmPy)
+  api(projects.packages.secrets)
 
   // GraalVM / Truffle
   api(libs.graalvm.truffle.api)

@@ -30,7 +30,7 @@ import elide.tool.cli.ProjectAwareSubcommand
 import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.tool.DelegatedToolCommand
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import elide.tooling.AbstractTool
 import elide.tooling.gvm.nativeImage.GRAALVM_VERSION
 import elide.tooling.gvm.nativeImage.NATIVE_IMAGE
@@ -151,7 +151,12 @@ import elide.tooling.project.ElideProject
             listOf(it)
           }
         }
-        val outSpecPositionMinusOne = argsList.indexOf("-H:Path")
+        val outSpecPositionMinusOne = (
+          when (val idx = argsList.indexOf("-H:Path")) {
+            -1 -> argsList.indexOf("-o")
+            else -> idx
+          }
+        )
         val outSpec = if (outSpecPositionMinusOne < 0) {
           // come up with an output path; use `.dev/artifacts/native-image` by default
           // @TODO resolve from config

@@ -182,13 +182,16 @@ public abstract interface class elide/tooling/config/BuildConfigurator$BuildWork
 }
 
 public abstract interface class elide/tooling/config/BuildConfigurator$ElideBuildState {
+	public fun forManifest ()Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;
 	public abstract fun getBeanContext ()Lio/micronaut/context/BeanContext;
 	public abstract fun getConfig ()Lelide/tooling/config/BuildConfigurator$BuildConfiguration;
 	public abstract fun getConsole ()Lelide/tooling/config/BuildConfigurator$BuildConsoleController;
+	public abstract fun getDebug ()Z
 	public abstract fun getEvents ()Lelide/tooling/config/BuildConfigurator$BuildEventController;
 	public abstract fun getLayout ()Lelide/tooling/config/BuildConfigurator$ProjectDirectories;
 	public abstract fun getManifest ()Lelide/tooling/project/manifest/ElidePackageManifest;
 	public abstract fun getProject ()Lelide/tooling/project/ElideConfiguredProject;
+	public abstract fun getRelease ()Z
 	public abstract fun getResourcesPath ()Ljava/nio/file/Path;
 }
 
@@ -2362,11 +2365,12 @@ public abstract interface class elide/tooling/jvm/resolver/AetherProjectProvider
 	public abstract fun buildState ()Lelide/tooling/config/BuildConfigurator$ElideBuildState;
 }
 
-public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/tooling/ClasspathsProvider, elide/tooling/deps/DependencyResolver$MavenResolver, java/lang/AutoCloseable {
+public final class elide/tooling/jvm/resolver/MavenAetherResolver : elide/tooling/ClasspathsProvider, elide/tooling/ModulepathsProvider, elide/tooling/deps/DependencyResolver$MavenResolver, java/lang/AutoCloseable {
 	public static final field Companion Lelide/tooling/jvm/resolver/MavenAetherResolver$Companion;
 	public fun classpathProvider (Lelide/tooling/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun close ()V
 	public fun contribute (Ljava/nio/file/Path;Lelide/tooling/project/ElideProject;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun modulepathProvider (Lelide/tooling/ClasspathSpec;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun resolve (Lkotlinx/coroutines/CoroutineScope;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public fun seal (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -2409,7 +2413,7 @@ public final class elide/tooling/kotlin/KotlinCompiler : elide/tooling/AbstractT
 	public fun <init> (Lelide/tooling/Arguments;Lelide/tooling/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Lkotlin/jvm/functions/Function1;Ljava/nio/file/Path;ZLkotlin/jvm/functions/Function1;)V
 	public synthetic fun <init> (Lelide/tooling/Arguments;Lelide/tooling/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Lkotlin/jvm/functions/Function1;Ljava/nio/file/Path;ZLkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public static final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
-	public static final fun configureDefaultPlugins (Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;ZZZ)Ljava/util/Set;
+	public static final fun configureDefaultPlugins (Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;ZZZ)Ljava/util/List;
 	public static final fun create (Lelide/tooling/Arguments;Lelide/tooling/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Ljava/nio/file/Path;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lelide/tooling/kotlin/KotlinCompiler;
 	public final fun getInputs ()Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;
 	public final fun getOutputs ()Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
@@ -2423,8 +2427,8 @@ public final class elide/tooling/kotlin/KotlinCompiler : elide/tooling/AbstractT
 
 public final class elide/tooling/kotlin/KotlinCompiler$Companion {
 	public final fun classesDir (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
-	public final fun configureDefaultPlugins (Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;ZZZ)Ljava/util/Set;
-	public static synthetic fun configureDefaultPlugins$default (Lelide/tooling/kotlin/KotlinCompiler$Companion;Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;ZZZILjava/lang/Object;)Ljava/util/Set;
+	public final fun configureDefaultPlugins (Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;ZZZ)Ljava/util/List;
+	public static synthetic fun configureDefaultPlugins$default (Lelide/tooling/kotlin/KotlinCompiler$Companion;Lorg/jetbrains/kotlin/cli/common/arguments/K2JVMCompilerArguments;ZZZILjava/lang/Object;)Ljava/util/List;
 	public final fun create (Lelide/tooling/Arguments;Lelide/tooling/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Ljava/nio/file/Path;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lelide/tooling/kotlin/KotlinCompiler;
 	public static synthetic fun create$default (Lelide/tooling/kotlin/KotlinCompiler$Companion;Lelide/tooling/Arguments;Lelide/tooling/Environment;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerInputs;Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;Ljava/nio/file/Path;ZLkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/tooling/kotlin/KotlinCompiler;
 	public final fun outputJar (Ljava/nio/file/Path;)Lelide/tooling/kotlin/KotlinCompiler$KotlinCompilerOutputs;
@@ -2621,7 +2625,9 @@ public synthetic class elide/tooling/project/$CompositePackageManifestService$De
 
 public final class elide/tooling/project/CompositePackageManifestService : elide/tooling/project/PackageManifestService {
 	public fun <init> (Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;Ljakarta/inject/Provider;)V
+	public fun configure (Lelide/tooling/project/codecs/PackageManifestCodec$ManifestBuildState;)V
 	public fun encode (Lelide/tooling/project/manifest/PackageManifest;Ljava/io/OutputStream;)V
+	public fun enforce (Lelide/tooling/project/manifest/PackageManifest;)Lelide/tooling/project/PackageManifestService$ManifestValidation;
 	public fun export (Lelide/tooling/project/manifest/ElidePackageManifest;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;
 	public fun merge (Ljava/lang/Iterable;)Lelide/tooling/project/manifest/ElidePackageManifest;
 	public fun parse (Ljava/io/InputStream;Lelide/tooling/project/ProjectEcosystem;)Lelide/tooling/project/manifest/PackageManifest;

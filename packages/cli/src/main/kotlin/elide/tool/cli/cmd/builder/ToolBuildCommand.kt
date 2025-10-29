@@ -49,7 +49,7 @@ import elide.tool.cli.ToolState
 import elide.tool.cli.output.redirectLoggingToMordant
 import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import elide.tooling.BuildMode
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
@@ -163,12 +163,15 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   /** Names of specific build tasks to run. */
   @CommandLine.Parameters(
     index = "0",
-    description = ["Tasks or scripts to build or run"],
+    description = ["Tasks/targets or flags"],
     scope = CommandLine.ScopeType.LOCAL,
     arity = "0..*",
-    paramLabel = "TASK",
+    paramLabel = "TASK|FLAG",
   )
-  internal var tasks: List<String>? = null
+  internal var params: List<String>? = null
+
+  /** Command-line usage, as parsed, with no processing. */
+  @CommandLine.Spec internal lateinit var spec: CommandLine.Model.CommandSpec
 
   // Terminal build error, if any.
   private val buildErr = atomic<CommandResult?>(null)
@@ -285,7 +288,19 @@ internal class ToolBuildCommand : ProjectAwareSubcommand<ToolState, CommandConte
   @Suppress("ReturnCount")
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     Elide.requestNatives(server = false, tooling = true)
-    val project = projectManager.resolveProject(projectOptions().projectPath()) ?: return CommandResult.err(
+
+    val isDebug = effectiveBuildMode == BuildMode.Debug
+    val isRelease = effectiveBuildMode == BuildMode.Release
+    val inputParams = params
+
+    val project = projectManager.resolveProject(
+      projectOptions().projectPath(),
+      object: ProjectManager.ProjectEvaluatorInputs {
+        override val debug: Boolean get() = isDebug
+        override val release: Boolean get() = isRelease
+        override val params: List<String>? get() = inputParams
+      }
+    ) ?: return CommandResult.err(
       message = "No valid Elide project found, nothing to build"
     )
 

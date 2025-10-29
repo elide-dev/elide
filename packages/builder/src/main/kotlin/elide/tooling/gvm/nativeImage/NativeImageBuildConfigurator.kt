@@ -17,6 +17,7 @@ package elide.tooling.gvm.nativeImage
 import com.github.ajalt.mordant.rendering.TextStyles
 import java.io.File
 import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.name
 import kotlin.reflect.KClass
@@ -32,6 +33,8 @@ import elide.tooling.BuildMode
 import elide.tooling.Classpath
 import elide.tooling.ClasspathSpec
 import elide.tooling.Environment
+import elide.tooling.ModuleInclusion
+import elide.tooling.Modulepath
 import elide.tooling.MultiPathUsage
 import elide.tooling.config.BuildConfigurator
 import elide.tooling.config.BuildConfigurator.BuildConfiguration
@@ -43,6 +46,19 @@ import elide.tooling.jvm.JvmLibraries
 import elide.tooling.jvm.resolver.MavenAetherResolver
 import elide.tooling.project.ElideProject
 import elide.tooling.project.manifest.ElidePackageManifest.*
+
+private const val EMBEDDED_GVM_VERSION = "25.0.0"
+
+private val withheldNativeJarNames = sortedSetOf(
+  "svm-$EMBEDDED_GVM_VERSION.jar",
+  "espresso-svm-$EMBEDDED_GVM_VERSION.jar",
+  "compiler-$EMBEDDED_GVM_VERSION.jar",
+  "pointsto-$EMBEDDED_GVM_VERSION.jar",
+  "native-image-base-$EMBEDDED_GVM_VERSION.jar",
+  "objectfile-$EMBEDDED_GVM_VERSION.jar",
+  "svm-capnproto-runtime-$EMBEDDED_GVM_VERSION.jar",
+  "svm-configure-$EMBEDDED_GVM_VERSION.jar",
+)
 
 /**
  * ## Native Image Build Configurator
@@ -69,6 +85,31 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
     }
   }
 
+  // Resolve the module path to use for the Native Image build task.
+  private fun modulepathForImage(
+    state: ElideBuildState,
+    img: NativeImage,
+    automodules: Boolean = true,
+    classpath: suspend () -> Classpath?,
+  ): suspend () -> Modulepath? = {
+    (state.config.resolvers[DependencyResolver.MavenResolver::class] as? MavenAetherResolver)?.let { resolver ->
+      Modulepath.empty().toMutable().apply {
+        // add classpath from project dependency resolver
+        resolver.modulepathProvider(
+          object : ClasspathSpec {
+            override val usage: MultiPathUsage = MultiPathUsage.Compile
+            override val moduleInclusion: ModuleInclusion = ModuleInclusion.ModulesOnly
+          },
+        )?.modulepath()?.let {
+          add(it)
+        }
+        // @TODO automodules
+      }.let { mut ->
+        Modulepath.from(mut.asList().map { it.path })
+      }
+    }
+  }
+
   // Resolve the classpath to use for the Native Image build task; this should include user dependencies and code.
   private fun classpathForImage(state: ElideBuildState, img: NativeImage): suspend () -> Classpath? = {
     (state.config.resolvers[DependencyResolver.MavenResolver::class] as? MavenAetherResolver)?.let { resolver ->
@@ -87,18 +128,18 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
           val jarNameQualified = "$jarname.jar"
           add(
             state.layout
-                  .artifacts
-                  .resolve("jvm")
-                  .resolve("jars")
-                  .resolve(jarNameQualified),
+              .artifacts
+              .resolve("jvm")
+              .resolve("jars")
+              .resolve(jarNameQualified),
           )
         }
 
         // add classpath from project dependency resolver
         resolver.classpathProvider(
           object : ClasspathSpec {
-                override val usage: MultiPathUsage = MultiPathUsage.Compile
-            },
+            override val usage: MultiPathUsage = MultiPathUsage.Compile
+          },
         )?.classpath()?.let {
           add(it)
         }
@@ -108,7 +149,7 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
       }.let {
         Classpath.from(it.map { it.path })
       }
-    }
+    } ?: Classpath.empty()
   }
 
   // Resolve the class entrypoint for a native image build, unless it's for a shared library.
@@ -135,6 +176,8 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
    * @param artifact The [NativeImage] artifact to build; this should be an entry in the current build state manifest.
    * @param entrypoint Entrypoint for the native image; this is typically the main class to run; `null` for libraries.
    * @param classpath Optional classpath to use for this task; if not provided, the default classpath will be used.
+   * @param modulepath Optional modulepath to use for this task; if not provided, the default (or an empty) module path
+   *   will be used; if auto-modules are enabled, modules from the [classpath] may be adopted.
    * @param dependencies Optional list of tasks that this task depends on.
    * @return A new task that builds a native image.
    */
@@ -145,11 +188,23 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
     artifact: NativeImage,
     entrypoint: String? = null,
     classpath: (suspend () -> Classpath?)? = null,
+    modulepath: (suspend () -> Modulepath?)? = null,
     dependencies: List<Task> = emptyList(),
     injectArgs: Boolean = true,
   ) = buildNativeImageName(state, config.projectRoot, artifact).let { nativeImageName ->
     fn(name, taskDependencies(dependencies)) {
-      val effectiveClasspath = classpath?.invoke() ?: Classpath.empty()
+      val initialClasspath = (classpath?.invoke() ?: Classpath.empty()).toMutable()
+      val initialModulepath = ((modulepath?.invoke() ?: Modulepath.empty())).toMutable()
+
+      val effectiveClasspath = initialClasspath.filter {
+        it.path.name !in withheldNativeJarNames
+      }
+      val effectiveModulepath = initialModulepath.filter {
+        true
+      }
+
+      // @TODO: implement auto-modules
+
       val imageOutPath = state.layout
         .artifacts
         .resolve("svm")
@@ -161,6 +216,15 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
         kvToken = '=',
       )
       val nativeImageArgs = Arguments.empty().toMutable().apply {
+        // add user's defs
+        addAllStrings(artifact.options.defs.map {
+          "-D${it.key}=${it.value}"
+        })
+
+        artifact.options.features.forEach {
+          add("--feature=$it")
+        }
+
         // add user's extra compile flags
         addAllStrings(artifact.options.flags)
 
@@ -212,8 +276,8 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
             else -> false
           }
 
-          // add optimization level
-          add(
+          // add optimization level; skip if instrumentation is set
+          if (!artifact.options.pgo.instrument && (!artifact.options.pgo.enabled && state.config.settings.release)) add(
             when (val level = artifact.options.optimization) {
                   OptimizationLevel.AUTO -> when {
                       config.settings.release -> if (pgoEnabled) OptimizationLevel.THREE else OptimizationLevel.FOUR
@@ -263,8 +327,29 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
             add(Argument.of("--initialize-at-run-time" to artifact.options.classInit.runtime.joinToString(",")))
           }
 
+          // apply built-in exports
+          addAllStrings(listOf(
+            // required for `--emit=build-report`
+            "--add-exports=jdk.graal.compiler/jdk.graal.compiler.util.json=com.oracle.graal.reporter",
+          ))
+
+          // native compiler and linker flags
+          if (artifact.options.cflags.isNotEmpty()) {
+            addAllStrings(artifact.options.cflags.map {
+              "--native-compiler-options=$it"
+            })
+          }
+          if (artifact.options.ldflags.isNotEmpty()) {
+            addAllStrings(artifact.options.ldflags.map {
+              "-H:NativeLinkerOption=$it"
+            })
+          }
+
           effectiveClasspath.takeIf { it.isNotEmpty() }?.let { cp ->
             add(Argument.of("--class-path" to cp.joinToString(":") { it.path.absolutePathString() }))
+          }
+          effectiveModulepath.takeIf { it.isNotEmpty() }?.let { cp ->
+            add(Argument.of("--module-path" to cp.joinToString(":") { it.path.absolutePathString() }))
           }
 
           // handle libraries or main entrypoints
@@ -318,16 +403,38 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
     state.manifest.artifacts.entries.filter { it.value is NativeImage }.forEach { (name, artifact) ->
       config.actionScope.apply {
         config.taskGraph.apply {
-          nativeImage(
-            name,
-            state,
-            config,
-            artifact as NativeImage,
-            resolveEntrypointForNativeImage(state, artifact),
-            classpathForImage(state, artifact),
-            taskDepsForImage(config),
-          ).also {
-            logging.debug { "Configured Native Image build for name '$name'" }
+          classpathForImage(state, artifact as NativeImage).let { classpath ->
+            val effectiveClasspathCached = AtomicReference<Classpath?>(null)
+            val effectiveModulepathCached = AtomicReference<Modulepath?>(null)
+
+            val classpathCached: suspend () -> Classpath? = suspend {
+              effectiveClasspathCached.get() ?: classpath().also {
+                effectiveClasspathCached.set(it)
+              }
+            }
+            val modulepathCached: suspend () -> Modulepath? = suspend {
+              effectiveModulepathCached.get() ?: modulepathForImage(
+                state,
+                artifact,
+                state.manifest.jvm?.features?.automodules != false,
+                classpathCached,
+              )().also {
+                effectiveModulepathCached.set(it)
+              }
+            }
+
+            nativeImage(
+              name,
+              state,
+              config,
+              artifact,
+              entrypoint = resolveEntrypointForNativeImage(state, artifact),
+              classpath = classpathCached,
+              modulepath = modulepathCached,
+              dependencies = taskDepsForImage(config),
+            ).also {
+              logging.debug { "Configured Native Image build for name '$name'" }
+            }
           }
         }
       }

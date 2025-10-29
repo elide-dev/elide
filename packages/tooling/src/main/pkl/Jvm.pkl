@@ -5,6 +5,7 @@ module elide.jvm
 import "Base.pkl" as common
 import "Artifacts.pkl" as artifacts
 import "Sources.pkl" as sources
+import "Java.pkl" as _java
 
 /// JVM target levels as integers.
 typealias JvmTargetLevel = "latest" | "stable" | "auto" | Float(1.8) | Float(1.9) | Int8(isBetween(8, 29))
@@ -122,6 +123,9 @@ class MavenPackageSpec extends MavenCoordinateSpec {
   /// Full Maven coordinate for the package; if specified, this is preferred to the group and name.
   coordinate: MavenCoordinate?
 
+  /// Local path to a JAR file to use in place of a resolved artifact for this dependency; project-root-relative.
+  path: common.FilePath?
+
   /// Name of a custom repository to pull this dependency from.
   repository: common.RepositoryName?
 }
@@ -161,11 +165,26 @@ class MavenDependencies {
   /// A list of Maven package dependencies to be resolved for this project.
   packages: Listing<MavenPackageDependency> = new {}
 
+  /// A list of Maven packages to make available at dev-time only.
+  devPackages: Listing<MavenPackageDependency> = new {}
+
+  /// A list of dependencies to include specifically on the module path.
+  modules: Listing<MavenPackageDependency> = new {}
+
+  /// A list of Maven packages to be resolved as compile-time only dependencies.
+  compileOnly: Listing<MavenPackageDependency> = new {}
+
+  /// A list of Maven package dependencies to be resolved as runtime dependencies.
+  runtimeOnly: Listing<MavenPackageDependency> = new {}
+
   /// A list of Maven package dependencies to be resolved as processor dependencies.
   processors: Listing<MavenPackageDependency> = new {}
 
   /// A list of Maven package dependencies to be resolved for this project.
   testPackages: Listing<MavenPackageDependency> = new {}
+
+  /// A list of Maven package dependencies to be excluded from resolution and classpath calculations.
+  exclusions: Listing<MavenPackageDependency> = new {}
 
   /// A list of Gradle dependency catalogs to be resolved for this project.
   catalogs: Listing<GradleCatalog> = new {}
@@ -230,13 +249,11 @@ function app(_entrypoint: common.FilePath | String) = new Jar {
 class JvmFeatures {
   /// Automatically provide test dependencies for JVM projects, like JUnit.
   testing: Boolean = true
+
+  /// Whether auto-modules are enabled (JDK 9+ modulepath handling).
+  automodules: Boolean = true
 }
 
-/// Controls settings relating to the Java compiler.
-class JavaCompiler {
-  /// Extra flags to pass to the Java compiler.
-  flags: Listing<String> = new {}
-}
 
 /// Controls settings relating to the Java language.
 class JavaLanguage {
@@ -247,7 +264,7 @@ class JavaLanguage {
   release: JvmTarget = "auto"
 
   /// Configuration for the Java compiler.
-  compiler: JavaCompiler = new {}
+  compiler: _java.JavaCompiler = new {}
 }
 
 /// Specifies settings which apply to JVM targets.
@@ -269,6 +286,9 @@ class JvmSettings {
 
   /// Runtime JVM flags.
   flags: Listing<String> = new {}
+
+  /// Runtime definitions (system properties).
+  defs: Mapping<String, String> = new {}
 }
 
 /// Options for running JVM tests.

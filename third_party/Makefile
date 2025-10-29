@@ -19,13 +19,14 @@ CUSTOM_ZLIB ?= no
 NATIVE ?= no
 RELEASE ?= no
 MUSL ?= no
+TESTS ?= no
 USE_NINJA ?= yes
 ENABLE_CCACHE ?= no
 ENABLE_SCCACHE ?= yes
 ELIDE_ROOT ?= $(realpath $(shell pwd)/..)
 MACOS_MIN_VERSION ?= 12.3
 
-NATIVE_TOOLS ?= sqlite apr
+NATIVE_TOOLS ?= boringssl sqlite apr
 LANGS ?= pkl
 
 ifeq ($(RELEASE),yes)
@@ -66,7 +67,7 @@ CMAKE_INSTALL = $(NINJA) install
 endif
 endif
 
-REQUIRED ?= sqlite
+REQUIRED ?= sqlite boringssl apr
 
 CCACHE ?= $(shell which ccache)
 SCCACHE ?= $(shell which sccache)
@@ -199,7 +200,7 @@ apr: apache/apr/.libs
 
 CFLAGS_APR ?=
 CFLAGS_APR +=$(CFLAGS_BASE) -w
-LDFLAGS_APR ?=-L$(ELIDE_ROOT)/third_party/google/boringssl/build  -lssl -lcrypto
+LDFLAGS_APR ?=-L$(ELIDE_ROOT)/third_party/google/boringssl/build -lssl -lcrypto
 LDFLAGS_APR +=$(LDFLAGS_BASE)
 
 # APR does not link with LLD.
@@ -250,7 +251,9 @@ google/boringssl/build:
 		&& $(BORINGSSL_PREFIX) $(CMAKE_BUILD) \
 		&& echo "BoringSSL is ready."
 ifeq ($(MUSL),no)
+ifeq ($(TESTS),yes)
 	$(RULE)cd google/boringssl/build && ./ssl_test && echo "BoringSSL test complete."
+endif
 endif
 
 CFLAGS_ZLIB ?=

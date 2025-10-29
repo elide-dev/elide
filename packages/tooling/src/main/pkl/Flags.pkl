@@ -1,0 +1,18 @@
+/// Project flag definitions and related methods.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.flags
+
+/// Describes the raw data type associated with a project flag.
+typealias ProjectFlagType = "boolean" | "string" | "integer" | "float"
+
+/// Describes the concept of a project flag, with no uniform properties.
+class ProjectFlag {
+  name: String
+  type: ProjectFlagType
+  description: String?
+  defaultValue: (Boolean | String | Int | Float)?
+  aliases: Listing<String> = new {}
+  required: Boolean = false
+}
+
+// external function booleanFlag(name: String)

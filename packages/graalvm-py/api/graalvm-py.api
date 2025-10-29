@@ -31,8 +31,8 @@ public final class elide/runtime/plugins/python/ExtensionsKt {
 
 public final class elide/runtime/plugins/python/Python {
 	public static final field Plugin Lelide/runtime/plugins/python/Python$Plugin;
-	public fun <init> (Lelide/runtime/plugins/python/PythonConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
-	public synthetic fun <init> (Lelide/runtime/plugins/python/PythonConfig;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lelide/runtime/plugins/python/PythonConfig;Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;)V
+	public synthetic fun <init> (Lelide/runtime/plugins/python/PythonConfig;Lelide/runtime/core/EnginePlugin$InstallationScope;Lelide/runtime/plugins/AbstractLanguagePlugin$LanguagePluginManifest;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class elide/runtime/plugins/python/Python$Plugin : elide/runtime/plugins/AbstractLanguagePlugin {
@@ -55,6 +55,24 @@ public final class elide/runtime/plugins/python/features/BouncyCastleFeature : o
 	public fun afterRegistration (Lorg/graalvm/nativeimage/hosted/Feature$AfterRegistrationAccess;)V
 	public fun beforeAnalysis (Lorg/graalvm/nativeimage/hosted/Feature$BeforeAnalysisAccess;)V
 	public fun getDescription ()Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/plugins/python/flask/FlaskAPI {
+	public static final field Companion Lelide/runtime/plugins/python/flask/FlaskAPI$Companion;
+	public static final field FLASK_INTRINSIC Ljava/lang/String;
+}
+
+public final class elide/runtime/plugins/python/flask/FlaskAPI$Companion {
+	public static final field FLASK_INTRINSIC Ljava/lang/String;
+}
+
+public abstract interface class elide/runtime/plugins/python/secrets/SecretsPythonAPI {
+	public static final field Companion Lelide/runtime/plugins/python/secrets/SecretsPythonAPI$Companion;
+	public static final field SECRETS_INTRINSIC Ljava/lang/String;
+}
+
+public final class elide/runtime/plugins/python/secrets/SecretsPythonAPI$Companion {
+	public static final field SECRETS_INTRINSIC Ljava/lang/String;
 }
 
 public final class org/graalvm/python/embedding/GraalPythonFilesystem {

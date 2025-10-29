@@ -50,6 +50,7 @@ public abstract interface class elide/runtime/core/EnginePlugin {
 
 public abstract interface class elide/runtime/core/EnginePlugin$InstallationScope {
 	public abstract fun deferred (Lkotlin/jvm/functions/Function0;)Ljava/util/concurrent/Future;
+	public abstract fun getBeanContext ()Lio/micronaut/context/BeanContext;
 	public abstract fun getConfiguration ()Lelide/runtime/core/PolyglotEngineConfiguration;
 	public abstract fun getLifecycle ()Lelide/runtime/core/EngineLifecycle;
 	public abstract fun registerBundle (Ljava/net/URL;)V

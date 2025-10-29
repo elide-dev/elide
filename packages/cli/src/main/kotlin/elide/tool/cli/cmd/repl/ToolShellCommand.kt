@@ -80,10 +80,13 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 import elide.annotations.Inject
 import elide.runtime.LogLevel
+import elide.runtime.core.EntrypointRegistry
 import elide.runtime.core.PolyglotContext
 import elide.runtime.core.PolyglotEngine
 import elide.runtime.core.PolyglotEngineConfiguration
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
+import elide.runtime.core.RuntimeLatch
+import elide.runtime.core.SharedContextFactory
 import elide.runtime.core.extensions.attach
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.Engine
@@ -102,6 +105,7 @@ import elide.runtime.precompiler.Precompiler
 import elide.runtime.runner.JvmRunner
 import elide.runtime.runner.RunnerOutcome
 import elide.runtime.runner.Runners
+import elide.secrets.Secrets
 import elide.tool.cli.*
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cmd.builder.emitCommand
@@ -114,13 +118,14 @@ import elide.tool.cli.output.JLineLogbackAppender
 import elide.tool.cli.output.TOOL_LOGGER_APPENDER
 import elide.tool.cli.output.TOOL_LOGGER_NAME
 import elide.tool.err.ErrPrinter
+import elide.tool.err.ErrorHandler.ErrorUtils.buildStacktrace
 import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
 import elide.tool.exec.SubprocessRunner.subprocess
 import elide.tool.exec.allProjectPaths
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import elide.tool.server.StaticSiteServer
 import elide.tool.server.StaticSiteServer.buildStaticServer
 import elide.tooling.*
@@ -319,6 +324,15 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   // Event listeners for the vfs
   @Inject internal lateinit var registeredVfsListeners: Stream<VfsListener>
+
+  // Lazy mutable entrypoint registry
+  @Inject internal lateinit var entrypointProvider: EntrypointRegistry
+
+  // Lazy mutable context factory
+  @Inject internal lateinit var sharedContextProvider: SharedContextFactory
+
+  // Global latch used to wait for background tasks
+  @Inject internal lateinit var runtimeLatch: RuntimeLatch
 
   // Intrinsics manager
   private val intrinsicsManager: Supplier<IntrinsicsManager>
@@ -560,6 +574,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       code,
       source,
     )
+
+    entrypointProvider.record(source)
+    sharedContextProvider.record { ctxAccessor().unwrap() }
 
     val ctx = ctxAccessor.invoke()
     logging.trace("Code chunk built. Evaluating")
@@ -1690,6 +1707,8 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     source: Source,
     execProvider: GuestExecutorProvider,
   ) {
+    entrypointProvider.record(source)
+
     try {
       // enter VM context
       logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
@@ -1705,6 +1724,9 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
   @Suppress("TooGenericExceptionCaught")
   private fun execWrapped(label: String, ctxAccessor: ContextAccessor, source: Source) {
+    entrypointProvider.record(source)
+    sharedContextProvider.record { ctxAccessor().unwrap() }
+
     // parse the source
     val ctx = ctxAccessor.invoke()
     val parsed = try {
@@ -1724,6 +1746,8 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     // execute the script
     parsed.execute()
+
+    runtimeLatch.await()
   }
 
   // Format a string with colorized output, maybe (i.e. if pretty-mode is enabled, and we have a compatible terminal).
@@ -1826,7 +1850,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             is TestOutcome.Error -> {
               val reason = outcome.reason
               val msg = when {
-                reason is Throwable && reason.message != null -> reason.message
+                reason is Throwable -> reason.buildStacktrace()
                 reason != null -> reason.toString()
                 else -> "Unknown error"
               }
@@ -1840,7 +1864,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             is TestOutcome.Failure -> {
               val reason = outcome.reason
               val msg = when {
-                reason is Throwable && reason.message != null -> reason.message
+                reason is Throwable -> reason.buildStacktrace()
                 reason != null -> reason.toString()
                 else -> "Unknown error"
               }
@@ -2005,7 +2029,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         guestExec,
       )
 
-      // otherwise, it's a normal test run.
+      // otherwise, it's a normal run.
       else -> try {
         // enter VM context
         logging.trace("Entered VM for script execution ('${primaryLanguage.id}'). Consuming script from: '$label'")
@@ -2431,6 +2455,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     appEnvironment.apply(
       project,
       this,
+    beanContext.getBean(Secrets::class.java).getEnv(),
       host = accessControl.allowAll || accessControl.allowEnv,
       dotenv = appEnvironment.dotenv,
     )
@@ -2739,6 +2764,27 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     val effectiveInitLangs = onByDefaultLangs + projectLangs
 
+    // initialize secrets
+    val secretsResolution = launch {
+      run {
+        projectResolution.join()
+
+        val secrets = beanContext.getBean(Secrets::class.java)
+        try {
+          secrets.init(projectPath, activeProject.value?.manifest)
+        } catch (t: Throwable) {
+          logging.warn { "Secrets were not initialized with message: ${t.message}" }
+        }
+        if(secrets.initialized) {
+          if (secrets.getProfile() == null) {
+            val profiles = secrets.listProfiles()
+            if (profiles.size != 1) logging.warn { "No secret profile will be loaded" }
+            else secrets.loadProfile(profiles.first())
+          }
+        }
+      }
+    }
+
     // if no entrypoint was specified, attempt to use the one in the project manifest, or try resolving the runnable as
     // a script name in either `elide.pkl` or a foreign manifest.
     when (val tgt = runnable) {
@@ -2869,6 +2915,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     try {
       projectResolution.join()
       lockfileResolution.join()
+      secretsResolution.join()
 
       resolveEngine(effectiveInitLangs).unwrap().use {
         withDeferredContext(effectiveInitLangs) {

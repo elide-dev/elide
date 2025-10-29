@@ -71,11 +71,11 @@ import elide.tooling.project.manifest.MavenPomManifest
     return System.getProperties()
   }
 
-  override fun parse(source: InputStream): MavenPomManifest {
+  override fun parse(source: InputStream, state: PackageManifestCodec.ManifestBuildState): MavenPomManifest {
     throw UnsupportedOperationException("Parsing from InputStream is not supported for POMs")
   }
 
-  override fun parseAsFile(path: Path): MavenPomManifest {
+  override fun parseAsFile(path: Path, state: PackageManifestCodec.ManifestBuildState): MavenPomManifest {
     val pomFile = path.toFile()
     val request = DefaultModelBuildingRequest()
     request.setPomFile(pomFile)

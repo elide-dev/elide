@@ -15,18 +15,28 @@ package elide.tooling.project.codecs
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Path
+import elide.tooling.project.PackageManifestService
+import elide.tooling.project.ProjectManager
+import elide.tooling.project.flags.ProjectFlagsContext
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.PackageManifest
 
 public interface PackageManifestCodec<T : PackageManifest> {
+  public interface ManifestBuildState {
+    public val isRelease: Boolean get() = false
+    public val isDebug: Boolean get() = false
+    public val flags: ProjectFlagsContext get() = ProjectFlagsContext.EMPTY
+    public val params: ProjectManager.ProjectParams? get() = ProjectManager.ProjectParams.EMPTY
+  }
+
   public fun defaultPath(): Path
 
   public fun supported(path: Path): Boolean
 
-  public fun parse(source: InputStream): T
+  public fun parse(source: InputStream, state: ManifestBuildState): T
 
-  public fun parseAsFile(path: Path): T {
-    return parse(source = path.toFile().inputStream())
+  public fun parseAsFile(path: Path, state: ManifestBuildState): T {
+    return parse(source = path.toFile().inputStream(), state)
   }
 
   public fun write(manifest: T, output: OutputStream)
@@ -34,4 +44,8 @@ public interface PackageManifestCodec<T : PackageManifest> {
   public fun fromElidePackage(source: ElidePackageManifest): T
 
   public fun toElidePackage(source: T): ElidePackageManifest
+
+  public fun enforce(manifest: T, state: ManifestBuildState): PackageManifestService.ManifestValidation {
+    return PackageManifestService.ManifestValidation.manifestOk()
+  }
 }

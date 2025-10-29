@@ -14,11 +14,15 @@ package elide.runtime.plugins.python
 
 import com.oracle.graal.python.PythonLanguage
 import org.graalvm.nativeimage.ImageInfo
+import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.io.FileSystem
 import org.graalvm.python.embedding.GraalPythonFilesystem
+import java.nio.charset.StandardCharsets
 import java.nio.file.Path
+import elide.runtime.Logging
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EngineLifecycleEvent.ContextCreated
+import elide.runtime.core.EngineLifecycleEvent.ContextFinalized
 import elide.runtime.core.EngineLifecycleEvent.ContextInitialized
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
@@ -27,26 +31,59 @@ import elide.runtime.core.PolyglotContextBuilder
 import elide.runtime.core.extensions.disableOptions
 import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOptions
+import elide.runtime.lang.python.PythonLang
 import elide.runtime.plugins.AbstractLanguagePlugin
 import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
+import elide.runtime.plugins.python.flask.FlaskAPI
+import elide.runtime.plugins.python.secrets.SecretsPythonAPI
 import elide.runtime.vfs.LanguageVFS.LanguageVFSInfo
 import elide.runtime.vfs.registerLanguageVfs
 
 // Whether to enable the Python VFS.
 private const val ENABLE_PYTHON_VFS = false
 
-// Paths to prepend to Python's path before user-added paths, and after the system path.
-private val BUILTIN_PYTHON_PATHS = listOf(
-  "./__runtime__/python", // prefix for injected built-in modules ("Elide modules")
-)
-
 @DelicateElideApi public class Python(
   private val config: PythonConfig,
+  private val scope: InstallationScope,
   @Suppress("unused") private val resources: LanguagePluginManifest? = null,
 ) {
   private fun initializeContext(context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
+  }
+
+  private fun finalizeContext(context: PolyglotContext) {
+    // special case: inject flask and secrets
+    // @TODO don't do this
+    context.enter()
+    try {
+      when (val flask = scope.beanContext.getBean<FlaskAPI>(FlaskAPI::class.java)) {
+        null -> logging.warn { "Failed to load Flask intrinsic" }
+        else -> context.unwrap().polyglotBindings.apply {}.putMember(
+          // @TODO don't do this either
+          // results in:
+          // `__Elide_FlaskIntrinsic__`
+          arrayOf("", "", "Elide", FlaskAPI.FLASK_INTRINSIC, "", "").joinToString("_"),
+          flask,
+        )
+      }
+      when (val secrets = scope.beanContext.getBean<SecretsPythonAPI>(SecretsPythonAPI::class.java)) {
+        null -> logging.warn { "Failed to load Secrets intrinsic" }
+        else -> context.unwrap().polyglotBindings.apply {}.putMember(
+          // @TODO don't do this either
+          // results in:
+          // `__Elide_SecretsIntrinsic__`
+          arrayOf("", "", "Elide", SecretsPythonAPI.SECRETS_INTRINSIC, "", "").joinToString("_"),
+          secrets,
+        )
+      }
+
+      scope.deferred {
+        context.evaluate(pythonInitSrc)
+      }
+    } finally {
+      context.leave()
+    }
   }
 
   private fun resolveGraalPythonVersions(): Pair<String, String> {
@@ -60,7 +97,6 @@ private val BUILTIN_PYTHON_PATHS = listOf(
   }
 
   private fun renderPythonPath(): String = sequence {
-    yieldAll(BUILTIN_PYTHON_PATHS)
     yieldAll(config.additionalPythonPaths)
   }.joinToString(":")
 
@@ -127,6 +163,25 @@ private val BUILTIN_PYTHON_PATHS = listOf(
     override val languageId: String = PYTHON_LANGUAGE_ID
     override val key: Key<Python> = Key(PYTHON_PLUGIN_ID)
 
+    private val logging by lazy {
+      Logging.of(Python::class)
+    }
+
+    @JvmStatic private val pythonInitSrc: Source = requireNotNull(
+      PythonLang::class.java.classLoader.getResourceAsStream("META-INF/elide/embedded/runtime/python/init.py")
+    ) {
+      "Failed to locate `init.py`; please check the classpath"
+    }.bufferedReader(StandardCharsets.UTF_8).use {
+      it.readText().let {
+        Source.newBuilder(PYTHON_LANGUAGE_ID, it, "<elide>/init.py")
+          .name("init.py")
+          .cached(true)
+          .internal(true)
+          .interactive(false)
+          .build()
+      }
+    }
+
     override fun install(scope: InstallationScope, configuration: PythonConfig.() -> Unit): Python {
       configureLanguageSupport(scope)
 
@@ -135,22 +190,22 @@ private val BUILTIN_PYTHON_PATHS = listOf(
       configureSharedBindings(scope, config)
 
       val resources = resolveEmbeddedManifest(scope)
-      val instance = Python(config, resources)
+      val instance = Python(config, scope, resources)
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
       scope.lifecycle.on(ContextInitialized, instance::initializeContext)
-      if (ENABLE_PYTHON_VFS) {
-        registerLanguageVfs(PYTHON_LANGUAGE_ID) {
-          object : LanguageVFSInfo {
-            override val router: (Path) -> Boolean get() = { path ->
-              val str = path.toString()
-              str.startsWith("<frozen ") || str.contains("/python-home/")
-            }
+      scope.lifecycle.on(ContextFinalized, instance::finalizeContext)
 
-            override val fsProvider: () -> FileSystem get() = {
-              GraalPythonFilesystem.delegate()
-            }
+      if (ENABLE_PYTHON_VFS) registerLanguageVfs(PYTHON_LANGUAGE_ID) {
+        object : LanguageVFSInfo {
+          override val router: (Path) -> Boolean get() = { path ->
+            val str = path.toString()
+            str.startsWith("<frozen ") || str.contains("/python-home/")
+          }
+
+          override val fsProvider: () -> FileSystem get() = {
+            GraalPythonFilesystem.delegate()
           }
         }
       }

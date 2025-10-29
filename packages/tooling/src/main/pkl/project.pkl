@@ -3,7 +3,10 @@
 module elide.project
 
 import "Base.pkl" as _common
+import "Builder.pkl" as _builder
 import "Dev.pkl" as _dev
+import "Toolchain.pkl" as _toolchain
+import "Flags.pkl" as _flags
 import "Sources.pkl" as _srcs
 import "Infra.pkl" as _infra
 import "Ops.pkl" as _ops
@@ -13,6 +16,7 @@ import "Task.pkl" as _tasks
 import "Web.pkl" as _web
 import "Workspace.pkl" as _workspace
 import "Lockfile.pkl" as _lockfile
+import "Secrets.pkl" as _secrets
 
 import "Container.pkl" as _container
 import "Kotlin.pkl" as _kotlin
@@ -25,6 +29,7 @@ import "NativeImage.pkl" as _nativeImage
 import "HuggingFace.pkl" as _huggingface
 import "Testing.pkl" as _testing
 import "Pkl.pkl" as _pkl
+import "State.pkl" as _state
 
 /// Name of a script within the project's configuration.
 typealias ScriptName = String
@@ -91,6 +96,9 @@ class ElideProject {
   /// Development settings for this project.
   dev: _dev.DevSettings
 
+  /// Toolchain settings for this project.
+  toolchain: _toolchain.ToolchainSettings
+
   /// Artifacts to be produced by this project.
   artifacts: _artifacts.Artifacts
 
@@ -111,6 +119,9 @@ class ElideProject {
 
   /// Settings which apply to web-based projects and applications.
   web: _web.WebSettings?
+
+  /// Settings which govern how secrets are handled.
+  secrets: _secrets.SecretsSettings?
 }
 
 /// A name for the project.
@@ -200,6 +211,9 @@ sources: _srcs.Sources = new {
 /// Development settings for this project.
 dev: _dev.DevSettings = new {}
 
+/// Toolchain settings for this project.
+toolchain: _toolchain.ToolchainSettings = new {}
+
 /// Artifacts to be produced by this project.
 artifacts: _artifacts.Artifacts = new {}
 
@@ -220,6 +234,16 @@ lockfile: _lockfile.LockfileSettings = new {}
 
 /// Settings which apply to web-based projects and applications.
 web: _web.WebSettings?
+
+/// Settings which govern how secrets are handled.
+secrets: _secrets.SecretsSettings?
+
+//
+// ------ State -----------------------------------------------------------------------------------------------------
+//
+
+/// Build-time state.
+state: _state.BuildTimeState = new {}
 
 //
 // ------ Execution -------------------------------------------------------------------------------------------------
@@ -280,4 +304,29 @@ function browser(_browser: _web.Browser, _version: String) = new _web.CssTarget 
 /// Create a static site artifact.
 function staticSite(_srcPath: _common.FilePath) = new _web.StaticSite {
   srcs = _srcPath
+}
+
+/// Create a local JAR dependency as a Maven artifact.
+function localJar(_group: _jvm.MavenGroup, _pkg: _jvm.MavenModule, _path: _common.FilePath) = new _jvm.MavenPackageSpec {
+  group = _group
+  name = _pkg
+  coordinate = "\(_group):\(_pkg)"
+  path = _path
+}
+
+function boolFlag(flag: String, _defaultValue: Boolean?) = new _flags.ProjectFlag {
+  name = flag
+  type = "boolean"
+  defaultValue = _defaultValue
+}
+
+function stringFlag(flag: String, _defaultValue: String?) = new _flags.ProjectFlag {
+  name = flag
+  type = "string"
+  defaultValue = _defaultValue
+}
+
+function mavenRepository(name: String, _coordinate: String) = new _jvm.MavenPackageSpec {
+  coordinate = _coordinate
+  repository = name
 }

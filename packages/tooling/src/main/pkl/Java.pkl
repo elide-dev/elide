@@ -2,5 +2,11 @@
 @ModuleInfo { minPklVersion = "0.28.1" }
 module elide.java
 
+/// Controls settings relating to the Java compiler.
+class JavaCompiler {
+  /// Extra flags to pass to the Java compiler.
+  flags: Listing<String> = new {}
+}
+
 /// Configures Java language features and settings.
 class JavaSettings {}

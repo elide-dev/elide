@@ -19,6 +19,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
 import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.flags.ProjectFlagDefinition
 import elide.tooling.project.manifest.ElidePackageManifest.*
 import elide.tooling.web.Browsers
 
@@ -28,6 +29,7 @@ private const val DEFAULT_JAVA_TARGET = 21u
 // Optimization level strings.
 private const val OPTIMIZATION_LEVEL_AUTO = "auto"
 private const val OPTIMIZATION_LEVEL_BUILD = "b"
+private const val OPTIMIZATION_LEVEL_SIZE = "s"
 private const val OPTIMIZATION_LEVEL_ZERO = "0"
 private const val OPTIMIZATION_LEVEL_ONE = "1"
 private const val OPTIMIZATION_LEVEL_TWO = "2"
@@ -53,10 +55,12 @@ public data class ElidePackageManifest(
   val pkl: PklSettings? = null,
   val nativeImage: NativeImageSettings? = null,
   val dev: DevSettings? = null,
+  val toolchain: ToolchainSettings? = null,
   val sources: Map<String, SourceSet> = emptyMap(),
   val tests: TestingSettings? = null,
   val lockfile: LockfileSettings? = null,
   val web: WebSettings? = null,
+  val secrets: SecretSettings? = null,
 ) : PackageManifest {
   @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
 
@@ -113,6 +117,21 @@ public data class ElidePackageManifest(
     val lsp: LspSettings? = null,
     val mcp: McpSettings? = null,
     val server: DevServerSettings? = null,
+    val flags: List<ProjectFlagDefinition.FlagInfo> = emptyList(),
+  )
+
+  @Serializable public class NativeToolchainSettings
+
+  @Serializable public class JvmToolchainSettings
+
+  @Serializable public data class EngineSettings(
+    val version: String? = null,
+  )
+
+  @Serializable public data class ToolchainSettings(
+    val native: NativeToolchainSettings? = null,
+    val jvm: JvmToolchainSettings? = null,
+    val engines: Map<String, EngineSettings>? = null,
   )
 
   @Serializable public data class Jar(
@@ -217,9 +236,10 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class MavenPackage(
     val group: String = "",
     val name: String = "",
-    val version: String = "",
-    val classifier: String = "",
-    val repository: String = "",
+    val version: String? = "",
+    val classifier: String? = "",
+    val repository: String? = "",
+    val path: String? = "",
     val coordinate: String,
   ) : DependencyEcosystemConfig.PackageSpec, Comparable<MavenPackage> {
     public companion object {
@@ -277,9 +297,9 @@ public data class ElidePackageManifest(
     override fun hashCode(): Int {
       var result = group.ifBlank { null }?.hashCode() ?: 0
       result = 31 * result + (name.ifBlank { null }?.hashCode() ?: 0)
-      result = 31 * result + (version.ifBlank { null }?.hashCode() ?: 0)
+      result = 31 * result + (version?.ifBlank { null }?.hashCode() ?: 0)
       result = 31 * result + coordinate.hashCode()
-      result = 31 * result + (repository.ifBlank { null }?.hashCode() ?: 0)
+      result = 31 * result + (repository?.ifBlank { null }?.hashCode() ?: 0)
       return result
     }
   }
@@ -313,15 +333,34 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class MavenDependencies(
     val coordinates: MavenCoordinates? = null,
     val packages: List<MavenPackage> = emptyList(),
+    val modules: List<MavenPackage> = emptyList(),
+    val devPackages: List<MavenPackage> = emptyList(),
     val testPackages: List<MavenPackage> = emptyList(),
+    val compileOnly: List<MavenPackage> = emptyList(),
+    val runtimeOnly: List<MavenPackage> = emptyList(),
     val processors: List<MavenPackage> = emptyList(),
+    val exclusions: List<MavenPackage> = emptyList(),
     val catalogs: List<GradleCatalog> = emptyList(),
     val repositories: Map<String, MavenRepository> = emptyMap(),
     val enableDefaultRepositories: Boolean = true,
     val from: List<String> = emptyList(),
   ) : DependencyEcosystemConfig {
-    public fun hasPackages(): Boolean = packages.isNotEmpty() || testPackages.isNotEmpty()
-    public fun allPackages(): Sequence<MavenPackage> = (packages.asSequence() + testPackages.asSequence()).distinct()
+    public fun hasPackages(): Boolean = (
+      packages.isNotEmpty() ||
+      devPackages.isNotEmpty() ||
+      testPackages.isNotEmpty() ||
+      modules.isNotEmpty() ||
+      compileOnly.isNotEmpty() ||
+      runtimeOnly.isNotEmpty()
+    )
+    public fun allPackages(): Sequence<MavenPackage> = sequence<MavenPackage> {
+      yieldAll(packages.asSequence())
+      yieldAll(modules.asSequence())
+      yieldAll(compileOnly.asSequence())
+      yieldAll(runtimeOnly.asSequence())
+      yieldAll(testPackages.asSequence())
+      yieldAll(devPackages.asSequence())
+    }.distinct()
   }
 
   @JvmRecord @Serializable public data class PipDependencies(
@@ -336,6 +375,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class PipPackage(
     val name: String,
+    val version: String? = null,
   ) : DependencyEcosystemConfig.PackageSpec
 
   @JvmRecord @Serializable public data class GemDependencies(
@@ -374,6 +414,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class JvmFeatures(
     val testing: Boolean = true,
+    val automodules: Boolean = true,
   )
 
   @JvmRecord @Serializable public data class JvmTesting(
@@ -430,6 +471,8 @@ public data class ElidePackageManifest(
     val freeCompilerArgs: List<String> = emptyList(),
     val apiVersion: String = "auto",
     val languageVersion: String = "auto",
+    val includeRuntime: Boolean = false,
+    val noStdlib: Boolean = false,
 
     // JVM Options
     val javaParameters: Boolean = false,
@@ -439,7 +482,7 @@ public data class ElidePackageManifest(
   ) {
     public fun collect(): Sequence<String> = sequence {
       // opt-ins
-      optIn.forEach { yield("-Xopt-in=$it") }
+      optIn.forEach { yield("-opt-in=$it") }
 
       // compiler options
       if (progressiveMode) yield("-progressive")
@@ -449,6 +492,13 @@ public data class ElidePackageManifest(
       if (verbose) yield("-verbose")
       if (apiVersion != "auto") yield("-api-version=$apiVersion")
       if (languageVersion != "auto") yield("-language-version=$languageVersion")
+      if (includeRuntime) yield("-include-runtime")
+      if (noStdlib) yield("-no-stdlib")
+      when (val tgt = jvmTarget) {
+        null -> {}
+        else -> yield("-jvm-target=${tgt.argValue}")
+      }
+
       if (freeCompilerArgs.isNotEmpty()) yieldAll(freeCompilerArgs)
     }
   }
@@ -457,6 +507,8 @@ public data class ElidePackageManifest(
     val injection: Boolean = true,
     val testing: Boolean = true,
     val kotlinx: Boolean = true,
+    val kapt: Boolean = true,
+    val ksp: Boolean = true,
     val enableDefaultPlugins: Boolean = true,
     val experimental: Boolean = true,
     val incremental: Boolean = true,
@@ -464,6 +516,7 @@ public data class ElidePackageManifest(
     val coroutines: Boolean = kotlinx,
     val redaction: Boolean = enableDefaultPlugins && experimental,
     val autoClasspath: Boolean = true,
+    val reflection: Boolean = true,
   )
 
   @JvmRecord @Serializable public data class KotlinSettings(
@@ -496,9 +549,16 @@ public data class ElidePackageManifest(
     val runtime: List<String> = emptyList(),
   )
 
+  @JvmRecord @Serializable public data class NativeImageExclusions(
+    val all: List<MavenPackage> = emptyList(),
+    val classpath: List<MavenPackage> = emptyList(),
+    val modulepath: List<MavenPackage> = emptyList(),
+  )
+
   @Serializable public enum class OptimizationLevel(override val symbol: String) : Symbolic<String> {
     AUTO(OPTIMIZATION_LEVEL_AUTO),
     BUILD(OPTIMIZATION_LEVEL_BUILD),
+    SIZE(OPTIMIZATION_LEVEL_SIZE),
     ZERO(OPTIMIZATION_LEVEL_ZERO),
     ONE(OPTIMIZATION_LEVEL_ONE),
     TWO(OPTIMIZATION_LEVEL_TWO),
@@ -509,6 +569,7 @@ public data class ElidePackageManifest(
       override fun resolve(symbol: String): OptimizationLevel = when (symbol.lowercase().trim()) {
         OPTIMIZATION_LEVEL_AUTO -> AUTO
         OPTIMIZATION_LEVEL_BUILD -> BUILD
+        OPTIMIZATION_LEVEL_SIZE -> SIZE
         OPTIMIZATION_LEVEL_ZERO -> ZERO
         OPTIMIZATION_LEVEL_ONE -> ONE
         OPTIMIZATION_LEVEL_TWO -> TWO
@@ -531,9 +592,14 @@ public data class ElidePackageManifest(
     val verbose: Boolean = false,
     val linkAtBuildTime: NativeImageLinkAtBuildTime = NativeImageLinkAtBuildTime(),
     val classInit: NativeImageClassInit = NativeImageClassInit(),
+    val exclusions: NativeImageExclusions = NativeImageExclusions(),
     val optimization: OptimizationLevel = OptimizationLevel.AUTO,
     val pgo: ProfileGuidedOptimization = ProfileGuidedOptimization(),
     val flags: List<String> = emptyList(),
+    val cflags: List<String> = emptyList(),
+    val ldflags: List<String> = emptyList(),
+    val defs: Map<String, String> = emptyMap(),
+    val features: List<String> = emptyList(),
   )
 
   @JvmRecord @Serializable public data class NativeImageSettings(
@@ -590,6 +656,34 @@ public data class ElidePackageManifest(
     val enabled: Boolean = true,
     val format: String = "auto",
   )
+
+  @Serializable public enum class SecretsRemote(override val symbol: String) : Symbolic<String> {
+    PROJECT("project"),
+    GITHUB("github");
+
+    public companion object : Symbolic.SealedResolver<String, SecretsRemote> {
+      override fun resolve(symbol: String): SecretsRemote = when (symbol.lowercase().trim()) {
+        "project" -> PROJECT
+        "github" -> GITHUB
+        else -> throw unresolved(symbol)
+      }
+    }
+  }
+
+  @JvmRecord @Serializable public data class ProjectRemoteSettings(
+    val path: String? = null,
+  )
+
+  @JvmRecord @Serializable public data class GithubRemoteSettings(
+    val repository: String? = null,
+  )
+
+  @JvmRecord @Serializable public data class SecretSettings(
+    val profile: String? = null,
+    val remote: SecretsRemote? = null,
+    val project: ProjectRemoteSettings? = null,
+    val github: GithubRemoteSettings? = null,
+  )
 }
 
 public fun NpmDependencies.merge(other: NpmDependencies): NpmDependencies {
@@ -615,9 +709,15 @@ public fun GemDependencies.merge(other: GemDependencies): GemDependencies {
 public fun MavenDependencies.merge(other: MavenDependencies): MavenDependencies {
   return MavenDependencies(
     packages = packages.union(other.packages).toList(),
+    modules = modules.union(other.modules).toList(),
+    devPackages = devPackages.union(other.devPackages).toList(),
     testPackages = testPackages.union(other.testPackages).toList(),
+    compileOnly = compileOnly.union(other.compileOnly).toList(),
+    runtimeOnly = runtimeOnly.union(other.runtimeOnly).toList(),
     processors = processors.union(other.processors).toList(),
+    exclusions = exclusions.union(other.exclusions).toList(),
     repositories = repositories.plus(other.repositories),
+    catalogs = catalogs.union(other.catalogs).toList(),
   )
 }
 

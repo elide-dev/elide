@@ -89,7 +89,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
+        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
         with:
           distribution: "graalvm"
           java-version: "25"
@@ -103,7 +103,7 @@ jobs:
       - name: "Setup: Git History"
         run: git fetch --unshallow || exit 0
       - name: "Setup: Gradle"
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         continue-on-error: true
         env:
           CI: true
@@ -120,6 +120,6 @@ jobs:
             -x nativeOptimizedCompile \
             --no-configuration-cache
       - name: "Report: SARIF Upload"
-        uses: github/codeql-action/upload-sarif@3c3833e0f8c1c83d449a7478aa59c036a9165498 # v3.29.11
+        uses: github/codeql-action/upload-sarif@3599b3baa15b485a2e49ef411a7a4bb2452e7f93 # v3.30.5
         with:
           sarif_file: build/reports/detekt/detekt.sarif

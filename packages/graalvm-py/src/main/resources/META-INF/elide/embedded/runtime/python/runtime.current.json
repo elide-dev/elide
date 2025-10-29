@@ -6,7 +6,7 @@
   ],
   "artifacts": [],
   "scripts": [
-    { "path": "environment.py" }
+    { "path": "init.py" }
   ],
   "bundles": []
 }

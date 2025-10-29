@@ -16,6 +16,7 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.ListeningExecutorService
 import com.google.common.util.concurrent.MoreExecutors
+import io.micronaut.context.BeanContext
 import java.net.URL
 import java.util.LinkedList
 import java.util.SortedSet
@@ -38,7 +39,9 @@ import elide.runtime.core.internals.MutableEngineLifecycle
  */
 @DelicateElideApi public class GraalVMConfiguration(
   /** A [MutableEngineLifecycle] instance that can be used to emit events to registered plugins. */
-  private val lifecycle: MutableEngineLifecycle
+  private val lifecycle: MutableEngineLifecycle,
+  /** Active injection context. */
+  private val beanContextFactory: () -> BeanContext,
 ) : PolyglotEngineConfiguration() {
   private companion object {
     private const val EXPERIMENTAL_INIT_EXECUTOR = false
@@ -78,12 +81,17 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   private inner class GraalVMInstallationScope(
     val config: GraalVMConfiguration,
     val exec: () -> ListeningExecutorService,
+    val beanContextFactory: () -> BeanContext,
   ) : InstallationScope {
     override val configuration: PolyglotEngineConfiguration get() = config
     override val lifecycle: EngineLifecycle get() = config.lifecycle
 
     override fun registerBundle(resource: URL) {
       registeredBundles.add(resource)
+    }
+
+    override val beanContext: BeanContext by lazy {
+      beanContextFactory.invoke()
     }
 
     override fun registeredBundles(): List<URL> =
@@ -122,7 +130,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   override val hostRuntime: HostRuntime = GraalVMRuntime()
 
   /** Installation scope for plugins. */
-  private val cachedScope by lazy { GraalVMInstallationScope(this, { initExecutor }) }
+  private val cachedScope by lazy { GraalVMInstallationScope(this, { initExecutor }, beanContextFactory) }
 
   /** Arguments to provide to guest code. */
   public val arguments: Array<out String> get() = entrypointArgs.value ?: emptyArray()
@@ -130,7 +138,7 @@ import elide.runtime.core.internals.MutableEngineLifecycle
   @Deprecated("Use installLazy instead", replaceWith = ReplaceWith("installLazy(plugin, configure)"))
   override fun <C : Any, I : Any> install(plugin: EnginePlugin<C, I>, configure: C.() -> Unit): I {
     assert(plugin.key.id !in plugins) { "A plugin with the provided key is already registered" }
-    val instance = plugin.install(GraalVMInstallationScope(this, { initExecutor }), configure)
+    val instance = plugin.install(GraalVMInstallationScope(this, { initExecutor }, beanContextFactory), configure)
     plugins[plugin.key.id] = instance
     return instance
   }

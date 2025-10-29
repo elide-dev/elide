@@ -290,7 +290,7 @@ jobs:
       - name: "Setup: Rust Caching"
         run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
+        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
         with:
           distribution: "graalvm"
           java-version: "25"
@@ -312,7 +312,7 @@ jobs:
         with:
           version: "1.0.0-beta9"
       - name: "Setup: uv"
-        uses: astral-sh/setup-uv@7edac99f961f18b581bbd960d59d049f04c0002f # v6.4.1
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
       - name: "Setup: Dependencies"
         run: |
           echo "Setting up venv..."
@@ -330,7 +330,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Setup: Gradle"
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
@@ -396,7 +396,7 @@ jobs:
           fail-on-error: 'false'
           fail-on-empty: 'false'
       - name: "Report: Codecov (Main)"
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./build/reports/kover/merged/xml/report.xml
@@ -406,7 +406,7 @@ jobs:
           fail_ci_if_error: false
           verbose: true
       - name: "Report: Codecov (Native)"
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./target/coverage-report.lcov
@@ -535,7 +535,7 @@ jobs:
         run: |
           echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
+        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
         with:
           distribution: "graalvm"
           java-version: "25"
@@ -573,7 +573,7 @@ jobs:
         with:
           merge-multiple: true
       - name: "Setup: Gradle"
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}

@@ -19,6 +19,7 @@ plugins {
   kotlin("plugin.atomicfu")
   kotlin("plugin.serialization")
   alias(libs.plugins.kotlinx.plugin.benchmark)
+  alias(libs.plugins.buildConfig)
   alias(libs.plugins.elide.conventions)
 }
 
@@ -56,6 +57,17 @@ kotlin {
   }
 }
 
+buildConfig {
+  className("ElideConstants")
+  packageName("elide.runtime.version")
+  buildConfigField("String", "ELIDE_VERSION", "\"$version\"")
+
+  useKotlinOutput {
+    topLevelConstants = true
+    internalVisibility = true
+  }
+}
+
 dependencies {
   common {
     api(projects.packages.core)
@@ -79,6 +91,7 @@ dependencies {
 
     api(libs.commons.compress)
     api(libs.commons.codec)
+    api(libs.semver)
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.kotlinx.coroutines.jdk9)
@@ -109,4 +122,8 @@ dependencies {
     api(libs.kotlinx.collections.immutable)
     api(libs.kotlinx.datetime)
   }
+}
+
+tasks.assemble.configure {
+  dependsOn(tasks.generateBuildConfig)
 }

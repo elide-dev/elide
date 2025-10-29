@@ -37,7 +37,7 @@ import elide.tooling.cli.Statics
 import elide.tool.cli.ToolState
 import elide.tool.cli.cmd.builder.BuildOutput
 import elide.tool.cli.output.redirectLoggingToMordant
-import elide.tool.project.ProjectManager
+import elide.tooling.project.ProjectManager
 import elide.tooling.builder.BuildDriver.dependencies
 import elide.tooling.builder.BuildDriver.resolve
 import elide.tooling.config.BuildConfiguration

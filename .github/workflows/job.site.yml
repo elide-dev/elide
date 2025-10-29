@@ -53,7 +53,7 @@ jobs:
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
+        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
         with:
           distribution: "graalvm"
           java-version: "25"
@@ -92,7 +92,7 @@ jobs:
         run: |
           make docs reports CI=yes JVM=21
       - name: "Build: Site"
-        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         env:
           CI: true
         with:
@@ -171,7 +171,7 @@ jobs:
       - name: "Setup: Docker Buildx"
         uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
       - name: "Setup: GraalVM"
-        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
+        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
         with:
           components: "native-image,js,wasm"
           distribution: "graalvm"

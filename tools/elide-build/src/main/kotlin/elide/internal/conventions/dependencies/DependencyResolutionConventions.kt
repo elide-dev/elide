@@ -40,8 +40,6 @@ private val lockingExemptConfigurations = sortedSetOf(
 
 // Netty dependencies which are exempt from version pins.
 private val nettyExemptions = sortedSetOf(
-  "epoll",
-  "kqueue",
   "tcnative",
   "boringssl",
 )

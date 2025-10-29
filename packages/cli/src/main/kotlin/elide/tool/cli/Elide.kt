@@ -43,6 +43,7 @@ import elide.runtime.gvm.internals.intrinsics.ElideIntrinsic
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.builder.ToolBuildCommand
 import elide.tool.cli.cmd.builder.ToolWhichCommand
+import elide.tool.cli.cmd.db.DbCommand
 import elide.tool.cli.cmd.deps.AddCommand
 import elide.tool.cli.cmd.deps.InstallCommand
 import elide.tool.cli.cmd.dev.DevCommand
@@ -132,6 +133,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     McpCommand::class,
     Elide.Completions::class,
     ToolSecretsCommand::class,
+    DbCommand::class,
   ],
   customSynopsis = [
     "",

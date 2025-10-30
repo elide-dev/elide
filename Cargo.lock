@@ -9518,14 +9518,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "transport"
-version = "1.0.0-beta10"
-dependencies = [
- "bindgen",
- "builder",
-]
-
-[[package]]
 name = "triomphe"
 version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"

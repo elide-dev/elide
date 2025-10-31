@@ -2,7 +2,9 @@ package dev.truffle.php.runtime;
 
 import com.oracle.truffle.api.CallTarget;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +19,7 @@ public final class PhpClass {
     private final CallTarget constructor;
     private final Map<String, Object> staticPropertyValues;  // Storage for static property values
     private PhpClass parentClass;  // Parent class for inheritance (nullable)
+    private final List<PhpInterface> implementedInterfaces;  // Interfaces implemented by this class
 
     public PhpClass(String name, Map<String, PropertyMetadata> properties,
                     Map<String, MethodMetadata> methods, CallTarget constructor) {
@@ -26,6 +29,7 @@ public final class PhpClass {
         this.constructor = constructor;
         this.staticPropertyValues = new HashMap<>();
         this.parentClass = null;
+        this.implementedInterfaces = new ArrayList<>();
 
         // Initialize static properties with their default values
         for (Map.Entry<String, PropertyMetadata> entry : properties.entrySet()) {
@@ -42,6 +46,53 @@ public final class PhpClass {
 
     public void setParentClass(PhpClass parentClass) {
         this.parentClass = parentClass;
+    }
+
+    public List<PhpInterface> getImplementedInterfaces() {
+        return implementedInterfaces;
+    }
+
+    public void addImplementedInterface(PhpInterface interfaceToAdd) {
+        implementedInterfaces.add(interfaceToAdd);
+    }
+
+    /**
+     * Check if this class implements a specific interface (directly or via inheritance).
+     *
+     * @param interfaceName The name of the interface to check
+     * @return true if this class implements the interface, false otherwise
+     */
+    public boolean implementsInterface(String interfaceName) {
+        // Check direct implementations
+        for (PhpInterface iface : implementedInterfaces) {
+            if (iface.getName().equals(interfaceName)) {
+                return true;
+            }
+            // Check parent interfaces recursively
+            if (implementsInterfaceRecursive(iface, interfaceName)) {
+                return true;
+            }
+        }
+        // Check parent class
+        if (parentClass != null) {
+            return parentClass.implementsInterface(interfaceName);
+        }
+        return false;
+    }
+
+    /**
+     * Helper method to recursively check if an interface extends another interface.
+     */
+    private boolean implementsInterfaceRecursive(PhpInterface iface, String interfaceName) {
+        for (PhpInterface parent : iface.getParentInterfaces()) {
+            if (parent.getName().equals(interfaceName)) {
+                return true;
+            }
+            if (implementsInterfaceRecursive(parent, interfaceName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getName() {

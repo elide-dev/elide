@@ -10,7 +10,8 @@ import dev.truffle.php.runtime.PhpObject;
  *
  * Syntax: $obj instanceof ClassName
  *
- * Returns true if the object is an instance of the specified class or any of its parent classes.
+ * Returns true if the object is an instance of the specified class, any of its parent classes,
+ * or if the class implements the specified interface.
  */
 public final class PhpInstanceofNode extends PhpExpressionNode {
 
@@ -48,6 +49,11 @@ public final class PhpInstanceofNode extends PhpExpressionNode {
                 return true;
             }
             currentClass = currentClass.getParentClass();
+        }
+
+        // Check if the class implements the interface
+        if (objectClass.implementsInterface(className)) {
+            return true;
         }
 
         return false;

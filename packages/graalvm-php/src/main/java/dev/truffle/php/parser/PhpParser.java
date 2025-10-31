@@ -27,6 +27,7 @@ import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpArray;
 import dev.truffle.php.runtime.PhpClass;
 import dev.truffle.php.runtime.PhpObject;
+import dev.truffle.php.runtime.PhpInterface;
 import dev.truffle.php.runtime.Visibility;
 import com.oracle.truffle.api.CallTarget;
 
@@ -62,7 +63,10 @@ public final class PhpParser {
     private final FrameDescriptor.Builder frameBuilder = FrameDescriptor.newBuilder();
     private final List<PhpFunction> declaredFunctions = new ArrayList<>();
     private final List<PhpClass> declaredClasses = new ArrayList<>();
+    private final List<PhpInterface> declaredInterfaces = new ArrayList<>();
     private final Map<String, String> classParentNames = new HashMap<>();  // className -> parentClassName
+    private final Map<String, List<String>> classImplementedInterfaces = new HashMap<>();  // className -> List<interfaceName>
+    private final Map<String, String> interfaceParentNames = new HashMap<>();  // interfaceName -> parentInterfaceName
     private String currentClassName = null;  // Track current class context during parsing
 
     public PhpParser(PhpLanguage language, Source source) {
@@ -88,12 +92,16 @@ public final class PhpParser {
         // Get context to access built-in classes
         PhpContext context = PhpContext.get(rootNode);
 
-        // Resolve parent class references
+        // Resolve parent class and interface references
+        resolveInterfaceInheritance(context);
         resolveClassInheritance(context);
 
-        // Register functions and classes in the context after parsing
+        // Register functions, classes, and interfaces in the context after parsing
         for (PhpFunction function : declaredFunctions) {
             context.registerFunction(function);
+        }
+        for (PhpInterface phpInterface : declaredInterfaces) {
+            context.registerInterface(phpInterface);
         }
         for (PhpClass phpClass : declaredClasses) {
             context.registerClass(phpClass);
@@ -107,6 +115,12 @@ public final class PhpParser {
         Map<String, PhpClass> classMap = new HashMap<>();
         for (PhpClass phpClass : declaredClasses) {
             classMap.put(phpClass.getName(), phpClass);
+        }
+
+        // Build a map of interface names for quick lookup
+        Map<String, PhpInterface> interfaceMap = new HashMap<>();
+        for (PhpInterface phpInterface : declaredInterfaces) {
+            interfaceMap.put(phpInterface.getName(), phpInterface);
         }
 
         // Resolve parent class references
@@ -131,7 +145,73 @@ public final class PhpParser {
                 // Set the parent class
                 phpClass.setParentClass(parentClass);
             }
+
+            // Resolve implemented interfaces
+            List<String> interfaceNames = classImplementedInterfaces.get(phpClass.getName());
+            if (interfaceNames != null) {
+                for (String interfaceName : interfaceNames) {
+                    // Find the interface - check current file interfaces first, then context
+                    PhpInterface phpInterface = interfaceMap.get(interfaceName);
+                    if (phpInterface == null) {
+                        phpInterface = context.getInterface(interfaceName);
+                    }
+                    if (phpInterface == null) {
+                        throw new RuntimeException("Interface not found: " + interfaceName + " for class " + phpClass.getName());
+                    }
+
+                    // Add the interface to the class
+                    phpClass.addImplementedInterface(phpInterface);
+                }
+            }
         }
+    }
+
+    private void resolveInterfaceInheritance(PhpContext context) {
+        // Build a map of interface names to PhpInterface objects for quick lookup
+        Map<String, PhpInterface> interfaceMap = new HashMap<>();
+        for (PhpInterface phpInterface : declaredInterfaces) {
+            interfaceMap.put(phpInterface.getName(), phpInterface);
+        }
+
+        // Resolve parent interface references
+        for (PhpInterface phpInterface : declaredInterfaces) {
+            String parentName = interfaceParentNames.get(phpInterface.getName());
+            if (parentName != null) {
+                // Find the parent interface - check current file interfaces first, then built-in interfaces (if any)
+                PhpInterface parentInterface = interfaceMap.get(parentName);
+                if (parentInterface == null) {
+                    // Check for built-in interfaces in context (if we add that later)
+                    parentInterface = context.getInterface(parentName);
+                }
+                if (parentInterface == null) {
+                    throw new RuntimeException("Parent interface not found: " + parentName + " for interface " + phpInterface.getName());
+                }
+
+                // Check for circular inheritance
+                if (hasCircularInterfaceInheritance(phpInterface.getName(), parentInterface, interfaceMap)) {
+                    throw new RuntimeException("Circular inheritance detected for interface: " + phpInterface.getName());
+                }
+
+                // Set the parent interface
+                phpInterface.addParentInterface(parentInterface);
+            }
+        }
+    }
+
+    private boolean hasCircularInterfaceInheritance(String originalInterfaceName, PhpInterface currentInterface, Map<String, PhpInterface> interfaceMap) {
+        // Walk up the inheritance chain
+        PhpInterface current = currentInterface;
+        while (current != null) {
+            if (current.getName().equals(originalInterfaceName)) {
+                return true; // Found a cycle
+            }
+            String parentName = interfaceParentNames.get(current.getName());
+            if (parentName == null) {
+                break; // No more parents
+            }
+            current = interfaceMap.get(parentName);
+        }
+        return false;
     }
 
     private boolean hasCircularInheritance(String originalClassName, PhpClass currentClass, Map<String, PhpClass> classMap) {
@@ -167,6 +247,11 @@ public final class PhpParser {
         // echo statement
         if (matchKeyword("echo")) {
             return parseEcho();
+        }
+
+        // interface definition
+        if (matchKeyword("interface")) {
+            return parseInterface();
         }
 
         // class definition
@@ -594,6 +679,30 @@ public final class PhpParser {
             skipWhitespace();
         }
 
+        // Check for implements keyword (can implement multiple interfaces)
+        List<String> implementedInterfaceNames = new ArrayList<>();
+        if (matchKeyword("implements")) {
+            skipWhitespace();
+            do {
+                StringBuilder interfaceName = new StringBuilder();
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    interfaceName.append(advance());
+                }
+                String ifaceName = interfaceName.toString();
+                if (ifaceName.isEmpty()) {
+                    throw new RuntimeException("Expected interface name after 'implements'");
+                }
+                implementedInterfaceNames.add(ifaceName);
+                skipWhitespace();
+                if (match(",")) {
+                    skipWhitespace();  // Skip whitespace after comma
+                } else {
+                    break;  // No more interfaces
+                }
+            } while (true);
+            skipWhitespace();
+        }
+
         expect("{");
 
         Map<String, PhpClass.PropertyMetadata> properties = new HashMap<>();
@@ -786,7 +895,101 @@ public final class PhpParser {
         PhpClass phpClass = new PhpClass(className, properties, methods, constructor);
         declaredClasses.add(phpClass);
 
+        // Store implemented interfaces for later resolution
+        if (!implementedInterfaceNames.isEmpty()) {
+            classImplementedInterfaces.put(className, implementedInterfaceNames);
+        }
+
         return new PhpClassNode(phpClass);
+    }
+
+    private PhpStatementNode parseInterface() {
+        skipWhitespace();
+
+        // Parse interface name
+        StringBuilder name = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+            name.append(advance());
+        }
+        String interfaceName = name.toString();
+
+        skipWhitespace();
+
+        // Check for extends keyword (interfaces can extend other interfaces)
+        String parentInterfaceName = null;
+        if (matchKeyword("extends")) {
+            skipWhitespace();
+            StringBuilder parentName = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                parentName.append(advance());
+            }
+            parentInterfaceName = parentName.toString();
+            if (parentInterfaceName.isEmpty()) {
+                throw new RuntimeException("Expected parent interface name after 'extends'");
+            }
+            interfaceParentNames.put(interfaceName, parentInterfaceName);
+            skipWhitespace();
+        }
+
+        expect("{");
+
+        Map<String, PhpInterface.MethodSignature> methods = new HashMap<>();
+
+        skipWhitespace();
+        while (!check("}") && !isAtEnd()) {
+            // Interfaces can only have method signatures (no implementations)
+            // All interface methods are implicitly public
+
+            // Check if it's a method signature
+            if (matchKeyword("function")) {
+                skipWhitespace();
+
+                // Parse method name
+                StringBuilder methodNameBuilder = new StringBuilder();
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    methodNameBuilder.append(advance());
+                }
+                String methodName = methodNameBuilder.toString();
+
+                skipWhitespace();
+                expect("(");
+                skipWhitespace();
+
+                // Parse parameters (just names, no implementations)
+                List<String> paramNames = new ArrayList<>();
+                while (!check(")")) {
+                    String paramName = parseVariableName();
+                    paramNames.add(paramName);
+                    skipWhitespace();
+                    if (match(",")) {
+                        skipWhitespace();
+                    }
+                }
+                expect(")");
+
+                skipWhitespace();
+                expect(";"); // Interface methods end with semicolon, no body
+
+                methods.put(methodName, new PhpInterface.MethodSignature(
+                    methodName,
+                    paramNames.toArray(new String[0])
+                ));
+
+            } else {
+                throw new RuntimeException("Unexpected token in interface body at position " + pos + ". Interfaces can only contain method signatures.");
+            }
+
+            skipWhitespace();
+        }
+
+        expect("}");
+
+        // Create PhpInterface
+        PhpInterface phpInterface = new PhpInterface(interfaceName, methods);
+        declaredInterfaces.add(phpInterface);
+
+        // For now, return a simple block node (interfaces don't execute code)
+        return new PhpBlockNode(new PhpStatementNode[0]);
     }
 
     private String parseNumberString() {
@@ -1671,17 +1874,20 @@ public final class PhpParser {
 
         skipWhitespace();
 
-        // Check for :: (static member access)
+        // Check for :: (static member access or parent:: keyword)
         if (match("::")) {
             skipWhitespace();
 
             // Check if it's a static property ($) or static method
             if (peek() == '$') {
-                // Static property access: ClassName::$property
+                // Static property access: ClassName::$property or parent::$property
                 String propName = parseVariableName();
+                if (identifier.equals("parent")) {
+                    throw new RuntimeException("parent::$property access not yet supported");
+                }
                 return new PhpStaticPropertyAccessNode(identifier, propName);
             } else {
-                // Static method call: ClassName::method()
+                // Static method call: ClassName::method() or parent::method()
                 StringBuilder methodNameBuilder = new StringBuilder();
                 while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
                     methodNameBuilder.append(advance());
@@ -1701,6 +1907,14 @@ public final class PhpParser {
                     }
                 }
                 expect(")");
+
+                // Check if it's a parent:: call
+                if (identifier.equals("parent")) {
+                    if (currentClassName == null) {
+                        throw new RuntimeException("Cannot use parent:: outside of class context");
+                    }
+                    return new PhpParentMethodCallNode(methodName, args.toArray(new PhpExpressionNode[0]), currentClassName);
+                }
 
                 return new PhpStaticMethodCallNode(identifier, methodName, args.toArray(new PhpExpressionNode[0]));
             }

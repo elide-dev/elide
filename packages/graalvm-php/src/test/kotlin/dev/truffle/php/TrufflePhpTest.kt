@@ -2511,6 +2511,407 @@ class TrufflePhpTest {
     assertEquals("515", output.trim())
   }
 
+  // Phase 1 Feature Tests - Interfaces
+  @Test fun `basic interface definition works`() {
+    val output = executePhp("""
+      <?php
+      interface Greeter {
+        function greet(${'$'}name);
+      }
+      class EnglishGreeter implements Greeter {
+        function greet(${'$'}name) {
+          return "Hello " . ${'$'}name;
+        }
+      }
+      ${'$'}g = new EnglishGreeter();
+      echo ${'$'}g->greet("World");
+    """.trimIndent())
+    assertEquals("Hello World", output.trim())
+  }
+
+  @Test fun `instanceof with interface returns true`() {
+    val output = executePhp("""
+      <?php
+      interface Drawable {
+        function draw();
+      }
+      class Circle implements Drawable {
+        function draw() {
+          return "circle";
+        }
+      }
+      ${'$'}c = new Circle();
+      if (${'$'}c instanceof Drawable) {
+        echo "yes";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `instanceof with non-implemented interface returns false`() {
+    val output = executePhp("""
+      <?php
+      interface Serializable {
+        function serialize();
+      }
+      interface Drawable {
+        function draw();
+      }
+      class Circle implements Drawable {
+        function draw() {
+          return "circle";
+        }
+      }
+      ${'$'}c = new Circle();
+      if (${'$'}c instanceof Serializable) {
+        echo "yes";
+      } else {
+        echo "no";
+      }
+    """.trimIndent())
+    assertEquals("no", output.trim())
+  }
+
+  @Test fun `class implementing multiple interfaces works`() {
+    val output = executePhp("""
+      <?php
+      interface Drawable {
+        function draw();
+      }
+      interface Movable {
+        function move(${'$'}x, ${'$'}y);
+      }
+      class Sprite implements Drawable, Movable {
+        public ${'$'}x = 0;
+        public ${'$'}y = 0;
+
+        function draw() {
+          return "drawing";
+        }
+
+        function move(${'$'}newX, ${'$'}newY) {
+          ${'$'}this->x = ${'$'}newX;
+          ${'$'}this->y = ${'$'}newY;
+        }
+      }
+      ${'$'}s = new Sprite();
+      echo ${'$'}s->draw();
+      ${'$'}s->move(10, 20);
+      echo ${'$'}s->x;
+      echo ${'$'}s->y;
+    """.trimIndent())
+    assertEquals("drawing1020", output.trim())
+  }
+
+  @Test fun `instanceof with multiple interfaces works`() {
+    val output = executePhp("""
+      <?php
+      interface A {
+        function methodA();
+      }
+      interface B {
+        function methodB();
+      }
+      class C implements A, B {
+        function methodA() {
+          return "a";
+        }
+        function methodB() {
+          return "b";
+        }
+      }
+      ${'$'}obj = new C();
+      if (${'$'}obj instanceof A) {
+        echo "A";
+      }
+      if (${'$'}obj instanceof B) {
+        echo "B";
+      }
+      if (${'$'}obj instanceof C) {
+        echo "C";
+      }
+    """.trimIndent())
+    assertEquals("ABC", output.trim())
+  }
+
+  @Test fun `interface extending another interface works`() {
+    val output = executePhp("""
+      <?php
+      interface Animal {
+        function makeSound();
+      }
+      interface Pet extends Animal {
+        function play();
+      }
+      class Dog implements Pet {
+        function makeSound() {
+          return "bark";
+        }
+        function play() {
+          return "fetch";
+        }
+      }
+      ${'$'}dog = new Dog();
+      echo ${'$'}dog->makeSound();
+      echo ${'$'}dog->play();
+    """.trimIndent())
+    assertEquals("barkfetch", output.trim())
+  }
+
+  @Test fun `instanceof with inherited interface works`() {
+    val output = executePhp("""
+      <?php
+      interface Base {
+        function baseMethod();
+      }
+      interface Extended extends Base {
+        function extendedMethod();
+      }
+      class Implementation implements Extended {
+        function baseMethod() {
+          return "base";
+        }
+        function extendedMethod() {
+          return "extended";
+        }
+      }
+      ${'$'}obj = new Implementation();
+      if (${'$'}obj instanceof Base) {
+        echo "Base";
+      }
+      if (${'$'}obj instanceof Extended) {
+        echo "Extended";
+      }
+    """.trimIndent())
+    assertEquals("BaseExtended", output.trim())
+  }
+
+  @Test fun `class hierarchy with interface works`() {
+    val output = executePhp("""
+      <?php
+      interface Printable {
+        function printIt();
+      }
+      class Parent implements Printable {
+        function printIt() {
+          return "parent";
+        }
+      }
+      class Child extends Parent {
+        public ${'$'}value = 42;
+      }
+      ${'$'}c = new Child();
+      echo ${'$'}c->printIt();
+      echo ${'$'}c->value;
+      if (${'$'}c instanceof Printable) {
+        echo "yes";
+      }
+    """.trimIndent())
+    assertEquals("parent42yes", output.trim())
+  }
+
+  @Test fun `interface with no methods works`() {
+    val output = executePhp("""
+      <?php
+      interface Marker {
+      }
+      class Tagged implements Marker {
+        public ${'$'}name = "test";
+      }
+      ${'$'}t = new Tagged();
+      if (${'$'}t instanceof Marker) {
+        echo "marked";
+      }
+      echo ${'$'}t->name;
+    """.trimIndent())
+    assertEquals("markedtest", output.trim())
+  }
+
+  @Test fun `multiple interface inheritance levels work`() {
+    val output = executePhp("""
+      <?php
+      interface A {
+        function methodA();
+      }
+      interface B extends A {
+        function methodB();
+      }
+      interface C extends B {
+        function methodC();
+      }
+      class D implements C {
+        function methodA() {
+          return "a";
+        }
+        function methodB() {
+          return "b";
+        }
+        function methodC() {
+          return "c";
+        }
+      }
+      ${'$'}obj = new D();
+      echo ${'$'}obj->methodA();
+      echo ${'$'}obj->methodB();
+      echo ${'$'}obj->methodC();
+      if (${'$'}obj instanceof A) {
+        echo "A";
+      }
+      if (${'$'}obj instanceof B) {
+        echo "B";
+      }
+      if (${'$'}obj instanceof C) {
+        echo "C";
+      }
+    """.trimIndent())
+    assertEquals("abcABC", output.trim())
+  }
+
+  // Phase 1 Feature Tests - parent:: Keyword
+  @Test fun `basic parent method call works`() {
+    val output = executePhp("""
+      <?php
+      class Parent {
+        function greet() {
+          return "Hello";
+        }
+      }
+      class Child extends Parent {
+        function greet() {
+          return parent::greet() . " World";
+        }
+      }
+      ${'$'}c = new Child();
+      echo ${'$'}c->greet();
+    """.trimIndent())
+    assertEquals("Hello World", output.trim())
+  }
+
+  @Test fun `parent method with parameters works`() {
+    val output = executePhp("""
+      <?php
+      class Calculator {
+        function add(${'$'}a, ${'$'}b) {
+          return ${'$'}a + ${'$'}b;
+        }
+      }
+      class AdvancedCalculator extends Calculator {
+        function add(${'$'}a, ${'$'}b) {
+          ${'$'}result = parent::add(${'$'}a, ${'$'}b);
+          return ${'$'}result * 2;
+        }
+      }
+      ${'$'}calc = new AdvancedCalculator();
+      echo ${'$'}calc->add(5, 3);
+    """.trimIndent())
+    assertEquals("16", output.trim())
+  }
+
+  @Test fun `parent method accessing parent properties works`() {
+    val output = executePhp("""
+      <?php
+      class Base {
+        protected ${'$'}value = 10;
+
+        function getValue() {
+          return ${'$'}this->value;
+        }
+      }
+      class Extended extends Base {
+        function getDoubleValue() {
+          return parent::getValue() * 2;
+        }
+      }
+      ${'$'}e = new Extended();
+      echo ${'$'}e->getDoubleValue();
+    """.trimIndent())
+    assertEquals("20", output.trim())
+  }
+
+  @Test fun `multiple parent method calls work`() {
+    val output = executePhp("""
+      <?php
+      class A {
+        function methodA() {
+          return "A";
+        }
+        function methodB() {
+          return "B";
+        }
+      }
+      class C extends A {
+        function combined() {
+          return parent::methodA() . parent::methodB();
+        }
+      }
+      ${'$'}c = new C();
+      echo ${'$'}c->combined();
+    """.trimIndent())
+    assertEquals("AB", output.trim())
+  }
+
+  @Test fun `parent method call in multi-level inheritance works`() {
+    val output = executePhp("""
+      <?php
+      class GrandParent {
+        function greet() {
+          return "GrandParent";
+        }
+      }
+      class Parent extends GrandParent {
+        function greet() {
+          return "Parent";
+        }
+      }
+      class Child extends Parent {
+        function greet() {
+          return parent::greet() . " and Child";
+        }
+      }
+      ${'$'}c = new Child();
+      echo ${'$'}c->greet();
+    """.trimIndent())
+    assertEquals("Parent and Child", output.trim())
+  }
+
+  @Test fun `parent method with no parameters works`() {
+    val output = executePhp("""
+      <?php
+      class Base {
+        function getMessage() {
+          return "base message";
+        }
+      }
+      class Derived extends Base {
+        function getMessage() {
+          return parent::getMessage() . " extended";
+        }
+      }
+      ${'$'}d = new Derived();
+      echo ${'$'}d->getMessage();
+    """.trimIndent())
+    assertEquals("base message extended", output.trim())
+  }
+
+  @Test fun `parent method call with string concatenation works`() {
+    val output = executePhp("""
+      <?php
+      class Animal {
+        function sound() {
+          return "some sound";
+        }
+      }
+      class Dog extends Animal {
+        function sound() {
+          return "bark - " . parent::sound();
+        }
+      }
+      ${'$'}dog = new Dog();
+      echo ${'$'}dog->sound();
+    """.trimIndent())
+    assertEquals("bark - some sound", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

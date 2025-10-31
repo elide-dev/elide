@@ -32,6 +32,7 @@ public final class PhpContext {
     private final Map<String, PhpFunction> functions;
     private final Map<String, CallTarget> builtins;
     private final Map<String, PhpClass> classes;
+    private final Map<String, PhpInterface> interfaces;
 
     public PhpContext(PhpLanguage language, TruffleLanguage.Env env) {
         this.language = language;
@@ -42,6 +43,7 @@ public final class PhpContext {
         this.functions = new HashMap<>();
         this.builtins = new HashMap<>();
         this.classes = new HashMap<>();
+        this.interfaces = new HashMap<>();
         // Initialize built-in functions for this context
         PhpBuiltinRegistry.initializeBuiltins(this, language);
         // Initialize built-in classes
@@ -127,6 +129,20 @@ public final class PhpContext {
      */
     public PhpClass getClass(String name) {
         return classes.get(name);
+    }
+
+    /**
+     * Register an interface in the context.
+     */
+    public void registerInterface(PhpInterface phpInterface) {
+        interfaces.put(phpInterface.getName(), phpInterface);
+    }
+
+    /**
+     * Get an interface by name.
+     */
+    public PhpInterface getInterface(String name) {
+        return interfaces.get(name);
     }
 
     /**

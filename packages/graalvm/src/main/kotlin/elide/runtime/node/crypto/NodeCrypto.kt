@@ -70,25 +70,26 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
   }
 
   @Polyglot override fun randomInt(
-    min: Int,
-    max: Int,
-    callback: ((JsError, Int) -> Unit)?
+    min: Value,
+    max: Value,
+    callback: Value?
   ): Int {
     require(min < max) { "min must be less than max" }
 
     if (max - min <= 0) {
-      return min
+      return min.asInt()
     }
 
     val randomIntValue = SecureRandom().nextInt(max - min)
 
-    return min + randomIntValue
+    return randomIntValue
   }
 
-  override fun randomInt(
-    max: Int
+  @Polyglot override fun randomInt(
+    max: Value,
+    callback: Value?
   ): Int {
-    return randomInt(min = 0, max)
+    return randomInt(min = 0, max.asInt())
   }
 
   // ProxyObject implementation
@@ -104,28 +105,31 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
       randomUUID(options)
     }
     F_RANDOM_INT -> ProxyExecutable { args ->
-      // Node.js signature: randomInt(min, max, [callback]) OR randomInt(max, [callback])
+      // Node.js signature: randomInt(max) OR randomInt(min, max, [callback]) OR randomInt(max, [callback])
       when (args.size) {
         1 -> {
           val max = args[0].asInt()
           randomInt(max)
         }
         2 -> {
-          val min = args[0].asInt()
-          val max = args[1].asInt()
-          randomInt(min, max)
+          if (args[0].fitsInInt() AND args[1].fitsInInt()) {
+            val min = args[0].asInt()
+            val max = args[1].asInt()
+
+            randomInt(min, max)
+          } else {
+            val max = args[0].asInt()
+            val callback = args[1]
+
+            randomInt(max, callback)
+          }
         }
         3 -> {
           val min = args[0].asInt()
           val max = args[1].asInt()
           val callback = args[2]
-          if (callback.canExecute()) {
-            return@ProxyExecutable randomInt(min, max) .also { result ->
-              callback.execute(null, result)
-            }
-          } else {
-            throw IllegalArgumentException("Callback provided to randomInt is not executable")
-          }
+
+          randomInt(min, max, callback)
         }
         else -> throw IllegalArgumentException("randomInt expects 1 to 3 arguments, got ${args.size}")
       }

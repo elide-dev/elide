@@ -136,7 +136,7 @@ kotest-plugin = "0.8.18"
 kotlin-compile-testing = "1.6.0"
 kotlin-dataframe = "0.11.0"
 kotlin-language = "2.1"
-kotlin-sdk = "2.2.21-RC2"
+kotlin-sdk = "2.3.0-Beta2"
 kotlinpoet = "2.2.0"
 kotlinx-abiValidator = "0.17.0"
 kotlinx-benchmark = "0.4.13"
@@ -187,7 +187,7 @@ kotlinx-wrappers-web = "1.0.0-pre.754"
 kotlinxWrappers = "pre.754"
 kover = "0.9.1"
 kover-plugin = "0.9.1"
-ksp = "2.2.21-RC2-2.0.4"
+ksp = "2.3.0"
 ktor = "3.3.1"
 ktlint = "1.1.1"
 ktoml = "0.7.1"
@@ -696,7 +696,6 @@ kotlinx-wrappers-typescript = { group = "org.jetbrains.kotlin-wrappers", name = 
 kotlinx-wrappers-web = { group = "org.jetbrains.kotlin-wrappers", name = "kotlin-web", version.ref = "kotlinx-wrappers-web" }
 ksp = { group = "com.google.devtools.ksp", name = "symbol-processing", version.ref = "ksp" }
 ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
-ksp-cmdline = { group = "com.google.devtools.ksp", name = "symbol-processing-cmdline", version.ref = "ksp" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-contentNegotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }

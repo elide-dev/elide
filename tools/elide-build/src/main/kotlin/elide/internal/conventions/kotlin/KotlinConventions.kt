@@ -14,7 +14,6 @@
 package elide.internal.conventions.kotlin
 
 import com.google.devtools.ksp.gradle.KspExtension
-import com.google.devtools.ksp.gradle.KspTask
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.the
@@ -349,11 +348,11 @@ internal fun Project.configureDokka() {
   }
 
   // same principle applies to KSP tasks
-  if (plugins.hasPlugin("com.google.devtools.ksp")) {
-    val kspTasks = tasks.withType(KspTask::class.java)
-    tasks.findByName("dokkaHtml")?.dependsOn(kspTasks)
-    tasks.findByName("dokkaHtmlPartial")?.dependsOn(kspTasks)
-  }
+//  if (plugins.hasPlugin("com.google.devtools.ksp")) {
+//    val kspTasks = tasks.withType(KspTask::class.java)
+//    tasks.findByName("dokkaHtml")?.dependsOn(kspTasks)
+//    tasks.findByName("dokkaHtmlPartial")?.dependsOn(kspTasks)
+//  }
 
   // if dokka is applied, we must depend on C-interop tasks
   if (plugins.hasPlugin("org.jetbrains.dokka")) {

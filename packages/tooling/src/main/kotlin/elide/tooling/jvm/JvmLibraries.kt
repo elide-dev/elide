@@ -24,7 +24,7 @@ import elide.tooling.project.ElideConfiguredProject
 public object JvmLibraries {
   // @TODO: don't hard-code any of this
   public const val ELIDE_VERSION: String = "1.0.0-beta10"
-  public const val EMBEDDED_KOTLIN: String = "2.2.21-RC2"
+  public const val EMBEDDED_KOTLIN: String = "2.3.0-Beta2"
 
   public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
   public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"

@@ -81,10 +81,10 @@ kotlin {
     apiVersion = KOTLIN_2_1
     languageVersion = KOTLIN_2_1
     freeCompilerArgs = listOf(
+      "-jvm-default=no-compatibility",
       "-Xcontext-receivers",
       "-Xskip-prerelease-check",
       "-Xsuppress-version-warnings",
-      "-Xjvm-default=all",
       "-Xjsr305=strict",
     )
   }

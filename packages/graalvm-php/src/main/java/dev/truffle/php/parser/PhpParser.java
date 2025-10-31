@@ -1195,6 +1195,7 @@ public final class PhpParser {
         while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
             className.append(advance());
         }
+        String identifier = className.toString();
 
         skipWhitespace();
         expect("::");
@@ -1208,7 +1209,17 @@ public final class PhpParser {
         PhpExpressionNode value = parseExpression();
         expect(";");
 
-        PhpExpressionNode writeExpr = new PhpStaticPropertyWriteNode(className.toString(), propertyName, value);
+        PhpExpressionNode writeExpr;
+        if (identifier.equals("self")) {
+            if (currentClassName == null) {
+                throw new RuntimeException("Cannot use self:: outside of class context");
+            }
+            writeExpr = new PhpSelfPropertyWriteNode(propertyName, value, currentClassName);
+        } else if (identifier.equals("parent")) {
+            throw new RuntimeException("parent::$property write not yet supported");
+        } else {
+            writeExpr = new PhpStaticPropertyWriteNode(identifier, propertyName, value);
+        }
         return new PhpExpressionStatementNode(writeExpr);
     }
 
@@ -1874,20 +1885,25 @@ public final class PhpParser {
 
         skipWhitespace();
 
-        // Check for :: (static member access or parent:: keyword)
+        // Check for :: (static member access, self::, or parent:: keyword)
         if (match("::")) {
             skipWhitespace();
 
             // Check if it's a static property ($) or static method
             if (peek() == '$') {
-                // Static property access: ClassName::$property or parent::$property
+                // Static property access: ClassName::$property, self::$property, or parent::$property
                 String propName = parseVariableName();
                 if (identifier.equals("parent")) {
                     throw new RuntimeException("parent::$property access not yet supported");
+                } else if (identifier.equals("self")) {
+                    if (currentClassName == null) {
+                        throw new RuntimeException("Cannot use self:: outside of class context");
+                    }
+                    return new PhpSelfPropertyAccessNode(propName, currentClassName);
                 }
                 return new PhpStaticPropertyAccessNode(identifier, propName);
             } else {
-                // Static method call: ClassName::method() or parent::method()
+                // Static method call: ClassName::method(), self::method(), or parent::method()
                 StringBuilder methodNameBuilder = new StringBuilder();
                 while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
                     methodNameBuilder.append(advance());
@@ -1914,6 +1930,14 @@ public final class PhpParser {
                         throw new RuntimeException("Cannot use parent:: outside of class context");
                     }
                     return new PhpParentMethodCallNode(methodName, args.toArray(new PhpExpressionNode[0]), currentClassName);
+                }
+
+                // Check if it's a self:: call
+                if (identifier.equals("self")) {
+                    if (currentClassName == null) {
+                        throw new RuntimeException("Cannot use self:: outside of class context");
+                    }
+                    return new PhpSelfMethodCallNode(methodName, args.toArray(new PhpExpressionNode[0]), currentClassName);
                 }
 
                 return new PhpStaticMethodCallNode(identifier, methodName, args.toArray(new PhpExpressionNode[0]));

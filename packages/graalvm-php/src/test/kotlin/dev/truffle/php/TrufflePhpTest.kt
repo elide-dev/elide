@@ -2912,6 +2912,157 @@ class TrufflePhpTest {
     assertEquals("bark - some sound", output.trim())
   }
 
+  // Phase 1 Feature Tests - self:: Keyword
+  @Test fun `basic self method call works`() {
+    val output = executePhp("""
+      <?php
+      class Calculator {
+        public static function add(${'$'}a, ${'$'}b) {
+          return ${'$'}a + ${'$'}b;
+        }
+
+        public static function addTen(${'$'}x) {
+          return self::add(${'$'}x, 10);
+        }
+      }
+      echo Calculator::addTen(5);
+    """.trimIndent())
+    assertEquals("15", output.trim())
+  }
+
+  @Test fun `self with static properties works`() {
+    val output = executePhp("""
+      <?php
+      class Counter {
+        public static ${'$'}count = 0;
+
+        public static function increment() {
+          self::${'$'}count = self::${'$'}count + 1;
+        }
+
+        public static function getCount() {
+          return self::${'$'}count;
+        }
+      }
+      Counter::increment();
+      Counter::increment();
+      Counter::increment();
+      echo Counter::getCount();
+    """.trimIndent())
+    assertEquals("3", output.trim())
+  }
+
+  @Test fun `self vs parent behavior works`() {
+    val output = executePhp("""
+      <?php
+      class Parent {
+        public static function getName() {
+          return "Parent";
+        }
+
+        public static function identify() {
+          return self::getName();
+        }
+      }
+      class Child extends Parent {
+        public static function getName() {
+          return "Child";
+        }
+      }
+      echo Child::identify();
+    """.trimIndent())
+    assertEquals("Parent", output.trim())
+  }
+
+  @Test fun `self in inheritance chain works`() {
+    val output = executePhp("""
+      <?php
+      class Base {
+        protected static ${'$'}value = 100;
+
+        public static function getValue() {
+          return self::${'$'}value;
+        }
+
+        public static function modify(${'$'}x) {
+          self::${'$'}value = self::${'$'}value + ${'$'}x;
+        }
+      }
+      class Extended extends Base {
+      }
+      Extended::modify(50);
+      echo Extended::getValue();
+    """.trimIndent())
+    assertEquals("150", output.trim())
+  }
+
+  @Test fun `self accessing static methods works`() {
+    val output = executePhp("""
+      <?php
+      class Math {
+        public static function double(${'$'}n) {
+          return ${'$'}n * 2;
+        }
+
+        public static function triple(${'$'}n) {
+          return ${'$'}n * 3;
+        }
+
+        public static function combine(${'$'}x) {
+          return self::double(${'$'}x) + self::triple(${'$'}x);
+        }
+      }
+      echo Math::combine(5);
+    """.trimIndent())
+    assertEquals("25", output.trim())
+  }
+
+  @Test fun `self with multiple parameters works`() {
+    val output = executePhp("""
+      <?php
+      class String {
+        public static function concat(${'$'}a, ${'$'}b, ${'$'}c) {
+          return ${'$'}a . ${'$'}b . ${'$'}c;
+        }
+
+        public static function makePhrase(${'$'}first, ${'$'}last) {
+          return self::concat(${'$'}first, " ", ${'$'}last);
+        }
+      }
+      echo String::makePhrase("Hello", "World");
+    """.trimIndent())
+    assertEquals("Hello World", output.trim())
+  }
+
+  @Test fun `multiple self calls in single method works`() {
+    val output = executePhp("""
+      <?php
+      class Data {
+        public static ${'$'}a = 1;
+        public static ${'$'}b = 2;
+        public static ${'$'}c = 3;
+
+        public static function getA() {
+          return self::${'$'}a;
+        }
+
+        public static function getB() {
+          return self::${'$'}b;
+        }
+
+        public static function getC() {
+          return self::${'$'}c;
+        }
+
+        public static function getSum() {
+          return self::getA() + self::getB() + self::getC();
+        }
+      }
+      echo Data::getSum();
+    """.trimIndent())
+    assertEquals("6", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

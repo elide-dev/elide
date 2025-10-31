@@ -47,3 +47,9 @@ typealias BinName = String
 typealias Purl = String(matches(
   Regex(#"^pkg:[a-zA-Z][a-zA-Z0-9+.-]*\/[a-zA-Z0-9._-]+(?:@[a-zA-Z0-9._-]+)?(?:\/[^?#]*)?(?:\?[^#]*)?(?:#.*)?$"#)
 ))
+
+/// Represents a port number.
+typealias PortNumber = Int(isBetween(1, 65535))
+
+/// Represents a non-root port number.
+typealias NonRootPortNumber = Int(isBetween(1024, 65535))

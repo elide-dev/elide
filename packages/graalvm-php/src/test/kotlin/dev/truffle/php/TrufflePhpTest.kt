@@ -1516,6 +1516,163 @@ class TrufflePhpTest {
     assertEquals("100", output.trim())
   }
 
+  // Tier 1 Feature Tests - Exception Handling
+  @Test fun `basic throw and catch works`() {
+    val output = executePhp("""
+      <?php
+      try {
+        throw new Exception("error");
+      } catch (Exception ${'$'}e) {
+        echo "caught";
+      }
+    """.trimIndent())
+    assertEquals("caught", output.trim())
+  }
+
+  @Test fun `catch can access exception message`() {
+    val output = executePhp("""
+      <?php
+      try {
+        throw new Exception("test message");
+      } catch (Exception ${'$'}e) {
+        echo ${'$'}e->message;
+      }
+    """.trimIndent())
+    assertEquals("test message", output.trim())
+  }
+
+  @Test fun `catch can access exception code`() {
+    val output = executePhp("""
+      <?php
+      try {
+        throw new Exception("error", 42);
+      } catch (Exception ${'$'}e) {
+        echo ${'$'}e->code;
+      }
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  @Test fun `finally block executes after try`() {
+    val output = executePhp("""
+      <?php
+      try {
+        echo "try";
+      } finally {
+        echo "finally";
+      }
+    """.trimIndent())
+    assertEquals("tryfinally", output.trim())
+  }
+
+  @Test fun `finally executes after catch`() {
+    val output = executePhp("""
+      <?php
+      try {
+        throw new Exception("error");
+      } catch (Exception ${'$'}e) {
+        echo "catch";
+      } finally {
+        echo "finally";
+      }
+    """.trimIndent())
+    assertEquals("catchfinally", output.trim())
+  }
+
+  @Test fun `exception propagates through function calls`() {
+    val output = executePhp("""
+      <?php
+      function throwError() {
+        throw new Exception("inner");
+      }
+      try {
+        throwError();
+      } catch (Exception ${'$'}e) {
+        echo "caught:" . ${'$'}e->message;
+      }
+    """.trimIndent())
+    assertEquals("caught:inner", output.trim())
+  }
+
+  @Test fun `multiple catch blocks work`() {
+    val output = executePhp("""
+      <?php
+      class CustomException extends Exception {
+      }
+      try {
+        throw new Exception("base");
+      } catch (CustomException ${'$'}e) {
+        echo "custom";
+      } catch (Exception ${'$'}e) {
+        echo "base";
+      }
+    """.trimIndent())
+    assertEquals("base", output.trim())
+  }
+
+  @Test fun `code after throw does not execute`() {
+    val output = executePhp("""
+      <?php
+      try {
+        echo "before";
+        throw new Exception("error");
+        echo "after";
+      } catch (Exception ${'$'}e) {
+        echo "caught";
+      }
+    """.trimIndent())
+    assertEquals("beforecaught", output.trim())
+  }
+
+  @Test fun `exception in function caught by caller`() {
+    val output = executePhp("""
+      <?php
+      function riskyOperation() {
+        echo "start";
+        throw new Exception("failed");
+        echo "end";
+      }
+      try {
+        riskyOperation();
+      } catch (Exception ${'$'}e) {
+        echo ${'$'}e->message;
+      }
+    """.trimIndent())
+    assertEquals("startfailed", output.trim())
+  }
+
+  @Test fun `nested try-catch works`() {
+    val output = executePhp("""
+      <?php
+      try {
+        echo "outer";
+        try {
+          throw new Exception("inner");
+        } catch (Exception ${'$'}e) {
+          echo "inner-catch";
+        }
+        echo "after-inner";
+      } catch (Exception ${'$'}e) {
+        echo "outer-catch";
+      }
+    """.trimIndent())
+    assertEquals("outerinner-catchafter-inner", output.trim())
+  }
+
+  @Test fun `exception with inheritance matching works`() {
+    val output = executePhp("""
+      <?php
+      class MyException extends Exception {
+      }
+      try {
+        throw new MyException("custom");
+      } catch (Exception ${'$'}e) {
+        echo "caught:" . ${'$'}e->message;
+      }
+    """.trimIndent())
+    assertEquals("caught:custom", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

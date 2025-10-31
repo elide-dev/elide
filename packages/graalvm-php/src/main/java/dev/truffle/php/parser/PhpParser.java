@@ -18,6 +18,8 @@ import dev.truffle.php.nodes.statement.PhpReturnNode;
 import dev.truffle.php.nodes.statement.PhpBreakNode;
 import dev.truffle.php.nodes.statement.PhpContinueNode;
 import dev.truffle.php.nodes.statement.PhpClassNode;
+import dev.truffle.php.nodes.statement.PhpThrowNode;
+import dev.truffle.php.nodes.statement.PhpTryNode;
 import dev.truffle.php.nodes.PhpFunctionRootNode;
 import dev.truffle.php.nodes.PhpMethodRootNode;
 import dev.truffle.php.runtime.PhpFunction;
@@ -81,11 +83,13 @@ public final class PhpParser {
         PhpStatementNode body = new PhpBlockNode(statements.toArray(new PhpStatementNode[0]));
         PhpRootNode rootNode = new PhpRootNode(language, frameBuilder.build(), body);
 
+        // Get context to access built-in classes
+        PhpContext context = PhpContext.get(rootNode);
+
         // Resolve parent class references
-        resolveClassInheritance();
+        resolveClassInheritance(context);
 
         // Register functions and classes in the context after parsing
-        PhpContext context = PhpContext.get(rootNode);
         for (PhpFunction function : declaredFunctions) {
             context.registerFunction(function);
         }
@@ -96,7 +100,7 @@ public final class PhpParser {
         return rootNode;
     }
 
-    private void resolveClassInheritance() {
+    private void resolveClassInheritance(PhpContext context) {
         // Build a map of class names to PhpClass objects for quick lookup
         Map<String, PhpClass> classMap = new HashMap<>();
         for (PhpClass phpClass : declaredClasses) {
@@ -107,8 +111,12 @@ public final class PhpParser {
         for (PhpClass phpClass : declaredClasses) {
             String parentName = classParentNames.get(phpClass.getName());
             if (parentName != null) {
-                // Find the parent class
+                // Find the parent class - check current file classes first, then built-in classes
                 PhpClass parentClass = classMap.get(parentName);
+                if (parentClass == null) {
+                    // Check for built-in classes in context
+                    parentClass = context.getClass(parentName);
+                }
                 if (parentClass == null) {
                     throw new RuntimeException("Parent class not found: " + parentName + " for class " + phpClass.getName());
                 }
@@ -155,57 +163,67 @@ public final class PhpParser {
         }
 
         // echo statement
-        if (match("echo")) {
+        if (matchKeyword("echo")) {
             return parseEcho();
         }
 
         // class definition
-        if (match("class")) {
+        if (matchKeyword("class")) {
             return parseClass();
         }
 
         // function definition
-        if (match("function")) {
+        if (matchKeyword("function")) {
             return parseFunction();
         }
 
         // return statement
-        if (match("return")) {
+        if (matchKeyword("return")) {
             return parseReturn();
         }
 
+        // throw statement
+        if (matchKeyword("throw")) {
+            return parseThrow();
+        }
+
+        // try/catch/finally statement
+        if (matchKeyword("try")) {
+            return parseTry();
+        }
+
         // if statement
-        if (match("if")) {
+        if (matchKeyword("if")) {
             return parseIf();
         }
 
         // while loop
-        if (match("while")) {
+        if (matchKeyword("while")) {
             return parseWhile();
         }
 
         // foreach loop (check before 'for' to avoid prefix match)
-        if (match("foreach")) {
+        if (matchKeyword("foreach")) {
             return parseForeach();
         }
 
         // for loop
-        if (match("for")) {
+        if (matchKeyword("for")) {
             return parseFor();
         }
 
         // break statement
-        if (match("break")) {
+        if (matchKeyword("break")) {
             return parseBreak();
         }
 
         // continue statement
-        if (match("continue")) {
+        if (matchKeyword("continue")) {
             return parseContinue();
         }
 
         // switch statement
-        if (match("switch")) {
+        if (matchKeyword("switch")) {
             return parseSwitch();
         }
 
@@ -322,7 +340,7 @@ public final class PhpParser {
         PhpStatementNode elseBranch = null;
 
         skipWhitespace();
-        if (match("else")) {
+        if (matchKeyword("else")) {
             skipWhitespace();
             elseBranch = parseBlock();
         }
@@ -410,7 +428,9 @@ public final class PhpParser {
         PhpExpressionNode arrayExpr = parseExpression();
 
         skipWhitespace();
-        expect("as");
+        if (!matchKeyword("as")) {
+            throw new RuntimeException("Expected 'as' in foreach loop");
+        }
         skipWhitespace();
 
         // Check for key => value syntax
@@ -551,7 +571,7 @@ public final class PhpParser {
 
         // Check for extends keyword
         String parentClassName = null;
-        if (match("extends")) {
+        if (matchKeyword("extends")) {
             skipWhitespace();
             StringBuilder parentName = new StringBuilder();
             while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
@@ -577,22 +597,22 @@ public final class PhpParser {
             boolean isPublic = true;
             boolean isStatic = false;
 
-            if (match("public")) {
+            if (matchKeyword("public")) {
                 isPublic = true;
                 skipWhitespace();
-            } else if (match("private")) {
+            } else if (matchKeyword("private")) {
                 isPublic = false;
                 skipWhitespace();
             }
 
             // Check for static modifier
-            if (match("static")) {
+            if (matchKeyword("static")) {
                 isStatic = true;
                 skipWhitespace();
             }
 
             // Check if it's a property or method
-            if (match("function")) {
+            if (matchKeyword("function")) {
                 // Parse method
                 skipWhitespace();
 
@@ -781,6 +801,79 @@ public final class PhpParser {
         return new PhpReturnNode(value);
     }
 
+    private PhpStatementNode parseThrow() {
+        skipWhitespace();
+        PhpExpressionNode exception = parseExpression();
+        expect(";");
+        return new PhpThrowNode(exception);
+    }
+
+    private PhpStatementNode parseTry() {
+        skipWhitespace();
+
+        // Parse try block
+        PhpStatementNode tryBody = parseBlock();
+
+        // Parse catch clauses (at least one catch or a finally is required)
+        List<PhpTryNode.PhpCatchClause> catchClauses = new ArrayList<>();
+        skipWhitespace();
+
+        while (matchKeyword("catch")) {
+            skipWhitespace();
+            expect("(");
+            skipWhitespace();
+
+            // Parse exception class name
+            StringBuilder exceptionClassName = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                exceptionClassName.append(advance());
+            }
+            String className = exceptionClassName.toString();
+
+            skipWhitespace();
+
+            // Parse exception variable name
+            String varName = parseVariableName();
+
+            // Create a frame slot for the exception variable
+            int varSlot = getOrCreateVariable(varName);
+
+            skipWhitespace();
+            expect(")");
+            skipWhitespace();
+
+            // Parse catch body
+            PhpStatementNode catchBody = parseBlock();
+
+            catchClauses.add(new PhpTryNode.PhpCatchClause(
+                className,
+                varName,
+                varSlot,
+                catchBody
+            ));
+
+            skipWhitespace();
+        }
+
+        // Parse optional finally block
+        PhpStatementNode finallyBody = null;
+        if (matchKeyword("finally")) {
+            skipWhitespace();
+            finallyBody = parseBlock();
+        }
+
+        // Validate: must have at least one catch or a finally
+        if (catchClauses.isEmpty() && finallyBody == null) {
+            throw new RuntimeException("try statement must have at least one catch or finally block");
+        }
+
+        return new PhpTryNode(
+            tryBody,
+            catchClauses.toArray(new PhpTryNode.PhpCatchClause[0]),
+            finallyBody
+        );
+    }
+
     private PhpStatementNode parseBreak() {
         skipWhitespace();
         int level = 1;
@@ -820,7 +913,7 @@ public final class PhpParser {
 
         skipWhitespace();
         while (!check("}") && !isAtEnd()) {
-            if (match("case")) {
+            if (matchKeyword("case")) {
                 skipWhitespace();
                 PhpExpressionNode caseValue = parseExpression();
                 skipWhitespace();
@@ -842,7 +935,7 @@ public final class PhpParser {
                     caseStatements.toArray(new PhpStatementNode[0]),
                     false
                 ));
-            } else if (match("default")) {
+            } else if (matchKeyword("default")) {
                 skipWhitespace();
                 expect(":");
                 skipWhitespace();
@@ -1316,13 +1409,13 @@ public final class PhpParser {
         }
 
         // Boolean and null
-        if (match("true")) {
+        if (matchKeyword("true")) {
             return new PhpBooleanLiteralNode(true);
         }
-        if (match("false")) {
+        if (matchKeyword("false")) {
             return new PhpBooleanLiteralNode(false);
         }
-        if (match("null")) {
+        if (matchKeyword("null")) {
             return new PhpNullLiteralNode();
         }
 
@@ -1332,7 +1425,7 @@ public final class PhpParser {
         }
 
         // Check for 'new' keyword
-        if (match("new")) {
+        if (matchKeyword("new")) {
             skipWhitespace();
             return parseNew();
         }
@@ -1682,6 +1775,33 @@ public final class PhpParser {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Match a keyword, ensuring it's followed by a word boundary.
+     * Use this for matching PHP keywords to avoid matching prefixes of identifiers.
+     */
+    private boolean matchKeyword(String keyword) {
+        if (pos + keyword.length() > code.length()) {
+            return false;
+        }
+
+        // Check if the keyword matches
+        if (!code.substring(pos, pos + keyword.length()).equals(keyword)) {
+            return false;
+        }
+
+        // Check that it's followed by a word boundary (not alphanumeric or underscore)
+        if (pos + keyword.length() < code.length()) {
+            char nextChar = code.charAt(pos + keyword.length());
+            if (Character.isLetterOrDigit(nextChar) || nextChar == '_') {
+                return false; // Not a word boundary, so not a keyword match
+            }
+        }
+
+        // It's a valid keyword match
+        pos += keyword.length();
+        return true;
     }
 
     private boolean check(String expected) {

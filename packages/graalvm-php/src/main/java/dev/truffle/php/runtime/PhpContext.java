@@ -44,6 +44,27 @@ public final class PhpContext {
         this.classes = new HashMap<>();
         // Initialize built-in functions for this context
         PhpBuiltinRegistry.initializeBuiltins(this, language);
+        // Initialize built-in classes
+        initializeBuiltinClasses();
+    }
+
+    /**
+     * Initialize built-in PHP classes like Exception.
+     */
+    private void initializeBuiltinClasses() {
+        // Create built-in Exception class
+        Map<String, PhpClass.PropertyMetadata> exceptionProperties = new HashMap<>();
+        exceptionProperties.put("message", new PhpClass.PropertyMetadata("message", true, false, ""));
+        exceptionProperties.put("code", new PhpClass.PropertyMetadata("code", true, false, 0L));
+
+        Map<String, PhpClass.MethodMetadata> exceptionMethods = new HashMap<>();
+
+        // Create constructor for Exception class
+        // Constructor: __construct($message = "", $code = 0)
+        CallTarget exceptionConstructor = PhpExceptionConstructor.create(language).getCallTarget();
+
+        PhpClass exceptionClass = new PhpClass("Exception", exceptionProperties, exceptionMethods, exceptionConstructor);
+        registerClass(exceptionClass);
     }
 
     public PhpLanguage getLanguage() {

@@ -92,7 +92,7 @@ val kotlincFlags = listOf(
   "-Xenhance-type-parameter-types-to-def-not-null",
   "-Xjdk-release=${kotlinTarget.target}",
   "-Xjspecify-annotations=strict",
-  "-Xjvm-default=all",
+  "-jvm-default=no-compatibility",
   "-Xno-call-assertions",
   "-Xno-param-assertions",
   "-Xno-receiver-assertions",

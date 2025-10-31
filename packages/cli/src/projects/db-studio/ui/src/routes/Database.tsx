@@ -1,30 +1,52 @@
 import { Link, Outlet, useParams } from 'react-router-dom'
-import { Database as DatabaseIcon } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { TableProperties as TableIcon } from 'lucide-react'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
 
 export default function Database() {
-  const { dbIndex } = useParams()
-  const { data: tables = [], isLoading: loading, error } = useDatabaseTables(dbIndex)
+  const { dbIndex, tableName } = useParams()
+  const { data: tables = [], isLoading: loading } = useDatabaseTables(dbIndex)
+  const [query, setQuery] = useState('')
+
+  const filteredTables = useMemo(() => {
+    if (!query) return tables
+    const q = query.toLowerCase()
+    return tables.filter(({ name }) => name.toLowerCase().includes(q))
+  }, [tables, query])
 
   return (
     <div className="flex h-[calc(100vh-73px)]">
       <div className="w-64 border-r border-gray-800 p-4 bg-gray-950">
-        <div className="text-xs text-gray-500 uppercase tracking-wider mb-3 font-medium">
-          {loading ? 'Loading…' : `${tables.length} TABLES`}
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder="Search tables…"
+            className="w-full bg-gray-900 border border-gray-800 rounded px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:border-gray-700 focus:ring-0"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            disabled={loading}
+          />
         </div>
-        {error && (
-          <div className="text-xs text-red-400 mb-2">{error.message}</div>
-        )}
-        {!loading && tables.map(({ name }) => (
-          <Link
-            key={name}
-            to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}
-            className="w-full block text-left px-3 py-2.5 rounded-md mb-1 flex items-center gap-2.5 text-sm transition-colors text-gray-300 hover:bg-gray-900 hover:text-white"
-          >
-            <DatabaseIcon className="w-4 h-4 flex-shrink-0" />
-            <span className="truncate">{name}</span>
-          </Link>
-        ))}
+        <div className="text-xs text-gray-500 uppercase  mb-3 font-medium">
+          {loading ? 'Loading…' : `${filteredTables.length} TABLES`}
+        </div>
+        {!loading && filteredTables.map(({ name }) => {
+          const isActive = decodeURIComponent(tableName || '') === name
+          return (
+            <Link
+              key={name}
+              to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}
+              className={[
+                'w-full text-left px-3 py-2.5 mb-1 flex items-center gap-2.5 text-sm transition-colors rounded',
+                isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white'
+              ].join(' ')}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              <TableIcon className="w-4 h-4 shrink-0" />
+              <span className="truncate">{name}</span>
+            </Link>
+          )
+        })}
       </div>
       <Outlet />
     </div>

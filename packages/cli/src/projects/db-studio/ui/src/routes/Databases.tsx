@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Database } from 'lucide-react'
+import { Database, ChevronRight } from 'lucide-react'
 import { useDatabases } from '../hooks/useDatabases'
 
 export default function Databases() {
@@ -48,7 +48,7 @@ export default function Databases() {
               <Link
                 key={index}
                 to={`/database/${index}/tables`}
-                className="bg-gray-900 border border-gray-800 rounded-lg p-5 hover:border-gray-700 hover:bg-gray-850 transition-all text-left group"
+                className="bg-gray-900 border border-gray-800 rounded-lg p-5 hover:border-gray-700 hover:bg-gray-800 transition-all text-left group hover:-translate-y-0.5 hover:shadow-lg"
               >
                 <div className="flex items-start gap-4">
                   <div className="bg-gray-800 p-3 rounded-lg group-hover:bg-gray-750 transition-colors">
@@ -69,6 +69,9 @@ export default function Databases() {
                       <span>•</span>
                       <span>{formatDate(db.lastModified)}</span>
                     </div>
+                  </div>
+                  <div className="self-center ml-2 text-gray-500 transition-all transform group-hover:text-gray-300 group-hover:translate-x-0.5 group-hover:scale-110">
+                    <ChevronRight className="w-5 h-5" />
                   </div>
                 </div>
               </Link>

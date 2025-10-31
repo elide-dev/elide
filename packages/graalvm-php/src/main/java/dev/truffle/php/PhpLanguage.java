@@ -5,6 +5,7 @@ import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.nodes.Node;
 import dev.truffle.php.parser.PhpParser;
 import dev.truffle.php.runtime.PhpContext;
+import dev.truffle.php.runtime.PhpBuiltinRegistry;
 
 /**
  * TrufflePHP Language Implementation

@@ -26,10 +26,20 @@ public final class PhpFunctionCallNode extends PhpExpressionNode {
     @ExplodeLoop
     public Object execute(VirtualFrame frame) {
         PhpContext context = PhpContext.get(this);
-        PhpFunction function = context.getFunction(functionName);
 
-        if (function == null) {
-            throw new RuntimeException("Undefined function: " + functionName);
+        // Check for built-in functions first
+        CallTarget builtinCallTarget = context.getBuiltin(functionName);
+        CallTarget callTarget;
+
+        if (builtinCallTarget != null) {
+            callTarget = builtinCallTarget;
+        } else {
+            // Check for user-defined functions
+            PhpFunction function = context.getFunction(functionName);
+            if (function == null) {
+                throw new RuntimeException("Undefined function: " + functionName);
+            }
+            callTarget = function.getCallTarget();
         }
 
         // Evaluate arguments
@@ -39,7 +49,6 @@ public final class PhpFunctionCallNode extends PhpExpressionNode {
         }
 
         // Call the function
-        CallTarget callTarget = function.getCallTarget();
         return callTarget.call(argumentValues);
     }
 }

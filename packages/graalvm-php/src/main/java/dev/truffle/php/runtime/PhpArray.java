@@ -83,6 +83,15 @@ public final class PhpArray {
     }
 
     /**
+     * Remove a key from the array.
+     */
+    public void remove(Object key) {
+        Object normalizedKey = normalizeKey(key);
+        map.remove(normalizedKey);
+        insertionOrder.remove(normalizedKey);
+    }
+
+    /**
      * Normalize keys according to PHP rules:
      * - Strings that look like integers become integers
      * - Booleans become integers (true=1, false=0)

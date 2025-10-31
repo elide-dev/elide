@@ -511,6 +511,157 @@ class TrufflePhpTest {
     assertEquals("1245", output.trim())
   }
 
+  // Built-in function tests - String functions
+  @Test fun `strlen function works`() {
+    val output = executePhp("""
+      <?php
+      echo strlen("hello");
+      echo strlen("");
+    """.trimIndent())
+    assertEquals("50", output.trim())
+  }
+
+  @Test fun `strtolower and strtoupper work`() {
+    val output = executePhp("""
+      <?php
+      echo strtolower("HELLO");
+      echo strtoupper("world");
+    """.trimIndent())
+    assertEquals("helloWORLD", output.trim())
+  }
+
+  @Test fun `substr function works`() {
+    val output = executePhp("""
+      <?php
+      echo substr("hello", 1, 3);
+      echo substr("world", 0, 2);
+    """.trimIndent())
+    assertEquals("ellwo", output.trim())
+  }
+
+  @Test fun `str_replace function works`() {
+    val output = executePhp("""
+      <?php
+      echo str_replace("world", "PHP", "hello world");
+    """.trimIndent())
+    assertEquals("hello PHP", output.trim())
+  }
+
+  @Test fun `explode and implode work`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = explode(",", "a,b,c");
+      echo ${'$'}arr[0];
+      echo ${'$'}arr[1];
+      echo implode("-", ${'$'}arr);
+    """.trimIndent())
+    assertEquals("aba-b-c", output.trim())
+  }
+
+  // Built-in function tests - Array functions
+  @Test fun `count function works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3];
+      echo count(${'$'}arr);
+      echo count([]);
+    """.trimIndent())
+    assertEquals("30", output.trim())
+  }
+
+  @Test fun `array_push function works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2];
+      array_push(${'$'}arr, 3, 4);
+      echo ${'$'}arr[2];
+      echo ${'$'}arr[3];
+    """.trimIndent())
+    assertEquals("34", output.trim())
+  }
+
+  @Test fun `in_array function works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3];
+      if (in_array(2, ${'$'}arr)) {
+        echo "yes";
+      }
+      if (in_array(5, ${'$'}arr)) {
+        echo "no";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `array_keys and array_values work`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = ["a" => 1, "b" => 2];
+      ${'$'}keys = array_keys(${'$'}arr);
+      ${'$'}vals = array_values(${'$'}arr);
+      echo ${'$'}keys[0];
+      echo ${'$'}vals[1];
+    """.trimIndent())
+    assertEquals("a2", output.trim())
+  }
+
+  // Built-in function tests - Type functions
+  @Test fun `is_array function works`() {
+    val output = executePhp("""
+      <?php
+      if (is_array([1, 2])) {
+        echo "yes";
+      }
+      if (is_array("test")) {
+        echo "no";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `is_string and is_int work`() {
+    val output = executePhp("""
+      <?php
+      if (is_string("hello")) {
+        echo "str";
+      }
+      if (is_int(42)) {
+        echo "int";
+      }
+    """.trimIndent())
+    assertEquals("strint", output.trim())
+  }
+
+  @Test fun `gettype function works`() {
+    val output = executePhp("""
+      <?php
+      echo gettype(42);
+      echo gettype("test");
+      echo gettype([1, 2]);
+    """.trimIndent())
+    assertEquals("integerstringarray", output.trim())
+  }
+
+  // Built-in function tests - Math functions
+  @Test fun `abs function works`() {
+    val output = executePhp("""
+      <?php
+      echo abs(-5);
+      echo abs(3);
+    """.trimIndent())
+    assertEquals("53", output.trim())
+  }
+
+  @Test fun `max and min functions work`() {
+    val output = executePhp("""
+      <?php
+      echo max(1, 5, 3);
+      echo min(1, 5, 3);
+    """.trimIndent())
+    assertEquals("51", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

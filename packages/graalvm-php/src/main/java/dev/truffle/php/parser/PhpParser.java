@@ -34,7 +34,7 @@ import java.util.Map;
  * Supported syntax:
  * - Literals: integers, floats, strings, booleans, null
  * - Binary operators: +, -, *, /, ., ==, !=, <, >, <=, >=, &&, ||
- * - Unary operators: !
+ * - Unary operators: !, -, +, ++, --
  * - Variables: $name
  * - echo statement
  * - if/else statements
@@ -663,7 +663,7 @@ public final class PhpParser {
             return PhpNodeFactory.createLogicalNot(operand);
         }
 
-        // Pre-increment operator
+        // Pre-increment operator (check before unary +)
         if (match("++")) {
             skipWhitespace();
             if (peek() != '$') {
@@ -674,7 +674,7 @@ public final class PhpParser {
             return PhpNodeFactory.createPreIncrement(slot);
         }
 
-        // Pre-decrement operator
+        // Pre-decrement operator (check before unary -)
         if (match("--")) {
             skipWhitespace();
             if (peek() != '$') {
@@ -683,6 +683,20 @@ public final class PhpParser {
             String varName = parseVariableName();
             int slot = getOrCreateVariable(varName);
             return PhpNodeFactory.createPreDecrement(slot);
+        }
+
+        // Unary minus (negation)
+        if (match("-")) {
+            skipWhitespace();
+            PhpExpressionNode operand = parseUnary();
+            // Implement negation as 0 - operand
+            return PhpNodeFactory.createSub(new PhpIntegerLiteralNode(0L), operand);
+        }
+
+        // Unary plus (just return the operand)
+        if (match("+")) {
+            skipWhitespace();
+            return parseUnary();
         }
 
         return parsePrimary();
@@ -786,6 +800,7 @@ public final class PhpParser {
             }
             expect(")");
 
+            // Create function call node (handles both built-in and user-defined functions)
             return new PhpFunctionCallNode(identifier, args.toArray(new PhpExpressionNode[0]));
         } else {
             // Just an identifier (could be a constant or future feature)

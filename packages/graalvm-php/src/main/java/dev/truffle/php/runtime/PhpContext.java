@@ -1,5 +1,6 @@
 package dev.truffle.php.runtime;
 
+import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.nodes.Node;
 import dev.truffle.php.PhpLanguage;
@@ -18,6 +19,7 @@ import java.util.Map;
  * - Standard I/O streams
  * - Language environment
  * - Function registry
+ * - Built-in function registry
  */
 public final class PhpContext {
 
@@ -27,6 +29,7 @@ public final class PhpContext {
     private final PrintWriter output;
     private final PrintWriter error;
     private final Map<String, PhpFunction> functions;
+    private final Map<String, CallTarget> builtins;
 
     public PhpContext(PhpLanguage language, TruffleLanguage.Env env) {
         this.language = language;
@@ -35,6 +38,9 @@ public final class PhpContext {
         this.output = new PrintWriter(env.out(), true);
         this.error = new PrintWriter(env.err(), true);
         this.functions = new HashMap<>();
+        this.builtins = new HashMap<>();
+        // Initialize built-in functions for this context
+        PhpBuiltinRegistry.initializeBuiltins(this, language);
     }
 
     public PhpLanguage getLanguage() {
@@ -69,6 +75,20 @@ public final class PhpContext {
      */
     public PhpFunction getFunction(String name) {
         return functions.get(name);
+    }
+
+    /**
+     * Register a built-in function in the context.
+     */
+    public void registerBuiltin(String name, CallTarget callTarget) {
+        builtins.put(name, callTarget);
+    }
+
+    /**
+     * Get a built-in function CallTarget by name.
+     */
+    public CallTarget getBuiltin(String name) {
+        return builtins.get(name);
     }
 
     /**

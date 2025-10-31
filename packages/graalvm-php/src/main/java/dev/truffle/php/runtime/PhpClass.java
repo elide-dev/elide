@@ -20,13 +20,15 @@ public final class PhpClass {
     private final Map<String, Object> staticPropertyValues;  // Storage for static property values
     private PhpClass parentClass;  // Parent class for inheritance (nullable)
     private final List<PhpInterface> implementedInterfaces;  // Interfaces implemented by this class
+    private final boolean isAbstract;  // Whether this class is abstract
 
     public PhpClass(String name, Map<String, PropertyMetadata> properties,
-                    Map<String, MethodMetadata> methods, CallTarget constructor) {
+                    Map<String, MethodMetadata> methods, CallTarget constructor, boolean isAbstract) {
         this.name = name;
         this.properties = new HashMap<>(properties);
         this.methods = new HashMap<>(methods);
         this.constructor = constructor;
+        this.isAbstract = isAbstract;
         this.staticPropertyValues = new HashMap<>();
         this.parentClass = null;
         this.implementedInterfaces = new ArrayList<>();
@@ -97,6 +99,10 @@ public final class PhpClass {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isAbstract() {
+        return isAbstract;
     }
 
     public Map<String, PropertyMetadata> getProperties() {
@@ -278,6 +284,77 @@ public final class PhpClass {
     }
 
     /**
+     * Get all unimplemented abstract methods for this class.
+     * This includes abstract methods from this class and all parent classes
+     * that don't have concrete implementations in this class or its parents.
+     *
+     * @return List of unimplemented abstract method names
+     */
+    public List<String> getUnimplementedAbstractMethods() {
+        List<String> unimplemented = new ArrayList<>();
+
+        // Collect all abstract methods from this class and parent classes
+        Map<String, MethodMetadata> allAbstractMethods = new HashMap<>();
+        collectAbstractMethods(this, allAbstractMethods);
+
+        // Check which ones are still abstract (not overridden with concrete implementation)
+        for (Map.Entry<String, MethodMetadata> entry : allAbstractMethods.entrySet()) {
+            String methodName = entry.getKey();
+            MethodMetadata method = getMethod(methodName);
+
+            if (method != null && method.isAbstract()) {
+                unimplemented.add(methodName);
+            }
+        }
+
+        return unimplemented;
+    }
+
+    /**
+     * Recursively collect abstract methods from this class and all parent classes.
+     */
+    private void collectAbstractMethods(PhpClass phpClass, Map<String, MethodMetadata> abstractMethods) {
+        if (phpClass == null) {
+            return;
+        }
+
+        // Add abstract methods from this class
+        for (Map.Entry<String, MethodMetadata> entry : phpClass.getMethods().entrySet()) {
+            if (entry.getValue().isAbstract()) {
+                // Only add if not already overridden by a child class
+                if (!abstractMethods.containsKey(entry.getKey())) {
+                    abstractMethods.put(entry.getKey(), entry.getValue());
+                }
+            } else {
+                // Concrete method found - remove from abstract list (it's implemented)
+                abstractMethods.remove(entry.getKey());
+            }
+        }
+
+        // Recursively check parent class
+        collectAbstractMethods(phpClass.getParentClass(), abstractMethods);
+    }
+
+    /**
+     * Validate that a concrete class has implemented all abstract methods.
+     * Throws a RuntimeException if there are unimplemented abstract methods.
+     */
+    public void validateAbstractMethodsImplemented() {
+        // Only validate concrete classes
+        if (isAbstract) {
+            return;
+        }
+
+        List<String> unimplemented = getUnimplementedAbstractMethods();
+        if (!unimplemented.isEmpty()) {
+            throw new RuntimeException(
+                "Class " + name + " must implement abstract methods: " +
+                String.join(", ", unimplemented)
+            );
+        }
+    }
+
+    /**
      * Metadata about a class property.
      */
     public static final class PropertyMetadata {
@@ -322,13 +399,15 @@ public final class PhpClass {
         private final String name;
         private final Visibility visibility;
         private final boolean isStatic;
+        private final boolean isAbstract;
         private final CallTarget callTarget;
         private final String[] parameterNames;
 
-        public MethodMetadata(String name, Visibility visibility, boolean isStatic, CallTarget callTarget, String[] parameterNames) {
+        public MethodMetadata(String name, Visibility visibility, boolean isStatic, boolean isAbstract, CallTarget callTarget, String[] parameterNames) {
             this.name = name;
             this.visibility = visibility;
             this.isStatic = isStatic;
+            this.isAbstract = isAbstract;
             this.callTarget = callTarget;
             this.parameterNames = parameterNames;
         }
@@ -348,6 +427,10 @@ public final class PhpClass {
 
         public boolean isStatic() {
             return isStatic;
+        }
+
+        public boolean isAbstract() {
+            return isAbstract;
         }
 
         public CallTarget getCallTarget() {

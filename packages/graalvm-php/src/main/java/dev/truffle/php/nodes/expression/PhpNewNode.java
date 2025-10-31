@@ -34,6 +34,11 @@ public final class PhpNewNode extends PhpExpressionNode {
             throw new RuntimeException("Class not found: " + className);
         }
 
+        // Check if class is abstract
+        if (phpClass.isAbstract()) {
+            throw new RuntimeException("Cannot instantiate abstract class: " + className);
+        }
+
         // Create new object instance
         PhpObject object = new PhpObject(phpClass);
 

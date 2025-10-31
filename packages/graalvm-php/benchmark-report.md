@@ -5,92 +5,92 @@
 ### array_associative
 
 **Performance:**
-- Mean: 7.21 ms
-- Median: 6.71 ms
-- Std Dev: 1.60 ms
-- Min: 5.51 ms
-- Max: 12.21 ms
-- Throughput: 138.74 ops/sec
+- Mean: 7.29 ms
+- Median: 7.12 ms
+- Std Dev: 1.81 ms
+- Min: 4.77 ms
+- Max: 12.28 ms
+- Throughput: 137.25 ops/sec
 
 **Memory:**
-- Before: 23.30 MB
-- After: 51.06 MB
-- Delta: 27.75 MB
+- Before: 23.34 MB
+- After: 49.05 MB
+- Delta: 25.71 MB
 
 ### array_sequential
 
 **Performance:**
-- Mean: 2.11 ms
-- Median: 1.88 ms
-- Std Dev: 811.06 μs
-- Min: 1.25 ms
-- Max: 4.53 ms
-- Throughput: 474.51 ops/sec
+- Mean: 2.01 ms
+- Median: 1.66 ms
+- Std Dev: 1.01 ms
+- Min: 1.14 ms
+- Max: 5.39 ms
+- Throughput: 496.57 ops/sec
 
 **Memory:**
-- Before: 23.19 MB
-- After: 29.59 MB
-- Delta: 6.41 MB
+- Before: 23.39 MB
+- After: 29.63 MB
+- Delta: 6.24 MB
 
 ### property_access
 
 **Performance:**
-- Mean: 2.43 ms
-- Median: 2.12 ms
-- Std Dev: 886.95 μs
-- Min: 1.26 ms
-- Max: 4.67 ms
-- Throughput: 410.72 ops/sec
+- Mean: 2.62 ms
+- Median: 2.37 ms
+- Std Dev: 889.69 μs
+- Min: 1.53 ms
+- Max: 4.94 ms
+- Throughput: 381.70 ops/sec
 
 **Memory:**
-- Before: 23.13 MB
-- After: 30.11 MB
+- Before: 23.17 MB
+- After: 30.15 MB
 - Delta: 6.98 MB
 
 ### string_concat
 
 **Performance:**
-- Mean: 1.69 ms
-- Median: 1.58 ms
-- Std Dev: 828.04 μs
-- Min: 856.71 μs
-- Max: 4.10 ms
-- Throughput: 591.75 ops/sec
+- Mean: 1.79 ms
+- Median: 1.55 ms
+- Std Dev: 782.21 μs
+- Min: 873.53 μs
+- Max: 4.02 ms
+- Throughput: 557.22 ops/sec
 
 **Memory:**
-- Before: 23.15 MB
-- After: 36.63 MB
+- Before: 23.19 MB
+- After: 36.67 MB
 - Delta: 13.48 MB
 
 ### arithmetic
 
 **Performance:**
-- Mean: 2.81 ms
-- Median: 2.40 ms
-- Std Dev: 1.28 ms
-- Min: 1.79 ms
-- Max: 7.50 ms
-- Throughput: 355.90 ops/sec
+- Mean: 2.65 ms
+- Median: 2.41 ms
+- Std Dev: 972.91 μs
+- Min: 1.85 ms
+- Max: 6.19 ms
+- Throughput: 377.62 ops/sec
 
 **Memory:**
-- Before: 23.16 MB
-- After: 26.79 MB
-- Delta: 3.63 MB
+- Before: 23.19 MB
+- After: 27.81 MB
+- Delta: 4.62 MB
 
 ### method_calls
 
 **Performance:**
-- Mean: 2.08 ms
-- Median: 1.81 ms
-- Std Dev: 1.10 ms
-- Min: 1.45 ms
-- Max: 6.68 ms
-- Throughput: 481.38 ops/sec
+- Mean: 2.18 ms
+- Median: 1.95 ms
+- Std Dev: 788.55 μs
+- Min: 1.67 ms
+- Max: 5.34 ms
+- Throughput: 459.09 ops/sec
 
 **Memory:**
-- Before: 23.16 MB
-- After: 49.65 MB
-- Delta: 26.49 MB
+- Before: 23.19 MB
+- After: 50.68 MB
+- Delta: 27.49 MB
 
 
 
@@ -98,9 +98,9 @@
 
 | Benchmark | Mean | Median | Std Dev | Min | Max | Throughput |
 -----------|------|--------|---------|-----|-----|------------|
- array_associative | 7ms | 7ms | 2ms | 6ms | 12ms | 138.74 ops/s |
- array_sequential | 2ms | 2ms | 811μs | 1ms | 5ms | 474.51 ops/s |
- property_access | 2ms | 2ms | 887μs | 1ms | 5ms | 410.72 ops/s |
- string_concat | 2ms | 2ms | 828μs | 857μs | 4ms | 591.75 ops/s |
- arithmetic | 3ms | 2ms | 1ms | 2ms | 7ms | 355.90 ops/s |
- method_calls | 2ms | 2ms | 1ms | 1ms | 7ms | 481.38 ops/s |
+ array_associative | 7ms | 7ms | 2ms | 5ms | 12ms | 137.25 ops/s |
+ array_sequential | 2ms | 2ms | 1ms | 1ms | 5ms | 496.57 ops/s |
+ property_access | 3ms | 2ms | 890μs | 2ms | 5ms | 381.70 ops/s |
+ string_concat | 2ms | 2ms | 782μs | 874μs | 4ms | 557.22 ops/s |
+ arithmetic | 3ms | 2ms | 973μs | 2ms | 6ms | 377.62 ops/s |
+ method_calls | 2ms | 2ms | 789μs | 2ms | 5ms | 459.09 ops/s |

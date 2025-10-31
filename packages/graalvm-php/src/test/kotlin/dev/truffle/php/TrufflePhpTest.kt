@@ -3063,6 +3063,331 @@ class TrufflePhpTest {
     assertEquals("6", output.trim())
   }
 
+  // Phase 2 Feature Tests - Abstract Classes & Methods
+  @Test fun `abstract class cannot be instantiated`() {
+    try {
+      executePhp("""
+        <?php
+        abstract class AbstractClass {
+          abstract function doSomething();
+        }
+        ${'$'}obj = new AbstractClass();
+      """.trimIndent())
+      fail("Expected runtime exception for abstract class instantiation")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("Cannot instantiate abstract class") == true ||
+                 e.message?.contains("abstract") == true)
+    }
+  }
+
+  @Test fun `concrete child implements abstract method works`() {
+    val output = executePhp("""
+      <?php
+      abstract class Animal {
+        abstract function makeSound();
+      }
+      class Dog extends Animal {
+        function makeSound() {
+          return "Bark";
+        }
+      }
+      ${'$'}dog = new Dog();
+      echo ${'$'}dog->makeSound();
+    """.trimIndent())
+    assertEquals("Bark", output.trim())
+  }
+
+  @Test fun `abstract child class does not require implementation`() {
+    val output = executePhp("""
+      <?php
+      abstract class Animal {
+        abstract function makeSound();
+      }
+      abstract class Mammal extends Animal {
+        abstract function hasHair();
+      }
+      class Dog extends Mammal {
+        function makeSound() {
+          return "Bark";
+        }
+        function hasHair() {
+          return true;
+        }
+      }
+      ${'$'}dog = new Dog();
+      echo ${'$'}dog->makeSound();
+      if (${'$'}dog->hasHair()) {
+        echo "Yes";
+      }
+    """.trimIndent())
+    assertEquals("BarkYes", output.trim())
+  }
+
+  @Test fun `concrete class with multiple abstract methods works`() {
+    val output = executePhp("""
+      <?php
+      abstract class Shape {
+        abstract function area();
+        abstract function perimeter();
+      }
+      class Rectangle extends Shape {
+        public ${'$'}width;
+        public ${'$'}height;
+
+        function __construct(${'$'}w, ${'$'}h) {
+          ${'$'}this->width = ${'$'}w;
+          ${'$'}this->height = ${'$'}h;
+        }
+
+        function area() {
+          return ${'$'}this->width * ${'$'}this->height;
+        }
+
+        function perimeter() {
+          return 2 * (${'$'}this->width + ${'$'}this->height);
+        }
+      }
+      ${'$'}r = new Rectangle(5, 10);
+      echo ${'$'}r->area();
+      echo ${'$'}r->perimeter();
+    """.trimIndent())
+    assertEquals("5030", output.trim())
+  }
+
+  @Test fun `abstract method inheritance through multiple levels works`() {
+    val output = executePhp("""
+      <?php
+      abstract class A {
+        abstract function methodA();
+      }
+      abstract class B extends A {
+        abstract function methodB();
+      }
+      class C extends B {
+        function methodA() {
+          return "A";
+        }
+        function methodB() {
+          return "B";
+        }
+      }
+      ${'$'}obj = new C();
+      echo ${'$'}obj->methodA();
+      echo ${'$'}obj->methodB();
+    """.trimIndent())
+    assertEquals("AB", output.trim())
+  }
+
+  @Test fun `concrete class missing abstract method implementation fails`() {
+    try {
+      executePhp("""
+        <?php
+        abstract class Animal {
+          abstract function makeSound();
+        }
+        class Dog extends Animal {
+          function eat() {
+            echo "eating";
+          }
+        }
+        ${'$'}dog = new Dog();
+      """.trimIndent())
+      fail("Expected runtime exception for missing abstract method implementation")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("must implement abstract methods") == true ||
+                 e.message?.contains("makeSound") == true)
+    }
+  }
+
+  @Test fun `abstract method in non-abstract class fails`() {
+    try {
+      executePhp("""
+        <?php
+        class NotAbstract {
+          abstract function doSomething();
+        }
+      """.trimIndent())
+      fail("Expected parse exception for abstract method in non-abstract class")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("cannot be declared in non-abstract class") == true ||
+                 e.message?.contains("abstract") == true)
+    }
+  }
+
+  @Test fun `abstract method cannot be private`() {
+    try {
+      executePhp("""
+        <?php
+        abstract class Test {
+          abstract private function doSomething();
+        }
+      """.trimIndent())
+      fail("Expected parse exception for private abstract method")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("cannot be private") == true ||
+                 e.message?.contains("private") == true)
+    }
+  }
+
+  @Test fun `constructor cannot be abstract`() {
+    try {
+      executePhp("""
+        <?php
+        abstract class Test {
+          abstract function __construct();
+        }
+      """.trimIndent())
+      fail("Expected parse exception for abstract constructor")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("Constructor cannot be abstract") == true ||
+                 e.message?.contains("constructor") == true)
+    }
+  }
+
+  @Test fun `abstract class with concrete methods works`() {
+    val output = executePhp("""
+      <?php
+      abstract class Vehicle {
+        public ${'$'}fuel = 100;
+
+        abstract function move();
+
+        function refuel() {
+          ${'$'}this->fuel = 100;
+          return "refueled";
+        }
+      }
+      class Car extends Vehicle {
+        function move() {
+          return "driving";
+        }
+      }
+      ${'$'}car = new Car();
+      echo ${'$'}car->move();
+      echo ${'$'}car->refuel();
+      echo ${'$'}car->fuel;
+    """.trimIndent())
+    assertEquals("drivingrefueled100", output.trim())
+  }
+
+  @Test fun `__toString magic method works with echo`() {
+    val output = executePhp("""
+      <?php
+      class Person {
+        public ${'$'}name;
+
+        function __construct(${'$'}name) {
+          ${'$'}this->name = ${'$'}name;
+        }
+
+        function __toString() {
+          return "Person: " . ${'$'}this->name;
+        }
+      }
+      ${'$'}person = new Person("Alice");
+      echo ${'$'}person;
+    """.trimIndent())
+    assertEquals("Person: Alice", output.trim())
+  }
+
+  @Test fun `__toString magic method works with string concatenation`() {
+    val output = executePhp("""
+      <?php
+      class Book {
+        public ${'$'}title;
+
+        function __construct(${'$'}title) {
+          ${'$'}this->title = ${'$'}title;
+        }
+
+        function __toString() {
+          return ${'$'}this->title;
+        }
+      }
+      ${'$'}book = new Book("1984");
+      echo "Reading: " . ${'$'}book;
+    """.trimIndent())
+    assertEquals("Reading: 1984", output.trim())
+  }
+
+  @Test fun `__toString must return string value`() {
+    try {
+      executePhp("""
+        <?php
+        class BadClass {
+          function __toString() {
+            return 42;
+          }
+        }
+        ${'$'}obj = new BadClass();
+        echo ${'$'}obj;
+      """.trimIndent())
+      fail("Expected exception for __toString returning non-string")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("must return a string") == true)
+    }
+  }
+
+  @Test fun `__toString works in inheritance`() {
+    val output = executePhp("""
+      <?php
+      class Animal {
+        public ${'$'}species;
+
+        function __construct(${'$'}species) {
+          ${'$'}this->species = ${'$'}species;
+        }
+
+        function __toString() {
+          return "Animal: " . ${'$'}this->species;
+        }
+      }
+
+      class Dog extends Animal {
+        public ${'$'}breed;
+
+        function __construct(${'$'}breed) {
+          ${'$'}this->species = "Dog";
+          ${'$'}this->breed = ${'$'}breed;
+        }
+      }
+
+      ${'$'}dog = new Dog("Labrador");
+      echo ${'$'}dog;
+    """.trimIndent())
+    assertEquals("Animal: Dog", output.trim())
+  }
+
+  @Test fun `child class can override __toString`() {
+    val output = executePhp("""
+      <?php
+      class Shape {
+        function __toString() {
+          return "generic shape";
+        }
+      }
+
+      class Circle extends Shape {
+        public ${'$'}radius;
+
+        function __construct(${'$'}r) {
+          ${'$'}this->radius = ${'$'}r;
+        }
+
+        function __toString() {
+          return "circle with radius " . ${'$'}this->radius;
+        }
+      }
+
+      ${'$'}shape = new Shape();
+      ${'$'}circle = new Circle(5);
+      echo ${'$'}shape;
+      echo " and ";
+      echo ${'$'}circle;
+    """.trimIndent())
+    assertEquals("generic shape and circle with radius 5", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

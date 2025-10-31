@@ -65,7 +65,7 @@ public final class PhpContext {
         // Constructor: __construct($message = "", $code = 0)
         CallTarget exceptionConstructor = PhpExceptionConstructor.create(language).getCallTarget();
 
-        PhpClass exceptionClass = new PhpClass("Exception", exceptionProperties, exceptionMethods, exceptionConstructor);
+        PhpClass exceptionClass = new PhpClass("Exception", exceptionProperties, exceptionMethods, exceptionConstructor, false);
         registerClass(exceptionClass);
     }
 

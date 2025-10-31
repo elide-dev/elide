@@ -4,6 +4,7 @@ import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.runtime.PhpStringUtil;
 
 /**
  * Node for string concatenation in PHP (the . operator).
@@ -34,9 +35,9 @@ public abstract class PhpConcatNode extends PhpExpressionNode {
             Object leftVal = left.execute(frame);
             Object rightVal = right.execute(frame);
 
-            // Convert both values to strings and concatenate
-            String leftStr = String.valueOf(leftVal);
-            String rightStr = String.valueOf(rightVal);
+            // Convert both values to strings using PHP conversion rules (including __toString)
+            String leftStr = PhpStringUtil.convertToString(leftVal);
+            String rightStr = PhpStringUtil.convertToString(rightVal);
 
             return leftStr + rightStr;
         }

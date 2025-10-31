@@ -5,6 +5,7 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import dev.truffle.php.nodes.PhpExpressionNode;
 import dev.truffle.php.nodes.PhpStatementNode;
 import dev.truffle.php.runtime.PhpContext;
+import dev.truffle.php.runtime.PhpStringUtil;
 
 /**
  * Node for the echo statement in PHP.
@@ -36,12 +37,6 @@ public final class PhpEchoNode extends PhpStatementNode {
      * Convert a PHP value to its string representation.
      */
     private String convertToString(Object value) {
-        if (value == null) {
-            return "";
-        }
-        if (value instanceof Boolean) {
-            return (Boolean) value ? "1" : "";
-        }
-        return value.toString();
+        return PhpStringUtil.convertToString(value);
     }
 }

@@ -164,6 +164,11 @@ public final class PhpParser {
                 }
             }
         }
+
+        // Validate abstract method implementation after all inheritance is resolved
+        for (PhpClass phpClass : declaredClasses) {
+            phpClass.validateAbstractMethodsImplemented();
+        }
     }
 
     private void resolveInterfaceInheritance(PhpContext context) {
@@ -254,9 +259,19 @@ public final class PhpParser {
             return parseInterface();
         }
 
+        // abstract class definition
+        if (matchKeyword("abstract")) {
+            skipWhitespace();
+            if (matchKeyword("class")) {
+                return parseClass(true);  // true = isAbstract
+            } else {
+                throw new RuntimeException("Expected 'class' after 'abstract' keyword at position " + pos);
+            }
+        }
+
         // class definition
         if (matchKeyword("class")) {
-            return parseClass();
+            return parseClass(false);  // false = not abstract
         }
 
         // function definition
@@ -651,7 +666,7 @@ public final class PhpParser {
         return new PhpFunctionNode(functionName, function);
     }
 
-    private PhpStatementNode parseClass() {
+    private PhpStatementNode parseClass(boolean isAbstract) {
         skipWhitespace();
 
         // Parse class name
@@ -711,6 +726,13 @@ public final class PhpParser {
 
         skipWhitespace();
         while (!check("}") && !isAtEnd()) {
+            // Check for abstract modifier first (can come before visibility)
+            boolean isMethodAbstract = false;
+            if (matchKeyword("abstract")) {
+                isMethodAbstract = true;
+                skipWhitespace();
+            }
+
             // Check for visibility modifiers
             Visibility visibility = Visibility.PUBLIC; // Default visibility is public
             boolean isStatic = false;
@@ -759,6 +781,38 @@ public final class PhpParser {
                     }
                 }
                 expect(")");
+
+                skipWhitespace();
+
+                // Handle abstract methods
+                if (isMethodAbstract) {
+                    // Validation for abstract methods
+                    if (!isAbstract) {
+                        throw new RuntimeException("Abstract method " + methodName + " cannot be declared in non-abstract class " + className);
+                    }
+                    if (visibility == Visibility.PRIVATE) {
+                        throw new RuntimeException("Abstract method " + methodName + " cannot be private");
+                    }
+                    if (methodName.equals("__construct")) {
+                        throw new RuntimeException("Constructor cannot be abstract");
+                    }
+
+                    // Abstract methods end with semicolon, no body
+                    expect(";");
+
+                    // Store abstract method with null CallTarget
+                    methods.put(methodName, new PhpClass.MethodMetadata(
+                        methodName,
+                        visibility,
+                        isStatic,
+                        true,  // isAbstract = true
+                        null,  // No CallTarget for abstract methods
+                        paramNames.toArray(new String[0])
+                    ));
+
+                    skipWhitespace();
+                    continue;  // Skip to next class member
+                }
 
                 // Create a new frame for the method
                 FrameDescriptor.Builder methodFrameBuilder = FrameDescriptor.newBuilder();
@@ -839,6 +893,7 @@ public final class PhpParser {
                         methodName,
                         visibility,
                         isStatic,
+                        false,  // isAbstract = false for concrete methods
                         methodCallTarget,
                         paramNames.toArray(new String[0])
                     ));
@@ -892,7 +947,7 @@ public final class PhpParser {
         expect("}");
 
         // Create PhpClass
-        PhpClass phpClass = new PhpClass(className, properties, methods, constructor);
+        PhpClass phpClass = new PhpClass(className, properties, methods, constructor, isAbstract);
         declaredClasses.add(phpClass);
 
         // Store implemented interfaces for later resolution

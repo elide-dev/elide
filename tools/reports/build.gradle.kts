@@ -45,7 +45,7 @@ val testCodeCoverageReport by reporting.reports.creating(JacocoCoverageReport::c
 }
 
 dependencies {
-  antJUnit("org.apache.ant", "ant-junit", "1.10.12")
+  antJUnit("org.apache.ant:ant-junit:1.10.12")
 }
 
 val locateCopyJUnitReports: TaskProvider<Copy> by tasks.registering(Copy::class) {

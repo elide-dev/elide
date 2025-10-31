@@ -58,13 +58,13 @@ val jvmCompileArgs = listOfNotNull(
 )
 
 val ktCompilerArgs = listOf(
+  "-jvm-default=no-compatibility",
   "-Xallow-unstable-dependencies",
   "-Xcontext-receivers",
   "-Xemit-jvm-type-annotations",
   "-Xlambdas=indy",
   "-Xsam-conversions=indy",
   "-Xjsr305=strict",
-  "-Xjvm-default=all",
   "-Xjavac-arguments=${jvmCompileArgs.joinToString(",")}}",
 
   // opt-in to Elide's delicate runtime API

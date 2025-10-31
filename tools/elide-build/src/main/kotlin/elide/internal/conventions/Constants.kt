@@ -84,7 +84,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.2.21-RC2"
+    const val KOTLIN_SDK_PIN = "2.3.0-Beta2"
 
     /** Constant: pinned version of Kotlin Coroutines. */
     const val COROUTINES = "1.10.2"
@@ -240,7 +240,7 @@ public object Constants {
       listOf(
         "-no-stdlib",
         "-no-reflect",
-        "-Xjvm-default=all",
+        "-jvm-default=no-compatibility",
         "-Xjsr305=strict",
         "-Xvalidate-bytecode",
         "-Xsam-conversions=indy",

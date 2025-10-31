@@ -59,6 +59,19 @@ public final class PhpBuiltinRegistry {
         // Output functions
         register(context, new VarDumpBuiltin(language));
         register(context, new PrintRBuiltin(language));
+
+        // File I/O functions
+        register(context, new FileGetContentsBuiltin(language));
+        register(context, new FilePutContentsBuiltin(language));
+        register(context, new FileExistsBuiltin(language));
+        register(context, new IsFileBuiltin(language));
+        register(context, new IsDirBuiltin(language));
+        register(context, new DirnameBuiltin(language));
+        register(context, new BasenameBuiltin(language));
+
+        // JSON functions
+        register(context, new JsonEncodeBuiltin(language));
+        register(context, new JsonDecodeBuiltin(language));
     }
 
     private static void register(PhpContext context, PhpBuiltinRootNode builtin) {

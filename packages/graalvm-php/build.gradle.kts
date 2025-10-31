@@ -54,6 +54,7 @@ dependencies {
   api(libs.graalvm.truffle.api)
   implementation(libs.kotlinx.coroutines.core)
   implementation(projects.packages.engine)
+  implementation(libs.json)  // For JSON encode/decode support
 
   compileOnly(libs.graalvm.svm)
   if (oracleGvm) {

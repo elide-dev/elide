@@ -194,6 +194,7 @@ include(
   ":packages:core",
   ":packages:engine",
   ":packages:exec",
+  ":packages:interop",
   ":packages:graalvm",
   ":packages:graalvm-java",
   ":packages:graalvm-jvm",

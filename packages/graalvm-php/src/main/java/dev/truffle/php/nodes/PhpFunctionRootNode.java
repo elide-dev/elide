@@ -5,6 +5,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 import dev.truffle.php.PhpLanguage;
 import dev.truffle.php.nodes.statement.PhpReturnNode;
+import dev.truffle.php.runtime.PhpArray;
 
 /**
  * Root node for PHP function execution.
@@ -14,6 +15,7 @@ public final class PhpFunctionRootNode extends RootNode {
     private final String functionName;
     private final String[] parameterNames;
     private final int[] parameterSlots;
+    private final int variadicParamIndex;  // -1 if no variadic parameter
 
     @Child
     private PhpStatementNode body;
@@ -24,21 +26,40 @@ public final class PhpFunctionRootNode extends RootNode {
         String functionName,
         String[] parameterNames,
         int[] parameterSlots,
-        PhpStatementNode body
+        PhpStatementNode body,
+        int variadicParamIndex
     ) {
         super(language, frameDescriptor);
         this.functionName = functionName;
         this.parameterNames = parameterNames;
         this.parameterSlots = parameterSlots;
         this.body = body;
+        this.variadicParamIndex = variadicParamIndex;
     }
 
     @Override
     public Object execute(VirtualFrame frame) {
         // Initialize parameters from arguments
         Object[] arguments = frame.getArguments();
-        for (int i = 0; i < parameterSlots.length && i < arguments.length; i++) {
-            frame.setObject(parameterSlots[i], arguments[i]);
+
+        if (variadicParamIndex >= 0) {
+            // Handle variadic parameter
+            // Assign fixed parameters up to the variadic one
+            for (int i = 0; i < variadicParamIndex && i < arguments.length; i++) {
+                frame.setObject(parameterSlots[i], arguments[i]);
+            }
+
+            // Collect remaining arguments into an array for the variadic parameter
+            PhpArray variadicArray = new PhpArray();
+            for (int i = variadicParamIndex; i < arguments.length; i++) {
+                variadicArray.append(arguments[i]);
+            }
+            frame.setObject(parameterSlots[variadicParamIndex], variadicArray);
+        } else {
+            // No variadic parameter - assign normally
+            for (int i = 0; i < parameterSlots.length && i < arguments.length; i++) {
+                frame.setObject(parameterSlots[i], arguments[i]);
+            }
         }
 
         try {

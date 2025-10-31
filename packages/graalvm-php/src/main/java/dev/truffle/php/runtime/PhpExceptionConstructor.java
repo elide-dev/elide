@@ -23,7 +23,8 @@ public final class PhpExceptionConstructor {
             new String[]{"message", "code"},
             new int[]{1, 2}, // param slots
             0, // $this slot
-            new ExceptionConstructorBody()
+            new ExceptionConstructorBody(),
+            -1 // no variadic parameter
         );
     }
 

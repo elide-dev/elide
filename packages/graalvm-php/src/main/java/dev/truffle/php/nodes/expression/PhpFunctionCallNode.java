@@ -4,8 +4,12 @@ import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.runtime.PhpArray;
 import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpFunction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Node for function calls in PHP.
@@ -42,13 +46,32 @@ public final class PhpFunctionCallNode extends PhpExpressionNode {
             callTarget = function.getCallTarget();
         }
 
-        // Evaluate arguments
-        Object[] argumentValues = new Object[arguments.length];
+        // Evaluate arguments and expand spread operators
+        List<Object> expandedArgs = new ArrayList<>();
         for (int i = 0; i < arguments.length; i++) {
-            argumentValues[i] = arguments[i].execute(frame);
+            PhpExpressionNode argNode = arguments[i];
+
+            // Check if this is a spread argument
+            if (argNode instanceof PhpSpreadArgumentNode) {
+                // Execute the expression and unpack it if it's an array
+                Object value = argNode.execute(frame);
+                if (value instanceof PhpArray) {
+                    PhpArray array = (PhpArray) value;
+                    // Add all elements from the array
+                    List<Object> keys = array.keys();
+                    for (Object key : keys) {
+                        expandedArgs.add(array.get(key));
+                    }
+                } else {
+                    throw new RuntimeException("Cannot use spread operator on non-array value in function " + functionName);
+                }
+            } else {
+                // Regular argument
+                expandedArgs.add(argNode.execute(frame));
+            }
         }
 
-        // Call the function
-        return callTarget.call(argumentValues);
+        // Call the function with expanded arguments
+        return callTarget.call(expandedArgs.toArray());
     }
 }

@@ -193,8 +193,16 @@ public final class PhpClassParser {
                 // Parse parameters with optional type hints
                 List<String> paramNames = new ArrayList<>();
                 List<dev.truffle.php.runtime.PhpTypeHint> paramTypes = new ArrayList<>();
+                int variadicParamIndex = -1;  // Index of variadic parameter, -1 if none
 
                 while (!check(")")) {
+                    // Check for variadic parameter (...)
+                    boolean isVariadic = false;
+                    if (match("...")) {
+                        isVariadic = true;
+                        skipWhitespace();
+                    }
+
                     // Check for optional type hint
                     dev.truffle.php.runtime.PhpTypeHint typeHint = parseOptionalTypeHint();
                     paramTypes.add(typeHint);
@@ -202,9 +210,20 @@ public final class PhpClassParser {
                     // Parse parameter name
                     String paramName = parseVariableName();
                     paramNames.add(paramName);
+
+                    if (isVariadic) {
+                        if (variadicParamIndex != -1) {
+                            throw new RuntimeException("Only one variadic parameter is allowed");
+                        }
+                        variadicParamIndex = paramNames.size() - 1;
+                    }
+
                     skipWhitespace();
 
                     if (match(",")) {
+                        if (isVariadic) {
+                            throw new RuntimeException("Variadic parameter must be the last parameter");
+                        }
                         skipWhitespace();
                     }
                 }
@@ -276,6 +295,7 @@ public final class PhpClassParser {
                 this.context.currentFrameBuilder = methodFrameBuilder;
                 this.context.currentClassName = className;  // Track class context for visibility checking
                 this.expressionParser.updateContext(methodFrameBuilder, className);
+                this.expressionParser.updateFunctionName(methodName);  // Track method name for __METHOD__
                 this.statementContext.currentFrameBuilder = methodFrameBuilder;
                 this.statementContext.currentClassName = className;
 
@@ -321,6 +341,7 @@ public final class PhpClassParser {
                 this.context.currentFrameBuilder = savedFrameBuilder;
                 this.context.currentClassName = savedClassName;
                 this.expressionParser.updateContext(savedFrameBuilder, savedClassName);
+                this.expressionParser.updateFunctionName("");  // Clear method name
                 this.statementContext.currentFrameBuilder = savedFrameBuilder;
                 this.statementContext.currentClassName = savedClassName;
 
@@ -333,7 +354,8 @@ public final class PhpClassParser {
                         className + "::" + methodName,
                         paramNames.toArray(new String[0]),
                         paramSlots,
-                        body
+                        body,
+                        variadicParamIndex
                     );
                     methodCallTarget = functionRoot.getCallTarget();
                 } else {
@@ -345,7 +367,8 @@ public final class PhpClassParser {
                         paramNames.toArray(new String[0]),
                         paramSlots,
                         thisSlot,
-                        body
+                        body,
+                        variadicParamIndex
                     );
                     methodCallTarget = methodRoot.getCallTarget();
                 }

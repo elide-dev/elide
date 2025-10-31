@@ -91,8 +91,16 @@ public final class PhpFunctionParser {
         // Parse parameters with optional type hints
         List<String> paramNames = new ArrayList<>();
         List<dev.truffle.php.runtime.PhpTypeHint> paramTypes = new ArrayList<>();
+        int variadicParamIndex = -1;  // Index of variadic parameter, -1 if none
 
         while (!check(")")) {
+            // Check for variadic parameter (...)
+            boolean isVariadic = false;
+            if (match("...")) {
+                isVariadic = true;
+                skipWhitespace();
+            }
+
             // Check for optional type hint
             dev.truffle.php.runtime.PhpTypeHint typeHint = parseOptionalTypeHint();
             paramTypes.add(typeHint);
@@ -100,9 +108,20 @@ public final class PhpFunctionParser {
             // Parse parameter name
             String paramName = parseVariableName();
             paramNames.add(paramName);
+
+            if (isVariadic) {
+                if (variadicParamIndex != -1) {
+                    throw new RuntimeException("Only one variadic parameter is allowed");
+                }
+                variadicParamIndex = paramNames.size() - 1;
+            }
+
             skipWhitespace();
 
             if (match(",")) {
+                if (isVariadic) {
+                    throw new RuntimeException("Variadic parameter must be the last parameter");
+                }
                 skipWhitespace();
             }
         }
@@ -133,6 +152,7 @@ public final class PhpFunctionParser {
         this.variables.clear();
         this.context.currentFrameBuilder = functionFrameBuilder;
         this.expressionParser.updateContext(functionFrameBuilder, null);
+        this.expressionParser.updateFunctionName(functionName);  // Track function name for __FUNCTION__
         this.statementContext.currentFrameBuilder = functionFrameBuilder;
         this.statementContext.currentClassName = null;
 
@@ -172,6 +192,7 @@ public final class PhpFunctionParser {
         this.variables.putAll(savedVars);
         this.context.currentFrameBuilder = savedFrameBuilder;
         this.expressionParser.updateContext(savedFrameBuilder, null);
+        this.expressionParser.updateFunctionName("");  // Clear function name
         this.statementContext.currentFrameBuilder = savedFrameBuilder;
         this.statementContext.currentClassName = null;
 
@@ -182,7 +203,8 @@ public final class PhpFunctionParser {
             functionName,
             paramNames.toArray(new String[0]),
             paramSlots,
-            body
+            body,
+            variadicParamIndex
         );
 
         // Create and register function

@@ -135,6 +135,14 @@ public final class PhpParser {
         functionParser.setNamespaceContext(context.getNamespaceContext());
         classParser.setNamespaceContext(context.getNamespaceContext());
 
+        // Set source path in expression context for magic constants
+        // Use getPath() for real files, fall back to getName() for in-memory sources (tests)
+        String sourcePath = source.getPath();
+        if (sourcePath == null || sourcePath.isEmpty()) {
+            sourcePath = source.getName();
+        }
+        expressionContext.sourcePath = sourcePath != null ? sourcePath : "";
+
         while (!lexer.isAtEnd()) {
             PhpStatementNode stmt = parseStatement();
             if (stmt != null) {

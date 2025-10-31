@@ -28,10 +28,16 @@ public final class PhpExpressionParser {
     public static final class ParserContext {
         public String currentClassName;
         public FrameDescriptor.Builder currentFrameBuilder;
+        public String sourcePath;
+        public String currentFunctionName;
+        public String currentNamespace;
 
         public ParserContext(String currentClassName, FrameDescriptor.Builder currentFrameBuilder) {
             this.currentClassName = currentClassName;
             this.currentFrameBuilder = currentFrameBuilder;
+            this.sourcePath = "";
+            this.currentFunctionName = "";
+            this.currentNamespace = "";
         }
     }
 
@@ -53,6 +59,14 @@ public final class PhpExpressionParser {
     public void updateContext(FrameDescriptor.Builder currentFrameBuilder, String currentClassName) {
         this.context.currentFrameBuilder = currentFrameBuilder;
         this.context.currentClassName = currentClassName;
+    }
+
+    public void updateNamespace(String namespace) {
+        this.context.currentNamespace = namespace;
+    }
+
+    public void updateFunctionName(String functionName) {
+        this.context.currentFunctionName = functionName;
     }
 
     private PhpExpressionNode parseAssignmentExpression() {
@@ -480,6 +494,11 @@ public final class PhpExpressionParser {
             return parseNew();
         }
 
+        // Check for magic constants (e.g., __FILE__, __DIR__, __LINE__)
+        if (peek() == '_' && peekNext() == '_') {
+            return parseMagicConstant();
+        }
+
         // Function call or identifier
         if (Character.isLetter(peek()) || peek() == '_') {
             return parseFunctionCallOrIdentifier();
@@ -666,16 +685,7 @@ public final class PhpExpressionParser {
             }
 
             // Regular function call
-            List<PhpExpressionNode> args = new ArrayList<>();
-            skipWhitespace();
-
-            while (!check(")")) {
-                args.add(parseExpression());
-                skipWhitespace();
-                if (match(",")) {
-                    skipWhitespace();
-                }
-            }
+            List<PhpExpressionNode> args = parseFunctionArguments();
             expect(")");
 
             // Create function call node (handles both built-in and user-defined functions)
@@ -750,6 +760,81 @@ public final class PhpExpressionParser {
             slotArray[i] = slots.get(i);
         }
         return new PhpUnsetNode(slotArray);
+    }
+
+    private PhpExpressionNode parseMagicConstant() {
+        // Parse magic constant name (e.g., __FILE__, __DIR__, __LINE__)
+        StringBuilder constantName = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+            constantName.append(advance());
+        }
+        String name = constantName.toString();
+
+        // Determine the type and compute the value
+        switch (name) {
+            case "__FILE__":
+                return new PhpMagicConstantNode(
+                    PhpMagicConstantNode.MagicConstantType.FILE,
+                    context.sourcePath
+                );
+            case "__DIR__":
+                // Extract directory from file path
+                String dir = context.sourcePath;
+                int lastSlash = dir.lastIndexOf('/');
+                if (lastSlash >= 0) {
+                    dir = dir.substring(0, lastSlash);
+                } else {
+                    dir = ".";
+                }
+                return new PhpMagicConstantNode(
+                    PhpMagicConstantNode.MagicConstantType.DIR,
+                    dir
+                );
+            case "__LINE__":
+                // Line numbers would require lexer support - for now return 0
+                // TODO: Add line tracking to lexer
+                return new PhpMagicConstantNode(
+                    PhpMagicConstantNode.MagicConstantType.LINE,
+                    0L
+                );
+            case "__CLASS__":
+                String className = context.currentClassName != null ? context.currentClassName : "";
+                return new PhpMagicConstantNode(
+                    PhpMagicConstantNode.MagicConstantType.CLASS_NAME,
+                    className
+                );
+            case "__METHOD__":
+                String methodName = "";
+                if (context.currentClassName != null && !context.currentClassName.isEmpty()) {
+                    if (context.currentFunctionName != null && !context.currentFunctionName.isEmpty()) {
+                        methodName = context.currentClassName + "::" + context.currentFunctionName;
+                    }
+                }
+                return new PhpMagicConstantNode(
+                    PhpMagicConstantNode.MagicConstantType.METHOD,
+                    methodName
+                );
+            case "__FUNCTION__":
+                String funcName = context.currentFunctionName != null ? context.currentFunctionName : "";
+                return new PhpMagicConstantNode(
+                    PhpMagicConstantNode.MagicConstantType.FUNCTION,
+                    funcName
+                );
+            case "__NAMESPACE__":
+                String namespace = context.currentNamespace != null ? context.currentNamespace : "";
+                return new PhpMagicConstantNode(
+                    PhpMagicConstantNode.MagicConstantType.NAMESPACE,
+                    namespace
+                );
+            case "__TRAIT__":
+                // Traits not yet implemented - return empty string
+                return new PhpMagicConstantNode(
+                    PhpMagicConstantNode.MagicConstantType.TRAIT,
+                    ""
+                );
+            default:
+                throw new RuntimeException("Unknown magic constant: " + name);
+        }
     }
 
     public PhpExpressionNode parseArrayLiteral() {
@@ -936,6 +1021,40 @@ public final class PhpExpressionParser {
 
         advance(); // consume closing quote
         return str.toString();
+    }
+
+    /**
+     * Parse function arguments, supporting spread operator (...$expr).
+     * Returns a list of expression nodes, which may include PhpSpreadArgumentNode instances.
+     */
+    private List<PhpExpressionNode> parseFunctionArguments() {
+        List<PhpExpressionNode> args = new ArrayList<>();
+        skipWhitespace();
+
+        while (!check(")")) {
+            // Check for spread operator
+            boolean isSpread = false;
+            if (match("...")) {
+                isSpread = true;
+                skipWhitespace();
+            }
+
+            PhpExpressionNode arg = parseExpression();
+
+            // Wrap in PhpSpreadArgumentNode if this is a spread argument
+            if (isSpread) {
+                arg = new PhpSpreadArgumentNode(arg);
+            }
+
+            args.add(arg);
+            skipWhitespace();
+
+            if (match(",")) {
+                skipWhitespace();
+            }
+        }
+
+        return args;
     }
 
     // Lexing method delegations

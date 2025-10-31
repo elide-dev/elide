@@ -942,7 +942,10 @@ public final class PhpStatementParser {
 
         // Update the namespace context
         if (namespaceContext != null) {
-            namespaceContext.setCurrentNamespace(namespaceName.toString());
+            String namespace = namespaceName.toString();
+            namespaceContext.setCurrentNamespace(namespace);
+            // Also update expression parser context for magic constants
+            expressionParser.updateNamespace(namespace);
         }
 
         // Namespace declarations don't produce runtime nodes

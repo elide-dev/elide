@@ -153,17 +153,91 @@ public final class PhpClass {
     }
 
     /**
+     * Check if a method is accessible from the given caller class context.
+     *
+     * @param methodName The method to check
+     * @param callerClass The class from which the access is being made (null = external access)
+     * @return true if accessible, false otherwise
+     */
+    public boolean isMethodAccessible(String methodName, PhpClass callerClass) {
+        MethodMetadata method = getMethod(methodName);
+        if (method == null) {
+            return false;
+        }
+
+        PhpClass definingClass = getMethodDefiningClass(methodName);
+        return isAccessible(method.getVisibility(), definingClass, callerClass);
+    }
+
+    /**
+     * Get the class where a method is defined (walks inheritance chain).
+     */
+    private PhpClass getMethodDefiningClass(String methodName) {
+        // Check if defined in this class
+        if (methods.containsKey(methodName)) {
+            return this;
+        }
+        // Check parent classes
+        PhpClass current = parentClass;
+        while (current != null) {
+            if (current.getMethods().containsKey(methodName)) {
+                return current;
+            }
+            current = current.getParentClass();
+        }
+        return this; // Fallback to current class
+    }
+
+    /**
+     * Check if a member with the given visibility is accessible from the caller class.
+     */
+    private boolean isAccessible(Visibility visibility, PhpClass definingClass, PhpClass callerClass) {
+        switch (visibility) {
+            case PUBLIC:
+                return true;
+            case PROTECTED:
+                // Protected is accessible from the same class or subclasses
+                if (callerClass == null) {
+                    return false; // External access not allowed
+                }
+                return isSameOrSubclass(callerClass, definingClass);
+            case PRIVATE:
+                // Private is only accessible from the exact same class
+                if (callerClass == null) {
+                    return false; // External access not allowed
+                }
+                return callerClass == definingClass;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check if testClass is the same as or a subclass of baseClass.
+     */
+    private boolean isSameOrSubclass(PhpClass testClass, PhpClass baseClass) {
+        PhpClass current = testClass;
+        while (current != null) {
+            if (current == baseClass) {
+                return true;
+            }
+            current = current.getParentClass();
+        }
+        return false;
+    }
+
+    /**
      * Metadata about a class property.
      */
     public static final class PropertyMetadata {
         private final String name;
-        private final boolean isPublic;
+        private final Visibility visibility;
         private final boolean isStatic;
         private final Object defaultValue;
 
-        public PropertyMetadata(String name, boolean isPublic, boolean isStatic, Object defaultValue) {
+        public PropertyMetadata(String name, Visibility visibility, boolean isStatic, Object defaultValue) {
             this.name = name;
-            this.isPublic = isPublic;
+            this.visibility = visibility;
             this.isStatic = isStatic;
             this.defaultValue = defaultValue;
         }
@@ -172,8 +246,13 @@ public final class PhpClass {
             return name;
         }
 
+        public Visibility getVisibility() {
+            return visibility;
+        }
+
+        // Legacy method for backwards compatibility
         public boolean isPublic() {
-            return isPublic;
+            return visibility == Visibility.PUBLIC;
         }
 
         public boolean isStatic() {
@@ -190,14 +269,14 @@ public final class PhpClass {
      */
     public static final class MethodMetadata {
         private final String name;
-        private final boolean isPublic;
+        private final Visibility visibility;
         private final boolean isStatic;
         private final CallTarget callTarget;
         private final String[] parameterNames;
 
-        public MethodMetadata(String name, boolean isPublic, boolean isStatic, CallTarget callTarget, String[] parameterNames) {
+        public MethodMetadata(String name, Visibility visibility, boolean isStatic, CallTarget callTarget, String[] parameterNames) {
             this.name = name;
-            this.isPublic = isPublic;
+            this.visibility = visibility;
             this.isStatic = isStatic;
             this.callTarget = callTarget;
             this.parameterNames = parameterNames;
@@ -207,8 +286,13 @@ public final class PhpClass {
             return name;
         }
 
+        public Visibility getVisibility() {
+            return visibility;
+        }
+
+        // Legacy method for backwards compatibility
         public boolean isPublic() {
-            return isPublic;
+            return visibility == Visibility.PUBLIC;
         }
 
         public boolean isStatic() {

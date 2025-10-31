@@ -606,6 +606,79 @@ class TrufflePhpTest {
     assertEquals("a2", output.trim())
   }
 
+  @Test fun `array_slice function works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3, 4, 5];
+      ${'$'}slice = array_slice(${'$'}arr, 1, 3);
+      echo count(${'$'}slice);
+      echo ${'$'}slice[0];
+      echo ${'$'}slice[1];
+      echo ${'$'}slice[2];
+    """.trimIndent())
+    assertEquals("3234", output.trim())
+  }
+
+  @Test fun `array_slice with negative offset works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3, 4, 5];
+      ${'$'}slice = array_slice(${'$'}arr, -2);
+      echo ${'$'}slice[0];
+      echo ${'$'}slice[1];
+    """.trimIndent())
+    assertEquals("45", output.trim())
+  }
+
+  @Test fun `array_reverse function works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3, 4];
+      ${'$'}rev = array_reverse(${'$'}arr);
+      echo ${'$'}rev[0];
+      echo ${'$'}rev[1];
+      echo ${'$'}rev[2];
+      echo ${'$'}rev[3];
+    """.trimIndent())
+    assertEquals("4321", output.trim())
+  }
+
+  @Test fun `array_search function works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = ["apple", "banana", "cherry"];
+      ${'$'}key = array_search("banana", ${'$'}arr);
+      echo ${'$'}key;
+    """.trimIndent())
+    assertEquals("1", output.trim())
+  }
+
+  @Test fun `array_search returns false when not found`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3];
+      ${'$'}result = array_search(5, ${'$'}arr);
+      if (${'$'}result == false) {
+        echo "not found";
+      }
+    """.trimIndent())
+    assertEquals("not found", output.trim())
+  }
+
+  @Test fun `array_key_exists function works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = ["name" => "John", "age" => 30];
+      if (array_key_exists("name", ${'$'}arr)) {
+        echo "yes";
+      }
+      if (array_key_exists("email", ${'$'}arr)) {
+        echo "no";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
   // Built-in function tests - Type functions
   @Test fun `is_array function works`() {
     val output = executePhp("""
@@ -1671,6 +1744,771 @@ class TrufflePhpTest {
       }
     """.trimIndent())
     assertEquals("caught:custom", output.trim())
+  }
+
+  // Phase 1 Feature Tests - instanceof Operator
+  @Test fun `instanceof with direct class returns true`() {
+    val output = executePhp("""
+      <?php
+      class Person {
+        public ${'$'}name;
+      }
+      ${'$'}p = new Person();
+      if (${'$'}p instanceof Person) {
+        echo "yes";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `instanceof with parent class returns true`() {
+    val output = executePhp("""
+      <?php
+      class Animal {
+        public ${'$'}name;
+      }
+      class Dog extends Animal {
+        public ${'$'}breed;
+      }
+      ${'$'}dog = new Dog();
+      if (${'$'}dog instanceof Animal) {
+        echo "yes";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `instanceof with wrong class returns false`() {
+    val output = executePhp("""
+      <?php
+      class Person {
+        public ${'$'}name;
+      }
+      class Car {
+        public ${'$'}model;
+      }
+      ${'$'}p = new Person();
+      if (${'$'}p instanceof Car) {
+        echo "yes";
+      } else {
+        echo "no";
+      }
+    """.trimIndent())
+    assertEquals("no", output.trim())
+  }
+
+  @Test fun `instanceof with non-object returns false`() {
+    val output = executePhp("""
+      <?php
+      class Person {
+      }
+      ${'$'}x = 42;
+      if (${'$'}x instanceof Person) {
+        echo "yes";
+      } else {
+        echo "no";
+      }
+    """.trimIndent())
+    assertEquals("no", output.trim())
+  }
+
+  @Test fun `instanceof with null returns false`() {
+    val output = executePhp("""
+      <?php
+      class Person {
+      }
+      ${'$'}x = null;
+      if (${'$'}x instanceof Person) {
+        echo "yes";
+      } else {
+        echo "no";
+      }
+    """.trimIndent())
+    assertEquals("no", output.trim())
+  }
+
+  @Test fun `instanceof with multi-level inheritance works`() {
+    val output = executePhp("""
+      <?php
+      class A {
+      }
+      class B extends A {
+      }
+      class C extends B {
+      }
+      ${'$'}obj = new C();
+      if (${'$'}obj instanceof A) {
+        echo "A";
+      }
+      if (${'$'}obj instanceof B) {
+        echo "B";
+      }
+      if (${'$'}obj instanceof C) {
+        echo "C";
+      }
+    """.trimIndent())
+    assertEquals("ABC", output.trim())
+  }
+
+  @Test fun `instanceof in logical expression works`() {
+    val output = executePhp("""
+      <?php
+      class Person {
+        public ${'$'}age;
+      }
+      ${'$'}p = new Person();
+      ${'$'}p->age = 25;
+      if (${'$'}p instanceof Person && ${'$'}p->age > 18) {
+        echo "adult";
+      }
+    """.trimIndent())
+    assertEquals("adult", output.trim())
+  }
+
+  // Phase 1 Feature Tests - Compound Assignment Operators
+  @Test fun `add assign operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 10;
+      ${'$'}x += 5;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("15", output.trim())
+  }
+
+  @Test fun `subtract assign operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 20;
+      ${'$'}x -= 7;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("13", output.trim())
+  }
+
+  @Test fun `multiply assign operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 6;
+      ${'$'}x *= 4;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("24", output.trim())
+  }
+
+  @Test fun `divide assign operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 20;
+      ${'$'}x /= 4;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("5.0", output.trim())
+  }
+
+  @Test fun `concatenate assign operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}str = "Hello";
+      ${'$'}str .= " World";
+      echo ${'$'}str;
+    """.trimIndent())
+    assertEquals("Hello World", output.trim())
+  }
+
+  @Test fun `modulo assign operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 17;
+      ${'$'}x %= 5;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("2", output.trim())
+  }
+
+  @Test fun `basic modulo operator works`() {
+    val output = executePhp("""
+      <?php
+      echo 17 % 5;
+      echo 20 % 6;
+    """.trimIndent())
+    assertEquals("22", output.trim())
+  }
+
+  @Test fun `modulo with variables works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}a = 15;
+      ${'$'}b = 4;
+      echo ${'$'}a % ${'$'}b;
+    """.trimIndent())
+    assertEquals("3", output.trim())
+  }
+
+  @Test fun `modulo in expressions works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = (10 % 3) + (20 % 7);
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("7", output.trim())
+  }
+
+  @Test fun `modulo with negative numbers works`() {
+    val output = executePhp("""
+      <?php
+      echo -17 % 5;
+      echo 17 % -5;
+    """.trimIndent())
+    assertEquals("-22", output.trim())
+  }
+
+  @Test fun `modulo in conditional works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 10;
+      if (${'$'}x % 2 == 0) {
+        echo "even";
+      } else {
+        echo "odd";
+      }
+    """.trimIndent())
+    assertEquals("even", output.trim())
+  }
+
+  @Test fun `compound assignment returns value`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 10;
+      ${'$'}y = (${'$'}x += 5);
+      echo ${'$'}y;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("1515", output.trim())
+  }
+
+  @Test fun `multiple compound assignments work`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}a = 5;
+      ${'$'}a += 3;
+      ${'$'}a *= 2;
+      ${'$'}a -= 4;
+      echo ${'$'}a;
+    """.trimIndent())
+    assertEquals("12", output.trim())
+  }
+
+  @Test fun `compound assignment with concatenation in loop`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}result = "";
+      for (${'$'}i = 1; ${'$'}i <= 3; ${'$'}i = ${'$'}i + 1) {
+        ${'$'}result .= ${'$'}i;
+      }
+      echo ${'$'}result;
+    """.trimIndent())
+    assertEquals("123", output.trim())
+  }
+
+  // Phase 1 Feature Tests - Visibility Modifiers
+  @Test fun `public property can be accessed from outside`() {
+    val output = executePhp("""
+      <?php
+      class Box {
+        public ${'$'}value = 42;
+      }
+      ${'$'}box = new Box();
+      echo ${'$'}box->value;
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  @Test fun `private property cannot be accessed from outside`() {
+    try {
+      executePhp("""
+        <?php
+        class Box {
+          private ${'$'}value = 42;
+        }
+        ${'$'}box = new Box();
+        echo ${'$'}box->value;
+      """.trimIndent())
+      fail("Expected runtime exception for private property access")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("Cannot access private property") == true ||
+                 e.message?.contains("private") == true)
+    }
+  }
+
+  @Test fun `protected property cannot be accessed from outside`() {
+    try {
+      executePhp("""
+        <?php
+        class Box {
+          protected ${'$'}value = 42;
+        }
+        ${'$'}box = new Box();
+        echo ${'$'}box->value;
+      """.trimIndent())
+      fail("Expected runtime exception for protected property access")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("Cannot access protected property") == true ||
+                 e.message?.contains("protected") == true)
+    }
+  }
+
+  @Test fun `private property can be accessed from within class`() {
+    val output = executePhp("""
+      <?php
+      class Box {
+        private ${'$'}value = 42;
+
+        public function getValue() {
+          return ${'$'}this->value;
+        }
+      }
+      ${'$'}box = new Box();
+      echo ${'$'}box->getValue();
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  @Test fun `protected property can be accessed from within class`() {
+    val output = executePhp("""
+      <?php
+      class Box {
+        protected ${'$'}value = 42;
+
+        public function getValue() {
+          return ${'$'}this->value;
+        }
+      }
+      ${'$'}box = new Box();
+      echo ${'$'}box->getValue();
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  @Test fun `protected property can be accessed from subclass`() {
+    val output = executePhp("""
+      <?php
+      class Parent {
+        protected ${'$'}value = 42;
+      }
+      class Child extends Parent {
+        public function getValue() {
+          return ${'$'}this->value;
+        }
+      }
+      ${'$'}child = new Child();
+      echo ${'$'}child->getValue();
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  @Test fun `private property cannot be accessed from subclass`() {
+    try {
+      executePhp("""
+        <?php
+        class Parent {
+          private ${'$'}value = 42;
+        }
+        class Child extends Parent {
+          public function getValue() {
+            return ${'$'}this->value;
+          }
+        }
+        ${'$'}child = new Child();
+        echo ${'$'}child->getValue();
+      """.trimIndent())
+      fail("Expected runtime exception for private property access from subclass")
+    } catch (e: Exception) {
+      // Expected - private properties are not accessible from subclasses
+      assertTrue(e.message?.contains("Undefined property") == true ||
+                 e.message?.contains("private") == true)
+    }
+  }
+
+  @Test fun `private method cannot be called from outside`() {
+    try {
+      executePhp("""
+        <?php
+        class Box {
+          private function secret() {
+            return "hidden";
+          }
+        }
+        ${'$'}box = new Box();
+        echo ${'$'}box->secret();
+      """.trimIndent())
+      fail("Expected runtime exception for private method call")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("Cannot call private method") == true ||
+                 e.message?.contains("private") == true)
+    }
+  }
+
+  @Test fun `protected method cannot be called from outside`() {
+    try {
+      executePhp("""
+        <?php
+        class Box {
+          protected function secret() {
+            return "hidden";
+          }
+        }
+        ${'$'}box = new Box();
+        echo ${'$'}box->secret();
+      """.trimIndent())
+      fail("Expected runtime exception for protected method call")
+    } catch (e: Exception) {
+      assertTrue(e.message?.contains("Cannot call protected method") == true ||
+                 e.message?.contains("protected") == true)
+    }
+  }
+
+  @Test fun `private method can be called from within class`() {
+    val output = executePhp("""
+      <?php
+      class Box {
+        private function secret() {
+          return "hidden";
+        }
+
+        public function reveal() {
+          return ${'$'}this->secret();
+        }
+      }
+      ${'$'}box = new Box();
+      echo ${'$'}box->reveal();
+    """.trimIndent())
+    assertEquals("hidden", output.trim())
+  }
+
+  @Test fun `protected method can be called from subclass`() {
+    val output = executePhp("""
+      <?php
+      class Parent {
+        protected function secret() {
+          return "hidden";
+        }
+      }
+      class Child extends Parent {
+        public function reveal() {
+          return ${'$'}this->secret();
+        }
+      }
+      ${'$'}child = new Child();
+      echo ${'$'}child->reveal();
+    """.trimIndent())
+    assertEquals("hidden", output.trim())
+  }
+
+  @Test fun `default visibility is public`() {
+    val output = executePhp("""
+      <?php
+      class Box {
+        ${'$'}value = 42;
+
+        function getValue() {
+          return ${'$'}this->value;
+        }
+      }
+      ${'$'}box = new Box();
+      echo ${'$'}box->value;
+      echo ${'$'}box->getValue();
+    """.trimIndent())
+    assertEquals("4242", output.trim())
+  }
+
+  @Test fun `multiple visibility levels in same class work`() {
+    val output = executePhp("""
+      <?php
+      class Example {
+        public ${'$'}publicProp = "public";
+        private ${'$'}privateProp = "private";
+        protected ${'$'}protectedProp = "protected";
+
+        public function getAll() {
+          return ${'$'}this->publicProp . ${'$'}this->privateProp . ${'$'}this->protectedProp;
+        }
+      }
+      ${'$'}ex = new Example();
+      echo ${'$'}ex->publicProp;
+      echo ${'$'}ex->getAll();
+    """.trimIndent())
+    assertEquals("publicpublicprivateprotected", output.trim())
+  }
+
+  // Additional Coverage Tests
+  @Test fun `nested arrays work correctly`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}nested = [[1, 2], [3, 4]];
+      echo ${'$'}nested[0][0];
+      echo ${'$'}nested[0][1];
+      echo ${'$'}nested[1][0];
+      echo ${'$'}nested[1][1];
+    """.trimIndent())
+    assertEquals("1234", output.trim())
+  }
+
+  @Test fun `mixed type array with numeric and string keys works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}mixed = [0 => "zero", "one" => 1, 2 => "two"];
+      echo ${'$'}mixed[0];
+      echo ${'$'}mixed["one"];
+      echo ${'$'}mixed[2];
+    """.trimIndent())
+    assertEquals("zero1two", output.trim())
+  }
+
+  @Test fun `recursive function works`() {
+    val output = executePhp("""
+      <?php
+      function factorial(${'$'}n) {
+        if (${'$'}n <= 1) {
+          return 1;
+        }
+        return ${'$'}n * factorial(${'$'}n - 1);
+      }
+      echo factorial(5);
+    """.trimIndent())
+    assertEquals("120", output.trim())
+  }
+
+  @Test fun `function with local variable scope works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = "global";
+      function test() {
+        ${'$'}x = "local";
+        return ${'$'}x;
+      }
+      echo test();
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("localglobal", output.trim())
+  }
+
+  @Test fun `array_merge with multiple arrays works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}a = [1, 2];
+      ${'$'}b = [3, 4];
+      ${'$'}c = [5, 6];
+      ${'$'}result = array_merge(${'$'}a, ${'$'}b, ${'$'}c);
+      echo count(${'$'}result);
+      echo ${'$'}result[0];
+      echo ${'$'}result[5];
+    """.trimIndent())
+    assertEquals("616", output.trim())
+  }
+
+  @Test fun `arithmetic with mixed integer and float works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}a = 10;
+      ${'$'}b = 3.5;
+      echo ${'$'}a + ${'$'}b;
+      echo ${'$'}a - ${'$'}b;
+    """.trimIndent())
+    assertEquals("13.56.5", output.trim())
+  }
+
+  @Test fun `string concatenation in loop builds correctly`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}result = "";
+      for (${'$'}i = 0; ${'$'}i < 5; ${'$'}i = ${'$'}i + 1) {
+        ${'$'}result = ${'$'}result . ${'$'}i;
+      }
+      echo ${'$'}result;
+    """.trimIndent())
+    assertEquals("01234", output.trim())
+  }
+
+  @Test fun `while loop with complex condition works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 0;
+      ${'$'}y = 10;
+      while (${'$'}x < 5 && ${'$'}y > 5) {
+        ${'$'}x = ${'$'}x + 1;
+        ${'$'}y = ${'$'}y - 1;
+      }
+      echo ${'$'}x;
+      echo ${'$'}y;
+    """.trimIndent())
+    assertEquals("55", output.trim())
+  }
+
+  @Test fun `foreach modifying array during iteration works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3];
+      ${'$'}sum = 0;
+      foreach (${'$'}arr as ${'$'}val) {
+        ${'$'}sum = ${'$'}sum + ${'$'}val;
+      }
+      echo ${'$'}sum;
+    """.trimIndent())
+    assertEquals("6", output.trim())
+  }
+
+  @Test fun `object property chaining works`() {
+    val output = executePhp("""
+      <?php
+      class Address {
+        public ${'$'}city;
+        function __construct(${'$'}c) {
+          ${'$'}this->city = ${'$'}c;
+        }
+      }
+      class Person {
+        public ${'$'}address;
+        function __construct() {
+          ${'$'}this->address = new Address("NYC");
+        }
+      }
+      ${'$'}p = new Person();
+      echo ${'$'}p->address->city;
+    """.trimIndent())
+    assertEquals("NYC", output.trim())
+  }
+
+  @Test fun `method returning object allows method chaining pattern`() {
+    val output = executePhp("""
+      <?php
+      class Builder {
+        public ${'$'}value;
+        function setValue(${'$'}v) {
+          ${'$'}this->value = ${'$'}v;
+          return ${'$'}this;
+        }
+        function getValue() {
+          return ${'$'}this->value;
+        }
+      }
+      ${'$'}b = new Builder();
+      ${'$'}result = ${'$'}b->setValue(42);
+      echo ${'$'}result->getValue();
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  @Test fun `comparison with same types works`() {
+    val output = executePhp("""
+      <?php
+      if (5 == 5) echo "1";
+      if ("hello" == "hello") echo "2";
+      if (true == true) echo "3";
+      if (false == false) echo "4";
+    """.trimIndent())
+    assertEquals("1234", output.trim())
+  }
+
+  @Test fun `array with string keys and array_keys works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}data = ["name" => "John", "age" => 30, "city" => "NYC"];
+      ${'$'}keys = array_keys(${'$'}data);
+      echo count(${'$'}keys);
+      echo ${'$'}keys[0];
+      echo ${'$'}keys[2];
+    """.trimIndent())
+    assertEquals("3namecity", output.trim())
+  }
+
+  @Test fun `trim function removes whitespace`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}str = "  hello world  ";
+      echo trim(${'$'}str);
+      echo strlen(trim(${'$'}str));
+    """.trimIndent())
+    assertEquals("hello world11", output.trim())
+  }
+
+  @Test fun `multiple echo statements on one line work`() {
+    val output = executePhp("""
+      <?php
+      echo "a", "b", "c";
+    """.trimIndent())
+    assertEquals("abc", output.trim())
+  }
+
+  @Test fun `unary minus on variables works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      ${'$'}y = -${'$'}x;
+      echo ${'$'}y;
+      echo -${'$'}y;
+    """.trimIndent())
+    assertEquals("-55", output.trim())
+  }
+
+  @Test fun `switch with multiple cases using same code block works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}day = 1;
+      switch (${'$'}day) {
+        case 0:
+        case 6:
+          echo "weekend";
+          break;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          echo "weekday";
+          break;
+      }
+    """.trimIndent())
+    assertEquals("weekday", output.trim())
+  }
+
+  @Test fun `array_pop and array_push combination works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}stack = [1, 2, 3];
+      array_push(${'$'}stack, 4);
+      echo count(${'$'}stack);
+      ${'$'}top = array_pop(${'$'}stack);
+      echo ${'$'}top;
+      echo count(${'$'}stack);
+    """.trimIndent())
+    assertEquals("443", output.trim())
+  }
+
+  @Test fun `complex expression with parentheses evaluates correctly`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}result = (2 + 3) * (4 - 1);
+      echo ${'$'}result;
+    """.trimIndent())
+    assertEquals("15", output.trim())
+  }
+
+  @Test fun `class method returning array works`() {
+    val output = executePhp("""
+      <?php
+      class DataProvider {
+        function getData() {
+          return [1, 2, 3, 4, 5];
+        }
+      }
+      ${'$'}dp = new DataProvider();
+      ${'$'}data = ${'$'}dp->getData();
+      echo count(${'$'}data);
+      echo ${'$'}data[0];
+      echo ${'$'}data[4];
+    """.trimIndent())
+    assertEquals("515", output.trim())
   }
 
   private fun executePhp(code: String): String {

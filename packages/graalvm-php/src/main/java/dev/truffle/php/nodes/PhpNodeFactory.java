@@ -29,6 +29,10 @@ public final class PhpNodeFactory {
         return PhpDivNode.create(left, right);
     }
 
+    public static PhpModNode createMod(PhpExpressionNode left, PhpExpressionNode right) {
+        return PhpModNode.create(left, right);
+    }
+
     public static PhpConcatNode createConcat(PhpExpressionNode left, PhpExpressionNode right) {
         return PhpConcatNode.create(left, right);
     }

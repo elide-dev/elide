@@ -36,9 +36,18 @@ public final class PhpObject implements TruffleObject {
     }
 
     /**
-     * Read a property value.
+     * Read a property value (external access - must be public).
      */
     public Object readProperty(String propertyName) {
+        return readProperty(propertyName, null);
+    }
+
+    /**
+     * Read a property value with caller context for visibility checking.
+     * @param propertyName The property to read
+     * @param callerClass The class from which the access is being made (null for external access)
+     */
+    public Object readProperty(String propertyName, PhpClass callerClass) {
         // Check if property exists in class definition
         if (!phpClass.hasProperty(propertyName)) {
             throw new RuntimeException("Undefined property: " + phpClass.getName() + "::$" + propertyName);
@@ -46,17 +55,28 @@ public final class PhpObject implements TruffleObject {
 
         // Check visibility
         PhpClass.PropertyMetadata metadata = phpClass.getProperty(propertyName);
-        if (!metadata.isPublic()) {
-            throw new RuntimeException("Cannot access private property: " + phpClass.getName() + "::$" + propertyName);
+        if (!isPropertyAccessible(metadata, callerClass)) {
+            String visibilityName = metadata.getVisibility().toString().toLowerCase();
+            throw new RuntimeException("Cannot access " + visibilityName + " property: " + phpClass.getName() + "::$" + propertyName);
         }
 
         return properties.get(propertyName);
     }
 
     /**
-     * Write a property value.
+     * Write a property value (external access - must be public).
      */
     public void writeProperty(String propertyName, Object value) {
+        writeProperty(propertyName, value, null);
+    }
+
+    /**
+     * Write a property value with caller context for visibility checking.
+     * @param propertyName The property to write
+     * @param value The value to write
+     * @param callerClass The class from which the access is being made (null for external access)
+     */
+    public void writeProperty(String propertyName, Object value, PhpClass callerClass) {
         // Check if property exists in class definition
         if (!phpClass.hasProperty(propertyName)) {
             throw new RuntimeException("Undefined property: " + phpClass.getName() + "::$" + propertyName);
@@ -64,8 +84,9 @@ public final class PhpObject implements TruffleObject {
 
         // Check visibility
         PhpClass.PropertyMetadata metadata = phpClass.getProperty(propertyName);
-        if (!metadata.isPublic()) {
-            throw new RuntimeException("Cannot access private property: " + phpClass.getName() + "::$" + propertyName);
+        if (!isPropertyAccessible(metadata, callerClass)) {
+            String visibilityName = metadata.getVisibility().toString().toLowerCase();
+            throw new RuntimeException("Cannot access " + visibilityName + " property: " + phpClass.getName() + "::$" + propertyName);
         }
 
         properties.put(propertyName, value);
@@ -89,6 +110,75 @@ public final class PhpObject implements TruffleObject {
             throw new RuntimeException("Undefined property: " + phpClass.getName() + "::$" + propertyName);
         }
         properties.put(propertyName, value);
+    }
+
+    /**
+     * Check if a property is accessible from the given caller class context.
+     */
+    private boolean isPropertyAccessible(PhpClass.PropertyMetadata metadata, PhpClass callerClass) {
+        return isAccessible(metadata.getVisibility(), getPropertyDefiningClass(metadata.getName()), callerClass);
+    }
+
+    /**
+     * Get the class where a property is defined (walks inheritance chain).
+     */
+    private PhpClass getPropertyDefiningClass(String propertyName) {
+        // Check if defined in this class
+        if (phpClass.getProperties().containsKey(propertyName)) {
+            return phpClass;
+        }
+        // Check parent classes
+        PhpClass current = phpClass.getParentClass();
+        while (current != null) {
+            if (current.getProperties().containsKey(propertyName)) {
+                return current;
+            }
+            current = current.getParentClass();
+        }
+        return phpClass; // Fallback to current class
+    }
+
+    /**
+     * Check if a member with the given visibility is accessible from the caller class.
+     *
+     * @param visibility The visibility of the member
+     * @param definingClass The class where the member is defined
+     * @param callerClass The class from which the access is being made (null = external access)
+     * @return true if accessible, false otherwise
+     */
+    private boolean isAccessible(Visibility visibility, PhpClass definingClass, PhpClass callerClass) {
+        switch (visibility) {
+            case PUBLIC:
+                return true;
+            case PROTECTED:
+                // Protected is accessible from the same class or subclasses
+                if (callerClass == null) {
+                    return false; // External access not allowed
+                }
+                return isSameOrSubclass(callerClass, definingClass);
+            case PRIVATE:
+                // Private is only accessible from the exact same class
+                if (callerClass == null) {
+                    return false; // External access not allowed
+                }
+                return callerClass == definingClass;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check if testClass is the same as or a subclass of baseClass.
+     */
+    private boolean isSameOrSubclass(PhpClass testClass, PhpClass baseClass) {
+        PhpClass current = testClass;
+        while (current != null) {
+            if (current == baseClass) {
+                return true;
+            }
+            current = current.getParentClass();
+        }
+        return false;
     }
 
     @Override

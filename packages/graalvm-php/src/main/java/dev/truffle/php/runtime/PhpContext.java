@@ -54,8 +54,8 @@ public final class PhpContext {
     private void initializeBuiltinClasses() {
         // Create built-in Exception class
         Map<String, PhpClass.PropertyMetadata> exceptionProperties = new HashMap<>();
-        exceptionProperties.put("message", new PhpClass.PropertyMetadata("message", true, false, ""));
-        exceptionProperties.put("code", new PhpClass.PropertyMetadata("code", true, false, 0L));
+        exceptionProperties.put("message", new PhpClass.PropertyMetadata("message", Visibility.PUBLIC, false, ""));
+        exceptionProperties.put("code", new PhpClass.PropertyMetadata("code", Visibility.PUBLIC, false, 0L));
 
         Map<String, PhpClass.MethodMetadata> exceptionMethods = new HashMap<>();
 

@@ -2,6 +2,8 @@ package dev.truffle.php.nodes.expression;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.runtime.PhpClass;
+import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpObject;
 
 /**
@@ -13,12 +15,20 @@ public final class PhpPropertyAccessNode extends PhpExpressionNode {
     private PhpExpressionNode objectNode;
 
     private final String propertyName;
-    private final boolean isInternal; // true if accessed from within methods ($this->prop)
+    private final String callerClassName; // The name of the class from which this access is being made (null for external)
 
+    // Constructor with caller class name
+    public PhpPropertyAccessNode(PhpExpressionNode objectNode, String propertyName, String callerClassName) {
+        this.objectNode = objectNode;
+        this.propertyName = propertyName;
+        this.callerClassName = callerClassName;
+    }
+
+    // Legacy constructor for backward compatibility
     public PhpPropertyAccessNode(PhpExpressionNode objectNode, String propertyName, boolean isInternal) {
         this.objectNode = objectNode;
         this.propertyName = propertyName;
-        this.isInternal = isInternal;
+        this.callerClassName = null; // Treated as external access
     }
 
     @Override
@@ -31,11 +41,14 @@ public final class PhpPropertyAccessNode extends PhpExpressionNode {
 
         PhpObject object = (PhpObject) objectValue;
 
-        // Use internal access if this is from within a method (bypasses visibility)
-        if (isInternal) {
-            return object.readPropertyInternal(propertyName);
-        } else {
-            return object.readProperty(propertyName);
+        // Look up caller class if we have a class name
+        PhpClass callerClass = null;
+        if (callerClassName != null) {
+            PhpContext context = PhpContext.get(this);
+            callerClass = context.getClass(callerClassName);
         }
+
+        // Use visibility checking with callerClass
+        return object.readProperty(propertyName, callerClass);
     }
 }

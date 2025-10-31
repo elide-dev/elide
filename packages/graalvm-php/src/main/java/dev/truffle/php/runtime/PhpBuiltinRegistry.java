@@ -38,6 +38,10 @@ public final class PhpBuiltinRegistry {
         register(context, new InArrayBuiltin(language));
         register(context, new ArrayKeysBuiltin(language));
         register(context, new ArrayValuesBuiltin(language));
+        register(context, new ArraySliceBuiltin(language));
+        register(context, new ArrayReverseBuiltin(language));
+        register(context, new ArraySearchBuiltin(language));
+        register(context, new ArrayKeyExistsBuiltin(language));
 
         // Type functions
         register(context, new IsArrayBuiltin(language));

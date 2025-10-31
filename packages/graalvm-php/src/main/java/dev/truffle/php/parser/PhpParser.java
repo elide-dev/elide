@@ -27,6 +27,7 @@ import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpArray;
 import dev.truffle.php.runtime.PhpClass;
 import dev.truffle.php.runtime.PhpObject;
+import dev.truffle.php.runtime.Visibility;
 import com.oracle.truffle.api.CallTarget;
 
 import java.util.ArrayList;
@@ -62,6 +63,7 @@ public final class PhpParser {
     private final List<PhpFunction> declaredFunctions = new ArrayList<>();
     private final List<PhpClass> declaredClasses = new ArrayList<>();
     private final Map<String, String> classParentNames = new HashMap<>();  // className -> parentClassName
+    private String currentClassName = null;  // Track current class context during parsing
 
     public PhpParser(PhpLanguage language, Source source) {
         this.language = language;
@@ -237,16 +239,23 @@ public final class PhpParser {
             // Scan ahead to find '=' or ';'
             while (!isAtEnd() && peek() != ';') {
                 if (peek() == '=') {
-                    // Check if it's assignment '=' (not ==, !=, <=, >=)
+                    // Check if it's assignment '=' or compound assignment (+=, -=, etc.)
                     char next = peekNext();
                     if (next != '=') {
-                        // Also check previous character to avoid !=, <=, >=
+                        // Also check previous character to avoid !=, <=, >=, but allow +=, -=, *=, /=, .=, %=
                         if (pos == 0 || (code.charAt(pos - 1) != '!' &&
                                           code.charAt(pos - 1) != '<' &&
                                           code.charAt(pos - 1) != '>')) {
                             hasAssignmentOperator = true;
                             break;
                         }
+                    }
+                } else if (peek() == '+' || peek() == '-' || peek() == '*' || peek() == '/' || peek() == '.' || peek() == '%') {
+                    // Check for compound assignment operators
+                    char next = peekNext();
+                    if (next == '=') {
+                        hasAssignmentOperator = true;
+                        break;
                     }
                 }
                 advance();
@@ -594,14 +603,17 @@ public final class PhpParser {
         skipWhitespace();
         while (!check("}") && !isAtEnd()) {
             // Check for visibility modifiers
-            boolean isPublic = true;
+            Visibility visibility = Visibility.PUBLIC; // Default visibility is public
             boolean isStatic = false;
 
             if (matchKeyword("public")) {
-                isPublic = true;
+                visibility = Visibility.PUBLIC;
+                skipWhitespace();
+            } else if (matchKeyword("protected")) {
+                visibility = Visibility.PROTECTED;
                 skipWhitespace();
             } else if (matchKeyword("private")) {
-                isPublic = false;
+                visibility = Visibility.PRIVATE;
                 skipWhitespace();
             }
 
@@ -658,10 +670,12 @@ public final class PhpParser {
                 // Save current parser state
                 Map<String, Integer> savedVars = new HashMap<>(this.variables);
                 FrameDescriptor.Builder savedFrameBuilder = this.currentFrameBuilder;
+                String savedClassName = this.currentClassName;
 
                 // Clear and set up method's variable scope
                 this.variables.clear();
                 this.currentFrameBuilder = methodFrameBuilder;
+                this.currentClassName = className;  // Track class context for visibility checking
 
                 // Add $this to variable map only for non-static methods
                 if (!isStatic) {
@@ -680,6 +694,7 @@ public final class PhpParser {
                 this.variables.clear();
                 this.variables.putAll(savedVars);
                 this.currentFrameBuilder = savedFrameBuilder;
+                this.currentClassName = savedClassName;
 
                 // Create method root node (use FunctionRootNode for static methods)
                 CallTarget methodCallTarget;
@@ -713,7 +728,7 @@ public final class PhpParser {
                 } else {
                     methods.put(methodName, new PhpClass.MethodMetadata(
                         methodName,
-                        isPublic,
+                        visibility,
                         isStatic,
                         methodCallTarget,
                         paramNames.toArray(new String[0])
@@ -756,7 +771,7 @@ public final class PhpParser {
 
                 expect(";");
 
-                properties.put(propName, new PhpClass.PropertyMetadata(propName, isPublic, isStatic, defaultValue));
+                properties.put(propName, new PhpClass.PropertyMetadata(propName, visibility, isStatic, defaultValue));
 
             } else {
                 throw new RuntimeException("Unexpected token in class body at position " + pos);
@@ -1015,6 +1030,34 @@ public final class PhpParser {
                 skipWhitespace();
             } while (match("["));
 
+            // Check for property assignment after array access ($arr[idx]->property = value)
+            if (match("->")) {
+                skipWhitespace();
+
+                // Parse property name
+                StringBuilder memberName = new StringBuilder();
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    memberName.append(advance());
+                }
+                String propertyName = memberName.toString();
+
+                skipWhitespace();
+                expect("=");
+                skipWhitespace();
+                PhpExpressionNode value = parseExpression();
+                expect(";");
+
+                // Build the array access first
+                PhpExpressionNode arrayAccess = varNode;
+                for (PhpExpressionNode index : indices) {
+                    arrayAccess = new PhpArrayAccessNode(arrayAccess, index);
+                }
+
+                // Then create property write on the result
+                PhpExpressionNode writeExpr = new PhpPropertyWriteNode(arrayAccess, propertyName, value, currentClassName);
+                return new PhpExpressionStatementNode(writeExpr);
+            }
+
             expect("=");
             skipWhitespace();
             PhpExpressionNode value = parseExpression();
@@ -1047,15 +1090,92 @@ public final class PhpParser {
             String propertyName = memberName.toString();
 
             skipWhitespace();
+
+            // Check for compound assignment operators on properties
+            PhpCompoundAssignmentNode.CompoundOp compoundOp = null;
+            if (match("+=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.ADD_ASSIGN;
+            } else if (match("-=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.SUB_ASSIGN;
+            } else if (match("*=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.MUL_ASSIGN;
+            } else if (match("/=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.DIV_ASSIGN;
+            } else if (match(".=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.CONCAT_ASSIGN;
+            } else if (match("%=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.MOD_ASSIGN;
+            }
+
+            if (compoundOp != null) {
+                // Compound assignment on property: $obj->prop += value
+                skipWhitespace();
+                PhpExpressionNode rightValue = parseExpression();
+                expect(";");
+
+                // Read current value, apply operation, write back
+                PhpExpressionNode readExpr = new PhpPropertyAccessNode(varNode, propertyName, currentClassName);
+                PhpExpressionNode newValue;
+                switch (compoundOp) {
+                    case ADD_ASSIGN:
+                        newValue = PhpNodeFactory.createAdd(readExpr, rightValue);
+                        break;
+                    case SUB_ASSIGN:
+                        newValue = PhpNodeFactory.createSub(readExpr, rightValue);
+                        break;
+                    case MUL_ASSIGN:
+                        newValue = PhpNodeFactory.createMul(readExpr, rightValue);
+                        break;
+                    case DIV_ASSIGN:
+                        newValue = PhpNodeFactory.createDiv(readExpr, rightValue);
+                        break;
+                    case CONCAT_ASSIGN:
+                        newValue = PhpNodeFactory.createConcat(readExpr, rightValue);
+                        break;
+                    case MOD_ASSIGN:
+                        newValue = PhpNodeFactory.createMod(readExpr, rightValue);
+                        break;
+                    default:
+                        throw new RuntimeException("Unknown compound operator");
+                }
+                PhpExpressionNode writeExpr = new PhpPropertyWriteNode(varNode, propertyName, newValue, currentClassName);
+                return new PhpExpressionStatementNode(writeExpr);
+            }
+
+            // Regular property assignment
             expect("=");
             skipWhitespace();
             PhpExpressionNode value = parseExpression();
             expect(";");
 
-            // Check if we're inside a method (have access to $this)
-            boolean isInternal = varName.equals("this");
-            PhpExpressionNode writeExpr = new PhpPropertyWriteNode(varNode, propertyName, value, isInternal);
+            PhpExpressionNode writeExpr = new PhpPropertyWriteNode(varNode, propertyName, value, currentClassName);
             return new PhpExpressionStatementNode(writeExpr);
+        }
+
+        // Check for compound assignment operators (+=, -=, *=, /=, .=, %=)
+        PhpCompoundAssignmentNode.CompoundOp compoundOp = null;
+        if (match("+=")) {
+            compoundOp = PhpCompoundAssignmentNode.CompoundOp.ADD_ASSIGN;
+        } else if (match("-=")) {
+            compoundOp = PhpCompoundAssignmentNode.CompoundOp.SUB_ASSIGN;
+        } else if (match("*=")) {
+            compoundOp = PhpCompoundAssignmentNode.CompoundOp.MUL_ASSIGN;
+        } else if (match("/=")) {
+            compoundOp = PhpCompoundAssignmentNode.CompoundOp.DIV_ASSIGN;
+        } else if (match(".=")) {
+            compoundOp = PhpCompoundAssignmentNode.CompoundOp.CONCAT_ASSIGN;
+        } else if (match("%=")) {
+            compoundOp = PhpCompoundAssignmentNode.CompoundOp.MOD_ASSIGN;
+        }
+
+        if (compoundOp != null) {
+            // Compound assignment
+            skipWhitespace();
+            PhpExpressionNode rightValue = parseExpression();
+            expect(";");
+
+            PhpExpressionNode compoundExpr = new PhpCompoundAssignmentNode(varName, slot, compoundOp, rightValue);
+            return new PhpExpressionStatementNode(compoundExpr);
         }
 
         // Regular variable assignment
@@ -1113,7 +1233,59 @@ public final class PhpParser {
     }
 
     private PhpExpressionNode parseExpression() {
-        return parseNullCoalescing();
+        return parseAssignmentExpression();
+    }
+
+    private PhpExpressionNode parseAssignmentExpression() {
+        PhpExpressionNode left = parseNullCoalescing();
+
+        // Check if this is an assignment or compound assignment
+        // Only handle if left side is a simple variable read
+        if (left instanceof PhpReadVariableNode) {
+            PhpReadVariableNode varNode = (PhpReadVariableNode) left;
+
+            skipWhitespace();
+
+            // Check for compound assignment operators
+            PhpCompoundAssignmentNode.CompoundOp compoundOp = null;
+            if (match("+=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.ADD_ASSIGN;
+            } else if (match("-=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.SUB_ASSIGN;
+            } else if (match("*=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.MUL_ASSIGN;
+            } else if (match("/=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.DIV_ASSIGN;
+            } else if (match(".=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.CONCAT_ASSIGN;
+            } else if (match("%=")) {
+                compoundOp = PhpCompoundAssignmentNode.CompoundOp.MOD_ASSIGN;
+            }
+
+            if (compoundOp != null) {
+                // Compound assignment
+                skipWhitespace();
+                PhpExpressionNode rightValue = parseAssignmentExpression();
+
+                // Get variable slot from the read node
+                int slot = varNode.getSlot();
+                String varName = getVariableName(slot);
+
+                return new PhpCompoundAssignmentNode(varName, slot, compoundOp, rightValue);
+            }
+        }
+
+        return left;
+    }
+
+    private String getVariableName(int slot) {
+        // Find variable name by slot
+        for (Map.Entry<String, Integer> entry : variables.entrySet()) {
+            if (entry.getValue() == slot) {
+                return entry.getKey();
+            }
+        }
+        return "unknown";
     }
 
     private PhpExpressionNode parseNullCoalescing() {
@@ -1192,6 +1364,22 @@ public final class PhpParser {
         PhpExpressionNode left = parseAddition();
 
         skipWhitespace();
+
+        // Check for instanceof operator
+        if (matchKeyword("instanceof")) {
+            skipWhitespace();
+            // Parse class name
+            StringBuilder className = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                className.append(advance());
+            }
+            String targetClassName = className.toString();
+            if (targetClassName.isEmpty()) {
+                throw new RuntimeException("Expected class name after instanceof");
+            }
+            return new PhpInstanceofNode(left, targetClassName);
+        }
+
         // Order matters: check longer operators first (<=, >=, !=, ==)
         if (match("==")) {
             skipWhitespace();
@@ -1227,15 +1415,19 @@ public final class PhpParser {
 
         while (true) {
             skipWhitespace();
-            if (match("+")) {
+            // Check for + but not +=
+            if (peek() == '+' && peekNext() != '=') {
+                advance(); // consume +
                 skipWhitespace();
                 PhpExpressionNode right = parseMultiplication();
                 left = PhpNodeFactory.createAdd(left, right);
-            } else if (match("-")) {
+            } else if (peek() == '-' && peekNext() != '=') {
+                advance(); // consume -
                 skipWhitespace();
                 PhpExpressionNode right = parseMultiplication();
                 left = PhpNodeFactory.createSub(left, right);
-            } else if (match(".") && !check(".")) { // . but not ..
+            } else if (peek() == '.' && peekNext() != '=' && peekNext() != '.') {
+                advance(); // consume .
                 skipWhitespace();
                 PhpExpressionNode right = parseMultiplication();
                 left = PhpNodeFactory.createConcat(left, right);
@@ -1252,14 +1444,22 @@ public final class PhpParser {
 
         while (true) {
             skipWhitespace();
-            if (match("*")) {
+            // Check for * but not *=
+            if (peek() == '*' && peekNext() != '=') {
+                advance(); // consume *
                 skipWhitespace();
                 PhpExpressionNode right = parseUnary();
                 left = PhpNodeFactory.createMul(left, right);
-            } else if (match("/")) {
+            } else if (peek() == '/' && peekNext() != '=') {
+                advance(); // consume /
                 skipWhitespace();
                 PhpExpressionNode right = parseUnary();
                 left = PhpNodeFactory.createDiv(left, right);
+            } else if (peek() == '%' && peekNext() != '=') {
+                advance(); // consume %
+                skipWhitespace();
+                PhpExpressionNode right = parseUnary();
+                left = PhpNodeFactory.createMod(left, right);
             } else {
                 break;
             }
@@ -1374,12 +1574,10 @@ public final class PhpParser {
                     }
                     expect(")");
 
-                    varNode = new PhpMethodCallNode(varNode, member, args.toArray(new PhpExpressionNode[0]));
+                    varNode = new PhpMethodCallNode(varNode, member, args.toArray(new PhpExpressionNode[0]), currentClassName);
                 } else {
                     // Property access
-                    // Check if we're inside a method (have access to $this)
-                    boolean isInternal = varName.equals("this");
-                    varNode = new PhpPropertyAccessNode(varNode, member, isInternal);
+                    varNode = new PhpPropertyAccessNode(varNode, member, currentClassName);
                 }
 
                 skipWhitespace();

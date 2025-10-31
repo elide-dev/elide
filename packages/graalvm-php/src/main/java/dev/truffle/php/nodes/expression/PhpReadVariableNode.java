@@ -13,7 +13,7 @@ import dev.truffle.php.nodes.PhpExpressionNode;
 @NodeField(name = "slot", type = int.class)
 public abstract class PhpReadVariableNode extends PhpExpressionNode {
 
-    protected abstract int getSlot();
+    public abstract int getSlot();
 
     public static PhpReadVariableNode create(int slot) {
         return new PhpReadVariableNodeImpl(slot);
@@ -27,7 +27,7 @@ public abstract class PhpReadVariableNode extends PhpExpressionNode {
         }
 
         @Override
-        protected int getSlot() {
+        public int getSlot() {
             return slot;
         }
 

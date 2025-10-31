@@ -7,6 +7,8 @@ import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.nodes.RepeatingNode;
 import dev.truffle.php.nodes.PhpExpressionNode;
 import dev.truffle.php.nodes.PhpStatementNode;
+import dev.truffle.php.runtime.PhpBreakException;
+import dev.truffle.php.runtime.PhpContinueException;
 
 /**
  * Node for for loops in PHP.
@@ -56,7 +58,18 @@ public final class PhpForNode extends PhpStatementNode {
                 return false;
             }
 
-            body.executeVoid(frame);
+            try {
+                body.executeVoid(frame);
+            } catch (PhpContinueException e) {
+                // Continue to next iteration after running increment
+                if (increment != null) {
+                    increment.execute(frame);
+                }
+                return true;
+            } catch (PhpBreakException e) {
+                // Exit loop
+                return false;
+            }
 
             if (increment != null) {
                 increment.execute(frame);

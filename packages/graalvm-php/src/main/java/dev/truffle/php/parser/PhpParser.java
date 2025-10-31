@@ -15,6 +15,8 @@ import dev.truffle.php.nodes.statement.PhpExpressionStatementNode;
 import dev.truffle.php.nodes.statement.PhpIfNode;
 import dev.truffle.php.nodes.statement.PhpFunctionNode;
 import dev.truffle.php.nodes.statement.PhpReturnNode;
+import dev.truffle.php.nodes.statement.PhpBreakNode;
+import dev.truffle.php.nodes.statement.PhpContinueNode;
 import dev.truffle.php.nodes.PhpFunctionRootNode;
 import dev.truffle.php.runtime.PhpFunction;
 import dev.truffle.php.runtime.PhpContext;
@@ -130,13 +132,23 @@ public final class PhpParser {
             return parseFor();
         }
 
+        // break statement
+        if (match("break")) {
+            return parseBreak();
+        }
+
+        // continue statement
+        if (match("continue")) {
+            return parseContinue();
+        }
+
         // Variable assignment
         if (peek() == '$') {
             return parseAssignment();
         }
 
-        // Expression statement (like function call)
-        if (Character.isLetter(peek()) || peek() == '_') {
+        // Expression statement (like function call, or increment/decrement)
+        if (Character.isLetter(peek()) || peek() == '_' || peek() == '+' || peek() == '-') {
             PhpExpressionNode expr = parseExpression();
             expect(";");
             return new PhpExpressionStatementNode(expr);
@@ -402,6 +414,32 @@ public final class PhpParser {
         return new PhpReturnNode(value);
     }
 
+    private PhpStatementNode parseBreak() {
+        skipWhitespace();
+        int level = 1;
+
+        // Optional level argument (e.g., break 2;)
+        if (Character.isDigit(peek())) {
+            level = Integer.parseInt(String.valueOf(advance()));
+        }
+
+        expect(";");
+        return new PhpBreakNode(level);
+    }
+
+    private PhpStatementNode parseContinue() {
+        skipWhitespace();
+        int level = 1;
+
+        // Optional level argument (e.g., continue 2;)
+        if (Character.isDigit(peek())) {
+            level = Integer.parseInt(String.valueOf(advance()));
+        }
+
+        expect(";");
+        return new PhpContinueNode(level);
+    }
+
     private PhpStatementNode parseAssignment() {
         String varName = parseVariableName();
         int slot = getOrCreateVariable(varName);
@@ -625,6 +663,28 @@ public final class PhpParser {
             return PhpNodeFactory.createLogicalNot(operand);
         }
 
+        // Pre-increment operator
+        if (match("++")) {
+            skipWhitespace();
+            if (peek() != '$') {
+                throw new RuntimeException("Pre-increment requires a variable");
+            }
+            String varName = parseVariableName();
+            int slot = getOrCreateVariable(varName);
+            return PhpNodeFactory.createPreIncrement(slot);
+        }
+
+        // Pre-decrement operator
+        if (match("--")) {
+            skipWhitespace();
+            if (peek() != '$') {
+                throw new RuntimeException("Pre-decrement requires a variable");
+            }
+            String varName = parseVariableName();
+            int slot = getOrCreateVariable(varName);
+            return PhpNodeFactory.createPreDecrement(slot);
+        }
+
         return parsePrimary();
     }
 
@@ -655,6 +715,16 @@ public final class PhpParser {
                 expect("]");
                 varNode = new PhpArrayAccessNode(varNode, indexNode);
                 skipWhitespace();
+            }
+
+            // Check for postfix increment/decrement (only on simple variables, not array access)
+            if (varNode instanceof PhpReadVariableNode) {
+                skipWhitespace();
+                if (match("++")) {
+                    return PhpNodeFactory.createPostIncrement(slot);
+                } else if (match("--")) {
+                    return PhpNodeFactory.createPostDecrement(slot);
+                }
             }
 
             return varNode;

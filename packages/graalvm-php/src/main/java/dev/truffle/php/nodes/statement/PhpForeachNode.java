@@ -9,6 +9,8 @@ import dev.truffle.php.nodes.PhpExpressionNode;
 import dev.truffle.php.nodes.PhpNodeFactory;
 import dev.truffle.php.nodes.PhpStatementNode;
 import dev.truffle.php.runtime.PhpArray;
+import dev.truffle.php.runtime.PhpBreakException;
+import dev.truffle.php.runtime.PhpContinueException;
 
 import java.util.List;
 
@@ -88,7 +90,16 @@ public final class PhpForeachNode extends PhpStatementNode {
             frame.setObject(valueSlot, value);
 
             // Execute body
-            body.executeVoid(frame);
+            try {
+                body.executeVoid(frame);
+            } catch (PhpContinueException e) {
+                // Continue to next iteration
+                currentIndex++;
+                return true;
+            } catch (PhpBreakException e) {
+                // Exit loop
+                return false;
+            }
 
             // Move to next element
             currentIndex++;

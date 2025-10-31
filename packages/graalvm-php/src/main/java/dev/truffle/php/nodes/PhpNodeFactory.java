@@ -76,4 +76,20 @@ public final class PhpNodeFactory {
     public static PhpWriteVariableNode createWriteVariable(PhpExpressionNode value, int slot) {
         return PhpWriteVariableNode.create(value, slot);
     }
+
+    public static PhpPreIncrementNode createPreIncrement(int slot) {
+        return PhpPreIncrementNode.create(slot);
+    }
+
+    public static PhpPostIncrementNode createPostIncrement(int slot) {
+        return PhpPostIncrementNode.create(slot);
+    }
+
+    public static PhpPreDecrementNode createPreDecrement(int slot) {
+        return PhpPreDecrementNode.create(slot);
+    }
+
+    public static PhpPostDecrementNode createPostDecrement(int slot) {
+        return PhpPostDecrementNode.create(slot);
+    }
 }

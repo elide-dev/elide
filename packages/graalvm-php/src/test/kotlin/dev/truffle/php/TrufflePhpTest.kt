@@ -324,6 +324,193 @@ class TrufflePhpTest {
     assertEquals("00011011", output.trim())
   }
 
+  // Increment/Decrement operator tests
+  @Test fun `pre-increment operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      echo ++${'$'}x;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("66", output.trim())
+  }
+
+  @Test fun `post-increment operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      echo ${'$'}x++;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("56", output.trim())
+  }
+
+  @Test fun `pre-decrement operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      echo --${'$'}x;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("44", output.trim())
+  }
+
+  @Test fun `post-decrement operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      echo ${'$'}x--;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("54", output.trim())
+  }
+
+  @Test fun `increment in assignment works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 10;
+      ${'$'}y = ++${'$'}x;
+      echo ${'$'}y;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("1111", output.trim())
+  }
+
+  @Test fun `post-increment in assignment works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 10;
+      ${'$'}y = ${'$'}x++;
+      echo ${'$'}y;
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("1011", output.trim())
+  }
+
+  @Test fun `increment in conditional works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 0;
+      if (++${'$'}x == 1) {
+        echo "yes";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `post-increment in conditional works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 0;
+      if (${'$'}x++ == 0) {
+        echo "yes";
+      }
+      echo ${'$'}x;
+    """.trimIndent())
+    assertEquals("yes1", output.trim())
+  }
+
+  @Test fun `increment and decrement with null works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = null;
+      ++${'$'}x;
+      echo ${'$'}x;
+      ${'$'}y = null;
+      ${'$'}z = ${'$'}y++;
+      if (${'$'}z == null) {
+        echo "null";
+      }
+      echo ${'$'}y;
+    """.trimIndent())
+    assertEquals("1null1", output.trim())
+  }
+
+  // Break and Continue tests
+  @Test fun `break in while loop works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}i = 0;
+      while (${'$'}i < 10) {
+        if (${'$'}i == 3) {
+          break;
+        }
+        echo ${'$'}i;
+        ${'$'}i = ${'$'}i + 1;
+      }
+    """.trimIndent())
+    assertEquals("012", output.trim())
+  }
+
+  @Test fun `break in for loop works`() {
+    val output = executePhp("""
+      <?php
+      for (${'$'}i = 0; ${'$'}i < 10; ${'$'}i = ${'$'}i + 1) {
+        if (${'$'}i == 4) {
+          break;
+        }
+        echo ${'$'}i;
+      }
+    """.trimIndent())
+    assertEquals("0123", output.trim())
+  }
+
+  @Test fun `break in foreach loop works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3, 4, 5];
+      foreach (${'$'}arr as ${'$'}val) {
+        if (${'$'}val == 4) {
+          break;
+        }
+        echo ${'$'}val;
+      }
+    """.trimIndent())
+    assertEquals("123", output.trim())
+  }
+
+  @Test fun `continue in while loop works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}i = 0;
+      while (${'$'}i < 5) {
+        ${'$'}i = ${'$'}i + 1;
+        if (${'$'}i == 3) {
+          continue;
+        }
+        echo ${'$'}i;
+      }
+    """.trimIndent())
+    assertEquals("1245", output.trim())
+  }
+
+  @Test fun `continue in for loop works`() {
+    val output = executePhp("""
+      <?php
+      for (${'$'}i = 0; ${'$'}i < 5; ${'$'}i = ${'$'}i + 1) {
+        if (${'$'}i == 2) {
+          continue;
+        }
+        echo ${'$'}i;
+      }
+    """.trimIndent())
+    assertEquals("0134", output.trim())
+  }
+
+  @Test fun `continue in foreach loop works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}arr = [1, 2, 3, 4, 5];
+      foreach (${'$'}arr as ${'$'}val) {
+        if (${'$'}val == 3) {
+          continue;
+        }
+        echo ${'$'}val;
+      }
+    """.trimIndent())
+    assertEquals("1245", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

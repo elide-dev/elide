@@ -15,6 +15,7 @@ public final class PhpClass {
     private final Map<String, PropertyMetadata> properties;
     private final Map<String, MethodMetadata> methods;
     private final CallTarget constructor;
+    private final Map<String, Object> staticPropertyValues;  // Storage for static property values
 
     public PhpClass(String name, Map<String, PropertyMetadata> properties,
                     Map<String, MethodMetadata> methods, CallTarget constructor) {
@@ -22,6 +23,15 @@ public final class PhpClass {
         this.properties = new HashMap<>(properties);
         this.methods = new HashMap<>(methods);
         this.constructor = constructor;
+        this.staticPropertyValues = new HashMap<>();
+
+        // Initialize static properties with their default values
+        for (Map.Entry<String, PropertyMetadata> entry : properties.entrySet()) {
+            PropertyMetadata prop = entry.getValue();
+            if (prop.isStatic()) {
+                staticPropertyValues.put(entry.getKey(), prop.getDefaultValue());
+            }
+        }
     }
 
     public String getName() {
@@ -56,17 +66,32 @@ public final class PhpClass {
         return properties.get(propertyName);
     }
 
+    public Object getStaticPropertyValue(String propertyName) {
+        return staticPropertyValues.get(propertyName);
+    }
+
+    public void setStaticPropertyValue(String propertyName, Object value) {
+        staticPropertyValues.put(propertyName, value);
+    }
+
+    public boolean hasStaticProperty(String propertyName) {
+        PropertyMetadata prop = properties.get(propertyName);
+        return prop != null && prop.isStatic();
+    }
+
     /**
      * Metadata about a class property.
      */
     public static final class PropertyMetadata {
         private final String name;
         private final boolean isPublic;
+        private final boolean isStatic;
         private final Object defaultValue;
 
-        public PropertyMetadata(String name, boolean isPublic, Object defaultValue) {
+        public PropertyMetadata(String name, boolean isPublic, boolean isStatic, Object defaultValue) {
             this.name = name;
             this.isPublic = isPublic;
+            this.isStatic = isStatic;
             this.defaultValue = defaultValue;
         }
 
@@ -76,6 +101,10 @@ public final class PhpClass {
 
         public boolean isPublic() {
             return isPublic;
+        }
+
+        public boolean isStatic() {
+            return isStatic;
         }
 
         public Object getDefaultValue() {
@@ -89,12 +118,14 @@ public final class PhpClass {
     public static final class MethodMetadata {
         private final String name;
         private final boolean isPublic;
+        private final boolean isStatic;
         private final CallTarget callTarget;
         private final String[] parameterNames;
 
-        public MethodMetadata(String name, boolean isPublic, CallTarget callTarget, String[] parameterNames) {
+        public MethodMetadata(String name, boolean isPublic, boolean isStatic, CallTarget callTarget, String[] parameterNames) {
             this.name = name;
             this.isPublic = isPublic;
+            this.isStatic = isStatic;
             this.callTarget = callTarget;
             this.parameterNames = parameterNames;
         }
@@ -105,6 +136,10 @@ public final class PhpClass {
 
         public boolean isPublic() {
             return isPublic;
+        }
+
+        public boolean isStatic() {
+            return isStatic;
         }
 
         public CallTarget getCallTarget() {

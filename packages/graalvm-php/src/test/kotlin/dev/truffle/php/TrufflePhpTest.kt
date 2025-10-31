@@ -984,6 +984,397 @@ class TrufflePhpTest {
     assertEquals("ready", output.trim())
   }
 
+  // Tier 1 Feature Tests - Ternary Operator
+  @Test fun `basic ternary operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      echo ${'$'}x > 3 ? "yes" : "no";
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `ternary operator with false condition works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 1;
+      echo ${'$'}x > 3 ? "yes" : "no";
+    """.trimIndent())
+    assertEquals("no", output.trim())
+  }
+
+  @Test fun `nested ternary operator works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      echo ${'$'}x > 10 ? "big" : ${'$'}x > 3 ? "medium" : "small";
+    """.trimIndent())
+    assertEquals("medium", output.trim())
+  }
+
+  @Test fun `ternary operator with different types works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}flag = true;
+      ${'$'}result = ${'$'}flag ? 42 : "no";
+      echo ${'$'}result;
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  // Tier 1 Feature Tests - Null Coalescing Operator
+  @Test fun `null coalescing with null value works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = null;
+      echo ${'$'}x ?? "default";
+    """.trimIndent())
+    assertEquals("default", output.trim())
+  }
+
+  @Test fun `null coalescing with non-null value works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = "value";
+      echo ${'$'}x ?? "default";
+    """.trimIndent())
+    assertEquals("value", output.trim())
+  }
+
+  @Test fun `chained null coalescing works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}a = null;
+      ${'$'}b = null;
+      ${'$'}c = "found";
+      echo ${'$'}a ?? ${'$'}b ?? ${'$'}c ?? "fallback";
+    """.trimIndent())
+    assertEquals("found", output.trim())
+  }
+
+  @Test fun `null coalescing with zero does not trigger`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 0;
+      echo ${'$'}x ?? "default";
+    """.trimIndent())
+    assertEquals("0", output.trim())
+  }
+
+  // Tier 1 Feature Tests - Switch Statement
+  @Test fun `basic switch statement works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 2;
+      switch (${'$'}x) {
+        case 1:
+          echo "one";
+          break;
+        case 2:
+          echo "two";
+          break;
+        case 3:
+          echo "three";
+          break;
+      }
+    """.trimIndent())
+    assertEquals("two", output.trim())
+  }
+
+  @Test fun `switch statement with fall-through works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 2;
+      switch (${'$'}x) {
+        case 1:
+          echo "one";
+        case 2:
+          echo "two";
+        case 3:
+          echo "three";
+      }
+    """.trimIndent())
+    assertEquals("twothree", output.trim())
+  }
+
+  @Test fun `switch statement with default case works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      switch (${'$'}x) {
+        case 1:
+          echo "one";
+          break;
+        case 2:
+          echo "two";
+          break;
+        default:
+          echo "other";
+      }
+    """.trimIndent())
+    assertEquals("other", output.trim())
+  }
+
+  @Test fun `switch statement with string cases works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = "hello";
+      switch (${'$'}x) {
+        case "hi":
+          echo "greeting1";
+          break;
+        case "hello":
+          echo "greeting2";
+          break;
+        default:
+          echo "unknown";
+      }
+    """.trimIndent())
+    assertEquals("greeting2", output.trim())
+  }
+
+  // Tier 1 Feature Tests - Language Constructs
+  @Test fun `isset with set variable returns true`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      if (isset(${'$'}x)) {
+        echo "yes";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `isset with null variable returns false`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = null;
+      if (isset(${'$'}x)) {
+        echo "yes";
+      } else {
+        echo "no";
+      }
+    """.trimIndent())
+    assertEquals("no", output.trim())
+  }
+
+  @Test fun `isset with multiple variables works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}a = 1;
+      ${'$'}b = 2;
+      ${'$'}c = null;
+      if (isset(${'$'}a, ${'$'}b)) {
+        echo "yes";
+      }
+      if (isset(${'$'}a, ${'$'}c)) {
+        echo "fail";
+      }
+    """.trimIndent())
+    assertEquals("yes", output.trim())
+  }
+
+  @Test fun `empty with empty values returns true`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}a = 0;
+      ${'$'}b = "";
+      ${'$'}c = null;
+      if (empty(${'$'}a)) echo "1";
+      if (empty(${'$'}b)) echo "2";
+      if (empty(${'$'}c)) echo "3";
+    """.trimIndent())
+    assertEquals("123", output.trim())
+  }
+
+  @Test fun `empty with non-empty value returns false`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 42;
+      if (empty(${'$'}x)) {
+        echo "empty";
+      } else {
+        echo "not empty";
+      }
+    """.trimIndent())
+    assertEquals("not empty", output.trim())
+  }
+
+  @Test fun `unset removes variable`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = 5;
+      unset(${'$'}x);
+      if (isset(${'$'}x)) {
+        echo "fail";
+      } else {
+        echo "removed";
+      }
+    """.trimIndent())
+    assertEquals("removed", output.trim())
+  }
+
+  // Tier 1 Feature Tests - String Interpolation
+  @Test fun `simple string interpolation works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}name = "World";
+      echo "Hello ${'$'}name!";
+    """.trimIndent())
+    assertEquals("Hello World!", output.trim())
+  }
+
+  @Test fun `string interpolation with multiple variables works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}first = "John";
+      ${'$'}last = "Doe";
+      echo "Name: ${'$'}first ${'$'}last";
+    """.trimIndent())
+    assertEquals("Name: John Doe", output.trim())
+  }
+
+  @Test fun `string interpolation with numbers works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}count = 42;
+      echo "Count: ${'$'}count";
+    """.trimIndent())
+    assertEquals("Count: 42", output.trim())
+  }
+
+  @Test fun `single quoted string does not interpolate`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}name = "World";
+      echo 'Hello ${'$'}name!';
+    """.trimIndent())
+    assertEquals("Hello \$name!", output.trim())
+  }
+
+  @Test fun `escaped dollar sign in double quoted string works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}price = 10;
+      echo "Price: \$${'$'}price";
+    """.trimIndent())
+    assertEquals("Price: \$10", output.trim())
+  }
+
+  @Test fun `string interpolation at string boundaries works`() {
+    val output = executePhp("""
+      <?php
+      ${'$'}x = "start";
+      ${'$'}y = "end";
+      echo "${'$'}x-middle-${'$'}y";
+    """.trimIndent())
+    assertEquals("start-middle-end", output.trim())
+  }
+
+  // Tier 1 Feature Tests - Static Class Members & Methods
+  @Test fun `static property with default value works`() {
+    val output = executePhp("""
+      <?php
+      class Counter {
+        public static ${'$'}count = 0;
+      }
+      echo Counter::${'$'}count;
+    """.trimIndent())
+    assertEquals("0", output.trim())
+  }
+
+  @Test fun `static property assignment works`() {
+    val output = executePhp("""
+      <?php
+      class Config {
+        public static ${'$'}version = 1;
+      }
+      Config::${'$'}version = 2;
+      echo Config::${'$'}version;
+    """.trimIndent())
+    assertEquals("2", output.trim())
+  }
+
+  @Test fun `static method call works`() {
+    val output = executePhp("""
+      <?php
+      class Math {
+        public static function add(${'$'}a, ${'$'}b) {
+          return ${'$'}a + ${'$'}b;
+        }
+      }
+      echo Math::add(5, 3);
+    """.trimIndent())
+    assertEquals("8", output.trim())
+  }
+
+  @Test fun `static property persists across accesses`() {
+    val output = executePhp("""
+      <?php
+      class Database {
+        public static ${'$'}connections = 0;
+      }
+      Database::${'$'}connections = Database::${'$'}connections + 1;
+      Database::${'$'}connections = Database::${'$'}connections + 1;
+      echo Database::${'$'}connections;
+    """.trimIndent())
+    assertEquals("2", output.trim())
+  }
+
+  @Test fun `static method without parameters works`() {
+    val output = executePhp("""
+      <?php
+      class Utils {
+        public static function greet() {
+          return "Hello";
+        }
+      }
+      echo Utils::greet();
+    """.trimIndent())
+    assertEquals("Hello", output.trim())
+  }
+
+  @Test fun `multiple static properties work independently`() {
+    val output = executePhp("""
+      <?php
+      class Settings {
+        public static ${'$'}debug = false;
+        public static ${'$'}timeout = 30;
+      }
+      Settings::${'$'}debug = true;
+      Settings::${'$'}timeout = 60;
+      if (Settings::${'$'}debug) {
+        echo "debug";
+      }
+      echo Settings::${'$'}timeout;
+    """.trimIndent())
+    assertEquals("debug60", output.trim())
+  }
+
+  @Test fun `static and instance members coexist`() {
+    val output = executePhp("""
+      <?php
+      class Example {
+        public static ${'$'}staticProp = "static";
+        public ${'$'}instanceProp = "instance";
+
+        public static function staticMethod() {
+          return "static method";
+        }
+
+        public function instanceMethod() {
+          return "instance method";
+        }
+      }
+      echo Example::${'$'}staticProp;
+      echo Example::staticMethod();
+      ${'$'}obj = new Example();
+      echo ${'$'}obj->instanceProp;
+      echo ${'$'}obj->instanceMethod();
+    """.trimIndent())
+    assertEquals("staticstatic methodinstanceinstance method", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

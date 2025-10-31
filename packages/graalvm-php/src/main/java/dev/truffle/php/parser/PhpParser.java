@@ -156,6 +156,11 @@ public final class PhpParser {
             return parseContinue();
         }
 
+        // switch statement
+        if (match("switch")) {
+            return parseSwitch();
+        }
+
         // Variable assignment or expression starting with $
         if (peek() == '$') {
             // Determine if this is an assignment or expression statement
@@ -194,11 +199,46 @@ public final class PhpParser {
             }
         }
 
-        // Expression statement (like function call, or increment/decrement)
+        // Expression statement (like function call, static method call, or increment/decrement)
+        // Also handle static property assignment: ClassName::$property = value;
         if (Character.isLetter(peek()) || peek() == '_' || peek() == '+' || peek() == '-') {
-            PhpExpressionNode expr = parseExpression();
-            expect(";");
-            return new PhpExpressionStatementNode(expr);
+            // Check if this might be a static property assignment
+            int savedPos = pos;
+            boolean isStaticPropertyAssignment = false;
+
+            // Try to parse identifier and check for ::$...=
+            if (Character.isLetter(peek()) || peek() == '_') {
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    advance();
+                }
+                skipWhitespace();
+                if (check("::")) {
+                    pos += 2;
+                    skipWhitespace();
+                    if (peek() == '$') {
+                        // Skip variable name
+                        advance(); // $
+                        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                            advance();
+                        }
+                        skipWhitespace();
+                        if (peek() == '=') {
+                            isStaticPropertyAssignment = true;
+                        }
+                    }
+                }
+            }
+
+            // Restore position
+            pos = savedPos;
+
+            if (isStaticPropertyAssignment) {
+                return parseStaticPropertyAssignment();
+            } else {
+                PhpExpressionNode expr = parseExpression();
+                expect(";");
+                return new PhpExpressionStatementNode(expr);
+            }
         }
 
         // Skip semicolons
@@ -470,11 +510,19 @@ public final class PhpParser {
         while (!check("}") && !isAtEnd()) {
             // Check for visibility modifiers
             boolean isPublic = true;
+            boolean isStatic = false;
+
             if (match("public")) {
                 isPublic = true;
                 skipWhitespace();
             } else if (match("private")) {
                 isPublic = false;
+                skipWhitespace();
+            }
+
+            // Check for static modifier
+            if (match("static")) {
+                isStatic = true;
                 skipWhitespace();
             }
 
@@ -509,8 +557,11 @@ public final class PhpParser {
                 // Create a new frame for the method
                 FrameDescriptor.Builder methodFrameBuilder = FrameDescriptor.newBuilder();
 
-                // Reserve slot for $this
-                int thisSlot = methodFrameBuilder.addSlot(FrameSlotKind.Illegal, "this", null);
+                int thisSlot = -1;
+                // Reserve slot for $this only for non-static methods
+                if (!isStatic) {
+                    thisSlot = methodFrameBuilder.addSlot(FrameSlotKind.Illegal, "this", null);
+                }
 
                 // Add parameter slots
                 int[] paramSlots = new int[paramNames.size()];
@@ -527,8 +578,10 @@ public final class PhpParser {
                 this.variables.clear();
                 this.currentFrameBuilder = methodFrameBuilder;
 
-                // Add $this to variable map
-                this.variables.put("this", thisSlot);
+                // Add $this to variable map only for non-static methods
+                if (!isStatic) {
+                    this.variables.put("this", thisSlot);
+                }
 
                 // Add parameters to method's variable map
                 for (int i = 0; i < paramNames.size(); i++) {
@@ -543,19 +596,31 @@ public final class PhpParser {
                 this.variables.putAll(savedVars);
                 this.currentFrameBuilder = savedFrameBuilder;
 
-                // Create method root node
-                PhpMethodRootNode methodRoot = new PhpMethodRootNode(
-                    language,
-                    methodFrameBuilder.build(),
-                    className,
-                    methodName,
-                    paramNames.toArray(new String[0]),
-                    paramSlots,
-                    thisSlot,
-                    body
-                );
-
-                CallTarget methodCallTarget = methodRoot.getCallTarget();
+                // Create method root node (use FunctionRootNode for static methods)
+                CallTarget methodCallTarget;
+                if (isStatic) {
+                    PhpFunctionRootNode functionRoot = new PhpFunctionRootNode(
+                        language,
+                        methodFrameBuilder.build(),
+                        className + "::" + methodName,
+                        paramNames.toArray(new String[0]),
+                        paramSlots,
+                        body
+                    );
+                    methodCallTarget = functionRoot.getCallTarget();
+                } else {
+                    PhpMethodRootNode methodRoot = new PhpMethodRootNode(
+                        language,
+                        methodFrameBuilder.build(),
+                        className,
+                        methodName,
+                        paramNames.toArray(new String[0]),
+                        paramSlots,
+                        thisSlot,
+                        body
+                    );
+                    methodCallTarget = methodRoot.getCallTarget();
+                }
 
                 // Check if it's a constructor
                 if (methodName.equals("__construct")) {
@@ -564,6 +629,7 @@ public final class PhpParser {
                     methods.put(methodName, new PhpClass.MethodMetadata(
                         methodName,
                         isPublic,
+                        isStatic,
                         methodCallTarget,
                         paramNames.toArray(new String[0])
                     ));
@@ -605,7 +671,7 @@ public final class PhpParser {
 
                 expect(";");
 
-                properties.put(propName, new PhpClass.PropertyMetadata(propName, isPublic, defaultValue));
+                properties.put(propName, new PhpClass.PropertyMetadata(propName, isPublic, isStatic, defaultValue));
 
             } else {
                 throw new RuntimeException("Unexpected token in class body at position " + pos);
@@ -674,6 +740,100 @@ public final class PhpParser {
 
         expect(";");
         return new PhpContinueNode(level);
+    }
+
+    private PhpStatementNode parseSwitch() {
+        skipWhitespace();
+        expect("(");
+        PhpExpressionNode switchExpr = parseExpression();
+        expect(")");
+        skipWhitespace();
+        expect("{");
+
+        List<dev.truffle.php.nodes.statement.PhpSwitchNode.CaseClause> cases = new ArrayList<>();
+        int defaultCaseIndex = -1;
+
+        skipWhitespace();
+        while (!check("}") && !isAtEnd()) {
+            if (match("case")) {
+                skipWhitespace();
+                PhpExpressionNode caseValue = parseExpression();
+                skipWhitespace();
+                expect(":");
+                skipWhitespace();
+
+                // Parse statements for this case until we hit another case/default or closing brace
+                List<PhpStatementNode> caseStatements = new ArrayList<>();
+                while (!check("case") && !check("default") && !check("}") && !isAtEnd()) {
+                    PhpStatementNode stmt = parseStatement();
+                    if (stmt != null) {
+                        caseStatements.add(stmt);
+                    }
+                    skipWhitespace();
+                }
+
+                cases.add(new dev.truffle.php.nodes.statement.PhpSwitchNode.CaseClause(
+                    caseValue,
+                    caseStatements.toArray(new PhpStatementNode[0]),
+                    false
+                ));
+            } else if (match("default")) {
+                skipWhitespace();
+                expect(":");
+                skipWhitespace();
+
+                // Parse statements for default case
+                List<PhpStatementNode> defaultStatements = new ArrayList<>();
+                while (!check("case") && !check("default") && !check("}") && !isAtEnd()) {
+                    PhpStatementNode stmt = parseStatement();
+                    if (stmt != null) {
+                        defaultStatements.add(stmt);
+                    }
+                    skipWhitespace();
+                }
+
+                defaultCaseIndex = cases.size();
+                cases.add(new dev.truffle.php.nodes.statement.PhpSwitchNode.CaseClause(
+                    null,
+                    defaultStatements.toArray(new PhpStatementNode[0]),
+                    true
+                ));
+            } else {
+                throw new RuntimeException("Expected 'case' or 'default' in switch statement at position " + pos);
+            }
+            skipWhitespace();
+        }
+
+        expect("}");
+
+        return new dev.truffle.php.nodes.statement.PhpSwitchNode(
+            switchExpr,
+            cases.toArray(new dev.truffle.php.nodes.statement.PhpSwitchNode.CaseClause[0]),
+            defaultCaseIndex
+        );
+    }
+
+    private PhpStatementNode parseStaticPropertyAssignment() {
+        // Parse ClassName::$property = value;
+        StringBuilder className = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+            className.append(advance());
+        }
+
+        skipWhitespace();
+        expect("::");
+        skipWhitespace();
+
+        String propertyName = parseVariableName();
+        skipWhitespace();
+        expect("=");
+        skipWhitespace();
+
+        PhpExpressionNode value = parseExpression();
+        expect(";");
+
+        PhpExpressionNode writeExpr = new PhpStaticPropertyWriteNode(className.toString(), propertyName, value);
+        return new PhpExpressionStatementNode(writeExpr);
     }
 
     private PhpStatementNode parseAssignment() {
@@ -795,7 +955,45 @@ public final class PhpParser {
     }
 
     private PhpExpressionNode parseExpression() {
-        return parseLogicalOr();
+        return parseNullCoalescing();
+    }
+
+    private PhpExpressionNode parseNullCoalescing() {
+        PhpExpressionNode left = parseTernary();
+
+        while (true) {
+            skipWhitespace();
+            // Check for ?? (null coalescing) - must check before single ?
+            if (check("??")) {
+                pos += 2; // consume ??
+                skipWhitespace();
+                PhpExpressionNode right = parseTernary();
+                left = new PhpNullCoalescingNode(left, right);
+            } else {
+                break;
+            }
+        }
+
+        return left;
+    }
+
+    private PhpExpressionNode parseTernary() {
+        PhpExpressionNode condition = parseLogicalOr();
+
+        skipWhitespace();
+        // Check for ? but not ?? (which is null coalescing)
+        if (peek() == '?' && peekNext() != '?') {
+            advance(); // consume ?
+            skipWhitespace();
+            PhpExpressionNode trueValue = parseExpression(); // Recursive for right-associativity
+            skipWhitespace();
+            expect(":");
+            skipWhitespace();
+            PhpExpressionNode falseValue = parseExpression(); // Recursive for right-associativity
+            return new PhpTernaryNode(condition, trueValue, falseValue);
+        }
+
+        return condition;
     }
 
     private PhpExpressionNode parseLogicalOr() {
@@ -1049,7 +1247,7 @@ public final class PhpParser {
 
         // String literal
         if (peek() == '"' || peek() == '\'') {
-            return new PhpStringLiteralNode(parseString());
+            return parseStringExpression();
         }
 
         // Boolean and null
@@ -1116,8 +1314,53 @@ public final class PhpParser {
         String identifier = name.toString();
 
         skipWhitespace();
+
+        // Check for :: (static member access)
+        if (match("::")) {
+            skipWhitespace();
+
+            // Check if it's a static property ($) or static method
+            if (peek() == '$') {
+                // Static property access: ClassName::$property
+                String propName = parseVariableName();
+                return new PhpStaticPropertyAccessNode(identifier, propName);
+            } else {
+                // Static method call: ClassName::method()
+                StringBuilder methodNameBuilder = new StringBuilder();
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    methodNameBuilder.append(advance());
+                }
+                String methodName = methodNameBuilder.toString();
+
+                skipWhitespace();
+                expect("(");
+                skipWhitespace();
+
+                List<PhpExpressionNode> args = new ArrayList<>();
+                while (!check(")")) {
+                    args.add(parseExpression());
+                    skipWhitespace();
+                    if (match(",")) {
+                        skipWhitespace();
+                    }
+                }
+                expect(")");
+
+                return new PhpStaticMethodCallNode(identifier, methodName, args.toArray(new PhpExpressionNode[0]));
+            }
+        }
+
         if (match("(")) {
-            // Function call
+            // Check for special language constructs
+            if (identifier.equals("isset")) {
+                return parseIsset();
+            } else if (identifier.equals("empty")) {
+                return parseEmpty();
+            } else if (identifier.equals("unset")) {
+                return parseUnset();
+            }
+
+            // Regular function call
             List<PhpExpressionNode> args = new ArrayList<>();
             skipWhitespace();
 
@@ -1136,6 +1379,72 @@ public final class PhpParser {
             // Just an identifier (could be a constant or future feature)
             throw new RuntimeException("Unexpected identifier: " + identifier);
         }
+    }
+
+    private PhpExpressionNode parseIsset() {
+        // isset() can take multiple variables
+        List<Integer> slots = new ArrayList<>();
+        skipWhitespace();
+
+        while (!check(")")) {
+            if (peek() != '$') {
+                throw new RuntimeException("isset() expects variable arguments");
+            }
+            String varName = parseVariableName();
+            int slot = getOrCreateVariable(varName);
+            slots.add(slot);
+
+            skipWhitespace();
+            if (match(",")) {
+                skipWhitespace();
+            }
+        }
+        expect(")");
+
+        int[] slotArray = new int[slots.size()];
+        for (int i = 0; i < slots.size(); i++) {
+            slotArray[i] = slots.get(i);
+        }
+        return new PhpIssetNode(slotArray);
+    }
+
+    private PhpExpressionNode parseEmpty() {
+        // empty() takes exactly one variable
+        skipWhitespace();
+        if (peek() != '$') {
+            throw new RuntimeException("empty() expects a variable argument");
+        }
+        String varName = parseVariableName();
+        int slot = getOrCreateVariable(varName);
+        expect(")");
+        return new PhpEmptyNode(slot);
+    }
+
+    private PhpExpressionNode parseUnset() {
+        // unset() can take multiple variables
+        List<Integer> slots = new ArrayList<>();
+        skipWhitespace();
+
+        while (!check(")")) {
+            if (peek() != '$') {
+                throw new RuntimeException("unset() expects variable arguments");
+            }
+            String varName = parseVariableName();
+            int slot = getOrCreateVariable(varName);
+            slots.add(slot);
+
+            skipWhitespace();
+            if (match(",")) {
+                skipWhitespace();
+            }
+        }
+        expect(")");
+
+        int[] slotArray = new int[slots.size()];
+        for (int i = 0; i < slots.size(); i++) {
+            slotArray[i] = slots.get(i);
+        }
+        return new PhpUnsetNode(slotArray);
     }
 
     private String parseVariableName() {
@@ -1173,6 +1482,74 @@ public final class PhpParser {
         } else {
             return new PhpIntegerLiteralNode(Long.parseLong(num.toString()));
         }
+    }
+
+    private PhpExpressionNode parseStringExpression() {
+        char quote = peek();
+
+        // Single-quoted strings don't support interpolation
+        if (quote == '\'') {
+            return new PhpStringLiteralNode(parseString());
+        }
+
+        // Double-quoted strings support interpolation
+        advance(); // consume opening quote
+        List<PhpExpressionNode> parts = new ArrayList<>();
+        StringBuilder currentLiteral = new StringBuilder();
+
+        while (!isAtEnd() && peek() != quote) {
+            if (peek() == '\\') {
+                // Handle escape sequences
+                advance();
+                if (!isAtEnd()) {
+                    char escaped = advance();
+                    switch (escaped) {
+                        case 'n': currentLiteral.append('\n'); break;
+                        case 't': currentLiteral.append('\t'); break;
+                        case 'r': currentLiteral.append('\r'); break;
+                        case '\\': currentLiteral.append('\\'); break;
+                        case '"': currentLiteral.append('"'); break;
+                        case '$': currentLiteral.append('$'); break; // Escaped $
+                        default: currentLiteral.append(escaped); break;
+                    }
+                }
+            } else if (peek() == '$' && peekNext() != '\0' && (Character.isLetter(peekNext()) || peekNext() == '_')) {
+                // Found a variable - add current literal if non-empty
+                if (currentLiteral.length() > 0) {
+                    parts.add(new PhpStringLiteralNode(currentLiteral.toString()));
+                    currentLiteral = new StringBuilder();
+                }
+
+                // Parse variable
+                String varName = parseVariableName();
+                int slot = getOrCreateVariable(varName);
+                parts.add(PhpNodeFactory.createReadVariable(slot));
+            } else {
+                currentLiteral.append(advance());
+            }
+        }
+
+        if (isAtEnd()) {
+            throw new RuntimeException("Unterminated string");
+        }
+
+        advance(); // consume closing quote
+
+        // Add final literal if present
+        if (currentLiteral.length() > 0) {
+            parts.add(new PhpStringLiteralNode(currentLiteral.toString()));
+        }
+
+        // If no interpolation, return simple literal
+        if (parts.isEmpty()) {
+            return new PhpStringLiteralNode("");
+        }
+        if (parts.size() == 1 && parts.get(0) instanceof PhpStringLiteralNode) {
+            return parts.get(0);
+        }
+
+        // Return interpolation node
+        return new PhpStringInterpolationNode(parts.toArray(new PhpExpressionNode[0]));
     }
 
     private String parseString() {

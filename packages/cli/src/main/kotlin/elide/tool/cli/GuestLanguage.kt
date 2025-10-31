@@ -86,6 +86,15 @@ enum class GuestLanguage (
     extensions = sortedSetOf("rb"),
   ),
 
+  /** Interactive PHP VM. */
+  PHP (
+    id = ENGINE_PHP,
+    formalName = "PHP",
+    experimental = true,
+    onByDefault = false,
+    extensions = sortedSetOf("php"),
+  ),
+
   /** Interactive nested JVM. */
   JVM (
     id = "jvm",

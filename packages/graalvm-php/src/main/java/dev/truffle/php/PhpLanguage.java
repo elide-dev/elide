@@ -5,6 +5,7 @@ import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.source.Source;
+import dev.truffle.php.nodes.PhpRootNode;
 import dev.truffle.php.parser.PhpParser;
 import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpBuiltinRegistry;
@@ -36,19 +37,25 @@ public final class PhpLanguage extends TruffleLanguage<PhpContext> {
 
     @Override
     protected CallTarget parse(ParsingRequest request) throws Exception {
-        PhpParser parser = new PhpParser(this, request.getSource());
+        // Get the context to access the global scope
+        PhpContext context = getCurrentContext(PhpLanguage.class);
+        PhpParser parser = new PhpParser(this, request.getSource(), context.getGlobalScope());
         return parser.parse().getCallTarget();
     }
 
     /**
      * Parse and execute a source file.
      * This is used by include/require statements to execute included files.
+     * The included file shares the same global scope and frame as the parent file.
      */
     public Object parseAndExecute(Source source, VirtualFrame frame) {
-        PhpParser parser = new PhpParser(this, source);
-        CallTarget callTarget = parser.parse().getCallTarget();
-        // Execute the included file with the current frame
-        return callTarget.call();
+        PhpContext context = getCurrentContext(PhpLanguage.class);
+        PhpParser parser = new PhpParser(this, source, context.getGlobalScope());
+        PhpRootNode rootNode = parser.parse();
+
+        // Execute the included file's body directly in the current frame
+        // This allows the included file to access and modify variables from the parent scope
+        return rootNode.execute(frame);
     }
 
     /**

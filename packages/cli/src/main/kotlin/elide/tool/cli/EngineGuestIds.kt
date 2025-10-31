@@ -33,3 +33,6 @@ const val ENGINE_LLVM = "llvm"
 
 /** GraalVM engine name for Pkl. */
 const val ENGINE_PKL = "pkl"
+
+/** GraalVM engine name for TrufflePHP. */
+const val ENGINE_PHP = "php"

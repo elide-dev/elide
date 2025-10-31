@@ -36,6 +36,7 @@ public final class PhpContext {
     private final Map<String, PhpClass> classes;
     private final Map<String, PhpInterface> interfaces;
     private final Set<String> includedFiles;
+    private final PhpGlobalScope globalScope;
 
     public PhpContext(PhpLanguage language, TruffleLanguage.Env env) {
         this.language = language;
@@ -48,6 +49,7 @@ public final class PhpContext {
         this.classes = new HashMap<>();
         this.interfaces = new HashMap<>();
         this.includedFiles = new HashSet<>();
+        this.globalScope = new PhpGlobalScope();
         // Initialize built-in functions for this context
         PhpBuiltinRegistry.initializeBuiltins(this, language);
         // Initialize built-in classes
@@ -161,6 +163,14 @@ public final class PhpContext {
      */
     public void markFileIncluded(String path) {
         includedFiles.add(path);
+    }
+
+    /**
+     * Get the global scope for this context.
+     * The global scope manages all top-level variables and is shared across included files.
+     */
+    public PhpGlobalScope getGlobalScope() {
+        return globalScope;
     }
 
     /**

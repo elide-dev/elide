@@ -20,6 +20,7 @@ import java.util.Map;
  * - Language environment
  * - Function registry
  * - Built-in function registry
+ * - Class registry
  */
 public final class PhpContext {
 
@@ -30,6 +31,7 @@ public final class PhpContext {
     private final PrintWriter error;
     private final Map<String, PhpFunction> functions;
     private final Map<String, CallTarget> builtins;
+    private final Map<String, PhpClass> classes;
 
     public PhpContext(PhpLanguage language, TruffleLanguage.Env env) {
         this.language = language;
@@ -39,6 +41,7 @@ public final class PhpContext {
         this.error = new PrintWriter(env.err(), true);
         this.functions = new HashMap<>();
         this.builtins = new HashMap<>();
+        this.classes = new HashMap<>();
         // Initialize built-in functions for this context
         PhpBuiltinRegistry.initializeBuiltins(this, language);
     }
@@ -89,6 +92,20 @@ public final class PhpContext {
      */
     public CallTarget getBuiltin(String name) {
         return builtins.get(name);
+    }
+
+    /**
+     * Register a class in the context.
+     */
+    public void registerClass(PhpClass phpClass) {
+        classes.put(phpClass.getName(), phpClass);
+    }
+
+    /**
+     * Get a class by name.
+     */
+    public PhpClass getClass(String name) {
+        return classes.get(name);
     }
 
     /**

@@ -17,10 +17,15 @@ import dev.truffle.php.nodes.statement.PhpFunctionNode;
 import dev.truffle.php.nodes.statement.PhpReturnNode;
 import dev.truffle.php.nodes.statement.PhpBreakNode;
 import dev.truffle.php.nodes.statement.PhpContinueNode;
+import dev.truffle.php.nodes.statement.PhpClassNode;
 import dev.truffle.php.nodes.PhpFunctionRootNode;
+import dev.truffle.php.nodes.PhpMethodRootNode;
 import dev.truffle.php.runtime.PhpFunction;
 import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpArray;
+import dev.truffle.php.runtime.PhpClass;
+import dev.truffle.php.runtime.PhpObject;
+import com.oracle.truffle.api.CallTarget;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +58,7 @@ public final class PhpParser {
     private final Map<String, Integer> variables = new HashMap<>();
     private final FrameDescriptor.Builder frameBuilder = FrameDescriptor.newBuilder();
     private final List<PhpFunction> declaredFunctions = new ArrayList<>();
+    private final List<PhpClass> declaredClasses = new ArrayList<>();
 
     public PhpParser(PhpLanguage language, Source source) {
         this.language = language;
@@ -74,10 +80,13 @@ public final class PhpParser {
         PhpStatementNode body = new PhpBlockNode(statements.toArray(new PhpStatementNode[0]));
         PhpRootNode rootNode = new PhpRootNode(language, frameBuilder.build(), body);
 
-        // Register functions in the context after parsing
+        // Register functions and classes in the context after parsing
         PhpContext context = PhpContext.get(rootNode);
         for (PhpFunction function : declaredFunctions) {
             context.registerFunction(function);
+        }
+        for (PhpClass phpClass : declaredClasses) {
+            context.registerClass(phpClass);
         }
 
         return rootNode;
@@ -100,6 +109,11 @@ public final class PhpParser {
         // echo statement
         if (match("echo")) {
             return parseEcho();
+        }
+
+        // class definition
+        if (match("class")) {
+            return parseClass();
         }
 
         // function definition
@@ -142,9 +156,42 @@ public final class PhpParser {
             return parseContinue();
         }
 
-        // Variable assignment
+        // Variable assignment or expression starting with $
         if (peek() == '$') {
-            return parseAssignment();
+            // Determine if this is an assignment or expression statement
+            // by looking ahead for '=' before ';'
+            int savedPos = pos;
+            boolean hasAssignmentOperator = false;
+
+            // Scan ahead to find '=' or ';'
+            while (!isAtEnd() && peek() != ';') {
+                if (peek() == '=') {
+                    // Check if it's assignment '=' (not ==, !=, <=, >=)
+                    char next = peekNext();
+                    if (next != '=') {
+                        // Also check previous character to avoid !=, <=, >=
+                        if (pos == 0 || (code.charAt(pos - 1) != '!' &&
+                                          code.charAt(pos - 1) != '<' &&
+                                          code.charAt(pos - 1) != '>')) {
+                            hasAssignmentOperator = true;
+                            break;
+                        }
+                    }
+                }
+                advance();
+            }
+
+            // Restore position
+            pos = savedPos;
+
+            if (hasAssignmentOperator) {
+                return parseAssignment();
+            } else {
+                // Expression statement (like method call: $obj->method())
+                PhpExpressionNode expr = parseExpression();
+                expect(";");
+                return new PhpExpressionStatementNode(expr);
+            }
         }
 
         // Expression statement (like function call, or increment/decrement)
@@ -402,6 +449,195 @@ public final class PhpParser {
         return new PhpFunctionNode(functionName, function);
     }
 
+    private PhpStatementNode parseClass() {
+        skipWhitespace();
+
+        // Parse class name
+        StringBuilder name = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+            name.append(advance());
+        }
+        String className = name.toString();
+
+        skipWhitespace();
+        expect("{");
+
+        Map<String, PhpClass.PropertyMetadata> properties = new HashMap<>();
+        Map<String, PhpClass.MethodMetadata> methods = new HashMap<>();
+        CallTarget constructor = null;
+
+        skipWhitespace();
+        while (!check("}") && !isAtEnd()) {
+            // Check for visibility modifiers
+            boolean isPublic = true;
+            if (match("public")) {
+                isPublic = true;
+                skipWhitespace();
+            } else if (match("private")) {
+                isPublic = false;
+                skipWhitespace();
+            }
+
+            // Check if it's a property or method
+            if (match("function")) {
+                // Parse method
+                skipWhitespace();
+
+                // Parse method name
+                StringBuilder methodNameBuilder = new StringBuilder();
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    methodNameBuilder.append(advance());
+                }
+                String methodName = methodNameBuilder.toString();
+
+                skipWhitespace();
+                expect("(");
+                skipWhitespace();
+
+                // Parse parameters
+                List<String> paramNames = new ArrayList<>();
+                while (!check(")")) {
+                    String paramName = parseVariableName();
+                    paramNames.add(paramName);
+                    skipWhitespace();
+                    if (match(",")) {
+                        skipWhitespace();
+                    }
+                }
+                expect(")");
+
+                // Create a new frame for the method
+                FrameDescriptor.Builder methodFrameBuilder = FrameDescriptor.newBuilder();
+
+                // Reserve slot for $this
+                int thisSlot = methodFrameBuilder.addSlot(FrameSlotKind.Illegal, "this", null);
+
+                // Add parameter slots
+                int[] paramSlots = new int[paramNames.size()];
+                for (int i = 0; i < paramNames.size(); i++) {
+                    int slot = methodFrameBuilder.addSlot(FrameSlotKind.Illegal, paramNames.get(i), null);
+                    paramSlots[i] = slot;
+                }
+
+                // Save current parser state
+                Map<String, Integer> savedVars = new HashMap<>(this.variables);
+                FrameDescriptor.Builder savedFrameBuilder = this.currentFrameBuilder;
+
+                // Clear and set up method's variable scope
+                this.variables.clear();
+                this.currentFrameBuilder = methodFrameBuilder;
+
+                // Add $this to variable map
+                this.variables.put("this", thisSlot);
+
+                // Add parameters to method's variable map
+                for (int i = 0; i < paramNames.size(); i++) {
+                    this.variables.put(paramNames.get(i), paramSlots[i]);
+                }
+
+                skipWhitespace();
+                PhpStatementNode body = parseBlock();
+
+                // Restore parser state
+                this.variables.clear();
+                this.variables.putAll(savedVars);
+                this.currentFrameBuilder = savedFrameBuilder;
+
+                // Create method root node
+                PhpMethodRootNode methodRoot = new PhpMethodRootNode(
+                    language,
+                    methodFrameBuilder.build(),
+                    className,
+                    methodName,
+                    paramNames.toArray(new String[0]),
+                    paramSlots,
+                    thisSlot,
+                    body
+                );
+
+                CallTarget methodCallTarget = methodRoot.getCallTarget();
+
+                // Check if it's a constructor
+                if (methodName.equals("__construct")) {
+                    constructor = methodCallTarget;
+                } else {
+                    methods.put(methodName, new PhpClass.MethodMetadata(
+                        methodName,
+                        isPublic,
+                        methodCallTarget,
+                        paramNames.toArray(new String[0])
+                    ));
+                }
+
+            } else if (peek() == '$') {
+                // Parse property
+                String propName = parseVariableName();
+                skipWhitespace();
+
+                // Parse default value if present
+                Object defaultValue = null;
+                if (match("=")) {
+                    skipWhitespace();
+                    // For now, only support literal default values
+                    if (peek() == '"' || peek() == '\'') {
+                        defaultValue = parseString();
+                    } else if (Character.isDigit(peek()) || peek() == '-') {
+                        if (peek() == '-') {
+                            advance(); // consume '-'
+                            skipWhitespace();
+                            defaultValue = -Long.parseLong(parseNumberString());
+                        } else {
+                            String numStr = parseNumberString();
+                            if (numStr.contains(".")) {
+                                defaultValue = Double.parseDouble(numStr);
+                            } else {
+                                defaultValue = Long.parseLong(numStr);
+                            }
+                        }
+                    } else if (match("true")) {
+                        defaultValue = true;
+                    } else if (match("false")) {
+                        defaultValue = false;
+                    } else if (match("null")) {
+                        defaultValue = null;
+                    }
+                }
+
+                expect(";");
+
+                properties.put(propName, new PhpClass.PropertyMetadata(propName, isPublic, defaultValue));
+
+            } else {
+                throw new RuntimeException("Unexpected token in class body at position " + pos);
+            }
+
+            skipWhitespace();
+        }
+
+        expect("}");
+
+        // Create PhpClass
+        PhpClass phpClass = new PhpClass(className, properties, methods, constructor);
+        declaredClasses.add(phpClass);
+
+        return new PhpClassNode(phpClass);
+    }
+
+    private String parseNumberString() {
+        StringBuilder num = new StringBuilder();
+        boolean hasDecimal = false;
+
+        while (!isAtEnd() && (Character.isDigit(peek()) || peek() == '.')) {
+            if (peek() == '.') {
+                if (hasDecimal) break;
+                hasDecimal = true;
+            }
+            num.append(advance());
+        }
+
+        return num.toString();
+    }
+
     private PhpStatementNode parseReturn() {
         skipWhitespace();
         PhpExpressionNode value = null;
@@ -478,6 +714,29 @@ public final class PhpParser {
                 }
             }
 
+            return new PhpExpressionStatementNode(writeExpr);
+        }
+
+        // Check for property assignment ($obj->property = value)
+        if (match("->")) {
+            skipWhitespace();
+
+            // Parse property name
+            StringBuilder memberName = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                memberName.append(advance());
+            }
+            String propertyName = memberName.toString();
+
+            skipWhitespace();
+            expect("=");
+            skipWhitespace();
+            PhpExpressionNode value = parseExpression();
+            expect(";");
+
+            // Check if we're inside a method (have access to $this)
+            boolean isInternal = varName.equals("this");
+            PhpExpressionNode writeExpr = new PhpPropertyWriteNode(varNode, propertyName, value, isInternal);
             return new PhpExpressionStatementNode(writeExpr);
         }
 
@@ -731,7 +990,46 @@ public final class PhpParser {
                 skipWhitespace();
             }
 
-            // Check for postfix increment/decrement (only on simple variables, not array access)
+            // Check for -> operator (property/method access)
+            while (match("->")) {
+                skipWhitespace();
+
+                // Parse property or method name
+                StringBuilder memberName = new StringBuilder();
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    memberName.append(advance());
+                }
+                String member = memberName.toString();
+
+                skipWhitespace();
+
+                // Check if it's a method call or property access
+                if (match("(")) {
+                    // Method call
+                    List<PhpExpressionNode> args = new ArrayList<>();
+                    skipWhitespace();
+
+                    while (!check(")")) {
+                        args.add(parseExpression());
+                        skipWhitespace();
+                        if (match(",")) {
+                            skipWhitespace();
+                        }
+                    }
+                    expect(")");
+
+                    varNode = new PhpMethodCallNode(varNode, member, args.toArray(new PhpExpressionNode[0]));
+                } else {
+                    // Property access
+                    // Check if we're inside a method (have access to $this)
+                    boolean isInternal = varName.equals("this");
+                    varNode = new PhpPropertyAccessNode(varNode, member, isInternal);
+                }
+
+                skipWhitespace();
+            }
+
+            // Check for postfix increment/decrement (only on simple variables, not array access or property access)
             if (varNode instanceof PhpReadVariableNode) {
                 skipWhitespace();
                 if (match("++")) {
@@ -770,12 +1068,44 @@ public final class PhpParser {
             return parseNumber();
         }
 
+        // Check for 'new' keyword
+        if (match("new")) {
+            skipWhitespace();
+            return parseNew();
+        }
+
         // Function call or identifier
         if (Character.isLetter(peek()) || peek() == '_') {
             return parseFunctionCallOrIdentifier();
         }
 
         throw new RuntimeException("Unexpected character at position " + pos + ": " + peek());
+    }
+
+    private PhpExpressionNode parseNew() {
+        // Parse class name
+        StringBuilder name = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+            name.append(advance());
+        }
+        String className = name.toString();
+
+        skipWhitespace();
+        expect("(");
+        skipWhitespace();
+
+        // Parse constructor arguments
+        List<PhpExpressionNode> args = new ArrayList<>();
+        while (!check(")")) {
+            args.add(parseExpression());
+            skipWhitespace();
+            if (match(",")) {
+                skipWhitespace();
+            }
+        }
+        expect(")");
+
+        return new PhpNewNode(className, args.toArray(new PhpExpressionNode[0]));
     }
 
     private PhpExpressionNode parseFunctionCallOrIdentifier() {

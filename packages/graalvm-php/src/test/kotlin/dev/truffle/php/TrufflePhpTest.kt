@@ -662,6 +662,328 @@ class TrufflePhpTest {
     assertEquals("51", output.trim())
   }
 
+  // Class and Object tests
+  @Test fun `simple class definition and instantiation works`() {
+    val output = executePhp("""
+      <?php
+      class Person {
+        public ${'$'}name;
+      }
+      ${'$'}p = new Person();
+      echo "created";
+    """.trimIndent())
+    assertEquals("created", output.trim())
+  }
+
+  @Test fun `class with constructor works`() {
+    val output = executePhp("""
+      <?php
+      class Person {
+        public ${'$'}name;
+        public ${'$'}age;
+
+        function __construct(${'$'}n, ${'$'}a) {
+          ${'$'}this->name = ${'$'}n;
+          ${'$'}this->age = ${'$'}a;
+        }
+      }
+      ${'$'}p = new Person("John", 30);
+      echo ${'$'}p->name;
+      echo ${'$'}p->age;
+    """.trimIndent())
+    assertEquals("John30", output.trim())
+  }
+
+  @Test fun `property access from outside class works`() {
+    val output = executePhp("""
+      <?php
+      class Box {
+        public ${'$'}value;
+      }
+      ${'$'}box = new Box();
+      ${'$'}box->value = 42;
+      echo ${'$'}box->value;
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  @Test fun `method with no parameters works`() {
+    val output = executePhp("""
+      <?php
+      class Greeter {
+        function sayHello() {
+          return "Hello";
+        }
+      }
+      ${'$'}g = new Greeter();
+      echo ${'$'}g->sayHello();
+    """.trimIndent())
+    assertEquals("Hello", output.trim())
+  }
+
+  @Test fun `method with parameters works`() {
+    val output = executePhp("""
+      <?php
+      class Calculator {
+        function add(${'$'}a, ${'$'}b) {
+          return ${'$'}a + ${'$'}b;
+        }
+      }
+      ${'$'}calc = new Calculator();
+      echo ${'$'}calc->add(5, 7);
+    """.trimIndent())
+    assertEquals("12", output.trim())
+  }
+
+  @Test fun `method accessing properties with this works`() {
+    val output = executePhp("""
+      <?php
+      class Counter {
+        public ${'$'}count;
+
+        function __construct() {
+          ${'$'}this->count = 0;
+        }
+
+        function increment() {
+          ${'$'}this->count = ${'$'}this->count + 1;
+          return ${'$'}this->count;
+        }
+      }
+      ${'$'}c = new Counter();
+      echo ${'$'}c->increment();
+      echo ${'$'}c->increment();
+      echo ${'$'}c->count;
+    """.trimIndent())
+    assertEquals("122", output.trim())
+  }
+
+  @Test fun `method calling another method works`() {
+    val output = executePhp("""
+      <?php
+      class Math {
+        function double(${'$'}n) {
+          return ${'$'}n * 2;
+        }
+
+        function quadruple(${'$'}n) {
+          return ${'$'}this->double(${'$'}this->double(${'$'}n));
+        }
+      }
+      ${'$'}m = new Math();
+      echo ${'$'}m->quadruple(3);
+    """.trimIndent())
+    assertEquals("12", output.trim())
+  }
+
+  @Test fun `property with default value works`() {
+    val output = executePhp("""
+      <?php
+      class Config {
+        public ${'$'}timeout = 30;
+        public ${'$'}retries = 3;
+      }
+      ${'$'}cfg = new Config();
+      echo ${'$'}cfg->timeout;
+      echo ${'$'}cfg->retries;
+    """.trimIndent())
+    assertEquals("303", output.trim())
+  }
+
+  @Test fun `constructor overrides default values`() {
+    val output = executePhp("""
+      <?php
+      class Settings {
+        public ${'$'}value = 10;
+
+        function __construct(${'$'}v) {
+          ${'$'}this->value = ${'$'}v;
+        }
+      }
+      ${'$'}s = new Settings(99);
+      echo ${'$'}s->value;
+    """.trimIndent())
+    assertEquals("99", output.trim())
+  }
+
+  @Test fun `multiple objects of same class are independent`() {
+    val output = executePhp("""
+      <?php
+      class Point {
+        public ${'$'}x;
+        public ${'$'}y;
+
+        function __construct(${'$'}x, ${'$'}y) {
+          ${'$'}this->x = ${'$'}x;
+          ${'$'}this->y = ${'$'}y;
+        }
+      }
+      ${'$'}p1 = new Point(1, 2);
+      ${'$'}p2 = new Point(3, 4);
+      echo ${'$'}p1->x;
+      echo ${'$'}p1->y;
+      echo ${'$'}p2->x;
+      echo ${'$'}p2->y;
+    """.trimIndent())
+    assertEquals("1234", output.trim())
+  }
+
+  @Test fun `method with no explicit return returns null`() {
+    val output = executePhp("""
+      <?php
+      class Test {
+        function noReturn() {
+          ${'$'}x = 5;
+        }
+      }
+      ${'$'}t = new Test();
+      ${'$'}result = ${'$'}t->noReturn();
+      if (${'$'}result == null) {
+        echo "null";
+      }
+    """.trimIndent())
+    assertEquals("null", output.trim())
+  }
+
+  @Test fun `method modifying property persists across calls`() {
+    val output = executePhp("""
+      <?php
+      class Accumulator {
+        public ${'$'}total;
+
+        function __construct() {
+          ${'$'}this->total = 0;
+        }
+
+        function add(${'$'}n) {
+          ${'$'}this->total = ${'$'}this->total + ${'$'}n;
+        }
+      }
+      ${'$'}acc = new Accumulator();
+      ${'$'}acc->add(5);
+      ${'$'}acc->add(3);
+      ${'$'}acc->add(2);
+      echo ${'$'}acc->total;
+    """.trimIndent())
+    assertEquals("10", output.trim())
+  }
+
+  @Test fun `class with multiple methods works`() {
+    val output = executePhp("""
+      <?php
+      class String {
+        public ${'$'}value;
+
+        function __construct(${'$'}v) {
+          ${'$'}this->value = ${'$'}v;
+        }
+
+        function upper() {
+          return strtoupper(${'$'}this->value);
+        }
+
+        function lower() {
+          return strtolower(${'$'}this->value);
+        }
+
+        function length() {
+          return strlen(${'$'}this->value);
+        }
+      }
+      ${'$'}s = new String("Hello");
+      echo ${'$'}s->upper();
+      echo ${'$'}s->lower();
+      echo ${'$'}s->length();
+    """.trimIndent())
+    assertEquals("HELLOhello5", output.trim())
+  }
+
+  @Test fun `class property accessed in conditional works`() {
+    val output = executePhp("""
+      <?php
+      class User {
+        public ${'$'}age;
+
+        function __construct(${'$'}a) {
+          ${'$'}this->age = ${'$'}a;
+        }
+
+        function isAdult() {
+          if (${'$'}this->age >= 18) {
+            return true;
+          }
+          return false;
+        }
+      }
+      ${'$'}u = new User(21);
+      if (${'$'}u->isAdult()) {
+        echo "adult";
+      }
+    """.trimIndent())
+    assertEquals("adult", output.trim())
+  }
+
+  @Test fun `property assignment in method works`() {
+    val output = executePhp("""
+      <?php
+      class Name {
+        public ${'$'}first;
+        public ${'$'}last;
+
+        function setName(${'$'}f, ${'$'}l) {
+          ${'$'}this->first = ${'$'}f;
+          ${'$'}this->last = ${'$'}l;
+        }
+
+        function fullName() {
+          return ${'$'}this->first . " " . ${'$'}this->last;
+        }
+      }
+      ${'$'}n = new Name();
+      ${'$'}n->setName("John", "Doe");
+      echo ${'$'}n->fullName();
+    """.trimIndent())
+    assertEquals("John Doe", output.trim())
+  }
+
+  @Test fun `method returning property works`() {
+    val output = executePhp("""
+      <?php
+      class Container {
+        public ${'$'}data;
+
+        function __construct(${'$'}d) {
+          ${'$'}this->data = ${'$'}d;
+        }
+
+        function getData() {
+          return ${'$'}this->data;
+        }
+      }
+      ${'$'}c = new Container("secret");
+      echo ${'$'}c->getData();
+    """.trimIndent())
+    assertEquals("secret", output.trim())
+  }
+
+  @Test fun `constructor with no parameters works`() {
+    val output = executePhp("""
+      <?php
+      class Logger {
+        public ${'$'}initialized;
+
+        function __construct() {
+          ${'$'}this->initialized = true;
+        }
+      }
+      ${'$'}log = new Logger();
+      if (${'$'}log->initialized) {
+        echo "ready";
+      }
+    """.trimIndent())
+    assertEquals("ready", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

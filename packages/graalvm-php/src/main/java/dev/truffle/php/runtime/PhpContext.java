@@ -23,6 +23,8 @@ import java.util.Set;
  * - Function registry
  * - Built-in function registry
  * - Class registry
+ * - Interface registry
+ * - Trait registry
  */
 public final class PhpContext {
 
@@ -35,6 +37,7 @@ public final class PhpContext {
     private final Map<String, CallTarget> builtins;
     private final Map<String, PhpClass> classes;
     private final Map<String, PhpInterface> interfaces;
+    private final Map<String, PhpTrait> traits;
     private final Set<String> includedFiles;
     private final PhpGlobalScope globalScope;
     private final PhpNamespaceContext namespaceContext;
@@ -49,6 +52,7 @@ public final class PhpContext {
         this.builtins = new HashMap<>();
         this.classes = new HashMap<>();
         this.interfaces = new HashMap<>();
+        this.traits = new HashMap<>();
         this.includedFiles = new HashSet<>();
         this.globalScope = new PhpGlobalScope();
         this.namespaceContext = new PhpNamespaceContext();
@@ -199,6 +203,35 @@ public final class PhpContext {
     }
 
     /**
+     * Register a trait in the context.
+     */
+    public void registerTrait(PhpTrait phpTrait) {
+        traits.put(phpTrait.getName(), phpTrait);
+    }
+
+    /**
+     * Get a trait by name (with namespace resolution).
+     */
+    public PhpTrait getTrait(String name) {
+        // First try the name as-is
+        PhpTrait trait = traits.get(name);
+        if (trait != null) {
+            return trait;
+        }
+
+        // Try resolving with namespace context (traits use class name resolution rules)
+        String resolved = namespaceContext.resolveClassName(name);
+        return traits.get(resolved);
+    }
+
+    /**
+     * Get a trait by its fully qualified name.
+     */
+    public PhpTrait getTraitByQualifiedName(String qualifiedName) {
+        return traits.get(qualifiedName);
+    }
+
+    /**
      * Check if a file has already been included (for *_once variants).
      */
     public boolean isFileIncluded(String path) {
@@ -226,6 +259,35 @@ public final class PhpContext {
      */
     public PhpNamespaceContext getNamespaceContext() {
         return namespaceContext;
+    }
+
+    /**
+     * Find a class that uses the given trait and has the given static property.
+     * This is needed for resolving self:: in trait methods at runtime.
+     *
+     * @param traitName The name of the trait
+     * @param propertyName The name of the static property
+     * @return The PhpClass that uses the trait and has the property, or null if not found
+     */
+    public PhpClass findClassUsingTraitWithProperty(String traitName, String propertyName) {
+        // Iterate through all registered classes
+        for (PhpClass phpClass : classes.values()) {
+            // Check if this class uses the trait
+            boolean usesTrait = false;
+            for (PhpTrait usedTrait : phpClass.getUsedTraits()) {
+                if (usedTrait.getName().equals(traitName)) {
+                    usesTrait = true;
+                    break;
+                }
+            }
+
+            // If the class uses the trait and has the static property, return it
+            if (usesTrait && phpClass.hasStaticProperty(propertyName)) {
+                return phpClass;
+            }
+        }
+
+        return null;
     }
 
     /**

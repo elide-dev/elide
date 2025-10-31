@@ -10,6 +10,7 @@ import dev.truffle.php.runtime.PhpFunction;
 import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpClass;
 import dev.truffle.php.runtime.PhpInterface;
+import dev.truffle.php.runtime.PhpTrait;
 import dev.truffle.php.runtime.PhpGlobalScope;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.Map;
  * - PhpExpressionParser: Expression parsing (literals, operators, variables, function calls)
  * - PhpStatementParser: Statement parsing (control flow, assignments, blocks)
  * - PhpClassParser: Class and interface declarations
+ * - PhpTraitParser: Trait declarations
  * - PhpFunctionParser: Function declarations
  *
  * Responsibilities:
@@ -50,6 +52,8 @@ public final class PhpParser {
     private final PhpStatementParser statementParser;
     private final PhpClassParser.ClassParserContext classContext;
     private final PhpClassParser classParser;
+    private final PhpTraitParser.TraitParserContext traitContext;
+    private final PhpTraitParser traitParser;
     private final PhpFunctionParser.FunctionParserContext functionContext;
     private final PhpFunctionParser functionParser;
 
@@ -61,6 +65,7 @@ public final class PhpParser {
         this.expressionContext = new PhpExpressionParser.ParserContext(null, null);
         this.statementContext = new PhpStatementParser.StatementContext(null, null);
         this.classContext = new PhpClassParser.ClassParserContext();
+        this.traitContext = new PhpTraitParser.TraitParserContext();
         this.functionContext = new PhpFunctionParser.FunctionParserContext();
 
         // Create expression parser with block delegate
@@ -95,6 +100,23 @@ public final class PhpParser {
             }
         );
 
+        // Create trait parser with block delegate
+        this.traitParser = new PhpTraitParser(
+            language,
+            lexer,
+            variables,
+            globalScope,
+            expressionParser,
+            statementContext,
+            traitContext,
+            new PhpTraitParser.BlockParserDelegate() {
+                @Override
+                public PhpStatementNode parseBlock() {
+                    return PhpParser.this.parseBlock();
+                }
+            }
+        );
+
         // Create function parser with block delegate
         this.functionParser = new PhpFunctionParser(
             language,
@@ -112,7 +134,7 @@ public final class PhpParser {
             }
         );
 
-        // Create statement parser with delegate for class/interface/function parsing
+        // Create statement parser with delegate for class/interface/trait/function parsing
         this.statementParser = new PhpStatementParser(
             lexer,
             variables,
@@ -128,6 +150,11 @@ public final class PhpParser {
                 @Override
                 public PhpStatementNode parseInterface() {
                     return classParser.parseInterface();
+                }
+
+                @Override
+                public PhpStatementNode parseTrait() {
+                    return traitParser.parseTrait();
                 }
 
                 @Override
@@ -148,6 +175,7 @@ public final class PhpParser {
         statementParser.setNamespaceContext(context.getNamespaceContext());
         functionParser.setNamespaceContext(context.getNamespaceContext());
         classParser.setNamespaceContext(context.getNamespaceContext());
+        traitParser.setNamespaceContext(context.getNamespaceContext());
 
         // Set source path in expression context for magic constants
         // Use getPath() for real files, fall back to getName() for in-memory sources (tests)
@@ -170,6 +198,32 @@ public final class PhpParser {
         // This allows variables to be shared across included files
         FrameDescriptor frameDescriptor = globalScope.build();
         PhpRootNode rootNode = new PhpRootNode(language, frameDescriptor, body);
+
+        // Register traits first (must be done before classes, as classes may use traits)
+        // First, resolve trait composition (nested traits)
+        resolveTraitComposition(context);
+
+        for (PhpTrait phpTrait : traitContext.declaredTraits) {
+            // Get the namespace this trait was declared in
+            String declaredNamespace = traitContext.traitNamespaces.get(phpTrait);
+            String traitName = phpTrait.getName();
+
+            if (declaredNamespace != null && !declaredNamespace.isEmpty() && !traitName.contains("\\")) {
+                // Create a new PhpTrait with namespaced name
+                PhpTrait namespacedTrait = new PhpTrait(
+                    declaredNamespace + "\\" + traitName,
+                    phpTrait.getMethods(),
+                    phpTrait.getProperties()
+                );
+                // Copy used traits if any
+                for (PhpTrait usedTrait : phpTrait.getUsedTraits()) {
+                    namespacedTrait.addUsedTrait(usedTrait);
+                }
+                context.registerTrait(namespacedTrait);
+            } else {
+                context.registerTrait(phpTrait);
+            }
+        }
 
         // Resolve parent class and interface references
         resolveInterfaceInheritance(context);
@@ -302,9 +356,49 @@ public final class PhpParser {
                     phpClass.addImplementedInterface(phpInterface);
                 }
             }
+
+            // Resolve used traits
+            List<String> traitNames = classContext.classUsedTraits.get(phpClass.getName());
+            if (traitNames != null) {
+                for (String traitName : traitNames) {
+                    // Find the trait - check context
+                    PhpTrait phpTrait = context.getTrait(traitName);
+                    if (phpTrait == null) {
+                        throw new RuntimeException("Trait not found: " + traitName + " for class " + phpClass.getName());
+                    }
+
+                    // Add the trait to the class
+                    phpClass.addUsedTrait(phpTrait);
+                }
+            }
         }
 
-        // Validate abstract method implementation after all inheritance is resolved
+        // Compose traits into classes after all traits are resolved
+        for (PhpClass phpClass : classContext.declaredClasses) {
+            // Get conflict resolutions for this class (if any)
+            List<PhpClass.TraitConflictResolution> classResolutions = new ArrayList<>();
+            List<PhpClassParser.TraitConflictResolution> parserResolutions = classContext.classTraitResolutions.get(phpClass.getName());
+
+            // Convert parser resolutions to runtime resolutions
+            if (parserResolutions != null) {
+                for (PhpClassParser.TraitConflictResolution parserRes : parserResolutions) {
+                    classResolutions.add(new PhpClass.TraitConflictResolution(
+                            parserRes.type == PhpClassParser.TraitConflictResolution.Type.INSTEADOF
+                                    ? PhpClass.TraitConflictResolution.Type.INSTEADOF
+                                    : PhpClass.TraitConflictResolution.Type.ALIAS,
+                            parserRes.traitName,
+                            parserRes.methodName,
+                            parserRes.excludedTraits,
+                            parserRes.aliasName,
+                            parserRes.aliasVisibility
+                    ));
+                }
+            }
+
+            phpClass.composeTraits(classResolutions);
+        }
+
+        // Validate abstract method implementation after all inheritance and trait composition is resolved
         for (PhpClass phpClass : classContext.declaredClasses) {
             phpClass.validateAbstractMethodsImplemented();
         }
@@ -370,6 +464,56 @@ public final class PhpParser {
                 break; // No more parents
             }
             current = classMap.get(parentName);
+        }
+        return false;
+    }
+
+    private void resolveTraitComposition(PhpContext context) {
+        // Build a map of trait names to PhpTrait objects for quick lookup
+        Map<String, PhpTrait> traitMap = new HashMap<>();
+        for (PhpTrait phpTrait : traitContext.declaredTraits) {
+            traitMap.put(phpTrait.getName(), phpTrait);
+        }
+
+        // Resolve trait usage (traits using other traits)
+        for (PhpTrait phpTrait : traitContext.declaredTraits) {
+            List<String> usedTraitNames = traitContext.traitUsedTraits.get(phpTrait.getName());
+            if (usedTraitNames != null) {
+                for (String usedTraitName : usedTraitNames) {
+                    // Find the used trait - check current file traits first, then context
+                    PhpTrait usedTrait = traitMap.get(usedTraitName);
+                    if (usedTrait == null) {
+                        usedTrait = context.getTrait(usedTraitName);
+                    }
+                    if (usedTrait == null) {
+                        throw new RuntimeException("Trait not found: " + usedTraitName + " used by trait " + phpTrait.getName());
+                    }
+
+                    // Check for circular trait usage
+                    if (hasCircularTraitUsage(phpTrait.getName(), usedTrait, traitMap)) {
+                        throw new RuntimeException("Circular trait usage detected for trait: " + phpTrait.getName());
+                    }
+
+                    // Add the used trait
+                    phpTrait.addUsedTrait(usedTrait);
+                }
+            }
+        }
+    }
+
+    private boolean hasCircularTraitUsage(String originalTraitName, PhpTrait currentTrait, Map<String, PhpTrait> traitMap) {
+        // Walk through the trait usage chain
+        PhpTrait current = currentTrait;
+        while (current != null) {
+            if (current.getName().equals(originalTraitName)) {
+                return true; // Found a cycle
+            }
+            List<String> usedTraitNames = traitContext.traitUsedTraits.get(current.getName());
+            if (usedTraitNames == null || usedTraitNames.isEmpty()) {
+                break; // No more traits used
+            }
+            // Check the first used trait (simplified circular detection)
+            current = traitMap.get(usedTraitNames.get(0));
         }
         return false;
     }

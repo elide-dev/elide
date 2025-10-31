@@ -654,12 +654,28 @@ public final class PhpExpressionParser {
             if (peek() == '$') {
                 // Static property access: ClassName::$property, self::$property, or parent::$property
                 String propName = parseVariableName();
-                if (identifier.equals("parent")) {
-                    throw new RuntimeException("parent::$property access not yet supported");
-                } else if (identifier.equals("self")) {
+
+                // Resolve the actual class name for self::
+                String className = identifier;
+                if (identifier.equals("self")) {
                     if (context.currentClassName == null) {
                         throw new RuntimeException("Cannot use self:: outside of class context");
                     }
+                    className = context.currentClassName;
+                } else if (identifier.equals("parent")) {
+                    throw new RuntimeException("parent::$property access not yet supported");
+                }
+
+                // Check for post-increment or post-decrement operators
+                skipWhitespace();
+                if (match("++")) {
+                    return new PhpStaticPropertyPostIncrementNode(className, propName);
+                } else if (match("--")) {
+                    return new PhpStaticPropertyPostDecrementNode(className, propName);
+                }
+
+                // Plain static property access
+                if (identifier.equals("self")) {
                     return new PhpSelfPropertyAccessNode(propName, context.currentClassName);
                 }
                 return new PhpStaticPropertyAccessNode(identifier, propName);

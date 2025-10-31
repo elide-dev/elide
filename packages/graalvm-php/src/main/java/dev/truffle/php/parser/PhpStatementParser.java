@@ -32,6 +32,7 @@ public final class PhpStatementParser {
     public interface ParserDelegate {
         PhpStatementNode parseClass(boolean isAbstract);
         PhpStatementNode parseInterface();
+        PhpStatementNode parseTrait();
         PhpStatementNode parseFunction();
     }
 
@@ -136,6 +137,11 @@ public final class PhpStatementParser {
         // interface definition - delegate to main parser
         if (matchKeyword("interface")) {
             return delegate.parseInterface();
+        }
+
+        // trait definition - delegate to main parser
+        if (matchKeyword("trait")) {
+            return delegate.parseTrait();
         }
 
         // abstract class definition - delegate to main parser

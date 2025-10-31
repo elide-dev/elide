@@ -20,6 +20,7 @@ public final class PhpClass {
     private final Map<String, Object> staticPropertyValues;  // Storage for static property values
     private PhpClass parentClass;  // Parent class for inheritance (nullable)
     private final List<PhpInterface> implementedInterfaces;  // Interfaces implemented by this class
+    private final List<PhpTrait> usedTraits;  // Traits used by this class
     private final boolean isAbstract;  // Whether this class is abstract
 
     public PhpClass(String name, Map<String, PropertyMetadata> properties,
@@ -32,6 +33,7 @@ public final class PhpClass {
         this.staticPropertyValues = new HashMap<>();
         this.parentClass = null;
         this.implementedInterfaces = new ArrayList<>();
+        this.usedTraits = new ArrayList<>();
 
         // Initialize static properties with their default values
         for (Map.Entry<String, PropertyMetadata> entry : properties.entrySet()) {
@@ -56,6 +58,160 @@ public final class PhpClass {
 
     public void addImplementedInterface(PhpInterface interfaceToAdd) {
         implementedInterfaces.add(interfaceToAdd);
+    }
+
+    public List<PhpTrait> getUsedTraits() {
+        return usedTraits;
+    }
+
+    public void addUsedTrait(PhpTrait trait) {
+        usedTraits.add(trait);
+    }
+
+    /**
+     * Compose traits into this class.
+     * This flattens all trait methods and properties into the class.
+     * Must be called after all traits have been added.
+     */
+    public void composeTraits(List<TraitConflictResolution> conflictResolutions) {
+        if (usedTraits.isEmpty()) {
+            return;
+        }
+
+        // Build a map of trait methods for conflict resolution
+        Map<String, Map<String, MethodMetadata>> traitMethodMap = new HashMap<>();  // traitName -> (methodName -> metadata)
+        for (PhpTrait trait : usedTraits) {
+            traitMethodMap.put(trait.getName(), trait.getAllMethods());
+        }
+
+        // Process insteadof rules first to determine which methods to exclude
+        Map<String, String> methodExclusions = new HashMap<>();  // methodName -> excluded traits (comma-separated)
+        if (conflictResolutions != null) {
+            for (TraitConflictResolution resolution : conflictResolutions) {
+                if (resolution.type == TraitConflictResolution.Type.INSTEADOF) {
+                    // Mark these methods from excluded traits as excluded
+                    for (String excludedTrait : resolution.excludedTraits) {
+                        String key = resolution.methodName + "@" + excludedTrait;
+                        methodExclusions.put(key, resolution.traitName);
+                    }
+                }
+            }
+        }
+
+        // Collect all methods from all traits (with proper precedence and conflict resolution)
+        for (PhpTrait trait : usedTraits) {
+            // Get all flattened methods from trait (includes nested traits)
+            Map<String, MethodMetadata> traitMethods = trait.getAllMethods();
+
+            // Add trait methods to class (only if not already defined in class)
+            // Class methods have highest precedence
+            for (Map.Entry<String, MethodMetadata> entry : traitMethods.entrySet()) {
+                String methodName = entry.getKey();
+
+                // Check if this method is excluded due to insteadof
+                String exclusionKey = methodName + "@" + trait.getName();
+                if (methodExclusions.containsKey(exclusionKey)) {
+                    continue;  // Skip this method from this trait
+                }
+
+                if (!methods.containsKey(methodName)) {
+                    methods.put(methodName, entry.getValue());
+                }
+            }
+
+            // Get all flattened properties from trait
+            Map<String, PropertyMetadata> traitProperties = trait.getAllProperties();
+
+            // Add trait properties to class (only if not already defined)
+            for (Map.Entry<String, PropertyMetadata> entry : traitProperties.entrySet()) {
+                String propName = entry.getKey();
+                if (!properties.containsKey(propName)) {
+                    properties.put(propName, entry.getValue());
+                    // Initialize static property if needed
+                    PropertyMetadata prop = entry.getValue();
+                    if (prop.isStatic()) {
+                        staticPropertyValues.put(propName, prop.getDefaultValue());
+                    }
+                }
+            }
+        }
+
+        // Process aliasing rules (must be done after method composition)
+        if (conflictResolutions != null) {
+            for (TraitConflictResolution resolution : conflictResolutions) {
+                if (resolution.type == TraitConflictResolution.Type.ALIAS) {
+                    // Find the method to alias
+                    MethodMetadata sourceMethod = null;
+
+                    if (resolution.traitName != null) {
+                        // Qualified alias: TraitName::method
+                        Map<String, MethodMetadata> traitMethods = traitMethodMap.get(resolution.traitName);
+                        if (traitMethods != null) {
+                            sourceMethod = traitMethods.get(resolution.methodName);
+                        }
+                    } else {
+                        // Unqualified alias: just method name
+                        // Search through all trait methods
+                        for (Map.Entry<String, Map<String, MethodMetadata>> traitEntry : traitMethodMap.entrySet()) {
+                            MethodMetadata method = traitEntry.getValue().get(resolution.methodName);
+                            if (method != null) {
+                                sourceMethod = method;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (sourceMethod != null) {
+                        // Create aliased method with potentially different visibility
+                        Visibility newVisibility = resolution.aliasVisibility != null
+                                ? resolution.aliasVisibility
+                                : sourceMethod.getVisibility();
+
+                        MethodMetadata aliasedMethod = new MethodMetadata(
+                                resolution.aliasName,
+                                newVisibility,
+                                sourceMethod.isStatic(),
+                                sourceMethod.isAbstract(),
+                                sourceMethod.getCallTarget(),
+                                sourceMethod.getParameterNames()
+                        );
+
+                        // Add the aliased method
+                        // If aliasName equals methodName, we're just changing visibility
+                        methods.put(resolution.aliasName, aliasedMethod);
+
+                        // If we're just changing visibility (same name), update the original too
+                        if (resolution.aliasName.equals(resolution.methodName) && resolution.aliasVisibility != null) {
+                            methods.put(resolution.methodName, aliasedMethod);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Represents a trait conflict resolution rule (needed for composeTraits).
+     */
+    public static final class TraitConflictResolution {
+        public enum Type { INSTEADOF, ALIAS }
+
+        public final Type type;
+        public final String traitName;
+        public final String methodName;
+        public final List<String> excludedTraits;
+        public final String aliasName;
+        public final Visibility aliasVisibility;
+
+        public TraitConflictResolution(Type type, String traitName, String methodName,
+                                       List<String> excludedTraits, String aliasName, Visibility aliasVisibility) {
+            this.type = type;
+            this.traitName = traitName;
+            this.methodName = methodName;
+            this.excludedTraits = excludedTraits;
+            this.aliasName = aliasName;
+            this.aliasVisibility = aliasVisibility;
+        }
     }
 
     /**

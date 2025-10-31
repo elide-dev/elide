@@ -1,0 +1,91 @@
+package dev.truffle.php.nodes.expression;
+
+import com.oracle.truffle.api.frame.VirtualFrame;
+import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.runtime.PhpClass;
+import dev.truffle.php.runtime.PhpContext;
+
+/**
+ * Node for post-increment operation on static properties (ClassName::$property++).
+ * Increments the static property and returns the old value.
+ */
+public final class PhpStaticPropertyPostIncrementNode extends PhpExpressionNode {
+
+    private final String className;
+    private final String propertyName;
+
+    public PhpStaticPropertyPostIncrementNode(String className, String propertyName) {
+        this.className = className;
+        this.propertyName = propertyName;
+    }
+
+    @Override
+    public Object execute(VirtualFrame frame) {
+        PhpContext context = PhpContext.get(this);
+        PhpClass phpClass = context.getClass(className);
+
+        // If class not found, check if it's a trait name
+        // When traits use self::, we need to resolve to the actual class that uses the trait
+        if (phpClass == null) {
+            // Check if className is a trait
+            if (context.getTrait(className) != null) {
+                // It's a trait - we need to find the actual class
+                // The class context is determined by which class's method is currently executing
+                // For static methods called as MyClass::method(), we need to find MyClass
+
+                // Strategy: Find a class that has this static property and uses this trait
+                phpClass = findClassUsingTrait(context, className, propertyName);
+
+                if (phpClass == null) {
+                    throw new RuntimeException("Cannot resolve class for trait '" + className +
+                        "' with static property $" + propertyName);
+                }
+            } else {
+                throw new RuntimeException("Class not found: " + className);
+            }
+        }
+
+        if (!phpClass.hasStaticProperty(propertyName)) {
+            throw new RuntimeException("Static property " + className + "::$" + propertyName + " does not exist");
+        }
+
+        // Read current value
+        Object current = phpClass.getStaticPropertyValue(propertyName);
+
+        // Store old value to return
+        Object oldValue;
+        Object newValue;
+
+        if (current instanceof Long) {
+            oldValue = current;
+            newValue = (Long) current + 1;
+        } else if (current instanceof Double) {
+            oldValue = current;
+            newValue = (Double) current + 1.0;
+        } else if (current == null) {
+            oldValue = null;
+            newValue = 1L;
+        } else {
+            // Fallback: treat as 0
+            oldValue = 0L;
+            newValue = 1L;
+        }
+
+        // Write back new value
+        phpClass.setStaticPropertyValue(propertyName, newValue);
+
+        // Return old value
+        return oldValue;
+    }
+
+    /**
+     * Find a class that uses the given trait and has the given static property.
+     * This is needed for resolving self:: in trait methods.
+     */
+    private PhpClass findClassUsingTrait(PhpContext context, String traitName, String propertyName) {
+        // We need to access all registered classes to find one that uses this trait
+        // Unfortunately, PhpContext doesn't expose a method to get all classes
+        // We'll need to add that capability
+        return context.findClassUsingTraitWithProperty(traitName, propertyName);
+    }
+}

@@ -73,6 +73,14 @@ public final class PhpMethodCallNode extends PhpExpressionNode {
         if (callerClassName != null) {
             PhpContext context = PhpContext.get(this);
             callerClass = context.getClass(callerClassName);
+
+            // If caller class not found, check if it's a trait
+            // Traits methods are composed into classes, so treat the target class as the caller
+            if (callerClass == null && context.getTrait(callerClassName) != null) {
+                // Caller is a trait - use the target class as caller for visibility checks
+                // This allows trait methods to call each other's private methods
+                callerClass = phpClass;
+            }
         }
 
         // Check visibility with caller context

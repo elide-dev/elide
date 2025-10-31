@@ -44,12 +44,48 @@ public final class PhpClassParser {
         public final List<PhpInterface> declaredInterfaces = new ArrayList<>();
         public final Map<String, String> classParentNames = new HashMap<>();  // className -> parentClassName
         public final Map<String, List<String>> classImplementedInterfaces = new HashMap<>();  // className -> List<interfaceName>
+        public final Map<String, List<String>> classUsedTraits = new HashMap<>();  // className -> List<traitName>
         public final Map<String, String> interfaceParentNames = new HashMap<>();  // interfaceName -> parentInterfaceName
         public final Map<PhpClass, String> classNamespaces = new HashMap<>();  // Track namespace for each class
         public final Map<PhpInterface, String> interfaceNamespaces = new HashMap<>();  // Track namespace for each interface
 
+        // Trait conflict resolution metadata
+        public final Map<String, List<TraitConflictResolution>> classTraitResolutions = new HashMap<>();  // className -> List<resolution>
+
         public String currentClassName;
         public FrameDescriptor.Builder currentFrameBuilder;
+    }
+
+    /**
+     * Represents a trait conflict resolution rule (insteadof or aliasing).
+     */
+    public static final class TraitConflictResolution {
+        public enum Type { INSTEADOF, ALIAS }
+
+        public final Type type;
+        public final String traitName;  // Can be null for simple aliases (no Trait:: prefix)
+        public final String methodName;
+        public final List<String> excludedTraits;  // For insteadof: traits to exclude
+        public final String aliasName;  // For alias: new method name (can be same as original)
+        public final Visibility aliasVisibility;  // For alias: new visibility (can be null to keep original)
+
+        private TraitConflictResolution(Type type, String traitName, String methodName,
+                                       List<String> excludedTraits, String aliasName, Visibility aliasVisibility) {
+            this.type = type;
+            this.traitName = traitName;
+            this.methodName = methodName;
+            this.excludedTraits = excludedTraits;
+            this.aliasName = aliasName;
+            this.aliasVisibility = aliasVisibility;
+        }
+
+        public static TraitConflictResolution insteadOf(String traitName, String methodName, List<String> excludedTraits) {
+            return new TraitConflictResolution(Type.INSTEADOF, traitName, methodName, excludedTraits, null, null);
+        }
+
+        public static TraitConflictResolution alias(String traitName, String methodName, String aliasName, Visibility visibility) {
+            return new TraitConflictResolution(Type.ALIAS, traitName, methodName, null, aliasName, visibility);
+        }
     }
 
     /**
@@ -143,9 +179,151 @@ public final class PhpClassParser {
         Map<String, PhpClass.PropertyMetadata> properties = new HashMap<>();
         Map<String, PhpClass.MethodMetadata> methods = new HashMap<>();
         CallTarget constructor = null;
+        List<String> usedTraitNames = new ArrayList<>();
 
         skipWhitespace();
         while (!check("}") && !isAtEnd()) {
+            // Check for 'use' keyword (trait usage) - must come before other members
+            if (matchKeyword("use")) {
+                skipWhitespace();
+
+                // Parse list of traits (can use multiple traits)
+                do {
+                    StringBuilder traitName = new StringBuilder();
+                    while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                        traitName.append(advance());
+                    }
+                    String trait = traitName.toString();
+                    if (trait.isEmpty()) {
+                        throw new RuntimeException("Expected trait name after 'use'");
+                    }
+                    usedTraitNames.add(trait);
+                    skipWhitespace();
+
+                    if (match(",")) {
+                        skipWhitespace();
+                    } else {
+                        break;
+                    }
+                } while (true);
+
+                // Parse conflict resolution syntax { ... }
+                List<TraitConflictResolution> resolutions = new ArrayList<>();
+                if (match("{")) {
+                    skipWhitespace();
+
+                    // Parse conflict resolution rules
+                    while (!check("}") && !isAtEnd()) {
+                        // Parse [TraitName::]methodName
+                        StringBuilder firstPart = new StringBuilder();
+                        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                            firstPart.append(advance());
+                        }
+                        String firstPartStr = firstPart.toString();
+
+                        skipWhitespace();
+
+                        // Check if this is TraitName::method or just method
+                        String traitName = null;
+                        String methodName;
+
+                        if (match("::")) {
+                            // This is TraitName::method
+                            traitName = firstPartStr;
+                            skipWhitespace();
+
+                            // Parse method name
+                            StringBuilder methodBuilder = new StringBuilder();
+                            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                                methodBuilder.append(advance());
+                            }
+                            methodName = methodBuilder.toString();
+                            skipWhitespace();
+                        } else {
+                            // This is just method name
+                            methodName = firstPartStr;
+                        }
+
+                        // Now check for 'insteadof' or 'as'
+                        if (matchKeyword("insteadof")) {
+                            skipWhitespace();
+
+                            // Parse list of excluded traits
+                            List<String> excludedTraits = new ArrayList<>();
+                            do {
+                                StringBuilder excludedTrait = new StringBuilder();
+                                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                                    excludedTrait.append(advance());
+                                }
+                                String excluded = excludedTrait.toString();
+                                if (excluded.isEmpty()) {
+                                    throw new RuntimeException("Expected trait name after 'insteadof'");
+                                }
+                                excludedTraits.add(excluded);
+                                skipWhitespace();
+
+                                if (match(",")) {
+                                    skipWhitespace();
+                                } else {
+                                    break;
+                                }
+                            } while (true);
+
+                            resolutions.add(TraitConflictResolution.insteadOf(traitName, methodName, excludedTraits));
+                            expect(";");
+
+                        } else if (matchKeyword("as")) {
+                            skipWhitespace();
+
+                            // Parse optional visibility modifier
+                            Visibility newVisibility = null;
+                            if (matchKeyword("public")) {
+                                newVisibility = Visibility.PUBLIC;
+                                skipWhitespace();
+                            } else if (matchKeyword("protected")) {
+                                newVisibility = Visibility.PROTECTED;
+                                skipWhitespace();
+                            } else if (matchKeyword("private")) {
+                                newVisibility = Visibility.PRIVATE;
+                                skipWhitespace();
+                            }
+
+                            // Parse optional new method name
+                            String aliasName = methodName;  // Default: keep same name
+                            if (Character.isLetter(peek()) || peek() == '_') {
+                                // New method name provided
+                                StringBuilder aliasBuilder = new StringBuilder();
+                                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                                    aliasBuilder.append(advance());
+                                }
+                                aliasName = aliasBuilder.toString();
+                                skipWhitespace();
+                            }
+
+                            resolutions.add(TraitConflictResolution.alias(traitName, methodName, aliasName, newVisibility));
+                            expect(";");
+
+                        } else {
+                            throw new RuntimeException("Expected 'insteadof' or 'as' in trait conflict resolution");
+                        }
+
+                        skipWhitespace();
+                    }
+
+                    expect("}");
+                    skipWhitespace();
+                } else {
+                    expect(";");
+                }
+
+                // Store resolutions for this class
+                if (!resolutions.isEmpty()) {
+                    context.classTraitResolutions.put(className, resolutions);
+                }
+                skipWhitespace();
+                continue;
+            }
+
             // Check for abstract modifier first (can come before visibility)
             boolean isMethodAbstract = false;
             if (matchKeyword("abstract")) {
@@ -446,6 +624,11 @@ public final class PhpClassParser {
         // Store implemented interfaces for later resolution
         if (!implementedInterfaceNames.isEmpty()) {
             context.classImplementedInterfaces.put(className, implementedInterfaceNames);
+        }
+
+        // Store used traits for later resolution
+        if (!usedTraitNames.isEmpty()) {
+            context.classUsedTraits.put(className, usedTraitNames);
         }
 
         return new PhpClassNode(phpClass);

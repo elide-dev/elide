@@ -216,10 +216,10 @@ public object HtmlBuilder {
             setMinifyJs(html.options.minify.js)
             setKeepComments(!html.options.minify.comments)
             setKeepHtmlAndHeadOpeningTags(true)
-            setDoNotMinifyDoctype(true)
-            setEnsureSpecCompliantUnquotedAttributeValues(true)
+            setMinifyDoctype(true)
+            setAllowNoncompliantUnquotedAttributeValues(true)
             setKeepClosingTags(true)
-            setKeepSpacesBetweenAttributes(true)
+            setAllowRemovingSpacesBetweenAttributes(true)
           }.build())
         }
       }

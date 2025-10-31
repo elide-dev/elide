@@ -16,6 +16,7 @@ public final class PhpClass {
     private final Map<String, MethodMetadata> methods;
     private final CallTarget constructor;
     private final Map<String, Object> staticPropertyValues;  // Storage for static property values
+    private PhpClass parentClass;  // Parent class for inheritance (nullable)
 
     public PhpClass(String name, Map<String, PropertyMetadata> properties,
                     Map<String, MethodMetadata> methods, CallTarget constructor) {
@@ -24,6 +25,7 @@ public final class PhpClass {
         this.methods = new HashMap<>(methods);
         this.constructor = constructor;
         this.staticPropertyValues = new HashMap<>();
+        this.parentClass = null;
 
         // Initialize static properties with their default values
         for (Map.Entry<String, PropertyMetadata> entry : properties.entrySet()) {
@@ -32,6 +34,14 @@ public final class PhpClass {
                 staticPropertyValues.put(entry.getKey(), prop.getDefaultValue());
             }
         }
+    }
+
+    public PhpClass getParentClass() {
+        return parentClass;
+    }
+
+    public void setParentClass(PhpClass parentClass) {
+        this.parentClass = parentClass;
     }
 
     public String getName() {
@@ -51,19 +61,82 @@ public final class PhpClass {
     }
 
     public boolean hasMethod(String methodName) {
-        return methods.containsKey(methodName);
+        if (methods.containsKey(methodName)) {
+            return true;
+        }
+        // Check parent class if present
+        if (parentClass != null) {
+            return parentClass.hasMethod(methodName);
+        }
+        return false;
     }
 
     public MethodMetadata getMethod(String methodName) {
-        return methods.get(methodName);
+        MethodMetadata method = methods.get(methodName);
+        if (method != null) {
+            return method;
+        }
+        // Check parent class if present
+        if (parentClass != null) {
+            return parentClass.getMethod(methodName);
+        }
+        return null;
     }
 
     public boolean hasProperty(String propertyName) {
-        return properties.containsKey(propertyName);
+        if (properties.containsKey(propertyName)) {
+            return true;
+        }
+        // Check parent class if present
+        if (parentClass != null) {
+            return parentClass.hasProperty(propertyName);
+        }
+        return false;
     }
 
     public PropertyMetadata getProperty(String propertyName) {
-        return properties.get(propertyName);
+        PropertyMetadata property = properties.get(propertyName);
+        if (property != null) {
+            return property;
+        }
+        // Check parent class if present
+        if (parentClass != null) {
+            return parentClass.getProperty(propertyName);
+        }
+        return null;
+    }
+
+    /**
+     * Get all properties including inherited ones.
+     * Properties are returned in inheritance order: parent first, then child.
+     * Child properties with same name override parent properties.
+     */
+    public Map<String, PropertyMetadata> getAllProperties() {
+        Map<String, PropertyMetadata> allProps = new HashMap<>();
+
+        // Start with parent properties (if parent exists)
+        if (parentClass != null) {
+            allProps.putAll(parentClass.getAllProperties());
+        }
+
+        // Add/override with this class's properties
+        allProps.putAll(properties);
+
+        return allProps;
+    }
+
+    /**
+     * Get the constructor for this class, or inherited from parent.
+     */
+    public CallTarget getConstructorOrInherited() {
+        if (constructor != null) {
+            return constructor;
+        }
+        // Check parent class if present
+        if (parentClass != null) {
+            return parentClass.getConstructorOrInherited();
+        }
+        return null;
     }
 
     public Object getStaticPropertyValue(String propertyName) {

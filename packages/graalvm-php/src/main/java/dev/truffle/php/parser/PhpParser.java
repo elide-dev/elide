@@ -59,6 +59,7 @@ public final class PhpParser {
     private final FrameDescriptor.Builder frameBuilder = FrameDescriptor.newBuilder();
     private final List<PhpFunction> declaredFunctions = new ArrayList<>();
     private final List<PhpClass> declaredClasses = new ArrayList<>();
+    private final Map<String, String> classParentNames = new HashMap<>();  // className -> parentClassName
 
     public PhpParser(PhpLanguage language, Source source) {
         this.language = language;
@@ -80,6 +81,9 @@ public final class PhpParser {
         PhpStatementNode body = new PhpBlockNode(statements.toArray(new PhpStatementNode[0]));
         PhpRootNode rootNode = new PhpRootNode(language, frameBuilder.build(), body);
 
+        // Resolve parent class references
+        resolveClassInheritance();
+
         // Register functions and classes in the context after parsing
         PhpContext context = PhpContext.get(rootNode);
         for (PhpFunction function : declaredFunctions) {
@@ -90,6 +94,50 @@ public final class PhpParser {
         }
 
         return rootNode;
+    }
+
+    private void resolveClassInheritance() {
+        // Build a map of class names to PhpClass objects for quick lookup
+        Map<String, PhpClass> classMap = new HashMap<>();
+        for (PhpClass phpClass : declaredClasses) {
+            classMap.put(phpClass.getName(), phpClass);
+        }
+
+        // Resolve parent class references
+        for (PhpClass phpClass : declaredClasses) {
+            String parentName = classParentNames.get(phpClass.getName());
+            if (parentName != null) {
+                // Find the parent class
+                PhpClass parentClass = classMap.get(parentName);
+                if (parentClass == null) {
+                    throw new RuntimeException("Parent class not found: " + parentName + " for class " + phpClass.getName());
+                }
+
+                // Check for circular inheritance
+                if (hasCircularInheritance(phpClass.getName(), parentClass, classMap)) {
+                    throw new RuntimeException("Circular inheritance detected for class: " + phpClass.getName());
+                }
+
+                // Set the parent class
+                phpClass.setParentClass(parentClass);
+            }
+        }
+    }
+
+    private boolean hasCircularInheritance(String originalClassName, PhpClass currentClass, Map<String, PhpClass> classMap) {
+        // Walk up the inheritance chain
+        PhpClass current = currentClass;
+        while (current != null) {
+            if (current.getName().equals(originalClassName)) {
+                return true; // Found a cycle
+            }
+            String parentName = classParentNames.get(current.getName());
+            if (parentName == null) {
+                break; // No more parents
+            }
+            current = classMap.get(parentName);
+        }
+        return false;
     }
 
     private void skipPhpOpenTag() {
@@ -500,6 +548,23 @@ public final class PhpParser {
         String className = name.toString();
 
         skipWhitespace();
+
+        // Check for extends keyword
+        String parentClassName = null;
+        if (match("extends")) {
+            skipWhitespace();
+            StringBuilder parentName = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                parentName.append(advance());
+            }
+            parentClassName = parentName.toString();
+            if (parentClassName.isEmpty()) {
+                throw new RuntimeException("Expected parent class name after 'extends'");
+            }
+            classParentNames.put(className, parentClassName);
+            skipWhitespace();
+        }
+
         expect("{");
 
         Map<String, PhpClass.PropertyMetadata> properties = new HashMap<>();

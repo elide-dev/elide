@@ -37,8 +37,8 @@ public final class PhpNewNode extends PhpExpressionNode {
         // Create new object instance
         PhpObject object = new PhpObject(phpClass);
 
-        // Call constructor if present
-        CallTarget constructor = phpClass.getConstructor();
+        // Call constructor if present (including inherited constructor)
+        CallTarget constructor = phpClass.getConstructorOrInherited();
         if (constructor != null) {
             // Evaluate constructor arguments
             Object[] args = new Object[constructorArgs.length + 1];

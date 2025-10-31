@@ -1375,6 +1375,147 @@ class TrufflePhpTest {
     assertEquals("staticstatic methodinstanceinstance method", output.trim())
   }
 
+  // Tier 1 Feature Tests - Class Inheritance
+  @Test fun `basic class inheritance with properties works`() {
+    val output = executePhp("""
+      <?php
+      class Animal {
+        public ${'$'}name;
+      }
+      class Dog extends Animal {
+        public ${'$'}breed;
+      }
+      ${'$'}dog = new Dog();
+      ${'$'}dog->name = "Max";
+      ${'$'}dog->breed = "Labrador";
+      echo ${'$'}dog->name;
+      echo ${'$'}dog->breed;
+    """.trimIndent())
+    assertEquals("MaxLabrador", output.trim())
+  }
+
+  @Test fun `method inheritance works`() {
+    val output = executePhp("""
+      <?php
+      class Parent {
+        public function greet() {
+          return "Hello";
+        }
+      }
+      class Child extends Parent {
+      }
+      ${'$'}c = new Child();
+      echo ${'$'}c->greet();
+    """.trimIndent())
+    assertEquals("Hello", output.trim())
+  }
+
+  @Test fun `constructor inheritance works`() {
+    val output = executePhp("""
+      <?php
+      class Base {
+        public ${'$'}value;
+
+        function __construct(${'$'}v) {
+          ${'$'}this->value = ${'$'}v;
+        }
+      }
+      class Derived extends Base {
+      }
+      ${'$'}d = new Derived(42);
+      echo ${'$'}d->value;
+    """.trimIndent())
+    assertEquals("42", output.trim())
+  }
+
+  @Test fun `property with default value inheritance works`() {
+    val output = executePhp("""
+      <?php
+      class Config {
+        public ${'$'}timeout = 30;
+        public ${'$'}retries = 3;
+      }
+      class CustomConfig extends Config {
+        public ${'$'}debug = true;
+      }
+      ${'$'}cfg = new CustomConfig();
+      echo ${'$'}cfg->timeout;
+      echo ${'$'}cfg->retries;
+      if (${'$'}cfg->debug) {
+        echo "debug";
+      }
+    """.trimIndent())
+    assertEquals("303debug", output.trim())
+  }
+
+  @Test fun `multiple level inheritance works`() {
+    val output = executePhp("""
+      <?php
+      class A {
+        public ${'$'}a = 1;
+      }
+      class B extends A {
+        public ${'$'}b = 2;
+      }
+      class C extends B {
+        public ${'$'}c = 3;
+      }
+      ${'$'}obj = new C();
+      echo ${'$'}obj->a;
+      echo ${'$'}obj->b;
+      echo ${'$'}obj->c;
+    """.trimIndent())
+    assertEquals("123", output.trim())
+  }
+
+  @Test fun `child constructor overrides parent constructor`() {
+    val output = executePhp("""
+      <?php
+      class Parent {
+        public ${'$'}x;
+
+        function __construct() {
+          ${'$'}this->x = 10;
+        }
+      }
+      class Child extends Parent {
+        public ${'$'}y;
+
+        function __construct(${'$'}val) {
+          ${'$'}this->y = ${'$'}val;
+        }
+      }
+      ${'$'}c = new Child(20);
+      if (${'$'}c->x == null) {
+        echo "x_null";
+      }
+      echo ${'$'}c->y;
+    """.trimIndent())
+    assertEquals("x_null20", output.trim())
+  }
+
+  @Test fun `inherited method can access inherited properties`() {
+    val output = executePhp("""
+      <?php
+      class Vehicle {
+        public ${'$'}speed;
+
+        function __construct(${'$'}s) {
+          ${'$'}this->speed = ${'$'}s;
+        }
+
+        function getSpeed() {
+          return ${'$'}this->speed;
+        }
+      }
+      class Car extends Vehicle {
+      }
+      ${'$'}car = new Car(100);
+      echo ${'$'}car->getSpeed();
+    """.trimIndent())
+    assertEquals("100", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

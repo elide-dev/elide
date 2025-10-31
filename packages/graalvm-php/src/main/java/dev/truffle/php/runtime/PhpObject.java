@@ -22,9 +22,12 @@ public final class PhpObject implements TruffleObject {
         this.phpClass = phpClass;
         this.properties = new HashMap<>();
 
-        // Initialize properties with default values
-        for (Map.Entry<String, PhpClass.PropertyMetadata> entry : phpClass.getProperties().entrySet()) {
-            properties.put(entry.getKey(), entry.getValue().getDefaultValue());
+        // Initialize properties with default values (including inherited properties)
+        for (Map.Entry<String, PhpClass.PropertyMetadata> entry : phpClass.getAllProperties().entrySet()) {
+            // Skip static properties (they're stored in the class, not the instance)
+            if (!entry.getValue().isStatic()) {
+                properties.put(entry.getKey(), entry.getValue().getDefaultValue());
+            }
         }
     }
 

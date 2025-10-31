@@ -4,6 +4,7 @@ import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.runtime.PhpArray;
 import dev.truffle.php.runtime.PhpClass;
 import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpObject;
@@ -56,7 +57,12 @@ public final class PhpMethodCallNode extends PhpExpressionNode {
         PhpObject object = (PhpObject) objectValue;
         PhpClass phpClass = object.getPhpClass();
 
+        // Check if method exists
         if (!phpClass.hasMethod(methodName)) {
+            // Try __call magic method
+            if (phpClass.hasMethod("__call")) {
+                return invokeCallMagicMethod(object, phpClass, frame);
+            }
             throw new RuntimeException("Call to undefined method: " + phpClass.getName() + "::" + methodName + "()");
         }
 
@@ -71,6 +77,10 @@ public final class PhpMethodCallNode extends PhpExpressionNode {
 
         // Check visibility with caller context
         if (!phpClass.isMethodAccessible(methodName, callerClass)) {
+            // Try __call magic method for inaccessible methods
+            if (phpClass.hasMethod("__call")) {
+                return invokeCallMagicMethod(object, phpClass, frame);
+            }
             String visibilityName = method.getVisibility().toString().toLowerCase();
             throw new RuntimeException("Cannot call " + visibilityName + " method: " + phpClass.getName() + "::" + methodName + "()");
         }
@@ -85,5 +95,24 @@ public final class PhpMethodCallNode extends PhpExpressionNode {
         // Call the method
         CallTarget callTarget = method.getCallTarget();
         return callTarget.call(args);
+    }
+
+    /**
+     * Invoke the __call magic method with method name and arguments array.
+     */
+    @ExplodeLoop
+    private Object invokeCallMagicMethod(PhpObject object, PhpClass phpClass, VirtualFrame frame) {
+        PhpClass.MethodMetadata callMethod = phpClass.getMethod("__call");
+        CallTarget callTarget = callMethod.getCallTarget();
+
+        // Create PHP array with arguments
+        PhpArray argsArray = new PhpArray();
+        for (int i = 0; i < argumentNodes.length; i++) {
+            Object argValue = argumentNodes[i].execute(frame);
+            argsArray.append(argValue);
+        }
+
+        // __call receives: $this, method name (string), arguments (PhpArray)
+        return callTarget.call(object, methodName, argsArray);
     }
 }

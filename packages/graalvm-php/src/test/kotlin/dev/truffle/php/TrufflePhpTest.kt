@@ -3388,6 +3388,228 @@ class TrufflePhpTest {
     assertEquals("generic shape and circle with radius 5", output.trim())
   }
 
+  @Test fun `__get magic method works for undefined property`() {
+    val output = executePhp("""
+      <?php
+      class MagicProperties {
+        function __get(${'$'}name) {
+          return "Getting property: " . ${'$'}name;
+        }
+      }
+      ${'$'}obj = new MagicProperties();
+      echo ${'$'}obj->foo;
+    """.trimIndent())
+    assertEquals("Getting property: foo", output.trim())
+  }
+
+  @Test fun `__set magic method works for undefined property`() {
+    val output = executePhp("""
+      <?php
+      class MagicProperties {
+        function __set(${'$'}name, ${'$'}value) {
+          echo "Setting " . ${'$'}name . " to " . ${'$'}value;
+        }
+      }
+      ${'$'}obj = new MagicProperties();
+      ${'$'}obj->username = "Alice";
+    """.trimIndent())
+    assertEquals("Setting username to Alice", output.trim())
+  }
+
+  @Test fun `__get and __set work together for dynamic properties`() {
+    val output = executePhp("""
+      <?php
+      class DynamicObject {
+        public ${'$'}name;
+        public ${'$'}age;
+
+        function __get(${'$'}propName) {
+          return "undefined";
+        }
+
+        function __set(${'$'}propName, ${'$'}value) {
+          if (${'$'}propName == "name") {
+            ${'$'}this->name = ${'$'}value;
+          }
+          if (${'$'}propName == "age") {
+            ${'$'}this->age = ${'$'}value;
+          }
+        }
+      }
+      ${'$'}obj = new DynamicObject();
+      ${'$'}obj->name = "Bob";
+      ${'$'}obj->age = 25;
+      echo ${'$'}obj->name;
+      echo " is ";
+      echo ${'$'}obj->age;
+      echo " years old. Country: ";
+      echo ${'$'}obj->country;
+    """.trimIndent())
+    assertEquals("Bob is 25 years old. Country: undefined", output.trim())
+  }
+
+  @Test fun `__get is called for inaccessible private property`() {
+    val output = executePhp("""
+      <?php
+      class PrivateData {
+        private ${'$'}secret = "hidden";
+
+        function __get(${'$'}name) {
+          return "Access to " . ${'$'}name . " denied via __get";
+        }
+      }
+      ${'$'}obj = new PrivateData();
+      echo ${'$'}obj->secret;
+    """.trimIndent())
+    assertEquals("Access to secret denied via __get", output.trim())
+  }
+
+  @Test fun `__set is called for inaccessible private property`() {
+    val output = executePhp("""
+      <?php
+      class PrivateData {
+        private ${'$'}secret = "hidden";
+
+        function __set(${'$'}name, ${'$'}value) {
+          echo "Attempt to set " . ${'$'}name . " to " . ${'$'}value . " blocked via __set";
+        }
+      }
+      ${'$'}obj = new PrivateData();
+      ${'$'}obj->secret = "exposed";
+    """.trimIndent())
+    assertEquals("Attempt to set secret to exposed blocked via __set", output.trim())
+  }
+
+  @Test fun `__call magic method works for undefined method`() {
+    val output = executePhp("""
+      <?php
+      class MagicMethods {
+        function __call(${'$'}name, ${'$'}arguments) {
+          return "Called: " . ${'$'}name . " with " . count(${'$'}arguments) . " arguments";
+        }
+      }
+      ${'$'}obj = new MagicMethods();
+      echo ${'$'}obj->doSomething(1, 2, 3);
+    """.trimIndent())
+    assertEquals("Called: doSomething with 3 arguments", output.trim())
+  }
+
+  @Test fun `__call magic method works for inaccessible private method`() {
+    val output = executePhp("""
+      <?php
+      class PrivateMethods {
+        private function secret() {
+          return "secret data";
+        }
+
+        function __call(${'$'}name, ${'$'}arguments) {
+          return "Access to " . ${'$'}name . " denied via __call";
+        }
+      }
+      ${'$'}obj = new PrivateMethods();
+      echo ${'$'}obj->secret();
+    """.trimIndent())
+    assertEquals("Access to secret denied via __call", output.trim())
+  }
+
+  // Phase 1 Feature Tests - __invoke Magic Method
+  @Test fun `__invoke magic method allows object to be called as function`() {
+    val output = executePhp("""
+      <?php
+      class Adder {
+        function __invoke(${'$'}a, ${'$'}b) {
+          return ${'$'}a + ${'$'}b;
+        }
+      }
+      ${'$'}add = new Adder();
+      echo ${'$'}add(5, 10);
+    """.trimIndent())
+    assertEquals("15", output.trim())
+  }
+
+  @Test fun `__invoke with no arguments works`() {
+    val output = executePhp("""
+      <?php
+      class Greeter {
+        function __invoke() {
+          return "Hello!";
+        }
+      }
+      ${'$'}greet = new Greeter();
+      echo ${'$'}greet();
+    """.trimIndent())
+    assertEquals("Hello!", output.trim())
+  }
+
+  @Test fun `__invoke with multiple arguments works`() {
+    val output = executePhp("""
+      <?php
+      class Multiplier {
+        function __invoke(${'$'}a, ${'$'}b, ${'$'}c) {
+          return ${'$'}a * ${'$'}b * ${'$'}c;
+        }
+      }
+      ${'$'}multiply = new Multiplier();
+      echo ${'$'}multiply(2, 3, 4);
+    """.trimIndent())
+    assertEquals("24", output.trim())
+  }
+
+  @Test fun `__invoke can access object properties`() {
+    val output = executePhp("""
+      <?php
+      class Counter {
+        private ${'$'}count = 0;
+
+        function __invoke() {
+          ${'$'}this->count = ${'$'}this->count + 1;
+          return ${'$'}this->count;
+        }
+      }
+      ${'$'}counter = new Counter();
+      echo ${'$'}counter();
+      echo ${'$'}counter();
+      echo ${'$'}counter();
+    """.trimIndent())
+    assertEquals("123", output.trim())
+  }
+
+  // Phase 1 Feature Tests - __callStatic Magic Method
+  @Test fun `__callStatic magic method works for undefined static method`() {
+    val output = executePhp("""
+      <?php
+      class StaticMagic {
+        static function __callStatic(${'$'}name, ${'$'}arguments) {
+          return "Static call: " . ${'$'}name . " with " . count(${'$'}arguments) . " arguments";
+        }
+      }
+      echo StaticMagic::doSomething(1, 2, 3);
+    """.trimIndent())
+    assertEquals("Static call: doSomething with 3 arguments", output.trim())
+  }
+
+  @Test fun `__callStatic can return computed values`() {
+    val output = executePhp("""
+      <?php
+      class Calculator {
+        static function __callStatic(${'$'}name, ${'$'}arguments) {
+          if (${'$'}name == "sum") {
+            ${'$'}total = 0;
+            ${'$'}i = 0;
+            while (${'$'}i < count(${'$'}arguments)) {
+              ${'$'}total = ${'$'}total + ${'$'}arguments[${'$'}i];
+              ${'$'}i++;
+            }
+            return ${'$'}total;
+          }
+          return 0;
+        }
+      }
+      echo Calculator::sum(10, 20, 30);
+    """.trimIndent())
+    assertEquals("60", output.trim())
+  }
+
   private fun executePhp(code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()

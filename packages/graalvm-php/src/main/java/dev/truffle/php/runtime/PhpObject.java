@@ -1,5 +1,6 @@
 package dev.truffle.php.runtime;
 
+import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.interop.TruffleObject;
 import com.oracle.truffle.api.library.ExportLibrary;
@@ -50,12 +51,28 @@ public final class PhpObject implements TruffleObject {
     public Object readProperty(String propertyName, PhpClass callerClass) {
         // Check if property exists in class definition
         if (!phpClass.hasProperty(propertyName)) {
+            // Try __get magic method
+            if (phpClass.hasMethod("__get")) {
+                PhpClass.MethodMetadata method = phpClass.getMethod("__get");
+                CallTarget callTarget = method.getCallTarget();
+                if (callTarget != null) {
+                    return callTarget.call(this, propertyName);
+                }
+            }
             throw new RuntimeException("Undefined property: " + phpClass.getName() + "::$" + propertyName);
         }
 
         // Check visibility
         PhpClass.PropertyMetadata metadata = phpClass.getProperty(propertyName);
         if (!isPropertyAccessible(metadata, callerClass)) {
+            // Try __get magic method for inaccessible properties
+            if (phpClass.hasMethod("__get")) {
+                PhpClass.MethodMetadata method = phpClass.getMethod("__get");
+                CallTarget callTarget = method.getCallTarget();
+                if (callTarget != null) {
+                    return callTarget.call(this, propertyName);
+                }
+            }
             String visibilityName = metadata.getVisibility().toString().toLowerCase();
             throw new RuntimeException("Cannot access " + visibilityName + " property: " + phpClass.getName() + "::$" + propertyName);
         }
@@ -79,12 +96,30 @@ public final class PhpObject implements TruffleObject {
     public void writeProperty(String propertyName, Object value, PhpClass callerClass) {
         // Check if property exists in class definition
         if (!phpClass.hasProperty(propertyName)) {
+            // Try __set magic method
+            if (phpClass.hasMethod("__set")) {
+                PhpClass.MethodMetadata method = phpClass.getMethod("__set");
+                CallTarget callTarget = method.getCallTarget();
+                if (callTarget != null) {
+                    callTarget.call(this, propertyName, value);
+                    return;
+                }
+            }
             throw new RuntimeException("Undefined property: " + phpClass.getName() + "::$" + propertyName);
         }
 
         // Check visibility
         PhpClass.PropertyMetadata metadata = phpClass.getProperty(propertyName);
         if (!isPropertyAccessible(metadata, callerClass)) {
+            // Try __set magic method for inaccessible properties
+            if (phpClass.hasMethod("__set")) {
+                PhpClass.MethodMetadata method = phpClass.getMethod("__set");
+                CallTarget callTarget = method.getCallTarget();
+                if (callTarget != null) {
+                    callTarget.call(this, propertyName, value);
+                    return;
+                }
+            }
             String visibilityName = metadata.getVisibility().toString().toLowerCase();
             throw new RuntimeException("Cannot access " + visibilityName + " property: " + phpClass.getName() + "::$" + propertyName);
         }

@@ -1852,6 +1852,24 @@ public final class PhpParser {
                 skipWhitespace();
             }
 
+            // Check for () - variable function call / __invoke
+            skipWhitespace();
+            if (match("(")) {
+                // Parse arguments
+                List<PhpExpressionNode> args = new ArrayList<>();
+                skipWhitespace();
+                while (!check(")")) {
+                    args.add(parseExpression());
+                    skipWhitespace();
+                    if (match(",")) {
+                        skipWhitespace();
+                    }
+                }
+                expect(")");
+                varNode = new PhpInvokeNode(varNode, args.toArray(new PhpExpressionNode[0]));
+                skipWhitespace();
+            }
+
             // Check for postfix increment/decrement (only on simple variables, not array access or property access)
             if (varNode instanceof PhpReadVariableNode) {
                 skipWhitespace();

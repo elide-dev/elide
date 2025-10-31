@@ -35,6 +35,7 @@ import io.modelcontextprotocol.kotlin.sdk.server.StdioServerTransport
 import io.modelcontextprotocol.kotlin.sdk.shared.AbstractTransport
 import org.graalvm.polyglot.Context
 import java.nio.charset.StandardCharsets
+import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.io.asSink
 import kotlinx.io.buffered
@@ -193,7 +194,9 @@ public object ModelContextProtocol {
       awaitClose: Boolean = true,
     ): EmbeddedServer<*, *> {
       val logging = Logging.of(McpServer::class)
-      val servers = ConcurrentMap<String, Server>()
+      val servers = ConcurrentMap<String, Pair<Server, Int>>()
+      val transports = ConcurrentMap<Int, SseServerTransport>()
+      val transportOracle = AtomicInteger(0)
 
       return embeddedServer(CIO, host = config.host, port = config.port.toInt()) {
         install(SSE)
@@ -201,8 +204,11 @@ public object ModelContextProtocol {
         routing {
           sse("/sse") {
             val transport = SseServerTransport("/message", this)
+            val transportId = transportOracle.incrementAndGet()
+            transports[transportId] = transport
+
             val server = serverFactory()
-            servers[transport.sessionId] = server
+            servers[transport.sessionId] = (server to transportId)
 
             server.onClose {
               logging.info("Server closed")
@@ -216,9 +222,15 @@ public object ModelContextProtocol {
               call.respond(HttpStatusCode.BadRequest, "Missing sessionId query parameter")
               return@post
             }
-            val transport = servers[sessionId]?.transport as? SseServerTransport
-            if (transport == null) {
+            val serverBundle = servers[sessionId]
+            if (serverBundle == null) {
               call.respond(HttpStatusCode.NotFound, "Session not found")
+              return@post
+            }
+            val (_, transportId) = serverBundle
+            val transport = transports[transportId]
+            if (transport == null) {
+              call.respond(HttpStatusCode.NotFound, "Transport not found")
               return@post
             }
             transport.handlePostMessage(call)

@@ -120,6 +120,7 @@ val enablePythonDynamic = true
 val enableRuby = false
 val enableLlvm = true
 val enableJvm = true
+val enablePhp = true
 val enableKotlin = true
 val enableSqlite = true
 val enableAllLocales = false
@@ -603,6 +604,9 @@ dependencies {
       compileOnly(projects.packages.graalvmJvm)
       compileOnly(projects.packages.graalvmJava)
       compileOnly(projects.packages.graalvmKt)
+    }
+    if (enablePhp) {
+      implementation(projects.packages.graalvmPhp)
     }
   }
 

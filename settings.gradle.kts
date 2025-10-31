@@ -201,6 +201,7 @@ include(
   ":packages:graalvm-js",
   ":packages:graalvm-kt",
   ":packages:graalvm-llvm",
+  ":packages:graalvm-php",
   ":packages:graalvm-py",
   ":packages:graalvm-rb",
   ":packages:graalvm-ts",

@@ -5,6 +5,8 @@ import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import kotlin.test.*
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.nio.file.Files
 
 class TrufflePhpTest {
   @Test fun `simple echo statement works`() {
@@ -3608,6 +3610,198 @@ class TrufflePhpTest {
       echo Calculator::sum(10, 20, 30);
     """.trimIndent())
     assertEquals("60", output.trim())
+  }
+
+  // File inclusion tests
+  @Test fun `require includes and executes a file`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val includedFile = File(tempDir, "included.php")
+      includedFile.writeText("<?php echo \"Hello from included file\";")
+
+      val output = executePhp("""
+        <?php
+        require "${includedFile.absolutePath}";
+      """.trimIndent())
+      assertEquals("Hello from included file", output.trim())
+    } finally {
+      tempDir.deleteRecursively()
+    }
+  }
+
+  @Test fun `include includes and executes a file`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val includedFile = File(tempDir, "included.php")
+      includedFile.writeText("<?php echo \"Hello from include\";")
+
+      val output = executePhp("""
+        <?php
+        include "${includedFile.absolutePath}";
+      """.trimIndent())
+      assertEquals("Hello from include", output.trim())
+    } finally {
+      tempDir.deleteRecursively()
+    }
+  }
+
+  @Test fun `require_once only includes a file once`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val includedFile = File(tempDir, "counter.php")
+      includedFile.writeText("<?php echo \"X\";")
+
+      val output = executePhp("""
+        <?php
+        require_once "${includedFile.absolutePath}";
+        require_once "${includedFile.absolutePath}";
+        require_once "${includedFile.absolutePath}";
+      """.trimIndent())
+      assertEquals("X", output.trim()) // Should only print once
+    } finally {
+      tempDir.deleteRecursively()
+    }
+  }
+
+  @Test fun `include_once only includes a file once`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val includedFile = File(tempDir, "counter.php")
+      includedFile.writeText("<?php echo \"Y\";")
+
+      val output = executePhp("""
+        <?php
+        include_once "${includedFile.absolutePath}";
+        include_once "${includedFile.absolutePath}";
+        include_once "${includedFile.absolutePath}";
+      """.trimIndent())
+      assertEquals("Y", output.trim()) // Should only print once
+    } finally {
+      tempDir.deleteRecursively()
+    }
+  }
+
+  @Test fun `require throws exception on missing file`() {
+    assertFailsWith<Exception> {
+      executePhp("""
+        <?php
+        require "/nonexistent/missing.php";
+        echo "Should not reach here";
+      """.trimIndent())
+    }
+  }
+
+  @Test fun `include continues execution on missing file`() {
+    val output = executePhp("""
+      <?php
+      include "/nonexistent/missing.php";
+      echo "Continued";
+    """.trimIndent())
+    // Include should print a warning but continue execution
+    assertEquals("Continued", output.trim())
+  }
+
+  @Test fun `variables from included files are accessible`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val includedFile = File(tempDir, "vars.php")
+      includedFile.writeText("<?php \$message = \"Hello from include\";")
+
+      val output = executePhp("""
+        <?php
+        require "${includedFile.absolutePath}";
+        echo ${'$'}message;
+      """.trimIndent())
+      assertEquals("Hello from include", output.trim())
+    } finally {
+      tempDir.deleteRecursively()
+    }
+  }
+
+  @Test fun `functions from included files are accessible`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val includedFile = File(tempDir, "functions.php")
+      includedFile.writeText("""
+        <?php
+        function greet(${'$'}name) {
+          return "Hello, " . ${'$'}name;
+        }
+      """.trimIndent())
+
+      val output = executePhp("""
+        <?php
+        require "${includedFile.absolutePath}";
+        echo greet("World");
+      """.trimIndent())
+      assertEquals("Hello, World", output.trim())
+    } finally {
+      tempDir.deleteRecursively()
+    }
+  }
+
+  @Test fun `classes from included files are accessible`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val includedFile = File(tempDir, "classes.php")
+      includedFile.writeText("""
+        <?php
+        class Greeter {
+          public function greet(${'$'}name) {
+            return "Hello, " . ${'$'}name;
+          }
+        }
+      """.trimIndent())
+
+      val output = executePhp("""
+        <?php
+        require "${includedFile.absolutePath}";
+        ${'$'}g = new Greeter();
+        echo ${'$'}g->greet("PHP");
+      """.trimIndent())
+      assertEquals("Hello, PHP", output.trim())
+    } finally {
+      tempDir.deleteRecursively()
+    }
+  }
+
+  @Test fun `nested includes work correctly`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val file1 = File(tempDir, "file1.php")
+      val file2 = File(tempDir, "file2.php")
+
+      file2.writeText("<?php echo \"C\";")
+      file1.writeText("<?php echo \"B\"; require \"${file2.absolutePath}\";")
+
+      val output = executePhp("""
+        <?php
+        echo "A";
+        require "${file1.absolutePath}";
+        echo "D";
+      """.trimIndent())
+      assertEquals("ABCD", output.trim())
+    } finally {
+      tempDir.deleteRecursively()
+    }
+  }
+
+  @Test fun `mixing require and require_once tracks files correctly`() {
+    val tempDir = Files.createTempDirectory("php-test").toFile()
+    try {
+      val includedFile = File(tempDir, "mixed.php")
+      includedFile.writeText("<?php echo \"X\";")
+
+      val output = executePhp("""
+        <?php
+        require_once "${includedFile.absolutePath}";
+        require_once "${includedFile.absolutePath}";
+        include_once "${includedFile.absolutePath}";
+      """.trimIndent())
+      assertEquals("X", output.trim()) // Should only print once across all _once variants
+    } finally {
+      tempDir.deleteRecursively()
+    }
   }
 
   private fun executePhp(code: String): String {

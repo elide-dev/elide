@@ -20,6 +20,8 @@ import dev.truffle.php.nodes.statement.PhpContinueNode;
 import dev.truffle.php.nodes.statement.PhpClassNode;
 import dev.truffle.php.nodes.statement.PhpThrowNode;
 import dev.truffle.php.nodes.statement.PhpTryNode;
+import dev.truffle.php.nodes.statement.PhpRequireNode;
+import dev.truffle.php.nodes.statement.PhpIncludeNode;
 import dev.truffle.php.nodes.PhpFunctionRootNode;
 import dev.truffle.php.nodes.PhpMethodRootNode;
 import dev.truffle.php.runtime.PhpFunction;
@@ -252,6 +254,36 @@ public final class PhpParser {
         // echo statement
         if (matchKeyword("echo")) {
             return parseEcho();
+        }
+
+        // require statement
+        if (matchKeyword("require_once")) {
+            skipWhitespace();
+            PhpExpressionNode pathExpr = parseExpression();
+            expect(";");
+            return new PhpRequireNode(pathExpr, true);
+        }
+
+        if (matchKeyword("require")) {
+            skipWhitespace();
+            PhpExpressionNode pathExpr = parseExpression();
+            expect(";");
+            return new PhpRequireNode(pathExpr, false);
+        }
+
+        // include statement
+        if (matchKeyword("include_once")) {
+            skipWhitespace();
+            PhpExpressionNode pathExpr = parseExpression();
+            expect(";");
+            return new PhpIncludeNode(pathExpr, true);
+        }
+
+        if (matchKeyword("include")) {
+            skipWhitespace();
+            PhpExpressionNode pathExpr = parseExpression();
+            expect(";");
+            return new PhpIncludeNode(pathExpr, false);
         }
 
         // interface definition

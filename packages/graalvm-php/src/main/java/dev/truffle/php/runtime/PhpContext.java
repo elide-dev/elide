@@ -9,7 +9,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * PHP execution context.
@@ -33,6 +35,7 @@ public final class PhpContext {
     private final Map<String, CallTarget> builtins;
     private final Map<String, PhpClass> classes;
     private final Map<String, PhpInterface> interfaces;
+    private final Set<String> includedFiles;
 
     public PhpContext(PhpLanguage language, TruffleLanguage.Env env) {
         this.language = language;
@@ -44,6 +47,7 @@ public final class PhpContext {
         this.builtins = new HashMap<>();
         this.classes = new HashMap<>();
         this.interfaces = new HashMap<>();
+        this.includedFiles = new HashSet<>();
         // Initialize built-in functions for this context
         PhpBuiltinRegistry.initializeBuiltins(this, language);
         // Initialize built-in classes
@@ -143,6 +147,20 @@ public final class PhpContext {
      */
     public PhpInterface getInterface(String name) {
         return interfaces.get(name);
+    }
+
+    /**
+     * Check if a file has already been included (for *_once variants).
+     */
+    public boolean isFileIncluded(String path) {
+        return includedFiles.contains(path);
+    }
+
+    /**
+     * Mark a file as included (for *_once variants).
+     */
+    public void markFileIncluded(String path) {
+        includedFiles.add(path);
     }
 
     /**

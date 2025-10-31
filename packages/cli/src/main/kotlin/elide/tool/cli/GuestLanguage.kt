@@ -77,7 +77,7 @@ enum class GuestLanguage (
     mimeTypes = sortedSetOf("application/x-python-code", "text/x-python")
   ),
 
-  /** Interactive Python VM. */
+  /** Interactive Ruby VM. */
   RUBY (
     id = ENGINE_RUBY,
     formalName = "Ruby",

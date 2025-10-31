@@ -58,7 +58,7 @@ public sealed interface HeaderValue {
   ) : HeaderValue {
     override val count: UShort get() = value.first
     override val values: Sequence<HttpHeaderValue> get() = value.second
-    override fun asString(): HttpHeaderValue = value.second.joinToString(", ") { it.toString() }
+    override fun asString(): HttpHeaderValue = value.second.joinToString(", ")
     override fun toString(): String = asString()
   }
 

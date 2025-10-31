@@ -6,6 +6,7 @@ export type TableData = {
   columns: string[]
   rows: unknown[][]
   totalRows: number
+  primaryKeys?: string[]
 }
 
 async function fetchTableData(

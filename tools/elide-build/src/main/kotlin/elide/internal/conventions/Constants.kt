@@ -160,6 +160,9 @@ public object Constants {
 
     /** GraalVM version. */
     const val GRAALVM = "25.0.1"
+
+    /** GraalVM version for Ruby artifacts. */
+    const val GRAALVM_RUBY = "25.0.0"
   }
 
   /** Kotlin conventions. */

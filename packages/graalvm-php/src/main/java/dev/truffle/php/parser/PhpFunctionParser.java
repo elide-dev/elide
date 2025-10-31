@@ -8,6 +8,7 @@ import dev.truffle.php.nodes.PhpStatementNode;
 import dev.truffle.php.nodes.statement.PhpFunctionNode;
 import dev.truffle.php.runtime.PhpFunction;
 import dev.truffle.php.runtime.PhpGlobalScope;
+import dev.truffle.php.runtime.PhpNamespaceContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,12 +29,14 @@ public final class PhpFunctionParser {
     private final PhpStatementParser.StatementContext statementContext;
     private final FunctionParserContext context;
     private final BlockParserDelegate blockDelegate;
+    private PhpNamespaceContext namespaceContext;
 
     /**
      * Context shared between function parser and main parser.
      */
     public static final class FunctionParserContext {
         public final List<PhpFunction> declaredFunctions = new ArrayList<>();
+        public final Map<PhpFunction, String> functionNamespaces = new HashMap<>();  // Track namespace for each function
         public FrameDescriptor.Builder currentFrameBuilder;
     }
 
@@ -61,6 +64,14 @@ public final class PhpFunctionParser {
         this.statementContext = statementContext;
         this.context = context;
         this.blockDelegate = blockDelegate;
+        this.namespaceContext = null;
+    }
+
+    /**
+     * Set the namespace context for parsing.
+     */
+    public void setNamespaceContext(PhpNamespaceContext namespaceContext) {
+        this.namespaceContext = namespaceContext;
     }
 
     public PhpStatementNode parseFunction() {
@@ -77,17 +88,33 @@ public final class PhpFunctionParser {
         expect("(");
         skipWhitespace();
 
-        // Parse parameters
+        // Parse parameters with optional type hints
         List<String> paramNames = new ArrayList<>();
+        List<dev.truffle.php.runtime.PhpTypeHint> paramTypes = new ArrayList<>();
+
         while (!check(")")) {
+            // Check for optional type hint
+            dev.truffle.php.runtime.PhpTypeHint typeHint = parseOptionalTypeHint();
+            paramTypes.add(typeHint);
+
+            // Parse parameter name
             String paramName = parseVariableName();
             paramNames.add(paramName);
             skipWhitespace();
+
             if (match(",")) {
                 skipWhitespace();
             }
         }
         expect(")");
+
+        // Parse optional return type hint
+        skipWhitespace();
+        dev.truffle.php.runtime.PhpTypeHint returnType = null;
+        if (match(":")) {
+            skipWhitespace();
+            returnType = parseTypeHint();
+        }
 
         // Create a new frame for the function
         FrameDescriptor.Builder functionFrameBuilder = FrameDescriptor.newBuilder();
@@ -114,8 +141,31 @@ public final class PhpFunctionParser {
             this.variables.put(paramNames.get(i), paramSlots[i]);
         }
 
+        // Add parameter type checks at the beginning of the function body
+        List<PhpStatementNode> bodyStatements = new ArrayList<>();
+
+        // Insert parameter type checks
+        for (int i = 0; i < paramNames.size(); i++) {
+            if (paramTypes.get(i) != null) {
+                bodyStatements.add(new dev.truffle.php.nodes.PhpParameterTypeCheckNode(
+                    paramNames.get(i),
+                    paramSlots[i],
+                    paramTypes.get(i),
+                    null  // No class context for standalone functions
+                ));
+            }
+        }
+
         skipWhitespace();
         PhpStatementNode body = blockDelegate.parseBlock();
+
+        // If we have type checks, wrap the body
+        if (!bodyStatements.isEmpty()) {
+            bodyStatements.add(body);
+            body = new dev.truffle.php.nodes.statement.PhpBlockNode(
+                bodyStatements.toArray(new PhpStatementNode[0])
+            );
+        }
 
         // Restore parser state
         this.variables.clear();
@@ -143,6 +193,11 @@ public final class PhpFunctionParser {
             paramNames.toArray(new String[0])
         );
         context.declaredFunctions.add(function);
+
+        // Track which namespace this function was declared in
+        if (namespaceContext != null) {
+            context.functionNamespaces.put(function, namespaceContext.getCurrentNamespace());
+        }
 
         return new PhpFunctionNode(functionName, function);
     }
@@ -183,5 +238,81 @@ public final class PhpFunctionParser {
 
     private boolean isAtEnd() {
         return lexer.isAtEnd();
+    }
+
+    private boolean matchKeyword(String keyword) {
+        return lexer.matchKeyword(keyword);
+    }
+
+    /**
+     * Parse optional type hint (for parameters).
+     * Returns null if no type hint is present.
+     */
+    private dev.truffle.php.runtime.PhpTypeHint parseOptionalTypeHint() {
+        skipWhitespace();
+
+        // Check for nullable type (?)
+        boolean nullable = false;
+        if (match("?")) {
+            nullable = true;
+            skipWhitespace();
+        }
+
+        // Check if next token looks like a type (not a variable)
+        if (peek() == '$') {
+            // No type hint, just a parameter
+            return null;
+        }
+
+        // Check if it's a known type or identifier
+        if (Character.isLetter(peek()) || peek() == '_') {
+            // Try to parse type name
+            int savedPos = lexer.getPosition();
+            StringBuilder typeName = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
+                typeName.append(advance());
+            }
+            String type = typeName.toString();
+
+            skipWhitespace();
+
+            // If followed by $, this is a type hint
+            if (peek() == '$') {
+                return new dev.truffle.php.runtime.PhpTypeHint(type, nullable);
+            } else {
+                // Not a type hint, restore position
+                lexer.setPosition(savedPos);
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Parse required type hint (for return types).
+     */
+    private dev.truffle.php.runtime.PhpTypeHint parseTypeHint() {
+        skipWhitespace();
+
+        // Check for nullable type (?)
+        boolean nullable = false;
+        if (match("?")) {
+            nullable = true;
+            skipWhitespace();
+        }
+
+        // Parse type name
+        StringBuilder typeName = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
+            typeName.append(advance());
+        }
+
+        String type = typeName.toString();
+        if (type.isEmpty()) {
+            throw new RuntimeException("Expected type name");
+        }
+
+        return new dev.truffle.php.runtime.PhpTypeHint(type, nullable);
     }
 }

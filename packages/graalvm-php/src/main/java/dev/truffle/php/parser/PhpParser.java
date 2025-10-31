@@ -128,6 +128,13 @@ public final class PhpParser {
         lexer.skipPhpOpenTag();
         List<PhpStatementNode> statements = new ArrayList<>();
 
+        // Get context and provide namespace context to statement parser
+        PhpRootNode tempRootNode = new PhpRootNode(language, FrameDescriptor.newBuilder().build(), new PhpBlockNode(new PhpStatementNode[0]));
+        PhpContext context = PhpContext.get(tempRootNode);
+        statementParser.setNamespaceContext(context.getNamespaceContext());
+        functionParser.setNamespaceContext(context.getNamespaceContext());
+        classParser.setNamespaceContext(context.getNamespaceContext());
+
         while (!lexer.isAtEnd()) {
             PhpStatementNode stmt = parseStatement();
             if (stmt != null) {
@@ -142,22 +149,79 @@ public final class PhpParser {
         FrameDescriptor frameDescriptor = globalScope.build();
         PhpRootNode rootNode = new PhpRootNode(language, frameDescriptor, body);
 
-        // Get context to access built-in classes
-        PhpContext context = PhpContext.get(rootNode);
-
         // Resolve parent class and interface references
         resolveInterfaceInheritance(context);
         resolveClassInheritance(context);
 
         // Register functions, classes, and interfaces in the context after parsing
+        // Use the namespace each function was declared in
+
         for (PhpFunction function : functionContext.declaredFunctions) {
-            context.registerFunction(function);
+            // Get the namespace this function was declared in
+            String declaredNamespace = functionContext.functionNamespaces.get(function);
+            String functionName = function.getName();
+
+            if (declaredNamespace != null && !declaredNamespace.isEmpty() && !functionName.contains("\\")) {
+                // Create a new PhpFunction with namespaced name
+                PhpFunction namespacedFunction = new PhpFunction(
+                    declaredNamespace + "\\" + functionName,
+                    function.getCallTarget(),
+                    function.getParameterCount(),
+                    function.getParameterNames()
+                );
+                context.registerFunction(namespacedFunction);
+            } else {
+                context.registerFunction(function);
+            }
         }
+
         for (PhpInterface phpInterface : classContext.declaredInterfaces) {
-            context.registerInterface(phpInterface);
+            // Get the namespace this interface was declared in
+            String declaredNamespace = classContext.interfaceNamespaces.get(phpInterface);
+            String interfaceName = phpInterface.getName();
+
+            if (declaredNamespace != null && !declaredNamespace.isEmpty() && !interfaceName.contains("\\")) {
+                // Create a new PhpInterface with namespaced name
+                PhpInterface namespacedInterface = new PhpInterface(
+                    declaredNamespace + "\\" + interfaceName,
+                    phpInterface.getMethods()
+                );
+                // Copy parent interfaces if any
+                for (PhpInterface parent : phpInterface.getParentInterfaces()) {
+                    namespacedInterface.addParentInterface(parent);
+                }
+                context.registerInterface(namespacedInterface);
+            } else {
+                context.registerInterface(phpInterface);
+            }
         }
+
         for (PhpClass phpClass : classContext.declaredClasses) {
-            context.registerClass(phpClass);
+            // Get the namespace this class was declared in
+            String declaredNamespace = classContext.classNamespaces.get(phpClass);
+            String className = phpClass.getName();
+
+            if (declaredNamespace != null && !declaredNamespace.isEmpty() && !className.contains("\\")) {
+                // Create a new PhpClass with namespaced name
+                PhpClass namespacedClass = new PhpClass(
+                    declaredNamespace + "\\" + className,
+                    phpClass.getProperties(),
+                    phpClass.getMethods(),
+                    phpClass.getConstructor(),
+                    phpClass.isAbstract()
+                );
+                // Copy parent class if any
+                if (phpClass.getParentClass() != null) {
+                    namespacedClass.setParentClass(phpClass.getParentClass());
+                }
+                // Copy implemented interfaces if any
+                for (PhpInterface iface : phpClass.getImplementedInterfaces()) {
+                    namespacedClass.addImplementedInterface(iface);
+                }
+                context.registerClass(namespacedClass);
+            } else {
+                context.registerClass(phpClass);
+            }
         }
 
         return rootNode;

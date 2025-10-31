@@ -187,11 +187,20 @@ public final class PhpExpressionParser {
         // Check for instanceof operator
         if (matchKeyword("instanceof")) {
             skipWhitespace();
-            // Parse class name
+
+            // Parse class name (can be fully qualified with leading \)
             StringBuilder className = new StringBuilder();
-            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+
+            // Check for leading backslash (fully qualified name)
+            if (peek() == '\\') {
+                advance(); // consume leading \
+            }
+
+            // Parse the class name (may include namespace separators)
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
                 className.append(advance());
             }
+
             String targetClassName = className.toString();
             if (targetClassName.isEmpty()) {
                 throw new RuntimeException("Expected class name after instanceof");
@@ -339,6 +348,12 @@ public final class PhpExpressionParser {
     private PhpExpressionNode parsePrimary() {
         skipWhitespace();
 
+        // Fully qualified names starting with \ (e.g., \Namespace\Class, \function())
+        if (peek() == '\\') {
+            advance(); // consume leading backslash
+            return parseFullyQualifiedName();
+        }
+
         // Parentheses
         if (match("(")) {
             PhpExpressionNode expr = parseExpression();
@@ -474,9 +489,16 @@ public final class PhpExpressionParser {
     }
 
     private PhpExpressionNode parseNew() {
-        // Parse class name
+        // Parse class name (can be fully qualified with leading \)
         StringBuilder name = new StringBuilder();
-        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+
+        // Check for leading backslash (fully qualified name)
+        if (peek() == '\\') {
+            advance(); // consume leading \
+        }
+
+        // Parse the class name (may include namespace separators)
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
             name.append(advance());
         }
         String className = name.toString();
@@ -497,6 +519,72 @@ public final class PhpExpressionParser {
         expect(")");
 
         return new PhpNewNode(className, args.toArray(new PhpExpressionNode[0]));
+    }
+
+    private PhpExpressionNode parseFullyQualifiedName() {
+        // Parse fully qualified name (already consumed leading \)
+        // Format: Namespace\ClassName or Namespace\functionName
+        StringBuilder name = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
+            name.append(advance());
+        }
+        String fullyQualifiedName = name.toString();
+
+        skipWhitespace();
+
+        // Check if it's followed by ( for function call or :: for static access
+        if (match("(")) {
+            // Function call: \Namespace\function()
+            List<PhpExpressionNode> args = new ArrayList<>();
+            skipWhitespace();
+
+            while (!check(")")) {
+                args.add(parseExpression());
+                skipWhitespace();
+                if (match(",")) {
+                    skipWhitespace();
+                }
+            }
+            expect(")");
+
+            return new PhpFunctionCallNode(fullyQualifiedName, args.toArray(new PhpExpressionNode[0]));
+        } else if (match("::")) {
+            // Static member access: \Namespace\Class::method()
+            skipWhitespace();
+
+            if (peek() == '$') {
+                // Static property: \Namespace\Class::$property
+                String propName = parseVariableName();
+                return new PhpStaticPropertyAccessNode(fullyQualifiedName, propName);
+            } else {
+                // Static method: \Namespace\Class::method()
+                StringBuilder methodNameBuilder = new StringBuilder();
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    methodNameBuilder.append(advance());
+                }
+                String methodName = methodNameBuilder.toString();
+
+                skipWhitespace();
+                expect("(");
+                skipWhitespace();
+
+                List<PhpExpressionNode> args = new ArrayList<>();
+                while (!check(")")) {
+                    args.add(parseExpression());
+                    skipWhitespace();
+                    if (match(",")) {
+                        skipWhitespace();
+                    }
+                }
+                expect(")");
+
+                return new PhpStaticMethodCallNode(fullyQualifiedName, methodName, args.toArray(new PhpExpressionNode[0]));
+            }
+        } else {
+            // Could be used in 'new' expression or instanceof - treat as identifier
+            // For now, throw error since we don't support standalone qualified names
+            throw new RuntimeException("Unexpected fully qualified name: \\" + fullyQualifiedName);
+        }
     }
 
     private PhpExpressionNode parseFunctionCallOrIdentifier() {

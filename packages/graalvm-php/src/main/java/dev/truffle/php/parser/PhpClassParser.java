@@ -12,6 +12,7 @@ import dev.truffle.php.nodes.statement.PhpClassNode;
 import dev.truffle.php.runtime.PhpClass;
 import dev.truffle.php.runtime.PhpGlobalScope;
 import dev.truffle.php.runtime.PhpInterface;
+import dev.truffle.php.runtime.PhpNamespaceContext;
 import dev.truffle.php.runtime.Visibility;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public final class PhpClassParser {
     private final PhpStatementParser.StatementContext statementContext;
     private final ClassParserContext context;
     private final BlockParserDelegate blockDelegate;
+    private PhpNamespaceContext namespaceContext;
 
     /**
      * Context shared between class parser and main parser.
@@ -43,6 +45,8 @@ public final class PhpClassParser {
         public final Map<String, String> classParentNames = new HashMap<>();  // className -> parentClassName
         public final Map<String, List<String>> classImplementedInterfaces = new HashMap<>();  // className -> List<interfaceName>
         public final Map<String, String> interfaceParentNames = new HashMap<>();  // interfaceName -> parentInterfaceName
+        public final Map<PhpClass, String> classNamespaces = new HashMap<>();  // Track namespace for each class
+        public final Map<PhpInterface, String> interfaceNamespaces = new HashMap<>();  // Track namespace for each interface
 
         public String currentClassName;
         public FrameDescriptor.Builder currentFrameBuilder;
@@ -72,6 +76,14 @@ public final class PhpClassParser {
         this.statementContext = statementContext;
         this.context = context;
         this.blockDelegate = blockDelegate;
+        this.namespaceContext = null;
+    }
+
+    /**
+     * Set the namespace context for parsing.
+     */
+    public void setNamespaceContext(PhpNamespaceContext namespaceContext) {
+        this.namespaceContext = namespaceContext;
     }
 
     public PhpStatementNode parseClass(boolean isAbstract) {
@@ -178,17 +190,33 @@ public final class PhpClassParser {
                 expect("(");
                 skipWhitespace();
 
-                // Parse parameters
+                // Parse parameters with optional type hints
                 List<String> paramNames = new ArrayList<>();
+                List<dev.truffle.php.runtime.PhpTypeHint> paramTypes = new ArrayList<>();
+
                 while (!check(")")) {
+                    // Check for optional type hint
+                    dev.truffle.php.runtime.PhpTypeHint typeHint = parseOptionalTypeHint();
+                    paramTypes.add(typeHint);
+
+                    // Parse parameter name
                     String paramName = parseVariableName();
                     paramNames.add(paramName);
                     skipWhitespace();
+
                     if (match(",")) {
                         skipWhitespace();
                     }
                 }
                 expect(")");
+
+                // Parse optional return type hint
+                skipWhitespace();
+                dev.truffle.php.runtime.PhpTypeHint returnType = null;
+                if (match(":")) {
+                    skipWhitespace();
+                    returnType = parseTypeHint();
+                }
 
                 skipWhitespace();
 
@@ -261,8 +289,31 @@ public final class PhpClassParser {
                     this.variables.put(paramNames.get(i), paramSlots[i]);
                 }
 
+                // Add parameter type checks at the beginning of the method body
+                List<PhpStatementNode> bodyStatements = new ArrayList<>();
+
+                // Insert parameter type checks
+                for (int i = 0; i < paramNames.size(); i++) {
+                    if (paramTypes.get(i) != null) {
+                        bodyStatements.add(new dev.truffle.php.nodes.PhpParameterTypeCheckNode(
+                            paramNames.get(i),
+                            paramSlots[i],
+                            paramTypes.get(i),
+                            className  // Pass class context for self/parent types
+                        ));
+                    }
+                }
+
                 skipWhitespace();
                 PhpStatementNode body = blockDelegate.parseBlock();
+
+                // If we have type checks, wrap the body
+                if (!bodyStatements.isEmpty()) {
+                    bodyStatements.add(body);
+                    body = new PhpBlockNode(
+                        bodyStatements.toArray(new PhpStatementNode[0])
+                    );
+                }
 
                 // Restore parser state
                 this.variables.clear();
@@ -364,6 +415,11 @@ public final class PhpClassParser {
         PhpClass phpClass = new PhpClass(className, properties, methods, constructor, isAbstract);
         context.declaredClasses.add(phpClass);
 
+        // Track which namespace this class was declared in
+        if (namespaceContext != null) {
+            context.classNamespaces.put(phpClass, namespaceContext.getCurrentNamespace());
+        }
+
         // Store implemented interfaces for later resolution
         if (!implementedInterfaceNames.isEmpty()) {
             context.classImplementedInterfaces.put(className, implementedInterfaceNames);
@@ -424,9 +480,12 @@ public final class PhpClassParser {
                 expect("(");
                 skipWhitespace();
 
-                // Parse parameters (just names, no implementations)
+                // Parse parameters with optional type hints
                 List<String> paramNames = new ArrayList<>();
                 while (!check(")")) {
+                    // Check for optional type hint (for signature only, not enforced)
+                    parseOptionalTypeHint();  // Parse but don't store for interfaces
+
                     String paramName = parseVariableName();
                     paramNames.add(paramName);
                     skipWhitespace();
@@ -435,6 +494,13 @@ public final class PhpClassParser {
                     }
                 }
                 expect(")");
+
+                // Parse optional return type hint (for signature only)
+                skipWhitespace();
+                if (match(":")) {
+                    skipWhitespace();
+                    parseTypeHint();  // Parse but don't store for interfaces
+                }
 
                 skipWhitespace();
                 expect(";"); // Interface methods end with semicolon, no body
@@ -456,6 +522,11 @@ public final class PhpClassParser {
         // Create PhpInterface
         PhpInterface phpInterface = new PhpInterface(interfaceName, methods);
         context.declaredInterfaces.add(phpInterface);
+
+        // Track which namespace this interface was declared in
+        if (namespaceContext != null) {
+            context.interfaceNamespaces.put(phpInterface, namespaceContext.getCurrentNamespace());
+        }
 
         // For now, return a simple block node (interfaces don't execute code)
         return new PhpBlockNode(new PhpStatementNode[0]);
@@ -537,5 +608,77 @@ public final class PhpClassParser {
 
     private boolean isAtEnd() {
         return lexer.isAtEnd();
+    }
+
+    /**
+     * Parse optional type hint (for parameters).
+     * Returns null if no type hint is present.
+     */
+    private dev.truffle.php.runtime.PhpTypeHint parseOptionalTypeHint() {
+        skipWhitespace();
+
+        // Check for nullable type (?)
+        boolean nullable = false;
+        if (match("?")) {
+            nullable = true;
+            skipWhitespace();
+        }
+
+        // Check if next token looks like a type (not a variable)
+        if (peek() == '$') {
+            // No type hint, just a parameter
+            return null;
+        }
+
+        // Check if it's a known type or identifier
+        if (Character.isLetter(peek()) || peek() == '_') {
+            // Try to parse type name
+            int savedPos = lexer.getPosition();
+            StringBuilder typeName = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
+                typeName.append(advance());
+            }
+            String type = typeName.toString();
+
+            skipWhitespace();
+
+            // If followed by $, this is a type hint
+            if (peek() == '$') {
+                return new dev.truffle.php.runtime.PhpTypeHint(type, nullable);
+            } else {
+                // Not a type hint, restore position
+                lexer.setPosition(savedPos);
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Parse required type hint (for return types).
+     */
+    private dev.truffle.php.runtime.PhpTypeHint parseTypeHint() {
+        skipWhitespace();
+
+        // Check for nullable type (?)
+        boolean nullable = false;
+        if (match("?")) {
+            nullable = true;
+            skipWhitespace();
+        }
+
+        // Parse type name
+        StringBuilder typeName = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
+            typeName.append(advance());
+        }
+
+        String type = typeName.toString();
+        if (type.isEmpty()) {
+            throw new RuntimeException("Expected type name");
+        }
+
+        return new dev.truffle.php.runtime.PhpTypeHint(type, nullable);
     }
 }

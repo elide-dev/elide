@@ -5,7 +5,9 @@ import dev.truffle.php.nodes.PhpNodeFactory;
 import dev.truffle.php.nodes.PhpStatementNode;
 import dev.truffle.php.nodes.expression.*;
 import dev.truffle.php.nodes.statement.*;
+import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpGlobalScope;
+import dev.truffle.php.runtime.PhpNamespaceContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,7 @@ public final class PhpStatementParser {
     private final PhpExpressionParser expressionParser;
     private final StatementContext context;
     private final ParserDelegate delegate;
+    private PhpNamespaceContext namespaceContext;  // Set during parsing
 
     public PhpStatementParser(
             PhpLexer lexer,
@@ -67,6 +70,15 @@ public final class PhpStatementParser {
         this.expressionParser = expressionParser;
         this.context = context;
         this.delegate = delegate;
+        this.namespaceContext = null;  // Will be set by PhpParser
+    }
+
+    /**
+     * Set the namespace context for parsing.
+     * Called by PhpParser to provide access to namespace resolution.
+     */
+    public void setNamespaceContext(PhpNamespaceContext namespaceContext) {
+        this.namespaceContext = namespaceContext;
     }
 
     public PhpStatementNode parseStatement() {
@@ -74,6 +86,16 @@ public final class PhpStatementParser {
 
         if (isAtEnd()) {
             return null;
+        }
+
+        // namespace statement
+        if (matchKeyword("namespace")) {
+            return parseNamespace();
+        }
+
+        // use statement
+        if (matchKeyword("use")) {
+            return parseUse();
         }
 
         // echo statement
@@ -234,7 +256,8 @@ public final class PhpStatementParser {
 
         // Expression statement (like function call, static method call, or increment/decrement)
         // Also handle static property assignment: ClassName::$property = value;
-        if (Character.isLetter(peek()) || peek() == '_' || peek() == '+' || peek() == '-') {
+        // Also handle fully qualified names: \Namespace\function()
+        if (Character.isLetter(peek()) || peek() == '_' || peek() == '+' || peek() == '-' || peek() == '\\') {
             // Check if this might be a static property assignment
             int savedPos = lexer.getPosition();
             boolean isStaticPropertyAssignment = false;
@@ -899,5 +922,92 @@ public final class PhpStatementParser {
 
     private boolean isAtEnd() {
         return lexer.isAtEnd();
+    }
+
+    /**
+     * Parse namespace declaration.
+     * Syntax: namespace MyApp\Controllers;
+     */
+    private PhpStatementNode parseNamespace() {
+        skipWhitespace();
+
+        // Parse namespace name
+        StringBuilder namespaceName = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
+            namespaceName.append(advance());
+        }
+
+        skipWhitespace();
+        expect(";");
+
+        // Update the namespace context
+        if (namespaceContext != null) {
+            namespaceContext.setCurrentNamespace(namespaceName.toString());
+        }
+
+        // Namespace declarations don't produce runtime nodes
+        return null;
+    }
+
+    /**
+     * Parse use statement.
+     * Syntax:
+     *   use MyApp\Models\User;
+     *   use MyApp\Models\User as UserModel;
+     *   use function MyApp\Functions\helper;
+     *   use const MyApp\Constants\VERSION;
+     */
+    private PhpStatementNode parseUse() {
+        skipWhitespace();
+
+        // Check for function or const use
+        boolean isFunction = false;
+        boolean isConst = false;
+
+        if (matchKeyword("function")) {
+            isFunction = true;
+            skipWhitespace();
+        } else if (matchKeyword("const")) {
+            isConst = true;
+            skipWhitespace();
+        }
+
+        // Parse qualified name
+        StringBuilder qualifiedName = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
+            qualifiedName.append(advance());
+        }
+
+        String fqn = qualifiedName.toString();
+        String alias = null;
+
+        skipWhitespace();
+
+        // Check for 'as' alias
+        if (matchKeyword("as")) {
+            skipWhitespace();
+            StringBuilder aliasBuilder = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                aliasBuilder.append(advance());
+            }
+            alias = aliasBuilder.toString();
+            skipWhitespace();
+        }
+
+        expect(";");
+
+        // Update the namespace context
+        if (namespaceContext != null) {
+            if (isFunction) {
+                namespaceContext.addFunctionUse(fqn, alias);
+            } else if (isConst) {
+                namespaceContext.addConstUse(fqn, alias);
+            } else {
+                namespaceContext.addClassUse(fqn, alias);
+            }
+        }
+
+        // Use statements don't produce runtime nodes
+        return null;
     }
 }

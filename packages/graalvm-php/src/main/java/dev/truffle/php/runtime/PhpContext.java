@@ -37,6 +37,7 @@ public final class PhpContext {
     private final Map<String, PhpInterface> interfaces;
     private final Set<String> includedFiles;
     private final PhpGlobalScope globalScope;
+    private final PhpNamespaceContext namespaceContext;
 
     public PhpContext(PhpLanguage language, TruffleLanguage.Env env) {
         this.language = language;
@@ -50,6 +51,7 @@ public final class PhpContext {
         this.interfaces = new HashMap<>();
         this.includedFiles = new HashSet<>();
         this.globalScope = new PhpGlobalScope();
+        this.namespaceContext = new PhpNamespaceContext();
         // Initialize built-in functions for this context
         PhpBuiltinRegistry.initializeBuiltins(this, language);
         // Initialize built-in classes
@@ -103,10 +105,25 @@ public final class PhpContext {
     }
 
     /**
-     * Get a function by name.
+     * Get a function by name (with namespace resolution).
      */
     public PhpFunction getFunction(String name) {
-        return functions.get(name);
+        // First try the name as-is (for backward compatibility)
+        PhpFunction func = functions.get(name);
+        if (func != null) {
+            return func;
+        }
+
+        // Try resolving with namespace context
+        String resolved = namespaceContext.resolveFunctionName(name);
+        return functions.get(resolved);
+    }
+
+    /**
+     * Get a function by its fully qualified name.
+     */
+    public PhpFunction getFunctionByQualifiedName(String qualifiedName) {
+        return functions.get(qualifiedName);
     }
 
     /**
@@ -131,10 +148,25 @@ public final class PhpContext {
     }
 
     /**
-     * Get a class by name.
+     * Get a class by name (with namespace resolution).
      */
     public PhpClass getClass(String name) {
-        return classes.get(name);
+        // First try the name as-is (for backward compatibility and built-ins)
+        PhpClass phpClass = classes.get(name);
+        if (phpClass != null) {
+            return phpClass;
+        }
+
+        // Try resolving with namespace context
+        String resolved = namespaceContext.resolveClassName(name);
+        return classes.get(resolved);
+    }
+
+    /**
+     * Get a class by its fully qualified name.
+     */
+    public PhpClass getClassByQualifiedName(String qualifiedName) {
+        return classes.get(qualifiedName);
     }
 
     /**
@@ -145,10 +177,25 @@ public final class PhpContext {
     }
 
     /**
-     * Get an interface by name.
+     * Get an interface by name (with namespace resolution).
      */
     public PhpInterface getInterface(String name) {
-        return interfaces.get(name);
+        // First try the name as-is
+        PhpInterface iface = interfaces.get(name);
+        if (iface != null) {
+            return iface;
+        }
+
+        // Try resolving with namespace context
+        String resolved = namespaceContext.resolveClassName(name);  // Interfaces use class name resolution rules
+        return interfaces.get(resolved);
+    }
+
+    /**
+     * Get an interface by its fully qualified name.
+     */
+    public PhpInterface getInterfaceByQualifiedName(String qualifiedName) {
+        return interfaces.get(qualifiedName);
     }
 
     /**
@@ -171,6 +218,14 @@ public final class PhpContext {
      */
     public PhpGlobalScope getGlobalScope() {
         return globalScope;
+    }
+
+    /**
+     * Get the namespace context for this execution.
+     * The namespace context manages namespace declarations and use statements.
+     */
+    public PhpNamespaceContext getNamespaceContext() {
+        return namespaceContext;
     }
 
     /**

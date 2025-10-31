@@ -5,10 +5,12 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlotTypeException;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.runtime.PhpReference;
 
 /**
  * Node for reading a variable value.
  * In PHP, variables are prefixed with $.
+ * Automatically unwraps PhpReference objects for by-reference variables.
  */
 @NodeField(name = "slot", type = int.class)
 public abstract class PhpReadVariableNode extends PhpExpressionNode {
@@ -34,7 +36,14 @@ public abstract class PhpReadVariableNode extends PhpExpressionNode {
         @Override
         public Object execute(VirtualFrame frame) {
             try {
-                return frame.getObject(slot);
+                Object value = frame.getObject(slot);
+
+                // Automatically unwrap references
+                if (value instanceof PhpReference) {
+                    return ((PhpReference) value).getValue();
+                }
+
+                return value;
             } catch (FrameSlotTypeException e) {
                 return null;
             }

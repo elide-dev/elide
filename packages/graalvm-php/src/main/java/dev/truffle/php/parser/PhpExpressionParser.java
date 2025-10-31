@@ -2,14 +2,20 @@ package dev.truffle.php.parser;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.FrameSlotKind;
+import dev.truffle.php.PhpLanguage;
+import dev.truffle.php.nodes.PhpClosureRootNode;
 import dev.truffle.php.nodes.PhpExpressionNode;
 import dev.truffle.php.nodes.PhpNodeFactory;
+import dev.truffle.php.nodes.PhpStatementNode;
 import dev.truffle.php.nodes.expression.*;
 import dev.truffle.php.runtime.PhpGlobalScope;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Expression parser for PHP, extracted from the main PhpParser.
@@ -17,10 +23,12 @@ import java.util.Map;
  */
 public final class PhpExpressionParser {
 
+    private final PhpLanguage language;
     private final PhpLexer lexer;
     private final Map<String, Integer> variables;
     private final PhpGlobalScope globalScope;
     private final ParserContext context;
+    private final BlockParserDelegate blockDelegate;
 
     /**
      * Context object to pass mutable parser state
@@ -41,15 +49,26 @@ public final class PhpExpressionParser {
         }
     }
 
+    /**
+     * Delegate interface for parsing blocks (to avoid circular dependency).
+     */
+    public interface BlockParserDelegate {
+        PhpStatementNode parseBlock();
+    }
+
     public PhpExpressionParser(
+            PhpLanguage language,
             PhpLexer lexer,
             Map<String, Integer> variables,
             PhpGlobalScope globalScope,
-            ParserContext context) {
+            ParserContext context,
+            BlockParserDelegate blockDelegate) {
+        this.language = language;
         this.lexer = lexer;
         this.variables = variables;
         this.globalScope = globalScope;
         this.context = context;
+        this.blockDelegate = blockDelegate;
     }
 
     public PhpExpressionNode parseExpression() {
@@ -492,6 +511,18 @@ public final class PhpExpressionParser {
         if (matchKeyword("new")) {
             skipWhitespace();
             return parseNew();
+        }
+
+        // Check for 'function' keyword (closure)
+        if (matchKeyword("function")) {
+            skipWhitespace();
+            return parseClosure();
+        }
+
+        // Check for 'fn' keyword (arrow function)
+        if (matchKeyword("fn")) {
+            skipWhitespace();
+            return parseArrowFunction();
         }
 
         // Check for magic constants (e.g., __FILE__, __DIR__, __LINE__)
@@ -1055,6 +1086,332 @@ public final class PhpExpressionParser {
         }
 
         return args;
+    }
+
+    /**
+     * Parse a closure (anonymous function).
+     * Syntax: function($param1, $param2) use ($captured1, $captured2) { body }
+     */
+    private PhpExpressionNode parseClosure() {
+        // Parse parameter list
+        expect("(");
+        skipWhitespace();
+
+        List<String> paramNames = new ArrayList<>();
+        int variadicParamIndex = -1;
+
+        while (!check(")")) {
+            // Check for variadic parameter (...)
+            boolean isVariadic = false;
+            if (match("...")) {
+                isVariadic = true;
+                skipWhitespace();
+            }
+
+            // Skip optional type hint
+            parseOptionalTypeHint();
+
+            // Parse parameter name
+            String paramName = parseVariableName();
+            paramNames.add(paramName);
+
+            if (isVariadic) {
+                if (variadicParamIndex != -1) {
+                    throw new RuntimeException("Only one variadic parameter is allowed");
+                }
+                variadicParamIndex = paramNames.size() - 1;
+            }
+
+            skipWhitespace();
+
+            if (match(",")) {
+                if (isVariadic) {
+                    throw new RuntimeException("Variadic parameter must be the last parameter");
+                }
+                skipWhitespace();
+            }
+        }
+        expect(")");
+
+        skipWhitespace();
+
+        // Parse optional 'use' clause for captured variables
+        List<String> capturedVarNames = new ArrayList<>();
+        List<Boolean> capturedByReference = new ArrayList<>();
+
+        if (matchKeyword("use")) {
+            skipWhitespace();
+            expect("(");
+            skipWhitespace();
+
+            while (!check(")")) {
+                // Check for & (by-reference capture)
+                boolean byRef = false;
+                if (match("&")) {
+                    byRef = true;
+                    skipWhitespace();
+                }
+
+                String varName = parseVariableName();
+                capturedVarNames.add(varName);
+                capturedByReference.add(byRef);
+
+                skipWhitespace();
+                if (match(",")) {
+                    skipWhitespace();
+                }
+            }
+            expect(")");
+            skipWhitespace();
+        }
+
+        // Create frame descriptor for closure
+        FrameDescriptor.Builder closureFrameBuilder = FrameDescriptor.newBuilder();
+
+        // Add slots for captured variables
+        int[] capturedSlots = new int[capturedVarNames.size()];
+        for (int i = 0; i < capturedVarNames.size(); i++) {
+            capturedSlots[i] = closureFrameBuilder.addSlot(FrameSlotKind.Illegal, capturedVarNames.get(i), null);
+        }
+
+        // Add slots for parameters
+        int[] paramSlots = new int[paramNames.size()];
+        for (int i = 0; i < paramNames.size(); i++) {
+            paramSlots[i] = closureFrameBuilder.addSlot(FrameSlotKind.Illegal, paramNames.get(i), null);
+        }
+
+        // Save current parser state
+        Map<String, Integer> savedVars = new HashMap<>(this.variables);
+        FrameDescriptor.Builder savedFrameBuilder = this.context.currentFrameBuilder;
+        String savedClassName = this.context.currentClassName;
+
+        // Set up closure's variable scope
+        this.variables.clear();
+        this.context.currentFrameBuilder = closureFrameBuilder;
+        this.context.currentClassName = null;
+
+        // Add captured variables to scope
+        for (int i = 0; i < capturedVarNames.size(); i++) {
+            this.variables.put(capturedVarNames.get(i), capturedSlots[i]);
+        }
+
+        // Add parameters to scope
+        for (int i = 0; i < paramNames.size(); i++) {
+            this.variables.put(paramNames.get(i), paramSlots[i]);
+        }
+
+        // Parse closure body
+        skipWhitespace();
+        PhpStatementNode body = blockDelegate.parseBlock();
+
+        // Restore parser state
+        this.variables.clear();
+        this.variables.putAll(savedVars);
+        this.context.currentFrameBuilder = savedFrameBuilder;
+        this.context.currentClassName = savedClassName;
+
+        // Create closure root node
+        PhpClosureRootNode closureRoot = new PhpClosureRootNode(
+            language,
+            closureFrameBuilder.build(),
+            paramNames.toArray(new String[0]),
+            paramSlots,
+            body,
+            variadicParamIndex,
+            capturedSlots
+        );
+
+        // Create expressions to read captured variables from enclosing scope
+        // For by-reference captures, wrap in PhpReference and store back
+        PhpExpressionNode[] capturedExpressions = new PhpExpressionNode[capturedVarNames.size()];
+        for (int i = 0; i < capturedVarNames.size(); i++) {
+            String varName = capturedVarNames.get(i);
+            int slot = getOrCreateVariable(varName);
+            boolean byRef = capturedByReference.get(i);
+
+            if (byRef) {
+                // For by-reference: read current value, wrap in reference, store back, and pass reference
+                PhpExpressionNode readNode = PhpNodeFactory.createReadVariable(slot);
+                PhpExpressionNode createRefNode = new PhpCreateReferenceNode(readNode);
+                PhpExpressionNode writeBackNode = PhpNodeFactory.createWriteVariable(createRefNode, slot);
+                capturedExpressions[i] = writeBackNode;
+            } else {
+                // For by-value: just read the value
+                capturedExpressions[i] = PhpNodeFactory.createReadVariable(slot);
+            }
+        }
+
+        // Return closure node
+        return new PhpClosureNode(
+            closureRoot.getCallTarget(),
+            paramNames.toArray(new String[0]),
+            capturedExpressions
+        );
+    }
+
+    /**
+     * Parse an arrow function.
+     * Syntax: fn($param1, $param2) => expression
+     * Arrow functions automatically capture all variables used in the expression.
+     */
+    private PhpExpressionNode parseArrowFunction() {
+        // Parse parameter list
+        expect("(");
+        skipWhitespace();
+
+        List<String> paramNames = new ArrayList<>();
+        int variadicParamIndex = -1;
+
+        while (!check(")")) {
+            // Check for variadic parameter (...)
+            boolean isVariadic = false;
+            if (match("...")) {
+                isVariadic = true;
+                skipWhitespace();
+            }
+
+            // Skip optional type hint
+            parseOptionalTypeHint();
+
+            // Parse parameter name
+            String paramName = parseVariableName();
+            paramNames.add(paramName);
+
+            if (isVariadic) {
+                if (variadicParamIndex != -1) {
+                    throw new RuntimeException("Only one variadic parameter is allowed");
+                }
+                variadicParamIndex = paramNames.size() - 1;
+            }
+
+            skipWhitespace();
+
+            if (match(",")) {
+                if (isVariadic) {
+                    throw new RuntimeException("Variadic parameter must be the last parameter");
+                }
+                skipWhitespace();
+            }
+        }
+        expect(")");
+
+        skipWhitespace();
+        expect("=>");
+        skipWhitespace();
+
+        // Create frame descriptor for arrow function
+        FrameDescriptor.Builder arrowFrameBuilder = FrameDescriptor.newBuilder();
+
+        // Save current parser state
+        Map<String, Integer> savedVars = new HashMap<>(this.variables);
+        FrameDescriptor.Builder savedFrameBuilder = this.context.currentFrameBuilder;
+        String savedClassName = this.context.currentClassName;
+
+        // Track variables used in expression (for auto-capture)
+        Set<String> usedVariables = new HashSet<>();
+
+        // Set up arrow function's variable scope
+        this.variables.clear();
+        this.context.currentFrameBuilder = arrowFrameBuilder;
+        this.context.currentClassName = null;
+
+        // Parse the expression (this will access variables)
+        PhpExpressionNode expression = parseExpression();
+
+        // Determine which variables were used (not including parameters)
+        Set<String> paramSet = new HashSet<>(paramNames);
+        List<String> capturedVarNames = new ArrayList<>();
+        for (String varName : this.variables.keySet()) {
+            if (!paramSet.contains(varName)) {
+                capturedVarNames.add(varName);
+            }
+        }
+
+        // Rebuild frame with captured variables first, then parameters
+        arrowFrameBuilder = FrameDescriptor.newBuilder();
+
+        int[] capturedSlots = new int[capturedVarNames.size()];
+        for (int i = 0; i < capturedVarNames.size(); i++) {
+            capturedSlots[i] = arrowFrameBuilder.addSlot(FrameSlotKind.Illegal, capturedVarNames.get(i), null);
+        }
+
+        int[] paramSlots = new int[paramNames.size()];
+        for (int i = 0; i < paramNames.size(); i++) {
+            paramSlots[i] = arrowFrameBuilder.addSlot(FrameSlotKind.Illegal, paramNames.get(i), null);
+        }
+
+        // Restore parser state
+        this.variables.clear();
+        this.variables.putAll(savedVars);
+        this.context.currentFrameBuilder = savedFrameBuilder;
+        this.context.currentClassName = savedClassName;
+
+        // Wrap expression in a return statement
+        PhpStatementNode body = new dev.truffle.php.nodes.statement.PhpReturnNode(expression);
+
+        // Create arrow function root node
+        PhpClosureRootNode arrowRoot = new PhpClosureRootNode(
+            language,
+            arrowFrameBuilder.build(),
+            paramNames.toArray(new String[0]),
+            paramSlots,
+            body,
+            variadicParamIndex,
+            capturedSlots
+        );
+
+        // Create expressions to read captured variables from enclosing scope
+        PhpExpressionNode[] capturedExpressions = new PhpExpressionNode[capturedVarNames.size()];
+        for (int i = 0; i < capturedVarNames.size(); i++) {
+            String varName = capturedVarNames.get(i);
+            int slot = getOrCreateVariable(varName);
+            capturedExpressions[i] = PhpNodeFactory.createReadVariable(slot);
+        }
+
+        // Return closure node
+        return new PhpClosureNode(
+            arrowRoot.getCallTarget(),
+            paramNames.toArray(new String[0]),
+            capturedExpressions
+        );
+    }
+
+    /**
+     * Parse optional type hint (for parameters).
+     * Returns silently if no type hint is present.
+     */
+    private void parseOptionalTypeHint() {
+        skipWhitespace();
+
+        // Check for nullable type (?)
+        if (match("?")) {
+            skipWhitespace();
+        }
+
+        // Check if next token looks like a type (not a variable)
+        if (peek() == '$') {
+            return; // No type hint
+        }
+
+        // Check if it's a known type or identifier
+        if (Character.isLetter(peek()) || peek() == '_' || peek() == '\\') {
+            // Try to parse type name
+            int savedPos = lexer.getPosition();
+            StringBuilder typeName = new StringBuilder();
+            while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_' || peek() == '\\')) {
+                typeName.append(advance());
+            }
+
+            skipWhitespace();
+
+            // If followed by $, this is a type hint
+            if (peek() == '$') {
+                return; // Successfully consumed type hint
+            } else {
+                // Not a type hint, restore position
+                lexer.setPosition(savedPos);
+            }
+        }
     }
 
     // Lexing method delegations

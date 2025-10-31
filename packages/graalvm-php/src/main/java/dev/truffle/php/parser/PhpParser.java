@@ -59,10 +59,24 @@ public final class PhpParser {
         this.lexer = new PhpLexer(source.getCharacters().toString());
         this.globalScope = globalScope;
         this.expressionContext = new PhpExpressionParser.ParserContext(null, null);
-        this.expressionParser = new PhpExpressionParser(lexer, variables, globalScope, expressionContext);
         this.statementContext = new PhpStatementParser.StatementContext(null, null);
         this.classContext = new PhpClassParser.ClassParserContext();
         this.functionContext = new PhpFunctionParser.FunctionParserContext();
+
+        // Create expression parser with block delegate
+        this.expressionParser = new PhpExpressionParser(
+            language,
+            lexer,
+            variables,
+            globalScope,
+            expressionContext,
+            new PhpExpressionParser.BlockParserDelegate() {
+                @Override
+                public PhpStatementNode parseBlock() {
+                    return PhpParser.this.parseBlock();
+                }
+            }
+        );
 
         // Create class parser with block delegate
         this.classParser = new PhpClassParser(

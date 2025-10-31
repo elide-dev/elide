@@ -2,10 +2,12 @@ package dev.truffle.php.nodes.expression;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.runtime.PhpReference;
 
 /**
  * Node for pre-increment operation (++$var).
  * Increments the variable and returns the new value.
+ * Automatically handles PhpReference objects for by-reference variables.
  */
 public final class PhpPreIncrementNode extends PhpExpressionNode {
 
@@ -21,8 +23,18 @@ public final class PhpPreIncrementNode extends PhpExpressionNode {
 
     @Override
     public Object execute(VirtualFrame frame) {
-        // Read current value
-        Object current = frame.getObject(slot);
+        // Read current value (may be a PhpReference)
+        Object slotValue = frame.getObject(slot);
+        Object current;
+        PhpReference reference = null;
+
+        // Unwrap reference if present
+        if (slotValue instanceof PhpReference) {
+            reference = (PhpReference) slotValue;
+            current = reference.getValue();
+        } else {
+            current = slotValue;
+        }
 
         // Increment
         Object newValue;
@@ -37,8 +49,12 @@ public final class PhpPreIncrementNode extends PhpExpressionNode {
             newValue = 1L;
         }
 
-        // Write back
-        frame.setObject(slot, newValue);
+        // Write back new value (update reference or slot)
+        if (reference != null) {
+            reference.setValue(newValue);
+        } else {
+            frame.setObject(slot, newValue);
+        }
 
         // Return new value
         return newValue;

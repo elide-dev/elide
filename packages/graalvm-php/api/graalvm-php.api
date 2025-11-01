@@ -1,0 +1,1277 @@
+public final class dev/truffle/php/PhpFileDetector : com/oracle/truffle/api/TruffleFile$FileTypeDetector {
+	public fun <init> ()V
+	public fun findEncoding (Lcom/oracle/truffle/api/TruffleFile;)Ljava/nio/charset/Charset;
+	public fun findMimeType (Lcom/oracle/truffle/api/TruffleFile;)Ljava/lang/String;
+}
+
+public final class dev/truffle/php/PhpLanguage : com/oracle/truffle/api/TruffleLanguage {
+	public static final field EXTENSION Ljava/lang/String;
+	public static final field ID Ljava/lang/String;
+	public static final field MIME_TYPE Ljava/lang/String;
+	public fun <init> ()V
+	public static fun get (Lcom/oracle/truffle/api/nodes/Node;)Ldev/truffle/php/PhpLanguage;
+	public static fun getContext (Lcom/oracle/truffle/api/nodes/Node;)Ldev/truffle/php/runtime/PhpContext;
+	public fun parseAndExecute (Lcom/oracle/truffle/api/source/Source;Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/PhpLanguageProvider : com/oracle/truffle/api/provider/TruffleLanguageProvider {
+	public fun <init> ()V
+}
+
+public abstract class dev/truffle/php/nodes/PhpBuiltinRootNode : com/oracle/truffle/api/nodes/RootNode {
+	protected fun <init> (Ldev/truffle/php/PhpLanguage;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	protected abstract fun executeBuiltin ([Ljava/lang/Object;)Ljava/lang/Object;
+	public fun getFunctionName ()Ljava/lang/String;
+}
+
+public final class dev/truffle/php/nodes/PhpClosureRootNode : com/oracle/truffle/api/nodes/RootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Lcom/oracle/truffle/api/frame/FrameDescriptor;[Ljava/lang/String;[ILdev/truffle/php/nodes/PhpStatementNode;I[I)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun getName ()Ljava/lang/String;
+}
+
+public abstract class dev/truffle/php/nodes/PhpExpressionNode : dev/truffle/php/nodes/PhpNode {
+	public fun <init> ()V
+}
+
+public final class dev/truffle/php/nodes/PhpFunctionRootNode : com/oracle/truffle/api/nodes/RootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Lcom/oracle/truffle/api/frame/FrameDescriptor;Ljava/lang/String;[Ljava/lang/String;[ILdev/truffle/php/nodes/PhpStatementNode;I)V
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Lcom/oracle/truffle/api/frame/FrameDescriptor;Ljava/lang/String;[Ljava/lang/String;[ILdev/truffle/php/nodes/PhpStatementNode;I[Z)V
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Lcom/oracle/truffle/api/frame/FrameDescriptor;Ljava/lang/String;[Ljava/lang/String;[ILdev/truffle/php/nodes/PhpStatementNode;I[ZZ)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun getName ()Ljava/lang/String;
+	public fun returnsByReference ()Z
+}
+
+public final class dev/truffle/php/nodes/PhpMethodRootNode : com/oracle/truffle/api/nodes/RootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Lcom/oracle/truffle/api/frame/FrameDescriptor;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;[IILdev/truffle/php/nodes/PhpStatementNode;I)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun getName ()Ljava/lang/String;
+	public fun getThisSlot ()I
+}
+
+public abstract class dev/truffle/php/nodes/PhpNode : com/oracle/truffle/api/nodes/Node {
+	public fun <init> ()V
+	public abstract fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun executeBoolean (Lcom/oracle/truffle/api/frame/VirtualFrame;)Z
+	public fun executeDouble (Lcom/oracle/truffle/api/frame/VirtualFrame;)D
+	public fun executeLong (Lcom/oracle/truffle/api/frame/VirtualFrame;)J
+	public fun executeString (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/String;
+}
+
+public final class dev/truffle/php/nodes/PhpNodeFactory {
+	public static fun createAdd (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpAddNode;
+	public static fun createConcat (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpConcatNode;
+	public static fun createDiv (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpDivNode;
+	public static fun createEqual (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpEqualNode;
+	public static fun createGreaterOrEqual (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpGreaterOrEqualNode;
+	public static fun createGreaterThan (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpGreaterThanNode;
+	public static fun createLessOrEqual (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLessOrEqualNode;
+	public static fun createLessThan (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLessThanNode;
+	public static fun createLogicalAnd (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLogicalAndNode;
+	public static fun createLogicalNot (Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLogicalNotNode;
+	public static fun createLogicalOr (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLogicalOrNode;
+	public static fun createMod (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpModNode;
+	public static fun createMul (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpMulNode;
+	public static fun createNotEqual (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpNotEqualNode;
+	public static fun createPostDecrement (I)Ldev/truffle/php/nodes/expression/PhpPostDecrementNode;
+	public static fun createPostIncrement (I)Ldev/truffle/php/nodes/expression/PhpPostIncrementNode;
+	public static fun createPreDecrement (I)Ldev/truffle/php/nodes/expression/PhpPreDecrementNode;
+	public static fun createPreIncrement (I)Ldev/truffle/php/nodes/expression/PhpPreIncrementNode;
+	public static fun createReadVariable (I)Ldev/truffle/php/nodes/expression/PhpReadVariableNode;
+	public static fun createSub (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpSubNode;
+	public static fun createWriteVariable (Ldev/truffle/php/nodes/PhpExpressionNode;I)Ldev/truffle/php/nodes/expression/PhpWriteVariableNode;
+}
+
+public final class dev/truffle/php/nodes/PhpParameterTypeCheckNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ljava/lang/String;ILdev/truffle/php/runtime/PhpTypeHint;Ljava/lang/String;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/PhpReturnTypeCheckNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpStatementNode;Ldev/truffle/php/runtime/PhpTypeHint;Ljava/lang/String;Ljava/lang/String;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+	public fun getCurrentClassName ()Ljava/lang/String;
+	public fun getFunctionName ()Ljava/lang/String;
+	public fun getTypeHint ()Ldev/truffle/php/runtime/PhpTypeHint;
+}
+
+public final class dev/truffle/php/nodes/PhpRootNode : com/oracle/truffle/api/nodes/RootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Lcom/oracle/truffle/api/frame/FrameDescriptor;Ldev/truffle/php/nodes/PhpStatementNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun getName ()Ljava/lang/String;
+}
+
+public abstract class dev/truffle/php/nodes/PhpStatementNode : dev/truffle/php/nodes/PhpNode {
+	public fun <init> ()V
+	public final fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public abstract fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/AbsBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArrayKeyExistsBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArrayKeysBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArrayMergeBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArrayPopBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArrayPushBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArrayReverseBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArraySearchBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArraySliceBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ArrayValuesBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/BasenameBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ConstantBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/CountBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/DefineBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/DefinedBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/DirnameBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ExplodeBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/FileExistsBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/FileGetContentsBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/FilePutContentsBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/GettypeBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/ImplodeBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/InArrayBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/IsArrayBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/IsDirBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/IsFileBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/IsIntBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/IsNullBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/IsStringBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/JsonDecodeBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/JsonEncodeBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/MaxBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/MinBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/PrintRBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/RandBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/StrReplaceBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/StrlenBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/StrtolowerBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/StrtoupperBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/SubstrBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/TrimBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/nodes/builtin/VarDumpBuiltin : dev/truffle/php/nodes/PhpBuiltinRootNode {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;)V
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpAddNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpAddNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpArrayAccessNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun getArrayNode ()Ldev/truffle/php/nodes/PhpExpressionNode;
+	public fun getIndexNode ()Ldev/truffle/php/nodes/PhpExpressionNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpArrayLiteralNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> ([Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun <init> ([Ldev/truffle/php/nodes/PhpExpressionNode;[Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpArrayWriteNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpBooleanLiteralNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Z)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun executeBoolean (Lcom/oracle/truffle/api/frame/VirtualFrame;)Z
+}
+
+public final class dev/truffle/php/nodes/expression/PhpBuiltinCallNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Lcom/oracle/truffle/api/CallTarget;[Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpClassConstantAccessNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpClosureNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Lcom/oracle/truffle/api/CallTarget;[Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpCompoundAssignmentNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;ILdev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp : java/lang/Enum {
+	public static final field ADD_ASSIGN Ldev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;
+	public static final field CONCAT_ASSIGN Ldev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;
+	public static final field DIV_ASSIGN Ldev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;
+	public static final field MOD_ASSIGN Ldev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;
+	public static final field MUL_ASSIGN Ldev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;
+	public static final field SUB_ASSIGN Ldev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;
+	public static fun valueOf (Ljava/lang/String;)Ldev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;
+	public static fun values ()[Ldev/truffle/php/nodes/expression/PhpCompoundAssignmentNode$CompoundOp;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpConcatNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpConcatNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpConstantAccessNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpCreateReferenceNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpDereferenceNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpDivNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpDivNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpEmptyNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (I)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpEqualNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpEqualNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpFloatLiteralNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (D)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun executeDouble (Lcom/oracle/truffle/api/frame/VirtualFrame;)D
+}
+
+public final class dev/truffle/php/nodes/expression/PhpFunctionCallNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpGreaterOrEqualNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpGreaterOrEqualNode;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpGreaterThanNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpGreaterThanNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpInstanceofNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpIntegerLiteralNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (J)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun executeLong (Lcom/oracle/truffle/api/frame/VirtualFrame;)J
+}
+
+public final class dev/truffle/php/nodes/expression/PhpInvokeNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;[Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpIssetNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> ([I)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpLessOrEqualNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLessOrEqualNode;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpLessThanNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLessThanNode;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpLogicalAndNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLogicalAndNode;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpLogicalNotNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field operand Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLogicalNotNode;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpLogicalOrNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpLogicalOrNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpMagicConstantNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;Ljava/lang/Object;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType : java/lang/Enum {
+	public static final field CLASS_NAME Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static final field DIR Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static final field FILE Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static final field FUNCTION Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static final field LINE Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static final field METHOD Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static final field NAMESPACE Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static final field TRAIT Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static fun valueOf (Ljava/lang/String;)Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+	public static fun values ()[Ldev/truffle/php/nodes/expression/PhpMagicConstantNode$MagicConstantType;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpMethodCallNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;)V
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;Z)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpModNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpModNode;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpMulNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpMulNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpNewNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpNotEqualNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpNotEqualNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpNullCoalescingNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpNullLiteralNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> ()V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpParentConstantAccessNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpParentMethodCallNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpPostDecrementNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public static fun create (I)Ldev/truffle/php/nodes/expression/PhpPostDecrementNode;
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpPostIncrementNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public static fun create (I)Ldev/truffle/php/nodes/expression/PhpPostIncrementNode;
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpPreDecrementNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public static fun create (I)Ldev/truffle/php/nodes/expression/PhpPreDecrementNode;
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpPreIncrementNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public static fun create (I)Ldev/truffle/php/nodes/expression/PhpPreIncrementNode;
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpPropertyAccessNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;Z)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun getCurrentClassName ()Ljava/lang/String;
+	public fun getObjectNode ()Ldev/truffle/php/nodes/PhpExpressionNode;
+	public fun getPropertyName ()Ljava/lang/String;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpPropertyPostDecrementNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/expression/PhpPropertyAccessNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpPropertyPostIncrementNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/expression/PhpPropertyAccessNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpPropertyWriteNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;)V
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;Ldev/truffle/php/nodes/PhpExpressionNode;Z)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpReadThisNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> ()V
+	public static fun create (I)Ldev/truffle/php/nodes/expression/PhpReadThisNode;
+	protected abstract fun getSlot ()I
+	protected fun readThis (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpReadThisNodeGen : dev/truffle/php/nodes/expression/PhpReadThisNode {
+	public static fun create (I)Ldev/truffle/php/nodes/expression/PhpReadThisNode;
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpReadVariableNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> ()V
+	public static fun create (I)Ldev/truffle/php/nodes/expression/PhpReadVariableNode;
+	public abstract fun getSlot ()I
+}
+
+public final class dev/truffle/php/nodes/expression/PhpSelfMethodCallNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpSelfPropertyAccessNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpSelfPropertyWriteNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ldev/truffle/php/nodes/PhpExpressionNode;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpSpreadArgumentNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun getExpression ()Ldev/truffle/php/nodes/PhpExpressionNode;
+	public fun isSpread ()Z
+}
+
+public final class dev/truffle/php/nodes/expression/PhpStaticMethodCallNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;[Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpStaticPropertyAccessNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpStaticPropertyPostDecrementNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpStaticPropertyPostIncrementNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpStaticPropertyWriteNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpStringInterpolationNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> ([Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpStringLiteralNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ljava/lang/String;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+	public fun executeString (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/String;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpSubNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field left Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected field right Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)Ldev/truffle/php/nodes/expression/PhpSubNode;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpTernaryNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/expression/PhpUnsetNode : dev/truffle/php/nodes/PhpExpressionNode {
+	public fun <init> ([I)V
+	public fun execute (Lcom/oracle/truffle/api/frame/VirtualFrame;)Ljava/lang/Object;
+}
+
+public abstract class dev/truffle/php/nodes/expression/PhpWriteVariableNode : dev/truffle/php/nodes/PhpExpressionNode {
+	protected field value Ldev/truffle/php/nodes/PhpExpressionNode;
+	protected fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public static fun create (Ldev/truffle/php/nodes/PhpExpressionNode;I)Ldev/truffle/php/nodes/expression/PhpWriteVariableNode;
+	protected abstract fun getSlot ()I
+}
+
+public final class dev/truffle/php/nodes/statement/PhpBlockNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> ([Ldev/truffle/php/nodes/PhpStatementNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpBreakNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (I)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpClassNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/runtime/PhpClass;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpConstDeclarationNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ljava/lang/String;Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpContinueNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (I)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpEchoNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> ([Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpExpressionStatementNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpForNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpStatementNode;Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpStatementNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpForeachNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;ILjava/lang/Integer;Ldev/truffle/php/nodes/PhpStatementNode;)V
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;ILjava/lang/Integer;Ldev/truffle/php/nodes/PhpStatementNode;Z)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpFunctionNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ljava/lang/String;Ldev/truffle/php/runtime/PhpFunction;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+	public fun getFunction ()Ldev/truffle/php/runtime/PhpFunction;
+	public fun getFunctionName ()Ljava/lang/String;
+}
+
+public final class dev/truffle/php/nodes/statement/PhpGlobalNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ljava/lang/String;I)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpIfNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpStatementNode;Ldev/truffle/php/nodes/PhpStatementNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpIncludeNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Z)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpReferenceAssignmentExprNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ljava/lang/String;ILdev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpReferenceAssignmentNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ljava/lang/String;ILjava/lang/String;I)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpRequireNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Z)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpReturnNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpReturnNode$PhpReturnException : com/oracle/truffle/api/nodes/ControlFlowException {
+	public fun <init> (Ljava/lang/Object;)V
+	public fun getResult ()Ljava/lang/Object;
+}
+
+public final class dev/truffle/php/nodes/statement/PhpSwitchNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;[Ldev/truffle/php/nodes/statement/PhpSwitchNode$CaseClause;I)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpSwitchNode$CaseClause {
+	public final field isDefault Z
+	public final field statements [Ldev/truffle/php/nodes/PhpStatementNode;
+	public final field valueNode Ldev/truffle/php/nodes/PhpExpressionNode;
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;[Ldev/truffle/php/nodes/PhpStatementNode;Z)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpThrowNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpTraitNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/runtime/PhpTrait;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+	public fun getPhpTrait ()Ldev/truffle/php/runtime/PhpTrait;
+}
+
+public final class dev/truffle/php/nodes/statement/PhpTryNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpStatementNode;[Ldev/truffle/php/nodes/statement/PhpTryNode$PhpCatchClause;Ldev/truffle/php/nodes/PhpStatementNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/nodes/statement/PhpTryNode$PhpCatchClause {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;ILdev/truffle/php/nodes/PhpStatementNode;)V
+	public fun getBody ()Ldev/truffle/php/nodes/PhpStatementNode;
+	public fun getExceptionClassName ()Ljava/lang/String;
+	public fun getVariableName ()Ljava/lang/String;
+	public fun getVariableSlot ()I
+	public fun matches (Ldev/truffle/php/runtime/PhpObject;)Z
+}
+
+public final class dev/truffle/php/nodes/statement/PhpWhileNode : dev/truffle/php/nodes/PhpStatementNode {
+	public fun <init> (Ldev/truffle/php/nodes/PhpExpressionNode;Ldev/truffle/php/nodes/PhpStatementNode;)V
+	public fun executeVoid (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public abstract class dev/truffle/php/nodes/types/PhpTypes {
+	public fun <init> ()V
+	public static fun isEmpty (Ljava/lang/Object;)Z
+	public static fun isNull (Ljava/lang/Object;)Z
+	public static fun toBoolean (Ljava/lang/Object;)Z
+}
+
+public final class dev/truffle/php/nodes/types/PhpTypesGen : dev/truffle/php/nodes/types/PhpTypes {
+	public static fun asBoolean (Ljava/lang/Object;)Z
+	public static fun asDouble (Ljava/lang/Object;)D
+	public static fun asLong (Ljava/lang/Object;)J
+	public static fun asString (Ljava/lang/Object;)Ljava/lang/String;
+	public static fun expectBoolean (Ljava/lang/Object;)Z
+	public static fun expectDouble (Ljava/lang/Object;)D
+	public static fun expectLong (Ljava/lang/Object;)J
+	public static fun expectString (Ljava/lang/Object;)Ljava/lang/String;
+	public static fun isBoolean (Ljava/lang/Object;)Z
+	public static fun isDouble (Ljava/lang/Object;)Z
+	public static fun isLong (Ljava/lang/Object;)Z
+	public static fun isString (Ljava/lang/Object;)Z
+}
+
+public final class dev/truffle/php/parser/PhpClassParser {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Ldev/truffle/php/parser/PhpLexer;Ljava/util/Map;Ldev/truffle/php/runtime/PhpGlobalScope;Ldev/truffle/php/parser/PhpExpressionParser;Ldev/truffle/php/parser/PhpStatementParser$StatementContext;Ldev/truffle/php/parser/PhpClassParser$ClassParserContext;Ldev/truffle/php/parser/PhpClassParser$BlockParserDelegate;)V
+	public fun parseClass (Z)Ldev/truffle/php/nodes/PhpStatementNode;
+	public fun parseInterface ()Ldev/truffle/php/nodes/PhpStatementNode;
+	public fun setNamespaceContext (Ldev/truffle/php/runtime/PhpNamespaceContext;)V
+}
+
+public abstract interface class dev/truffle/php/parser/PhpClassParser$BlockParserDelegate {
+	public abstract fun parseBlock ()Ldev/truffle/php/nodes/PhpStatementNode;
+}
+
+public final class dev/truffle/php/parser/PhpClassParser$ClassConstant {
+	public final field name Ljava/lang/String;
+	public final field value Ljava/lang/Object;
+	public final field visibility Ldev/truffle/php/runtime/Visibility;
+	public fun <init> (Ljava/lang/String;Ljava/lang/Object;Ldev/truffle/php/runtime/Visibility;)V
+}
+
+public final class dev/truffle/php/parser/PhpClassParser$ClassParserContext {
+	public final field classConstants Ljava/util/Map;
+	public final field classImplementedInterfaces Ljava/util/Map;
+	public final field classNamespaces Ljava/util/Map;
+	public final field classParentNames Ljava/util/Map;
+	public final field classTraitResolutions Ljava/util/Map;
+	public final field classUsedTraits Ljava/util/Map;
+	public field currentClassName Ljava/lang/String;
+	public field currentFrameBuilder Lcom/oracle/truffle/api/frame/FrameDescriptor$Builder;
+	public final field declaredClasses Ljava/util/List;
+	public final field declaredInterfaces Ljava/util/List;
+	public final field interfaceNamespaces Ljava/util/Map;
+	public final field interfaceParentNames Ljava/util/Map;
+	public fun <init> ()V
+}
+
+public final class dev/truffle/php/parser/PhpClassParser$TraitConflictResolution {
+	public final field aliasName Ljava/lang/String;
+	public final field aliasVisibility Ldev/truffle/php/runtime/Visibility;
+	public final field excludedTraits Ljava/util/List;
+	public final field methodName Ljava/lang/String;
+	public final field traitName Ljava/lang/String;
+	public final field type Ldev/truffle/php/parser/PhpClassParser$TraitConflictResolution$Type;
+	public static fun alias (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ldev/truffle/php/runtime/Visibility;)Ldev/truffle/php/parser/PhpClassParser$TraitConflictResolution;
+	public static fun insteadOf (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Ldev/truffle/php/parser/PhpClassParser$TraitConflictResolution;
+}
+
+public final class dev/truffle/php/parser/PhpClassParser$TraitConflictResolution$Type : java/lang/Enum {
+	public static final field ALIAS Ldev/truffle/php/parser/PhpClassParser$TraitConflictResolution$Type;
+	public static final field INSTEADOF Ldev/truffle/php/parser/PhpClassParser$TraitConflictResolution$Type;
+	public static fun valueOf (Ljava/lang/String;)Ldev/truffle/php/parser/PhpClassParser$TraitConflictResolution$Type;
+	public static fun values ()[Ldev/truffle/php/parser/PhpClassParser$TraitConflictResolution$Type;
+}
+
+public final class dev/truffle/php/parser/PhpExpressionParser {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Ldev/truffle/php/parser/PhpLexer;Ljava/util/Map;Ldev/truffle/php/runtime/PhpGlobalScope;Ldev/truffle/php/parser/PhpExpressionParser$ParserContext;Ldev/truffle/php/parser/PhpExpressionParser$BlockParserDelegate;)V
+	public fun parseArrayLiteral ()Ldev/truffle/php/nodes/PhpExpressionNode;
+	public fun parseExpression ()Ldev/truffle/php/nodes/PhpExpressionNode;
+	public fun updateContext (Lcom/oracle/truffle/api/frame/FrameDescriptor$Builder;Ljava/lang/String;)V
+	public fun updateFunctionName (Ljava/lang/String;)V
+	public fun updateNamespace (Ljava/lang/String;)V
+}
+
+public abstract interface class dev/truffle/php/parser/PhpExpressionParser$BlockParserDelegate {
+	public abstract fun parseBlock ()Ldev/truffle/php/nodes/PhpStatementNode;
+}
+
+public final class dev/truffle/php/parser/PhpExpressionParser$ParserContext {
+	public field currentClassName Ljava/lang/String;
+	public field currentFrameBuilder Lcom/oracle/truffle/api/frame/FrameDescriptor$Builder;
+	public field currentFunctionName Ljava/lang/String;
+	public field currentNamespace Ljava/lang/String;
+	public field sourcePath Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Lcom/oracle/truffle/api/frame/FrameDescriptor$Builder;)V
+}
+
+public final class dev/truffle/php/parser/PhpFunctionParser {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Ldev/truffle/php/parser/PhpLexer;Ljava/util/Map;Ldev/truffle/php/runtime/PhpGlobalScope;Ldev/truffle/php/parser/PhpExpressionParser;Ldev/truffle/php/parser/PhpStatementParser$StatementContext;Ldev/truffle/php/parser/PhpFunctionParser$FunctionParserContext;Ldev/truffle/php/parser/PhpFunctionParser$BlockParserDelegate;)V
+	public fun parseFunction ()Ldev/truffle/php/nodes/PhpStatementNode;
+	public fun setNamespaceContext (Ldev/truffle/php/runtime/PhpNamespaceContext;)V
+}
+
+public abstract interface class dev/truffle/php/parser/PhpFunctionParser$BlockParserDelegate {
+	public abstract fun parseBlock ()Ldev/truffle/php/nodes/PhpStatementNode;
+}
+
+public final class dev/truffle/php/parser/PhpFunctionParser$FunctionParserContext {
+	public field currentFrameBuilder Lcom/oracle/truffle/api/frame/FrameDescriptor$Builder;
+	public final field declaredFunctions Ljava/util/List;
+	public final field functionNamespaces Ljava/util/Map;
+	public fun <init> ()V
+}
+
+public final class dev/truffle/php/parser/PhpLexer {
+	public fun <init> (Ljava/lang/String;)V
+	public fun advance ()C
+	public fun check (Ljava/lang/String;)Z
+	public fun expect (Ljava/lang/String;)V
+	public fun getCode ()Ljava/lang/String;
+	public fun getCurrentLine ()I
+	public fun getPosition ()I
+	public fun isAtEnd ()Z
+	public fun match (Ljava/lang/String;)Z
+	public fun matchKeyword (Ljava/lang/String;)Z
+	public fun parseIdentifier ()Ljava/lang/String;
+	public fun parseNumberString ()Ljava/lang/String;
+	public fun peek ()C
+	public fun peekNext ()C
+	public fun setPosition (I)V
+	public fun skipPhpOpenTag ()V
+	public fun skipWhitespace ()V
+}
+
+public final class dev/truffle/php/parser/PhpParser {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Lcom/oracle/truffle/api/source/Source;Ldev/truffle/php/runtime/PhpGlobalScope;)V
+	public fun parse ()Ldev/truffle/php/nodes/PhpRootNode;
+}
+
+public final class dev/truffle/php/parser/PhpStatementParser {
+	public fun <init> (Ldev/truffle/php/parser/PhpLexer;Ljava/util/Map;Ldev/truffle/php/runtime/PhpGlobalScope;Ldev/truffle/php/parser/PhpExpressionParser;Ldev/truffle/php/parser/PhpStatementParser$StatementContext;Ldev/truffle/php/parser/PhpStatementParser$ParserDelegate;)V
+	public fun parseBlock ()Ldev/truffle/php/nodes/PhpStatementNode;
+	public fun parseStatement ()Ldev/truffle/php/nodes/PhpStatementNode;
+	public fun setNamespaceContext (Ldev/truffle/php/runtime/PhpNamespaceContext;)V
+}
+
+public abstract interface class dev/truffle/php/parser/PhpStatementParser$ParserDelegate {
+	public abstract fun parseClass (Z)Ldev/truffle/php/nodes/PhpStatementNode;
+	public abstract fun parseFunction ()Ldev/truffle/php/nodes/PhpStatementNode;
+	public abstract fun parseInterface ()Ldev/truffle/php/nodes/PhpStatementNode;
+	public abstract fun parseTrait ()Ldev/truffle/php/nodes/PhpStatementNode;
+}
+
+public final class dev/truffle/php/parser/PhpStatementParser$StatementContext {
+	public field currentClassName Ljava/lang/String;
+	public field currentFrameBuilder Lcom/oracle/truffle/api/frame/FrameDescriptor$Builder;
+	public fun <init> (Ljava/lang/String;Lcom/oracle/truffle/api/frame/FrameDescriptor$Builder;)V
+}
+
+public final class dev/truffle/php/parser/PhpTraitParser {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Ldev/truffle/php/parser/PhpLexer;Ljava/util/Map;Ldev/truffle/php/runtime/PhpGlobalScope;Ldev/truffle/php/parser/PhpExpressionParser;Ldev/truffle/php/parser/PhpStatementParser$StatementContext;Ldev/truffle/php/parser/PhpTraitParser$TraitParserContext;Ldev/truffle/php/parser/PhpTraitParser$BlockParserDelegate;)V
+	public fun parseTrait ()Ldev/truffle/php/nodes/PhpStatementNode;
+	public fun setNamespaceContext (Ldev/truffle/php/runtime/PhpNamespaceContext;)V
+}
+
+public abstract interface class dev/truffle/php/parser/PhpTraitParser$BlockParserDelegate {
+	public abstract fun parseBlock ()Ldev/truffle/php/nodes/PhpStatementNode;
+}
+
+public final class dev/truffle/php/parser/PhpTraitParser$TraitParserContext {
+	public field currentFrameBuilder Lcom/oracle/truffle/api/frame/FrameDescriptor$Builder;
+	public field currentTraitName Ljava/lang/String;
+	public final field declaredTraits Ljava/util/List;
+	public final field traitNamespaces Ljava/util/Map;
+	public final field traitUsedTraits Ljava/util/Map;
+	public fun <init> ()V
+}
+
+public final class dev/truffle/php/runtime/PhpArray {
+	public fun <init> ()V
+	public fun append (Ljava/lang/Object;)V
+	public fun containsKey (Ljava/lang/Object;)Z
+	public fun get (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun keys ()Ljava/util/List;
+	public fun put (Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun remove (Ljava/lang/Object;)V
+	public fun size ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/truffle/php/runtime/PhpBreakException : com/oracle/truffle/api/nodes/ControlFlowException {
+	public fun <init> (I)V
+	public fun getLevel ()I
+}
+
+public final class dev/truffle/php/runtime/PhpBuiltinRegistry {
+	public static fun initializeBuiltins (Ldev/truffle/php/runtime/PhpContext;Ldev/truffle/php/PhpLanguage;)V
+}
+
+public final class dev/truffle/php/runtime/PhpClass {
+	public fun <init> (Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;Lcom/oracle/truffle/api/CallTarget;Z)V
+	public fun addConstant (Ljava/lang/String;Ljava/lang/Object;Ldev/truffle/php/runtime/Visibility;)V
+	public fun addImplementedInterface (Ldev/truffle/php/runtime/PhpInterface;)V
+	public fun addUsedTrait (Ldev/truffle/php/runtime/PhpTrait;)V
+	public fun composeTraits (Ljava/util/List;)V
+	public fun getAllProperties ()Ljava/util/Map;
+	public fun getConstant (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getConstantMetadata (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass$ConstantMetadata;
+	public fun getConstructor ()Lcom/oracle/truffle/api/CallTarget;
+	public fun getConstructorOrInherited ()Lcom/oracle/truffle/api/CallTarget;
+	public fun getImplementedInterfaces ()Ljava/util/List;
+	public fun getMethod (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass$MethodMetadata;
+	public fun getMethods ()Ljava/util/Map;
+	public fun getName ()Ljava/lang/String;
+	public fun getParentClass ()Ldev/truffle/php/runtime/PhpClass;
+	public fun getProperties ()Ljava/util/Map;
+	public fun getProperty (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass$PropertyMetadata;
+	public fun getStaticPropertyValue (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getUnimplementedAbstractMethods ()Ljava/util/List;
+	public fun getUsedTraits ()Ljava/util/List;
+	public fun hasConstant (Ljava/lang/String;)Z
+	public fun hasMethod (Ljava/lang/String;)Z
+	public fun hasProperty (Ljava/lang/String;)Z
+	public fun hasStaticProperty (Ljava/lang/String;)Z
+	public fun implementsInterface (Ljava/lang/String;)Z
+	public fun isAbstract ()Z
+	public fun isMethodAccessible (Ljava/lang/String;Ldev/truffle/php/runtime/PhpClass;)Z
+	public fun setParentClass (Ldev/truffle/php/runtime/PhpClass;)V
+	public fun setStaticPropertyValue (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun validateAbstractMethodsImplemented ()V
+}
+
+public final class dev/truffle/php/runtime/PhpClass$ConstantMetadata {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Object;Ldev/truffle/php/runtime/Visibility;)V
+	public fun getName ()Ljava/lang/String;
+	public fun getValue ()Ljava/lang/Object;
+	public fun getVisibility ()Ldev/truffle/php/runtime/Visibility;
+}
+
+public final class dev/truffle/php/runtime/PhpClass$MethodMetadata {
+	public fun <init> (Ljava/lang/String;Ldev/truffle/php/runtime/Visibility;ZZLcom/oracle/truffle/api/CallTarget;[Ljava/lang/String;)V
+	public fun getCallTarget ()Lcom/oracle/truffle/api/CallTarget;
+	public fun getName ()Ljava/lang/String;
+	public fun getParameterNames ()[Ljava/lang/String;
+	public fun getVisibility ()Ldev/truffle/php/runtime/Visibility;
+	public fun isAbstract ()Z
+	public fun isPublic ()Z
+	public fun isStatic ()Z
+}
+
+public final class dev/truffle/php/runtime/PhpClass$PropertyMetadata {
+	public fun <init> (Ljava/lang/String;Ldev/truffle/php/runtime/Visibility;ZLjava/lang/Object;)V
+	public fun getDefaultValue ()Ljava/lang/Object;
+	public fun getName ()Ljava/lang/String;
+	public fun getVisibility ()Ldev/truffle/php/runtime/Visibility;
+	public fun isPublic ()Z
+	public fun isStatic ()Z
+}
+
+public final class dev/truffle/php/runtime/PhpClass$TraitConflictResolution {
+	public final field aliasName Ljava/lang/String;
+	public final field aliasVisibility Ldev/truffle/php/runtime/Visibility;
+	public final field excludedTraits Ljava/util/List;
+	public final field methodName Ljava/lang/String;
+	public final field traitName Ljava/lang/String;
+	public final field type Ldev/truffle/php/runtime/PhpClass$TraitConflictResolution$Type;
+	public fun <init> (Ldev/truffle/php/runtime/PhpClass$TraitConflictResolution$Type;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ldev/truffle/php/runtime/Visibility;)V
+}
+
+public final class dev/truffle/php/runtime/PhpClass$TraitConflictResolution$Type : java/lang/Enum {
+	public static final field ALIAS Ldev/truffle/php/runtime/PhpClass$TraitConflictResolution$Type;
+	public static final field INSTEADOF Ldev/truffle/php/runtime/PhpClass$TraitConflictResolution$Type;
+	public static fun valueOf (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass$TraitConflictResolution$Type;
+	public static fun values ()[Ldev/truffle/php/runtime/PhpClass$TraitConflictResolution$Type;
+}
+
+public final class dev/truffle/php/runtime/PhpClosure : com/oracle/truffle/api/interop/TruffleObject {
+	public fun <init> (Lcom/oracle/truffle/api/CallTarget;[Ljava/lang/String;[Ljava/lang/Object;)V
+	public fun getCallTarget ()Lcom/oracle/truffle/api/CallTarget;
+	public fun getCapturedValues ()[Ljava/lang/Object;
+	public fun getParameterCount ()I
+	public fun getParameterNames ()[Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/truffle/php/runtime/PhpContext {
+	public fun <init> (Ldev/truffle/php/PhpLanguage;Lcom/oracle/truffle/api/TruffleLanguage$Env;)V
+	public fun defineConstant (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun findClassUsingTraitWithProperty (Ljava/lang/String;Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass;
+	public static fun get (Lcom/oracle/truffle/api/nodes/Node;)Ldev/truffle/php/runtime/PhpContext;
+	public fun getBuiltin (Ljava/lang/String;)Lcom/oracle/truffle/api/CallTarget;
+	public fun getClass (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass;
+	public fun getClassByQualifiedName (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass;
+	public fun getConstant (Ljava/lang/String;)Ljava/lang/Object;
+	public fun getEnv ()Lcom/oracle/truffle/api/TruffleLanguage$Env;
+	public fun getError ()Ljava/io/PrintWriter;
+	public fun getFunction (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpFunction;
+	public fun getFunctionByQualifiedName (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpFunction;
+	public fun getGlobalScope ()Ldev/truffle/php/runtime/PhpGlobalScope;
+	public fun getInput ()Ljava/io/BufferedReader;
+	public fun getInterface (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpInterface;
+	public fun getInterfaceByQualifiedName (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpInterface;
+	public fun getLanguage ()Ldev/truffle/php/PhpLanguage;
+	public fun getNamespaceContext ()Ldev/truffle/php/runtime/PhpNamespaceContext;
+	public fun getOutput ()Ljava/io/PrintWriter;
+	public fun getTrait (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpTrait;
+	public fun getTraitByQualifiedName (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpTrait;
+	public fun isConstantDefined (Ljava/lang/String;)Z
+	public fun isFileIncluded (Ljava/lang/String;)Z
+	public fun markFileIncluded (Ljava/lang/String;)V
+	public fun registerBuiltin (Ljava/lang/String;Lcom/oracle/truffle/api/CallTarget;)V
+	public fun registerClass (Ldev/truffle/php/runtime/PhpClass;)V
+	public fun registerFunction (Ldev/truffle/php/runtime/PhpFunction;)V
+	public fun registerInterface (Ldev/truffle/php/runtime/PhpInterface;)V
+	public fun registerTrait (Ldev/truffle/php/runtime/PhpTrait;)V
+}
+
+public final class dev/truffle/php/runtime/PhpContinueException : com/oracle/truffle/api/nodes/ControlFlowException {
+	public fun <init> (I)V
+	public fun getLevel ()I
+}
+
+public final class dev/truffle/php/runtime/PhpExceptionConstructor {
+	public fun <init> ()V
+	public static fun create (Ldev/truffle/php/PhpLanguage;)Ldev/truffle/php/nodes/PhpMethodRootNode;
+}
+
+public final class dev/truffle/php/runtime/PhpFunction {
+	public fun <init> (Ljava/lang/String;Lcom/oracle/truffle/api/CallTarget;I[Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Lcom/oracle/truffle/api/CallTarget;I[Ljava/lang/String;[Z)V
+	public fun getCallTarget ()Lcom/oracle/truffle/api/CallTarget;
+	public fun getName ()Ljava/lang/String;
+	public fun getParameterCount ()I
+	public fun getParameterNames ()[Ljava/lang/String;
+	public fun getReferenceParameters ()[Z
+	public fun isReferenceParameter (I)Z
+}
+
+public final class dev/truffle/php/runtime/PhpGlobalScope {
+	public fun <init> ()V
+	public fun build ()Lcom/oracle/truffle/api/frame/FrameDescriptor;
+	public fun getGlobalFrame ()Lcom/oracle/truffle/api/frame/MaterializedFrame;
+	public fun getGlobalSlot (Ljava/lang/String;)Ljava/lang/Integer;
+	public fun getGlobalVariableCount ()I
+	public fun getGlobalVariables ()Ljava/util/Map;
+	public fun getOrCreateGlobalSlot (Ljava/lang/String;)I
+	public fun hasGlobalVariable (Ljava/lang/String;)Z
+	public fun setGlobalFrame (Lcom/oracle/truffle/api/frame/VirtualFrame;)V
+}
+
+public final class dev/truffle/php/runtime/PhpInterface {
+	public fun <init> (Ljava/lang/String;Ljava/util/Map;)V
+	public fun addParentInterface (Ldev/truffle/php/runtime/PhpInterface;)V
+	public fun getAllMethods ()Ljava/util/Map;
+	public fun getMethod (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpInterface$MethodSignature;
+	public fun getMethods ()Ljava/util/Map;
+	public fun getName ()Ljava/lang/String;
+	public fun getParentInterfaces ()Ljava/util/List;
+	public fun hasMethod (Ljava/lang/String;)Z
+}
+
+public final class dev/truffle/php/runtime/PhpInterface$MethodSignature {
+	public fun <init> (Ljava/lang/String;[Ljava/lang/String;)V
+	public fun getName ()Ljava/lang/String;
+	public fun getParameterCount ()I
+	public fun getParameterNames ()[Ljava/lang/String;
+}
+
+public final class dev/truffle/php/runtime/PhpNamespaceContext {
+	public fun <init> ()V
+	public fun addClassUse (Ljava/lang/String;Ljava/lang/String;)V
+	public fun addConstUse (Ljava/lang/String;Ljava/lang/String;)V
+	public fun addFunctionUse (Ljava/lang/String;Ljava/lang/String;)V
+	public fun clearImports ()V
+	public fun copy ()Ldev/truffle/php/runtime/PhpNamespaceContext;
+	public fun getCurrentNamespace ()Ljava/lang/String;
+	public fun reset ()V
+	public fun resolveClassName (Ljava/lang/String;)Ljava/lang/String;
+	public fun resolveConstantName (Ljava/lang/String;)Ljava/lang/String;
+	public fun resolveFunctionName (Ljava/lang/String;)Ljava/lang/String;
+	public fun setCurrentNamespace (Ljava/lang/String;)V
+}
+
+public final class dev/truffle/php/runtime/PhpObject : com/oracle/truffle/api/interop/TruffleObject {
+	public fun <init> (Ldev/truffle/php/runtime/PhpClass;)V
+	public fun getPhpClass ()Ldev/truffle/php/runtime/PhpClass;
+	public fun readProperty (Ljava/lang/String;)Ljava/lang/Object;
+	public fun readProperty (Ljava/lang/String;Ldev/truffle/php/runtime/PhpClass;)Ljava/lang/Object;
+	public fun readPropertyInternal (Ljava/lang/String;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public fun writeProperty (Ljava/lang/String;Ljava/lang/Object;)V
+	public fun writeProperty (Ljava/lang/String;Ljava/lang/Object;Ldev/truffle/php/runtime/PhpClass;)V
+	public fun writePropertyInternal (Ljava/lang/String;Ljava/lang/Object;)V
+}
+
+public final class dev/truffle/php/runtime/PhpReference : com/oracle/truffle/api/interop/TruffleObject {
+	public fun <init> (Ljava/lang/Object;)V
+	public fun getValue ()Ljava/lang/Object;
+	public fun setValue (Ljava/lang/Object;)V
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/truffle/php/runtime/PhpStringUtil {
+	public static fun convertToString (Ljava/lang/Object;)Ljava/lang/String;
+}
+
+public final class dev/truffle/php/runtime/PhpThrowableException : com/oracle/truffle/api/nodes/ControlFlowException {
+	public fun <init> (Ldev/truffle/php/runtime/PhpObject;)V
+	public fun getExceptionObject ()Ldev/truffle/php/runtime/PhpObject;
+}
+
+public final class dev/truffle/php/runtime/PhpTrait {
+	public fun <init> (Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;)V
+	public fun addUsedTrait (Ldev/truffle/php/runtime/PhpTrait;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getAbstractMethods ()Ljava/util/List;
+	public fun getAllMethods ()Ljava/util/Map;
+	public fun getAllProperties ()Ljava/util/Map;
+	public fun getMethod (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass$MethodMetadata;
+	public fun getMethods ()Ljava/util/Map;
+	public fun getName ()Ljava/lang/String;
+	public fun getProperties ()Ljava/util/Map;
+	public fun getProperty (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpClass$PropertyMetadata;
+	public fun getUsedTraits ()Ljava/util/List;
+	public fun hasMethod (Ljava/lang/String;)Z
+	public fun hasProperty (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/truffle/php/runtime/PhpTypeHint {
+	public fun <init> (Ljava/lang/String;Z)V
+	public fun getDisplayName ()Ljava/lang/String;
+	public fun getKind ()Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public fun getTypeName ()Ljava/lang/String;
+	public fun isNullable ()Z
+	public fun matches (Ljava/lang/Object;Ldev/truffle/php/runtime/PhpContext;Ljava/lang/String;)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class dev/truffle/php/runtime/PhpTypeHint$TypeKind : java/lang/Enum {
+	public static final field ARRAY Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field BOOL Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field CALLABLE Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field CLASS Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field FLOAT Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field INT Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field MIXED Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field NULL Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field PARENT Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field SELF Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field STRING Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static final field VOID Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static fun valueOf (Ljava/lang/String;)Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+	public static fun values ()[Ldev/truffle/php/runtime/PhpTypeHint$TypeKind;
+}
+
+public final class dev/truffle/php/runtime/Visibility : java/lang/Enum {
+	public static final field PRIVATE Ldev/truffle/php/runtime/Visibility;
+	public static final field PROTECTED Ldev/truffle/php/runtime/Visibility;
+	public static final field PUBLIC Ldev/truffle/php/runtime/Visibility;
+	public static fun valueOf (Ljava/lang/String;)Ldev/truffle/php/runtime/Visibility;
+	public static fun values ()[Ldev/truffle/php/runtime/Visibility;
+}
+

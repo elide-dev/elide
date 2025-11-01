@@ -994,6 +994,7 @@ val initializeAtBuildTimeTest: List<String> = listOf(
 val initializeAtRuntime: List<String> = listOfNotNull(
   onlyIf(!enableSqliteStatic, "org.sqlite.SQLiteJDBCLoader"),
   onlyIf(!enableSqliteStatic, "org.sqlite.core.NativeDB"),
+  "elide.tooling.project.manifest.ElidePackageManifest${'$'}NativeImage",
   "org.fusesource.jansi.internal.CLibrary",
   "com.github.ajalt.mordant.rendering.TextStyles",
   "elide.tool.err.ErrPrinter",

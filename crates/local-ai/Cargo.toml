@@ -62,6 +62,10 @@ default-features = true
 workspace = true
 default-features = false
 
+[target.x86_64-apple-darwin.dependencies.llama-cpp-2]
+workspace = true
+default-features = true
+
 [target.aarch64-apple-darwin.dependencies.llama-cpp-2]
 workspace = true
 default-features = true

@@ -220,7 +220,8 @@ mosaic = "0.16.0"
 mrjar = "0.1.1"
 msgpack = "0.9.4"
 netty = "4.2.1.Final"
-netty-http3 = "0.0.70.Final"
+netty-http3 = "0.0.30.Final"
+netty-quic = "0.0.74.Final"
 netty-iouring = "0.0.26.Final"
 netty-tcnative = "2.0.74.Final"
 nexusPublishing = "2.0.0"
@@ -752,7 +753,9 @@ msgpack = { group = "org.msgpack", name = "msgpack-core", version.ref = "msgpack
 netty-bom = { group = "io.netty", name = "netty-bom", version.ref = "netty" }
 netty-codec-http = { group = "io.netty", name = "netty-codec-http" }
 netty-codec-http2 = { group = "io.netty", name = "netty-codec-http2" }
-netty-incubator-codec-http3 = { group = "io.netty.incubator", name = "netty-incubator-codec-http3", version.ref = "netty-http3" }
+netty-codec-http3 = { group = "io.netty.incubator", name = "netty-incubator-codec-http3", version.ref = "netty-http3" }
+netty-codec-quic = { group = "io.netty.incubator", name = "netty-incubator-codec-native-quic", version.ref = "netty-quic" }
+netty-pkitesting = { group = "io.netty", name = "netty-pkitesting", version.ref = "netty" }
 netty-resolver-dns-native-macos = { group = "io.netty", name = "netty-resolver-dns-native-macos", version.ref = "netty" }
 netty-tcnative = { group = "io.netty", name = "netty-tcnative", version.ref = "netty-tcnative" }
 netty-tcnative-boringssl-static = { group = "io.netty", name = "netty-tcnative-boringssl-static", version.ref = "netty-tcnative" }

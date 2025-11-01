@@ -1,85 +1,96 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package dev.truffle.php.runtime;
 
-import com.oracle.truffle.api.CallTarget;
 import dev.truffle.php.PhpLanguage;
 import dev.truffle.php.nodes.PhpBuiltinRootNode;
 import dev.truffle.php.nodes.builtin.*;
 
 /**
- * Registry for built-in PHP functions.
- * This class provides static methods to initialize built-in functions for a context.
+ * Registry for built-in PHP functions. This class provides static methods to initialize built-in
+ * functions for a context.
  */
 public final class PhpBuiltinRegistry {
 
-    private PhpBuiltinRegistry() {
-        // Private constructor - utility class
-    }
+  private PhpBuiltinRegistry() {
+    // Private constructor - utility class
+  }
 
-    /**
-     * Initialize built-in functions for a given context.
-     * This creates new CallTargets for each context to avoid sharing AST nodes.
-     */
-    public static void initializeBuiltins(PhpContext context, PhpLanguage language) {
-        // String functions
-        register(context, new StrlenBuiltin(language));
-        register(context, new SubstrBuiltin(language));
-        register(context, new StrtolowerBuiltin(language));
-        register(context, new StrtoupperBuiltin(language));
-        register(context, new TrimBuiltin(language));
-        register(context, new StrReplaceBuiltin(language));
-        register(context, new ExplodeBuiltin(language));
-        register(context, new ImplodeBuiltin(language));
+  /**
+   * Initialize built-in functions for a given context. This creates new CallTargets for each
+   * context to avoid sharing AST nodes.
+   */
+  public static void initializeBuiltins(PhpContext context, PhpLanguage language) {
+    // String functions
+    register(context, new StrlenBuiltin(language));
+    register(context, new SubstrBuiltin(language));
+    register(context, new StrtolowerBuiltin(language));
+    register(context, new StrtoupperBuiltin(language));
+    register(context, new TrimBuiltin(language));
+    register(context, new StrReplaceBuiltin(language));
+    register(context, new ExplodeBuiltin(language));
+    register(context, new ImplodeBuiltin(language));
 
-        // Array functions
-        register(context, new CountBuiltin(language));
-        register(context, new ArrayPushBuiltin(language));
-        register(context, new ArrayPopBuiltin(language));
-        register(context, new ArrayMergeBuiltin(language));
-        register(context, new InArrayBuiltin(language));
-        register(context, new ArrayKeysBuiltin(language));
-        register(context, new ArrayValuesBuiltin(language));
-        register(context, new ArraySliceBuiltin(language));
-        register(context, new ArrayReverseBuiltin(language));
-        register(context, new ArraySearchBuiltin(language));
-        register(context, new ArrayKeyExistsBuiltin(language));
+    // Array functions
+    register(context, new CountBuiltin(language));
+    register(context, new ArrayPushBuiltin(language));
+    register(context, new ArrayPopBuiltin(language));
+    register(context, new ArrayMergeBuiltin(language));
+    register(context, new InArrayBuiltin(language));
+    register(context, new ArrayKeysBuiltin(language));
+    register(context, new ArrayValuesBuiltin(language));
+    register(context, new ArraySliceBuiltin(language));
+    register(context, new ArrayReverseBuiltin(language));
+    register(context, new ArraySearchBuiltin(language));
+    register(context, new ArrayKeyExistsBuiltin(language));
 
-        // Type functions
-        register(context, new IsArrayBuiltin(language));
-        register(context, new IsStringBuiltin(language));
-        register(context, new IsIntBuiltin(language));
-        register(context, new IsNullBuiltin(language));
-        register(context, new GettypeBuiltin(language));
+    // Type functions
+    register(context, new IsArrayBuiltin(language));
+    register(context, new IsStringBuiltin(language));
+    register(context, new IsIntBuiltin(language));
+    register(context, new IsNullBuiltin(language));
+    register(context, new GettypeBuiltin(language));
 
-        // Math functions
-        register(context, new AbsBuiltin(language));
-        register(context, new MaxBuiltin(language));
-        register(context, new MinBuiltin(language));
-        register(context, new RandBuiltin(language));
+    // Math functions
+    register(context, new AbsBuiltin(language));
+    register(context, new MaxBuiltin(language));
+    register(context, new MinBuiltin(language));
+    register(context, new RandBuiltin(language));
 
-        // Output functions
-        register(context, new VarDumpBuiltin(language));
-        register(context, new PrintRBuiltin(language));
+    // Output functions
+    register(context, new VarDumpBuiltin(language));
+    register(context, new PrintRBuiltin(language));
 
-        // File I/O functions
-        register(context, new FileGetContentsBuiltin(language));
-        register(context, new FilePutContentsBuiltin(language));
-        register(context, new FileExistsBuiltin(language));
-        register(context, new IsFileBuiltin(language));
-        register(context, new IsDirBuiltin(language));
-        register(context, new DirnameBuiltin(language));
-        register(context, new BasenameBuiltin(language));
+    // File I/O functions
+    register(context, new FileGetContentsBuiltin(language));
+    register(context, new FilePutContentsBuiltin(language));
+    register(context, new FileExistsBuiltin(language));
+    register(context, new IsFileBuiltin(language));
+    register(context, new IsDirBuiltin(language));
+    register(context, new DirnameBuiltin(language));
+    register(context, new BasenameBuiltin(language));
 
-        // JSON functions
-        register(context, new JsonEncodeBuiltin(language));
-        register(context, new JsonDecodeBuiltin(language));
+    // JSON functions
+    register(context, new JsonEncodeBuiltin(language));
+    register(context, new JsonDecodeBuiltin(language));
 
-        // Constant functions
-        register(context, new DefineBuiltin(language));
-        register(context, new DefinedBuiltin(language));
-        register(context, new ConstantBuiltin(language));
-    }
+    // Constant functions
+    register(context, new DefineBuiltin(language));
+    register(context, new DefinedBuiltin(language));
+    register(context, new ConstantBuiltin(language));
+  }
 
-    private static void register(PhpContext context, PhpBuiltinRootNode builtin) {
-        context.registerBuiltin(builtin.getFunctionName(), builtin.getCallTarget());
-    }
+  private static void register(PhpContext context, PhpBuiltinRootNode builtin) {
+    context.registerBuiltin(builtin.getFunctionName(), builtin.getCallTarget());
+  }
 }

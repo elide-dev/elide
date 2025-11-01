@@ -1,32 +1,40 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package dev.truffle.php.nodes.expression;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import dev.truffle.php.nodes.PhpExpressionNode;
 import dev.truffle.php.runtime.PhpReference;
 
-/**
- * Node that creates a PhpReference wrapping a value.
- * Used for by-reference capture in closures.
- */
+/** Node that creates a PhpReference wrapping a value. Used for by-reference capture in closures. */
 public final class PhpCreateReferenceNode extends PhpExpressionNode {
 
-    @Child
-    private PhpExpressionNode valueNode;
+  @Child private PhpExpressionNode valueNode;
 
-    public PhpCreateReferenceNode(PhpExpressionNode valueNode) {
-        this.valueNode = valueNode;
+  public PhpCreateReferenceNode(PhpExpressionNode valueNode) {
+    this.valueNode = valueNode;
+  }
+
+  @Override
+  public Object execute(VirtualFrame frame) {
+    Object value = valueNode.execute(frame);
+
+    // If already a reference, return it
+    if (value instanceof PhpReference) {
+      return value;
     }
 
-    @Override
-    public Object execute(VirtualFrame frame) {
-        Object value = valueNode.execute(frame);
-
-        // If already a reference, return it
-        if (value instanceof PhpReference) {
-            return value;
-        }
-
-        // Wrap in a new reference
-        return new PhpReference(value);
-    }
+    // Wrap in a new reference
+    return new PhpReference(value);
+  }
 }

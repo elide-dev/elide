@@ -1,3 +1,15 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
 package dev.truffle.php.runtime;
 
 import com.oracle.truffle.api.interop.InteropLibrary;
@@ -6,71 +18,71 @@ import com.oracle.truffle.api.library.ExportLibrary;
 import com.oracle.truffle.api.library.ExportMessage;
 
 /**
- * Represents a PHP reference (by-reference variable).
- * This is a mutable box that allows multiple variables to share the same value.
- * Used for implementing by-reference capture in closures and by-reference parameters.
+ * Represents a PHP reference (by-reference variable). This is a mutable box that allows multiple
+ * variables to share the same value. Used for implementing by-reference capture in closures and
+ * by-reference parameters.
  */
 @ExportLibrary(InteropLibrary.class)
 public final class PhpReference implements TruffleObject {
 
-    private Object value;
+  private Object value;
 
-    public PhpReference(Object value) {
-        this.value = value;
-    }
+  public PhpReference(Object value) {
+    this.value = value;
+  }
 
-    public Object getValue() {
-        return value;
-    }
+  public Object getValue() {
+    return value;
+  }
 
-    public void setValue(Object value) {
-        this.value = value;
-    }
+  public void setValue(Object value) {
+    this.value = value;
+  }
 
-    @ExportMessage
-    boolean hasMembers() {
-        return true;
-    }
+  @ExportMessage
+  boolean hasMembers() {
+    return true;
+  }
 
-    @ExportMessage
-    Object getMembers(@SuppressWarnings("unused") boolean includeInternal) {
-        return new String[] { "value" };
-    }
+  @ExportMessage
+  Object getMembers(@SuppressWarnings("unused") boolean includeInternal) {
+    return new String[] {"value"};
+  }
 
-    @ExportMessage
-    boolean isMemberReadable(String member) {
-        return "value".equals(member);
-    }
+  @ExportMessage
+  boolean isMemberReadable(String member) {
+    return "value".equals(member);
+  }
 
-    @ExportMessage
-    Object readMember(String member) {
-        if ("value".equals(member)) {
-            return value;
-        }
-        throw new UnsupportedOperationException("Unknown member: " + member);
+  @ExportMessage
+  Object readMember(String member) {
+    if ("value".equals(member)) {
+      return value;
     }
+    throw new UnsupportedOperationException("Unknown member: " + member);
+  }
 
-    @ExportMessage
-    boolean isMemberModifiable(String member) {
-        return "value".equals(member);
-    }
+  @ExportMessage
+  boolean isMemberModifiable(String member) {
+    return "value".equals(member);
+  }
 
-    @ExportMessage
-    boolean isMemberInsertable(@SuppressWarnings("unused") String member) {
-        return false;
-    }
+  @ExportMessage
+  boolean isMemberInsertable(@SuppressWarnings("unused") String member) {
+    return false;
+  }
 
-    @ExportMessage
-    void writeMember(String member, Object newValue) {
-        if ("value".equals(member)) {
-            this.value = newValue;
-        } else {
-            throw new UnsupportedOperationException("Unknown member: " + member);
-        }
+  @ExportMessage
+  void writeMember(String member, Object newValue) {
+    if ("value".equals(member)) {
+      this.value = newValue;
+    } else {
+      throw new UnsupportedOperationException("Unknown member: " + member);
     }
+  }
 
-    @Override
-    public String toString() {
-        return "PhpReference(" + value + ")";
-    }
+  @Override
+  public String toString() {
+    return "PhpReference(" + value + ")";
+  }
 }

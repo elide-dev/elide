@@ -72,6 +72,11 @@ public final class PhpBuiltinRegistry {
         // JSON functions
         register(context, new JsonEncodeBuiltin(language));
         register(context, new JsonDecodeBuiltin(language));
+
+        // Constant functions
+        register(context, new DefineBuiltin(language));
+        register(context, new DefinedBuiltin(language));
+        register(context, new ConstantBuiltin(language));
     }
 
     private static void register(PhpContext context, PhpBuiltinRootNode builtin) {

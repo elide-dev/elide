@@ -11,6 +11,7 @@ import dev.truffle.php.nodes.PhpStatementNode;
 import dev.truffle.php.runtime.PhpArray;
 import dev.truffle.php.runtime.PhpBreakException;
 import dev.truffle.php.runtime.PhpContinueException;
+import dev.truffle.php.runtime.PhpReference;
 
 import java.util.List;
 
@@ -26,8 +27,12 @@ public final class PhpForeachNode extends PhpStatementNode {
     private LoopNode loopNode;
 
     public PhpForeachNode(PhpExpressionNode arrayExpr, int valueSlot, Integer keySlot, PhpStatementNode body) {
+        this(arrayExpr, valueSlot, keySlot, body, false);
+    }
+
+    public PhpForeachNode(PhpExpressionNode arrayExpr, int valueSlot, Integer keySlot, PhpStatementNode body, boolean valueByReference) {
         this.loopNode = Truffle.getRuntime().createLoopNode(
-            new PhpForeachRepeatingNode(arrayExpr, valueSlot, keySlot, body)
+            new PhpForeachRepeatingNode(arrayExpr, valueSlot, keySlot, body, valueByReference)
         );
     }
 
@@ -43,6 +48,7 @@ public final class PhpForeachNode extends PhpStatementNode {
 
         private final int valueSlot;
         private final Integer keySlot; // null if no key variable
+        private final boolean valueByReference; // true if value should be a reference
 
         @Child
         private PhpStatementNode body;
@@ -51,11 +57,12 @@ public final class PhpForeachNode extends PhpStatementNode {
         private int currentIndex;
         private PhpArray array;
 
-        PhpForeachRepeatingNode(PhpExpressionNode arrayExpr, int valueSlot, Integer keySlot, PhpStatementNode body) {
+        PhpForeachRepeatingNode(PhpExpressionNode arrayExpr, int valueSlot, Integer keySlot, PhpStatementNode body, boolean valueByReference) {
             this.arrayExpr = arrayExpr;
             this.valueSlot = valueSlot;
             this.keySlot = keySlot;
             this.body = body;
+            this.valueByReference = valueByReference;
             this.currentIndex = 0;
         }
 
@@ -87,7 +94,21 @@ public final class PhpForeachNode extends PhpStatementNode {
             }
 
             // Set value variable
-            frame.setObject(valueSlot, value);
+            if (valueByReference) {
+                // For foreach with reference, we wrap the array element in a PhpReference
+                // and store it back in the array. This way, modifications to the loop
+                // variable will update the array element.
+                PhpReference ref;
+                if (value instanceof PhpReference) {
+                    ref = (PhpReference) value;
+                } else {
+                    ref = new PhpReference(value);
+                    array.put(key, ref);
+                }
+                frame.setObject(valueSlot, ref);
+            } else {
+                frame.setObject(valueSlot, value);
+            }
 
             // Execute body
             try {

@@ -99,6 +99,11 @@ public final class PhpStatementParser {
             return parseUse();
         }
 
+        // const statement (top-level constant definition)
+        if (matchKeyword("const")) {
+            return parseConstDeclaration();
+        }
+
         // echo statement
         if (matchKeyword("echo")) {
             return parseEcho();
@@ -167,6 +172,11 @@ public final class PhpStatementParser {
         // return statement
         if (matchKeyword("return")) {
             return parseReturn();
+        }
+
+        // global statement
+        if (matchKeyword("global")) {
+            return parseGlobal();
         }
 
         // throw statement
@@ -432,28 +442,46 @@ public final class PhpStatementParser {
         // Check for key => value syntax
         Integer keySlot = null;
         int valueSlot;
+        boolean valueByReference = false;
 
-        // Parse first variable (could be key or value)
-        String firstVar = parseVariableName();
-        int firstSlot = getOrCreateVariable(firstVar);
-
-        skipWhitespace();
-        if (match("=>")) {
-            // It's key => value syntax
-            keySlot = firstSlot;
+        // Check for reference on first variable (&$value without key)
+        if (match("&")) {
+            valueByReference = true;
             skipWhitespace();
+            // Parse the value variable
             String valueVar = parseVariableName();
             valueSlot = getOrCreateVariable(valueVar);
+            // No key in this case
         } else {
-            // It's just value syntax
-            valueSlot = firstSlot;
+            // Parse first variable (could be key or value)
+            String firstVar = parseVariableName();
+            int firstSlot = getOrCreateVariable(firstVar);
+
+            skipWhitespace();
+            if (match("=>")) {
+                // It's key => value syntax
+                keySlot = firstSlot;
+                skipWhitespace();
+
+                // Check for reference on value (&$value)
+                if (match("&")) {
+                    valueByReference = true;
+                    skipWhitespace();
+                }
+
+                String valueVar = parseVariableName();
+                valueSlot = getOrCreateVariable(valueVar);
+            } else {
+                // It's just value syntax (no key)
+                valueSlot = firstSlot;
+            }
         }
 
         expect(")");
         skipWhitespace();
 
         PhpStatementNode body = parseBlock();
-        return new PhpForeachNode(arrayExpr, valueSlot, keySlot, body);
+        return new PhpForeachNode(arrayExpr, valueSlot, keySlot, body, valueByReference);
     }
 
     public PhpStatementNode parseBlock() {
@@ -485,6 +513,36 @@ public final class PhpStatementParser {
 
         expect(";");
         return new PhpReturnNode(value);
+    }
+
+    private PhpStatementNode parseGlobal() {
+        // Parse global statement: global $var1, $var2, ...;
+        // Creates PhpGlobalNode instances that link local variables to global scope
+        skipWhitespace();
+
+        List<PhpStatementNode> globalNodes = new ArrayList<>();
+
+        do {
+            // Parse variable name
+            String varName = parseVariableName();
+
+            // Get or create a local slot for this variable
+            int localSlot = getOrCreateVariable(varName);
+
+            // Create a PhpGlobalNode to link local to global
+            globalNodes.add(new PhpGlobalNode(varName, localSlot));
+
+            skipWhitespace();
+        } while (match(","));
+
+        expect(";");
+
+        // Return a single node or a block node depending on count
+        if (globalNodes.size() == 1) {
+            return globalNodes.get(0);
+        } else {
+            return new PhpBlockNode(globalNodes.toArray(new PhpStatementNode[0]));
+        }
     }
 
     private PhpStatementNode parseThrow() {
@@ -860,14 +918,33 @@ public final class PhpStatementParser {
             return new PhpExpressionStatementNode(compoundExpr);
         }
 
-        // Regular variable assignment
-        expect("=");
-        skipWhitespace();
-        PhpExpressionNode value = expressionParser.parseExpression();
-        expect(";");
+        // Check for reference assignment (=&) or regular assignment (=)
+        boolean isReferenceAssignment = false;
+        if (match("=&")) {
+            isReferenceAssignment = true;
+            skipWhitespace();
+        } else {
+            // Regular assignment
+            expect("=");
+            skipWhitespace();
+        }
 
-        PhpExpressionNode writeExpr = PhpNodeFactory.createWriteVariable(value, slot);
-        return new PhpExpressionStatementNode(writeExpr);
+        if (isReferenceAssignment) {
+            // Reference assignment: $b =& $a or $ref =& $arr[1]
+            // Parse the right-hand side expression (variable or array access)
+            PhpExpressionNode sourceExpr = expressionParser.parseExpression();
+            expect(";");
+
+            // Create a reference assignment node that handles expressions
+            return new PhpReferenceAssignmentExprNode(varName, slot, sourceExpr);
+        } else {
+            // Regular assignment
+            PhpExpressionNode value = expressionParser.parseExpression();
+            expect(";");
+
+            PhpExpressionNode writeExpr = PhpNodeFactory.createWriteVariable(value, slot);
+            return new PhpExpressionStatementNode(writeExpr);
+        }
     }
 
     private String parseVariableName() {
@@ -1018,5 +1095,37 @@ public final class PhpStatementParser {
 
         // Use statements don't produce runtime nodes
         return null;
+    }
+
+    /**
+     * Parse const declaration.
+     * Syntax: const CONSTANT_NAME = value;
+     */
+    private PhpStatementNode parseConstDeclaration() {
+        skipWhitespace();
+
+        // Parse constant name (identifier)
+        StringBuilder constantName = new StringBuilder();
+        while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+            constantName.append(advance());
+        }
+
+        String name = constantName.toString();
+        if (name.isEmpty()) {
+            throw new RuntimeException("Expected constant name after 'const'");
+        }
+
+        skipWhitespace();
+        expect("=");
+        skipWhitespace();
+
+        // Parse constant value expression
+        PhpExpressionNode value = expressionParser.parseExpression();
+
+        skipWhitespace();
+        expect(";");
+
+        // Create a statement that defines the constant at runtime
+        return new PhpConstDeclarationNode(name, value);
     }
 }

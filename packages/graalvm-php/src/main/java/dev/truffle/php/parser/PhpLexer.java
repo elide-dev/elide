@@ -10,6 +10,7 @@ public final class PhpLexer {
 
     private final String code;
     private int pos = 0;
+    private int line = 1; // Track current line number (1-indexed)
 
     public PhpLexer(String code) {
         this.code = code;
@@ -28,6 +29,13 @@ public final class PhpLexer {
      */
     public void setPosition(int pos) {
         this.pos = pos;
+    }
+
+    /**
+     * Get the current line number (1-indexed).
+     */
+    public int getCurrentLine() {
+        return line;
     }
 
     /**
@@ -55,9 +63,14 @@ public final class PhpLexer {
 
     /**
      * Consume and return the current character.
+     * Tracks line numbers when encountering newlines.
      */
     public char advance() {
-        return code.charAt(pos++);
+        char c = code.charAt(pos++);
+        if (c == '\n') {
+            line++;
+        }
+        return c;
     }
 
     /**

@@ -3,6 +3,7 @@ package dev.truffle.php.nodes.builtin;
 import dev.truffle.php.PhpLanguage;
 import dev.truffle.php.nodes.PhpBuiltinRootNode;
 import dev.truffle.php.runtime.PhpArray;
+import dev.truffle.php.runtime.PhpReference;
 
 /**
  * Built-in function: implode
@@ -36,7 +37,12 @@ public final class ImplodeBuiltin extends PhpBuiltinRootNode {
             if (!first) {
                 result.append(glue);
             }
-            result.append(array.get(key).toString());
+            Object value = array.get(key);
+            // Unwrap PhpReference if present
+            if (value instanceof PhpReference) {
+                value = ((PhpReference) value).getValue();
+            }
+            result.append(value.toString());
             first = false;
         }
 

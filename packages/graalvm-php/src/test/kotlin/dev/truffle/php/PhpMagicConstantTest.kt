@@ -28,12 +28,12 @@ class PhpMagicConstantTest : AbstractPhpTest() {
     }
 
     @Test fun `__LINE__ is defined`() {
-        // Note: __LINE__ returns 0 for now (requires lexer line tracking)
+        // __LINE__ now returns the actual line number (line tracking is implemented)
         val output = executePhp("""
             <?php
             echo __LINE__;
         """.trimIndent())
-        assertEquals("0", output.trim())
+        assertEquals("2", output.trim())
     }
 
     @Test fun `__CLASS__ returns empty outside class`() {

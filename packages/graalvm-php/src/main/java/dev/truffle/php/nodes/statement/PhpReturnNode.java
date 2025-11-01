@@ -2,8 +2,11 @@ package dev.truffle.php.nodes.statement;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ControlFlowException;
+import com.oracle.truffle.api.nodes.RootNode;
 import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.nodes.PhpFunctionRootNode;
 import dev.truffle.php.nodes.PhpStatementNode;
+import dev.truffle.php.nodes.expression.PhpReadVariableNode;
 
 /**
  * Node for return statements in PHP.
@@ -20,7 +23,25 @@ public final class PhpReturnNode extends PhpStatementNode {
 
     @Override
     public void executeVoid(VirtualFrame frame) {
-        Object value = valueNode != null ? valueNode.execute(frame) : null;
+        Object value = null;
+
+        if (valueNode != null) {
+            // Check if we're in a function that returns by reference
+            RootNode rootNode = getRootNode();
+            boolean returnsByReference = rootNode instanceof PhpFunctionRootNode &&
+                                         ((PhpFunctionRootNode) rootNode).returnsByReference();
+
+            if (returnsByReference && valueNode instanceof PhpReadVariableNode) {
+                // For return-by-reference, we need to return the PhpReference object itself
+                // instead of the unwrapped value
+                int slot = ((PhpReadVariableNode) valueNode).getSlot();
+                value = frame.getObject(slot);
+            } else {
+                // Normal return - evaluate the expression (which unwraps references)
+                value = valueNode.execute(frame);
+            }
+        }
+
         throw new PhpReturnException(value);
     }
 

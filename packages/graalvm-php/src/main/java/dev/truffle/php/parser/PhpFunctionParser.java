@@ -77,6 +77,14 @@ public final class PhpFunctionParser {
     public PhpStatementNode parseFunction() {
         skipWhitespace();
 
+        // Check for return-by-reference indicator (&)
+        // Syntax: function &functionName()
+        boolean returnsByReference = false;
+        if (match("&")) {
+            returnsByReference = true;
+            skipWhitespace();
+        }
+
         // Parse function name
         StringBuilder name = new StringBuilder();
         while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
@@ -91,6 +99,7 @@ public final class PhpFunctionParser {
         // Parse parameters with optional type hints
         List<String> paramNames = new ArrayList<>();
         List<dev.truffle.php.runtime.PhpTypeHint> paramTypes = new ArrayList<>();
+        List<Boolean> referenceParams = new ArrayList<>();  // Track which parameters are by-reference
         int variadicParamIndex = -1;  // Index of variadic parameter, -1 if none
 
         while (!check(")")) {
@@ -104,6 +113,14 @@ public final class PhpFunctionParser {
             // Check for optional type hint
             dev.truffle.php.runtime.PhpTypeHint typeHint = parseOptionalTypeHint();
             paramTypes.add(typeHint);
+
+            // Check for reference parameter (&$param)
+            boolean isReference = false;
+            if (match("&")) {
+                isReference = true;
+                skipWhitespace();
+            }
+            referenceParams.add(isReference);
 
             // Parse parameter name
             String paramName = parseVariableName();
@@ -196,6 +213,12 @@ public final class PhpFunctionParser {
         this.statementContext.currentFrameBuilder = savedFrameBuilder;
         this.statementContext.currentClassName = null;
 
+        // Convert reference parameters list to array
+        boolean[] referenceParamsArray = new boolean[referenceParams.size()];
+        for (int i = 0; i < referenceParams.size(); i++) {
+            referenceParamsArray[i] = referenceParams.get(i);
+        }
+
         // Create function root node
         PhpFunctionRootNode functionRoot = new PhpFunctionRootNode(
             language,
@@ -204,7 +227,9 @@ public final class PhpFunctionParser {
             paramNames.toArray(new String[0]),
             paramSlots,
             body,
-            variadicParamIndex
+            variadicParamIndex,
+            referenceParamsArray,
+            returnsByReference
         );
 
         // Create and register function
@@ -212,7 +237,8 @@ public final class PhpFunctionParser {
             functionName,
             functionRoot.getCallTarget(),
             paramNames.size(),
-            paramNames.toArray(new String[0])
+            paramNames.toArray(new String[0]),
+            referenceParamsArray
         );
         context.declaredFunctions.add(function);
 

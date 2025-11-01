@@ -28,7 +28,7 @@ abstract class AbstractPhpTest {
             .option("engine.WarnInterpreterOnly", "false")
             .allowAllAccess(true)
             .build().use { context ->
-                context.eval(Source.newBuilder("php", code, "test.php").build())
+                context.eval(Source.newBuilder("php", code, "script.php").build())
             }
 
         return outputStream.toString()
@@ -50,7 +50,7 @@ abstract class AbstractPhpTest {
             .option("engine.WarnInterpreterOnly", "false")
             .allowAllAccess(true)
             .build().use { context ->
-                context.eval(Source.newBuilder("php", code, "test.php").build())
+                context.eval(Source.newBuilder("php", code, "script.php").build())
             }
 
         return Pair(outputStream.toString(), errorStream.toString())
@@ -73,7 +73,7 @@ abstract class AbstractPhpTest {
                 .option("engine.WarnInterpreterOnly", "false")
                 .allowAllAccess(true)
                 .build().use { context ->
-                    context.eval(Source.newBuilder("php", code, "test.php").build())
+                    context.eval(Source.newBuilder("php", code, "script.php").build())
                 }
             throw AssertionError("Expected an exception but none was thrown")
         } catch (e: Exception) {

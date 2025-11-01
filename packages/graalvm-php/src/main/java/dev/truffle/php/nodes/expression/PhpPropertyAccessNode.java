@@ -31,6 +31,18 @@ public final class PhpPropertyAccessNode extends PhpExpressionNode {
         this.callerClassName = null; // Treated as external access
     }
 
+    public PhpExpressionNode getObjectNode() {
+        return objectNode;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public String getCurrentClassName() {
+        return callerClassName;
+    }
+
     @Override
     public Object execute(VirtualFrame frame) {
         Object objectValue = objectNode.execute(frame);

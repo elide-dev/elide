@@ -7,6 +7,7 @@ import dev.truffle.php.nodes.PhpExpressionNode;
 import dev.truffle.php.runtime.PhpArray;
 import dev.truffle.php.runtime.PhpContext;
 import dev.truffle.php.runtime.PhpFunction;
+import dev.truffle.php.runtime.PhpReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +35,13 @@ public final class PhpFunctionCallNode extends PhpExpressionNode {
         // Check for built-in functions first
         CallTarget builtinCallTarget = context.getBuiltin(functionName);
         CallTarget callTarget;
+        PhpFunction function = null;
 
         if (builtinCallTarget != null) {
             callTarget = builtinCallTarget;
         } else {
             // Check for user-defined functions
-            PhpFunction function = context.getFunction(functionName);
+            function = context.getFunction(functionName);
             if (function == null) {
                 throw new RuntimeException("Undefined function: " + functionName);
             }
@@ -48,6 +50,7 @@ public final class PhpFunctionCallNode extends PhpExpressionNode {
 
         // Evaluate arguments and expand spread operators
         List<Object> expandedArgs = new ArrayList<>();
+        int paramIndex = 0;
         for (int i = 0; i < arguments.length; i++) {
             PhpExpressionNode argNode = arguments[i];
 
@@ -61,13 +64,45 @@ public final class PhpFunctionCallNode extends PhpExpressionNode {
                     List<Object> keys = array.keys();
                     for (Object key : keys) {
                         expandedArgs.add(array.get(key));
+                        paramIndex++;
                     }
                 } else {
                     throw new RuntimeException("Cannot use spread operator on non-array value in function " + functionName);
                 }
             } else {
-                // Regular argument
-                expandedArgs.add(argNode.execute(frame));
+                // Check if this parameter should be passed by reference
+                boolean isReferenceParam = function != null && function.isReferenceParameter(paramIndex);
+
+                if (isReferenceParam) {
+                    // For reference parameters, we need to pass a PhpReference
+                    if (argNode instanceof PhpReadVariableNode) {
+                        // Get the variable slot
+                        int slot = ((PhpReadVariableNode) argNode).getSlot();
+
+                        // Read the current value from the slot
+                        Object currentValue = frame.getObject(slot);
+
+                        // If it's already a reference, use it; otherwise wrap it
+                        PhpReference ref;
+                        if (currentValue instanceof PhpReference) {
+                            ref = (PhpReference) currentValue;
+                        } else {
+                            // Wrap the value in a reference
+                            ref = new PhpReference(currentValue);
+                            // Store the reference back in the slot
+                            frame.setObject(slot, ref);
+                        }
+
+                        expandedArgs.add(ref);
+                    } else {
+                        // PHP doesn't allow passing non-variables by reference
+                        throw new RuntimeException("Only variables can be passed by reference");
+                    }
+                } else {
+                    // Regular argument - just evaluate it
+                    expandedArgs.add(argNode.execute(frame));
+                }
+                paramIndex++;
             }
         }
 

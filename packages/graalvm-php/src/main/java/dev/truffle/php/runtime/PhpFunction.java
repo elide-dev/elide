@@ -11,12 +11,18 @@ public final class PhpFunction {
     private final CallTarget callTarget;
     private final int parameterCount;
     private final String[] parameterNames;
+    private final boolean[] referenceParameters;  // Track which parameters are by-reference
 
     public PhpFunction(String name, CallTarget callTarget, int parameterCount, String[] parameterNames) {
+        this(name, callTarget, parameterCount, parameterNames, null);
+    }
+
+    public PhpFunction(String name, CallTarget callTarget, int parameterCount, String[] parameterNames, boolean[] referenceParameters) {
         this.name = name;
         this.callTarget = callTarget;
         this.parameterCount = parameterCount;
         this.parameterNames = parameterNames;
+        this.referenceParameters = referenceParameters;
     }
 
     public String getName() {
@@ -33,5 +39,13 @@ public final class PhpFunction {
 
     public String[] getParameterNames() {
         return parameterNames;
+    }
+
+    public boolean[] getReferenceParameters() {
+        return referenceParameters;
+    }
+
+    public boolean isReferenceParameter(int index) {
+        return referenceParameters != null && index < referenceParameters.length && referenceParameters[index];
     }
 }

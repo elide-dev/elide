@@ -3,6 +3,7 @@ package dev.truffle.php.nodes.expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import dev.truffle.php.nodes.PhpExpressionNode;
 import dev.truffle.php.runtime.PhpArray;
+import dev.truffle.php.runtime.PhpReference;
 
 /**
  * Node for array access in PHP (e.g., $arr[0] or $arr["key"]).
@@ -20,6 +21,14 @@ public final class PhpArrayAccessNode extends PhpExpressionNode {
         this.indexNode = indexNode;
     }
 
+    public PhpExpressionNode getArrayNode() {
+        return arrayNode;
+    }
+
+    public PhpExpressionNode getIndexNode() {
+        return indexNode;
+    }
+
     @Override
     public Object execute(VirtualFrame frame) {
         Object arrayObj = arrayNode.execute(frame);
@@ -30,6 +39,15 @@ public final class PhpArrayAccessNode extends PhpExpressionNode {
         }
 
         PhpArray array = (PhpArray) arrayObj;
-        return array.get(index);
+        Object value = array.get(index);
+
+        // Unwrap PhpReference if present
+        // This happens when array elements are stored as references
+        // (e.g., after foreach with &$value)
+        if (value instanceof PhpReference) {
+            return ((PhpReference) value).getValue();
+        }
+
+        return value;
     }
 }

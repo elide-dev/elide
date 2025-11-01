@@ -38,6 +38,7 @@ public final class PhpContext {
     private final Map<String, PhpClass> classes;
     private final Map<String, PhpInterface> interfaces;
     private final Map<String, PhpTrait> traits;
+    private final Map<String, Object> constants;
     private final Set<String> includedFiles;
     private final PhpGlobalScope globalScope;
     private final PhpNamespaceContext namespaceContext;
@@ -53,6 +54,7 @@ public final class PhpContext {
         this.classes = new HashMap<>();
         this.interfaces = new HashMap<>();
         this.traits = new HashMap<>();
+        this.constants = new HashMap<>();
         this.includedFiles = new HashSet<>();
         this.globalScope = new PhpGlobalScope();
         this.namespaceContext = new PhpNamespaceContext();
@@ -288,6 +290,29 @@ public final class PhpContext {
         }
 
         return null;
+    }
+
+    /**
+     * Define a constant in the context.
+     * Constants are case-sensitive by default.
+     */
+    public void defineConstant(String name, Object value) {
+        constants.put(name, value);
+    }
+
+    /**
+     * Get a constant by name.
+     * Returns null if the constant is not defined.
+     */
+    public Object getConstant(String name) {
+        return constants.get(name);
+    }
+
+    /**
+     * Check if a constant is defined.
+     */
+    public boolean isConstantDefined(String name) {
+        return constants.containsKey(name);
     }
 
     /**

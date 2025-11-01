@@ -16,6 +16,7 @@ public final class PhpClass {
     private final String name;
     private final Map<String, PropertyMetadata> properties;
     private final Map<String, MethodMetadata> methods;
+    private final Map<String, ConstantMetadata> constants;  // Class constants
     private final CallTarget constructor;
     private final Map<String, Object> staticPropertyValues;  // Storage for static property values
     private PhpClass parentClass;  // Parent class for inheritance (nullable)
@@ -28,6 +29,7 @@ public final class PhpClass {
         this.name = name;
         this.properties = new HashMap<>(properties);
         this.methods = new HashMap<>(methods);
+        this.constants = new HashMap<>();
         this.constructor = constructor;
         this.isAbstract = isAbstract;
         this.staticPropertyValues = new HashMap<>();
@@ -366,6 +368,57 @@ public final class PhpClass {
     }
 
     /**
+     * Add a constant to this class.
+     */
+    public void addConstant(String name, Object value, Visibility visibility) {
+        constants.put(name, new ConstantMetadata(name, value, visibility));
+    }
+
+    /**
+     * Check if this class has a constant (includes inherited constants).
+     */
+    public boolean hasConstant(String constantName) {
+        if (constants.containsKey(constantName)) {
+            return true;
+        }
+        // Check parent class if present
+        if (parentClass != null) {
+            return parentClass.hasConstant(constantName);
+        }
+        return false;
+    }
+
+    /**
+     * Get a constant value (includes inherited constants).
+     */
+    public Object getConstant(String constantName) {
+        ConstantMetadata constant = constants.get(constantName);
+        if (constant != null) {
+            return constant.getValue();
+        }
+        // Check parent class if present
+        if (parentClass != null) {
+            return parentClass.getConstant(constantName);
+        }
+        return null;
+    }
+
+    /**
+     * Get constant metadata (includes inherited constants).
+     */
+    public ConstantMetadata getConstantMetadata(String constantName) {
+        ConstantMetadata constant = constants.get(constantName);
+        if (constant != null) {
+            return constant;
+        }
+        // Check parent class if present
+        if (parentClass != null) {
+            return parentClass.getConstantMetadata(constantName);
+        }
+        return null;
+    }
+
+    /**
      * Check if a method is accessible from the given caller class context.
      *
      * @param methodName The method to check
@@ -595,6 +648,33 @@ public final class PhpClass {
 
         public String[] getParameterNames() {
             return parameterNames;
+        }
+    }
+
+    /**
+     * Metadata about a class constant.
+     */
+    public static final class ConstantMetadata {
+        private final String name;
+        private final Object value;
+        private final Visibility visibility;
+
+        public ConstantMetadata(String name, Object value, Visibility visibility) {
+            this.name = name;
+            this.value = value;
+            this.visibility = visibility;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Visibility getVisibility() {
+            return visibility;
         }
     }
 }

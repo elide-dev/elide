@@ -241,8 +241,16 @@ public final class PhpExpressionParser {
             return new PhpInstanceofNode(left, targetClassName);
         }
 
-        // Order matters: check longer operators first (<=, >=, !=, ==)
-        if (match("==")) {
+        // Order matters: check longer operators first (===, !==, <=, >=, ==, !=)
+        if (match("===")) {
+            skipWhitespace();
+            PhpExpressionNode right = parseAddition();
+            return PhpNodeFactory.createEqual(left, right); // For now, use same as ==
+        } else if (match("!==")) {
+            skipWhitespace();
+            PhpExpressionNode right = parseAddition();
+            return PhpNodeFactory.createNotEqual(left, right); // For now, use same as !=
+        } else if (match("==")) {
             skipWhitespace();
             PhpExpressionNode right = parseAddition();
             return PhpNodeFactory.createEqual(left, right);
@@ -468,13 +476,22 @@ public final class PhpExpressionParser {
                 skipWhitespace();
             }
 
-            // Check for postfix increment/decrement (only on simple variables, not array access or property access)
+            // Check for postfix increment/decrement on variables and properties
+            skipWhitespace();
             if (varNode instanceof PhpReadVariableNode) {
-                skipWhitespace();
+                // Postfix on simple variable
                 if (match("++")) {
                     return PhpNodeFactory.createPostIncrement(slot);
                 } else if (match("--")) {
                     return PhpNodeFactory.createPostDecrement(slot);
+                }
+            } else if (varNode instanceof PhpPropertyAccessNode) {
+                // Postfix on property access: $obj->property++
+                PhpPropertyAccessNode propAccess = (PhpPropertyAccessNode) varNode;
+                if (match("++")) {
+                    return new PhpPropertyPostIncrementNode(propAccess);
+                } else if (match("--")) {
+                    return new PhpPropertyPostDecrementNode(propAccess);
                 }
             }
 
@@ -680,44 +697,67 @@ public final class PhpExpressionParser {
                 }
                 return new PhpStaticPropertyAccessNode(identifier, propName);
             } else {
-                // Static method call: ClassName::method(), self::method(), or parent::method()
-                StringBuilder methodNameBuilder = new StringBuilder();
+                // Could be static method call or class constant access
+                // ClassName::method(), self::method(), parent::method()
+                // ClassName::CONSTANT, self::CONSTANT, parent::CONSTANT
+                StringBuilder memberNameBuilder = new StringBuilder();
                 while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
-                    methodNameBuilder.append(advance());
+                    memberNameBuilder.append(advance());
                 }
-                String methodName = methodNameBuilder.toString();
+                String memberName = memberNameBuilder.toString();
 
                 skipWhitespace();
-                expect("(");
-                skipWhitespace();
 
-                List<PhpExpressionNode> args = new ArrayList<>();
-                while (!check(")")) {
-                    args.add(parseExpression());
+                // Check if it's a method call (has opening paren) or constant access (no paren)
+                if (match("(")) {
+                    // It's a method call
                     skipWhitespace();
-                    if (match(",")) {
+
+                    List<PhpExpressionNode> args = new ArrayList<>();
+                    while (!check(")")) {
+                        args.add(parseExpression());
                         skipWhitespace();
+                        if (match(",")) {
+                            skipWhitespace();
+                        }
                     }
-                }
-                expect(")");
+                    expect(")");
 
-                // Check if it's a parent:: call
-                if (identifier.equals("parent")) {
-                    if (context.currentClassName == null) {
-                        throw new RuntimeException("Cannot use parent:: outside of class context");
+                    // Check if it's a parent:: call
+                    if (identifier.equals("parent")) {
+                        if (context.currentClassName == null) {
+                            throw new RuntimeException("Cannot use parent:: outside of class context");
+                        }
+                        return new PhpParentMethodCallNode(memberName, args.toArray(new PhpExpressionNode[0]), context.currentClassName);
                     }
-                    return new PhpParentMethodCallNode(methodName, args.toArray(new PhpExpressionNode[0]), context.currentClassName);
-                }
 
-                // Check if it's a self:: call
-                if (identifier.equals("self")) {
-                    if (context.currentClassName == null) {
-                        throw new RuntimeException("Cannot use self:: outside of class context");
+                    // Check if it's a self:: call
+                    if (identifier.equals("self")) {
+                        if (context.currentClassName == null) {
+                            throw new RuntimeException("Cannot use self:: outside of class context");
+                        }
+                        return new PhpSelfMethodCallNode(memberName, args.toArray(new PhpExpressionNode[0]), context.currentClassName);
                     }
-                    return new PhpSelfMethodCallNode(methodName, args.toArray(new PhpExpressionNode[0]), context.currentClassName);
-                }
 
-                return new PhpStaticMethodCallNode(identifier, methodName, args.toArray(new PhpExpressionNode[0]));
+                    return new PhpStaticMethodCallNode(identifier, memberName, args.toArray(new PhpExpressionNode[0]));
+                } else {
+                    // It's a class constant access
+                    // Resolve self and parent
+                    String className = identifier;
+                    if (identifier.equals("self")) {
+                        if (context.currentClassName == null) {
+                            throw new RuntimeException("Cannot use self:: outside of class context");
+                        }
+                        className = context.currentClassName;
+                    } else if (identifier.equals("parent")) {
+                        if (context.currentClassName == null) {
+                            throw new RuntimeException("Cannot use parent:: outside of class context");
+                        }
+                        return new PhpParentConstantAccessNode(memberName, context.currentClassName);
+                    }
+
+                    return new PhpClassConstantAccessNode(className, memberName);
+                }
             }
         }
 
@@ -738,8 +778,23 @@ public final class PhpExpressionParser {
             // Create function call node (handles both built-in and user-defined functions)
             return new PhpFunctionCallNode(identifier, args.toArray(new PhpExpressionNode[0]));
         } else {
-            // Just an identifier (could be a constant or future feature)
-            throw new RuntimeException("Unexpected identifier: " + identifier);
+            // Just an identifier - treat as constant access
+            PhpExpressionNode constantNode = new PhpConstantAccessNode(identifier);
+
+            // Check for array access on constant (e.g., COLORS[1])
+            skipWhitespace();
+            while (match("[")) {
+                skipWhitespace();
+                PhpExpressionNode indexNode = null;
+                if (!check("]")) {
+                    indexNode = parseExpression();
+                }
+                expect("]");
+                constantNode = new PhpArrayAccessNode(constantNode, indexNode);
+                skipWhitespace();
+            }
+
+            return constantNode;
         }
     }
 
@@ -838,11 +893,11 @@ public final class PhpExpressionParser {
                     dir
                 );
             case "__LINE__":
-                // Line numbers would require lexer support - for now return 0
-                // TODO: Add line tracking to lexer
+                // Get current line number from lexer
+                long currentLine = (long) lexer.getCurrentLine();
                 return new PhpMagicConstantNode(
                     PhpMagicConstantNode.MagicConstantType.LINE,
-                    0L
+                    currentLine
                 );
             case "__CLASS__":
                 String className = context.currentClassName != null ? context.currentClassName : "";

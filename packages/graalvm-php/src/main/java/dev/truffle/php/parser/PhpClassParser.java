@@ -52,6 +52,9 @@ public final class PhpClassParser {
         // Trait conflict resolution metadata
         public final Map<String, List<TraitConflictResolution>> classTraitResolutions = new HashMap<>();  // className -> List<resolution>
 
+        // Class constants metadata (parsed during class parsing, added after class creation)
+        public final Map<String, List<ClassConstant>> classConstants = new HashMap<>();  // className -> List<constant>
+
         public String currentClassName;
         public FrameDescriptor.Builder currentFrameBuilder;
     }
@@ -85,6 +88,21 @@ public final class PhpClassParser {
 
         public static TraitConflictResolution alias(String traitName, String methodName, String aliasName, Visibility visibility) {
             return new TraitConflictResolution(Type.ALIAS, traitName, methodName, null, aliasName, visibility);
+        }
+    }
+
+    /**
+     * Represents a class constant parsed during class parsing.
+     */
+    public static final class ClassConstant {
+        public final String name;
+        public final Object value;
+        public final Visibility visibility;
+
+        public ClassConstant(String name, Object value, Visibility visibility) {
+            this.name = name;
+            this.value = value;
+            this.visibility = visibility;
         }
     }
 
@@ -350,6 +368,66 @@ public final class PhpClassParser {
             if (matchKeyword("static")) {
                 isStatic = true;
                 skipWhitespace();
+            }
+
+            // Check for const declaration
+            if (matchKeyword("const")) {
+                // Parse class constant: [visibility] const CONSTANT_NAME = value;
+                skipWhitespace();
+
+                // Parse constant name
+                StringBuilder constantNameBuilder = new StringBuilder();
+                while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
+                    constantNameBuilder.append(advance());
+                }
+                String constantName = constantNameBuilder.toString();
+                if (constantName.isEmpty()) {
+                    throw new RuntimeException("Expected constant name after 'const'");
+                }
+
+                skipWhitespace();
+                expect("=");
+                skipWhitespace();
+
+                // Parse constant value (only literals are supported for class constants)
+                Object constantValue = null;
+                if (peek() == '"' || peek() == '\'') {
+                    constantValue = parseString();
+                } else if (Character.isDigit(peek()) || peek() == '-') {
+                    if (peek() == '-') {
+                        advance(); // consume '-'
+                        skipWhitespace();
+                        constantValue = -Long.parseLong(parseNumberString());
+                    } else {
+                        String numStr = parseNumberString();
+                        if (numStr.contains(".")) {
+                            constantValue = Double.parseDouble(numStr);
+                        } else {
+                            constantValue = Long.parseLong(numStr);
+                        }
+                    }
+                } else if (match("true")) {
+                    constantValue = true;
+                } else if (match("false")) {
+                    constantValue = false;
+                } else if (match("null")) {
+                    constantValue = null;
+                } else {
+                    throw new RuntimeException("Class constants must have literal values");
+                }
+
+                expect(";");
+
+                // Store constant in a temporary list (we'll add them to the class after creation)
+                // For now, we'll add them directly after the class is created
+                // We need to track them separately since PhpClass constructor doesn't take constants
+                if (!context.classConstants.containsKey(className)) {
+                    context.classConstants.put(className, new ArrayList<>());
+                }
+                context.classConstants.get(className).add(new ClassConstant(constantName, constantValue, visibility));
+
+                skipWhitespace();
+                continue;  // Skip to next class member
             }
 
             // Check if it's a property or method
@@ -629,6 +707,14 @@ public final class PhpClassParser {
         // Store used traits for later resolution
         if (!usedTraitNames.isEmpty()) {
             context.classUsedTraits.put(className, usedTraitNames);
+        }
+
+        // Add class constants to the PhpClass
+        List<ClassConstant> constants = context.classConstants.get(className);
+        if (constants != null) {
+            for (ClassConstant constant : constants) {
+                phpClass.addConstant(constant.name, constant.value, constant.visibility);
+            }
         }
 
         return new PhpClassNode(phpClass);

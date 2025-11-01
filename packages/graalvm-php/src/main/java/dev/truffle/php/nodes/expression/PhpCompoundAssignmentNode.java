@@ -2,6 +2,7 @@ package dev.truffle.php.nodes.expression;
 
 import com.oracle.truffle.api.frame.VirtualFrame;
 import dev.truffle.php.nodes.PhpExpressionNode;
+import dev.truffle.php.runtime.PhpReference;
 
 /**
  * Node for compound assignment operators like +=, -=, *=, /=, .=
@@ -37,7 +38,17 @@ public final class PhpCompoundAssignmentNode extends PhpExpressionNode {
     @Override
     public Object execute(VirtualFrame frame) {
         // Read current value
-        Object currentValue = frame.getObject(variableSlot);
+        Object slotValue = frame.getObject(variableSlot);
+
+        // Check if the slot contains a reference
+        PhpReference reference = null;
+        Object currentValue;
+        if (slotValue instanceof PhpReference) {
+            reference = (PhpReference) slotValue;
+            currentValue = reference.getValue();
+        } else {
+            currentValue = slotValue;
+        }
 
         // Execute right side
         Object rightValue = rightNode.execute(frame);
@@ -46,7 +57,13 @@ public final class PhpCompoundAssignmentNode extends PhpExpressionNode {
         Object result = performOperation(currentValue, rightValue);
 
         // Write back to variable
-        frame.setObject(variableSlot, result);
+        if (reference != null) {
+            // Update the reference's value
+            reference.setValue(result);
+        } else {
+            // Normal assignment
+            frame.setObject(variableSlot, result);
+        }
 
         return result;
     }

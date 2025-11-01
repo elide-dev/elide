@@ -524,6 +524,9 @@ dependencies {
   // Netty
   implementation(libs.netty.codec.http)
   implementation(libs.netty.codec.http2)
+  implementation(libs.netty.codec.http3)
+  implementation(libs.netty.codec.quic)
+  implementation(libs.netty.pkitesting)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"

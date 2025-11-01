@@ -91,7 +91,7 @@ enum class GuestLanguage (
     id = ENGINE_PHP,
     formalName = "PHP",
     experimental = true,
-    onByDefault = false,
+    onByDefault = true,
     extensions = sortedSetOf("php"),
   ),
 
@@ -178,6 +178,7 @@ enum class GuestLanguage (
       WASM.engine -> WASM
       LLVM.engine -> LLVM
       PKL.engine -> PKL
+      PHP.engine -> PHP
       else -> null
     }
 
@@ -191,6 +192,7 @@ enum class GuestLanguage (
       LLVM.id -> LLVM
       TYPESCRIPT.id -> TYPESCRIPT
       PKL.id -> PKL
+      PHP.id -> PHP
 
       // JVM extension guests
       KOTLIN.id -> KOTLIN

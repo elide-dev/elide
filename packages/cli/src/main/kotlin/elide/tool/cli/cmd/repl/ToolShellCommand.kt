@@ -2557,12 +2557,11 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           logging.debug("Configuring TypeScript support")
           resourcesPath = gvmResources
         }
-//
-//        PHP -> configure(elide.runtime.plugins.php.PHP) {
-//          logging.debug("Configuring PHP support")
-//          resourcesPath = gvmResources
-//        }
-//
+
+        PHP -> configure(elide.runtime.plugins.php.PHP) {
+          logging.debug("Configuring PHP support")
+        }
+
 //        RUBY -> ignoreNotInstalled {
 //           install(elide.runtime.plugins.ruby.Ruby) {
 //             logging.debug("Configuring Ruby VM")
@@ -2572,7 +2571,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 //             installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
 //           }
 //         }
-//
+
         PYTHON -> configure(elide.runtime.plugins.python.Python) {
           logging.debug("Configuring Python VM")
           installIntrinsics(intrinsics, GraalVMGuest.PYTHON, versionProp)

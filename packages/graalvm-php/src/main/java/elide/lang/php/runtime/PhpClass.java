@@ -13,6 +13,7 @@
 package elide.lang.php.runtime;
 
 import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +74,7 @@ public final class PhpClass {
     return implementedInterfaces;
   }
 
+  @TruffleBoundary
   public void addImplementedInterface(PhpInterface interfaceToAdd) {
     implementedInterfaces.add(interfaceToAdd);
   }
@@ -81,6 +83,7 @@ public final class PhpClass {
     return usedTraits;
   }
 
+  @TruffleBoundary
   public void addUsedTrait(PhpTrait trait) {
     usedTraits.add(trait);
   }
@@ -89,6 +92,7 @@ public final class PhpClass {
    * Compose traits into this class. This flattens all trait methods and properties into the class.
    * Must be called after all traits have been added.
    */
+  @TruffleBoundary
   public void composeTraits(List<TraitConflictResolution> conflictResolutions) {
     if (usedTraits.isEmpty()) {
       return;
@@ -247,6 +251,7 @@ public final class PhpClass {
    * @param interfaceName The name of the interface to check
    * @return true if this class implements the interface, false otherwise
    */
+  @TruffleBoundary
   public boolean implementsInterface(String interfaceName) {
     // Check direct implementations
     for (PhpInterface iface : implementedInterfaces) {
@@ -266,6 +271,7 @@ public final class PhpClass {
   }
 
   /** Helper method to recursively check if an interface extends another interface. */
+  @TruffleBoundary
   private boolean implementsInterfaceRecursive(PhpInterface iface, String interfaceName) {
     for (PhpInterface parent : iface.getParentInterfaces()) {
       if (parent.getName().equals(interfaceName)) {
@@ -298,6 +304,7 @@ public final class PhpClass {
     return constructor;
   }
 
+  @TruffleBoundary
   public boolean hasMethod(String methodName) {
     if (methods.containsKey(methodName)) {
       return true;
@@ -309,6 +316,7 @@ public final class PhpClass {
     return false;
   }
 
+  @TruffleBoundary
   public MethodMetadata getMethod(String methodName) {
     MethodMetadata method = methods.get(methodName);
     if (method != null) {
@@ -321,6 +329,7 @@ public final class PhpClass {
     return null;
   }
 
+  @TruffleBoundary
   public boolean hasProperty(String propertyName) {
     if (properties.containsKey(propertyName)) {
       return true;
@@ -332,6 +341,7 @@ public final class PhpClass {
     return false;
   }
 
+  @TruffleBoundary
   public PropertyMetadata getProperty(String propertyName) {
     PropertyMetadata property = properties.get(propertyName);
     if (property != null) {
@@ -348,6 +358,7 @@ public final class PhpClass {
    * Get all properties including inherited ones. Properties are returned in inheritance order:
    * parent first, then child. Child properties with same name override parent properties.
    */
+  @TruffleBoundary
   public Map<String, PropertyMetadata> getAllProperties() {
     Map<String, PropertyMetadata> allProps = new HashMap<>();
 
@@ -374,25 +385,30 @@ public final class PhpClass {
     return null;
   }
 
+  @TruffleBoundary
   public Object getStaticPropertyValue(String propertyName) {
     return staticPropertyValues.get(propertyName);
   }
 
+  @TruffleBoundary
   public void setStaticPropertyValue(String propertyName, Object value) {
     staticPropertyValues.put(propertyName, value);
   }
 
+  @TruffleBoundary
   public boolean hasStaticProperty(String propertyName) {
     PropertyMetadata prop = properties.get(propertyName);
     return prop != null && prop.isStatic();
   }
 
   /** Add a constant to this class. */
+  @TruffleBoundary
   public void addConstant(String name, Object value, Visibility visibility) {
     constants.put(name, new ConstantMetadata(name, value, visibility));
   }
 
   /** Check if this class has a constant (includes inherited constants). */
+  @TruffleBoundary
   public boolean hasConstant(String constantName) {
     if (constants.containsKey(constantName)) {
       return true;
@@ -405,6 +421,7 @@ public final class PhpClass {
   }
 
   /** Get a constant value (includes inherited constants). */
+  @TruffleBoundary
   public Object getConstant(String constantName) {
     ConstantMetadata constant = constants.get(constantName);
     if (constant != null) {
@@ -418,6 +435,7 @@ public final class PhpClass {
   }
 
   /** Get constant metadata (includes inherited constants). */
+  @TruffleBoundary
   public ConstantMetadata getConstantMetadata(String constantName) {
     ConstantMetadata constant = constants.get(constantName);
     if (constant != null) {
@@ -448,6 +466,7 @@ public final class PhpClass {
   }
 
   /** Get the class where a method is defined (walks inheritance chain). */
+  @TruffleBoundary
   private PhpClass getMethodDefiningClass(String methodName) {
     // Check if defined in this class
     if (methods.containsKey(methodName)) {
@@ -506,6 +525,7 @@ public final class PhpClass {
    *
    * @return List of unimplemented abstract method names
    */
+  @TruffleBoundary
   public List<String> getUnimplementedAbstractMethods() {
     List<String> unimplemented = new ArrayList<>();
 
@@ -527,6 +547,7 @@ public final class PhpClass {
   }
 
   /** Recursively collect abstract methods from this class and all parent classes. */
+  @TruffleBoundary
   private void collectAbstractMethods(
       PhpClass phpClass, Map<String, MethodMetadata> abstractMethods) {
     if (phpClass == null) {
@@ -554,6 +575,7 @@ public final class PhpClass {
    * Validate that a concrete class has implemented all abstract methods. Throws a RuntimeException
    * if there are unimplemented abstract methods.
    */
+  @TruffleBoundary
   public void validateAbstractMethodsImplemented() {
     // Only validate concrete classes
     if (isAbstract) {

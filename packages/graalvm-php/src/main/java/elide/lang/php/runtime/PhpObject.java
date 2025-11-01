@@ -13,6 +13,7 @@
 package elide.lang.php.runtime;
 
 import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.interop.TruffleObject;
 import com.oracle.truffle.api.library.ExportLibrary;
@@ -27,10 +28,15 @@ public final class PhpObject implements TruffleObject {
   private final PhpClass phpClass;
   private final Map<String, Object> properties;
 
+  @TruffleBoundary
   public PhpObject(PhpClass phpClass) {
     this.phpClass = phpClass;
     this.properties = new HashMap<>();
+    initializeProperties(phpClass, properties);
+  }
 
+  @TruffleBoundary
+  private static void initializeProperties(PhpClass phpClass, Map<String, Object> properties) {
     // Initialize properties with default values (including inherited properties)
     for (Map.Entry<String, PhpClass.PropertyMetadata> entry :
         phpClass.getAllProperties().entrySet()) {
@@ -46,6 +52,7 @@ public final class PhpObject implements TruffleObject {
   }
 
   /** Read a property value (external access - must be public). */
+  @TruffleBoundary
   public Object readProperty(String propertyName) {
     return readProperty(propertyName, null);
   }
@@ -56,6 +63,7 @@ public final class PhpObject implements TruffleObject {
    * @param propertyName The property to read
    * @param callerClass The class from which the access is being made (null for external access)
    */
+  @TruffleBoundary
   public Object readProperty(String propertyName, PhpClass callerClass) {
     // Check if property exists in class definition
     if (!phpClass.hasProperty(propertyName)) {
@@ -96,6 +104,7 @@ public final class PhpObject implements TruffleObject {
   }
 
   /** Write a property value (external access - must be public). */
+  @TruffleBoundary
   public void writeProperty(String propertyName, Object value) {
     writeProperty(propertyName, value, null);
   }
@@ -107,6 +116,7 @@ public final class PhpObject implements TruffleObject {
    * @param value The value to write
    * @param callerClass The class from which the access is being made (null for external access)
    */
+  @TruffleBoundary
   public void writeProperty(String propertyName, Object value, PhpClass callerClass) {
     // Check if property exists in class definition
     if (!phpClass.hasProperty(propertyName)) {
@@ -149,6 +159,7 @@ public final class PhpObject implements TruffleObject {
   }
 
   /** Read property internally (from within methods, bypasses visibility). */
+  @TruffleBoundary
   public Object readPropertyInternal(String propertyName) {
     if (!phpClass.hasProperty(propertyName)) {
       throw new RuntimeException(
@@ -158,6 +169,7 @@ public final class PhpObject implements TruffleObject {
   }
 
   /** Write property internally (from within methods, bypasses visibility). */
+  @TruffleBoundary
   public void writePropertyInternal(String propertyName, Object value) {
     if (!phpClass.hasProperty(propertyName)) {
       throw new RuntimeException(
@@ -173,6 +185,7 @@ public final class PhpObject implements TruffleObject {
   }
 
   /** Get the class where a property is defined (walks inheritance chain). */
+  @TruffleBoundary
   private PhpClass getPropertyDefiningClass(String propertyName) {
     // Check if defined in this class
     if (phpClass.getProperties().containsKey(propertyName)) {
@@ -232,6 +245,7 @@ public final class PhpObject implements TruffleObject {
   }
 
   @Override
+  @TruffleBoundary
   public String toString() {
     return phpClass.getName() + " Object";
   }
@@ -243,6 +257,7 @@ public final class PhpObject implements TruffleObject {
   }
 
   @ExportMessage
+  @TruffleBoundary
   Object getMembers(@SuppressWarnings("unused") boolean includeInternal) {
     return properties.keySet().toArray(new String[0]);
   }

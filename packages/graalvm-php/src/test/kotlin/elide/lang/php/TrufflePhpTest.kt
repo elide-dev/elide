@@ -16,6 +16,7 @@ package elide.lang.php
 
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Context
+import org.intellij.lang.annotations.Language
 import kotlin.test.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -3817,7 +3818,7 @@ class TrufflePhpTest {
     }
   }
 
-  private fun executePhp(code: String): String {
+  private fun executePhp(@Language("php") code: String): String {
     val outputStream = ByteArrayOutputStream()
     val errorStream = ByteArrayOutputStream()
 

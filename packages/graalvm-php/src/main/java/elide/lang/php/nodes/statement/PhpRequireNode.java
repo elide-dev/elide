@@ -12,8 +12,10 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.TruffleFile;
 import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.source.Source;
 import elide.lang.php.PhpLanguage;
@@ -39,10 +41,26 @@ public final class PhpRequireNode extends PhpStatementNode {
     this.once = once;
   }
 
+  @TruffleBoundary
+  private static String convertToString(Object value) {
+    return value.toString();
+  }
+
+  @TruffleBoundary
+  private static String getExceptionMessage(Exception e) {
+    return e.getMessage();
+  }
+
   @Override
   public void executeVoid(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeRequire(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeRequire(MaterializedFrame frame) {
     Object pathValue = pathNode.execute(frame);
-    String path = pathValue.toString();
+    String path = convertToString(pathValue);
 
     PhpContext context = PhpContext.get(this);
     TruffleLanguage.Env env = context.getEnv();
@@ -66,8 +84,25 @@ public final class PhpRequireNode extends PhpStatementNode {
       throw new RuntimeException("Failed opening required '" + path + "': Not a regular file");
     }
 
+    // Read file content
+    String content = readFileContent(file, path);
+
+    // Create a Source from the file content
+    Source source = createSource(content, file, path);
+
+    // Mark file as included for _once variants
+    if (once) {
+      context.markFileIncluded(path);
+    }
+
+    // Parse and execute the file
+    PhpLanguage language = PhpLanguage.get(this);
+    language.parseAndExecute(source, frame);
+  }
+
+  @TruffleBoundary
+  private String readFileContent(TruffleFile file, String path) {
     try {
-      // Read the file content
       StringBuilder content = new StringBuilder();
       try (BufferedReader reader = file.newBufferedReader(StandardCharsets.UTF_8)) {
         String line;
@@ -75,24 +110,20 @@ public final class PhpRequireNode extends PhpStatementNode {
           content.append(line).append("\n");
         }
       }
-
-      // Create a Source from the file
-      Source source =
-          Source.newBuilder(PhpLanguage.ID, content.toString(), file.getName())
-              .uri(file.toUri())
-              .build();
-
-      // Mark file as included for _once variants
-      if (once) {
-        context.markFileIncluded(path);
-      }
-
-      // Parse and execute the file
-      PhpLanguage language = PhpLanguage.get(this);
-      language.parseAndExecute(source, frame);
-
+      return content.toString();
     } catch (IOException e) {
-      throw new RuntimeException("Failed to read file '" + path + "': " + e.getMessage());
+      throw new RuntimeException("Failed to read file '" + path + "': " + getExceptionMessage(e));
+    }
+  }
+
+  @TruffleBoundary
+  private Source createSource(String content, TruffleFile file, String path) {
+    try {
+      return Source.newBuilder(PhpLanguage.ID, content, file.getName())
+          .uri(file.toUri())
+          .build();
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to create source for '" + path + "': " + getExceptionMessage(e));
     }
   }
 }

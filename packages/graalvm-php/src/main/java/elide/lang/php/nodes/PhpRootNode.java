@@ -12,11 +12,14 @@
  */
 package elide.lang.php.nodes;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 import elide.lang.php.PhpLanguage;
 import elide.lang.php.runtime.PhpContext;
+import elide.lang.php.runtime.PhpGlobalScope;
 
 /** Root node for PHP program execution. This is the entry point for executing PHP code. */
 public final class PhpRootNode extends RootNode {
@@ -30,12 +33,24 @@ public final class PhpRootNode extends RootNode {
 
   @Override
   public Object execute(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    return executeBody(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private Object executeBody(MaterializedFrame frame) {
     // Set the global frame so that functions can access global variables
-    PhpContext context = PhpContext.get(this);
-    context.getGlobalScope().setGlobalFrame(frame);
+    PhpGlobalScope globalScope = getGlobalScopeFromContext();
+    globalScope.setGlobalFrame(frame);
 
     body.executeVoid(frame);
     return 0; // PHP scripts return 0 by default
+  }
+
+  @TruffleBoundary
+  private PhpGlobalScope getGlobalScopeFromContext() {
+    PhpContext context = PhpContext.get(this);
+    return context.getGlobalScope();
   }
 
   @Override

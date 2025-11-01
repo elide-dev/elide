@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.expression;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import elide.lang.php.nodes.PhpExpressionNode;
 import elide.lang.php.runtime.PhpReference;
@@ -79,6 +80,7 @@ public final class PhpCompoundAssignmentNode extends PhpExpressionNode {
     return result;
   }
 
+  @TruffleBoundary
   private Object performOperation(Object left, Object right) {
     switch (operation) {
       case ADD_ASSIGN:
@@ -162,6 +164,7 @@ public final class PhpCompoundAssignmentNode extends PhpExpressionNode {
     return leftNum / rightNum;
   }
 
+  @TruffleBoundary
   private Object concat(Object left, Object right) {
     String leftStr = left == null ? "" : String.valueOf(left);
     String rightStr = right == null ? "" : String.valueOf(right);
@@ -179,6 +182,7 @@ public final class PhpCompoundAssignmentNode extends PhpExpressionNode {
     return leftNum % rightNum;
   }
 
+  @TruffleBoundary
   private double toNumber(Object value) {
     if (value instanceof Long) {
       return ((Long) value).doubleValue();

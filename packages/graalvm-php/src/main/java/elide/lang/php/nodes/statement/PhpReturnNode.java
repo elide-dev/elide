@@ -12,6 +12,8 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ControlFlowException;
 import com.oracle.truffle.api.nodes.RootNode;
@@ -31,6 +33,12 @@ public final class PhpReturnNode extends PhpStatementNode {
 
   @Override
   public void executeVoid(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeReturn(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeReturn(MaterializedFrame frame) {
     Object value = null;
 
     if (valueNode != null) {

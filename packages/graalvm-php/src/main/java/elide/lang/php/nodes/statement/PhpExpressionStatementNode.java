@@ -12,6 +12,8 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import elide.lang.php.nodes.PhpExpressionNode;
 import elide.lang.php.nodes.PhpStatementNode;
@@ -30,6 +32,12 @@ public final class PhpExpressionStatementNode extends PhpStatementNode {
 
   @Override
   public void executeVoid(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeExpression(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeExpression(MaterializedFrame frame) {
     expression.execute(frame);
   }
 }

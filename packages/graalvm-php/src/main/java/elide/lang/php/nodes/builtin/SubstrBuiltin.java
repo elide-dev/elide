@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.builtin;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import elide.lang.php.PhpLanguage;
 import elide.lang.php.nodes.PhpBuiltinRootNode;
 
@@ -23,6 +24,7 @@ public final class SubstrBuiltin extends PhpBuiltinRootNode {
   }
 
   @Override
+  @TruffleBoundary
   protected Object executeBuiltin(Object[] args) {
     if (args.length < 2) {
       return null;
@@ -46,6 +48,7 @@ public final class SubstrBuiltin extends PhpBuiltinRootNode {
     return str.substring(start, end);
   }
 
+  @TruffleBoundary
   private String toString(Object obj) {
     if (obj == null) return "";
     return obj.toString();

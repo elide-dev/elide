@@ -13,6 +13,7 @@
 package elide.lang.php.runtime;
 
 import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.TruffleLanguage;
 import com.oracle.truffle.api.nodes.Node;
 import elide.lang.php.PhpLanguage;
@@ -111,11 +112,13 @@ public final class PhpContext {
   }
 
   /** Register a function in the context. */
+  @TruffleBoundary
   public void registerFunction(PhpFunction function) {
     functions.put(function.getName(), function);
   }
 
   /** Get a function by name (with namespace resolution). */
+  @TruffleBoundary
   public PhpFunction getFunction(String name) {
     // First try the name as-is (for backward compatibility)
     PhpFunction func = functions.get(name);
@@ -129,26 +132,31 @@ public final class PhpContext {
   }
 
   /** Get a function by its fully qualified name. */
+  @TruffleBoundary
   public PhpFunction getFunctionByQualifiedName(String qualifiedName) {
     return functions.get(qualifiedName);
   }
 
   /** Register a built-in function in the context. */
+  @TruffleBoundary
   public void registerBuiltin(String name, CallTarget callTarget) {
     builtins.put(name, callTarget);
   }
 
   /** Get a built-in function CallTarget by name. */
+  @TruffleBoundary
   public CallTarget getBuiltin(String name) {
     return builtins.get(name);
   }
 
   /** Register a class in the context. */
+  @TruffleBoundary
   public void registerClass(PhpClass phpClass) {
     classes.put(phpClass.getName(), phpClass);
   }
 
   /** Get a class by name (with namespace resolution). */
+  @TruffleBoundary
   public PhpClass getClass(String name) {
     // First try the name as-is (for backward compatibility and built-ins)
     PhpClass phpClass = classes.get(name);
@@ -162,16 +170,19 @@ public final class PhpContext {
   }
 
   /** Get a class by its fully qualified name. */
+  @TruffleBoundary
   public PhpClass getClassByQualifiedName(String qualifiedName) {
     return classes.get(qualifiedName);
   }
 
   /** Register an interface in the context. */
+  @TruffleBoundary
   public void registerInterface(PhpInterface phpInterface) {
     interfaces.put(phpInterface.getName(), phpInterface);
   }
 
   /** Get an interface by name (with namespace resolution). */
+  @TruffleBoundary
   public PhpInterface getInterface(String name) {
     // First try the name as-is
     PhpInterface iface = interfaces.get(name);
@@ -186,16 +197,19 @@ public final class PhpContext {
   }
 
   /** Get an interface by its fully qualified name. */
+  @TruffleBoundary
   public PhpInterface getInterfaceByQualifiedName(String qualifiedName) {
     return interfaces.get(qualifiedName);
   }
 
   /** Register a trait in the context. */
+  @TruffleBoundary
   public void registerTrait(PhpTrait phpTrait) {
     traits.put(phpTrait.getName(), phpTrait);
   }
 
   /** Get a trait by name (with namespace resolution). */
+  @TruffleBoundary
   public PhpTrait getTrait(String name) {
     // First try the name as-is
     PhpTrait trait = traits.get(name);
@@ -209,16 +223,19 @@ public final class PhpContext {
   }
 
   /** Get a trait by its fully qualified name. */
+  @TruffleBoundary
   public PhpTrait getTraitByQualifiedName(String qualifiedName) {
     return traits.get(qualifiedName);
   }
 
   /** Check if a file has already been included (for *_once variants). */
+  @TruffleBoundary
   public boolean isFileIncluded(String path) {
     return includedFiles.contains(path);
   }
 
   /** Mark a file as included (for *_once variants). */
+  @TruffleBoundary
   public void markFileIncluded(String path) {
     includedFiles.add(path);
   }
@@ -247,6 +264,7 @@ public final class PhpContext {
    * @param propertyName The name of the static property
    * @return The PhpClass that uses the trait and has the property, or null if not found
    */
+  @TruffleBoundary
   public PhpClass findClassUsingTraitWithProperty(String traitName, String propertyName) {
     // Iterate through all registered classes
     for (PhpClass phpClass : classes.values()) {
@@ -269,16 +287,19 @@ public final class PhpContext {
   }
 
   /** Define a constant in the context. Constants are case-sensitive by default. */
+  @TruffleBoundary
   public void defineConstant(String name, Object value) {
     constants.put(name, value);
   }
 
   /** Get a constant by name. Returns null if the constant is not defined. */
+  @TruffleBoundary
   public Object getConstant(String name) {
     return constants.get(name);
   }
 
   /** Check if a constant is defined. */
+  @TruffleBoundary
   public boolean isConstantDefined(String name) {
     return constants.containsKey(name);
   }

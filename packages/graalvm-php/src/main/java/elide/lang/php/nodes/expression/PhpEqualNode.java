@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.expression;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import elide.lang.php.nodes.PhpExpressionNode;
@@ -64,7 +65,12 @@ public abstract class PhpEqualNode extends PhpExpressionNode {
         return (Double) leftVal == ((Long) rightVal).doubleValue();
       }
 
-      return leftVal.equals(rightVal);
+      return objectEquals(leftVal, rightVal);
+    }
+
+    @TruffleBoundary
+    private static boolean objectEquals(Object left, Object right) {
+      return left.equals(right);
     }
   }
 }

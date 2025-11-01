@@ -58,13 +58,17 @@ public final class PhpLanguage extends TruffleLanguage<PhpContext> {
    * files. The included file shares the same global scope and frame as the parent file.
    */
   public Object parseAndExecute(Source source, VirtualFrame frame) {
-    PhpContext context = getCurrentContext(PhpLanguage.class);
-    PhpParser parser = new PhpParser(this, source, context.getGlobalScope());
-    PhpRootNode rootNode = parser.parse();
-
+    PhpRootNode rootNode = parseSourceFile(source);
     // Execute the included file's body directly in the current frame
     // This allows the included file to access and modify variables from the parent scope
     return rootNode.execute(frame);
+  }
+
+  @com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
+  private PhpRootNode parseSourceFile(Source source) {
+    PhpContext context = getCurrentContext(PhpLanguage.class);
+    PhpParser parser = new PhpParser(this, source, context.getGlobalScope());
+    return parser.parse();
   }
 
   /** Get the language instance from a node. */

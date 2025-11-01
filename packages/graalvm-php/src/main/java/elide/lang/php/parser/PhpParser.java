@@ -12,6 +12,7 @@
  */
 package elide.lang.php.parser;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.source.Source;
 import elide.lang.php.PhpLanguage;
@@ -316,6 +317,7 @@ public final class PhpParser {
     return rootNode;
   }
 
+  @TruffleBoundary
   private void resolveClassInheritance(PhpContext context) {
     // Build a map of class names to PhpClass objects for quick lookup
     Map<String, PhpClass> classMap = new HashMap<>();
@@ -423,6 +425,7 @@ public final class PhpParser {
     }
   }
 
+  @TruffleBoundary
   private void resolveInterfaceInheritance(PhpContext context) {
     // Build a map of interface names to PhpInterface objects for quick lookup
     Map<String, PhpInterface> interfaceMap = new HashMap<>();
@@ -462,6 +465,7 @@ public final class PhpParser {
     }
   }
 
+  @TruffleBoundary
   private boolean hasCircularInterfaceInheritance(
       String originalInterfaceName,
       PhpInterface currentInterface,
@@ -481,6 +485,7 @@ public final class PhpParser {
     return false;
   }
 
+  @TruffleBoundary
   private boolean hasCircularInheritance(
       String originalClassName, PhpClass currentClass, Map<String, PhpClass> classMap) {
     // Walk up the inheritance chain
@@ -498,6 +503,7 @@ public final class PhpParser {
     return false;
   }
 
+  @TruffleBoundary
   private void resolveTraitComposition(PhpContext context) {
     // Build a map of trait names to PhpTrait objects for quick lookup
     Map<String, PhpTrait> traitMap = new HashMap<>();
@@ -533,6 +539,7 @@ public final class PhpParser {
     }
   }
 
+  @TruffleBoundary
   private boolean hasCircularTraitUsage(
       String originalTraitName, PhpTrait currentTrait, Map<String, PhpTrait> traitMap) {
     // Walk through the trait usage chain

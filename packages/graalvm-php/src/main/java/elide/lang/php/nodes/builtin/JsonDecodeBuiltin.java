@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.builtin;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import elide.lang.php.PhpLanguage;
 import elide.lang.php.nodes.PhpBuiltinRootNode;
 import elide.lang.php.runtime.PhpArray;
@@ -30,6 +31,7 @@ public final class JsonDecodeBuiltin extends PhpBuiltinRootNode {
   }
 
   @Override
+  @TruffleBoundary
   protected Object executeBuiltin(Object[] args) {
     if (args.length == 0) {
       throw new RuntimeException("json_decode() expects at least 1 parameter, 0 given");
@@ -67,6 +69,7 @@ public final class JsonDecodeBuiltin extends PhpBuiltinRootNode {
     }
   }
 
+  @TruffleBoundary
   private Object convertFromJson(JSONObject jsonObject, boolean associative) {
     // Always convert to associative array (PHP objects are complex)
     PhpArray result = new PhpArray();
@@ -77,6 +80,7 @@ public final class JsonDecodeBuiltin extends PhpBuiltinRootNode {
     return result;
   }
 
+  @TruffleBoundary
   private Object convertFromJson(JSONArray jsonArray) {
     PhpArray result = new PhpArray();
     for (int i = 0; i < jsonArray.length(); i++) {
@@ -86,6 +90,7 @@ public final class JsonDecodeBuiltin extends PhpBuiltinRootNode {
     return result;
   }
 
+  @TruffleBoundary
   private Object convertValue(Object value) {
     if (value == JSONObject.NULL || value == null) {
       return null;

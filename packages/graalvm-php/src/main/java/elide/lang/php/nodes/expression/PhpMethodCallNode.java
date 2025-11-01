@@ -13,6 +13,7 @@
 package elide.lang.php.nodes.expression;
 
 import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import elide.lang.php.nodes.PhpExpressionNode;
@@ -20,6 +21,7 @@ import elide.lang.php.runtime.PhpArray;
 import elide.lang.php.runtime.PhpClass;
 import elide.lang.php.runtime.PhpContext;
 import elide.lang.php.runtime.PhpObject;
+import elide.lang.php.runtime.Visibility;
 
 /** AST node for calling object methods ($obj->method()). */
 public final class PhpMethodCallNode extends PhpExpressionNode {
@@ -109,7 +111,7 @@ public final class PhpMethodCallNode extends PhpExpressionNode {
       if (phpClass.hasMethod("__call")) {
         return invokeCallMagicMethod(object, phpClass, frame);
       }
-      String visibilityName = method.getVisibility().toString().toLowerCase();
+      String visibilityName = getVisibilityName(method.getVisibility());
       throw new RuntimeException(
           "Cannot call "
               + visibilityName
@@ -147,5 +149,10 @@ public final class PhpMethodCallNode extends PhpExpressionNode {
 
     // __call receives: $this, method name (string), arguments (PhpArray)
     return callTarget.call(object, methodName, argsArray);
+  }
+
+  @TruffleBoundary
+  private static String getVisibilityName(Visibility visibility) {
+    return visibility.toString().toLowerCase();
   }
 }

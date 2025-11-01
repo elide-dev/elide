@@ -12,6 +12,7 @@
  */
 package elide.lang.php.runtime;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,7 @@ public final class PhpTrait {
    * @param methodName The method name to check
    * @return true if the method exists in this trait
    */
+  @TruffleBoundary
   public boolean hasMethod(String methodName) {
     return methods.containsKey(methodName);
   }
@@ -84,6 +86,7 @@ public final class PhpTrait {
    * @param methodName The method name
    * @return The method metadata, or null if not found
    */
+  @TruffleBoundary
   public PhpClass.MethodMetadata getMethod(String methodName) {
     return methods.get(methodName);
   }
@@ -94,6 +97,7 @@ public final class PhpTrait {
    * @param propertyName The property name to check
    * @return true if the property exists in this trait
    */
+  @TruffleBoundary
   public boolean hasProperty(String propertyName) {
     return properties.containsKey(propertyName);
   }
@@ -104,6 +108,7 @@ public final class PhpTrait {
    * @param propertyName The property name
    * @return The property metadata, or null if not found
    */
+  @TruffleBoundary
   public PhpClass.PropertyMetadata getProperty(String propertyName) {
     return properties.get(propertyName);
   }
@@ -118,6 +123,7 @@ public final class PhpTrait {
    *
    * @return Map of all flattened methods
    */
+  @TruffleBoundary
   public Map<String, PhpClass.MethodMetadata> getAllMethods() {
     Map<String, PhpClass.MethodMetadata> allMethods = new HashMap<>();
 
@@ -141,6 +147,7 @@ public final class PhpTrait {
    *
    * @return Map of all flattened properties
    */
+  @TruffleBoundary
   public Map<String, PhpClass.PropertyMetadata> getAllProperties() {
     Map<String, PhpClass.PropertyMetadata> allProperties = new HashMap<>();
 
@@ -160,6 +167,7 @@ public final class PhpTrait {
    *
    * @return List of abstract method names
    */
+  @TruffleBoundary
   public List<String> getAbstractMethods() {
     List<String> abstractMethods = new ArrayList<>();
 
@@ -187,11 +195,13 @@ public final class PhpTrait {
   }
 
   @Override
+  @TruffleBoundary
   public String toString() {
     return "Trait[" + name + "]";
   }
 
   @Override
+  @TruffleBoundary
   public boolean equals(Object obj) {
     if (this == obj) return true;
     if (!(obj instanceof PhpTrait)) return false;
@@ -200,6 +210,7 @@ public final class PhpTrait {
   }
 
   @Override
+  @TruffleBoundary
   public int hashCode() {
     return name.hashCode();
   }

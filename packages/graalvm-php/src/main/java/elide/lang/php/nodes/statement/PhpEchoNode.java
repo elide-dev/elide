@@ -12,12 +12,15 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import elide.lang.php.nodes.PhpExpressionNode;
 import elide.lang.php.nodes.PhpStatementNode;
 import elide.lang.php.runtime.PhpContext;
 import elide.lang.php.runtime.PhpStringUtil;
+import java.io.PrintWriter;
 
 /**
  * Node for the echo statement in PHP. Echo can output one or more expressions, separated by commas.
@@ -31,20 +34,36 @@ public final class PhpEchoNode extends PhpStatementNode {
   }
 
   @Override
-  @ExplodeLoop
   public void executeVoid(VirtualFrame frame) {
-    PhpContext context = PhpContext.get(this);
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeEcho(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeEcho(MaterializedFrame frame) {
+    PrintWriter output = getOutput();
 
     for (PhpExpressionNode expr : expressions) {
       Object value = expr.execute(frame);
-      String output = convertToString(value);
-      context.getOutput().print(output);
+      printValue(output, value);
     }
-    context.getOutput().flush();
+    flushOutput(output);
   }
 
-  /** Convert a PHP value to its string representation. */
-  private String convertToString(Object value) {
-    return PhpStringUtil.convertToString(value);
+  @TruffleBoundary
+  private PrintWriter getOutput() {
+    PhpContext context = PhpContext.get(this);
+    return context.getOutput();
+  }
+
+  @TruffleBoundary
+  private void printValue(PrintWriter output, Object value) {
+    String str = PhpStringUtil.convertToString(value);
+    output.print(str);
+  }
+
+  @TruffleBoundary
+  private void flushOutput(PrintWriter output) {
+    output.flush();
   }
 }

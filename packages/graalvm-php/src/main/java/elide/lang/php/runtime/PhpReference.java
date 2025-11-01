@@ -12,6 +12,7 @@
  */
 package elide.lang.php.runtime;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.interop.TruffleObject;
 import com.oracle.truffle.api.library.ExportLibrary;
@@ -59,6 +60,12 @@ public final class PhpReference implements TruffleObject {
     if ("value".equals(member)) {
       return value;
     }
+    throwUnknownMemberException(member);
+    return null; // Unreachable
+  }
+
+  @TruffleBoundary
+  private void throwUnknownMemberException(String member) {
     throw new UnsupportedOperationException("Unknown member: " + member);
   }
 
@@ -77,7 +84,7 @@ public final class PhpReference implements TruffleObject {
     if ("value".equals(member)) {
       this.value = newValue;
     } else {
-      throw new UnsupportedOperationException("Unknown member: " + member);
+      throwUnknownMemberException(member);
     }
   }
 

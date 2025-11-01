@@ -58,6 +58,7 @@ dependencies {
   api(libs.bundles.maven.model)
   api(libs.jline.reader)
   api(libs.jline.builtins)
+  api(libs.graalvm.truffle.api)
 
   implementation(libs.ktoml)
   implementation(libs.kotlinx.io.bytestring)

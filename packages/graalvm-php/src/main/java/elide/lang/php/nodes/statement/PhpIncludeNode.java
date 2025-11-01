@@ -12,8 +12,10 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.TruffleFile;
 import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.source.Source;
 import elide.lang.php.PhpLanguage;
@@ -39,10 +41,26 @@ public final class PhpIncludeNode extends PhpStatementNode {
     this.once = once;
   }
 
+  @TruffleBoundary
+  private static String convertToString(Object value) {
+    return value.toString();
+  }
+
+  @TruffleBoundary
+  private static String getExceptionMessage(Exception e) {
+    return e.getMessage();
+  }
+
   @Override
   public void executeVoid(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeInclude(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeInclude(MaterializedFrame frame) {
     Object pathValue = pathNode.execute(frame);
-    String path = pathValue.toString();
+    String path = convertToString(pathValue);
 
     PhpContext context = PhpContext.get(this);
     TruffleLanguage.Env env = context.getEnv();
@@ -58,19 +76,41 @@ public final class PhpIncludeNode extends PhpStatementNode {
     // Check if file exists - for include, print warning instead of throwing
     if (!file.exists()) {
       // In real PHP this would emit a warning
-      System.err.println(
-          "Warning: include(" + path + "): Failed to open stream: No such file or directory");
+      printWarning("Warning: include(" + path + "): Failed to open stream: No such file or directory");
       return;
     }
 
     // Check if it's a regular file
     if (!file.isRegularFile()) {
-      System.err.println("Warning: include(" + path + "): Not a regular file");
+      printWarning("Warning: include(" + path + "): Not a regular file");
       return;
     }
 
+    // Read file content
+    String content = readFileContent(file, path);
+    if (content == null) {
+      return; // Error already printed
+    }
+
+    // Create a Source from the file content
+    Source source = createSource(content, file, path);
+    if (source == null) {
+      return; // Error already printed
+    }
+
+    // Mark file as included for _once variants
+    if (once) {
+      context.markFileIncluded(path);
+    }
+
+    // Parse and execute the file
+    PhpLanguage language = PhpLanguage.get(this);
+    language.parseAndExecute(source, frame);
+  }
+
+  @TruffleBoundary
+  private String readFileContent(TruffleFile file, String path) {
     try {
-      // Read the file content
       StringBuilder content = new StringBuilder();
       try (BufferedReader reader = file.newBufferedReader(StandardCharsets.UTF_8)) {
         String line;
@@ -78,24 +118,27 @@ public final class PhpIncludeNode extends PhpStatementNode {
           content.append(line).append("\n");
         }
       }
-
-      // Create a Source from the file
-      Source source =
-          Source.newBuilder(PhpLanguage.ID, content.toString(), file.getName())
-              .uri(file.toUri())
-              .build();
-
-      // Mark file as included for _once variants
-      if (once) {
-        context.markFileIncluded(path);
-      }
-
-      // Parse and execute the file
-      PhpLanguage language = PhpLanguage.get(this);
-      language.parseAndExecute(source, frame);
-
+      return content.toString();
     } catch (IOException e) {
-      System.err.println("Warning: include(" + path + "): Failed to read file: " + e.getMessage());
+      printWarning("Warning: include(" + path + "): Failed to read file: " + getExceptionMessage(e));
+      return null;
     }
+  }
+
+  @TruffleBoundary
+  private Source createSource(String content, TruffleFile file, String path) {
+    try {
+      return Source.newBuilder(PhpLanguage.ID, content, file.getName())
+          .uri(file.toUri())
+          .build();
+    } catch (Exception e) {
+      printWarning("Warning: include(" + path + "): Failed to create source: " + getExceptionMessage(e));
+      return null;
+    }
+  }
+
+  @TruffleBoundary
+  private static void printWarning(String message) {
+    System.err.println(message);
   }
 }

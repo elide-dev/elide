@@ -12,6 +12,7 @@
  */
 package elide.lang.php.runtime;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,7 @@ public final class PhpInterface {
   }
 
   /** Check if this interface has a method (including inherited from parent interfaces). */
+  @TruffleBoundary
   public boolean hasMethod(String methodName) {
     if (methods.containsKey(methodName)) {
       return true;
@@ -64,6 +66,7 @@ public final class PhpInterface {
   }
 
   /** Get a method signature (including inherited from parent interfaces). */
+  @TruffleBoundary
   public MethodSignature getMethod(String methodName) {
     MethodSignature method = methods.get(methodName);
     if (method != null) {
@@ -80,6 +83,7 @@ public final class PhpInterface {
   }
 
   /** Get all methods including inherited ones from parent interfaces. */
+  @TruffleBoundary
   public Map<String, MethodSignature> getAllMethods() {
     Map<String, MethodSignature> allMethods = new HashMap<>();
 

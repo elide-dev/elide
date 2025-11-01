@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.builtin;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import elide.lang.php.PhpLanguage;
 import elide.lang.php.nodes.PhpBuiltinRootNode;
 import elide.lang.php.runtime.PhpContext;
@@ -26,6 +27,7 @@ public final class DefineBuiltin extends PhpBuiltinRootNode {
   }
 
   @Override
+  @TruffleBoundary
   protected Object executeBuiltin(Object[] args) {
 
     // Require at least 2 arguments (name and value)

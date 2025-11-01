@@ -13,6 +13,7 @@
 package elide.lang.php.runtime;
 
 import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.interop.InteropLibrary;
 import com.oracle.truffle.api.interop.TruffleObject;
 import com.oracle.truffle.api.library.ExportLibrary;
@@ -64,6 +65,7 @@ public final class PhpClosure implements TruffleObject {
   }
 
   @Override
+  @TruffleBoundary
   public String toString() {
     return "Closure";
   }

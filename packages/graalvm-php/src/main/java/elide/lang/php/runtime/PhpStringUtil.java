@@ -13,6 +13,7 @@
 package elide.lang.php.runtime;
 
 import com.oracle.truffle.api.CallTarget;
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 
 /** Utility methods for PHP string operations. */
 public final class PhpStringUtil {
@@ -27,6 +28,7 @@ public final class PhpStringUtil {
    * @param value The value to convert
    * @return The string representation
    */
+  @TruffleBoundary
   public static String convertToString(Object value) {
     if (value == null) {
       return "";

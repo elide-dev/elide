@@ -42,10 +42,18 @@ public final class PhpStringInterpolationNode extends PhpExpressionNode {
       return toString(parts[0].execute(frame));
     }
 
-    // Multiple parts - build string
+    // Multiple parts - collect values first, then build string
+    Object[] values = new Object[parts.length];
+    for (int i = 0; i < parts.length; i++) {
+      values[i] = parts[i].execute(frame);
+    }
+    return buildString(values);
+  }
+
+  @TruffleBoundary
+  private String buildString(Object[] values) {
     StringBuilder result = new StringBuilder();
-    for (PhpExpressionNode part : parts) {
-      Object value = part.execute(frame);
+    for (Object value : values) {
       result.append(toString(value));
     }
     return result.toString();

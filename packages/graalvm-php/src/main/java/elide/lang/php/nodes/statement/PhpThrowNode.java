@@ -12,6 +12,8 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import elide.lang.php.nodes.PhpExpressionNode;
 import elide.lang.php.nodes.PhpStatementNode;
@@ -30,15 +32,31 @@ public final class PhpThrowNode extends PhpStatementNode {
     this.exceptionNode = exceptionNode;
   }
 
+  @TruffleBoundary
+  private static String getSimpleClassName(Object obj) {
+    return obj.getClass().getSimpleName();
+  }
+
   @Override
   public void executeVoid(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeThrow(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeThrow(MaterializedFrame frame) {
     Object exception = exceptionNode.execute(frame);
 
     if (!(exception instanceof PhpObject)) {
-      throw new RuntimeException(
-          "Can only throw objects, got: " + exception.getClass().getSimpleName());
+      throwInvalidException(exception);
     }
 
     throw new PhpThrowableException((PhpObject) exception);
+  }
+
+  @TruffleBoundary
+  private void throwInvalidException(Object exception) {
+    throw new RuntimeException(
+        "Can only throw objects, got: " + getSimpleClassName(exception));
   }
 }

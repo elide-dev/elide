@@ -49,6 +49,7 @@ public final class PhpGlobalScope {
    * @param varName the variable name (without the $ prefix)
    * @return the frame slot index
    */
+  @com.oracle.truffle.api.CompilerDirectives.TruffleBoundary
   public int getOrCreateGlobalSlot(String varName) {
     return globalVariables.computeIfAbsent(
         varName,

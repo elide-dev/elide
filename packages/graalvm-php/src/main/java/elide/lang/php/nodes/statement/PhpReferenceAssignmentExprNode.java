@@ -12,6 +12,8 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import elide.lang.php.nodes.PhpExpressionNode;
 import elide.lang.php.nodes.PhpStatementNode;
@@ -45,6 +47,12 @@ public final class PhpReferenceAssignmentExprNode extends PhpStatementNode {
 
   @Override
   public void executeVoid(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeReferenceAssignment(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeReferenceAssignment(MaterializedFrame frame) {
     // Check what type of expression we have
     if (sourceExpr instanceof PhpReadVariableNode) {
       // Variable-to-variable reference: $b =& $a
@@ -61,7 +69,7 @@ public final class PhpReferenceAssignmentExprNode extends PhpStatementNode {
     }
   }
 
-  private void handleVariableReference(VirtualFrame frame, PhpReadVariableNode varNode) {
+  private void handleVariableReference(MaterializedFrame frame, PhpReadVariableNode varNode) {
     // Get the source variable slot
     int sourceSlot = varNode.getSlot();
 
@@ -83,7 +91,7 @@ public final class PhpReferenceAssignmentExprNode extends PhpStatementNode {
     frame.setObject(targetSlot, reference);
   }
 
-  private void handleArrayElementReference(VirtualFrame frame, PhpArrayAccessNode arrayAccessNode) {
+  private void handleArrayElementReference(MaterializedFrame frame, PhpArrayAccessNode arrayAccessNode) {
     // Get the array and index nodes
     PhpExpressionNode arrayNode = arrayAccessNode.getArrayNode();
     PhpExpressionNode indexNode = arrayAccessNode.getIndexNode();
@@ -117,7 +125,7 @@ public final class PhpReferenceAssignmentExprNode extends PhpStatementNode {
   }
 
   private void handleFunctionCallReference(
-      VirtualFrame frame, PhpFunctionCallNode functionCallNode) {
+      MaterializedFrame frame, PhpFunctionCallNode functionCallNode) {
     // Execute the function call
     // If the function returns by reference, it will return a PhpReference object
     Object result = functionCallNode.execute(frame);

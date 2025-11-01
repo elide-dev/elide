@@ -12,7 +12,9 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.Truffle;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.LoopNode;
 import com.oracle.truffle.api.nodes.Node;
@@ -64,6 +66,12 @@ public final class PhpForNode extends PhpStatementNode {
 
     @Override
     public boolean executeRepeating(VirtualFrame frame) {
+      MaterializedFrame materializedFrame = frame.materialize();
+      return executeRepeatingBoundary(materializedFrame);
+    }
+
+    @TruffleBoundary
+    private boolean executeRepeatingBoundary(MaterializedFrame frame) {
       if (condition != null && !evaluateConditionAsBoolean(frame)) {
         return false;
       }
@@ -88,7 +96,7 @@ public final class PhpForNode extends PhpStatementNode {
       return true;
     }
 
-    private boolean evaluateConditionAsBoolean(VirtualFrame frame) {
+    private boolean evaluateConditionAsBoolean(MaterializedFrame frame) {
       Object value = condition.execute(frame);
       return isTruthy(value);
     }

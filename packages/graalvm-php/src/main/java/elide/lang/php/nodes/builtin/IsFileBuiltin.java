@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.builtin;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import elide.lang.php.PhpLanguage;
 import elide.lang.php.nodes.PhpBuiltinRootNode;
 import java.nio.file.Files;
@@ -30,6 +31,7 @@ public final class IsFileBuiltin extends PhpBuiltinRootNode {
   }
 
   @Override
+  @TruffleBoundary
   protected Object executeBuiltin(Object[] args) {
     if (args.length == 0) {
       throw new RuntimeException("is_file() expects at least 1 parameter, 0 given");

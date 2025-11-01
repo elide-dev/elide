@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.builtin;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import elide.lang.php.PhpLanguage;
 import elide.lang.php.nodes.PhpBuiltinRootNode;
 import elide.lang.php.runtime.PhpArray;
@@ -26,6 +27,7 @@ public final class PrintRBuiltin extends PhpBuiltinRootNode {
   }
 
   @Override
+  @TruffleBoundary
   protected Object executeBuiltin(Object[] args) {
     if (args.length == 0) {
       return null;
@@ -38,6 +40,7 @@ public final class PrintRBuiltin extends PhpBuiltinRootNode {
     return true;
   }
 
+  @TruffleBoundary
   private void printValue(PrintWriter out, Object value, int indent) {
     if (value == null) {
       // null prints nothing in print_r
@@ -60,6 +63,7 @@ public final class PrintRBuiltin extends PhpBuiltinRootNode {
     }
   }
 
+  @TruffleBoundary
   private String spaces(int count) {
     return " ".repeat(count);
   }

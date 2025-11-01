@@ -12,6 +12,8 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import com.oracle.truffle.api.profiles.ConditionProfile;
@@ -38,6 +40,12 @@ public final class PhpIfNode extends PhpStatementNode {
 
   @Override
   public void executeVoid(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeIf(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeIf(MaterializedFrame frame) {
     boolean conditionValue;
     try {
       conditionValue = condition.executeBoolean(frame);

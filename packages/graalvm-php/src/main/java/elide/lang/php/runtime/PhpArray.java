@@ -12,6 +12,7 @@
  */
 package elide.lang.php.runtime;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +28,14 @@ public final class PhpArray {
   private final List<Object> insertionOrder;
   private long nextIntKey = 0;
 
+  @TruffleBoundary
   public PhpArray() {
     this.map = new HashMap<>();
     this.insertionOrder = new ArrayList<>();
   }
 
   /** Append a value to the array (next integer index). */
+  @TruffleBoundary
   public void append(Object value) {
     while (map.containsKey(nextIntKey)) {
       nextIntKey++;
@@ -42,6 +45,7 @@ public final class PhpArray {
   }
 
   /** Put a value at a specific key. */
+  @TruffleBoundary
   public void put(Object key, Object value) {
     Object normalizedKey = normalizeKey(key);
 
@@ -61,28 +65,33 @@ public final class PhpArray {
   }
 
   /** Get a value by key. */
+  @TruffleBoundary
   public Object get(Object key) {
     Object normalizedKey = normalizeKey(key);
     return map.get(normalizedKey);
   }
 
   /** Check if a key exists. */
+  @TruffleBoundary
   public boolean containsKey(Object key) {
     Object normalizedKey = normalizeKey(key);
     return map.containsKey(normalizedKey);
   }
 
   /** Get the size of the array. */
+  @TruffleBoundary
   public int size() {
     return map.size();
   }
 
   /** Get all keys in insertion order. */
+  @TruffleBoundary
   public List<Object> keys() {
     return new ArrayList<>(insertionOrder);
   }
 
   /** Remove a key from the array. */
+  @TruffleBoundary
   public void remove(Object key) {
     Object normalizedKey = normalizeKey(key);
     map.remove(normalizedKey);
@@ -94,6 +103,7 @@ public final class PhpArray {
    * Booleans become integers (true=1, false=0) - Floats become integers (truncated) - null becomes
    * empty string
    */
+  @TruffleBoundary
   private Object normalizeKey(Object key) {
     if (key == null) {
       return "";
@@ -120,6 +130,7 @@ public final class PhpArray {
   }
 
   @Override
+  @TruffleBoundary
   public String toString() {
     return "Array(" + size() + ")";
   }

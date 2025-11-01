@@ -12,6 +12,8 @@
  */
 package elide.lang.php.parser;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+
 /**
  * Lexer for PHP source code.
  *
@@ -98,6 +100,7 @@ public final class PhpLexer {
   }
 
   /** Check if the current position matches the expected string. Does not consume the string. */
+  @TruffleBoundary
   public boolean check(String expected) {
     if (pos + expected.length() > code.length()) {
       return false;
@@ -110,6 +113,7 @@ public final class PhpLexer {
    *
    * @return true if matched and consumed, false otherwise
    */
+  @TruffleBoundary
   public boolean match(String expected) {
     if (check(expected)) {
       pos += expected.length();
@@ -124,6 +128,7 @@ public final class PhpLexer {
    *
    * @return true if matched and consumed, false otherwise
    */
+  @TruffleBoundary
   public boolean matchKeyword(String keyword) {
     if (pos + keyword.length() > code.length()) {
       return false;
@@ -153,6 +158,7 @@ public final class PhpLexer {
    *
    * @throws RuntimeException if the expected string is not found
    */
+  @TruffleBoundary
   public void expect(String expected) {
     skipWhitespace();
     if (!match(expected)) {
@@ -161,6 +167,7 @@ public final class PhpLexer {
   }
 
   /** Skip the PHP open tag (<?php) if present. */
+  @TruffleBoundary
   public void skipPhpOpenTag() {
     skipWhitespace();
     if (match("<?php")) {
@@ -169,6 +176,7 @@ public final class PhpLexer {
   }
 
   /** Parse a variable name (without the $ prefix). Expects the $ to be consumed already. */
+  @TruffleBoundary
   public String parseIdentifier() {
     StringBuilder name = new StringBuilder();
     while (!isAtEnd() && (Character.isLetterOrDigit(peek()) || peek() == '_')) {
@@ -178,6 +186,7 @@ public final class PhpLexer {
   }
 
   /** Parse a number string (digits and optional decimal point). */
+  @TruffleBoundary
   public String parseNumberString() {
     StringBuilder num = new StringBuilder();
     boolean hasDecimal = false;

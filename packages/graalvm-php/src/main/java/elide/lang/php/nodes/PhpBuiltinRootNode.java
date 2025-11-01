@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 import elide.lang.php.PhpLanguage;
@@ -37,6 +38,11 @@ public abstract class PhpBuiltinRootNode extends RootNode {
   public Object execute(VirtualFrame frame) {
     // Arguments are passed as frame arguments
     Object[] args = frame.getArguments();
+    return executeBuiltinBoundary(args);
+  }
+
+  @TruffleBoundary
+  private Object executeBuiltinBoundary(Object[] args) {
     return executeBuiltin(args);
   }
 

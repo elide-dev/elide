@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.builtin;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import elide.lang.php.PhpLanguage;
 import elide.lang.php.nodes.PhpBuiltinRootNode;
 import elide.lang.php.runtime.PhpArray;
@@ -33,6 +34,7 @@ public final class JsonEncodeBuiltin extends PhpBuiltinRootNode {
   }
 
   @Override
+  @TruffleBoundary
   protected Object executeBuiltin(Object[] args) {
     if (args.length == 0) {
       throw new RuntimeException("json_encode() expects at least 1 parameter, 0 given");
@@ -56,6 +58,7 @@ public final class JsonEncodeBuiltin extends PhpBuiltinRootNode {
     }
   }
 
+  @TruffleBoundary
   private Object convertToJson(Object value) {
     if (value == null) {
       return JSONObject.NULL;

@@ -12,6 +12,7 @@
  */
 package elide.lang.php.nodes.builtin;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import elide.lang.php.PhpLanguage;
 import elide.lang.php.nodes.PhpBuiltinRootNode;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public final class FileGetContentsBuiltin extends PhpBuiltinRootNode {
   }
 
   @Override
+  @TruffleBoundary
   protected Object executeBuiltin(Object[] args) {
     if (args.length == 0) {
       throw new RuntimeException("file_get_contents() expects at least 1 parameter, 0 given");
@@ -54,6 +56,7 @@ public final class FileGetContentsBuiltin extends PhpBuiltinRootNode {
     }
   }
 
+  @TruffleBoundary
   private String getType(Object value) {
     if (value == null) return "null";
     if (value instanceof String) return "string";

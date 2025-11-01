@@ -12,6 +12,8 @@
  */
 package elide.lang.php.nodes.statement;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.ExplodeLoop;
 import elide.lang.php.nodes.PhpExpressionNode;
@@ -68,8 +70,13 @@ public final class PhpSwitchNode extends PhpStatementNode {
   }
 
   @Override
-  @ExplodeLoop
   public void executeVoid(VirtualFrame frame) {
+    MaterializedFrame materializedFrame = frame.materialize();
+    executeSwitchLogic(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private void executeSwitchLogic(MaterializedFrame frame) {
     Object switchValue = switchExpression.execute(frame);
 
     // Find matching case
@@ -114,6 +121,7 @@ public final class PhpSwitchNode extends PhpStatementNode {
   }
 
   /** PHP loose equality comparison for switch cases. */
+  @TruffleBoundary
   private boolean phpEquals(Object a, Object b) {
     if (a == b) {
       return true;
@@ -139,6 +147,11 @@ public final class PhpSwitchNode extends PhpStatementNode {
     if (a instanceof Number && b instanceof Number) {
       return ((Number) a).doubleValue() == ((Number) b).doubleValue();
     }
+    return objectEquals(a, b);
+  }
+
+  @TruffleBoundary
+  private static boolean objectEquals(Object a, Object b) {
     return a.equals(b);
   }
 

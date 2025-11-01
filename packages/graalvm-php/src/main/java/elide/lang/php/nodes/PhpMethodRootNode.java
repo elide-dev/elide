@@ -12,7 +12,9 @@
  */
 package elide.lang.php.nodes;
 
+import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.frame.FrameDescriptor;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.RootNode;
 import elide.lang.php.PhpLanguage;
@@ -85,6 +87,12 @@ public final class PhpMethodRootNode extends RootNode {
       }
     }
 
+    MaterializedFrame materializedFrame = frame.materialize();
+    return executeBody(materializedFrame);
+  }
+
+  @TruffleBoundary
+  private Object executeBody(MaterializedFrame frame) {
     try {
       body.executeVoid(frame);
       return null; // Methods without explicit return return null

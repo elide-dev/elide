@@ -91,10 +91,12 @@ import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
+import elide.runtime.http.server.HttpApplicationOptions
+import elide.runtime.http.server.netty.HttpApplicationStack
+import elide.runtime.http.server.python.wsgi.WsgiEntrypoint
+import elide.runtime.http.server.python.wsgi.WsgiServerApplication
 import elide.runtime.intrinsics.js.node.util.DebugLogger
 import elide.runtime.intrinsics.server.http.HttpServerAgent
-import elide.runtime.intrinsics.server.http.v2.wsgi.ElideWsgiServer
-import elide.runtime.intrinsics.server.http.v2.wsgi.WsgiEntrypoint
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.plugins.Coverage
 import elide.runtime.plugins.jvm.Jvm
@@ -123,6 +125,8 @@ import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
 import elide.tool.exec.SubprocessRunner.subprocess
 import elide.tool.exec.allProjectPaths
+import elide.tool.extensions.echoShutdownMessage
+import elide.tool.extensions.echoStartMessage
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.server.StaticSiteServer
@@ -1741,11 +1745,18 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           }
           ?: error("No available WSGI configuration in manifest or CLI arguments")
 
-          ElideWsgiServer(
-            entrypoint = entrypoint,
-            executor = runtimeExecutor.acquire(),
-            runtimeLatch = runtimeLatch,
-          ).bind(serverSettings.port ?: wsgiOptions?.port ?: ElideWsgiServer.DEFAULT_PORT)
+          val wsgiApp = WsgiServerApplication(entrypoint, runtimeExecutor.acquire())
+          val bindOptions = HttpApplicationOptions()
+
+          val stack = HttpApplicationStack.bind(wsgiApp, bindOptions)
+          stack.echoStartMessage()
+
+          try {
+            // wait until shutdown
+            stack.onClose.get()
+          } finally {
+            stack.echoShutdownMessage()
+          }
         }
 
         else -> error("Cannot run embedded server for language $language")

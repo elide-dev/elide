@@ -10,26 +10,26 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.server.http.v2.wsgi
+package elide.runtime.http.server.python.wsgi
 
-import java.util.concurrent.locks.ReentrantLock
-import kotlinx.atomicfu.locks.withLock
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyObject
+import java.util.concurrent.locks.ReentrantLock
+import kotlinx.atomicfu.locks.withLock
 import elide.runtime.Logger
 
 /**
- * WSGI `wsgi.errors` implementation that forwards writes to an [elide.runtime.Logger].
+ * WSGI `wsgi.errors` implementation that forwards writes to an [Logger].
  *
  * Messages are buffered until a newline or flush is observed to reduce fragmented log lines. Servers should call
  * [dispose] once request handling finishes to guarantee that any pending content is emitted.
  */
-internal class WsgiErrorStream(private val log: Logger) : ProxyObject {
+public class WsgiErrorStream(private val log: Logger) : ProxyObject {
   private val lock = ReentrantLock()
   private val buffer = StringBuilder()
 
-  fun dispose() {
+  internal fun dispose() {
     flushBuffer()
   }
 
@@ -59,7 +59,7 @@ internal class WsgiErrorStream(private val log: Logger) : ProxyObject {
 
   override fun getMemberKeys(): Array<String> = MEMBERS
   override fun hasMember(key: String?): Boolean = key != null && MEMBERS.binarySearch(key) >= 0
-  override fun putMember(key: String?, value: Value?) = error("Modifying the error stream is not allowed")
+  override fun putMember(key: String?, value: Value?): Nothing = error("Modifying the error stream is not allowed")
 
   private fun writeValue(value: Value?) {
     if (value == null || value.isNull) return
@@ -117,10 +117,10 @@ internal class WsgiErrorStream(private val log: Logger) : ProxyObject {
   }
 
   private fun logLine(line: String) {
-    log.error(line.ifEmpty { "" })
+    log.error(line)
   }
 
-  companion object {
+  internal companion object {
     private const val MEMBER_FLUSH = "flush"
     private const val MEMBER_WRITE = "write"
     private const val MEMBER_WRITE_LINES = "writelines"

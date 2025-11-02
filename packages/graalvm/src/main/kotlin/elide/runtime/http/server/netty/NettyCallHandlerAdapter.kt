@@ -204,13 +204,10 @@ internal class NettyCallHandlerAdapter(
     // only the first exception thrown during a call can fail it
     if (callFailed) return logging.error("Exception after failed call", cause)
     else if (inFlight != null) logging.error("Call failed with an exception", cause)
-    else {
-      // we can't recover from an error if there is no call to respond to
-      logging.error("Exception caught outside of call dispatch", cause)
-      context.close()
-    }
+    else logging.error("Exception caught outside of call dispatch", cause)
 
     val call = inFlight ?: return
+    requestState = Dropping
     callFailed = true
 
     when (responseState) {
@@ -235,6 +232,8 @@ internal class NettyCallHandlerAdapter(
 
     when (message) {
       is HttpResponse -> {
+        applyDefaultHeaders(message)
+
         call.context.headersFlushed()
         context.writeAndFlush(message).addListener {
           // if the call is still active, notify the context
@@ -301,7 +300,7 @@ internal class NettyCallHandlerAdapter(
     val requestBody = NettyContentStream(channelContext.executor())
     val responseBody = NettyContentStream(channelContext.executor())
 
-    val response = defaultResponseFor(request, defaultServerName)
+    val response = defaultResponseFor(request)
     val callContext = application.newContext(request, response, requestBody, responseBody)
 
     return NettyHttpCall(
@@ -336,18 +335,22 @@ internal class NettyCallHandlerAdapter(
     error("Internal error: $message")
   }
 
+  private fun applyDefaultHeaders(response: HttpResponse) = with(response.headers()) {
+    if (!contains(HttpHeaderNames.DATE)) set(HttpHeaderNames.DATE, DateFormatter.format(Date()))
+    if (!contains(HttpHeaderNames.SERVER)) set(HttpHeaderNames.SERVER, defaultServerName)
+
+    if (!contains(HttpHeaderNames.CONTENT_LENGTH) && !contains(HttpHeaderNames.TRANSFER_ENCODING))
+      set(HttpHeaderNames.CONTENT_LENGTH, "0")
+  }
+
   internal companion object {
     private val logging = Logging.of(NettyCallHandlerAdapter::class)
 
     /** Prepare a base response for the given [request]. A call handler is expected to customize the returned value. */
-    private fun defaultResponseFor(request: HttpRequest, serverName: String): HttpResponse = DefaultHttpResponse(
+    private fun defaultResponseFor(request: HttpRequest): HttpResponse = DefaultHttpResponse(
       /* version = */ request.protocolVersion(),
       /* status = */ HttpResponseStatus.OK,
-    ).apply {
-      setHeader(HttpHeaderNames.DATE, DateFormatter.format(Date()))
-      setHeader(HttpHeaderNames.SERVER, serverName)
-      HttpUtil.setContentLength(this, 0)
-    }
+    )
 
     /** Prepare a default 500-ISE response for the given [request]. */
     private fun serverErrorResponseFor(request: HttpRequest): FullHttpResponse = DefaultFullHttpResponse(

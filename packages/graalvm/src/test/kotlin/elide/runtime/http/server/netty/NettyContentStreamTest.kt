@@ -13,12 +13,6 @@
 
 package elide.runtime.http.server.netty
 
-import elide.runtime.http.server.ContentStreamConsumer
-import elide.runtime.http.server.ContentStreamSource
-import elide.runtime.http.server.ReadableContentStream
-import elide.runtime.http.server.StreamBusyException
-import elide.runtime.http.server.StreamClosedException
-import elide.runtime.http.server.WritableContentStream
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.channel.embedded.EmbeddedChannel
@@ -29,6 +23,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import elide.runtime.http.server.StreamBusyException
+import elide.runtime.http.server.StreamClosedException
 
 class NettyContentStreamTest : NettyStreamTest() {
   private lateinit var _channel: EmbeddedChannel
@@ -437,80 +433,5 @@ class NettyContentStreamTest : NettyStreamTest() {
     assertEquals(listOf("first", "second"), consumer.received, "expected buffered data after pulls")
     assertEquals(1, consumer.closeCount, "expected consumer to close after draining buffered data")
     assertNull(consumer.closeCause)
-  }
-
-  private class RecordingProducer : ContentStreamSource {
-    var writer: WritableContentStream.Writer? = null
-      private set
-    var attachCount = 0
-      private set
-    var closeCount = 0
-      private set
-    var pullCount = 0
-      private set
-    var closeCause: Throwable? = null
-      private set
-    var onAttach: (WritableContentStream.Writer) -> Unit = {}
-    var onPullAction: () -> Unit = {}
-    var onCloseAction: (Throwable?) -> Unit = {}
-
-    fun write(content: ByteBuf) {
-      writer?.write(content) ?: error("writer not available")
-    }
-
-    fun end(error: Throwable? = null) {
-      writer?.end(error) ?: error("writer not available")
-    }
-
-    override fun onAttached(writer: WritableContentStream.Writer) {
-      attachCount++
-      this.writer = writer
-      onAttach(writer)
-    }
-
-    override fun onPull() {
-      pullCount++
-      onPullAction()
-    }
-
-    override fun onClose(failure: Throwable?) {
-      closeCount++
-      closeCause = failure
-      onCloseAction(failure)
-    }
-  }
-
-  private class RecordingConsumer : ContentStreamConsumer {
-    var reader: ReadableContentStream.Reader? = null
-      private set
-    var attachCount = 0
-      private set
-    var readCount = 0
-      private set
-    var closeCount = 0
-      private set
-    var closeCause: Throwable? = null
-      private set
-    val received: MutableList<String> = mutableListOf()
-    var onAttach: (ReadableContentStream.Reader) -> Unit = {}
-    var onReadAction: (ByteBuf) -> Unit = { content -> received += content.toString(Charsets.UTF_8) }
-    var onCloseAction: (Throwable?) -> Unit = {}
-
-    override fun onAttached(reader: ReadableContentStream.Reader) {
-      attachCount++
-      this.reader = reader
-      onAttach(reader)
-    }
-
-    override fun onRead(content: ByteBuf) {
-      readCount++
-      onReadAction(content)
-    }
-
-    override fun onClose(failure: Throwable?) {
-      closeCount++
-      closeCause = failure
-      onCloseAction(failure)
-    }
   }
 }

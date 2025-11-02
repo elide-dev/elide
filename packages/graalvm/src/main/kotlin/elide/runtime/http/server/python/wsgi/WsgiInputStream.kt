@@ -10,13 +10,15 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.runtime.intrinsics.server.http.v2.wsgi
+package elide.runtime.http.server.python.wsgi
 
-import io.netty.handler.codec.http.HttpContent
+import io.netty.buffer.ByteBuf
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyIterable
+import org.graalvm.polyglot.proxy.ProxyIterator
 import org.graalvm.polyglot.proxy.ProxyObject
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
@@ -27,10 +29,11 @@ import kotlinx.io.bytestring.ByteStringBuilder
 import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.exec.ContextLocal
 import elide.runtime.exec.compute
-import elide.runtime.intrinsics.server.http.v2.HttpContentSource
+import elide.runtime.http.server.ContentStreamConsumer
+import elide.runtime.http.server.ReadableContentStream
 
 /**
- * File-like WSGI input stream backed by an [HttpContentSource].
+ * File-like WSGI input stream backed by an [ReadableContentStream].
  *
  * The stream requests content chunks on demand from the provided executor thread and exposes standard Python file
  * APIs (`read`, `readline`, `readlines`, iteration).
@@ -41,24 +44,33 @@ import elide.runtime.intrinsics.server.http.v2.HttpContentSource
 public class WsgiInputStream(
   private val executor: ContextAwareExecutor,
   private val limit: Long,
-) : ProxyObject, HttpContentSource.Consumer {
+) : ProxyObject, ProxyIterable, ProxyIterator, ContentStreamConsumer {
 
   private val lock = ReentrantLock()
   private val bytesRead = AtomicLong()
   private val exhausted = AtomicBoolean()
 
-  private var currentBuffer: HttpContent? = null
-  private var sourceHandle: HttpContentSource.Handle? = null
+  private var currentBuffer: ByteBuf? = null
+  private var sourceReader: ReadableContentStream.Reader? = null
   private var readLatch: CountDownLatch? = null
 
-  override fun attached(handle: HttpContentSource.Handle): Unit = lock.withLock {
-    sourceHandle = handle
+  override fun onAttached(reader: ReadableContentStream.Reader) {
+    sourceReader = reader
     releaseLatch()
   }
 
-  override fun released(): Unit = lock.withLock {
-    sourceHandle = null
+  override fun onClose(failure: Throwable?) {
+    sourceReader = null
     releaseLatch()
+  }
+
+  override fun onRead(content: ByteBuf) {
+    lock.withLock {
+      releaseCurrentBufferLocked()
+      currentBuffer = content.retain()
+
+      releaseLatch()
+    }
   }
 
   /**
@@ -69,8 +81,8 @@ public class WsgiInputStream(
    */
   public fun dispose() {
     val handle = lock.withLock {
-      val activeHandle = sourceHandle
-      sourceHandle = null
+      val activeHandle = sourceReader
+      sourceReader = null
       releaseCurrentBufferLocked()
       releaseLatch()
       exhausted.set(true)
@@ -78,16 +90,6 @@ public class WsgiInputStream(
     }
 
     handle?.release()
-  }
-
-  override fun consume(content: HttpContent, handle: HttpContentSource.Handle) {
-    lock.withLock {
-      releaseCurrentBufferLocked()
-      sourceHandle = handle
-      currentBuffer = content
-
-      releaseLatch()
-    }
   }
 
   private fun releaseLatch() {
@@ -120,25 +122,25 @@ public class WsgiInputStream(
   }
 
   // blocks until content is available; returns null if EOF
-  private fun awaitBuffer(): HttpContent? {
+  private fun awaitBuffer(): ByteBuf? {
     if (bytesRead.get() >= limit) {
       lock.withLock { releaseCurrentBufferLocked() }
       exhausted.set(true)
       return null
     }
 
-    var available: HttpContent? = null
+    var available: ByteBuf? = null
     var latch: CountDownLatch? = null
     val eof = lock.withLock {
       val buffer = currentBuffer
-      if (buffer?.content()?.isReadable == true) {
+      if (buffer?.isReadable == true) {
         available = buffer
         return@withLock false
       }
 
       releaseCurrentBufferLocked()
 
-      val handle = sourceHandle ?: return@withLock true
+      val handle = sourceReader ?: return@withLock true
 
       if (readLatch == null) {
         readLatch = CountDownLatch(1)
@@ -176,12 +178,12 @@ public class WsgiInputStream(
     if (count == 0) return ByteArray(0)
 
     var read = 0
-    var buffer = awaitBuffer()?.content() ?: return ByteArray(0)
+    var buffer = awaitBuffer() ?: return ByteArray(0)
     val bytes = ByteStringBuilder()
 
     while (read < count) {
       if (!buffer.isReadable) {
-        buffer = awaitBuffer()?.content() ?: break
+        buffer = awaitBuffer() ?: break
         continue
       }
       val byte = buffer.readByte()
@@ -209,7 +211,7 @@ public class WsgiInputStream(
     val bytes = ByteArray(count)
     var read = 0
     while (read < count) {
-      val buffer = awaitBuffer()?.content() ?: break
+      val buffer = awaitBuffer() ?: break
       if (!buffer.isReadable) continue
       val length = buffer.readableBytes().coerceAtMost(count - read)
 
@@ -243,8 +245,13 @@ public class WsgiInputStream(
       dispose()
       null
     }
+
     else -> null
   }
+
+  override fun getIterator(): Any = this
+  override fun hasNext(): Boolean = !exhausted.get()
+  override fun getNext(): Any = convertBytes(readLine())
 
   public companion object {
     private const val MEMBER_ITER = "__iter__"

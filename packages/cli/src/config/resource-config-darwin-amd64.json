@@ -14,8 +14,6 @@
       { "pattern": "Windows" },
       { "pattern": "win32" },
       { "pattern": "Win32" },
-      { "pattern": "*.dll\\E" },
-      { "pattern": "*.so\\E" },
       { "pattern": "aarch64" },
       { "pattern": "arm64" }
     ]

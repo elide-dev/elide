@@ -156,7 +156,11 @@ internal fun Project.configureDependencyResolution(conventions: ElideBuildExtens
 
       // process dependency pins: graalvm
       if (requested.group.contains("org.graalvm") && !requested.group.contains("buildtools")) {
-        useVersion(Versions.GRAALVM)
+        if (requested.group.contains("ruby") || requested.name.contains("ruby")) {
+          useVersion(Versions.GRAALVM_RUBY)
+        } else {
+          useVersion(Versions.GRAALVM)
+        }
         because("pin graalvm")
       }
     }

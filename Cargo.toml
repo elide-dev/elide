@@ -23,7 +23,7 @@ exclude = ["crates/build", "third_party", "runtime", "crates/entry", "crates/tra
 [workspace.package]
 license = "MIT"
 edition = "2024"
-rust-version = "1.88.0"
+rust-version = "1.91.0"
 version = "1.0.0-beta10"
 authors = ["Elide Technologies, Inc."]
 homepage = "https://elide.dev"
@@ -110,7 +110,7 @@ lightningcss = { version = "1.0.0-alpha.67", features = [
   "browserslist",
 ] }
 lol_html = { version = "2.5.0" }
-minify-html = { version = "0.15.0" }
+minify-html = { version = "0.18.1" }
 minify-html-onepass = { version = "0.15.0" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }

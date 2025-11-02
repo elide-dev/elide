@@ -1,0 +1,146 @@
+#
+# Copyright (c) 2024 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
+name: Native Images
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Enable Release Targets
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+
+      ## Input: Optimization
+      opt:
+        description: "Optimization"
+        type: choice
+        options:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "b"
+          - "s"
+        default: "4"
+
+      ## Input: PGO
+      pgo:
+        description: "PGO"
+        type: boolean
+        default: false
+
+      ## Input: Release Packing
+      pack:
+        description: "Pack"
+        type: boolean
+        default: false
+
+      ## Input: Version Override
+      version:
+        description: "Version Override"
+        type: string
+        default: ""
+
+  workflow_call:
+    inputs:
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+      opt:
+        description: "Optimization"
+        type: string
+        default: "4"
+      pgo:
+        description: "PGO"
+        type: boolean
+        default: false
+      pack:
+        description: "Pack"
+        type: boolean
+        default: false
+      version:
+        description: "Version Override"
+        type: string
+        default: ""
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+        description: "GCP Service Account"
+      BUILDBOT_GHCR_TOKEN:
+        required: false
+        description: "GHCR Token"
+      CODECOV_TOKEN:
+        required: false
+        description: "Codecov token"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
+      COSIGN_KEY:
+        required: false
+        description: "Cosign Key"
+      COSIGN_PASSWORD:
+        required: false
+        description: "Cosign Password"
+      SIGNING_KEY:
+        required: true
+        description: "GPG Signing Key"
+
+# Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
+env:
+  RUST_BACKTRACE: full
+  SCCACHE_DIRECT: "true"
+  RUSTC_WRAPPER: "sccache"
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Job: Library Build
+  ##
+  gradle:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - darwin
+          - linux
+        arch:
+          - amd64
+          - aarch64
+
+    name: "Native (${{ matrix.os }}-${{ matrix.arch }})"
+
+    permissions:
+      contents: write
+      id-token: write
+
+    uses: ./.github/workflows/job.native-image.yml
+    with:
+      release: ${{ inputs.release }}
+      pgo: ${{ inputs.pgo }}
+      pack: ${{ inputs.pack }}
+      version: "${{ inputs.version }}"
+      opt: "${{ inputs.opt }}"
+      runner: "${{ matrix.os }}-${{ matrix.arch }}-cipool"
+      arch: "${{ matrix.arch }}"
+      os: "${{ matrix.os }}"

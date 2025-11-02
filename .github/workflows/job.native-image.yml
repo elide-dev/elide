@@ -161,8 +161,6 @@ name: Native Image
 # Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:
   RUST_BACKTRACE: full
-  SCCACHE_DIRECT: "true"
-  RUSTC_WRAPPER: "sccache"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 permissions:
@@ -173,19 +171,8 @@ jobs:
   ## Job: Library Build
   ##
   gradle:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ["${{ inputs.os }}"]
-        mode: ["Strict"]
-        machine:
-          - ${{ inputs.runner }}
-        arch:
-          - ${{ inputs.arch }}
-
-    name: "Native (${{ matrix.os }}-${{ matrix.arch }})"
-    runs-on: ${{ matrix.machine }}
-    continue-on-error: ${{ matrix.mode != 'Strict' }}
+    name: "Native (${{ inputs.os }}-${{ inputs.arch }})"
+    runs-on: ${{ inputs.runner }}
 
     permissions:
       contents: write
@@ -211,25 +198,11 @@ jobs:
       - name: "Setup: Checkout"
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0
+          fetch-depth: 1
           submodules: true
           persist-credentials: false
+          clean: false
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "Setup: Cache Restore"
-        id: cache-restore
-        uses: buildjet/cache/restore@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
-        with:
-          key: elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
-          path: |
-            tools/elide-build/build/**/*.*
-            packages/*/build/**/*.*
-            target/
-            target/x86_64-unknown-linux-gnu/debug/*.a
-            target/x86_64-unknown-linux-gnu/debug/*.so
-            third_party/sqlite/install/
-          restore-keys: |
-            elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
-            elide-v3-
       - name: "Setup: Packages"
         if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
         run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev libtool libtool-bin
@@ -237,8 +210,11 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0
         with:
           toolchain: stable
-          cache: true # handled by sccache
-          cache-key: "elide-rust-v1-{{ hashFiles('Cargo.lock') }}"
+          cache: false # handled by sccache
+      - name: "Setup: Elide"
+        uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
+        with:
+          version: "1.0.0-beta10"
       - name: "Setup: SCCache"
         uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
       - name: "Setup: Rust Caching"
@@ -277,13 +253,12 @@ jobs:
       - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         id: gradlebuild
-        continue-on-error: ${{ matrix.mode == 'labs' }}
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         with:
-          cache-read-only: false
+          cache-read-only: true
           cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
           dependency-graph: disabled
           gradle-home-cache-cleanup: true
@@ -350,11 +325,11 @@ jobs:
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         id: build-artifact
         with:
-          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}
+          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ inputs.os }}-${{ inputs.arch }}
           path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
       - name: "Artifact: Provenance Subject"
         id: hash
-        if: ${{ matrix.os == 'linux' && inputs.release }}
+        if: ${{ inputs.os == 'linux' && inputs.release }}
         run: |
           echo "hashes=$(sha256sum ./packages/cli/build/native/nativeOptimizedCompile/elide | base64 -w0)" >> "$GITHUB_OUTPUT"
       - name: "🛠️ Release: Package"
@@ -387,5 +362,5 @@ jobs:
         id: pack-artifact
         if: inputs.pack
         with:
-          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}-release.zip
+          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ inputs.os }}-${{ inputs.arch }}-release.zip
           path: staging/**/*.*

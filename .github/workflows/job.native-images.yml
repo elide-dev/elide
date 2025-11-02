@@ -106,8 +106,6 @@ name: Native Images
 # Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:
   RUST_BACKTRACE: full
-  SCCACHE_DIRECT: "true"
-  RUSTC_WRAPPER: "sccache"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 permissions:
@@ -128,7 +126,7 @@ jobs:
           - amd64
           - aarch64
 
-    name: "Native (${{ matrix.os }}-${{ matrix.arch }})"
+    name: "Native Image"
 
     permissions:
       contents: write

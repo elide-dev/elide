@@ -12,9 +12,10 @@
 [submodule "apr"]
 	path = third_party/apache/apr
 	url = git@github.com:apache/apr.git
+	shallow = true
 	ignore = dirty
 [submodule "boringssl"]
 	path = third_party/google/boringssl
 	url = git@github.com:google/boringssl.git
+	shallow = true
 	ignore = dirty
-

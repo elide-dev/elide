@@ -135,6 +135,7 @@ jobs:
       id-token: write
 
     uses: ./.github/workflows/job.native-image.yml
+    secrets: inherit
     with:
       release: ${{ inputs.release }}
       pgo: ${{ inputs.pgo }}

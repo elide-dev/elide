@@ -57,7 +57,7 @@ public interface HttpServerTransport {
       public val UNSUPPORTED_UDP_DOMAIN_SOCKETS: Unavailable = Unavailable("UDP domain sockets are not supported")
 
       public fun nativeTransportUnavailable(reason: Throwable?): Unavailable {
-        return Unavailable(reason?.message ?: "native transport is unavailable (no reason provided)")
+        return Unavailable(reason?.message ?: "no reason provided")
       }
     }
   }

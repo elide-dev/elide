@@ -13,15 +13,21 @@
 
 package elide.runtime.http.server.netty
 
+import elide.runtime.http.server.CallContext
 import elide.runtime.http.server.CleartextOptions
 import elide.runtime.http.server.Http3Options
+import elide.runtime.http.server.HttpApplication
 import elide.runtime.http.server.HttpApplicationOptions
+import elide.runtime.http.server.HttpCall
 import elide.runtime.http.server.HttpsOptions
+import elide.runtime.http.server.ReadableContentStream
+import elide.runtime.http.server.WritableContentStream
 import io.netty.handler.codec.http.*
 import io.netty.handler.ssl.ApplicationProtocolNames
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import java.net.InetSocketAddress
 import java.net.SocketAddress
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.*
 
@@ -62,6 +68,62 @@ class ServerFullStackTest : AbstractServerStackTest() {
   ): String {
     val address = addressFor(service) as InetSocketAddress
     return "${address.hostName.takeIf { withHost }.orEmpty()}:${address.port}"
+  }
+
+  @Test fun `should call application's onStart when server starts successfully`() {
+    val onStartCalled = AtomicBoolean(false)
+    val caughtError = AtomicReference<Throwable?>(null)
+
+    val application = object : HttpApplication<CallContext.Empty> {
+      override fun toString(): String = "LifecycleTestApplication"
+
+      override fun newContext(
+        request: HttpRequest,
+        response: HttpResponse,
+        requestBody: ReadableContentStream,
+        responseBody: WritableContentStream,
+      ): CallContext.Empty = CallContext.Empty
+
+      override fun handle(call: HttpCall<CallContext.Empty>) {
+        call.send()
+      }
+
+      override fun onError(error: Throwable?) {
+        if (error != null) caughtError.compareAndSet(null, error)
+      }
+
+      override fun onStart(stack: HttpApplicationStack) {
+        onStartCalled.set(true)
+      }
+    }
+
+    val options = HttpApplicationOptions(
+      http = CleartextOptions(address = testAddress()),
+    )
+
+    val stack = HttpApplicationStack.bind(application, options)
+    try {
+      val failures = stack.services.filter { it.bindResult.isFailure }
+      if (failures.isNotEmpty()) {
+        val details = failures.joinToString("\n") {
+          val failure = it.bindResult.exceptionOrNull()
+          "[${it.label}] ${failure?.stackTraceToString() ?: "unknown failure"}"
+        }
+        fail("Expected services to bind successfully but found failures:\n$details")
+      }
+
+      assertTrue(onStartCalled.get(), "Expected application's onStart lifecycle method to be invoked")
+
+      caughtError.get()?.let { error ->
+        fail("Unexpected application error during stack lifecycle:\n${error.stackTraceToString()}")
+      }
+    } finally {
+      val shutdownErrors = stack.close(force = true).get()
+      if (shutdownErrors.isNotEmpty()) {
+        val details = shutdownErrors.joinToString("\n") { it.stackTraceToString() }
+        fail("Server failed to shutdown cleanly:\n$details")
+      }
+    }
   }
 
   @Test fun `should advertise alt services`() {

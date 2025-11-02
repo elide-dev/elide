@@ -87,7 +87,7 @@ public typealias ServerCloseFuture = Future<List<Throwable>>
  * @see HttpApplication
  * @see Service
  */
-public class HttpApplicationStack private constructor(
+public class HttpApplicationStack internal constructor(
   /**
    * Services assigned to this server stack. This list contains both services that started successfully and those that
    * failed; the result can be accessed through the [Service.bindResult] field.
@@ -277,9 +277,10 @@ public class HttpApplicationStack private constructor(
           groups = scope.groups.values.toList(),
         )
 
-        // notify handlers that we are now ready to go
-        // stack.channels.forEach { it.pipeline().fireUserEventTriggered(ApplicationBoundEvent(stack)) }
+        // notify handlers and the application that we are now ready to go
         deferredStack.complete(stack)
+        application.onStart(stack)
+
         stack
       } catch (e: Exception) {
         // cleanup any groups and channels that were created

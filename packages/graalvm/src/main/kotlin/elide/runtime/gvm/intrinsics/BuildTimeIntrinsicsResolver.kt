@@ -44,11 +44,12 @@ import elide.runtime.gvm.internals.js.JsTimerExecutorProviderImpl
 import elide.runtime.gvm.internals.js.JsTimersIntrinsic
 import elide.runtime.gvm.internals.sqlite.ElideSqliteModule
 import elide.runtime.gvm.internals.testing.ElideTestingModule
+import elide.runtime.http.server.HttpServerEngine
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.IntrinsicsResolver
 import elide.runtime.intrinsics.ai.ElideLLMModule
 import elide.runtime.intrinsics.js.err.ValueErrorIntrinsic
-import elide.runtime.intrinsics.server.http.v2.flask.FlaskHttpIntrinsic
+import elide.runtime.intrinsics.python.flask.FlaskIntrinsic
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.javascript.*
 import elide.runtime.node.asserts.NodeAssertModule
@@ -95,6 +96,7 @@ import elide.runtime.plugins.env.EnvConfig
   testRegistrar: TestingRegistrar,
   entrypoint: EntrypointRegistry,
   executor: RuntimeExecutor,
+  serverEngine: HttpServerEngine,
   latch: RuntimeLatch,
 ) : IntrinsicsResolver {
   init {
@@ -104,6 +106,7 @@ import elide.runtime.plugins.env.EnvConfig
     registrar = testRegistrar
     entrypointProvider = entrypoint
     runtimeExecutor = executor
+    runtimeServerEngine = serverEngine
     runtimeLatch = latch
   }
 
@@ -114,6 +117,7 @@ import elide.runtime.plugins.env.EnvConfig
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var registrar: TestingRegistrar
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var entrypointProvider: EntrypointRegistry
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeExecutor: RuntimeExecutor
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeServerEngine: HttpServerEngine
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeLatch: RuntimeLatch
     @JvmStatic private val execProvider = GuestExecutorProvider { exec }
     @JvmStatic private val timerExecutor = JsTimerExecutorProviderImpl()
@@ -175,10 +179,11 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val transformStream = TransformStreamIntrinsic()
     @JvmStatic private val browserStubs = BrowserStubs()
 
-    @JvmStatic private val flask = FlaskHttpIntrinsic(
+    @JvmStatic private val flask = FlaskIntrinsic(
       runtimeLatch = { runtimeLatch },
       entrypointProvider = { entrypointProvider },
       runtimeExecutor = { runtimeExecutor },
+      serverEngine = { runtimeServerEngine }
     )
 
     // All built-ins and intrinsics.

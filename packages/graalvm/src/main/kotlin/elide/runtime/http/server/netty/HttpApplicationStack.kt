@@ -17,10 +17,7 @@ import io.netty.channel.Channel
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.unix.DomainSocketAddress
 import java.net.*
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.Future
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.io.path.pathString
@@ -32,7 +29,7 @@ import elide.runtime.http.server.HttpApplicationOptions
 import elide.runtime.http.server.netty.HttpApplicationStack.Companion.bind
 
 /** A future returned by [HttpApplicationStack.close] to track errors during server shutdown. */
-public typealias ServerCloseFuture = Future<List<Throwable>>
+public typealias ServerCloseFuture = CompletionStage<List<Throwable>>
 
 /**
  * A group of HTTP [services] associated with an [HttpApplication], each corresponding to a bound server socket that
@@ -200,6 +197,14 @@ public class HttpApplicationStack internal constructor(
 
     return onClose
   }
+
+  /**
+   * Block until the stack's [onClose] future completes, and return its result.
+   *
+   * It is generally recommended to use the async methods to react to the shutdown event, this method is intended for
+   * contexts where explicit blocking is desired.
+   */
+  public fun awaitClose(): List<Throwable> = closeFuture.get()
 
   public companion object {
     private val log = Logging.of(HttpApplicationStack::class)

@@ -79,6 +79,11 @@ public inline fun WritableContentStream.source(
   },
 )
 
+/** Write a single [data] chunk when pulled and close the stream immediately after. */
+public fun WritableContentStream.source(data: ByteBuf) {
+  source { it.write(data); it.end() }
+}
+
 /**
  * Attach a content consumer to this request body, calling [onRead] whenever new data is received. The [onClose]
  * function is called when the producer is detached from the body due to end of data or closing.

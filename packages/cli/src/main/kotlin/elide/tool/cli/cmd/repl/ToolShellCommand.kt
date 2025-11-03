@@ -1753,7 +1753,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
           try {
             // wait until shutdown
-            stack.onClose.get()
+            stack.awaitClose()
           } finally {
             stack.echoShutdownMessage()
           }
@@ -3177,6 +3177,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         else -> throw err
       }
     }
+  }
+
+  private fun bindServer() {
+
   }
 }
 

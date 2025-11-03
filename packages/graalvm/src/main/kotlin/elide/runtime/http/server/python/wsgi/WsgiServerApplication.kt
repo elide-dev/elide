@@ -203,7 +203,7 @@ public class WsgiServerApplication(
       executor.execute(contextPin) {
         // we need to make sure we're in context to use the iterator here
         if (!guestIterator.hasIteratorNextElement()) writer.end() else {
-          writer.write(guestIterator.iteratorNextElement.readToByteArray())
+          writer.write(guestIterator.iteratorNextElement.readBytes())
           if (!guestIterator.hasIteratorNextElement()) writer.end() // end early
         }
       }
@@ -224,13 +224,13 @@ public class WsgiServerApplication(
 
       // we need to store the first non-empty chunk here since we already
       // polled it, it will be pulled later
-      firstNonEmptyChunk.set(element.readToByteArray())
+      firstNonEmptyChunk.set(element.readBytes())
       call.send()
       break
     }
   }
 
-  private fun Value.readToByteArray(): ByteArray {
+  private fun Value.readBytes(): ByteArray {
     val bytes = ByteArray(bufferSize.toInt())
     readBuffer(0L, bytes, 0, bytes.size)
     return bytes

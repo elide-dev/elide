@@ -41,7 +41,7 @@ fun HttpApplicationStack.echoStartMessage() {
 }
 
 fun HttpApplicationStack.echoShutdownMessage() {
-  val errors = onClose.get()?.joinToString("\n").orEmpty()
+  val errors = awaitClose().joinToString("\n")
   if (errors.isNotEmpty()) terminal.println(TextColors.red("Some services failed to shutdown properly:\n$errors"))
   else terminal.println("Server stopped successfully")
 }

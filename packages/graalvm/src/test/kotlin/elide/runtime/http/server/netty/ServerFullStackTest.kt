@@ -118,7 +118,8 @@ class ServerFullStackTest : AbstractServerStackTest() {
         fail("Unexpected application error during stack lifecycle:\n${error.stackTraceToString()}")
       }
     } finally {
-      val shutdownErrors = stack.close(force = true).get()
+      stack.close(force = true)
+      val shutdownErrors = stack.awaitClose()
       if (shutdownErrors.isNotEmpty()) {
         val details = shutdownErrors.joinToString("\n") { it.stackTraceToString() }
         fail("Server failed to shutdown cleanly:\n$details")

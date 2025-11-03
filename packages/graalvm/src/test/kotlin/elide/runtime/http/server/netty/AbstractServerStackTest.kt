@@ -141,7 +141,8 @@ abstract class AbstractServerStackTest {
       block(server)
     } finally {
       // wait for shutdown
-      val errors = server.close(force = true).get()
+      server.close(force = true)
+      val errors = server.awaitClose()
       if (errors.isNotEmpty()) fail { "Test server failed to shutdown properly:\n${errors.joinToString("\n")}" }
       if (caughtErrors.isNotEmpty()) fail { "Test server failed during use:\n${caughtErrors.joinToString("\n")}" }
     }

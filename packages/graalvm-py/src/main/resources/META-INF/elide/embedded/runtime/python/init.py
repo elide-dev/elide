@@ -162,7 +162,7 @@ def __init__interop():
       if name == FLASK_GLOBAL:
         return flask_factory
       if name == FLASK_ABORT:
-        return flask_binding().request.abort
+        return flask_binding().abort
       if name == FLASK_REQUEST:
         return flask_binding().request
       if name == FLASK_URL_FOR:

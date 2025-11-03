@@ -663,8 +663,6 @@ pub fn setup_cc() -> Build {
   build
     // Defines & Compiler Settings
     .pic(true)
-    .static_flag(true)
-    .shared_flag(true)
     .use_plt(false);
 
   build
@@ -771,11 +769,6 @@ pub fn build_dual_cc(
   let mut static_lib = build.clone();
   let mut shared_lib = build.clone();
 
-  static_lib
-    // Sources: Native DB
-    .static_flag(true)
-    .shared_flag(false);
-
   for flag in extra_static_cflags.unwrap_or_default() {
     static_lib.flag(flag);
   }
@@ -797,8 +790,6 @@ pub fn build_dual_cc(
   };
 
   let outpath = out_dir.join(format!("lib{}.{}", shared_lib_name, lib_tail));
-
-  shared_lib.static_flag(false).shared_flag(true);
 
   // add extra shared c_cflags, if any
   for flag in extra_shared_cflags.unwrap_or_default() {

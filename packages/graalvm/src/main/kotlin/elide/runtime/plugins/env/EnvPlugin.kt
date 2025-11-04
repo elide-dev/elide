@@ -14,6 +14,7 @@ package elide.runtime.plugins.env
 
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyHashMap
 import org.graalvm.polyglot.proxy.ProxyIterable
 import org.graalvm.polyglot.proxy.ProxyIterator
@@ -97,6 +98,11 @@ import elide.vm.annotations.Polyglot
   public fun configure(scope: InstallationScope, context: PolyglotContext, language: GuestLanguage) {
     scope.deferred {
       context.bindings(language).putMember(APP_ENV_BIND_PATH, proxiedEnvMap)
+
+      // must be added to both language bindings and polyglot bindings, so that it surfaces in all languages.
+      context.unwrap().polyglotBindings.putMember(APP_ENV_BIND_PATH_FACTORY, ProxyExecutable {
+        proxiedEnvMap
+      })
     }
   }
 
@@ -104,6 +110,7 @@ import elide.vm.annotations.Polyglot
   public companion object Plugin : EnginePlugin<EnvConfig, Environment> {
     /** Binding path for the env container. */
     private const val APP_ENV_BIND_PATH = "app_env"
+    private const val APP_ENV_BIND_PATH_FACTORY = "app_env_factory"
 
     override val key: Key<Environment> = Key("Environment")
 

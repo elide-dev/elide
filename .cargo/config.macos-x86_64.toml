@@ -1,0 +1,63 @@
+#
+# Copyright (c) 2024 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
+[build]
+rustflags = [
+  # Use clang to drive linking via linker plugins, with lld as the linker. Wire in the linker script which fixes LTO
+  # arguments via linker plugins.
+  # "-Clinker=clang",
+  # "-Clink-arg=-fuse-ld=lld",
+
+  # Defer LTO to the final linkage step, which happens outside `rustc`.
+  # "-Clto=thin",
+  # "-Clinker-plugin-lto",
+
+  # Target the native host CPU.
+  # "-Ctarget-cpu=apple-m1",
+
+  # Enforce completely position-independent executables.
+  "-Crelocation-model=pic",
+
+  # Enables access to unstable options.
+  # "-Zunstable-options",
+
+  # Tune for M2, despite compat at M1.
+  # "-Ztune-cpu=apple-m2",
+
+  # Assigns alignment with macOS build flags in `third_party`; for equivalence to `-mbranch-protection-standard`,
+  # see: https://developer.arm.com/documentation/102433/0200/Applying-these-techniques-to-real-code
+  # "-Zbranch-protection=bti,pac-ret",
+
+  # Thread locals are confined to the inner binary, and are never accessible beyond the VM barrier.
+  # "-Ztls_model=local-exec",
+
+  # Build the Rust stdlib when we build the runtime, so that flags are applied uniformly.
+  # "-Zbuild-std",
+
+  # Symbol visibility is set to `hidden` by default.
+  # "-Zdefault_hidden_visibility=yes",
+
+  # Enable elimination of unused virtual functions if LLVM can prove in the LTO phase that they are never executed.
+  # "-Zvirtual-function-elimination",
+
+  # Explicit macOS target version to align with C-layer code.
+  "-Clink-arg=-mmacosx-version-min=15.0",
+]
+
+[env]
+ELIDE_ROOT = { value = ".", relative = true }
+SQLITE3_STATIC = { value = "1" }
+SQLITE3_LIB_DIR = { value = "target/lib", relative = true }
+SQLITE3_INCLUDE_DIR = { value = "target/include", relative = true }
+MACOSX_DEPLOYMENT_TARGET = { value = "15.0" }
+

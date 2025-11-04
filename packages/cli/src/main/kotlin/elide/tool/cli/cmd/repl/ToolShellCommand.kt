@@ -2558,15 +2558,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           resourcesPath = gvmResources
         }
 
-//        RUBY -> ignoreNotInstalled {
-//           install(elide.runtime.plugins.ruby.Ruby) {
-//             logging.debug("Configuring Ruby VM")
-//             resourcesPath = gvmResources
-//             executable = cmd
-//             executableList = listOf(cmd).plus(args)
-//             installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-//           }
-//         }
+        RUBY -> configure(elide.runtime.plugins.ruby.Ruby) {
+          logging.debug("Configuring Ruby VM")
+          resourcesPath = gvmResources
+          executable = cmd
+          executableList = listOf(cmd).plus(args)
+          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+        }
 
         PYTHON -> configure(elide.runtime.plugins.python.Python) {
           logging.debug("Configuring Python VM")

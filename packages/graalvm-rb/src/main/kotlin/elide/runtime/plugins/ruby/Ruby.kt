@@ -29,14 +29,19 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
   private val config: RubyConfig,
   @Suppress("unused") private val resources: LanguagePluginManifest? = null,
 ) {
-  private fun initializeContext(context: PolyglotContext) {
+  private fun initializeContext(scope: InstallationScope, context: PolyglotContext) {
     // apply init-time settings
     config.applyTo(context)
 
     // run embedded initialization code
     context.enter()
-    context.evaluate(rubyInitSrc)
-    context.leave()
+    try {
+      scope.deferred {
+        context.evaluate(rubyInitSrc)
+      }
+    } finally {
+      context.leave()
+    }
   }
 
   private fun configureContext(builder: PolyglotContextBuilder) {
@@ -102,7 +107,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin.LanguagePluginManifest
 
       // subscribe to lifecycle events
       scope.lifecycle.on(ContextCreated, instance::configureContext)
-      scope.lifecycle.on(ContextInitialized, instance::initializeContext)
+      scope.lifecycle.on(ContextInitialized) { instance.initializeContext(scope, it) }
 
       // register resources with the VFS
       return instance

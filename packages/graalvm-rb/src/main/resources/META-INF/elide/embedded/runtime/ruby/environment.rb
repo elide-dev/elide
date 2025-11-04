@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Elide Technologies, Inc.
+# Copyright (c) 2024-2025 Elide Technologies, Inc.
 #
 # Licensed under the MIT license (the "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
@@ -12,7 +12,7 @@
 module AppEnv
   # Fetches the application-specific environment variables during static
   # initialization. This is meant to replace and shadow the host's environment.
-  elide_app_environment = Truffle::Interop.import("elide_app_environment")
+  elide_app_environment = Truffle::Interop.import("app_env_factory")
   @private_env_map = elide_app_environment.call || {}
 
   class << self

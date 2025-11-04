@@ -183,6 +183,7 @@ val dumpPointsTo = false
 val elideTarget = TargetInfo.current(project)
 val effectiveGc = findProperty("elide.gc") ?: "serial"
 val defaultArchTarget = when {
+  TargetCriteria.allOf(elideTarget, Criteria.MacAmd64) -> "compatibility"
   TargetCriteria.allOf(elideTarget, Criteria.Amd64) -> "x86-64-v3"
   TargetCriteria.allOf(elideTarget, Criteria.MacArm64) -> "armv8.1-a"
   else -> "compatibility"

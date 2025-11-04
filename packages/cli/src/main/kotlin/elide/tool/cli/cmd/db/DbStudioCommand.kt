@@ -72,7 +72,7 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
   private companion object {
     private const val STUDIO_API_SOURCE = "samples/db-studio/api"
     private const val STUDIO_UI_SOURCE = "samples/db-studio/ui/dist"
-    private const val STUDIO_OUTPUT_DIR = ".db-studio"
+    private const val STUDIO_OUTPUT_DIR = ".dev/db-studio"
     private const val STUDIO_INDEX_FILE = "index.tsx"
     private val SQLITE_EXTENSIONS = setOf(".db", ".sqlite", ".sqlite3", ".db3")
   }

@@ -1,0 +1,14 @@
+[
+  {
+    "condition": {
+      "typeReachable": "io.netty.channel.ReflectiveChannelFactory"
+    },
+    "name": "io.netty.channel.kqueue.KQueueServerSocketChannel",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  }
+]

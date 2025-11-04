@@ -1,0 +1,14 @@
+[
+  {
+    "condition": {
+      "typeReachable": "io.netty.channel.ReflectiveChannelFactory"
+    },
+    "name": "io.netty.incubator.channel.uring.IOUringServerSocketChannel",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  }
+]

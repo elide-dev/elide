@@ -306,7 +306,7 @@ jobs:
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
-        run: make -C third_party CI=yes -j2
+        run: make natives CI=yes
         timeout-minutes: 5
       - name: "🛠️ Release: Image"
         env:

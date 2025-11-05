@@ -1780,7 +1780,6 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
   "-R:MaximumHeapSizePercent=80",
   "--initialize-at-build-time=sun.awt.resources.awtosx",
   onlyIf(enableLto, "-H:NativeLinkerOption=-flto"),
-  onlyIf(TargetCriteria.allOf(elideTarget, Criteria.MacAmd64), "-H:NativeLinkerOption=-Wl,-ld_classic"),
   "-H:NativeLinkerOption=$nativesPath/libdiag.a",
   "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.a",
   "-H:NativeLinkerOption=$nativesPath/libumbrella.a",

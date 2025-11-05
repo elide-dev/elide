@@ -287,7 +287,7 @@ jobs:
       - name: "Setup: Gradle Settings (Globals)"
         run: cp -fv /home/ci-agent/gradle-ci.properties ~/.gradle/gradle.properties || echo "No global settings."
       - name: "Setup: Cosign"
-        if: inputs.pack
+        if: inputs.pack && inputs.signing
         uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
       - name: "Build Environment"
         run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
@@ -355,7 +355,7 @@ jobs:
         run: |
           echo "hashes=$(sha256sum ./packages/cli/build/native/nativeOptimizedCompile/elide | base64 -w0)" >> "$GITHUB_OUTPUT"
       - name: "🛠️ Release: Package"
-        if: inputs.pack
+        if: inputs.pack && inputs.signing
         run: bash ./tools/scripts/release/build-release.sh
         env:
           COSIGN_KEY: ${{ secrets.COSIGN_KEY }}

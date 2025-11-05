@@ -1,0 +1,10 @@
+/// Describes the runtime engine configurations for an Elide project.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.engine
+
+/// Configures the execution engine used by Elide when running this project.
+class EngineSettings {
+  /// Sets the maximum number of guest contexts to use when running the
+  /// application. Defaults to a sensible limit based on available processors.
+  maxContexts: Int?
+}

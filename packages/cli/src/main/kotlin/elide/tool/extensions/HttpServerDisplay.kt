@@ -13,43 +13,77 @@
 
 package elide.tool.extensions
 
-import com.github.ajalt.mordant.rendering.TextColors
-import com.github.ajalt.mordant.rendering.TextStyles
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextStyles.dim
+import kotlin.time.DurationUnit
+import kotlin.time.measureTime
 import elide.runtime.http.server.netty.HttpApplicationStack
 import elide.runtime.http.server.netty.assembleUri
 import elide.tooling.cli.Statics.terminal
 
-fun HttpApplicationStack.echoStartMessage() {
-  val singleService = services.singleOrNull { it.bindResult.isSuccess }
+fun HttpApplicationStack.Companion.bindAndDisplayResult(block: () -> HttpApplicationStack): HttpApplicationStack {
+  val stack: HttpApplicationStack
+  val bindTime = measureTime { stack = block() }.let {
+    when {
+      it.inWholeSeconds > 0 -> it.toString(DurationUnit.SECONDS, decimals = 2)
+      else -> it.toString(DurationUnit.MILLISECONDS, decimals = 0)
+    }
+  }
+
+  val singleService = stack.services.singleOrNull { it.bindResult.isSuccess }
 
   if (singleService != null) {
     val uri = singleService.bindResult.getOrThrow().assembleUri()
-    terminal.println(TextColors.green("Server listening on: $uri"))
+    val label = serviceDisplayName(singleService.label)
+    terminal.println(green("$label listening on: ${cyan(uri.toString())} ($bindTime)"))
   } else {
-    val startupMessages = services.map { service ->
+    val maxLabelSize = stack.services.maxOf { serviceDisplayName(it.label).length } + 1
+
+    val startupMessages = stack.services.map { service ->
       service.bindResult.fold(
-        onSuccess = { TextColors.green("︎[${service.label}]: listening at ${it.assembleUri()}") },
-        onFailure = { TextColors.red("[${service.label}]: failed with $it") },
+        onSuccess = {
+          val label = dim("${serviceDisplayName(service.label)}:".padEnd(maxLabelSize))
+          "︎$label listening at ${cyan(it.assembleUri().toString())}"
+        },
+        onFailure = {
+          val label = dim("${serviceDisplayName(service.label)}:".padEnd(maxLabelSize))
+          "$label ${red("failed with $it")}"
+        },
       )
     }
 
-    terminal.println("Server started:")
+    val summaryColor = when (stack.services.count { it.bindResult.isSuccess }) {
+      startupMessages.size -> green
+      0 -> red
+      else -> yellow
+    }
+
+    terminal.println("Started ${summaryColor(startupMessages.size.toString())} services in $bindTime")
     startupMessages.forEach { message -> terminal.println(message) }
   }
 
 
-  val failures = services.filter { it.bindResult.isFailure }
+  val failures = stack.services.filter { it.bindResult.isFailure }
   if (failures.isNotEmpty()) {
     val message = failures.joinToString("\n") {
-      TextColors.red(" - [${it.label}] ${it.bindResult.exceptionOrNull()?.stackTraceToString()}")
+      red(" - [${it.label}] ${it.bindResult.exceptionOrNull()?.stackTraceToString()}")
     }
 
-    terminal.println(TextStyles.dim("Some test services failed to start:\n$message"))
+    terminal.println(dim("Some test services failed to start:\n$message"))
   }
+
+  return stack
 }
 
 fun HttpApplicationStack.echoShutdownMessage() {
   val errors = awaitClose().joinToString("\n")
-  if (errors.isNotEmpty()) terminal.println(TextColors.red("Some services failed to shutdown properly:\n$errors"))
+  if (errors.isNotEmpty()) terminal.println(red("Some services failed to shutdown properly:\n$errors"))
   else terminal.println("Server stopped successfully")
+}
+
+fun serviceDisplayName(label: String): String = when (label) {
+  "http" -> "HTTP"
+  "https" -> "HTTPS"
+  "http3" -> "HTTP/3"
+  else -> error("Unknown service label $label")
 }

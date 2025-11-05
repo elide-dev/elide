@@ -30,6 +30,8 @@ import "HuggingFace.pkl" as _huggingface
 import "Testing.pkl" as _testing
 import "Pkl.pkl" as _pkl
 import "State.pkl" as _state
+import "Server.pkl" as _server
+import "Engine.pkl" as _engine
 
 /// Name of a script within the project's configuration.
 typealias ScriptName = String
@@ -54,6 +56,9 @@ class ElideProject {
 
   /// Relative path to the source file evaluated by the runtime on startup.
   entrypoint: Entrypoint?
+
+  /// Configuration for the execution engine.
+  engine: _engine.EngineSettings?
 
   /// Script mappings; each entry is a name and a script to run.
   scripts: Mapping<ScriptName, _common.ShellCommand | _common.FilePath | String> = new {}
@@ -122,6 +127,9 @@ class ElideProject {
 
   /// Settings which govern how secrets are handled.
   secrets: _secrets.SecretsSettings?
+
+  /// Settings for guest HTTP servers
+  server: _server.HttpServerSettings?
 }
 
 /// A name for the project.
@@ -197,6 +205,12 @@ pkl: _pkl.PklSettings?
 
 /// Project-wide settings for the Native Image compiler.
 nativeImage: _nativeImage.NativeImageSettings?
+
+/// Configuration for the execution engine.
+engine: _engine.EngineSettings?
+
+/// Settings for guest HTTP servers
+server: _server.HttpServerSettings?
 
 //
 // ------ Structure -------------------------------------------------------------------------------------------------

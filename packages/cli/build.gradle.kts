@@ -1254,7 +1254,12 @@ val initializeAtRuntime: List<String> = listOfNotNull(
   "io.netty.channel.kqueue.KQueue",
   "io.netty.channel.kqueue.KQueueIoHandler",
   "io.netty.channel.kqueue.KQueueEventLoop",
-
+  $$"io.netty.pkitesting.CertificateBuilder$SecureRandomHolder",
+  "io.netty.incubator.codec.quic.ConnectionIdChannelMap",
+  "io.netty.incubator.codec.quic.InsecureQuicTokenHandler",
+  "io.netty.incubator.codec.quic.BoringSSL",
+  "io.netty.incubator.codec.quic.BoringSSLPrivateKeyMethod",
+  $$"io.netty.util.NetUtilSubstitutions$NetUtilLocalhost6LazyHolder",
   // --- Netty: Native Crypto -----
 
   "io.netty.internal.tcnative.Buffer",

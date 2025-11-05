@@ -273,6 +273,22 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
             mapper.map(value, StaticSite::class.java)
           })
 
+          "elide.server#SelfSignedCertificate" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, ServerSettings.SSLCertificate.SelfSignedCertificate::class.java)
+          })
+
+          "elide.server#LocalFileCertificate" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, ServerSettings.SSLCertificate.LocalFileCertificate::class.java)
+          })
+
+          "elide.server#SocketAddress" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, ServerSettings.BindingAddress.SocketAddress::class.java)
+          })
+
+          "elide.server#DomainSocketAddress" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, ServerSettings.BindingAddress.DomainSocketAddress::class.java)
+          })
+
           else -> Optional.empty()
         }
       }

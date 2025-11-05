@@ -91,15 +91,12 @@ import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
-import elide.runtime.http.server.HttpApplication
 import elide.runtime.http.server.HttpApplicationOptions
 import elide.runtime.http.server.js.worker.JsWorkerApplication
-import elide.runtime.http.server.js.worker.JsWorkerEntrypoint
 import elide.runtime.http.server.netty.HttpApplicationStack
 import elide.runtime.http.server.python.wsgi.WsgiEntrypoint
 import elide.runtime.http.server.python.wsgi.WsgiServerApplication
 import elide.runtime.intrinsics.js.node.util.DebugLogger
-import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.plugins.Coverage
 import elide.runtime.plugins.jvm.Jvm
@@ -128,12 +125,13 @@ import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
 import elide.tool.exec.SubprocessRunner.subprocess
 import elide.tool.exec.allProjectPaths
+import elide.tool.extensions.bindAndDisplayResult
 import elide.tool.extensions.echoShutdownMessage
-import elide.tool.extensions.echoStartMessage
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
 import elide.tool.server.StaticSiteServer
 import elide.tool.server.StaticSiteServer.buildStaticServer
+import elide.tool.server.toHttpApplicationOptions
 import elide.tooling.*
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
@@ -246,15 +244,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     // Active line reader.
     private val lineReader = atomic<LineReader?>(null)
-
-    // Server manager
-    private val serverAgent: HttpServerAgent by lazy { HttpServerAgent() }
-
-    // Synchronization primitive used to coordinate server behavior
-    private val phaser = atomic(Phaser(1))
-
-    // Whether a server is running.
-    private val serverRunning = atomic(false)
 
     // Active project configuration.
     private val activeProject = atomic<ElideProject?>(null)
@@ -616,8 +605,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     code: String,
   ) {
     if (serveMode()) {
-      assert(!serverRunning.value) { "Server is already running" }
-      serverRunning.value = true
       executeSource(
         "stdin",
         languages,
@@ -1594,7 +1581,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   }
 
   private fun ElideProject.isWsgiEnabled(): Boolean {
-    return manifest.python?.wsgi?.let { it.app != null || it.factory != null } == true
+    return manifest.python?.wsgi?.name != null
   }
 
   // Detect whether we are running in `test` mode (with alias `test` or `tests`).
@@ -1720,14 +1707,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     entrypointProvider.record(source)
 
     try {
-      val httpApp: HttpApplication<*>
-      val httpOptions: HttpApplicationOptions
-
-      when (language) {
+      val httpApp = when (language) {
         JS, TYPESCRIPT -> {
           logging.debug { "Starting JavaScript/Typescript worker server" }
-          httpApp = JsWorkerApplication(source, runtimeExecutor.acquire())
-          httpOptions = HttpApplicationOptions()
+          JsWorkerApplication(source, runtimeExecutor.acquire())
         }
 
         PYTHON -> {
@@ -1735,27 +1718,24 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           val wsgiOptions = activeProject.value?.manifest?.python?.wsgi
           val entrypoint = wsgiOptions?.let { wsgi ->
             // resolve from manifest
-            val bindingArgs = if (wsgi.app != null) null else wsgi.args
-            val bindingName = wsgi.app
-              ?: wsgi.factory
-              ?: error("Serve mode should only be active if the app or factory binding is specified")
-
-            WsgiEntrypoint(source, bindingName, bindingArgs)
+            val bindingName = wsgi.name ?: error("Serve mode should only be active if the binding name is specified")
+            WsgiEntrypoint(source, bindingName, wsgi.args)
           } ?: serverSettings.wsgi?.let {
             // resolve from CLI arguments
             WsgiEntrypoint.from(it, source)
           }
           ?: error("No available WSGI configuration in manifest or CLI arguments")
 
-          httpApp = WsgiServerApplication(entrypoint, runtimeExecutor.acquire())
-          httpOptions = HttpApplicationOptions()
+          WsgiServerApplication(entrypoint, runtimeExecutor.acquire())
         }
 
         else -> error("Cannot run embedded server for language $language")
       }
 
-      val stack = HttpApplicationStack.bind(httpApp, httpOptions)
-      stack.echoStartMessage()
+      val stack = HttpApplicationStack.bindAndDisplayResult {
+        val options = activeProject.value?.manifest?.server?.toHttpApplicationOptions() ?: HttpApplicationOptions()
+        HttpApplicationStack.bind(httpApp, options)
+      }
 
       try {
         // wait until shutdown
@@ -1764,7 +1744,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         stack.echoShutdownMessage()
       }
 
-      runtimeLatch.await()
     } catch (exc: PolyglotException) {
       processUserCodeError(language, exc)?.let { throw it }
     }
@@ -2964,7 +2943,8 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       resolveEngine(effectiveInitLangs).unwrap().use {
         withDeferredContext(effectiveInitLangs) {
           val executor = ContextAwareExecutor(
-            maxContextPoolSize = Runtime.getRuntime().availableProcessors(),
+            maxContextPoolSize = activeProject.value?.manifest?.engine?.maxContexts
+              ?: Runtime.getRuntime().availableProcessors(),
             baseExecutor = Executors.newCachedThreadPool(),
             contextFactory = { it().unwrap() },
           )
@@ -3104,20 +3084,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           }
         }
 
-        // don't exit if we have a running server
-        if (serverRunning.value) {
-          // wait for all tasks to arrive
-          logging.debug("Waiting for long-lived tasks to arrive")
-          phaser.value.arriveAndAwaitAdvance()
-          logging.debug("Exiting server context")
-        }
         engine().unwrap().let { engine ->
           val terminationPeriod = (commons().timeoutSeconds).seconds
           logging.debug { "Preparing to shut down execution (termination period: $terminationPeriod)" }
 
           try {
             logging.trace { "Triggering graceful engine shutdown" }
-            engine.close()
+            engine.close(true)
           } catch (exc: IllegalStateException) {
             logging.trace { "Shutdown produced ISE: probably still executing (message: '${exc.message}')" }
 

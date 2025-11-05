@@ -319,8 +319,14 @@ internal fun AbstractBootstrap<*, *>.bindAndRegister(
       val channel = future.channel()
       scope.registerChannel(provider.label, channel)
 
+      // prefer using the hostname passed in the options
+      val displayAddress = when (val bound = channel.localAddress()) {
+        is InetSocketAddress -> InetSocketAddress((configuredAddress as InetSocketAddress).hostName, bound.port)
+        else -> bound
+      }
+
       HttpApplicationStack.ServiceBinding(
-        address = channel.localAddress(),
+        address = displayAddress,
         scheme = serviceScheme,
       )
     }

@@ -162,6 +162,7 @@ name: Native Image
 env:
   RUST_BACKTRACE: full
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+  MACOSX_DEPLOYMENT_TARGET: "14.0"
 
 permissions:
   contents: read

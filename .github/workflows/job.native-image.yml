@@ -292,7 +292,7 @@ jobs:
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
-        run: make natives CI=yes -j`nproc`
+        run: make natives CI=yes -j2
       - name: "🛠️ Release: Image"
         env:
           CI: true

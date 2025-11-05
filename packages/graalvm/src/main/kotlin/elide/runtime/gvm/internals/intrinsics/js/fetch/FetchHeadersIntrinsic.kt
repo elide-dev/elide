@@ -27,7 +27,7 @@ import elide.runtime.intrinsics.js.MultiMapLike
 import elide.vm.annotations.Polyglot
 
 /** Implementation of `Headers` intrinsic from the Fetch API. */
-@ReflectiveAccess @Introspected internal class FetchHeadersIntrinsic private constructor (
+@ReflectiveAccess @Introspected internal class FetchHeadersIntrinsic private constructor(
   initialData: JsMutableMultiMap<String, String>?,
 
   // Internal data map.
@@ -89,11 +89,13 @@ import elide.vm.annotations.Polyglot
     @JvmStatic override fun fromMultiMap(map: Map<String, List<String>>): FetchHeadersIntrinsic {
       return FetchHeadersIntrinsic(
         initialData = null,
-        data = JsMutableMultiMap.fromPairs(map.entries.flatMap {
-          it.value.map { value ->
-            it.key to value
-          }
-        }),
+        data = JsMutableMultiMap.fromPairs(
+          map.entries.flatMap {
+            it.value.map { value ->
+              it.key to value
+            }
+          },
+        ),
       )
     }
 
@@ -104,7 +106,7 @@ import elide.vm.annotations.Polyglot
      */
     @JvmStatic override fun from(previous: FetchHeaders): FetchHeadersIntrinsic {
       val concrete = previous as? FetchHeadersIntrinsic ?: error(
-        "Failed to cast `FetchHeaders` as only known concrete class `FetchHeadersIntrinsic"
+        "Failed to cast `FetchHeaders` as only known concrete class `FetchHeadersIntrinsic",
       )
       return FetchHeadersIntrinsic(
         initialData = null,
@@ -117,13 +119,21 @@ import elide.vm.annotations.Polyglot
      *
      * @return Immutable copy of the provided guest value headers.
      */
-    @JvmStatic override fun from(value: Value?): FetchHeadersIntrinsic = empty().also {
-      if (value != null) when {
-        value.hasMembers() -> value.memberKeys.forEach { key ->
-          it.data.put(key, value.getMember(key).asString())
-        }
-        else -> error("Invalid headers value; please provide a simple object")
+    @JvmStatic override fun from(value: Value?): FetchHeadersIntrinsic = if (value == null) empty() else when {
+      value.isHostObject -> {
+        runCatching { value.asHostObject<FetchHeadersIntrinsic>() }
+          .getOrElse { error("Invalid headers value, host object must be a 'Headers' instance") }
       }
+
+      value.hasMembers() -> empty().apply {
+        value.memberKeys.forEach { key ->
+          val headerValue = value.getMember(key)
+          require(headerValue.isString) { "Invalid header value, expected a string, received: $headerValue" }
+          data[key] = headerValue.asString()
+        }
+      }
+
+      else -> error("Invalid headers value; please provide a simple object")
     }
   }
 
@@ -132,10 +142,10 @@ import elide.vm.annotations.Polyglot
   private val valueCache: SortedMap<String, String> = TreeMap(String.CASE_INSENSITIVE_ORDER)
 
   /** Empty constructor: empty headers. */
-  @Polyglot constructor(): this(null)
+  @Polyglot constructor() : this(null)
 
   /** Construct from a plain JavaScript map-capable object. */
-  @Polyglot constructor(initialValue: Value) : this (
+  @Polyglot constructor(initialValue: Value) : this(
     when {
       // if it's a host object, it should really only be another `FetchHeadersIntrinsic` instance.
       initialValue.isHostObject -> {
@@ -143,7 +153,7 @@ import elide.vm.annotations.Polyglot
           initialValue.`as`(FetchHeadersIntrinsic::class.java)
         } catch (_: ClassCastException) {
           throw IllegalArgumentException(
-            "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'"
+            "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'",
           )
         }).internalDataForCopy()
       }
@@ -166,7 +176,7 @@ import elide.vm.annotations.Polyglot
       // if it's a regular map-like object, we can add each value wrapped in a single-entry set.
       initialValue.hasHashEntries() -> {
         val mapKeysIter = initialValue.hashKeysIterator
-        val iterWrap = object: Iterator<String> {
+        val iterWrap = object : Iterator<String> {
           override fun hasNext(): Boolean = mapKeysIter.hasIteratorNextElement()
           override fun next(): String = mapKeysIter.iteratorNextElement?.asString() ?: throw NoSuchElementException()
         }
@@ -182,9 +192,9 @@ import elide.vm.annotations.Polyglot
 
       // otherwise, we can't accept it, it's an error.
       else -> throw IllegalArgumentException(
-        "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'"
+        "Unsupported type for `Headers` constructor: '${initialValue.metaObject.metaSimpleName}'",
       )
-    }
+    },
   )
 
   /** @return Copy of internal data. */
@@ -202,7 +212,7 @@ import elide.vm.annotations.Polyglot
   }
 
   // Lock the data structure when iteration begins.
-  private fun <R: Any> lockForIteration(op: () -> R): R {
+  private fun <R : Any> lockForIteration(op: () -> R): R {
     return try {
       locked.compareAndSet(false, true)
       op.invoke()
@@ -212,7 +222,7 @@ import elide.vm.annotations.Polyglot
   }
 
   // Check the lock before mutating inner data.
-  private fun <R: Any> onlyIfUnlocked(op: () -> R): R {
+  private fun <R : Any> onlyIfUnlocked(op: () -> R): R {
     check(!locked.get()) {
       "Cannot mutate headers while locked for iteration"
     }
@@ -256,10 +266,12 @@ import elide.vm.annotations.Polyglot
       } else {
         value
       }
-    }.collect(Collectors.toMap(
-      { it.first },
-      { it.second },
-    ))
+    }.collect(
+      Collectors.toMap(
+        { it.first },
+        { it.second },
+      ),
+    )
   }
 
   override fun toString(): String {

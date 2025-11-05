@@ -92,8 +92,8 @@ internal class FetchResponseIntrinsic private constructor (
     @JvmStatic internal fun create(
       url: String,
       status: Int,
-      statusText: String,
-      headers: FetchHeaders,
+      statusText: String? = null,
+      headers: FetchHeaders = FetchHeadersIntrinsic.empty(),
       body: ReadableStream? = null,
       redirected: Boolean = false,
     ): FetchResponseIntrinsic = FetchResponseIntrinsic(
@@ -146,7 +146,7 @@ internal class FetchResponseIntrinsic private constructor (
     @Polyglot get() = responseUrl.get()
     @Polyglot set(value) = responseUrl.set(value)
 
-  @get:Polyglot override val body: ReadableStream get() = responseBody.get()
+  @get:Polyglot override val body: ReadableStream? get() = responseBody.get()
   @get:Polyglot override val bodyUsed: Boolean get() = bodyConsumed.get()
   @get:Polyglot override val redirected: Boolean get() = responseRedirected.get()
 

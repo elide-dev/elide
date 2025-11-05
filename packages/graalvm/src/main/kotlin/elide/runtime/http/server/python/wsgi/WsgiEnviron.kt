@@ -15,15 +15,15 @@ package elide.runtime.http.server.python.wsgi
 
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.netty.handler.codec.http.HttpRequest
-import io.netty.handler.codec.http.HttpUtil
 import io.netty.util.AsciiString
 import org.graalvm.polyglot.proxy.ProxyHashMap
-import org.graalvm.polyglot.proxy.ProxyObject
 import elide.runtime.Logging
 import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.http.server.CallContext
 import elide.runtime.http.server.getHeader
-import elide.runtime.http.server.python.wsgi.WsgiServerApplication.HostInfo
+import elide.runtime.http.server.hostnameOrDomainPath
+import elide.runtime.http.server.netty.HttpApplicationStack.ServiceBinding
+import elide.runtime.http.server.portOrNull
 
 /**
  * A WSGI environ container, holding a [map] that can be passed to guest code, and the [input] and [error] streams
@@ -46,6 +46,9 @@ public class WsgiEnviron(
     private const val MULTITHREAD = false
     private const val MULTIPROCESS = false
     private const val RUN_ONCE = false
+
+    private const val UNKNOWN_HOST: String = "localhost"
+    private const val UNKNOWN_PORT: Int = 0
 
     private val WSGI_VERSION: Array<Int> = arrayOf(1, 0)
 
@@ -78,7 +81,7 @@ public class WsgiEnviron(
       request: HttpRequest,
       executor: ContextAwareExecutor,
       entrypoint: WsgiEntrypoint,
-      host: HostInfo,
+      host: ServiceBinding,
     ): WsgiEnviron {
       val contentLength = request.getHeader(HttpHeaderNames.CONTENT_LENGTH)?.toLongOrNull() ?: 0
       val inputStream = WsgiInputStream(executor, contentLength)
@@ -96,8 +99,8 @@ public class WsgiEnviron(
 
         // CGI variables
         put("SCRIPT_NAME", entrypoint.source.name)
-        put("SERVER_NAME", host.hostname)
-        put("SERVER_PORT", host.port.toString())
+        put("SERVER_NAME", host.address.hostnameOrDomainPath() ?: UNKNOWN_HOST)
+        put("SERVER_PORT", (host.address.portOrNull() ?: UNKNOWN_PORT).toString())
         put("REQUEST_METHOD", request.method().name())
         put("PATH_INFO", request.uri().substringBefore('?'))
         put("QUERY_STRING", request.uri().substringAfter('?'))

@@ -91,7 +91,10 @@ import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
+import elide.runtime.http.server.HttpApplication
 import elide.runtime.http.server.HttpApplicationOptions
+import elide.runtime.http.server.js.worker.JsWorkerApplication
+import elide.runtime.http.server.js.worker.JsWorkerEntrypoint
 import elide.runtime.http.server.netty.HttpApplicationStack
 import elide.runtime.http.server.python.wsgi.WsgiEntrypoint
 import elide.runtime.http.server.python.wsgi.WsgiServerApplication
@@ -1717,19 +1720,18 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     entrypointProvider.record(source)
 
     try {
+      val httpApp: HttpApplication<*>
+      val httpOptions: HttpApplicationOptions
+
       when (language) {
         JS, TYPESCRIPT -> {
-          // enter VM context
-          logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
-
-          // initialize the server intrinsic and run using the provided source
-          serverAgent.run(source, execProvider) { resolvePolyglotContext(langs, detached = false) }
-          phaser.value.register()
-          serverRunning.value = true
+          logging.debug { "Starting JavaScript/Typescript worker server" }
+          httpApp = JsWorkerApplication(source, runtimeExecutor.acquire())
+          httpOptions = HttpApplicationOptions()
         }
 
         PYTHON -> {
-          logging.trace("Running WSGI server")
+          logging.debug { "Starting WSGI server" }
           val wsgiOptions = activeProject.value?.manifest?.python?.wsgi
           val entrypoint = wsgiOptions?.let { wsgi ->
             // resolve from manifest
@@ -1745,21 +1747,21 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           }
           ?: error("No available WSGI configuration in manifest or CLI arguments")
 
-          val wsgiApp = WsgiServerApplication(entrypoint, runtimeExecutor.acquire())
-          val bindOptions = HttpApplicationOptions()
-
-          val stack = HttpApplicationStack.bind(wsgiApp, bindOptions)
-          stack.echoStartMessage()
-
-          try {
-            // wait until shutdown
-            stack.awaitClose()
-          } finally {
-            stack.echoShutdownMessage()
-          }
+          httpApp = WsgiServerApplication(entrypoint, runtimeExecutor.acquire())
+          httpOptions = HttpApplicationOptions()
         }
 
         else -> error("Cannot run embedded server for language $language")
+      }
+
+      val stack = HttpApplicationStack.bind(httpApp, httpOptions)
+      stack.echoStartMessage()
+
+      try {
+        // wait until shutdown
+        stack.awaitClose()
+      } finally {
+        stack.echoShutdownMessage()
       }
 
       runtimeLatch.await()

@@ -97,7 +97,7 @@ internal class ReadableStreamBufferSource(private val wrapped: ByteBuffer) : Rea
     val byteController = controller as ReadableByteStreamController
     val desiredBytes = byteController.desiredSize?.toLong() ?: 0
 
-    if (desiredBytes > 0) {
+    if (desiredBytes > 0 && remaining.get() > 0) {
       val length = desiredBytes.toInt().coerceAtMost(wrapped.remaining())
       val view = ArrayBufferViews.newView(
         type = ArrayBufferViewType.Uint8Array,
@@ -107,9 +107,9 @@ internal class ReadableStreamBufferSource(private val wrapped: ByteBuffer) : Rea
       )
 
       controller.enqueue(view)
+    } else {
+      controller.close()
     }
-
-    if (remaining.get() == 0) controller.close()
     return super.pull(controller)
   }
 }
@@ -142,6 +142,19 @@ internal class ReadableStreamAsyncIteratorSource(private val wrapped: Value) : R
     runCatching { iterator.invokeMember("return") }.getOrElse {
       return JsPromise.rejected(it)
     }
+
+    return JsPromise.resolved(Unit)
+  }
+}
+
+internal class ReadableStreamHostIteratorSource(private val wrapped: Iterator<Any>) : ReadableStreamSource {
+  internal constructor(iterable: Iterable<Any>) : this(iterable.iterator())
+
+  override fun pull(controller: ReadableStreamController): JsPromise<Unit> {
+    controller as ReadableStreamDefaultController
+
+    if (wrapped.hasNext()) controller.enqueue(Value.asValue(wrapped.next()))
+    else controller.close()
 
     return JsPromise.resolved(Unit)
   }

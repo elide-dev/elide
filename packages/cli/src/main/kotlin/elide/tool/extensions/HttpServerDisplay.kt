@@ -20,15 +20,23 @@ import elide.runtime.http.server.netty.assembleUri
 import elide.tooling.cli.Statics.terminal
 
 fun HttpApplicationStack.echoStartMessage() {
-  val startupMessages = services.map { service ->
-    service.bindResult.fold(
-      onSuccess = { TextColors.green("︎[${service.label}]: listening at ${it.assembleUri()}") },
-      onFailure = { TextColors.red("[${service.label}]: failed with $it") },
-    )
+  val singleService = services.singleOrNull { it.bindResult.isSuccess }
+
+  if (singleService != null) {
+    val uri = singleService.bindResult.getOrThrow().assembleUri()
+    terminal.println(TextColors.green("Server listening on: $uri"))
+  } else {
+    val startupMessages = services.map { service ->
+      service.bindResult.fold(
+        onSuccess = { TextColors.green("︎[${service.label}]: listening at ${it.assembleUri()}") },
+        onFailure = { TextColors.red("[${service.label}]: failed with $it") },
+      )
+    }
+
+    terminal.println("Server started:")
+    startupMessages.forEach { message -> terminal.println(message) }
   }
 
-  terminal.println("Server started:")
-  startupMessages.forEach { message -> terminal.println(message) }
 
   val failures = services.filter { it.bindResult.isFailure }
   if (failures.isNotEmpty()) {

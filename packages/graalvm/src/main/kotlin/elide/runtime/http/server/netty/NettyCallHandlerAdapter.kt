@@ -77,15 +77,18 @@ internal class NettyCallHandlerAdapter(
       onAttached = { requestWriter.set(it) },
       onClose = { error ->
         requestWriter.set(null)
-        close(error)
+        if (error != null) close(error)
       },
       onPull = { channelContext.read() },
     )
 
     private fun consumeResponse() = responseBody.consume(
-      onClose = { write(LastHttpContent.EMPTY_LAST_CONTENT, channelContext) },
+      onClose = {
+        if (it == null) write(LastHttpContent.EMPTY_LAST_CONTENT, channelContext)
+        else fail(it)
+      },
       onRead = { bytes, reader ->
-        write(DefaultHttpContent(bytes.retain()), channelContext)
+        if (bytes.isReadable) write(DefaultHttpContent(bytes.retain()), channelContext)
         reader.pull()
       },
     )
@@ -119,7 +122,7 @@ internal class NettyCallHandlerAdapter(
 
     fun offer(content: HttpContent): Boolean {
       return requestWriter.get()?.let { writer ->
-        writer.write(content.content())
+        if (content.content().isReadable) writer.write(content.content())
         if (content is LastHttpContent) writer.end()
       } != null
     }

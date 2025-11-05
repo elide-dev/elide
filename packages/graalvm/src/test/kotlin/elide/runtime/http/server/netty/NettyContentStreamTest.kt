@@ -24,7 +24,6 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import elide.runtime.http.server.StreamBusyException
-import elide.runtime.http.server.StreamClosedException
 
 class NettyContentStreamTest : NettyStreamTest() {
   private lateinit var _channel: EmbeddedChannel
@@ -248,24 +247,6 @@ class NettyContentStreamTest : NettyStreamTest() {
     assertIs<IllegalStateException>(consumerCause.cause)
   }
 
-  @Test fun `should surface stream errors to new consumers`() {
-    val stream = newStream()
-    val failure = IllegalStateException("boom")
-
-    stream.close(failure)
-    drainEventLoop()
-
-    val consumer = RecordingConsumer()
-    stream.consume(consumer)
-    drainEventLoop()
-
-    assertEquals(1, consumer.attachCount, "expected attach callback even when closed")
-    assertEquals(1, consumer.closeCount, "expected consumer to close immediately")
-    val cause = consumer.closeCause
-    assertIs<StreamClosedException>(cause)
-    assertEquals(failure, cause.cause, "expected original error to propagate")
-  }
-
   @Test fun `should drain closing stream when consumer attaches after end`() {
     val stream = newStream()
     val producer = RecordingProducer()
@@ -433,5 +414,71 @@ class NettyContentStreamTest : NettyStreamTest() {
     assertEquals(listOf("first", "second"), consumer.received, "expected buffered data after pulls")
     assertEquals(1, consumer.closeCount, "expected consumer to close after draining buffered data")
     assertNull(consumer.closeCause)
+  }
+
+  @Test fun `should not fail new consumer when closed without error`() {
+    val stream = newStream()
+    val consumer = RecordingConsumer()
+
+    stream.close()
+    drainEventLoop()
+
+    stream.consume(consumer)
+    drainEventLoop()
+
+    assertEquals(1, consumer.attachCount)
+    assertEquals(1, consumer.closeCount)
+    assertEquals(0, consumer.readCount)
+    assertNull(consumer.closeCause)
+  }
+
+  @Test fun `should fail new consumer when closed with error`() {
+    val stream = newStream()
+    val consumer = RecordingConsumer()
+
+    val testError = IllegalStateException("test")
+    stream.close(testError)
+    drainEventLoop()
+
+    stream.consume(consumer)
+    drainEventLoop()
+
+    assertEquals(1, consumer.attachCount)
+    assertEquals(1, consumer.closeCount)
+    assertEquals(0, consumer.readCount)
+    assertEquals(testError, consumer.closeCause)
+  }
+
+  @Test fun `should not fail new producer when closed without error`() {
+    val stream = newStream()
+    val producer = RecordingProducer()
+
+    stream.close()
+    drainEventLoop()
+
+    stream.source(producer)
+    drainEventLoop()
+
+    assertEquals(1, producer.attachCount)
+    assertEquals(1, producer.closeCount)
+    assertEquals(0, producer.pullCount)
+    assertNull(producer.closeCause)
+  }
+
+  @Test fun `should fail new producer when closed with error`() {
+    val stream = newStream()
+    val producer = RecordingProducer()
+
+    val testError = IllegalStateException("test")
+    stream.close(testError)
+    drainEventLoop()
+
+    stream.source(producer)
+    drainEventLoop()
+
+    assertEquals(1, producer.attachCount)
+    assertEquals(1, producer.closeCount)
+    assertEquals(0, producer.pullCount)
+    assertEquals(testError, producer.closeCause)
   }
 }

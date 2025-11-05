@@ -13,7 +13,6 @@
 
 package elide.runtime.http.server.python.wsgi
 
-import io.netty.channel.unix.DomainSocketAddress
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.netty.handler.codec.http.HttpRequest
 import io.netty.handler.codec.http.HttpResponse
@@ -22,10 +21,7 @@ import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import org.graalvm.polyglot.proxy.ProxyHashMap
-import java.net.InetSocketAddress
-import java.net.UnixDomainSocketAddress
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.io.path.absolutePathString
 import kotlin.time.TimeSource
 import elide.runtime.Logging
 import elide.runtime.exec.ContextAwareExecutor
@@ -34,6 +30,7 @@ import elide.runtime.exec.PinnedContext
 import elide.runtime.http.server.*
 import elide.runtime.http.server.netty.Http3Service
 import elide.runtime.http.server.netty.HttpApplicationStack
+import elide.runtime.http.server.netty.HttpApplicationStack.ServiceBinding
 import elide.runtime.http.server.netty.HttpCleartextService
 import elide.runtime.http.server.netty.HttpsService
 
@@ -63,9 +60,7 @@ public class WsgiServerApplication(
   }
 
   /** Host information resolved once the application starts used to prepare a [WsgiEnviron]. */
-  public data class HostInfo(val scheme: String, val hostname: String, val port: Int)
-
-  @Volatile private var hostInfo: HostInfo? = null
+  @Volatile private var hostInfo: ServiceBinding? = null
 
   override fun toString(): String {
     return "WsgiServerApplication(${entrypoint.source.name})"
@@ -81,14 +76,7 @@ public class WsgiServerApplication(
       ?: services[HttpCleartextService.LABEL]?.bindResult?.getOrNull()
       ?: error("Unable to resolve bound host address: no services running")
 
-    hostInfo = when (val address = binding.address) {
-      is InetSocketAddress -> HostInfo(binding.scheme, address.hostName, address.port)
-      // NIO/Native domain sockets
-      is UnixDomainSocketAddress -> HostInfo(binding.scheme, address.path.absolutePathString(), 0)
-      is DomainSocketAddress -> HostInfo(binding.scheme, address.path(), 0)
-      // fallback to cleartext. localhost and no port
-      else -> HostInfo(UNKNOWN_SCHEME, UNKNOWN_HOST, UNKNOWN_PORT)
-    }
+    hostInfo = binding
   }
 
   override fun newContext(
@@ -214,7 +202,6 @@ public class WsgiServerApplication(
     while (true) {
       if (!guestIterator.hasIteratorNextElement()) {
         // if we reach the end, send an empty response
-        call.responseBody.close()
         call.send()
         return
       }
@@ -237,10 +224,6 @@ public class WsgiServerApplication(
   }
 
   public companion object {
-    private const val UNKNOWN_SCHEME: String = "http"
-    private const val UNKNOWN_HOST: String = "localhost"
-    private const val UNKNOWN_PORT: Int = 0
-
     private val log = Logging.of(WsgiServerApplication::class.java)
     private val LocalWsgiStack = ContextLocal<WsgiCallable>()
   }

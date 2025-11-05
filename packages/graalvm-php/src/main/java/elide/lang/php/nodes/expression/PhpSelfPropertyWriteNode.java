@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+package elide.lang.php.nodes.expression;
+
+import com.oracle.truffle.api.frame.VirtualFrame;
+import elide.lang.php.nodes.PhpExpressionNode;
+import elide.lang.php.runtime.PhpClass;
+import elide.lang.php.runtime.PhpContext;
+
+/**
+ * AST node for writing static properties using self:: keyword.
+ *
+ * <p>Syntax: self::$propertyName = value;
+ *
+ * <p>This node writes to static properties of the current class.
+ */
+public final class PhpSelfPropertyWriteNode extends PhpExpressionNode {
+
+  @Child private PhpExpressionNode valueNode;
+
+  private final String propertyName;
+  private final String currentClassName; // The class from which self:: is being called
+
+  public PhpSelfPropertyWriteNode(
+      String propertyName, PhpExpressionNode valueNode, String currentClassName) {
+    this.propertyName = propertyName;
+    this.valueNode = valueNode;
+    this.currentClassName = currentClassName;
+  }
+
+  @Override
+  public Object execute(VirtualFrame frame) {
+    PhpContext context = PhpContext.get(this);
+
+    // Get the current class
+    PhpClass currentClass = context.getClass(currentClassName);
+    if (currentClass == null) {
+      throw new RuntimeException("Cannot use self:: in undefined class: " + currentClassName);
+    }
+
+    // Check if the property exists and is static
+    if (!currentClass.hasStaticProperty(propertyName)) {
+      throw new RuntimeException(
+          "Access to undeclared static property: " + currentClassName + "::$" + propertyName);
+    }
+
+    // Evaluate the value
+    Object value = valueNode.execute(frame);
+
+    // Write the static property value
+    currentClass.setStaticPropertyValue(propertyName, value);
+
+    // Return the value (for chaining assignments)
+    return value;
+  }
+}

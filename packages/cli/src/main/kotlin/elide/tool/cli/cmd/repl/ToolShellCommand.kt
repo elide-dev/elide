@@ -2558,6 +2558,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           resourcesPath = gvmResources
         }
 
+        PHP -> configure(elide.runtime.plugins.php.PHP) {
+          logging.debug("Configuring PHP support")
+        }
+
 //        RUBY -> ignoreNotInstalled {
 //           install(elide.runtime.plugins.ruby.Ruby) {
 //             logging.debug("Configuring Ruby VM")

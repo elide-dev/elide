@@ -86,6 +86,15 @@ enum class GuestLanguage (
     extensions = sortedSetOf("rb"),
   ),
 
+  /** Interactive PHP VM. */
+  PHP (
+    id = ENGINE_PHP,
+    formalName = "PHP",
+    experimental = true,
+    onByDefault = true,
+    extensions = sortedSetOf("php"),
+  ),
+
   /** Interactive nested JVM. */
   JVM (
     id = "jvm",
@@ -169,6 +178,7 @@ enum class GuestLanguage (
       WASM.engine -> WASM
       LLVM.engine -> LLVM
       PKL.engine -> PKL
+      PHP.engine -> PHP
       else -> null
     }
 
@@ -182,6 +192,7 @@ enum class GuestLanguage (
       LLVM.id -> LLVM
       TYPESCRIPT.id -> TYPESCRIPT
       PKL.id -> PKL
+      PHP.id -> PHP
 
       // JVM extension guests
       KOTLIN.id -> KOTLIN

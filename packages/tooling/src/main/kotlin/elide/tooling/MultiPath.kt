@@ -12,6 +12,7 @@
  */
 package elide.tooling
 
+import com.oracle.truffle.api.CompilerDirectives
 import org.graalvm.nativeimage.ImageInfo
 import java.nio.file.Path
 import java.util.LinkedList
@@ -464,6 +465,7 @@ public sealed class AbstractJvmMultiPathContainer : MultiPath.MultiPathContainer
 ) : MultiPath.MutableMultiPathContainer<JvmMultiPathEntry, JvmMultiPath> {
   override fun toMutable(): MutableJvmMultiPathContainer = this
   override fun asPathSequence(): Sequence<Path> = paths.asSequence().map { it.path }
+  @CompilerDirectives.TruffleBoundary
   override fun iterator(): MutableIterator<MultiPath.Entry> = paths.toMutableList().iterator()
 
   override fun asArgumentSequence(): Sequence<Argument> = sequenceOf(

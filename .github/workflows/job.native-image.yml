@@ -285,6 +285,13 @@ jobs:
           sed -i "s/elide = \"${current_version}\"/elide = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
           sed -i "s/elide-bin = \"${current_version}\"/elide-bin = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
           sed -i "s/${current_version}/${{ inputs.version }}/g" tools/elide-build/src/main/kotlin/elide/internal/conventions/Constants.kt
+      - name: "🛠️ Release: Natives"
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
+        run: make natives CI=yes -j`nproc`
       - name: "🛠️ Release: Image"
         env:
           CI: true

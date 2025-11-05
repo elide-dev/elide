@@ -22,6 +22,18 @@ name: Native Image
         type: boolean
         default: false
 
+      ## Input: Enable Signing
+      signing:
+        description: "Signing"
+        type: boolean
+        default: false
+
+      ## Input: Enable Provenance
+      provenance:
+        description: "Provenance"
+        type: boolean
+        default: false
+
       ## Input: Static Linkage
       static:
         description: "Static"
@@ -90,6 +102,14 @@ name: Native Image
     inputs:
       release:
         description: "Release"
+        type: boolean
+        default: false
+      signing:
+        description: "Signing"
+        type: boolean
+        default: false
+      provenance:
+        description: "Provenance"
         type: boolean
         default: false
       static:
@@ -202,7 +222,7 @@ jobs:
           fetch-depth: 1
           submodules: true
           persist-credentials: false
-          clean: false
+          clean: true
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Packages"
         if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
@@ -286,19 +306,21 @@ jobs:
           sed -i "s/elide = \"${current_version}\"/elide = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
           sed -i "s/elide-bin = \"${current_version}\"/elide-bin = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
           sed -i "s/${current_version}/${{ inputs.version }}/g" tools/elide-build/src/main/kotlin/elide/internal/conventions/Constants.kt
-      - name: "🛠️ Release: Natives"
+      - name: "🛠️ Release: Third-Party Natives"
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
-        run: make natives CI=yes -j2
+        run: make -C third_party CI=yes -j2
+        timeout-minutes: 5
       - name: "🛠️ Release: Image"
         env:
           CI: true
           BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
+        timeout-minutes: 30
         run: |
           ./gradlew \
             :packages:cli:nativeOptimizedCompile \
@@ -321,6 +343,7 @@ jobs:
             -Pelide.release=${{ inputs.release }} \
             -Pelide.buildMode=${{ inputs.release == true && 'release' || 'dev' }}
       - name: "Setup: Signing Keys"
+        if: inputs.release && inputs.pack && inputs.signing
         run: |
           cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
@@ -334,7 +357,7 @@ jobs:
           path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
       - name: "Artifact: Provenance Subject"
         id: hash
-        if: ${{ inputs.os == 'linux' && inputs.release }}
+        if: inputs.release && inputs.pack && inputs.provenance
         run: |
           echo "hashes=$(sha256sum ./packages/cli/build/native/nativeOptimizedCompile/elide | base64 -w0)" >> "$GITHUB_OUTPUT"
       - name: "🛠️ Release: Package"

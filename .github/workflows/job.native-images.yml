@@ -22,6 +22,18 @@ name: Native Images
         type: boolean
         default: false
 
+      ## Input: Enable Signing
+      signing:
+        description: "Signing"
+        type: boolean
+        default: false
+
+      ## Input: Enable Provenance
+      provenance:
+        description: "Provenance"
+        type: boolean
+        default: false
+
       ## Input: Optimization
       opt:
         description: "Optimization"
@@ -58,6 +70,14 @@ name: Native Images
     inputs:
       release:
         description: "Release"
+        type: boolean
+        default: false
+      signing:
+        description: "Signing"
+        type: boolean
+        default: false
+      provenance:
+        description: "Provenance"
         type: boolean
         default: false
       opt:
@@ -136,6 +156,8 @@ jobs:
     secrets: inherit
     with:
       release: ${{ inputs.release }}
+      signing: ${{ inputs.signing }}
+      provenance: ${{ inputs.provenance }}
       pgo: ${{ inputs.pgo }}
       pack: ${{ inputs.pack }}
       version: "${{ inputs.version }}"

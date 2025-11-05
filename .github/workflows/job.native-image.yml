@@ -307,7 +307,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           TEST_EXCEPTIONS: true
         run: make natives CI=yes
-        timeout-minutes: 5
+        timeout-minutes: 10
       - name: "🛠️ Release: Image"
         env:
           CI: true

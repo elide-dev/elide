@@ -119,11 +119,10 @@ public final class PhpRequireNode extends PhpStatementNode {
   @TruffleBoundary
   private Source createSource(String content, TruffleFile file, String path) {
     try {
-      return Source.newBuilder(PhpLanguage.ID, content, file.getName())
-          .uri(file.toUri())
-          .build();
+      return Source.newBuilder(PhpLanguage.ID, content, file.getName()).uri(file.toUri()).build();
     } catch (Exception e) {
-      throw new RuntimeException("Failed to create source for '" + path + "': " + getExceptionMessage(e));
+      throw new RuntimeException(
+          "Failed to create source for '" + path + "': " + getExceptionMessage(e));
     }
   }
 }

@@ -91,7 +91,8 @@ public final class PhpReferenceAssignmentExprNode extends PhpStatementNode {
     frame.setObject(targetSlot, reference);
   }
 
-  private void handleArrayElementReference(MaterializedFrame frame, PhpArrayAccessNode arrayAccessNode) {
+  private void handleArrayElementReference(
+      MaterializedFrame frame, PhpArrayAccessNode arrayAccessNode) {
     // Get the array and index nodes
     PhpExpressionNode arrayNode = arrayAccessNode.getArrayNode();
     PhpExpressionNode indexNode = arrayAccessNode.getIndexNode();

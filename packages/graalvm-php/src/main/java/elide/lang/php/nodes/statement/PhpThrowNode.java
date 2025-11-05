@@ -56,7 +56,6 @@ public final class PhpThrowNode extends PhpStatementNode {
 
   @TruffleBoundary
   private void throwInvalidException(Object exception) {
-    throw new RuntimeException(
-        "Can only throw objects, got: " + getSimpleClassName(exception));
+    throw new RuntimeException("Can only throw objects, got: " + getSimpleClassName(exception));
   }
 }

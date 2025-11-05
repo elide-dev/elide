@@ -76,7 +76,8 @@ public final class PhpIncludeNode extends PhpStatementNode {
     // Check if file exists - for include, print warning instead of throwing
     if (!file.exists()) {
       // In real PHP this would emit a warning
-      printWarning("Warning: include(" + path + "): Failed to open stream: No such file or directory");
+      printWarning(
+          "Warning: include(" + path + "): Failed to open stream: No such file or directory");
       return;
     }
 
@@ -120,7 +121,8 @@ public final class PhpIncludeNode extends PhpStatementNode {
       }
       return content.toString();
     } catch (IOException e) {
-      printWarning("Warning: include(" + path + "): Failed to read file: " + getExceptionMessage(e));
+      printWarning(
+          "Warning: include(" + path + "): Failed to read file: " + getExceptionMessage(e));
       return null;
     }
   }
@@ -128,11 +130,10 @@ public final class PhpIncludeNode extends PhpStatementNode {
   @TruffleBoundary
   private Source createSource(String content, TruffleFile file, String path) {
     try {
-      return Source.newBuilder(PhpLanguage.ID, content, file.getName())
-          .uri(file.toUri())
-          .build();
+      return Source.newBuilder(PhpLanguage.ID, content, file.getName()).uri(file.toUri()).build();
     } catch (Exception e) {
-      printWarning("Warning: include(" + path + "): Failed to create source: " + getExceptionMessage(e));
+      printWarning(
+          "Warning: include(" + path + "): Failed to create source: " + getExceptionMessage(e));
       return null;
     }
   }

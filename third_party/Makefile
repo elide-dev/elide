@@ -24,7 +24,7 @@ USE_NINJA ?= yes
 ENABLE_CCACHE ?= no
 ENABLE_SCCACHE ?= no
 ELIDE_ROOT ?= $(realpath $(shell pwd)/..)
-MACOS_MIN_VERSION ?= 12.3
+MACOS_MIN_VERSION ?= 14.0
 
 NATIVE_TOOLS ?= boringssl sqlite apr
 LANGS ?= pkl

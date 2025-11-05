@@ -33,7 +33,7 @@ const DEBUG: &str = "debug";
 const RELEASE: &str = "release";
 
 /// Minimum supported version of macOS.
-pub const MACOS_MIN: &str = "12.3";
+pub const MACOS_MIN: &str = "14.0";
 
 /// Enumerates the types of build profiles which Elide supports.
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]

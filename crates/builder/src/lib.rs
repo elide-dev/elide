@@ -47,7 +47,7 @@ const DEBUG: &str = "debug";
 const RELEASE: &str = "release";
 
 /// Minimum supported version of macOS.
-pub const MACOS_MIN: &str = "12.3";
+pub const MACOS_MIN: &str = "14.0";
 
 /// Minimum supported version of Android.
 const android_api_version: &str = "21";

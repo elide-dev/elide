@@ -776,7 +776,7 @@ val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
   executable = "cargo"
   args(baseCargoFlags.plus("--release"))
   environment("JAVA_HOME", System.getProperty("java.home"))
-  environment("MACOSX_DEPLOYMENT_TARGET", "15.0")
+  environment("MACOSX_DEPLOYMENT_TARGET", "14.0")
 
   outputs.upToDateWhen { true }
   outputs.dir(targetDir)
@@ -789,7 +789,7 @@ val buildRustNativesForHostDebug by tasks.registering(Exec::class) {
   executable = "cargo"
   args(baseCargoFlags)
   environment("JAVA_HOME", System.getProperty("java.home"))
-  environment("MACOSX_DEPLOYMENT_TARGET", "15.0")
+  environment("MACOSX_DEPLOYMENT_TARGET", "14.0")
 
   outputs.upToDateWhen { true }
   outputs.dir(targetDir)
@@ -802,7 +802,7 @@ val buildRustNativesForHost by tasks.registering(Exec::class) {
   executable = "cargo"
   args(baseCargoFlags.plus(listOfNotNull(if (isRelease) "--release" else null)))
   environment("JAVA_HOME", System.getProperty("java.home"))
-  environment("MACOSX_DEPLOYMENT_TARGET", "15.0")
+  environment("MACOSX_DEPLOYMENT_TARGET", "14.0")
 
   outputs.upToDateWhen { true }
   outputs.dir(targetDir)

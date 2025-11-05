@@ -29,16 +29,17 @@ import elide.http.request.JavaNetHttpUri
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.js.JsError
+import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.*
 import elide.vm.annotations.Polyglot
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
-internal class FetchRequestIntrinsic internal constructor (
+internal class FetchRequestIntrinsic internal constructor(
   targetUrl: URLIntrinsic.URLValue,
   targetMethod: String = FetchRequest.Defaults.DEFAULT_METHOD,
   requestHeaders: FetchHeaders = FetchHeadersIntrinsic.empty(),
-  private val bodyData: InputStream? = null,
-) : FetchMutableRequest, elide.runtime.intrinsics.server.http.HttpRequest {
+  private val bodyData: ReadableStream? = null,
+) : FetchMutableRequest, ReadOnlyProxyObject {
   /**
    * Implements options for the fetch Request constructor.
    */
@@ -57,25 +58,61 @@ internal class FetchRequestIntrinsic internal constructor (
               val headersValue = value.getMember("headers")
               if (headersValue.isNull) null else FetchHeaders.from(headersValue)
             }
+
             else -> null
           },
         )
+
         else -> throw JsError.typeError("Invalid options for Request")
       }
     }
   }
 
   internal companion object Factory : FetchMutableRequest.RequestFactory<FetchMutableRequest> {
+    private const val MEMBER_BODY = "body"
+    private const val MEMBER_BODY_USED = "bodyUsed"
+    private const val MEMBER_CACHE = "cache"
+    private const val MEMBER_CREDENTIALS = "credentials"
+    private const val MEMBER_DESTINATION = "destination"
+    private const val MEMBER_HEADERS = "headers"
+    private const val MEMBER_INTEGRITY = "integrity"
+    private const val MEMBER_METHOD = "method"
+    private const val MEMBER_MODE = "mode"
+    private const val MEMBER_PRIORITY = "priority"
+    private const val MEMBER_REDIRECT = "redirect"
+    private const val MEMBER_REFERRER = "referrer"
+    private const val MEMBER_REFERRER_POLICY = "referrerPolicy"
+    private const val MEMBER_MEMBER_URL = "url"
+
+    private val MemberKeys = arrayOf(
+      MEMBER_BODY,
+      MEMBER_BODY_USED,
+      MEMBER_CACHE,
+      MEMBER_CREDENTIALS,
+      MEMBER_DESTINATION,
+      MEMBER_HEADERS,
+      MEMBER_INTEGRITY,
+      MEMBER_METHOD,
+      MEMBER_MODE,
+      MEMBER_PRIORITY,
+      MEMBER_REDIRECT,
+      MEMBER_REFERRER,
+      MEMBER_REFERRER_POLICY,
+      MEMBER_MEMBER_URL,
+    )
+
     @JvmStatic override fun forRequest(request: HttpRequest<*>): FetchMutableRequest {
       return FetchRequestIntrinsic(
         targetUrl = URLIntrinsic.URLValue.fromURL(request.uri),
         targetMethod = request.method.name,
-        requestHeaders = FetchHeaders.fromPairs(request.headers.asMap().entries.flatMap {
-          it.value.map { value ->
-            it.key to value
-          }
-        }),
-        bodyData = request.getBody(InputStream::class.java).orElse(null),
+        requestHeaders = FetchHeaders.fromPairs(
+          request.headers.asMap().entries.flatMap {
+            it.value.map { value ->
+              it.key to value
+            }
+          },
+        ),
+        bodyData = request.getBody(InputStream::class.java).map { ReadableStream.wrap(it) }.orElse(null),
       )
     }
 
@@ -87,11 +124,13 @@ internal class FetchRequestIntrinsic internal constructor (
         },
         targetMethod = request.method.symbol,
 
-        requestHeaders = FetchHeaders.fromPairs(request.headers.asOrdered().flatMap { header ->
-          header.value.values.map { value ->
-            header.name.name to value
-          }
-        }.toList()),
+        requestHeaders = FetchHeaders.fromPairs(
+          request.headers.asOrdered().flatMap { header ->
+            header.value.values.map { value ->
+              header.name.name to value
+            }
+          }.toList(),
+        ),
 
         bodyData = when (val body = request.body) {
           is Body.Empty -> null
@@ -99,7 +138,7 @@ internal class FetchRequestIntrinsic internal constructor (
           is PrimitiveBody.StringBody -> body.unwrap().byteInputStream(StandardCharsets.UTF_8)
           is PrimitiveBody.Bytes -> body.unwrap().inputStream()
           else -> error("Unrecognized body type: ${request.body}")
-        },
+        }?.let { ReadableStream.wrap(it) },
       )
     }
   }
@@ -114,7 +153,7 @@ internal class FetchRequestIntrinsic internal constructor (
   constructor (url: URL) : this(targetUrl = URLIntrinsic.URLValue.fromString(url.toString()))
 
   /** Construct a new `Request` from another request (i.e. make a mutable or non-mutable copy). */
-  @Polyglot constructor (request: FetchRequest) : this (
+  @Polyglot constructor (request: FetchRequest) : this(
     targetUrl = URLIntrinsic.URLValue.fromString(request.url),
     targetMethod = request.method,
     requestHeaders = request.headers,
@@ -146,21 +185,39 @@ internal class FetchRequestIntrinsic internal constructor (
     get() = targetMethod.get()
     set(value) = targetMethod.set(value)
 
-  override val uri: String get() = targetUrl.get().toString()
-  override val version: String get() = "HTTP/1.1" // @TODO make accurate
-
   // -- Interface: Immutable HTTP Request -- //
 
   @get:Polyglot override val bodyUsed: Boolean get() = bodyConsumed.get()
   @get:Polyglot override val destination: String get() = targetUrl.get().toString()
 
-  @get:Polyglot override val body: ReadableStream? get() {
-    if (bodyData == null) return null
-    if (!bodyConsumed.get()) bodyConsumed.set(true)
-    return ReadableStream.wrap(bodyData)
-  }
+  @get:Polyglot override val body: ReadableStream?
+    get() {
+      if (bodyData == null) return null
+      if (!bodyConsumed.get()) bodyConsumed.set(true)
+      return bodyData
+    }
 
   override fun toString(): String {
-    return "$version $method $url"
+    return "$method $url"
+  }
+
+  override fun getMemberKeys(): Array<String> = MemberKeys
+
+  override fun getMember(key: String?): Any? = when (key) {
+    MEMBER_BODY -> body
+    MEMBER_BODY_USED -> bodyUsed
+    MEMBER_CACHE -> cache
+    MEMBER_CREDENTIALS -> credentials
+    MEMBER_DESTINATION -> destination
+    MEMBER_HEADERS -> headers
+    MEMBER_INTEGRITY -> integrity
+    MEMBER_METHOD -> method
+    MEMBER_MODE -> mode
+    MEMBER_PRIORITY -> priority
+    MEMBER_REDIRECT -> redirect
+    MEMBER_REFERRER -> referrer
+    MEMBER_REFERRER_POLICY -> referrerPolicy
+    MEMBER_MEMBER_URL -> url
+    else -> null
   }
 }

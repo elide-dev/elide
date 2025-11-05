@@ -41,9 +41,6 @@ import elide.vm.annotations.Polyglot
 
   /** Mutable multi-map factory. */
   @Suppress("unused") internal companion object Factory : MapFactory<JsMutableMultiMap<*, *>> {
-    // Singleton empty map instance.
-    private val EMPTY_MAP = JsMutableMultiMap<Any, Any?>(mapImpl())
-
     // Internal function to create a backing-map implementation.
     @JvmStatic private fun <K: Any, V> mapImpl(size: Int? = null): MutableMap<K, MutableList<V>> = if (size != null) {
       HashMap(size)
@@ -205,7 +202,7 @@ import elide.vm.annotations.Polyglot
      * @return Empty JS map instance.
      */
     @Suppress("UNCHECKED_CAST")
-    @JvmStatic override fun <K: Any, V> empty(): JsMutableMultiMap<K, V> = EMPTY_MAP as JsMutableMultiMap<K, V>
+    @JvmStatic override fun <K: Any, V> empty(): JsMutableMultiMap<K, V> = JsMutableMultiMap(mapImpl())
   }
 
   /** @inheritDoc */

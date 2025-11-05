@@ -23,8 +23,6 @@ import java.nio.ByteBuffer
 import elide.annotations.API
 import elide.runtime.exec.GuestExecution
 import elide.runtime.gvm.internals.intrinsics.js.webstreams.*
-import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.BYOB
-import elide.runtime.intrinsics.js.ReadableStream.ReaderMode.Default
 import elide.runtime.intrinsics.js.stream.*
 import elide.vm.annotations.Polyglot
 
@@ -174,6 +172,14 @@ import elide.vm.annotations.Polyglot
      * @return New [ReadableStream] instance wrapping the given [ByteBuffer].
      */
     public fun wrap(buffer: ByteBuffer): Impl
+
+    /**
+     * Use the [Impl] factory to create a new [ReadableStream] instance which wraps the given [hostIterable].
+     *
+     * @param hostIterable A host iterable used to emit values.
+     * @return New [ReadableStream] instance wrapping the given [ByteBuffer].
+     */
+    public fun from(hostIterable: Iterable<Any>): ReadableStream
   }
 
   /** Default constructors/factory methods for [ReadableStream] instances. */
@@ -182,6 +188,10 @@ import elide.vm.annotations.Polyglot
 
     @Polyglot public fun from(asyncIterable: Value): ReadableStream {
       return create(ReadableStreamAsyncIteratorSource(asyncIterable.iterator))
+    }
+
+    override fun from(hostIterable: Iterable<Any>): ReadableStream {
+      return create(ReadableStreamHostIteratorSource(hostIterable))
     }
 
     override fun create(source: ReadableStreamSource, queuingStrategy: QueuingStrategy?): ReadableStream {
@@ -208,9 +218,16 @@ import elide.vm.annotations.Polyglot
     }
 
     override fun empty(): ReadableStream = create(ReadableStreamEmptySource)
-    override fun wrap(input: InputStream): ReadableStream = create(ReadableStreamInputStreamSource(input))
+    override fun wrap(input: InputStream): ReadableStream = create(
+      ReadableStreamInputStreamSource(input),
+      queuingStrategy = ByteLengthQueuingStrategy(DEFAULT_BUFFER_SIZE.toDouble()),
+    )
+
     override fun wrap(reader: Reader): ReadableStream = create(ReadableStreamReaderSource(reader))
     override fun wrap(bytes: ByteArray): ReadableStream = wrap(ByteBuffer.wrap(bytes))
-    override fun wrap(buffer: ByteBuffer): ReadableStream = create(ReadableStreamBufferSource(buffer))
+    override fun wrap(buffer: ByteBuffer): ReadableStream = create(
+      source = ReadableStreamBufferSource(buffer),
+      queuingStrategy = ByteLengthQueuingStrategy(buffer.remaining().toDouble()),
+    )
   }
 }

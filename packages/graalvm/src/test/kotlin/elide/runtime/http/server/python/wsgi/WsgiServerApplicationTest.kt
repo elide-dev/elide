@@ -44,7 +44,7 @@ import elide.runtime.http.server.netty.NettyContentStream
 import elide.runtime.http.server.source
 import elide.runtime.http.server.write
 
-@MicronautTest class WsgiServerApplicationTest : PythonTest() {
+@MicronautTest(rebuildContext = true) class WsgiServerApplicationTest : PythonTest() {
   lateinit var executor: ContextAwareExecutor
 
   @BeforeEach fun setup() {
@@ -186,6 +186,9 @@ import elide.runtime.http.server.write
       assertEquals("test-app", response.headers().get("x-app-name"))
     }
 
+    executor.awaitContextTasks(channel)
+    channel.runPendingTasks()
+
     assertIs<LastHttpContent>(channel.readOutbound<HttpContent>())
   }
 
@@ -250,6 +253,9 @@ import elide.runtime.http.server.write
       assertNotNull(response, "expected a response to be returned")
       assertEquals(HttpResponseStatus.OK, response.status(), "expected a 200 response")
     }
+
+    executor.awaitContextTasks(channel)
+    channel.runPendingTasks()
 
     assertIs<LastHttpContent>(channel.readOutbound<HttpContent>())
 

@@ -100,7 +100,7 @@ internal class NettyContentStream(
       is StreamState.Closed -> {
         // stream is closed, detach the consumer immediately
         if (notifyConsumerAttached(consumer, InertReader))
-          notifyConsumerClosed(consumer, StreamClosedException(snap.error))
+          notifyConsumerClosed(consumer, snap.error)
         streamConsumer = null
       }
 
@@ -121,7 +121,8 @@ internal class NettyContentStream(
       is StreamState.Closed, StreamState.Closing -> {
         // stream is either closed or ended, detach the producer immediately
         // (we won't accept new data beyond this point anyway)
-        notifyProducerClosed(producer, StreamClosedException((snap as? StreamState.Closed)?.error))
+        if (notifyProducerAttached(producer, InertWriter))
+          notifyProducerClosed(producer, ((snap as? StreamState.Closed)?.error))
         streamConsumer = null
       }
 

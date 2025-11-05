@@ -15,9 +15,16 @@ package elide.runtime.http.server
 
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
+import io.netty.channel.unix.DomainSocketAddress
 import io.netty.handler.codec.http.HttpRequest
 import io.netty.handler.codec.http.HttpResponse
+import java.net.InetSocketAddress
+import java.net.SocketAddress
+import java.net.UnixDomainSocketAddress
 import java.nio.charset.Charset
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+import kotlin.io.path.pathString
 
 /** Returns the string value of a header with the given [name] in this request, if it exists. */
 public fun HttpRequest.getHeader(name: CharSequence): String? = headers().get(name)
@@ -108,3 +115,21 @@ public inline fun ReadableContentStream.consume(
     }
   },
 )
+
+/**
+ * Returns the hostname for this address if it points to a socket, or the file path if it represents a Unix domain
+ * socket. Unrecognized address types are silently ignored and will return `null`.
+ */
+public fun SocketAddress.hostnameOrDomainPath(): String? = when (this) {
+  is InetSocketAddress -> hostName
+  is DomainSocketAddress -> path()
+  is UnixDomainSocketAddress -> path.pathString
+  else -> null
+}
+
+/** Returns the port number for this address, if it is an [InetSocketAddress], or `null` otherwise. */
+@OptIn(ExperimentalContracts::class)
+public fun SocketAddress.portOrNull(): Int? {
+  contract { returnsNotNull() implies (this@portOrNull is InetSocketAddress) }
+  return if (this is InetSocketAddress) port else null
+}

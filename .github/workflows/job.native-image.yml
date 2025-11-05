@@ -28,12 +28,6 @@ name: Native Image
         type: boolean
         default: false
 
-      ## Input: Enable Provenance
-      provenance:
-        description: "Provenance"
-        type: boolean
-        default: false
-
       ## Input: Static Linkage
       static:
         description: "Static"
@@ -357,7 +351,7 @@ jobs:
           path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
       - name: "Artifact: Provenance Subject"
         id: hash
-        if: inputs.release && inputs.pack && inputs.provenance
+        if: inputs.release && inputs.pack && inputs.signing
         run: |
           echo "hashes=$(sha256sum ./packages/cli/build/native/nativeOptimizedCompile/elide | base64 -w0)" >> "$GITHUB_OUTPUT"
       - name: "🛠️ Release: Package"

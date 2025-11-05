@@ -183,6 +183,7 @@ val dumpPointsTo = false
 val elideTarget = TargetInfo.current(project)
 val effectiveGc = findProperty("elide.gc") ?: "serial"
 val defaultArchTarget = when {
+  TargetCriteria.allOf(elideTarget, Criteria.MacAmd64) -> "compatibility"
   TargetCriteria.allOf(elideTarget, Criteria.Amd64) -> "x86-64-v3"
   TargetCriteria.allOf(elideTarget, Criteria.MacArm64) -> "armv8.1-a"
   else -> "compatibility"
@@ -1831,6 +1832,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
   "-R:MaximumHeapSizePercent=80",
   "--initialize-at-build-time=sun.awt.resources.awtosx",
   onlyIf(enableLto, "-H:NativeLinkerOption=-flto"),
+  onlyIf(TargetCriteria.allOf(elideTarget, Criteria.MacAmd64), "-H:NativeLinkerOption=-Wl,-ld_classic"),
   "-H:NativeLinkerOption=$nativesPath/libdiag.a",
   "-H:NativeLinkerOption=$nativesPath/libsqlitejdbc.a",
   "-H:NativeLinkerOption=$nativesPath/libumbrella.a",
@@ -1928,7 +1930,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-Delide.vm.engine.preinitialize=true",
   ) else emptyList())
 ).plus(if (project.properties["elide.ci"] == "true") listOf(
-  "-J-Xmx${nativeBuildRam("64g")}",
+  "-J-Xmx${nativeBuildRam("32g")}",
   "--parallelism=${nativeBuildCpus(Runtime.getRuntime().availableProcessors())}",
 ) else listOf(
   "-J-Xmx${nativeBuildRam("64g")}",

@@ -722,8 +722,8 @@ private fun TargetInfo.matches(criteria: TargetPredicate): Boolean =
 val isClang19 = findProperty("elide.compiler") == "clang-19"
 
 fun resolveCargoConfig(target: TargetInfo): File? = when {
-  // Disabled: causes issues with clang.
-  // target.matches(Criteria.MacArm64) -> "macos-arm64"
+  target.matches(Criteria.MacAmd64) -> "macos-x86_64"
+  target.matches(Criteria.MacArm64) -> "macos-arm64"
   target.matches(Criteria.Amd64) -> if (isClang19) "clang-x86_64" else "x86_64"
   target.matches(Criteria.Arm64) -> if (isClang19) "clang-arm64" else "arm64"
   else -> null

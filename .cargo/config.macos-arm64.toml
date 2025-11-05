@@ -69,4 +69,3 @@ OPENSSL_INCLUDE_DIR = { value = "target/include", relative = true }
 SQLITE3_LIB_DIR = { value = "target/lib", relative = true }
 SQLITE3_INCLUDE_DIR = { value = "target/include", relative = true }
 MACOSX_DEPLOYMENT_TARGET = { value = "15.0" }
-

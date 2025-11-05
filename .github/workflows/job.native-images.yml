@@ -22,6 +22,12 @@ name: Native Images
         type: boolean
         default: false
 
+      ## Input: Enable Signing
+      signing:
+        description: "Signing"
+        type: boolean
+        default: false
+
       ## Input: Optimization
       opt:
         description: "Optimization"
@@ -58,6 +64,10 @@ name: Native Images
     inputs:
       release:
         description: "Release"
+        type: boolean
+        default: false
+      signing:
+        description: "Signing"
         type: boolean
         default: false
       opt:
@@ -106,8 +116,6 @@ name: Native Images
 # Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
 env:
   RUST_BACKTRACE: full
-  SCCACHE_DIRECT: "true"
-  RUSTC_WRAPPER: "sccache"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 permissions:
@@ -128,7 +136,7 @@ jobs:
           - amd64
           - aarch64
 
-    name: "Native (${{ matrix.os }}-${{ matrix.arch }})"
+    name: "Native Image"
 
     permissions:
       contents: write
@@ -138,6 +146,7 @@ jobs:
     secrets: inherit
     with:
       release: ${{ inputs.release }}
+      signing: ${{ inputs.signing }}
       pgo: ${{ inputs.pgo }}
       pack: ${{ inputs.pack }}
       version: "${{ inputs.version }}"

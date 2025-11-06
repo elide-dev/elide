@@ -89,11 +89,138 @@ import elide.testing.annotations.TestCase
       assertEquals(it, SQLitePrimitiveType.resolve(it.number))
     }
     assertThrows<Unresolved> {
-      SQLitePrimitiveType.resolve("foo")
-    }
-    assertThrows<Unresolved> {
       SQLitePrimitiveType.resolve(99)
     }
+  }
+
+  @Test fun testSqliteTypeAffinityResolution() {
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("VARCHAR"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("VARCHAR(255)"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("NVARCHAR"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("NVARCHAR(255)"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("CHAR"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("CHAR(10)"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("NCHAR"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("CLOB"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("CHARACTER"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("NATIVE CHARACTER"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("varchar"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("VarChar"))
+
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("INT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("BIGINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("TINYINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("SMALLINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("MEDIUMINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("INT2"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("INT8"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("FLOATING POINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("bigint"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("BigInt"))
+
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("REAL"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DOUBLE"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DOUBLE PRECISION"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("FLOAT"))
+
+    assertEquals(SQLitePrimitiveType.BLOB, SQLitePrimitiveType.resolve("BLOB"))
+    assertEquals(SQLitePrimitiveType.BLOB, SQLitePrimitiveType.resolve(""))
+
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("NUMERIC"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DECIMAL"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DECIMAL(10,2)"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("BOOLEAN"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DATE"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DATETIME"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DATETIME2"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("TIMESTAMP"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("BINARY"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("foo"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("UNKNOWN_TYPE"))
+  }
+
+  @Test fun `query table with type affinities`() = dual {
+    assertNotNull(SQLite.inMemory()).use { db ->
+      assertTrue(db.active)
+
+      db.exec("""
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY,
+          username VARCHAR(255),
+          email NVARCHAR(255),
+          age NUMERIC,
+          salary DECIMAL(10,2),
+          bio TEXT,
+          created_at DATETIME,
+          is_active BOOLEAN
+        );
+      """)
+
+      db.exec("""
+        INSERT INTO users (username, email, age, salary, bio, created_at, is_active)
+        VALUES ('alice', 'alice@example.com', 30, 75000.50, 'Software engineer', '2024-01-15', 1);
+      """)
+
+      val query = db.prepare("SELECT * FROM users;")
+      val results = query.all()
+      assertEquals(1, results.size)
+
+      val alice = results[0]
+      assertEquals("alice", alice["username"])
+      assertEquals("alice@example.com", alice["email"])
+      assertEquals(30, alice["age"])
+      assertEquals(75000.50, alice["salary"])
+      assertEquals("Software engineer", alice["bio"])
+      assertEquals("2024-01-15", alice["created_at"])
+      assertEquals(1, alice["is_active"])
+
+      db.close()
+    }
+  }.guest {
+    // language=JavaScript
+    """
+      const { ok, equal } = require("node:assert");
+      const { Database } = require("elide:sqlite");
+
+      const db = new Database();
+      ok(db);
+
+      db.exec(`
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY,
+          username VARCHAR(255),
+          email NVARCHAR(255),
+          age NUMERIC,
+          salary DECIMAL(10,2),
+          bio TEXT,
+          created_at DATETIME,
+          is_active BOOLEAN
+        );
+      `);
+
+      db.exec(`
+        INSERT INTO users (username, email, age, salary, bio, created_at, is_active)
+        VALUES ('alice', 'alice@example.com', 30, 75000.50, 'Software engineer', '2024-01-15', 1);
+      `);
+
+      const stmt = db.prepare("SELECT * FROM users;");
+      const results = stmt.all();
+
+      ok(results);
+      equal(results.length, 1);
+
+      const alice = results[0];
+      ok(alice);
+      equal(alice.username, "alice");
+      equal(alice.email, "alice@example.com");
+      equal(alice.age, 30);
+      equal(alice.salary, 75000.50);
+      equal(alice.bio, "Software engineer");
+      equal(alice.created_at, "2024-01-15");
+      equal(alice.is_active, 1);
+
+      db.close();
+    """
   }
 
   @Test fun testRejectInvalidExtension() {

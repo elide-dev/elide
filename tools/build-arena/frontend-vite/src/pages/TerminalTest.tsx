@@ -100,8 +100,10 @@ export function TerminalTest() {
   const connectWebSocket = (containerId: string) => {
     if (!terminal.current) return;
 
-    const wsUrl = `ws://localhost:3001/ws/terminal/${containerId}`;
+    // Enable recording by adding ?record=true to WebSocket URL
+    const wsUrl = `ws://localhost:3001/ws/terminal/${containerId}?record=true`;
     ws.current = new WebSocket(wsUrl);
+    terminal.current.writeln('\x1b[1;35m🎥 Recording enabled - session will be saved\x1b[0m');
 
     ws.current.onopen = () => {
       terminal.current?.writeln('\x1b[1;32m✓ WebSocket connected\x1b[0m');

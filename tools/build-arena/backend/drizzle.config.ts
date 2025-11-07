@@ -6,6 +6,6 @@ export default {
   out: './drizzle',
   dialect: 'sqlite',
   dbCredentials: {
-    url: process.env.DATABASE_PATH || join(process.cwd(), 'backend', 'build-arena.db'),
+    url: process.env.DATABASE_PATH || join(process.cwd(), 'build-arena.db'),
   },
 } satisfies Config;

@@ -11,6 +11,8 @@ export function TerminalTest() {
   const [connected, setConnected] = useState(false);
   const [containerId, setContainerId] = useState<string>('');
   const [containerStatus, setContainerStatus] = useState<string>('');
+  const [repoUrl, setRepoUrl] = useState<string>('https://github.com/google/gson.git');
+  const [autoRunClaude, setAutoRunClaude] = useState<boolean>(true);
   useEffect(() => {
     if (!terminalRef.current) return;
 
@@ -119,6 +121,28 @@ export function TerminalTest() {
       terminal.current?.writeln('\x1b[1;36mType commands and press Enter\x1b[0m\n');
       setConnected(true);
 
+      // Auto-run Claude Code if enabled
+      if (autoRunClaude && repoUrl && ws.current) {
+        // Wait a moment for the shell to fully initialize
+        setTimeout(() => {
+          // Start Claude Code in interactive mode
+          const claudeCommand = `claude "Clone ${repoUrl}, analyze the project structure, then build it using Elide. Time the build and report the results. Read /workspace/CLAUDE.md for instructions."\n`;
+          terminal.current?.writeln(`\x1b[1;35m🤖 Auto-starting Claude Code...\x1b[0m`);
+          ws.current?.send(JSON.stringify({ type: 'input', data: claudeCommand }));
+
+          // Auto-answer prompts:
+          // After 1.5 seconds, send "1" for dark mode
+          setTimeout(() => {
+            ws.current?.send(JSON.stringify({ type: 'input', data: '1\n' }));
+          }, 1500);
+
+          // After 3 seconds, send Enter to skip account linking
+          setTimeout(() => {
+            ws.current?.send(JSON.stringify({ type: 'input', data: '\n' }));
+          }, 3000);
+        }, 2000); // 2 second delay to let bashrc finish
+      }
+
       // Focus the terminal to capture keyboard input
       terminal.current?.focus();
     };
@@ -175,6 +199,37 @@ export function TerminalTest() {
         </header>
 
         <div className="bg-slate-800 rounded-lg shadow-xl p-6 mb-4">
+          {/* Configuration Section */}
+          <div className="mb-6 space-y-4">
+            <div>
+              <label htmlFor="repoUrl" className="block text-sm font-medium text-gray-300 mb-2">
+                Repository URL
+              </label>
+              <input
+                id="repoUrl"
+                type="text"
+                value={repoUrl}
+                onChange={(e) => setRepoUrl(e.target.value)}
+                disabled={connected}
+                placeholder="https://github.com/user/repo.git"
+                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                id="autoRun"
+                type="checkbox"
+                checked={autoRunClaude}
+                onChange={(e) => setAutoRunClaude(e.target.checked)}
+                disabled={connected}
+                className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500 focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+              <label htmlFor="autoRun" className="text-sm text-gray-300">
+                Auto-run Claude Code to clone and build with Elide
+              </label>
+            </div>
+          </div>
+
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <button

@@ -48,11 +48,38 @@ RUN java -version && \
 ENV TERM=xterm-256color
 ENV LANG=C.UTF-8
 
+# Create non-root user for Claude Code (won't run with --dangerously-skip-permissions as root)
+RUN useradd -m -s /bin/bash -u 1000 builder && \
+    mkdir -p /workspace && \
+    chown -R builder:builder /workspace
+
 # Set working directory
 WORKDIR /workspace
 
-# Copy CLAUDE.md instruction file (will be added at runtime)
-# COPY CLAUDE.md /workspace/CLAUDE.md
+# Copy Claude Code instructions
+COPY CLAUDE.md /workspace/CLAUDE.md
+RUN chown builder:builder /workspace/CLAUDE.md
+
+# Pre-configure Claude Code to skip prompts and enable dangerous permissions
+RUN mkdir -p /home/builder/.config/claude && \
+    echo '{"theme":"dark","telemetry":false,"accountLinked":false,"skipAccountPrompt":true}' > /home/builder/.config/claude/config.json && \
+    chown -R builder:builder /home/builder/.config
+
+# Create .bashrc with helpful startup message
+RUN echo '# Display welcome message and Claude Code info' >> /home/builder/.bashrc && \
+    echo 'if [ -t 1 ]; then' >> /home/builder/.bashrc && \
+    echo '  echo -e "\033[1;32m=== Elide Build Arena Container ===\033[0m"' >> /home/builder/.bashrc && \
+    echo '  echo -e "\033[1;36mClaude Code:\033[0m $(claude --version 2>/dev/null || echo \"not installed\")"' >> /home/builder/.bashrc && \
+    echo '  echo -e "\033[1;36mJava:\033[0m $(java -version 2>&1 | head -1)"' >> /home/builder/.bashrc && \
+    echo '  echo -e "\033[1;36mWorking Directory:\033[0m /workspace"' >> /home/builder/.bashrc && \
+    echo '  echo -e "\033[1;36mInstructions:\033[0m cat /workspace/CLAUDE.md"' >> /home/builder/.bashrc && \
+    echo '  echo ""' >> /home/builder/.bashrc && \
+    echo '  echo -e "\033[0;33mTip: Type \047claude \"your task\"\047 to run Claude Code\033[0m"' >> /home/builder/.bashrc && \
+    echo '  echo ""' >> /home/builder/.bashrc && \
+    echo 'fi' >> /home/builder/.bashrc
+
+# Switch to non-root user
+USER builder
 
 # Default command - interactive bash with Claude Code available
 CMD ["/bin/bash", "-l"]

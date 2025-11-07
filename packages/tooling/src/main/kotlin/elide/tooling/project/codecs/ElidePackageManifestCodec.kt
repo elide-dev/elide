@@ -292,6 +292,11 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
           else -> Optional.empty()
         }
       }
+      .addConversion(
+        Conversion.of(PClassInfo.String, ServerSettings.BindingAddress::class.java, StrConverter {
+          ServerSettings.BindingAddress.DomainSocketAddress(it)
+        })
+      )
       .build()
   }
 

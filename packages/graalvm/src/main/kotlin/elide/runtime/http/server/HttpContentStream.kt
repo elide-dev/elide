@@ -19,7 +19,7 @@ public open class StreamBusyException : IllegalStateException("Stream is already
 public open class StreamClosedException(override val cause: Throwable?) :
   IllegalStateException("Stream is already closed", cause)
 
-public interface ContentStream {
+public interface HttpContentStream {
   /**
    * Close the stream with an optional [error]. This will detach any active consumers and producers, and mark the
    * stream as failed, surfacing the error to any consumer or producer that attempts to use it in the future.
@@ -38,8 +38,8 @@ public interface ContentStream {
  * The request body is closed automatically by the server components once the call handling is complete, after which
  * attempting to [consume] it will throw an exception.
  */
-public interface ReadableContentStream : ContentStream {
-  /** A reader used by an [ContentStreamConsumer] to control the request body it is attached to. */
+public interface HttpRequestBody : HttpContentStream {
+  /** A reader used by an [HttpRequestConsumer] to control the request body it is attached to. */
   public interface Reader {
     /**
      * Request more data from the transport. A single [pull] call will result in at most one chunk being delivered.
@@ -58,17 +58,17 @@ public interface ReadableContentStream : ContentStream {
    * The consumer is automatically detached when the body is closed or the end of the stream is reached.
    * Calling this method after the body is closed will cause the [consumer] to fail with an exception.
    */
-  public fun consume(consumer: ContentStreamConsumer)
+  public fun consume(consumer: HttpRequestConsumer)
 }
 
 /**
- * Represents the content of an outgoing HTTP response. An [ContentStreamSource] must be attached as a [source] to
+ * Represents the content of an outgoing HTTP response. An [HttpResponseSource] must be attached as a [source] to
  * send data to the client, otherwise the request will have an empty body when sent.
  *
  * Producers are asynchronous and must send data when the engine issues a pull.
  */
-public interface WritableContentStream : ContentStream {
-  /** A writer used by an [ContentStreamSource] to [write] data or mark the [end] of the stream. */
+public interface HttpResponseBody : HttpContentStream {
+  /** A writer used by an [HttpResponseSource] to [write] data or mark the [end] of the stream. */
   public interface Writer {
     /**
      * Write a [content] chunk to the stream.
@@ -99,17 +99,17 @@ public interface WritableContentStream : ContentStream {
    * finished. The producer is automatically released when it signals the end of the stream or when the response is
    * closed.
    */
-  public fun source(producer: ContentStreamSource)
+  public fun source(producer: HttpResponseSource)
 }
 
 /**
- * A content producer for an [WritableContentStream] that pushes data asynchronously as a response to [onPull] calls. The
+ * A content producer for an [HttpResponseBody] that pushes data asynchronously as a response to [onPull] calls. The
  * response body calls [onClose] on the producer when it is no longer needed (e.g. after indicating end of stream) or
  * when an error occurs.
  */
-public interface ContentStreamSource {
+public interface HttpResponseSource {
   /**
-   * Called when the producer is attached to a [WritableContentStream].
+   * Called when the producer is attached to a [HttpResponseBody].
    *
    * This method is always called, even when the producer cannot be attached to the body; in cases where the producer
    * cannot be attached (e.g. stream failed or closed before attaching), the [writer] will be inert, and [onClose]
@@ -118,13 +118,13 @@ public interface ContentStreamSource {
    * If this method throws an exception, the producer will be detached immediately and [onClose] will be called with
    * the failure cause.
    */
-  public fun onAttached(writer: WritableContentStream.Writer)
+  public fun onAttached(writer: HttpResponseBody.Writer)
 
   /**
    * Called when the transport is ready to send response data to the client.
    *
-   * Implementations must either push a new content chunk with [push][WritableContentStream.Writer.write] or end the stream
-   * with [end][WritableContentStream.Writer.end], otherwise the response will stall.
+   * Implementations must either push a new content chunk with [push][HttpResponseBody.Writer.write] or end the stream
+   * with [end][HttpResponseBody.Writer.end], otherwise the response will stall.
    *
    * Pushing multiple content chunks for a single pull is allowed, as they will be buffered by the underlying Netty
    * channel automatically.
@@ -144,14 +144,14 @@ public interface ContentStreamSource {
 }
 
 /**
- * A consumer for an [ReadableContentStream] that receives content asynchronously and requests more data by pulling.
+ * A consumer for an [HttpRequestBody] that receives content asynchronously and requests more data by pulling.
  *
  * After attaching, the consumer can request to be released to stop receiving data, or discard the rest of the request
  * content, so that future consumers will not observe any data at all.
  */
-public interface ContentStreamConsumer {
+public interface HttpRequestConsumer {
   /**
-   * Called when the consumer is attached to a [ReadableContentStream].
+   * Called when the consumer is attached to a [HttpRequestBody].
    *
    * This method is always called, even when the consumer cannot be attached to the body; in cases where the consumer
    * cannot be attached (e.g. stream failed or closed before attaching), the [reader] will be inert, and [onClose] will
@@ -160,13 +160,13 @@ public interface ContentStreamConsumer {
    * If this method throws an exception, the consumer will be detached immediately and [onClose] will be called with
    * the failure cause.
    */
-  public fun onAttached(reader: ReadableContentStream.Reader)
+  public fun onAttached(reader: HttpRequestBody.Reader)
 
   /**
    * Called when a [content] element is received from the underlying transport. The [content] is owned by the request
    * body and will be released automatically after this method returns.
    *
-   * Content is only received after [ReadableContentStream.Reader.pull] is called; each pull will result in *at most* one
+   * Content is only received after [HttpRequestBody.Reader.pull] is called; each pull will result in *at most* one
    * element being delivered.
    *
    * If this method throws an exception, the consumer will be detached and [onClose] will be called with the failure

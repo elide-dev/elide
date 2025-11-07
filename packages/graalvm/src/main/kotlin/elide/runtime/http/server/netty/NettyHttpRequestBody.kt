@@ -19,11 +19,11 @@ import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.Logging
 import elide.runtime.http.server.*
 
-internal class NettyContentStream(
+internal class NettyHttpRequestBody(
   private val eventLoop: EventExecutor,
-  private var streamConsumer: ContentStreamConsumer? = null,
-  private var streamProducer: ContentStreamSource? = null,
-) : ReadableContentStream, WritableContentStream {
+  private var streamConsumer: HttpRequestConsumer? = null,
+  private var streamProducer: HttpResponseSource? = null,
+) : HttpRequestBody, HttpResponseBody {
   private sealed interface StreamFrame {
     data object End : StreamFrame
     @JvmInline value class Data(val content: ByteBuf) : StreamFrame
@@ -36,25 +36,25 @@ internal class NettyContentStream(
   }
 
   // noop reader used when a consumer fails to attach
-  private data object InertReader : ReadableContentStream.Reader {
+  private data object InertReader : HttpRequestBody.Reader {
     override fun pull() = Unit
     override fun release() = Unit
   }
 
   // reader adapter that delegates calls to the stream on the event loop
-  @JvmInline private value class StreamReader(private val body: NettyContentStream) : ReadableContentStream.Reader {
+  @JvmInline private value class StreamReader(private val body: NettyHttpRequestBody) : HttpRequestBody.Reader {
     override fun pull() = body.onPull()
     override fun release() = body.onClose(null)
   }
 
   // noop reader used when a producer fails to attach
-  private data object InertWriter : WritableContentStream.Writer {
+  private data object InertWriter : HttpResponseBody.Writer {
     override fun write(content: ByteBuf) = Unit
     override fun end(error: Throwable?) = Unit
   }
 
   // writer adapter that delegates calls to the stream on the event loop
-  @JvmInline private value class StreamWriter(private val body: NettyContentStream) : WritableContentStream.Writer {
+  @JvmInline private value class StreamWriter(private val body: NettyHttpRequestBody) : HttpResponseBody.Writer {
     override fun write(content: ByteBuf) = body.onPush(content)
     override fun end(error: Throwable?) = body.onEnd(error)
   }
@@ -75,13 +75,13 @@ internal class NettyContentStream(
 
   // ---- inherited API surface ----
 
-  override fun consume(consumer: ContentStreamConsumer) {
+  override fun consume(consumer: HttpRequestConsumer) {
     if (consumed.compareAndSet(false, true)) onConsumerAttached(consumer)
     // stream is busy, close the consumer it unless it fails during the first callback
     else if (notifyConsumerAttached(consumer, InertReader)) notifyConsumerClosed(consumer, StreamBusyException())
   }
 
-  override fun source(producer: ContentStreamSource) {
+  override fun source(producer: HttpResponseSource) {
     if (sourced.compareAndSet(false, true)) onProducerAttached(producer)
     // stream is busy, close the producer it unless it fails during the first callback
     else if (notifyProducerAttached(producer, InertWriter)) notifyProducerClosed(producer, StreamBusyException())
@@ -94,7 +94,7 @@ internal class NettyContentStream(
 
   // ---- event handling ----
 
-  private fun onConsumerAttached(consumer: ContentStreamConsumer) = runOnEventLoop(preferImmediate = true) {
+  private fun onConsumerAttached(consumer: HttpRequestConsumer) = runOnEventLoop(preferImmediate = true) {
     when (val snap = state) {
       is StreamState.Closed -> {
         // stream is closed, detach the consumer immediately
@@ -115,7 +115,7 @@ internal class NettyContentStream(
     }
   }
 
-  private fun onProducerAttached(producer: ContentStreamSource) = runOnEventLoop(preferImmediate = true) {
+  private fun onProducerAttached(producer: HttpResponseSource) = runOnEventLoop(preferImmediate = true) {
     when (val snap = state) {
       is StreamState.Closed, StreamState.Closing -> {
         // stream is either closed or ended, detach the producer immediately
@@ -242,19 +242,19 @@ internal class NettyContentStream(
 
   // ---- consumer callbacks ----
 
-  private fun notifyConsumerAttached(consumer: ContentStreamConsumer, reader: ReadableContentStream.Reader): Boolean {
+  private fun notifyConsumerAttached(consumer: HttpRequestConsumer, reader: HttpRequestBody.Reader): Boolean {
     return runCatching { consumer.onAttached(reader); true }
       .recoverCatching { consumer.onClose(IllegalStateException("Consumer failed to attach: $it", it)); false }
       .getOrElse { log.error("Consumer failed to close after attach failure: $it", it); false }
   }
 
-  private fun notifyConsumerClosed(consumer: ContentStreamConsumer, error: Throwable? = null) {
+  private fun notifyConsumerClosed(consumer: HttpRequestConsumer, error: Throwable? = null) {
     runCatching { consumer.onClose(error) }.onFailure { cause ->
       log.error("Consumer failed to close: $cause", cause)
     }
   }
 
-  private fun notifyRead(consumer: ContentStreamConsumer, content: ByteBuf): Boolean {
+  private fun notifyRead(consumer: HttpRequestConsumer, content: ByteBuf): Boolean {
     val result = runCatching { consumer.onRead(content) }
       .onFailure { onClose(IllegalStateException("Consumer failed to read content: $it", it)) }
 
@@ -264,18 +264,18 @@ internal class NettyContentStream(
 
   // ---- producer callbacks ----
 
-  private fun notifyProducerAttached(producer: ContentStreamSource, writer: WritableContentStream.Writer): Boolean {
+  private fun notifyProducerAttached(producer: HttpResponseSource, writer: HttpResponseBody.Writer): Boolean {
     return runCatching { producer.onAttached(writer); true }
       .recoverCatching { producer.onClose(IllegalStateException("Producer failed to attach: $it", it)); false }
       .getOrElse { log.error("Producer failed to close after attach failure: $it", it); false }
   }
 
-  private fun notifyProducerClosed(producer: ContentStreamSource, error: Throwable? = null) {
+  private fun notifyProducerClosed(producer: HttpResponseSource, error: Throwable? = null) {
     runCatching { producer.onClose(error) }
       .onFailure { cause -> log.error("Producer failed to close: $cause", cause) }
   }
 
-  private fun notifyPull(producer: ContentStreamSource) {
+  private fun notifyPull(producer: HttpResponseSource) {
     runCatching { producer.onPull() }
       .onFailure { onClose(IllegalStateException("Producer failed while pulling: $it", it)) }
   }
@@ -289,6 +289,6 @@ internal class NettyContentStream(
   }
 
   private companion object {
-    private val log = Logging.of(NettyContentStream::class.java)
+    private val log = Logging.of(NettyHttpRequestBody::class.java)
   }
 }

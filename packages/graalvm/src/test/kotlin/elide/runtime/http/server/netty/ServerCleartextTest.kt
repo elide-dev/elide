@@ -27,18 +27,18 @@ class ServerCleartextTest : AbstractServerStackTest() {
   }
 
   private fun testServer(
-    transport: HttpServerTransport,
-    useDomainSockets: Boolean,
-    allowFailure: (Throwable) -> Boolean = { false },
-    block: HttpApplicationStack.() -> Unit,
+      transport: ServerTransport,
+      useDomainSockets: Boolean,
+      allowFailure: (Throwable) -> Boolean = { false },
+      block: HttpApplicationStack.() -> Unit,
   ) {
     assumeTrue(transport.isAvailable(tcpDomain = useDomainSockets))
     withTestServer(cleartextOptions(useDomainSockets), transport, allowFailure, block)
   }
 
   @DynamicTransportTest fun `should handle cleartext HTTP_1`(
-    transport: HttpServerTransport,
-    useDomainSockets: Boolean,
+      transport: ServerTransport,
+      useDomainSockets: Boolean,
   ) = testServer(transport, useDomainSockets) {
     TestClients.cleartext(singleBoundAddress()).use { client ->
       client.assertRequestOk(HttpVersion.HTTP_1_0, "/http_1_0")
@@ -50,8 +50,8 @@ class ServerCleartextTest : AbstractServerStackTest() {
   }
 
   @DynamicTransportTest fun `should allow upgrading to cleartext HTTP-2`(
-    transport: HttpServerTransport,
-    useDomainSockets: Boolean
+      transport: ServerTransport,
+      useDomainSockets: Boolean
   ) = testServer(transport, useDomainSockets) {
     val serverAddress = services.single().bindResult.getOrThrow().address
     val upgradeSucceeded = AtomicReference<Boolean?>(null)

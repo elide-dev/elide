@@ -31,8 +31,8 @@ public abstract class NodeHttpServerApplication(
   override fun newContext(
     request: HttpRequest,
     response: HttpResponse,
-    requestBody: ReadableContentStream,
-    responseBody: WritableContentStream
+    requestBody: HttpRequestBody,
+    responseBody: HttpResponseBody
   ): CallContext.Empty = CallContext.Empty
 
   override fun handle(call: HttpCall<CallContext.Empty>) {

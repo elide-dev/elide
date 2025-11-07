@@ -12,12 +12,12 @@
  */
 package elide.runtime.http.server.netty
 
-import elide.runtime.http.server.ContentStreamConsumer
-import elide.runtime.http.server.ReadableContentStream
+import elide.runtime.http.server.HttpRequestConsumer
+import elide.runtime.http.server.HttpRequestBody
 import io.netty.buffer.ByteBuf
 
-internal class RecordingConsumer : ContentStreamConsumer {
-  var reader: ReadableContentStream.Reader? = null
+internal class RecordingConsumer : HttpRequestConsumer {
+  var reader: HttpRequestBody.Reader? = null
     private set
   var attachCount = 0
     private set
@@ -28,11 +28,11 @@ internal class RecordingConsumer : ContentStreamConsumer {
   var closeCause: Throwable? = null
     private set
   val received: MutableList<String> = mutableListOf()
-  var onAttach: (ReadableContentStream.Reader) -> Unit = {}
+  var onAttach: (HttpRequestBody.Reader) -> Unit = {}
   var onReadAction: (ByteBuf) -> Unit = { content -> received += content.toString(Charsets.UTF_8) }
   var onCloseAction: (Throwable?) -> Unit = {}
 
-  override fun onAttached(reader: ReadableContentStream.Reader) {
+  override fun onAttached(reader: HttpRequestBody.Reader) {
     attachCount++
     this.reader = reader
     onAttach(reader)

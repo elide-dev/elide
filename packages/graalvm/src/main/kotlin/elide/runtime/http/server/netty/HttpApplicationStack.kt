@@ -237,9 +237,9 @@ public class HttpApplicationStack internal constructor(
      * can lead to an error being thrown if an unsupported feature is required (e.g. UDP over domain sockets on NIO).
      */
     public fun <C : CallContext> bind(
-      application: HttpApplication<C>,
-      options: HttpApplicationOptions,
-      transportOverride: HttpServerTransport? = null,
+        application: HttpApplication<C>,
+        options: HttpApplicationOptions,
+        transportOverride: ServerTransport? = null,
     ): HttpApplicationStack {
       log.debug("Binding HTTP server stack for {}", application)
       val bindStarted = TimeSource.Monotonic.markNow()

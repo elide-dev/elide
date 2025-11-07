@@ -72,7 +72,7 @@ abstract class AbstractServerStackTest {
    */
   protected fun withTestServer(
     options: HttpApplicationOptions,
-    transport: HttpServerTransport? = null,
+    transport: ServerTransport? = null,
     allowFailure: (Throwable) -> Boolean = { false },
     block: HttpApplicationStack.() -> Unit
   ) {
@@ -82,8 +82,8 @@ abstract class AbstractServerStackTest {
       override fun newContext(
         request: HttpRequest,
         response: HttpResponse,
-        requestBody: ReadableContentStream,
-        responseBody: WritableContentStream
+        requestBody: HttpRequestBody,
+        responseBody: HttpResponseBody
       ) = CallContext.Empty
 
       override fun handle(call: HttpCall<CallContext.Empty>) {
@@ -146,7 +146,7 @@ class ServerTestMatrix : ArgumentsProvider {
   ): Stream<out Arguments?>? {
     val builder = Stream.builder<Arguments>()
 
-    for (transport in HttpServerTransport.all) {
+    for (transport in ServerTransport.all) {
       // test each transport with both regular and domain sockets
       builder.add(Arguments.of(transport, true))
       builder.add(Arguments.of(transport, false))

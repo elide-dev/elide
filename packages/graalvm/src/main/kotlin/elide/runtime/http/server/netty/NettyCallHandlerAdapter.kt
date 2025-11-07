@@ -58,11 +58,11 @@ internal class NettyCallHandlerAdapter(
     override val context: CallContext,
     override val request: HttpRequest,
     override val response: HttpResponse,
-    override val requestBody: NettyContentStream,
-    override val responseBody: NettyContentStream,
+    override val requestBody: NettyHttpRequestBody,
+    override val responseBody: NettyHttpRequestBody,
     private val channelContext: ChannelHandlerContext,
   ) : HttpCall<CallContext> {
-    private val requestWriter = AtomicReference<WritableContentStream.Writer?>(null)
+    private val requestWriter = AtomicReference<HttpResponseBody.Writer?>(null)
     private val closed = AtomicBoolean(false)
 
     init {
@@ -300,8 +300,8 @@ internal class NettyCallHandlerAdapter(
   }
 
   private fun newCall(request: HttpRequest, channelContext: ChannelHandlerContext): NettyHttpCall {
-    val requestBody = NettyContentStream(channelContext.executor())
-    val responseBody = NettyContentStream(channelContext.executor())
+    val requestBody = NettyHttpRequestBody(channelContext.executor())
+    val responseBody = NettyHttpRequestBody(channelContext.executor())
 
     val response = defaultResponseFor(request)
     val callContext = application.newContext(request, response, requestBody, responseBody)

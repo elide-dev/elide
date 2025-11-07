@@ -30,18 +30,18 @@ class ServerHttpsTest : AbstractServerStackTest() {
   }
 
   private fun testServer(
-    transport: HttpServerTransport,
-    useDomainSockets: Boolean,
-    allowFailure: (Throwable) -> Boolean = { false },
-    block: HttpApplicationStack.() -> Unit,
+      transport: ServerTransport,
+      useDomainSockets: Boolean,
+      allowFailure: (Throwable) -> Boolean = { false },
+      block: HttpApplicationStack.() -> Unit,
   ) {
     assumeTrue(transport.isAvailable(tcpDomain = useDomainSockets))
     withTestServer(tlsOptions(useDomainSockets), transport, allowFailure, block)
   }
 
   @DynamicTransportTest fun `should handle HTTP_1 over TLS`(
-    transport: HttpServerTransport,
-    useDomainSockets: Boolean,
+      transport: ServerTransport,
+      useDomainSockets: Boolean,
   ) = testServer(transport, useDomainSockets) {
     val serverAddress = services.single().bindResult.getOrThrow().address
 
@@ -55,8 +55,8 @@ class ServerHttpsTest : AbstractServerStackTest() {
   }
 
   @DynamicTransportTest fun `should support ALPN`(
-    transport: HttpServerTransport,
-    useDomainSockets: Boolean,
+      transport: ServerTransport,
+      useDomainSockets: Boolean,
   ) = testServer(transport, useDomainSockets) {
     val serverAddress = services.single().bindResult.getOrThrow().address
     val selectedProtocol = AtomicReference<String?>()

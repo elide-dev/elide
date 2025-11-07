@@ -51,12 +51,12 @@ public fun HttpResponse.setHeaders(name: CharSequence, values: Iterable<Any>): H
 public fun HttpResponse.removeHeader(name: CharSequence): HttpResponse = apply { headers().remove(name) }
 
 /** Push raw [bytes] wrapped as a [ByteBuf][io.netty.buffer.ByteBuf] to the response body. */
-public fun WritableContentStream.Writer.write(bytes: ByteArray) {
+public fun HttpResponseBody.Writer.write(bytes: ByteArray) {
   write(Unpooled.wrappedBuffer(bytes))
 }
 
 /** Encode the given string [content] and push it to the response body. */
-public fun WritableContentStream.Writer.write(content: String, charset: Charset = Charsets.UTF_8) {
+public fun HttpResponseBody.Writer.write(content: String, charset: Charset = Charsets.UTF_8) {
   write(Unpooled.wrappedBuffer(content.toByteArray(charset)))
 }
 
@@ -64,16 +64,16 @@ public fun WritableContentStream.Writer.write(content: String, charset: Charset 
  * Attach a content producer to this response body, calling [onPull] whenever new data is requested. The [onClose]
  * function is called when the producer is detached from the body due to end of data or closing.
  */
-public inline fun WritableContentStream.source(
-  crossinline onAttached: (WritableContentStream.Writer) -> Unit = {},
+public inline fun HttpResponseBody.source(
+  crossinline onAttached: (HttpResponseBody.Writer) -> Unit = {},
   crossinline onClose: (Throwable?) -> Unit = {},
-  crossinline onPull: (WritableContentStream.Writer) -> Unit
+  crossinline onPull: (HttpResponseBody.Writer) -> Unit
 ): Unit = source(
-  object : ContentStreamSource {
-    @Volatile private var handle: WritableContentStream.Writer? = null
+  object : HttpResponseSource {
+    @Volatile private var handle: HttpResponseBody.Writer? = null
 
     override fun onPull() = onPull(handle ?: error("Pulled before attached"))
-    override fun onAttached(writer: WritableContentStream.Writer) {
+    override fun onAttached(writer: HttpResponseBody.Writer) {
       handle = writer
       onAttached(writer)
     }
@@ -86,7 +86,7 @@ public inline fun WritableContentStream.source(
 )
 
 /** Write a single [data] chunk when pulled and close the stream immediately after. */
-public fun WritableContentStream.source(data: ByteBuf) {
+public fun HttpResponseBody.source(data: ByteBuf) {
   source { it.write(data); it.end() }
 }
 
@@ -94,16 +94,16 @@ public fun WritableContentStream.source(data: ByteBuf) {
  * Attach a content consumer to this request body, calling [onRead] whenever new data is received. The [onClose]
  * function is called when the producer is detached from the body due to end of data or closing.
  */
-public inline fun ReadableContentStream.consume(
-  crossinline onAttached: (ReadableContentStream.Reader) -> Unit = { it.pull() },
+public inline fun HttpRequestBody.consume(
+  crossinline onAttached: (HttpRequestBody.Reader) -> Unit = { it.pull() },
   crossinline onClose: (Throwable?) -> Unit = {},
-  crossinline onRead: (ByteBuf, ReadableContentStream.Reader) -> Unit
+  crossinline onRead: (ByteBuf, HttpRequestBody.Reader) -> Unit
 ): Unit = consume(
-  object : ContentStreamConsumer {
-    @Volatile private var handle: ReadableContentStream.Reader? = null
+  object : HttpRequestConsumer {
+    @Volatile private var handle: HttpRequestBody.Reader? = null
 
     override fun onRead(content: ByteBuf) = onRead(content, handle ?: error("Read before attached"))
-    override fun onAttached(reader: ReadableContentStream.Reader) {
+    override fun onAttached(reader: HttpRequestBody.Reader) {
       handle = reader
       onAttached(reader)
     }

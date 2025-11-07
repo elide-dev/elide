@@ -18,9 +18,9 @@ import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.exec.PinnedContext
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViewType
 import elide.runtime.gvm.internals.intrinsics.js.ArrayBufferViews
-import elide.runtime.http.server.ContentStreamConsumer
-import elide.runtime.http.server.ReadableContentStream
-import elide.runtime.http.server.WritableContentStream
+import elide.runtime.http.server.HttpRequestConsumer
+import elide.runtime.http.server.HttpRequestBody
+import elide.runtime.http.server.HttpResponseBody
 import elide.runtime.http.server.common.WorkerResponseContent
 import elide.runtime.http.server.js.worker.JsWorkerStreams.consumeResponseStream
 import elide.runtime.http.server.source
@@ -42,11 +42,11 @@ internal object JsWorkerStreams {
    * Returns a [ReadableStream] that pulls from the [requestBody] using the given [executor] for context management.
    * Failures and cancellation events are propagated between the streams, so they are properly synchronized.
    */
-  fun forRequest(requestBody: ReadableContentStream, executor: ContextAwareExecutor): ReadableStream {
+  fun forRequest(requestBody: HttpRequestBody, executor: ContextAwareExecutor): ReadableStream {
     val pinnedContext = PinnedContext.current()
-    val source = object : ReadableStreamSource, ContentStreamConsumer {
+    val source = object : ReadableStreamSource, HttpRequestConsumer {
       @Volatile private var streamController: ReadableStreamDefaultController? = null
-      @Volatile private var streamReader: ReadableContentStream.Reader? = null
+      @Volatile private var streamReader: HttpRequestBody.Reader? = null
 
       override fun start(controller: ReadableStreamController) {
         streamController = controller as ReadableStreamDefaultController
@@ -64,7 +64,7 @@ internal object JsWorkerStreams {
         return JsPromise.resolved(Unit)
       }
 
-      override fun onAttached(reader: ReadableContentStream.Reader) {
+      override fun onAttached(reader: HttpRequestBody.Reader) {
         streamReader = reader
       }
 
@@ -100,7 +100,7 @@ internal object JsWorkerStreams {
    */
   fun consumeResponseStream(
     sourceStream: ReadableStream,
-    callStream: WritableContentStream,
+    callStream: HttpResponseBody,
     executor: ContextAwareExecutor
   ) {
     val reader = sourceStream.getReader() as ReadableStreamDefaultReader

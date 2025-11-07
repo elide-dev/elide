@@ -33,13 +33,13 @@ public interface HttpCall<C : CallContext> {
   public val request: HttpRequest
 
   /**
-   * Content for the incoming request that can be consumed asynchronously by an [ContentStreamConsumer].
+   * Content for the incoming request that can be consumed asynchronously by an [HttpRequestConsumer].
    *
    * Once a consumer is attached to the body, it will collect data until the end of the stream is reached or the
    * consumer chooses to detach, discarding the rest of the data. After the consumer is released, any attempts to use
    * the request body will have no effect.
    */
-  public val requestBody: ReadableContentStream // Request content
+  public val requestBody: HttpRequestBody // Request content
 
   /**
    * Response header to be sent to the client. Can be used together with [responseBody] to prepare the full HTTP
@@ -51,7 +51,7 @@ public interface HttpCall<C : CallContext> {
   public val response: HttpResponse // Netty response header
 
   /**
-   * Content for the response sent to the client. Attach an [ContentStreamSource] as a source to provide the data.
+   * Content for the response sent to the client. Attach an [HttpResponseSource] as a source to provide the data.
    *
    * When [send] is called, the engine will pull from the source attached to the body to begin producing content; if
    * no source has been set, an empty body will be sent and the response will be closed immediately.
@@ -59,7 +59,7 @@ public interface HttpCall<C : CallContext> {
    * After a producer is attached, releasing it will mark the end of the response body, which triggers the end of the
    * call once sent.
    */
-  public val responseBody: WritableContentStream // Response content
+  public val responseBody: HttpResponseBody // Response content
 
   /**
    * Send the [response] headers to the client if they have not been sent yet. After this method is called any changes

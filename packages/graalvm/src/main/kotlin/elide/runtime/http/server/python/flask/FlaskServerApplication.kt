@@ -42,8 +42,8 @@ public class FlaskServerApplication internal constructor(
   override fun newContext(
     request: HttpRequest,
     response: HttpResponse,
-    requestBody: ReadableContentStream,
-    responseBody: WritableContentStream
+    requestBody: HttpRequestBody,
+    responseBody: HttpResponseBody
   ): FlaskContext = FlaskContext(request)
 
   override fun handle(call: HttpCall<FlaskContext>) {
@@ -194,7 +194,7 @@ public class FlaskServerApplication internal constructor(
 
   private fun HttpCall<FlaskContext>.useHostResponse(overrideStatus: Boolean, returnValue: Value) {
     // it could be a content producer
-    val producer = runCatching { returnValue.asHostObject<ContentStreamSource>() }
+    val producer = runCatching { returnValue.asHostObject<HttpResponseSource>() }
       .getOrNull()
       ?: error("Invalid Flask response object provided: $returnValue")
 

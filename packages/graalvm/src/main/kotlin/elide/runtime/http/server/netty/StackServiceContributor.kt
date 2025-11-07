@@ -60,13 +60,13 @@ internal abstract class StackServiceContributor(val label: String) {
     /** Options used to configure the stack. */
     val options: HttpApplicationOptions,
     /** Server transport override that should be used by all services. */
-    val transportOverride: HttpServerTransport?,
+    val transportOverride: ServerTransport?,
     /** A deferred reference to the application stack that will be created from this scope. */
     val deferredStack: Future<HttpApplicationStack>,
   ) {
-    /** Resolved [HttpServerTransport] instances registered by contributors using their labels. */
-    val transports: Map<String, HttpServerTransport> get() = mutableTransports
-    private val mutableTransports = mutableMapOf<String, HttpServerTransport>()
+    /** Resolved [ServerTransport] instances registered by contributors using their labels. */
+    val transports: Map<String, ServerTransport> get() = mutableTransports
+    private val mutableTransports = mutableMapOf<String, ServerTransport>()
 
     /** Event loop groups registered by contributors. See [parentGroupFor] and [childGroupFor] extensions. */
     val groups: Map<String, EventLoopGroup> get() = mutableGroups.toMap()
@@ -80,7 +80,7 @@ internal abstract class StackServiceContributor(val label: String) {
     private val pending = mutableMapOf<String, ChannelFuture>()
 
     /** Register a [transport] using the given [key]. Only one transport may be registered with a single key. */
-    fun registerTransport(key: String, transport: HttpServerTransport) {
+    fun registerTransport(key: String, transport: ServerTransport) {
       require(mutableTransports.put(key, transport) == null) { "Duplicate transport for key $key: $transport" }
     }
 
@@ -165,7 +165,7 @@ internal abstract class StackServiceContributor(val label: String) {
    * Select the preferred transport for this service; implementations are not required to respect the override value
    * specified in the options but doing so is encouraged to allow proper testing.
    */
-  internal open fun resolveTransport(scope: BindingScope, address: SocketAddress): HttpServerTransport {
+  internal open fun resolveTransport(scope: BindingScope, address: SocketAddress): ServerTransport {
     return resolveTransport(scope, address, udp = useUdp)
   }
 
@@ -176,7 +176,7 @@ internal abstract class StackServiceContributor(val label: String) {
    * When [child] is `true`, the returned group will be used as a child group in a [ServerBootstrap], otherwise it will
    * be used a parent group or as the single group of an [AbstractBootstrap].
    */
-  internal open fun newGroup(scope: BindingScope, transport: HttpServerTransport, child: Boolean): EventLoopGroup {
+  internal open fun newGroup(scope: BindingScope, transport: ServerTransport, child: Boolean): EventLoopGroup {
     return transport.eventLoopGroup()
   }
 
@@ -267,11 +267,11 @@ internal fun StackServiceContributor.resolveTransport(
   scope: BindingScope,
   address: SocketAddress,
   udp: Boolean,
-): HttpServerTransport {
+): ServerTransport {
   scope.transportOverride?.let { return it }
   val isDomain = address.isDomainSocket()
 
-  return HttpServerTransport.resolve(
+  return ServerTransport.resolve(
     tcpDomainSockets = !udp && isDomain,
     udpDomainSockets = udp && isDomain,
   ) ?: error("Failed to resolve a server transport for service $label and address $address")

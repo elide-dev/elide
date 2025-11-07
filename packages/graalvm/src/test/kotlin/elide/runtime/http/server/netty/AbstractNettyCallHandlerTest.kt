@@ -17,8 +17,8 @@ import elide.runtime.http.server.HttpApplication
 import elide.runtime.http.server.HttpCall
 import io.netty.handler.codec.http.HttpRequest
 import io.netty.handler.codec.http.HttpResponse
-import elide.runtime.http.server.ReadableContentStream
-import elide.runtime.http.server.WritableContentStream
+import elide.runtime.http.server.HttpRequestBody
+import elide.runtime.http.server.HttpResponseBody
 
 abstract class AbstractNettyCallHandlerTest {
   protected class TestApplication : HttpApplication<TestContext> {
@@ -31,8 +31,8 @@ abstract class AbstractNettyCallHandlerTest {
     override fun newContext(
       request: HttpRequest,
       response: HttpResponse,
-      requestBody: ReadableContentStream,
-      responseBody: WritableContentStream
+      requestBody: HttpRequestBody,
+      responseBody: HttpResponseBody
     ): TestContext = TestContext()
 
     override fun handle(call: HttpCall<TestContext>) {

@@ -20,8 +20,8 @@ import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.getOrSet
-import elide.runtime.http.server.ContentStreamSource
-import elide.runtime.http.server.WritableContentStream
+import elide.runtime.http.server.HttpResponseSource
+import elide.runtime.http.server.HttpResponseBody
 import elide.runtime.intrinsics.js.JsPromise
 
 internal class FlaskReactTemplate(private val source: Path) : ProxyExecutable {
@@ -49,12 +49,12 @@ internal class FlaskReactTemplate(private val source: Path) : ProxyExecutable {
       else return result.asString()
     }
 
-    return object : ContentStreamSource {
+    return object : HttpResponseSource {
       private val closed = AtomicBoolean(false)
 
       override fun onPull() = Unit
       override fun onClose(failure: Throwable?) = closed.set(true)
-      override fun onAttached(writer: WritableContentStream.Writer) {
+      override fun onAttached(writer: HttpResponseBody.Writer) {
         promise.then(
           onFulfilled = {
             if (closed.get()) return@then

@@ -74,7 +74,7 @@ public class WsgiEnviron(
      * and the [host] information is used to populate the default scheme, host, and port fields.
      *
      * Once the environ is created, the [input] stream must be attached to a
-     * [stream][elide.runtime.http.server.ReadableContentStream] before it can be used.
+     * [stream][elide.runtime.http.server.HttpRequestBody] before it can be used.
      */
     @JvmStatic public fun from(
       request: HttpRequest,

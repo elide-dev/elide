@@ -37,8 +37,8 @@ public interface HttpApplication<C : CallContext> : HttpCallHandler<C> {
   public fun newContext(
     request: HttpRequest,
     response: HttpResponse,
-    requestBody: ReadableContentStream,
-    responseBody: WritableContentStream,
+    requestBody: HttpRequestBody,
+    responseBody: HttpResponseBody,
   ): C
 
   /**

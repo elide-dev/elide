@@ -27,10 +27,10 @@ class ServerHttp3Test : AbstractServerStackTest() {
   }
 
   private fun testServer(
-    transport: HttpServerTransport,
-    useDomainSockets: Boolean,
-    allowFailure: (Throwable) -> Boolean = { false },
-    block: HttpApplicationStack.() -> Unit,
+      transport: ServerTransport,
+      useDomainSockets: Boolean,
+      allowFailure: (Throwable) -> Boolean = { false },
+      block: HttpApplicationStack.() -> Unit,
   ) {
     assumeFalse(useDomainSockets)
     assumeTrue(transport.isAvailable())
@@ -38,8 +38,8 @@ class ServerHttp3Test : AbstractServerStackTest() {
   }
 
   @DynamicTransportTest fun `should handle HTTP_3 requests`(
-    transport: HttpServerTransport,
-    useDomainSockets: Boolean,
+      transport: ServerTransport,
+      useDomainSockets: Boolean,
   ) = testServer(transport, useDomainSockets) {
     val serverAddress = services.single().bindResult.getOrThrow().address
 

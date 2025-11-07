@@ -19,8 +19,8 @@ import elide.runtime.http.server.HttpApplication
 import elide.runtime.http.server.HttpApplicationOptions
 import elide.runtime.http.server.HttpCall
 import elide.runtime.http.server.HttpsOptions
-import elide.runtime.http.server.ReadableContentStream
-import elide.runtime.http.server.WritableContentStream
+import elide.runtime.http.server.HttpRequestBody
+import elide.runtime.http.server.HttpResponseBody
 import io.netty.handler.codec.http.*
 import io.netty.handler.ssl.ApplicationProtocolNames
 import org.junit.jupiter.api.Assumptions.assumeTrue
@@ -79,8 +79,8 @@ class ServerFullStackTest : AbstractServerStackTest() {
       override fun newContext(
         request: HttpRequest,
         response: HttpResponse,
-        requestBody: ReadableContentStream,
-        responseBody: WritableContentStream,
+        requestBody: HttpRequestBody,
+        responseBody: HttpResponseBody,
       ): CallContext.Empty = CallContext.Empty
 
       override fun handle(call: HttpCall<CallContext.Empty>) {
@@ -211,7 +211,7 @@ class ServerFullStackTest : AbstractServerStackTest() {
   }
 
   @DynamicTransportTest fun `should handle requests on full stack`(
-    transport: HttpServerTransport,
+    transport: ServerTransport,
     useDomainSockets: Boolean,
   ) {
     assumeTrue(transport.isAvailable())

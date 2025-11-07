@@ -61,8 +61,8 @@ public class JsWorkerApplication(
   override fun newContext(
     request: HttpRequest,
     response: HttpResponse,
-    requestBody: ReadableContentStream,
-    responseBody: WritableContentStream
+    requestBody: HttpRequestBody,
+    responseBody: HttpResponseBody
   ): JsWorkerEnv {
     val host = hostInfo ?: error("Host info is unresolved, cannot accept calls before binding")
     return JsWorkerEnv(

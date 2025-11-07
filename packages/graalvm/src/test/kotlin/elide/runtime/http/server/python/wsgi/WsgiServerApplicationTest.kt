@@ -39,7 +39,7 @@ import elide.runtime.http.server.HttpApplication
 import elide.runtime.http.server.netty.HttpApplicationStack
 import elide.runtime.http.server.netty.HttpCleartextService
 import elide.runtime.http.server.netty.NettyCallHandlerAdapter
-import elide.runtime.http.server.netty.NettyContentStream
+import elide.runtime.http.server.netty.NettyHttpRequestBody
 import elide.runtime.http.server.source
 import elide.runtime.http.server.write
 
@@ -307,7 +307,7 @@ import elide.runtime.http.server.write
     val channel = EmbeddedChannel()
     val input = WsgiInputStream(executor, 11)
 
-    val stream = NettyContentStream(channel.eventLoop())
+    val stream = NettyHttpRequestBody(channel.eventLoop())
     stream.source {
       it.write("hello")
       it.write("world\n")
@@ -349,7 +349,7 @@ import elide.runtime.http.server.write
     val channel = EmbeddedChannel()
     val input = WsgiInputStream(executor, 12)
 
-    val stream = NettyContentStream(channel.eventLoop())
+    val stream = NettyHttpRequestBody(channel.eventLoop())
     stream.source {
       it.write("hello\n")
       it.write("world\n")

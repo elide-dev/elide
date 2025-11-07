@@ -38,8 +38,8 @@ public class NodeHttpServerResponse(
   private val executor: ContextAwareExecutor,
   private val events: EventAwareProxy = EventAwareProxy.create(),
   private val origin: PinnedContext = PinnedContext.current(),
-) : EventAware by events, ProxyObject, ContentStreamSource {
-  private val targetWriter = AtomicReference<WritableContentStream.Writer?>(null)
+) : EventAware by events, ProxyObject, HttpResponseSource {
+  private val targetWriter = AtomicReference<HttpResponseBody.Writer?>(null)
   private val writeState = AtomicInteger(0)
   private val headersSent = AtomicBoolean(false)
 
@@ -211,7 +211,7 @@ public class NodeHttpServerResponse(
     else -> null
   }
 
-  override fun onAttached(writer: WritableContentStream.Writer) {
+  override fun onAttached(writer: HttpResponseBody.Writer) {
     targetWriter.set(writer)
   }
 

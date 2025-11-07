@@ -17,7 +17,7 @@ import org.graalvm.polyglot.Value
 import elide.runtime.exec.ContextAware
 import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.exec.PinnedContext
-import elide.runtime.http.server.WritableContentStream
+import elide.runtime.http.server.HttpResponseBody
 import elide.runtime.http.server.source
 
 /**
@@ -30,7 +30,7 @@ import elide.runtime.http.server.source
  * This function must be called from within the [executor] while the context that produced the [iterator] is active to
  * ensure it can be pinned correctly.
  */
-@ContextAware public fun WritableContentStream.sourceIterator(
+@ContextAware public fun HttpResponseBody.sourceIterator(
   iterator: Value,
   executor: ContextAwareExecutor,
   mapChunk: (chunk: Value) -> ByteBuf,

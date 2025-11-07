@@ -24,7 +24,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import elide.runtime.http.server.StreamBusyException
 
-class NettyContentStreamTest : NettyStreamTest() {
+class NettyHttpContentStreamTest : NettyStreamTest() {
   private lateinit var _channel: EmbeddedChannel
 
   override val channel: EmbeddedChannel
@@ -38,7 +38,7 @@ class NettyContentStreamTest : NettyStreamTest() {
     channel.finishAndReleaseAll()
   }
 
-  private fun newStream(): NettyContentStream = NettyContentStream(channel.eventLoop())
+  private fun newStream(): NettyHttpRequestBody = NettyHttpRequestBody(channel.eventLoop())
 
   private fun bufferOf(text: String): ByteBuf = Unpooled.copiedBuffer(text, Charsets.UTF_8)
 

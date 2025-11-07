@@ -67,7 +67,7 @@ public class NodeHttpServerInstance internal constructor(
 
   private fun prepareOptions(overrideHost: String?, overridePort: Int): HttpApplicationOptions {
     val overrideAddress = InetSocketAddress(overrideHost ?: DEFAULT_HOST, overridePort)
-    return HttpApplicationOptions(http = options.http?.copy(address = overrideAddress))
+    return options.copy(http = options.http?.copy(address = overrideAddress))
   }
 
   override fun listen(port: Int, callback: Value?) {

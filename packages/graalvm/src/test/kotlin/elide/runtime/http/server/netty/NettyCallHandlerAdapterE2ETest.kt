@@ -132,8 +132,8 @@ class NettyCallHandlerAdapterE2ETest : AbstractNettyCallHandlerTest() {
 
   @Test fun `should support streamed calls`() {
     var call: HttpCall<TestContext>? = null
-    var requestReader: ReadableContentStream.Reader? = null
-    var responseWriter: WritableContentStream.Writer? = null
+    var requestReader: HttpRequestBody.Reader? = null
+    var responseWriter: HttpResponseBody.Writer? = null
     val requestChunks = mutableListOf<ByteBuf>()
 
     application.onHandle = { incoming ->

@@ -29,11 +29,11 @@ import kotlinx.io.bytestring.ByteStringBuilder
 import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.exec.ContextLocal
 import elide.runtime.exec.compute
-import elide.runtime.http.server.ContentStreamConsumer
-import elide.runtime.http.server.ReadableContentStream
+import elide.runtime.http.server.HttpRequestConsumer
+import elide.runtime.http.server.HttpRequestBody
 
 /**
- * File-like WSGI input stream backed by an [ReadableContentStream].
+ * File-like WSGI input stream backed by an [HttpRequestBody].
  *
  * The stream requests content chunks on demand from the provided executor thread and exposes standard Python file
  * APIs (`read`, `readline`, `readlines`, iteration).
@@ -44,17 +44,17 @@ import elide.runtime.http.server.ReadableContentStream
 public class WsgiInputStream(
   private val executor: ContextAwareExecutor,
   private val limit: Long,
-) : ProxyObject, ProxyIterable, ProxyIterator, ContentStreamConsumer {
+) : ProxyObject, ProxyIterable, ProxyIterator, HttpRequestConsumer {
 
   private val lock = ReentrantLock()
   private val bytesRead = AtomicLong()
   private val exhausted = AtomicBoolean()
 
   private var currentBuffer: ByteBuf? = null
-  private var sourceReader: ReadableContentStream.Reader? = null
+  private var sourceReader: HttpRequestBody.Reader? = null
   private var readLatch: CountDownLatch? = null
 
-  override fun onAttached(reader: ReadableContentStream.Reader) {
+  override fun onAttached(reader: HttpRequestBody.Reader) {
     sourceReader = reader
     releaseLatch()
   }

@@ -35,7 +35,7 @@ internal data object HttpsService : StackServiceContributor(LABEL) {
     return requireNotNull(scope.options.https?.address)
   }
 
-  override fun newGroup(scope: BindingScope, transport: HttpServerTransport, child: Boolean): EventLoopGroup {
+  override fun newGroup(scope: BindingScope, transport: ServerTransport, child: Boolean): EventLoopGroup {
     val cleartextTransport = scope.transports[HttpCleartextService.LABEL]
     return when {
       child -> scope.childGroupFor(HttpCleartextService)

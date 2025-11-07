@@ -12,12 +12,12 @@
  */
 package elide.runtime.http.server.netty
 
-import elide.runtime.http.server.ContentStreamSource
-import elide.runtime.http.server.WritableContentStream
+import elide.runtime.http.server.HttpResponseSource
+import elide.runtime.http.server.HttpResponseBody
 import io.netty.buffer.ByteBuf
 
-internal class RecordingProducer : ContentStreamSource {
-  var writer: WritableContentStream.Writer? = null
+internal class RecordingProducer : HttpResponseSource {
+  var writer: HttpResponseBody.Writer? = null
     private set
   var attachCount = 0
     private set
@@ -27,7 +27,7 @@ internal class RecordingProducer : ContentStreamSource {
     private set
   var closeCause: Throwable? = null
     private set
-  var onAttach: (WritableContentStream.Writer) -> Unit = {}
+  var onAttach: (HttpResponseBody.Writer) -> Unit = {}
   var onPullAction: () -> Unit = {}
   var onCloseAction: (Throwable?) -> Unit = {}
 
@@ -39,7 +39,7 @@ internal class RecordingProducer : ContentStreamSource {
     writer?.end(error) ?: error("writer not available")
   }
 
-  override fun onAttached(writer: WritableContentStream.Writer) {
+  override fun onAttached(writer: HttpResponseBody.Writer) {
     attachCount++
     this.writer = writer
     onAttach(writer)

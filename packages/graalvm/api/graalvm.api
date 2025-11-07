@@ -2696,30 +2696,11 @@ public final class elide/runtime/http/server/CleartextOptions {
 public final class elide/runtime/http/server/CleartextOptions$Companion {
 }
 
-public abstract interface class elide/runtime/http/server/ContentStream {
-	public abstract fun close (Ljava/lang/Throwable;)V
-	public static synthetic fun close$default (Lelide/runtime/http/server/ContentStream;Ljava/lang/Throwable;ILjava/lang/Object;)V
-}
-
-public abstract interface class elide/runtime/http/server/ContentStreamConsumer {
-	public abstract fun onAttached (Lelide/runtime/http/server/ReadableContentStream$Reader;)V
-	public abstract fun onClose (Ljava/lang/Throwable;)V
-	public static synthetic fun onClose$default (Lelide/runtime/http/server/ContentStreamConsumer;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public abstract fun onRead (Lio/netty/buffer/ByteBuf;)V
-}
-
-public abstract interface class elide/runtime/http/server/ContentStreamSource {
-	public abstract fun onAttached (Lelide/runtime/http/server/WritableContentStream$Writer;)V
-	public abstract fun onClose (Ljava/lang/Throwable;)V
-	public static synthetic fun onClose$default (Lelide/runtime/http/server/ContentStreamSource;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public abstract fun onPull ()V
-}
-
 public final class elide/runtime/http/server/ExtensionsKt {
 	public static final fun addHeader (Lio/netty/handler/codec/http/HttpResponse;Ljava/lang/CharSequence;Ljava/lang/Object;)Lio/netty/handler/codec/http/HttpResponse;
 	public static final fun addHeaders (Lio/netty/handler/codec/http/HttpResponse;Ljava/lang/CharSequence;Ljava/lang/Iterable;)Lio/netty/handler/codec/http/HttpResponse;
-	public static final fun consume (Lelide/runtime/http/server/ReadableContentStream;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
-	public static synthetic fun consume$default (Lelide/runtime/http/server/ReadableContentStream;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
+	public static final fun consume (Lelide/runtime/http/server/HttpRequestBody;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;)V
+	public static synthetic fun consume$default (Lelide/runtime/http/server/HttpRequestBody;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)V
 	public static final fun getHeader (Lio/netty/handler/codec/http/HttpRequest;Ljava/lang/CharSequence;)Ljava/lang/String;
 	public static final fun getHeaders (Lio/netty/handler/codec/http/HttpRequest;Ljava/lang/CharSequence;)Ljava/util/List;
 	public static final fun hostnameOrDomainPath (Ljava/net/SocketAddress;)Ljava/lang/String;
@@ -2727,12 +2708,12 @@ public final class elide/runtime/http/server/ExtensionsKt {
 	public static final fun removeHeader (Lio/netty/handler/codec/http/HttpResponse;Ljava/lang/CharSequence;)Lio/netty/handler/codec/http/HttpResponse;
 	public static final fun setHeader (Lio/netty/handler/codec/http/HttpResponse;Ljava/lang/CharSequence;Ljava/lang/Object;)Lio/netty/handler/codec/http/HttpResponse;
 	public static final fun setHeaders (Lio/netty/handler/codec/http/HttpResponse;Ljava/lang/CharSequence;Ljava/lang/Iterable;)Lio/netty/handler/codec/http/HttpResponse;
-	public static final fun source (Lelide/runtime/http/server/WritableContentStream;Lio/netty/buffer/ByteBuf;)V
-	public static final fun source (Lelide/runtime/http/server/WritableContentStream;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
-	public static synthetic fun source$default (Lelide/runtime/http/server/WritableContentStream;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
-	public static final fun write (Lelide/runtime/http/server/WritableContentStream$Writer;Ljava/lang/String;Ljava/nio/charset/Charset;)V
-	public static final fun write (Lelide/runtime/http/server/WritableContentStream$Writer;[B)V
-	public static synthetic fun write$default (Lelide/runtime/http/server/WritableContentStream$Writer;Ljava/lang/String;Ljava/nio/charset/Charset;ILjava/lang/Object;)V
+	public static final fun source (Lelide/runtime/http/server/HttpResponseBody;Lio/netty/buffer/ByteBuf;)V
+	public static final fun source (Lelide/runtime/http/server/HttpResponseBody;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)V
+	public static synthetic fun source$default (Lelide/runtime/http/server/HttpResponseBody;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)V
+	public static final fun write (Lelide/runtime/http/server/HttpResponseBody$Writer;Ljava/lang/String;Ljava/nio/charset/Charset;)V
+	public static final fun write (Lelide/runtime/http/server/HttpResponseBody$Writer;[B)V
+	public static synthetic fun write$default (Lelide/runtime/http/server/HttpResponseBody$Writer;Ljava/lang/String;Ljava/nio/charset/Charset;ILjava/lang/Object;)V
 }
 
 public final class elide/runtime/http/server/Http3Options {
@@ -2758,7 +2739,7 @@ public final class elide/runtime/http/server/Http3Options$Companion {
 }
 
 public abstract interface class elide/runtime/http/server/HttpApplication : elide/runtime/http/server/HttpCallHandler {
-	public abstract fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/CallContext;
+	public abstract fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/CallContext;
 	public fun onError (Ljava/lang/Throwable;)V
 	public fun onStart (Lelide/runtime/http/server/netty/HttpApplicationStack;)V
 }
@@ -2796,15 +2777,53 @@ public abstract interface class elide/runtime/http/server/HttpCall {
 	public static synthetic fun fail$default (Lelide/runtime/http/server/HttpCall;Ljava/lang/Throwable;ILjava/lang/Object;)V
 	public abstract fun getContext ()Lelide/runtime/http/server/CallContext;
 	public abstract fun getRequest ()Lio/netty/handler/codec/http/HttpRequest;
-	public abstract fun getRequestBody ()Lelide/runtime/http/server/ReadableContentStream;
+	public abstract fun getRequestBody ()Lelide/runtime/http/server/HttpRequestBody;
 	public abstract fun getResponse ()Lio/netty/handler/codec/http/HttpResponse;
-	public abstract fun getResponseBody ()Lelide/runtime/http/server/WritableContentStream;
+	public abstract fun getResponseBody ()Lelide/runtime/http/server/HttpResponseBody;
 	public abstract fun send ()V
 	public abstract fun sendHeaders ()V
 }
 
 public abstract interface class elide/runtime/http/server/HttpCallHandler {
 	public abstract fun handle (Lelide/runtime/http/server/HttpCall;)V
+}
+
+public abstract interface class elide/runtime/http/server/HttpContentStream {
+	public abstract fun close (Ljava/lang/Throwable;)V
+	public static synthetic fun close$default (Lelide/runtime/http/server/HttpContentStream;Ljava/lang/Throwable;ILjava/lang/Object;)V
+}
+
+public abstract interface class elide/runtime/http/server/HttpRequestBody : elide/runtime/http/server/HttpContentStream {
+	public abstract fun consume (Lelide/runtime/http/server/HttpRequestConsumer;)V
+}
+
+public abstract interface class elide/runtime/http/server/HttpRequestBody$Reader {
+	public abstract fun pull ()V
+	public abstract fun release ()V
+}
+
+public abstract interface class elide/runtime/http/server/HttpRequestConsumer {
+	public abstract fun onAttached (Lelide/runtime/http/server/HttpRequestBody$Reader;)V
+	public abstract fun onClose (Ljava/lang/Throwable;)V
+	public static synthetic fun onClose$default (Lelide/runtime/http/server/HttpRequestConsumer;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public abstract fun onRead (Lio/netty/buffer/ByteBuf;)V
+}
+
+public abstract interface class elide/runtime/http/server/HttpResponseBody : elide/runtime/http/server/HttpContentStream {
+	public abstract fun source (Lelide/runtime/http/server/HttpResponseSource;)V
+}
+
+public abstract interface class elide/runtime/http/server/HttpResponseBody$Writer {
+	public abstract fun end (Ljava/lang/Throwable;)V
+	public static synthetic fun end$default (Lelide/runtime/http/server/HttpResponseBody$Writer;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public abstract fun write (Lio/netty/buffer/ByteBuf;)V
+}
+
+public abstract interface class elide/runtime/http/server/HttpResponseSource {
+	public abstract fun onAttached (Lelide/runtime/http/server/HttpResponseBody$Writer;)V
+	public abstract fun onClose (Ljava/lang/Throwable;)V
+	public static synthetic fun onClose$default (Lelide/runtime/http/server/HttpResponseSource;Ljava/lang/Throwable;ILjava/lang/Object;)V
+	public abstract fun onPull ()V
 }
 
 public final class elide/runtime/http/server/HttpServerEngine {
@@ -2837,15 +2856,6 @@ public final class elide/runtime/http/server/HttpsOptions {
 public final class elide/runtime/http/server/HttpsOptions$Companion {
 }
 
-public abstract interface class elide/runtime/http/server/ReadableContentStream : elide/runtime/http/server/ContentStream {
-	public abstract fun consume (Lelide/runtime/http/server/ContentStreamConsumer;)V
-}
-
-public abstract interface class elide/runtime/http/server/ReadableContentStream$Reader {
-	public abstract fun pull ()V
-	public abstract fun release ()V
-}
-
 public class elide/runtime/http/server/StreamBusyException : java/lang/IllegalStateException {
 	public fun <init> ()V
 }
@@ -2855,29 +2865,19 @@ public class elide/runtime/http/server/StreamClosedException : java/lang/Illegal
 	public fun getCause ()Ljava/lang/Throwable;
 }
 
-public abstract interface class elide/runtime/http/server/WritableContentStream : elide/runtime/http/server/ContentStream {
-	public abstract fun source (Lelide/runtime/http/server/ContentStreamSource;)V
-}
-
-public abstract interface class elide/runtime/http/server/WritableContentStream$Writer {
-	public abstract fun end (Ljava/lang/Throwable;)V
-	public static synthetic fun end$default (Lelide/runtime/http/server/WritableContentStream$Writer;Ljava/lang/Throwable;ILjava/lang/Object;)V
-	public abstract fun write (Lio/netty/buffer/ByteBuf;)V
-}
-
 public final class elide/runtime/http/server/guest/GuestIteratorProducerKt {
-	public static final fun sourceIterator (Lelide/runtime/http/server/WritableContentStream;Lorg/graalvm/polyglot/Value;Lelide/runtime/exec/ContextAwareExecutor;Lkotlin/jvm/functions/Function1;)V
+	public static final fun sourceIterator (Lelide/runtime/http/server/HttpResponseBody;Lorg/graalvm/polyglot/Value;Lelide/runtime/exec/ContextAwareExecutor;Lkotlin/jvm/functions/Function1;)V
 }
 
 public abstract class elide/runtime/http/server/js/node/NodeHttpServerApplication : elide/runtime/http/server/HttpApplication {
 	public fun <init> (Lelide/runtime/exec/ContextAwareExecutor;)V
 	protected abstract fun dispatch (Lelide/runtime/http/server/js/node/NodeHttpServerRequest;Lelide/runtime/http/server/js/node/NodeHttpServerResponse;)V
 	public fun handle (Lelide/runtime/http/server/HttpCall;)V
-	public fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/CallContext$Empty;
-	public synthetic fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/CallContext;
+	public fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/CallContext$Empty;
+	public synthetic fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/CallContext;
 }
 
-public final class elide/runtime/http/server/js/node/NodeHttpServerRequest : elide/runtime/http/server/ContentStreamConsumer, elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/node/events/EventAware {
+public final class elide/runtime/http/server/js/node/NodeHttpServerRequest : elide/runtime/http/server/HttpRequestConsumer, elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/node/events/EventAware {
 	public static final field Companion Lelide/runtime/http/server/js/node/NodeHttpServerRequest$Companion;
 	public static final field EVENT_CLOSE Ljava/lang/String;
 	public static final field EVENT_DATA Ljava/lang/String;
@@ -2906,7 +2906,7 @@ public final class elide/runtime/http/server/js/node/NodeHttpServerRequest : eli
 	public fun off (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public fun on (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
 	public fun on (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
-	public fun onAttached (Lelide/runtime/http/server/ReadableContentStream$Reader;)V
+	public fun onAttached (Lelide/runtime/http/server/HttpRequestBody$Reader;)V
 	public fun onClose (Ljava/lang/Throwable;)V
 	public fun onRead (Lio/netty/buffer/ByteBuf;)V
 	public fun once (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
@@ -2930,7 +2930,7 @@ public final class elide/runtime/http/server/js/node/NodeHttpServerRequest : eli
 public final class elide/runtime/http/server/js/node/NodeHttpServerRequest$Companion {
 }
 
-public final class elide/runtime/http/server/js/node/NodeHttpServerResponse : elide/runtime/http/server/ContentStreamSource, elide/runtime/node/events/EventAware, org/graalvm/polyglot/proxy/ProxyObject {
+public final class elide/runtime/http/server/js/node/NodeHttpServerResponse : elide/runtime/http/server/HttpResponseSource, elide/runtime/node/events/EventAware, org/graalvm/polyglot/proxy/ProxyObject {
 	public synthetic fun <init> (Lelide/runtime/http/server/HttpCall;Lelide/runtime/http/server/js/node/NodeHttpServerRequest;Lelide/runtime/exec/ContextAwareExecutor;Lelide/runtime/node/events/EventAwareProxy;Lorg/graalvm/polyglot/Context;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lelide/runtime/http/server/HttpCall;Lelide/runtime/http/server/js/node/NodeHttpServerRequest;Lelide/runtime/exec/ContextAwareExecutor;Lelide/runtime/node/events/EventAwareProxy;Lorg/graalvm/polyglot/Context;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun addEventListener (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/AddEventListenerOptions;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
@@ -2952,7 +2952,7 @@ public final class elide/runtime/http/server/js/node/NodeHttpServerResponse : el
 	public fun off (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public fun on (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
 	public fun on (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Lelide/runtime/intrinsics/js/node/events/EventEmitter;
-	public fun onAttached (Lelide/runtime/http/server/WritableContentStream$Writer;)V
+	public fun onAttached (Lelide/runtime/http/server/HttpResponseBody$Writer;)V
 	public fun onClose (Ljava/lang/Throwable;)V
 	public fun onPull ()V
 	public fun once (Ljava/lang/String;Lelide/runtime/intrinsics/js/node/events/EventListener;)V
@@ -2977,8 +2977,8 @@ public final class elide/runtime/http/server/js/node/NodeHttpServerResponse : el
 public final class elide/runtime/http/server/js/worker/JsWorkerApplication : elide/runtime/http/server/HttpApplication {
 	public fun <init> (Lorg/graalvm/polyglot/Source;Lelide/runtime/exec/ContextAwareExecutor;)V
 	public fun handle (Lelide/runtime/http/server/HttpCall;)V
-	public synthetic fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/CallContext;
-	public fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/js/worker/JsWorkerEnv;
+	public synthetic fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/CallContext;
+	public fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/js/worker/JsWorkerEnv;
 	public fun onStart (Lelide/runtime/http/server/netty/HttpApplicationStack;)V
 }
 
@@ -3037,8 +3037,8 @@ public final class elide/runtime/http/server/netty/HttpApplicationStack {
 }
 
 public final class elide/runtime/http/server/netty/HttpApplicationStack$Companion {
-	public final fun bind (Lelide/runtime/http/server/HttpApplication;Lelide/runtime/http/server/HttpApplicationOptions;Lelide/runtime/http/server/netty/HttpServerTransport;)Lelide/runtime/http/server/netty/HttpApplicationStack;
-	public static synthetic fun bind$default (Lelide/runtime/http/server/netty/HttpApplicationStack$Companion;Lelide/runtime/http/server/HttpApplication;Lelide/runtime/http/server/HttpApplicationOptions;Lelide/runtime/http/server/netty/HttpServerTransport;ILjava/lang/Object;)Lelide/runtime/http/server/netty/HttpApplicationStack;
+	public final fun bind (Lelide/runtime/http/server/HttpApplication;Lelide/runtime/http/server/HttpApplicationOptions;Lelide/runtime/http/server/netty/ServerTransport;)Lelide/runtime/http/server/netty/HttpApplicationStack;
+	public static synthetic fun bind$default (Lelide/runtime/http/server/netty/HttpApplicationStack$Companion;Lelide/runtime/http/server/HttpApplication;Lelide/runtime/http/server/HttpApplicationOptions;Lelide/runtime/http/server/netty/ServerTransport;ILjava/lang/Object;)Lelide/runtime/http/server/netty/HttpApplicationStack;
 }
 
 public final class elide/runtime/http/server/netty/HttpApplicationStack$Service {
@@ -3071,38 +3071,38 @@ public final class elide/runtime/http/server/netty/HttpApplicationStackKt {
 	public static final fun assembleUri (Lelide/runtime/http/server/netty/HttpApplicationStack$ServiceBinding;)Ljava/net/URI;
 }
 
-public abstract interface class elide/runtime/http/server/netty/HttpServerTransport {
-	public static final field Companion Lelide/runtime/http/server/netty/HttpServerTransport$Companion;
-	public abstract fun checkAvailable (ZZ)Lelide/runtime/http/server/netty/HttpServerTransport$Availability;
-	public static synthetic fun checkAvailable$default (Lelide/runtime/http/server/netty/HttpServerTransport;ZZILjava/lang/Object;)Lelide/runtime/http/server/netty/HttpServerTransport$Availability;
+public abstract interface class elide/runtime/http/server/netty/ServerTransport {
+	public static final field Companion Lelide/runtime/http/server/netty/ServerTransport$Companion;
+	public abstract fun checkAvailable (ZZ)Lelide/runtime/http/server/netty/ServerTransport$Availability;
+	public static synthetic fun checkAvailable$default (Lelide/runtime/http/server/netty/ServerTransport;ZZILjava/lang/Object;)Lelide/runtime/http/server/netty/ServerTransport$Availability;
 	public fun configure (Lio/netty/bootstrap/AbstractBootstrap;)V
 	public abstract fun eventLoopGroup ()Lio/netty/channel/EventLoopGroup;
 	public fun mapAddress (Ljava/net/SocketAddress;)Ljava/net/SocketAddress;
 	public abstract fun tcpChannel (Z)Ljava/lang/Class;
-	public static synthetic fun tcpChannel$default (Lelide/runtime/http/server/netty/HttpServerTransport;ZILjava/lang/Object;)Ljava/lang/Class;
+	public static synthetic fun tcpChannel$default (Lelide/runtime/http/server/netty/ServerTransport;ZILjava/lang/Object;)Ljava/lang/Class;
 	public abstract fun udpChannel (Z)Ljava/lang/Class;
-	public static synthetic fun udpChannel$default (Lelide/runtime/http/server/netty/HttpServerTransport;ZILjava/lang/Object;)Ljava/lang/Class;
+	public static synthetic fun udpChannel$default (Lelide/runtime/http/server/netty/ServerTransport;ZILjava/lang/Object;)Ljava/lang/Class;
 }
 
-public abstract interface class elide/runtime/http/server/netty/HttpServerTransport$Availability {
+public abstract interface class elide/runtime/http/server/netty/ServerTransport$Availability {
 }
 
-public final class elide/runtime/http/server/netty/HttpServerTransport$Available : elide/runtime/http/server/netty/HttpServerTransport$Availability {
-	public static final field INSTANCE Lelide/runtime/http/server/netty/HttpServerTransport$Available;
+public final class elide/runtime/http/server/netty/ServerTransport$Available : elide/runtime/http/server/netty/ServerTransport$Availability {
+	public static final field INSTANCE Lelide/runtime/http/server/netty/ServerTransport$Available;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class elide/runtime/http/server/netty/HttpServerTransport$Companion {
-	public final fun getAll ()[Lelide/runtime/http/server/netty/HttpServerTransport;
-	public final fun resolve (ZZ)Lelide/runtime/http/server/netty/HttpServerTransport;
-	public static synthetic fun resolve$default (Lelide/runtime/http/server/netty/HttpServerTransport$Companion;ZZILjava/lang/Object;)Lelide/runtime/http/server/netty/HttpServerTransport;
+public final class elide/runtime/http/server/netty/ServerTransport$Companion {
+	public final fun getAll ()[Lelide/runtime/http/server/netty/ServerTransport;
+	public final fun resolve (ZZ)Lelide/runtime/http/server/netty/ServerTransport;
+	public static synthetic fun resolve$default (Lelide/runtime/http/server/netty/ServerTransport$Companion;ZZILjava/lang/Object;)Lelide/runtime/http/server/netty/ServerTransport;
 }
 
-public final class elide/runtime/http/server/netty/HttpServerTransport$Unavailable : elide/runtime/http/server/netty/HttpServerTransport$Availability {
-	public static final field Companion Lelide/runtime/http/server/netty/HttpServerTransport$Unavailable$Companion;
-	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/http/server/netty/HttpServerTransport$Unavailable;
+public final class elide/runtime/http/server/netty/ServerTransport$Unavailable : elide/runtime/http/server/netty/ServerTransport$Availability {
+	public static final field Companion Lelide/runtime/http/server/netty/ServerTransport$Unavailable$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/runtime/http/server/netty/ServerTransport$Unavailable;
 	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
 	public fun equals (Ljava/lang/Object;)Z
 	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
@@ -3115,15 +3115,15 @@ public final class elide/runtime/http/server/netty/HttpServerTransport$Unavailab
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
-public final class elide/runtime/http/server/netty/HttpServerTransport$Unavailable$Companion {
-	public final fun getUNSUPPORTED_TCP_DOMAIN_SOCKETS-VevuToM ()Ljava/lang/String;
-	public final fun getUNSUPPORTED_UDP_DOMAIN_SOCKETS-VevuToM ()Ljava/lang/String;
-	public final fun nativeTransportUnavailable-YWr4K4A (Ljava/lang/Throwable;)Ljava/lang/String;
+public final class elide/runtime/http/server/netty/ServerTransport$Unavailable$Companion {
+	public final fun getUNSUPPORTED_TCP_DOMAIN_SOCKETS-gttqI6U ()Ljava/lang/String;
+	public final fun getUNSUPPORTED_UDP_DOMAIN_SOCKETS-gttqI6U ()Ljava/lang/String;
+	public final fun nativeTransportUnavailable-K4TT3CM (Ljava/lang/Throwable;)Ljava/lang/String;
 }
 
-public final class elide/runtime/http/server/netty/HttpServerTransportKt {
-	public static final fun isAvailable (Lelide/runtime/http/server/netty/HttpServerTransport;ZZ)Z
-	public static synthetic fun isAvailable$default (Lelide/runtime/http/server/netty/HttpServerTransport;ZZILjava/lang/Object;)Z
+public final class elide/runtime/http/server/netty/ServerTransportKt {
+	public static final fun isAvailable (Lelide/runtime/http/server/netty/ServerTransport;ZZ)Z
+	public static synthetic fun isAvailable$default (Lelide/runtime/http/server/netty/ServerTransport;ZZILjava/lang/Object;)Z
 }
 
 public final class elide/runtime/http/server/python/flask/FlaskContext : elide/runtime/http/server/CallContext {
@@ -3141,8 +3141,8 @@ public final class elide/runtime/http/server/python/flask/FlaskRouter {
 
 public final class elide/runtime/http/server/python/flask/FlaskServerApplication : elide/runtime/http/server/HttpApplication {
 	public fun handle (Lelide/runtime/http/server/HttpCall;)V
-	public synthetic fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/CallContext;
-	public fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/python/flask/FlaskContext;
+	public synthetic fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/CallContext;
+	public fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/python/flask/FlaskContext;
 }
 
 public final class elide/runtime/http/server/python/wsgi/WsgiEntrypoint {
@@ -3191,7 +3191,7 @@ public final class elide/runtime/http/server/python/wsgi/WsgiErrorStream : org/g
 	public synthetic fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 }
 
-public final class elide/runtime/http/server/python/wsgi/WsgiInputStream : elide/runtime/http/server/ContentStreamConsumer, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyIterator, org/graalvm/polyglot/proxy/ProxyObject {
+public final class elide/runtime/http/server/python/wsgi/WsgiInputStream : elide/runtime/http/server/HttpRequestConsumer, org/graalvm/polyglot/proxy/ProxyIterable, org/graalvm/polyglot/proxy/ProxyIterator, org/graalvm/polyglot/proxy/ProxyObject {
 	public static final field Companion Lelide/runtime/http/server/python/wsgi/WsgiInputStream$Companion;
 	public fun <init> (Lelide/runtime/exec/ContextAwareExecutor;J)V
 	public final fun dispose ()V
@@ -3202,7 +3202,7 @@ public final class elide/runtime/http/server/python/wsgi/WsgiInputStream : elide
 	public fun getNext ()Ljava/lang/Object;
 	public fun hasMember (Ljava/lang/String;)Z
 	public fun hasNext ()Z
-	public fun onAttached (Lelide/runtime/http/server/ReadableContentStream$Reader;)V
+	public fun onAttached (Lelide/runtime/http/server/HttpRequestBody$Reader;)V
 	public fun onClose (Ljava/lang/Throwable;)V
 	public fun onRead (Lio/netty/buffer/ByteBuf;)V
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)Ljava/lang/Void;
@@ -3216,8 +3216,8 @@ public final class elide/runtime/http/server/python/wsgi/WsgiServerApplication :
 	public static final field Companion Lelide/runtime/http/server/python/wsgi/WsgiServerApplication$Companion;
 	public fun <init> (Lelide/runtime/http/server/python/wsgi/WsgiEntrypoint;Lelide/runtime/exec/ContextAwareExecutor;)V
 	public fun handle (Lelide/runtime/http/server/HttpCall;)V
-	public synthetic fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/CallContext;
-	public fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/ReadableContentStream;Lelide/runtime/http/server/WritableContentStream;)Lelide/runtime/http/server/python/wsgi/WsgiEnviron;
+	public synthetic fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/CallContext;
+	public fun newContext (Lio/netty/handler/codec/http/HttpRequest;Lio/netty/handler/codec/http/HttpResponse;Lelide/runtime/http/server/HttpRequestBody;Lelide/runtime/http/server/HttpResponseBody;)Lelide/runtime/http/server/python/wsgi/WsgiEnviron;
 	public fun onStart (Lelide/runtime/http/server/netty/HttpApplicationStack;)V
 	public fun toString ()Ljava/lang/String;
 }

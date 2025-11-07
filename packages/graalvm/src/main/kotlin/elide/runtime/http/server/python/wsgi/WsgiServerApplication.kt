@@ -81,8 +81,8 @@ public class WsgiServerApplication(
   override fun newContext(
     request: HttpRequest,
     response: HttpResponse,
-    requestBody: ReadableContentStream,
-    responseBody: WritableContentStream
+    requestBody: HttpRequestBody,
+    responseBody: HttpResponseBody
   ): WsgiEnviron {
     val host = hostInfo ?: error("Host info is unresolved, cannot accept calls before binding")
     return WsgiEnviron.from(request, executor, entrypoint, host)

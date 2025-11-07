@@ -21,9 +21,9 @@ import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.exec.PinnedContext
 import elide.runtime.http.server.CallContext
-import elide.runtime.http.server.ContentStreamConsumer
+import elide.runtime.http.server.HttpRequestConsumer
 import elide.runtime.http.server.HttpCall
-import elide.runtime.http.server.ReadableContentStream
+import elide.runtime.http.server.HttpRequestBody
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.node.buffer.NodeHostBuffer
 import elide.runtime.node.events.EventAware
@@ -35,7 +35,7 @@ public class NodeHttpServerRequest(
   private val executor: ContextAwareExecutor,
   private val events: EventAwareProxy = EventAwareProxy.create(),
   private val origin: PinnedContext = PinnedContext.current(),
-) : EventAware by events, ReadOnlyProxyObject, ContentStreamConsumer {
+) : EventAware by events, ReadOnlyProxyObject, HttpRequestConsumer {
   init {
     addListener(NEW_LISTENER) {
       // if a data listener attaches before we have a reader, set the pull flag
@@ -93,7 +93,7 @@ public class NodeHttpServerRequest(
   }
 
   private val complete = AtomicBoolean(false)
-  private val sourceReader = AtomicReference<ReadableContentStream.Reader?>(null)
+  private val sourceReader = AtomicReference<HttpRequestBody.Reader?>(null)
   private val flowing = AtomicBoolean(false)
 
   override fun getMemberKeys(): Array<String> = MemberKeys + events.memberKeys
@@ -120,7 +120,7 @@ public class NodeHttpServerRequest(
     else -> events.getMember(key)
   }
 
-  override fun onAttached(reader: ReadableContentStream.Reader) {
+  override fun onAttached(reader: HttpRequestBody.Reader) {
     sourceReader.set(reader)
     reader.pull()
   }

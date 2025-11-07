@@ -32,24 +32,24 @@ import java.net.SocketAddress
 import java.net.UnixDomainSocketAddress
 import kotlin.io.path.pathString
 import elide.runtime.Logging
-import elide.runtime.http.server.netty.HttpServerTransport.Availability
-import elide.runtime.http.server.netty.HttpServerTransport.Available
-import elide.runtime.http.server.netty.HttpServerTransport.Unavailable.Companion.nativeTransportUnavailable
+import elide.runtime.http.server.netty.ServerTransport.Availability
+import elide.runtime.http.server.netty.ServerTransport.Available
+import elide.runtime.http.server.netty.ServerTransport.Unavailable.Companion.nativeTransportUnavailable
 
 /**
  * Platform-specific transport that provides the [event loop groups][eventLoopGroup] and channel classes used by
  * the server (for both [TCP][tcpChannel] and [UDP][udpChannel] sockets).
  *
- * Use [HttpServerTransport.resolve] to resolve the preferred transport implementation for the current platform.
+ * Use [ServerTransport.resolve] to resolve the preferred transport implementation for the current platform.
  */
-public interface HttpServerTransport {
-  /** Describes the availability of an [HttpServerTransport] on a specific platform. */
+public interface ServerTransport {
+  /** Describes the availability of an [ServerTransport] on a specific platform. */
   public sealed interface Availability
 
-  /** Indicates that the target [HttpServerTransport] is available and supports the requested features. */
+  /** Indicates that the target [ServerTransport] is available and supports the requested features. */
   public data object Available : Availability
 
-  /** Indicates that the target [HttpServerTransport] is unavailable or does not support the requested features. */
+  /** Indicates that the target [ServerTransport] is unavailable or does not support the requested features. */
   @JvmInline public value class Unavailable(public val reason: String) : Availability {
     public companion object {
       public val UNSUPPORTED_TCP_DOMAIN_SOCKETS: Unavailable = Unavailable("TCP domain sockets are not supported")
@@ -98,7 +98,7 @@ public interface HttpServerTransport {
 
   public companion object {
     /** Lists all supported server transports, in descending order of priority. */
-    public val all: Array<HttpServerTransport> = arrayOf(
+    public val all: Array<ServerTransport> = arrayOf(
       // prefer `io_uring` if available (Linux-only, modern kernels)
       IOUringTransport,
       // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
@@ -109,20 +109,20 @@ public interface HttpServerTransport {
       NioTransport,
     )
 
-    private val log = Logging.of(HttpServerTransport::class)
+    private val log = Logging.of(ServerTransport::class)
 
     /**
-     * Resolve the preferred [HttpServerTransport] for the current platform, optionally requiring support for the
+     * Resolve the preferred [ServerTransport] for the current platform, optionally requiring support for the
      * specified features.
      *
      * @param tcpDomainSockets Whether support for TCP over Unix domain sockets is required.
      * @param udpDomainSockets Whether support for UDP over Unix domain sockets is required.
-     * @return A [HttpServerTransport] with support for the requested features, or `null` if none is found.
+     * @return A [ServerTransport] with support for the requested features, or `null` if none is found.
      */
     public fun resolve(
       tcpDomainSockets: Boolean = false,
       udpDomainSockets: Boolean = false,
-    ): HttpServerTransport? {
+    ): ServerTransport? {
       for (transport in all) {
         val result = transport.checkAvailable(tcpDomainSockets, udpDomainSockets)
 
@@ -142,15 +142,15 @@ public interface HttpServerTransport {
  * @param udpDomain Require support for UDP over Unix domain sockets.
  * @return Whether the transport is available for the current platform and supports the requested features.
  */
-public fun HttpServerTransport.isAvailable(
+public fun ServerTransport.isAvailable(
   tcpDomain: Boolean = false,
   udpDomain: Boolean = false,
 ): Boolean = checkAvailable(tcpDomain, udpDomain) is Available
 
 /** Generic Java NIO transport layer, used as fallback where native transport is not available. */
-internal data object NioTransport : HttpServerTransport {
+internal data object NioTransport : ServerTransport {
   override fun checkAvailable(tcpDomain: Boolean, udpDomain: Boolean): Availability {
-    if (udpDomain) return HttpServerTransport.Unavailable.UNSUPPORTED_UDP_DOMAIN_SOCKETS
+    if (udpDomain) return ServerTransport.Unavailable.UNSUPPORTED_UDP_DOMAIN_SOCKETS
     return Available
   }
 
@@ -175,7 +175,7 @@ internal data object NioTransport : HttpServerTransport {
 }
 
 /** Base class for Unix native transports. */
-internal abstract class UnixTransport : HttpServerTransport {
+internal abstract class UnixTransport : ServerTransport {
   override fun mapAddress(address: SocketAddress): SocketAddress = when (address) {
     is UnixDomainSocketAddress -> DomainSocketAddress(address.path.pathString)
     else -> address
@@ -186,8 +186,8 @@ internal abstract class UnixTransport : HttpServerTransport {
 internal data object IOUringTransport : UnixTransport() {
   override fun checkAvailable(tcpDomain: Boolean, udpDomain: Boolean): Availability = when {
     !IOUring.isAvailable() -> nativeTransportUnavailable(IOUring.unavailabilityCause())
-    tcpDomain -> HttpServerTransport.Unavailable.UNSUPPORTED_TCP_DOMAIN_SOCKETS
-    udpDomain -> HttpServerTransport.Unavailable.UNSUPPORTED_UDP_DOMAIN_SOCKETS
+    tcpDomain -> ServerTransport.Unavailable.UNSUPPORTED_TCP_DOMAIN_SOCKETS
+    udpDomain -> ServerTransport.Unavailable.UNSUPPORTED_UDP_DOMAIN_SOCKETS
     else -> Available
   }
 

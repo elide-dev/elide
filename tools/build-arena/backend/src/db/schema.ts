@@ -53,6 +53,29 @@ export const workerAssignments = sqliteTable('worker_assignments', {
   completedAt: integer('completed_at', { mode: 'timestamp' }),
 });
 
+/**
+ * Build cache table - stores metadata about cached recordings
+ */
+export const buildCache = sqliteTable('build_cache', {
+  cacheKey: text('cache_key').primaryKey(),
+  jobId: text('job_id').notNull().references(() => jobs.id),
+  repositoryUrl: text('repository_url').notNull(),
+  commitHash: text('commit_hash'),
+  buildTool: text('build_tool').notNull(), // 'elide' | 'standard'
+
+  recordingPath: text('recording_path').notNull(),
+  fileSizeBytes: integer('file_size_bytes').notNull(),
+  durationMs: integer('duration_ms').notNull(),
+  messageCount: integer('message_count').notNull(),
+
+  claudeVersion: text('claude_version').notNull(),
+  dockerImage: text('docker_image').notNull(),
+
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  accessCount: integer('access_count').notNull().default(0),
+  lastAccessedAt: integer('last_accessed_at', { mode: 'timestamp' }),
+});
+
 export type Job = typeof jobs.$inferSelect;
 export type NewJob = typeof jobs.$inferInsert;
 export type BuildResult = typeof buildResults.$inferSelect;
@@ -61,3 +84,5 @@ export type Worker = typeof workers.$inferSelect;
 export type NewWorker = typeof workers.$inferInsert;
 export type WorkerAssignment = typeof workerAssignments.$inferSelect;
 export type NewWorkerAssignment = typeof workerAssignments.$inferInsert;
+export type BuildCache = typeof buildCache.$inferSelect;
+export type NewBuildCache = typeof buildCache.$inferInsert;

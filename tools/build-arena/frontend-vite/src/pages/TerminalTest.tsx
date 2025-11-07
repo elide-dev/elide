@@ -17,9 +17,9 @@ export function TerminalTest() {
     if (!terminalRef.current) return;
 
     console.log('Creating terminal...');
-    // Create terminal
+    // Create terminal (read-only for "watching like a movie")
     const term = new Terminal({
-      cursorBlink: true,
+      cursorBlink: false, // No cursor in view-only mode
       fontSize: 14,
       fontFamily: 'Menlo, Monaco, "Courier New", monospace',
       theme: {
@@ -29,6 +29,7 @@ export function TerminalTest() {
       rows: 30,
       cols: 120,
       convertEol: true,
+      disableStdin: true, // Disable keyboard input - view-only
     });
 
     const fit = new FitAddon();
@@ -41,27 +42,12 @@ export function TerminalTest() {
 
       // Welcome message
       term.writeln('\x1b[1;32m=== Build Arena Terminal Test ===\x1b[0m');
+      term.writeln('\x1b[1;36m📺 View-Only Mode - Watch the build like a movie\x1b[0m');
       term.writeln('Click "Start Container" to launch a test environment\n');
-
-      // Focus terminal
-      term.focus();
     }, 0);
 
     terminal.current = term;
     fitAddon.current = fit;
-
-    // Focus terminal on click
-    terminalRef.current.addEventListener('click', () => {
-      term.focus();
-    });
-
-    // Register terminal input handler
-    term.onData((data) => {
-      // Send to container via WebSocket if connected
-      if (ws.current?.readyState === WebSocket.OPEN) {
-        ws.current.send(JSON.stringify({ type: 'input', data }));
-      }
-    });
 
     // Handle window resize
     const handleResize = () => {
@@ -100,7 +86,8 @@ export function TerminalTest() {
       setContainerStatus('Running');
 
       terminal.current.writeln(`\x1b[1;32mContainer started: ${data.containerId}\x1b[0m`);
-      terminal.current.writeln('\x1b[1;33mConnecting WebSocket...\x1b[0m\n');
+      terminal.current.writeln('\x1b[1;33mConnecting WebSocket...\x1b[0m');
+      terminal.current.writeln('\x1b[1;36m📺 View-only mode - no keyboard input required\x1b[0m\n');
 
       // Connect WebSocket
       connectWebSocket(data.containerId);
@@ -118,33 +105,19 @@ export function TerminalTest() {
 
     ws.current.onopen = () => {
       terminal.current?.writeln('\x1b[1;32m✓ WebSocket connected\x1b[0m');
-      terminal.current?.writeln('\x1b[1;36mType commands and press Enter\x1b[0m\n');
+      terminal.current?.writeln('\x1b[1;36m📺 Watching build output in real-time...\x1b[0m\n');
       setConnected(true);
 
       // Auto-run Claude Code if enabled
       if (autoRunClaude && repoUrl && ws.current) {
         // Wait a moment for the shell to fully initialize
         setTimeout(() => {
-          // Start Claude Code in interactive mode
-          const claudeCommand = `claude "Clone ${repoUrl}, analyze the project structure, then build it using Elide. Time the build and report the results. Read /workspace/CLAUDE.md for instructions."\n`;
-          terminal.current?.writeln(`\x1b[1;35m🤖 Auto-starting Claude Code...\x1b[0m`);
+          // Start Claude Code in non-interactive mode using --print flag
+          const claudeCommand = `claude --print --output-format json --max-turns 50 "Clone ${repoUrl}, analyze the project structure, then build it using Elide. Time the build and report the results. Read /workspace/CLAUDE.md for instructions."\n`;
+          terminal.current?.writeln(`\x1b[1;35m🤖 Starting Claude Code (non-interactive)...\x1b[0m`);
           ws.current?.send(JSON.stringify({ type: 'input', data: claudeCommand }));
-
-          // Auto-answer prompts:
-          // After 1.5 seconds, send "1" for dark mode
-          setTimeout(() => {
-            ws.current?.send(JSON.stringify({ type: 'input', data: '1\n' }));
-          }, 1500);
-
-          // After 3 seconds, send Enter to skip account linking
-          setTimeout(() => {
-            ws.current?.send(JSON.stringify({ type: 'input', data: '\n' }));
-          }, 3000);
         }, 2000); // 2 second delay to let bashrc finish
       }
-
-      // Focus the terminal to capture keyboard input
-      terminal.current?.focus();
     };
 
     ws.current.onmessage = (event) => {
@@ -287,23 +260,23 @@ export function TerminalTest() {
         </div>
 
         <div className="bg-slate-800 rounded-lg shadow-xl p-6">
-          <h2 className="text-xl font-bold text-white mb-4">Test Instructions</h2>
+          <h2 className="text-xl font-bold text-white mb-4">📺 View-Only Terminal</h2>
           <ul className="space-y-2 text-gray-300">
             <li className="flex items-start gap-2">
               <span className="text-green-500">1.</span>
-              <span>Click "Start Container" to launch a Docker container with Elide builder image</span>
+              <span>Enter a repository URL and check "Auto-run Claude Code"</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-500">2.</span>
-              <span>WebSocket will automatically connect to the container's terminal</span>
+              <span>Click "Start Container" to launch the build environment</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-500">3.</span>
-              <span>Try commands: <code className="bg-slate-700 px-2 py-1 rounded text-sm">ls</code>, <code className="bg-slate-700 px-2 py-1 rounded text-sm">pwd</code>, <code className="bg-slate-700 px-2 py-1 rounded text-sm">java -version</code></span>
+              <span>Watch as Claude Code automatically clones, analyzes, and builds the project</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-500">4.</span>
-              <span>Test Claude Code if installed: <code className="bg-slate-700 px-2 py-1 rounded text-sm">claude --version</code></span>
+              <span><strong>No keyboard input needed</strong> - Just watch the build like a movie 🍿</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-green-500">5.</span>

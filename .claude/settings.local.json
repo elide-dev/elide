@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout:*)",
+      "Bash(tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(curl:*)",
+      "Bash(pnpm test:headed:*)",
+      "Bash(pkill:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm db:push:*)",
+      "Bash(pnpm --filter @elide/build-arena-backend db:push:*)",
+      "Bash(echo:*)",
+      "Bash(.gitignore)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(pnpm --filter @elide/build-arena-frontend add:*)",
+      "Bash(pnpm --filter @elide/build-arena-frontend dev:*)",
+      "Bash(open:*)",
+      "Bash(./build-images.sh:*)",
+      "mcp__elide__elide",
+      "Bash(./test-terminal.sh:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm exec tsc:*)",
+      "Bash(cat:*)",
+      "Bash(docker rm:*)",
+      "Bash(docker exec:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat(build-arena): add terminal testing page with Claude Code API key support\n\n- Add TerminalTest page with xterm.js for interactive container terminal\n- Implement WebSocket-based terminal I/O for direct container access  \n- Create test API endpoints for container lifecycle management\n- Fix React StrictMode compatibility by removing initialized ref guard\n- Add ANTHROPIC_API_KEY environment variable support:\n  - Updated .env with Claude Code API key\n  - Modified backend to load .env variables on startup\n  - Pass API key to all Docker containers via Env array\n- Add terminal WebSocket server with path-based routing\n- Prevent duplicate WebSocket handler registration in watch mode\n\nThe terminal test page allows interactive testing of Docker containers\nwith Claude Code installed, verifying that the API key is properly\npassed to containers for build automation.\n\nTested:\n- Terminal renders correctly with colors and formatting\n- Commands execute and show output (ls, pwd, java -version)\n- Claude Code is available (claude --version shows 2.0.35)\n- ANTHROPIC_API_KEY is passed to containers (verified via docker exec)\n- WebSocket handles bidirectional I/O without duplication\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "WebFetch(domain:code.claude.com)",
+      "Bash(git commit:*)",
+      "Bash(docker run --rm elide-builder:latest cat /home/builder/.claude/settings.json)",
+      "Bash(docker run:*)",
+      "Bash(source .env)",
+      "Bash(xargs cat:*)",
+      "Bash(/Users/rwalters/GitHub/elide/tools/build-arena/test-claude-noninteractive.sh:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "elide"
+  ]
+}

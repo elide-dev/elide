@@ -17,6 +17,10 @@ export function Terminal({ jobId, tool, onBellRung }: TerminalProps) {
   const wsRef = useRef<WebSocket | null>(null)
   const [bellCount, setBellCount] = useState(0)
   const [keystrokeCount, setKeystrokeCount] = useState(0)
+  const [buildStartTime, setBuildStartTime] = useState<number | null>(null)
+  const [buildDuration, setBuildDuration] = useState<number | null>(null)
+  const [elapsedTime, setElapsedTime] = useState<number>(0)
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const KEYSTROKE_LIMIT = 1000
 
   useEffect(() => {
@@ -109,6 +113,10 @@ export function Terminal({ jobId, tool, onBellRung }: TerminalProps) {
           const { payload } = message
           if (payload.tool === tool && payload.jobId === jobId) {
             term.writeln(`\x1b[1;32m=== Build started at ${payload.timestamp} ===\x1b[0m`)
+            // Start the timer
+            setBuildStartTime(Date.now())
+            setElapsedTime(0)
+            setBuildDuration(null)
           }
         } else if (message.type === 'build_completed') {
           const { payload } = message
@@ -120,6 +128,11 @@ export function Terminal({ jobId, tool, onBellRung }: TerminalProps) {
                 payload.result.duration
               }ms ===\x1b[0m`
             )
+            // Stop the timer
+            if (buildStartTime) {
+              setBuildDuration(Date.now() - buildStartTime)
+            }
+            setBuildStartTime(null)
           }
         } else if (message.type === 'build_bell') {
           const { payload } = message
@@ -127,6 +140,12 @@ export function Terminal({ jobId, tool, onBellRung }: TerminalProps) {
             setBellCount((prev) => prev + 1)
             if (onBellRung) {
               onBellRung()
+            }
+            // Stop the timer when bell rings
+            if (buildStartTime) {
+              const finalDuration = Date.now() - buildStartTime
+              setBuildDuration(finalDuration)
+              setBuildStartTime(null)
             }
             // Visual notification
             term.writeln('\x1b[1;33m🔔 BELL RUNG! Build milestone reached!\x1b[0m')
@@ -154,17 +173,58 @@ export function Terminal({ jobId, tool, onBellRung }: TerminalProps) {
       window.removeEventListener('resize', handleResize)
       ws.close()
       term.dispose()
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current)
+      }
     }
   }, [jobId, tool, onBellRung])
+
+  // Timer effect - updates elapsed time every 100ms when build is running
+  useEffect(() => {
+    if (buildStartTime !== null) {
+      // Start interval to update elapsed time
+      timerIntervalRef.current = setInterval(() => {
+        setElapsedTime(Date.now() - buildStartTime)
+      }, 100) // Update every 100ms for smooth display
+
+      return () => {
+        if (timerIntervalRef.current) {
+          clearInterval(timerIntervalRef.current)
+          timerIntervalRef.current = null
+        }
+      }
+    }
+  }, [buildStartTime])
+
+  // Format time as MM:SS.d
+  const formatTime = (ms: number): string => {
+    const totalSeconds = Math.floor(ms / 1000)
+    const minutes = Math.floor(totalSeconds / 60)
+    const seconds = totalSeconds % 60
+    const deciseconds = Math.floor((ms % 1000) / 100)
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${deciseconds}`
+  }
 
   return (
     <div className="relative h-full w-full">
       <div ref={terminalRef} className="h-full w-full" />
+
+      {/* Timer Display */}
+      {(buildStartTime !== null || buildDuration !== null) && (
+        <div className="absolute top-2 left-2 bg-indigo-600 text-white px-4 py-2 rounded-lg font-mono text-lg font-bold shadow-lg">
+          ⏱️ {formatTime(buildDuration !== null ? buildDuration : elapsedTime)}
+          {buildDuration !== null && ' (Final)'}
+        </div>
+      )}
+
+      {/* Bell Counter */}
       {bellCount > 0 && (
         <div className="absolute top-2 right-2 bg-yellow-500 text-black px-3 py-1 rounded-full font-bold text-sm animate-pulse">
           🔔 x{bellCount}
         </div>
       )}
+
+      {/* Keystroke Counter */}
       {keystrokeCount > 0 && (
         <div className="absolute bottom-2 right-2 bg-slate-700 text-gray-300 px-2 py-1 rounded text-xs">
           {keystrokeCount}/{KEYSTROKE_LIMIT} keys

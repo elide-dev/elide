@@ -272,14 +272,24 @@ INSTRUCTIONS_EOF
       echo "Starting Claude Code agent..."
       echo ""
 
-      # Start Claude Code with the instructions
-      # In a real implementation, you would start Claude Code here
-      # For now, we'll execute the instructions directly as a bash script
+      # Start Claude Code in non-interactive mode with proper flags
+      # Use --print for non-interactive mode
+      # --output-format json for structured output
+      # --max-turns to limit iterations
+      # The ANTHROPIC_API_KEY is pre-configured in the environment
 
-      # Extract and execute the bash commands from CLAUDE.md
-      # This is a simplified version - in production, Claude Code would read and execute these
+      claude --print --output-format json --max-turns 50 "$(cat CLAUDE.md)" 2>&1 | tee /workspace/claude-output.log
 
-      ${this.getDirectExecutionScript(tool)}
+      CLAUDE_EXIT_CODE=\${PIPESTATUS[0]}
+
+      if [ \$CLAUDE_EXIT_CODE -ne 0 ]; then
+        echo "Claude Code exited with code: \$CLAUDE_EXIT_CODE"
+        echo "Falling back to direct execution..."
+
+        ${this.getDirectExecutionScript(tool)}
+      else
+        echo "Claude Code execution completed successfully"
+      fi
 
       echo ""
       echo "======================================"

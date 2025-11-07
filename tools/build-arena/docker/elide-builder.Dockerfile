@@ -60,10 +60,14 @@ WORKDIR /workspace
 COPY CLAUDE.md /workspace/CLAUDE.md
 RUN chown builder:builder /workspace/CLAUDE.md
 
-# Pre-configure Claude Code to skip prompts and enable dangerous permissions
-RUN mkdir -p /home/builder/.config/claude && \
-    echo '{"theme":"dark","telemetry":false,"accountLinked":false,"skipAccountPrompt":true}' > /home/builder/.config/claude/config.json && \
-    chown -R builder:builder /home/builder/.config
+# Pre-configure Claude Code to skip prompts and enable non-interactive mode
+# Create API key helper script that returns the API key from environment
+RUN mkdir -p /home/builder/.claude && \
+    echo '#!/bin/bash' > /home/builder/.claude/api-key-helper.sh && \
+    echo 'echo "$ANTHROPIC_API_KEY"' >> /home/builder/.claude/api-key-helper.sh && \
+    chmod +x /home/builder/.claude/api-key-helper.sh && \
+    echo '{"permissionMode":"bypassPermissions","apiKeyHelper":"/home/builder/.claude/api-key-helper.sh"}' > /home/builder/.claude/settings.json && \
+    chown -R builder:builder /home/builder/.claude
 
 # Create .bashrc with helpful startup message
 RUN echo '# Display welcome message and Claude Code info' >> /home/builder/.bashrc && \

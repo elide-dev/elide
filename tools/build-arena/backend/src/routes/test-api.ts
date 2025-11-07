@@ -23,7 +23,7 @@ testApiRouter.post('/test/start-container', async (req, res) => {
       Tty: true,
       OpenStdin: true,
       StdinOnce: false,
-      Cmd: ['/bin/bash'],
+      Cmd: ['/bin/bash', '-l'],  // -l for login shell (sources .bashrc/.profile)
       WorkingDir: '/workspace',
       Env: [
         'TERM=xterm-256color',

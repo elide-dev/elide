@@ -13,6 +13,10 @@ export function TerminalTest() {
   const [containerStatus, setContainerStatus] = useState<string>('');
   const [repoUrl, setRepoUrl] = useState<string>('https://github.com/google/gson.git');
   const [autoRunClaude, setAutoRunClaude] = useState<boolean>(true);
+  const [elapsedTime, setElapsedTime] = useState<number>(0);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<number | null>(null);
   useEffect(() => {
     if (!terminalRef.current) return;
 
@@ -60,21 +64,64 @@ export function TerminalTest() {
       window.removeEventListener('resize', handleResize);
       term.dispose();
       ws.current?.close();
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
     };
   }, []);
 
+  // Timer effect
+  useEffect(() => {
+    if (isRunning) {
+      startTimeRef.current = Date.now();
+      timerIntervalRef.current = setInterval(() => {
+        if (startTimeRef.current) {
+          const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
+          setElapsedTime(elapsed);
+        }
+      }, 1000);
+    } else {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, [isRunning]);
+
   const startContainer = async () => {
     if (!terminal.current) return;
+
+    // Start timer
+    setElapsedTime(0);
+    setIsRunning(true);
 
     terminal.current.writeln('\x1b[1;33mStarting Docker container...\x1b[0m');
     setContainerStatus('Starting...');
 
     try {
-      // Start a test container
-      const response = await fetch('/api/test/start-container', {
+      // Choose endpoint based on whether auto-run is enabled
+      const endpoint = autoRunClaude
+        ? '/api/test/start-container-with-minder'
+        : '/api/test/start-container';
+
+      if (autoRunClaude) {
+        terminal.current.writeln('\x1b[1;35m🤖 Starting with autonomous minder process...\x1b[0m');
+      }
+
+      // Start a test container (with or without minder)
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: 'elide-builder:latest' }),
+        body: JSON.stringify({
+          image: 'elide-builder:latest',
+          repoUrl: repoUrl,
+        }),
       });
 
       if (!response.ok) {
@@ -86,10 +133,14 @@ export function TerminalTest() {
       setContainerStatus('Running');
 
       terminal.current.writeln(`\x1b[1;32mContainer started: ${data.containerId}\x1b[0m`);
+      if (data.minderPid) {
+        terminal.current.writeln(`\x1b[1;35m🤖 Minder process started (PID: ${data.minderPid})\x1b[0m`);
+        terminal.current.writeln('\x1b[1;35m✨ Autonomous mode: The minder will handle all Claude Code interactions\x1b[0m');
+      }
       terminal.current.writeln('\x1b[1;33mConnecting WebSocket...\x1b[0m');
       terminal.current.writeln('\x1b[1;36m📺 View-only mode - no keyboard input required\x1b[0m\n');
 
-      // Connect WebSocket
+      // Connect WebSocket in monitoring mode (not interactive)
       connectWebSocket(data.containerId);
     } catch (error) {
       terminal.current.writeln(`\x1b[1;31mError: ${error instanceof Error ? error.message : 'Unknown error'}\x1b[0m`);
@@ -100,8 +151,12 @@ export function TerminalTest() {
   const connectWebSocket = (containerId: string) => {
     if (!terminal.current) return;
 
-    // Enable recording by adding ?record=true to WebSocket URL
-    const wsUrl = `ws://localhost:3001/ws/terminal/${containerId}?record=true`;
+    // Enable recording and set interactive mode based on whether we're using the minder
+    // If using minder, we connect in monitoring mode (interactive=false)
+    const wsUrl = autoRunClaude
+      ? `ws://localhost:3001/ws/terminal/${containerId}?record=true&interactive=false`
+      : `ws://localhost:3001/ws/terminal/${containerId}?record=true`;
+
     ws.current = new WebSocket(wsUrl);
     terminal.current.writeln('\x1b[1;35m🎥 Recording enabled - session will be saved\x1b[0m');
 
@@ -110,16 +165,8 @@ export function TerminalTest() {
       terminal.current?.writeln('\x1b[1;36m📺 Watching build output in real-time...\x1b[0m\n');
       setConnected(true);
 
-      // Auto-run Claude Code if enabled
-      if (autoRunClaude && repoUrl && ws.current) {
-        // Wait a moment for the shell to fully initialize
-        setTimeout(() => {
-          // Start Claude Code in non-interactive mode using --print flag
-          const claudeCommand = `claude --print --output-format json --max-turns 50 "Clone ${repoUrl}, analyze the project structure, then build it using Elide. Time the build and report the results. Read /workspace/CLAUDE.md for instructions."\n`;
-          terminal.current?.writeln(`\x1b[1;35m🤖 Starting Claude Code (non-interactive)...\x1b[0m`);
-          ws.current?.send(JSON.stringify({ type: 'input', data: claudeCommand }));
-        }, 2000); // 2 second delay to let bashrc finish
-      }
+      // If minder is running, it will handle everything automatically
+      // If no minder, we're in manual mode (no auto-run from frontend)
     };
 
     ws.current.onmessage = (event) => {
@@ -143,6 +190,9 @@ export function TerminalTest() {
   const stopContainer = async () => {
     if (!containerId || !terminal.current) return;
 
+    // Stop timer
+    setIsRunning(false);
+
     terminal.current.writeln('\n\x1b[1;33mStopping container...\x1b[0m');
     setContainerStatus('Stopping...');
 
@@ -163,6 +213,13 @@ export function TerminalTest() {
 
   const clearTerminal = () => {
     terminal.current?.clear();
+  };
+
+  // Format elapsed time as MM:SS
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -230,6 +287,16 @@ export function TerminalTest() {
             </div>
 
             <div className="flex items-center gap-4">
+              {isRunning && (
+                <div className="flex items-center gap-2 bg-slate-700 px-4 py-2 rounded">
+                  <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-lg font-mono text-blue-400 font-bold">
+                    {formatTime(elapsedTime)}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <div
                   className={`w-3 h-3 rounded-full ${

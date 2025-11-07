@@ -15,13 +15,25 @@ package elide.runtime.node
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
+import elide.runtime.core.EntrypointRegistry
+import elide.runtime.core.RuntimeExecutor
+import elide.runtime.core.RuntimeLatch
 import elide.runtime.node.http.NodeHttpModule
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `http` built-in module. */
 @TestCase internal class NodeHttpTest : NodeModuleConformanceTest<NodeHttpModule>() {
+  @Inject lateinit var entrypoint: EntrypointRegistry
+  @Inject lateinit var executor: RuntimeExecutor
+  @Inject lateinit var latch: RuntimeLatch
+
   override val moduleName: String get() = "http"
-  override fun provide(): NodeHttpModule = NodeHttpModule()
+  override fun provide(): NodeHttpModule = NodeHttpModule(
+    entrypointProvider = { entrypoint },
+    runtimeLatch = { latch },
+    executorProvider = { executor },
+  )
+
   @Inject lateinit var http: NodeHttpModule
 
   // @TODO(sgammon): Not yet fully supported

@@ -19,11 +19,14 @@ import java.net.UnixDomainSocketAddress
 import java.time.Instant
 import kotlin.io.path.Path
 import elide.runtime.http.server.*
+import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tooling.project.manifest.ElidePackageManifest.ServerSettings
 
-fun ServerSettings.toHttpApplicationOptions(): HttpApplicationOptions {
+fun ServerSettings?.toHttpApplicationOptions(): HttpApplicationOptions {
+  if (this == null) return HttpApplicationOptions()
+
   return HttpApplicationOptions(
-    serverName = serverName ?: HttpApplicationOptions.DEFAULT_SERVER_NAME,
+    serverName = serverName ?: "elide/$ELIDE_TOOL_VERSION",
     http = if (!cleartext) null else CleartextOptions(
       address.toAddress(
         CleartextOptions.DEFAULT_HTTP_HOST,

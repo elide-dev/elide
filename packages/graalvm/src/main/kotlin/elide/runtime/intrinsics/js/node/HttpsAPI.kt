@@ -15,6 +15,6 @@ package elide.runtime.intrinsics.js.node
 import elide.annotations.API
 
 /**
- * ## Node API: HTTP
+ * ## Node API: HTTPS
  */
-@API public interface HTTPAPI : NodeAPI
+@API public interface HttpsAPI : NodeAPI

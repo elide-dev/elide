@@ -18,13 +18,13 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.intrinsics.js.node.HTTP2API
+import elide.runtime.intrinsics.js.node.Http2API
 import elide.runtime.lang.javascript.NodeModuleName
 
 // Installs the Node `http2` module into the intrinsic bindings.
 @Intrinsic internal class NodeHttp2Module : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeHttp2.create() }
-  internal fun provide(): HTTP2API = singleton
+  internal fun provide(): Http2API = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.HTTP2)) { provide() }
@@ -34,7 +34,7 @@ import elide.runtime.lang.javascript.NodeModuleName
 /**
  * # Node API: `http2`
  */
-internal class NodeHttp2 private constructor () : ReadOnlyProxyObject, HTTP2API {
+internal class NodeHttp2 private constructor () : ReadOnlyProxyObject, Http2API {
   //
 
   internal companion object {

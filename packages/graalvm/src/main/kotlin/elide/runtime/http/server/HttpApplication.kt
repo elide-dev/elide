@@ -76,7 +76,7 @@ public data class HttpApplicationOptions(
   val serverName: String = DEFAULT_SERVER_NAME,
 ) {
   public companion object {
-    public const val DEFAULT_SERVER_NAME: String = "Elide"
+    public const val DEFAULT_SERVER_NAME: String = "elide"
   }
 }
 

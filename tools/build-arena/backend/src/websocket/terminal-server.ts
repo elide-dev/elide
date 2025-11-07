@@ -12,12 +12,23 @@ interface TerminalClient {
   stream?: NodeJS.ReadWriteStream;
   recorder?: WebSocketRecorder;
   enableRecording?: boolean;
+  isInteractive?: boolean; // Only interactive clients can send input
+}
+
+// Track all clients watching each container
+interface ContainerSession {
+  containerId: string;
+  exec: Docker.Exec;
+  stream: NodeJS.ReadWriteStream;
+  clients: Set<TerminalClient>;
+  recorder?: WebSocketRecorder;
 }
 
 let terminalHandlerRegistered = false;
 
 /**
  * Setup WebSocket server for direct terminal connections
+ * Supports multiple clients watching the same container (broadcast)
  */
 export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
   // Prevent duplicate handler registration
@@ -27,6 +38,7 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
   terminalHandlerRegistered = true;
 
   const clients = new Map<WebSocket, TerminalClient>();
+  const containerSessions = new Map<string, ContainerSession>();
 
   wss.on('connection', async (ws: WebSocket, req: IncomingMessage) => {
     // Only handle terminal WebSocket connections
@@ -44,119 +56,163 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
 
     const containerId = match[1];
 
-    // Check for recording flag in query params
+    // Check for recording flag and interactive mode in query params
     const url = new URL(req.url || '', `http://${req.headers.host}`);
     const enableRecording = url.searchParams.get('record') === 'true';
+    const isInteractive = url.searchParams.get('interactive') !== 'false'; // Default to interactive
 
-    console.log(`Terminal WebSocket connected for container: ${containerId} (recording: ${enableRecording})`);
+    console.log(`Terminal WebSocket connected for container: ${containerId} (recording: ${enableRecording}, interactive: ${isInteractive})`);
 
     const client: TerminalClient = {
       ws,
       containerId,
       enableRecording,
+      isInteractive,
     };
-
-    // Initialize recorder if recording is enabled
-    if (enableRecording) {
-      client.recorder = new WebSocketRecorder(
-        containerId,
-        'test', // tool type
-        {
-          jobId: containerId,
-          tool: 'test',
-          repositoryUrl: 'test-session',
-          claudeVersion: '2.0.35',
-          dockerImage: 'elide-builder:latest'
-        }
-      );
-      client.recorder.start();
-      console.log(`Started recording for container: ${containerId}`);
-    }
 
     clients.set(ws, client);
 
+    // Check if we already have a session for this container
+    let session = containerSessions.get(containerId);
+
     try {
-      // Get container
-      const container = docker.getContainer(containerId);
+      if (!session) {
+        // First client for this container - create new session
+        console.log(`Creating new session for container: ${containerId}`);
 
-      // Create exec instance for interactive bash
-      const exec = await container.exec({
-        Cmd: ['/bin/bash'],
-        AttachStdin: true,
-        AttachStdout: true,
-        AttachStderr: true,
-        Tty: true,
-        Env: ['TERM=xterm-256color'],
-      });
+        // Get container
+        const container = docker.getContainer(containerId);
 
-      // Start exec and get stream
-      const stream = await exec.start({
-        Tty: true,
-        stdin: true,
-        hijack: true, // Important: hijack the connection for interactive use
-      }) as NodeJS.ReadWriteStream;
+        // Create exec instance for interactive bash
+        const exec = await container.exec({
+          Cmd: ['/bin/bash'],
+          AttachStdin: true,
+          AttachStdout: true,
+          AttachStderr: true,
+          Tty: true,
+          Env: ['TERM=xterm-256color'],
+        });
 
-      client.exec = exec;
-      client.stream = stream;
+        // Start exec and get stream
+        const stream = await exec.start({
+          Tty: true,
+          stdin: true,
+          hijack: true, // Important: hijack the connection for interactive use
+        }) as NodeJS.ReadWriteStream;
 
-      // Set encoding for proper text handling
-      stream.setEncoding('utf8');
+        // Set encoding for proper text handling
+        stream.setEncoding('utf8');
 
-      // Forward container output to WebSocket
-      stream.on('data', (data: string | Buffer) => {
-        const output = typeof data === 'string' ? data : data.toString('utf-8');
-
-        // Log output (first 200 chars to avoid spam)
-        const preview = output.length > 200 ? output.substring(0, 200) + '...' : output;
-        console.log(`Container ${containerId} output:`, JSON.stringify(preview));
-
-        const message = {
-          type: 'output',
-          data: output,
+        // Create session
+        session = {
+          containerId,
+          exec,
+          stream,
+          clients: new Set<TerminalClient>(),
         };
 
-        // Record message if recording is enabled
-        if (client.recorder) {
-          client.recorder.record(message);
+        // Initialize recorder if recording is enabled
+        if (enableRecording) {
+          session.recorder = new WebSocketRecorder(
+            containerId,
+            'test', // tool type
+            {
+              jobId: containerId,
+              tool: 'test',
+              repositoryUrl: 'test-session',
+              claudeVersion: '2.0.35',
+              dockerImage: 'elide-builder:latest'
+            }
+          );
+          session.recorder.start();
+          console.log(`Started recording for container: ${containerId}`);
         }
 
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify(message));
-        }
-      });
+        containerSessions.set(containerId, session);
 
-      stream.on('end', () => {
-        console.log(`Stream ended for container: ${containerId}`);
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.close(1000, 'Stream ended');
-        }
-      });
+        // Forward container output to ALL connected clients (broadcast)
+        stream.on('data', (data: string | Buffer) => {
+          const output = typeof data === 'string' ? data : data.toString('utf-8');
 
-      stream.on('error', (error: Error) => {
-        console.error(`Stream error for container ${containerId}:`, error);
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({
+          // Log output (first 200 chars to avoid spam)
+          const preview = output.length > 200 ? output.substring(0, 200) + '...' : output;
+          console.log(`Container ${containerId} output (${session!.clients.size} clients):`, JSON.stringify(preview));
+
+          const message = {
+            type: 'output',
+            data: output,
+          };
+
+          // Record message if recording is enabled
+          if (session!.recorder) {
+            session!.recorder.record(message);
+          }
+
+          // Broadcast to all clients watching this container
+          session!.clients.forEach(client => {
+            if (client.ws.readyState === WebSocket.OPEN) {
+              client.ws.send(JSON.stringify(message));
+            }
+          });
+        });
+
+        stream.on('end', () => {
+          console.log(`Stream ended for container: ${containerId}`);
+          // Close all clients
+          session!.clients.forEach(client => {
+            if (client.ws.readyState === WebSocket.OPEN) {
+              client.ws.close(1000, 'Stream ended');
+            }
+          });
+          containerSessions.delete(containerId);
+        });
+
+        stream.on('error', (error: Error) => {
+          console.error(`Stream error for container ${containerId}:`, error);
+          const errorMessage = {
             type: 'error',
             message: error.message,
-          }));
-        }
-      });
+          };
+          // Broadcast error to all clients
+          session!.clients.forEach(client => {
+            if (client.ws.readyState === WebSocket.OPEN) {
+              client.ws.send(JSON.stringify(errorMessage));
+            }
+          });
+        });
+      } else {
+        console.log(`Joining existing session for container: ${containerId} (${session.clients.size} existing clients)`);
+      }
+
+      // Add this client to the session
+      session.clients.add(client);
+      client.exec = session.exec;
+      client.stream = session.stream;
 
       // Handle messages from WebSocket (user input)
       ws.on('message', (data: Buffer) => {
         try {
           const message = JSON.parse(data.toString());
-          console.log(`Terminal input for ${containerId}:`, message);
 
-          if (message.type === 'input' && stream) {
-            // Record input if recording is enabled
-            if (client.recorder) {
-              client.recorder.record({ type: 'input', data: message.data });
+          if (message.type === 'input') {
+            // Only interactive clients can send input
+            if (!client.isInteractive) {
+              console.log(`Non-interactive client tried to send input - ignoring`);
+              return;
             }
 
-            // Write user input to container stdin
-            console.log(`Writing to container stdin:`, JSON.stringify(message.data));
-            stream.write(message.data);
+            console.log(`Terminal input for ${containerId}:`, message);
+
+            if (session!.stream) {
+              // Record input if recording is enabled
+              if (session!.recorder) {
+                session!.recorder.record({ type: 'input', data: message.data });
+              }
+
+              // Write user input to container stdin
+              console.log(`Writing to container stdin:`, JSON.stringify(message.data));
+              session!.stream.write(message.data);
+            }
           }
         } catch (error) {
           console.error('Error parsing WebSocket message:', error);
@@ -177,23 +233,37 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
     ws.on('close', async () => {
       console.log(`Terminal WebSocket disconnected for container: ${containerId}`);
 
-      // Stop and save recording if enabled
-      if (client.recorder) {
-        try {
-          client.recorder.stop();
-          const cacheKey = `test-${containerId}`;
-          const recordingPath = await client.recorder.save(cacheKey, './recordings');
-          console.log(`Saved recording for container ${containerId}: ${recordingPath}`);
-          console.log(`  Messages: ${client.recorder.getMessageCount()}`);
-          console.log(`  Duration: ${client.recorder.getDuration()}ms`);
-        } catch (error) {
-          console.error(`Error saving recording for container ${containerId}:`, error);
-        }
-      }
+      // Remove client from session
+      const session = containerSessions.get(containerId);
+      if (session) {
+        session.clients.delete(client);
+        console.log(`Client removed from session. Remaining clients: ${session.clients.size}`);
 
-      // Clean up stream
-      if (client.stream) {
-        client.stream.end();
+        // If this was the last client, clean up the session
+        if (session.clients.size === 0) {
+          console.log(`Last client disconnected. Cleaning up session for container: ${containerId}`);
+
+          // Stop and save recording if enabled
+          if (session.recorder) {
+            try {
+              session.recorder.stop();
+              const cacheKey = `test-${containerId}`;
+              const recordingPath = await session.recorder.save(cacheKey, './recordings');
+              console.log(`Saved recording for container ${containerId}: ${recordingPath}`);
+              console.log(`  Messages: ${session.recorder.getMessageCount()}`);
+              console.log(`  Duration: ${session.recorder.getDuration()}ms`);
+            } catch (error) {
+              console.error(`Error saving recording for container ${containerId}:`, error);
+            }
+          }
+
+          // Clean up stream
+          if (session.stream) {
+            session.stream.end();
+          }
+
+          containerSessions.delete(containerId);
+        }
       }
 
       clients.delete(ws);

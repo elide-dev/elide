@@ -54,8 +54,9 @@ internal data object FlaskStaticAssetsRouter {
     }
 
     context.responseBody.source(onClose = { stream.close() }) { writer ->
-      if (stream.read(buffer) == -1) writer.end()
-      else writer.write(Unpooled.copiedBuffer(buffer))
+      val read = stream.read(buffer)
+      if (read == -1) writer.end()
+      else writer.write(Unpooled.copiedBuffer(buffer, 0, read))
     }
 
     return true

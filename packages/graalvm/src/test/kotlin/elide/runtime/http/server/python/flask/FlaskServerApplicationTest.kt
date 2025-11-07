@@ -13,6 +13,7 @@
 package elide.runtime.http.server.python.flask
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.netty.buffer.Unpooled
 import io.netty.channel.embedded.EmbeddedChannel
 import io.netty.handler.codec.http.*
 import org.graalvm.polyglot.Context
@@ -20,19 +21,20 @@ import org.graalvm.polyglot.Source
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.io.TempDir
 import java.net.InetSocketAddress
 import java.nio.file.Path
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
-import kotlinx.serialization.json.Json
+import java.util.concurrent.TimeUnit
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeText
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.test.assertTrue
+import kotlin.test.fail
 import elide.annotations.Inject
 import elide.runtime.core.EntrypointRegistry
 import elide.runtime.core.RuntimeExecutor
@@ -47,7 +49,9 @@ import elide.runtime.http.server.netty.HttpApplicationStack.ServiceBinding
 import elide.runtime.http.server.netty.HttpCleartextService
 import elide.runtime.http.server.netty.NettyCallHandlerAdapter
 
-@MicronautTest(rebuildContext = true) class FlaskServerApplicationTest : PythonTest() {
+@MicronautTest(rebuildContext = true)
+@Timeout(value = 60, unit = TimeUnit.SECONDS)
+class FlaskServerApplicationTest : PythonTest() {
   @Inject lateinit var runtimeExecutor: RuntimeExecutor
   @Inject lateinit var serverEngine: HttpServerEngine
   @Inject lateinit var entrypoint: EntrypointRegistry
@@ -111,6 +115,55 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
     while (!latch.isDone) channel.runPendingTasks()
   }
 
+  private fun EmbeddedChannel.assertResponse(
+    request: HttpRequest = DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/"),
+    requestContent: List<String> = emptyList(),
+    expectedStatus: HttpResponseStatus = HttpResponseStatus.OK,
+  ): HttpResponse {
+    writeInbound(request)
+    requestContent.forEach { content ->
+      val buf = Unpooled.copiedBuffer(content, Charsets.UTF_8)
+      writeInbound(DefaultHttpContent(buf))
+    }
+
+    writeInbound(LastHttpContent.EMPTY_LAST_CONTENT)
+    runPendingTasks()
+
+    while (!Thread.currentThread().isInterrupted) {
+      executor.awaitContextTasks(this)
+      runPendingTasks()
+
+      readOutbound<Any>()?.let { response ->
+        assertIs<HttpResponse>(response, "expected a response to be returned")
+        assertEquals(expectedStatus, response.status())
+
+        return response
+      }
+
+      Thread.sleep(10)
+    }
+
+    fail("expected a response to be received")
+  }
+
+  private fun EmbeddedChannel.assertResponseContent(vararg chunks: String) {
+    for (chunk in chunks) {
+      executor.awaitContextTasks(this)
+      runPendingTasks()
+
+      readOutbound<HttpContent>().let { content ->
+        assertNotNull(content, "expected a content chunk")
+        assertEquals(chunk, content.content().toString(Charsets.UTF_8))
+        content.release()
+      }
+    }
+
+    executor.awaitContextTasks(this)
+    runPendingTasks()
+
+    readOutbound<HttpContent>()?.let { assertIs<LastHttpContent>(it) }
+  }
+
   @Test fun `should handle requests`() {
     val channel = setupTestApplication(
       """
@@ -131,27 +184,12 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
     val request = DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/test?m=world")
     request.headers().set("X-Message", "hello")
 
-    channel.writeInbound(request)
-    channel.writeInbound(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
-
-    channel.runPendingTasks()
-    executor.awaitContextTasks(channel)
-
-    channel.readOutbound<HttpResponse>().let { response ->
-      assertNotNull(response, "expected a response to be returned")
-      assertEquals(HttpResponseStatus.OK, response.status(), "expected a 200 response")
-    }
+    channel.assertResponse(request)
 
     executor.awaitContextTasks(channel)
     channel.runPendingTasks()
 
-    channel.readOutbound<HttpContent>().let { content ->
-      assertNotNull(content, "expected a content chunk")
-      assertEquals("GET,/test?m=world,hello,world", content.content().toString(Charsets.UTF_8))
-      content.release()
-    }
-
-    assertIs<LastHttpContent>(channel.readOutbound<HttpContent>()).release()
+    channel.assertResponseContent("GET,/test?m=world,hello,world")
   }
 
   @Test fun `should support response tuples`() {
@@ -169,28 +207,13 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
       """.trimIndent(),
     )
 
-    channel.writeInbound(DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/"))
-    channel.writeInbound(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
-
-    channel.runPendingTasks()
-    executor.awaitContextTasks(channel)
-
-    channel.readOutbound<HttpResponse>().let { response ->
-      assertNotNull(response, "expected a response to be returned")
-      assertEquals(HttpResponseStatus.CREATED, response.status(), "expected a 201 response")
-      assertEquals("true", response.headers().get("X-Custom"))
-    }
+    val response = channel.assertResponse(expectedStatus = HttpResponseStatus.CREATED)
+    assertEquals("true", response.headers().get("X-Custom"))
 
     executor.awaitContextTasks(channel)
     channel.runPendingTasks()
 
-    channel.readOutbound<HttpContent>().let { content ->
-      assertNotNull(content, "expected a content chunk")
-      assertEquals("created", content.content().toString(Charsets.UTF_8))
-      content.release()
-    }
-
-    assertIs<LastHttpContent>(channel.readOutbound<HttpContent>()).release()
+    channel.assertResponseContent("created")
   }
 
   @Test fun `should encode lists as JSON`() {
@@ -208,30 +231,13 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
       """.trimIndent(),
     )
 
-    channel.writeInbound(DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/"))
-    channel.writeInbound(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
-
-    channel.runPendingTasks()
-    executor.awaitContextTasks(channel)
-
-    channel.readOutbound<HttpResponse>().let { response ->
-      assertNotNull(response, "expected a response to be returned")
-      assertEquals(HttpResponseStatus.OK, response.status())
-      assertEquals("application/json; charset=utf-8", response.headers().get(HttpHeaderNames.CONTENT_TYPE))
-    }
+    val response = channel.assertResponse()
+    assertEquals("application/json; charset=utf-8", response.headers().get(HttpHeaderNames.CONTENT_TYPE))
 
     executor.awaitContextTasks(channel)
     channel.runPendingTasks()
 
-    channel.readOutbound<HttpContent>().let { content ->
-      assertNotNull(content, "expected a content chunk")
-      val payload = content.content().toString(Charsets.UTF_8)
-      val expected = Json.parseToJsonElement("[\"alpha\",{\"beta\":2}]")
-      assertEquals(expected, Json.parseToJsonElement(payload))
-      content.release()
-    }
-
-    assertIs<LastHttpContent>(channel.readOutbound<HttpContent>()).release()
+    channel.assertResponseContent("[\"alpha\",{\"beta\":2}]")
   }
 
   @Test fun `should reject requests with abort`() {
@@ -249,26 +255,10 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
       """.trimIndent(),
     )
 
-    channel.writeInbound(DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/"))
-    channel.writeInbound(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
+    val response = channel.assertResponse(expectedStatus = HttpResponseStatus.FORBIDDEN)
+    assertEquals("0", response.headers().get(HttpHeaderNames.CONTENT_LENGTH))
 
-    channel.runPendingTasks()
-    executor.awaitContextTasks(channel)
-
-    channel.readOutbound<HttpResponse>().let { response ->
-      assertNotNull(response, "expected a response to be returned")
-      assertEquals(HttpResponseStatus.FORBIDDEN, response.status(), "expected a 403 response")
-      assertEquals("0", response.headers().get(HttpHeaderNames.CONTENT_LENGTH))
-    }
-
-    executor.awaitContextTasks(channel)
-    channel.runPendingTasks()
-
-    channel.readOutbound<HttpContent>().let { content ->
-      assertIs<LastHttpContent>(content)
-      assertEquals(0, content.content().readableBytes())
-      content.release()
-    }
+    channel.assertResponseContent("")
   }
 
   @Test fun `should serve static assets`() {
@@ -287,34 +277,20 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
       """.trimIndent(),
     )
 
-    channel.writeInbound(DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/static/hello.txt"))
-    channel.writeInbound(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
+    val response = channel.assertResponse(
+      request = DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/static/hello.txt"),
+    )
 
     channel.runPendingTasks()
     executor.awaitContextTasks(channel)
 
-    channel.readOutbound<HttpResponse>().let { response ->
-      assertNotNull(response, "expected a response to be returned")
-      assertEquals(HttpResponseStatus.OK, response.status())
-      assertEquals("static-response".length, response.headers().getInt(HttpHeaderNames.CONTENT_LENGTH))
-
-      val contentType = response.headers().get(HttpHeaderNames.CONTENT_TYPE)
-      assertNotNull(contentType)
-      assertTrue(contentType.startsWith("text/plain"))
-    }
+    assertEquals("static-response".length, response.headers().getInt(HttpHeaderNames.CONTENT_LENGTH))
+    assertEquals("text/plain", response.headers().get(HttpHeaderNames.CONTENT_TYPE))
 
     executor.awaitContextTasks(channel)
     channel.runPendingTasks()
 
-    channel.readOutbound<HttpContent>().let { content ->
-      assertNotNull(content, "expected a content chunk")
-      val buffer = ByteArray("static-response".length)
-      content.content().getBytes(content.content().readerIndex(), buffer, 0, buffer.size)
-      assertEquals("static-response", String(buffer, Charsets.UTF_8))
-      content.release()
-    }
-
-    assertIs<LastHttpContent>(channel.readOutbound<HttpContent>()).release()
+    channel.assertResponseContent("static-response")
   }
 
   @Test fun `should support routing`() {
@@ -336,52 +312,22 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
       """.trimIndent(),
     )
 
-    channel.writeInbound(DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/users/42/posts/abc/def"))
-    channel.writeInbound(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
+    channel.assertResponse(DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/users/42/posts/abc/def"))
 
     channel.runPendingTasks()
     executor.awaitContextTasks(channel)
 
-    channel.readOutbound<HttpResponse>().let { response ->
-      assertNotNull(response, "expected a response to be returned")
-      assertEquals(HttpResponseStatus.OK, response.status())
-    }
-
-    executor.awaitContextTasks(channel)
-    channel.runPendingTasks()
-
-    channel.readOutbound<HttpContent>().let { content ->
-      assertNotNull(content, "expected a content chunk")
-      assertEquals("42|int|abc/def", content.content().toString(Charsets.UTF_8))
-      content.release()
-    }
-
-    assertIs<LastHttpContent>(channel.readOutbound<HttpContent>()).release()
+    channel.assertResponseContent("42|int|abc/def")
 
     channel.runPendingTasks()
 
     val postRequest = DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, "/users/42")
-    channel.writeInbound(postRequest)
-    channel.writeInbound(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
+    channel.assertResponse(postRequest)
 
     channel.runPendingTasks()
     executor.awaitContextTasks(channel)
 
-    channel.readOutbound<HttpResponse>().let { response ->
-      assertNotNull(response)
-      assertEquals(HttpResponseStatus.OK, response.status())
-    }
-
-    executor.awaitContextTasks(channel)
-    channel.runPendingTasks()
-
-    channel.readOutbound<HttpContent>().let { content ->
-      assertNotNull(content)
-      assertEquals("updated", content.content().toString(Charsets.UTF_8))
-      content.release()
-    }
-
-    assertIs<LastHttpContent>(channel.readOutbound<HttpContent>()).release()
+    channel.assertResponseContent("updated")
   }
 
   @Test fun `url_for should return handler path`() {
@@ -403,26 +349,11 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
       """.trimIndent(),
     )
 
-    channel.writeInbound(DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/items/books"))
-    channel.writeInbound(DefaultLastHttpContent.EMPTY_LAST_CONTENT)
+    channel.assertResponse(DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/items/books"))
 
     channel.runPendingTasks()
     executor.awaitContextTasks(channel)
 
-    channel.readOutbound<HttpResponse>().let { response ->
-      assertNotNull(response)
-      assertEquals(HttpResponseStatus.OK, response.status())
-    }
-
-    executor.awaitContextTasks(channel)
-    channel.runPendingTasks()
-
-    channel.readOutbound<HttpContent>().let { content ->
-      assertNotNull(content)
-      assertEquals("/items/books/7?extra=foo", content.content().toString(Charsets.UTF_8))
-      content.release()
-    }
-
-    assertIs<LastHttpContent>(channel.readOutbound<HttpContent>()).release()
+    channel.assertResponseContent("/items/books/7?extra=foo")
   }
 }

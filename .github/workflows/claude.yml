@@ -59,7 +59,7 @@ jobs:
         with:
           version: "10.6.2"
       - name: "Setup: Elide"
-        uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
+        uses: elide-dev/setup-elide@cc5ca312ef6df23b07967bba9308bfa77dfec6f8
         with:
           version: "1.0.0-beta10"
       - name: "Check: Anthropic API Key"

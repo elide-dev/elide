@@ -22,17 +22,12 @@ const options = {
 }
 
 const server = http.createServer(options, (req, res) => {
-  console.log('Request received: ' + req);
-  console.log('Event proxy: ' + req.on)
-
   let content = '';
   req.on('data', (chunk) => {
-    console.log('Received data');
     content += chunk.toString("utf8");
   })
 
   req.on('end', () => {
-    console.log('Consumed request content: ' + content);
     res.writeHead(200, {'Content-Type': 'text/plain', 'Content-Length': content.length});
     res.write(content);
     res.end();

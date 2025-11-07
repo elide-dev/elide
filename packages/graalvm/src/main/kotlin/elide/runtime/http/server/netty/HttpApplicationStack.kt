@@ -298,7 +298,7 @@ public class HttpApplicationStack internal constructor(
 }
 
 /** Assemble a URI for this service from its scheme and bound address. */
-public fun HttpApplicationStack.ServiceBinding.assembleUri(): URI {
+public fun HttpApplicationStack.ServiceBinding.assembleUri(): String {
   return when (address) {
     is InetSocketAddress -> URI(
       /* scheme = */ scheme,
@@ -308,10 +308,10 @@ public fun HttpApplicationStack.ServiceBinding.assembleUri(): URI {
       /* path = */ null,
       /* query = */ null,
       /* fragment = */ null,
-    )
+    ).toString()
 
-    is DomainSocketAddress -> URI.create("unix://${URLEncoder.encode(address.path(), Charsets.UTF_8)}")
-    is UnixDomainSocketAddress -> URI.create("unix://${URLEncoder.encode(address.path.pathString, Charsets.UTF_8)}")
+    is DomainSocketAddress -> address.path()
+    is UnixDomainSocketAddress -> address.path.pathString
 
     else -> error("Unsupported address type $address")
   }

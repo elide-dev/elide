@@ -43,7 +43,7 @@ fun HttpApplicationStack.Companion.bindAndDisplayResult(block: () -> HttpApplica
       service.bindResult.fold(
         onSuccess = {
           val label = dim("${serviceDisplayName(service.label)}:".padEnd(maxLabelSize))
-          "︎$label listening at ${cyan(it.assembleUri().toString())}"
+          "︎$label listening at ${cyan(it.assembleUri())}"
         },
         onFailure = {
           val label = dim("${serviceDisplayName(service.label)}:".padEnd(maxLabelSize))
@@ -69,7 +69,7 @@ fun HttpApplicationStack.Companion.bindAndDisplayResult(block: () -> HttpApplica
       red(" - [${it.label}] ${it.bindResult.exceptionOrNull()?.stackTraceToString()}")
     }
 
-    terminal.println(dim("Some test services failed to start:\n$message"))
+    terminal.println(dim("Some services failed to start:\n$message"))
   }
 
   return stack

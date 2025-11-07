@@ -16,13 +16,12 @@ package elide.runtime.gvm.python
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import elide.runtime.core.DelicateElideApi
-import elide.runtime.gvm.PythonTest
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 
 /** Basic Python runtime utility tests. */
 @OptIn(DelicateElideApi::class)
-@TestCase class PythonTest : PythonTest() {
+@TestCase class PythonSmokeTest : PythonTest() {
   @Test fun testPythonGuestCodeBasic() = executeGuest {
     // language=python
     """

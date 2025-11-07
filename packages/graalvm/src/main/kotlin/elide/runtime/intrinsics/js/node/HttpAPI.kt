@@ -12,9 +12,21 @@
  */
 package elide.runtime.intrinsics.js.node
 
+import org.graalvm.polyglot.Value
 import elide.annotations.API
+import elide.runtime.intrinsics.js.node.http.HttpServerAPI
+import elide.vm.annotations.Polyglot
+
+public typealias ServerRequestListener = Value
+public typealias CreateServerOptions = Value
 
 /**
- * ## Node API: HTTP/2
+ * ## Node API: HTTP
  */
-@API public interface HTTP2API : NodeAPI
+@API public interface HttpAPI : NodeAPI {
+  @Polyglot public fun createServer(
+    options: CreateServerOptions? = null,
+    listener: ServerRequestListener? = null
+  ): HttpServerAPI
+}
+

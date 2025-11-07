@@ -188,14 +188,17 @@ internal class NettyContentStream(
             // we've hit the end of the stream, update the state and stop
             finalizeClose()
             notifyConsumerClosed(consumer)
+            streamConsumer = null
             break
           }
 
           null -> {
             // request more data from an active producer if open, or
             // we're not getting any more data, detach
-            if (snap is StreamState.Open && producer != null) notifyPull(producer)
-            else notifyConsumerClosed(consumer)
+            if (snap is StreamState.Open && producer != null) notifyPull(producer) else {
+              notifyConsumerClosed(consumer)
+              streamConsumer = null
+            }
             break
           }
         }

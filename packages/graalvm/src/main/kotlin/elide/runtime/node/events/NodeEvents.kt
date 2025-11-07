@@ -63,6 +63,7 @@ private const val EVENT_EMITTER_CLS = "EventEmitter"
 // Maximum number of listeners to set as a default value.
 private const val DEFAULT_DEFAULT_MAX_LISTENERS = 10
 
+private const val ON_FN = "on"
 private const val ADD_EVENT_LISTENER_FN = "addEventListener"
 private const val REMOVE_EVENT_LISTENER_FN = "removeEventListener"
 private const val DISPATCH_EVENT_FN = "dispatchEvent"
@@ -71,6 +72,7 @@ private val allEventTargetProps = arrayOf(
   ADD_EVENT_LISTENER_FN,
   REMOVE_EVENT_LISTENER_FN,
   DISPATCH_EVENT_FN,
+  ON_FN,
 )
 
 // Installs the Node `events` built-in module.
@@ -205,7 +207,7 @@ internal object StandardEventName {
      * @return A new [GuestEventListener] instance.
      */
     @JvmStatic public fun of(listener: Value): EventListener = GuestEventListener { event ->
-      listener.executeVoid(event)
+      listener.executeVoid(*event)
     }
   }
 }
@@ -331,7 +333,7 @@ public class EventAwareProxy private constructor (private val relay: EventAware)
   // Match a property name against a potential event name.
   private fun isEventPropertyKey(name: String): String? = name.lowercase().let { lowered ->
     when {
-      lowered.startsWith("on") -> lowered.substring(2)
+      lowered.startsWith("on") -> lowered.substring(2).ifBlank { null }
       else -> null
     }
   }
@@ -366,7 +368,7 @@ public class EventAwareProxy private constructor (private val relay: EventAware)
 
   override fun getMember(key: String): Any? = when (val ev = isEventPropertyKey(key)) {
     null -> when (key) {
-      ADD_EVENT_LISTENER_FN -> ProxyExecutable {
+      ADD_EVENT_LISTENER_FN, ON_FN -> ProxyExecutable {
         when (it.size) {
           0, 1 -> throw JsError.valueError("Event type and listener are required")
           2 -> relay.addEventListener(

@@ -37,33 +37,11 @@ import elide.runtime.Logging
 import elide.runtime.http.server.*
 
 abstract class AbstractServerStackTest {
-  @ParameterizedTest(name = "{0}, domain sockets={1}")
-  @ArgumentsSource(ServerTestMatrix::class)
-  @Timeout(value = 15, unit = TimeUnit.SECONDS)
-  annotation class DynamicTransportTest
-
-  class ServerTestMatrix : ArgumentsProvider {
-    override fun provideArguments(
-      parameters: ParameterDeclarations?,
-      context: ExtensionContext?
-    ): Stream<out Arguments?>? {
-      val builder = Stream.builder<Arguments>()
-
-      for (transport in HttpServerTransport.all) {
-        // test each transport with both regular and domain sockets
-        builder.add(Arguments.of(transport, true))
-        builder.add(Arguments.of(transport, false))
-      }
-
-      return builder.build()
-    }
-  }
-
   @TempDir lateinit var tempDir: Path
   lateinit var domainSocket: Path
   lateinit var testCertificate: CertificateSource.File
 
-  @BeforeEach fun setupDomainSocket() {
+  @BeforeEach fun setup() {
     // cleaned up automatically after each test when tempDir is deleted
     domainSocket = tempDir.resolve("test.sock")
 
@@ -155,5 +133,26 @@ abstract class AbstractServerStackTest {
 
   companion object {
     private val log = Logging.of(AbstractServerStackTest::class)
+  }
+}
+
+@ParameterizedTest(name = "{0}, domain sockets={1}")
+@ArgumentsSource(ServerTestMatrix::class)
+@Timeout(value = 15, unit = TimeUnit.SECONDS)
+annotation class DynamicTransportTest
+class ServerTestMatrix : ArgumentsProvider {
+  override fun provideArguments(
+    parameters: ParameterDeclarations?,
+    context: ExtensionContext?
+  ): Stream<out Arguments?>? {
+    val builder = Stream.builder<Arguments>()
+
+    for (transport in HttpServerTransport.all) {
+      // test each transport with both regular and domain sockets
+      builder.add(Arguments.of(transport, true))
+      builder.add(Arguments.of(transport, false))
+    }
+
+    return builder.build()
   }
 }

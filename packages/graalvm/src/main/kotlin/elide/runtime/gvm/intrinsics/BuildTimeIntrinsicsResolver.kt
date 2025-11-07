@@ -140,7 +140,11 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val timers = JsTimersIntrinsic(timerExecutor)
     @JvmStatic private val buffer = NodeBufferModule()
     @JvmStatic private val querystring = NodeQuerystringModule()
-    @JvmStatic private val http = NodeHttpModule()
+    @JvmStatic private val http = NodeHttpModule(
+      entrypointProvider = { entrypointProvider },
+      runtimeLatch = { runtimeLatch },
+      executorProvider = { runtimeExecutor },
+    )
     @JvmStatic private val https = NodeHttpsModule()
     @JvmStatic private val http2 = NodeHttp2Module()
     @JvmStatic private val encoding = JsEncodingIntrinsics()
@@ -167,7 +171,7 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val queueMicrotaskCallable = QueueMicrotaskCallable(execProvider)
     @JvmStatic private val messageChannel = MessageChannelBuiltin()
     @JvmStatic private val stringDecoder = NodeStringDecoderModule()
-    @JvmStatic private val process = NodeProcessModule(Provider { envConfigSupplier.get() })
+    @JvmStatic private val process = NodeProcessModule { envConfigSupplier.get() }
     @JvmStatic private val structuredClone = StructuredCloneBuiltin()
     @JvmStatic private val valueError = ValueErrorIntrinsic()
     @JvmStatic private val elideTesting = ElideTestingModule(registrarProvider)
@@ -183,7 +187,7 @@ import elide.runtime.plugins.env.EnvConfig
       runtimeLatch = { runtimeLatch },
       entrypointProvider = { entrypointProvider },
       runtimeExecutor = { runtimeExecutor },
-      serverEngine = { runtimeServerEngine }
+      serverEngine = { runtimeServerEngine },
     )
 
     // All built-ins and intrinsics.

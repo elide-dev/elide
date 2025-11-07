@@ -61,7 +61,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
 import java.util.concurrent.Executors
-import java.util.concurrent.Phaser
 import java.util.concurrent.TimeoutException
 import java.util.function.Supplier
 import java.util.jar.JarInputStream
@@ -91,7 +90,6 @@ import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
-import elide.runtime.http.server.HttpApplicationOptions
 import elide.runtime.http.server.js.worker.JsWorkerApplication
 import elide.runtime.http.server.netty.HttpApplicationStack
 import elide.runtime.http.server.python.wsgi.WsgiEntrypoint
@@ -1733,7 +1731,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       }
 
       val stack = HttpApplicationStack.bindAndDisplayResult {
-        val options = activeProject.value?.manifest?.server?.toHttpApplicationOptions() ?: HttpApplicationOptions()
+        val options = activeProject.value?.manifest?.server.toHttpApplicationOptions()
         HttpApplicationStack.bind(httpApp, options)
       }
 

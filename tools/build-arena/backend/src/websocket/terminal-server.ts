@@ -1,6 +1,7 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import Docker from 'dockerode';
 import { IncomingMessage } from 'http';
+import { WebSocketRecorder } from '../services/websocket-recorder';
 
 const docker = new Docker();
 
@@ -9,6 +10,8 @@ interface TerminalClient {
   containerId: string;
   exec?: Docker.Exec;
   stream?: NodeJS.ReadWriteStream;
+  recorder?: WebSocketRecorder;
+  enableRecording?: boolean;
 }
 
 let terminalHandlerRegistered = false;
@@ -40,12 +43,35 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
     }
 
     const containerId = match[1];
-    console.log(`Terminal WebSocket connected for container: ${containerId}`);
+
+    // Check for recording flag in query params
+    const url = new URL(req.url || '', `http://${req.headers.host}`);
+    const enableRecording = url.searchParams.get('record') === 'true';
+
+    console.log(`Terminal WebSocket connected for container: ${containerId} (recording: ${enableRecording})`);
 
     const client: TerminalClient = {
       ws,
       containerId,
+      enableRecording,
     };
+
+    // Initialize recorder if recording is enabled
+    if (enableRecording) {
+      client.recorder = new WebSocketRecorder(
+        containerId,
+        'test', // tool type
+        {
+          jobId: containerId,
+          tool: 'test',
+          repositoryUrl: 'test-session',
+          claudeVersion: '2.0.35',
+          dockerImage: 'elide-builder:latest'
+        }
+      );
+      client.recorder.start();
+      console.log(`Started recording for container: ${containerId}`);
+    }
 
     clients.set(ws, client);
 
@@ -79,12 +105,23 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
       // Forward container output to WebSocket
       stream.on('data', (data: string | Buffer) => {
         const output = typeof data === 'string' ? data : data.toString('utf-8');
-        console.log(`Container ${containerId} output:`, JSON.stringify(output));
+
+        // Log output (first 200 chars to avoid spam)
+        const preview = output.length > 200 ? output.substring(0, 200) + '...' : output;
+        console.log(`Container ${containerId} output:`, JSON.stringify(preview));
+
+        const message = {
+          type: 'output',
+          data: output,
+        };
+
+        // Record message if recording is enabled
+        if (client.recorder) {
+          client.recorder.record(message);
+        }
+
         if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({
-            type: 'output',
-            data: output,
-          }));
+          ws.send(JSON.stringify(message));
         }
       });
 
@@ -112,6 +149,11 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
           console.log(`Terminal input for ${containerId}:`, message);
 
           if (message.type === 'input' && stream) {
+            // Record input if recording is enabled
+            if (client.recorder) {
+              client.recorder.record({ type: 'input', data: message.data });
+            }
+
             // Write user input to container stdin
             console.log(`Writing to container stdin:`, JSON.stringify(message.data));
             stream.write(message.data);
@@ -132,8 +174,22 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
       return;
     }
 
-    ws.on('close', () => {
+    ws.on('close', async () => {
       console.log(`Terminal WebSocket disconnected for container: ${containerId}`);
+
+      // Stop and save recording if enabled
+      if (client.recorder) {
+        try {
+          client.recorder.stop();
+          const cacheKey = `test-${containerId}`;
+          const recordingPath = await client.recorder.save(cacheKey, './recordings');
+          console.log(`Saved recording for container ${containerId}: ${recordingPath}`);
+          console.log(`  Messages: ${client.recorder.getMessageCount()}`);
+          console.log(`  Duration: ${client.recorder.getDuration()}ms`);
+        } catch (error) {
+          console.error(`Error saving recording for container ${containerId}:`, error);
+        }
+      }
 
       // Clean up stream
       if (client.stream) {

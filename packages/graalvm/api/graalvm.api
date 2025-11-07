@@ -3068,7 +3068,7 @@ public final class elide/runtime/http/server/netty/HttpApplicationStack$ServiceB
 }
 
 public final class elide/runtime/http/server/netty/HttpApplicationStackKt {
-	public static final fun assembleUri (Lelide/runtime/http/server/netty/HttpApplicationStack$ServiceBinding;)Ljava/net/URI;
+	public static final fun assembleUri (Lelide/runtime/http/server/netty/HttpApplicationStack$ServiceBinding;)Ljava/lang/String;
 }
 
 public abstract interface class elide/runtime/http/server/netty/ServerTransport {

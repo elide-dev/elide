@@ -35,7 +35,7 @@ import elide.runtime.http.server.netty.NettyCallHandlerAdapter
 import elide.runtime.intrinsics.GuestIntrinsic
 
 @MicronautTest(rebuildContext = true)
-// @Timeout(value = 10, unit = TimeUnit.SECONDS)
+@Timeout(value = 10, unit = TimeUnit.SECONDS)
 internal class JsNodeHttpApplicationTest : AbstractJsTest() {
   lateinit var executor: ContextAwareExecutor
 

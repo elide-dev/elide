@@ -3151,10 +3151,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       }
     }
   }
-
-  private fun bindServer() {
-
-  }
 }
 
 private fun PackageManifestService.resolveToTask(

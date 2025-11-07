@@ -15077,6 +15077,553 @@
     }
   ],
   "foreign": {
+    "upcalls": [
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": []
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jbyte"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jdouble",
+          "jdouble"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jdouble"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": []
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jdouble",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": []
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      }
+    ],
     "downcalls": [
       {
         "returnType": "void",
@@ -15519,553 +16066,6 @@
         "parameterTypes": [
           "jlong",
           "jint",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jlong",
-          "jlong",
-          "jint",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jdouble",
-          "jdouble"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jdouble"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": []
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jdouble",
-        "parameterTypes": [
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jint",
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": []
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jint"
-        ]
-      }
-    ],
-    "upcalls": [
-      {
-        "returnType": "void",
-        "parameterTypes": [
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "void",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "void",
-        "parameterTypes": [
-          "jint",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "void",
-        "parameterTypes": [
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "void",
-        "parameterTypes": [
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jlong",
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "void",
-        "parameterTypes": []
-      },
-      {
-        "returnType": "void",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "void",
-        "parameterTypes": [
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jlong",
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jlong",
-          "jint",
-          "jlong",
-          "jint",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jlong",
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jint",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jint",
-          "jint",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jint",
-        "parameterTypes": [
-          "jint",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jint",
-          "jbyte"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jint",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jint",
-          "jlong",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jint",
-          "jlong",
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jint",
-          "jint",
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jint",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "void",
-        "parameterTypes": [
-          "jint",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jint"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong"
-        ]
-      },
-      {
-        "returnType": "jlong",
-        "parameterTypes": [
-          "jlong",
-          "jlong",
-          "jlong",
-          "jint",
-          "jint",
-          "jlong",
           "jlong",
           "jlong",
           "jlong"

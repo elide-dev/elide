@@ -64,7 +64,7 @@ async function startContainer() {
   const response = await fetch(`${BACKEND_URL}/api/test/start-container`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ image: 'elide-builder:latest' })
+    body: JSON.stringify({ image: 'elide-runner:latest' })
   });
 
   if (!response.ok) {
@@ -96,7 +96,8 @@ async function connectWebSocket(containerId) {
       console.log('⏳ Waiting 5 seconds for bash init and frontend connection...\n');
       setTimeout(() => {
         // Use interactive Claude Code (not --print)
-        const command = `claude "Clone ${REPO_URL}, analyze the project structure, then build it using Elide. Time the build and report the results. Read /workspace/CLAUDE.md for instructions."\n`;
+        // Let Claude follow the instructions in CLAUDE.md without hard-coding the build tool
+        const command = `claude "Clone ${REPO_URL}, analyze the project structure, then build it following the instructions in /workspace/CLAUDE.md. Time the build and report the results with a bell signal."\n`;
 
         console.log(`🤖 Sending command to Claude Code (interactive with auto-approve)...\n`);
         ws.send(JSON.stringify({
@@ -112,6 +113,7 @@ async function connectWebSocket(containerId) {
     let trustHandled = false;
     let gitCloneHandled = false;
     let claudeStarted = false;
+    let lastErrorTime = 0;
 
     ws.on('message', (data) => {
       try {
@@ -148,6 +150,28 @@ async function connectWebSocket(containerId) {
             outputBuffer = '';
           }
 
+          // Handle API errors - auto-retry
+          if (claudeStarted &&
+              (output.includes('API Error: 500') ||
+               output.includes('Internal server error') ||
+               output.includes('"type":"api_error"'))) {
+
+            const now = Date.now();
+            // Debounce: only retry once per 5 seconds
+            if (now - lastErrorTime > 5000) {
+              console.log(`\n⚠️  API Error detected - sending retry command...\n`);
+
+              setTimeout(() => {
+                ws.send(JSON.stringify({
+                  type: 'input',
+                  data: 'let\'s try that again\n'
+                }));
+                lastErrorTime = now;
+                console.log(`✅ Retry command sent\n`);
+              }, 1000);
+            }
+          }
+
           // Handle theme selection prompt (only once)
           if (!themeHandled && output.includes('Choose the text style')) {
             console.log(`\n🎨 Auto-selecting default theme...\n`);
@@ -157,7 +181,7 @@ async function connectWebSocket(containerId) {
                 data: '\r' // Send carriage return for TUI selection
               }));
               themeHandled = true;
-              console.log(`✅ Theme selected, watching for API key prompt\n`);
+              console.log(`✅ Theme selected, waiting for API key prompt\n`);
             }, 1000);
           }
 
@@ -184,18 +208,23 @@ async function connectWebSocket(containerId) {
           }
 
           // Handle workspace trust prompt (only once, after API key)
-          // Look for the unique combination of "Yes, proceed" and "No, exit" options
+          // In isolated container, we always want to approve workspace access
           if (apiKeyHandled && !trustHandled &&
-              (output.includes('Yes, proceed') || output.includes('trust the files'))) {
+              (output.includes('trust') ||
+               output.includes('Trust') ||
+               output.includes('workspace') ||
+               output.includes('Workspace'))) {
             console.log(`\n✅ Auto-trusting workspace folder...\n`);
             setTimeout(() => {
-              // "Yes, proceed" is already selected (option 1), just press Enter
+              // "Yes" option is already selected (option 1), just press Enter
               ws.send(JSON.stringify({
                 type: 'input',
                 data: '\r'
               }));
               trustHandled = true;
-              console.log(`✅ Workspace trusted, now watching for approval requests\n`);
+              // Enable generic handler immediately
+              gitCloneHandled = true;
+              console.log(`✅ Workspace trusted, generic approval handler enabled\n`);
             }, 1000);
           }
 
@@ -223,38 +252,36 @@ async function connectWebSocket(containerId) {
             }, 1000);
           }
 
-          // Handle ANY "Do you want to proceed?" prompt (after initial setup)
-          // This catches all Bash tool permission requests generically
-          if (gitCloneHandled &&
-              output.includes('Do you want to proceed?') &&
-              output.includes('Yes, and don\'t ask again')) {
+          // Handle ANY permission prompt (after initial setup)
+          // In isolated container, we ALWAYS approve everything
+          // Look for common permission prompt patterns
+          const hasPermissionPrompt = output.includes('Do you want to proceed?') ||
+                                       output.includes('Do you want to') ||
+                                       output.includes('proceed?') ||
+                                       output.includes('❯ 1. Yes') ||  // Option menu with Yes
+                                       output.includes('Enter to confirm');
+
+          if (gitCloneHandled && hasPermissionPrompt) {
 
             // Debounce: only handle if we haven't seen this prompt recently
             const now = Date.now();
-            if (now - lastApprovalTime > 2000) {
+            if (now - lastApprovalTime > 2000) { // 2 second debounce
               // Extract command from the output for logging
               const commandMatch = output.match(/Bash command\s+([^\n]+)/i) ||
                                    output.match(/Bash\(([^)]+)\)/);
-              const command = commandMatch ? commandMatch[1].trim() : 'unknown command';
+              const command = commandMatch ? commandMatch[1].trim() : 'permission request';
 
-              console.log(`\n🔓 Auto-approving Bash permission: ${command}...\n`);
+              console.log(`\n🔓 Auto-approving: ${command}...\n`);
 
+              // In isolated container, always approve with Enter
+              // Option 1 is usually pre-selected
               setTimeout(() => {
-                // Send DOWN arrow to select "Yes, and don't ask again" (option 2)
                 ws.send(JSON.stringify({
                   type: 'input',
-                  data: '\x1b[B' // DOWN arrow key
+                  data: '\r'  // Just press Enter on default selection
                 }));
-
-                // Wait a bit then send Enter to confirm
-                setTimeout(() => {
-                  ws.send(JSON.stringify({
-                    type: 'input',
-                    data: '\r'
-                  }));
-                  lastApprovalTime = now;
-                  console.log(`✅ Bash permission granted for: ${command}\n`);
-                }, 500);
+                lastApprovalTime = now;
+                console.log(`✅ Permission granted for: ${command}\n`);
               }, 1000);
             }
           }

@@ -12,6 +12,7 @@
  */
 package elide.runtime.intrinsics.js.node
 
+import RandomIntCallback
 import org.graalvm.polyglot.Value
 import elide.annotations.API
 import elide.runtime.intrinsics.js.err.JsError
@@ -43,7 +44,11 @@ import elide.vm.annotations.Polyglot
    * @param callback
    * @return A randomly generated integer between `min` (inclusive) and `max` (exclusive).
    */
-  @Polyglot public fun randomInt(min: Int, max: Int, callback: Value? = null): Int
+  public fun randomInt(min: Int = 0, max: Int, callback: RandomIntCallback? = null): Any
 
-  @Polyglot public fun randomInt(max: Int, callback: Value? = null): Int
+  @Polyglot public fun randomInt(min: Value?, max: Value, callback: Value?): Any
+
+  @Polyglot public fun randomInt(max: Value, callback: Value?): Any
+
+  @Polyglot public fun randomInt(max: Value): Any
 }

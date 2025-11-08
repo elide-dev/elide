@@ -12,11 +12,12 @@
  */
 package elide.runtime.node.crypto
 
+import RandomIntCallback
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
-import elide.runtime.intrinsics.js.err.JsError
+import elide.runtime.gvm.js.JsError
 import elide.runtime.gvm.js.JsSymbol.JsSymbols.asJsSymbol
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
@@ -26,6 +27,8 @@ import elide.runtime.intrinsics.js.node.CryptoAPI
 import elide.runtime.lang.javascript.NodeModuleName
 import elide.vm.annotations.Polyglot
 import java.security.SecureRandom
+import elide.runtime.intrinsics.js.err.AbstractJsException
+import elide.runtime.intrinsics.js.err.RangeError
 
 // Internal symbol where the Node built-in module is installed.
 private const val CRYPTO_MODULE_SYMBOL = "node_${NodeModuleName.CRYPTO}"
@@ -69,27 +72,44 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
     return java.util.UUID.randomUUID().toString()
   }
 
-  @Polyglot override fun randomInt(
-    min: Value,
-    max: Value,
-    callback: Value?
-  ): Int {
-    require(min < max) { "min must be less than max" }
+ override fun randomInt(min: Int, max: Int, callback: RandomIntCallback?): Any {
+   var error: AbstractJsException? = null
 
-    if (max - min <= 0) {
-      return min.asInt()
-    }
+   if (min >= max) {
+     error = RangeError.create("The value of \"max\" is out of range. It must be greater than the value of \"min\" ($min). Received $max")
+   }
 
-    val randomIntValue = SecureRandom().nextInt(max - min)
+   val secureRandom = SecureRandom()
 
-    return randomIntValue
+   val bounds = max - min
+   val randomInt = secureRandom.nextInt(bounds) + min
+
+   if (callback != null) {
+     callback.invoke(error, randomInt)
+   } else {
+    return randomInt
+   }
+
+    return Unit
+ }
+
+  @Polyglot override fun randomInt(min: Value?, max: Value, callback: Value?): Int {
+    return randomInt(min, max, callback)
   }
 
-  @Polyglot override fun randomInt(
+  override fun randomInt(max: Value, callback: Value?): Int {
+    return randomInt(max, callback)
+  }
+
+  override fun randomInt(max: Value): Int {
+    return randomInt(max)
+  }
+
+  @Polyglot fun randomInt(
     max: Value,
-    callback: Value?
+    callback: RandomIntCallback?
   ): Int {
-    return randomInt(min = 0, max.asInt())
+    return randomInt(max, callback)
   }
 
   // ProxyObject implementation
@@ -104,34 +124,17 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
       val options = args.getOrNull(0)
       randomUUID(options)
     }
-    F_RANDOM_INT -> ProxyExecutable { args ->
+    F_RANDOM_INT -> ProxyExecutable {
       // Node.js signature: randomInt(max) OR randomInt(min, max, [callback]) OR randomInt(max, [callback])
-      when (args.size) {
-        1 -> {
-          val max = args[0].asInt()
-          randomInt(max)
+      when (it.size) {
+        1 -> randomInt(it.first())
+        2 -> if (it[1].fitsInInt()) {
+          randomInt(it.first(), it[1])
+        } else {
+          randomInt(max = it.first(), callback = it[1])
         }
-        2 -> {
-          if (args[0].fitsInInt() AND args[1].fitsInInt()) {
-            val min = args[0].asInt()
-            val max = args[1].asInt()
-
-            randomInt(min, max)
-          } else {
-            val max = args[0].asInt()
-            val callback = args[1]
-
-            randomInt(max, callback)
-          }
-        }
-        3 -> {
-          val min = args[0].asInt()
-          val max = args[1].asInt()
-          val callback = args[2]
-
-          randomInt(min, max, callback)
-        }
-        else -> throw IllegalArgumentException("randomInt expects 1 to 3 arguments, got ${args.size}")
+        3 -> randomInt(it.first(), it[1], it.getOrNull(2))
+        else -> throw JsError.typeError("Invalid number of arguments for `crypto.randomInt`")
       }
     }
     else -> null

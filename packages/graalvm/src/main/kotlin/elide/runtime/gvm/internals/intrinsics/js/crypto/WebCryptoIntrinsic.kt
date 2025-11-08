@@ -27,6 +27,7 @@ import elide.runtime.gvm.internals.intrinsics.js.typed.UUIDValue
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.Crypto.Companion.MAX_RANDOM_BYTES_SIZE
 import elide.runtime.intrinsics.js.SubtleCrypto
+import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.QuotaExceededError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.typed.UUID
@@ -101,11 +102,7 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, ProxyObject, AbstractJsIntrins
 
   @Polyglot override fun randomUUID(): UUID = UUIDValue.random()
 
-  @Polyglot override fun randomInt(
-    min: Int,
-    max: Int,
-    callback: (elide.runtime.intrinsics.js.err.JsError, Int) -> Unit?
-  ): Int {
+  @Polyglot override fun randomInt(min: Int, max: Int, callback: (AbstractJsException?, Int) -> Unit?): Any {
     TODO("Not yet implemented")
   }
 

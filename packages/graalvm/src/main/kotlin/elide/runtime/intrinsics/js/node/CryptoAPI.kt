@@ -12,10 +12,10 @@
  */
 package elide.runtime.intrinsics.js.node
 
-import RandomIntCallback
+
 import org.graalvm.polyglot.Value
 import elide.annotations.API
-import elide.runtime.intrinsics.js.err.JsError
+import elide.runtime.intrinsics.js.node.crypto.RandomIntCallback
 import elide.vm.annotations.Polyglot
 
 /**

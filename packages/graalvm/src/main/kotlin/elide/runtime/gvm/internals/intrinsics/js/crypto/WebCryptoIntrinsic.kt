@@ -102,8 +102,8 @@ internal class WebCryptoIntrinsic : WebCryptoAPI, ProxyObject, AbstractJsIntrins
 
   @Polyglot override fun randomUUID(): UUID = UUIDValue.random()
 
-  @Polyglot override fun randomInt(min: Int, max: Int, callback: (AbstractJsException?, Int) -> Unit?): Any {
-    TODO("Not yet implemented")
+  @Polyglot override fun randomInt(min: Int, max: Int, callback: (AbstractJsException?, Int) -> Unit?) {
+    callback(null, SecureRandom().nextInt())
   }
 
   @get:Polyglot override val subtle: SubtleCrypto get() = error("SubtleCrypto is not supported yet in Elide.")

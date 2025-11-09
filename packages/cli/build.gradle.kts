@@ -117,7 +117,7 @@ val enableObfuscation = false
 val enableTs = true
 val enablePython = true
 val enablePythonDynamic = true
-val enableRuby = true
+val enableRuby = false
 val enableLlvm = true
 val enableJvm = true
 val enableKotlin = true
@@ -1033,6 +1033,7 @@ val initializeAtBuildtime: List<String> = listOf(
   "org.eclipse.aether.repository.RemoteRepository",
   "org.eclipse.aether.repository.RepositoryPolicy",
   "org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationComponentRegistrar",
+  "org.jetbrains.kotlinx.serialization.compiler.extensions.SerializationComponentRegistrar\$Companion",
 ).onlyIf(enableKotlin)).plus(listOf(
   "com.oracle.svm.driver",
 ).onlyIf(enableEmbeddedSvm))
@@ -1959,8 +1960,8 @@ val embeddedSubstrateFlags = listOf(
   // "-H:+AllowDeprecatedBuilderClassesOnImageClasspath",
   "-Dcom.oracle.graalvm.isaot=true",
   "-J-Dcom.oracle.graalvm.isaot=true",
-  "-Dorg.graalvm.version=25.0.0",
-  "-J-Dorg.graalvm.version=25.0.0",
+  "-Dorg.graalvm.version=25.0.1",
+  "-J-Dorg.graalvm.version=25.0.1",
   "--link-at-build-time=com.oracle.svm.driver,com.oracle.svm.driver.metainf",
   "-H:IncludeResources=com/oracle/svm/driver/launcher/.*",
 )

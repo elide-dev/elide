@@ -44,18 +44,5 @@ import elide.runtime.feature.FrameworkFeature
 
     // JShell and Java compiler (all violations trace through these)
     support.initializeAtRunTime("jdk.jshell", "JShell REPL diagnostics")
-    support.initializeAtRunTime("com.sun.tools.javac", "Java compiler internals")
-
-    // Kotlin compiler repackaged dependencies
-    support.initializeAtRunTime("org.jetbrains.kotlin.com", "Kotlin repackaged Guava/IntelliJ classes")
-    support.initializeAtRunTime("org.jetbrains.kotlin.it.unimi", "Kotlin repackaged FastUtil")
-    support.initializeAtRunTime("org.jetbrains.kotlin.protobuf", "Kotlin repackaged Protocol Buffers")
-
-    // Compression libraries with JNI bindings
-    support.initializeAtRunTime("com.aayushatharva.brotli4j", "Brotli compression JNI")
-    support.initializeAtRunTime("org.apache.commons.compress", "Apache Commons compression")
-
-    // Micronaut concurrent collections
-    support.initializeAtRunTime("io.micronaut.core.util.clhm", "Micronaut ConcurrentLinkedHashMap")
   }
 }

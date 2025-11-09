@@ -12,7 +12,6 @@
  */
 package elide.runtime.node.crypto
 
-import RandomIntCallback
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyExecutable
 import elide.runtime.gvm.api.Intrinsic
@@ -29,6 +28,7 @@ import elide.vm.annotations.Polyglot
 import java.security.SecureRandom
 import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.RangeError
+import elide.runtime.intrinsics.js.node.crypto.RandomIntCallback
 
 // Internal symbol where the Node built-in module is installed.
 private const val CRYPTO_MODULE_SYMBOL = "node_${NodeModuleName.CRYPTO}"
@@ -36,6 +36,9 @@ private const val CRYPTO_MODULE_SYMBOL = "node_${NodeModuleName.CRYPTO}"
 // Function name for randomUUID
 private const val F_RANDOM_UUID = "randomUUID"
 private const val F_RANDOM_INT = "randomInt"
+
+// Cached Int generator to ensure we don't create multiple instances.
+private val cryptoRandomGenerator by lazy { SecureRandom() }
 
 
 // Installs the Node crypto module into the intrinsic bindings.
@@ -79,29 +82,27 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
      error = RangeError.create("The value of \"max\" is out of range. It must be greater than the value of \"min\" ($min). Received $max")
    }
 
-   val secureRandom = SecureRandom()
-
    val bounds = max - min
-   val randomInt = secureRandom.nextInt(bounds) + min
+   val randomInt = cryptoRandomGenerator.nextInt(bounds) + min
 
    if (callback != null) {
      callback.invoke(error, randomInt)
-   } else {
-    return randomInt
+
+     return Unit
    }
 
-    return Unit
+   return randomInt
  }
 
   @Polyglot override fun randomInt(min: Value?, max: Value, callback: Value?): Int {
     return randomInt(min, max, callback)
   }
 
-  override fun randomInt(max: Value, callback: Value?): Int {
+  @Polyglot override fun randomInt(max: Value, callback: Value?): Int {
     return randomInt(max, callback)
   }
 
-  override fun randomInt(max: Value): Int {
+  @Polyglot override fun randomInt(max: Value): Int {
     return randomInt(max)
   }
 
@@ -129,7 +130,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
       when (it.size) {
         1 -> randomInt(it.first())
         2 -> if (it[1].fitsInInt()) {
-          randomInt(it.first(), it[1])
+          randomInt(min = it.first().asInt(), max = it[1].asInt())
         } else {
           randomInt(max = it.first(), callback = it[1])
         }

@@ -18,7 +18,9 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import elide.annotations.Inject
+import elide.runtime.intrinsics.js.err.RangeError
 import elide.runtime.node.crypto.NodeCryptoModule
 import elide.testing.annotations.TestCase
 
@@ -196,6 +198,73 @@ import elide.testing.annotations.TestCase
 
     assert.equal(typeof uuid1, "string");
     assert.equal(typeof uuid2, "string");
+    """
+  }
+
+  @Test fun `randomInt should return an Int when valid min and max are provided with no callback`() = conforms {
+    val randomInt = crypto.provide().randomInt(5, 10)
+    assertIs<Int>(randomInt, "randomInt should return an Int")
+    assertTrue(randomInt in 5 until 10, "randomInt should be within the specified range")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const int = crypto.randomInt();
+    assert.equal(typeof int, "Number");
+    """
+  }
+
+  @Test fun `randomInt should invoke callback with error when min is greater than or equal to max`() = conforms {
+    var callbackInvoked = false
+    crypto.provide().randomInt(10, 5) { err, value ->
+      callbackInvoked = true
+      assertNotNull(err, "Error should be provided when min >= max")
+      assertIs<RangeError>(err, "Error should be of type RangeError")
+    }
+    assertTrue(callbackInvoked, "Callback should have been invoked")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    let callbackInvoked = false;
+    crypto.randomInt(10, 5, (err, value) => {
+      callbackInvoked = true;
+      assert.ok(err, "Error should be provided when min >= max");
+      assert.equal(err.name, "RangeError", "Error should be of type RangeError");
+    });
+
+    assert.ok(callbackInvoked, "Callback should have been invoked");
+    """
+  }
+
+  @Test fun `randomInt should return nothing when a callback is provided`() = conforms {
+    var callbackInvoked = false
+    val result = crypto.provide().randomInt(5, 10) { err, value ->
+      callbackInvoked = true
+      assertNull(err, "Error should be null for valid range")
+      assertTrue(value in 5 until 10, "Value should be within the specified range")
+    }
+    assertTrue(callbackInvoked, "Callback should have been invoked")
+    assertEquals(Unit, result, "randomInt should return Unit when a callback is provided")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    let callbackInvoked = false;
+    const result = crypto.randomInt(5, 10, (err, value) => {
+      callbackInvoked = true;
+      assert.ifError(err);
+      assert.ok(value >= 5 && value < 10, "Value should be within the specified range");
+    });
+
+    assert.ok(callbackInvoked, "Callback should have been invoked");
+    assert.equal(result, undefined, "randomInt should return undefined when a callback is provided");
     """
   }
 }

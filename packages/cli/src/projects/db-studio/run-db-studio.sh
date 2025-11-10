@@ -66,7 +66,7 @@ wait_for_server 4984 "API Server"
 
 # Start UI server in background
 echo -e "${BLUE}[UI Server]${NC} Starting on port 8080..."
-./gradlew :packages:cli:run --args="serve $UI_DIR" -q 2>&1 | sed 's/^/[UI] /' &
+./gradlew :packages:cli:run --args="serve .dev/db-studio/ui" -q 2>&1 | sed 's/^/[UI] /' &
 UI_PID=$!
 
 # Wait for UI server to be ready

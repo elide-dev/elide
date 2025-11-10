@@ -57,7 +57,6 @@ data class DiscoveredDatabase(
   val name: String,
   val size: Long,
   val lastModified: Long,
-  val isLocal: Boolean = false, // Whether it's in the current working directory
 )
 
 @Command(
@@ -88,7 +87,6 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
       name = name,
       size = fileSize(),
       lastModified = getLastModifiedTime().toMillis(),
-      isLocal = true,
     )
   }.getOrNull()
 
@@ -107,13 +105,13 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     }
   }.getOrElse { emptyList() }
 
-  private fun discoverDatabases(): List<DiscoveredDatabase> {
-    val cwd = Path.of(System.getProperty("user.dir"))
+  private fun discoverDatabases(baseDir: Path? = null): List<DiscoveredDatabase> {
+    val searchDir = baseDir ?: Path.of(System.getProperty("user.dir"))
 
     // Search current directory and immediate subdirectories
-    val currentDir = searchDirectory(cwd, depth = 0, maxDepth = 0)
+    val currentDir = searchDirectory(searchDir, depth = 0, maxDepth = 0)
     val subDirs = runCatching {
-      cwd.listDirectoryEntries()
+      searchDir.listDirectoryEntries()
         .filter { it.isDirectory() }
         .flatMap { searchDirectory(it, depth = 1, maxDepth = 1) }
     }.getOrElse { emptyList() }
@@ -144,7 +142,7 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
 
   @Parameters(
     index = "0",
-    description = ["Path to SQLite database file"],
+    description = ["Path to SQLite database file or directory for discovery"],
     arity = "0..1",
     paramLabel = "DATABASE_PATH",
   )
@@ -203,22 +201,38 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
 
       discovered
     } else {
-      val dbFile = Path.of(databasePath!!)
+      val dbPath = Path.of(databasePath!!)
 
-      if (!dbFile.exists()) {
-        return CommandResult.err(message = "Database file not found: $databasePath")
+      if (!dbPath.exists()) {
+        return CommandResult.err(message = "Path not found: $databasePath")
       }
 
-      // Create a single-item list with the specified database
-      listOf(
-        DiscoveredDatabase(
-          path = dbFile.toAbsolutePath().toString(),
-          name = dbFile.name,
-          size = dbFile.fileSize(),
-          lastModified = dbFile.getLastModifiedTime().toMillis(),
-          isLocal = true,
-        )
-      )
+      when {
+        // If it's a directory, discover databases within it
+        dbPath.isDirectory() -> {
+          val discovered = discoverDatabases(dbPath)
+
+          if (discovered.isEmpty()) {
+            return CommandResult.err(message = "No SQLite databases found in directory: $databasePath")
+          }
+
+          discovered
+        }
+        // If it's a file, use it as a single database
+        dbPath.isRegularFile() -> {
+          listOf(
+            DiscoveredDatabase(
+              path = dbPath.toAbsolutePath().toString(),
+              name = dbPath.name,
+              size = dbPath.fileSize(),
+              lastModified = dbPath.getLastModifiedTime().toMillis(),
+            )
+          )
+        }
+        else -> {
+          return CommandResult.err(message = "Path must be a file or directory: $databasePath")
+        }
+      }
     }
 
     // Generate config.ts with port and databases

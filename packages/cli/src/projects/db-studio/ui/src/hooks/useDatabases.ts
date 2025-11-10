@@ -5,7 +5,6 @@ export type DiscoveredDatabase = {
   path: string
   size: number
   lastModified: number
-  isLocal: boolean
 }
 
 type DatabasesResponse = {

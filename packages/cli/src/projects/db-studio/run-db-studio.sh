@@ -51,9 +51,14 @@ wait_for_server() {
   echo -e "${GREEN}✓ $name is ready${NC}"
 }
 
-# Start API server in background
+# Get absolute paths
+PROJECT_ROOT="$(pwd)"
+API_DIR="$PROJECT_ROOT/.dev/db-studio/api"
+UI_DIR="$PROJECT_ROOT/.dev/db-studio/ui"
+
+# Start API server in background (imperative Node.js HTTP server)
 echo -e "${BLUE}[API Server]${NC} Starting on port 4984..."
-./gradlew :packages:cli:run --args="serve .dev/db-studio/api/index.tsx" -q 2>&1 | sed 's/^/[API] /' &
+./gradlew :packages:cli:run --args="run $API_DIR/index.tsx" -q 2>&1 | sed 's/^/[API] /' &
 API_PID=$!
 
 # Wait for API server to be ready
@@ -61,7 +66,7 @@ wait_for_server 4984 "API Server"
 
 # Start UI server in background
 echo -e "${BLUE}[UI Server]${NC} Starting on port 8080..."
-./gradlew :packages:cli:run --args="serve .dev/db-studio/ui" -q 2>&1 | sed 's/^/[UI] /' &
+./gradlew :packages:cli:run --args="serve $UI_DIR" -q 2>&1 | sed 's/^/[UI] /' &
 UI_PID=$!
 
 # Wait for UI server to be ready

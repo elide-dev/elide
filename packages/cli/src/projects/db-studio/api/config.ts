@@ -17,7 +17,6 @@ const config = {
       name: "sample.db",
       size: 0,
       lastModified: Date.now(),
-      isLocal: true,
     }
   ] as DiscoveredDatabase[],
 };

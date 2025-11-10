@@ -46,18 +46,19 @@ const server = createServer(options, (req, res) => {
       // Handle the API request
       const response = await handleApiRequest(url, method, body, databases, Database);
 
-      // Write response with Content-Length
+      // Write response with Content-Length (byte length, not character length)
       res.writeHead(response.status, {
         ...response.headers,
-        'Content-Length': response.body.length
+        'Content-Length': Buffer.byteLength(response.body, 'utf8')
       });
+      console.log(response.body);
       res.end(response.body);
     } catch (err) {
       console.error("Error handling request:", err);
       const errorBody = JSON.stringify({ error: 'Internal server error' });
       res.writeHead(500, {
         'Content-Type': 'application/json',
-        'Content-Length': errorBody.length
+        'Content-Length': Buffer.byteLength(errorBody, 'utf8')
       });
       res.end(errorBody);
     }

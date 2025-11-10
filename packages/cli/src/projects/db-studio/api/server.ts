@@ -4,31 +4,25 @@ import type { Database } from "elide:sqlite";
 import type { DiscoveredDatabase } from "./database.ts";
 import { getDatabaseInfo, getTables, getTableData } from "./database.ts";
 
-/**
- * HTTP Server Layer - JSON API Handler
- *
- * Provides RESTful JSON API endpoints for database operations.
- * Used by the imperative Node.js HTTP server in index.tsx.
- * The React UI is served separately via a static file server.
- */
-
 type ApiResponse = {
   status: number;
   headers: Record<string, string>;
   body: string;
 };
 
-/**
- * Get database by index from the discovered list
- */
-function getDatabaseByIndex(databases: DiscoveredDatabase[], index: number): DiscoveredDatabase | null {
-  if (index < 0 || index >= databases.length) return null;
-  return databases[index];
-}
+type RouteContext = {
+  databases: DiscoveredDatabase[];
+  Database: typeof Database;
+};
 
-/**
- * Helper to create JSON response
- */
+type RouteHandler = (params: Record<string, string>, context: RouteContext) => Promise<ApiResponse>;
+
+type Route = {
+  method: string;
+  pattern: string;
+  handler: RouteHandler;
+};
+
 function jsonResponse(data: unknown, status: number = 200): ApiResponse {
   return {
     status,
@@ -37,17 +31,27 @@ function jsonResponse(data: unknown, status: number = 200): ApiResponse {
   };
 }
 
-/**
- * Helper to create error response
- */
 function errorResponse(message: string, status: number = 500): ApiResponse {
   return jsonResponse({ error: message }, status);
 }
 
-/**
- * Match a route pattern with path parameters
- * Returns null if no match, otherwise returns extracted parameters
- */
+function validateAndGetDatabase(
+  dbIndexStr: string,
+  databases: DiscoveredDatabase[]
+): { database: DiscoveredDatabase } | { error: ApiResponse } {
+  const dbIndex = parseInt(dbIndexStr, 10);
+
+  if (isNaN(dbIndex)) {
+    return { error: errorResponse("Invalid database index", 400) };
+  }
+
+  if (dbIndex < 0 || dbIndex >= databases.length) {
+    return { error: errorResponse(`Database not found at index ${dbIndex}`, 404) };
+  }
+
+  return { database: databases[dbIndex] };
+}
+
 function matchRoute(pattern: string, path: string): Record<string, string> | null {
   const patternParts = pattern.split("/").filter(p => p);
   const pathParts = path.split("/").filter(p => p);
@@ -73,6 +77,70 @@ function matchRoute(pattern: string, path: string): Record<string, string> | nul
   return params;
 }
 
+async function healthCheck(): Promise<ApiResponse> {
+  return jsonResponse({ status: "ok" });
+}
+
+async function listDatabases(_params: Record<string, string>, context: RouteContext): Promise<ApiResponse> {
+  return jsonResponse({ databases: context.databases });
+}
+
+async function getDatabaseInfoRoute(params: Record<string, string>, context: RouteContext): Promise<ApiResponse> {
+  const result = validateAndGetDatabase(params.dbIndex, context.databases);
+  if ("error" in result) return result.error;
+
+  const { database } = result;
+  const db = new context.Database(database.path);
+  const info = getDatabaseInfo(db, database.path);
+
+  const fullInfo = {
+    ...info,
+    size: database.size,
+    lastModified: database.lastModified,
+    isLocal: database.isLocal,
+    tableCount: info.tableCount,
+  };
+
+  return jsonResponse(fullInfo);
+}
+
+async function getTablesRoute(params: Record<string, string>, context: RouteContext): Promise<ApiResponse> {
+  const result = validateAndGetDatabase(params.dbIndex, context.databases);
+  if ("error" in result) return result.error;
+
+  const { database } = result;
+  const db = new context.Database(database.path);
+  const tables = getTables(db);
+
+  return jsonResponse({ tables });
+}
+
+async function getTableDataRoute(params: Record<string, string>, context: RouteContext): Promise<ApiResponse> {
+  const result = validateAndGetDatabase(params.dbIndex, context.databases);
+  if ("error" in result) return result.error;
+
+  const tableName = params.tableName;
+  if (!tableName) {
+    return errorResponse("Table name is required", 400);
+  }
+
+  const { database } = result;
+  const db = new context.Database(database.path);
+  const tableData = getTableData(db, tableName);
+
+  return jsonResponse(tableData);
+}
+
+/**
+ * Route Registry
+ */
+const routes: Route[] = [
+  { method: "GET", pattern: "/api/databases", handler: listDatabases },
+  { method: "GET", pattern: "/api/databases/:dbIndex", handler: getDatabaseInfoRoute },
+  { method: "GET", pattern: "/api/databases/:dbIndex/tables", handler: getTablesRoute },
+  { method: "GET", pattern: "/api/databases/:dbIndex/tables/:tableName", handler: getTableDataRoute },
+];
+
 /**
  * Handle API requests using Node.js primitives
  */
@@ -87,100 +155,24 @@ export async function handleApiRequest(
   const path = url.split('?')[0];
 
   try {
-    // ============================================================================
-    // Route: GET /health
-    // ============================================================================
+    // Special case: health check endpoint (no params needed)
     if (method === "GET" && path === "/health") {
-      return jsonResponse({ status: "ok" });
+      return healthCheck();
     }
 
-    // ============================================================================
-    // Route: GET /api/databases
-    // ============================================================================
-    if (method === "GET" && path === "/api/databases") {
-      return jsonResponse({ databases });
+    // Try to match against registered routes
+    const context: RouteContext = { databases, Database };
+
+    for (const route of routes) {
+      if (route.method !== method) continue;
+
+      const params = matchRoute(route.pattern, path);
+      if (params) {
+        return await route.handler(params, context);
+      }
     }
 
-    // ============================================================================
-    // Route: GET /api/databases/:dbIndex
-    // ============================================================================
-    const dbInfoMatch = matchRoute("/api/databases/:dbIndex", path);
-    if (method === "GET" && dbInfoMatch) {
-      const dbIndex = parseInt(dbInfoMatch.dbIndex, 10);
-
-      if (isNaN(dbIndex)) {
-        return errorResponse("Invalid database index", 400);
-      }
-
-      const database = getDatabaseByIndex(databases, dbIndex);
-      if (!database) {
-        return errorResponse(`Database not found at index ${dbIndex}`, 404);
-      }
-
-      const db = new Database(database.path);
-      const info = getDatabaseInfo(db, database.path);
-
-      const fullInfo = {
-        ...info,
-        size: database.size,
-        lastModified: database.lastModified,
-        isLocal: database.isLocal,
-        tableCount: info.tableCount,
-      };
-
-      return jsonResponse(fullInfo);
-    }
-
-    // ============================================================================
-    // Route: GET /api/databases/:dbIndex/tables
-    // ============================================================================
-    const tablesMatch = matchRoute("/api/databases/:dbIndex/tables", path);
-    if (method === "GET" && tablesMatch) {
-      const dbIndex = parseInt(tablesMatch.dbIndex, 10);
-
-      if (isNaN(dbIndex)) {
-        return errorResponse("Invalid database index", 400);
-      }
-
-      const database = getDatabaseByIndex(databases, dbIndex);
-      if (!database) {
-        return errorResponse(`Database not found at index ${dbIndex}`, 404);
-      }
-
-      const db = new Database(database.path);
-      const tables = getTables(db);
-      return jsonResponse({ tables });
-    }
-
-    // ============================================================================
-    // Route: GET /api/databases/:dbIndex/tables/:tableName
-    // ============================================================================
-    const tableDataMatch = matchRoute("/api/databases/:dbIndex/tables/:tableName", path);
-    if (method === "GET" && tableDataMatch) {
-      const dbIndex = parseInt(tableDataMatch.dbIndex, 10);
-
-      if (isNaN(dbIndex)) {
-        return errorResponse("Invalid database index", 400);
-      }
-
-      const database = getDatabaseByIndex(databases, dbIndex);
-      if (!database) {
-        return errorResponse(`Database not found at index ${dbIndex}`, 404);
-      }
-
-      const tableName = tableDataMatch.tableName;
-      if (!tableName) {
-        return errorResponse("Table name is required", 400);
-      }
-
-      const db = new Database(database.path);
-      const tableData = getTableData(db, tableName);
-      return jsonResponse(tableData);
-    }
-
-    // ============================================================================
     // No route matched - return 404
-    // ============================================================================
     return { status: 404, headers: {}, body: '' };
 
   } catch (err) {

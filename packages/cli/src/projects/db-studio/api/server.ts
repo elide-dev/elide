@@ -5,27 +5,17 @@ import type { DiscoveredDatabase } from "./database.ts";
 import { getDatabaseInfo, getTables, getTableData } from "./database.ts";
 
 /**
- * HTTP Server Layer - JSON API Only
+ * HTTP Server Layer - JSON API Handler
  *
  * Provides RESTful JSON API endpoints for database operations.
+ * Used by the imperative Node.js HTTP server in index.tsx.
  * The React UI is served separately via a static file server.
  */
 
-export type ServerConfig = {
-  port: number;
-  databases: DiscoveredDatabase[];
-  Database: typeof Database;
-};
-
-// Extended HTTP types for route parameters
-// Note: These extend the base ElideHttp types from http.d.ts
-type RouteContext = {
-  params?: Record<string, string>;
-};
-
-type ElideHttpResponseExtended = {
-  header(name: string, value: string): void;
-  send(status: number, body: string): void;
+type ApiResponse = {
+  status: number;
+  headers: Record<string, string>;
+  body: string;
 };
 
 /**
@@ -37,55 +27,94 @@ function getDatabaseByIndex(databases: DiscoveredDatabase[], index: number): Dis
 }
 
 /**
- * Start the HTTP server with API and SSR routes
+ * Helper to create JSON response
  */
-export function startServer({ port, databases, Database }: ServerConfig): void {
-  if (!Elide.http) {
-    throw new Error("Running under Elide but no server is available: please run with `elide serve`");
+function jsonResponse(data: unknown, status: number = 200): ApiResponse {
+  return {
+    status,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  };
+}
+
+/**
+ * Helper to create error response
+ */
+function errorResponse(message: string, status: number = 500): ApiResponse {
+  return jsonResponse({ error: message }, status);
+}
+
+/**
+ * Match a route pattern with path parameters
+ * Returns null if no match, otherwise returns extracted parameters
+ */
+function matchRoute(pattern: string, path: string): Record<string, string> | null {
+  const patternParts = pattern.split("/").filter(p => p);
+  const pathParts = path.split("/").filter(p => p);
+
+  if (patternParts.length !== pathParts.length) return null;
+
+  const params: Record<string, string> = {};
+
+  for (let i = 0; i < patternParts.length; i++) {
+    const patternPart = patternParts[i];
+    const pathPart = pathParts[i];
+
+    if (patternPart.startsWith(":")) {
+      // Parameter segment
+      const paramName = patternPart.slice(1);
+      params[paramName] = pathPart;
+    } else if (patternPart !== pathPart) {
+      // Literal segment doesn't match
+      return null;
+    }
   }
 
-  console.log("Server starting with config:", { port, databaseCount: databases?.length });
+  return params;
+}
 
-  // ============================================================================
-  // JSON API Routes
-  // ============================================================================
+/**
+ * Handle API requests using Node.js primitives
+ */
+export async function handleApiRequest(
+  url: string,
+  method: string,
+  body: string,
+  databases: DiscoveredDatabase[],
+  Database: typeof Database
+): Promise<ApiResponse> {
+  // Parse URL path (remove query string if present)
+  const path = url.split('?')[0];
 
-  /**
-   * GET /api/databases
-   * List all discovered databases
-   */
-  Elide.http.router.handle("GET", "/api/databases", async (request, response: ElideHttpResponseExtended) => {
-    try {
-      response.header("Content-Type", "application/json");
-      response.send(200, JSON.stringify({ databases }));
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      console.error("Error getting databases:", err);
-      response.header("Content-Type", "application/json");
-      response.send(500, JSON.stringify({ error: errorMessage }));
+  try {
+    // ============================================================================
+    // Route: GET /health
+    // ============================================================================
+    if (method === "GET" && path === "/health") {
+      return jsonResponse({ status: "ok" });
     }
-  });
 
-  /**
-   * GET /api/databases/:dbIndex
-   * Get metadata for a specific database
-   */
-  Elide.http.router.handle("GET", "/api/databases/:dbIndex", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
-    try {
-      const dbIndexStr = context?.params?.dbIndex || "";
-      const dbIndex = parseInt(dbIndexStr, 10);
+    // ============================================================================
+    // Route: GET /api/databases
+    // ============================================================================
+    if (method === "GET" && path === "/api/databases") {
+      return jsonResponse({ databases });
+    }
+
+    // ============================================================================
+    // Route: GET /api/databases/:dbIndex
+    // ============================================================================
+    const dbInfoMatch = matchRoute("/api/databases/:dbIndex", path);
+    if (method === "GET" && dbInfoMatch) {
+      const dbIndex = parseInt(dbInfoMatch.dbIndex, 10);
 
       if (isNaN(dbIndex)) {
-        response.header("Content-Type", "application/json");
-        response.send(400, JSON.stringify({ error: "Invalid database index" }));
-        return;
+        return errorResponse("Invalid database index", 400);
       }
 
       const database = getDatabaseByIndex(databases, dbIndex);
       if (!database) {
-        response.header("Content-Type", "application/json");
-        response.send(404, JSON.stringify({ error: `Database not found at index ${dbIndex}` }));
-        return;
+        return errorResponse(`Database not found at index ${dbIndex}`, 404);
       }
 
       const db = new Database(database.path);
@@ -96,121 +125,67 @@ export function startServer({ port, databases, Database }: ServerConfig): void {
         size: database.size,
         lastModified: database.lastModified,
         isLocal: database.isLocal,
-        tableCount: info.tableCount, // From getDatabaseInfo
+        tableCount: info.tableCount,
       };
 
-      response.header("Content-Type", "application/json");
-      response.send(200, JSON.stringify(fullInfo));
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      console.error("Error getting database info:", err);
-      response.header("Content-Type", "application/json");
-      response.send(500, JSON.stringify({ error: errorMessage }));
+      return jsonResponse(fullInfo);
     }
-  });
 
-  /**
-   * GET /api/databases/:dbIndex/tables
-   * List all tables in a database
-   */
-  Elide.http.router.handle("GET", "/api/databases/:dbIndex/tables", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
-    try {
-      const dbIndexStr = context?.params?.dbIndex || "";
-      const dbIndex = parseInt(dbIndexStr, 10);
+    // ============================================================================
+    // Route: GET /api/databases/:dbIndex/tables
+    // ============================================================================
+    const tablesMatch = matchRoute("/api/databases/:dbIndex/tables", path);
+    if (method === "GET" && tablesMatch) {
+      const dbIndex = parseInt(tablesMatch.dbIndex, 10);
 
       if (isNaN(dbIndex)) {
-        response.header("Content-Type", "application/json");
-        response.send(400, JSON.stringify({ error: "Invalid database index" }));
-        return;
+        return errorResponse("Invalid database index", 400);
       }
 
       const database = getDatabaseByIndex(databases, dbIndex);
       if (!database) {
-        response.header("Content-Type", "application/json");
-        response.send(404, JSON.stringify({ error: `Database not found at index ${dbIndex}` }));
-        return;
+        return errorResponse(`Database not found at index ${dbIndex}`, 404);
       }
 
       const db = new Database(database.path);
       const tables = getTables(db);
-      response.header("Content-Type", "application/json");
-      response.send(200, JSON.stringify({ tables }));
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      console.error("Error getting tables:", err);
-      response.header("Content-Type", "application/json");
-      response.send(500, JSON.stringify({ error: errorMessage }));
+      return jsonResponse({ tables });
     }
-  });
 
-  /**
-   * GET /api/databases/:dbIndex/tables/:tableName
-   * Get data from a specific table
-   */
-  Elide.http.router.handle("GET", "/api/databases/:dbIndex/tables/:tableName", async (request, response: ElideHttpResponseExtended, context: RouteContext) => {
-    try {
-      const dbIndexStr = context?.params?.dbIndex || "";
-      const dbIndex = parseInt(dbIndexStr, 10);
+    // ============================================================================
+    // Route: GET /api/databases/:dbIndex/tables/:tableName
+    // ============================================================================
+    const tableDataMatch = matchRoute("/api/databases/:dbIndex/tables/:tableName", path);
+    if (method === "GET" && tableDataMatch) {
+      const dbIndex = parseInt(tableDataMatch.dbIndex, 10);
 
       if (isNaN(dbIndex)) {
-        response.header("Content-Type", "application/json");
-        response.send(400, JSON.stringify({ error: "Invalid database index" }));
-        return;
+        return errorResponse("Invalid database index", 400);
       }
 
       const database = getDatabaseByIndex(databases, dbIndex);
       if (!database) {
-        response.header("Content-Type", "application/json");
-        response.send(404, JSON.stringify({ error: `Database not found at index ${dbIndex}` }));
-        return;
+        return errorResponse(`Database not found at index ${dbIndex}`, 404);
       }
 
-      const tableName = context?.params?.tableName || "";
+      const tableName = tableDataMatch.tableName;
       if (!tableName) {
-        response.header("Content-Type", "application/json");
-        response.send(400, JSON.stringify({ error: "Table name is required" }));
-        return;
+        return errorResponse("Table name is required", 400);
       }
 
       const db = new Database(database.path);
       const tableData = getTableData(db, tableName);
-      response.header("Content-Type", "application/json");
-      response.send(200, JSON.stringify(tableData));
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      console.error("Error getting table data:", err);
-      response.header("Content-Type", "application/json");
-      response.send(500, JSON.stringify({ error: errorMessage }));
+      return jsonResponse(tableData);
     }
-  });
 
-  /**
-   * GET /health
-   * Health check endpoint
-   */
-  Elide.http.router.handle("GET", "/health", (request, response: ElideHttpResponseExtended) => {
-    response.header("Content-Type", "application/json");
-    response.send(200, JSON.stringify({ status: "ok" }));
-  });
+    // ============================================================================
+    // No route matched - return 404
+    // ============================================================================
+    return { status: 404, headers: {}, body: '' };
 
-
-  // ============================================================================
-  // Server Configuration
-  // ============================================================================
-
-  Elide.http.config.port = port;
-
-  Elide.http.config.onBind(() => {
-    console.log(`Database Studio listening at "http://localhost:${port}"! 🚀`);
-    console.log(`${databases.length} database(s) available`);
-    console.log();
-    console.log("API Endpoints:");
-    console.log(`  GET /api/databases`);
-    console.log(`  GET /api/databases/:dbIndex`);
-    console.log(`  GET /api/databases/:dbIndex/tables`);
-    console.log(`  GET /api/databases/:dbIndex/tables/:tableName`);
-    console.log(`  GET /health`);
-  });
-
-  Elide.http.start();
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    console.error("Error handling request:", err);
+    return errorResponse(errorMessage, 500);
+  }
 }

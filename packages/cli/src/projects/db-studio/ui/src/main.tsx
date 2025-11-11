@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Databases from './routes/Databases.tsx'
 import Database from './routes/Database.tsx'
 import Table from './routes/Table.tsx'
+import Query from './routes/Query.tsx'
 
 const queryClient = new QueryClient()
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
         children: [
           { path: 'tables', element: <div className="flex-1 p-6 overflow-auto flex items-center justify-center text-gray-500">Select a table to view data</div> },
           { path: 'table/:tableName', element: <Table /> },
+          { path: 'query', element: <Query /> },
         ],
       },
     ],

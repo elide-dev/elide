@@ -82,8 +82,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
      error = RangeError.create("The value of \"max\" is out of range. It must be greater than the value of \"min\" ($min). Received $max")
    }
 
-   val bounds = max - min
-   val randomInt = cryptoRandomGenerator.nextInt(bounds) + min
+   val randomInt = cryptoRandomGenerator.nextInt(min,   max)
 
    if (callback != null) {
      callback.invoke(error, randomInt)
@@ -106,13 +105,6 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
     return randomInt(max)
   }
 
-  @Polyglot fun randomInt(
-    max: Value,
-    callback: RandomIntCallback?
-  ): Int {
-    return randomInt(max, callback)
-  }
-
   // ProxyObject implementation
   override fun getMemberKeys(): Array<String> = moduleMembers
 
@@ -126,7 +118,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
       randomUUID(options)
     }
     F_RANDOM_INT -> ProxyExecutable {
-      // Node.js signature: randomInt(max) OR randomInt(min, max, [callback]) OR randomInt(max, [callback])
+      // Node.js signature: randomInt(max) OR randomInt(max, [callback]) OR randomInt(min, max) OR randomInt(min, max, [callback])
       when (it.size) {
         1 -> randomInt(it.first())
         2 -> if (it[1].fitsInInt()) {

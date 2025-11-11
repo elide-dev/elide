@@ -241,7 +241,7 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Test fun `randomInt should return nothing when a callback is provided`() = conforms {
+  @Test fun `randomInt should return Unit when a callback is provided`() = conforms {
     var callbackInvoked = false
     val result = crypto.provide().randomInt(5, 10) { err, value ->
       callbackInvoked = true
@@ -265,6 +265,22 @@ import elide.testing.annotations.TestCase
 
     assert.ok(callbackInvoked, "Callback should have been invoked");
     assert.equal(result, undefined, "randomInt should return undefined when a callback is provided");
+    """
+  }
+
+  @Test fun `randomInt should default min to 0 when only max is provided`() = conforms {
+    val randomInt = crypto.provide().randomInt(max = 5)
+    assertIs<Int>(randomInt, "randomInt should return an Int")
+    assertTrue(randomInt in 0 until 5, "randomInt should be within the range 0 to max")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const int = crypto.randomInt(5);
+    assert.equal(typeof int, "Number");
+    assert.ok(int >= 0 && int < 5, "randomInt should be within the range 0 to max");
     """
   }
 }

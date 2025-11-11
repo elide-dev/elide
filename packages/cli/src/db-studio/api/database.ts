@@ -20,7 +20,6 @@ export interface DiscoveredDatabase {
   name: string;
   size: number;
   lastModified: number;
-  isLocal: boolean;
 }
 
 export interface TableInfo {
@@ -40,7 +39,6 @@ export interface DatabaseInfo {
   name: string;
   size: number;
   lastModified: number;
-  isLocal: boolean;
   tableCount: number;
 }
 
@@ -119,7 +117,6 @@ export function getDatabaseInfo(db: Database, dbPath: string): DatabaseInfo {
     name,
     size: 0, // Will be populated by calling code if available
     lastModified: 0, // Will be populated by calling code if available
-    isLocal: false, // Will be populated by calling code if available
     tableCount: tablesResult?.count ?? 0,
   };
 }

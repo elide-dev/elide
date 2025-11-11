@@ -1,27 +1,10 @@
 import { Link } from 'react-router-dom'
 import { Database, ChevronRight } from 'lucide-react'
 import { useDatabases } from '../hooks/useDatabases'
+import { formatBytes, formatDate } from '../lib/utils'
 
 export default function Databases() {
   const { data: databases = [], isLoading: loading, error } = useDatabases()
-
-  const formatBytes = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
-  }
-
-  const formatDate = (timestamp: number) => {
-    const now = Date.now()
-    const diff = now - timestamp
-    const minutes = Math.floor(diff / 60000)
-    const hours = Math.floor(diff / 3600000)
-    const days = Math.floor(diff / 86400000)
-
-    if (minutes < 60) return `${minutes}m ago`
-    if (hours < 24) return `${hours}h ago`
-    return `${days}d ago`
-  }
 
   if (loading) {
     return <div className="min-h-[calc(100vh-73px)] bg-black text-white flex items-center justify-center">Loading...</div>
@@ -57,11 +40,6 @@ export default function Databases() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1.5">
                       <h3 className="font-medium text-base">{dbName}</h3>
-                      {db.isLocal && (
-                        <span className="text-[10px] font-medium bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded uppercase tracking-wide">
-                          LOCAL
-                        </span>
-                      )}
                     </div>
                     <p className="text-xs text-gray-500 truncate mb-2">{db.path}</p>
                     <div className="flex items-center gap-3 text-xs text-gray-400">

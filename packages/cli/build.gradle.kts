@@ -2414,7 +2414,7 @@ tasks {
   val allSamples = layout.projectDirectory.dir("src/projects")
     .asFile
     .listFiles()
-    .filter { it.isDirectory() }
+    .filter { it.isDirectory() && it.name != "db-studio" }
     .map { it.toPath() to it.name }
 
   val builtSamples = layout.buildDirectory.dir("packed-samples")
@@ -2436,10 +2436,29 @@ tasks {
     dependsOn(allSamplePackTasks)
   }
 
+  val prepareDbStudioResources by registering(Copy::class) {
+    group = "build"
+    description = "Prepare Database Studio resources for embedding in CLI"
+
+    // Copy API files
+    from(layout.projectDirectory.dir("src/db-studio/api")) {
+      into("api")
+      exclude("config.ts")  // Generated at runtime with injected config
+    }
+
+    // Copy built UI (dist/ folder only, not source or node_modules)
+    from(layout.projectDirectory.dir("src/db-studio/ui/dist")) {
+      into("ui")
+    }
+
+    into(layout.buildDirectory.dir("resources/main/META-INF/elide/db-studio"))
+  }
+
   processResources {
     dependsOn(
       ":packages:graalvm:buildRustNativesForHostDebug",
       prepKotlinResources,
+      prepareDbStudioResources,
       packSamples,
       allSamplePackTasks,
     )

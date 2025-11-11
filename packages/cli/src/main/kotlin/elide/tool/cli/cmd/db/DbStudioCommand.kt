@@ -69,8 +69,8 @@ data class DiscoveredDatabase(
 internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>() {
 
   private companion object {
-    private const val STUDIO_API_SOURCE = "samples/db-studio/api"
-    private const val STUDIO_UI_SOURCE = "samples/db-studio/ui/dist"
+    private const val STUDIO_API_RESOURCE = "/META-INF/elide/db-studio/api"
+    private const val STUDIO_UI_RESOURCE = "/META-INF/elide/db-studio/ui"
     private const val STUDIO_OUTPUT_DIR = ".dev/db-studio"
     private const val STUDIO_INDEX_FILE = "index.tsx"
     private val SQLITE_EXTENSIONS = setOf(".db", ".sqlite", ".sqlite3", ".db3")
@@ -140,6 +140,39 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     }
   }
 
+  private fun extractResourceDirectory(resourcePath: String, targetDir: Path) {
+    val classLoader = DbStudioCommand::class.java.classLoader
+    val resourceUrl = classLoader.getResource(resourcePath.trimStart('/'))
+      ?: error("Resource not found: $resourcePath")
+
+    when (resourceUrl.protocol) {
+      "file" -> {
+        // Development mode: copy from file system
+        val sourcePath = Path.of(resourceUrl.toURI())
+        copyDirectory(sourcePath, targetDir)
+      }
+      "jar" -> {
+        // Production mode: extract from JAR
+        val jarPath = resourceUrl.path.substringBefore("!")
+        val jarFile = java.util.jar.JarFile(Path.of(java.net.URI(jarPath)).toFile())
+        val resourcePrefix = resourcePath.trimStart('/') + "/"
+
+        jarFile.entries().asIterator().forEach { entry ->
+          if (entry.name.startsWith(resourcePrefix) && !entry.isDirectory) {
+            val relativePath = entry.name.removePrefix(resourcePrefix)
+            val targetFile = targetDir.resolve(relativePath)
+            Files.createDirectories(targetFile.parent)
+
+            jarFile.getInputStream(entry).use { input ->
+              Files.copy(input, targetFile, StandardCopyOption.REPLACE_EXISTING)
+            }
+          }
+        }
+      }
+      else -> error("Unsupported resource protocol: ${resourceUrl.protocol}")
+    }
+  }
+
   @Parameters(
     index = "0",
     description = ["Path to SQLite database file or directory for discovery"],
@@ -173,23 +206,23 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     Files.createDirectories(apiDir)
     Files.createDirectories(uiDir)
 
-    // Copy API server files from samples/db-studio/api to .db-studio/api/
-    val apiSource = Path.of(STUDIO_API_SOURCE)
-    if (!apiSource.exists() || !apiSource.isDirectory()) {
+    // Extract API server files from embedded resources to .dev/db-studio/api/
+    try {
+      extractResourceDirectory(STUDIO_API_RESOURCE, apiDir)
+    } catch (e: Exception) {
       return CommandResult.err(
-        message = "API source not found at $STUDIO_API_SOURCE. Ensure samples/db-studio/api exists."
+        message = "Failed to extract API resources from $STUDIO_API_RESOURCE: ${e.message}"
       )
     }
-    copyDirectory(apiSource, apiDir)
 
-    // Copy React app UI files from samples/db-studio/ui/dist to .db-studio/ui/
-    val uiSource = Path.of(STUDIO_UI_SOURCE)
-    if (!uiSource.exists() || !uiSource.isDirectory()) {
+    // Extract React app UI files from embedded resources to .dev/db-studio/ui/
+    try {
+      extractResourceDirectory(STUDIO_UI_RESOURCE, uiDir)
+    } catch (e: Exception) {
       return CommandResult.err(
-        message = "UI build not found at $STUDIO_UI_SOURCE. Please run 'cd samples/db-studio/ui && npm run build' first."
+        message = "Failed to extract UI resources from $STUDIO_UI_RESOURCE: ${e.message}"
       )
     }
-    copyDirectory(uiSource, uiDir)
 
     // Always use databases array - either discover or create from single path
     val databases = if (databasePath == null) {

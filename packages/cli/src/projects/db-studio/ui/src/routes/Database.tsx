@@ -1,10 +1,12 @@
-import { Link, Outlet, useParams } from 'react-router-dom'
+import { Link, Outlet, useParams, useLocation } from 'react-router-dom'
 import { useMemo, useState } from 'react'
-import { TableProperties as TableIcon } from 'lucide-react'
+import { TableProperties as TableIcon, Code2 } from 'lucide-react'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
+import { Button } from '@/components/ui/button'
 
 export default function Database() {
   const { dbIndex, tableName } = useParams()
+  const location = useLocation()
   const { data: tables = [], isLoading: loading } = useDatabaseTables(dbIndex)
   const [query, setQuery] = useState('')
 
@@ -14,9 +16,27 @@ export default function Database() {
     return tables.filter(({ name }) => name.toLowerCase().includes(q))
   }, [tables, query])
 
+  const isQueryActive = location.pathname.includes('/query')
+
   return (
     <div className="flex h-[calc(100vh-73px)]">
       <div className="w-64 border-r border-gray-800 p-4 bg-gray-950">
+        <div className="mb-3">
+          <Button
+            asChild
+            variant={isQueryActive ? 'default' : 'outline'}
+            size="sm"
+            className={[
+              'w-full justify-start border-gray-800 bg-gray-950 text-gray-200 hover:bg-gray-900 hover:text-white',
+              isQueryActive ? 'bg-gray-900 text-white' : ''
+            ].join(' ')}
+          >
+            <Link to={`/database/${dbIndex}/query`}>
+              <Code2 className="w-4 h-4" />
+              <span>Query Editor</span>
+            </Link>
+          </Button>
+        </div>
         <div className="mb-3">
           <input
             type="text"

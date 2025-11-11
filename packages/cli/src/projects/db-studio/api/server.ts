@@ -1,6 +1,7 @@
 /// <reference path="../../../../../types/index.d.ts" />
 
 import type { Database } from "elide:sqlite";
+import { Database as DatabaseConstructor } from "elide:sqlite";
 import type { DiscoveredDatabase } from "./database.ts";
 import { getDatabaseInfo, getTables, getTableData } from "./database.ts";
 
@@ -12,7 +13,7 @@ type ApiResponse = {
 
 type RouteContext = {
   databases: DiscoveredDatabase[];
-  Database: typeof Database;
+  Database: typeof DatabaseConstructor;
 };
 
 type RouteHandler = (params: Record<string, string>, context: RouteContext, body: string) => Promise<ApiResponse>;
@@ -22,6 +23,15 @@ type Route = {
   pattern: string;
   handler: RouteHandler;
 };
+
+type DatabaseHandlerContext = {
+  database: DiscoveredDatabase;
+  db: Database;
+  databases: DiscoveredDatabase[];
+  Database: typeof DatabaseConstructor;
+};
+
+type DatabaseHandler = (params: Record<string, string>, context: DatabaseHandlerContext, body: string) => Promise<ApiResponse>;
 
 function jsonResponse(data: unknown, status: number = 200): ApiResponse {
   console.log("returning json response", data);
@@ -36,7 +46,7 @@ function errorResponse(message: string, status: number = 500): ApiResponse {
   return jsonResponse({ error: message }, status);
 }
 
-function validateAndGetDatabase(
+function validateDatabaseIndex(
   dbIndexStr: string,
   databases: DiscoveredDatabase[]
 ): { database: DiscoveredDatabase } | { error: ApiResponse } {
@@ -51,6 +61,31 @@ function validateAndGetDatabase(
   }
 
   return { database: databases[dbIndex] };
+}
+
+function withDatabase(handler: DatabaseHandler): RouteHandler {
+  return async (params: Record<string, string>, context: RouteContext, body: string): Promise<ApiResponse> => {
+    const result = validateDatabaseIndex(params.dbIndex, context.databases);
+    if ("error" in result) return result.error;
+
+    const { database } = result;
+    const db = new context.Database(database.path);
+
+    return handler(params, { ...context, database, db }, body);
+  };
+}
+
+function requireTableName(params: Record<string, string>): ApiResponse | null {
+  const tableName = params.tableName;
+  if (!tableName) {
+    return errorResponse("Table name is required", 400);
+  }
+  return null;
+}
+
+function handleDatabaseError(err: unknown, operation: string): ApiResponse {
+  const errorMessage = err instanceof Error ? err.message : "Unknown error";
+  return errorResponse(`Failed to ${operation}: ${errorMessage}`, 500);
 }
 
 function buildWhereClause(where: Record<string, unknown>): { clause: string; values: unknown[] } {
@@ -121,61 +156,36 @@ async function listDatabases(_params: Record<string, string>, context: RouteCont
   return jsonResponse({ databases: context.databases });
 }
 
-async function getDatabaseInfoRoute(params: Record<string, string>, context: RouteContext, _body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
-
-  const { database } = result;
-  const db = new context.Database(database.path);
-  const info = getDatabaseInfo(db, database.path);
+const getDatabaseInfoRoute = withDatabase(async (_params, context, _body) => {
+  const info = getDatabaseInfo(context.db, context.database.path);
 
   const fullInfo = {
     ...info,
-    size: database.size,
-    lastModified: database.lastModified,
+    size: context.database.size,
+    lastModified: context.database.lastModified,
     tableCount: info.tableCount,
   };
 
   return jsonResponse(fullInfo);
-}
+});
 
-async function getTablesRoute(params: Record<string, string>, context: RouteContext, _body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
-
-  const { database } = result;
-  const db = new context.Database(database.path);
-  const tables = getTables(db);
-
+const getTablesRoute = withDatabase(async (_params, context, _body) => {
+  const tables = getTables(context.db);
   return jsonResponse({ tables });
-}
+});
 
-async function getTableDataRoute(params: Record<string, string>, context: RouteContext, _body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
+const getTableDataRoute = withDatabase(async (params, context, _body) => {
+  const tableNameError = requireTableName(params);
+  if (tableNameError) return tableNameError;
 
-  const tableName = params.tableName;
-  if (!tableName) {
-    return errorResponse("Table name is required", 400);
-  }
-
-  const { database } = result;
-  const db = new context.Database(database.path);
-  const tableData = getTableData(db, tableName);
-
+  const tableData = getTableData(context.db, params.tableName);
   console.log(tableData);
-
   return jsonResponse(tableData);
-}
+});
 
-async function insertRowsRoute(params: Record<string, string>, context: RouteContext, body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
-
-  const tableName = params.tableName;
-  if (!tableName) {
-    return errorResponse("Table name is required", 400);
-  }
+const insertRowsRoute = withDatabase(async (params, context, body) => {
+  const tableNameError = requireTableName(params);
+  if (tableNameError) return tableNameError;
 
   const data = parseRequestBody(body);
   const values = data.values as Record<string, unknown> | undefined;
@@ -184,31 +194,22 @@ async function insertRowsRoute(params: Record<string, string>, context: RouteCon
     return errorResponse("Request body must contain 'values' object", 400);
   }
 
-  const { database } = result;
-  const db = new context.Database(database.path);
-
   const columns = Object.keys(values);
   const placeholders = columns.map(() => "?").join(", ");
-  const sql = `INSERT INTO ${tableName} (${columns.join(", ")}) VALUES (${placeholders})`;
+  const sql = `INSERT INTO ${params.tableName} (${columns.join(", ")}) VALUES (${placeholders})`;
 
   try {
-    const stmt = db.prepare(sql);
-    stmt.run(...Object.values(values));
+    const stmt = context.db.prepare(sql);
+    stmt.run(...(Object.values(values) as any));
     return jsonResponse({ success: true, message: "Row inserted successfully" });
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(`Failed to insert row: ${errorMessage}`, 500);
+    return handleDatabaseError(err, "insert row");
   }
-}
+});
 
-async function updateRowsRoute(params: Record<string, string>, context: RouteContext, body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
-
-  const tableName = params.tableName;
-  if (!tableName) {
-    return errorResponse("Table name is required", 400);
-  }
+const updateRowsRoute = withDatabase(async (params, context, body) => {
+  const tableNameError = requireTableName(params);
+  if (tableNameError) return tableNameError;
 
   const data = parseRequestBody(body);
   const values = data.values as Record<string, unknown> | undefined;
@@ -222,32 +223,23 @@ async function updateRowsRoute(params: Record<string, string>, context: RouteCon
     return errorResponse("Request body must contain 'where' object with at least one condition", 400);
   }
 
-  const { database } = result;
-  const db = new context.Database(database.path);
-
   const setColumns = Object.keys(values).map(key => `${key} = ?`).join(", ");
   const { clause: whereClause, values: whereValues } = buildWhereClause(where);
-  const sql = `UPDATE ${tableName} SET ${setColumns} ${whereClause}`;
+  const sql = `UPDATE ${params.tableName} SET ${setColumns} ${whereClause}`;
 
   try {
-    const stmt = db.prepare(sql);
+    const stmt = context.db.prepare(sql);
     const allValues = [...Object.values(values), ...whereValues];
-    const info = stmt.run(...allValues);
+    const info = stmt.run(...(allValues as any));
     return jsonResponse({ success: true, rowsAffected: info.changes, message: "Rows updated successfully" });
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(`Failed to update rows: ${errorMessage}`, 500);
+    return handleDatabaseError(err, "update rows");
   }
-}
+});
 
-async function deleteRowsRoute(params: Record<string, string>, context: RouteContext, body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
-
-  const tableName = params.tableName;
-  if (!tableName) {
-    return errorResponse("Table name is required", 400);
-  }
+const deleteRowsRoute = withDatabase(async (params, context, body) => {
+  const tableNameError = requireTableName(params);
+  if (tableNameError) return tableNameError;
 
   const data = parseRequestBody(body);
   const where = data.where as Record<string, unknown> | undefined;
@@ -256,26 +248,19 @@ async function deleteRowsRoute(params: Record<string, string>, context: RouteCon
     return errorResponse("Request body must contain 'where' object with at least one condition (safety check)", 400);
   }
 
-  const { database } = result;
-  const db = new context.Database(database.path);
-
   const { clause: whereClause, values: whereValues } = buildWhereClause(where);
-  const sql = `DELETE FROM ${tableName} ${whereClause}`;
+  const sql = `DELETE FROM ${params.tableName} ${whereClause}`;
 
   try {
-    const stmt = db.prepare(sql);
-    const info = stmt.run(...whereValues);
+    const stmt = context.db.prepare(sql);
+    const info = stmt.run(...(whereValues as any));
     return jsonResponse({ success: true, rowsAffected: info.changes, message: "Rows deleted successfully" });
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(`Failed to delete rows: ${errorMessage}`, 500);
+    return handleDatabaseError(err, "delete rows");
   }
-}
+});
 
-async function createTableRoute(params: Record<string, string>, context: RouteContext, body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
-
+const createTableRoute = withDatabase(async (_params, context, body) => {
   const data = parseRequestBody(body);
   const tableName = data.name as string | undefined;
   const schema = data.schema as Array<{ name: string; type: string; constraints?: string }> | undefined;
@@ -288,9 +273,6 @@ async function createTableRoute(params: Record<string, string>, context: RouteCo
     return errorResponse("Request body must contain 'schema' array with at least one column", 400);
   }
 
-  const { database } = result;
-  const db = new context.Database(database.path);
-
   const columns = schema.map(col => {
     const constraints = col.constraints ? ` ${col.constraints}` : "";
     return `${col.name} ${col.type}${constraints}`;
@@ -299,22 +281,16 @@ async function createTableRoute(params: Record<string, string>, context: RouteCo
   const sql = `CREATE TABLE ${tableName} (${columns})`;
 
   try {
-    db.exec(sql);
+    context.db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${tableName}' created successfully` });
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(`Failed to create table: ${errorMessage}`, 500);
+    return handleDatabaseError(err, "create table");
   }
-}
+});
 
-async function dropTableRoute(params: Record<string, string>, context: RouteContext, body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
-
-  const tableName = params.tableName;
-  if (!tableName) {
-    return errorResponse("Table name is required", 400);
-  }
+const dropTableRoute = withDatabase(async (params, context, body) => {
+  const tableNameError = requireTableName(params);
+  if (tableNameError) return tableNameError;
 
   const data = parseRequestBody(body);
   const confirm = data.confirm as boolean | undefined;
@@ -323,24 +299,17 @@ async function dropTableRoute(params: Record<string, string>, context: RouteCont
     return errorResponse("Must set 'confirm: true' in request body to drop table (safety check)", 400);
   }
 
-  const { database } = result;
-  const db = new context.Database(database.path);
-
-  const sql = `DROP TABLE ${tableName}`;
+  const sql = `DROP TABLE ${params.tableName}`;
 
   try {
-    db.exec(sql);
-    return jsonResponse({ success: true, message: `Table '${tableName}' dropped successfully` });
+    context.db.exec(sql);
+    return jsonResponse({ success: true, message: `Table '${params.tableName}' dropped successfully` });
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(`Failed to drop table: ${errorMessage}`, 500);
+    return handleDatabaseError(err, "drop table");
   }
-}
+});
 
-async function executeQueryRoute(params: Record<string, string>, context: RouteContext, body: string): Promise<ApiResponse> {
-  const result = validateAndGetDatabase(params.dbIndex, context.databases);
-  if ("error" in result) return result.error;
-
+const executeQueryRoute = withDatabase(async (_params, context, body) => {
   const data = parseRequestBody(body);
   const sql = data.sql as string | undefined;
   const queryParams = data.params as unknown[] | undefined;
@@ -353,22 +322,19 @@ async function executeQueryRoute(params: Record<string, string>, context: RouteC
     console.warn(`Warning: Executing potentially destructive query: ${sql}`);
   }
 
-  const { database } = result;
-  const db = new context.Database(database.path);
-
   try {
-    const stmt = db.prepare(sql);
+    const stmt = context.db.prepare(sql);
     const params = queryParams || [];
 
     if (sql.trim().toLowerCase().startsWith("select")) {
-      const rows = stmt.all(...params);
+      const rows = stmt.all(...(params as any));
       return jsonResponse({
         success: true,
         rows,
         rowCount: Array.isArray(rows) ? rows.length : 0,
       });
     } else {
-      const info = stmt.run(...params);
+      const info = stmt.run(...(params as any));
       return jsonResponse({
         success: true,
         rowsAffected: info.changes,
@@ -376,10 +342,9 @@ async function executeQueryRoute(params: Record<string, string>, context: RouteC
       });
     }
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(`Failed to execute query: ${errorMessage}`, 500);
+    return handleDatabaseError(err, "execute query");
   }
-}
+});
 
 /**
  * Route Registry
@@ -412,7 +377,7 @@ export async function handleApiRequest(
   method: string,
   body: string,
   databases: DiscoveredDatabase[],
-  Database: typeof Database
+  Database: typeof DatabaseConstructor
 ): Promise<ApiResponse> {
   // Parse URL path (remove query string if present)
   const path = url.split('?')[0];

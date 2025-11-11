@@ -46,9 +46,39 @@ import elide.vm.annotations.Polyglot
    */
   public fun randomInt(min: Int = 0, max: Int, callback: RandomIntCallback? = null): Any
 
+  /**
+   * ## Crypto: randomInt
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   *
+   * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
+   *
+   * @param min
+   * @param max
+   * @param callback
+   * @return A randomly generated integer between `min` (inclusive) and `max` (exclusive) or nothing if a callback was provided.
+   */
   @Polyglot public fun randomInt(min: Value?, max: Value, callback: Value?): Any
 
+  /**
+   * ## Crypto: randomInt
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   *
+   * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
+   *
+   * @param max
+   * @param callback
+   * @return A randomly generated integer between `0` (inclusive) and `max` (exclusive) or nothing if a callback was provided.
+   */
   @Polyglot public fun randomInt(max: Value, callback: Value?): Any
 
+  /**
+   * ## Crypto: randomInt
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   *
+   * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
+   *
+   * @param max
+   * @return A randomly generated integer between `0` (inclusive) and `max` (exclusive).
+   */
   @Polyglot public fun randomInt(max: Value): Any
 }

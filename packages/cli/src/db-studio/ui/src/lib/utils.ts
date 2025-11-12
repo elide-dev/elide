@@ -22,3 +22,13 @@ export function formatDate(timestamp: number) {
   if (hours < 24) return `${hours}h ago`
   return `${days}d ago`
 }
+
+export function formatRowCount(count: number): string {
+  if (count < 1000) return count.toString()
+  if (count < 1000000) {
+    const k = count / 1000
+    return k % 1 === 0 ? `${k}K` : `${k.toFixed(1)}K`
+  }
+  const m = count / 1000000
+  return m % 1 === 0 ? `${m}M` : `${m.toFixed(1)}M`
+}

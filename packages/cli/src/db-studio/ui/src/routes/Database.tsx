@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { TableProperties as TableIcon, Code2 } from 'lucide-react'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
 import { Button } from '@/components/ui/button'
+import { formatRowCount } from '../lib/utils'
 
 export default function Database() {
   const { dbIndex, tableName } = useParams()
@@ -50,7 +51,7 @@ export default function Database() {
         <div className="text-xs text-gray-500 uppercase  mb-3 font-medium">
           {loading ? 'Loading…' : `${filteredTables.length} TABLES`}
         </div>
-        {!loading && filteredTables.map(({ name }) => {
+        {!loading && filteredTables.map(({ name, rowCount }) => {
           const isActive = decodeURIComponent(tableName || '') === name
           return (
             <Link
@@ -63,7 +64,8 @@ export default function Database() {
               aria-current={isActive ? 'page' : undefined}
             >
               <TableIcon className="w-4 h-4 shrink-0" />
-              <span className="truncate">{name}</span>
+              <span className="truncate flex-1">{name}</span>
+              <span className="text-xs text-gray-500 shrink-0">{formatRowCount(rowCount)}</span>
             </Link>
           )
         })}

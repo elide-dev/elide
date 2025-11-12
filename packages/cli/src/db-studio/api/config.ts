@@ -1,5 +1,3 @@
-/// <reference path="../../../../../types/index.d.ts" />
-
 import type { DiscoveredDatabase } from "./database.ts";
 
 /**

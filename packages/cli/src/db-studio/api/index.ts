@@ -1,19 +1,16 @@
-
 import { createServer } from "http";
 import { Database } from "elide:sqlite";
-import { handleApiRequest } from "./server.ts";
+import { handleApiRequest } from "./http/server.ts";
 import config from "./config.ts";
 
 /**
- * Database Studio - Entry Point (Imperative Server)
+ * Database Studio - Entry Point
  *
- * Creates an HTTP server using Node.js http module with explicit binding.
- * This is an imperative server that calls createServer() and listen() directly.
+ * Bootstraps the HTTP server for the Database Studio API.
  */
 
 export { Database };
 
-// Configuration loaded from config.ts
 const { port, databases } = config;
 
 // Server options with self-signed certificate for HTTPS/HTTP3

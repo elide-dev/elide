@@ -9,10 +9,10 @@
  *
  * NOTE: This module does NOT import "elide:sqlite" directly because Elide's
  * module loader can only handle that special protocol in the entry point file.
- * The Database class must be passed from index.tsx.
+ * The Database class must be passed from index.ts.
  */
 
-import { Database, Statement } from "elide:sqlite";
+import type { Database, Statement } from "elide:sqlite";
 
 /**
  * Log SQL queries to console
@@ -167,7 +167,6 @@ export function validateDatabase(db: Database): boolean {
   try {
     // Try a simple query to verify the database is valid
     const sql = "SELECT 1";
-    logQuery(sql);
     const query = db.query(sql);
     query.get();
     return true;

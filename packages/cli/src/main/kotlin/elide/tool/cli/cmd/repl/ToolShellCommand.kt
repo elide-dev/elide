@@ -91,7 +91,7 @@ import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
 import elide.runtime.http.server.js.worker.JsWorkerApplication
-import elide.runtime.http.server.netty.HttpApplicationStack
+import elide.runtime.http.server.netty.*
 import elide.runtime.http.server.python.wsgi.WsgiEntrypoint
 import elide.runtime.http.server.python.wsgi.WsgiServerApplication
 import elide.runtime.intrinsics.js.node.util.DebugLogger
@@ -1730,9 +1730,18 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         else -> error("Cannot run embedded server for language $language")
       }
 
+      val manifestServerOptions = activeProject.value?.manifest?.server
+      val options = manifestServerOptions.toHttpApplicationOptions()
+      val transport = serverSettings.transport?.toServerTransport() ?: when (manifestServerOptions?.transport) {
+        ElidePackageManifest.ServerSettings.TRANSPORT_IO_URING -> IOUringTransport
+        ElidePackageManifest.ServerSettings.TRANSPORT_EPOLL -> EpollTransport
+        ElidePackageManifest.ServerSettings.TRANSPORT_KQUEUE -> KQueueTransport
+        ElidePackageManifest.ServerSettings.TRANSPORT_NIO -> NioTransport
+        else -> null
+      }
+
       val stack = HttpApplicationStack.bindAndDisplayResult {
-        val options = activeProject.value?.manifest?.server.toHttpApplicationOptions()
-        HttpApplicationStack.bind(httpApp, options)
+        HttpApplicationStack.bind(httpApp, options, transport)
       }
 
       try {

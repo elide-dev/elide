@@ -72,7 +72,7 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     private const val STUDIO_API_RESOURCE = "/META-INF/elide/db-studio/api"
     private const val STUDIO_UI_RESOURCE = "/META-INF/elide/db-studio/ui"
     private const val STUDIO_OUTPUT_DIR = ".dev/db-studio"
-    private const val STUDIO_INDEX_FILE = "index.tsx"
+    private const val STUDIO_INDEX_FILE = "index.ts"
     private val SQLITE_EXTENSIONS = setOf(".db", ".sqlite", ".sqlite3", ".db3")
   }
 

@@ -3027,6 +3027,18 @@ public final class elide/runtime/http/server/js/worker/JsWorkerEnv : elide/runti
 public final class elide/runtime/http/server/js/worker/JsWorkerEnv$Companion {
 }
 
+public final class elide/runtime/http/server/netty/EpollTransport : elide/runtime/http/server/netty/UnixTransport {
+	public static final field INSTANCE Lelide/runtime/http/server/netty/EpollTransport;
+	public fun checkAvailable (ZZ)Lelide/runtime/http/server/netty/ServerTransport$Availability;
+	public fun configure (Lio/netty/bootstrap/AbstractBootstrap;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun eventLoopGroup ()Lio/netty/channel/EventLoopGroup;
+	public fun hashCode ()I
+	public fun tcpChannel (Z)Ljava/lang/Class;
+	public fun toString ()Ljava/lang/String;
+	public fun udpChannel (Z)Ljava/lang/Class;
+}
+
 public final class elide/runtime/http/server/netty/HttpApplicationStack {
 	public static final field Companion Lelide/runtime/http/server/netty/HttpApplicationStack$Companion;
 	public final fun awaitClose ()Ljava/util/List;
@@ -3071,6 +3083,40 @@ public final class elide/runtime/http/server/netty/HttpApplicationStackKt {
 	public static final fun assembleUri (Lelide/runtime/http/server/netty/HttpApplicationStack$ServiceBinding;)Ljava/lang/String;
 }
 
+public final class elide/runtime/http/server/netty/IOUringTransport : elide/runtime/http/server/netty/UnixTransport {
+	public static final field INSTANCE Lelide/runtime/http/server/netty/IOUringTransport;
+	public fun checkAvailable (ZZ)Lelide/runtime/http/server/netty/ServerTransport$Availability;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun eventLoopGroup ()Lio/netty/channel/EventLoopGroup;
+	public fun hashCode ()I
+	public fun tcpChannel (Z)Ljava/lang/Class;
+	public fun toString ()Ljava/lang/String;
+	public fun udpChannel (Z)Ljava/lang/Class;
+}
+
+public final class elide/runtime/http/server/netty/KQueueTransport : elide/runtime/http/server/netty/UnixTransport {
+	public static final field INSTANCE Lelide/runtime/http/server/netty/KQueueTransport;
+	public fun checkAvailable (ZZ)Lelide/runtime/http/server/netty/ServerTransport$Availability;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun eventLoopGroup ()Lio/netty/channel/EventLoopGroup;
+	public fun hashCode ()I
+	public fun tcpChannel (Z)Ljava/lang/Class;
+	public fun toString ()Ljava/lang/String;
+	public fun udpChannel (Z)Ljava/lang/Class;
+}
+
+public final class elide/runtime/http/server/netty/NioTransport : elide/runtime/http/server/netty/ServerTransport {
+	public static final field INSTANCE Lelide/runtime/http/server/netty/NioTransport;
+	public fun checkAvailable (ZZ)Lelide/runtime/http/server/netty/ServerTransport$Availability;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun eventLoopGroup ()Lio/netty/channel/EventLoopGroup;
+	public fun hashCode ()I
+	public fun mapAddress (Ljava/net/SocketAddress;)Ljava/net/SocketAddress;
+	public fun tcpChannel (Z)Ljava/lang/Class;
+	public fun toString ()Ljava/lang/String;
+	public fun udpChannel (Z)Ljava/lang/Class;
+}
+
 public abstract interface class elide/runtime/http/server/netty/ServerTransport {
 	public static final field Companion Lelide/runtime/http/server/netty/ServerTransport$Companion;
 	public abstract fun checkAvailable (ZZ)Lelide/runtime/http/server/netty/ServerTransport$Availability;
@@ -3095,7 +3141,7 @@ public final class elide/runtime/http/server/netty/ServerTransport$Available : e
 }
 
 public final class elide/runtime/http/server/netty/ServerTransport$Companion {
-	public final fun getAll ()[Lelide/runtime/http/server/netty/ServerTransport;
+	public final fun all ()Lkotlin/sequences/Sequence;
 	public final fun resolve (ZZ)Lelide/runtime/http/server/netty/ServerTransport;
 	public static synthetic fun resolve$default (Lelide/runtime/http/server/netty/ServerTransport$Companion;ZZILjava/lang/Object;)Lelide/runtime/http/server/netty/ServerTransport;
 }
@@ -3124,6 +3170,11 @@ public final class elide/runtime/http/server/netty/ServerTransport$Unavailable$C
 public final class elide/runtime/http/server/netty/ServerTransportKt {
 	public static final fun isAvailable (Lelide/runtime/http/server/netty/ServerTransport;ZZ)Z
 	public static synthetic fun isAvailable$default (Lelide/runtime/http/server/netty/ServerTransport;ZZILjava/lang/Object;)Z
+}
+
+public abstract class elide/runtime/http/server/netty/UnixTransport : elide/runtime/http/server/netty/ServerTransport {
+	public fun <init> ()V
+	public fun mapAddress (Ljava/net/SocketAddress;)Ljava/net/SocketAddress;
 }
 
 public final class elide/runtime/http/server/python/flask/FlaskContext : elide/runtime/http/server/CallContext {

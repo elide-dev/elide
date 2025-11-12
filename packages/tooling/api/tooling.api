@@ -5612,24 +5612,30 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$SecretsRe
 
 public final class elide/tooling/project/manifest/ElidePackageManifest$ServerSettings : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Companion;
+	public static final field TRANSPORT_EPOLL Ljava/lang/String;
+	public static final field TRANSPORT_IO_URING Ljava/lang/String;
+	public static final field TRANSPORT_KQUEUE Ljava/lang/String;
+	public static final field TRANSPORT_NIO Ljava/lang/String;
 	public fun <init> ()V
-	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;ZLelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;Ljava/lang/String;)V
-	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;ZLelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;ZLjava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;Ljava/lang/String;)V
+	public synthetic fun <init> (Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;ZLjava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun address ()Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;
 	public final fun cleartext ()Z
 	public final fun component1 ()Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;
 	public final fun component2 ()Z
-	public final fun component3 ()Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;
-	public final fun component4 ()Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;
-	public final fun component5 ()Ljava/lang/String;
-	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;ZLelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;ZLelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;
+	public final fun component5 ()Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;ZLjava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$BindingAddress;ZLjava/lang/String;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public final fun http3 ()Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$Http3ServerSettings;
 	public final fun https ()Lelide/tooling/project/manifest/ElidePackageManifest$ServerSettings$HttpsServerSettings;
 	public final fun serverName ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
+	public final fun transport ()Ljava/lang/String;
 }
 
 public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$ServerSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {

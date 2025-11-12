@@ -6,7 +6,7 @@ version = "1.0.0"
 description = "Database Studio API Server"
 
 entrypoint {
-  "index.tsx"
+  "index.ts"
 }
 
 dependencies {

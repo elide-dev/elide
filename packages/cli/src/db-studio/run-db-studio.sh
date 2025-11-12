@@ -58,7 +58,7 @@ UI_DIR="$PROJECT_ROOT/.dev/db-studio/ui"
 
 # Start API server in background (imperative Node.js HTTP server)
 echo -e "${BLUE}[API Server]${NC} Starting on port 4984..."
-./gradlew :packages:cli:run --args="run $API_DIR/index.tsx" -q 2>&1 | sed 's/^/[API] /' &
+./gradlew :packages:cli:run --args="run $API_DIR/index.ts" -q 2>&1 | sed 's/^/[API] /' &
 API_PID=$!
 
 # Wait for API server to be ready

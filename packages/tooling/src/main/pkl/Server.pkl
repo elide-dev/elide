@@ -52,6 +52,9 @@ typealias DomainSocketAddress = _common.FilePath
 /// Describes an address to which a server application can be bound.
 typealias BindingAddress = SocketAddress | DomainSocketAddress
 
+/// Describes a specific server transport implementation.
+typealias ServerTransport = "io_uring" | "kqueue" | "epoll" | "nio"
+
 /// Configures the HTTPS features for declarative server apps and static asset
 /// servers.
 class HttpsServerSettings {
@@ -88,6 +91,9 @@ class HttpServerSettings {
 
   /// Whether the default insecure HTTP server is enabled.
   cleartext: Boolean = true
+
+  /// Optional override for the server transport to be used for all services.
+  transport: ServerTransport?
 
   /// Configures an HTTPS service for the application.
   ///

@@ -15,6 +15,7 @@ package elide.tool.cli.options
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Option
+import elide.runtime.http.server.netty.*
 import elide.tooling.project.ElideProject
 
 /**
@@ -24,6 +25,13 @@ import elide.tooling.project.ElideProject
  * host and port, and configuration of various server features.
  */
 @Introspected @ReflectiveAccess class ServerOptions : OptionsMixin<ServerOptions> {
+  enum class TransportOverride {
+    IO_URING,
+    EPOLL,
+    KQUEUE,
+    NIO,
+  }
+
   @JvmRecord data class EffectiveServerOptions(
     val host: String,
     val port: UShort,
@@ -56,6 +64,16 @@ import elide.tooling.project.ElideProject
   )
   var wsgi: String? = null
 
+  /** Specifies a server transport override. */
+  @Option(
+    names = ["--transport"],
+    description = [
+      "Overrides the preferred server transport to be used; a fallback transport may still be used if the selected" +
+              "option is not supported in this platform or incompatible with the required features.",
+    ],
+  )
+  var transport: TransportOverride? = null
+
   fun effectiveServerOptions(project: ElideProject?): EffectiveServerOptions {
     return EffectiveServerOptions(
       host = host ?: project?.manifest?.dev?.server?.host ?: DEFAULT_SERVER_HOST,
@@ -74,4 +92,11 @@ import elide.tooling.project.ElideProject
     const val DEFAULT_LINK_HOST: String = "localhost"
     const val DEFAULT_SERVER_PORT: Int = 8080
   }
+}
+
+fun ServerOptions.TransportOverride.toServerTransport(): ServerTransport = when (this) {
+  ServerOptions.TransportOverride.IO_URING -> IOUringTransport
+  ServerOptions.TransportOverride.EPOLL -> EpollTransport
+  ServerOptions.TransportOverride.KQUEUE -> KQueueTransport
+  ServerOptions.TransportOverride.NIO -> NioTransport
 }

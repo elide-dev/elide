@@ -700,6 +700,7 @@ public data class ElidePackageManifest(
   @JvmRecord @Serializable public data class ServerSettings(
     val address: BindingAddress? = null,
     val cleartext: Boolean = true,
+    val transport: String? = null,
     val https: HttpsServerSettings? = null,
     val http3: Http3ServerSettings? = null,
     val serverName: String? = null,
@@ -736,6 +737,13 @@ public data class ElidePackageManifest(
       val address: BindingAddress? = null,
       val advertise: Boolean = false,
     )
+
+    public companion object {
+      public const val TRANSPORT_IO_URING: String = "io_uring"
+      public const val TRANSPORT_EPOLL: String = "epoll"
+      public const val TRANSPORT_KQUEUE: String = "kqueue"
+      public const val TRANSPORT_NIO: String = "nio"
+    }
   }
 }
 

@@ -182,60 +182,94 @@ internal abstract class StackServiceContributor(val label: String) {
 
   /**
    * Contribute to a binding [scope], preparing a service instance and registering its components as they are created.
+   * This method automatically falls back to the next preferred transport if configuration fails.
    */
   internal fun contribute(scope: BindingScope) {
     if (!isApplicable(scope)) return
 
-    // resolve address and transport
     val targetAddress = selectAddress(scope)
+    val preferredTransport: ServerTransport = resolveTransport(scope, targetAddress)
 
-    val resolvedTransport = resolveTransport(scope, targetAddress)
-    val resolvedAddress = resolvedTransport.mapAddress(targetAddress)
+    // create once and reuse through failures (will only be actually used once)
+    val serviceHandler = prepareHandler(scope)
 
-    scope.registerTransport(label, resolvedTransport)
+    var parentGroup: EventLoopGroup? = null
+    var childGroup: EventLoopGroup? = null
 
-    log.debug(
-      "Configuring $label server for address={}, transport={} {}",
-      resolvedAddress, resolvedTransport, if (scope.transportOverride != null) "(manual override)" else "(resolved)",
-    )
+    // start with the preferred transport and work down from there
+    for (transport in ServerTransport.all().dropWhile { it != preferredTransport }) try {
+      log.debug(
+        "Configuring service '{}' for address={}, transport={} {}",
+        label, targetAddress, transport,
+        if (transport == scope.transportOverride) "(manual override)"
+        else if (transport != preferredTransport) "(fallback)"
+        else "(resolved)",
+      )
 
-    prepareBootstrap().apply {
-      // set up event loop groups
-      if (this is ServerBootstrap) {
-        val parent = newGroup(scope, resolvedTransport, child = false)
-        scope.registerGroup("$label:$GROUP_PARENT_SUFFIX", parent)
+      val transportAddress = transport.mapAddress(targetAddress)
 
-        val child = newGroup(scope, resolvedTransport, child = true)
-        scope.registerGroup("$label:$GROUP_CHILD_SUFFIX", child)
+      val bootstrap = prepareBootstrap().apply {
+        // set up event loop groups
+        if (this is ServerBootstrap) {
+          parentGroup = newGroup(scope, transport, child = false)
+          childGroup = newGroup(scope, transport, child = true)
+          group(parentGroup, childGroup)
+        } else {
+          parentGroup = newGroup(scope, transport, child = false)
+          group(parentGroup)
+        }
 
-        group(parent, child)
-      } else {
-        val single = newGroup(scope, resolvedTransport, child = false)
-        scope.registerGroup(label, single)
+        // select the channel class
+        val channelType = if (useUdp) transport.udpChannel(transportAddress.isDomainSocket())
+        else transport.tcpChannel(transportAddress.isDomainSocket())
+        channel(channelType)
 
-        group(single)
+        // set the target address (use the transport-specific version)
+        localAddress(transportAddress)
+
+        // set channel handler
+        if (this is ServerBootstrap) childHandler(serviceHandler)
+        else handler(serviceHandler)
+
+        // apply final transport options
+        transport.configure(this)
       }
 
-      // select the channel class
-      val channelType = if (useUdp) resolvedTransport.udpChannel(resolvedAddress.isDomainSocket())
-      else resolvedTransport.tcpChannel(resolvedAddress.isDomainSocket())
-      channel(channelType)
+      scope.registerTransport(label, transport)
+      if (childGroup != null && parentGroup != null) {
+        scope.registerGroup("$label:$GROUP_CHILD_SUFFIX", childGroup)
+        scope.registerGroup("$label:$GROUP_PARENT_SUFFIX", parentGroup)
+      } else if (parentGroup != null) {
+        scope.registerGroup(label, parentGroup)
+      }
 
-      // set the target address (use the transport-specific version)
-      localAddress(resolvedAddress)
+      bootstrap.bindAndRegister(
+        provider = this,
+        scope = scope,
+        configuredAddress = targetAddress,
+        serviceScheme = targetScheme,
+      )
 
-      // set channel handler
-      if (this is ServerBootstrap) childHandler(prepareHandler(scope))
-      else handler(prepareHandler(scope))
+      log.debug(
+        "Started service '{}' for address={}, transport={} {}",
+        label, transportAddress, transport,
+        if (transport == scope.transportOverride) "(manual override)"
+        else if (transport != preferredTransport) "(fallback)"
+        else "(resolved)",
+      )
 
-      // apply final transport options
-      resolvedTransport.configure(this)
-    }.bindAndRegister(
-      provider = this,
-      scope = scope,
-      configuredAddress = targetAddress,
-      serviceScheme = targetScheme,
-    )
+      return
+    } catch (e: Throwable) {
+      // graceful fallback, don't log as warning or error, this is (somewhat) expected
+      if (log.isTraceEnabled) log.debug("Failed to configure service '{}' with {}, falling back:", label, transport, e)
+      else log.debug("Failed to configure service '{}' with {}, falling back ({})", label, transport, e.message)
+
+      parentGroup?.shutdownGracefully()
+      childGroup?.shutdownGracefully()
+    }
+
+    // if we reached here, every fallback failed, which probably means the transport isn't the issue
+    error("Failed to configure service $label, check the logs for details.")
   }
 
   companion object {

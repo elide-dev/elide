@@ -97,8 +97,8 @@ public interface ServerTransport {
   }
 
   public companion object {
-    /** Lists all supported server transports, in descending order of priority. */
-    public val all: Array<ServerTransport> = arrayOf(
+    /** Yields all supported server transports, in descending order of priority. */
+    public fun all(): Sequence<ServerTransport> = sequenceOf(
       // prefer `io_uring` if available (Linux-only, modern kernels)
       IOUringTransport,
       // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
@@ -123,7 +123,7 @@ public interface ServerTransport {
       tcpDomainSockets: Boolean = false,
       udpDomainSockets: Boolean = false,
     ): ServerTransport? {
-      for (transport in all) {
+      for (transport in all()) {
         val result = transport.checkAvailable(tcpDomainSockets, udpDomainSockets)
 
         if (result is Unavailable) log.debug("{} is unavailable because: {}", transport, result.reason)
@@ -148,7 +148,7 @@ public fun ServerTransport.isAvailable(
 ): Boolean = checkAvailable(tcpDomain, udpDomain) is Available
 
 /** Generic Java NIO transport layer, used as fallback where native transport is not available. */
-internal data object NioTransport : ServerTransport {
+public data object NioTransport : ServerTransport {
   override fun checkAvailable(tcpDomain: Boolean, udpDomain: Boolean): Availability {
     if (udpDomain) return ServerTransport.Unavailable.UNSUPPORTED_UDP_DOMAIN_SOCKETS
     return Available
@@ -175,7 +175,7 @@ internal data object NioTransport : ServerTransport {
 }
 
 /** Base class for Unix native transports. */
-internal abstract class UnixTransport : ServerTransport {
+public abstract class UnixTransport : ServerTransport {
   override fun mapAddress(address: SocketAddress): SocketAddress = when (address) {
     is UnixDomainSocketAddress -> DomainSocketAddress(address.path.pathString)
     else -> address
@@ -183,7 +183,7 @@ internal abstract class UnixTransport : ServerTransport {
 }
 
 /** IO-Uring transport layer, available on Linux only. */
-internal data object IOUringTransport : UnixTransport() {
+public data object IOUringTransport : UnixTransport() {
   override fun checkAvailable(tcpDomain: Boolean, udpDomain: Boolean): Availability = when {
     !IOUring.isAvailable() -> nativeTransportUnavailable(IOUring.unavailabilityCause())
     tcpDomain -> ServerTransport.Unavailable.UNSUPPORTED_TCP_DOMAIN_SOCKETS
@@ -207,7 +207,7 @@ internal data object IOUringTransport : UnixTransport() {
 }
 
 /** Epoll transport layer, available on most Linux kernels. */
-internal data object EpollTransport : UnixTransport() {
+public data object EpollTransport : UnixTransport() {
   override fun checkAvailable(tcpDomain: Boolean, udpDomain: Boolean): Availability = when {
     !Epoll.isAvailable() -> nativeTransportUnavailable(Epoll.unavailabilityCause())
     else -> Available
@@ -233,7 +233,7 @@ internal data object EpollTransport : UnixTransport() {
 }
 
 /** KQueue transport layer, available for Unix-like systems */
-internal data object KQueueTransport : UnixTransport() {
+public data object KQueueTransport : UnixTransport() {
   override fun checkAvailable(tcpDomain: Boolean, udpDomain: Boolean): Availability = when {
     !KQueue.isAvailable() -> nativeTransportUnavailable(KQueue.unavailabilityCause())
     else -> Available

@@ -97,8 +97,8 @@ export default function Query() {
 
   return (
     <div className="flex-1 p-0 overflow-auto font-mono flex flex-col">
-      <div className="px-6 pt-6 pb-4 border-b border-gray-800">
-        <div className="flex items-center justify-between mb-4">
+      <div className="pt-6 border-b border-gray-800">
+        <div className="flex items-center justify-between mb-4 px-6">
           <h2 className="text-2xl font-semibold tracking-tight">SQL Query Editor</h2>
           <div className="flex gap-2">
             <Button
@@ -135,7 +135,7 @@ export default function Query() {
               allowMultipleSelections: false,
             }}
             editable={!loading}
-            className="w-full [&_.cm-editor]:bg-gray-900 [&_.cm-editor]:border-0 [&_.cm-editor]:rounded-none [&_.cm-scroller]:font-mono [&_.cm-content]:text-gray-200 [&_.cm-content]:text-sm [&_.cm-placeholder]:text-gray-600 [&_.cm-editor]:w-full [&_.cm-gutter]:bg-gray-900 [&_.cm-lineNumbers]:text-gray-500"
+            className="w-full [&_.cm-editor]:bg-gray-900 [&_.cm-editor]:border-0 [&_.cm-editor]:rounded-none [&_.cm-scroller]:font-mono [&_.cm-content]:text-gray-200 [&_.cm-content]:text-sm [&_.cm-placeholder]:text-gray-600 [&_.cm-editor]:w-full [&_.cm-gutter]:bg-gray-900 [&_.cm-lineNumbers]:text-gray-500 [&_.cm-editor]:p-0 [&_.cm-scroller]:p-0 [&_.cm-content]:p-0"
           />
           <div className="flex items-center gap-3 px-3 py-1.5 bg-gray-900 border-t border-gray-800">
             <div className="text-xs text-gray-400 font-mono">
@@ -180,29 +180,38 @@ export default function Query() {
                     <UiTable className="w-full">
                       <TableHeader>
                         <TableRow className="bg-gray-900/50">
-                          {Object.keys(result.rows[0] as Record<string, unknown>).map((col) => (
-                            <TableHead
-                              key={col}
-                              className="text-left px-4 py-3 text-xs font-medium text-gray-400 tracking-wider border-b border-gray-800"
-                            >
-                              {col}
-                            </TableHead>
-                          ))}
+                          {Object.keys(result.rows[0] as Record<string, unknown>).map((col, colIndex, cols) => {
+                            const isLastColumn = colIndex === cols.length - 1
+                            return (
+                              <TableHead
+                                key={col}
+                                className={`text-left px-4 py-3 text-xs font-medium text-gray-400 tracking-wider border-b border-gray-800 ${!isLastColumn ? 'border-r border-gray-800' : ''}`}
+                              >
+                                {col}
+                              </TableHead>
+                            )
+                          })}
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {result.rows.map((row, i) => (
-                          <TableRow key={i} className="hover:bg-gray-900/30 transition-colors">
-                            {Object.values(row as Record<string, unknown>).map((cell, j) => (
-                              <TableCell
-                                key={j}
-                                className="px-4 py-3 text-sm text-gray-200 whitespace-nowrap"
-                              >
-                                {String(cell ?? '')}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        ))}
+                        {result.rows.map((row, i) => {
+                          const rowValues = Object.values(row as Record<string, unknown>)
+                          return (
+                            <TableRow key={i} className="hover:bg-gray-900/30 transition-colors">
+                              {rowValues.map((cell, j) => {
+                                const isLastColumn = j === rowValues.length - 1
+                                return (
+                                  <TableCell
+                                    key={j}
+                                    className={`px-4 py-3 text-sm text-gray-200 whitespace-nowrap ${!isLastColumn ? 'border-r border-gray-800' : ''}`}
+                                  >
+                                    {String(cell ?? '')}
+                                  </TableCell>
+                                )
+                              })}
+                            </TableRow>
+                          )
+                        })}
                       </TableBody>
                     </UiTable>
                   </div>

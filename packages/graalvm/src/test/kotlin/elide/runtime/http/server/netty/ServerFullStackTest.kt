@@ -12,15 +12,6 @@
  */
 package elide.runtime.http.server.netty
 
-import elide.runtime.http.server.CallContext
-import elide.runtime.http.server.CleartextOptions
-import elide.runtime.http.server.Http3Options
-import elide.runtime.http.server.HttpApplication
-import elide.runtime.http.server.HttpApplicationOptions
-import elide.runtime.http.server.HttpCall
-import elide.runtime.http.server.HttpsOptions
-import elide.runtime.http.server.HttpRequestBody
-import elide.runtime.http.server.HttpResponseBody
 import io.netty.handler.codec.http.*
 import io.netty.handler.ssl.ApplicationProtocolNames
 import org.junit.jupiter.api.Assumptions.assumeTrue
@@ -29,6 +20,7 @@ import java.net.SocketAddress
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.*
+import elide.runtime.http.server.*
 
 class ServerFullStackTest : AbstractServerStackTest() {
   private fun withTestServer(
@@ -316,6 +308,23 @@ class ServerFullStackTest : AbstractServerStackTest() {
       TestClients.http3(http3Address, testCertificate).use { client ->
         client.assertRequestOk(HttpVersion.HTTP_1_1, "/h3")
       }
+    }
+  }
+
+  @DynamicTransportTest fun `should fall back to supported transport`(
+    transport: ServerTransport,
+    useDomainSockets: Boolean,
+  ) {
+    assumeTrue(!transport.isAvailable()) // we're only interested in unsupported transports
+
+    val options = HttpApplicationOptions(
+      http = CleartextOptions(testAddress(useDomainSockets, "cleartext")),
+      https = HttpsOptions(testCertificate, testAddress(useDomainSockets, "https")),
+      http3 = Http3Options(testCertificate, testAddress(useDomainSocket = false)),
+    )
+
+    withTestServer(options, transport) {
+      // noop, binding is the test
     }
   }
 }

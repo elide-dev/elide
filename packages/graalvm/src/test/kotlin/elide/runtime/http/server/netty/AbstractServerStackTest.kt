@@ -146,7 +146,7 @@ class ServerTestMatrix : ArgumentsProvider {
   ): Stream<out Arguments?>? {
     val builder = Stream.builder<Arguments>()
 
-    for (transport in ServerTransport.all) {
+    for (transport in ServerTransport.all()) {
       // test each transport with both regular and domain sockets
       builder.add(Arguments.of(transport, true))
       builder.add(Arguments.of(transport, false))

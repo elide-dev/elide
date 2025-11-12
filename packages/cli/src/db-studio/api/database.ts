@@ -1,4 +1,3 @@
-/// <reference path="../../../../../types/index.d.ts" />
 /**
  * Database API Layer
  *
@@ -13,7 +12,16 @@
  * The Database class must be passed from index.tsx.
  */
 
-import type { Database, Statement } from "elide:sqlite";
+import { Database, Statement } from "elide:sqlite";
+
+/**
+ * Log SQL queries to console
+ */
+function logQuery(sql: string, params?: unknown[]): void {
+  const timestamp = new Date().toISOString();
+  const paramsStr = params && params.length > 0 ? ` [${params.join(", ")}]` : "";
+  console.log(`[${timestamp}] SQL: ${sql}${paramsStr}`);
+}
 
 export interface DiscoveredDatabase {
   path: string;
@@ -54,12 +62,16 @@ interface CountRow {
  * Get list of tables in a database
  */
 export function getTables(db: Database): TableInfo[] {
-  const query: Statement<TableNameRow> = db.query("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name");
+  const sql = "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name";
+  logQuery(sql);
+  const query: Statement<TableNameRow> = db.query(sql);
   const results = query.all();
 
   return results.map(({ name }) => {
     const tableName = name;
-    const countQuery: Statement<CountRow> = db.query(`SELECT COUNT(*) as count FROM ${tableName}`);
+    const countSql = `SELECT COUNT(*) as count FROM ${tableName}`;
+    logQuery(countSql);
+    const countQuery: Statement<CountRow> = db.query(countSql);
     const countResult = countQuery.get();
 
     return {
@@ -80,16 +92,22 @@ interface ColumnNameRow {
 export function getTableData(db: Database, tableName: string, limit: number = 100, offset: number = 0): TableData {
 
   // Get schema (column names)
-  const schemaQuery: Statement<ColumnNameRow> = db.prepare(`SELECT name FROM pragma_table_info('${tableName}') ORDER BY cid`);
+  const schemaSql = `SELECT name FROM pragma_table_info('${tableName}') ORDER BY cid`;
+  logQuery(schemaSql);
+  const schemaQuery: Statement<ColumnNameRow> = db.prepare(schemaSql);
   const schemaResults = schemaQuery.all();
   const columns = schemaResults.map((col) => col.name);
 
   // Get data rows (unknown type since we don't know the schema)
-  const dataQuery = db.query(`SELECT * FROM ${tableName} LIMIT ${limit} OFFSET ${offset}`);
+  const dataSql = `SELECT * FROM ${tableName} LIMIT ${limit} OFFSET ${offset}`;
+  logQuery(dataSql);
+  const dataQuery = db.query(dataSql);
   const rows = dataQuery.all();
 
   // Get total row count
-  const countQuery: Statement<CountRow> = db.query(`SELECT COUNT(*) as count FROM ${tableName}`);
+  const countSql = `SELECT COUNT(*) as count FROM ${tableName}`;
+  logQuery(countSql);
+  const countQuery: Statement<CountRow> = db.query(countSql);
   const countResult = countQuery.get();
   const totalRows = countResult?.count ?? 0;
 
@@ -105,7 +123,9 @@ export function getTableData(db: Database, tableName: string, limit: number = 10
  * Get database metadata
  */
 export function getDatabaseInfo(db: Database, dbPath: string): DatabaseInfo {
-  const tablesQuery: Statement<CountRow> = db.query("SELECT COUNT(*) as count FROM sqlite_master WHERE type='table'");
+  const sql = "SELECT COUNT(*) as count FROM sqlite_master WHERE type='table'";
+  logQuery(sql);
+  const tablesQuery: Statement<CountRow> = db.query(sql);
   const tablesResult = tablesQuery.get();
 
   // Extract name from path
@@ -125,6 +145,7 @@ export function getDatabaseInfo(db: Database, dbPath: string): DatabaseInfo {
  * Execute a raw SQL query (for future query editor feature)
  */
 export function executeQuery(db: Database, sql: string, limit: number = 100): { columns: string[], rows: unknown[][] } {
+  logQuery(sql);
   const query = db.query(sql);
   const results = query.all();
 
@@ -145,7 +166,9 @@ export function executeQuery(db: Database, sql: string, limit: number = 100): { 
 export function validateDatabase(db: Database): boolean {
   try {
     // Try a simple query to verify the database is valid
-    const query = db.query("SELECT 1");
+    const sql = "SELECT 1";
+    logQuery(sql);
+    const query = db.query(sql);
     query.get();
     return true;
   } catch (err) {

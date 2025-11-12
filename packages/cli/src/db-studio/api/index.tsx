@@ -1,4 +1,3 @@
-/// <reference path="../../../../../types/index.d.ts" />
 
 import { createServer } from "http";
 import { Database } from "elide:sqlite";
@@ -43,15 +42,12 @@ const server = createServer(options, (req, res) => {
       const url = req.url || '/';
       const method = req.method || 'GET';
 
-      // Handle the API request
       const response = await handleApiRequest(url, method, body, databases, Database);
 
-      // Write response with Content-Length (byte length, not character length)
       res.writeHead(response.status, {
         ...response.headers,
         'Content-Length': Buffer.byteLength(response.body, 'utf8')
       });
-      console.log(response.body);
       res.end(response.body);
     } catch (err) {
       console.error("Error handling request:", err);
@@ -67,5 +63,5 @@ const server = createServer(options, (req, res) => {
 
 // Start listening on configured port
 server.listen(port, () => {
-  console.log(`Database Studio API started on http://localhost:${port} 🎉`);
+  console.log(`Database Studio API started on http://localhost:${port} 🚀`);
 });

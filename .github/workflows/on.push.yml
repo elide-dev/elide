@@ -90,6 +90,7 @@ jobs:
       contents: "read"
       checks: "read"
       models: "read"
+      artifact-metadata: "read"
       deployments: "read"
       discussions: "read"
       id-token: "write"

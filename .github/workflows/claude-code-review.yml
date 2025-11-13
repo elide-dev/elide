@@ -71,7 +71,7 @@ jobs:
         with:
           version: "10.6.2"
       - name: "Setup: Elide"
-        uses: elide-dev/setup-elide@cc5ca312ef6df23b07967bba9308bfa77dfec6f8
+        uses: elide-dev/setup-elide@d91d5859c0722417ea1ac4c682382ac8a6622b80 # v3.0.0
         with:
           version: "1.0.0-beta10"
       - name: "Review: Claude"

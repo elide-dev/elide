@@ -44,7 +44,7 @@ internal class ToolS3Command : ProjectAwareSubcommand<ToolState, CommandContext>
   /** Specifies the port of the server. */
   @CommandLine.Option(
     names = ["--port", "-P"],
-    description = ["The port of the server."],
+    description = ["Port of the server."],
     defaultValue = "8080",
   )
   internal var port: Int = 8080
@@ -52,7 +52,7 @@ internal class ToolS3Command : ProjectAwareSubcommand<ToolState, CommandContext>
   @CommandLine.Option(
     names = ["--in-memory", "--memory", "-m"],
     description =
-      ["If set, the server will be run in memory. Files will be read from the directory, but will not be modified."],
+      ["Run the server in memory. Files will be read from the directory, but will not be modified."],
     defaultValue = "false",
   )
   internal var memory: Boolean = false

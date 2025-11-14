@@ -9,6 +9,7 @@ import type {
   BuildCompletedMessage,
   BuildBellMessage,
   ErrorMessage,
+  BuildTool,
 } from '../../../shared/types.js';
 import { DbJobManager } from '../services/db-job-manager.js';
 
@@ -156,7 +157,10 @@ export function setupWebSocketServer(wss: WebSocketServer): void {
   sandboxRunner.on('build:started', (data: { jobId: string; tool: string; timestamp: string }) => {
     const message: BuildStartedMessage = {
       type: 'build_started',
-      payload: data,
+      payload: {
+        ...data,
+        tool: data.tool as BuildTool,
+      },
     };
     broadcastToJob(data.jobId, message);
   });
@@ -172,7 +176,10 @@ export function setupWebSocketServer(wss: WebSocketServer): void {
   sandboxRunner.on('build:completed', (data: { jobId: string; tool: string; result: any }) => {
     const message: BuildCompletedMessage = {
       type: 'build_completed',
-      payload: data,
+      payload: {
+        ...data,
+        tool: data.tool as BuildTool,
+      },
     };
     broadcastToJob(data.jobId, message);
   });
@@ -190,7 +197,10 @@ export function setupWebSocketServer(wss: WebSocketServer): void {
   sandboxRunner.on('build:bell', (data: { jobId: string; tool: string; timestamp: string; message?: string }) => {
     const message: BuildBellMessage = {
       type: 'build_bell',
-      payload: data,
+      payload: {
+        ...data,
+        tool: data.tool as BuildTool,
+      },
     };
     broadcastToJob(data.jobId, message);
     console.log(`🔔 Bell rung for ${data.tool} on job ${data.jobId}`);

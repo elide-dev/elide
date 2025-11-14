@@ -1,9 +1,11 @@
-import { promises as fs } from 'fs';
-import { createGzip } from 'zlib';
+import { promises as fs, createWriteStream } from 'fs';
+import { createGzip, gunzip } from 'zlib';
 import { promisify } from 'util';
 import { pipeline } from 'stream';
 import * as path from 'path';
 import * as crypto from 'crypto';
+
+const gunzipAsync = promisify(gunzip);
 
 const pipelineAsync = promisify(pipeline);
 
@@ -45,6 +47,8 @@ export class WebSocketRecorder {
   private tool: string;
   private metadata: Recording['metadata'];
   private recording: boolean = false;
+  private bellRung: boolean = false;
+  private buildSucceeded: boolean = false;
 
   constructor(jobId: string, tool: string, metadata: Omit<Recording['metadata'], 'timestamp'>) {
     this.jobId = jobId;
@@ -76,6 +80,33 @@ export class WebSocketRecorder {
 
     const ts = Date.now() - this.startTime;
     this.messages.push({ ts, msg: message });
+
+    // Watch for bell signal in output messages
+    if (message.type === 'output' && message.data) {
+      this.detectBell(message.data);
+    }
+  }
+
+  /**
+   * Detect if the bell has been rung with success status
+   */
+  private detectBell(data: string): void {
+    // Check for bell emoji
+    if (data.includes('🔔 BUILD COMPLETE 🔔')) {
+      this.bellRung = true;
+      console.log(`[Recorder] Bell detected for job ${this.jobId} (${this.tool})`);
+
+      // Check if status is SUCCESS (case insensitive)
+      // Look within a reasonable window after the bell
+      const lowerData = data.toLowerCase();
+      if (lowerData.includes('status: success') || lowerData.includes('status:success')) {
+        this.buildSucceeded = true;
+        console.log(`[Recorder] Build SUCCESS detected for job ${this.jobId} (${this.tool})`);
+      } else if (lowerData.includes('status: failure') || lowerData.includes('status:failure')) {
+        this.buildSucceeded = false;
+        console.log(`[Recorder] Build FAILURE detected for job ${this.jobId} (${this.tool})`);
+      }
+    }
   }
 
   /**
@@ -87,11 +118,25 @@ export class WebSocketRecorder {
   }
 
   /**
-   * Save recording to filesystem with gzip compression
+   * Get buffered messages (for replay to new clients)
    */
-  async save(cacheKey: string, recordingsDir: string = './recordings'): Promise<string> {
+  getMessages(): RecordedMessage[] {
+    return this.messages;
+  }
+
+  /**
+   * Save recording to filesystem with gzip compression
+   * Only saves if the bell was rung with SUCCESS status
+   */
+  async save(cacheKey: string, recordingsDir: string = './recordings'): Promise<string | null> {
     if (this.messages.length === 0) {
       throw new Error('No messages to save');
+    }
+
+    // Only save successful builds where the bell was rung
+    if (!this.bellRung || !this.buildSucceeded) {
+      console.log(`[Recorder] Skipping save for job ${this.jobId} (${this.tool}) - bellRung: ${this.bellRung}, buildSucceeded: ${this.buildSucceeded}`);
+      return null;
     }
 
     // Ensure recordings directory exists
@@ -114,7 +159,7 @@ export class WebSocketRecorder {
         yield Buffer.from(json, 'utf8');
       }(),
       gzip,
-      fs.createWriteStream(filePath)
+      createWriteStream(filePath)
     );
 
     const stats = await fs.stat(filePath);
@@ -142,6 +187,27 @@ export class WebSocketRecorder {
    */
   isRecording(): boolean {
     return this.recording;
+  }
+
+  /**
+   * Check if the bell was rung
+   */
+  isBellRung(): boolean {
+    return this.bellRung;
+  }
+
+  /**
+   * Check if the build succeeded
+   */
+  isBuildSuccessful(): boolean {
+    return this.buildSucceeded;
+  }
+
+  /**
+   * Check if this recording should be saved (bell + success)
+   */
+  shouldSave(): boolean {
+    return this.bellRung && this.buildSucceeded;
   }
 }
 
@@ -185,8 +251,7 @@ export async function findCachedRecording(cacheKey: string, recordingsDir: strin
  * Load a recording from disk (uncompressed)
  */
 export async function loadRecording(filePath: string): Promise<Recording> {
-  const gunzip = promisify(require('zlib').gunzip);
   const compressed = await fs.readFile(filePath);
-  const json = await gunzip(compressed);
+  const json = await gunzipAsync(compressed);
   return JSON.parse(json.toString('utf8'));
 }

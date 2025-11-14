@@ -182,6 +182,20 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
         });
       } else {
         console.log(`Joining existing session for container: ${containerId} (${session.clients.size} existing clients)`);
+
+        // Replay buffered history to new client if recorder exists
+        if (session.recorder) {
+          const messages = session.recorder.getMessages();
+          if (messages.length > 0) {
+            console.log(`Replaying ${messages.length} buffered messages to new client`);
+            // Send all buffered messages to this client
+            messages.forEach(({ msg }) => {
+              if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(msg));
+              }
+            });
+          }
+        }
       }
 
       // Add this client to the session
@@ -249,9 +263,15 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
               session.recorder.stop();
               const cacheKey = `test-${containerId}`;
               const recordingPath = await session.recorder.save(cacheKey, './recordings');
-              console.log(`Saved recording for container ${containerId}: ${recordingPath}`);
-              console.log(`  Messages: ${session.recorder.getMessageCount()}`);
-              console.log(`  Duration: ${session.recorder.getDuration()}ms`);
+              if (recordingPath) {
+                console.log(`Saved recording for container ${containerId}: ${recordingPath}`);
+                console.log(`  Messages: ${session.recorder.getMessageCount()}`);
+                console.log(`  Duration: ${session.recorder.getDuration()}ms`);
+                console.log(`  Bell rung: ${session.recorder.isBellRung()}`);
+                console.log(`  Build successful: ${session.recorder.isBuildSuccessful()}`);
+              } else {
+                console.log(`Recording not saved for container ${containerId} - build did not complete successfully`);
+              }
             } catch (error) {
               console.error(`Error saving recording for container ${containerId}:`, error);
             }

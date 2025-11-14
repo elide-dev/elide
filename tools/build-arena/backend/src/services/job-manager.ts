@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { BuildJob, JobStatus } from '../../../shared/types.js';
-import { SandboxRunner } from './sandbox-runner.js';
 import { InteractiveSandboxRunner } from './interactive-sandbox-runner.js';
 import { EventEmitter } from 'events';
 

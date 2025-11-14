@@ -1,11 +1,18 @@
 import { test, expect, type Page } from '@playwright/test';
 
 test.describe('Claude Autonomous Build Test', () => {
+  // Configure this test suite
+  test.use({
+    baseURL: 'http://localhost:3000',
+    // Longer timeout for Claude builds
+    timeout: 5 * 60 * 1000 // 5 minutes
+  });
+
   test('should watch Claude Code build autonomously and mirror output', async ({ page }) => {
     console.log('\n🎬 Starting Claude Code autonomous build test...\n');
 
     // Navigate to terminal test page
-    await page.goto('http://localhost:3000/test/terminal');
+    await page.goto('/test/terminal');
     console.log('✅ Loaded terminal test page');
 
     // Set up console logging for terminal output

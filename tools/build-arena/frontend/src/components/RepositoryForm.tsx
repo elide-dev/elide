@@ -1,9 +1,48 @@
-'use client'
-
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 interface RepositoryFormProps {
   onJobSubmitted: (jobId: string) => void
+}
+
+// Popular Java repositories categorized by build size
+const EXAMPLE_REPOS = {
+  small: [
+    { name: 'Spring PetClinic', url: 'https://github.com/spring-projects/spring-petclinic.git', time: '<1 min' },
+    { name: 'Apache Commons Lang', url: 'https://github.com/apache/commons-lang.git', time: '<1 min' },
+    { name: 'Apache Commons IO', url: 'https://github.com/apache/commons-io.git', time: '<1 min' },
+    { name: 'Google Gson', url: 'https://github.com/google/gson.git', time: '<1 min' },
+    { name: 'Square Okio', url: 'https://github.com/square/okio.git', time: '<1 min' },
+    { name: 'Joda Time', url: 'https://github.com/JodaOrg/joda-time.git', time: '<1 min' },
+  ],
+  medium: [
+    { name: 'Google Guava', url: 'https://github.com/google/guava.git', time: '1-5 min' },
+    { name: 'Square OkHttp', url: 'https://github.com/square/okhttp.git', time: '1-5 min' },
+    { name: 'Square Retrofit', url: 'https://github.com/square/retrofit.git', time: '1-5 min' },
+    { name: 'JUnit 5', url: 'https://github.com/junit-team/junit5.git', time: '1-5 min' },
+    { name: 'Mockito', url: 'https://github.com/mockito/mockito.git', time: '1-5 min' },
+    { name: 'Google Guice', url: 'https://github.com/google/guice.git', time: '1-5 min' },
+    { name: 'Jackson Core', url: 'https://github.com/FasterXML/jackson-core.git', time: '1-5 min' },
+  ],
+  large: [
+    { name: 'Spring Boot', url: 'https://github.com/spring-projects/spring-boot.git', time: '5-15 min' },
+    { name: 'Spring Framework', url: 'https://github.com/spring-projects/spring-framework.git', time: '5-15 min' },
+    { name: 'Apache Kafka', url: 'https://github.com/apache/kafka.git', time: '5-15 min' },
+    { name: 'Elasticsearch', url: 'https://github.com/elastic/elasticsearch.git', time: '5-15 min' },
+    { name: 'Gradle', url: 'https://github.com/gradle/gradle.git', time: '5-15 min' },
+  ],
+}
+
+function pickRandomRepos() {
+  const pickRandom = <T,>(arr: T[], count: number): T[] => {
+    const shuffled = [...arr].sort(() => Math.random() - 0.5)
+    return shuffled.slice(0, count)
+  }
+
+  return [
+    ...pickRandom(EXAMPLE_REPOS.small, 2),
+    ...pickRandom(EXAMPLE_REPOS.medium, 2),
+    ...pickRandom(EXAMPLE_REPOS.large, 1),
+  ]
 }
 
 export function RepositoryForm({ onJobSubmitted }: RepositoryFormProps) {
@@ -11,13 +50,16 @@ export function RepositoryForm({ onJobSubmitted }: RepositoryFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Pick random examples on component mount
+  const suggestedRepos = useMemo(() => pickRandomRepos(), [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:3001/api/jobs', {
+      const response = await fetch('/api/jobs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +99,7 @@ export function RepositoryForm({ onJobSubmitted }: RepositoryFormProps) {
             onChange={(e) => setRepoUrl(e.target.value)}
             placeholder="https://github.com/username/repo.git"
             required
-            className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-elide-primary focus:border-transparent"
+            className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           />
           <p className="mt-2 text-sm text-gray-400">
             Enter a public GitHub, GitLab, or Git repository URL with a Maven or Gradle build
@@ -73,28 +115,38 @@ export function RepositoryForm({ onJobSubmitted }: RepositoryFormProps) {
         <button
           type="submit"
           disabled={loading || !repoUrl}
-          className="w-full px-6 py-3 bg-elide-primary hover:bg-elide-secondary disabled:bg-gray-600 text-white font-semibold rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
+          className="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 text-white font-semibold rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
         >
-          {loading ? 'Submitting...' : 'Start Build Comparison'}
+          {loading ? 'Submitting...' : 'Start AI Build Competition'}
         </button>
       </form>
 
       <div className="mt-8 pt-6 border-t border-slate-700">
-        <h3 className="text-lg font-semibold text-white mb-3">Example Repositories</h3>
+        <h3 className="text-lg font-semibold text-white mb-3">Suggested Repositories</h3>
+        <p className="text-sm text-gray-400 mb-4">
+          Try these popular Java projects to see Elide's performance improvements
+        </p>
         <div className="space-y-2">
-          <button
-            onClick={() => setRepoUrl('https://github.com/spring-projects/spring-petclinic.git')}
-            className="block w-full text-left px-4 py-2 bg-slate-700 hover:bg-slate-600 text-gray-300 rounded transition-colors"
-          >
-            Spring PetClinic
-          </button>
-          <button
-            onClick={() => setRepoUrl('https://github.com/apache/commons-lang.git')}
-            className="block w-full text-left px-4 py-2 bg-slate-700 hover:bg-slate-600 text-gray-300 rounded transition-colors"
-          >
-            Apache Commons Lang
-          </button>
+          {suggestedRepos.map((repo, index) => (
+            <button
+              key={index}
+              onClick={() => setRepoUrl(repo.url)}
+              className="block w-full text-left px-4 py-3 bg-slate-700 hover:bg-slate-600 text-gray-300 rounded-lg transition-colors group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-medium group-hover:text-white transition-colors">
+                  {repo.name}
+                </span>
+                <span className="text-xs text-gray-500 bg-slate-800 px-2 py-1 rounded">
+                  ~{repo.time}
+                </span>
+              </div>
+            </button>
+          ))}
         </div>
+        <p className="mt-4 text-xs text-gray-500 text-center">
+          Refresh page for different suggestions • 18 popular projects available
+        </p>
       </div>
     </div>
   )

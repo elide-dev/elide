@@ -1,13 +1,11 @@
 import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import * as schema from './schema.js';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import { join } from 'path';
 
 // Database file location - store in backend directory
-const DB_PATH = process.env.DATABASE_PATH || join(__dirname, '..', '..', 'build-arena.db');
+// Use process.cwd() to ensure consistency with drizzle.config.ts
+const DB_PATH = process.env.DATABASE_PATH || join(process.cwd(), 'build-arena.db');
 
 // Create libSQL client
 const client = createClient({

@@ -148,7 +148,7 @@ export class SandboxRunner extends EventEmitter {
     return new Promise((resolve, reject) => {
       container.attach(
         { stream: true, stdout: true, stderr: true },
-        (err, stream) => {
+        (err: Error | null, stream?: NodeJS.ReadableStream) => {
           if (err) {
             reject(err);
             return;

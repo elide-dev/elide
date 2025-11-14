@@ -41,31 +41,40 @@ tools/build-arena/
 **Prerequisites**: Node.js 20+, pnpm, Docker
 
 ```bash
-# First-time setup (installs dependencies, builds Docker images)
-./dev-pnpm.sh setup
+# Install dependencies
+pnpm install
 
-# Start development (backend + frontend in parallel)
-./dev-pnpm.sh dev
+# Build Docker images (first time only)
+cd docker && ./build-images.sh
 
-# Run tests
-pnpm test
+# Start development servers (backend + frontend)
+pnpm dev
 ```
 
 The application will be available at:
-- **Frontend (Vite)**: http://localhost:5173
-- **Glue Server API**: http://localhost:3001
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:3001
 - **WebSocket**: ws://localhost:3001/ws
 
 ### Available Commands
 
 ```bash
-./dev-pnpm.sh dev        # Start both servers
-./dev-pnpm.sh backend    # Start backend only
-./dev-pnpm.sh frontend   # Start frontend only
-./dev-pnpm.sh lint       # Run Biome linter
-./dev-pnpm.sh format     # Format code with Biome
-./dev-pnpm.sh test       # Run Playwright tests
-./dev-pnpm.sh test:ui    # Open Playwright UI
+pnpm dev              # Start both backend and frontend
+pnpm dev:backend      # Start backend only
+pnpm dev:frontend     # Start frontend only
+pnpm build            # Build both for production
+pnpm lint             # Run Biome linter
+pnpm format           # Format code with Biome
+pnpm test             # Run Playwright tests
+pnpm test:ui          # Open Playwright UI
+
+# Docker
+cd docker && ./build-images.sh              # Build container images
+cd docker && ./build-images.sh --no-cache   # Rebuild from scratch
+
+# Testing
+tsx scripts/api-race-test.ts                # Run API-based race test
+./scripts/run-race-tests.sh                 # Run full Playwright test suite
 ```
 
 ### Architecture
@@ -75,7 +84,7 @@ Build Arena uses a **hot-standby architecture**:
 - **Frontend**: Vite-based React app (can be built to static files for CDN deployment)
 - **Build Containers**: Docker containers with Claude Code agents (spawned per job, destroyed after)
 
-See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed information.
+See [ARCHITECTURE.md](./docs/ARCHITECTURE.md) for detailed information.
 
 ## Technology Stack
 
@@ -128,19 +137,19 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed information.
 
 See these guides for more information:
 
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Hot-standby design, deployment scenarios, scaling
-- **[SETUP.md](./SETUP.md)** - Installation, configuration, and deployment
-- **[INTERACTIVE_AGENTS.md](./INTERACTIVE_AGENTS.md)** - How AI agents work, autonomy, and customization
-- **[TESTING.md](./TESTING.md)** - Comprehensive Playwright testing guide
+- **[TESTING.md](./docs/TESTING.md)** - Automated testing guide with Playwright and API tests
 - **[Docker files](./docker/)** - Container configurations and CLAUDE.md instructions
+  - [CLAUDE.md](./docker/CLAUDE.md) - Elide runner instructions
+  - [CLAUDE-STANDARD.md](./docker/CLAUDE-STANDARD.md) - Maven/Gradle runner instructions
+  - [CLAUDE-elide.md](./docker/CLAUDE-elide.md) - Elide-specific guidance
+  - [build-images.sh](./docker/build-images.sh) - Docker image build script
 
 ### Quick Links
 
-- Hot-standby architecture → [ARCHITECTURE.md](./ARCHITECTURE.md)
-- Testing guide → [TESTING.md](./TESTING.md)
-- Deployment scenarios → [ARCHITECTURE.md#deployment-scenarios](./ARCHITECTURE.md)
-- API reference → [SETUP.md#api-reference](./SETUP.md)
-- Agent instructions → [INTERACTIVE_AGENTS.md#agent-instructions](./INTERACTIVE_AGENTS.md)
+- Testing guide → [docs/TESTING.md](./docs/TESTING.md)
+- Elide runner setup → [docker/CLAUDE-elide.md](./docker/CLAUDE-elide.md)
+- Standard runner setup → [docker/CLAUDE-STANDARD.md](./docker/CLAUDE-STANDARD.md)
+- API test runner → [scripts/api-race-test.ts](./scripts/api-race-test.ts)
 
 ### Cost & Requirements
 

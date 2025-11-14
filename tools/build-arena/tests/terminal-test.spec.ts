@@ -35,17 +35,17 @@ test.describe('Terminal Test Page', () => {
     // Wait for container to start (this may take a few seconds)
     await expect(page.getByText('Connected')).toBeVisible({ timeout: 30000 });
 
-    // Check for container ID
-    await expect(page.getByText(/Container ID:/)).toBeVisible();
+    // Check for container ID in the DOM (it appears above the terminal)
+    await expect(page.locator('text=Container ID:')).toBeVisible({ timeout: 5000 });
 
-    // Wait for terminal output
-    await page.waitForSelector('.xterm-screen', { timeout: 5000 });
-
-    // Give it a moment to fully connect
+    // Verify terminal shows connection messages
+    const terminal = page.locator('.xterm-rows');
     await page.waitForTimeout(2000);
+    const terminalContent = await terminal.innerText();
+    expect(terminalContent).toContain('Container started');
   });
 
-  test('should execute commands in terminal', async () => {
+  test('should show view-only terminal messages', async () => {
     // Start container
     const startButton = page.getByRole('button', { name: 'Start Container' });
     await startButton.click();
@@ -54,63 +54,38 @@ test.describe('Terminal Test Page', () => {
     await expect(page.getByText('Connected')).toBeVisible({ timeout: 30000 });
     await page.waitForTimeout(2000);
 
-    // Focus on terminal (click on it)
-    const terminal = page.locator('.xterm-screen');
-    await terminal.click();
+    // Check terminal shows view-only messages
+    const terminal = page.locator('.xterm-rows');
+    const terminalContent = await terminal.innerText();
 
-    // Type a command
-    await page.keyboard.type('echo "Hello from terminal test"\n');
-
-    // Wait a moment for output
-    await page.waitForTimeout(1000);
-
-    // Check if output contains our message
-    const terminalContent = await terminal.textContent();
-    expect(terminalContent).toContain('Hello from terminal test');
+    // Verify view-only mode messages
+    expect(terminalContent).toContain('View-Only Mode');
+    expect(terminalContent).toContain('Container started');
+    expect(terminalContent).toContain('WebSocket connected');
   });
 
-  test('should show Java version', async () => {
+  test('should display container configuration options', async () => {
+    // Verify repository URL input exists
+    await expect(page.locator('input#repoUrl')).toBeVisible();
+
+    // Verify runner type selector exists
+    await expect(page.locator('select#runnerType')).toBeVisible();
+
+    // Verify auto-run checkbox exists
+    await expect(page.locator('input#autoRun')).toBeVisible();
+  });
+
+  test('should show timer when container is running', async () => {
     // Start container
     const startButton = page.getByRole('button', { name: 'Start Container' });
     await startButton.click();
 
     // Wait for connection
     await expect(page.getByText('Connected')).toBeVisible({ timeout: 30000 });
-    await page.waitForTimeout(2000);
 
-    // Focus and execute java command
-    const terminal = page.locator('.xterm-screen');
-    await terminal.click();
-    await page.keyboard.type('java -version\n');
-
-    // Wait for output
-    await page.waitForTimeout(3000);
-
-    // Check for Java version in output
-    const terminalContent = await terminal.textContent();
-    expect(terminalContent).toMatch(/openjdk version|java version/i);
-  });
-
-  test('should check if Elide is installed', async () => {
-    // Start container
-    const startButton = page.getByRole('button', { name: 'Start Container' });
-    await startButton.click();
-
-    // Wait for connection
-    await expect(page.getByText('Connected')).toBeVisible({ timeout: 30000 });
-    await page.waitForTimeout(2000);
-
-    // Check elide version
-    const terminal = page.locator('.xterm-screen');
-    await terminal.click();
-    await page.keyboard.type('elide --version\n');
-
-    // Wait for output
-    await page.waitForTimeout(3000);
-
-    const terminalContent = await terminal.textContent();
-    // Elide should be installed or we should see command output
-    expect(terminalContent).toBeTruthy();
+    // Timer should be visible (be specific to avoid matching footer timestamp)
+    await expect(page.locator('.text-blue-400.font-bold')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('.text-blue-400.font-bold')).toContainText(/\d{2}:\d{2}/);
   });
 
   test('should stop container and disconnect', async () => {
@@ -122,15 +97,19 @@ test.describe('Terminal Test Page', () => {
     await expect(page.getByText('Connected')).toBeVisible({ timeout: 30000 });
     await page.waitForTimeout(2000);
 
-    // Stop container
+    // Stop container button should be enabled
     const stopButton = page.getByRole('button', { name: 'Stop Container' });
+    await expect(stopButton).toBeEnabled({ timeout: 5000 });
     await stopButton.click();
 
-    // Wait for disconnection
+    // Wait for disconnection - check for "Disconnected" status indicator
     await expect(page.getByText('Disconnected')).toBeVisible({ timeout: 10000 });
 
-    // Status should change
-    await expect(page.getByText(/Status:.*Stopped/)).toBeVisible();
+    // Verify terminal shows stop message
+    await page.waitForTimeout(1000);
+    const terminal = page.locator('.xterm-rows');
+    const terminalContent = await terminal.innerText();
+    expect(terminalContent).toContain('Container stopped');
   });
 
   test('should clear terminal', async () => {
@@ -143,7 +122,7 @@ test.describe('Terminal Test Page', () => {
     await page.waitForTimeout(2000);
 
     // Type some commands
-    const terminal = page.locator('.xterm-screen');
+    const terminal = page.locator('.xterm-rows');
     await terminal.click();
     await page.keyboard.type('echo "test output"\n');
     await page.waitForTimeout(1000);
@@ -154,21 +133,22 @@ test.describe('Terminal Test Page', () => {
 
     // Terminal should be cleared (check if welcome message is gone)
     await page.waitForTimeout(500);
-    const terminalContent = await terminal.textContent();
+    const terminalContent = await terminal.innerText();
     expect(terminalContent?.trim().length).toBeLessThan(100); // Should be mostly empty
   });
 
-  test('should display test instructions', async () => {
-    await expect(page.getByRole('heading', { name: 'Test Instructions' })).toBeVisible();
-    await expect(page.getByText(/Click "Start Container"/)).toBeVisible();
-    await expect(page.getByText(/WebSocket will automatically connect/)).toBeVisible();
+  test('should display view-only terminal instructions', async () => {
+    await expect(page.getByRole('heading', { name: '📺 View-Only Terminal' })).toBeVisible();
+    await expect(page.getByText(/Enter a repository URL/)).toBeVisible();
+    await expect(page.getByText(/Watch as Claude Code automatically/)).toBeVisible();
+    await expect(page.getByText(/No keyboard input needed/)).toBeVisible();
   });
 });
 
 test.describe('Terminal Test Page - Error Handling', () => {
   test('should handle container start failure gracefully', async ({ page }) => {
     // Mock API to return error
-    await page.route('**/api/test/start-container', (route) =>
+    await page.route('**/api/test/start-container-with-minder', (route) =>
       route.fulfill({
         status: 500,
         body: JSON.stringify({ error: 'Failed to start container' }),
@@ -181,10 +161,13 @@ test.describe('Terminal Test Page - Error Handling', () => {
     await page.getByRole('button', { name: 'Start Container' }).click();
 
     // Should show error in terminal
-    await page.waitForTimeout(1000);
-    const terminal = page.locator('.xterm-screen');
-    const content = await terminal.textContent();
+    await page.waitForTimeout(2000);
+    const terminal = page.locator('.xterm-rows');
+    const content = await terminal.innerText();
     expect(content).toContain('Error');
+
+    // Status should show Failed (be specific - look for the status field, not terminal text)
+    await expect(page.locator('text=/Status:.*Failed/')).toBeVisible({ timeout: 5000 });
   });
 });
 
@@ -192,8 +175,8 @@ test.describe('Terminal Test Page - Navigation', () => {
   test('should have link to homepage', async ({ page }) => {
     await page.goto('http://localhost:3000/');
 
-    // Should have link to terminal test
-    const link = page.getByRole('link', { name: 'Terminal Test Page' });
+    // Should have link to terminal test (look for the card link containing "Terminal Test")
+    const link = page.getByRole('link').filter({ has: page.getByRole('heading', { name: 'Terminal Test' }) });
     await expect(link).toBeVisible();
 
     // Click link

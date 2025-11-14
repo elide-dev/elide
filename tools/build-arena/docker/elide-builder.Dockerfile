@@ -1,9 +1,10 @@
 # Elide Builder Docker Image
 # This image contains Claude Code, Elide, and Java for AI-driven build comparisons
 # Multi-platform build for linux/amd64 and linux/arm64
+# Uses Ubuntu 24.04 (Noble) for GLIBC 2.39+ (Elide requires GLIBC 2.38+)
 
 # Use Eclipse Temurin (AdoptOpenJDK) - official OpenJDK builds with full Java toolchain
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:17-jdk-noble
 
 # Prevent interactive prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
@@ -33,8 +34,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Claude Code CLI
-RUN npm install -g @anthropic-ai/claude-code
+# Install Claude Code CLI (trying version 2.0.30 - before apiKeyHelper changes)
+RUN npm install -g @anthropic-ai/claude-code@2.0.30
 
 # Note: Elide installation skipped for now - will be added via volume mount or separate step
 # The terminal test page works fine without Elide installed
@@ -49,25 +50,41 @@ ENV TERM=xterm-256color
 ENV LANG=C.UTF-8
 
 # Create non-root user for Claude Code (won't run with --dangerously-skip-permissions as root)
-RUN useradd -m -s /bin/bash -u 1000 builder && \
+# Note: Ubuntu 24.04 (Noble) already has UID 1000, so we use the next available UID
+RUN useradd -m -s /bin/bash builder && \
     mkdir -p /workspace && \
     chown -R builder:builder /workspace
 
 # Set working directory
 WORKDIR /workspace
 
-# Copy Claude Code instructions
-COPY CLAUDE.md /workspace/CLAUDE.md
+# Copy Claude Code instructions (Elide-specific)
+COPY CLAUDE-ELIDE.md /workspace/CLAUDE.md
 RUN chown builder:builder /workspace/CLAUDE.md
 
 # Pre-configure Claude Code to skip prompts and enable non-interactive mode
-# Create API key helper script that returns the API key from environment
-RUN mkdir -p /home/builder/.claude && \
-    echo '#!/bin/bash' > /home/builder/.claude/api-key-helper.sh && \
-    echo 'echo "$ANTHROPIC_API_KEY"' >> /home/builder/.claude/api-key-helper.sh && \
-    chmod +x /home/builder/.claude/api-key-helper.sh && \
-    echo '{"permissionMode":"bypassPermissions","apiKeyHelper":"/home/builder/.claude/api-key-helper.sh"}' > /home/builder/.claude/settings.json && \
-    chown -R builder:builder /home/builder/.claude
+# Create directory structure for Claude Code configuration
+RUN mkdir -p /home/builder/.claude /home/builder/.config/claude-code && \
+    echo '{"permissionMode":"dangerouslySkipPermissions"}' > /home/builder/.claude/settings.json && \
+    echo '{"permissionMode":"dangerouslySkipPermissions"}' > /home/builder/.config/claude-code/settings.json && \
+    chown -R builder:builder /home/builder/.claude /home/builder/.config
+
+# Create a startup script that will configure the API key from environment variable
+# This creates .claude.json with the API key before Claude Code starts
+# Based on workaround from https://github.com/anthropics/claude-code/issues/441
+RUN echo '#!/bin/bash' > /usr/local/bin/init-claude.sh && \
+    echo 'if [ -n "$ANTHROPIC_API_KEY" ]; then' >> /usr/local/bin/init-claude.sh && \
+    echo '  cat > $HOME/.claude.json <<EOF' >> /usr/local/bin/init-claude.sh && \
+    echo '{' >> /usr/local/bin/init-claude.sh && \
+    echo '  "changelogLastFetched": 1000000000000,' >> /usr/local/bin/init-claude.sh && \
+    echo '  "primaryApiKey": "$ANTHROPIC_API_KEY",' >> /usr/local/bin/init-claude.sh && \
+    echo '  "hasCompletedOnboarding": true,' >> /usr/local/bin/init-claude.sh && \
+    echo '  "lastOnboardingVersion": "2.0.30"' >> /usr/local/bin/init-claude.sh && \
+    echo '}' >> /usr/local/bin/init-claude.sh && \
+    echo 'EOF' >> /usr/local/bin/init-claude.sh && \
+    echo 'fi' >> /usr/local/bin/init-claude.sh && \
+    echo 'exec "$@"' >> /usr/local/bin/init-claude.sh && \
+    chmod +x /usr/local/bin/init-claude.sh
 
 # Create .bashrc with helpful startup message
 RUN echo '# Display welcome message and Claude Code info' >> /home/builder/.bashrc && \
@@ -84,6 +101,9 @@ RUN echo '# Display welcome message and Claude Code info' >> /home/builder/.bash
 
 # Switch to non-root user
 USER builder
+
+# Use init script as entrypoint to configure API key before starting
+ENTRYPOINT ["/usr/local/bin/init-claude.sh"]
 
 # Default command - interactive bash with Claude Code available
 CMD ["/bin/bash", "-l"]

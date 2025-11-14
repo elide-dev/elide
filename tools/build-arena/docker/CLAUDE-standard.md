@@ -1,216 +1,204 @@
-# Build Arena Challenge: Standard Toolchain Team
+# Claude Code Instructions - STANDARD RUNNER (Maven/Gradle)
 
-Welcome to Build Arena! You are the **Standard Toolchain** agent competing in a head-to-head build race.
+You are competing in the **Build Arena Race** using **Maven or Gradle**!
 
-## Your Mission
+## 🏁 YOUR MISSION
 
-Build and test a Java project using standard Maven/Gradle tools as fast as possible, competing against Elide.
+1. **Download and install Maven or Gradle**
+2. **Clone the target repository**
+3. **Build the project using Maven/Gradle**
+4. **🔔 RING THE BELL** to signal completion
 
-## Rules of Engagement
+## ⚠️ CRITICAL: YOU MUST RING THE BELL!
 
-You have **FULL AUTONOMY** to use any strategy you want:
+When done (success OR failure), output:
+```
+🔔 BUILD COMPLETE 🔔
+Runner: MAVEN (or GRADLE)
+Status: [SUCCESS/FAILURE]
+```
 
-- ✓ Read documentation (online or in the repo)
-- ✓ Search the internet for solutions
-- ✓ Install any programs or tools you need
-- ✓ Optimize build configurations (tune JVM, Gradle daemon, etc.)
-- ✓ Run builds in parallel
-- ✓ Cache dependencies aggressively
-- ✓ Skip non-essential steps (if you can justify it)
-- ✓ Use any trick, optimization, or technique you can think of
-- ✓ Leverage Gradle build cache, Maven local repository, etc.
+## Step 1: Install Maven
 
-**The only requirement**: Ring the bell (`\a`) when you're confident the binary is built and validated.
-
-You decide how to verify compilation success - whether that's running tests, checking file signatures, attempting to execute the binary, or any other method you deem appropriate.
-
-## Suggested Workflow
-
-Here's a suggested approach, but feel free to improvise:
-
-### 1. Download and Setup Build Tools
+Maven is NOT pre-installed. You must download it:
 
 ```bash
-# Check Java installation
-java -version
+# Download and install Maven
+cd /tmp
+wget https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
+tar xzf apache-maven-3.9.9-bin.tar.gz
+mv apache-maven-3.9.9 ~/maven
+export PATH="$HOME/maven/bin:$PATH"
 
-# Check/install Gradle
-if ! command -v gradle &> /dev/null; then
-    echo "Gradle not found in PATH, using wrapper if available"
-fi
-
-# Check Maven installation
-if ! command -v mvn &> /dev/null; then
-    echo "Installing Maven..."
-    apt-get update && apt-get install -y maven
-fi
-
+# Verify installation
 mvn --version
-gradle --version || echo "Will use Gradle wrapper if available"
 ```
 
-### 2. Clone the Repository
-
-The repository URL will be provided as an environment variable `$REPO_URL`.
+## Alternative: Install Gradle
 
 ```bash
-echo "Cloning repository: $REPO_URL"
-git clone "$REPO_URL" project
-cd project
+# Download and install Gradle
+cd /tmp
+wget https://services.gradle.org/distributions/gradle-8.5-bin.zip
+unzip gradle-8.5-bin.zip
+mv gradle-8.5 ~/gradle
+export PATH="$HOME/gradle/bin:$PATH"
+
+# Verify installation
+gradle --version
 ```
 
-### 3. Analyze the Project
-
-Examine the project structure to determine the build system:
-
-- Look for `build.gradle` or `build.gradle.kts` → Gradle project
-- Look for `pom.xml` → Maven project
-- Check for any special build requirements in README.md
+## Step 2: Clone Repository
 
 ```bash
-# List project structure
-ls -la
+cd /workspace
+git clone <repository-url>
+cd <repo-name>
+```
 
-# Check for build files
-if [ -f "build.gradle" ] || [ -f "build.gradle.kts" ]; then
-    echo "Detected Gradle project"
-    BUILD_SYSTEM="gradle"
-elif [ -f "pom.xml" ]; then
-    echo "Detected Maven project"
-    BUILD_SYSTEM="maven"
+## Step 3: Detect Build Tool
+
+```bash
+# Check what build tool the project uses
+if [ -f "pom.xml" ]; then
+    echo "📦 Maven project detected"
+    BUILD_TOOL="maven"
+elif [ -f "build.gradle" ] || [ -f "build.gradle.kts" ]; then
+    echo "📦 Gradle project detected"
+    BUILD_TOOL="gradle"
+fi
+```
+
+## Step 4: Build
+
+**IMPORTANT**: Redirect Maven/Gradle output to see completion status!
+
+```bash
+# Maven build - pipe to file and show tail
+if [ "$BUILD_TOOL" = "maven" ]; then
+    mvn clean package -DskipTests 2>&1 | tee /tmp/build.log
+    # Show final result
+    tail -20 /tmp/build.log
+fi
+
+# Gradle build - pipe to file and show tail
+if [ "$BUILD_TOOL" = "gradle" ]; then
+    gradle build -x test 2>&1 | tee /tmp/build.log
+    # Show final result
+    tail -20 /tmp/build.log
+fi
+
+# Check if build succeeded
+if grep -q "BUILD SUCCESS" /tmp/build.log; then
+    BUILD_STATUS="SUCCESS"
+elif grep -q "BUILD FAILURE" /tmp/build.log; then
+    BUILD_STATUS="FAILURE"
+elif grep -q "BUILD SUCCESSFUL" /tmp/build.log; then
+    BUILD_STATUS="SUCCESS"
+elif grep -q "BUILD FAILED" /tmp/build.log; then
+    BUILD_STATUS="FAILURE"
 else
-    echo "Could not detect build system"
-    exit 1
+    BUILD_STATUS="UNKNOWN"
 fi
 ```
 
-### 4. Build the Project with Standard Tools
+## Step 5: Verify Build Artifacts
 
-Use standard Maven or Gradle to build the project:
+**CRITICAL**: Don't just trust the log - verify artifacts were actually created!
 
 ```bash
-echo "Starting build with standard toolchain..."
-START_TIME=$(date +%s)
-
-if [ "$BUILD_SYSTEM" = "gradle" ]; then
-    # Use Gradle wrapper if available, otherwise system Gradle
-    if [ -f "gradlew" ]; then
-        echo "Using Gradle wrapper..."
-        chmod +x gradlew
-        ./gradlew build --no-daemon
+# Check for Maven artifacts
+if [ "$BUILD_TOOL" = "maven" ]; then
+    if [ -d "target" ]; then
+        echo "✓ Found target/ directory"
+        if ls target/*.jar 1> /dev/null 2>&1; then
+            echo "✓ JAR files created:"
+            ls -lh target/*.jar
+            # For CLI tools, try running with --version
+            # java -jar target/*.jar --version 2>/dev/null || echo "(Library project - no CLI)"
+        else
+            echo "⚠ No JAR files found in target/"
+            BUILD_STATUS="FAILURE"
+        fi
     else
-        echo "Using system Gradle..."
-        gradle build --no-daemon
+        echo "✗ No target/ directory found"
+        BUILD_STATUS="FAILURE"
     fi
-    BUILD_EXIT_CODE=$?
+fi
 
-elif [ "$BUILD_SYSTEM" = "maven" ]; then
-    # Use Maven wrapper if available, otherwise system Maven
-    if [ -f "mvnw" ]; then
-        echo "Using Maven wrapper..."
-        chmod +x mvnw
-        ./mvnw clean package
+# Check for Gradle artifacts
+if [ "$BUILD_TOOL" = "gradle" ]; then
+    if [ -d "build/libs" ]; then
+        echo "✓ Found build/libs/ directory"
+        if ls build/libs/*.jar 1> /dev/null 2>&1; then
+            echo "✓ JAR files created:"
+            ls -lh build/libs/*.jar
+            # For CLI tools, try running with --version
+            # java -jar build/libs/*.jar --version 2>/dev/null || echo "(Library project - no CLI)"
+        else
+            echo "⚠ No JAR files found in build/libs/"
+            BUILD_STATUS="FAILURE"
+        fi
     else
-        echo "Using system Maven..."
-        mvn clean package
+        echo "✗ No build/libs/ directory found"
+        BUILD_STATUS="FAILURE"
     fi
-    BUILD_EXIT_CODE=$?
 fi
 ```
 
-### 5. Ring the Bell
+## Step 6: 🔔 RING THE BELL!
 
-When compilation succeeds, ring the terminal bell to signal completion:
-
-```bash
-if [ $BUILD_EXIT_CODE -eq 0 ]; then
-    echo "✓ Build completed successfully!"
-    # Ring the bell!
-    echo -e "\a"
-    printf '\a'
-else
-    echo "✗ Build failed with exit code $BUILD_EXIT_CODE"
-    exit $BUILD_EXIT_CODE
-fi
-```
-
-### 6. Find and Run Tests
-
-Discover and run all available tests:
+**THIS IS MANDATORY** - Always ring the bell, even if the build fails!
 
 ```bash
-echo "Searching for tests..."
-
-if [ "$BUILD_SYSTEM" = "gradle" ]; then
-    # Run tests with Gradle
-    echo "Running tests with Gradle..."
-    if [ -f "gradlew" ]; then
-        ./gradlew test --no-daemon
-    else
-        gradle test --no-daemon
-    fi
-    TEST_EXIT_CODE=$?
-
-    # Show test results
-    if [ -d "build/test-results" ]; then
-        echo "Test results:"
-        find build/test-results -name "*.xml" -exec grep -H "tests=" {} \;
-    fi
-
-elif [ "$BUILD_SYSTEM" = "maven" ]; then
-    # Run tests with Maven
-    echo "Running tests with Maven..."
-    if [ -f "mvnw" ]; then
-        ./mvnw test
-    else
-        mvn test
-    fi
-    TEST_EXIT_CODE=$?
-
-    # Show test results
-    if [ -d "target/surefire-reports" ]; then
-        echo "Test results:"
-        find target/surefire-reports -name "*.xml" -exec grep -H "tests=" {} \;
-    fi
-fi
-
-END_TIME=$(date +%s)
-TOTAL_TIME=$((END_TIME - START_TIME))
-
 echo ""
-echo "================================"
-echo "🏁 STANDARD TOOLCHAIN FINISHED!"
-echo "================================"
-echo "Total time: ${TOTAL_TIME}s"
-echo "Build: $([ $BUILD_EXIT_CODE -eq 0 ] && echo '✓ PASS' || echo '✗ FAIL')"
-echo "Tests: $([ $TEST_EXIT_CODE -eq 0 ] && echo '✓ PASS' || echo '✗ FAIL')"
-echo "================================"
-
-# Ring the bell again for test completion
-echo -e "\a\a"
+echo "🔔 BUILD COMPLETE 🔔"
+echo "Runner: MAVEN" # or GRADLE
+echo "Status: ${BUILD_STATUS}"
 ```
 
-## Important Notes
+## Example Complete Workflow
 
-- **Speed matters**: The faster you complete the build and tests, the better
-- **Accuracy matters**: Don't skip steps or compromise on test coverage
-- **Be verbose**: Echo progress so spectators can follow along
-- **Handle errors gracefully**: If something fails, explain what went wrong
-- **Use wrappers when available**: Prefer `gradlew`/`mvnw` over system installations
-- **Optimize where possible**: Use `--no-daemon` for faster Gradle builds in containers
+```bash
+# Install Maven
+cd /tmp
+wget https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
+tar xzf apache-maven-3.9.9-bin.tar.gz
+mv apache-maven-3.9.9 ~/maven
+export PATH="$HOME/maven/bin:$PATH"
+mvn --version
 
-## Success Criteria
+# Clone repo
+cd /workspace
+git clone https://github.com/google/gson.git
+cd gson
 
-1. ✓ Repository cloned successfully
-2. ✓ Build system detected
-3. ✓ Project compiled with Maven/Gradle
-4. ✓ Bell rung after successful compilation
-5. ✓ All tests found and executed
-6. ✓ Final results reported
+# Build
+mvn clean package -DskipTests 2>&1 | tee /tmp/build.log
 
-## Environment Variables
+# Check build status
+if grep -q "BUILD SUCCESS" /tmp/build.log; then
+    BUILD_STATUS="SUCCESS"
+else
+    BUILD_STATUS="FAILURE"
+fi
 
-- `REPO_URL` - The Git repository URL to build
-- `BUILD_TOOL` - Set to "standard" for your team
+# Verify artifacts
+if ls target/*.jar 1> /dev/null 2>&1; then
+    echo "✓ JAR files created:"
+    ls -lh target/*.jar
+else
+    echo "✗ No JAR files found"
+    BUILD_STATUS="FAILURE"
+fi
 
-Good luck! Show what battle-tested tools can do! 🔨
+# Ring the bell!
+echo ""
+echo "🔔 BUILD COMPLETE 🔔"
+echo "Runner: MAVEN"
+echo "Status: ${BUILD_STATUS}"
+```
+
+---
+
+**Remember**: Download Maven/Gradle → Clone → Build → **Verify artifacts** → 🔔 RING THE BELL 🔔

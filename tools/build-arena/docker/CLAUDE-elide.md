@@ -1,184 +1,151 @@
-# Build Arena Challenge: Elide Team
+# Claude Code Instructions - ELIDE RUNNER
 
-Welcome to Build Arena! You are the **Elide** agent competing in a head-to-head build race.
+You are competing in the **Build Arena Race** using **Elide**!
 
-## Your Mission
+## 🏁 YOUR MISSION
 
-Build and test a Java project using Elide as fast as possible, competing against the standard toolchain.
+1. **Download and install Elide**
+2. **Clone the target repository**
+3. **Build the project using Elide**
+4. **🔔 RING THE BELL** to signal completion
 
-## Rules of Engagement
+## ⚠️ CRITICAL: YOU MUST RING THE BELL!
 
-You have **FULL AUTONOMY** to use any strategy you want:
+When done (success OR failure), output:
+```
+🔔 BUILD COMPLETE 🔔
+Runner: ELIDE
+Status: [SUCCESS/FAILURE]
+```
 
-- ✓ Read documentation (online or in the repo)
-- ✓ Search the internet for solutions
-- ✓ Install any programs or tools you need
-- ✓ Optimize build configurations
-- ✓ Run builds in parallel
-- ✓ Cache dependencies aggressively
-- ✓ Skip non-essential steps (if you can justify it)
-- ✓ Use any trick, optimization, or technique you can think of
+## Step 1: Install Elide
 
-**The only requirement**: Ring the bell (`\a`) when you're confident the binary is built and validated.
-
-You decide how to verify compilation success - whether that's running tests, checking file signatures, attempting to execute the binary, or any other method you deem appropriate.
-
-## Suggested Workflow
-
-Here's a suggested approach, but feel free to improvise:
-
-### 1. Download and Setup Elide
+Elide is NOT pre-installed. Download it with this EXACT command:
 
 ```bash
-# Check if Elide is already installed
-if ! command -v elide &> /dev/null; then
-    echo "Installing Elide..."
-    curl -fsSL https://elide.dev/install.sh | bash
-    export PATH="$HOME/.elide/bin:$PATH"
+curl -sSL https://static.elide.dev/cli/install.sh | bash -s - --version=1.0.0-beta10 && export PATH="$HOME/.elide/bin:$PATH" && elide --version
+```
+
+That's it! This single command will:
+1. Download and install Elide
+2. Add it to your PATH
+3. Verify it's working
+
+**Copy and run that exact command above.** Don't modify it.
+
+## Step 2: Clone Repository
+
+```bash
+cd /workspace
+git clone <repository-url>
+cd <repo-name>
+```
+
+## Step 3: Build with Elide
+
+**IMPORTANT**: Elide is super simple! It automatically detects Maven, Gradle, NPM, and other project types.
+
+Just run:
+```bash
+elide build
+```
+
+That's it! Elide will auto-detect the project type and build it.
+
+**⚠️ CRITICAL RULE: NO FALLBACK TO MAVEN/GRADLE!**
+
+You MUST use Elide for building. **DO NOT** fall back to Maven (`mvn`/`mvnw`) or Gradle (`gradle`/`gradlew`) commands even if:
+- Elide is not installed (install it first with the command in Step 1!)
+- Elide build fails (report FAILURE status)
+- You see `mvnw` or `gradlew` wrapper scripts in the repo
+
+This is the **Elide Runner** - using Maven/Gradle invalidates the benchmark!
+
+## Step 4: Verify the Build
+
+**CRITICAL**: Don't just trust the exit code - verify artifacts were created!
+
+```bash
+# Check for build artifacts
+if [ -d "target" ]; then
+    echo "✓ Found target/ directory"
+    ls -lh target/*.jar 2>/dev/null && echo "✓ JAR files created" || echo "⚠ No JARs found"
 fi
 
-# Verify installation
-elide --version
+if [ -d "build/libs" ]; then
+    echo "✓ Found build/libs/ directory"
+    ls -lh build/libs/*.jar 2>/dev/null && echo "✓ JAR files created" || echo "⚠ No JARs found"
+fi
+
+# Try to run the artifact if it's a CLI tool
+# (This will fail for library projects, which is fine)
+if [ -f "target/*.jar" ] || [ -f "build/libs/*.jar" ]; then
+    echo "Attempting to verify artifact..."
+    # Try running with --help or --version if it's a CLI tool
+    # java -jar target/*.jar --version 2>/dev/null || echo "Not a CLI tool (expected for libraries)"
+fi
 ```
 
-### 2. Clone the Repository
+## Step 5: 🔔 RING THE BELL!
 
-The repository URL will be provided as an environment variable `$REPO_URL`.
-
-```bash
-echo "Cloning repository: $REPO_URL"
-git clone "$REPO_URL" project
-cd project
-```
-
-### 3. Analyze the Project
-
-Examine the project structure to determine the build system:
-
-- Look for `build.gradle` or `build.gradle.kts` → Gradle project
-- Look for `pom.xml` → Maven project
-- Check for any special build requirements in README.md
+**THIS IS MANDATORY** - Determine success/failure based on build AND artifacts:
 
 ```bash
-# List project structure
-ls -la
-
-# Check for build files
-if [ -f "build.gradle" ] || [ -f "build.gradle.kts" ]; then
-    echo "Detected Gradle project"
-    BUILD_SYSTEM="gradle"
-elif [ -f "pom.xml" ]; then
-    echo "Detected Maven project"
-    BUILD_SYSTEM="maven"
+# Determine final status
+if [ $? -eq 0 ] && ([ -f target/*.jar ] || [ -f build/libs/*.jar ]); then
+    BUILD_STATUS="SUCCESS"
 else
-    echo "Could not detect build system"
-    exit 1
+    BUILD_STATUS="FAILURE"
 fi
-```
-
-### 4. Build the Project with Elide
-
-Use Elide to build the project:
-
-```bash
-echo "Starting build with Elide..."
-START_TIME=$(date +%s)
-
-if [ "$BUILD_SYSTEM" = "gradle" ]; then
-    # Build with Elide's Gradle integration
-    elide gradle build --no-daemon
-elif [ "$BUILD_SYSTEM" = "maven" ]; then
-    # Build with Elide's Maven integration
-    elide mvn clean package
-fi
-
-BUILD_EXIT_CODE=$?
-```
-
-### 5. Ring the Bell
-
-When compilation succeeds, ring the terminal bell to signal completion:
-
-```bash
-if [ $BUILD_EXIT_CODE -eq 0 ]; then
-    echo "✓ Build completed successfully!"
-    # Ring the bell!
-    echo -e "\a"
-    printf '\a'
-else
-    echo "✗ Build failed with exit code $BUILD_EXIT_CODE"
-    exit $BUILD_EXIT_CODE
-fi
-```
-
-### 6. Find and Run Tests
-
-Discover and run all available tests:
-
-```bash
-echo "Searching for tests..."
-
-if [ "$BUILD_SYSTEM" = "gradle" ]; then
-    # Run tests with Gradle
-    echo "Running tests with Gradle..."
-    elide gradle test --no-daemon
-    TEST_EXIT_CODE=$?
-
-    # Show test results
-    if [ -d "build/test-results" ]; then
-        echo "Test results:"
-        find build/test-results -name "*.xml" -exec grep -H "tests=" {} \;
-    fi
-
-elif [ "$BUILD_SYSTEM" = "maven" ]; then
-    # Run tests with Maven
-    echo "Running tests with Maven..."
-    elide mvn test
-    TEST_EXIT_CODE=$?
-
-    # Show test results
-    if [ -d "target/surefire-reports" ]; then
-        echo "Test results:"
-        find target/surefire-reports -name "*.xml" -exec grep -H "tests=" {} \;
-    fi
-fi
-
-END_TIME=$(date +%s)
-TOTAL_TIME=$((END_TIME - START_TIME))
 
 echo ""
-echo "================================"
-echo "🏁 ELIDE FINISHED!"
-echo "================================"
-echo "Total time: ${TOTAL_TIME}s"
-echo "Build: $([ $BUILD_EXIT_CODE -eq 0 ] && echo '✓ PASS' || echo '✗ FAIL')"
-echo "Tests: $([ $TEST_EXIT_CODE -eq 0 ] && echo '✓ PASS' || echo '✗ FAIL')"
-echo "================================"
-
-# Ring the bell again for test completion
-echo -e "\a\a"
+echo "🔔 BUILD COMPLETE 🔔"
+echo "Runner: ELIDE"
+echo "Status: ${BUILD_STATUS}"
 ```
 
-## Important Notes
+## Example Complete Workflow
 
-- **Speed matters**: The faster you complete the build and tests, the better
-- **Accuracy matters**: Don't skip steps or compromise on test coverage
-- **Be verbose**: Echo progress so spectators can follow along
-- **Handle errors gracefully**: If something fails, explain what went wrong
-- **Use Elide features**: Leverage Elide's optimizations for the best performance
+```bash
+# 1. Install Elide (use the EXACT command from above)
+curl -sSL https://static.elide.dev/cli/install.sh | bash -s - --version=1.0.0-beta10 && export PATH="$HOME/.elide/bin:$PATH" && elide --version
 
-## Success Criteria
+# 2. Clone repo
+cd /workspace
+git clone https://github.com/google/gson.git
+cd gson
 
-1. ✓ Repository cloned successfully
-2. ✓ Build system detected
-3. ✓ Project compiled with Elide
-4. ✓ Bell rung after successful compilation
-5. ✓ All tests found and executed
-6. ✓ Final results reported
+# 3. Build with Elide
+elide build
 
-## Environment Variables
+# 4. Verify artifacts
+ls -lh target/*.jar 2>/dev/null || ls -lh build/libs/*.jar 2>/dev/null
 
-- `REPO_URL` - The Git repository URL to build
-- `BUILD_TOOL` - Set to "elide" for your team
+# 5. Determine status and ring the bell
+if [ $? -eq 0 ] && ([ -f target/*.jar ] || [ -f build/libs/*.jar ]); then
+    BUILD_STATUS="SUCCESS"
+else
+    BUILD_STATUS="FAILURE"
+fi
 
-Good luck! May the fastest build tool win! 🚀
+echo ""
+echo "🔔 BUILD COMPLETE 🔔"
+echo "Runner: ELIDE"
+echo "Status: ${BUILD_STATUS}"
+```
+
+## Key Points
+
+- ✅ **Use the EXACT install command**: `curl -sSL https://static.elide.dev/cli/install.sh | bash -s - --version=1.0.0-beta10 && export PATH="$HOME/.elide/bin:$PATH" && elide --version`
+- ✅ **Elide is simple**: Just run `elide build` - it auto-detects Maven, Gradle, NPM, etc.
+- ✅ **Verify artifacts**: Check that JAR files were actually created before marking as SUCCESS
+- ✅ **Always ring the bell**: Output the completion signal even if the build fails!
+
+---
+
+**Quick Reference:**
+1. Install: `curl -sSL https://static.elide.dev/cli/install.sh | bash -s - --version=1.0.0-beta10 && export PATH="$HOME/.elide/bin:$PATH" && elide --version`
+2. Clone: `git clone <url> && cd <repo>`
+3. Build: `elide build`
+4. Verify: `ls target/*.jar || ls build/libs/*.jar`
+5. Bell: `echo "🔔 BUILD COMPLETE 🔔"`

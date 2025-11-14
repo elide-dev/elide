@@ -1,5 +1,3 @@
-'use client'
-
 import { useEffect, useState } from 'react'
 import useSWR from 'swr'
 import { Terminal } from './Terminal'
@@ -14,7 +12,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export function BuildArena({ jobId }: BuildArenaProps) {
   const { data, error } = useSWR<{ job: BuildJob }>(
-    `http://localhost:3001/api/jobs/${jobId}`,
+    `/api/jobs/${jobId}`,
     fetcher,
     { refreshInterval: 1000 }
   )

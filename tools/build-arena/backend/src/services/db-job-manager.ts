@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import { v4 as uuidv4 } from 'uuid';
 import { eq, desc } from 'drizzle-orm';
 import { db, jobs, buildResults, type Job, type NewJob, type NewBuildResult } from '../db/index.js';
-import type { BuildJob, JobStatus, BuildResult } from '../../../shared/types.js';
+import type { BuildJob, JobStatus, BuildResult, BuildTool } from '../../../shared/types.js';
 import { InteractiveSandboxRunner } from './interactive-sandbox-runner.js';
 
 /**
@@ -59,7 +59,13 @@ export class DbJobManager extends EventEmitter {
       this.updateJobStatus(jobId, 'failed');
     });
 
-    return this.dbJobToBuildJob(newJob);
+    // Fetch the inserted job to get proper types
+    const [insertedJob] = await db.select().from(jobs).where(eq(jobs.id, jobId));
+    if (!insertedJob) {
+      throw new Error(`Failed to fetch newly created job ${jobId}`);
+    }
+
+    return this.dbJobToBuildJob(insertedJob);
   }
 
   /**
@@ -85,7 +91,6 @@ export class DbJobManager extends EventEmitter {
     const allJobs = await db.select().from(jobs).orderBy(desc(jobs.createdAt));
 
     // Fetch all results for these jobs
-    const jobIds = allJobs.map(j => j.id);
     const allResults = await db.select().from(buildResults);
 
     return allJobs.map(job => {
@@ -107,7 +112,6 @@ export class DbJobManager extends EventEmitter {
       .limit(limit);
 
     // Fetch results for these jobs
-    const jobIds = completedJobs.map(j => j.id);
     const allResults = await db.select().from(buildResults);
 
     return completedJobs
@@ -184,10 +188,10 @@ export class DbJobManager extends EventEmitter {
     const newResult: NewBuildResult = {
       jobId,
       buildType,
-      status: result.status,
-      duration: result.duration,
-      output: result.output,
-      bellRung: result.bellRung || false,
+      status: result.status === 'success' || result.status === 'failure' ? result.status : 'failure',
+      duration: Math.floor((result.duration || 0) / 1000), // Convert ms to seconds
+      output: null, // Output is not captured in the current BuildResult type
+      bellRung: false, // Bell ringing is tracked separately via events
       createdAt: new Date(),
     };
 
@@ -223,24 +227,23 @@ export class DbJobManager extends EventEmitter {
     elideResult?: typeof buildResults.$inferSelect,
     standardResult?: typeof buildResults.$inferSelect
   ): BuildJob {
+    // Convert database BuildResult to shared BuildResult type
+    const convertResult = (dbResult: typeof buildResults.$inferSelect) => ({
+      tool: dbResult.buildType as BuildTool,
+      status: dbResult.status as 'success' | 'failure',
+      startTime: dbResult.createdAt.toISOString(),
+      duration: dbResult.duration * 1000, // Convert seconds back to milliseconds
+      exitCode: dbResult.status === 'success' ? 0 : 1,
+    });
+
     return {
       id: job.id,
       repositoryUrl: job.repositoryUrl,
       repositoryName: job.repositoryName,
       status: job.status as JobStatus,
       createdAt: job.createdAt.toISOString(),
-      elideResult: elideResult ? {
-        status: elideResult.status as 'success' | 'failure',
-        duration: elideResult.duration,
-        output: elideResult.output || '',
-        bellRung: elideResult.bellRung || false,
-      } : undefined,
-      standardResult: standardResult ? {
-        status: standardResult.status as 'success' | 'failure',
-        duration: standardResult.duration,
-        output: standardResult.output || '',
-        bellRung: standardResult.bellRung || false,
-      } : undefined,
+      elideResult: elideResult ? convertResult(elideResult) : undefined,
+      standardResult: standardResult ? convertResult(standardResult) : undefined,
     };
   }
 }

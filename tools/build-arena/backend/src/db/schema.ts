@@ -21,6 +21,7 @@ export const buildResults = sqliteTable('build_results', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   jobId: text('job_id').notNull().references(() => jobs.id, { onDelete: 'cascade' }),
   buildType: text('build_type').notNull(), // 'elide' | 'standard'
+  containerId: text('container_id'), // Docker container ID
   status: text('status').notNull(), // 'success' | 'failure'
   duration: integer('duration').notNull(), // in seconds
   output: text('output'), // build output/logs
@@ -76,6 +77,32 @@ export const buildCache = sqliteTable('build_cache', {
   lastAccessedAt: integer('last_accessed_at', { mode: 'timestamp' }),
 });
 
+/**
+ * Race statistics table - aggregated win/loss data for analytics
+ */
+export const raceStatistics = sqliteTable('race_statistics', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  repositoryUrl: text('repository_url').notNull(),
+  repositoryName: text('repository_name').notNull(),
+
+  // Aggregate stats
+  totalRaces: integer('total_races').notNull().default(0),
+  elideWins: integer('elide_wins').notNull().default(0),
+  standardWins: integer('standard_wins').notNull().default(0),
+  ties: integer('ties').notNull().default(0),
+
+  // Average build times (in seconds)
+  elideAvgDuration: integer('elide_avg_duration'),
+  standardAvgDuration: integer('standard_avg_duration'),
+
+  // Latest race
+  lastRaceAt: integer('last_race_at', { mode: 'timestamp' }),
+  lastRaceJobId: text('last_race_job_id').references(() => jobs.id),
+
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
 export type Job = typeof jobs.$inferSelect;
 export type NewJob = typeof jobs.$inferInsert;
 export type BuildResult = typeof buildResults.$inferSelect;
@@ -86,3 +113,5 @@ export type WorkerAssignment = typeof workerAssignments.$inferSelect;
 export type NewWorkerAssignment = typeof workerAssignments.$inferInsert;
 export type BuildCache = typeof buildCache.$inferSelect;
 export type NewBuildCache = typeof buildCache.$inferInsert;
+export type RaceStatistics = typeof raceStatistics.$inferSelect;
+export type NewRaceStatistics = typeof raceStatistics.$inferInsert;

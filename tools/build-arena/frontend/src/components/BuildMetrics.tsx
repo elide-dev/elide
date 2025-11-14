@@ -1,5 +1,3 @@
-'use client'
-
 import type { BuildResult } from '@shared/types'
 
 interface BuildMetricsProps {
@@ -101,12 +99,13 @@ export function BuildMetrics({ elideResult, standardResult }: BuildMetricsProps)
           <div className="flex items-center justify-between">
             <div>
               <p className="text-lg font-bold text-white">
-                {elideResult.duration && standardResult.duration &&
-                 elideResult.duration < standardResult.duration
-                  ? '🏆 Elide Wins!'
-                  : standardResult.duration < elideResult.duration
-                  ? '🏆 Standard Wins!'
-                  : '🤝 Tie!'}
+                {elideResult.duration && standardResult.duration
+                  ? elideResult.duration < standardResult.duration
+                    ? '🏆 Elide Wins!'
+                    : standardResult.duration < elideResult.duration
+                    ? '🏆 Standard Wins!'
+                    : '🤝 Tie!'
+                  : 'In Progress'}
               </p>
               <p className="text-sm text-gray-300 mt-1">
                 {elideResult.duration && standardResult.duration &&

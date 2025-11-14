@@ -1,9 +1,9 @@
-import { Router } from 'express';
+import { Router, type Router as ExpressRouter } from 'express';
 import { z } from 'zod';
 import { DbJobManager } from '../services/db-job-manager.js';
-import type { SubmitJobRequest, SubmitJobResponse, JobStatusResponse } from '../../../shared/types.js';
+import type { SubmitJobResponse, JobStatusResponse } from '../../../shared/types.js';
 
-export const apiRouter = Router();
+export const apiRouter: ExpressRouter = Router();
 const jobManager = DbJobManager.getInstance();
 
 // Validation schema for repository URL
@@ -87,7 +87,7 @@ apiRouter.get('/jobs/recent/results', async (req, res) => {
 });
 
 // List all jobs (for admin/debugging)
-apiRouter.get('/jobs', async (req, res) => {
+apiRouter.get('/jobs', async (_req, res) => {
   try {
     const jobs = await jobManager.listJobs();
     res.json({ jobs });
@@ -124,7 +124,7 @@ apiRouter.post('/jobs/:jobId/cancel', async (req, res) => {
 
 // Seed mock data (development only)
 if (process.env.NODE_ENV !== 'production') {
-  apiRouter.post('/dev/seed-mock-data', async (req, res) => {
+  apiRouter.post('/dev/seed-mock-data', async (_req, res) => {
     try {
       const { db, jobs: jobsTable, buildResults: buildResultsTable } = await import('../db/index.js');
 

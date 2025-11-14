@@ -1,6 +1,5 @@
-import { Router } from 'express';
+import { Router, type Router as ExpressRouter } from 'express';
 import Docker from 'dockerode';
-import { v4 as uuidv4 } from 'uuid';
 import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -10,7 +9,7 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export const testApiRouter = Router();
+export const testApiRouter: ExpressRouter = Router();
 const docker = new Docker();
 
 // Store active test containers and their minder processes
@@ -182,9 +181,9 @@ testApiRouter.post('/test/stop-container/:containerId', async (req, res) => {
 /**
  * List active test containers
  */
-testApiRouter.get('/test/containers', async (req, res) => {
+testApiRouter.get('/test/containers', async (_req, res) => {
   try {
-    const containers = Array.from(testContainers.entries()).map(([id, container]) => ({
+    const containers = Array.from(testContainers.entries()).map(([id, _container]) => ({
       id,
       hasMinder: minderProcesses.has(id),
       minderPid: minderProcesses.get(id)?.pid,
@@ -234,7 +233,7 @@ testApiRouter.get('/test/container/:containerId/logs', async (req, res) => {
 /**
  * Cleanup all test containers and minder processes (for development)
  */
-testApiRouter.post('/test/cleanup', async (req, res) => {
+testApiRouter.post('/test/cleanup', async (_req, res) => {
   try {
     console.log(`Cleaning up ${testContainers.size} test containers and ${minderProcesses.size} minder processes`);
 

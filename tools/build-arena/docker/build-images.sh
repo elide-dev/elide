@@ -19,10 +19,10 @@ if ! docker buildx version > /dev/null 2>&1; then
     echo ""
 
     # Standard single-platform build
-    echo "Building Elide builder image (single platform)..."
+    echo "Building elide-builder image (single platform)..."
     docker build -t elide-builder:latest -f elide-builder.Dockerfile .
 
-    echo "Building standard builder image (single platform)..."
+    echo "Building standard-builder image (single platform)..."
     docker build -t standard-builder:latest -f standard-builder.Dockerfile .
 else
     # Check if running on Mac (likely ARM64)
@@ -42,7 +42,7 @@ else
     fi
 
     # Build for linux/amd64 (most common production platform)
-    echo "Building Elide builder image for ${PLATFORM}..."
+    echo "Building elide-builder image for ${PLATFORM}..."
     docker buildx build \
         --platform ${PLATFORM} \
         --tag elide-builder:latest \
@@ -50,7 +50,7 @@ else
         --load \
         .
 
-    echo "Building standard builder image for ${PLATFORM}..."
+    echo "Building standard-builder image for ${PLATFORM}..."
     docker buildx build \
         --platform ${PLATFORM} \
         --tag standard-builder:latest \

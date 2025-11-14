@@ -14,16 +14,18 @@ package elide.tool.cli.cmd.s3
 
 import com.robothy.s3.rest.LocalS3
 import com.robothy.s3.rest.bootstrap.LocalS3Mode
-import io.micronaut.core.annotation.Introspected
-import io.micronaut.core.annotation.ReflectiveAccess
-import picocli.CommandLine
-import picocli.CommandLine.Command
-import kotlinx.coroutines.awaitCancellation
-import kotlin.coroutines.cancellation.CancellationException
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ProjectAwareSubcommand
 import elide.tool.cli.ToolState
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
+import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
+import picocli.CommandLine
+import picocli.CommandLine.Command
 
 /** TBD. */
 @Command(
@@ -51,24 +53,30 @@ internal class ToolS3Command : ProjectAwareSubcommand<ToolState, CommandContext>
 
   @CommandLine.Option(
     names = ["--in-memory", "--memory", "-m"],
-    description =
-      ["Run the server in memory. Files will be read from the directory, but will not be modified."],
+    description = ["Run the server in memory. Files will be read from the directory, but will not be modified."],
     defaultValue = "false",
   )
   internal var memory: Boolean = false
+
+  @CommandLine.Option(
+    names = ["--shutdown-after"],
+    description = ["Automatically shut down the server after this many seconds."],
+    defaultValue = "-1",
+  )
+  internal var timeout: Int = -1
 
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     val mode = if (memory) LocalS3Mode.IN_MEMORY else LocalS3Mode.PERSISTENCE
     val userDir = System.getProperty("user.dir")
-    val dataPath = directory?.let { if (it[0] == '/' || it[1] == ':') it else "$userDir/$it" } ?: userDir
-    val server = LocalS3
-      .builder()
-      .port(port)
-      .mode(mode)
-      .dataPath(dataPath)
-      .build()
+    val dataPath = directory?.let { if (it.isCharAt(0, '/') || it.isCharAt(1, ':')) it else "$userDir/$it" } ?: userDir
+    val server = LocalS3.builder().port(port).mode(mode).dataPath(dataPath).build()
     server.start()
+    if (timeout > 0) {
+      delay(timeout.seconds)
+      server.shutdown()
+      return CommandResult.success()
+    }
     try {
       awaitCancellation()
     } catch (t: Throwable) {
@@ -77,4 +85,6 @@ internal class ToolS3Command : ProjectAwareSubcommand<ToolState, CommandContext>
       server.shutdown()
     }
   }
+
+  private fun String.isCharAt(index: Int, char: Char): Boolean = length > index && this[index] == char
 }

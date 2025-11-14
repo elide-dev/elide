@@ -657,6 +657,9 @@ dependencies {
   implementation(libs.jib.core)
   implementation(libs.jib.extension.commons)
 
+  // Mock S3
+  implementation(libs.locals3)
+
   // Tests
   testImplementation(libs.kotlin.test.junit5)
   testImplementation(projects.packages.test)

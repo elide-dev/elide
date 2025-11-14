@@ -56,6 +56,7 @@ import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.cmd.s3.ToolS3Command
 import elide.tool.cli.cmd.secrets.ToolSecretsCommand
 import elide.tool.cli.cmd.tool.jar.JarToolAdapter
 import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
@@ -132,6 +133,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     McpCommand::class,
     Elide.Completions::class,
     ToolSecretsCommand::class,
+    ToolS3Command::class,
   ],
   customSynopsis = [
     "",

@@ -48,6 +48,9 @@ public interface RemoteManagement {
   /** Deselects the selected access file. */
   public fun deselectAccess()
 
+  /** Prompts user on a new encryption mode for superuser access. */
+  public fun changeSuperEncryption()
+
   /** Generates new keys for specified profiles. */
   public fun rekeyProfile(profile: String)
 

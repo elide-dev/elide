@@ -245,6 +245,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
         ManageRemoteOptions.CREATE -> createAccess(remote)
         ManageRemoteOptions.LIST -> println(remote.listAccesses())
         ManageRemoteOptions.SELECT -> selectAccess(remote)
+        ManageRemoteOptions.CHANGE -> remote.changeSuperEncryption()
         ManageRemoteOptions.REMOVE -> removeAccess(remote)
         ManageRemoteOptions.REKEY -> rekeyProfiles(remote)
         ManageRemoteOptions.DELETE -> deleteProfile(remote)
@@ -379,6 +380,7 @@ internal class ToolSecretsCommand : ProjectAwareSubcommand<ToolState, CommandCon
     CREATE("Create an access file"),
     LIST("List access files"),
     SELECT("Select an access file"),
+    CHANGE("Change superuser encryption details"),
     REMOVE("Remove an access file"),
     REKEY("Regenerate profile keys"),
     DELETE("Delete a profile"),

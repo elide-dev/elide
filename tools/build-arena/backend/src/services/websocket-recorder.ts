@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import { pipeline } from 'stream';
 import * as path from 'path';
 import * as crypto from 'crypto';
+import { detectBell } from '../utils/bell-detector.js';
 
 const gunzipAsync = promisify(gunzip);
 
@@ -89,20 +90,20 @@ export class WebSocketRecorder {
 
   /**
    * Detect if the bell has been rung with success status
+   * Uses shared bell detector for consistency with minder
    */
   private detectBell(data: string): void {
-    // Check for bell emoji
-    if (data.includes('🔔 BUILD COMPLETE 🔔')) {
+    const bellResult = detectBell(data);
+
+    if (bellResult.bellRung && !this.bellRung) {
       this.bellRung = true;
       console.log(`[Recorder] Bell detected for job ${this.jobId} (${this.tool})`);
 
-      // Check if status is SUCCESS (case insensitive)
-      // Look within a reasonable window after the bell
-      const lowerData = data.toLowerCase();
-      if (lowerData.includes('status: success') || lowerData.includes('status:success')) {
+      // Update build status based on detection result
+      if (bellResult.buildStatus === 'success') {
         this.buildSucceeded = true;
         console.log(`[Recorder] Build SUCCESS detected for job ${this.jobId} (${this.tool})`);
-      } else if (lowerData.includes('status: failure') || lowerData.includes('status:failure')) {
+      } else if (bellResult.buildStatus === 'failure') {
         this.buildSucceeded = false;
         console.log(`[Recorder] Build FAILURE detected for job ${this.jobId} (${this.tool})`);
       }

@@ -122,7 +122,7 @@ export function RacePage() {
   }, [jobId]); // Only depend on jobId - terminals are checked inside the effect
 
   // Race timers
-  const { elideElapsed, standardElapsed, start: startTimers, reset: resetTimers } = useRaceTimer();
+  const { elideElapsed, standardElapsed, start: startTimers, reset: resetTimers, setElideElapsed, setStandardElapsed } = useRaceTimer();
 
   // WebSocket connections for live race
   useRaceWebSocket({
@@ -131,20 +131,21 @@ export function RacePage() {
     elideTerminal: elideTerminal?.terminal || null,
     standardTerminal: standardTerminal?.terminal || null,
     enabled: raceStatus?.mode === 'live',
+    onElideElapsedUpdate: setElideElapsed,
+    onStandardElapsedUpdate: setStandardElapsed,
   });
 
   // Start timers when live race begins
   useEffect(() => {
     if (raceStatus?.mode === 'live' && raceStatus.status === 'running') {
-      // Calculate initial elapsed time if race was already in progress
-      let initialElapsed = 0;
-      if (raceStatus.startedAt) {
-        const startedAt = new Date(raceStatus.startedAt);
-        initialElapsed = Math.floor((Date.now() - startedAt.getTime()) / 1000);
-      }
-      startTimers(initialElapsed);
+      // For live races, DON'T use the local timer - rely on WebSocket metadata
+      // The WebSocket will provide elapsed time with each message
+      console.log('[RacePage] Live race detected - timers will be updated from WebSocket metadata');
+      // Initialize to 0, WebSocket will update immediately
+      setElideElapsed(0);
+      setStandardElapsed(0);
     }
-  }, [raceStatus?.mode, raceStatus?.status, raceStatus?.startedAt, startTimers]);
+  }, [raceStatus?.mode, raceStatus?.status, raceStatus?.startedAt, setElideElapsed, setStandardElapsed]);
 
   // Start race
   const startRace = async () => {

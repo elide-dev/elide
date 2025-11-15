@@ -48,6 +48,8 @@ RUN java -version && \
 # Set environment variables
 ENV TERM=xterm-256color
 ENV LANG=C.UTF-8
+# Disable Claude Code auto-update (correct env var from docs)
+ENV DISABLE_AUTOUPDATER=1
 
 # Create non-root user for Claude Code (won't run with --dangerously-skip-permissions as root)
 # Note: Ubuntu 24.04 (Noble) already has UID 1000, so we use the next available UID

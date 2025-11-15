@@ -73,7 +73,7 @@ COPY CLAUDE-ELIDE.md /workspace/CLAUDE.md
 RUN chown builder:builder /workspace/CLAUDE.md
 
 # Copy Maven to Elide converter script
-COPY ../../../scripts/maven-to-elide.py /app/maven-to-elide.py
+COPY maven-to-elide.py /app/maven-to-elide.py
 RUN chmod +x /app/maven-to-elide.py
 
 # Pre-configure Claude Code to skip prompts and enable non-interactive mode

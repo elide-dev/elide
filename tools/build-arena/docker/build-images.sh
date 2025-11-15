@@ -25,11 +25,15 @@ if ! docker buildx version > /dev/null 2>&1; then
     echo "Building standard-builder image (single platform)..."
     docker build -t standard-builder:latest -f standard-builder.Dockerfile .
 else
-    # Check if running on Mac (likely ARM64)
-    PLATFORM="linux/amd64"
+    # Detect native platform
     if [[ $(uname -m) == "arm64" ]]; then
-        echo -e "${YELLOW}Detected ARM64 Mac - building for linux/amd64 (production)${NC}"
-        echo "Images will run on Linux servers via emulation locally."
+        PLATFORM="linux/arm64"
+        echo -e "${YELLOW}Detected ARM64 Mac - building for linux/arm64 (native)${NC}"
+        echo "Building for native platform for faster builds."
+        echo ""
+    else
+        PLATFORM="linux/amd64"
+        echo "Building for linux/amd64"
         echo ""
     fi
 

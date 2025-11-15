@@ -37,13 +37,21 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # Install Claude Code CLI (trying version 2.0.30 - before apiKeyHelper changes)
 RUN npm install -g @anthropic-ai/claude-code@2.0.30
 
-# Note: Elide installation skipped for now - will be added via volume mount or separate step
-# The terminal test page works fine without Elide installed
+# Install Elide (multi-platform support for amd64/arm64)
+ARG TARGETARCH
+ENV ELIDE_VERSION=1.0.0-beta10
+RUN ELIDE_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "aarch64" || echo "amd64") && \
+    wget -q "https://github.com/elide-dev/elide/releases/download/${ELIDE_VERSION}/elide-${ELIDE_VERSION}-linux-${ELIDE_ARCH}.tgz" && \
+    tar -xzf "elide-${ELIDE_VERSION}-linux-${ELIDE_ARCH}.tgz" && \
+    mv "elide-${ELIDE_VERSION}-linux-${ELIDE_ARCH}/elide" /usr/local/bin/elide && \
+    chmod +x /usr/local/bin/elide && \
+    rm -rf "elide-${ELIDE_VERSION}-linux-${ELIDE_ARCH}" "elide-${ELIDE_VERSION}-linux-${ELIDE_ARCH}.tgz"
 
 # Verify installations
 RUN java -version && \
     node --version && \
-    claude --version
+    claude --version && \
+    elide --version
 
 # Set environment variables
 ENV TERM=xterm-256color
@@ -63,6 +71,10 @@ WORKDIR /workspace
 # Copy Claude Code instructions (Elide-specific)
 COPY CLAUDE-ELIDE.md /workspace/CLAUDE.md
 RUN chown builder:builder /workspace/CLAUDE.md
+
+# Copy Maven to Elide converter script
+COPY ../../../scripts/maven-to-elide.py /app/maven-to-elide.py
+RUN chmod +x /app/maven-to-elide.py
 
 # Pre-configure Claude Code to skip prompts and enable non-interactive mode
 # Create directory structure for Claude Code configuration

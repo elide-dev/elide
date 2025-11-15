@@ -118,7 +118,10 @@ cat elide.pkl  # Verify conversion
 
 ```bash
 # Use 'time' command to measure build duration
-time elide build
+START_TIME=$(date +%s)
+elide build
+END_TIME=$(date +%s)
+BUILD_TIME=$((END_TIME - START_TIME))
 ```
 
 **Expected output:**
@@ -131,13 +134,29 @@ Building <project-name>
 ✓ Build successful
 ```
 
-**Verify artifacts:**
+### Step 6: Verify Build Artifacts
+
+**CRITICAL**: Don't just trust the output - verify artifacts were actually created!
+
 ```bash
-find . -name "*.jar" -path "*/.dev/artifacts/*"
-ls -la .dev/artifacts/jvm/jars/
+# Check for Elide artifacts
+if [ -d ".dev/artifacts" ]; then
+    echo "✓ Found .dev/artifacts/ directory"
+    if find .dev/artifacts -name "*.jar" | grep -q .; then
+        echo "✓ JAR files created:"
+        find .dev/artifacts -name "*.jar" -exec ls -lh {} \;
+        BUILD_STATUS="SUCCESS"
+    else
+        echo "⚠ No JAR files found in .dev/artifacts/"
+        BUILD_STATUS="FAILURE"
+    fi
+else
+    echo "✗ No .dev/artifacts/ directory found"
+    BUILD_STATUS="FAILURE"
+fi
 ```
 
-### Step 5: Run Tests
+### Step 7: Run Tests (Optional)
 
 ```bash
 elide java test

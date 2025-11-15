@@ -5,3 +5,6 @@ backend/build-arena.db-wal
 *.db
 *.db-shm
 *.db-wal
+# WebSocket recordings (binary compressed files)
+recordings/
+*.json.gz

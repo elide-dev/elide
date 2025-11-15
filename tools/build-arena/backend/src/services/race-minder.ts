@@ -154,7 +154,13 @@ export class RaceMinder {
         this.lastOutputSnippet = output.slice(-200);
 
         // Detect when Claude Code starts
-        if (!this.claudeStarted && output.includes('Welcome to Claude Code')) {
+        // Check for multiple indicators since .claude.json may skip onboarding
+        if (!this.claudeStarted && (
+            output.includes('Welcome to Claude Code') ||
+            output.includes('Welcome back!') ||
+            output.includes('Sonnet 4.5') ||
+            output.includes('╭─── Claude Code v')
+        )) {
           this.claudeStarted = true;
           console.log(`[Minder:${this.config.buildType}] Claude Code started`);
         }
@@ -275,8 +281,12 @@ export class RaceMinder {
    */
   private handlePermissionPrompts(output: string): void {
     // Check if this is the workspace trust prompt
+    // Multiple variations across Claude Code versions:
     const isWorkspaceTrust = output.includes('Do you trust the files') ||
-                             output.includes('Do you want to work in this folder');
+                             output.includes('Do you want to work in this folder') ||
+                             output.includes('Is this a project you created or one you trust') ||
+                             output.includes('Ready to code here') ||
+                             output.includes('Quick safety check');
 
     // WORKSPACE TRUST: Handle separately with immediate approval
     if (isWorkspaceTrust) {
@@ -308,12 +318,9 @@ export class RaceMinder {
     }
 
     // GENERIC PERMISSION PROMPTS: Handle other prompts (git clone, bash commands, etc.)
-    // Skip if we're still in workspace trust prompt (fragments may arrive separately)
-    if (this.workspaceTrustHandled && Date.now() - this.lastApprovalTime < 5000) {
-      // Within 5 seconds of workspace trust approval - ignore other prompts
-      // This prevents fragments of the workspace trust prompt from triggering generic handler
-      return;
-    }
+    // Note: Removed the 5-second blanket block after workspace trust because it was
+    // preventing legitimate Bash prompts from being detected. The 2-second debounce
+    // at line 337 is sufficient to prevent duplicate approvals.
 
     // Only detect actual permission prompts, not UI refreshes
     // Must have BOTH a prompt question AND option choices

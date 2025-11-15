@@ -6,6 +6,8 @@ export interface RaceTimers {
   start: (initialElapsedSeconds?: number) => void;
   stop: () => void;
   reset: () => void;
+  setElideElapsed: (elapsed: number) => void;
+  setStandardElapsed: (elapsed: number) => void;
 }
 
 /**
@@ -71,6 +73,8 @@ export function useRaceTimer(): RaceTimers {
     start,
     stop,
     reset,
+    setElideElapsed,
+    setStandardElapsed,
   };
 }
 

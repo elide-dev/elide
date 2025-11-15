@@ -10,7 +10,7 @@ import {
   type CacheKeyParams,
 } from '../services/websocket-recorder.js';
 import { RaceMinder } from '../services/race-minder.js';
-import { startContainer } from '../services/container-manager.js';
+import { startContainer, cleanupJobContainers } from '../services/container-manager.js';
 import { updateRaceStatistics as updateStats, determineWinner } from '../services/race-statistics.js';
 import { startRaceSchema, buildTypeSchema } from '../validation/schemas.js';
 import { CONFIG, ERROR_MESSAGES, HTTP_STATUS } from '../config/constants.js';
@@ -238,18 +238,114 @@ raceApiRouter.post('/start', async (req, res) => {
     const host = process.env.HOST || 'localhost';
     const port = process.env.PORT || 3001;
 
+    // Build WebSocket URLs with metadata for recording
+    const elideWsUrl = `ws://${host}:${port}/ws/terminal/${elideContainerId}?` + new URLSearchParams({
+      record: 'true',
+      jobId,
+      buildType: 'elide',
+      repoUrl: repositoryUrl,
+      claudeVersion: CONFIG.CLAUDE.VERSION,
+      dockerImage: CONFIG.DOCKER.IMAGES.ELIDE
+    }).toString();
+
+    const standardWsUrl = `ws://${host}:${port}/ws/terminal/${standardContainerId}?` + new URLSearchParams({
+      record: 'true',
+      jobId,
+      buildType: 'standard',
+      repoUrl: repositoryUrl,
+      claudeVersion: CONFIG.CLAUDE.VERSION,
+      dockerImage: CONFIG.DOCKER.IMAGES.STANDARD
+    }).toString();
+
+    // Track completion of both minders
+    const minderResults = {
+      elide: null as any,
+      standard: null as any,
+    };
+
+    let raceFinalized = false;
+
+    const finalizeRace = async () => {
+      if (raceFinalized || !minderResults.elide || !minderResults.standard) {
+        return; // Not ready yet or already finalized
+      }
+
+      raceFinalized = true;
+      console.log(`[Race] Both minders completed for job ${jobId} - finalizing race`);
+
+      try {
+        // Update build results with final durations
+        await db.update(buildResults)
+          .set({
+            status: minderResults.elide.success ? 'success' : 'failure',
+            duration: minderResults.elide.duration,
+            bellRung: minderResults.elide.bellRung,
+          })
+          .where(and(
+            eq(buildResults.jobId, jobId),
+            eq(buildResults.buildType, 'elide')
+          ));
+
+        await db.update(buildResults)
+          .set({
+            status: minderResults.standard.success ? 'success' : 'failure',
+            duration: minderResults.standard.duration,
+            bellRung: minderResults.standard.bellRung,
+          })
+          .where(and(
+            eq(buildResults.jobId, jobId),
+            eq(buildResults.buildType, 'standard')
+          ));
+
+        // Update job as completed
+        await db.update(jobs)
+          .set({
+            status: 'completed',
+            completedAt: new Date(),
+          })
+          .where(eq(jobs.id, jobId));
+
+        // Update race statistics
+        await updateStats(jobId);
+
+        console.log(`[Race] Race ${jobId} finalized successfully`);
+
+        // Cleanup containers after a delay to allow recordings to save
+        setTimeout(async () => {
+          try {
+            await cleanupJobContainers(jobId);
+            console.log(`[Race] Containers cleaned up for job ${jobId}`);
+          } catch (error) {
+            console.error(`[Race] Error cleaning up containers for job ${jobId}:`, error);
+          }
+        }, 5000); // 5 second delay to ensure recordings are saved
+      } catch (error) {
+        console.error(`[Race] Error finalizing race ${jobId}:`, error);
+      }
+    };
+
     const elideMinder = new RaceMinder({
       containerId: elideContainerId,
       repoUrl: repositoryUrl,
       buildType: 'elide',
-      wsUrl: `ws://${host}:${port}/ws/terminal/${elideContainerId}?record=true`,
+      wsUrl: elideWsUrl,
+      onComplete: async (result) => {
+        console.log(`[Race] Elide minder completed:`, result);
+        minderResults.elide = result;
+        await finalizeRace();
+      },
     });
 
     const standardMinder = new RaceMinder({
       containerId: standardContainerId,
       repoUrl: repositoryUrl,
       buildType: 'standard',
-      wsUrl: `ws://${host}:${port}/ws/terminal/${standardContainerId}?record=true`,
+      wsUrl: standardWsUrl,
+      onComplete: async (result) => {
+        console.log(`[Race] Standard minder completed:`, result);
+        minderResults.standard = result;
+        await finalizeRace();
+      },
     });
 
     // Start minders in background (don't await - they run autonomously)
@@ -326,7 +422,7 @@ raceApiRouter.get('/:jobId/recording/:buildType', async (req, res) => {
 });
 
 // Get minder status for debugging (must be before /:jobId route)
-raceApiRouter.get('/minders', async (req, res) => {
+raceApiRouter.get('/minders', async (_req, res) => {
   try {
     const { getActiveMinders } = await import('../services/race-minder.js');
     const minders = getActiveMinders();
@@ -340,6 +436,94 @@ raceApiRouter.get('/minders', async (req, res) => {
   } catch (error) {
     console.error('Error fetching minder status:', error);
     res.status(500).json({ error: 'Failed to fetch minder status' });
+  }
+});
+
+// Get recent completed races (must be before /:jobId route)
+raceApiRouter.get('/recent', async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit as string) || 10, 50); // Max 50 races
+
+    // Get recent completed jobs with their build results
+    const recentJobs = await db
+      .select({
+        job: jobs,
+      })
+      .from(jobs)
+      .where(
+        and(
+          eq(jobs.status, 'completed'),
+          notLike(jobs.id, 'mock-job-%') // Exclude mock data
+        )
+      )
+      .orderBy(desc(jobs.completedAt))
+      .limit(limit);
+
+    // For each job, get build results and check for recordings
+    const racesWithDetails = await Promise.all(
+      recentJobs.map(async ({ job }) => {
+        const results = await db.select().from(buildResults).where(eq(buildResults.jobId, job.id));
+
+        const elideResult = results.find((r) => r.buildType === 'elide');
+        const standardResult = results.find((r) => r.buildType === 'standard');
+
+        // Check for cached recordings
+        const elideCacheKey = generateCacheKey({
+          repositoryUrl: job.repositoryUrl,
+          tool: 'elide',
+          claudeVersion: CONFIG.CLAUDE.VERSION,
+          dockerImage: CONFIG.DOCKER.IMAGES.ELIDE,
+        });
+
+        const standardCacheKey = generateCacheKey({
+          repositoryUrl: job.repositoryUrl,
+          tool: 'standard',
+          claudeVersion: CONFIG.CLAUDE.VERSION,
+          dockerImage: CONFIG.DOCKER.IMAGES.STANDARD,
+        });
+
+        const [elideRecordingPath, standardRecordingPath] = await Promise.all([
+          findCachedRecording(elideCacheKey, RECORDINGS_DIR),
+          findCachedRecording(standardCacheKey, RECORDINGS_DIR),
+        ]);
+
+        const hasRecording = !!elideRecordingPath && !!standardRecordingPath;
+
+        // Determine winner
+        let winner: 'elide' | 'standard' | 'tie' | undefined;
+        if (elideResult && standardResult) {
+          winner = determineWinner(elideResult.duration, standardResult.duration);
+        }
+
+        return {
+          jobId: job.id,
+          repositoryUrl: job.repositoryUrl,
+          repositoryName: job.repositoryName,
+          status: job.status,
+          startedAt: job.startedAt?.toISOString(),
+          completedAt: job.completedAt?.toISOString(),
+          hasRecording,
+          elide: elideResult
+            ? {
+                status: elideResult.status === 'success' ? 'completed' : 'failed',
+                duration: elideResult.duration,
+              }
+            : null,
+          standard: standardResult
+            ? {
+                status: standardResult.status === 'success' ? 'completed' : 'failed',
+                duration: standardResult.duration,
+              }
+            : null,
+          winner,
+        };
+      })
+    );
+
+    res.json({ races: racesWithDetails });
+  } catch (error) {
+    console.error('Error fetching recent races:', error);
+    res.status(500).json({ error: 'Failed to fetch recent races' });
   }
 });
 

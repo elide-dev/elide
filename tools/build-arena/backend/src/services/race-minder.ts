@@ -10,12 +10,15 @@
  */
 
 import WebSocket from 'ws';
+import { detectBell } from '../utils/bell-detector.js';
+import { extractTokenUsage, type TokenUsage } from '../utils/token-parser.js';
 
 export interface MinderConfig {
   containerId: string;
   repoUrl: string;
   buildType: 'elide' | 'standard';
   wsUrl: string;
+  onComplete?: (result: MinderResult) => void | Promise<void>;
 }
 
 export interface MinderResult {
@@ -23,6 +26,7 @@ export interface MinderResult {
   bellRung: boolean;
   duration: number;
   error?: string;
+  tokenUsage?: TokenUsage;
 }
 
 // Global registry of active minders for debugging
@@ -38,6 +42,7 @@ export class RaceMinder {
   private startTime: number;
   private outputBuffer: string = '';
   private lastOutputSnippet: string = ''; // For debugging - last 200 chars of output
+  private terminalHistory: string = ''; // Full terminal output history for debugging (last 50KB)
 
   // State tracking
   private themeHandled = false;
@@ -80,6 +85,7 @@ export class RaceMinder {
         bellRung: this.bellRung,
       },
       lastOutputSnippet: this.lastOutputSnippet,
+      terminalHistory: this.terminalHistory.slice(-10000), // Last 10KB for API response
     };
   }
 
@@ -97,7 +103,8 @@ export class RaceMinder {
 
         // Wait for bash to initialize, then send claude command
         setTimeout(() => {
-          const command = `claude "Clone ${this.config.repoUrl}, analyze the project structure, then build it following the instructions in /workspace/CLAUDE.md. Time the build and report results with a bell signal."\n`;
+          // Simpler, more direct command that Claude can execute
+          const command = `claude "Please run these commands: 1) git clone ${this.config.repoUrl} and cd into it, 2) read the build instructions from the README, 3) build the project, 4) when done, echo BUILD COMPLETE with a bell emoji 🔔"\n`;
 
           console.log(`[Minder:${this.config.buildType}] Sending Claude command`);
           this.sendInput(command);
@@ -113,30 +120,50 @@ export class RaceMinder {
         reject(error);
       });
 
-      this.ws.on('close', () => {
+      this.ws.on('close', async () => {
         const duration = Date.now() - this.startTime;
         console.log(`[Minder:${this.config.buildType}] WebSocket closed. Duration: ${duration}ms, Bell rung: ${this.bellRung}`);
 
-        resolve({
+        // Extract token usage from container logs
+        const tokenUsage = await extractTokenUsage(this.config.containerId);
+
+        const result: MinderResult = {
           success: this.bellRung,
           bellRung: this.bellRung,
           duration: Math.round(duration / 1000),
-        });
+          tokenUsage,
+        };
+
+        // Call completion callback if provided
+        if (this.config.onComplete) {
+          try {
+            await this.config.onComplete(result);
+          } catch (error) {
+            console.error(`[Minder:${this.config.buildType}] Error in completion callback:`, error);
+          }
+        }
+
+        resolve(result);
       });
 
-      // Timeout after 10 minutes
-      setTimeout(() => {
+      // Timeout after 30 minutes
+      setTimeout(async () => {
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-          console.log(`[Minder:${this.config.buildType}] Timeout after 10 minutes`);
+          console.log(`[Minder:${this.config.buildType}] Timeout after 30 minutes`);
           this.ws.close();
+
+          // Extract token usage even on timeout
+          const tokenUsage = await extractTokenUsage(this.config.containerId);
+
           resolve({
             success: false,
             bellRung: this.bellRung,
-            duration: 600,
+            duration: 1800,
             error: 'Timeout',
+            tokenUsage,
           });
         }
-      }, 600000);
+      }, 1800000);
     });
   }
 
@@ -152,6 +179,12 @@ export class RaceMinder {
 
         // Track last output snippet for debugging
         this.lastOutputSnippet = output.slice(-200);
+
+        // Append to terminal history (keep last 50KB)
+        this.terminalHistory += output;
+        if (this.terminalHistory.length > 50000) {
+          this.terminalHistory = this.terminalHistory.slice(-50000);
+        }
 
         // Detect when Claude Code starts
         // Check for multiple indicators since .claude.json may skip onboarding
@@ -318,20 +351,30 @@ export class RaceMinder {
     }
 
     // GENERIC PERMISSION PROMPTS: Handle other prompts (git clone, bash commands, etc.)
-    // Note: Removed the 5-second blanket block after workspace trust because it was
-    // preventing legitimate Bash prompts from being detected. The 2-second debounce
-    // at line 337 is sufficient to prevent duplicate approvals.
+    // Note: Permission prompts often span multiple WebSocket messages, so we check
+    // the accumulated terminalHistory instead of just the current output chunk
+    // Use a larger buffer (5000 chars) because ANSI escape codes spread content out
+
+    // Get the tail of terminal history to check for complete prompts
+    const recentHistory = this.terminalHistory.slice(-5000);
 
     // Only detect actual permission prompts, not UI refreshes
     // Must have BOTH a prompt question AND option choices
-    const hasPromptQuestion = output.includes('Do you want to proceed?') ||
-                              output.includes('proceed?') ||
-                              output.includes('Enter to confirm');
+    const hasPromptQuestion = recentHistory.includes('Do you want to proceed?') ||
+                              recentHistory.includes('proceed?') ||
+                              recentHistory.includes('Enter to confirm');
 
     // Look for numbered options (1. Yes, 2. Yes/No, etc.)
-    const hasOptionChoices = /[❯\s]*1\.\s*(Yes|Allow|Approve)/i.test(output);
+    // Allow ANSI escape codes between "1." and "Yes" using [\s\u001b\[]* to match whitespace and escape sequences
+    const hasOptionChoices = /[❯\s]*1\.[\s\u001b\[;0-9m]*(Yes|Allow|Approve)/i.test(recentHistory);
 
     const hasPermissionPrompt = hasPromptQuestion && hasOptionChoices;
+
+    // Debug logging
+    if (hasPromptQuestion || hasOptionChoices) {
+      console.log(`[Minder:${this.config.buildType}] Prompt detection - question:${hasPromptQuestion}, choices:${hasOptionChoices}`);
+      console.log(`[Minder:${this.config.buildType}] Recent history preview (last 300 chars):`, recentHistory.slice(-300));
+    }
 
     if (hasPermissionPrompt) {
       const now = Date.now();
@@ -385,27 +428,31 @@ export class RaceMinder {
    * Check for completion signals (bell ringing)
    */
   private checkCompletion(output: string, _resolve: (result: MinderResult) => void): void {
-    const completionPatterns = [
-      /🔔/,
-      /BUILD COMPLETE/i,
-      /\[BUILD COMPLETE\]/i,
-      /Build succeeded/i,
-      /Build failed/i,
-      /BUILD SUCCESS/i,
-      /BUILD FAILURE/i,
-      /BUILD SUCCEEDED/i,
-      /BUILD FAILED/i,
-      /\[SUCCESS\]/i,
-      /\[FAILED\]/i,
-      /Total time:/i,
-      /BUILD SUCCESSFUL/i,
-    ];
+    // Only check completion patterns AFTER Claude has started and is not thinking
+    // This prevents false positives from the command being displayed
+    if (!this.claudeStarted) {
+      return;
+    }
 
-    const isComplete = completionPatterns.some(p => p.test(output));
-    if (isComplete && !this.bellRung) {
+    // Don't check during thinking animations - no real output happens during these
+    const isThinking = /(?:Swooping|Pollinating|Calculating|Stewing|Thinking|Twisting|Simmering|Tempering|Clauding|Perusing|Spinning)…/i.test(output);
+    if (isThinking) {
+      return;
+    }
+
+    // Skip Claude's command echo display (gray boxes with bg color 48;5;237)
+    const isCommandEcho = /\[48;5;237m/.test(output);
+    if (isCommandEcho) {
+      return;
+    }
+
+    // Use shared bell detector for consistent detection across minder and recorder
+    const bellResult = detectBell(output);
+
+    if (bellResult.bellRung && !this.bellRung) {
       this.bellRung = true;
-      const match = completionPatterns.find(p => p.test(output));
-      console.log(`[Minder:${this.config.buildType}] Bell rung! Pattern: ${match}`);
+      console.log(`[Minder:${this.config.buildType}] Bell rung! Status: ${bellResult.buildStatus}`);
+      console.log(`[Minder:${this.config.buildType}] Output snippet: ${output.slice(0, 200)}`);
 
       // Wait a bit to capture final output, then close
       setTimeout(() => {

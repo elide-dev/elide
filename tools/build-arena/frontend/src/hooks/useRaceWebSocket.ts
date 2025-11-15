@@ -7,13 +7,15 @@ export interface UseRaceWebSocketParams {
   elideTerminal: Terminal | null;
   standardTerminal: Terminal | null;
   enabled: boolean;
+  onElideElapsedUpdate?: (elapsed: number) => void;
+  onStandardElapsedUpdate?: (elapsed: number) => void;
 }
 
 /**
  * Hook to manage WebSocket connections for live race viewing
  */
 export function useRaceWebSocket(params: UseRaceWebSocketParams) {
-  const { elideContainerId, standardContainerId, elideTerminal, standardTerminal, enabled } = params;
+  const { elideContainerId, standardContainerId, elideTerminal, standardTerminal, enabled, onElideElapsedUpdate, onStandardElapsedUpdate } = params;
 
   const elideWsRef = useRef<WebSocket | null>(null);
   const standardWsRef = useRef<WebSocket | null>(null);
@@ -49,6 +51,17 @@ export function useRaceWebSocket(params: UseRaceWebSocketParams) {
       }
       if (message.type === 'output' && message.data && elideTerminal) {
         elideTerminal.write(message.data);
+
+        // Update elapsed time from WebSocket message metadata
+        if (message.elapsed !== undefined && onElideElapsedUpdate) {
+          console.log('[Elide WS] Updating elapsed:', message.elapsed);
+          onElideElapsedUpdate(message.elapsed);
+        } else {
+          console.warn('[Elide WS] No elapsed in message or no callback:', {
+            hasElapsed: message.elapsed !== undefined,
+            hasCallback: !!onElideElapsedUpdate
+          });
+        }
       }
     };
 
@@ -71,6 +84,17 @@ export function useRaceWebSocket(params: UseRaceWebSocketParams) {
       }
       if (message.type === 'output' && message.data && standardTerminal) {
         standardTerminal.write(message.data);
+
+        // Update elapsed time from WebSocket message metadata
+        if (message.elapsed !== undefined && onStandardElapsedUpdate) {
+          console.log('[Standard WS] Updating elapsed:', message.elapsed);
+          onStandardElapsedUpdate(message.elapsed);
+        } else {
+          console.warn('[Standard WS] No elapsed in message or no callback:', {
+            hasElapsed: message.elapsed !== undefined,
+            hasCallback: !!onStandardElapsedUpdate
+          });
+        }
       }
     };
 
@@ -87,7 +111,7 @@ export function useRaceWebSocket(params: UseRaceWebSocketParams) {
       elideWsRef.current = null;
       standardWsRef.current = null;
     };
-  }, [enabled, elideContainerId, standardContainerId, elideTerminal, standardTerminal]);
+  }, [enabled, elideContainerId, standardContainerId, elideTerminal, standardTerminal, onElideElapsedUpdate, onStandardElapsedUpdate]);
 
   return {
     elideWs: elideWsRef.current,

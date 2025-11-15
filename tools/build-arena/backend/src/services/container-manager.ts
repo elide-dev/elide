@@ -1,5 +1,8 @@
 import { spawn } from 'child_process';
 import * as path from 'path';
+import Docker from 'dockerode';
+
+const docker = new Docker();
 
 export interface StartContainerOptions {
   image: string;
@@ -61,4 +64,69 @@ export async function startContainer(options: StartContainerOptions): Promise<st
       }
     });
   });
+}
+
+/**
+ * Stop and remove a Docker container
+ */
+export async function stopContainer(containerId: string): Promise<void> {
+  try {
+    const container = docker.getContainer(containerId);
+
+    // Get container info to check if it exists and is running
+    const info = await container.inspect();
+
+    // Stop container if running
+    if (info.State.Running) {
+      console.log(`[Container] Stopping container ${containerId.substring(0, 12)}`);
+      await container.stop({ t: 10 }); // 10 second grace period
+    }
+
+    // Remove container (if not using --rm flag)
+    // Note: containers started with --rm will auto-remove when stopped
+    console.log(`[Container] Container ${containerId.substring(0, 12)} stopped`);
+  } catch (error: any) {
+    // Ignore errors if container doesn't exist or already stopped
+    if (error.statusCode === 404) {
+      console.log(`[Container] Container ${containerId.substring(0, 12)} already removed`);
+    } else if (error.statusCode === 304) {
+      console.log(`[Container] Container ${containerId.substring(0, 12)} already stopped`);
+    } else {
+      console.error(`[Container] Error stopping container ${containerId.substring(0, 12)}:`, error.message);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Cleanup containers for a job (both elide and standard)
+ */
+export async function cleanupJobContainers(jobId: string): Promise<void> {
+  console.log(`[Container] Cleaning up containers for job ${jobId}`);
+
+  try {
+    // List containers with this job ID label or name pattern
+    const containers = await docker.listContainers({
+      all: true,
+      filters: {
+        name: [`race-${jobId}-`]
+      }
+    });
+
+    // Stop each container
+    await Promise.all(
+      containers.map(async (containerInfo) => {
+        try {
+          await stopContainer(containerInfo.Id);
+        } catch (error) {
+          console.error(`[Container] Failed to stop container ${containerInfo.Id.substring(0, 12)}:`, error);
+        }
+      })
+    );
+
+    console.log(`[Container] Cleaned up ${containers.length} containers for job ${jobId}`);
+  } catch (error) {
+    console.error(`[Container] Error cleaning up containers for job ${jobId}:`, error);
+    throw error;
+  }
 }

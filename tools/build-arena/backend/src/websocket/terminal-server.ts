@@ -22,6 +22,7 @@ interface ContainerSession {
   stream: NodeJS.ReadWriteStream;
   clients: Set<TerminalClient>;
   recorder?: WebSocketRecorder;
+  startTime: number; // Epoch timestamp when session started
 }
 
 let terminalHandlerRegistered = false;
@@ -61,7 +62,14 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
     const enableRecording = url.searchParams.get('record') === 'true';
     const isInteractive = url.searchParams.get('interactive') !== 'false'; // Default to interactive
 
-    console.log(`Terminal WebSocket connected for container: ${containerId} (recording: ${enableRecording}, interactive: ${isInteractive})`);
+    // Extract metadata for recording
+    const jobId = url.searchParams.get('jobId') || containerId;
+    const buildType = url.searchParams.get('buildType') || 'unknown';
+    const repoUrl = url.searchParams.get('repoUrl') || 'unknown';
+    const claudeVersion = url.searchParams.get('claudeVersion') || '2.0.35';
+    const dockerImage = url.searchParams.get('dockerImage') || 'elide-builder:latest';
+
+    console.log(`Terminal WebSocket connected for container: ${containerId} (recording: ${enableRecording}, interactive: ${isInteractive}, job: ${jobId})`);
 
     const client: TerminalClient = {
       ws,
@@ -109,23 +117,24 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
           exec,
           stream,
           clients: new Set<TerminalClient>(),
+          startTime: Date.now(), // Record when this session started
         };
 
         // Initialize recorder if recording is enabled
         if (enableRecording) {
           session.recorder = new WebSocketRecorder(
-            containerId,
-            'test', // tool type
+            jobId,
+            buildType,
             {
-              jobId: containerId,
-              tool: 'test',
-              repositoryUrl: 'test-session',
-              claudeVersion: '2.0.35',
-              dockerImage: 'elide-builder:latest'
+              jobId,
+              tool: buildType,
+              repositoryUrl: repoUrl,
+              claudeVersion,
+              dockerImage
             }
           );
           session.recorder.start();
-          console.log(`Started recording for container: ${containerId}`);
+          console.log(`Started recording for job ${jobId} (${buildType})`);
         }
 
         containerSessions.set(containerId, session);
@@ -138,9 +147,13 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
           const preview = output.length > 200 ? output.substring(0, 200) + '...' : output;
           console.log(`Container ${containerId} output (${session!.clients.size} clients):`, JSON.stringify(preview));
 
+          const now = Date.now();
           const message = {
             type: 'output',
             data: output,
+            timestamp: now, // When this message was generated
+            startTime: session!.startTime, // When the session started
+            elapsed: Math.floor((now - session!.startTime) / 1000), // Elapsed seconds
           };
 
           // Record message if recording is enabled
@@ -261,19 +274,32 @@ export function setupTerminalWebSocketServer(wss: WebSocketServer): void {
           if (session.recorder) {
             try {
               session.recorder.stop();
-              const cacheKey = `test-${containerId}`;
-              const recordingPath = await session.recorder.save(cacheKey, './recordings');
+              // Import generateCacheKey from websocket-recorder
+              const { generateCacheKey } = await import('../services/websocket-recorder.js');
+              const { CONFIG } = await import('../config/constants.js');
+
+              // Generate proper cache key from recorder metadata
+              const metadata = (session.recorder as any).metadata;
+              const cacheKey = generateCacheKey({
+                repositoryUrl: metadata.repositoryUrl,
+                tool: metadata.tool,
+                claudeVersion: metadata.claudeVersion,
+                dockerImage: metadata.dockerImage
+              });
+
+              const recordingsDir = CONFIG.RECORDINGS?.DIR || './recordings';
+              const recordingPath = await session.recorder.save(cacheKey, recordingsDir);
               if (recordingPath) {
-                console.log(`Saved recording for container ${containerId}: ${recordingPath}`);
-                console.log(`  Messages: ${session.recorder.getMessageCount()}`);
-                console.log(`  Duration: ${session.recorder.getDuration()}ms`);
-                console.log(`  Bell rung: ${session.recorder.isBellRung()}`);
-                console.log(`  Build successful: ${session.recorder.isBuildSuccessful()}`);
+                console.log(`✅ Saved recording for job ${metadata.jobId} (${metadata.tool}): ${recordingPath}`);
+                console.log(`   Messages: ${session.recorder.getMessageCount()}`);
+                console.log(`   Duration: ${session.recorder.getDuration()}ms`);
+                console.log(`   Bell rung: ${session.recorder.isBellRung()}`);
+                console.log(`   Build successful: ${session.recorder.isBuildSuccessful()}`);
               } else {
-                console.log(`Recording not saved for container ${containerId} - build did not complete successfully`);
+                console.log(`⚠️  Recording not saved for job ${metadata.jobId} (${metadata.tool}) - build did not complete successfully`);
               }
             } catch (error) {
-              console.error(`Error saving recording for container ${containerId}:`, error);
+              console.error(`❌ Error saving recording for container ${containerId}:`, error);
             }
           }
 

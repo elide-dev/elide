@@ -39,6 +39,17 @@ pluginManagement {
         includeGroup("com.google.devtools.ksp.gradle.plugin")
       }
     }
+    maven {
+      name = "maven-central-explicit"
+      url = uri("https://repo1.maven.org/maven2/")
+    }
+    maven {
+      name = "kotlin-dev"
+      url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+      content {
+        includeGroupByRegex("org\\.jetbrains.*")
+      }
+    }
     gradlePluginPortal()
     mavenCentral()
     google()
@@ -66,6 +77,11 @@ buildscript {
         includeGroup("com.google.devtools.ksp")
       }
     }
+    maven {
+      name = "maven-central-explicit"
+      url = uri("https://repo1.maven.org/maven2/")
+    }
+    mavenCentral()
   }
   dependencies {
     val asm = "9.8"
@@ -167,6 +183,17 @@ dependencyResolutionManagement {
       content {
         includeGroup("com.google.devtools.ksp")
         includeGroup("com.google.devtools.ksp.gradle.plugin")
+      }
+    }
+    maven {
+      name = "maven-central-explicit"
+      url = uri("https://repo1.maven.org/maven2/")
+    }
+    maven {
+      name = "kotlin-dev"
+      url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+      content {
+        includeGroupByRegex("org\\.jetbrains.*")
       }
     }
     mavenCentral()

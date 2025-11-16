@@ -1,5 +1,6 @@
 .venv/
 .DS_Store
+TODO.md
 .dev/cache
 .dev/dependencies
 .dev/coverage

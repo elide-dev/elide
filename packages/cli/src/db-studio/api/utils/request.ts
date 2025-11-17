@@ -20,7 +20,7 @@ export function buildWhereClause(where: Record<string, unknown>): { clause: stri
   const values: unknown[] = [];
 
   for (const [key, value] of Object.entries(where)) {
-    conditions.push(`${key} = ?`);
+    conditions.push(`"${key}" = ?`);
     values.push(value);
   }
 

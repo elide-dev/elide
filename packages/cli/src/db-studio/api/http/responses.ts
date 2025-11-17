@@ -20,7 +20,7 @@ export function jsonResponse(data: unknown, status: number = SUCCESS_STATUS): Ap
  * Create an error response
  */
 export function errorResponse(message: string, status: number = ERROR_STATUS): ApiResponse {
-  return jsonResponse({ error: message }, status);
+  return jsonResponse({ success: false, error: message }, status);
 }
 
 /**
@@ -29,6 +29,25 @@ export function errorResponse(message: string, status: number = ERROR_STATUS): A
 export function handleDatabaseError(err: unknown, operation: string): ApiResponse {
   const errorMessage = err instanceof Error ? err.message : "Unknown error";
   return errorResponse(`Failed to ${operation}: ${errorMessage}`, ERROR_STATUS);
+}
+
+/**
+ * Handle SQL query errors with context
+ */
+export function handleSQLError(
+  err: unknown,
+  sql: string,
+  startTime?: number
+): ApiResponse {
+  const errorMessage = err instanceof Error ? err.message : "Unknown error";
+  const endTime = startTime ? performance.now() : undefined;
+  
+  return jsonResponse({
+    success: false,
+    error: errorMessage,
+    sql: sql.trim(),
+    executionTimeMs: endTime && startTime ? Number((endTime - startTime).toFixed(2)) : undefined,
+  }, ERROR_STATUS);
 }
 
 /**

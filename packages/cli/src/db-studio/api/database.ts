@@ -13,6 +13,7 @@
  */
 
 import type { Database, Statement } from "elide:sqlite";
+import type { ColumnMetadata, ForeignKeyReference } from "./http/schemas.ts";
 
 /**
  * Log SQL queries to console
@@ -40,9 +41,14 @@ export interface TableInfo {
 
 export type TableData = {
   name: string;
-  columns: string[];
+  columns: ColumnMetadata[];
   rows: unknown[][];
   totalRows: number;
+  metadata: {
+    executionTimeMs: number;
+    sql: string;
+    rowCount: number;
+  };
 };
 
 export interface DatabaseInfo {
@@ -101,22 +107,117 @@ export function getTables(db: Database): TableInfo[] {
   }));
 }
 
-
-interface ColumnNameRow {
+interface PragmaTableInfoRow {
+  cid: number;
   name: string;
+  type: string;
+  notnull: number;
+  dflt_value: string | null;
+  pk: number;
+}
+
+interface PragmaForeignKeyRow {
+  id: number;
+  seq: number;
+  table: string;
+  from: string;
+  to: string;
+  on_update: string;
+  on_delete: string;
+  match: string;
+}
+
+interface PragmaIndexListRow {
+  seq: number;
+  name: string;
+  unique: number;
+  origin: string;
+  partial: number;
+}
+
+interface PragmaIndexInfoRow {
+  seqno: number;
+  cid: number;
+  name: string;
+}
+
+/**
+ * Get comprehensive column metadata for a table
+ */
+export function getColumnMetadata(db: Database, tableName: string): ColumnMetadata[] {
+  // Get basic column information
+  const tableInfoSql = `SELECT * FROM pragma_table_info('${tableName}')`;
+  logQuery(tableInfoSql);
+  const tableInfoQuery: Statement<PragmaTableInfoRow> = db.prepare(tableInfoSql);
+  const columns = tableInfoQuery.all();
+
+  // Get foreign key information
+  const foreignKeySql = `SELECT * FROM pragma_foreign_key_list('${tableName}')`;
+  logQuery(foreignKeySql);
+  const foreignKeyQuery: Statement<PragmaForeignKeyRow> = db.prepare(foreignKeySql);
+  const foreignKeys = foreignKeyQuery.all();
+
+  // Build foreign key map: column name -> foreign key reference
+  const foreignKeyMap = new Map<string, ForeignKeyReference>();
+  for (const fk of foreignKeys) {
+    foreignKeyMap.set(fk.from, {
+      table: fk.table,
+      column: fk.to,
+      onUpdate: fk.on_update,
+      onDelete: fk.on_delete,
+    });
+  }
+
+  // Get unique constraint information from indexes
+  const indexListSql = `SELECT * FROM pragma_index_list('${tableName}')`;
+  logQuery(indexListSql);
+  const indexListQuery: Statement<PragmaIndexListRow> = db.prepare(indexListSql);
+  const indexes = indexListQuery.all();
+
+  // Build set of columns that have unique constraints
+  const uniqueColumns = new Set<string>();
+  for (const index of indexes) {
+    if (index.unique === 1) {
+      const indexInfoSql = `SELECT * FROM pragma_index_info('${index.name}')`;
+      logQuery(indexInfoSql);
+      const indexInfoQuery: Statement<PragmaIndexInfoRow> = db.prepare(indexInfoSql);
+      const indexInfo = indexInfoQuery.all();
+      
+      // Only mark as unique if it's a single-column index
+      if (indexInfo.length === 1) {
+        const colName = indexInfo[0].name;
+        if (colName) {
+          uniqueColumns.add(colName);
+        }
+      }
+    }
+  }
+
+  // Build the column metadata array
+  return columns.map((col): ColumnMetadata => {
+    const isAutoIncrement = col.pk === 1 && col.type.toUpperCase() === "INTEGER";
+    
+    return {
+      name: col.name,
+      type: col.type,
+      nullable: col.notnull === 0,
+      primaryKey: col.pk > 0,
+      defaultValue: col.dflt_value,
+      foreignKey: foreignKeyMap.get(col.name),
+      unique: uniqueColumns.has(col.name),
+      autoIncrement: isAutoIncrement,
+    };
+  });
 }
 
 /**
  * Get table data with schema and rows
  */
 export function getTableData(db: Database, tableName: string, limit: number = 100, offset: number = 0): TableData {
-
-  // Get schema (column names)
-  const schemaSql = `SELECT name FROM pragma_table_info('${tableName}') ORDER BY cid`;
-  logQuery(schemaSql);
-  const schemaQuery: Statement<ColumnNameRow> = db.prepare(schemaSql);
-  const schemaResults = schemaQuery.all();
-  const columns = schemaResults.map((col) => col.name);
+  const startTime = performance.now();
+  
+  // Get column metadata
+  const columns = getColumnMetadata(db, tableName);
 
   // Get data rows (unknown type since we don't know the schema)
   const dataSql = `SELECT * FROM "${tableName}" LIMIT ${limit} OFFSET ${offset}`;
@@ -131,11 +232,18 @@ export function getTableData(db: Database, tableName: string, limit: number = 10
   const countResult = countQuery.get();
   const totalRows = countResult?.count ?? 0;
 
+  const endTime = performance.now();
+
   return {
     name: tableName,
     columns,
-    rows: rows.map((row: unknown) => columns.map(col => (row as Record<string, unknown>)[col])),
+    rows: rows.map((row: unknown) => columns.map(col => (row as Record<string, unknown>)[col.name])),
     totalRows,
+    metadata: {
+      executionTimeMs: Number((endTime - startTime).toFixed(2)),
+      sql: dataSql,
+      rowCount: rows.length,
+    },
   };
 }
 
@@ -162,22 +270,50 @@ export function getDatabaseInfo(db: Database, dbPath: string): DatabaseInfo {
 }
 
 /**
- * Execute a raw SQL query (for future query editor feature)
+ * Execute a raw SQL query and extract column metadata where possible
+ * For ad-hoc queries, we can't extract full metadata, so we provide basic info
  */
-export function executeQuery(db: Database, sql: string, limit: number = 100): { columns: string[], rows: unknown[][] } {
+export function executeQuery(
+  db: Database,
+  sql: string
+): { columns: ColumnMetadata[], rows: unknown[][], data: Record<string, unknown>[] } {
   logQuery(sql);
   const query = db.query(sql);
   const results = query.all();
 
   if (results.length === 0) {
-    return { columns: [], rows: [] };
+    return { columns: [], rows: [], data: [] };
   }
 
   const firstRow = results[0] as Record<string, unknown>;
-  const columns = Object.keys(firstRow);
-  const rows = results.map((row: unknown) => columns.map(col => (row as Record<string, unknown>)[col]));
+  const columnNames = Object.keys(firstRow);
+  
+  // For ad-hoc queries, we can only infer basic column info from the data
+  const columns: ColumnMetadata[] = columnNames.map(name => ({
+    name,
+    type: inferColumnType(firstRow[name]),
+    nullable: true, // We can't know for sure
+    primaryKey: false, // We can't determine this for arbitrary queries
+  }));
 
-  return { columns, rows };
+  const rows = results.map((row: unknown) => 
+    columnNames.map(col => (row as Record<string, unknown>)[col])
+  );
+
+  return { columns, rows, data: results as Record<string, unknown>[] };
+}
+
+/**
+ * Infer a SQLite type from a JavaScript value
+ */
+function inferColumnType(value: unknown): string {
+  if (value === null || value === undefined) return "NULL";
+  if (typeof value === "number") {
+    return Number.isInteger(value) ? "INTEGER" : "REAL";
+  }
+  if (typeof value === "string") return "TEXT";
+  if (typeof value === "boolean") return "INTEGER"; // SQLite stores booleans as integers
+  return "BLOB";
 }
 
 /**

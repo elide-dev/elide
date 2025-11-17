@@ -17,7 +17,7 @@ export default function TableView() {
   }
 
   return (
-    <div className="flex-1 p-0 overflow-auto font-mono">
+    <div className="flex-1 flex flex-col overflow-hidden font-mono">
       <div className="px-6 pt-6 pb-4 border-b border-gray-800">
         <h2 className="text-2xl font-semibold tracking-tight flex items-center gap-3">
           <span className="truncate">{data.name}</span>
@@ -26,11 +26,13 @@ export default function TableView() {
           </span>
         </h2>
       </div>
-      <DataTable 
-        columns={data.columns} 
-        rows={data.rows} 
-        primaryKeys={data.primaryKeys} 
-      />
+      <div className="flex-1 overflow-auto">
+        <DataTable 
+          columns={data.columns} 
+          rows={data.rows} 
+          primaryKeys={data.primaryKeys} 
+        />
+      </div>
     </div>
   )
 }

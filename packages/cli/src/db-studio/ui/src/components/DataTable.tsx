@@ -14,13 +14,15 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ArrowUpWideNarrow, ArrowDownWideNarrow, ChevronDown, Settings2 } from "lucide-react"
+import { ArrowUpDown, ArrowUpWideNarrow, ArrowDownWideNarrow, ChevronDown, Settings2, Search, Key, Link } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -32,11 +34,38 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { ColumnInfo } from "./ColumnInfo"
+
+export type ColumnMetadata = {
+  name: string
+  type: string
+  nullable: boolean
+  primaryKey: boolean
+  defaultValue?: string | number | null
+  foreignKey?: {
+    table: string
+    column: string
+    onUpdate?: string
+    onDelete?: string
+  }
+  unique?: boolean
+  autoIncrement?: boolean
+}
+
+export type QueryMetadata = {
+  executionTimeMs: number
+  sql: string
+  rowCount: number
+}
+
+export type DataTableData = {
+  columns: ColumnMetadata[]
+  rows: unknown[][]
+  metadata?: QueryMetadata
+}
 
 interface DataTableProps {
-  columns: string[]
-  rows: unknown[][]
-  primaryKeys?: string[]
+  data: DataTableData
   showControls?: boolean // Show search, column toggle, and pagination (default: true)
 }
 
@@ -45,11 +74,14 @@ interface DataTableProps {
  * Uses TanStack Table for sorting, filtering, pagination, and column visibility
  * Handles NULL values, empty strings, and other data types appropriately
  */
-export function DataTable({ columns, rows, primaryKeys, showControls = true }: DataTableProps) {
+export function DataTable({ data, showControls = true }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
+  const [columnSearch, setColumnSearch] = React.useState("")
+
+  const { columns, rows, metadata } = data
 
   const formatCellValue = (value: unknown): React.ReactNode => {
     return value === null || value === undefined ? (
@@ -59,14 +91,19 @@ export function DataTable({ columns, rows, primaryKeys, showControls = true }: D
     )
   }
 
-  // Convert string[] columns and unknown[][] rows to TanStack Table format
+  // Columns are already ColumnMetadata format
+  const normalizedColumns: ColumnMetadata[] = React.useMemo(() => {
+    return columns
+  }, [columns])
+
+  // Convert ColumnMetadata[] and unknown[][] rows to TanStack Table format
   const tableColumns: ColumnDef<Record<string, unknown>>[] = React.useMemo(
     () =>
-      columns.map((col) => {
-        const isKey = primaryKeys?.includes(col) || /(^id$|_id$)/i.test(col)
+      normalizedColumns.map((col) => {
+        const isKey = col.primaryKey
 
         return {
-          accessorKey: col,
+          accessorKey: col.name,
           size: 200, // Default column width
           minSize: 100, // Minimum column width
           maxSize: 1000, // Maximum column width
@@ -86,52 +123,54 @@ export function DataTable({ columns, rows, primaryKeys, showControls = true }: D
               }
             }
             
-            return showControls ? (
+            const headerContent = showControls ? (
               <div
                 className="flex items-center gap-1.5 cursor-pointer select-none hover:text-gray-200 transition-colors w-full h-full px-4 py-2"
                 onClick={handleSort}
               >
                 {isKey && (
-                  <svg
-                    className="w-3.5 h-3.5 text-amber-300 shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1721 9z"
-                    />
-                  </svg>
+                  <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
                 )}
-                <span className="text-xs font-semibold text-gray-400 tracking-wider flex-1 truncate">
-                  {col}
-                </span>
+                {col.foreignKey && (
+                  <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                )}
+                <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                  <span className="text-xs font-semibold text-gray-200 tracking-wider truncate">
+                    {col.name}
+                  </span>
+                  {col.type && col.type !== 'UNKNOWN' && (
+                    <span className="text-[10px] text-gray-500 font-normal truncate">
+                      {col.type}
+                    </span>
+                  )}
+                </div>
                 <SortIcon className="h-3.5 w-3.5 text-gray-400 shrink-0" />
               </div>
             ) : (
               <div className="flex items-center gap-1.5 px-4 py-2">
                 {isKey && (
-                  <svg
-                    className="w-3.5 h-3.5 text-amber-300 shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1721 9z"
-                    />
-                  </svg>
+                  <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
                 )}
-                <span className="text-xs font-semibold text-gray-400 tracking-wider truncate">
-                  {col}
-                </span>
+                {col.foreignKey && (
+                  <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                )}
+                <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                  <span className="text-xs font-semibold text-gray-200 tracking-wider truncate">
+                    {col.name}
+                  </span>
+                  {col.type && col.type !== 'UNKNOWN' && (
+                    <span className="text-[10px] text-gray-500 font-normal truncate">
+                      {col.type}
+                    </span>
+                  )}
+                </div>
               </div>
+            )
+            
+            return (
+              <ColumnInfo column={col}>
+                {headerContent}
+              </ColumnInfo>
             )
           },
           cell: ({ getValue }) => {
@@ -139,19 +178,19 @@ export function DataTable({ columns, rows, primaryKeys, showControls = true }: D
           },
         }
       }),
-    [columns, primaryKeys, showControls]
+    [normalizedColumns, showControls]
   )
 
   // Convert rows array to object format for TanStack Table
   const tableData: Record<string, unknown>[] = React.useMemo(
     () =>
       rows.map((row) =>
-        columns.reduce((acc, col, idx) => {
-          acc[col] = row[idx]
+        normalizedColumns.reduce((acc, col, idx) => {
+          acc[col.name] = row[idx]
           return acc
         }, {} as Record<string, unknown>)
       ),
-    [rows, columns]
+    [rows, normalizedColumns]
   )
 
   const table = useReactTable({
@@ -186,35 +225,93 @@ export function DataTable({ columns, rows, primaryKeys, showControls = true }: D
             onChange={(event) => {
               const value = event.target.value
               // Simple global filter on first column, can be enhanced
-              if (columns.length > 0) {
-                table.getColumn(columns[0])?.setFilterValue(value)
+              if (normalizedColumns.length > 0) {
+                table.getColumn(normalizedColumns[0].name)?.setFilterValue(value)
               }
             }}
             className="max-w-sm"
           />
-          <DropdownMenu>
+          {metadata?.executionTimeMs !== undefined && (
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900/50 border border-gray-800 rounded-md">
+              <span className="text-xs text-gray-400">Execution:</span>
+              <span className="text-xs font-mono font-semibold text-green-400">{metadata.executionTimeMs}ms</span>
+            </div>
+          )}
+          <DropdownMenu onOpenChange={(open) => !open && setColumnSearch("")}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
                 <Settings2 className="mr-2 h-4 w-4" />
                 Columns <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[200px]">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                      onSelect={(e) => e.preventDefault()}
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
+            <DropdownMenuContent align="end" className="w-[240px]" onCloseAutoFocus={(e) => e.preventDefault()}>
+              <DropdownMenuLabel>Toggle columns
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <div className="px-2 py-2" onKeyDown={(e) => e.stopPropagation()}>
+                <div className="relative">
+                  <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+                  <Input
+                    placeholder="Search..."
+                    value={columnSearch}
+                    onChange={(e) => setColumnSearch(e.target.value)}
+                    className="h-8 text-xs pl-8 w-full"
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    autoFocus
+                  />
+                </div>
+              </div>
+
+              <DropdownMenuSeparator />
+              <div className="max-h-[300px] overflow-y-auto">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-full justify-start text-xs font-normal"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    const hasHiddenColumns = table.getAllColumns().some(col => !col.getIsVisible() && col.getCanHide())
+                    table.getAllColumns().forEach(col => {
+                      if (col.getCanHide()) {
+                        col.toggleVisibility(hasHiddenColumns)
+                      }
+                    })
+                  }}
+                >
+                  {table.getAllColumns().some(col => !col.getIsVisible() && col.getCanHide()) 
+                    ? "Select all" 
+                    : "Deselect all"}
+                </Button>
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .filter((column) => 
+                    column.id.toLowerCase().includes(columnSearch.toLowerCase())
                   )
-                })}
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    )
+                  })}
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .filter((column) => 
+                    column.id.toLowerCase().includes(columnSearch.toLowerCase())
+                  ).length === 0 && (
+                  <div className="px-2 py-2 text-xs text-gray-500 text-center">
+                    No columns found
+                  </div>
+                )}
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -230,7 +327,7 @@ export function DataTable({ columns, rows, primaryKeys, showControls = true }: D
                   return (
                     <TableHead
                       key={header.id}
-                      className={`text-left border-b border-r border-gray-800 ${showControls ? 'p-0 hover:bg-gray-800/50' : 'px-4 py-2'} relative overflow-hidden`}
+                      className={`text-left border-b border-r border-gray-800 ${showControls ? 'p-0 hover:bg-gray-800/50' : 'px-4 py-2'} relative overflow-hidden font-mono`}
                       style={{ width: header.getSize(), maxWidth: header.getSize() }}
                     >
                       {header.isPlaceholder
@@ -263,7 +360,7 @@ export function DataTable({ columns, rows, primaryKeys, showControls = true }: D
                     return (
                       <TableCell
                         key={cell.id}
-                        className="px-4 py-2 text-xs text-gray-200 border-r border-gray-800 overflow-hidden"
+                        className="px-4 py-2 text-xs text-gray-200 border-r border-gray-800 overflow-hidden font-mono"
                         style={{ width: cell.column.getSize(), maxWidth: cell.column.getSize() }}
                       >
                         <div className="truncate">
@@ -276,7 +373,7 @@ export function DataTable({ columns, rows, primaryKeys, showControls = true }: D
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={normalizedColumns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

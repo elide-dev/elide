@@ -42,10 +42,10 @@ export const createTableRoute = withDatabase(async (_params, context, body) => {
 
   const columns = schema.map(col => {
     const constraints = col.constraints ? ` ${col.constraints}` : "";
-    return `${col.name} ${col.type}${constraints}`;
+    return `"${col.name}" ${col.type}${constraints}`;
   }).join(", ");
 
-  const sql = `CREATE TABLE ${tableName} (${columns})`;
+  const sql = `CREATE TABLE "${tableName}" (${columns})`;
 
   try {
     context.db.exec(sql);
@@ -69,7 +69,7 @@ export const dropTableRoute = withDatabase(async (params, context, body) => {
     return errorResponse("Must set 'confirm: true' in request body to drop table (safety check)", 400);
   }
 
-  const sql = `DROP TABLE ${params.tableName}`;
+  const sql = `DROP TABLE "${params.tableName}"`;
 
   try {
     context.db.exec(sql);

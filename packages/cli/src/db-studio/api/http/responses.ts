@@ -8,7 +8,7 @@ const NOT_FOUND_STATUS = 404;
  * Create a JSON response
  */
 export function jsonResponse(data: unknown, status: number = SUCCESS_STATUS): ApiResponse {
-  console.log("returning json response", data);
+  // console.log("returning json response", data);
   return {
     status,
     headers: { "Content-Type": "application/json" },

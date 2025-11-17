@@ -20,7 +20,8 @@ export const insertRowsRoute = withDatabase(async (params, context, body) => {
 
   const columns = Object.keys(values);
   const placeholders = columns.map(() => "?").join(", ");
-  const sql = `INSERT INTO ${params.tableName} (${columns.join(", ")}) VALUES (${placeholders})`;
+  const quotedColumns = columns.map(col => `"${col}"`).join(", ");
+  const sql = `INSERT INTO "${params.tableName}" (${quotedColumns}) VALUES (${placeholders})`;
 
   try {
     const stmt = context.db.prepare(sql);
@@ -50,9 +51,9 @@ export const updateRowsRoute = withDatabase(async (params, context, body) => {
     return errorResponse("Request body must contain 'where' object with at least one condition", 400);
   }
 
-  const setColumns = Object.keys(values).map(key => `${key} = ?`).join(", ");
+  const setColumns = Object.keys(values).map(key => `"${key}" = ?`).join(", ");
   const { clause: whereClause, values: whereValues } = buildWhereClause(where);
-  const sql = `UPDATE ${params.tableName} SET ${setColumns} ${whereClause}`;
+  const sql = `UPDATE "${params.tableName}" SET ${setColumns} ${whereClause}`;
 
   try {
     const stmt = context.db.prepare(sql);
@@ -79,7 +80,7 @@ export const deleteRowsRoute = withDatabase(async (params, context, body) => {
   }
 
   const { clause: whereClause, values: whereValues } = buildWhereClause(where);
-  const sql = `DELETE FROM ${params.tableName} ${whereClause}`;
+  const sql = `DELETE FROM "${params.tableName}" ${whereClause}`;
 
   try {
     const stmt = context.db.prepare(sql);

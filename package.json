@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
-    "@commitlint/cli": "19.8.1",
+    "@commitlint/cli": "20.1.0",
     "@commitlint/config-conventional": "19.8.1",
     "@mdx-js/esbuild": "3.1.1",
     "@mitata/counters": "0.0.8",

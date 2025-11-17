@@ -1,4 +1,4 @@
-import { jsonResponse, handleDatabaseError, errorResponse } from "../http/responses.ts";
+import { jsonResponse, handleSQLError, errorResponse } from "../http/responses.ts";
 import { withDatabase } from "../http/middleware.ts";
 import { requireTableName } from "../utils/validation.ts";
 import { parseRequestBody } from "../utils/request.ts";
@@ -13,14 +13,13 @@ export const getTablesRoute = withDatabase(async (_params, context, _body) => {
 });
 
 /**
- * Get table data
+ * Get table data with enhanced column metadata
  */
 export const getTableDataRoute = withDatabase(async (params, context, _body) => {
   const tableNameError = requireTableName(params);
   if (tableNameError) return tableNameError;
 
   const tableData = getTableData(context.db, params.tableName);
-  console.log(tableData);
   return jsonResponse(tableData);
 });
 
@@ -46,12 +45,13 @@ export const createTableRoute = withDatabase(async (_params, context, body) => {
   }).join(", ");
 
   const sql = `CREATE TABLE "${tableName}" (${columns})`;
+  const startTime = performance.now();
 
   try {
     context.db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${tableName}' created successfully` });
   } catch (err) {
-    return handleDatabaseError(err, "create table");
+    return handleSQLError(err, sql, startTime);
   }
 });
 
@@ -70,12 +70,13 @@ export const dropTableRoute = withDatabase(async (params, context, body) => {
   }
 
   const sql = `DROP TABLE "${params.tableName}"`;
+  const startTime = performance.now();
 
   try {
     context.db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${params.tableName}' dropped successfully` });
   } catch (err) {
-    return handleDatabaseError(err, "drop table");
+    return handleSQLError(err, sql, startTime);
   }
 });
 

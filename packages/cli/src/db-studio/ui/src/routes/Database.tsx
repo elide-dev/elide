@@ -58,8 +58,8 @@ export default function Database() {
               key={name}
               to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}
               className={[
-                'w-full text-left px-3 py-2.5 mb-1 flex items-center gap-2.5 text-sm transition-colors rounded',
-                isActive ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white'
+                'w-full text-left px-3 py-2 mb-1 flex items-center gap-2 text-sm transition-colors rounded bg-gray-950 hover:bg-gray-900',
+                isActive ? 'bg-gray-900 text-white' : 'text-gray-200 hover:text-white'
               ].join(' ')}
               aria-current={isActive ? 'page' : undefined}
             >

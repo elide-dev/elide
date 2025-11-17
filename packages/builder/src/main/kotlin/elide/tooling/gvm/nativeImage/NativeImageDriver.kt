@@ -15,12 +15,15 @@ package elide.tooling.gvm.nativeImage
 import com.oracle.svm.driver.NativeImage
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
+import java.io.File
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.concurrent.TimeUnit
 import kotlinx.collections.immutable.toPersistentList
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.exists
 import elide.runtime.Logging
 import elide.tooling.Argument
 import elide.tooling.ArgumentContext
@@ -34,6 +37,7 @@ import elide.tooling.cli.Statics
 import elide.tooling.AbstractTool
 import elide.tooling.jvm.JavaCompiler
 import elide.tooling.project.ElideProject
+import elide.tooling.project.manifest.ElidePackageManifest
 
 // Internal debug logs.
 private const val NI_DEBUG_LOGGING = false
@@ -42,13 +46,16 @@ private const val NI_DEBUG_LOGGING = false
 public const val NATIVE_IMAGE: String = "native-image"
 
 // GraalVM version.
-public const val GRAALVM_VERSION: String = "24.0.1"
+public const val GRAALVM_VERSION: String = "25.0.1"
 
 // Embedded JVM/JDK version.
-public const val EMBEDDED_JDK_VERSION: String = "24"
+public const val EMBEDDED_JDK_VERSION: String = "25"
 
 // Build-time SVM support flag.
 public val svmIsSupported: Boolean = System.getProperty("elide.svm") == "true"
+
+// How long (maximum) to wait for a Native Image build.
+private const val MAX_NATIVE_IMAGE_MINUTES = 30L
 
 // Description to show.
 public const val NI_COMPILER_DESCRIPTION: String =
@@ -237,6 +244,7 @@ where options include:
   public val outputs: NativeImageOutputs,
   private val configurator: NativeImageConfigurator.() -> Unit = {},
   private val projectRoot: Path,
+  private val driverMode: ElidePackageManifest.NativeImageDriverMode,
 ) : AbstractTool(info = nativeImage.extend(
   args,
   env,
@@ -300,12 +308,7 @@ where options include:
     }
   }
 
-  private fun amendArgs(
-    args: MutableArguments,
-    javaToolchainHome: Path,
-    inputs: NativeImageInputs.Paths,
-    project: ElideProject?,
-  ) {
+  private fun amendArgs(args: MutableArguments, project: ElideProject?) {
     val baseArgs = args.asArgumentList()
     val targetName = project?.manifest?.name ?: "app"
     val targetOuts = projectRoot.resolve(".dev").resolve("artifacts").resolve("native-image").resolve(targetName)
@@ -355,8 +358,6 @@ where options include:
     debugLog("Amending arguments")
     amendArgs(
       mut,
-      javaToolchainHome,
-      inputs as NativeImageInputs.Paths,
       projectInfo,
     )
     mut.add("-H:-UnlockExperimentalVMOptions")  // lock it back up
@@ -366,16 +367,66 @@ where options include:
     return try {
       debugLog("Finalized arguments: ${argList.joinToString(" ")}")
 
-      @Suppress("SwallowedException")
-      try {
-        NativeImage.buildImage(argList.toTypedArray(), /* exit = */ false)
-      } catch (result: NativeImageResult) {
-        when (val err = result.error) {
-          null -> Tool.Result.Success
-          else -> throw err
+      when (driverMode) {
+        ElidePackageManifest.NativeImageDriverMode.EMBEDDED -> @Suppress("SwallowedException") try {
+          NativeImage.buildImage(argList.toTypedArray(), /* exit = */ false)
+          Tool.Result.Success  // unreachable
+        } catch (result: NativeImageResult) {
+          when (val err = result.error) {
+            null -> Tool.Result.Success
+            else -> throw err
+          }
+        }
+
+        ElidePackageManifest.NativeImageDriverMode.EXTERNAL -> {
+          val gvmHome = System.getenv("GRAALVM_HOME")
+          val javaHome = System.getenv("JAVA_HOME")
+          val effectiveHome = gvmHome ?: javaHome
+          val nativeImageBin = when (effectiveHome) {
+            null -> System.getenv("PATH").let { systemPath ->
+              systemPath.split(File.pathSeparator).map {
+                Paths.get(it, "native-image")
+              }.first { candidate ->
+                candidate.exists() && Files.isExecutable(candidate)
+              }
+            }
+            else -> Paths.get(effectiveHome, "bin", "native-image")
+          }
+          if (nativeImageBin == null || !Files.exists(nativeImageBin)) error(
+            "Cannot call `native-image` driver with mode `external`: `native-image` not found. " +
+            "Please set `GRAALVM_HOME`, set `JAVA_HOME` to a GraalVM installation, or add `native-image` " +
+            "to your PATH. Otherwise, use driver mode `embedded`."
+          )
+          if (!Files.isExecutable(nativeImageBin)) error(
+            "Native Image cannot be called with mode `external`: not executable"
+          )
+          try {
+            val cwd = Paths.get(System.getProperty("user.dir")).toFile()
+
+            // prepare to call native image as a subprocess
+            with(ProcessBuilder()) {
+              directory(cwd)
+              environment().putAll(System.getenv())
+              inheritIO()
+
+              command(sequence {
+                yield(nativeImageBin.absolutePathString())
+                yieldAll(argList)
+              }.toList())
+            }.start().let { proc ->
+              when (proc.waitFor(MAX_NATIVE_IMAGE_MINUTES, TimeUnit.MINUTES)) {
+                true -> when (proc.exitValue()) {
+                  0 -> Tool.Result.Success
+                  else -> Tool.Result.UnspecifiedFailure
+                }
+                else -> error("Native Image timed out after 30 minutes of execution")
+              }
+            }
+          } catch (_: RuntimeException) {
+            Tool.Result.UnspecifiedFailure
+          }
         }
       }
-      Tool.Result.Success
     } catch (err: Throwable) {
       logging.error("Native Image compilation failed", err)
       Tool.Result.UnspecifiedFailure
@@ -429,6 +480,7 @@ where options include:
      * @param outputs Outputs from the driver.
      * @param env Environment for the driver; defaults to the host environment.
      * @param projectRoot Project root path; defaults to the current working directory.
+     * @param driverMode Describes how Native Image should be dispatched.
      * @param configurator Optional configurator for the driver, which can be used to amend arguments.
      */
     @JvmStatic public fun create(
@@ -437,6 +489,7 @@ where options include:
       inputs: NativeImageInputs,
       outputs: NativeImageOutputs,
       projectRoot: Path = Paths.get(System.getProperty("user.dir")),
+      driverMode: ElidePackageManifest.NativeImageDriverMode = ElidePackageManifest.NativeImageDriverMode.EMBEDDED,
       configurator: NativeImageConfigurator.() -> Unit = {},
     ): NativeImageDriver = NativeImageDriver(
       args = args,
@@ -445,6 +498,7 @@ where options include:
       outputs = outputs,
       projectRoot = projectRoot,
       configurator = configurator,
+      driverMode = driverMode,
     )
   }
 }

@@ -596,6 +596,19 @@ public data class ElidePackageManifest(
     val profiles: List<String> = emptyList(),
   )
 
+  @Serializable public enum class NativeImageDriverMode (override val symbol: String) : Symbolic<String> {
+    EMBEDDED("embedded"),
+    EXTERNAL("external");
+
+    public companion object: Symbolic.SealedResolver<String, NativeImageDriverMode> {
+      override fun resolve(symbol: String): NativeImageDriverMode = when (symbol) {
+        "embedded" -> EMBEDDED
+        "external" -> EXTERNAL
+        else -> throw unresolved(symbol)
+      }
+    }
+  }
+
   @JvmRecord @Serializable public data class NativeImageOptions(
     val verbose: Boolean = false,
     val linkAtBuildTime: NativeImageLinkAtBuildTime = NativeImageLinkAtBuildTime(),
@@ -603,6 +616,7 @@ public data class ElidePackageManifest(
     val exclusions: NativeImageExclusions = NativeImageExclusions(),
     val optimization: OptimizationLevel = OptimizationLevel.AUTO,
     val pgo: ProfileGuidedOptimization = ProfileGuidedOptimization(),
+    val driverMode: NativeImageDriverMode = NativeImageDriverMode.EMBEDDED,
     val flags: List<String> = emptyList(),
     val cflags: List<String> = emptyList(),
     val ldflags: List<String> = emptyList(),

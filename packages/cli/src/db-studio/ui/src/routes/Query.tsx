@@ -8,16 +8,9 @@ import { oneDark } from '@codemirror/theme-one-dark'
 import { keymap, EditorView } from '@codemirror/view'
 import { Prec } from '@codemirror/state'
 import { format } from 'sql-formatter'
-import {
-  Table as UiTable,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from '@/components/ui/table'
 import { useQueryExecution } from '../hooks/useQueryExecution'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
+import { DataTable } from '../components/DataTable'
 
 export default function Query() {
   const { dbIndex } = useParams()
@@ -176,45 +169,10 @@ export default function Query() {
             {result.rows !== undefined ? (
               <>
                 {result.rows.length > 0 ? (
-                  <div className="overflow-hidden">
-                    <UiTable className="w-full">
-                      <TableHeader>
-                        <TableRow className="bg-gray-900/50">
-                          {Object.keys(result.rows[0] as Record<string, unknown>).map((col, colIndex, cols) => {
-                            const isLastColumn = colIndex === cols.length - 1
-                            return (
-                              <TableHead
-                                key={col}
-                                className={`text-left px-4 py-3 text-xs font-medium text-gray-400 tracking-wider border-b border-gray-800 ${!isLastColumn ? 'border-r border-gray-800' : ''}`}
-                              >
-                                {col}
-                              </TableHead>
-                            )
-                          })}
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {result.rows.map((row, i) => {
-                          const rowValues = Object.values(row as Record<string, unknown>)
-                          return (
-                            <TableRow key={i} className="hover:bg-gray-900/30 transition-colors">
-                              {rowValues.map((cell, j) => {
-                                const isLastColumn = j === rowValues.length - 1
-                                return (
-                                  <TableCell
-                                    key={j}
-                                    className={`px-4 py-3 text-sm text-gray-200 whitespace-nowrap ${!isLastColumn ? 'border-r border-gray-800' : ''}`}
-                                  >
-                                    {String(cell ?? '')}
-                                  </TableCell>
-                                )
-                              })}
-                            </TableRow>
-                          )
-                        })}
-                      </TableBody>
-                    </UiTable>
-                  </div>
+                  <DataTable
+                    columns={Object.keys(result.rows[0] as Record<string, unknown>)}
+                    rows={result.rows.map(row => Object.values(row as Record<string, unknown>))}
+                  />
                 ) : (
                   <div className="px-6 pt-6 text-gray-500 text-sm">No rows returned</div>
                 )}

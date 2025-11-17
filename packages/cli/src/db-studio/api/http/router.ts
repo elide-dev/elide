@@ -47,16 +47,16 @@ function matchPathSegment(
       matched: true,
       parameter: {
         name: extractParameterName(patternSegment),
-        value: pathSegment
+        value: decodeURIComponent(pathSegment)
       }
     };
   }
-  
+
   // Literal segment - must match exactly
   if (patternSegment === pathSegment) {
     return { matched: true, parameter: null };
   }
-  
+
   return { matched: false };
 }
 

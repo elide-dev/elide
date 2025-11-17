@@ -1,14 +1,43 @@
 import { useMutation } from '@tanstack/react-query'
 import { API_BASE_URL } from '../config'
 
-export type QueryResult = {
-  success: boolean
-  rows?: unknown[]
-  rowCount?: number
-  rowsAffected?: number
-  lastInsertRowid?: number
-  error?: string
+export type ColumnMetadata = {
+  name: string
+  type: string
+  nullable: boolean
+  primaryKey: boolean
+  defaultValue?: string | number | null
+  foreignKey?: {
+    table: string
+    column: string
+    onUpdate?: string
+    onDelete?: string
+  }
+  unique?: boolean
+  autoIncrement?: boolean
 }
+
+export type QueryMetadata = {
+  executionTimeMs: number
+  sql: string
+  rowCount: number
+}
+
+export type SelectQueryResult = {
+  success: true
+  data: Record<string, unknown>[]
+  columns: ColumnMetadata[]
+  metadata: QueryMetadata
+}
+
+export type WriteQueryResult = {
+  success: true
+  rowsAffected: number
+  lastInsertRowid?: number | bigint
+  metadata: QueryMetadata
+}
+
+export type QueryResult = SelectQueryResult | WriteQueryResult
 
 async function executeQuery(
   dbIndex: string,
@@ -31,7 +60,14 @@ async function executeQuery(
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({ error: res.statusText }))
-    throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`)
+    
+    // Create error with additional context
+    const error: any = new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`)
+    
+    // Attach the full error response for display purposes
+    error.response = errorData
+    
+    throw error
   }
 
   return res.json()

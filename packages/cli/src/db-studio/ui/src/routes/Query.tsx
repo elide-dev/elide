@@ -172,6 +172,7 @@ export default function Query() {
                   <DataTable
                     columns={Object.keys(result.rows[0] as Record<string, unknown>)}
                     rows={result.rows.map(row => Object.values(row as Record<string, unknown>))}
+                    showControls={false}
                   />
                 ) : (
                   <div className="px-6 pt-6 text-gray-500 text-sm">No rows returned</div>

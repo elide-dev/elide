@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../config'
 
 export type TableMeta = {
   name: string
+  type: 'table' | 'view'
   rowCount: number
 }
 

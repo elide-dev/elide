@@ -1,9 +1,10 @@
-import { jsonResponse, handleDatabaseError, errorResponse } from "../http/responses.ts";
+import { jsonResponse, handleSQLError, errorResponse } from "../http/responses.ts";
 import { withDatabase } from "../http/middleware.ts";
 import { parseRequestBody } from "../utils/request.ts";
+import { executeQuery } from "../database.ts";
 
 /**
- * Execute a raw SQL query
+ * Execute a raw SQL query with rich metadata
  */
 export const executeQueryRoute = withDatabase(async (_params, context, body) => {
   const data = parseRequestBody(body);
@@ -14,27 +15,48 @@ export const executeQueryRoute = withDatabase(async (_params, context, body) => 
     return errorResponse("Request body must contain 'sql' string", 400);
   }
 
-  try {
-    const stmt = context.db.prepare(sql);
-    const params = queryParams || [];
+  const trimmedSql = sql.trim();
+  const startTime = performance.now();
 
-    if (sql.trim().toLowerCase().startsWith("select")) {
-      const rows = stmt.all(...(params as any));
+  try {
+    const params = queryParams || [];
+    const sqlLower = trimmedSql.toLowerCase();
+
+    // Determine if this is a SELECT query
+    if (sqlLower.startsWith("select")) {
+      // For SELECT queries, use our enhanced executeQuery function
+      const { columns, data: rows } = executeQuery(context.db, trimmedSql);
+      const endTime = performance.now();
+
       return jsonResponse({
         success: true,
-        rows,
-        rowCount: Array.isArray(rows) ? rows.length : 0,
+        data: rows,
+        columns,
+        metadata: {
+          executionTimeMs: Number((endTime - startTime).toFixed(2)),
+          sql: trimmedSql,
+          rowCount: rows.length,
+        },
       });
     } else {
+      // For INSERT/UPDATE/DELETE/CREATE/DROP etc.
+      const stmt = context.db.prepare(trimmedSql);
       const info = stmt.run(...(params as any));
+      const endTime = performance.now();
+
       return jsonResponse({
         success: true,
         rowsAffected: info.changes,
         lastInsertRowid: info.lastInsertRowid,
+        metadata: {
+          executionTimeMs: Number((endTime - startTime).toFixed(2)),
+          sql: trimmedSql,
+          rowCount: info.changes,
+        },
       });
     }
   } catch (err) {
-    return handleDatabaseError(err, "execute query");
+    return handleSQLError(err, trimmedSql, startTime);
   }
 });
 

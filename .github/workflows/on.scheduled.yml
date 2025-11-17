@@ -39,7 +39,7 @@ jobs:
       pull-requests: "write"
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           egress-policy: audit
 
@@ -66,7 +66,7 @@ jobs:
       pull-requests: "write"
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           egress-policy: audit
 
@@ -122,7 +122,7 @@ jobs:
         shell: bash
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           egress-policy: audit
       - name: "Setup: Checkout"

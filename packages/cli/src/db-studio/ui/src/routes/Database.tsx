@@ -1,6 +1,6 @@
 import { Link, Outlet, useParams, useLocation } from 'react-router-dom'
 import { useMemo, useState } from 'react'
-import { TableProperties as TableIcon, Code2 } from 'lucide-react'
+import { TableProperties as TableIcon, Code2, ScanEye } from 'lucide-react'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
 import { Button } from '@/components/ui/button'
 import { formatRowCount } from '../lib/utils'
@@ -12,9 +12,18 @@ export default function Database() {
   const [query, setQuery] = useState('')
 
   const filteredTables = useMemo(() => {
-    if (!query) return tables
-    const q = query.toLowerCase()
-    return tables.filter(({ name }) => name.toLowerCase().includes(q))
+    let filtered = tables
+    if (query) {
+      const q = query.toLowerCase()
+      filtered = tables.filter(({ name }) => name.toLowerCase().includes(q))
+    }
+    // Sort: tables first (alphabetically), then views (alphabetically)
+    return filtered.sort((a, b) => {
+      if (a.type === b.type) {
+        return a.name.localeCompare(b.name)
+      }
+      return a.type === 'table' ? -1 : 1
+    })
   }, [tables, query])
 
   const isQueryActive = location.pathname.includes('/query')
@@ -49,10 +58,11 @@ export default function Database() {
           />
         </div>
         <div className="text-xs text-gray-500 uppercase  mb-3 font-medium">
-          {loading ? 'Loading…' : `${filteredTables.length} TABLES`}
+          {loading ? 'Loading…' : `${filteredTables.length} TABLES & VIEWS`}
         </div>
-        {!loading && filteredTables.map(({ name, rowCount }) => {
+        {!loading && filteredTables.map(({ name, type, rowCount }) => {
           const isActive = decodeURIComponent(tableName || '') === name
+          const Icon = type === 'view' ? ScanEye : TableIcon
           return (
             <Link
               key={name}
@@ -63,7 +73,7 @@ export default function Database() {
               ].join(' ')}
               aria-current={isActive ? 'page' : undefined}
             >
-              <TableIcon className="w-4 h-4 shrink-0" />
+              <Icon className="w-4 h-4 shrink-0" />
               <span className="truncate flex-1">{name}</span>
               <span className="text-xs text-gray-500 shrink-0">{formatRowCount(rowCount)}</span>
             </Link>

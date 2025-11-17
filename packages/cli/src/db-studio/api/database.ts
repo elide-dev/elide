@@ -30,8 +30,11 @@ export interface DiscoveredDatabase {
   lastModified: number;
 }
 
+export type TableType = 'table' | 'view';
+
 export interface TableInfo {
   name: string;
+  type: TableType;
   rowCount: number;
 }
 
@@ -52,6 +55,7 @@ export interface DatabaseInfo {
 
 interface TableNameRow {
   name: string;
+  type: 'table' | 'view';
 }
 
 interface CountRow {
@@ -59,26 +63,42 @@ interface CountRow {
 }
 
 /**
- * Get list of tables in a database
+ * Get list of tables and views in a database
  */
 export function getTables(db: Database): TableInfo[] {
-  const sql = "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name";
-  logQuery(sql);
-  const query: Statement<TableNameRow> = db.query(sql);
-  const results = query.all();
+  // First query: get all table and view names with their types
+  const tableNamesQuery = "SELECT name, type FROM sqlite_master WHERE type IN ('table', 'view') ORDER BY name";
+  logQuery(tableNamesQuery);
+  const tablesQuery: Statement<TableNameRow> = db.query(tableNamesQuery);
+  const tables = tablesQuery.all();
 
-  return results.map(({ name }) => {
-    const tableName = name;
-    const countSql = `SELECT COUNT(*) as count FROM ${tableName}`;
-    logQuery(countSql);
-    const countQuery: Statement<CountRow> = db.query(countSql);
-    const countResult = countQuery.get();
+  if (tables.length === 0) {
+    return [];
+  }
 
-    return {
-      name: tableName,
-      rowCount: countResult?.count ?? 0,
-    };
-  });
+  // Second query: get counts for all tables and views in a single UNION ALL query
+  const tableCountQuery = tables.map(({ name }) =>
+    `SELECT '${name}' as tableName, COUNT(*) as count FROM "${name}"`
+  ).join(' UNION ALL ');
+  
+  logQuery(tableCountQuery);
+  
+  interface CountResultRow {
+    tableName: string;
+    count: number;
+  }
+  
+  const countsQuery: Statement<CountResultRow> = db.query(tableCountQuery);
+  const counts = countsQuery.all();
+
+  // Create a map for O(1) lookup
+  const countMap = new Map(counts.map(({ tableName, count }) => [tableName, count]));
+
+  return tables.map(({ name, type }) => ({
+    name,
+    type,
+    rowCount: countMap.get(name) ?? 0,
+  }));
 }
 
 
@@ -99,13 +119,13 @@ export function getTableData(db: Database, tableName: string, limit: number = 10
   const columns = schemaResults.map((col) => col.name);
 
   // Get data rows (unknown type since we don't know the schema)
-  const dataSql = `SELECT * FROM ${tableName} LIMIT ${limit} OFFSET ${offset}`;
+  const dataSql = `SELECT * FROM "${tableName}" LIMIT ${limit} OFFSET ${offset}`;
   logQuery(dataSql);
   const dataQuery = db.query(dataSql);
   const rows = dataQuery.all();
 
   // Get total row count
-  const countSql = `SELECT COUNT(*) as count FROM ${tableName}`;
+  const countSql = `SELECT COUNT(*) as count FROM "${tableName}"`;
   logQuery(countSql);
   const countQuery: Statement<CountRow> = db.query(countSql);
   const countResult = countQuery.get();

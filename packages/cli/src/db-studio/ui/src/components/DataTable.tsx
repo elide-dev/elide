@@ -72,6 +72,11 @@ export type DataTablePagination = {
   offset: number
 }
 
+export type DataTableSorting = {
+  column: string | null
+  direction: 'asc' | 'desc' | null
+}
+
 interface DataTableProps {
   data: DataTableData
   showControls?: boolean // Show sorting, column toggle, and column resizing (default: true)
@@ -81,6 +86,9 @@ interface DataTableProps {
   totalRows: number
   pagination: DataTablePagination
   onPaginationChange: (limit: number, offset: number) => void
+  // Server-side sorting props (optional - if not provided, sorting is disabled)
+  sorting?: DataTableSorting
+  onSortChange?: (column: string | null, direction: 'asc' | 'desc' | null) => void
   isLoading?: boolean // Show skeleton loaders when fetching new data
 }
 
@@ -88,6 +96,7 @@ interface DataTableProps {
  * Reusable data table component for displaying database query results
  * Uses TanStack Table for sorting, filtering, and column visibility
  * Always uses server-side pagination via totalRows, limit, offset props and onPaginationChange callback
+ * Supports server-side sorting via sorting and onSortChange props
  * Pagination is controlled - limit/offset come from props (URL query params)
  * Handles NULL values, empty strings, and other data types appropriately
  */
@@ -99,9 +108,18 @@ export function DataTable({
   totalRows,
   pagination,
   onPaginationChange,
+  sorting,
+  onSortChange,
   isLoading = false,
 }: DataTableProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  // Convert server-side sorting to TanStack Table format
+  const sortingState: SortingState = React.useMemo(() => {
+    if (sorting?.column && sorting.direction) {
+      return [{ id: sorting.column, desc: sorting.direction === 'desc' }]
+    }
+    return []
+  }, [sorting])
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
@@ -156,43 +174,46 @@ export function DataTable({
               sorted === 'asc' ? ArrowUpWideNarrow : sorted === 'desc' ? ArrowDownWideNarrow : ArrowUpDown
 
             const handleSort = () => {
+              if (!onSortChange) return // Sorting disabled
+
               // Three-state sorting: no sort → asc → desc → no sort
               if (!sorted) {
-                column.toggleSorting(false) // asc
+                onSortChange(col.name, 'asc')
               } else if (sorted === 'asc') {
-                column.toggleSorting(true) // desc
+                onSortChange(col.name, 'desc')
               } else {
-                column.clearSorting() // clear sorting
+                onSortChange(null, null)
               }
             }
 
-            const headerContent = showControls ? (
-              <div
-                className="flex items-center gap-1.5 cursor-pointer select-none hover:text-gray-200 transition-colors w-full h-full px-4 py-2"
-                onClick={handleSort}
-              >
-                {isKey && <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />}
-                {col.foreignKey && <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
-                <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                  <span className="text-xs font-semibold text-gray-200 tracking-wider truncate">{col.name}</span>
-                  {col.type && col.type !== 'UNKNOWN' && (
-                    <span className="text-[10px] text-gray-500 font-normal truncate">{col.type}</span>
-                  )}
+            const headerContent =
+              showControls && onSortChange ? (
+                <div
+                  className="flex items-center gap-1.5 cursor-pointer select-none hover:text-gray-200 transition-colors w-full h-full px-4 py-2"
+                  onClick={handleSort}
+                >
+                  {isKey && <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />}
+                  {col.foreignKey && <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
+                  <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-gray-200 tracking-wider truncate">{col.name}</span>
+                    {col.type && col.type !== 'UNKNOWN' && (
+                      <span className="text-[10px] text-gray-500 font-normal truncate">{col.type}</span>
+                    )}
+                  </div>
+                  <SortIcon className="h-3.5 w-3.5 text-gray-400 shrink-0" />
                 </div>
-                <SortIcon className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-              </div>
-            ) : (
-              <div className="flex items-center gap-1.5 px-4 py-2">
-                {isKey && <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />}
-                {col.foreignKey && <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
-                <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                  <span className="text-xs font-semibold text-gray-200 tracking-wider truncate">{col.name}</span>
-                  {col.type && col.type !== 'UNKNOWN' && (
-                    <span className="text-[10px] text-gray-500 font-normal truncate">{col.type}</span>
-                  )}
+              ) : (
+                <div className="flex items-center gap-1.5 px-4 py-2">
+                  {isKey && <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />}
+                  {col.foreignKey && <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
+                  <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-gray-200 tracking-wider truncate">{col.name}</span>
+                    {col.type && col.type !== 'UNKNOWN' && (
+                      <span className="text-[10px] text-gray-500 font-normal truncate">{col.type}</span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )
+              )
 
             return <ColumnInfo column={col}>{headerContent}</ColumnInfo>
           },
@@ -201,7 +222,7 @@ export function DataTable({
           },
         }
       }),
-    [normalizedColumns, showControls]
+    [normalizedColumns, showControls, onSortChange]
   )
 
   // Convert rows array to object format for TanStack Table
@@ -222,20 +243,22 @@ export function DataTable({
   const table = useReactTable({
     data: tableData,
     columns: tableColumns,
-    onSortingChange: setSorting,
+    // Server-side sorting: when onSortChange is provided, use manual sorting
+    manualSorting: !!onSortChange,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     // Always use server-side pagination
     manualPagination: true,
     pageCount: Math.ceil(totalRows / limit),
-    getSortedRowModel: getSortedRowModel(),
+    // Only use client-side sorting if server-side sorting is not enabled
+    getSortedRowModel: onSortChange ? undefined : getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onColumnSizingChange: setColumnSizing,
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
     state: {
-      sorting,
+      sorting: sortingState,
       columnFilters,
       columnVisibility,
       columnSizing,

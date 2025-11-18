@@ -36,20 +36,30 @@ export type PaginationParams = {
   offset: number
 }
 
+export type SortingParams = {
+  column: string | null
+  direction: 'asc' | 'desc' | null
+}
+
 async function fetchTableData(
   dbIndex: string,
   tableName: string,
-  pagination?: PaginationParams
+  pagination?: PaginationParams,
+  sorting?: SortingParams
 ): Promise<TableData> {
   const params = new URLSearchParams()
   if (pagination) {
     params.set('limit', pagination.limit.toString())
     params.set('offset', pagination.offset.toString())
   }
-  
+  if (sorting?.column && sorting.direction) {
+    params.set('sort', sorting.column)
+    params.set('order', sorting.direction)
+  }
+
   const queryString = params.toString()
   const url = `${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}${queryString ? `?${queryString}` : ''}`
-  
+
   const res = await fetch(url)
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${res.statusText}`)
@@ -60,11 +70,12 @@ async function fetchTableData(
 export function useTableData(
   dbIndex: string | undefined,
   tableName: string | undefined,
-  pagination?: PaginationParams
+  pagination?: PaginationParams,
+  sorting?: SortingParams
 ) {
   return useQuery({
-    queryKey: ['databases', dbIndex, 'tables', tableName, pagination],
-    queryFn: () => fetchTableData(dbIndex!, tableName!, pagination),
+    queryKey: ['databases', dbIndex, 'tables', tableName, pagination, sorting],
+    queryFn: () => fetchTableData(dbIndex!, tableName!, pagination, sorting),
     enabled: !!dbIndex && !!tableName,
     placeholderData: (previousData) => previousData, // Keep previous data while fetching
   })

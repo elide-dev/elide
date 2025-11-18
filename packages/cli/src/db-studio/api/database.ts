@@ -212,15 +212,39 @@ export function getColumnMetadata(db: Database, tableName: string): ColumnMetada
 
 /**
  * Get table data with schema and rows
+ * Supports optional sorting by column name and direction
  */
-export function getTableData(db: Database, tableName: string, limit: number = 100, offset: number = 0): TableData {
+export function getTableData(
+  db: Database,
+  tableName: string,
+  limit: number = 100,
+  offset: number = 0,
+  sortColumn: string | null = null,
+  sortDirection: 'asc' | 'desc' | null = null
+): TableData {
   const startTime = performance.now();
   
   // Get column metadata
   const columns = getColumnMetadata(db, tableName);
 
-  // Get data rows (unknown type since we don't know the schema)
-  const dataSql = `SELECT * FROM "${tableName}" LIMIT ${limit} OFFSET ${offset}`;
+  // Validate sort column if provided
+  if (sortColumn && sortDirection) {
+    const columnExists = columns.some(col => col.name === sortColumn);
+    if (!columnExists) {
+      throw new Error(`Invalid sort column: "${sortColumn}" does not exist in table "${tableName}"`);
+    }
+  }
+
+  // Build SQL query with optional ORDER BY clause
+  let dataSql = `SELECT * FROM "${tableName}"`;
+  
+  if (sortColumn && sortDirection) {
+    // Column name is validated above, but we still quote it for safety
+    dataSql += ` ORDER BY "${sortColumn}" ${sortDirection.toUpperCase()}`;
+  }
+  
+  dataSql += ` LIMIT ${limit} OFFSET ${offset}`;
+  
   logQuery(dataSql);
   const dataQuery = db.query(dataSql);
   const rows = dataQuery.all();

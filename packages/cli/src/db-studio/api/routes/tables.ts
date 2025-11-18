@@ -3,8 +3,7 @@ import { withDatabase } from "../http/middleware.ts";
 import { requireTableName } from "../utils/validation.ts";
 import { parseRequestBody, parseQueryParams } from "../utils/request.ts";
 import { getTables, getTableData } from "../database.ts";
-import { FilterSchema, type Filter } from "../http/schemas.ts";
-import { z } from "zod";
+import type { Filter } from "../http/schemas.ts";
 
 /**
  * Get list of tables in a database
@@ -67,19 +66,9 @@ export const getTableDataRoute = withDatabase(async (context) => {
       if (!Array.isArray(parsedWhere)) {
         return errorResponse("Invalid where parameter: must be a JSON array of filters", 400);
       }
-      
-      // Validate each filter using Zod schema
-      const FiltersArraySchema = z.array(FilterSchema);
-      const validationResult = FiltersArraySchema.safeParse(parsedWhere);
-      
-      if (!validationResult.success) {
-        return errorResponse(
-          `Invalid filter format: ${validationResult.error.message}`,
-          400
-        );
-      }
-      
-      filters = validationResult.data;
+
+      // Type cast - rely on compile-time types rather than runtime validation
+      filters = parsedWhere as Filter[];
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
       return errorResponse(

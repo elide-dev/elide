@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { API_BASE_URL } from '../config'
+import type { Filter } from '@/lib/types'
 
 export type ColumnMetadata = {
   name: string
@@ -45,7 +46,8 @@ async function fetchTableData(
   dbIndex: string,
   tableName: string,
   pagination?: PaginationParams,
-  sorting?: SortingParams
+  sorting?: SortingParams,
+  filters?: Filter[]
 ): Promise<TableData> {
   const params = new URLSearchParams()
   if (pagination) {
@@ -55,6 +57,10 @@ async function fetchTableData(
   if (sorting?.column && sorting.direction) {
     params.set('sort', sorting.column)
     params.set('order', sorting.direction)
+  }
+  if (filters && filters.length > 0) {
+    // Convert filters to JSON and URL encode
+    params.set('where', encodeURIComponent(JSON.stringify(filters)))
   }
 
   const queryString = params.toString()
@@ -71,11 +77,12 @@ export function useTableData(
   dbIndex: string | undefined,
   tableName: string | undefined,
   pagination?: PaginationParams,
-  sorting?: SortingParams
+  sorting?: SortingParams,
+  filters?: Filter[]
 ) {
   return useQuery({
-    queryKey: ['databases', dbIndex, 'tables', tableName, pagination, sorting],
-    queryFn: () => fetchTableData(dbIndex!, tableName!, pagination, sorting),
+    queryKey: ['databases', dbIndex, 'tables', tableName, pagination, sorting, filters],
+    queryFn: () => fetchTableData(dbIndex!, tableName!, pagination, sorting, filters),
     enabled: !!dbIndex && !!tableName,
     placeholderData: (previousData) => previousData, // Keep previous data while fetching
   })

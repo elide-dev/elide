@@ -22,6 +22,9 @@ import {
   Search,
   Key,
   Link,
+  Filter as FilterIcon,
+  X,
+  Plus,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -39,6 +42,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { ColumnInfo } from './ColumnInfo'
 import { formatRowCount } from '@/lib/utils'
+import type { Filter } from '@/lib/types'
+import { FILTER_OPERATORS } from '@/lib/types'
 
 export type ColumnMetadata = {
   name: string
@@ -90,6 +95,9 @@ interface DataTableProps {
   // Server-side sorting props (optional - if not provided, sorting is disabled)
   sorting?: DataTableSorting
   onSortChange?: (column: string | null, direction: 'asc' | 'desc' | null) => void
+  // Server-side filtering props (optional)
+  filters?: Filter[]
+  onFiltersChange?: (filters: Filter[]) => void
   isLoading?: boolean // Show skeleton loaders when fetching new data
   tableName?: string // Table name to display in toolbar
 }
@@ -112,6 +120,8 @@ export function DataTable({
   onPaginationChange,
   sorting,
   onSortChange,
+  filters = [],
+  onFiltersChange,
   isLoading = false,
   tableName,
 }: DataTableProps) {
@@ -127,6 +137,7 @@ export function DataTable({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
   const [columnSearch, setColumnSearch] = React.useState('')
+  const [showFilters, setShowFilters] = React.useState(filters.length > 0)
 
   const { columns, rows, metadata } = data
 
@@ -152,6 +163,57 @@ export function DataTable({
     ) : (
       String(value)
     )
+  }
+
+  // Filter management functions
+  const handleAddFilter = () => {
+    if (!onFiltersChange) return
+    const newFilter: Filter = {
+      column: columns[0]?.name || '',
+      operator: 'eq',
+      value: '',
+    }
+    onFiltersChange([...filters, newFilter])
+    setShowFilters(true)
+  }
+
+  const handleRemoveFilter = (index: number) => {
+    if (!onFiltersChange) return
+    const newFilters = filters.filter((_, i) => i !== index)
+    onFiltersChange(newFilters)
+    if (newFilters.length === 0) {
+      setShowFilters(false)
+    }
+  }
+
+  const handleUpdateFilter = (index: number, updates: Partial<Filter>) => {
+    if (!onFiltersChange) return
+    const newFilters = filters.map((filter, i) => {
+      if (i === index) {
+        const updatedFilter = { ...filter, ...updates }
+        // Reset value if operator changes to one that doesn't need a value
+        if (updates.operator && (updates.operator === 'is_null' || updates.operator === 'is_not_null')) {
+          updatedFilter.value = undefined
+        }
+        // Reset value if operator changes to 'in' (needs array)
+        if (updates.operator === 'in' && !Array.isArray(updatedFilter.value)) {
+          updatedFilter.value = []
+        }
+        // Reset value to string if operator changes from 'in' to something else
+        if (updates.operator && updates.operator !== 'in' && Array.isArray(updatedFilter.value)) {
+          updatedFilter.value = ''
+        }
+        return updatedFilter
+      }
+      return filter
+    })
+    onFiltersChange(newFilters)
+  }
+
+  const handleClearFilters = () => {
+    if (!onFiltersChange) return
+    onFiltersChange([])
+    setShowFilters(false)
   }
 
   // Columns are already ColumnMetadata format
@@ -287,6 +349,21 @@ export function DataTable({
                 </HoverCardContent>
               </HoverCard>
             </div>
+          )}
+          {showControls && onFiltersChange && (
+            <Button
+              variant={filters.length > 0 ? 'default' : 'outline'}
+              onClick={() => {
+                if (filters.length === 0) {
+                  handleAddFilter()
+                } else {
+                  setShowFilters(!showFilters)
+                }
+              }}
+            >
+              <FilterIcon className="mr-2 h-4 w-4" />
+              Filters {filters.length > 0 && `(${filters.length})`}
+            </Button>
           )}
           {showControls && (
             <DropdownMenu onOpenChange={(open) => !open && setColumnSearch('')}>
@@ -469,6 +546,122 @@ export function DataTable({
                 </HoverCard>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Filter rows section */}
+      {showFilters && onFiltersChange && filters.length > 0 && (
+        <div className="border-b border-gray-800 bg-gray-950/50 shrink-0">
+          <div className="px-6 py-3 space-y-2">
+            {filters.map((filter, index) => {
+              const operatorMeta = FILTER_OPERATORS.find((op) => op.value === filter.operator)
+              const requiresValue = operatorMeta?.requiresValue ?? true
+              const isArrayValue = operatorMeta?.isArrayValue ?? false
+
+              return (
+                <div key={index} className="flex items-center gap-2">
+                  {/* First filter shows "where", others show "and" */}
+                  <span className="text-xs text-gray-400 font-mono w-12 uppercase">
+                    {index === 0 ? 'where' : 'and'}
+                  </span>
+
+                  {/* Column selector */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="min-w-[140px] justify-between font-mono text-xs">
+                        {filter.column}
+                        <ChevronDown className="ml-2 h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="max-h-[300px] overflow-y-auto">
+                      {columns.map((col) => (
+                        <DropdownMenuCheckboxItem
+                          key={col.name}
+                          checked={filter.column === col.name}
+                          onCheckedChange={() => handleUpdateFilter(index, { column: col.name })}
+                          onSelect={(e) => e.preventDefault()}
+                        >
+                          <span className="font-mono text-xs">{col.name}</span>
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* Operator selector */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="min-w-[140px] justify-between text-xs">
+                        {operatorMeta?.label || filter.operator}
+                        <ChevronDown className="ml-2 h-3 w-3" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {FILTER_OPERATORS.map((op) => (
+                        <DropdownMenuCheckboxItem
+                          key={op.value}
+                          checked={filter.operator === op.value}
+                          onCheckedChange={() => handleUpdateFilter(index, { operator: op.value })}
+                          onSelect={(e) => e.preventDefault()}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs">{op.label}</span>
+                            <span className="text-[10px] text-gray-500 font-mono">{op.symbol}</span>
+                          </div>
+                        </DropdownMenuCheckboxItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* Value input (conditional based on operator) */}
+                  {requiresValue && !isArrayValue && (
+                    <Input
+                      placeholder="Value..."
+                      value={String(filter.value ?? '')}
+                      onChange={(e) => handleUpdateFilter(index, { value: e.target.value })}
+                      className="h-8 text-xs font-mono flex-1"
+                    />
+                  )}
+
+                  {/* Array value input for 'in' operator */}
+                  {requiresValue && isArrayValue && (
+                    <Input
+                      placeholder="Value1, Value2, Value3..."
+                      value={Array.isArray(filter.value) ? filter.value.join(', ') : ''}
+                      onChange={(e) => {
+                        const values = e.target.value
+                          .split(',')
+                          .map((v) => v.trim())
+                          .filter((v) => v !== '')
+                        handleUpdateFilter(index, { value: values })
+                      }}
+                      className="h-8 text-xs font-mono flex-1"
+                    />
+                  )}
+
+                  {/* Remove button */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemoveFilter(index)}
+                    className="h-8 w-8 p-0 text-gray-400 hover:text-gray-200"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              )
+            })}
+
+            {/* Action buttons */}
+            <div className="flex items-center gap-2 pt-1">
+              <Button variant="outline" size="sm" onClick={handleAddFilter} className="h-7 text-xs">
+                <Plus className="mr-1 h-3 w-3" />
+                Add filter
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleClearFilters} className="h-7 text-xs text-gray-400">
+                Clear all
+              </Button>
+            </div>
           </div>
         </div>
       )}

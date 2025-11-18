@@ -13,7 +13,7 @@
  */
 
 import type { Database, Statement } from "elide:sqlite";
-import type { ColumnMetadata, ForeignKeyReference } from "./http/schemas.ts";
+import type { ColumnMetadata, ForeignKeyReference, Filter } from "./http/schemas.ts";
 
 /**
  * Log SQL queries to console
@@ -211,8 +211,93 @@ export function getColumnMetadata(db: Database, tableName: string): ColumnMetada
 }
 
 /**
+ * Build WHERE clause and parameter values from filters
+ * Returns an object with the WHERE clause (without the WHERE keyword) and the parameter values
+ */
+function buildWhereClause(
+  filters: Filter[],
+  columns: ColumnMetadata[]
+): { whereClause: string; params: unknown[] } {
+  if (filters.length === 0) {
+    return { whereClause: '', params: [] };
+  }
+
+  const columnNames = new Set(columns.map(col => col.name));
+  const conditions: string[] = [];
+  const params: unknown[] = [];
+
+  for (const filter of filters) {
+    // Validate column exists
+    if (!columnNames.has(filter.column)) {
+      throw new Error(`Invalid filter column: "${filter.column}" does not exist in table`);
+    }
+
+    const quotedColumn = `"${filter.column}"`;
+
+    switch (filter.operator) {
+      case 'eq':
+        conditions.push(`${quotedColumn} = ?`);
+        params.push(filter.value);
+        break;
+      case 'neq':
+        conditions.push(`${quotedColumn} <> ?`);
+        params.push(filter.value);
+        break;
+      case 'gt':
+        conditions.push(`${quotedColumn} > ?`);
+        params.push(filter.value);
+        break;
+      case 'gte':
+        conditions.push(`${quotedColumn} >= ?`);
+        params.push(filter.value);
+        break;
+      case 'lt':
+        conditions.push(`${quotedColumn} < ?`);
+        params.push(filter.value);
+        break;
+      case 'lte':
+        conditions.push(`${quotedColumn} <= ?`);
+        params.push(filter.value);
+        break;
+      case 'like':
+        conditions.push(`${quotedColumn} LIKE ?`);
+        params.push(filter.value);
+        break;
+      case 'not_like':
+        conditions.push(`${quotedColumn} NOT LIKE ?`);
+        params.push(filter.value);
+        break;
+      case 'in':
+        if (!Array.isArray(filter.value)) {
+          throw new Error(`Filter operator 'in' requires an array value for column "${filter.column}"`);
+        }
+        if (filter.value.length === 0) {
+          throw new Error(`Filter operator 'in' requires at least one value for column "${filter.column}"`);
+        }
+        const placeholders = filter.value.map(() => '?').join(', ');
+        conditions.push(`${quotedColumn} IN (${placeholders})`);
+        params.push(...filter.value);
+        break;
+      case 'is_null':
+        conditions.push(`${quotedColumn} IS NULL`);
+        break;
+      case 'is_not_null':
+        conditions.push(`${quotedColumn} IS NOT NULL`);
+        break;
+      default:
+        throw new Error(`Unsupported filter operator: ${filter.operator}`);
+    }
+  }
+
+  return {
+    whereClause: conditions.join(' AND '),
+    params,
+  };
+}
+
+/**
  * Get table data with schema and rows
- * Supports optional sorting by column name and direction
+ * Supports optional sorting by column name and direction and filtering via WHERE clause
  */
 export function getTableData(
   db: Database,
@@ -220,7 +305,8 @@ export function getTableData(
   limit: number = 100,
   offset: number = 0,
   sortColumn: string | null = null,
-  sortDirection: 'asc' | 'desc' | null = null
+  sortDirection: 'asc' | 'desc' | null = null,
+  filters: Filter[] | null = null
 ): TableData {
   const startTime = performance.now();
   
@@ -235,8 +321,17 @@ export function getTableData(
     }
   }
 
-  // Build SQL query with optional ORDER BY clause
+  // Build WHERE clause from filters
+  const { whereClause, params: whereParams } = filters && filters.length > 0
+    ? buildWhereClause(filters, columns)
+    : { whereClause: '', params: [] };
+
+  // Build SQL query with optional WHERE and ORDER BY clauses
   let dataSql = `SELECT * FROM "${tableName}"`;
+  
+  if (whereClause) {
+    dataSql += ` WHERE ${whereClause}`;
+  }
   
   if (sortColumn && sortDirection) {
     // Column name is validated above, but we still quote it for safety
@@ -245,15 +340,18 @@ export function getTableData(
   
   dataSql += ` LIMIT ${limit} OFFSET ${offset}`;
   
-  logQuery(dataSql);
+  logQuery(dataSql, whereParams);
   const dataQuery = db.query(dataSql);
-  const rows = dataQuery.all();
+  const rows = whereParams.length > 0 ? dataQuery.all(...(whereParams as (string | number | null)[])) : dataQuery.all();
 
-  // Get total row count
-  const countSql = `SELECT COUNT(*) as count FROM "${tableName}"`;
-  logQuery(countSql);
+  // Get total row count with same WHERE clause
+  let countSql = `SELECT COUNT(*) as count FROM "${tableName}"`;
+  if (whereClause) {
+    countSql += ` WHERE ${whereClause}`;
+  }
+  logQuery(countSql, whereParams);
   const countQuery: Statement<CountRow> = db.query(countSql);
-  const countResult = countQuery.get();
+  const countResult = whereParams.length > 0 ? countQuery.get(...(whereParams as (string | number | null)[])) : countQuery.get();
   const totalRows = countResult?.count ?? 0;
 
   const endTime = performance.now();

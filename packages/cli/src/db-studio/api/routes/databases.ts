@@ -6,20 +6,22 @@ import { getDatabaseInfo } from "../database.ts";
 /**
  * List all databases
  */
-export async function listDatabases(_params: Record<string, string>, context: RouteContext, _body: string): Promise<ApiResponse> {
-  return jsonResponse({ databases: context.databases });
+export async function listDatabases(context: RouteContext): Promise<ApiResponse> {
+  const { databases } = context;
+  return jsonResponse({ databases });
 }
 
 /**
  * Get database info
  */
-export const getDatabaseInfoRoute = withDatabase(async (_params, context, _body) => {
-  const info = getDatabaseInfo(context.db, context.database.path);
+export const getDatabaseInfoRoute = withDatabase(async (context) => {
+  const { db, database } = context;
+  const info = getDatabaseInfo(db, database.path);
 
   const fullInfo = {
     ...info,
-    size: context.database.size,
-    lastModified: context.database.lastModified,
+    size: database.size,
+    lastModified: database.lastModified,
     tableCount: info.tableCount,
   };
 

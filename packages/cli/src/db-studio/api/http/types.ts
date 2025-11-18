@@ -21,15 +21,16 @@ export type ApiResponse = {
 export type RouteContext = {
   databases: DiscoveredDatabase[];
   Database: DatabaseConstructor;
+  params: Record<string, string>;
+  body: string;
+  url: string;
 };
 
 /**
  * Route handler function signature
  */
 export type RouteHandler = (
-  params: Record<string, string>,
-  context: RouteContext,
-  body: string
+  context: RouteContext
 ) => Promise<ApiResponse>;
 
 /**
@@ -48,14 +49,16 @@ export type DatabaseHandlerContext = {
   database: DiscoveredDatabase;
   db: Database;
   databases: DiscoveredDatabase[];
+  Database: DatabaseConstructor;
+  params: Record<string, string>;
+  body: string;
+  url: string;
 };
 
 /**
  * Database-specific handler function signature
  */
 export type DatabaseHandler = (
-  params: Record<string, string>,
-  context: DatabaseHandlerContext,
-  body: string
+  context: DatabaseHandlerContext
 ) => Promise<ApiResponse>;
 

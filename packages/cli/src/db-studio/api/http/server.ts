@@ -17,7 +17,6 @@ function parseUrlPath(url: string): string {
 async function executeMatchingRoute(
   path: string,
   method: string,
-  body: string,
   context: RouteContext
 ): Promise<ApiResponse | null> {
   for (const route of routes) {
@@ -25,7 +24,7 @@ async function executeMatchingRoute(
 
     const params = matchRoute(route.pattern, path);
     if (params) {
-      return await route.handler(params, context, body);
+      return await route.handler({ ...context, params });
     }
   }
 
@@ -44,9 +43,15 @@ export async function handleApiRequest(
 ): Promise<ApiResponse> {
   try {
     const path = parseUrlPath(url);
-    const context: RouteContext = { databases, Database };
+    const context: RouteContext = { 
+      databases, 
+      Database,
+      params: {},
+      body,
+      url
+    };
 
-    const response = await executeMatchingRoute(path, method, body, context);
+    const response = await executeMatchingRoute(path, method, context);
     return response ?? notFoundResponse();
 
   } catch (err) {

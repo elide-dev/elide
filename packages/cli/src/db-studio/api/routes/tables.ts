@@ -15,17 +15,19 @@ export const getTablesRoute = withDatabase(async (context) => {
 
 /**
  * Get table data with enhanced column metadata
- * Supports query parameters: limit (default: 100), offset (default: 0)
+ * Supports query parameters: limit (default: 100), offset (default: 0), sort (column name), order (asc/desc)
  */
 export const getTableDataRoute = withDatabase(async (context) => {
   const { params, db, url } = context;
   const tableNameError = requireTableName(params);
   if (tableNameError) return tableNameError;
 
-  // Parse query parameters for pagination
+  // Parse query parameters for pagination and sorting
   const queryParams = parseQueryParams(url);
   const limitParam = queryParams.get('limit');
   const offsetParam = queryParams.get('offset');
+  const sortParam = queryParams.get('sort');
+  const orderParam = queryParams.get('order');
   
   const limit = limitParam ? parseInt(limitParam, 10) : 100;
   const offset = offsetParam ? parseInt(offsetParam, 10) : 0;
@@ -38,8 +40,26 @@ export const getTableDataRoute = withDatabase(async (context) => {
     return errorResponse("Invalid offset parameter (must be >= 0)", 400);
   }
 
-  const tableData = getTableData(db, params.tableName, limit, offset);
-  return jsonResponse(tableData);
+  // Validate sorting parameters
+  let sortColumn: string | null = null;
+  let sortDirection: 'asc' | 'desc' | null = null;
+  
+  if (sortParam) {
+    // Validate order parameter if sort is provided
+    if (!orderParam || (orderParam !== 'asc' && orderParam !== 'desc')) {
+      return errorResponse("Invalid order parameter (must be 'asc' or 'desc' when sort is provided)", 400);
+    }
+    sortColumn = sortParam;
+    sortDirection = orderParam as 'asc' | 'desc';
+  }
+
+  try {
+    const tableData = getTableData(db, params.tableName, limit, offset, sortColumn, sortDirection);
+    return jsonResponse(tableData);
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return errorResponse(errorMessage, 400);
+  }
 });
 
 /**

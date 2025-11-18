@@ -27,7 +27,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
-  Table as UiTable,
   TableBody,
   TableCell,
   TableHead,
@@ -253,74 +252,13 @@ export function DataTable({
   })
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col h-full">
       {/* Toolbar with search and column visibility */}
       {showControls && (
-        <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-800">
-          {metadata?.executionTimeMs !== undefined && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900/50 border border-gray-800 rounded-md">
-              <span className="text-xs text-gray-400">{rows.length} rows ⋅</span>
-              <span className="text-xs font-mono font-semibold text-gray-400">{metadata.executionTimeMs}ms</span>
-            </div>
-          )}
-          
-          {/* Server-side pagination controls */}
-          {hasServerPagination && onPaginationChange && (
-            <div className="flex items-center gap-2 ml-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const newOffset = Math.max(0, offset - limit)
-                  onPaginationChange(limit, newOffset)
-                }}
-                disabled={offset === 0}
-                className="h-9 w-9 p-0"
-              >
-                <ChevronDown className="h-4 w-4 rotate-90" />
-              </Button>
-              
-              <Input
-                type="number"
-                value={limit}
-                onChange={(e) => {
-                  const newLimit = Math.max(1, Math.min(1000, parseInt(e.target.value) || 100))
-                  onPaginationChange(newLimit, offset)
-                }}
-                className="h-9 w-20 text-center font-mono text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                min="1"
-                max="1000"
-              />
-              
-              <Input
-                type="number"
-                value={offset}
-                onChange={(e) => {
-                  const newOffset = Math.max(0, parseInt(e.target.value) || 0)
-                  onPaginationChange(limit, newOffset)
-                }}
-                className="h-9 w-20 text-center font-mono text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                min="0"
-              />
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const newOffset = Math.min(Math.max(0, totalRows - limit), offset + limit)
-                  onPaginationChange(limit, newOffset)
-                }}
-                disabled={offset + limit >= totalRows}
-                className="h-9 w-9 p-0"
-              >
-                <ChevronDown className="h-4 w-4 -rotate-90" />
-              </Button>
-            </div>
-          )}
-          
+        <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-800 bg-gray-950 shrink-0">
           <DropdownMenu onOpenChange={(open) => !open && setColumnSearch("")}>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
+              <Button variant="outline">
                 <Settings2 className="mr-2 h-4 w-4" />
                 Columns <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
@@ -395,20 +333,83 @@ export function DataTable({
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
+          
+          <div className="flex items-center gap-2 ml-auto">
+            {metadata?.executionTimeMs !== undefined && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900/50 border border-gray-800 rounded-md">
+                <span className="text-xs text-gray-400">{rows.length} rows ⋅</span>
+                <span className="text-xs font-mono font-semibold text-gray-400">{metadata.executionTimeMs}ms</span>
+              </div>
+            )}
+            
+            {/* Server-side pagination controls */}
+            {hasServerPagination && onPaginationChange && (
+              <>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const newOffset = Math.max(0, offset - limit)
+                  onPaginationChange(limit, newOffset)
+                }}
+                disabled={offset === 0}
+                className="h-9 w-9 p-0"
+              >
+                <ChevronDown className="h-4 w-4 rotate-90" />
+              </Button>
+              
+              <Input
+                type="number"
+                value={limit}
+                onChange={(e) => {
+                  const newLimit = Math.max(1, Math.min(1000, parseInt(e.target.value) || 100))
+                  onPaginationChange(newLimit, offset)
+                }}
+                className="h-9 w-20 text-center font-mono text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                min="1"
+                max="1000"
+              />
+              
+              <Input
+                type="number"
+                value={offset}
+                onChange={(e) => {
+                  const newOffset = Math.max(0, parseInt(e.target.value) || 0)
+                  onPaginationChange(limit, newOffset)
+                }}
+                className="h-9 w-20 text-center font-mono text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                min="0"
+              />
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const newOffset = Math.min(Math.max(0, totalRows - limit), offset + limit)
+                  onPaginationChange(limit, newOffset)
+                }}
+                disabled={offset + limit >= totalRows}
+                className="h-9 w-9 p-0"
+              >
+                <ChevronDown className="h-4 w-4 -rotate-90" />
+              </Button>
+              </>
+            )}
+          </div>
         </div>
       )}
 
       {/* Table */}
-      <div className="overflow-auto">
-        <UiTable style={{ width: showControls ? table.getCenterTotalSize() : '100%' }}>
+      <div className="overflow-auto flex-1">
+        <table className="w-full caption-bottom text-sm" style={{ width: showControls ? table.getCenterTotalSize() : '100%' }}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="bg-gray-900/50">
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
-                      className={`text-left border-b border-r border-gray-800 ${showControls ? 'p-0 hover:bg-gray-800/50' : 'px-4 py-2'} relative overflow-hidden font-mono`}
+                      className={`text-left border-b border-r border-gray-800 ${showControls ? 'p-0 hover:bg-gray-800' : 'px-4 py-2'} sticky top-0 z-10 bg-gray-900 overflow-hidden font-mono`}
                       style={{ width: header.getSize(), maxWidth: header.getSize() }}
                     >
                       {header.isPlaceholder
@@ -464,7 +465,7 @@ export function DataTable({
               </TableRow>
             )}
           </TableBody>
-        </UiTable>
+        </table>
       </div>
 
     </div>

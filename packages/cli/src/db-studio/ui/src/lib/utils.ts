@@ -1,5 +1,5 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -26,9 +26,9 @@ export function formatDate(timestamp: number) {
 export function formatRowCount(count: number): string {
   if (count < 1000) return count.toString()
   if (count < 1000000) {
-    const k = count / 1000
+    const k = Math.floor(count / 100) / 10
     return k % 1 === 0 ? `${k}K` : `${k.toFixed(1)}K`
   }
-  const m = count / 1000000
+  const m = Math.floor(count / 100000) / 10
   return m % 1 === 0 ? `${m}M` : `${m.toFixed(1)}M`
 }

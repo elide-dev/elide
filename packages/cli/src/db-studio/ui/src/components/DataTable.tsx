@@ -38,6 +38,7 @@ import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/compon
 import { Skeleton } from '@/components/ui/skeleton'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { ColumnInfo } from './ColumnInfo'
+import { formatRowCount } from '@/lib/utils'
 
 export type ColumnMetadata = {
   name: string
@@ -90,6 +91,7 @@ interface DataTableProps {
   sorting?: DataTableSorting
   onSortChange?: (column: string | null, direction: 'asc' | 'desc' | null) => void
   isLoading?: boolean // Show skeleton loaders when fetching new data
+  tableName?: string // Table name to display in toolbar
 }
 
 /**
@@ -111,6 +113,7 @@ export function DataTable({
   sorting,
   onSortChange,
   isLoading = false,
+  tableName,
 }: DataTableProps) {
   // Convert server-side sorting to TanStack Table format
   const sortingState: SortingState = React.useMemo(() => {
@@ -268,8 +271,23 @@ export function DataTable({
   return (
     <div className="w-full flex flex-col h-full">
       {/* Toolbar with metadata and controls */}
-      {(showControls || showMetadata || showPagination) && (
+      {(showControls || showMetadata || showPagination || tableName) && (
         <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-800 bg-gray-950 shrink-0">
+          {tableName && (
+            <div className="flex items-center gap-3 mr-4">
+              <h2 className="text-lg font-semibold tracking-tight truncate">{tableName}</h2>
+              <HoverCard openDelay={200}>
+                <HoverCardTrigger asChild>
+                  <span className="inline-flex items-center rounded-md bg-gray-800/60 text-gray-300 border border-gray-700 px-2.5 py-0.5 text-xs font-medium shrink-0 cursor-default">
+                    {formatRowCount(totalRows)} rows
+                  </span>
+                </HoverCardTrigger>
+                <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
+                  <span className="text-xs font-semibold">{totalRows.toLocaleString()} total rows</span>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
+          )}
           {showControls && (
             <DropdownMenu onOpenChange={(open) => !open && setColumnSearch('')}>
               <DropdownMenuTrigger asChild>

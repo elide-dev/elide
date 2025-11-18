@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react'
 
 function App() {
   const location = useLocation()
-  const isOnDatabases = location.pathname === '/'
+  const isHomeScreen = location.pathname === '/'
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="border-b border-gray-800 px-6 py-4 flex items-center justify-between">
@@ -18,7 +18,7 @@ function App() {
           </div>
           </Link>
         </div>
-        {!isOnDatabases && (
+        {!isHomeScreen && (
           <div>
             <Button asChild variant="outline" size="sm" className="border-gray-800 bg-gray-950 text-gray-200 hover:bg-gray-900 hover:text-white">
               <Link to="/" aria-label="Back to databases">

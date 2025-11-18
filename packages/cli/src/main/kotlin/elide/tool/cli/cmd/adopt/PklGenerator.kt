@@ -80,18 +80,27 @@ object PklGenerator {
       appendLine("dependencies {")
       appendLine("  maven {")
 
-      // Repositories
-      if (repositories.isNotEmpty()) {
-        appendLine("    repositories {")
-        repositories.forEach { repo ->
-          if (repo.name != null) {
-            appendLine("      [\"${repo.id}\"] = \"${repo.url}\"  // ${repo.name}")
-          } else {
-            appendLine("      [\"${repo.id}\"] = \"${repo.url}\"")
-          }
-        }
-        appendLine("    }")
+      // Repositories - always include Maven Central (Super POM default)
+      val hasMavenCentral = repositories.any {
+        it.url.contains("repo.maven.apache.org") || it.url.contains("repo1.maven.org")
       }
+
+      appendLine("    repositories {")
+
+      // Add Maven Central if not already present (Super POM implicit default)
+      if (!hasMavenCentral) {
+        appendLine("      [\"central\"] = \"https://repo.maven.apache.org/maven2\"  // Maven Central (Super POM default)")
+      }
+
+      // Add custom repositories
+      repositories.forEach { repo ->
+        if (repo.name != null) {
+          appendLine("      [\"${repo.id}\"] = \"${repo.url}\"  // ${repo.name}")
+        } else {
+          appendLine("      [\"${repo.id}\"] = \"${repo.url}\"")
+        }
+      }
+      appendLine("    }")
 
       // Compile dependencies
       if (compileDeps.isNotEmpty()) {
@@ -144,18 +153,27 @@ object PklGenerator {
       appendLine("dependencies {")
       appendLine("  maven {")
 
-      // Repositories
-      if (pom.repositories.isNotEmpty()) {
-        appendLine("    repositories {")
-        pom.repositories.forEach { repo ->
-          if (repo.name != null) {
-            appendLine("      [\"${repo.id}\"] = \"${repo.url}\"  // ${repo.name}")
-          } else {
-            appendLine("      [\"${repo.id}\"] = \"${repo.url}\"")
-          }
-        }
-        appendLine("    }")
+      // Repositories - always include Maven Central (Super POM default)
+      val hasMavenCentral = pom.repositories.any {
+        it.url.contains("repo.maven.apache.org") || it.url.contains("repo1.maven.org")
       }
+
+      appendLine("    repositories {")
+
+      // Add Maven Central if not already present (Super POM implicit default)
+      if (!hasMavenCentral) {
+        appendLine("      [\"central\"] = \"https://repo.maven.apache.org/maven2\"  // Maven Central (Super POM default)")
+      }
+
+      // Add custom repositories
+      pom.repositories.forEach { repo ->
+        if (repo.name != null) {
+          appendLine("      [\"${repo.id}\"] = \"${repo.url}\"  // ${repo.name}")
+        } else {
+          appendLine("      [\"${repo.id}\"] = \"${repo.url}\"")
+        }
+      }
+      appendLine("    }")
 
       // Compile dependencies
       if (compileDeps.isNotEmpty()) {

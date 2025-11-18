@@ -145,6 +145,16 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
         append("  Profiles: ${pom.profiles.size} (${pom.profiles.joinToString(", ") { it.id }})")
       }
       append("  Dependencies: ${pom.dependencies.size} (${pom.dependencies.count { it.scope == "compile" || it.scope == "runtime" }} compile, ${pom.dependencies.count { it.scope == "test" }} test)")
+
+      // Warn about unconverted build plugins
+      if (pom.plugins.isNotEmpty()) {
+        appendLine()
+        append("⚠ Build plugins detected (${pom.plugins.size}) - manual conversion may be needed:")
+        pom.plugins.forEach { plugin ->
+          val pluginId = "${plugin.groupId}:${plugin.artifactId}${plugin.version?.let { ":$it" } ?: ""}"
+          append("    - $pluginId")
+        }
+      }
     }
 
     // Handle multi-module projects

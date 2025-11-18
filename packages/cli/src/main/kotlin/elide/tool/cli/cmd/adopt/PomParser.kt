@@ -60,6 +60,15 @@ data class Profile(
 )
 
 /**
+ * Represents a Maven build plugin.
+ */
+data class Plugin(
+  val groupId: String,
+  val artifactId: String,
+  val version: String? = null
+)
+
+/**
  * Represents a dependency in Maven POM.
  */
 data class Dependency(
@@ -97,6 +106,7 @@ data class PomDescriptor(
   val parent: ParentPom? = null,
   val repositories: List<Repository> = emptyList(),
   val profiles: List<Profile> = emptyList(),
+  val plugins: List<Plugin> = emptyList(),
   val path: Path
 )
 
@@ -172,6 +182,9 @@ object PomParser {
     // Parse profiles
     val profiles = parseProfiles(root, pomPath)
 
+    // Parse build plugins
+    val plugins = parsePlugins(root)
+
     return PomDescriptor(
       groupId = groupId,
       artifactId = artifactId,
@@ -186,6 +199,7 @@ object PomParser {
       parent = parent,
       repositories = repositories,
       profiles = profiles,
+      plugins = plugins,
       path = pomPath
     )
   }
@@ -236,6 +250,28 @@ object PomParser {
         dependencies = profileDeps,
         dependencyManagement = profileDepMgmt,
         repositories = profileRepos
+      )
+    }
+  }
+
+  /**
+   * Parse build plugins from POM.
+   */
+  private fun parsePlugins(root: Element): List<Plugin> {
+    val buildElement = findElement(root, "build") ?: return emptyList()
+    val pluginsElement = findElement(buildElement, "plugins") ?: return emptyList()
+    val pluginList = pluginsElement.getElementsByTagName("plugin")
+
+    return (0 until pluginList.length).mapNotNull { i ->
+      val pluginElement = pluginList.item(i) as? Element ?: return@mapNotNull null
+      val groupId = findText(pluginElement, "groupId") ?: "org.apache.maven.plugins" // Maven default
+      val artifactId = findText(pluginElement, "artifactId") ?: return@mapNotNull null
+      val version = findText(pluginElement, "version")
+
+      Plugin(
+        groupId = groupId,
+        artifactId = artifactId,
+        version = version
       )
     }
   }
@@ -560,10 +596,12 @@ object PomParser {
     if (value == null) return null
 
     var result = value
-    val propertyPattern = Regex("\\$\\{([^}]+)}")
+    // Pattern captures: ${propertyName:defaultValue} or ${propertyName}
+    val propertyPattern = Regex("\\$\\{([^:}]+)(?::([^}]+))?}")
 
     propertyPattern.findAll(value).forEach { match ->
       val propertyName = match.groupValues[1]
+      val defaultValue = match.groupValues.getOrNull(2)
 
       val propertyValue = when {
         // Environment variables: ${env.VAR_NAME}
@@ -588,8 +626,10 @@ object PomParser {
         else -> properties[propertyName]
       }
 
-      if (propertyValue != null) {
-        result = result!!.replace(match.value, propertyValue)
+      // Use property value if found, otherwise use default value
+      val replacementValue = propertyValue ?: defaultValue
+      if (replacementValue != null) {
+        result = result!!.replace(match.value, replacementValue)
       }
     }
 

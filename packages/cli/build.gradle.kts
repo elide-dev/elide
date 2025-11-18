@@ -657,6 +657,9 @@ dependencies {
   implementation(libs.jib.core)
   implementation(libs.jib.extension.commons)
 
+  // Mock S3
+  implementation(libs.locals3)
+
   // Tests
   testImplementation(libs.kotlin.test.junit5)
   testImplementation(projects.packages.test)
@@ -1389,6 +1392,10 @@ val commonNativeArgs = listOfNotNull(
   "-J--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=ALL-UNNAMED",
   "-J--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code=ALL-UNNAMED",
   "-J--add-exports=jdk.graal.compiler/jdk.graal.compiler.util.json=com.oracle.graal.reporter",
+  "-J--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+  "-J--add-opens=java.base/java.io=ALL-UNNAMED",
+  "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+  "--add-opens=java.base/java.io=ALL-UNNAMED",
   "--add-opens=java.base/java.nio=ALL-UNNAMED",
   "--add-opens=io.netty.common/io.netty.util=org.graalvm.nativeimage.builder",
   "--add-opens=io.netty.common/io.netty.util.internal.svm=org.graalvm.nativeimage.builder",

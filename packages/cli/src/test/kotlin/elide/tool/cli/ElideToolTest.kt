@@ -261,4 +261,15 @@ import elide.testing.annotations.TestCase
       )
     }
   }
+
+  @Test fun testEntrypointS3() {
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        "s3",
+        "--in-memory",
+        "--shutdown-after",
+        "5"
+      )
+    }
+  }
 }

@@ -31,13 +31,26 @@ export type TableData = {
   metadata: QueryMetadata
 }
 
+export type PaginationParams = {
+  limit: number
+  offset: number
+}
+
 async function fetchTableData(
   dbIndex: string,
-  tableName: string
+  tableName: string,
+  pagination?: PaginationParams
 ): Promise<TableData> {
-  const res = await fetch(
-    `${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}`
-  )
+  const params = new URLSearchParams()
+  if (pagination) {
+    params.set('limit', pagination.limit.toString())
+    params.set('offset', pagination.offset.toString())
+  }
+  
+  const queryString = params.toString()
+  const url = `${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}${queryString ? `?${queryString}` : ''}`
+  
+  const res = await fetch(url)
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${res.statusText}`)
   }
@@ -46,11 +59,13 @@ async function fetchTableData(
 
 export function useTableData(
   dbIndex: string | undefined,
-  tableName: string | undefined
+  tableName: string | undefined,
+  pagination?: PaginationParams
 ) {
   return useQuery({
-    queryKey: ['databases', dbIndex, 'tables', tableName],
-    queryFn: () => fetchTableData(dbIndex!, tableName!),
+    queryKey: ['databases', dbIndex, 'tables', tableName, pagination],
+    queryFn: () => fetchTableData(dbIndex!, tableName!, pagination),
     enabled: !!dbIndex && !!tableName,
+    placeholderData: (previousData) => previousData, // Keep previous data while fetching
   })
 }

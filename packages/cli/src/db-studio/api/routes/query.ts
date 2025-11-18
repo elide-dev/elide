@@ -6,7 +6,8 @@ import { executeQuery } from "../database.ts";
 /**
  * Execute a raw SQL query with rich metadata
  */
-export const executeQueryRoute = withDatabase(async (_params, context, body) => {
+export const executeQueryRoute = withDatabase(async (context) => {
+  const { db, body } = context;
   const data = parseRequestBody(body);
   const sql = data.sql as string | undefined;
   const queryParams = data.params as unknown[] | undefined;
@@ -25,7 +26,7 @@ export const executeQueryRoute = withDatabase(async (_params, context, body) => 
     // Determine if this is a SELECT query
     if (sqlLower.startsWith("select")) {
       // For SELECT queries, use our enhanced executeQuery function
-      const { columns, data: rows } = executeQuery(context.db, trimmedSql);
+      const { columns, data: rows } = executeQuery(db, trimmedSql);
       const endTime = performance.now();
 
       return jsonResponse({
@@ -40,7 +41,7 @@ export const executeQueryRoute = withDatabase(async (_params, context, body) => 
       });
     } else {
       // For INSERT/UPDATE/DELETE/CREATE/DROP etc.
-      const stmt = context.db.prepare(trimmedSql);
+      const stmt = db.prepare(trimmedSql);
       const info = stmt.run(...(params as any));
       const endTime = performance.now();
 

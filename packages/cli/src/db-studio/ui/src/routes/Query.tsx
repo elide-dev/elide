@@ -157,22 +157,54 @@ export default function Query() {
 
         {error && (
           <div className="px-6 pt-6">
-            <div className="bg-red-950/30 border border-red-800 p-4">
-              <h3 className="text-red-400 font-semibold mb-2">Error</h3>
-              <p className="text-red-300 text-sm">{error.message}</p>
+            <div className="bg-red-950/30 border border-red-800 p-4 rounded-lg">
+              <h3 className="text-red-400 font-semibold mb-3 flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                SQL Error
+              </h3>
+              <p className="text-red-300 text-sm mb-3 leading-relaxed">{error.message}</p>
+              
+              {/* Try to extract and display SQL from error response */}
+              {(() => {
+                try {
+                  // The error might have additional data in its response
+                  const errorData = (error as any).response || {};
+                  if (errorData.sql) {
+                    return (
+                      <div className="mt-3 pt-3 border-t border-red-800/50">
+                        <div className="text-xs text-red-400/70 mb-1 font-semibold">Failed Query:</div>
+                        <pre className="text-xs text-red-200 bg-red-950/50 p-2 rounded border border-red-800/30 overflow-x-auto font-mono">
+                          {errorData.sql}
+                        </pre>
+                        {errorData.executionTimeMs !== undefined && (
+                          <div className="text-xs text-red-400/70 mt-2">
+                            Execution time: <span className="font-mono">{errorData.executionTimeMs}ms</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+                } catch {}
+                return null;
+              })()}
             </div>
           </div>
         )}
 
         {result && !error && (
           <>
-            {result.rows !== undefined ? (
+            {'data' in result ? (
               <>
-                {result.rows.length > 0 ? (
+                {result.data.length > 0 ? (
                   <DataTable
-                    columns={Object.keys(result.rows[0] as Record<string, unknown>)}
-                    rows={result.rows.map(row => Object.values(row as Record<string, unknown>))}
-                    showControls={false}
+                    data={{
+                      columns: result.columns,
+                      rows: result.data.map(row => result.columns.map(col => row[col.name])),
+                      metadata: result.metadata,
+                    }}
+                    showControls={true}
                   />
                 ) : (
                   <div className="px-6 pt-6 text-gray-500 text-sm">No rows returned</div>
@@ -182,16 +214,18 @@ export default function Query() {
               <div className="px-6 pt-6">
                 <div className="bg-gray-900/50 border border-gray-800 p-4">
                   <div className="text-sm text-gray-300">
-                    {result.rowsAffected !== undefined && (
-                      <div className="mb-2">
-                        <span className="text-gray-400">Rows affected: </span>
-                        <span className="font-semibold">{result.rowsAffected}</span>
-                      </div>
-                    )}
+                    <div className="mb-2">
+                      <span className="text-gray-400">Execution time: </span>
+                      <span className="font-mono font-semibold text-green-400">{result.metadata.executionTimeMs}ms</span>
+                    </div>
+                    <div className="mb-2">
+                      <span className="text-gray-400">Rows affected: </span>
+                      <span className="font-semibold">{result.rowsAffected}</span>
+                    </div>
                     {result.lastInsertRowid !== undefined && (
                       <div>
                         <span className="text-gray-400">Last insert row ID: </span>
-                        <span className="font-semibold">{result.lastInsertRowid}</span>
+                        <span className="font-semibold">{String(result.lastInsertRowid)}</span>
                       </div>
                     )}
                   </div>

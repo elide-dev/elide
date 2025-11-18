@@ -106,20 +106,24 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
     }
 
     output {
-      append("Parsing ${pomPath.fileName}...")
+      append("@|bold,cyan 📋 Parsing Maven POM...|@")
+      append("  File: @|bold ${pomPath.fileName}|@")
+      append("  Path: ${pomPath.parent}")
     }
 
     // Parse POM
     val basePom = try {
       PomParser.parse(pomPath)
     } catch (e: Exception) {
-      return err("Failed to parse POM file: ${e.message}")
+      return err("@|bold,red ✗ Failed to parse POM file|@\n  ${e.message}\n\n" +
+        "Tip: Ensure the POM file is valid XML and follows Maven POM schema.")
     }
 
     // Activate profiles if specified
     val pom = if (activateProfiles.isNotEmpty()) {
       output {
-        append("Activating profile(s): ${activateProfiles.joinToString(", ")}")
+        append("@|bold,yellow ⚙ Activating Maven profiles...|@")
+        append("  Profiles: ${activateProfiles.joinToString(", ")}")
       }
       PomParser.activateProfiles(basePom, activateProfiles)
     } else {
@@ -130,29 +134,73 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
     val isMultiModule = pom.modules.isNotEmpty()
 
     output {
-      append("Found project: ${pom.name ?: pom.artifactId}")
-      append("  GroupId: ${pom.groupId}")
-      append("  ArtifactId: ${pom.artifactId}")
-      append("  Version: ${pom.version}")
+      appendLine()
+      append("@|bold,green ✓ Project parsed successfully|@")
+      append("  Name: @|bold ${pom.name ?: pom.artifactId}|@")
+      append("  Coordinates: @|cyan ${pom.groupId}:${pom.artifactId}:${pom.version}|@")
       if (pom.description != null) {
-        append("  Description: ${pom.description}")
+        val desc = if (pom.description!!.length > 80) {
+          pom.description!!.take(77) + "..."
+        } else {
+          pom.description
+        }
+        append("  Description: $desc")
       }
+      if (pom.parent != null) {
+        append("  Parent: ${pom.parent!!.groupId}:${pom.parent!!.artifactId}:${pom.parent!!.version}")
+      }
+      appendLine()
+
       if (isMultiModule) {
-        append("  Type: Multi-module project")
-        append("  Modules: ${pom.modules.size}")
+        append("@|bold,magenta 📦 Multi-module project|@")
+        append("  Modules: @|bold ${pom.modules.size}|@")
+        if (pom.modules.size <= 10) {
+          pom.modules.forEach { module ->
+            append("    - $module")
+          }
+        } else {
+          pom.modules.take(10).forEach { module ->
+            append("    - $module")
+          }
+          append("    ... and ${pom.modules.size - 10} more")
+        }
+        appendLine()
       }
+
+      val compileDeps = pom.dependencies.count { it.scope == "compile" || it.scope == "runtime" || it.scope == null }
+      val testDeps = pom.dependencies.count { it.scope == "test" }
+      append("@|bold 📚 Dependencies|@")
+      append("  Total: @|bold ${pom.dependencies.size}|@ (@|cyan ${compileDeps} compile|@, @|yellow ${testDeps} test|@)")
+      if (pom.dependencyManagement.isNotEmpty()) {
+        append("  Managed: @|bold ${pom.dependencyManagement.size}|@ (from dependencyManagement)")
+      }
+      if (pom.repositories.isNotEmpty()) {
+        append("  Repositories: ${pom.repositories.size}")
+      }
+
       if (pom.profiles.isNotEmpty()) {
-        append("  Profiles: ${pom.profiles.size} (${pom.profiles.joinToString(", ") { it.id }})")
+        appendLine()
+        append("@|bold 🎯 Available profiles|@")
+        append("  Count: @|bold ${pom.profiles.size}|@")
+        append("  IDs: ${pom.profiles.joinToString(", ") { it.id }}")
       }
-      append("  Dependencies: ${pom.dependencies.size} (${pom.dependencies.count { it.scope == "compile" || it.scope == "runtime" }} compile, ${pom.dependencies.count { it.scope == "test" }} test)")
 
       // Warn about unconverted build plugins
       if (pom.plugins.isNotEmpty()) {
         appendLine()
-        append("⚠ Build plugins detected (${pom.plugins.size}) - manual conversion may be needed:")
-        pom.plugins.forEach { plugin ->
-          val pluginId = "${plugin.groupId}:${plugin.artifactId}${plugin.version?.let { ":$it" } ?: ""}"
-          append("    - $pluginId")
+        append("@|bold,yellow ⚠ Build plugins detected|@")
+        append("  Count: @|bold ${pom.plugins.size}|@ (manual conversion may be needed)")
+        if (pom.plugins.size <= 5) {
+          pom.plugins.forEach { plugin ->
+            val pluginId = "${plugin.groupId}:${plugin.artifactId}${plugin.version?.let { ":$it" } ?: ""}"
+            append("    - $pluginId")
+          }
+        } else {
+          pom.plugins.take(5).forEach { plugin ->
+            val pluginId = "${plugin.groupId}:${plugin.artifactId}${plugin.version?.let { ":$it" } ?: ""}"
+            append("    - $pluginId")
+          }
+          append("    ... and ${pom.plugins.size - 5} more")
         }
       }
     }
@@ -172,19 +220,21 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
   private suspend fun CommandContext.convertMultiModuleProject(parentPom: PomDescriptor, pomPath: Path): CommandResult {
     output {
       appendLine()
-      append("Processing ${parentPom.modules.size} module(s)...")
+      append("@|bold,cyan 🔍 Processing modules...|@")
+      append("  Total modules: @|bold ${parentPom.modules.size}|@")
+      appendLine()
     }
 
     val modulePoms = mutableListOf<PomDescriptor>()
     var failureCount = 0
 
     // Parse all module POMs
-    for (moduleName in parentPom.modules) {
+    for ((index, moduleName) in parentPom.modules.withIndex()) {
       val modulePomPath = pomPath.parent.resolve(moduleName).resolve("pom.xml")
 
       if (!modulePomPath.exists()) {
         output {
-          append("  ⚠ Warning: Module '$moduleName' pom.xml not found at $modulePomPath")
+          append("  @|yellow ⚠|@ Module @|bold $moduleName|@ pom.xml not found")
         }
         failureCount++
         continue
@@ -194,18 +244,29 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
         val modulePom = PomParser.parse(modulePomPath)
         modulePoms.add(modulePom)
         output {
-          append("  ✓ Parsed module: ${modulePom.artifactId}")
+          append("  @|green ✓|@ [@|bold ${index + 1}/${parentPom.modules.size}|@] ${modulePom.artifactId}")
         }
       } catch (e: Exception) {
         failureCount++
         output {
-          append("  ✗ Failed to parse module '$moduleName': ${e.message}")
+          append("  @|red ✗|@ [@|bold ${index + 1}/${parentPom.modules.size}|@] Failed to parse @|bold $moduleName|@")
+          append("      Error: ${e.message}")
         }
       }
     }
 
     if (modulePoms.isEmpty()) {
-      return err("No modules could be parsed successfully")
+      return err("@|bold,red ✗ No modules could be parsed successfully|@\n\n" +
+        "Tip: Verify that the module directories exist and contain valid pom.xml files.")
+    }
+
+    output {
+      appendLine()
+      append("@|bold,green ✓ Parsed ${modulePoms.size} module(s) successfully|@")
+      if (failureCount > 0) {
+        append("  @|yellow Skipped $failureCount module(s) due to errors|@")
+      }
+      appendLine()
     }
 
     // Generate single root elide.pkl with workspaces
@@ -220,31 +281,48 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
     // Handle dry run
     if (dryRun) {
       output {
+        append("@|bold,cyan 📄 Generated multi-module elide.pkl (dry-run)|@")
+        append("  Output path: @|bold $outputPath|@")
+        append("  Modules: ${modulePoms.size}")
+        append("  Total lines: ${pklContent.lines().size}")
         appendLine()
-        append("Generated multi-module elide.pkl:")
-        append("=".repeat(60))
+        append("@|bold ${"─".repeat(80)}|@")
         append(pklContent)
-        append("=".repeat(60))
+        append("@|bold ${"─".repeat(80)}|@")
       }
       return success()
     }
 
     // Check if output file exists
     if (outputPath.exists() && !force) {
-      return err("Output file already exists: $outputPath\nUse --force to overwrite")
+      return err("@|bold,red ✗ Output file already exists|@\n  Path: $outputPath\n\n" +
+        "Tip: Use @|bold --force|@ to overwrite the existing file.")
     }
 
     // Write output file
     try {
       outputPath.writeText(pklContent)
+
+      val totalDeps = (parentPom.dependencies + modulePoms.flatMap { it.dependencies })
+        .distinctBy { it.coordinate() }
+        .size
+
       output {
         appendLine()
-        append("✓ Successfully created multi-module elide.pkl at $outputPath")
-        append("  Included ${modulePoms.size} module(s), skipped $failureCount")
-        append("  Total dependencies: ${(parentPom.dependencies + modulePoms.flatMap { it.dependencies }).distinctBy { it.coordinate() }.size}")
+        append("@|bold,green ✓ Successfully created multi-module elide.pkl|@")
+        append("  Location: @|bold $outputPath|@")
+        append("  Modules: @|bold ${modulePoms.size}|@ included, @|yellow $failureCount|@ skipped")
+        append("  Dependencies: @|bold $totalDeps|@ unique dependencies")
+        append("  Size: ${pklContent.length} bytes (${pklContent.lines().size} lines)")
+        appendLine()
+        append("@|bold,cyan 💡 Next steps:|@")
+        append("  1. Review the generated elide.pkl file")
+        append("  2. Run @|bold elide build|@ to build your project")
+        append("  3. Customize repositories and dependencies as needed")
       }
     } catch (e: Exception) {
-      return err("Failed to write output file: ${e.message}")
+      return err("@|bold,red ✗ Failed to write output file|@\n  ${e.message}\n\n" +
+        "Tip: Check that you have write permissions for the target directory.")
     }
 
     return success()
@@ -268,17 +346,23 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
     if (dryRun) {
       output {
         appendLine()
-        append("Generated elide.pkl for ${pom.artifactId}:")
-        append("=".repeat(60))
+        append("@|bold,cyan 📄 Generated elide.pkl (dry-run)|@")
+        append("  Project: @|bold ${pom.artifactId}|@")
+        append("  Output path: @|bold $outputPath|@")
+        append("  Dependencies: ${pom.dependencies.size}")
+        append("  Total lines: ${pklContent.lines().size}")
+        appendLine()
+        append("@|bold ${"─".repeat(80)}|@")
         append(pklContent)
-        append("=".repeat(60))
+        append("@|bold ${"─".repeat(80)}|@")
       }
       return null
     }
 
     // Check if output file exists
     if (outputPath.exists() && !force) {
-      return err("Output file already exists: $outputPath\nUse --force to overwrite")
+      return err("@|bold,red ✗ Output file already exists|@\n  Path: $outputPath\n\n" +
+        "Tip: Use @|bold --force|@ to overwrite the existing file.")
     }
 
     // Write output file
@@ -286,10 +370,19 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
       outputPath.writeText(pklContent)
       output {
         appendLine()
-        append("✓ Successfully created $outputPath")
+        append("@|bold,green ✓ Successfully created elide.pkl|@")
+        append("  Location: @|bold $outputPath|@")
+        append("  Dependencies: @|bold ${pom.dependencies.size}|@ total")
+        append("  Size: ${pklContent.length} bytes (${pklContent.lines().size} lines)")
+        appendLine()
+        append("@|bold,cyan 💡 Next steps:|@")
+        append("  1. Review the generated elide.pkl file")
+        append("  2. Run @|bold elide build|@ to build your project")
+        append("  3. Customize repositories and dependencies as needed")
       }
     } catch (e: Exception) {
-      return err("Failed to write output file: ${e.message}")
+      return err("@|bold,red ✗ Failed to write output file|@\n  ${e.message}\n\n" +
+        "Tip: Check that you have write permissions for the target directory.")
     }
 
     return null

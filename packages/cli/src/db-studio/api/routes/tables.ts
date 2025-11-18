@@ -1,32 +1,52 @@
 import { jsonResponse, handleSQLError, errorResponse } from "../http/responses.ts";
 import { withDatabase } from "../http/middleware.ts";
 import { requireTableName } from "../utils/validation.ts";
-import { parseRequestBody } from "../utils/request.ts";
+import { parseRequestBody, parseQueryParams } from "../utils/request.ts";
 import { getTables, getTableData } from "../database.ts";
 
 /**
  * Get list of tables in a database
  */
-export const getTablesRoute = withDatabase(async (_params, context, _body) => {
-  const tables = getTables(context.db);
+export const getTablesRoute = withDatabase(async (context) => {
+  const { db } = context;
+  const tables = getTables(db);
   return jsonResponse({ tables });
 });
 
 /**
  * Get table data with enhanced column metadata
+ * Supports query parameters: limit (default: 100), offset (default: 0)
  */
-export const getTableDataRoute = withDatabase(async (params, context, _body) => {
+export const getTableDataRoute = withDatabase(async (context) => {
+  const { params, db, url } = context;
   const tableNameError = requireTableName(params);
   if (tableNameError) return tableNameError;
 
-  const tableData = getTableData(context.db, params.tableName);
+  // Parse query parameters for pagination
+  const queryParams = parseQueryParams(url);
+  const limitParam = queryParams.get('limit');
+  const offsetParam = queryParams.get('offset');
+  
+  const limit = limitParam ? parseInt(limitParam, 10) : 100;
+  const offset = offsetParam ? parseInt(offsetParam, 10) : 0;
+  
+  // Validate pagination parameters
+  if (isNaN(limit) || limit < 1 || limit > 1000) {
+    return errorResponse("Invalid limit parameter (must be between 1 and 1000)", 400);
+  }
+  if (isNaN(offset) || offset < 0) {
+    return errorResponse("Invalid offset parameter (must be >= 0)", 400);
+  }
+
+  const tableData = getTableData(db, params.tableName, limit, offset);
   return jsonResponse(tableData);
 });
 
 /**
  * Create a new table
  */
-export const createTableRoute = withDatabase(async (_params, context, body) => {
+export const createTableRoute = withDatabase(async (context) => {
+  const { db, body } = context;
   const data = parseRequestBody(body);
   const tableName = data.name as string | undefined;
   const schema = data.schema as Array<{ name: string; type: string; constraints?: string }> | undefined;
@@ -48,7 +68,7 @@ export const createTableRoute = withDatabase(async (_params, context, body) => {
   const startTime = performance.now();
 
   try {
-    context.db.exec(sql);
+    db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${tableName}' created successfully` });
   } catch (err) {
     return handleSQLError(err, sql, startTime);
@@ -58,7 +78,8 @@ export const createTableRoute = withDatabase(async (_params, context, body) => {
 /**
  * Drop a table
  */
-export const dropTableRoute = withDatabase(async (params, context, body) => {
+export const dropTableRoute = withDatabase(async (context) => {
+  const { params, db, body } = context;
   const tableNameError = requireTableName(params);
   if (tableNameError) return tableNameError;
 
@@ -73,7 +94,7 @@ export const dropTableRoute = withDatabase(async (params, context, body) => {
   const startTime = performance.now();
 
   try {
-    context.db.exec(sql);
+    db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${params.tableName}' dropped successfully` });
   } catch (err) {
     return handleSQLError(err, sql, startTime);

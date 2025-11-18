@@ -1,15 +1,27 @@
-import { useParams } from 'react-router-dom'
+import { useCallback, useMemo } from 'react'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useTableData } from '../hooks/useTableData'
 import { DataTable } from '../components/DataTable'
 
 export default function TableView() {
   const { dbIndex, tableName } = useParams()
-  const { data, isLoading: loading, error } = useTableData(dbIndex, tableName)
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  const pagination = useMemo(() => ({
+    limit: parseInt(searchParams.get('limit') || '100', 10),
+    offset: parseInt(searchParams.get('offset') || '0', 10),
+  }), [searchParams])
+  
+  const { data, isLoading: loading, isFetching, error } = useTableData(dbIndex, tableName, pagination)
+  
+  const handlePaginationChange = useCallback((limit: number, offset: number) => {
+    setSearchParams({ limit: limit.toString(), offset: offset.toString() })
+  }, [setSearchParams])
 
-  if (loading) {
+  if (loading && !data) {
     return <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-gray-500 font-mono">Loading…</div>
   }
-  if (error) {
+  if (error && !data) {
     return <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-red-400 font-mono">Error: {error.message}</div>
   }
   if (!data) {
@@ -27,7 +39,13 @@ export default function TableView() {
         </h2>
       </div>
       <div className="flex-1 overflow-auto">
-        <DataTable data={data} />
+        <DataTable 
+          data={data}
+          totalRows={data.totalRows}
+          pagination={pagination}
+          onPaginationChange={handlePaginationChange}
+          isLoading={isFetching}
+        />
       </div>
     </div>
   )

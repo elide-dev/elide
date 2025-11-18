@@ -34,6 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Skeleton } from "@/components/ui/skeleton"
 import { ColumnInfo } from "./ColumnInfo"
 
 export type ColumnMetadata = {
@@ -64,17 +65,36 @@ export type DataTableData = {
   metadata?: QueryMetadata
 }
 
+export type DataTablePagination = {
+  limit: number
+  offset: number
+}
+
 interface DataTableProps {
   data: DataTableData
   showControls?: boolean // Show search, column toggle, and pagination (default: true)
+  // Server-side pagination props (optional)
+  totalRows?: number
+  pagination?: DataTablePagination
+  onPaginationChange?: (limit: number, offset: number) => void
+  isLoading?: boolean // Show skeleton loaders when fetching new data
 }
 
 /**
  * Reusable data table component for displaying database query results
- * Uses TanStack Table for sorting, filtering, pagination, and column visibility
+ * Uses TanStack Table for sorting, filtering, and column visibility
+ * Supports server-side pagination via totalRows, limit, offset props and onPaginationChange callback
+ * Pagination is controlled - limit/offset come from props (URL query params)
  * Handles NULL values, empty strings, and other data types appropriately
  */
-export function DataTable({ data, showControls = true }: DataTableProps) {
+export function DataTable({ 
+  data, 
+  showControls = true, 
+  totalRows: totalRowsProp,
+  pagination: paginationProp,
+  onPaginationChange,
+  isLoading = false
+}: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -82,6 +102,12 @@ export function DataTable({ data, showControls = true }: DataTableProps) {
   const [columnSearch, setColumnSearch] = React.useState("")
 
   const { columns, rows, metadata } = data
+  
+  // Server-side pagination detection and values
+  const hasServerPagination = !!onPaginationChange && !!totalRowsProp && !!paginationProp
+  const totalRows = totalRowsProp ?? rows.length
+  const limit = paginationProp?.limit ?? 100
+  const offset = paginationProp?.offset ?? 0
 
   const formatCellValue = (value: unknown): React.ReactNode => {
     return value === null || value === undefined ? (
@@ -199,7 +225,13 @@ export function DataTable({ data, showControls = true }: DataTableProps) {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    // Only use client-side pagination if server-side pagination is not enabled
+    ...(hasServerPagination ? {
+      manualPagination: true,
+      pageCount: Math.ceil(totalRows / limit),
+    } : {
+      getPaginationRowModel: getPaginationRowModel(),
+    }),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -211,6 +243,12 @@ export function DataTable({ data, showControls = true }: DataTableProps) {
       columnFilters,
       columnVisibility,
       columnSizing,
+      ...(!hasServerPagination && {
+        pagination: {
+          pageIndex: 0,
+          pageSize: 100,
+        },
+      }),
     },
   })
 
@@ -219,24 +257,67 @@ export function DataTable({ data, showControls = true }: DataTableProps) {
       {/* Toolbar with search and column visibility */}
       {showControls && (
         <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-800">
-          <Input
-            placeholder="Filter all columns..."
-            value={(columnFilters[0]?.value as string) ?? ""}
-            onChange={(event) => {
-              const value = event.target.value
-              // Simple global filter on first column, can be enhanced
-              if (normalizedColumns.length > 0) {
-                table.getColumn(normalizedColumns[0].name)?.setFilterValue(value)
-              }
-            }}
-            className="max-w-sm"
-          />
           {metadata?.executionTimeMs !== undefined && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900/50 border border-gray-800 rounded-md">
-              <span className="text-xs text-gray-400">Execution:</span>
-              <span className="text-xs font-mono font-semibold text-green-400">{metadata.executionTimeMs}ms</span>
+              <span className="text-xs text-gray-400">{rows.length} rows ⋅</span>
+              <span className="text-xs font-mono font-semibold text-gray-400">{metadata.executionTimeMs}ms</span>
             </div>
           )}
+          
+          {/* Server-side pagination controls */}
+          {hasServerPagination && onPaginationChange && (
+            <div className="flex items-center gap-2 ml-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const newOffset = Math.max(0, offset - limit)
+                  onPaginationChange(limit, newOffset)
+                }}
+                disabled={offset === 0}
+                className="h-9 w-9 p-0"
+              >
+                <ChevronDown className="h-4 w-4 rotate-90" />
+              </Button>
+              
+              <Input
+                type="number"
+                value={limit}
+                onChange={(e) => {
+                  const newLimit = Math.max(1, Math.min(1000, parseInt(e.target.value) || 100))
+                  onPaginationChange(newLimit, offset)
+                }}
+                className="h-9 w-20 text-center font-mono text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                min="1"
+                max="1000"
+              />
+              
+              <Input
+                type="number"
+                value={offset}
+                onChange={(e) => {
+                  const newOffset = Math.max(0, parseInt(e.target.value) || 0)
+                  onPaginationChange(limit, newOffset)
+                }}
+                className="h-9 w-20 text-center font-mono text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                min="0"
+              />
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const newOffset = Math.min(Math.max(0, totalRows - limit), offset + limit)
+                  onPaginationChange(limit, newOffset)
+                }}
+                disabled={offset + limit >= totalRows}
+                className="h-9 w-9 p-0"
+              >
+                <ChevronDown className="h-4 w-4 -rotate-90" />
+              </Button>
+            </div>
+          )}
+          
           <DropdownMenu onOpenChange={(open) => !open && setColumnSearch("")}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -363,9 +444,13 @@ export function DataTable({ data, showControls = true }: DataTableProps) {
                         className="px-4 py-2 text-xs text-gray-200 border-r border-gray-800 overflow-hidden font-mono"
                         style={{ width: cell.column.getSize(), maxWidth: cell.column.getSize() }}
                       >
-                        <div className="truncate">
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </div>
+                        {isLoading ? (
+                          <Skeleton className="h-4 w-full" />
+                        ) : (
+                          <div className="truncate">
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </div>
+                        )}
                       </TableCell>
                     )
                   })}
@@ -382,37 +467,6 @@ export function DataTable({ data, showControls = true }: DataTableProps) {
         </UiTable>
       </div>
 
-      {/* Pagination Controls */}
-      {showControls && (
-        <div className="flex items-center justify-end space-x-2 px-6 py-4 border-t border-gray-800">
-          <div className="flex-1 text-sm text-muted-foreground">
-            Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
-            {Math.min(
-              (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-              table.getFilteredRowModel().rows.length
-            )}{" "}
-            of {table.getFilteredRowModel().rows.length} row(s)
-          </div>
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { useTableData } from '../hooks/useTableData'
 import type { SortingParams } from '../hooks/useTableData'
 import { DataTable } from '../components/DataTable'
 import type { DataTableSorting } from '../components/DataTable'
+import type { Filter } from '@/lib/types'
 
 export default function TableView() {
   const { dbIndex, tableName } = useParams()
@@ -26,7 +27,19 @@ export default function TableView() {
     return { column: null, direction: null }
   }, [searchParams])
 
-  const { data, isLoading: loading, isFetching, error } = useTableData(dbIndex, tableName, pagination, sorting)
+  const filters: Filter[] = useMemo(() => {
+    const whereParam = searchParams.get('where')
+    if (!whereParam) return []
+    try {
+      const decoded = decodeURIComponent(whereParam)
+      const parsed = JSON.parse(decoded)
+      return Array.isArray(parsed) ? parsed : []
+    } catch {
+      return []
+    }
+  }, [searchParams])
+
+  const { data, isLoading: loading, isFetching, error } = useTableData(dbIndex, tableName, pagination, sorting, filters)
 
   const handlePaginationChange = useCallback(
     (limit: number, offset: number) => {
@@ -39,9 +52,13 @@ export default function TableView() {
         newParams.sort = sorting.column
         newParams.order = sorting.direction
       }
+      // Preserve filters
+      if (filters.length > 0) {
+        newParams.where = encodeURIComponent(JSON.stringify(filters))
+      }
       setSearchParams(newParams)
     },
-    [setSearchParams, sorting]
+    [setSearchParams, sorting, filters]
   )
 
   const handleSortChange = useCallback(
@@ -55,9 +72,33 @@ export default function TableView() {
         newParams.sort = column
         newParams.order = direction
       }
+      // Preserve filters
+      if (filters.length > 0) {
+        newParams.where = encodeURIComponent(JSON.stringify(filters))
+      }
       setSearchParams(newParams)
     },
-    [setSearchParams, pagination.limit]
+    [setSearchParams, pagination.limit, filters]
+  )
+
+  const handleFiltersChange = useCallback(
+    (newFilters: Filter[]) => {
+      const newParams: Record<string, string> = {
+        limit: pagination.limit.toString(),
+        offset: '0', // Reset to first page when filters change
+      }
+      // Preserve sorting params
+      if (sorting.column && sorting.direction) {
+        newParams.sort = sorting.column
+        newParams.order = sorting.direction
+      }
+      // Add filters if provided
+      if (newFilters.length > 0) {
+        newParams.where = encodeURIComponent(JSON.stringify(newFilters))
+      }
+      setSearchParams(newParams)
+    },
+    [setSearchParams, pagination.limit, sorting]
   )
 
   const tableSorting: DataTableSorting = useMemo(
@@ -95,6 +136,8 @@ export default function TableView() {
           onPaginationChange={handlePaginationChange}
           sorting={tableSorting}
           onSortChange={handleSortChange}
+          filters={filters}
+          onFiltersChange={handleFiltersChange}
           isLoading={isFetching}
         />
       </div>

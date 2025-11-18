@@ -83,7 +83,6 @@ public data class ElidePackageManifest(
 
   @Serializable public data class JarResource(
     val path: String,
-    val position: String,
   )
 
   @Serializable public data class ProjectSourceSpec(
@@ -139,7 +138,7 @@ public data class ElidePackageManifest(
   @Serializable public data class Jar(
     val name: String? = null,
     val sources: List<String> = emptyList(),
-    val resources: List<JarResource> = emptyList(),
+    val resources: Map<String, JarResource> = emptyMap(),
     val manifest: Map<String, String> = emptyMap(),
     val options: JarOptions = JarOptions(),
     override val from: List<String> = emptyList(),

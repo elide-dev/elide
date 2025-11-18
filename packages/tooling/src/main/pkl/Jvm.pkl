@@ -85,7 +85,7 @@ open class Jar extends artifacts.Artifact {
   }
 
   /// Which resources to add to the JAR.
-  resources: Listing<common.FilePath | JarResource> = new {}
+  resources: Mapping<common.FilePath, common.FilePath | JarResource> = new {}
 
   /// Keys and values to include in the JAR's manifest.
   manifest: Mapping<JarManifestKey, JarManifestValue> = new {}

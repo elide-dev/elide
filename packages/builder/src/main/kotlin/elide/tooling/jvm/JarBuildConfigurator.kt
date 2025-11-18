@@ -34,6 +34,7 @@ import elide.exec.ActionScope
 import elide.exec.Task
 import elide.exec.Task.Companion.fn
 import elide.exec.taskDependencies
+import elide.runtime.Logging
 import elide.tooling.Arguments
 import elide.tooling.Classpath
 import elide.tooling.Environment
@@ -56,6 +57,8 @@ public interface JarConfigurator {}
  * ## Jar Build Configurator
  */
 internal class JarBuildConfigurator : BuildConfigurator {
+  private val logging by lazy { Logging.of(JarBuildConfigurator::class) }
+
   override fun dependsOn(): List<KClass<out BuildConfigurator>> = listOf(
     JvmBuildConfigurator::class,
   )
@@ -82,11 +85,20 @@ internal class JarBuildConfigurator : BuildConfigurator {
     val root = state.config.projectRoot
     val resources = jar.resources
     return resources.map { resource ->
-      val path = root.resolve(resource.path)
-      if (!Files.exists(path)) {
-        error("Resource '$resource' (specified for JAR '${jar.name}') does not exist in project root")
+      val pathKey = if (resource.key.startsWith("/")) resource.key else {
+        logging.debug { "Resource key for JAR '${resource.key}' is not absolute; implying '/'" }
+        "/${resource.key}"
       }
-      path to resource.position
+      val path = root.resolve(resource.value.path)
+      if (!Files.exists(path)) {
+        error(buildString {
+          append("Resource '${resource.value.path}'")
+          append("(specified for JAR '")
+          append(jar.name ?: "default")
+          append("' does not exist in project root")
+        })
+      }
+      path to pathKey
     }
   }
 
@@ -95,8 +107,8 @@ internal class JarBuildConfigurator : BuildConfigurator {
     val built = state.config.taskGraph.build()
     return built.nodes().filter {
       // @TODO better than strings?
-      it.toString().lowercase().let {
-        it.contains("kotlin") || it.contains("java")
+      it.toString().lowercase().let { token ->
+        token.contains("kotlin") || token.contains("java")
       }
     }
   }

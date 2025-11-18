@@ -219,6 +219,11 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
           )
         })
       ).addConversion(
+        // convert string jar resource target path
+        Conversion.of(PClassInfo.String, JarResource::class.java, StrConverter {
+          JarResource(path = it)
+        })
+      ).addConversion(
         // convert flag defaults as booleans
         Conversion.of(PClassInfo.Boolean, ProjectFlagValue::class.java,
                       Converter<Boolean, ProjectFlagValue> { value, mapper ->

@@ -17,19 +17,19 @@ export default function Query() {
 
   const [sql, setSql] = useState('')
   const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 })
-  
+
   const { data: tables = [] } = useDatabaseTables(dbIndex)
   const { mutate: executeQuery, data: result, isPending: loading, error } = useQueryExecution(dbIndex)
 
   useEffect(() => {
     if (tables.length > 0) {
       const firstTable = tables[0].name
-      setSql(`SELECT * FROM ${firstTable};`)
+      setSql(`SELECT * FROM "${firstTable}";`)
     }
   }, [tables])
 
   const handleExecute = () => executeQuery({ sql: sql.trim() })
-  
+
   const handleClear = () => setSql('')
 
   const handleFormat = () => {
@@ -149,28 +149,29 @@ export default function Query() {
       </div>
 
       <div className="flex-1 overflow-auto">
-        {loading && (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            Executing query...
-          </div>
-        )}
+        {loading && <div className="flex items-center justify-center h-full text-gray-500">Executing query...</div>}
 
         {error && (
           <div className="px-6 pt-6">
             <div className="bg-red-950/30 border border-red-800 p-4 rounded-lg">
               <h3 className="text-red-400 font-semibold mb-3 flex items-center gap-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 SQL Error
               </h3>
               <p className="text-red-300 text-sm mb-3 leading-relaxed">{error.message}</p>
-              
+
               {/* Try to extract and display SQL from error response */}
               {(() => {
                 try {
                   // The error might have additional data in its response
-                  const errorData = (error as any).response || {};
+                  const errorData = (error as any).response || {}
                   if (errorData.sql) {
                     return (
                       <div className="mt-3 pt-3 border-t border-red-800/50">
@@ -184,10 +185,10 @@ export default function Query() {
                           </div>
                         )}
                       </div>
-                    );
+                    )
                   }
                 } catch {}
-                return null;
+                return null
               })()}
             </div>
           </div>
@@ -201,10 +202,15 @@ export default function Query() {
                   <DataTable
                     data={{
                       columns: result.columns,
-                      rows: result.data.map(row => result.columns.map(col => row[col.name])),
+                      rows: result.data.map((row) => result.columns.map((col) => row[col.name])),
                       metadata: result.metadata,
                     }}
-                    showControls={true}
+                    showControls={false}
+                    showPagination={false}
+                    showMetadata={true}
+                    totalRows={result.data.length}
+                    pagination={{ limit: result.data.length, offset: 0 }}
+                    onPaginationChange={() => {}}
                   />
                 ) : (
                   <div className="px-6 pt-6 text-gray-500 text-sm">No rows returned</div>
@@ -216,7 +222,9 @@ export default function Query() {
                   <div className="text-sm text-gray-300">
                     <div className="mb-2">
                       <span className="text-gray-400">Execution time: </span>
-                      <span className="font-mono font-semibold text-green-400">{result.metadata.executionTimeMs}ms</span>
+                      <span className="font-mono font-semibold text-green-400">
+                        {result.metadata.executionTimeMs}ms
+                      </span>
                     </div>
                     <div className="mb-2">
                       <span className="text-gray-400">Rows affected: </span>
@@ -244,4 +252,3 @@ export default function Query() {
     </div>
   )
 }
-

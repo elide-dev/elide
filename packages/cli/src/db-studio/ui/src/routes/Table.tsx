@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useTableData } from '../hooks/useTableData'
 import type { SortingParams } from '../hooks/useTableData'
+import { useDatabaseTables } from '../hooks/useDatabaseTables'
 import { DataTable } from '../components/DataTable'
 import type { DataTableSorting } from '../components/DataTable'
 import type { Filter } from '@/lib/types'
@@ -9,6 +10,9 @@ import type { Filter } from '@/lib/types'
 export default function TableView() {
   const { dbIndex, tableName } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
+
+  // Get tables list to access the total row count
+  const { data: tables = [] } = useDatabaseTables(dbIndex)
 
   const pagination = useMemo(
     () => ({
@@ -39,7 +43,13 @@ export default function TableView() {
     }
   }, [searchParams])
 
-  const { data, isLoading: loading, isFetching, error } = useTableData(dbIndex, tableName, pagination, sorting, filters)
+  const {
+    data,
+    isLoading: loading,
+    isFetching,
+    error,
+    refetch,
+  } = useTableData(dbIndex, tableName, pagination, sorting, filters)
 
   const handlePaginationChange = useCallback(
     (limit: number, offset: number) => {
@@ -101,6 +111,10 @@ export default function TableView() {
     [setSearchParams, pagination.limit, sorting]
   )
 
+  const handleRefresh = useCallback(() => {
+    refetch()
+  }, [refetch])
+
   const tableSorting: DataTableSorting = useMemo(
     () => ({
       column: sorting.column,
@@ -108,6 +122,12 @@ export default function TableView() {
     }),
     [sorting]
   )
+
+  // Find the current table's row count from the tables list
+  const tableRowCount = useMemo(() => {
+    const table = tables.find((t) => t.name === tableName)
+    return table?.rowCount
+  }, [tables, tableName])
 
   if (loading && !data) {
     return (
@@ -131,6 +151,7 @@ export default function TableView() {
         <DataTable
           data={data}
           totalRows={data.totalRows}
+          tableRowCount={tableRowCount}
           tableName={data.name}
           pagination={pagination}
           onPaginationChange={handlePaginationChange}
@@ -139,6 +160,7 @@ export default function TableView() {
           filters={filters}
           onFiltersChange={handleFiltersChange}
           isLoading={isFetching}
+          onRefresh={handleRefresh}
         />
       </div>
     </div>

@@ -87,6 +87,12 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
   )
   var skipModules: Boolean = false
 
+  @Option(
+    names = ["--activate-profile", "-P"],
+    description = ["Activate Maven profile(s) by ID (can be specified multiple times)"]
+  )
+  var activateProfiles: List<String> = emptyList()
+
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     // Determine POM file path
     val pomPath = when {
@@ -104,10 +110,20 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
     }
 
     // Parse POM
-    val pom = try {
+    val basePom = try {
       PomParser.parse(pomPath)
     } catch (e: Exception) {
       return err("Failed to parse POM file: ${e.message}")
+    }
+
+    // Activate profiles if specified
+    val pom = if (activateProfiles.isNotEmpty()) {
+      output {
+        append("Activating profile(s): ${activateProfiles.joinToString(", ")}")
+      }
+      PomParser.activateProfiles(basePom, activateProfiles)
+    } else {
+      basePom
     }
 
     // Check if this is a multi-module project
@@ -122,66 +138,103 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
         append("  Description: ${pom.description}")
       }
       if (isMultiModule) {
+        append("  Type: Multi-module project")
         append("  Modules: ${pom.modules.size}")
+      }
+      if (pom.profiles.isNotEmpty()) {
+        append("  Profiles: ${pom.profiles.size} (${pom.profiles.joinToString(", ") { it.id }})")
       }
       append("  Dependencies: ${pom.dependencies.size} (${pom.dependencies.count { it.scope == "compile" || it.scope == "runtime" }} compile, ${pom.dependencies.count { it.scope == "test" }} test)")
     }
 
-    // Process main POM
-    val mainResult = convertSinglePom(pom, pomPath)
-    if (mainResult != null) return mainResult
-
-    // Process modules if present and not skipped
+    // Handle multi-module projects
     if (isMultiModule && !skipModules) {
+      return convertMultiModuleProject(pom, pomPath)
+    }
+
+    // Handle single-module project
+    return convertSinglePom(pom, pomPath) ?: success()
+  }
+
+  /**
+   * Convert a multi-module Maven project to a single root elide.pkl with workspaces.
+   */
+  private suspend fun CommandContext.convertMultiModuleProject(parentPom: PomDescriptor, pomPath: Path): CommandResult {
+    output {
+      appendLine()
+      append("Processing ${parentPom.modules.size} module(s)...")
+    }
+
+    val modulePoms = mutableListOf<PomDescriptor>()
+    var failureCount = 0
+
+    // Parse all module POMs
+    for (moduleName in parentPom.modules) {
+      val modulePomPath = pomPath.parent.resolve(moduleName).resolve("pom.xml")
+
+      if (!modulePomPath.exists()) {
+        output {
+          append("  ⚠ Warning: Module '$moduleName' pom.xml not found at $modulePomPath")
+        }
+        failureCount++
+        continue
+      }
+
+      try {
+        val modulePom = PomParser.parse(modulePomPath)
+        modulePoms.add(modulePom)
+        output {
+          append("  ✓ Parsed module: ${modulePom.artifactId}")
+        }
+      } catch (e: Exception) {
+        failureCount++
+        output {
+          append("  ✗ Failed to parse module '$moduleName': ${e.message}")
+        }
+      }
+    }
+
+    if (modulePoms.isEmpty()) {
+      return err("No modules could be parsed successfully")
+    }
+
+    // Generate single root elide.pkl with workspaces
+    val pklContent = PklGenerator.generateMultiModule(parentPom, modulePoms)
+
+    // Determine output path (always at root for multi-module)
+    val outputPath = when {
+      outputFile != null -> Path.of(outputFile).absolute()
+      else -> pomPath.parent.resolve("elide.pkl")
+    }
+
+    // Handle dry run
+    if (dryRun) {
       output {
         appendLine()
-        append("Processing ${pom.modules.size} module(s)...")
+        append("Generated multi-module elide.pkl:")
+        append("=".repeat(60))
+        append(pklContent)
+        append("=".repeat(60))
       }
+      return success()
+    }
 
-      var moduleCount = 0
-      var failureCount = 0
+    // Check if output file exists
+    if (outputPath.exists() && !force) {
+      return err("Output file already exists: $outputPath\nUse --force to overwrite")
+    }
 
-      for (moduleName in pom.modules) {
-        val modulePomPath = pomPath.parent.resolve(moduleName).resolve("pom.xml")
-
-        if (!modulePomPath.exists()) {
-          output {
-            append("  ⚠ Skipping module '$moduleName': pom.xml not found at $modulePomPath")
-          }
-          failureCount++
-          continue
-        }
-
-        try {
-          val modulePom = PomParser.parse(modulePomPath)
-          output {
-            append("  Processing module: ${modulePom.artifactId}")
-          }
-
-          val moduleResult = convertSinglePom(modulePom, modulePomPath)
-          if (moduleResult != null) {
-            failureCount++
-            output {
-              append("    ✗ Failed: ${moduleResult}")
-            }
-          } else {
-            moduleCount++
-            output {
-              append("    ✓ Generated ${modulePomPath.parent.resolve("elide.pkl")}")
-            }
-          }
-        } catch (e: Exception) {
-          failureCount++
-          output {
-            append("  ✗ Failed to process module '$moduleName': ${e.message}")
-          }
-        }
-      }
-
+    // Write output file
+    try {
+      outputPath.writeText(pklContent)
       output {
         appendLine()
-        append("Module conversion complete: $moduleCount succeeded, $failureCount failed")
+        append("✓ Successfully created multi-module elide.pkl at $outputPath")
+        append("  Included ${modulePoms.size} module(s), skipped $failureCount")
+        append("  Total dependencies: ${(parentPom.dependencies + modulePoms.flatMap { it.dependencies }).distinctBy { it.coordinate() }.size}")
       }
+    } catch (e: Exception) {
+      return err("Failed to write output file: ${e.message}")
     }
 
     return success()

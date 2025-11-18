@@ -112,14 +112,19 @@ export default function Database() {
                 key={name}
                 to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}
                 className={[
-                  'w-full text-left px-3 py-2 mb-1 flex items-center gap-2 text-sm transition-colors rounded bg-gray-950 hover:bg-gray-900',
-                  isActive ? 'bg-gray-900 text-white' : 'text-gray-200 hover:text-white'
+                  'w-full text-left px-3 py-2 mb-1 flex items-center gap-2 text-sm transition-colors rounded border',
+                  isActive 
+                    ? 'bg-blue-950/50 text-white border-blue-800/60 hover:bg-blue-950/70' 
+                    : 'bg-gray-950 text-gray-200 hover:bg-gray-900 hover:text-white border-transparent'
                 ].join(' ')}
                 aria-current={isActive ? 'page' : undefined}
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span className="truncate flex-1">{name}</span>
-                <span className="text-xs text-gray-500 shrink-0">{formatRowCount(rowCount)}</span>
+                <span className={[
+                  'text-xs shrink-0',
+                  isActive ? 'text-gray-400' : 'text-gray-500'
+                ].join(' ')}>{formatRowCount(rowCount)}</span>
               </Link>
             )
           })}

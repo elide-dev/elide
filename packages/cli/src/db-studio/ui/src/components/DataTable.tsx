@@ -25,6 +25,7 @@ import {
   Filter as FilterIcon,
   X,
   Plus,
+  RefreshCw,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -40,6 +41,7 @@ import { Input } from '@/components/ui/input'
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { Badge } from '@/components/ui/badge'
 import { ColumnInfo } from './ColumnInfo'
 import { formatRowCount } from '@/lib/utils'
 import type { Filter } from '@/lib/types'
@@ -90,6 +92,7 @@ interface DataTableProps {
   showMetadata?: boolean // Show execution time and row count metadata (default: true when available)
   // Server-side pagination props (required)
   totalRows: number
+  tableRowCount?: number // Total rows in the table (unfiltered) - shown in badge next to table name
   pagination: DataTablePagination
   onPaginationChange: (limit: number, offset: number) => void
   // Server-side sorting props (optional - if not provided, sorting is disabled)
@@ -100,6 +103,7 @@ interface DataTableProps {
   onFiltersChange?: (filters: Filter[]) => void
   isLoading?: boolean // Show skeleton loaders when fetching new data
   tableName?: string // Table name to display in toolbar
+  onRefresh?: () => void // Callback to refetch the current query state
 }
 
 /**
@@ -116,6 +120,7 @@ export function DataTable({
   showPagination = true,
   showMetadata = true,
   totalRows,
+  tableRowCount,
   pagination,
   onPaginationChange,
   sorting,
@@ -124,6 +129,7 @@ export function DataTable({
   onFiltersChange,
   isLoading = false,
   tableName,
+  onRefresh,
 }: DataTableProps) {
   // Convert server-side sorting to TanStack Table format
   const sortingState: SortingState = React.useMemo(() => {
@@ -138,6 +144,14 @@ export function DataTable({
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
   const [columnSearch, setColumnSearch] = React.useState('')
   const [showFilters, setShowFilters] = React.useState(filters.length > 0)
+
+  // Track draft filters (being edited) separately from applied filters
+  const [draftFilters, setDraftFilters] = React.useState<Filter[]>(filters)
+
+  // Sync draft filters when applied filters change externally
+  React.useEffect(() => {
+    setDraftFilters(filters)
+  }, [filters])
 
   const { columns, rows, metadata } = data
 
@@ -165,7 +179,12 @@ export function DataTable({
     )
   }
 
-  // Filter management functions
+  // Check if draft filters differ from applied filters
+  const hasUnappliedChanges = React.useMemo(() => {
+    return JSON.stringify(draftFilters) !== JSON.stringify(filters)
+  }, [draftFilters, filters])
+
+  // Filter management functions (work with draft filters)
   const handleAddFilter = () => {
     if (!onFiltersChange) return
     const newFilter: Filter = {
@@ -173,22 +192,26 @@ export function DataTable({
       operator: 'eq',
       value: '',
     }
-    onFiltersChange([...filters, newFilter])
+    setDraftFilters([...draftFilters, newFilter])
     setShowFilters(true)
   }
 
   const handleRemoveFilter = (index: number) => {
     if (!onFiltersChange) return
-    const newFilters = filters.filter((_, i) => i !== index)
-    onFiltersChange(newFilters)
+    const newFilters = draftFilters.filter((_, i) => i !== index)
     if (newFilters.length === 0) {
+      // If removing the last filter, clear all and close panel
+      setDraftFilters([])
+      onFiltersChange([])
       setShowFilters(false)
+    } else {
+      setDraftFilters(newFilters)
     }
   }
 
   const handleUpdateFilter = (index: number, updates: Partial<Filter>) => {
     if (!onFiltersChange) return
-    const newFilters = filters.map((filter, i) => {
+    const newFilters = draftFilters.map((filter, i) => {
       if (i === index) {
         const updatedFilter = { ...filter, ...updates }
         // Reset value if operator changes to one that doesn't need a value
@@ -207,11 +230,17 @@ export function DataTable({
       }
       return filter
     })
-    onFiltersChange(newFilters)
+    setDraftFilters(newFilters)
+  }
+
+  const handleApplyFilters = () => {
+    if (!onFiltersChange) return
+    onFiltersChange(draftFilters)
   }
 
   const handleClearFilters = () => {
     if (!onFiltersChange) return
+    setDraftFilters([])
     onFiltersChange([])
     setShowFilters(false)
   }
@@ -338,42 +367,67 @@ export function DataTable({
           {tableName && (
             <div className="flex items-center gap-3 mr-4">
               <h2 className="text-lg font-semibold tracking-tight truncate">{tableName}</h2>
-              <HoverCard openDelay={200}>
-                <HoverCardTrigger asChild>
-                  <span className="inline-flex items-center rounded-md bg-gray-800/60 text-gray-300 border border-gray-700 px-2.5 py-0.5 text-xs font-medium shrink-0 cursor-default">
-                    {formatRowCount(totalRows)} rows
-                  </span>
-                </HoverCardTrigger>
-                <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
-                  <span className="text-xs font-semibold">{totalRows.toLocaleString()} total rows</span>
-                </HoverCardContent>
-              </HoverCard>
+              {tableRowCount ? (
+                <HoverCard openDelay={200}>
+                  <HoverCardTrigger asChild>
+                    <Badge variant="secondary" className="shrink-0 cursor-default">
+                      {formatRowCount(tableRowCount)} rows
+                    </Badge>
+                  </HoverCardTrigger>
+                  <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
+                    <span className="text-xs font-semibold">{tableRowCount.toLocaleString()} total rows</span>
+                  </HoverCardContent>
+                </HoverCard>
+              ) : (
+                <Skeleton className="w-16 h-4" />
+              )}
             </div>
           )}
           {showControls && onFiltersChange && (
-            <Button
-              variant={filters.length > 0 ? 'default' : 'outline'}
-              onClick={() => {
-                if (filters.length === 0) {
-                  handleAddFilter()
-                } else {
-                  setShowFilters(!showFilters)
-                }
-              }}
-            >
-              <FilterIcon className="mr-2 h-4 w-4" />
-              Filters {filters.length > 0 && `(${filters.length})`}
-            </Button>
+            <div className="relative">
+              <Button
+                variant="outline"
+                className={showFilters ? 'bg-accent text-accent-foreground' : ''}
+                onClick={() => {
+                  if (draftFilters.length === 0 && filters.length === 0) {
+                    handleAddFilter()
+                  } else {
+                    setShowFilters(!showFilters)
+                  }
+                }}
+              >
+                <FilterIcon className="mr-2 h-4 w-4" />
+                Filters
+              </Button>
+              {filters.length > 0 && (
+                <Badge
+                  variant="secondary"
+                  className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] rounded-full bg-white text-black"
+                >
+                  !
+                </Badge>
+              )}
+            </div>
           )}
           {showControls && (
             <DropdownMenu onOpenChange={(open) => !open && setColumnSearch('')}>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Settings2 className="mr-2 h-4 w-4" />
-                  Columns <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
+                <div className="relative">
+                  <Button variant="outline">
+                    <Settings2 className="mr-2 h-4 w-4" />
+                    Columns
+                  </Button>
+                  {Object.values(columnVisibility).some((visible) => visible === false) && (
+                    <Badge
+                      variant="secondary"
+                      className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] rounded-full bg-white text-black"
+                    >
+                      !
+                    </Badge>
+                  )}
+                </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[240px]" onCloseAutoFocus={(e) => e.preventDefault()}>
+              <DropdownMenuContent align="center" className="w-[240px]" onCloseAutoFocus={(e) => e.preventDefault()}>
                 <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <div className="px-2 py-2" onKeyDown={(e) => e.stopPropagation()}>
@@ -470,7 +524,6 @@ export function DataTable({
                     <span className="text-xs font-semibold">Previous Page</span>
                   </HoverCardContent>
                 </HoverCard>
-
                 <HoverCard openDelay={200}>
                   <HoverCardTrigger asChild>
                     <Input
@@ -498,7 +551,6 @@ export function DataTable({
                     <span className="text-xs font-semibold">LIMIT</span>
                   </HoverCardContent>
                 </HoverCard>
-
                 <HoverCard openDelay={200}>
                   <HoverCardTrigger asChild>
                     <Input
@@ -525,7 +577,6 @@ export function DataTable({
                     <span className="text-xs font-semibold">OFFSET</span>
                   </HoverCardContent>
                 </HoverCard>
-
                 <HoverCard openDelay={200}>
                   <HoverCardTrigger asChild>
                     <Button
@@ -544,6 +595,25 @@ export function DataTable({
                     <span className="text-xs font-semibold">Next Page</span>
                   </HoverCardContent>
                 </HoverCard>
+                {/* Refresh button */}
+                {onRefresh && (
+                  <HoverCard openDelay={200}>
+                    <HoverCardTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={onRefresh}
+                        disabled={isLoading}
+                        className="h-9 w-9 p-0 ml-2"
+                      >
+                        <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                      </Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
+                      <span className="text-xs font-semibold">Refresh rows</span>
+                    </HoverCardContent>
+                  </HoverCard>
+                )}
               </div>
             )}
           </div>
@@ -551,115 +621,134 @@ export function DataTable({
       )}
 
       {/* Filter rows section */}
-      {showFilters && onFiltersChange && filters.length > 0 && (
+      {showFilters && onFiltersChange && draftFilters.length > 0 && (
         <div className="border-b border-gray-800 bg-gray-950/50 shrink-0">
-          <div className="px-6 py-3 space-y-2">
-            {filters.map((filter, index) => {
-              const operatorMeta = FILTER_OPERATORS.find((op) => op.value === filter.operator)
-              const requiresValue = operatorMeta?.requiresValue ?? true
-              const isArrayValue = operatorMeta?.isArrayValue ?? false
+          <div className="flex items-start gap-6 px-6 py-3">
+            <div className="space-y-2">
+              {draftFilters.map((filter, index) => {
+                const operatorMeta = FILTER_OPERATORS.find((op) => op.value === filter.operator)
+                const requiresValue = operatorMeta?.requiresValue ?? true
+                const isArrayValue = operatorMeta?.isArrayValue ?? false
 
-              return (
-                <div key={index} className="flex items-center gap-2">
-                  {/* First filter shows "where", others show "and" */}
-                  <span className="text-xs text-gray-400 font-mono w-12 uppercase">
-                    {index === 0 ? 'where' : 'and'}
-                  </span>
+                return (
+                  <div key={index} className="flex items-center gap-2">
+                    {/* First filter shows "where", others show "and" */}
+                    <span className="text-xs text-gray-400 font-mono w-12 uppercase shrink-0">
+                      {index === 0 ? 'where' : 'and'}
+                    </span>
 
-                  {/* Column selector */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="min-w-[140px] justify-between font-mono text-xs">
-                        {filter.column}
-                        <ChevronDown className="ml-2 h-3 w-3" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="max-h-[300px] overflow-y-auto">
-                      {columns.map((col) => (
-                        <DropdownMenuCheckboxItem
-                          key={col.name}
-                          checked={filter.column === col.name}
-                          onCheckedChange={() => handleUpdateFilter(index, { column: col.name })}
-                          onSelect={(e) => e.preventDefault()}
+                    {/* Column selector */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="min-w-[140px] w-auto max-w-[280px] justify-between font-mono text-xs"
                         >
-                          <span className="font-mono text-xs">{col.name}</span>
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                          <span className="flex-1 text-left">{filter.column}</span>
+                          <ChevronDown className="ml-2 h-3 w-3 shrink-0" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="max-h-[300px] overflow-y-auto">
+                        {columns.map((col) => (
+                          <DropdownMenuCheckboxItem
+                            key={col.name}
+                            checked={filter.column === col.name}
+                            onCheckedChange={() => handleUpdateFilter(index, { column: col.name })}
+                            onSelect={(e) => e.preventDefault()}
+                          >
+                            <span className="font-mono text-xs pr-8">{col.name}</span>
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
 
-                  {/* Operator selector */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="min-w-[140px] justify-between text-xs">
-                        {operatorMeta?.label || filter.operator}
-                        <ChevronDown className="ml-2 h-3 w-3" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {FILTER_OPERATORS.map((op) => (
-                        <DropdownMenuCheckboxItem
-                          key={op.value}
-                          checked={filter.operator === op.value}
-                          onCheckedChange={() => handleUpdateFilter(index, { operator: op.value })}
-                          onSelect={(e) => e.preventDefault()}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs">{op.label}</span>
-                            <span className="text-[10px] text-gray-500 font-mono">{op.symbol}</span>
-                          </div>
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    {/* Operator selector */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm" className="w-[160px] justify-between text-xs">
+                          <span className="truncate">{operatorMeta?.label || filter.operator}</span>
+                          <ChevronDown className="ml-2 h-3 w-3 shrink-0" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-[200px]">
+                        {FILTER_OPERATORS.map((op) => (
+                          <DropdownMenuCheckboxItem
+                            key={op.value}
+                            checked={filter.operator === op.value}
+                            onCheckedChange={() => handleUpdateFilter(index, { operator: op.value })}
+                            onSelect={(e) => e.preventDefault()}
+                            className="pr-2"
+                          >
+                            <div className="flex items-center justify-between gap-2 w-full">
+                              <span className="text-xs flex-1">{op.label}</span>
+                              <Badge variant="secondary" className="ml-auto font-mono text-[10px] px-1.5 py-0">
+                                {op.symbol}
+                              </Badge>
+                            </div>
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
 
-                  {/* Value input (conditional based on operator) */}
-                  {requiresValue && !isArrayValue && (
-                    <Input
-                      placeholder="Value..."
-                      value={String(filter.value ?? '')}
-                      onChange={(e) => handleUpdateFilter(index, { value: e.target.value })}
-                      className="h-8 text-xs font-mono flex-1"
-                    />
-                  )}
+                    {/* Value input (conditional based on operator) */}
+                    {requiresValue && !isArrayValue && (
+                      <Input
+                        placeholder="Value..."
+                        value={String(filter.value ?? '')}
+                        onChange={(e) => handleUpdateFilter(index, { value: e.target.value })}
+                        className="h-8 w-[200px] text-xs font-mono"
+                      />
+                    )}
 
-                  {/* Array value input for 'in' operator */}
-                  {requiresValue && isArrayValue && (
-                    <Input
-                      placeholder="Value1, Value2, Value3..."
-                      value={Array.isArray(filter.value) ? filter.value.join(', ') : ''}
-                      onChange={(e) => {
-                        const values = e.target.value
-                          .split(',')
-                          .map((v) => v.trim())
-                          .filter((v) => v !== '')
-                        handleUpdateFilter(index, { value: values })
-                      }}
-                      className="h-8 text-xs font-mono flex-1"
-                    />
-                  )}
+                    {/* Array value input for 'in' operator */}
+                    {requiresValue && isArrayValue && (
+                      <Input
+                        placeholder="Value1, Value2, Value3..."
+                        value={Array.isArray(filter.value) ? filter.value.join(', ') : ''}
+                        onChange={(e) => {
+                          const values = e.target.value
+                            .split(',')
+                            .map((v) => v.trim())
+                            .filter((v) => v !== '')
+                          handleUpdateFilter(index, { value: values })
+                        }}
+                        className="h-8 w-[280px] text-xs font-mono"
+                      />
+                    )}
 
-                  {/* Remove button */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleRemoveFilter(index)}
-                    className="h-8 w-8 p-0 text-gray-400 hover:text-gray-200"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              )
-            })}
-
-            {/* Action buttons */}
-            <div className="flex items-center gap-2 pt-1">
-              <Button variant="outline" size="sm" onClick={handleAddFilter} className="h-7 text-xs">
+                    {/* Remove button */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRemoveFilter(index)}
+                      className="h-8 w-8 p-0 shrink-0 text-gray-400 hover:text-gray-200"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )
+              })}
+            </div>
+            {/* Separator */}
+            <div className="w-px bg-gray-800 self-stretch"></div>
+            {/* Action buttons column */}
+            <div className="flex items-end gap-2 pt-0.5">
+              <Button
+                variant="default"
+                size="sm"
+                onClick={handleApplyFilters}
+                disabled={!hasUnappliedChanges}
+                className="h-8 text-xs"
+              >
+                Apply
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleAddFilter} className="h-8 text-xs">
                 <Plus className="mr-1 h-3 w-3" />
                 Add filter
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleClearFilters} className="h-7 text-xs text-gray-400">
-                Clear all
+              <Button variant="ghost" size="sm" onClick={handleClearFilters} className="h-8 text-xs text-gray-400">
+                Clear filters
               </Button>
             </div>
           </div>

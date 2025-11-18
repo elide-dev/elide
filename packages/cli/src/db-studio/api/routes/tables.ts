@@ -3,6 +3,8 @@ import { withDatabase } from "../http/middleware.ts";
 import { requireTableName } from "../utils/validation.ts";
 import { parseRequestBody, parseQueryParams } from "../utils/request.ts";
 import { getTables, getTableData } from "../database.ts";
+import { FilterSchema, type Filter } from "../http/schemas.ts";
+import { z } from "zod";
 
 /**
  * Get list of tables in a database
@@ -15,7 +17,7 @@ export const getTablesRoute = withDatabase(async (context) => {
 
 /**
  * Get table data with enhanced column metadata
- * Supports query parameters: limit (default: 100), offset (default: 0), sort (column name), order (asc/desc)
+ * Supports query parameters: limit (default: 100), offset (default: 0), sort (column name), order (asc/desc), where (JSON-encoded filters)
  */
 export const getTableDataRoute = withDatabase(async (context) => {
   const { params, db, url } = context;
@@ -28,6 +30,7 @@ export const getTableDataRoute = withDatabase(async (context) => {
   const offsetParam = queryParams.get('offset');
   const sortParam = queryParams.get('sort');
   const orderParam = queryParams.get('order');
+  const whereParam = queryParams.get('where');
   
   const limit = limitParam ? parseInt(limitParam, 10) : 100;
   const offset = offsetParam ? parseInt(offsetParam, 10) : 0;
@@ -53,8 +56,41 @@ export const getTableDataRoute = withDatabase(async (context) => {
     sortDirection = orderParam as 'asc' | 'desc';
   }
 
+  // Parse and validate filters
+  let filters: Filter[] | null = null;
+  if (whereParam) {
+    try {
+      const decodedWhere = decodeURIComponent(whereParam);
+      const parsedWhere = JSON.parse(decodedWhere);
+      
+      // Validate that it's an array
+      if (!Array.isArray(parsedWhere)) {
+        return errorResponse("Invalid where parameter: must be a JSON array of filters", 400);
+      }
+      
+      // Validate each filter using Zod schema
+      const FiltersArraySchema = z.array(FilterSchema);
+      const validationResult = FiltersArraySchema.safeParse(parsedWhere);
+      
+      if (!validationResult.success) {
+        return errorResponse(
+          `Invalid filter format: ${validationResult.error.message}`,
+          400
+        );
+      }
+      
+      filters = validationResult.data;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      return errorResponse(
+        `Failed to parse where parameter: ${errorMessage}`,
+        400
+      );
+    }
+  }
+
   try {
-    const tableData = getTableData(db, params.tableName, limit, offset, sortColumn, sortDirection);
+    const tableData = getTableData(db, params.tableName, limit, offset, sortColumn, sortDirection, filters);
     return jsonResponse(tableData);
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : "Unknown error";

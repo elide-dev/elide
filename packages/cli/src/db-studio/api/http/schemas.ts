@@ -100,3 +100,38 @@ export const ErrorResponseSchema = z.object({
 
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>;
 
+/**
+ * Filter operator types for WHERE clause filtering
+ */
+export const FilterOperatorSchema = z.enum([
+  'eq',           // equals (=)
+  'neq',          // not equals (<>)
+  'gt',           // greater than (>)
+  'gte',          // greater or equal (>=)
+  'lt',           // less than (<)
+  'lte',          // less or equal (<=)
+  'like',         // LIKE
+  'not_like',     // NOT LIKE
+  'in',           // IN (value is array)
+  'is_null',      // IS NULL (no value)
+  'is_not_null',  // IS NOT NULL (no value)
+]);
+
+export type FilterOperator = z.infer<typeof FilterOperatorSchema>;
+
+/**
+ * Filter schema for WHERE clause conditions
+ */
+export const FilterSchema = z.object({
+  column: z.string(),
+  operator: FilterOperatorSchema,
+  value: z.union([
+    z.string(),
+    z.number(),
+    z.null(),
+    z.array(z.string()),
+  ]).optional(),
+});
+
+export type Filter = z.infer<typeof FilterSchema>;
+

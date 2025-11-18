@@ -26,13 +26,14 @@ import elide.tool.cli.ToolState
  *
  * This command provides subcommands for adopting from various build tools:
  * - maven: Adopt Maven pom.xml to elide.pkl
- * - (future) gradle: Adopt Gradle build files to elide.pkl
+ * - gradle: Adopt Gradle build files to elide.pkl
  */
 @Command(
   name = "adopt",
   mixinStandardHelpOptions = true,
   subcommands = [
     MavenAdoptCommand::class,
+    GradleAdoptCommand::class,
   ],
   description = [
     "Adopt build files from other tools to Elide format.",
@@ -41,7 +42,8 @@ import elide.tool.cli.ToolState
     "elide @|bold,fg(cyan) adopt|@ <COMMAND>",
     "",
     "Available Commands:",
-    "  @|bold maven|@    Adopt Maven pom.xml to elide.pkl",
+    "  @|bold maven|@     Adopt Maven pom.xml to elide.pkl",
+    "  @|bold gradle|@    Adopt Gradle build files to elide.pkl",
     "",
   ]
 )
@@ -54,7 +56,8 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
       append("Use 'elide adopt <command>' to adopt build files.")
       appendLine()
       append("Available commands:")
-      append("  maven    Adopt Maven pom.xml to elide.pkl")
+      append("  maven     Adopt Maven pom.xml to elide.pkl")
+      append("  gradle    Adopt Gradle build files to elide.pkl")
     }
     return success()
   }

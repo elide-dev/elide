@@ -205,5 +205,197 @@ object PklGenerator {
     appendLine("}")
   }
 
+  /**
+   * Generate elide.pkl content from a Gradle project descriptor.
+   *
+   * @param gradle The Gradle project descriptor
+   */
+  internal fun generate(gradle: GradleDescriptor): String = buildString {
+    // Header
+    appendLine("amends \"elide:project.pkl\"")
+    appendLine()
+
+    // Project metadata
+    appendLine("name = \"${gradle.name}\"")
+    if (gradle.description != null) {
+      appendLine("description = \"${gradle.description.escapeQuotes()}\"")
+    }
+    if (gradle.version != "unspecified" && gradle.version.isNotBlank()) {
+      appendLine("version = \"${gradle.version}\"")
+    }
+    appendLine()
+
+    // Dependencies section
+    val compileDeps = gradle.dependencies.filterNot { it.isTestScope() }
+    val testDeps = gradle.dependencies.filter { it.isTestScope() }
+
+    if (compileDeps.isNotEmpty() || testDeps.isNotEmpty() || gradle.repositories.isNotEmpty()) {
+      appendLine("dependencies {")
+      appendLine("  maven {")
+
+      // Repositories
+      if (gradle.repositories.isNotEmpty()) {
+        appendLine("    repositories {")
+        gradle.repositories.forEach { repo ->
+          appendLine("      [\"${repo.name}\"] = \"${repo.url}\"")
+        }
+        appendLine("    }")
+        appendLine()
+      }
+
+      // Compile dependencies
+      if (compileDeps.isNotEmpty()) {
+        appendLine("    packages {")
+        compileDeps.forEach { dep ->
+          appendLine("      \"${dep.coordinate()}\"")
+        }
+        appendLine("    }")
+      }
+
+      // Test dependencies
+      if (testDeps.isNotEmpty()) {
+        if (compileDeps.isNotEmpty()) appendLine()
+        appendLine("    testPackages {")
+        testDeps.forEach { dep ->
+          appendLine("      \"${dep.coordinate()}\"")
+        }
+        appendLine("    }")
+      }
+
+      appendLine("  }")
+      appendLine("}")
+      appendLine()
+    }
+
+    // Build warnings
+    if (gradle.plugins.isNotEmpty()) {
+      appendLine("// Build plugins detected (manual conversion may be needed):")
+      gradle.plugins.forEach { plugin ->
+        val pluginStr = if (plugin.version != null) {
+          "//   - ${plugin.id}:${plugin.version}"
+        } else {
+          "//   - ${plugin.id}"
+        }
+        appendLine(pluginStr)
+      }
+      appendLine()
+    }
+
+    // Source mappings (Gradle defaults)
+    appendLine("sources {")
+    appendLine("  [\"main\"] = \"src/main/java/**/*.java\"")
+    appendLine("  [\"test\"] = \"src/test/java/**/*.java\"")
+    appendLine("}")
+  }
+
+  /**
+   * Generate elide.pkl content for a multi-module Gradle project.
+   *
+   * @param rootProject The root Gradle project
+   * @param subprojects List of subproject descriptors
+   */
+  internal fun generateMultiModule(rootProject: GradleDescriptor, subprojects: List<GradleDescriptor>): String = buildString {
+    // Header
+    appendLine("amends \"elide:project.pkl\"")
+    appendLine()
+
+    // Project metadata from root
+    appendLine("name = \"${rootProject.name}\"")
+    if (rootProject.description != null) {
+      appendLine("description = \"${rootProject.description.escapeQuotes()}\"")
+    }
+    if (rootProject.version != "unspecified" && rootProject.version.isNotBlank()) {
+      appendLine("version = \"${rootProject.version}\"")
+    }
+    appendLine()
+
+    // Workspaces block
+    if (rootProject.modules.isNotEmpty()) {
+      appendLine("workspaces {")
+      rootProject.modules.forEach { module ->
+        appendLine("  \"$module\"")
+      }
+      appendLine("}")
+      appendLine()
+    }
+
+    // Aggregate all dependencies from all subprojects
+    val allCompileDeps = mutableSetOf<GradleDescriptor.Dependency>()
+    val allTestDeps = mutableSetOf<GradleDescriptor.Dependency>()
+    val allRepositories = mutableSetOf<GradleDescriptor.Repository>()
+
+    // Include root dependencies and repositories
+    allCompileDeps.addAll(rootProject.dependencies.filterNot { it.isTestScope() })
+    allTestDeps.addAll(rootProject.dependencies.filter { it.isTestScope() })
+    allRepositories.addAll(rootProject.repositories)
+
+    // Include subproject dependencies and repositories
+    subprojects.forEach { subproject ->
+      allCompileDeps.addAll(subproject.dependencies.filterNot { it.isTestScope() })
+      allTestDeps.addAll(subproject.dependencies.filter { it.isTestScope() })
+      allRepositories.addAll(subproject.repositories)
+    }
+
+    // Dependencies section
+    if (allCompileDeps.isNotEmpty() || allTestDeps.isNotEmpty() || allRepositories.isNotEmpty()) {
+      appendLine("dependencies {")
+      appendLine("  maven {")
+
+      // Repositories
+      if (allRepositories.isNotEmpty()) {
+        appendLine("    repositories {")
+        allRepositories.forEach { repo ->
+          appendLine("      [\"${repo.name}\"] = \"${repo.url}\"")
+        }
+        appendLine("    }")
+        appendLine()
+      }
+
+      // Compile dependencies
+      if (allCompileDeps.isNotEmpty()) {
+        appendLine("    packages {")
+        allCompileDeps.forEach { dep ->
+          appendLine("      \"${dep.coordinate()}\"")
+        }
+        appendLine("    }")
+      }
+
+      // Test dependencies
+      if (allTestDeps.isNotEmpty()) {
+        if (allCompileDeps.isNotEmpty()) appendLine()
+        appendLine("    testPackages {")
+        allTestDeps.forEach { dep ->
+          appendLine("      \"${dep.coordinate()}\"")
+        }
+        appendLine("    }")
+      }
+
+      appendLine("  }")
+      appendLine("}")
+      appendLine()
+    }
+
+    // Build warnings (aggregate all plugins)
+    val allPlugins = (rootProject.plugins + subprojects.flatMap { it.plugins }).distinctBy { it.id }
+    if (allPlugins.isNotEmpty()) {
+      appendLine("// Build plugins detected (manual conversion may be needed):")
+      allPlugins.forEach { plugin ->
+        val pluginStr = if (plugin.version != null) {
+          "//   - ${plugin.id}:${plugin.version}"
+        } else {
+          "//   - ${plugin.id}"
+        }
+        appendLine(pluginStr)
+      }
+      appendLine()
+    }
+
+    // Source mappings (Gradle defaults)
+    appendLine("sources {")
+    appendLine("  [\"main\"] = \"src/main/java/**/*.java\"")
+    appendLine("  [\"test\"] = \"src/test/java/**/*.java\"")
+    appendLine("}")
+  }
+
   private fun String.escapeQuotes(): String = replace("\"", "\\\"")
 }

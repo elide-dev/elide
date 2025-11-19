@@ -188,17 +188,7 @@ public data object IOUringTransport : UnixTransport() {
     !IOUring.isAvailable() -> nativeTransportUnavailable(IOUring.unavailabilityCause())
     tcpDomain -> ServerTransport.Unavailable.UNSUPPORTED_TCP_DOMAIN_SOCKETS
     udpDomain -> ServerTransport.Unavailable.UNSUPPORTED_UDP_DOMAIN_SOCKETS
-    !canInstantiateChannel() -> ServerTransport.Unavailable("IOUringServerSocketChannel cannot be instantiated (missing GraalVM reflection config?)")
     else -> Available
-  }
-
-  private fun canInstantiateChannel(): Boolean = try {
-    IOUringServerSocketChannel::class.java.getConstructor()
-    true
-  } catch (e: NoSuchMethodException) {
-    false
-  } catch (e: Throwable) {
-    false
   }
 
   override fun eventLoopGroup(): EventLoopGroup {

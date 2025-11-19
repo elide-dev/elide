@@ -3,6 +3,59 @@
  */
 
 /**
+ * Column metadata from database schema
+ */
+export type ColumnMetadata = {
+  name: string
+  type: string
+  nullable: boolean
+  primaryKey: boolean
+  defaultValue?: string | number | null
+  foreignKey?: {
+    table: string
+    column: string
+    onUpdate?: string
+    onDelete?: string
+  }
+  unique?: boolean
+  autoIncrement?: boolean
+}
+
+/**
+ * Query execution metadata
+ */
+export type QueryMetadata = {
+  executionTimeMs: number
+  sql: string
+  rowCount: number
+}
+
+/**
+ * Data table data structure
+ */
+export type DataTableData = {
+  columns: ColumnMetadata[]
+  rows: unknown[][]
+  metadata?: QueryMetadata
+}
+
+/**
+ * Pagination parameters
+ */
+export type PaginationParams = {
+  limit: number
+  offset: number
+}
+
+/**
+ * Sorting parameters
+ */
+export type SortingParams = {
+  column: string | null
+  direction: 'asc' | 'desc' | null
+}
+
+/**
  * Filter operator types for WHERE clause filtering
  */
 export type FilterOperator =

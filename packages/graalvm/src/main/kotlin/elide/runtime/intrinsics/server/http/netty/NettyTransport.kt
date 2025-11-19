@@ -67,7 +67,7 @@ internal sealed interface NettyTransport<T : ServerSocketChannel> {
     /** Resolve a [NettyTransport] implementation for the current platform. */
     internal fun resolve(): NettyTransport<*> = when {
       // prefer `io_uring` if available (Linux-only, modern kernels)
-      IOUring.isAvailable() -> IOUringTransport
+      IOUring.isAvailable() && canInstantiateIOUringChannel() -> IOUringTransport
 
       // next up, prefer `epoll` if available (Linux-only, nearly all kernels)
       Epoll.isAvailable() -> EpollTransport
@@ -77,6 +77,21 @@ internal sealed interface NettyTransport<T : ServerSocketChannel> {
 
       // otherwise, fallback to NIO
       else -> NioTransport
+    }
+
+    /**
+     * Test if IOUringServerSocketChannel can be instantiated via reflection.
+     * GraalVM native image requires explicit reflection configuration.
+     */
+    private fun canInstantiateIOUringChannel(): Boolean = try {
+      IOUringServerSocketChannel::class.java.getConstructor()
+      true
+    } catch (e: NoSuchMethodException) {
+      logging.debug { "IOUring transport unavailable: channel constructor not accessible (missing GraalVM reflection config?)" }
+      false
+    } catch (e: Throwable) {
+      logging.debug { "IOUring transport unavailable: ${e.message}" }
+      false
     }
   }
 }

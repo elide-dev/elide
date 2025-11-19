@@ -98,13 +98,18 @@ internal object GradleParser {
       projectDir.fileName.toString() to emptyList()
     }
 
+    // Parse version catalog if present
+    val versionCatalog = GradleVersionCatalogParser.findVersionCatalog(projectDir)?.let {
+      GradleVersionCatalogParser.parse(it)
+    }
+
     // Parse build file for metadata
     val group = extractGroup(buildFileContent, isKotlinDsl)
     val version = extractVersion(buildFileContent, isKotlinDsl)
     val description = extractDescription(buildFileContent, isKotlinDsl)
 
-    // Parse dependencies
-    val dependencies = extractDependencies(buildFileContent, isKotlinDsl)
+    // Parse dependencies (with version catalog support)
+    val dependencies = extractDependencies(buildFileContent, isKotlinDsl, versionCatalog)
 
     // Parse repositories
     val repositories = extractRepositories(buildFileContent, isKotlinDsl)
@@ -216,7 +221,11 @@ internal object GradleParser {
   /**
    * Extract dependencies from build file.
    */
-  private fun extractDependencies(content: String, isKotlinDsl: Boolean): List<GradleDescriptor.Dependency> {
+  private fun extractDependencies(
+    content: String,
+    isKotlinDsl: Boolean,
+    versionCatalog: VersionCatalog? = null
+  ): List<GradleDescriptor.Dependency> {
     val dependencies = mutableListOf<GradleDescriptor.Dependency>()
 
     // Common configurations
@@ -226,10 +235,11 @@ internal object GradleParser {
     )
 
     for (config in configurations) {
+      // Use restricted character class that doesn't match newlines
       val pattern = if (isKotlinDsl) {
-        """$config\s*\(\s*"([^:]+):([^:]+):([^"]+)"\s*\)""".toRegex()
+        """$config\s*\(\s*"([a-zA-Z0-9._-]+):([a-zA-Z0-9._-]+):([a-zA-Z0-9._-]+)"\s*\)""".toRegex()
       } else {
-        """$config\s+['"]([^:]+):([^:]+):([^'"]+)['"]""".toRegex()
+        """$config\s+['"]([a-zA-Z0-9._-]+):([a-zA-Z0-9._-]+):([a-zA-Z0-9._-]+)['"]""".toRegex()
       }
 
       pattern.findAll(content).forEach { match ->
@@ -243,11 +253,11 @@ internal object GradleParser {
         )
       }
 
-      // Also match without version
+      // Also match without version (use character class that doesn't include newlines)
       val patternNoVersion = if (isKotlinDsl) {
-        """$config\s*\(\s*"([^:]+):([^:"]+)"\s*\)""".toRegex()
+        """$config\s*\(\s*"([a-zA-Z0-9._-]+):([a-zA-Z0-9._-]+)"\s*\)""".toRegex()
       } else {
-        """$config\s+['"]([^:]+):([^:'"]+)['"]""".toRegex()
+        """$config\s+['"]([a-zA-Z0-9._-]+):([a-zA-Z0-9._-]+)['"]""".toRegex()
       }
 
       patternNoVersion.findAll(content).forEach { match ->
@@ -259,6 +269,58 @@ internal object GradleParser {
             version = null,
           )
         )
+      }
+    }
+
+    // Extract dependencies from version catalog references (libs.*)
+    if (versionCatalog != null) {
+      for (config in configurations) {
+        // Match patterns like: implementation(libs.kotlin.stdlib)
+        val catalogPattern = if (isKotlinDsl) {
+          """$config\s*\(\s*libs\.([a-zA-Z0-9._-]+)\s*\)""".toRegex()
+        } else {
+          """$config\s+libs\.([a-zA-Z0-9._-]+)""".toRegex()
+        }
+
+        catalogPattern.findAll(content).forEach { match ->
+          val catalogRef = match.groupValues[1].replace(".", "-")
+
+          // Check if it's a bundle reference (libs.bundles.xxx)
+          if (catalogRef.startsWith("bundles-")) {
+            val bundleName = catalogRef.removePrefix("bundles-")
+            versionCatalog.bundles[bundleName]?.let { bundleLibs ->
+              // Expand bundle into individual dependencies
+              bundleLibs.forEach { libAlias ->
+                versionCatalog.libraries[libAlias]?.let { library ->
+                  val (groupId, artifactId) = library.module.split(":", limit = 2)
+                  val version = library.resolveVersion(versionCatalog.versions)
+                  dependencies.add(
+                    GradleDescriptor.Dependency(
+                      configuration = config,
+                      groupId = groupId,
+                      artifactId = artifactId,
+                      version = version,
+                    )
+                  )
+                }
+              }
+            }
+          } else {
+            // Try as regular library reference
+            versionCatalog.libraries[catalogRef]?.let { library ->
+              val (groupId, artifactId) = library.module.split(":", limit = 2)
+              val version = library.resolveVersion(versionCatalog.versions)
+              dependencies.add(
+                GradleDescriptor.Dependency(
+                  configuration = config,
+                  groupId = groupId,
+                  artifactId = artifactId,
+                  version = version,
+                )
+              )
+            }
+          }
+        }
       }
     }
 

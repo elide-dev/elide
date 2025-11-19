@@ -1,0 +1,254 @@
+# Elide Build Adopter Guides
+
+Welcome to the Elide Build Adopter documentation. These guides help you migrate from other build systems to Elide.
+
+## Migration Guides
+
+### [Migrating from Maven](./migrating-from-maven.md)
+
+Complete guide to converting Maven projects to Elide using `elide adopt maven`.
+
+**Topics covered:**
+- Quick start and basic usage
+- Parent POM resolution
+- Multi-module projects
+- BOM (Bill of Materials) support
+- Maven profiles
+- Real-world examples (Spring Boot, Apache Commons)
+
+**Best for:**
+- Maven users looking to try Elide
+- Projects with complex parent hierarchies
+- Multi-module Maven projects
+- Spring Boot applications
+
+---
+
+### [Migrating from Gradle](./migrating-from-gradle.md)
+
+Complete guide to converting Gradle projects to Elide using `elide adopt gradle`.
+
+**Topics covered:**
+- Groovy and Kotlin DSL support
+- Multi-project builds
+- Dependency configuration mapping
+- Repository detection
+- Plugin handling
+- Real-world examples (Kotlin apps, Spring Boot)
+
+**Best for:**
+- Gradle users looking to try Elide
+- Kotlin/JVM projects
+- Multi-project Gradle builds
+- Android projects (with limitations)
+
+---
+
+### [Migrating from Bazel](./migrating-from-bazel.md) ⚠️ *Planned*
+
+Design document for the planned Bazel adopter (`elide adopt bazel`).
+
+**Topics covered:**
+- BUILD and WORKSPACE parsing
+- maven_install dependency extraction
+- Multi-package workspaces
+- Target type mapping (java_library, java_binary)
+- Implementation strategy and roadmap
+
+**Best for:**
+- Understanding planned Bazel support
+- Contributing to Bazel adopter implementation
+- Evaluating if Elide is right for Bazel projects
+- Providing feedback on the design
+
+**Status:** Not yet implemented - this is a planning document.
+
+---
+
+### [Troubleshooting Guide](./adopt-troubleshooting.md)
+
+Solutions to common issues when using build adopters.
+
+**Topics covered:**
+- Parent POM resolution failures
+- Missing dependency versions
+- Multi-module detection issues
+- Plugin configuration problems
+- Performance optimization
+- Network and proxy issues
+
+**Best for:**
+- Debugging adoption failures
+- Understanding error messages
+- Finding workarounds for edge cases
+- Reporting issues effectively
+
+## Quick Reference
+
+### Command Syntax
+
+**Maven:**
+```bash
+elide adopt maven [OPTIONS] [POM_FILE]
+
+# Common options
+--dry-run              # Preview output
+--output FILE          # Custom output file
+--skip-modules         # Parent only (multi-module)
+-P PROFILE             # Activate Maven profile
+```
+
+**Gradle:**
+```bash
+elide adopt gradle [OPTIONS] [BUILD_FILE]
+
+# Common options
+--dry-run              # Preview output
+--output FILE          # Custom output file
+--skip-subprojects     # Root only (multi-project)
+```
+
+### Common Workflows
+
+**1. Try before converting:**
+```bash
+# Preview the output
+elide adopt maven --dry-run
+
+# Review what would be generated
+elide adopt gradle --dry-run | less
+```
+
+**2. Convert and validate:**
+```bash
+# Convert
+elide adopt maven
+
+# Verify PKL
+cat elide.pkl
+
+# Test build
+elide build
+```
+
+**3. Multi-module projects:**
+```bash
+# Auto-detect and convert
+elide adopt maven
+
+# Or convert parent only
+elide adopt maven --skip-modules
+```
+
+**4. Handle errors:**
+```bash
+# Check error output
+elide adopt maven 2>&1 | tee adoption.log
+
+# Consult troubleshooting guide
+cat project/docs/guides/adopt-troubleshooting.md
+```
+
+## Feature Comparison
+
+| Feature | Maven | Gradle | Bazel |
+|---------|-------|--------|-------|
+| **Parent POM Resolution** | ✅ Full support | N/A | N/A |
+| **BOM Import** | ✅ Full support | Partial | N/A |
+| **Multi-Module/Project** | ✅ Full support | ✅ Full support | 📋 Planned |
+| **Property Interpolation** | ✅ Full support | Partial | 📋 Planned |
+| **Profiles** | ✅ Full support | N/A | N/A |
+| **Custom Repositories** | ✅ Full support | ✅ Full support | 📋 Planned |
+| **Plugin Detection** | ✅ Listed in comments | ✅ Listed in comments | 📋 Planned |
+| **Remote Resolution** | ✅ Maven Central | N/A | N/A |
+| **Version Catalogs** | N/A | ❌ Not yet | N/A |
+| **Composite Builds** | N/A | ❌ Not yet | N/A |
+| **maven_install** | N/A | N/A | 📋 Planned |
+| **Bazel Query API** | N/A | N/A | 📋 Planned |
+
+## Examples by Project Type
+
+### Spring Boot
+
+**Maven:**
+```bash
+# Automatically resolves spring-boot-starter-parent
+elide adopt maven
+```
+
+**Gradle:**
+```bash
+# Handles Spring Boot plugin and dependencies
+elide adopt gradle
+```
+
+### Android
+
+**Gradle only:**
+```bash
+# Extracts dependencies, but Android config needs manual work
+elide adopt gradle
+# See gradle guide for limitations
+```
+
+### Kotlin Multiplatform
+
+**Gradle only:**
+```bash
+# JVM source set is extracted, other platforms may need manual work
+elide adopt gradle
+```
+
+### Multi-Module Microservices
+
+**Maven:**
+```bash
+# Aggregates all modules into single elide.pkl
+elide adopt maven
+```
+
+**Gradle:**
+```bash
+# Detects multi-project via settings.gradle
+elide adopt gradle
+```
+
+## Known Limitations
+
+### Maven
+- Build plugins not converted (only documented)
+- Dependency exclusions not supported
+- `provided` and `system` scopes not fully supported
+
+### Gradle
+- Android configuration blocks not converted
+- Kotlin Multiplatform limited support
+- Version catalogs (libs.versions.toml) not supported
+- Custom Gradle tasks not converted
+- `compileOnly` dependencies listed in comments only
+
+## Getting Help
+
+1. **Check the troubleshooting guide** - Most common issues are documented
+2. **Review examples** - Each guide has multiple real-world examples
+3. **Use --dry-run** - Preview before making changes
+4. **Keep original build file** - You can use both systems during transition
+
+## Related Documentation
+
+- [Elide PKL Reference](../elide-pkl-reference.md) _(coming soon)_
+- [Elide CLI Guide](../cli-guide.md) _(coming soon)_
+- [Build Configuration](../build-configuration.md) _(coming soon)_
+
+## Contributing
+
+Found an issue or have a suggestion? Please file an issue with:
+- Your Elide version (`elide --version`)
+- Command used
+- Error output
+- Minimal reproduction (pom.xml or build.gradle)
+
+---
+
+**Last updated:** November 2024
+**Elide Version:** 1.0.0-alpha

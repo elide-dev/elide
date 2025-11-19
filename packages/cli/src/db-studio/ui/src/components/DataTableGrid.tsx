@@ -1,4 +1,3 @@
-import * as React from 'react'
 import type { Table } from '@tanstack/react-table'
 import { flexRender } from '@tanstack/react-table'
 
@@ -13,18 +12,15 @@ type DataTableGridProps = {
   offset: number
 }
 
-export const DataTableGrid = React.memo(function DataTableGrid({
-  table,
-  isLoading,
-  showControls,
-  limit,
-  offset,
-}: DataTableGridProps) {
+export function DataTableGrid({ table, isLoading, showControls, limit, offset }: DataTableGridProps) {
   return (
     <div className="overflow-auto flex-1 relative">
       <table
         className="w-full caption-bottom text-sm"
-        style={{ width: showControls ? table.getCenterTotalSize() : '100%' }}
+        style={{
+          width: showControls ? table.getCenterTotalSize() : '100%',
+          tableLayout: showControls ? 'fixed' : 'auto',
+        }}
       >
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -33,7 +29,7 @@ export const DataTableGrid = React.memo(function DataTableGrid({
                 return (
                   <TableHead
                     key={header.id}
-                    className={`text-left border-b border-r border-gray-800 ${showControls ? 'p-0 hover:bg-gray-800' : 'px-4 py-2'} sticky top-0 z-10 bg-gray-900 overflow-hidden font-mono`}
+                    className={`text-left border-b border-r border-gray-800 ${showControls ? 'p-0 hover:bg-gray-800 relative' : 'px-4 py-2'} sticky top-0 z-10 bg-gray-900 overflow-hidden font-mono`}
                     style={{ width: header.getSize(), maxWidth: header.getSize() }}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -92,4 +88,4 @@ export const DataTableGrid = React.memo(function DataTableGrid({
       )}
     </div>
   )
-})
+}

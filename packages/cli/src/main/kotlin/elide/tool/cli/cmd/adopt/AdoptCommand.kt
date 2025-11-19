@@ -96,7 +96,18 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
   }
 
   /**
-   * Auto-detect build system and invoke appropriate adopter.
+   * Data class to hold detected build system information.
+   */
+  private data class DetectedBuildSystem(
+    val name: String,
+    val files: List<String>,
+    val command: String,
+    val description: String? = null
+  )
+
+  /**
+   * Auto-detect build system(s) and provide guidance.
+   * Supports monorepos with multiple build systems.
    */
   private suspend fun autoDetectAndAdopt(
     ctx: CommandContext,
@@ -104,68 +115,83 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
     state: ToolContext<ToolState>
   ): CommandResult {
     val projectDir = Path.of(path).absolute()
+    val detected = mutableListOf<DetectedBuildSystem>()
 
-    // Check for each build system in priority order and provide usage instructions
+    // Check for Maven
+    if (projectDir.resolve("pom.xml").exists()) {
+      detected.add(
+        DetectedBuildSystem(
+          name = "Maven",
+          files = listOf("pom.xml"),
+          command = "elide adopt maven ${projectDir.resolve("pom.xml")}"
+        )
+      )
+    }
+
+    // Check for Gradle
+    val gradleFiles = listOfNotNull(
+      if (projectDir.resolve("build.gradle.kts").exists()) "build.gradle.kts" else null,
+      if (projectDir.resolve("build.gradle").exists()) "build.gradle" else null
+    )
+    if (gradleFiles.isNotEmpty()) {
+      val buildFile = gradleFiles.first()  // Prefer .kts
+      detected.add(
+        DetectedBuildSystem(
+          name = "Gradle",
+          files = gradleFiles,
+          command = "elide adopt gradle ${projectDir.resolve(buildFile)}"
+        )
+      )
+    }
+
+    // Check for Bazel
+    val bazelFiles = listOfNotNull(
+      if (projectDir.resolve("MODULE.bazel").exists()) "MODULE.bazel" else null,
+      if (projectDir.resolve("WORKSPACE.bazel").exists()) "WORKSPACE.bazel" else null,
+      if (projectDir.resolve("WORKSPACE").exists()) "WORKSPACE" else null
+    )
+    if (bazelFiles.isNotEmpty()) {
+      detected.add(
+        DetectedBuildSystem(
+          name = "Bazel",
+          files = bazelFiles,
+          command = "elide adopt bazel $projectDir"
+        )
+      )
+    }
+
+    // Check for Node.js/NPM
+    if (projectDir.resolve("package.json").exists()) {
+      detected.add(
+        DetectedBuildSystem(
+          name = "Node.js",
+          files = listOf("package.json"),
+          command = "elide adopt node ${projectDir.resolve("package.json")}"
+        )
+      )
+    }
+
+    // Check for Python
+    val pythonFiles = listOfNotNull(
+      if (projectDir.resolve("pyproject.toml").exists()) "pyproject.toml" else null,
+      if (projectDir.resolve("requirements.txt").exists()) "requirements.txt" else null,
+      if (projectDir.resolve("setup.py").exists()) "setup.py" else null,
+      if (projectDir.resolve("Pipfile").exists()) "Pipfile" else null
+    )
+    if (pythonFiles.isNotEmpty()) {
+      detected.add(
+        DetectedBuildSystem(
+          name = "Python",
+          files = pythonFiles,
+          command = "elide adopt python $projectDir",
+          description = "Python support coming soon"
+        )
+      )
+    }
+
     return with(ctx) {
       when {
-        // Maven: pom.xml
-        projectDir.resolve("pom.xml").exists() -> {
-          output {
-            append("@|bold,fg(green) ✓ Detected:|@ Maven project")
-            appendLine()
-            append("  File: pom.xml")
-            appendLine()
-            appendLine()
-            append("@|bold Run the following command to convert:|@")
-            append("  elide adopt maven ${projectDir.resolve("pom.xml")}")
-          }
-          success()
-        }
-
-        // Gradle: build.gradle or build.gradle.kts
-        projectDir.resolve("build.gradle.kts").exists() || projectDir.resolve("build.gradle").exists() -> {
-          val buildFile = if (projectDir.resolve("build.gradle.kts").exists()) "build.gradle.kts" else "build.gradle"
-          output {
-            append("@|bold,fg(green) ✓ Detected:|@ Gradle project")
-            appendLine()
-            append("  File: $buildFile")
-            appendLine()
-            appendLine()
-            append("@|bold Run the following command to convert:|@")
-            append("  elide adopt gradle ${projectDir.resolve(buildFile)}")
-          }
-          success()
-        }
-
-        // Bazel: WORKSPACE, WORKSPACE.bazel, or MODULE.bazel
-        projectDir.resolve("MODULE.bazel").exists() ||
-        projectDir.resolve("WORKSPACE.bazel").exists() ||
-        projectDir.resolve("WORKSPACE").exists() -> {
-          output {
-            append("@|bold,fg(green) ✓ Detected:|@ Bazel project")
-            appendLine()
-            appendLine()
-            append("@|bold Run the following command to convert:|@")
-            append("  elide adopt bazel $projectDir")
-          }
-          success()
-        }
-
-        // Node.js: package.json
-        projectDir.resolve("package.json").exists() -> {
-          output {
-            append("@|bold,fg(green) ✓ Detected:|@ Node.js project")
-            appendLine()
-            append("  File: package.json")
-            appendLine()
-            appendLine()
-            append("@|bold Run the following command to convert:|@")
-            append("  elide adopt node ${projectDir.resolve("package.json")}")
-          }
-          success()
-        }
-
-        else -> {
+        detected.isEmpty() -> {
           output {
             append("@|bold,fg(red) ✗ Error:|@ No supported build system detected at $projectDir")
             appendLine()
@@ -175,8 +201,58 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
             append("  • build.gradle / build.gradle.kts (Gradle)")
             append("  • WORKSPACE / MODULE.bazel (Bazel)")
             append("  • package.json (Node.js)")
+            append("  • pyproject.toml / requirements.txt (Python)")
           }
           err(exitCode = 1)
+        }
+
+        detected.size == 1 -> {
+          // Single build system detected
+          val system = detected.first()
+          output {
+            append("@|bold,fg(green) ✓ Detected:|@ ${system.name} project")
+            appendLine()
+            append("  File${if (system.files.size > 1) "s" else ""}: ${system.files.joinToString(", ")}")
+            appendLine()
+            appendLine()
+            if (system.description != null) {
+              append("@|bold,fg(yellow) Note:|@ ${system.description}")
+              appendLine()
+              appendLine()
+            }
+            append("@|bold Run the following command to convert:|@")
+            append("  ${system.command}")
+          }
+          success()
+        }
+
+        else -> {
+          // Multiple build systems detected (monorepo)
+          output {
+            append("@|bold,fg(cyan) ✓ Detected:|@ Monorepo with ${detected.size} build systems")
+            appendLine()
+            appendLine()
+            append("@|bold Detected build systems:|@")
+            for (system in detected) {
+              appendLine()
+              append("  @|bold ${system.name}:|@")
+              append("    Files: ${system.files.joinToString(", ")}")
+              if (system.description != null) {
+                append("    Note: ${system.description}")
+              }
+            }
+            appendLine()
+            appendLine()
+            append("@|bold Run these commands to convert:|@")
+            for (system in detected) {
+              append("  ${system.command}")
+            }
+            appendLine()
+            appendLine()
+            append("@|bold,fg(yellow) Tip:|@ For monorepos, you may want to convert each build system separately.")
+            append("Elide supports polyglot projects natively!")
+          }
+          success()
         }
       }
     }

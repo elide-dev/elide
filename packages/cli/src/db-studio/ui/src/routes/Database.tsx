@@ -1,6 +1,6 @@
 import { Link, Outlet, useParams, useLocation } from 'react-router-dom'
 import { useMemo, useState } from 'react'
-import { TableProperties as TableIcon, Code2, ScanEye, ListFilter } from 'lucide-react'
+import { TableProperties as TableIcon, Code2, ScanEye, ListFilter, ArrowLeft } from 'lucide-react'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
 import { Button } from '@/components/ui/button'
 import { formatRowCount } from '../lib/utils'
@@ -21,20 +21,20 @@ export default function Database() {
 
   const filteredTables = useMemo(() => {
     let filtered = tables
-    
+
     // Filter by type
     filtered = filtered.filter(({ type }) => {
       if (type === 'table') return showTables
       if (type === 'view') return showViews
       return true
     })
-    
+
     // Filter by search query
     if (query) {
       const q = query.toLowerCase()
       filtered = filtered.filter(({ name }) => name.toLowerCase().includes(q))
     }
-    
+
     // Sort: tables first (alphabetically), then views (alphabetically)
     return filtered.sort((a, b) => {
       if (a.type === b.type) {
@@ -47,8 +47,27 @@ export default function Database() {
   const isQueryActive = location.pathname.includes('/query')
 
   return (
-    <div className="flex h-[calc(100vh-73px)]">
+    <div className="flex h-screen">
       <div className="w-64 border-r border-gray-800 bg-gray-950 flex flex-col">
+        {/* Logo and Navigation */}
+        <div className="p-4 border-b border-gray-800 shrink-0">
+          <Link to="/" className="flex items-center gap-2 mb-4">
+            <img src="/elide-logo.svg" alt="Elide" className="w-8 h-8" />
+            <h1 className="text-lg font-medium">Database Studio</h1>
+          </Link>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="w-full justify-start border-gray-800 bg-gray-950 text-gray-200 hover:bg-gray-900 hover:text-white"
+          >
+            <Link to="/" aria-label="Back to databases">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to databases</span>
+            </Link>
+          </Button>
+        </div>
+
         <div className="p-4 shrink-0">
           <div className="mb-3">
             <Button
@@ -57,7 +76,7 @@ export default function Database() {
               size="sm"
               className={[
                 'w-full justify-start border-gray-800 bg-gray-950 text-gray-200 hover:bg-gray-900 hover:text-white',
-                isQueryActive ? 'bg-gray-900 text-white' : ''
+                isQueryActive ? 'bg-gray-900 text-white' : '',
               ].join(' ')}
             >
               <Link to={`/database/${dbIndex}/query`}>
@@ -104,35 +123,33 @@ export default function Database() {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-4 pb-4">
-          {!loading && filteredTables.map(({ name, type, rowCount }) => {
-            const isActive = decodeURIComponent(tableName || '') === name
-            const Icon = type === 'view' ? ScanEye : TableIcon
-            return (
-              <Link
-                key={name}
-                to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}
-                className={[
-                  'w-full text-left px-3 py-2 mb-1 flex items-center gap-2 text-sm transition-colors rounded border',
-                  isActive 
-                    ? 'bg-blue-950/50 text-white border-blue-800/60 hover:bg-blue-950/70' 
-                    : 'bg-gray-950 text-gray-200 hover:bg-gray-900 hover:text-white border-transparent'
-                ].join(' ')}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <Icon className="w-4 h-4 shrink-0" />
-                <span className="truncate flex-1">{name}</span>
-                <span className={[
-                  'text-xs shrink-0',
-                  isActive ? 'text-gray-400' : 'text-gray-500'
-                ].join(' ')}>{formatRowCount(rowCount)}</span>
-              </Link>
-            )
-          })}
+          {!loading &&
+            filteredTables.map(({ name, type, rowCount }) => {
+              const isActive = decodeURIComponent(tableName || '') === name
+              const Icon = type === 'view' ? ScanEye : TableIcon
+              return (
+                <Link
+                  key={name}
+                  to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}
+                  className={[
+                    'w-full text-left px-3 py-2 mb-1 flex items-center gap-2 text-sm transition-colors rounded border',
+                    isActive
+                      ? 'bg-blue-950/50 text-white border-blue-800/60 hover:bg-blue-950/70'
+                      : 'bg-gray-950 text-gray-200 hover:bg-gray-900 hover:text-white border-transparent',
+                  ].join(' ')}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span className="truncate flex-1">{name}</span>
+                  <span className={['text-xs shrink-0', isActive ? 'text-gray-400' : 'text-gray-500'].join(' ')}>
+                    {formatRowCount(rowCount)}
+                  </span>
+                </Link>
+              )
+            })}
         </div>
       </div>
       <Outlet />
     </div>
   )
 }
-
-

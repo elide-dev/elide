@@ -7,11 +7,13 @@ export default function Databases() {
   const { data: databases = [], isLoading: loading, error } = useDatabases()
 
   if (loading) {
-    return <div className="min-h-[calc(100vh-73px)] bg-black text-white flex items-center justify-center">Loading...</div>
+    return <div className="min-h-screen bg-black text-white flex items-center justify-center">Loading...</div>
   }
 
   if (error) {
-    return <div className="min-h-[calc(100vh-73px)] bg-black text-white flex items-center justify-center">Error: {error.message}</div>
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">Error: {error.message}</div>
+    )
   }
 
   return (
@@ -60,5 +62,3 @@ export default function Databases() {
     </div>
   )
 }
-
-

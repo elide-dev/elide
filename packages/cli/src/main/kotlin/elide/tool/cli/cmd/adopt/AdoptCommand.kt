@@ -40,6 +40,7 @@ import elide.tool.cli.ToolState
     GradleAdoptCommand::class,
     BazelAdoptCommand::class,
     NodeAdoptCommand::class,
+    PythonAdoptCommand::class,
   ],
   description = [
     "Adopt build files from other tools to Elide format.",
@@ -58,6 +59,7 @@ import elide.tool.cli.ToolState
     "  @|bold gradle|@    Adopt Gradle build files to elide.pkl",
     "  @|bold bazel|@     Adopt Bazel BUILD and WORKSPACE files to elide.pkl",
     "  @|bold node|@      Adopt Node.js package.json to elide.pkl",
+    "  @|bold python|@    Adopt Python pyproject.toml or requirements.txt to elide.pkl",
     "",
   ]
 )
@@ -91,6 +93,7 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
       append("  gradle    Adopt Gradle build files to elide.pkl")
       append("  bazel     Adopt Bazel BUILD and WORKSPACE files to elide.pkl")
       append("  node      Adopt Node.js package.json to elide.pkl")
+      append("  python    Adopt Python pyproject.toml or requirements.txt to elide.pkl")
     }
     return success()
   }
@@ -175,16 +178,14 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
     val pythonFiles = listOfNotNull(
       if (projectDir.resolve("pyproject.toml").exists()) "pyproject.toml" else null,
       if (projectDir.resolve("requirements.txt").exists()) "requirements.txt" else null,
-      if (projectDir.resolve("setup.py").exists()) "setup.py" else null,
-      if (projectDir.resolve("Pipfile").exists()) "Pipfile" else null
     )
     if (pythonFiles.isNotEmpty()) {
+      val primaryFile = if (pythonFiles.contains("pyproject.toml")) "pyproject.toml" else "requirements.txt"
       detected.add(
         DetectedBuildSystem(
           name = "Python",
           files = pythonFiles,
-          command = "elide adopt python $projectDir",
-          description = "Python support coming soon"
+          command = "elide adopt python ${projectDir.resolve(primaryFile)}"
         )
       )
     }

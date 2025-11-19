@@ -806,5 +806,96 @@ object PklGenerator {
     }
   }
 
+  /**
+   * Generate elide.pkl content from a Python project descriptor.
+   *
+   * @param python PythonDescriptor parsed from pyproject.toml, requirements.txt, etc.
+   */
+  fun generateFromPython(python: PythonDescriptor): String = buildString {
+    // Header
+    appendLine("amends \"elide:project.pkl\"")
+    appendLine()
+
+    // Project metadata
+    appendLine("name = \"${python.name}\"")
+    if (python.description != null) {
+      appendLine("description = \"${python.description.escapeQuotes()}\"")
+    }
+    if (python.version != null) {
+      appendLine("version = \"${python.version}\"")
+    }
+    appendLine()
+
+    // Python version requirement
+    if (python.pythonVersion != null) {
+      appendLine("python {")
+      appendLine("  version = \"${python.pythonVersion}\"")
+      appendLine("}")
+      appendLine()
+    }
+
+    // Dependencies section
+    val prodDeps = python.dependencies
+    val devDeps = python.devDependencies
+    val optionalDeps = python.optionalDependencies
+
+    if (prodDeps.isNotEmpty() || devDeps.isNotEmpty()) {
+      appendLine("dependencies {")
+      appendLine("  pypi {")
+
+      // Production dependencies
+      if (prodDeps.isNotEmpty()) {
+        appendLine("    packages {")
+        prodDeps.sorted().forEach { dep ->
+          appendLine("      \"$dep\"")
+        }
+        appendLine("    }")
+      }
+
+      // Development dependencies
+      if (devDeps.isNotEmpty()) {
+        if (prodDeps.isNotEmpty()) appendLine()
+        appendLine("    testPackages {")
+        devDeps.sorted().forEach { dep ->
+          appendLine("      \"$dep\"")
+        }
+        appendLine("    }")
+      }
+
+      appendLine("  }")
+      appendLine("}")
+      appendLine()
+    }
+
+    // Optional dependencies (listed as comments, grouped by extra name)
+    if (optionalDeps.isNotEmpty()) {
+      appendLine("// Optional dependencies (install with pip install <package>[extra]):")
+      optionalDeps.forEach { (extraName, deps) ->
+        appendLine("//   [$extraName]")
+        deps.forEach { dep ->
+          appendLine("//     - $dep")
+        }
+      }
+      appendLine()
+    }
+
+    // Python scripts (entry points)
+    if (python.scripts.isNotEmpty()) {
+      appendLine("// Python scripts/entry points:")
+      python.scripts.forEach { (name, entryPoint) ->
+        appendLine("//   $name -> $entryPoint")
+      }
+      appendLine()
+    }
+
+    // Build system information
+    if (python.buildSystem != null) {
+      appendLine("// Build system: ${python.buildSystem}")
+    }
+
+    // Source type note
+    appendLine("// Converted from: ${python.sourceDisplayName()}")
+  }
+
   private fun String.escapeQuotes(): String = replace("\"", "\\\"")
 }

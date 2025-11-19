@@ -65,6 +65,48 @@ Design document for the planned Bazel adopter (`elide adopt bazel`).
 
 ---
 
+### [Migrating from Node.js](./migrating-from-nodejs.md)
+
+Complete guide to converting Node.js projects to Elide using `elide adopt node`.
+
+**Topics covered:**
+- package.json parsing
+- Dependency type mapping (dependencies, devDependencies)
+- NPM/Yarn/PNPM workspaces
+- Monorepo support
+- Version range handling
+- Real-world examples (React, Express, TypeScript)
+
+**Best for:**
+- Node.js/NPM users looking to try Elide
+- React and frontend projects
+- Full-stack JavaScript/TypeScript applications
+- NPM workspace monorepos
+
+---
+
+### [Migrating from Python](./migrating-from-python.md) ⚠️ *Planned*
+
+Complete guide to converting Python projects to Elide using `elide adopt python`.
+
+**Topics covered:**
+- pyproject.toml (PEP 621) support
+- requirements.txt parsing
+- Pipfile support
+- Virtual environment configuration
+- Dependency extras and version specifiers
+- Real-world examples (FastAPI, Django, Data Science)
+
+**Best for:**
+- Python users evaluating Elide
+- FastAPI and Django projects
+- Data science and ML pipelines
+- React + Python polyglot applications
+
+**Status:** Python adopter in development - this documents planned functionality.
+
+---
+
 ### [Troubleshooting Guide](./adopt-troubleshooting.md)
 
 Solutions to common issues when using build adopters.
@@ -106,6 +148,29 @@ elide adopt gradle [OPTIONS] [BUILD_FILE]
 --dry-run              # Preview output
 --output FILE          # Custom output file
 --skip-subprojects     # Root only (multi-project)
+```
+
+**Node.js:**
+```bash
+elide adopt node [OPTIONS] [PACKAGE_JSON]
+
+# Common options
+--dry-run              # Preview output
+--output FILE          # Custom output file
+--skip-workspaces      # Root only (workspaces)
+--force                # Overwrite existing file
+```
+
+**Python:**
+```bash
+elide adopt python [OPTIONS] [CONFIG_FILE]
+
+# Common options
+--dry-run              # Preview output
+--output FILE          # Custom output file
+--python-version VER   # Specify Python version
+
+# ⚠️ In development
 ```
 
 ### Common Workflows
@@ -151,20 +216,23 @@ cat project/docs/guides/adopt-troubleshooting.md
 
 ## Feature Comparison
 
-| Feature | Maven | Gradle | Bazel |
-|---------|-------|--------|-------|
-| **Parent POM Resolution** | ✅ Full support | N/A | N/A |
-| **BOM Import** | ✅ Full support | Partial | N/A |
-| **Multi-Module/Project** | ✅ Full support | ✅ Full support | 📋 Planned |
-| **Property Interpolation** | ✅ Full support | Partial | 📋 Planned |
-| **Profiles** | ✅ Full support | N/A | N/A |
-| **Custom Repositories** | ✅ Full support | ✅ Full support | 📋 Planned |
-| **Plugin Detection** | ✅ Listed in comments | ✅ Listed in comments | 📋 Planned |
-| **Remote Resolution** | ✅ Maven Central | N/A | N/A |
-| **Version Catalogs** | N/A | ❌ Not yet | N/A |
-| **Composite Builds** | N/A | ❌ Not yet | N/A |
-| **maven_install** | N/A | N/A | 📋 Planned |
-| **Bazel Query API** | N/A | N/A | 📋 Planned |
+| Feature | Maven | Gradle | Bazel | Node.js | Python |
+|---------|-------|--------|-------|---------|--------|
+| **Parent POM Resolution** | ✅ Full support | N/A | N/A | N/A | N/A |
+| **BOM Import** | ✅ Full support | Partial | N/A | N/A | N/A |
+| **Multi-Module/Project** | ✅ Full support | ✅ Full support | 📋 Planned | ✅ Full support | 📋 Planned |
+| **Property Interpolation** | ✅ Full support | Partial | 📋 Planned | N/A | N/A |
+| **Profiles** | ✅ Full support | N/A | N/A | N/A | 📋 Planned |
+| **Custom Repositories** | ✅ Full support | ✅ Full support | 📋 Planned | ✅ Default (npm) | 📋 Planned |
+| **Plugin Detection** | ✅ Listed in comments | ✅ Listed in comments | 📋 Planned | N/A | N/A |
+| **Remote Resolution** | ✅ Maven Central | N/A | N/A | N/A | N/A |
+| **Version Catalogs** | N/A | ❌ Not yet | N/A | N/A | N/A |
+| **Composite Builds** | N/A | ❌ Not yet | N/A | N/A | N/A |
+| **Workspaces** | N/A | N/A | N/A | ✅ Full support | 📋 Planned |
+| **Dev Dependencies** | N/A | N/A | N/A | ✅ Full support | 📋 Planned |
+| **Scripts/Tasks** | N/A | N/A | N/A | ✅ Documented | 📋 Planned |
+| **maven_install** | N/A | N/A | 📋 Planned | N/A | N/A |
+| **Bazel Query API** | N/A | N/A | 📋 Planned | N/A | N/A |
 
 ## Examples by Project Type
 
@@ -213,6 +281,41 @@ elide adopt maven
 elide adopt gradle
 ```
 
+### React Application
+
+**Node.js:**
+```bash
+# React projects with package.json
+elide adopt node
+
+# The adopter will:
+# 1. Parse package.json
+# 2. Convert React dependencies
+# 3. Document NPM scripts
+# 4. Handle workspaces if present
+```
+
+### Full-Stack (React + Python)
+
+**Polyglot:**
+```bash
+my-fullstack-app/
+├── web/
+│   └── package.json     # React frontend
+└── api/
+    └── pyproject.toml   # Python backend
+
+# Convert frontend
+cd web
+elide adopt node
+
+# Convert backend (when available)
+cd ../api
+elide adopt python
+
+# Result: Polyglot elide.pkl with both npm and pypi dependencies
+```
+
 ## Known Limitations
 
 ### Maven
@@ -226,6 +329,18 @@ elide adopt gradle
 - Version catalogs (libs.versions.toml) not supported
 - Custom Gradle tasks not converted
 - `compileOnly` dependencies listed in comments only
+
+### Node.js
+- NPM scripts not converted to tasks (only documented)
+- Git/file/link dependencies need manual configuration
+- Peer/optional dependencies documented but not enforced
+- Engine requirements not converted
+
+### Python
+- ⚠️ **In Development**: Python adopter is currently being implemented
+- Setup.py with complex logic not fully supported
+- Conda-specific packages require manual configuration
+- Platform-specific markers limited support
 
 ## Getting Help
 

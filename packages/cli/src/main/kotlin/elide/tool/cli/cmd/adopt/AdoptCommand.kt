@@ -34,6 +34,8 @@ import elide.tool.cli.ToolState
   subcommands = [
     MavenAdoptCommand::class,
     GradleAdoptCommand::class,
+    BazelAdoptCommand::class,
+    NodeAdoptCommand::class,
   ],
   description = [
     "Adopt build files from other tools to Elide format.",
@@ -44,6 +46,8 @@ import elide.tool.cli.ToolState
     "Available Commands:",
     "  @|bold maven|@     Adopt Maven pom.xml to elide.pkl",
     "  @|bold gradle|@    Adopt Gradle build files to elide.pkl",
+    "  @|bold bazel|@     Adopt Bazel BUILD and WORKSPACE files to elide.pkl",
+    "  @|bold node|@      Adopt Node.js package.json to elide.pkl",
     "",
   ]
 )
@@ -58,6 +62,8 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
       append("Available commands:")
       append("  maven     Adopt Maven pom.xml to elide.pkl")
       append("  gradle    Adopt Gradle build files to elide.pkl")
+      append("  bazel     Adopt Bazel BUILD and WORKSPACE files to elide.pkl")
+      append("  node      Adopt Node.js package.json to elide.pkl")
     }
     return success()
   }

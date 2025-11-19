@@ -226,8 +226,11 @@ object PklGenerator {
     appendLine()
 
     // Dependencies section
-    val compileDeps = gradle.dependencies.filterNot { it.isTestScope() }
-    val testDeps = gradle.dependencies.filter { it.isTestScope() }
+    val allDeps = gradle.dependencies
+    val compileOnlyDeps = allDeps.filter { it.isCompileOnly() && !it.isTestScope() }
+    val compileDeps = allDeps.filterNot { it.isTestScope() || it.isCompileOnly() }
+    val testDeps = allDeps.filter { it.isTestScope() && !it.isCompileOnly() }
+    val testCompileOnlyDeps = allDeps.filter { it.isTestScope() && it.isCompileOnly() }
 
     if (compileDeps.isNotEmpty() || testDeps.isNotEmpty() || gradle.repositories.isNotEmpty()) {
       appendLine("dependencies {")
@@ -264,6 +267,36 @@ object PklGenerator {
 
       appendLine("  }")
       appendLine("}")
+      appendLine()
+    }
+
+    // CompileOnly dependencies (listed as comments)
+    if (compileOnlyDeps.isNotEmpty()) {
+      appendLine("// Compile-only dependencies (not included at runtime):")
+      appendLine("// These are typically annotation processors, Lombok, or provided libraries")
+      compileOnlyDeps.forEach { dep ->
+        appendLine("//   - ${dep.coordinate()}")
+      }
+      appendLine()
+    }
+
+    // Test compileOnly dependencies (listed as comments)
+    if (testCompileOnlyDeps.isNotEmpty()) {
+      appendLine("// Test compile-only dependencies (not included in test runtime):")
+      testCompileOnlyDeps.forEach { dep ->
+        appendLine("//   - ${dep.coordinate()}")
+      }
+      appendLine()
+    }
+
+    // Composite builds (included builds)
+    if (gradle.includedBuilds.isNotEmpty()) {
+      appendLine("// Composite builds detected (included builds):")
+      appendLine("// These are separate Gradle builds included in this project.")
+      appendLine("// Manual conversion may be needed for each included build.")
+      gradle.includedBuilds.forEach { includedBuild ->
+        appendLine("//   - $includedBuild")
+      }
       appendLine()
     }
 
@@ -322,17 +355,23 @@ object PklGenerator {
     // Aggregate all dependencies from all subprojects
     val allCompileDeps = mutableSetOf<GradleDescriptor.Dependency>()
     val allTestDeps = mutableSetOf<GradleDescriptor.Dependency>()
+    val allCompileOnlyDeps = mutableSetOf<GradleDescriptor.Dependency>()
+    val allTestCompileOnlyDeps = mutableSetOf<GradleDescriptor.Dependency>()
     val allRepositories = mutableSetOf<GradleDescriptor.Repository>()
 
     // Include root dependencies and repositories
-    allCompileDeps.addAll(rootProject.dependencies.filterNot { it.isTestScope() })
-    allTestDeps.addAll(rootProject.dependencies.filter { it.isTestScope() })
+    allCompileDeps.addAll(rootProject.dependencies.filterNot { it.isTestScope() || it.isCompileOnly() })
+    allTestDeps.addAll(rootProject.dependencies.filter { it.isTestScope() && !it.isCompileOnly() })
+    allCompileOnlyDeps.addAll(rootProject.dependencies.filter { it.isCompileOnly() && !it.isTestScope() })
+    allTestCompileOnlyDeps.addAll(rootProject.dependencies.filter { it.isTestScope() && it.isCompileOnly() })
     allRepositories.addAll(rootProject.repositories)
 
     // Include subproject dependencies and repositories
     subprojects.forEach { subproject ->
-      allCompileDeps.addAll(subproject.dependencies.filterNot { it.isTestScope() })
-      allTestDeps.addAll(subproject.dependencies.filter { it.isTestScope() })
+      allCompileDeps.addAll(subproject.dependencies.filterNot { it.isTestScope() || it.isCompileOnly() })
+      allTestDeps.addAll(subproject.dependencies.filter { it.isTestScope() && !it.isCompileOnly() })
+      allCompileOnlyDeps.addAll(subproject.dependencies.filter { it.isCompileOnly() && !it.isTestScope() })
+      allTestCompileOnlyDeps.addAll(subproject.dependencies.filter { it.isTestScope() && it.isCompileOnly() })
       allRepositories.addAll(subproject.repositories)
     }
 
@@ -375,6 +414,37 @@ object PklGenerator {
       appendLine()
     }
 
+    // CompileOnly dependencies (listed as comments)
+    if (allCompileOnlyDeps.isNotEmpty()) {
+      appendLine("// Compile-only dependencies (not included at runtime):")
+      appendLine("// These are typically annotation processors, Lombok, or provided libraries")
+      allCompileOnlyDeps.forEach { dep ->
+        appendLine("//   - ${dep.coordinate()}")
+      }
+      appendLine()
+    }
+
+    // Test compileOnly dependencies (listed as comments)
+    if (allTestCompileOnlyDeps.isNotEmpty()) {
+      appendLine("// Test compile-only dependencies (not included in test runtime):")
+      allTestCompileOnlyDeps.forEach { dep ->
+        appendLine("//   - ${dep.coordinate()}")
+      }
+      appendLine()
+    }
+
+    // Composite builds (aggregate all included builds)
+    val allIncludedBuilds = (rootProject.includedBuilds + subprojects.flatMap { it.includedBuilds }).distinct()
+    if (allIncludedBuilds.isNotEmpty()) {
+      appendLine("// Composite builds detected (included builds):")
+      appendLine("// These are separate Gradle builds included in this project.")
+      appendLine("// Manual conversion may be needed for each included build.")
+      allIncludedBuilds.forEach { includedBuild ->
+        appendLine("//   - $includedBuild")
+      }
+      appendLine()
+    }
+
     // Build warnings (aggregate all plugins)
     val allPlugins = (rootProject.plugins + subprojects.flatMap { it.plugins }).distinctBy { it.id }
     if (allPlugins.isNotEmpty()) {
@@ -395,6 +465,345 @@ object PklGenerator {
     appendLine("  [\"main\"] = \"src/main/java/**/*.java\"")
     appendLine("  [\"test\"] = \"src/test/java/**/*.java\"")
     appendLine("}")
+  }
+
+  /**
+   * Generate elide.pkl content from a package.json descriptor.
+   *
+   * @param pkg The package.json descriptor
+   */
+  internal fun generate(pkg: PackageJsonDescriptor): String = buildString {
+    // Header
+    appendLine("amends \"elide:project.pkl\"")
+    appendLine()
+
+    // Project metadata
+    appendLine("name = \"${pkg.name}\"")
+    if (pkg.description != null) {
+      appendLine("description = \"${pkg.description.escapeQuotes()}\"")
+    }
+    if (pkg.version != null) {
+      appendLine("version = \"${pkg.version}\"")
+    }
+    appendLine()
+
+    // Dependencies section
+    val prodDeps = pkg.dependencies
+    val devDeps = pkg.devDependencies
+    val peerDeps = pkg.peerDependencies
+    val optionalDeps = pkg.optionalDependencies
+
+    if (prodDeps.isNotEmpty() || devDeps.isNotEmpty()) {
+      appendLine("dependencies {")
+      appendLine("  npm {")
+
+      // Production dependencies
+      if (prodDeps.isNotEmpty()) {
+        appendLine("    packages {")
+        prodDeps.forEach { (name, version) ->
+          val versionSpec = if (version.startsWith("^") || version.startsWith("~") || version.startsWith(">=")) {
+            version
+          } else {
+            "^$version"
+          }
+          appendLine("      \"$name@$versionSpec\"")
+        }
+        appendLine("    }")
+      }
+
+      // Development dependencies
+      if (devDeps.isNotEmpty()) {
+        if (prodDeps.isNotEmpty()) appendLine()
+        appendLine("    testPackages {")
+        devDeps.forEach { (name, version) ->
+          val versionSpec = if (version.startsWith("^") || version.startsWith("~") || version.startsWith(">=")) {
+            version
+          } else {
+            "^$version"
+          }
+          appendLine("      \"$name@$versionSpec\"")
+        }
+        appendLine("    }")
+      }
+
+      appendLine("  }")
+      appendLine("}")
+      appendLine()
+    }
+
+    // Peer dependencies (listed as comments)
+    if (peerDeps.isNotEmpty()) {
+      appendLine("// Peer dependencies (should be provided by the consuming application):")
+      peerDeps.forEach { (name, version) ->
+        appendLine("//   - $name@$version")
+      }
+      appendLine()
+    }
+
+    // Optional dependencies (listed as comments)
+    if (optionalDeps.isNotEmpty()) {
+      appendLine("// Optional dependencies:")
+      optionalDeps.forEach { (name, version) ->
+        appendLine("//   - $name@$version")
+      }
+      appendLine()
+    }
+
+    // NPM scripts (listed as comments)
+    if (pkg.scripts.isNotEmpty()) {
+      appendLine("// NPM scripts (may need manual conversion):")
+      pkg.scripts.forEach { (name, script) ->
+        appendLine("//   $name: $script")
+      }
+      appendLine()
+    }
+
+    // Source mappings (Node.js defaults)
+    appendLine("sources {")
+    appendLine("  [\"main\"] = \"src/**/*.{js,ts,jsx,tsx}\"")
+    appendLine("  [\"test\"] = \"test/**/*.{js,ts,jsx,tsx}\"")
+    appendLine("}")
+  }
+
+  /**
+   * Generate elide.pkl content for a Node.js workspace/monorepo project.
+   *
+   * @param rootPkg The root package.json descriptor
+   * @param workspacePackages List of workspace package descriptors
+   */
+  internal fun generateWorkspace(
+    rootPkg: PackageJsonDescriptor,
+    workspacePackages: List<PackageJsonDescriptor>
+  ): String = buildString {
+    // Header
+    appendLine("amends \"elide:project.pkl\"")
+    appendLine()
+
+    // Project metadata from root
+    appendLine("name = \"${rootPkg.name}\"")
+    if (rootPkg.description != null) {
+      appendLine("description = \"${rootPkg.description.escapeQuotes()}\"")
+    }
+    if (rootPkg.version != null) {
+      appendLine("version = \"${rootPkg.version}\"")
+    }
+    appendLine()
+
+    // Workspaces block
+    if (rootPkg.workspaces.isNotEmpty()) {
+      appendLine("workspaces {")
+      rootPkg.workspaces.forEach { workspace ->
+        appendLine("  \"$workspace\"")
+      }
+      appendLine("}")
+      appendLine()
+    }
+
+    // Aggregate all dependencies from all workspace packages
+    val allProdDeps = mutableMapOf<String, String>()
+    val allDevDeps = mutableMapOf<String, String>()
+    val allPeerDeps = mutableMapOf<String, String>()
+
+    // Include root dependencies
+    allProdDeps.putAll(rootPkg.dependencies)
+    allDevDeps.putAll(rootPkg.devDependencies)
+    allPeerDeps.putAll(rootPkg.peerDependencies)
+
+    // Include workspace package dependencies
+    workspacePackages.forEach { pkg ->
+      allProdDeps.putAll(pkg.dependencies)
+      allDevDeps.putAll(pkg.devDependencies)
+      allPeerDeps.putAll(pkg.peerDependencies)
+    }
+
+    // Filter out workspace internal dependencies
+    val workspacePackageNames = workspacePackages.map { it.name }.toSet()
+    val prodDeps = allProdDeps.filterKeys { it !in workspacePackageNames }
+    val devDeps = allDevDeps.filterKeys { it !in workspacePackageNames }
+    val peerDeps = allPeerDeps.filterKeys { it !in workspacePackageNames }
+
+    // Dependencies section
+    if (prodDeps.isNotEmpty() || devDeps.isNotEmpty()) {
+      appendLine("dependencies {")
+      appendLine("  npm {")
+
+      // Production dependencies
+      if (prodDeps.isNotEmpty()) {
+        appendLine("    packages {")
+        prodDeps.toSortedMap().forEach { (name, version) ->
+          val versionSpec = if (version.startsWith("^") || version.startsWith("~") || version.startsWith(">=")) {
+            version
+          } else {
+            "^$version"
+          }
+          appendLine("      \"$name@$versionSpec\"")
+        }
+        appendLine("    }")
+      }
+
+      // Development dependencies
+      if (devDeps.isNotEmpty()) {
+        if (prodDeps.isNotEmpty()) appendLine()
+        appendLine("    testPackages {")
+        devDeps.toSortedMap().forEach { (name, version) ->
+          val versionSpec = if (version.startsWith("^") || version.startsWith("~") || version.startsWith(">=")) {
+            version
+          } else {
+            "^$version"
+          }
+          appendLine("      \"$name@$versionSpec\"")
+        }
+        appendLine("    }")
+      }
+
+      appendLine("  }")
+      appendLine("}")
+      appendLine()
+    }
+
+    // Peer dependencies (listed as comments)
+    if (peerDeps.isNotEmpty()) {
+      appendLine("// Peer dependencies (should be provided by the consuming application):")
+      peerDeps.toSortedMap().forEach { (name, version) ->
+        appendLine("//   - $name@$version")
+      }
+      appendLine()
+    }
+
+    // Note about workspace structure
+    appendLine("// Note: This is a Node.js workspace/monorepo project with ${workspacePackages.size} workspace(s).")
+    appendLine("// Dependencies are aggregated from all workspaces. Workspace-internal dependencies are excluded.")
+  }
+
+  /**
+   * Generate elide.pkl from a Bazel project descriptor.
+   *
+   * @param bazel Bazel project descriptor
+   * @return Generated elide.pkl content
+   */
+  internal fun generate(bazel: BazelDescriptor): String = buildString {
+    // Header
+    appendLine("amends \"elide:project.pkl\"")
+    appendLine()
+
+    // Project metadata
+    appendLine("name = \"${bazel.name}\"")
+    appendLine()
+
+    // Dependencies section (Maven dependencies from WORKSPACE/MODULE.bazel)
+    if (bazel.dependencies.isNotEmpty()) {
+      appendLine("dependencies {")
+      appendLine("  maven {")
+      appendLine("    packages {")
+
+      bazel.dependencies.forEach { dep ->
+        val groupId = dep.groupId()
+        val artifactId = dep.artifactId()
+        val version = dep.version()
+
+        if (version != null) {
+          appendLine("      \"$groupId:$artifactId:$version\"")
+        } else {
+          appendLine("      \"${dep.coordinate}\" // No version specified")
+        }
+      }
+
+      appendLine("    }")
+      appendLine("  }")
+      appendLine("}")
+      appendLine()
+    }
+
+    // Source mappings based on Bazel targets
+    appendLine("sources {")
+
+    // Infer source mappings from targets
+    val mainSrcs = mutableSetOf<String>()
+    val testSrcs = mutableSetOf<String>()
+
+    bazel.targets.forEach { target ->
+      if (target.isTestTarget()) {
+        testSrcs.addAll(target.srcs)
+      } else {
+        mainSrcs.addAll(target.srcs)
+      }
+    }
+
+    // Generate source mappings
+    if (mainSrcs.isNotEmpty()) {
+      // Try to infer pattern from sources
+      val mainPattern = inferSourcePattern(mainSrcs) ?: "src/main/**/*.{java,kt}"
+      appendLine("  [\"main\"] = \"$mainPattern\"")
+    } else {
+      // Default Bazel Java/Kotlin patterns
+      appendLine("  [\"main\"] = \"src/main/**/*.{java,kt}\"")
+    }
+
+    if (testSrcs.isNotEmpty()) {
+      val testPattern = inferSourcePattern(testSrcs) ?: "src/test/**/*.{java,kt}"
+      appendLine("  [\"test\"] = \"$testPattern\"")
+    } else {
+      appendLine("  [\"test\"] = \"src/test/**/*.{java,kt}\"")
+    }
+
+    appendLine("}")
+    appendLine()
+
+    // Bazel-specific notes
+    if (bazel.targets.isNotEmpty()) {
+      appendLine("// Bazel targets found in BUILD file:")
+      bazel.targets.forEach { target ->
+        appendLine("//   - ${target.name} (${target.rule})")
+      }
+      appendLine()
+    }
+
+    // Note about Bazel BUILD files
+    appendLine("// Note: This project uses Bazel for builds. The generated configuration")
+    appendLine("// is based on the WORKSPACE/MODULE.bazel and BUILD files.")
+    if (bazel.workspaceFile != null) {
+      appendLine("// Workspace file: ${bazel.workspaceFile.fileName}")
+    }
+    if (bazel.buildFile != null) {
+      appendLine("// Build file: ${bazel.buildFile.fileName}")
+    }
+  }
+
+  /**
+   * Infer a source pattern from a list of source files.
+   *
+   * This attempts to find a common pattern among the source files.
+   * For example, if all sources are in "src/main/java", it returns a glob pattern for java/kt files.
+   */
+  private fun inferSourcePattern(srcs: Set<String>): String? {
+    if (srcs.isEmpty()) return null
+
+    // Look for common prefixes
+    val firstSrc = srcs.first()
+    val parts = firstSrc.split("/")
+
+    // Try to find common directory prefix
+    var commonPrefix = ""
+    for (i in parts.indices) {
+      val prefix = parts.take(i + 1).joinToString("/")
+      if (srcs.all { it.startsWith(prefix) }) {
+        commonPrefix = prefix
+      } else {
+        break
+      }
+    }
+
+    // If we found a common prefix, use it
+    return if (commonPrefix.isNotEmpty()) {
+      "$commonPrefix/**/*.{java,kt}"
+    } else {
+      // Look for common patterns like "java/" or "kotlin/"
+      when {
+        srcs.any { it.contains("/java/") } -> "**/*.java"
+        srcs.any { it.contains("/kotlin/") } -> "**/*.kt"
+        else -> "**/*.{java,kt}"
+      }
+    }
   }
 
   private fun String.escapeQuotes(): String = replace("\"", "\\\"")

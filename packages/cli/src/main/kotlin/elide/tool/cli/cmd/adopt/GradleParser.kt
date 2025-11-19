@@ -39,6 +39,7 @@ internal data class GradleDescriptor(
   val dependencies: List<Dependency> = emptyList(),
   val repositories: List<Repository> = emptyList(),
   val plugins: List<Plugin> = emptyList(),
+  val includedBuilds: List<String> = emptyList(),
   val buildFile: Path? = null,
 ) {
   data class Dependency(
@@ -50,6 +51,8 @@ internal data class GradleDescriptor(
     fun coordinate(): String = "$groupId:$artifactId${version?.let { ":$it" } ?: ""}"
 
     fun isTestScope(): Boolean = configuration.contains("test", ignoreCase = true)
+
+    fun isCompileOnly(): Boolean = configuration.contains("compileOnly", ignoreCase = true)
   }
 
   data class Repository(
@@ -90,12 +93,12 @@ internal object GradleParser {
     val buildFileContent = buildFilePath.readText()
     val isKotlinDsl = buildFilePath.fileName.toString().endsWith(".kts")
 
-    // Parse settings.gradle[.kts] for project name and modules
+    // Parse settings.gradle[.kts] for project name, modules, and composite builds
     val settingsFile = findSettingsFile(projectDir)
-    val (projectName, modules) = if (settingsFile != null) {
+    val settingsInfo = if (settingsFile != null) {
       parseSettingsFile(settingsFile)
     } else {
-      projectDir.fileName.toString() to emptyList()
+      SettingsInfo(projectDir.fileName.toString(), emptyList(), emptyList())
     }
 
     // Parse version catalog if present
@@ -118,14 +121,15 @@ internal object GradleParser {
     val plugins = extractPlugins(buildFileContent, isKotlinDsl)
 
     return GradleDescriptor(
-      name = projectName,
+      name = settingsInfo.projectName,
       group = group,
       version = version,
       description = description,
-      modules = modules,
+      modules = settingsInfo.modules,
       dependencies = dependencies,
       repositories = repositories,
       plugins = plugins,
+      includedBuilds = settingsInfo.includedBuilds,
       buildFile = buildFilePath,
     )
   }
@@ -150,9 +154,18 @@ internal object GradleParser {
   }
 
   /**
-   * Parse settings file for root project name and included modules.
+   * Data class to hold parsed settings file information.
    */
-  private fun parseSettingsFile(settingsFile: Path): Pair<String, List<String>> {
+  private data class SettingsInfo(
+    val projectName: String,
+    val modules: List<String>,
+    val includedBuilds: List<String>,
+  )
+
+  /**
+   * Parse settings file for root project name, included modules, and included builds.
+   */
+  private fun parseSettingsFile(settingsFile: Path): SettingsInfo {
     val content = settingsFile.readText()
     val isKotlinDsl = settingsFile.fileName.toString().endsWith(".kts")
 
@@ -179,7 +192,21 @@ internal object GradleParser {
       modules.add(module)
     }
 
-    return projectName to modules
+    // Extract included builds (composite builds)
+    val includedBuilds = mutableListOf<String>()
+
+    // Match includeBuild("path") or includeBuild 'path'
+    val includeBuildPattern = if (isKotlinDsl) {
+      """includeBuild\s*\(\s*"([^"]+)"\s*\)""".toRegex()
+    } else {
+      """includeBuild\s+['"]([^'"]+)['"]""".toRegex()
+    }
+
+    includeBuildPattern.findAll(content).forEach { match ->
+      includedBuilds.add(match.groupValues[1])
+    }
+
+    return SettingsInfo(projectName, modules, includedBuilds)
   }
 
   /**

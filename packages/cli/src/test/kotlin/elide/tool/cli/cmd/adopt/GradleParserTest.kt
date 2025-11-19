@@ -353,4 +353,159 @@ class GradleParserTest {
     assertNotNull(junitDep)
     assertEquals("org.junit.jupiter:junit-jupiter", junitDep.coordinate())
   }
+
+  @Test
+  fun `testParseCompileOnlyDependencies`() {
+    val buildFile = createTempFile(suffix = ".gradle.kts")
+    buildFile.writeText("""
+      plugins {
+        kotlin("jvm") version "1.9.21"
+      }
+
+      dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
+        compileOnly("org.projectlombok:lombok:1.18.30")
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testCompileOnly("org.mockito:mockito-core:5.8.0")
+      }
+    """.trimIndent())
+
+    val descriptor = GradleParser.parse(buildFile.toPath())
+
+    // Verify regular implementation dependency
+    val kotlinDep = descriptor.dependencies.find { it.artifactId == "kotlin-stdlib" }
+    assertNotNull(kotlinDep)
+    assertEquals("implementation", kotlinDep.configuration)
+    assertFalse(kotlinDep.isCompileOnly())
+
+    // Verify compileOnly dependency
+    val lombokDep = descriptor.dependencies.find { it.artifactId == "lombok" }
+    assertNotNull(lombokDep)
+    assertEquals("compileOnly", lombokDep.configuration)
+    assertTrue(lombokDep.isCompileOnly())
+    assertFalse(lombokDep.isTestScope())
+
+    // Verify testImplementation dependency
+    val junitDep = descriptor.dependencies.find { it.artifactId == "junit-jupiter" }
+    assertNotNull(junitDep)
+    assertEquals("testImplementation", junitDep.configuration)
+    assertTrue(junitDep.isTestScope())
+    assertFalse(junitDep.isCompileOnly())
+
+    // Verify testCompileOnly dependency
+    val mockitoDep = descriptor.dependencies.find { it.artifactId == "mockito-core" }
+    assertNotNull(mockitoDep)
+    assertEquals("testCompileOnly", mockitoDep.configuration)
+    assertTrue(mockitoDep.isTestScope())
+    assertTrue(mockitoDep.isCompileOnly())
+  }
+
+  @Test
+  fun `testPklGenerationWithCompileOnlyDependencies`() {
+    val buildFile = createTempFile(suffix = ".gradle.kts")
+    buildFile.writeText("""
+      plugins {
+        kotlin("jvm") version "1.9.21"
+      }
+
+      group = "com.example"
+      version = "1.0.0"
+
+      dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
+        compileOnly("org.projectlombok:lombok:1.18.30")
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testCompileOnly("org.mockito:mockito-core:5.8.0")
+      }
+    """.trimIndent())
+
+    val descriptor = GradleParser.parse(buildFile.toPath())
+    val pkl = PklGenerator.generate(descriptor)
+
+    // Verify regular dependencies are in packages block
+    assertTrue(pkl.contains("packages {"))
+    assertTrue(pkl.contains("\"org.jetbrains.kotlin:kotlin-stdlib:1.9.21\""))
+    assertFalse(pkl.contains("\"org.projectlombok:lombok:1.18.30\""))  // compileOnly should NOT be in packages
+
+    // Verify test dependencies are in testPackages block
+    assertTrue(pkl.contains("testPackages {"))
+    assertTrue(pkl.contains("\"org.junit.jupiter:junit-jupiter\""))
+    assertFalse(pkl.contains("\"org.mockito:mockito-core:5.8.0\""))  // testCompileOnly should NOT be in testPackages
+
+    // Verify compileOnly dependencies are listed in comments
+    assertTrue(pkl.contains("// Compile-only dependencies (not included at runtime):"))
+    assertTrue(pkl.contains("//   - org.projectlombok:lombok:1.18.30"))
+
+    // Verify testCompileOnly dependencies are listed in comments
+    assertTrue(pkl.contains("// Test compile-only dependencies (not included in test runtime):"))
+    assertTrue(pkl.contains("//   - org.mockito:mockito-core:5.8.0"))
+  }
+
+  @Test
+  fun `testParseCompositeBuilds`() {
+    val projectDir = Files.createTempDirectory("test-composite-builds")
+    val settingsFile = projectDir.resolve("settings.gradle.kts")
+    settingsFile.writeText("""
+      rootProject.name = "composite-project"
+
+      include("module-a")
+      include("module-b")
+
+      includeBuild("../external-build-1")
+      includeBuild("../external-build-2")
+    """.trimIndent())
+
+    val buildFile = projectDir.resolve("build.gradle.kts")
+    buildFile.writeText("""
+      group = "com.example"
+      version = "1.0.0"
+    """.trimIndent())
+
+    val descriptor = GradleParser.parse(buildFile)
+
+    // Verify basic project info
+    assertEquals("composite-project", descriptor.name)
+    assertEquals(2, descriptor.modules.size)
+
+    // Verify composite builds (includeBuild)
+    assertEquals(2, descriptor.includedBuilds.size)
+    assertTrue(descriptor.includedBuilds.contains("../external-build-1"))
+    assertTrue(descriptor.includedBuilds.contains("../external-build-2"))
+  }
+
+  @Test
+  fun `testPklGenerationWithCompositeBuilds`() {
+    val projectDir = Files.createTempDirectory("test-composite-pkl")
+    val settingsFile = projectDir.resolve("settings.gradle.kts")
+    settingsFile.writeText("""
+      rootProject.name = "composite-project"
+
+      includeBuild("../shared-library")
+      includeBuild("../common-utils")
+    """.trimIndent())
+
+    val buildFile = projectDir.resolve("build.gradle.kts")
+    buildFile.writeText("""
+      plugins {
+        kotlin("jvm") version "1.9.21"
+      }
+
+      group = "com.example"
+      version = "1.0.0"
+
+      dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
+      }
+    """.trimIndent())
+
+    val descriptor = GradleParser.parse(buildFile)
+    val pkl = PklGenerator.generate(descriptor)
+
+    // Verify composite builds are documented in PKL
+    assertTrue(pkl.contains("// Composite builds detected (included builds):"))
+    assertTrue(pkl.contains("//   - ../shared-library"))
+    assertTrue(pkl.contains("//   - ../common-utils"))
+    assertTrue(pkl.contains("// These are separate Gradle builds included in this project."))
+    assertTrue(pkl.contains("// Manual conversion may be needed for each included build."))
+  }
 }

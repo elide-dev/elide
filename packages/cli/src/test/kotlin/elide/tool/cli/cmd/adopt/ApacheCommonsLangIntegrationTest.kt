@@ -161,6 +161,6 @@ class ApacheCommonsLangIntegrationTest {
     // JUnit should have a version from parent's dependencyManagement
     val junitManaged = pom.dependencyManagement["org.junit.jupiter:junit-jupiter"]
     assertNotNull(junitManaged, "JUnit should be in dependencyManagement from parent")
-    assertNotNull(junitManaged.version, "Managed JUnit should have version")
+    assertTrue(junitManaged?.isNotEmpty() == true, "Managed JUnit should have version")
   }
 }

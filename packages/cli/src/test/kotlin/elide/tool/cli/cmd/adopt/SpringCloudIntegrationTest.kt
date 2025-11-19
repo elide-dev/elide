@@ -231,10 +231,10 @@ class SpringCloudIntegrationTest {
     if (pom.dependencyManagement.isNotEmpty()) {
       println("Dependency management entries: ${pom.dependencyManagement.size}")
 
-      // Verify dependency management entries are well-formed
-      pom.dependencyManagement.values.forEach { dep ->
-        assertTrue(dep.groupId.isNotEmpty(), "Managed dependency should have groupId")
-        assertTrue(dep.artifactId.isNotEmpty(), "Managed dependency should have artifactId")
+      // Verify dependency management entries are well-formed (coordinate -> version)
+      pom.dependencyManagement.forEach { (coordinate, version) ->
+        assertTrue(coordinate.isNotEmpty(), "Managed dependency coordinate should not be empty")
+        assertTrue(version.isNotEmpty(), "Managed dependency version should not be empty")
       }
     }
   }

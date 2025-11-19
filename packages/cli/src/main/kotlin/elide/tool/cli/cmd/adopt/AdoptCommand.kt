@@ -74,7 +74,7 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
     // If a path was provided, auto-detect and run appropriate adopter
     if (projectPath != null) {
-      return autoDetectAndAdopt(projectPath!!, state)
+      return autoDetectAndAdopt(this, projectPath!!, state)
     }
 
     // Otherwise show help
@@ -98,66 +98,87 @@ internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
   /**
    * Auto-detect build system and invoke appropriate adopter.
    */
-  private suspend fun CommandContext.autoDetectAndAdopt(
+  private suspend fun autoDetectAndAdopt(
+    ctx: CommandContext,
     path: String,
     state: ToolContext<ToolState>
   ): CommandResult {
     val projectDir = Path.of(path).absolute()
 
-    // Check for each build system in priority order
-    val detected = when {
-      // Maven: pom.xml
-      projectDir.resolve("pom.xml").exists() -> {
-        output { append("@|bold,fg(green) Detected:|@ Maven project (pom.xml)") }
-        "maven" to MavenAdoptCommand().apply { pomFile = projectDir.resolve("pom.xml").toString() }
-      }
-
-      // Gradle: build.gradle or build.gradle.kts
-      projectDir.resolve("build.gradle.kts").exists() || projectDir.resolve("build.gradle").exists() -> {
-        output { append("@|bold,fg(green) Detected:|@ Gradle project") }
-        val gradleBuildFile = when {
-          projectDir.resolve("build.gradle.kts").exists() -> "build.gradle.kts"
-          else -> "build.gradle"
+    // Check for each build system in priority order and provide usage instructions
+    return with(ctx) {
+      when {
+        // Maven: pom.xml
+        projectDir.resolve("pom.xml").exists() -> {
+          output {
+            append("@|bold,fg(green) ✓ Detected:|@ Maven project")
+            appendLine()
+            append("  File: pom.xml")
+            appendLine()
+            appendLine()
+            append("@|bold Run the following command to convert:|@")
+            append("  elide adopt maven ${projectDir.resolve("pom.xml")}")
+          }
+          success()
         }
-        "gradle" to GradleAdoptCommand().apply { this.buildFile = projectDir.resolve(gradleBuildFile).toString() }
-      }
 
-      // Bazel: WORKSPACE, WORKSPACE.bazel, or MODULE.bazel
-      projectDir.resolve("MODULE.bazel").exists() ||
-      projectDir.resolve("WORKSPACE.bazel").exists() ||
-      projectDir.resolve("WORKSPACE").exists() -> {
-        output { append("@|bold,fg(green) Detected:|@ Bazel project") }
-        "bazel" to BazelAdoptCommand().apply { this.projectDir = projectDir.toString() }
-      }
-
-      // Node.js: package.json
-      projectDir.resolve("package.json").exists() -> {
-        output { append("@|bold,fg(green) Detected:|@ Node.js project (package.json)") }
-        "node" to NodeAdoptCommand().apply { packageJsonFile = projectDir.resolve("package.json").toString() }
-      }
-
-      else -> {
-        output {
-          append("@|bold,fg(red) Error:|@ No supported build system detected at $projectDir")
-          appendLine()
-          append("Looked for:")
-          appendLine()
-          append("  - pom.xml (Maven)")
-          appendLine()
-          append("  - build.gradle(.kts) (Gradle)")
-          appendLine()
-          append("  - WORKSPACE/MODULE.bazel (Bazel)")
-          appendLine()
-          append("  - package.json (Node.js)")
+        // Gradle: build.gradle or build.gradle.kts
+        projectDir.resolve("build.gradle.kts").exists() || projectDir.resolve("build.gradle").exists() -> {
+          val buildFile = if (projectDir.resolve("build.gradle.kts").exists()) "build.gradle.kts" else "build.gradle"
+          output {
+            append("@|bold,fg(green) ✓ Detected:|@ Gradle project")
+            appendLine()
+            append("  File: $buildFile")
+            appendLine()
+            appendLine()
+            append("@|bold Run the following command to convert:|@")
+            append("  elide adopt gradle ${projectDir.resolve(buildFile)}")
+          }
+          success()
         }
-        return err(exitCode = 1)
+
+        // Bazel: WORKSPACE, WORKSPACE.bazel, or MODULE.bazel
+        projectDir.resolve("MODULE.bazel").exists() ||
+        projectDir.resolve("WORKSPACE.bazel").exists() ||
+        projectDir.resolve("WORKSPACE").exists() -> {
+          output {
+            append("@|bold,fg(green) ✓ Detected:|@ Bazel project")
+            appendLine()
+            appendLine()
+            append("@|bold Run the following command to convert:|@")
+            append("  elide adopt bazel $projectDir")
+          }
+          success()
+        }
+
+        // Node.js: package.json
+        projectDir.resolve("package.json").exists() -> {
+          output {
+            append("@|bold,fg(green) ✓ Detected:|@ Node.js project")
+            appendLine()
+            append("  File: package.json")
+            appendLine()
+            appendLine()
+            append("@|bold Run the following command to convert:|@")
+            append("  elide adopt node ${projectDir.resolve("package.json")}")
+          }
+          success()
+        }
+
+        else -> {
+          output {
+            append("@|bold,fg(red) ✗ Error:|@ No supported build system detected at $projectDir")
+            appendLine()
+            appendLine()
+            append("@|bold Looked for:|@")
+            append("  • pom.xml (Maven)")
+            append("  • build.gradle / build.gradle.kts (Gradle)")
+            append("  • WORKSPACE / MODULE.bazel (Bazel)")
+            append("  • package.json (Node.js)")
+          }
+          err(exitCode = 1)
+        }
       }
     }
-
-    val (buildSystem, command) = detected
-    output { appendLine() }
-
-    // Invoke the detected adopter
-    return command.invoke(this, state)
   }
 }

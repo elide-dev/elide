@@ -1,5 +1,4 @@
 import * as React from 'react'
-import type { Table } from '@tanstack/react-table'
 import { Settings2, Search } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -13,22 +12,19 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { useDataTable } from '@/contexts/DataTableContext'
 
-type ColumnsDropdownProps = {
-  table: Table<Record<string, unknown>>
-  columnSearch: string
-  setColumnSearch: (value: string) => void
-}
+export const ColumnsDropdown = function ColumnsDropdown() {
+  const { table } = useDataTable()
 
-export const ColumnsDropdown = React.memo(function ColumnsDropdown({
-  table,
-  columnSearch,
-  setColumnSearch,
-}: ColumnsDropdownProps) {
-  const hasHiddenColumns = Object.values(table.getState().columnVisibility).some((visible) => visible === false)
+  // Local search state
+  const [search, setSearch] = React.useState('')
+
+  const visibility = table.getState().columnVisibility
+  const hasHiddenColumns = Object.values(visibility).some((visible) => !visible)
 
   return (
-    <DropdownMenu onOpenChange={(open) => !open && setColumnSearch('')}>
+    <DropdownMenu onOpenChange={(open) => !open && setSearch('')}>
       <DropdownMenuTrigger asChild>
         <div className="relative">
           <Button variant="outline">
@@ -53,8 +49,8 @@ export const ColumnsDropdown = React.memo(function ColumnsDropdown({
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
             <Input
               placeholder="Search..."
-              value={columnSearch}
-              onChange={(e) => setColumnSearch(e.target.value)}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="h-8 text-xs pl-8 w-full"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}
@@ -86,7 +82,7 @@ export const ColumnsDropdown = React.memo(function ColumnsDropdown({
           {table
             .getAllColumns()
             .filter((column) => column.getCanHide())
-            .filter((column) => column.id.toLowerCase().includes(columnSearch.toLowerCase()))
+            .filter((column) => column.id.toLowerCase().includes(search.toLowerCase()))
             .map((column) => {
               return (
                 <DropdownMenuCheckboxItem
@@ -102,11 +98,11 @@ export const ColumnsDropdown = React.memo(function ColumnsDropdown({
           {table
             .getAllColumns()
             .filter((column) => column.getCanHide())
-            .filter((column) => column.id.toLowerCase().includes(columnSearch.toLowerCase())).length === 0 && (
+            .filter((column) => column.id.toLowerCase().includes(search.toLowerCase())).length === 0 && (
             <div className="px-2 py-2 text-xs text-gray-500 text-center">No columns found</div>
           )}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
   )
-})
+}

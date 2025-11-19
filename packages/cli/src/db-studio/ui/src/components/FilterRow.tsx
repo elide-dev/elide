@@ -10,14 +10,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import type { Filter } from '@/lib/types'
+import type { Filter, ColumnMetadata } from '@/lib/types'
 import { FILTER_OPERATORS } from '@/lib/types'
-import type { ColumnMetadata } from './DataTable'
 
 type FilterRowProps = {
   filter: Filter
   columns: ColumnMetadata[]
   isFirst: boolean
+  onApply: () => void
   onUpdate: (updates: Partial<Filter>) => void
   onRemove: () => void
 }
@@ -26,6 +26,7 @@ export const FilterRow = React.memo(function FilterRow({
   filter,
   columns,
   isFirst,
+  onApply,
   onUpdate,
   onRemove,
 }: FilterRowProps) {
@@ -41,7 +42,11 @@ export const FilterRow = React.memo(function FilterRow({
       {/* Column selector */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="min-w-[140px] w-auto max-w-[280px] justify-between font-mono text-xs">
+          <Button
+            variant="outline"
+            size="sm"
+            className="min-w-[140px] w-auto max-w-[280px] justify-between font-mono text-xs"
+          >
             <span className="flex-1 text-left">{filter.column}</span>
             <ChevronDown className="ml-2 h-3 w-3 shrink-0" />
           </Button>
@@ -94,7 +99,12 @@ export const FilterRow = React.memo(function FilterRow({
           placeholder="Value..."
           value={String(filter.value ?? '')}
           onChange={(e) => onUpdate({ value: e.target.value })}
-          className="h-8 w-[200px] text-xs font-mono"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              onApply()
+            }
+          }}
+          className="h-8 w-[200px] text-xs md:text-xs font-mono"
         />
       )}
 
@@ -110,7 +120,7 @@ export const FilterRow = React.memo(function FilterRow({
               .filter((v) => v !== '')
             onUpdate({ value: values })
           }}
-          className="h-8 w-[280px] text-xs font-mono"
+          className="h-8 w-[280px] text-xs md:text-xs font-mono"
         />
       )}
 

@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Key, Link, ArrowUpDown, ArrowUpWideNarrow, ArrowDownWideNarrow } from 'lucide-react'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import type { ColumnMetadata } from './DataTable'
+import type { ColumnMetadata } from '@/lib/types'
+import { useDataTable } from '@/contexts/DataTableContext'
 
 type ColumnInfoProps = {
   column: ColumnMetadata
@@ -119,30 +120,29 @@ type ColumnHeaderProps = {
   column: ColumnMetadata
   sorted: false | 'asc' | 'desc'
   showControls?: boolean
-  onSortChange?: (column: string | null, direction: 'asc' | 'desc' | null) => void
 }
 
 /**
  * Column header component that displays column name, type, and optional sorting controls
  * Wraps content in a ColumnInfo hover card for displaying detailed metadata
  */
-export function ColumnHeader({ column, sorted, showControls = true, onSortChange }: ColumnHeaderProps) {
+export function ColumnHeader({ column, sorted, showControls = true }: ColumnHeaderProps) {
+  const { onSortingChange } = useDataTable()
+
   const isKey = column.primaryKey
   const isForeignKey = !!column.foreignKey
-  const isSortable = showControls && onSortChange
+  const isSortable = showControls
 
   const handleSort = React.useCallback(() => {
-    if (!onSortChange) return
-
     // Three-state sorting: no sort → asc → desc → no sort
     if (!sorted) {
-      onSortChange(column.name, 'asc')
+      onSortingChange({ column: column.name, direction: 'asc' })
     } else if (sorted === 'asc') {
-      onSortChange(column.name, 'desc')
+      onSortingChange({ column: column.name, direction: 'desc' })
     } else {
-      onSortChange(null, null)
+      onSortingChange({ column: null, direction: null })
     }
-  }, [sorted, onSortChange, column.name])
+  }, [sorted, onSortingChange, column.name])
 
   return (
     <ColumnInfo column={column}>

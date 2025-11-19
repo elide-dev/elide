@@ -1,139 +1,154 @@
-import { useCallback, useMemo } from 'react'
+import * as React from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
+import type { ColumnDef, SortingState } from '@tanstack/react-table'
+import { getCoreRowModel, getFilteredRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { useTableData } from '../hooks/useTableData'
-import type { SortingParams } from '../hooks/useTableData'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
 import { DataTable } from '../components/DataTable'
-import type { DataTableSorting } from '../components/DataTable'
-import type { Filter } from '@/lib/types'
+import { DataTableProvider } from '@/contexts/DataTableContext'
+import { parsePaginationParams, parseSortingParams, parseFilterParams, buildSearchParams } from '@/lib/urlParams'
+import { DEFAULT_OFFSET } from '@/lib/constants'
+import type { ColumnMetadata, PaginationParams, SortingParams, Filter } from '@/lib/types'
+import { ColumnHeader } from '@/components/ColumnHeader'
+
+/**
+ * Format cell values with special handling for NULL values
+ */
+function formatCellValue(value: unknown): React.ReactNode {
+  if (value === null || value === undefined) return <span className="text-gray-500 font-normal">NULL</span>
+  return String(value)
+}
 
 export default function TableView() {
   const { dbIndex, tableName } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
 
+  // Parse URL params once (source of truth)
+  const pagination = React.useMemo(() => parsePaginationParams(searchParams), [searchParams])
+  const sorting = React.useMemo(() => parseSortingParams(searchParams), [searchParams])
+  const appliedFilters = React.useMemo(() => parseFilterParams(searchParams), [searchParams])
+
   // Get tables list to access the total row count
   const { data: tables = [] } = useDatabaseTables(dbIndex)
 
-  const pagination = useMemo(
-    () => ({
-      limit: parseInt(searchParams.get('limit') || '100', 10),
-      offset: parseInt(searchParams.get('offset') || '0', 10),
-    }),
-    [searchParams]
-  )
-
-  const sorting: SortingParams = useMemo(() => {
-    const sort = searchParams.get('sort')
-    const order = searchParams.get('order')
-    if (sort && order && (order === 'asc' || order === 'desc')) {
-      return { column: sort, direction: order as 'asc' | 'desc' }
-    }
-    return { column: null, direction: null }
-  }, [searchParams])
-
-  const filters: Filter[] = useMemo(() => {
-    const whereParam = searchParams.get('where')
-    if (!whereParam) return []
-    try {
-      const decoded = decodeURIComponent(whereParam)
-      const parsed = JSON.parse(decoded)
-      return Array.isArray(parsed) ? parsed : []
-    } catch {
-      return []
-    }
-  }, [searchParams])
-
-  const {
-    data,
-    isLoading: loading,
-    isFetching,
-    error,
-    refetch,
-  } = useTableData(dbIndex, tableName, pagination, sorting, filters)
-
-  const handlePaginationChange = useCallback(
-    (limit: number, offset: number) => {
-      const newParams: Record<string, string> = {
-        limit: limit.toString(),
-        offset: offset.toString(),
-      }
-      // Preserve sorting params
-      if (sorting.column && sorting.direction) {
-        newParams.sort = sorting.column
-        newParams.order = sorting.direction
-      }
-      // Preserve filters
-      if (filters.length > 0) {
-        newParams.where = encodeURIComponent(JSON.stringify(filters))
-      }
-      setSearchParams(newParams)
-    },
-    [setSearchParams, sorting, filters]
-  )
-
-  const handleSortChange = useCallback(
-    (column: string | null, direction: 'asc' | 'desc' | null) => {
-      const newParams: Record<string, string> = {
-        limit: pagination.limit.toString(),
-        offset: '0', // Reset to first page when sorting changes
-      }
-      // Add sorting params if provided
-      if (column && direction) {
-        newParams.sort = column
-        newParams.order = direction
-      }
-      // Preserve filters
-      if (filters.length > 0) {
-        newParams.where = encodeURIComponent(JSON.stringify(filters))
-      }
-      setSearchParams(newParams)
-    },
-    [setSearchParams, pagination.limit, filters]
-  )
-
-  const handleFiltersChange = useCallback(
-    (newFilters: Filter[]) => {
-      const newParams: Record<string, string> = {
-        limit: pagination.limit.toString(),
-        offset: '0', // Reset to first page when filters change
-      }
-      // Preserve sorting params
-      if (sorting.column && sorting.direction) {
-        newParams.sort = sorting.column
-        newParams.order = sorting.direction
-      }
-      // Add filters if provided
-      if (newFilters.length > 0) {
-        newParams.where = encodeURIComponent(JSON.stringify(newFilters))
-      }
-      setSearchParams(newParams)
-    },
-    [setSearchParams, pagination.limit, sorting]
-  )
-
-  const handleRefresh = useCallback(() => {
-    refetch()
-  }, [refetch])
-
-  const tableSorting: DataTableSorting = useMemo(
-    () => ({
-      column: sorting.column,
-      direction: sorting.direction,
-    }),
-    [sorting]
+  // Fetch table data with server params
+  const { data, isLoading, isFetching, error, refetch } = useTableData(
+    dbIndex,
+    tableName,
+    pagination,
+    sorting,
+    appliedFilters
   )
 
   // Find the current table's row count from the tables list
-  const tableRowCount = useMemo(() => {
+  const tableRowCount = React.useMemo(() => {
     const table = tables.find((t) => t.name === tableName)
     return table?.rowCount
   }, [tables, tableName])
 
-  if (loading && !data) {
+  // Change handlers - update URL which triggers re-fetch
+  const handlePaginationChange = React.useCallback(
+    (newPagination: PaginationParams) => {
+      setSearchParams(buildSearchParams(newPagination, sorting, appliedFilters))
+    },
+    [setSearchParams, sorting, appliedFilters]
+  )
+
+  const handleSortingChange = React.useCallback(
+    (newSorting: SortingParams) => {
+      // Reset offset when sorting changes
+      const resetPagination = { ...pagination, offset: DEFAULT_OFFSET }
+      setSearchParams(buildSearchParams(resetPagination, newSorting, appliedFilters))
+    },
+    [setSearchParams, pagination, appliedFilters]
+  )
+
+  const handleFiltersChange = React.useCallback(
+    (newFilters: Filter[]) => {
+      // Reset offset when filters change
+      const resetPagination = { ...pagination, offset: DEFAULT_OFFSET }
+      setSearchParams(buildSearchParams(resetPagination, sorting, newFilters))
+    },
+    [setSearchParams, pagination, sorting]
+  )
+
+  // Convert server-side sorting to TanStack Table format
+  const sortingState: SortingState = React.useMemo(() => {
+    if (sorting.column && sorting.direction) {
+      return [
+        {
+          id: sorting.column,
+          desc: sorting.direction === 'desc',
+        },
+      ]
+    }
+    return []
+  }, [sorting.column, sorting.direction])
+
+  // Build TanStack Table columns
+  const tableColumns: ColumnDef<Record<string, unknown>>[] = React.useMemo(() => {
+    if (!data) return []
+
+    return data.columns.map((col: ColumnMetadata) => {
+      return {
+        accessorKey: col.name,
+        size: 200,
+        minSize: 100,
+        maxSize: 1000,
+        enableResizing: true,
+        header: ({ column }) => {
+          const sorted = column.getIsSorted()
+          return <ColumnHeader column={col} sorted={sorted} showControls={true} />
+        },
+        cell: ({ getValue }) => {
+          return formatCellValue(getValue())
+        },
+      }
+    })
+  }, [data?.columns])
+
+  // Build TanStack Table data
+  const tableData: Record<string, unknown>[] = React.useMemo(() => {
+    if (!data) return []
+
+    return data.rows.map((row) =>
+      data.columns.reduce(
+        (acc, col, idx) => {
+          acc[col.name] = row[idx]
+          return acc
+        },
+        {} as Record<string, unknown>
+      )
+    )
+  }, [data?.rows, data?.columns])
+
+  // Create TanStack Table instance
+  const table = useReactTable({
+    data: tableData,
+    columns: tableColumns,
+    manualSorting: true,
+    manualPagination: true,
+    pageCount: data ? Math.ceil(data.totalRows / pagination.limit) : 0,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
+    state: {
+      sorting: sortingState,
+    },
+  })
+
+  // Loading state
+  if (isLoading && !data) {
     return (
-      <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-gray-500 font-mono">Loading…</div>
+      <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-gray-500 font-mono">
+        Loading…
+      </div>
     )
   }
+
+  // Error state
   if (error && !data) {
     return (
       <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-red-400 font-mono">
@@ -141,28 +156,40 @@ export default function TableView() {
       </div>
     )
   }
+
+  // No data state
   if (!data) {
     return <div className="flex-1 p-0 overflow-auto font-mono" />
   }
 
+  // Build context value
+  const contextValue = {
+    table,
+    columns: data.columns,
+    rowCount: data.rows.length,
+    metadata: data.metadata,
+    pagination,
+    sorting,
+    appliedFilters,
+    onPaginationChange: handlePaginationChange,
+    onSortingChange: handleSortingChange,
+    onFiltersChange: handleFiltersChange,
+    onRefresh: refetch,
+    config: {
+      tableName: data.name,
+      tableRowCount,
+      totalRows: data.totalRows,
+      isLoading: isFetching,
+      showControls: true,
+      showPagination: true,
+    },
+  }
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex-1 overflow-auto">
-        <DataTable
-          data={data}
-          totalRows={data.totalRows}
-          tableRowCount={tableRowCount}
-          tableName={data.name}
-          pagination={pagination}
-          onPaginationChange={handlePaginationChange}
-          sorting={tableSorting}
-          onSortChange={handleSortChange}
-          filters={filters}
-          onFiltersChange={handleFiltersChange}
-          isLoading={isFetching}
-          onRefresh={handleRefresh}
-        />
-      </div>
+      <DataTableProvider key={tableName} value={contextValue}>
+        <DataTable />
+      </DataTableProvider>
     </div>
   )
 }

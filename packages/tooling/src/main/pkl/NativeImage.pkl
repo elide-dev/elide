@@ -15,6 +15,9 @@ typealias OptimizationLevel = "auto" | "b" | "s" | "0" | "1" | "2" | "3" | "4"
 /// Type of image produced by a native image task.
 typealias ImageType = "binary" | "library"
 
+/// Whether to invoke Native Image internally, or as a sub-process.
+typealias NativeImageDriverMode = "embedded" | "external"
+
 /// Configuration for Native Image link-at-build-time settings.
 class NativeImageLinkAtBuildTime {
   /// Whether link-at-build-time is enabled as the default.
@@ -77,6 +80,9 @@ class NativeImageExclusions {
 open class NativeImageOptions {
   /// Whether to activate verbose output.
   verbose: Boolean = false
+
+  /// How Native Image should be invoked.
+  driverMode: NativeImageDriverMode = "embedded"
 
   /// Build-time linkage options.
   linkAtBuildTime: NativeImageLinkAtBuildTime = new {}

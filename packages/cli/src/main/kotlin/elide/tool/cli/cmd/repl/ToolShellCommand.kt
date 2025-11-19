@@ -60,7 +60,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.*
-import java.util.concurrent.Phaser
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeoutException
 import java.util.function.Supplier
 import java.util.jar.JarInputStream
@@ -80,22 +80,21 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toJavaDuration
 import elide.annotations.Inject
 import elide.runtime.LogLevel
-import elide.runtime.core.EntrypointRegistry
-import elide.runtime.core.PolyglotContext
-import elide.runtime.core.PolyglotEngine
-import elide.runtime.core.PolyglotEngineConfiguration
+import elide.runtime.core.*
 import elide.runtime.core.PolyglotEngineConfiguration.HostAccess
-import elide.runtime.core.RuntimeLatch
-import elide.runtime.core.SharedContextFactory
 import elide.runtime.core.extensions.attach
+import elide.runtime.exec.ContextAwareExecutor
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.Engine
 import elide.runtime.gvm.GraalVMGuest
 import elide.runtime.gvm.GuestError
 import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
+import elide.runtime.http.server.js.worker.JsWorkerApplication
+import elide.runtime.http.server.netty.*
+import elide.runtime.http.server.python.wsgi.WsgiEntrypoint
+import elide.runtime.http.server.python.wsgi.WsgiServerApplication
 import elide.runtime.intrinsics.js.node.util.DebugLogger
-import elide.runtime.intrinsics.server.http.HttpServerAgent
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.plugins.Coverage
 import elide.runtime.plugins.jvm.Jvm
@@ -107,6 +106,7 @@ import elide.runtime.runner.RunnerOutcome
 import elide.runtime.runner.Runners
 import elide.secrets.Secrets
 import elide.tool.cli.*
+import elide.tool.cli.GuestLanguage
 import elide.tool.cli.GuestLanguage.*
 import elide.tool.cli.cmd.builder.emitCommand
 import elide.tool.cli.cmd.runner.*
@@ -123,11 +123,13 @@ import elide.tool.exec.SubprocessRunner.delegateTask
 import elide.tool.exec.SubprocessRunner.stringToTask
 import elide.tool.exec.SubprocessRunner.subprocess
 import elide.tool.exec.allProjectPaths
+import elide.tool.extensions.bindAndDisplayResult
+import elide.tool.extensions.echoShutdownMessage
 import elide.tool.extensions.installIntrinsics
 import elide.tool.io.WorkdirManager
-import elide.tooling.project.ProjectManager
 import elide.tool.server.StaticSiteServer
 import elide.tool.server.StaticSiteServer.buildStaticServer
+import elide.tool.server.toHttpApplicationOptions
 import elide.tooling.*
 import elide.tooling.builder.BuildDriver
 import elide.tooling.builder.BuildDriver.dependencies
@@ -143,6 +145,7 @@ import elide.tooling.lockfile.*
 import elide.tooling.project.ElideProject
 import elide.tooling.project.PackageManifestService
 import elide.tooling.project.ProjectEcosystem
+import elide.tooling.project.ProjectManager
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.StaticSite
 import elide.tooling.project.manifest.NodePackageManifest
@@ -240,15 +243,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     // Active line reader.
     private val lineReader = atomic<LineReader?>(null)
 
-    // Server manager
-    private val serverAgent: HttpServerAgent by lazy { HttpServerAgent() }
-
-    // Synchronization primitive used to coordinate server behavior
-    private val phaser = atomic(Phaser(1))
-
-    // Whether a server is running.
-    private val serverRunning = atomic(false)
-
     // Active project configuration.
     private val activeProject = atomic<ElideProject?>(null)
 
@@ -329,7 +323,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   @Inject internal lateinit var entrypointProvider: EntrypointRegistry
 
   // Lazy mutable context factory
-  @Inject internal lateinit var sharedContextProvider: SharedContextFactory
+  @Inject internal lateinit var runtimeExecutor: RuntimeExecutor
 
   // Global latch used to wait for background tasks
   @Inject internal lateinit var runtimeLatch: RuntimeLatch
@@ -576,7 +570,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     )
 
     entrypointProvider.record(source)
-    sharedContextProvider.record { ctxAccessor().unwrap() }
 
     val ctx = ctxAccessor.invoke()
     logging.trace("Code chunk built. Evaluating")
@@ -610,8 +603,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     code: String,
   ) {
     if (serveMode()) {
-      assert(!serverRunning.value) { "Server is already running" }
-      serverRunning.value = true
       executeSource(
         "stdin",
         languages,
@@ -1151,23 +1142,21 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         "${language.label} syntax is incomplete",
       )
 
-      exc.isHostException || exc.message?.contains("HostException: ") == true -> {
-        when (exc.asHostException()) {
-          // guest error thrown from host-side logic
-          is GuestError -> displayFormattedError(
-            exc,
-            msg ?: exc.message ?: "An error was thrown",
-            stacktrace = !isInteractive(),
-          )
+      exc.isHostException -> when (val hostExc = exc.asHostException()) {
+        // guest error thrown from host-side logic
+        is GuestError -> displayFormattedError(
+          exc,
+          msg ?: exc.message ?: "An error was thrown",
+          stacktrace = !isInteractive(),
+        )
 
-          else -> displayFormattedError(
-            exc.asHostException(),
-            msg ?: exc.asHostException().message ?: "A runtime error was thrown",
-            advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
-            stacktrace = true,
-            internal = true,
-          )
-        }
+        else -> displayFormattedError(
+          hostExc,
+          msg ?: hostExc.message ?: "A runtime error was thrown",
+          advice = "This is an error in Elide. Please report this to the Elide Team with `elide bug`",
+          stacktrace = true,
+          internal = true,
+        )
       }
 
       // if this is a guest-side exception, throw it
@@ -1578,13 +1567,19 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   }
 
   // Detect whether we are running in `serve` mode (with alias `start`).
-  private fun serveMode(): Boolean = _isServeMode
+  private fun serveMode(): Boolean {
+    return _isServeMode || activeProject.value?.isWsgiEnabled() == true
+  }
 
   private val _isTestMode by lazy {
     commandSpecifiesTest ||
             actionHint?.lowercase()?.trim().let {
               it != null && it == "test" || it == "tests"
             }
+  }
+
+  private fun ElideProject.isWsgiEnabled(): Boolean {
+    return manifest.python?.wsgi?.name != null
   }
 
   // Detect whether we are running in `test` mode (with alias `test` or `tests`).
@@ -1710,13 +1705,52 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     entrypointProvider.record(source)
 
     try {
-      // enter VM context
-      logging.trace("Entered VM for server application (language: ${language.id}). Consuming script from: '$label'")
+      val httpApp = when (language) {
+        JS, TYPESCRIPT -> {
+          logging.debug { "Starting JavaScript/Typescript worker server" }
+          JsWorkerApplication(source, runtimeExecutor.acquire())
+        }
 
-      // initialize the server intrinsic and run using the provided source
-      serverAgent.run(source, execProvider) { resolvePolyglotContext(langs, detached = false) }
-      phaser.value.register()
-      serverRunning.value = true
+        PYTHON -> {
+          logging.debug { "Starting WSGI server" }
+          val wsgiOptions = activeProject.value?.manifest?.python?.wsgi
+          val entrypoint = wsgiOptions?.let { wsgi ->
+            // resolve from manifest
+            val bindingName = wsgi.name ?: error("Serve mode should only be active if the binding name is specified")
+            WsgiEntrypoint(source, bindingName, wsgi.args)
+          } ?: serverSettings.wsgi?.let {
+            // resolve from CLI arguments
+            WsgiEntrypoint.from(it, source)
+          }
+          ?: error("No available WSGI configuration in manifest or CLI arguments")
+
+          WsgiServerApplication(entrypoint, runtimeExecutor.acquire())
+        }
+
+        else -> error("Cannot run embedded server for language $language")
+      }
+
+      val manifestServerOptions = activeProject.value?.manifest?.server
+      val options = manifestServerOptions.toHttpApplicationOptions()
+      val transport = serverSettings.transport?.toServerTransport() ?: when (manifestServerOptions?.transport) {
+        ElidePackageManifest.ServerSettings.TRANSPORT_IO_URING -> IOUringTransport
+        ElidePackageManifest.ServerSettings.TRANSPORT_EPOLL -> EpollTransport
+        ElidePackageManifest.ServerSettings.TRANSPORT_KQUEUE -> KQueueTransport
+        ElidePackageManifest.ServerSettings.TRANSPORT_NIO -> NioTransport
+        else -> null
+      }
+
+      val stack = HttpApplicationStack.bindAndDisplayResult {
+        HttpApplicationStack.bind(httpApp, options, transport)
+      }
+
+      try {
+        // wait until shutdown
+        stack.awaitClose()
+      } finally {
+        stack.echoShutdownMessage()
+      }
+
     } catch (exc: PolyglotException) {
       processUserCodeError(language, exc)?.let { throw it }
     }
@@ -1725,7 +1759,6 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   @Suppress("TooGenericExceptionCaught")
   private fun execWrapped(label: String, ctxAccessor: ContextAccessor, source: Source) {
     entrypointProvider.record(source)
-    sharedContextProvider.record { ctxAccessor().unwrap() }
 
     // parse the source
     val ctx = ctxAccessor.invoke()
@@ -2455,7 +2488,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
     appEnvironment.apply(
       project,
       this,
-    beanContext.getBean(Secrets::class.java).getEnv(),
+      beanContext.getBean(Secrets::class.java).getEnv(),
       host = accessControl.allowAll || accessControl.allowEnv,
       dotenv = appEnvironment.dotenv,
     )
@@ -2555,15 +2588,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           resourcesPath = gvmResources
         }
 
-//        RUBY -> ignoreNotInstalled {
-//           install(elide.runtime.plugins.ruby.Ruby) {
-//             logging.debug("Configuring Ruby VM")
-//             resourcesPath = gvmResources
-//             executable = cmd
-//             executableList = listOf(cmd).plus(args)
-//             installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
-//           }
-//         }
+//        RUBY -> configure(elide.runtime.plugins.ruby.Ruby) {
+//          logging.debug("Configuring Ruby VM")
+//          resourcesPath = gvmResources
+//          executable = cmd
+//          executableList = listOf(cmd).plus(args)
+//          installIntrinsics(intrinsics, GraalVMGuest.RUBY, versionProp)
+//        }
 
         PYTHON -> configure(elide.runtime.plugins.python.Python) {
           logging.debug("Configuring Python VM")
@@ -2693,11 +2724,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
     // resolve project configuration (async)
     val projectResolution = launch {
-      runCatching {
-        projectManager.resolveProject(projectPath)
-      }.getOrNull()?.let {
-        activeProject.value = it
-      }
+      // TODO: we should surface manifest parsing errors instead of failing silently
+      runCatching { projectManager.resolveProject(projectPath) }
+        .onFailure { cause -> logging.debug("Failed to resolve project manifest", cause) }
+        .onSuccess { activeProject.value = it }
     }
     val lockfileResolution = launch {
       runCatching {
@@ -2775,7 +2805,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         } catch (t: Throwable) {
           logging.warn { "Secrets were not initialized with message: ${t.message}" }
         }
-        if(secrets.initialized) {
+        if (secrets.initialized) {
           if (secrets.getProfile() == null) {
             val profiles = secrets.listProfiles()
             if (profiles.size != 1) logging.warn { "No secret profile will be loaded" }
@@ -2919,6 +2949,15 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
 
       resolveEngine(effectiveInitLangs).unwrap().use {
         withDeferredContext(effectiveInitLangs) {
+          val executor = ContextAwareExecutor(
+            maxContextPoolSize = activeProject.value?.manifest?.engine?.maxContexts
+              ?: Runtime.getRuntime().availableProcessors(),
+            baseExecutor = Executors.newCachedThreadPool(),
+            contextFactory = { it().unwrap() },
+          )
+
+          runtimeExecutor.register(executor)
+
           // warn about experimental status, as applicable
           if (verbose && experimentalLangs.isNotEmpty()) {
             logging.warn(
@@ -3052,20 +3091,13 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           }
         }
 
-        // don't exit if we have a running server
-        if (serverRunning.value) {
-          // wait for all tasks to arrive
-          logging.debug("Waiting for long-lived tasks to arrive")
-          phaser.value.arriveAndAwaitAdvance()
-          logging.debug("Exiting server context")
-        }
         engine().unwrap().let { engine ->
           val terminationPeriod = (commons().timeoutSeconds).seconds
           logging.debug { "Preparing to shut down execution (termination period: $terminationPeriod)" }
 
           try {
             logging.trace { "Triggering graceful engine shutdown" }
-            engine.close()
+            engine.close(true)
           } catch (exc: IllegalStateException) {
             logging.trace { "Shutdown produced ISE: probably still executing (message: '${exc.message}')" }
 

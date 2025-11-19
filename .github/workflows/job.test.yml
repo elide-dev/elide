@@ -137,7 +137,7 @@ permissions:
 env:
   CI: "true"
   RUST_BACKTRACE: full
-  ELIDE_VERSION: "1.0.0-beta9"
+  ELIDE_VERSION: "1.0.0-beta10"
   SCCACHE_DIRECT: "true"
   RUSTC_WRAPPER: "sccache"
 
@@ -158,7 +158,7 @@ jobs:
 
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           disable-sudo: true
           egress-policy: block
@@ -247,7 +247,7 @@ jobs:
             www.googleapis.com:443
             ziglang.org:443
       - name: "Setup: Checkout"
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           fetch-depth: 0
           submodules: true
@@ -278,7 +278,7 @@ jobs:
             elide-v3-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-v3-
       - name: "Setup: Rust"
-        uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0
+        uses: actions-rust-lang/setup-rust-toolchain@1780873c7b576612439a134613cc4cc74ce5538c # v1.15.2
         with:
           toolchain: stable
           cache: true # handled by sccache
@@ -290,29 +290,29 @@ jobs:
       - name: "Setup: Rust Caching"
         run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
         with:
           distribution: "graalvm"
           java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version: 23
       - name: "Setup: Bun"
-        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
+        uses: step-security/setup-bun@81c6b5758214d7e8b68a403c6a55a040e9b8879a # v2.0.3
         with:
           bun-version: "1.2.14"
       - name: "Setup: PNPM"
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
         with:
           version: "10.6.2"
       - name: "Setup: Elide"
-        uses: elide-dev/setup-elide@990b915b2974a70e7654acb1303607b4cd1d3538 # v2
+        uses: elide-dev/setup-elide@d91d5859c0722417ea1ac4c682382ac8a6622b80 # v3.0.0
         with:
-          version: "1.0.0-beta9"
+          version: "1.0.0-beta10"
       - name: "Setup: uv"
-        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+        uses: astral-sh/setup-uv@5a7eac68fb9809dea845d802897dc5c723910fa3 # v7.1.3
       - name: "Setup: Dependencies"
         run: |
           echo "Setting up venv..."
@@ -325,7 +325,7 @@ jobs:
           echo "Installing dependencies..."
           elide install
       - name: "Setup: Artifacts"
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         continue-on-error: true
         with:
           merge-multiple: true
@@ -373,7 +373,7 @@ jobs:
             -Pelide.ci=true \
             -PbuildDocs=false
       - name: "Artifact: Reports"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: test-reports-jvm
           path: |
@@ -445,7 +445,7 @@ jobs:
     if: inputs.native
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           disable-sudo: true
           egress-policy: audit
@@ -491,7 +491,7 @@ jobs:
             sonarcloud.io:443
             storage.googleapis.com:443
       - name: "Setup: Checkout"
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           fetch-depth: 0
           submodules: true
@@ -522,7 +522,7 @@ jobs:
             elide-v3-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-v3-
       - name: "Setup: Rust"
-        uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0
+        uses: actions-rust-lang/setup-rust-toolchain@1780873c7b576612439a134613cc4cc74ce5538c # v1.15.2
         with:
           toolchain: stable
           target: wasm32-wasip1
@@ -535,7 +535,7 @@ jobs:
         run: |
           echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
         with:
           distribution: "graalvm"
           java-version: "25"
@@ -545,11 +545,11 @@ jobs:
         with:
           python-version: 3.12
       - name: "Setup: Node"
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version: 23
       - name: "Setup: PNPM"
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
         with:
           version: "10.6.2"
           run_install: |
@@ -568,7 +568,7 @@ jobs:
           . .venv/bin/activate
           echo PATH=$PATH >> $GITHUB_ENV
       - name: "Setup: Artifacts"
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         continue-on-error: true
         with:
           merge-multiple: true
@@ -613,7 +613,7 @@ jobs:
             -Pelide.ci=true \
             -PbuildDocs=false
       - name: "Artifact: Reports"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: test-reports-native
           path: |

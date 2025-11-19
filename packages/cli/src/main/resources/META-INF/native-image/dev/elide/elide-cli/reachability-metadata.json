@@ -948,6 +948,394 @@
       "type": "com.oracle.truffle.tools.profiler.impl.MemoryTracerInstrumentProvider"
     },
     {
+      "type": "com.robothy.s3.core.model.answers.CompleteMultipartUploadAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.CopyObjectAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.DeleteObjectAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.GetObjectAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.GetObjectTaggingAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.HeadObjectAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.ListMultipartUploadAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.ListObjectsAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.ListObjectsV2Ans",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.ListObjectsVersionsAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.ListPartsAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.PutObjectAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.answers.UploadPartAns",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.internal.BucketMetadata",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.internal.LocalS3Metadata",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.internal.ObjectMetadata",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.internal.UploadMetadata",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.internal.UploadPartMetadata",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.internal.VersionedObjectMetadata",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.request.CompleteMultipartUploadPartOption",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.request.CopyObjectOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.request.CreateMultipartUploadOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.request.GetObjectOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.request.ListObjectVersionsOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.request.PutObjectOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.core.model.request.UploadPartOptions",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.AccessControlPolicy",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.Grant",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.Grantee",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.ObjectIdentifier",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.Owner",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.PolicyStatus",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.PublicAccessBlockConfiguration",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.Tagging",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.VersioningConfiguration",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.converter.AmazonInstantConverter",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.enums.CheckSumAlgorithm",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.enums.StorageClass",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.request.CreateBucketConfiguration",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.request.DeleteObjectsRequest",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.response.CreateBucketResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.response.DeleteMarkerEntry",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.response.DeleteResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.response.GetBucketResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.response.LocationConstraint",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.response.ObjectVersion",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.response.S3Error",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.response.S3Object",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.datatypes.serializer.GranteeSerializer",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.LocalS3",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.request.BucketRegion",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.request.CompletedPart",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.request.CompleteMultipartUpload",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.request.DecodedAmzRequestBody",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.CommonPrefix",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.CompleteMultipartUploadResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.CopyObjectResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.InitiateMultipartUploadResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.ListAllMyBucketsResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.ListBucketResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.ListBucketV2Result",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.ListMultipartUploadsResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.ListPartsResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.ListVersionsResult",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
+      "type": "com.robothy.s3.rest.model.response.S3Bucket",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "com.sun.crypto.provider.AESCipher$General",
       "methods": [
         {
@@ -2288,6 +2676,33 @@
       ]
     },
     {
+      "type": "elide.runtime.http.server.$HttpServerEngine$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.http.server.netty.AltServiceAdvertisingHandler"
+    },
+    {
+      "type": "elide.runtime.http.server.netty.HttpChannelHandlers$TlsAlpnHandler"
+    },
+    {
+      "type": "elide.runtime.http.server.netty.HttpChannelHandlers$http2Pipeline$$inlined$initializer$1"
+    },
+    {
+      "type": "elide.runtime.http.server.netty.HttpChannelHandlers$http3$$inlined$initializer$1"
+    },
+    {
+      "type": "elide.runtime.http.server.netty.HttpChannelHandlers$tls$$inlined$initializer$1"
+    },
+    {
+      "type": "elide.runtime.http.server.netty.NettyCallHandlerAdapter"
+    },
+    {
       "type": "elide.runtime.intrinsics.ai.$ElideLLMModule$Definition",
       "methods": [
         {
@@ -2334,6 +2749,15 @@
     },
     {
       "type": "elide.runtime.intrinsics.js.s3.$S3Module$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.runtime.intrinsics.python.flask.$FlaskIntrinsic$Definition",
       "methods": [
         {
           "name": "<init>",
@@ -5496,10 +5920,30 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$PythonSettings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "boolean",
+            "elide.tooling.project.manifest.ElidePackageManifest$WsgiSettings"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$RubySettings"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$RuntimeEngineSettings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.Integer"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$SecretSettings",
@@ -5517,6 +5961,77 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$SecretsRemote"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress",
+            "boolean",
+            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$HttpsServerSettings",
+            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$Http3ServerSettings",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress$SocketAddress",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.Integer"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$Http3ServerSettings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$SSLCertificate",
+            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress",
+            "boolean"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$HttpsServerSettings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$SSLCertificate",
+            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$SSLCertificate"
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$SSLCertificate$LocalFileCertificate",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.lang.String",
+            "java.lang.String"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$SourceSet"
@@ -5550,6 +6065,18 @@
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
       "allDeclaredConstructors": true
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$WsgiSettings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String",
+            "java.util.List"
+          ]
+        }
+      ]
     },
     {
       "type": "elide.tooling.reporting.TestReportProcessor$Factory"
@@ -8399,8 +8926,29 @@
       "jniAccessible": true
     },
     {
+      "type": "io.netty.channel.kqueue.KQueueDatagramChannel",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "io.netty.channel.kqueue.KQueueEventArray",
       "jniAccessible": true
+    },
+    {
+      "type": "io.netty.channel.kqueue.KQueueIoHandler"
+    },
+    {
+      "type": "io.netty.channel.kqueue.KQueueServerSocketChannel",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "io.netty.channel.kqueue.KQueueStaticallyReferencedJniMethods",
@@ -8486,6 +9034,85 @@
       "type": "io.netty.handler.codec.http.HttpServerExpectContinueHandler"
     },
     {
+      "type": "io.netty.handler.codec.http2.AbstractHttp2StreamChannel"
+    },
+    {
+      "type": "io.netty.handler.codec.http2.Http2FrameCodec"
+    },
+    {
+      "type": "io.netty.handler.codec.http2.Http2MultiplexHandler"
+    },
+    {
+      "type": "io.netty.handler.codec.http2.Http2StreamFrameToHttpObjectCodec"
+    },
+    {
+      "type": "io.netty.handler.ssl.OpenSslSessionCache",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "getSession",
+          "parameterTypes": [
+            "long",
+            "byte[]"
+          ]
+        },
+        {
+          "name": "sessionCreated",
+          "parameterTypes": [
+            "long",
+            "long"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.handler.ssl.ReferenceCountedOpenSslContext$AbstractCertificateVerifier",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "verify",
+          "parameterTypes": [
+            "long",
+            "byte[][]",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.handler.ssl.ReferenceCountedOpenSslServerContext$ExtendedTrustManagerVerifyCallback"
+    },
+    {
+      "type": "io.netty.handler.ssl.ReferenceCountedOpenSslServerContext$OpenSslServerCertificateCallback",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "handle",
+          "parameterTypes": [
+            "long",
+            "byte[]",
+            "byte[][]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.handler.ssl.ReferenceCountedOpenSslServerContext$OpenSslSniHostnameMatcher",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "match",
+          "parameterTypes": [
+            "long",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.handler.ssl.SslHandler"
+    },
+    {
       "type": "io.netty.handler.timeout.WriteTimeoutHandler"
     },
     {
@@ -8499,6 +9126,214 @@
     {
       "type": "io.netty.incubator.channel.uring.NativeStaticallyReferencedJniMethods",
       "jniAccessible": true
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSL",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLCertificateCallback"
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLCertificateCallbackTask",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "chain"
+        },
+        {
+          "name": "key"
+        }
+      ],
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "byte[]",
+            "byte[][]",
+            "java.lang.String[]",
+            "io.netty.incubator.codec.quic.BoringSSLCertificateCallback"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLCertificateVerifyCallback"
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLCertificateVerifyCallbackTask",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "byte[][]",
+            "java.lang.String",
+            "io.netty.incubator.codec.quic.BoringSSLCertificateVerifyCallback"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLHandshakeCompleteCallback",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "handshakeComplete",
+          "parameterTypes": [
+            "long",
+            "byte[]",
+            "java.lang.String",
+            "java.lang.String",
+            "byte[]",
+            "byte[][]",
+            "long",
+            "long",
+            "byte[]",
+            "boolean"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLKeylogCallback",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "logKey",
+          "parameterTypes": [
+            "long",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLNativeStaticallyReferencedJniMethods",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLPrivateKeyMethodDecryptTask",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "byte[]",
+            "io.netty.incubator.codec.quic.BoringSSLPrivateKeyMethod"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLPrivateKeyMethodSignTask",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "long",
+            "int",
+            "byte[]",
+            "io.netty.incubator.codec.quic.BoringSSLPrivateKeyMethod"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLPrivateKeyMethodTask",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "resultBytes"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLSessionCallback",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "newSession",
+          "parameterTypes": [
+            "long",
+            "long",
+            "long",
+            "byte[]",
+            "boolean",
+            "byte[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLSessionTicketCallback",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "findSessionTicket",
+          "parameterTypes": [
+            "byte[]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLTask",
+      "jniAccessible": true,
+      "fields": [
+        {
+          "name": "complete"
+        },
+        {
+          "name": "returnValue"
+        }
+      ],
+      "methods": [
+        {
+          "name": "destroy",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.BoringSSLTlsextServernameCallback",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "selectCtx",
+          "parameterTypes": [
+            "long",
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.Quiche",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.QuicheLogger",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "log",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.QuicheNativeStaticallyReferencedJniMethods",
+      "jniAccessible": true
+    },
+    {
+      "type": "io.netty.incubator.codec.quic.QuicheQuicServerCodec"
     },
     {
       "type": "io.netty.internal.tcnative.Buffer",
@@ -8689,6 +9524,46 @@
       ]
     },
     {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueColdProducerFields",
+      "fields": [
+        {
+          "name": "producerLimit"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueConsumerFields",
+      "fields": [
+        {
+          "name": "consumerIndex"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.BaseMpscLinkedArrayQueueProducerFields",
+      "fields": [
+        {
+          "name": "producerIndex"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.MpmcArrayQueueConsumerIndexField",
+      "fields": [
+        {
+          "name": "consumerIndex"
+        }
+      ]
+    },
+    {
+      "type": "io.netty.util.internal.shaded.org.jctools.queues.MpmcArrayQueueProducerIndexField",
+      "fields": [
+        {
+          "name": "producerIndex"
+        }
+      ]
+    },
+    {
       "type": "io.netty.util.internal.shaded.org.jctools.queues.atomic.BaseMpscLinkedAtomicArrayQueueColdProducerFields",
       "fields": [
         {
@@ -8809,6 +9684,12 @@
           "parameterTypes": [
             "java.lang.String"
           ]
+        },
+        {
+          "name": "valueOf",
+          "parameterTypes": [
+            "boolean"
+          ]
         }
       ]
     },
@@ -8897,7 +9778,13 @@
       ]
     },
     {
-      "type": "java.lang.Enum"
+      "type": "java.lang.Enum",
+      "methods": [
+        {
+          "name": "name",
+          "parameterTypes": []
+        }
+      ]
     },
     {
       "type": "java.lang.Exception",
@@ -8917,9 +9804,18 @@
     },
     {
       "type": "java.lang.Integer",
+      "jniAccessible": true,
       "fields": [
         {
           "name": "TYPE"
+        }
+      ],
+      "methods": [
+        {
+          "name": "valueOf",
+          "parameterTypes": [
+            "int"
+          ]
         }
       ]
     },
@@ -8928,9 +9824,18 @@
     },
     {
       "type": "java.lang.Long",
+      "jniAccessible": true,
       "fields": [
         {
           "name": "TYPE"
+        }
+      ],
+      "methods": [
+        {
+          "name": "valueOf",
+          "parameterTypes": [
+            "long"
+          ]
         }
       ]
     },
@@ -8943,7 +9848,8 @@
     },
     {
       "type": "java.lang.Object",
-      "allDeclaredFields": true
+      "allDeclaredFields": true,
+      "jniAccessible": true
     },
     {
       "type": "java.lang.Object[]"
@@ -9107,6 +10013,10 @@
       ]
     },
     {
+      "type": "java.lang.UnsupportedOperationException",
+      "jniAccessible": true
+    },
+    {
       "type": "java.lang.Void",
       "fields": [
         {
@@ -9234,6 +10144,36 @@
       "type": "java.math.BigInteger"
     },
     {
+      "type": "java.net.Inet4Address",
+      "jniAccessible": true
+    },
+    {
+      "type": "java.net.Inet6Address",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "getByAddress",
+          "parameterTypes": [
+            "java.lang.String",
+            "byte[]",
+            "int"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "java.net.InetAddress",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "getByAddress",
+          "parameterTypes": [
+            "byte[]"
+          ]
+        }
+      ]
+    },
+    {
       "type": "java.net.InetSocketAddress",
       "jniAccessible": true,
       "methods": [
@@ -9241,6 +10181,13 @@
           "name": "<init>",
           "parameterTypes": [
             "java.lang.String",
+            "int"
+          ]
+        },
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.net.InetAddress",
             "int"
           ]
         }
@@ -9512,6 +10459,9 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "java.util.Locale$Category"
+    },
+    {
       "type": "java.util.Map"
     },
     {
@@ -9654,6 +10604,17 @@
           ]
         }
       ]
+    },
+    {
+      "type": "javax.net.ssl.SSLContext",
+      "fields": [
+        {
+          "name": "contextSpi"
+        }
+      ]
+    },
+    {
+      "type": "javax.net.ssl.X509ExtendedTrustManager"
     },
     {
       "type": "jdk.internal.jrtfs.JrtFileSystemProvider"
@@ -10810,6 +11771,15 @@
       ]
     },
     {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.NoSig$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "org.bouncycastle.jcajce.provider.asymmetric.RSA$Mappings",
       "methods": [
         {
@@ -10838,6 +11808,15 @@
     },
     {
       "type": "org.bouncycastle.jcajce.provider.asymmetric.X509$Mappings",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.jcajce.provider.asymmetric.rsa.KeyFactorySpi",
       "methods": [
         {
           "name": "<init>",
@@ -11510,6 +12489,18 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "org.bouncycastle.jce.provider.BouncyCastleProvider",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "org.bouncycastle.openssl.PEMParser"
     },
     {
       "type": "org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory",
@@ -13958,6 +14949,60 @@
       ]
     },
     {
+      "type": "sun.security.provider.SHA3$SHA224",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA3$SHA256",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA3$SHA384",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA3$SHA512",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA3$SHAKE128Hash",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "sun.security.provider.SHA3$SHAKE256Hash",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
       "type": "sun.security.provider.SHA5$SHA384",
       "methods": [
         {
@@ -14055,6 +15100,20 @@
           "parameterTypes": []
         }
       ]
+    },
+    {
+      "type": "sun.security.ssl.SSLContextImpl",
+      "fields": [
+        {
+          "name": "trustManager"
+        }
+      ]
+    },
+    {
+      "type": "sun.security.ssl.SSLContextImpl$AbstractTLSContext"
+    },
+    {
+      "type": "sun.security.ssl.SSLContextImpl$CustomizedTLSContext"
     },
     {
       "type": "sun.security.ssl.SSLContextImpl$DefaultSSLContext",
@@ -14243,6 +15302,15 @@
       "type": "sun.util.resources.cldr.CalendarData"
     },
     {
+      "type": "sun.util.resources.cldr.TimeZoneNames"
+    },
+    {
+      "type": "sun.util.resources.cldr.TimeZoneNames_en"
+    },
+    {
+      "type": "sun.util.resources.cldr.TimeZoneNames_en_US"
+    },
+    {
       "type": {
         "proxy": [
           "com.github.ajalt.mordant.internal.jna.MacosLibC"
@@ -14397,12 +15465,988 @@
     }
   ],
   "foreign": {
-    "downcalls": [
+    "upcalls": [
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": []
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jbyte"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jdouble",
+          "jdouble"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jdouble"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": []
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
       {
         "returnType": "jint",
         "parameterTypes": [
           "jlong",
           "jint"
+        ]
+      },
+      {
+        "returnType": "jdouble",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": []
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      }
+    ],
+    "downcalls": [
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": []
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jbyte"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "void",
+        "parameterTypes": [
+          "jint",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
         ]
       },
       {
@@ -14416,8 +16460,117 @@
         ]
       },
       {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jdouble",
+          "jdouble"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jdouble"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": []
+      },
+      {
         "returnType": "jint",
         "parameterTypes": [
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": [
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jdouble",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jint",
+          "jlong",
+          "jint"
+        ]
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
+          "jlong"
+        ]
+      },
+      {
+        "returnType": "jint",
+        "parameterTypes": []
+      },
+      {
+        "returnType": "jlong",
+        "parameterTypes": [
+          "jlong",
+          "jlong",
           "jint"
         ]
       }

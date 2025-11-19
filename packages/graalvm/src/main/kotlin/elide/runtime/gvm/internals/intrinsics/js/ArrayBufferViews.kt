@@ -134,7 +134,7 @@ internal object ArrayBufferViews {
    * or return `null` if it is not known.
    */
   internal fun getViewTypeOrNull(view: Value): ArrayBufferViewType? {
-    val metaName = view.metaObject.metaSimpleName
+    val metaName = view.metaObject?.metaSimpleName ?: return null
     return runCatching { ArrayBufferViewType.valueOf(metaName) }.getOrNull()
   }
 
@@ -150,6 +150,21 @@ internal object ArrayBufferViews {
 
     if (!value.hasBufferElements()) throw TypeError.create("Invalid backing buffer: $value has no buffer elements")
     return value
+  }
+
+  /**
+   * Given an array buffer [view], return a [ByteArray] containing the data from the viewed segment of the backing
+   * array buffer.
+   */
+  internal fun readViewedBytes(view: Value): ByteArray {
+    val buffer = getBackingBuffer(view)
+    val offset = getOffset(view)
+    val length = getLength(view)
+
+    val bytes = ByteArray(length.toInt())
+    buffer.readBuffer(offset, bytes, 0, bytes.size)
+
+    return bytes
   }
 
   /**

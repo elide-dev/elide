@@ -27,6 +27,9 @@ import elide.runtime.core.extensions.enableOptions
 import elide.runtime.core.extensions.setOption
 import elide.runtime.plugins.AbstractLanguagePlugin
 
+// Whether patched Espresso is in use.
+private const val USE_PATCHED_ESPRESSO = false
+
 /**
  * Language plugin providing support for JVM bytecode.
  *
@@ -75,7 +78,7 @@ import elide.runtime.plugins.AbstractLanguagePlugin
         "java.HotSwapAPI",
       )
     }
-    if (config.enableSourceIntegration) {
+    if (config.enableSourceIntegration && USE_PATCHED_ESPRESSO) {
       builder.option(
         "java.HostSourceLoader",
         "elide.runtime.gvm.jvm.JvmSourceLoader",

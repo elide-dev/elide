@@ -30,7 +30,7 @@
 </p>
 
 <p align="center">
-Latest: <code>1.0.0-beta9</code>
+Latest: <code>1.0.0-beta10</code>
 </p>
 <p align="center">
   Learn more at <a href="https://elide.dev">elide.dev</a> | <a href="https://docs.elide.dev">Docs, Guides, and Samples</a>
@@ -176,10 +176,10 @@ We provide a [setup action](https://github.com/marketplace/actions/setup-elide):
 
 ```yaml
 - name: "Setup: Elide"
-  uses: elide-dev/setup-elide@v2
+  uses: elide-dev/setup-elide@v3
   with:
     # any tag from the `elide-dev/elide` repo; omit for latest
-    version: 1.0.0-beta9
+    version: 1.0.0-beta10
 ```
 
 ### Using Elide from Gradle

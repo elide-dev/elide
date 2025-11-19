@@ -170,12 +170,12 @@ jobs:
         if: contains(matrix.runner, 'linux')
         run: sudo apt-get install -y libtool-bin build-essential libc6-dev
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           egress-policy: audit
           disable-sudo: ${{ contains(matrix.runner, 'linux') }}
       - name: "Setup: Checkout"
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           submodules: true
           persist-credentials: false
@@ -193,31 +193,31 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
         with:
           distribution: "graalvm"
           java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Bun"
-        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
+        uses: step-security/setup-bun@81c6b5758214d7e8b68a403c6a55a040e9b8879a # v2.0.3
         with:
           bun-version: "1.2.14"
       - name: "Setup: PNPM"
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
         with:
           version: "10.6.2"
           run_install: |
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
       - name: "Setup: Node"
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version: 23
           cache: "pnpm"
       - name: "Setup: Yarn"
         run: pnpm install -g yarn@1.22.19
       - name: "Setup: Artifacts"
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         continue-on-error: true
         with:
           merge-multiple: true
@@ -253,21 +253,21 @@ jobs:
           popd;
           echo "Binary compressed.";
       - name: "Artifacts: Debug Binary (Unix)"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.xz
       - name: "Artifacts: Debug Binary (Windows)"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide
       - name: "Artifacts: Dashboard Dump"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: success()
         with:
           name: cli-debug-report-${{ matrix.tag }}
@@ -320,12 +320,12 @@ jobs:
         if: contains(matrix.runner, 'linux')
         run: sudo apt-get install -y libtool-bin build-essential libc6-dev
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           egress-policy: audit
           disable-sudo: ${{ contains(matrix.runner, 'linux') }}
       - name: "Setup: Checkout"
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           submodules: true
           persist-credentials: false
@@ -343,21 +343,21 @@ jobs:
         with:
           arch: ${{ matrix.arch }}
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
         with:
           distribution: "graalvm"
           java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Setup: Node"
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version: 23
       - name: "Setup: Bun"
-        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
+        uses: step-security/setup-bun@81c6b5758214d7e8b68a403c6a55a040e9b8879a # v2.0.3
         with:
           bun-version: "1.2.14"
       - name: "Setup: PNPM"
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
         with:
           version: "10.6.2"
           run_install: |
@@ -366,7 +366,7 @@ jobs:
       - name: "Setup: Yarn"
         run: pnpm install -g yarn@1.22.19
       - name: "Setup: Artifacts"
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         continue-on-error: true
         with:
           merge-multiple: true
@@ -398,7 +398,7 @@ jobs:
             -Pversion=${{ inputs.version }} \
             -Pelide.version=${{ inputs.version }}
       - name: "Artifacts: Release Binary (Posix)"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: success() && contains(matrix.runner, 'windows') != true
         with:
           name: cli-release-${{ matrix.tag }}
@@ -408,7 +408,7 @@ jobs:
             ./packages/cli/build/nativeOptimizedCompile/elide-${{ inputs.version }}-${{ matrix.tag }}.*.tgz
             ./packages/cli/build/nativeOptimizedCompile/elide-${{ inputs.version }}-${{ matrix.tag }}.*.txz
       - name: "Artifacts: Release Binary (Windows)"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-release-${{ matrix.tag }}

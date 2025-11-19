@@ -89,11 +89,243 @@ import elide.testing.annotations.TestCase
       assertEquals(it, SQLitePrimitiveType.resolve(it.number))
     }
     assertThrows<Unresolved> {
-      SQLitePrimitiveType.resolve("foo")
-    }
-    assertThrows<Unresolved> {
       SQLitePrimitiveType.resolve(99)
     }
+  }
+
+  @Test fun testSqliteTypeAffinityResolution() {
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("VARCHAR"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("VARCHAR(255)"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("NVARCHAR"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("NVARCHAR(255)"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("CHAR"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("CHAR(10)"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("NCHAR"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("CLOB"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("CHARACTER"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("NATIVE CHARACTER"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("varchar"))
+    assertEquals(SQLitePrimitiveType.TEXT, SQLitePrimitiveType.resolve("VarChar"))
+
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("INT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("BIGINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("TINYINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("SMALLINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("MEDIUMINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("INT2"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("INT8"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("FLOATING POINT"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("bigint"))
+    assertEquals(SQLitePrimitiveType.INTEGER, SQLitePrimitiveType.resolve("BigInt"))
+
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("REAL"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DOUBLE"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DOUBLE PRECISION"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("FLOAT"))
+
+    assertEquals(SQLitePrimitiveType.BLOB, SQLitePrimitiveType.resolve("BLOB"))
+    assertEquals(SQLitePrimitiveType.BLOB, SQLitePrimitiveType.resolve(""))
+
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("NUMERIC"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DECIMAL"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DECIMAL(10,2)"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("BOOLEAN"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DATE"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DATETIME"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("DATETIME2"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("TIMESTAMP"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("BINARY"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("foo"))
+    assertEquals(SQLitePrimitiveType.REAL, SQLitePrimitiveType.resolve("UNKNOWN_TYPE"))
+  }
+
+  @Test fun `query table with type affinities`() = dual {
+    assertNotNull(SQLite.inMemory()).use { db ->
+      assertTrue(db.active)
+
+      db.exec("""
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY,
+          username VARCHAR(255),
+          email NVARCHAR(255),
+          age NUMERIC,
+          salary DECIMAL(10,2),
+          bio TEXT,
+          created_at DATETIME,
+          is_active BOOLEAN
+        );
+      """)
+
+      db.exec("""
+        INSERT INTO users (username, email, age, salary, bio, created_at, is_active)
+        VALUES ('alice', 'alice@example.com', 30, 75000.50, 'Software engineer', '2024-01-15', 1);
+      """)
+
+      val query = db.prepare("SELECT * FROM users;")
+      val results = query.all()
+      assertEquals(1, results.size)
+
+      val alice = results[0]
+      assertEquals("alice", alice["username"])
+      assertEquals("alice@example.com", alice["email"])
+      assertEquals(30, alice["age"])
+      assertEquals(75000.50, alice["salary"])
+      assertEquals("Software engineer", alice["bio"])
+      assertEquals("2024-01-15", alice["created_at"])
+      assertEquals(1, alice["is_active"])
+
+      db.close()
+    }
+  }.guest {
+    // language=JavaScript
+    """
+      const { ok, equal } = require("node:assert");
+      const { Database } = require("elide:sqlite");
+
+      const db = new Database();
+      ok(db);
+
+      db.exec(`
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY,
+          username VARCHAR(255),
+          email NVARCHAR(255),
+          age NUMERIC,
+          salary DECIMAL(10,2),
+          bio TEXT,
+          created_at DATETIME,
+          is_active BOOLEAN
+        );
+      `);
+
+      db.exec(`
+        INSERT INTO users (username, email, age, salary, bio, created_at, is_active)
+        VALUES ('alice', 'alice@example.com', 30, 75000.50, 'Software engineer', '2024-01-15', 1);
+      `);
+
+      const stmt = db.prepare("SELECT * FROM users;");
+      const results = stmt.all();
+
+      ok(results);
+      equal(results.length, 1);
+
+      const alice = results[0];
+      ok(alice);
+      equal(alice.username, "alice");
+      equal(alice.email, "alice@example.com");
+      equal(alice.age, 30);
+      equal(alice.salary, 75000.50);
+      equal(alice.bio, "Software engineer");
+      equal(alice.created_at, "2024-01-15");
+      equal(alice.is_active, 1);
+
+      db.close();
+    """
+  }
+
+  @Test fun `host - verify declared types map to primitive types`() {
+    assertNotNull(SQLite.inMemory()).use { db ->
+      assertTrue(db.active)
+
+      db.exec("""
+        CREATE TABLE test (
+          a VARCHAR(255),
+          b NUMERIC,
+          c DECIMAL(10,2),
+          d INTEGER,
+          e TEXT
+        )
+      """)
+
+      db.exec("INSERT INTO test VALUES ('text', 42, 3.14, 100, 'hello')")
+
+      val conn = db.connection()
+      val rs = conn.createStatement().executeQuery("SELECT * FROM test")
+      val metadata = rs.metaData
+
+      assertEquals("VARCHAR", metadata.getColumnTypeName(1))
+      assertEquals("NUMERIC", metadata.getColumnTypeName(2))
+      assertEquals("DECIMAL", metadata.getColumnTypeName(3))
+      assertEquals("INTEGER", metadata.getColumnTypeName(4))
+      assertEquals("TEXT", metadata.getColumnTypeName(5))
+
+      val results = db.query("SELECT * FROM test").all()
+      assertEquals(SQLitePrimitiveType.TEXT, results[0].columnTypes["a"])
+      assertEquals(SQLitePrimitiveType.REAL, results[0].columnTypes["b"])
+      assertEquals(SQLitePrimitiveType.REAL, results[0].columnTypes["c"])
+      assertEquals(SQLitePrimitiveType.INTEGER, results[0].columnTypes["d"])
+      assertEquals(SQLitePrimitiveType.TEXT, results[0].columnTypes["e"])
+
+      db.close()
+    }
+  }
+
+  @Test fun `numeric affinity stores values as multiple storage classes`() = dual {
+    assertNotNull(SQLite.inMemory()).use { db ->
+      assertTrue(db.active)
+
+      db.exec("""
+        CREATE TABLE test_numeric (
+          id INTEGER PRIMARY KEY,
+          value NUMERIC
+        );
+      """)
+
+      db.exec("INSERT INTO test_numeric (value) VALUES (42);")
+      db.exec("INSERT INTO test_numeric (value) VALUES (3.14);")
+      db.exec("INSERT INTO test_numeric (value) VALUES ('hello');")
+      db.exec("INSERT INTO test_numeric (value) VALUES ('123');")
+      db.exec("INSERT INTO test_numeric (value) VALUES ('45.67');")
+      db.exec("INSERT INTO test_numeric (value) VALUES (null);")
+
+      val results = db.query("SELECT * FROM test_numeric ORDER BY id;").all()
+      assertEquals(6, results.size)
+
+      assertEquals(SQLitePrimitiveType.REAL, results[0].columnTypes["value"])
+      assertEquals(42, results[0]["value"])
+      assertEquals(3.14, results[1]["value"])
+      assertEquals("hello", results[2]["value"])
+      assertEquals(123, results[3]["value"])
+      assertEquals(45.67, results[4]["value"])
+      assertNull(results[5]["value"])
+
+      db.close()
+    }
+  }.guest {
+    // language=JavaScript
+    """
+      const { ok, equal } = require("node:assert");
+      const { Database } = require("elide:sqlite");
+
+      const db = new Database();
+      ok(db);
+
+      db.exec(`
+        CREATE TABLE test_numeric (
+          id INTEGER PRIMARY KEY,
+          value NUMERIC
+        );
+      `);
+
+      db.exec("INSERT INTO test_numeric (value) VALUES (42);");
+      db.exec("INSERT INTO test_numeric (value) VALUES (3.14);");
+      db.exec("INSERT INTO test_numeric (value) VALUES ('hello');");
+      db.exec("INSERT INTO test_numeric (value) VALUES ('123');");
+      db.exec("INSERT INTO test_numeric (value) VALUES ('45.67');");
+      db.exec("INSERT INTO test_numeric (value) VALUES (null);");
+
+      const results = db.query("SELECT * FROM test_numeric ORDER BY id;").all();
+      equal(results.length, 6);
+
+      equal(results[0].value, 42);
+      equal(results[1].value, 3.14);
+      equal(results[2].value, "hello");
+      equal(results[3].value, 123);
+      equal(results[4].value, 45.67);
+      equal(results[5].value, null);
+
+      db.close();
+    """
   }
 
   @Test fun testRejectInvalidExtension() {

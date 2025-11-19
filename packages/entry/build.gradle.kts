@@ -94,6 +94,7 @@ val patched: Configuration by configurations.creating {
 val kotlincFlags = listOf(
   "-no-reflect",
   "-no-stdlib",
+  "-jvm-default=no-compatibility",
   "-Xjsr305=strict",
   "-Xabi-stability=stable",
   "-Xassertions=jvm",
@@ -103,7 +104,6 @@ val kotlincFlags = listOf(
   "-Xenhance-type-parameter-types-to-def-not-null",
   "-Xjdk-release=${kotlinTarget.target}",
   "-Xjspecify-annotations=strict",
-  "-Xjvm-default=all",
   "-Xno-call-assertions",
   "-Xno-param-assertions",
   "-Xno-receiver-assertions",

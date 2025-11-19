@@ -22,8 +22,8 @@ import jakarta.inject.Provider
 import jakarta.inject.Singleton
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.core.EntrypointRegistry
+import elide.runtime.core.RuntimeExecutor
 import elide.runtime.core.RuntimeLatch
-import elide.runtime.core.SharedContextFactory
 import elide.runtime.exec.GuestExecutor
 import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.GuestLanguage
@@ -44,11 +44,12 @@ import elide.runtime.gvm.internals.js.JsTimerExecutorProviderImpl
 import elide.runtime.gvm.internals.js.JsTimersIntrinsic
 import elide.runtime.gvm.internals.sqlite.ElideSqliteModule
 import elide.runtime.gvm.internals.testing.ElideTestingModule
+import elide.runtime.http.server.HttpServerEngine
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.IntrinsicsResolver
 import elide.runtime.intrinsics.ai.ElideLLMModule
 import elide.runtime.intrinsics.js.err.ValueErrorIntrinsic
-import elide.runtime.intrinsics.server.http.v2.flask.FlaskHttpIntrinsic
+import elide.runtime.intrinsics.python.flask.FlaskIntrinsic
 import elide.runtime.intrinsics.testing.TestingRegistrar
 import elide.runtime.javascript.*
 import elide.runtime.node.asserts.NodeAssertModule
@@ -94,7 +95,8 @@ import elide.runtime.plugins.env.EnvConfig
   vfsInitializerListener: VfsInitializerListener,
   testRegistrar: TestingRegistrar,
   entrypoint: EntrypointRegistry,
-  contextFactory: SharedContextFactory,
+  executor: RuntimeExecutor,
+  serverEngine: HttpServerEngine,
   latch: RuntimeLatch,
 ) : IntrinsicsResolver {
   init {
@@ -103,7 +105,8 @@ import elide.runtime.plugins.env.EnvConfig
     listener = vfsInitializerListener
     registrar = testRegistrar
     entrypointProvider = entrypoint
-    contextProvider = contextFactory
+    runtimeExecutor = executor
+    runtimeServerEngine = serverEngine
     runtimeLatch = latch
   }
 
@@ -113,7 +116,8 @@ import elide.runtime.plugins.env.EnvConfig
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var listener: VfsInitializerListener
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var registrar: TestingRegistrar
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var entrypointProvider: EntrypointRegistry
-    @CompilerDirectives.CompilationFinal @Volatile private lateinit var contextProvider: SharedContextFactory
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeExecutor: RuntimeExecutor
+    @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeServerEngine: HttpServerEngine
     @CompilerDirectives.CompilationFinal @Volatile private lateinit var runtimeLatch: RuntimeLatch
     @JvmStatic private val execProvider = GuestExecutorProvider { exec }
     @JvmStatic private val timerExecutor = JsTimerExecutorProviderImpl()
@@ -136,7 +140,11 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val timers = JsTimersIntrinsic(timerExecutor)
     @JvmStatic private val buffer = NodeBufferModule()
     @JvmStatic private val querystring = NodeQuerystringModule()
-    @JvmStatic private val http = NodeHttpModule()
+    @JvmStatic private val http = NodeHttpModule(
+      entrypointProvider = { entrypointProvider },
+      runtimeLatch = { runtimeLatch },
+      executorProvider = { runtimeExecutor },
+    )
     @JvmStatic private val https = NodeHttpsModule()
     @JvmStatic private val http2 = NodeHttp2Module()
     @JvmStatic private val encoding = JsEncodingIntrinsics()
@@ -163,7 +171,7 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val queueMicrotaskCallable = QueueMicrotaskCallable(execProvider)
     @JvmStatic private val messageChannel = MessageChannelBuiltin()
     @JvmStatic private val stringDecoder = NodeStringDecoderModule()
-    @JvmStatic private val process = NodeProcessModule(Provider { envConfigSupplier.get() })
+    @JvmStatic private val process = NodeProcessModule { envConfigSupplier.get() }
     @JvmStatic private val structuredClone = StructuredCloneBuiltin()
     @JvmStatic private val valueError = ValueErrorIntrinsic()
     @JvmStatic private val elideTesting = ElideTestingModule(registrarProvider)
@@ -175,10 +183,11 @@ import elide.runtime.plugins.env.EnvConfig
     @JvmStatic private val transformStream = TransformStreamIntrinsic()
     @JvmStatic private val browserStubs = BrowserStubs()
 
-    @JvmStatic private val flask = FlaskHttpIntrinsic(
-      runtimeLatchProvider = { runtimeLatch },
+    @JvmStatic private val flask = FlaskIntrinsic(
+      runtimeLatch = { runtimeLatch },
       entrypointProvider = { entrypointProvider },
-      contextProvider = { contextProvider },
+      runtimeExecutor = { runtimeExecutor },
+      serverEngine = { runtimeServerEngine },
     )
 
     // All built-ins and intrinsics.

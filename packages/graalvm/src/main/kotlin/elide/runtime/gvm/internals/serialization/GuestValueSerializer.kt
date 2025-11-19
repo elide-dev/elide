@@ -90,6 +90,6 @@ public data object GuestValueSerializer : SerializationStrategy<Value> {
       }
     }
 
-    else -> throw SerializationException("Cannot serialize non-guest values")
+    else -> encoder.encodeString(value.toString())
   }
 }

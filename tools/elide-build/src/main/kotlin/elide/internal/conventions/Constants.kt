@@ -84,7 +84,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.2.21-RC2"
+    const val KOTLIN_SDK_PIN = "2.2.21"
 
     /** Constant: pinned version of Kotlin Coroutines. */
     const val COROUTINES = "1.10.2"
@@ -159,7 +159,10 @@ public object Constants {
     const val OKIO = "3.16.2"
 
     /** GraalVM version. */
-    const val GRAALVM = "25.0.0"
+    const val GRAALVM = "25.0.1"
+
+    /** GraalVM version for Ruby artifacts. */
+    const val GRAALVM_RUBY = "25.0.0"
   }
 
   /** Kotlin conventions. */
@@ -216,7 +219,7 @@ public object Constants {
   /** Static library configuration values. */
   public object Elide {
     /** Version string for the library. */
-    public const val VERSION: String = "1.0.0-beta10-rc9"
+    public const val VERSION: String = "1.0.0-beta10"
 
     /** Maven group shared by Elide artifacts. */
     public const val GROUP: String = "dev.elide"
@@ -240,7 +243,7 @@ public object Constants {
       listOf(
         "-no-stdlib",
         "-no-reflect",
-        "-Xjvm-default=all",
+        "-jvm-default=no-compatibility",
         "-Xjsr305=strict",
         "-Xvalidate-bytecode",
         "-Xsam-conversions=indy",

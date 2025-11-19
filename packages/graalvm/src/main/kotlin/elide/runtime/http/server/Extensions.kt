@@ -1,0 +1,134 @@
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+package elide.runtime.http.server
+
+import io.netty.buffer.ByteBuf
+import io.netty.buffer.Unpooled
+import io.netty.channel.unix.DomainSocketAddress
+import io.netty.handler.codec.http.HttpRequest
+import io.netty.handler.codec.http.HttpResponse
+import java.net.InetSocketAddress
+import java.net.SocketAddress
+import java.net.UnixDomainSocketAddress
+import java.nio.charset.Charset
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+import kotlin.io.path.pathString
+
+/** Returns the string value of a header with the given [name] in this request, if it exists. */
+public fun HttpRequest.getHeader(name: CharSequence): String? = headers().get(name)
+
+/** Returns all values of a header with the given [name] in this request. */
+public fun HttpRequest.getHeaders(name: CharSequence): List<String> = headers().getAll(name).orEmpty()
+
+/** Adds a [value] to the header with the given [name] for this request. */
+public fun HttpResponse.addHeader(name: CharSequence, value: Any): HttpResponse = apply { headers().add(name, value) }
+
+/** Adds a group of [values] to the header with the given [name] for this request. */
+public fun HttpResponse.addHeaders(name: CharSequence, values: Iterable<Any>): HttpResponse = apply {
+  headers().add(name, values)
+}
+
+/** Sets the [value] of the header with the given [name] for this request, overwriting any existing values. */
+public fun HttpResponse.setHeader(name: CharSequence, value: Any): HttpResponse = apply { headers().set(name, value) }
+
+/** Sets the [values] of the header with the given [name] for this request, overwriting any existing values. */
+public fun HttpResponse.setHeaders(name: CharSequence, values: Iterable<Any>): HttpResponse = apply {
+  headers().set(name, values)
+}
+
+/** Remove a header with the given [name] from this request. */
+public fun HttpResponse.removeHeader(name: CharSequence): HttpResponse = apply { headers().remove(name) }
+
+/** Push raw [bytes] wrapped as a [ByteBuf][io.netty.buffer.ByteBuf] to the response body. */
+public fun HttpResponseBody.Writer.write(bytes: ByteArray) {
+  write(Unpooled.wrappedBuffer(bytes))
+}
+
+/** Encode the given string [content] and push it to the response body. */
+public fun HttpResponseBody.Writer.write(content: String, charset: Charset = Charsets.UTF_8) {
+  write(Unpooled.wrappedBuffer(content.toByteArray(charset)))
+}
+
+/**
+ * Attach a content producer to this response body, calling [onPull] whenever new data is requested. The [onClose]
+ * function is called when the producer is detached from the body due to end of data or closing.
+ */
+public inline fun HttpResponseBody.source(
+  crossinline onAttached: (HttpResponseBody.Writer) -> Unit = {},
+  crossinline onClose: (Throwable?) -> Unit = {},
+  crossinline onPull: (HttpResponseBody.Writer) -> Unit
+): Unit = source(
+  object : HttpResponseSource {
+    @Volatile private var handle: HttpResponseBody.Writer? = null
+
+    override fun onPull() = onPull(handle ?: error("Pulled before attached"))
+    override fun onAttached(writer: HttpResponseBody.Writer) {
+      handle = writer
+      onAttached(writer)
+    }
+
+    override fun onClose(failure: Throwable?) {
+      handle = null
+      onClose(failure)
+    }
+  },
+)
+
+/** Write a single [data] chunk when pulled and close the stream immediately after. */
+public fun HttpResponseBody.source(data: ByteBuf) {
+  source { it.write(data); it.end() }
+}
+
+/**
+ * Attach a content consumer to this request body, calling [onRead] whenever new data is received. The [onClose]
+ * function is called when the producer is detached from the body due to end of data or closing.
+ */
+public inline fun HttpRequestBody.consume(
+  crossinline onAttached: (HttpRequestBody.Reader) -> Unit = { it.pull() },
+  crossinline onClose: (Throwable?) -> Unit = {},
+  crossinline onRead: (ByteBuf, HttpRequestBody.Reader) -> Unit
+): Unit = consume(
+  object : HttpRequestConsumer {
+    @Volatile private var handle: HttpRequestBody.Reader? = null
+
+    override fun onRead(content: ByteBuf) = onRead(content, handle ?: error("Read before attached"))
+    override fun onAttached(reader: HttpRequestBody.Reader) {
+      handle = reader
+      onAttached(reader)
+    }
+
+    override fun onClose(failure: Throwable?) {
+      handle = null
+      onClose(failure)
+    }
+  },
+)
+
+/**
+ * Returns the hostname for this address if it points to a socket, or the file path if it represents a Unix domain
+ * socket. Unrecognized address types are silently ignored and will return `null`.
+ */
+public fun SocketAddress.hostnameOrDomainPath(): String? = when (this) {
+  is InetSocketAddress -> hostName
+  is DomainSocketAddress -> path()
+  is UnixDomainSocketAddress -> path.pathString
+  else -> null
+}
+
+/** Returns the port number for this address, if it is an [InetSocketAddress], or `null` otherwise. */
+@OptIn(ExperimentalContracts::class)
+public fun SocketAddress.portOrNull(): Int? {
+  contract { returnsNotNull() implies (this@portOrNull is InetSocketAddress) }
+  return if (this is InetSocketAddress) port else null
+}

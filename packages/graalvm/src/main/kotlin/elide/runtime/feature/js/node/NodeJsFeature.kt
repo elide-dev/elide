@@ -34,7 +34,6 @@ import elide.runtime.node.domain.NodeDomain
 import elide.runtime.node.events.NodeEventsModuleFacade
 import elide.runtime.node.fs.FilesystemBase
 import elide.runtime.node.fs.NodeFilesystemProxy
-import elide.runtime.node.http.NodeHttp
 import elide.runtime.node.http2.NodeHttp2
 import elide.runtime.node.https.NodeHttps
 import elide.runtime.node.inspector.NodeInspector
@@ -66,6 +65,7 @@ import elide.runtime.intrinsics.js.node.process.ProcessStandardStream
 import elide.runtime.intrinsics.js.node.stream.Duplex
 import elide.runtime.intrinsics.js.node.stream.StatefulStream
 import elide.runtime.intrinsics.js.node.stream.Writable
+import elide.runtime.node.http.NodeHttp
 
 // Whether to register modules for reflective access.
 private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
@@ -149,9 +149,9 @@ private const val REGISTER_ALL_MODULES_FOR_REFLECTION = true
     cls(NodeFilesystemProxy::class)
 
     // `http`, `http2`, `https`
-    cls(HTTPAPI::class)
-    cls(HTTP2API::class)
-    cls(HTTPSAPI::class)
+    cls(HttpAPI::class)
+    cls(Http2API::class)
+    cls(HttpsAPI::class)
     cls(NodeHttp::class)
     cls(NodeHttp2::class)
     cls(NodeHttps::class)

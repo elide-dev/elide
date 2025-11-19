@@ -72,6 +72,9 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     /** Whether to enable dependencies (installation-aware). */
     public val dependencies: Boolean
 
+    /** Whether to auto-install dependencies if needed. */
+    public val install: Boolean
+
     /** Whether to download source dependencies (installation-aware). */
     public val sources: Boolean
 
@@ -103,6 +106,7 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override val verbose: Boolean,
     override val caching: Boolean,
     override val dependencies: Boolean,
+    override val install: Boolean,
     override val dry: Boolean,
     override val checks: Boolean,
     override val buildMode: BuildMode,
@@ -113,6 +117,7 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override fun toMutable(): MutableBuildSettings = MutableBuildSettings(
       caching = caching,
       dependencies = dependencies,
+      install = install,
       preserve = preserve,
       release = release,
       dry = dry,
@@ -138,6 +143,7 @@ public fun interface BuildConfigurator : ProjectConfigurator {
     override var release: Boolean = false,
     override var debug: Boolean = false,
     override var dependencies: Boolean = true,
+    override var install: Boolean = true,
     override var dry: Boolean = false,
     override var checks: Boolean = true,
     override var buildMode: BuildMode = BuildMode.default(),
@@ -149,6 +155,7 @@ public fun interface BuildConfigurator : ProjectConfigurator {
       caching = caching,
       preserve = preserve,
       dependencies = dependencies,
+      install = install,
       checks = checks,
       dry = dry,
       release = release,

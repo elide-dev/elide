@@ -43,6 +43,7 @@ import elide.runtime.gvm.internals.intrinsics.ElideIntrinsic
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.builder.ToolBuildCommand
 import elide.tool.cli.cmd.builder.ToolWhichCommand
+import elide.tool.cli.cmd.classpath.ClasspathCommand
 import elide.tool.cli.cmd.deps.AddCommand
 import elide.tool.cli.cmd.deps.InstallCommand
 import elide.tool.cli.cmd.dev.DevCommand
@@ -56,6 +57,7 @@ import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
+import elide.tool.cli.cmd.s3.ToolS3Command
 import elide.tool.cli.cmd.secrets.ToolSecretsCommand
 import elide.tool.cli.cmd.tool.jar.JarToolAdapter
 import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
@@ -112,6 +114,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     ToolShellCommand::class,
     ToolBuildCommand::class,
     DevCommand::class,
+    ClasspathCommand::class,
     ToolProjectCommand::class,
     InitCommand::class,
     InstallCommand::class,
@@ -132,6 +135,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     McpCommand::class,
     Elide.Completions::class,
     ToolSecretsCommand::class,
+    ToolS3Command::class,
   ],
   customSynopsis = [
     "",

@@ -61,6 +61,8 @@ public data class ElidePackageManifest(
   val lockfile: LockfileSettings? = null,
   val web: WebSettings? = null,
   val secrets: SecretSettings? = null,
+  val engine: RuntimeEngineSettings? = null,
+  val server: ServerSettings? = null,
 ) : PackageManifest {
   @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
 
@@ -81,7 +83,6 @@ public data class ElidePackageManifest(
 
   @Serializable public data class JarResource(
     val path: String,
-    val position: String,
   )
 
   @Serializable public data class ProjectSourceSpec(
@@ -137,7 +138,7 @@ public data class ElidePackageManifest(
   @Serializable public data class Jar(
     val name: String? = null,
     val sources: List<String> = emptyList(),
-    val resources: List<JarResource> = emptyList(),
+    val resources: Map<String, JarResource> = emptyMap(),
     val manifest: Map<String, String> = emptyMap(),
     val options: JarOptions = JarOptions(),
     override val from: List<String> = emptyList(),
@@ -528,6 +529,12 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class PythonSettings(
     val debug: Boolean = false,
+    val wsgi: WsgiSettings = WsgiSettings(),
+  )
+
+  @JvmRecord @Serializable public data class WsgiSettings(
+    val name: String? = null,
+    val args: List<String>? = null,
   )
 
   @JvmRecord @Serializable public data class RubySettings(
@@ -588,6 +595,19 @@ public data class ElidePackageManifest(
     val profiles: List<String> = emptyList(),
   )
 
+  @Serializable public enum class NativeImageDriverMode (override val symbol: String) : Symbolic<String> {
+    EMBEDDED("embedded"),
+    EXTERNAL("external");
+
+    public companion object: Symbolic.SealedResolver<String, NativeImageDriverMode> {
+      override fun resolve(symbol: String): NativeImageDriverMode = when (symbol) {
+        "embedded" -> EMBEDDED
+        "external" -> EXTERNAL
+        else -> throw unresolved(symbol)
+      }
+    }
+  }
+
   @JvmRecord @Serializable public data class NativeImageOptions(
     val verbose: Boolean = false,
     val linkAtBuildTime: NativeImageLinkAtBuildTime = NativeImageLinkAtBuildTime(),
@@ -595,6 +615,7 @@ public data class ElidePackageManifest(
     val exclusions: NativeImageExclusions = NativeImageExclusions(),
     val optimization: OptimizationLevel = OptimizationLevel.AUTO,
     val pgo: ProfileGuidedOptimization = ProfileGuidedOptimization(),
+    val driverMode: NativeImageDriverMode = NativeImageDriverMode.EMBEDDED,
     val flags: List<String> = emptyList(),
     val cflags: List<String> = emptyList(),
     val ldflags: List<String> = emptyList(),
@@ -684,6 +705,59 @@ public data class ElidePackageManifest(
     val project: ProjectRemoteSettings? = null,
     val github: GithubRemoteSettings? = null,
   )
+
+  @JvmRecord @Serializable public data class RuntimeEngineSettings(
+    val maxContexts: Int? = null,
+  )
+
+  @JvmRecord @Serializable public data class ServerSettings(
+    val address: BindingAddress? = null,
+    val cleartext: Boolean = true,
+    val transport: String? = null,
+    val https: HttpsServerSettings? = null,
+    val http3: Http3ServerSettings? = null,
+    val serverName: String? = null,
+  ) {
+    @Serializable public sealed interface SSLCertificate {
+      @JvmRecord @Serializable public data class LocalFileCertificate(
+        val certFile: String,
+        val keyFile: String,
+        val keyPassphrase: String? = null,
+      ) : SSLCertificate
+
+      @JvmRecord @Serializable public data class SelfSignedCertificate(
+        val subject: String? = null,
+        val notBefore: Long? = null,
+        val notAfter: Long? = null,
+      ) : SSLCertificate
+    }
+
+    @Serializable public sealed interface BindingAddress {
+      @Serializable @JvmInline public value class DomainSocketAddress(public val path: String) : BindingAddress
+      @JvmRecord @Serializable public data class SocketAddress(
+        public val hostname: String? = null,
+        public val port: Int? = null,
+      ) : BindingAddress
+    }
+
+    @JvmRecord @Serializable public data class HttpsServerSettings(
+      val certificate: SSLCertificate,
+      val address: BindingAddress? = null,
+    )
+
+    @JvmRecord @Serializable public data class Http3ServerSettings(
+      val certificate: SSLCertificate,
+      val address: BindingAddress? = null,
+      val advertise: Boolean = false,
+    )
+
+    public companion object {
+      public const val TRANSPORT_IO_URING: String = "io_uring"
+      public const val TRANSPORT_EPOLL: String = "epoll"
+      public const val TRANSPORT_KQUEUE: String = "kqueue"
+      public const val TRANSPORT_NIO: String = "nio"
+    }
+  }
 }
 
 public fun NpmDependencies.merge(other: NpmDependencies): NpmDependencies {

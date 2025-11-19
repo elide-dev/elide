@@ -18,13 +18,13 @@ import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.intrinsics.js.node.HTTPSAPI
+import elide.runtime.intrinsics.js.node.HttpsAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
 // Installs the Node `https` module into the intrinsic bindings.
 @Intrinsic internal class NodeHttpsModule : AbstractNodeBuiltinModule() {
   private val singleton by lazy { NodeHttps.create() }
-  internal fun provide(): HTTPSAPI = singleton
+  internal fun provide(): HttpsAPI = singleton
 
   override fun install(bindings: MutableIntrinsicBindings) {
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.HTTPS)) { singleton }
@@ -34,7 +34,7 @@ import elide.runtime.lang.javascript.NodeModuleName
 /**
  * # Node API: `https`
  */
-internal class NodeHttps private constructor () : ReadOnlyProxyObject, HTTPSAPI {
+internal class NodeHttps private constructor () : ReadOnlyProxyObject, HttpsAPI {
   //
 
   internal companion object {

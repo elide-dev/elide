@@ -377,6 +377,7 @@ internal class NativeImageBuildConfigurator : BuildConfigurator {
         inputs,
         outputs,
         projectRoot = config.projectRoot,
+        driverMode = artifact.options.driverMode,
       )
       driver.invoke(
         object : AbstractTool.EmbeddedToolState {

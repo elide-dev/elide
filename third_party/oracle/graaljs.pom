@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.graalvm.js</groupId>
   <artifactId>js</artifactId>
-  <version>24.2.2-elide-1.0.0-beta9</version>
+  <version>24.2.2-elide-1.0.0-beta10</version>
   <packaging>pom</packaging>
   <url>http://www.graalvm.org/</url>
   <name>Js Enterprise</name>

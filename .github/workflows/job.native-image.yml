@@ -204,12 +204,12 @@ jobs:
 
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           disable-sudo: false
           egress-policy: audit
       - name: "Setup: Checkout"
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:
           fetch-depth: 0
           submodules: true
@@ -234,7 +234,7 @@ jobs:
         if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
         run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev libtool libtool-bin
       - name: "Setup: Rust"
-        uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0
+        uses: actions-rust-lang/setup-rust-toolchain@1780873c7b576612439a134613cc4cc74ce5538c # v1.15.2
         with:
           toolchain: stable
           cache: true # handled by sccache
@@ -244,25 +244,29 @@ jobs:
       - name: "Setup: Rust Caching"
         run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@e140024fdc2d95d3c7e10a636887a91090d29990 # v1.4.0
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
         with:
           distribution: "graalvm"
           java-version: "25"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Elide"
+        uses: elide-dev/setup-elide@d91d5859c0722417ea1ac4c682382ac8a6622b80 # v3.0.0
+        with:
+          version: "1.0.0-beta10"
       - name: "Setup: PNPM"
-        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
         with:
           version: "10.6.2"
       - name: "Setup: Node"
-        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version: 23
       - name: "Setup: Bun"
-        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
+        uses: step-security/setup-bun@81c6b5758214d7e8b68a403c6a55a040e9b8879a # v2.0.3
         with:
           bun-version: "1.2.14"
       - name: "Setup: uv"
-        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
+        uses: astral-sh/setup-uv@5a7eac68fb9809dea845d802897dc5c723910fa3 # v7.1.3
       - name: "Setup: Dependencies"
         run: |
           echo "Setting up venv..."
@@ -298,9 +302,11 @@ jobs:
             yarn
       - name: "Setup: Gradle Settings"
         run: cp -fv ./.github/workflows/gradle-ci.properties ~/.gradle/gradle.properties
+      - name: "Setup: Gradle Settings (Globals)"
+        run: cp -fv /home/ci-agent/gradle-ci.properties ~/.gradle/gradle.properties || echo "No global settings."
       - name: "Setup: Cosign"
         if: inputs.pack
-        uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
       - name: "Build Environment"
         run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
       - name: "Overrides: Version"
@@ -336,7 +342,7 @@ jobs:
             -Pelide.optMode=${{ inputs.opt }} \
             -Pelide.stamp=${{ inputs.release }} \
             -Pelide.pgo=${{ inputs.pgo }} \
-            -Pelide.static=${{ inputs.static }} \
+            -Pelide.static=${{ inputs.static == true && 'true' || 'false' }} \
             -Pelide.release=${{ inputs.release }} \
             -Pelide.buildMode=${{ inputs.release == true && 'release' || 'dev' }}
       - name: "Setup: Signing Keys"
@@ -345,7 +351,7 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
           gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
       - name: "Artifact: Build Outputs"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         id: build-artifact
         with:
           name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}
@@ -381,7 +387,7 @@ jobs:
           tree -L 3 staging/
           echo "Release built."
       - name: "Artifact: Release Package"
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         id: pack-artifact
         if: inputs.pack
         with:

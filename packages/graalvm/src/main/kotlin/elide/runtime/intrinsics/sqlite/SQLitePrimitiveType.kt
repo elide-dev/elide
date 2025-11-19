@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Elide Technologies, Inc.
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
  *
  * Licensed under the MIT license (the "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
@@ -120,18 +120,35 @@ private const val SQLITE_INT_BLOB: Int = 3
     }
 
     /**
-     * Resolve an SQLite primitive type by its string symbol.
+     * Resolve an SQLite primitive type by its string symbol or type affinity.
      *
-     * @param symbol The string symbol to resolve.
+     * @param symbol The string symbol or type name to resolve.
      * @return The resolved SQLite primitive type.
-     * @throws Symbolic.Unresolved if the symbol is unrecognized.
+     * @see <a href="https://www.sqlite.org/datatype3.html#determination_of_column_affinity">SQLite Type Affinity</a>
      */
-    override fun resolve(symbol: String): SQLitePrimitiveType = when (symbol) {
-      SQLITE_PRIMITIVE_TEXT -> TEXT
-      SQLITE_PRIMITIVE_INTEGER -> INTEGER
-      SQLITE_PRIMITIVE_REAL -> REAL
-      SQLITE_PRIMITIVE_BLOB -> BLOB
-      else -> throw unresolved(symbol)
+    override fun resolve(symbol: String): SQLitePrimitiveType {
+      when (symbol) {
+        SQLITE_PRIMITIVE_TEXT -> return TEXT
+        SQLITE_PRIMITIVE_INTEGER -> return INTEGER
+        SQLITE_PRIMITIVE_REAL -> return REAL
+        SQLITE_PRIMITIVE_BLOB -> return BLOB
+      }
+
+      val upperSymbol = symbol.uppercase()
+
+      if (upperSymbol.contains("INT")) return INTEGER
+
+      if (upperSymbol.contains("CHAR") ||
+          upperSymbol.contains("CLOB") ||
+          upperSymbol.contains("TEXT")) return TEXT
+
+      if (upperSymbol.contains("BLOB") || upperSymbol.isEmpty()) return BLOB
+
+      if (upperSymbol.contains("REAL") ||
+          upperSymbol.contains("FLOA") ||
+          upperSymbol.contains("DOUB")) return REAL
+
+      return REAL
     }
   }
 }

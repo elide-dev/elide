@@ -13,9 +13,9 @@ RUN apt-get update \
   && useradd dev -g elide -m -s /bin/bash \
   && rm -rf /var/lib/apt/lists/*
 
-ENV ELIDE_VERSION=1.0.0-beta9
-ENV ELIDE_DIGEST_LINUX_AMD64=26eb0e66d08d97911db9d021051f87a448015a48ddfebc36e7f76f6a02af263c
-ENV ELIDE_DIGEST_LINUX_ARM64=34c3aed8a9d3ac243ea62100c8ee1e17ce2d6e218f578626916feb7feb9b84ef
+ENV ELIDE_VERSION=1.0.0-beta10
+ENV ELIDE_DIGEST_LINUX_AMD64=8d5e563b3910d9475d2fff8fcf8e287a41524ef3c9766bd645f972b6ef10a743
+ENV ELIDE_DIGEST_LINUX_ARM64=e6489c93c53dfe3a12360fb09a7946bf4d56d8046b91e6f5075093030976e00c
 
 USER dev
 RUN ELIDE_ARCH=$(uname -m) \
@@ -43,10 +43,10 @@ FROM debian:sid-slim@sha256:3e62bb802f97815491469a127cfef29a8266977b8fde5f0c0954
 LABEL org.opencontainers.image.vendor=Elide
 LABEL org.opencontainers.image.title="Elide Runtime"
 LABEL org.opencontainers.image.description="Elide runtime CLI as a container image"
-LABEL org.opencontainers.image.version=1.0.0-beta9
+LABEL org.opencontainers.image.version=1.0.0-beta10
 LABEL org.opencontainers.image.url=https://github.com/elide-dev/elide
 LABEL org.opencontainers.image.base.name=debian:sid-slim
-LABEL org.opencontainers.image.base.digest=sha256:5e814211fbdb43856892292a315c740e8882387709a1f51ee266884931ff5eac
+LABEL org.opencontainers.image.base.digest=sha256:3e62bb802f97815491469a127cfef29a8266977b8fde5f0c09541d761b36a6a2
 LABEL org.opencontainers.image.source=https://github.com/elide-dev/elide/blob/main/tools/images/elide/Dockerfile
 
 RUN groupadd elide \
@@ -66,7 +66,7 @@ COPY --from=builder --chown=dev:elide /home/dev/elide /home/dev/elide
 COPY entrypoint.sh /home/dev/elide/entrypoint.sh
 USER dev
 
-ENV ELIDE_VERSION=1.0.0-beta9
+ENV ELIDE_VERSION=1.0.0-beta10
 
 RUN echo "Setting up Elide..." \
   && mkdir -p /home/dev/.elide /home/dev/workdir \

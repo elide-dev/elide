@@ -19,7 +19,8 @@ import java.util.*
 import java.util.concurrent.Future
 import elide.runtime.Logging
 import elide.runtime.core.*
-import elide.runtime.core.EngineLifecycleEvent.*
+import elide.runtime.core.EngineLifecycleEvent.ContextCreated
+import elide.runtime.core.EngineLifecycleEvent.EngineCreated
 import elide.runtime.core.EnginePlugin.InstallationScope
 import elide.runtime.core.EnginePlugin.Key
 import elide.runtime.gvm.internals.vfs.AbstractDelegateVFS
@@ -68,18 +69,9 @@ import elide.runtime.vfs.languageVfsRegistry
         logging.debug("No host access requested, using in-memory vfs")
         acquireEmbeddedVfs(config.writable, config.deferred, config.registeredBundles)
       } else {
-        // python and ruby have their own virtual filesystem delegates
-        if (!config.languages.any { it.languageId == "ruby" }) {
-          // if the configuration requires host access, we use a hybrid vfs
-          logging.debug("Host access requested, using hybrid vfs")
-          HybridVfs.acquire(config.writable, config.registeredBundles)
-        } else acquireCompoundVfs(
-          config.useHost,
-          config.writable,
-          config.deferred,
-          config.registeredBundles,
-          config.languages,
-        )
+        // if the configuration requires host access, we use a hybrid vfs
+        logging.debug("Host access requested, using hybrid vfs")
+        HybridVfs.acquire(config.writable, config.registeredBundles)
       }.also { vfs ->
         onVfsReady(vfs)
       }
@@ -103,10 +95,12 @@ import elide.runtime.vfs.languageVfsRegistry
     }
 
     // use the configured VFS for each context
-    builder.allowIO(IOAccess.newBuilder()
+    builder.allowIO(
+      IOAccess.newBuilder()
         .fileSystem(fileSystem.get())
         .allowHostSocketAccess(true)  // @TODO(sgammon): needs policy enforcement
-        .build())
+        .build(),
+    )
   }
 
   /** Identifier for the [Vfs] plugin, which configures contexts with a custom file system. */
@@ -140,7 +134,7 @@ import elide.runtime.vfs.languageVfsRegistry
     private fun resolveLanguageVfs(language: GuestLanguage): elide.runtime.vfs.LanguageVFS? {
       return LanguageVFS.delegate(
         language.languageId,
-        languageVfsRegistry()[language.languageId] ?: return null
+        languageVfsRegistry()[language.languageId] ?: return null,
       )
     }
 
@@ -166,6 +160,7 @@ import elide.runtime.vfs.languageVfsRegistry
           HostVFS.acquireWritable() as AbstractDelegateVFS<*>
         else
           HostVFS.acquire() as AbstractDelegateVFS<*>
+
         else -> embedded
       }
 
@@ -173,9 +168,11 @@ import elide.runtime.vfs.languageVfsRegistry
         // if the host is primary, the embedded vfs is the first overlay
         hostPrimary -> Collections.singletonList(embedded)
         else -> emptyList()
-      }.plus(languages.mapNotNull {
-        resolveLanguageVfs(it)
-      })
+      }.plus(
+        languages.mapNotNull {
+          resolveLanguageVfs(it)
+        },
+      )
 
       return CompoundVFSImpl.create(primary, overlays, hostPrimary, hostPrimary)
     }

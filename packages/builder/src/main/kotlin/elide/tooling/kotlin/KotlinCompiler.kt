@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.com.intellij.openapi.Disposable
 import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
-import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.Services
 import org.jetbrains.kotlin.incremental.destinationAsFile
@@ -381,7 +380,6 @@ public val kotlinc: Tool.CommandLineTool = Tool.describe(
         debugLog("Building Kotlin compiler services")
 
         buildSet {
-          addAll(ServiceLoaderLite.loadImplementations(ComponentRegistrar::class.java, classLoader))
           addAll(ServiceLoaderLite.loadImplementations(CompilerPluginRegistrar::class.java, classLoader))
           add(org.jetbrains.kotlin.powerassert.PowerAssertCommandLineProcessor())
           add(dev.zacsweers.redacted.compiler.RedactedCommandLineProcessor())

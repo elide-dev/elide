@@ -524,6 +524,9 @@ dependencies {
   // Netty
   implementation(libs.netty.codec.http)
   implementation(libs.netty.codec.http2)
+  implementation(libs.netty.codec.http3)
+  implementation(libs.netty.codec.quic)
+  implementation(libs.netty.pkitesting)
 
   val arch = when (System.getProperty("os.arch")) {
     "amd64", "x86_64" -> "x86_64"
@@ -775,6 +778,19 @@ val buildRustNativesForHostRelease by tasks.registering(Exec::class) {
 
   executable = "cargo"
   args(baseCargoFlags.plus("--release"))
+  environment("JAVA_HOME", System.getProperty("java.home"))
+  environment("MACOSX_DEPLOYMENT_TARGET", "15.0")
+
+  outputs.upToDateWhen { true }
+  outputs.dir(targetDir)
+}
+
+val buildRustNativesForHostDebug by tasks.registering(Exec::class) {
+  workingDir(rootDir)
+  dependsOn("buildThirdPartyNatives")
+
+  executable = "cargo"
+  args(baseCargoFlags)
   environment("JAVA_HOME", System.getProperty("java.home"))
   environment("MACOSX_DEPLOYMENT_TARGET", "15.0")
 

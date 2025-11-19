@@ -25,4 +25,20 @@ class PipDependencies {
 }
 
 /// Configures Python language features and settings.
-class PythonSettings {}
+class PythonSettings {
+  /// Enable additional Python debugging features.
+  debug: Boolean = false
+
+  /// Configure the project as a WSGI application using Elide's HTTP engine.
+  wsgi: WsgiEntrypoint = new {}
+}
+
+class WsgiEntrypoint {
+  /// Name of the callable to be used as the WSGI application. If arguments
+  /// are provided via `args`, this name points to a callable that produces
+  /// the application instead.
+  name: String? = null
+
+  /// Optional arguments passed to the `application` entrypoint callable.
+  args: Listing<String> = new {}
+}

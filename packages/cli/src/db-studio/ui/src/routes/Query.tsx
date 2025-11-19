@@ -11,6 +11,9 @@ import { format } from 'sql-formatter'
 import { useQueryExecution } from '../hooks/useQueryExecution'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
 import { DataTable } from '../components/DataTable'
+import { DataTableProvider } from '@/contexts/DataTableContext'
+import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
 export default function Query() {
   const { dbIndex } = useParams()
@@ -46,6 +49,16 @@ export default function Query() {
       console.error('Formatting error:', err)
     }
   }
+
+  // Memoize data object for DataTable
+  const tableData = useMemo(() => {
+    if (!result || !('data' in result)) return null
+    return {
+      columns: result.columns,
+      rows: result.data.map((row) => result.columns.map((col) => row[col.name])),
+      metadata: result.metadata,
+    }
+  }, [result])
 
   const sqlRef = useRef(sql)
   const executeQueryRef = useRef(executeQuery)
@@ -198,20 +211,8 @@ export default function Query() {
           <>
             {'data' in result ? (
               <>
-                {result.data.length > 0 ? (
-                  <DataTable
-                    data={{
-                      columns: result.columns,
-                      rows: result.data.map((row) => result.columns.map((col) => row[col.name])),
-                      metadata: result.metadata,
-                    }}
-                    showControls={false}
-                    showPagination={false}
-                    showMetadata={true}
-                    totalRows={result.data.length}
-                    pagination={{ limit: result.data.length, offset: 0 }}
-                    onPaginationChange={() => {}}
-                  />
+                {result.data.length > 0 && tableData ? (
+                  <QueryResultsTable tableData={tableData} totalRows={result.data.length} />
                 ) : (
                   <div className="px-6 pt-6 text-gray-500 text-sm">No rows returned</div>
                 )}
@@ -250,5 +251,80 @@ export default function Query() {
         )}
       </div>
     </div>
+  )
+}
+
+/**
+ * Component to render query results in a DataTable
+ * Creates a simple table instance without server-side state
+ */
+function QueryResultsTable({
+  tableData,
+  totalRows,
+}: {
+  tableData: { columns: any[]; rows: unknown[][]; metadata: any }
+  totalRows: number
+}) {
+  // Build TanStack Table columns
+  const tableColumns: ColumnDef<Record<string, unknown>>[] = useMemo(() => {
+    return tableData.columns.map((col) => ({
+      accessorKey: col.name,
+      header: col.name,
+      cell: ({ getValue }) => {
+        const value = getValue()
+        if (value === null || value === undefined)
+          return <span className="text-gray-500 font-normal">NULL</span>
+        return String(value)
+      },
+    }))
+  }, [tableData.columns])
+
+  // Build TanStack Table data
+  const tableRows: Record<string, unknown>[] = useMemo(() => {
+    return tableData.rows.map((row) =>
+      tableData.columns.reduce(
+        (acc, col, idx) => {
+          acc[col.name] = row[idx]
+          return acc
+        },
+        {} as Record<string, unknown>
+      )
+    )
+  }, [tableData.rows, tableData.columns])
+
+  // Create TanStack Table instance (no sorting, filtering, or pagination)
+  const table = useReactTable({
+    data: tableRows,
+    columns: tableColumns,
+    getCoreRowModel: getCoreRowModel(),
+  })
+
+  // Build context value
+  const contextValue = useMemo(
+    () => ({
+      table,
+      columns: tableData.columns,
+      rowCount: tableData.rows.length,
+      metadata: tableData.metadata,
+      pagination: { limit: totalRows, offset: 0 },
+      sorting: { column: null, direction: null },
+      appliedFilters: [],
+      onPaginationChange: () => {},
+      onSortingChange: () => {},
+      onFiltersChange: () => {},
+      config: {
+        totalRows,
+        isLoading: false,
+        showControls: false,
+        showPagination: false,
+      },
+    }),
+    [table, tableData, totalRows]
+  )
+
+  return (
+    <DataTableProvider value={contextValue}>
+      <DataTable />
+    </DataTableProvider>
   )
 }

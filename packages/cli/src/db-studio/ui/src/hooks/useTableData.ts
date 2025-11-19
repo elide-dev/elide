@@ -1,28 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { API_BASE_URL } from '../config'
-import type { Filter } from '@/lib/types'
-
-export type ColumnMetadata = {
-  name: string
-  type: string
-  nullable: boolean
-  primaryKey: boolean
-  defaultValue?: string | number | null
-  foreignKey?: {
-    table: string
-    column: string
-    onUpdate?: string
-    onDelete?: string
-  }
-  unique?: boolean
-  autoIncrement?: boolean
-}
-
-export type QueryMetadata = {
-  executionTimeMs: number
-  sql: string
-  rowCount: number
-}
+import type { Filter, ColumnMetadata, QueryMetadata, PaginationParams, SortingParams } from '@/lib/types'
 
 export type TableData = {
   name: string
@@ -30,16 +8,6 @@ export type TableData = {
   rows: unknown[][]
   totalRows: number
   metadata: QueryMetadata
-}
-
-export type PaginationParams = {
-  limit: number
-  offset: number
-}
-
-export type SortingParams = {
-  column: string | null
-  direction: 'asc' | 'desc' | null
 }
 
 async function fetchTableData(

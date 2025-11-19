@@ -16,6 +16,10 @@ package elide.tool.cli.cmd.adopt
 import io.micronaut.core.annotation.Introspected
 import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
+import picocli.CommandLine.Parameters
+import java.nio.file.Path
+import kotlin.io.path.absolute
+import kotlin.io.path.exists
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
@@ -39,9 +43,15 @@ import elide.tool.cli.ToolState
   ],
   description = [
     "Adopt build files from other tools to Elide format.",
+    "Automatically detects build system if path is provided.",
   ],
   customSynopsis = [
+    "elide @|bold,fg(cyan) adopt|@ [PATH]",
     "elide @|bold,fg(cyan) adopt|@ <COMMAND>",
+    "",
+    "Auto-detection:",
+    "  elide adopt .                Auto-detect build system in current directory",
+    "  elide adopt /path/to/project Auto-detect build system at path",
     "",
     "Available Commands:",
     "  @|bold maven|@     Adopt Maven pom.xml to elide.pkl",
@@ -54,17 +64,100 @@ import elide.tool.cli.ToolState
 @Introspected
 @ReflectiveAccess
 internal class AdoptCommand : AbstractSubcommand<ToolState, CommandContext>() {
+  @Parameters(
+    index = "0",
+    arity = "0..1",
+    description = ["Path to project directory (auto-detects build system)"]
+  )
+  var projectPath: String? = null
+
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    // This is a parent command, so it just shows help if called directly
+    // If a path was provided, auto-detect and run appropriate adopter
+    if (projectPath != null) {
+      return autoDetectAndAdopt(projectPath!!, state)
+    }
+
+    // Otherwise show help
     output {
-      append("Use 'elide adopt <command>' to adopt build files.")
+      append("Use 'elide adopt <command>' to adopt build files, or provide a path for auto-detection.")
       appendLine()
-      append("Available commands:")
+      appendLine()
+      append("@|bold Auto-detection:|@")
+      append("  elide adopt .                Auto-detect build system in current directory")
+      append("  elide adopt /path/to/project Auto-detect build system at path")
+      appendLine()
+      append("@|bold Available commands:|@")
       append("  maven     Adopt Maven pom.xml to elide.pkl")
       append("  gradle    Adopt Gradle build files to elide.pkl")
       append("  bazel     Adopt Bazel BUILD and WORKSPACE files to elide.pkl")
       append("  node      Adopt Node.js package.json to elide.pkl")
     }
     return success()
+  }
+
+  /**
+   * Auto-detect build system and invoke appropriate adopter.
+   */
+  private suspend fun CommandContext.autoDetectAndAdopt(
+    path: String,
+    state: ToolContext<ToolState>
+  ): CommandResult {
+    val projectDir = Path.of(path).absolute()
+
+    // Check for each build system in priority order
+    val detected = when {
+      // Maven: pom.xml
+      projectDir.resolve("pom.xml").exists() -> {
+        output { append("@|bold,fg(green) Detected:|@ Maven project (pom.xml)") }
+        "maven" to MavenAdoptCommand().apply { pomFile = projectDir.resolve("pom.xml").toString() }
+      }
+
+      // Gradle: build.gradle or build.gradle.kts
+      projectDir.resolve("build.gradle.kts").exists() || projectDir.resolve("build.gradle").exists() -> {
+        output { append("@|bold,fg(green) Detected:|@ Gradle project") }
+        val gradleBuildFile = when {
+          projectDir.resolve("build.gradle.kts").exists() -> "build.gradle.kts"
+          else -> "build.gradle"
+        }
+        "gradle" to GradleAdoptCommand().apply { this.buildFile = projectDir.resolve(gradleBuildFile).toString() }
+      }
+
+      // Bazel: WORKSPACE, WORKSPACE.bazel, or MODULE.bazel
+      projectDir.resolve("MODULE.bazel").exists() ||
+      projectDir.resolve("WORKSPACE.bazel").exists() ||
+      projectDir.resolve("WORKSPACE").exists() -> {
+        output { append("@|bold,fg(green) Detected:|@ Bazel project") }
+        "bazel" to BazelAdoptCommand().apply { this.projectDir = projectDir.toString() }
+      }
+
+      // Node.js: package.json
+      projectDir.resolve("package.json").exists() -> {
+        output { append("@|bold,fg(green) Detected:|@ Node.js project (package.json)") }
+        "node" to NodeAdoptCommand().apply { packageJsonFile = projectDir.resolve("package.json").toString() }
+      }
+
+      else -> {
+        output {
+          append("@|bold,fg(red) Error:|@ No supported build system detected at $projectDir")
+          appendLine()
+          append("Looked for:")
+          appendLine()
+          append("  - pom.xml (Maven)")
+          appendLine()
+          append("  - build.gradle(.kts) (Gradle)")
+          appendLine()
+          append("  - WORKSPACE/MODULE.bazel (Bazel)")
+          appendLine()
+          append("  - package.json (Node.js)")
+        }
+        return err(exitCode = 1)
+      }
+    }
+
+    val (buildSystem, command) = detected
+    output { appendLine() }
+
+    // Invoke the detected adopter
+    return command.invoke(this, state)
   }
 }

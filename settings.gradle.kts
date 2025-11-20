@@ -15,6 +15,32 @@
   "UnstableApiUsage",
 )
 
+// ==============================================================================
+// ktoml Fork Integration (Temporary - until upstream PR merges)
+// ==============================================================================
+// Using rjwalters/ktoml fork for empty line parsing fix (issue #361)
+// See: https://github.com/akuleshov7/ktoml/issues/361
+
+val ktomlFork = file("external/ktoml")
+val ktomlBuildFile = file("external/ktoml/build.gradle.kts")
+
+// Include ktoml as composite build if available
+if (ktomlBuildFile.exists()) {
+    logger.lifecycle("✅ Using ktoml from git submodule (rjwalters/ktoml with empty line fix)")
+
+    includeBuild("external/ktoml") {
+        dependencySubstitution {
+            substitute(module("com.akuleshov7:ktoml-core")).using(project(":ktoml-core"))
+            substitute(module("com.akuleshov7:ktoml-file")).using(project(":ktoml-file"))
+            substitute(module("com.akuleshov7:ktoml-source")).using(project(":ktoml-source"))
+        }
+    }
+} else {
+    logger.warn("⚠️  ktoml fork not available at external/ktoml")
+    logger.warn("    Falling back to published version (may fail on pyproject.toml with empty lines)")
+    logger.warn("    To fix: git submodule update --init --recursive")
+}
+
 pluginManagement {
   repositories {
     maven {

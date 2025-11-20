@@ -65,7 +65,9 @@ class RealWorldPythonIntegrationTest {
 
     // Verify basic metadata
     assertEquals("fastapi", descriptor.name)
-    assertNotNull(descriptor.version)
+    // Note: FastAPI uses dynamic = ["version"] in pyproject.toml
+    // Version is determined at build time from git tags, so it's null in the parsed file
+    // This is valid per PEP 621 dynamic metadata specification
     assertNotNull(descriptor.description)
 
     // Verify Python version requirement

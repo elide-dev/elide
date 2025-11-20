@@ -657,6 +657,32 @@ fun forceDisableNpmTasks() {
   tasks.findByName("setupNodeJs")?.let { forceDisableTask(it) }
 }
 
+// --- Tasks: Git Submodule Initialization
+//
+// Automatically initialize git submodules if they're not present.
+// This ensures external/ktoml is available without manual intervention.
+//
+val initSubmodules by tasks.registering(Exec::class) {
+  description = "Initialize git submodules if not already initialized"
+  group = "build setup"
+
+  val ktomlDir = file("external/ktoml")
+  onlyIf { !ktomlDir.exists() || ktomlDir.list()?.isEmpty() != false }
+
+  commandLine("git", "submodule", "update", "--init", "--recursive")
+
+  doFirst {
+    logger.lifecycle("Initializing git submodules...")
+  }
+}
+
+// Make all projects depend on submodule initialization
+allprojects {
+  tasks.matching { it.name != "initSubmodules" }.configureEach {
+    dependsOn(initSubmodules)
+  }
+}
+
 forceDisableNpmTasks()
 
 afterEvaluate {

@@ -22,6 +22,7 @@ import com.oracle.truffle.js.runtime.JSException;
 import com.oracle.truffle.js.runtime.JSRealm;
 import com.oracle.truffle.js.runtime.objects.AbstractModuleRecord;
 import com.oracle.truffle.js.runtime.objects.JSModuleData;
+import com.oracle.truffle.js.runtime.objects.JSModuleLoader;
 import com.oracle.truffle.js.runtime.objects.JSModuleRecord;
 import com.oracle.truffle.js.runtime.objects.ScriptOrModule;
 import java.io.IOException;
@@ -30,8 +31,26 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
+  private static final String ELIDE_MODULE_PREFIX = "elide";
+  private static final String NODE_MODULE_PREFIX = "node";
+  private static final String DENO_MODULE_PREFIX = "deno";
+  private static final String BUN_MODULE_PREFIX = "bun";
+
   protected AbstractTypeScriptLoader(JSRealm realm) {
     super(realm);
+  }
+
+  private static boolean isSpecialProtocolImport(String specifier) {
+    if (!specifier.contains(":")) {
+      return false;
+    }
+    int colonIndex = specifier.indexOf(':');
+
+    String protocol = specifier.substring(0, colonIndex);
+    return protocol.equals(ELIDE_MODULE_PREFIX)
+        || protocol.equals(NODE_MODULE_PREFIX)
+        || protocol.equals(DENO_MODULE_PREFIX)
+        || protocol.equals(BUN_MODULE_PREFIX);
   }
 
   @SuppressWarnings("SameParameterValue")
@@ -99,6 +118,20 @@ abstract class AbstractTypeScriptLoader extends NpmCompatibleESModuleLoader {
     try {
       var env = JavaScriptLanguage.getCurrentEnv();
       var specifier = moduleRequest.specifier().toJavaStringUncached();
+
+      // delegate special protocol prefixes to the realm's main module loader,
+      // as it knows how to handle synthetic modules
+      if (isSpecialProtocolImport(specifier)) {
+        JSModuleLoader realmLoader = realm.getModuleLoader();
+        if (realmLoader != null && realmLoader != this) {
+          try {
+            return realmLoader.resolveImportedModule(referrer, moduleRequest);
+          } catch (Exception e) {
+            // continue with file-based resolution
+          }
+        }
+      }
+
       var parentSrc = referrer.getSource();
       var maybeParentPath = parentSrc.getPath();
       var maybeParentUri = parentSrc.getURI();

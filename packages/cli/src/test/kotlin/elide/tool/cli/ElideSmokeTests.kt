@@ -70,6 +70,7 @@ import elide.testing.annotations.TestCase
       testFile("hello-fn.mts"),
       testFile("hello-import.mts"),
       testFile("hello-import-js.mts"),
+      testFile("import-prefix-test.ts"),
       testFile("paths.cjs"),
       testFile("paths.mjs"),
       testFile("paths-default.mjs"),

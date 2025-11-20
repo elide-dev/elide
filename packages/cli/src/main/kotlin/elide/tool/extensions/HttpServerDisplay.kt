@@ -31,11 +31,12 @@ fun HttpApplicationStack.Companion.bindAndDisplayResult(block: () -> HttpApplica
   }
 
   val singleService = stack.services.singleOrNull { it.bindResult.isSuccess }
+  val failures = stack.services.filter { it.bindResult.isFailure }
 
   if (singleService != null) {
     val uri = singleService.bindResult.getOrThrow().assembleUri()
     val label = serviceDisplayName(singleService.label)
-    terminal.println(green("$label listening on: ${cyan(uri.toString())} ($bindTime)"))
+    terminal.println(green("$label listening on: ${cyan(uri)} ($bindTime)"))
   } else {
     val maxLabelSize = stack.services.maxOf { serviceDisplayName(it.label).length } + 1
 
@@ -47,23 +48,24 @@ fun HttpApplicationStack.Companion.bindAndDisplayResult(block: () -> HttpApplica
         },
         onFailure = {
           val label = dim("${serviceDisplayName(service.label)}:".padEnd(maxLabelSize))
-          "$label ${red("failed with $it")}"
+          "$label ${red(it.message ?: "failed to start")}"
         },
       )
     }
 
-    val summaryColor = when (stack.services.count { it.bindResult.isSuccess }) {
+    val successes = stack.services.size - failures.size
+    val summaryColor = when (successes) {
       startupMessages.size -> green
       0 -> red
       else -> yellow
     }
 
-    terminal.println("Started ${summaryColor(startupMessages.size.toString())} services in $bindTime")
+    val header = "Started ${summaryColor(successes.toString())} service${if (successes != 1) "s" else ""} in $bindTime"
+    terminal.println(header)
+
     startupMessages.forEach { message -> terminal.println(message) }
   }
 
-
-  val failures = stack.services.filter { it.bindResult.isFailure }
   if (failures.isNotEmpty()) {
     val message = failures.joinToString("\n") {
       red(" - [${it.label}] ${it.bindResult.exceptionOrNull()?.stackTraceToString()}")
@@ -78,7 +80,7 @@ fun HttpApplicationStack.Companion.bindAndDisplayResult(block: () -> HttpApplica
 fun HttpApplicationStack.echoShutdownMessage() {
   val errors = awaitClose().joinToString("\n")
   if (errors.isNotEmpty()) terminal.println(red("Some services failed to shutdown properly:\n$errors"))
-  else terminal.println("Server stopped successfully")
+  else terminal.println("Server stopped")
 }
 
 fun serviceDisplayName(label: String): String = when (label) {

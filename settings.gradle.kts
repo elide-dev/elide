@@ -39,6 +39,13 @@ pluginManagement {
         includeGroup("com.google.devtools.ksp.gradle.plugin")
       }
     }
+    maven {
+      name = "elide-plugins"
+      url = uri("https://maven.elide.dev")
+      content {
+        includeGroup("dev.zacsweers.redacted")
+      }
+    }
     gradlePluginPortal()
     mavenCentral()
     google()

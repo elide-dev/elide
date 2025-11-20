@@ -137,9 +137,9 @@ kotest-plugin = "0.8.18"
 kotlin-compile-testing = "1.6.0"
 kotlin-dataframe = "0.11.0"
 kotlin-language = "2.1"
-kotlin-sdk = "2.2.21"
+kotlin-sdk = "2.3.0-RC"
 kotlinpoet = "2.2.0"
-kotlinx-abiValidator = "0.17.0"
+kotlinx-abiValidator = "0.18.1"
 kotlinx-benchmark = "0.4.13"
 kotlinx-browser = "0.1"
 kotlinx-collections = "0.4.0"
@@ -188,7 +188,7 @@ kotlinx-wrappers-web = "1.0.0-pre.754"
 kotlinxWrappers = "pre.754"
 kover = "0.9.1"
 kover-plugin = "0.9.1"
-ksp = "2.2.21-2.0.4"
+ksp = "2.3.2"
 ktor = "3.3.1"
 ktlint = "1.1.1"
 ktoml = "0.7.1"
@@ -261,7 +261,7 @@ qodanaGradle = "2023.3.1"
 r8 = "1.4.45"
 react = "19.0.0"
 reactivestreams = "1.0.4"
-redacted-plugin = "1.15.0"
+redacted-plugin = "1.16.0-rc1"
 sarif4k = "0.6.0"
 semver = "6.0.0"
 shadow-plugin = "8.1.1"
@@ -344,7 +344,6 @@ pkl = { id = "org.pkl-lang", version.ref = "pkl" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "pluginPublish" }
 protobuf = { id = "com.google.protobuf", version.ref = "pluginProtobuf" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodanaGradle" }
-redacted = { id = "dev.zacsweers.redacted", version.ref = "redacted-plugin" }
 reflekt = { id = "org.jetbrains.reflekt", version.ref = "kotlin-sdk" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow-plugin" }
 sigstore = { id = "dev.sigstore.sign", version.ref = "sigstore" }

@@ -26,7 +26,7 @@ public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion {
 	public static synthetic fun getDefaultPlugins$default (Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$Companion;ZILjava/lang/Object;)Ljava/util/List;
 }
 
-public final class elide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin : java/lang/Enum, elide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinPluginConfig {
+public abstract class elide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin : java/lang/Enum, elide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinPluginConfig {
 	public static final field KAPT Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin;
 	public static final field POWER_ASSERT Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin;
 	public static final field REDACTED Lelide/runtime/gvm/kotlin/KotlinCompilerConfig$KotlinBuiltinPlugin;

@@ -10,8 +10,15 @@
  */
 
 import WebSocket from 'ws';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { detectBell } from '../utils/bell-detector.js';
 import { extractTokenUsage, type TokenUsage } from '../utils/token-parser.js';
+
+// Get __dirname equivalent in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export interface MinderConfig {
   containerId: string;
@@ -103,10 +110,20 @@ export class RaceMinder {
 
         // Wait for bash to initialize, then send claude command
         setTimeout(() => {
-          // Simpler, more direct command that Claude can execute
-          const command = `claude "Please run these commands: 1) git clone ${this.config.repoUrl} and cd into it, 2) read the build instructions from the README, 3) build the project, 4) when done, echo BUILD COMPLETE with a bell emoji 🔔"\n`;
+          // Load instructions from file based on build type
+          const instructionsPath = join(__dirname, `../../instructions/${this.config.buildType}.md`);
+          const instructions = readFileSync(instructionsPath, 'utf-8');
 
-          console.log(`[Minder:${this.config.buildType}] Sending Claude command`);
+          // Format instructions for Claude command, escaping quotes and newlines
+          const escapedInstructions = instructions
+            .replace(/\\/g, '\\\\')  // Escape backslashes first
+            .replace(/"/g, '\\"')     // Escape quotes
+            .replace(/\n/g, '\\n');   // Escape newlines for shell command
+
+          // Send instructions + task
+          const command = `claude "Here are your instructions:\n\n${escapedInstructions}\n\nNow execute this task: Clone ${this.config.repoUrl}, build it following the instructions above, and ring the bell when done."\n`;
+
+          console.log(`[Minder:${this.config.buildType}] Sending Claude command with ${instructions.split('\n').length} lines of instructions`);
           this.sendInput(command);
         }, 2000);
       });

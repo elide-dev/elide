@@ -13,23 +13,53 @@ NC='\033[0m'
 echo -e "${GREEN}Building Docker images for Build Arena${NC}"
 echo ""
 
-# Step 1: Build Elide from source
-echo -e "${BLUE}Step 1: Building Elide from source...${NC}"
+# Step 1: Build Elide from source on remote Linux machine
+echo -e "${BLUE}Step 1: Building Elide from source on remote Linux machine...${NC}"
 cd ../../..  # Navigate to repo root from tools/build-arena/docker
-echo "Running: ./gradlew :packages:cli:installDist"
-./gradlew :packages:cli:installDist
 
-# Step 2: Copy Elide binary to docker build context
-echo -e "${BLUE}Step 2: Copying Elide binary to docker build context...${NC}"
-ELIDE_BIN="packages/cli/build/install/cli/bin/elide"
-if [ ! -f "$ELIDE_BIN" ]; then
-    echo "Error: Elide binary not found at $ELIDE_BIN"
+# Get current branch name
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+echo "Current branch: ${CURRENT_BRANCH}"
+
+# Get remote repository URL
+REPO_URL=$(git config --get remote.origin.url)
+echo "Repository: ${REPO_URL}"
+
+# Remote build configuration
+REMOTE_USER="rwalters"
+REMOTE_HOST="192.168.1.135"
+REMOTE_DIR="/tmp/elide-build-$(date +%s)"
+
+echo "Cloning ${CURRENT_BRANCH} on remote machine..."
+# Clone the repository and checkout the current branch on remote machine
+ssh ${REMOTE_USER}@${REMOTE_HOST} "git clone -b ${CURRENT_BRANCH} ${REPO_URL} ${REMOTE_DIR}"
+
+echo "Building Elide on remote Linux machine..."
+# Build on remote machine
+ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_DIR} && ./gradlew :packages:cli:installDist --no-daemon"
+
+echo "Copying build artifacts back..."
+# Copy build artifacts back
+rsync -az ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/packages/cli/build/install/cli/ \
+  ./packages/cli/build/install/cli/
+
+# Cleanup remote directory
+ssh ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${REMOTE_DIR}"
+echo "Remote build complete!"
+cd tools/build-arena/docker
+
+# Step 2: Copy Elide distribution to docker build context
+echo -e "${BLUE}Step 2: Copying Elide distribution to docker build context...${NC}"
+ELIDE_DIST="packages/cli/build/install/cli"
+if [ ! -d "$ELIDE_DIST" ]; then
+    echo "Error: Elide distribution not found at $ELIDE_DIST"
     echo "Build may have failed. Check output above."
     exit 1
 fi
 
-cp "$ELIDE_BIN" tools/build-arena/docker/elide
-echo "✓ Copied Elide binary to tools/build-arena/docker/elide"
+# Copy entire distribution (bin/ and lib/)
+cp -r "$ELIDE_DIST" tools/build-arena/docker/elide-dist
+echo "✓ Copied Elide distribution to tools/build-arena/docker/elide-dist"
 
 # Return to docker directory
 cd tools/build-arena/docker
@@ -48,17 +78,10 @@ if ! docker buildx version > /dev/null 2>&1; then
     echo -e "${BLUE}Step 4: Building standard-builder image (single platform)...${NC}"
     docker build -t standard-builder:latest -f standard-builder.Dockerfile .
 else
-    # Detect native platform
-    if [[ $(uname -m) == "arm64" ]]; then
-        PLATFORM="linux/arm64"
-        echo -e "${YELLOW}Detected ARM64 Mac - building for linux/arm64 (native)${NC}"
-        echo "Building for native platform for faster builds."
-        echo ""
-    else
-        PLATFORM="linux/amd64"
-        echo "Building for linux/amd64"
-        echo ""
-    fi
+    # Build for linux/amd64 to match remote Linux build
+    PLATFORM="linux/amd64"
+    echo -e "${YELLOW}Building for linux/amd64 (to match remote Linux Elide build)${NC}"
+    echo ""
 
     # Create builder if it doesn't exist
     if ! docker buildx ls | grep -q "build-arena-builder"; then
@@ -86,11 +109,11 @@ else
         .
 fi
 
-# Cleanup: Remove copied Elide binary
+# Cleanup: Remove copied Elide distribution
 echo ""
 echo -e "${BLUE}Step 5: Cleaning up...${NC}"
-rm -f elide
-echo "✓ Removed temporary Elide binary"
+rm -rf elide-dist
+echo "✓ Removed temporary Elide distribution"
 
 echo ""
 echo -e "${GREEN}All images built successfully!${NC}"

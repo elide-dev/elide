@@ -15,7 +15,10 @@ package elide.runtime.http.server.netty
 import io.netty.channel.Channel
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.unix.DomainSocketAddress
-import java.net.*
+import java.net.InetSocketAddress
+import java.net.SocketAddress
+import java.net.URI
+import java.net.UnixDomainSocketAddress
 import java.util.concurrent.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -160,7 +163,7 @@ public class HttpApplicationStack internal constructor(
     val errors = CopyOnWriteArrayList<Throwable>()
     val pendingChannels = AtomicInteger(channels.size)
     val pendingGroups = AtomicInteger(groups.size)
-    val channelsClosed = CompletableFuture<Unit>()
+    val channelsClosed = if (channels.isNotEmpty()) CompletableFuture() else CompletableFuture.completedFuture(Unit)
 
     // begin closing bound sockets
     for (channel in channels) channel.close().addListener { future ->
@@ -237,9 +240,9 @@ public class HttpApplicationStack internal constructor(
      * can lead to an error being thrown if an unsupported feature is required (e.g. UDP over domain sockets on NIO).
      */
     public fun <C : CallContext> bind(
-        application: HttpApplication<C>,
-        options: HttpApplicationOptions,
-        transportOverride: ServerTransport? = null,
+      application: HttpApplication<C>,
+      options: HttpApplicationOptions,
+      transportOverride: ServerTransport? = null,
     ): HttpApplicationStack {
       log.debug("Binding HTTP server stack for {}", application)
       val bindStarted = TimeSource.Monotonic.markNow()
@@ -281,9 +284,14 @@ public class HttpApplicationStack internal constructor(
           groups = scope.groups.values.toList(),
         )
 
-        // notify handlers and the application that we are now ready to go
-        deferredStack.complete(stack)
-        application.onStart(stack)
+        if (failed == services.size) {
+          log.debug("All services failed to start, shutting down")
+          stack.close()
+        } else {
+          // notify handlers and the application that we are now ready to go
+          deferredStack.complete(stack)
+          application.onStart(stack)
+        }
 
         stack
       } catch (e: Exception) {

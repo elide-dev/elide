@@ -4,10 +4,9 @@ You are competing in the **Build Arena Race** using **Maven or Gradle**!
 
 ## 🏁 YOUR MISSION
 
-1. **Download and install Maven or Gradle**
-2. **Clone the target repository**
-3. **Build the project using Maven/Gradle**
-4. **🔔 RING THE BELL** to signal completion
+1. **Clone the target repository**
+2. **Build the project using Maven/Gradle** (both are pre-installed)
+3. **🔔 RING THE BELL** to signal completion
 
 ## ⚠️ CRITICAL: YOU MUST RING THE BELL!
 
@@ -18,33 +17,15 @@ Runner: MAVEN (or GRADLE)
 Status: [SUCCESS/FAILURE]
 ```
 
-## Step 1: Install Maven
+## Step 1: Verify Build Tools
 
-Maven is NOT pre-installed. You must download it:
+Maven and Gradle are pre-installed. Verify they're available:
 
 ```bash
-# Download and install Maven
-cd /tmp
-wget https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
-tar xzf apache-maven-3.9.9-bin.tar.gz
-mv apache-maven-3.9.9 ~/maven
-export PATH="$HOME/maven/bin:$PATH"
-
-# Verify installation
+# Verify Maven
 mvn --version
-```
 
-## Alternative: Install Gradle
-
-```bash
-# Download and install Gradle
-cd /tmp
-wget https://services.gradle.org/distributions/gradle-8.5-bin.zip
-unzip gradle-8.5-bin.zip
-mv gradle-8.5 ~/gradle
-export PATH="$HOME/gradle/bin:$PATH"
-
-# Verify installation
+# Verify Gradle
 gradle --version
 ```
 
@@ -160,12 +141,7 @@ echo "Status: ${BUILD_STATUS}"
 ## Example Complete Workflow
 
 ```bash
-# Install Maven
-cd /tmp
-wget https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
-tar xzf apache-maven-3.9.9-bin.tar.gz
-mv apache-maven-3.9.9 ~/maven
-export PATH="$HOME/maven/bin:$PATH"
+# Verify Maven is installed
 mvn --version
 
 # Clone repo
@@ -201,4 +177,4 @@ echo "Status: ${BUILD_STATUS}"
 
 ---
 
-**Remember**: Download Maven/Gradle → Clone → Build → **Verify artifacts** → 🔔 RING THE BELL 🔔
+**Remember**: Clone → Build → **Verify artifacts** → 🔔 RING THE BELL 🔔

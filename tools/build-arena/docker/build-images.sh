@@ -7,9 +7,32 @@ set -e
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m'
 
 echo -e "${GREEN}Building Docker images for Build Arena${NC}"
+echo ""
+
+# Step 1: Build Elide from source
+echo -e "${BLUE}Step 1: Building Elide from source...${NC}"
+cd ../../..  # Navigate to repo root from tools/build-arena/docker
+echo "Running: ./gradlew :packages:cli:installDist"
+./gradlew :packages:cli:installDist
+
+# Step 2: Copy Elide binary to docker build context
+echo -e "${BLUE}Step 2: Copying Elide binary to docker build context...${NC}"
+ELIDE_BIN="packages/cli/build/install/cli/bin/elide"
+if [ ! -f "$ELIDE_BIN" ]; then
+    echo "Error: Elide binary not found at $ELIDE_BIN"
+    echo "Build may have failed. Check output above."
+    exit 1
+fi
+
+cp "$ELIDE_BIN" tools/build-arena/docker/elide
+echo "✓ Copied Elide binary to tools/build-arena/docker/elide"
+
+# Return to docker directory
+cd tools/build-arena/docker
 echo ""
 
 # Check if buildx is available
@@ -19,10 +42,10 @@ if ! docker buildx version > /dev/null 2>&1; then
     echo ""
 
     # Standard single-platform build
-    echo "Building elide-builder image (single platform)..."
+    echo -e "${BLUE}Step 3: Building elide-builder image (single platform)...${NC}"
     docker build -t elide-builder:latest -f elide-builder.Dockerfile .
 
-    echo "Building standard-builder image (single platform)..."
+    echo -e "${BLUE}Step 4: Building standard-builder image (single platform)...${NC}"
     docker build -t standard-builder:latest -f standard-builder.Dockerfile .
 else
     # Detect native platform
@@ -45,8 +68,8 @@ else
         docker buildx use build-arena-builder
     fi
 
-    # Build for linux/amd64 (most common production platform)
-    echo "Building elide-builder image for ${PLATFORM}..."
+    # Build for native platform
+    echo -e "${BLUE}Step 3: Building elide-builder image for ${PLATFORM}...${NC}"
     docker buildx build \
         --platform ${PLATFORM} \
         --tag elide-builder:latest \
@@ -54,7 +77,7 @@ else
         --load \
         .
 
-    echo "Building standard-builder image for ${PLATFORM}..."
+    echo -e "${BLUE}Step 4: Building standard-builder image for ${PLATFORM}...${NC}"
     docker buildx build \
         --platform ${PLATFORM} \
         --tag standard-builder:latest \
@@ -62,6 +85,12 @@ else
         --load \
         .
 fi
+
+# Cleanup: Remove copied Elide binary
+echo ""
+echo -e "${BLUE}Step 5: Cleaning up...${NC}"
+rm -f elide
+echo "✓ Removed temporary Elide binary"
 
 echo ""
 echo -e "${GREEN}All images built successfully!${NC}"

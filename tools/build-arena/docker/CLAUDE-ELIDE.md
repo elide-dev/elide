@@ -40,11 +40,9 @@ OR use one of these bell patterns:
 
 - **Java**: OpenJDK 17 (Temurin)
 - **Elide**: Pre-installed (`elide --version` to verify)
-- **Python 3**: Pre-installed for running conversion scripts
 - **Claude Code**: You! (version shown at startup)
 - **Working Directory**: `/workspace`
 - **API Key**: Pre-configured via `ANTHROPIC_API_KEY` environment variable
-- **Maven Converter**: Pre-installed at `/app/maven-to-elide.py`
 
 ## Required Workflow Steps
 
@@ -88,31 +86,29 @@ cat README.md
 
 **This is the most important step!** Elide requires an `elide.pkl` file to build Maven projects.
 
-For single-module projects:
+Use the `elide adopt` command to convert Maven or Gradle projects:
+
 ```bash
-python3 /app/maven-to-elide.py pom.xml
-cat elide.pkl  # Verify conversion
+# For Maven projects
+elide adopt maven
+
+# For Gradle projects
+elide adopt gradle
 ```
 
-For multi-module projects:
-```bash
-# Navigate to the main submodule (usually same name as repo)
-cd <main-module-name>
-python3 /app/maven-to-elide.py pom.xml
-cat elide.pkl  # Verify conversion
-```
-
-**What the converter does:**
-- Parses `pom.xml` to extract dependencies
+**What `elide adopt` does:**
+- Detects the build system (Maven or Gradle)
+- Parses `pom.xml` or `build.gradle[.kts]` to extract dependencies
 - Resolves versions from dependency management
-- Maps source directories (src/main/java, src/test/java)
-- Generates `elide.pkl` in Elide's format
+- Maps source directories (src/main/java, src/test/java, etc.)
+- Generates `elide.pkl` in Elide's PKL format
+- Handles multi-module projects automatically
 
 **Important notes:**
-- Works best for single-module Maven projects
-- Projects without custom plugins
-- Test dependencies may fail if inherited from parent POM
-- Main source compilation should succeed
+- Works for both single and multi-module projects
+- Supports Maven and Gradle build systems
+- May skip test dependencies if versions can't be resolved
+- Main source compilation should succeed even if tests fail
 
 ### Step 5: Build with Elide (TIMED!)
 
@@ -193,11 +189,8 @@ ls -la
 cat pom.xml
 ls -la */pom.xml
 
-# Navigate to main module
-cd gson
-
 # Step 4: CONVERT TO ELIDE FORMAT
-python3 /app/maven-to-elide.py pom.xml
+elide adopt maven
 cat elide.pkl  # Verify conversion
 
 # Step 5: Build (timed)
@@ -234,16 +227,27 @@ elide package                     # Create JAR/WAR
 elide clean                       # Clean build artifacts
 ```
 
-## Maven-to-Elide Converter Reference
+## Elide Adopt Reference
 
-**Location:** `/app/maven-to-elide.py`
+**Command:** `elide adopt <build-system>`
+
+**Supported build systems:**
+- `maven` - Converts Maven projects (pom.xml)
+- `gradle` - Converts Gradle projects (build.gradle or build.gradle.kts)
 
 **Usage:**
 ```bash
-python3 /app/maven-to-elide.py [path-to-pom.xml]
+# Auto-detect build system
+elide adopt
+
+# Explicitly specify Maven
+elide adopt maven
+
+# Explicitly specify Gradle
+elide adopt gradle
 ```
 
-**Output:** Creates `elide.pkl` in the same directory as the pom.xml
+**Output:** Creates `elide.pkl` in the current directory
 
 **Example output:**
 ```pkl
@@ -289,10 +293,11 @@ sources {
 ## Troubleshooting
 
 ### If conversion fails:
-1. Check if pom.xml exists and is valid XML
-2. For multi-module projects, navigate to the submodule first
-3. Check warnings about missing versions - may need parent POM
-4. **Still ring the bell with FAILURE status!**
+1. Check if pom.xml or build.gradle exists and is valid
+2. Try running `elide adopt` without arguments to auto-detect
+3. For Maven, check for missing parent POM dependencies
+4. For Gradle, check for missing plugin repositories
+5. **Still ring the bell with FAILURE status!**
 
 ### If build fails after conversion:
 1. Check the generated elide.pkl for correctness
@@ -306,13 +311,13 @@ sources {
 **"Package does not exist" errors during test compilation:**
 - Test dependencies missing versions from parent POM
 - Main code may still compile successfully
-- This is a known limitation of the current converter
+- This is expected for some complex projects
 
 **Multi-module project:**
 ```bash
 ls -la */pom.xml
 cd <main-module-name>
-python3 /app/maven-to-elide.py pom.xml
+elide adopt maven
 elide build
 ```
 
@@ -355,7 +360,7 @@ Error: Compilation failed - incompatible Java version
 ---
 
 **Remember**:
-- Download tools → Clone repo → **CONVERT TO ELIDE FORMAT** → Build → Test → 🔔 RING THE BELL 🔔
-- The conversion step is CRITICAL - Elide will not build Maven projects without elide.pkl
+- Clone repo → **CONVERT TO ELIDE FORMAT** (using `elide adopt`) → Build → Test → 🔔 RING THE BELL 🔔
+- The conversion step is CRITICAL - Elide will not build Maven/Gradle projects without elide.pkl
 - The bell signal is THE FINISH LINE for the Build Arena race!
 - Speed and automation are key to winning the benchmark competition!

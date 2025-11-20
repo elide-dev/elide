@@ -16,6 +16,7 @@ import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
@@ -258,6 +259,43 @@ import elide.testing.annotations.TestCase
     const int = crypto.randomInt(1);
     assert.equal(typeof int, "number");
     assert.ok(int >= 0 && int < 1, "randomInt should be within the range 0 to max");
+    """
+  }
+
+  @Test fun `randomInt should invoke callback when callback is provided`() = conforms {
+    var callbackInvoked = false
+    val genInt = crypto.provide().randomInt(10, 20) { error, result ->
+      callbackInvoked = true
+      assertNull(error, "Callback error should be null")
+      assertIs<Int>(result, "Callback result should be an Int")
+      assertTrue(result in 10 until 20, "Callback result should be within the specified range")
+    }
+    assertTrue(callbackInvoked, "Callback should have been invoked")
+    assertIs<Unit>(genInt, "randomInt should return Unit when callback is provided")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+    
+    function randomIntPromise(min, max) {
+      return new Promise((resolve, reject) => {
+        crypto.randomInt(min, max, (err, int) => {
+          callbackInvoked = true;
+          assert.equal(err, null, "Callback error should be null");
+          resolve(int);
+        });
+      });
+    }
+
+    let callbackInvoked = false;
+
+    randomIntPromise(10, 20)
+      .then((int) => {
+        assert.equal(typeof int, "number");
+        assert.ok(int >= 10 && int < 20, "randomInt should be within the range");
+        assert.ok(callbackInvoked, "Callback should have been invoked");
+      })
     """
   }
 }

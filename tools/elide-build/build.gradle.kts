@@ -25,8 +25,9 @@ plugins {
   java
   `jvm-toolchains`
 
-  alias(libs.plugins.testLogger)
-  alias(libs.plugins.versionCheck)
+  // Temporarily disabled due to dependency resolution issues with Gradle 8.11.1
+  // alias(libs.plugins.testLogger)
+  // alias(libs.plugins.versionCheck)
 
   id("java-gradle-plugin")
   `kotlin-dsl`
@@ -43,6 +44,10 @@ repositories {
       includeGroup("com.google.devtools.ksp")
       includeGroup("com.google.devtools.ksp.gradle.plugin")
     }
+  }
+  maven {
+    name = "maven-central-explicit"
+    url = uri("https://repo1.maven.org/maven2/")
   }
   gradlePluginPortal()
   mavenCentral()
@@ -81,7 +86,6 @@ kotlin {
     apiVersion = KOTLIN_2_1
     languageVersion = KOTLIN_2_1
     freeCompilerArgs = listOf(
-      "-jvm-default=no-compatibility",
       "-Xcontext-receivers",
       "-Xskip-prerelease-check",
       "-Xsuppress-version-warnings",
@@ -150,6 +154,8 @@ dependencies {
 // Plugin: Test Logger
 // -------------------
 // Configure test logging.
+// Temporarily commented out - see gradle-kotlin-analysis.md
+/*
 testlogger {
   theme = com.adarshr.gradle.testlogger.theme.ThemeType.MOCHA_PARALLEL
   showExceptions = System.getenv("TEST_EXCEPTIONS") == "true"
@@ -163,6 +169,7 @@ testlogger {
   showSkippedStandardStreams = false
   slowThreshold = 30000L
 }
+*/
 
 // Tasks: Test
 // -----------
@@ -232,6 +239,14 @@ configurations.all {
     if (requested.group == asm.group && requested.name == asm.name) {
       useVersion(libs.versions.asm.get())
       because("need better bytecode support")
+    }
+
+    // Force Kotlin dependencies to use the correct version
+    if (requested.group == "org.jetbrains.kotlin") {
+      if (requested.version == "2.2.20" || requested.version == "2.0.21") {
+        useVersion(libs.versions.kotlin.sdk.get())
+        because("version ${requested.version} doesn't exist or isn't accessible, using ${libs.versions.kotlin.sdk.get()}")
+      }
     }
   }
 }

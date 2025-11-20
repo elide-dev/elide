@@ -12,6 +12,8 @@
  */
 package elide.runtime.node
 
+import org.graalvm.polyglot.Value
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -20,7 +22,9 @@ import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import elide.annotations.Inject
+import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.RangeError
+import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.node.crypto.NodeCryptoModule
 import elide.testing.annotations.TestCase
 
@@ -211,76 +215,49 @@ import elide.testing.annotations.TestCase
     const crypto = require("crypto")
     const assert = require("assert")
 
-    const int = crypto.randomInt();
-    assert.equal(typeof int, "Number");
+    const int = crypto.randomInt(5, 10);
+    assert.equal(typeof int, "number");
     """
   }
 
-  @Test fun `randomInt should invoke callback with error when min is greater than or equal to max`() = conforms {
-    var callbackInvoked = false
-    crypto.provide().randomInt(10, 5) { err, value ->
-      callbackInvoked = true
-      assertNotNull(err, "Error should be provided when min >= max")
-      assertIs<RangeError>(err, "Error should be of type RangeError")
-    }
-    assertTrue(callbackInvoked, "Callback should have been invoked")
+  @Test fun `randomInt should throw a RangeError when min is greater than or equal to max`() = conforms {
+    assertThrows<RangeError> { crypto.provide().randomInt(10, 5) }
+    assertThrows<RangeError> { crypto.provide().randomInt(10, 10) }
   }.guest {
     //language=javascript
     """
     const crypto = require("crypto")
     const assert = require("assert")
 
-    let callbackInvoked = false;
-    crypto.randomInt(10, 5, (err, value) => {
-      callbackInvoked = true;
-      assert.ok(err, "Error should be provided when min >= max");
-      assert.equal(err.name, "RangeError", "Error should be of type RangeError");
+    assert.throws(() => {
+      crypto.randomInt(10, 10);
+    }, (err) => {
+      assert.ok(err instanceof RangeError);
+      return true;
     });
-
-    assert.ok(callbackInvoked, "Callback should have been invoked");
-    """
-  }
-
-  @Test fun `randomInt should return Unit when a callback is provided`() = conforms {
-    var callbackInvoked = false
-    val result = crypto.provide().randomInt(5, 10) { err, value ->
-      callbackInvoked = true
-      assertNull(err, "Error should be null for valid range")
-      assertTrue(value in 5 until 10, "Value should be within the specified range")
-    }
-    assertTrue(callbackInvoked, "Callback should have been invoked")
-    assertEquals(Unit, result, "randomInt should return Unit when a callback is provided")
-  }.guest {
-    //language=javascript
-    """
-    const crypto = require("crypto")
-    const assert = require("assert")
-
-    let callbackInvoked = false;
-    const result = crypto.randomInt(5, 10, (err, value) => {
-      callbackInvoked = true;
-      assert.ifError(err);
-      assert.ok(value >= 5 && value < 10, "Value should be within the specified range");
+    
+    assert.throws(() => {
+      crypto.randomInt(10, 5);
+    }, (err) => {
+      assert.ok(err instanceof RangeError);
+      return true;
     });
-
-    assert.ok(callbackInvoked, "Callback should have been invoked");
-    assert.equal(result, undefined, "randomInt should return undefined when a callback is provided");
     """
   }
 
   @Test fun `randomInt should default min to 0 when only max is provided`() = conforms {
-    val randomInt = crypto.provide().randomInt(max = 5)
+    val randomInt = crypto.provide().randomInt(max = 1)
     assertIs<Int>(randomInt, "randomInt should return an Int")
-    assertTrue(randomInt in 0 until 5, "randomInt should be within the range 0 to max")
+    assertEquals(0, randomInt, "randomInt should be 0 when max is 1")
   }.guest {
     //language=javascript
     """
     const crypto = require("crypto")
     const assert = require("assert")
 
-    const int = crypto.randomInt(5);
-    assert.equal(typeof int, "Number");
-    assert.ok(int >= 0 && int < 5, "randomInt should be within the range 0 to max");
+    const int = crypto.randomInt(1);
+    assert.equal(typeof int, "number");
+    assert.ok(int >= 0 && int < 1, "randomInt should be within the range 0 to max");
     """
   }
 }

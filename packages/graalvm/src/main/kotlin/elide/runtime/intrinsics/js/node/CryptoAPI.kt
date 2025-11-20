@@ -57,7 +57,7 @@ import elide.vm.annotations.Polyglot
    * @param callback
    * @return A randomly generated integer between `min` (inclusive) and `max` (exclusive) or nothing if a callback was provided.
    */
-  @Polyglot public fun randomInt(min: Value?, max: Value, callback: Value?): Any
+  @Polyglot public fun randomInt(min: Value, max: Value, callback: Value?): Any
 
   /**
    * ## Crypto: randomInt

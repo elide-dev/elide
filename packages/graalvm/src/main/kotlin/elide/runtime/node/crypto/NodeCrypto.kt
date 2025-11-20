@@ -79,30 +79,26 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
    var error: AbstractJsException? = null
 
    if (min >= max) {
-     error = RangeError.create("The value of \"max\" is out of range. It must be greater than the value of \"min\" ($min). Received $max")
+     throw RangeError.create("The value of \"max\" is out of range. It must be greater than the value of \"min\" ($min). Received $max")
    }
 
    val randomInt = cryptoRandomGenerator.nextInt(min,   max)
 
-   if (callback != null) {
-     callback.invoke(error, randomInt)
-
-     return Unit
-   }
+   callback?.invoke(error, randomInt)
 
    return randomInt
  }
 
-  @Polyglot override fun randomInt(min: Value?, max: Value, callback: Value?): Int {
+  @Polyglot override fun randomInt(min: Value, max: Value, callback: Value?): Any {
     return randomInt(min, max, callback)
   }
 
-  @Polyglot override fun randomInt(max: Value, callback: Value?): Int {
-    return randomInt(max, callback)
+  @Polyglot override fun randomInt(max: Value, callback: Value?): Any {
+    return randomInt(0, max.asInt(), callback as? RandomIntCallback)
   }
 
-  @Polyglot override fun randomInt(max: Value): Int {
-    return randomInt(max)
+  @Polyglot override fun randomInt(max: Value): Any {
+    return randomInt(0, max = max.asInt())
   }
 
   // ProxyObject implementation
@@ -117,17 +113,17 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
       val options = args.getOrNull(0)
       randomUUID(options)
     }
-    F_RANDOM_INT -> ProxyExecutable {
+    F_RANDOM_INT -> ProxyExecutable { args ->
       // Node.js signature: randomInt(max) OR randomInt(max, [callback]) OR randomInt(min, max) OR randomInt(min, max, [callback])
-      when (it.size) {
-        1 -> randomInt(it.first())
-        2 -> if (it[1].fitsInInt()) {
-          randomInt(min = it.first().asInt(), max = it[1].asInt())
+      when (args.size) {
+        1 -> randomInt(0, args.first().asInt())
+        2 -> if (args[1].fitsInInt()) {
+          randomInt(min = args.first().asInt(), max = args[1].asInt())
         } else {
-          randomInt(max = it.first(), callback = it[1])
+          randomInt(max = args.first(), callback = args[1])
         }
-        3 -> randomInt(it.first(), it[1], it.getOrNull(2))
-        else -> throw JsError.typeError("Invalid number of arguments for `crypto.randomInt`")
+        3 -> randomInt(args.first().asInt(), args[1].asInt(), args.getOrNull(2) as? RandomIntCallback)
+        else -> throw JsError.typeError("Invalid number of arguments for `crypto.randomInt`, ${args.size} arguments were provided.")
       }
     }
     else -> null

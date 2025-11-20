@@ -84,9 +84,12 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
 
    val randomInt = cryptoRandomGenerator.nextInt(min,   max)
 
-   callback?.invoke(error, randomInt)
-
-   return randomInt
+   if (callback != null) {
+     callback.invoke(error, randomInt)
+     return Unit
+   } else {
+      return randomInt
+   }
  }
 
   @Polyglot override fun randomInt(min: Value, max: Value, callback: Value?): Any {
@@ -98,7 +101,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
   }
 
   @Polyglot override fun randomInt(max: Value): Any {
-    return randomInt(0, max = max.asInt())
+    return randomInt(0, max.asInt())
   }
 
   // ProxyObject implementation

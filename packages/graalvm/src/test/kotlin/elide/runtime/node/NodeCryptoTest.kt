@@ -12,20 +12,16 @@
  */
 package elide.runtime.node
 
-import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import elide.annotations.Inject
-import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.RangeError
-import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.node.crypto.NodeCryptoModule
 import elide.testing.annotations.TestCase
 
@@ -296,6 +292,22 @@ import elide.testing.annotations.TestCase
         assert.ok(int >= 10 && int < 20, "randomInt should be within the range");
         assert.ok(callbackInvoked, "Callback should have been invoked");
       })
+    """
+  }
+
+  @Test fun `randomInt should return min when the range is 1`() = conforms {
+    val randomInt = crypto.provide().randomInt(7, 8)
+    assertIs<Int>(randomInt, "randomInt should return an Int")
+    assertEquals(7, randomInt, "randomInt should return min when range is 1")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const randomInt = crypto.randomInt(7, 8);
+    assert.equal(typeof randomInt, "number");
+    assert.equal(randomInt, 7, "randomInt should return min when range is 1");
     """
   }
 }

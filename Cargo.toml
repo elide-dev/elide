@@ -115,7 +115,7 @@ minify-html-onepass = { version = "0.15.0" }
 miette = { version = "7.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.43" }
 # orogene = { path = "../orogene", default-features = false, features = ["mimalloc"] }
-orogene = { git = "https://github.com/elide-dev/orogene", rev = "4e4b918fa708800ae3ebab904be77f21b6428336", default-features = false, features = [
+orogene = { git = "https://github.com/elide-dev/orogene", rev = "2e00bfa8c9fc1775906b0e5e1ad6fe93659136bd", default-features = false, features = [
   "mimalloc",
 ] }
 image = { version = "0.25.6", default-features = false, features = [
@@ -165,7 +165,7 @@ toml = { version = "0.8.20", default-features = false }
 typeshare = { version = "1.0.4" }
 
 ## Oxc
-oxc = { git = "https://github.com/elide-dev/oxc", rev = "4283fd8eb922e4ea23cf9045e57696095d31d6b0", default-features = false, features = [
+oxc = { git = "https://github.com/elide-dev/oxc", rev = "4b9d8d2c4abbeda1cd2cbb0ca5e530d2690ab00a", default-features = false, features = [
   "full",
   "isolated_declarations",
   "mangler",
@@ -173,7 +173,7 @@ oxc = { git = "https://github.com/elide-dev/oxc", rev = "4283fd8eb922e4ea23cf904
 ] }
 
 ## Uv
-uv = { git = "https://github.com/elide-dev/uv", rev = "ee2649feaa78b847ebcd44daebdce28c2e974842" }
+uv = { git = "https://github.com/elide-dev/uv", rev = "8d8aabb88490672c156fc688e7823140681497d0" }
 
 ## Ruff
-ruff = { git = "https://github.com/elide-dev/ruff", rev = "7198e531827a8376531c85080f0c593f9dd1635a" }
+ruff = { git = "https://github.com/elide-dev/ruff", rev = "06941c1987bd4fe2b54d99b5514784472cabc0b3" }

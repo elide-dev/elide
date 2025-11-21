@@ -12,13 +12,16 @@
  */
 package elide.runtime.node
 
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import elide.annotations.Inject
+import elide.runtime.intrinsics.js.err.RangeError
 import elide.runtime.node.crypto.NodeCryptoModule
 import elide.testing.annotations.TestCase
 
@@ -196,6 +199,115 @@ import elide.testing.annotations.TestCase
 
     assert.equal(typeof uuid1, "string");
     assert.equal(typeof uuid2, "string");
+    """
+  }
+
+  @Test fun `randomInt should return an Int when valid min and max are provided with no callback`() = conforms {
+    val randomInt = crypto.provide().randomInt(5, 10)
+    assertIs<Int>(randomInt, "randomInt should return an Int")
+    assertTrue(randomInt in 5 until 10, "randomInt should be within the specified range")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const int = crypto.randomInt(5, 10);
+    assert.equal(typeof int, "number");
+    """
+  }
+
+  @Test fun `randomInt should throw a RangeError when min is greater than or equal to max`() = conforms {
+    assertThrows<RangeError> { crypto.provide().randomInt(10, 5) }
+    assertThrows<RangeError> { crypto.provide().randomInt(10, 10) }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    assert.throws(() => {
+      crypto.randomInt(10, 10);
+    }, (err) => {
+      assert.ok(err instanceof RangeError);
+      return true;
+    });
+    
+    assert.throws(() => {
+      crypto.randomInt(10, 5);
+    }, (err) => {
+      assert.ok(err instanceof RangeError);
+      return true;
+    });
+    """
+  }
+
+  @Test fun `randomInt should default min to 0 when only max is provided`() = conforms {
+    val randomInt = crypto.provide().randomInt(max = 1)
+    assertIs<Int>(randomInt, "randomInt should return an Int")
+    assertEquals(0, randomInt, "randomInt should be 0 when max is 1")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const int = crypto.randomInt(1);
+    assert.equal(typeof int, "number");
+    assert.ok(int >= 0 && int < 1, "randomInt should be within the range 0 to max");
+    """
+  }
+
+  @Test fun `randomInt should invoke callback when callback is provided`() = conforms {
+    var callbackInvoked = false
+    val genInt = crypto.provide().randomInt(10, 20) { error, result ->
+      callbackInvoked = true
+      assertNull(error, "Callback error should be null")
+      assertIs<Int>(result, "Callback result should be an Int")
+      assertTrue(result in 10 until 20, "Callback result should be within the specified range")
+    }
+    assertTrue(callbackInvoked, "Callback should have been invoked")
+    assertIs<Unit>(genInt, "randomInt should return Unit when callback is provided")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+    
+    function randomIntPromise(min, max) {
+      return new Promise((resolve, reject) => {
+        crypto.randomInt(min, max, (err, int) => {
+          callbackInvoked = true;
+          assert.equal(err, null, "Callback error should be null");
+          resolve(int);
+        });
+      });
+    }
+
+    let callbackInvoked = false;
+
+    randomIntPromise(10, 20)
+      .then((int) => {
+        assert.equal(typeof int, "number");
+        assert.ok(int >= 10 && int < 20, "randomInt should be within the range");
+        assert.ok(callbackInvoked, "Callback should have been invoked");
+      })
+    """
+  }
+
+  @Test fun `randomInt should return min when the range is 1`() = conforms {
+    val randomInt = crypto.provide().randomInt(7, 8)
+    assertIs<Int>(randomInt, "randomInt should return an Int")
+    assertEquals(7, randomInt, "randomInt should return min when range is 1")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const randomInt = crypto.randomInt(7, 8);
+    assert.equal(typeof randomInt, "number");
+    assert.equal(randomInt, 7, "randomInt should return min when range is 1");
     """
   }
 }

@@ -1,0 +1,310 @@
+#
+# Copyright (c) 2025 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
+name: Release
+
+"on":
+    workflow_dispatch:
+      inputs:
+        test:
+          description: "Test Mode"
+          type: boolean
+          default: true
+
+# Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
+env:
+  RUST_BACKTRACE: full
+  SCCACHE_DIRECT: "true"
+  RUSTC_WRAPPER: "sccache"
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Job: Library Build
+  ##
+  release:
+    name: "Release: Native Build (${{ matrix.os }}, ${{ matrix.arch || 'amd64' }})"
+    runs-on: ${{ matrix.runner }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: minimax-arm64-1
+            arch: arm64
+            labs: false
+            tag: linux-arm64
+          - runner: macsandbox-arm64-1
+            arch: arm64
+            labs: false
+            tag: darwin-arm64
+          - runner: ci-agent-01
+            arch: amd64
+            labs: false
+            tag: linux-amd64
+          - runner: unclemax-win1
+            arch: amd64
+            labs: false
+            tag: windows-amd64
+    permissions:
+      contents: write
+      id-token: write
+
+    defaults:
+      run:
+        shell: bash
+
+    outputs:
+      elide-version: ${{ steps.get-version.outputs.test }}
+
+    steps:
+      - name: "Setup: Job Mode"
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "TEST_MODE=${{ inputs.test }}" >> $GITHUB_ENV
+          else
+            echo "TEST_MODE=true" >> $GITHUB_ENV
+          fi
+
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          disable-sudo: false
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+          submodules: true
+          persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: buildjet/cache/restore@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
+        with:
+          key: elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          path: |
+            tools/elide-build/build/**/*.*
+            packages/*/build/**/*.*
+            target/
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            third_party/sqlite/install/
+          restore-keys: |
+            elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-v3-
+      - name: "Setup: Packages"
+        if: contains(matrix.runner, 'ubuntu') || contains(matrix.runner, 'linux')
+        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev
+      - name: "Setup: Rust"
+        uses: actions-rust-lang/setup-rust-toolchain@fb51252c7ba57d633bc668f941da052e410add48 # v1.13.0
+        with:
+          toolchain: stable
+          cache: true # handled by sccache
+          cache-key: "elide-rust-v1-{{ hashFiles('Cargo.lock') }}"
+      - name: "Setup: SCCache"
+        uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+      - name: "Setup: Rust Caching"
+        run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
+      - name: "Setup: GraalVM (Java 25)"
+        uses: graalvm/setup-graalvm@7f488cf82a3629ee755e4e97342c01d6bed318fa # v1.3.5
+        with:
+          distribution: "graalvm"
+          java-version: "25"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Node"
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 23
+      - name: "Setup: Bun"
+        uses: step-security/setup-bun@a961ff54612b97ac3259f517fb6a81be3b657a59 # v2.0.2
+        with:
+          bun-version: "1.2.14"
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        with:
+          version: "10.6.2"
+      - name: "Setup: uv"
+        uses: astral-sh/setup-uv@7edac99f961f18b581bbd960d59d049f04c0002f # v6.4.1
+      - name: "Setup: Dependencies"
+        run: |
+          echo "Setting up venv..."
+          uv venv
+          echo "Activating venv..."
+          . .venv/bin/activate
+          echo "Installing dependencies via Pip..."
+          uv pip install -r config/requirements.txt
+          echo PATH=$PATH >> $GITHUB_ENV
+          echo "Installing dependencies..."
+          pnpm install
+      - name: "Setup: Gradle"
+        uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4.4.3
+        id: gradlebuild
+        continue-on-error: ${{ matrix.mode == 'labs' }}
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+        with:
+          cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          gradle-home-cache-cleanup: true
+          gradle-home-cache-includes: binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
+      - name: "Setup: Gradle Settings"
+        run: cp -fv ./.github/workflows/gradle-ci.properties ~/.gradle/gradle.properties
+      - name: "Setup: Cosign"
+        uses: sigstore/cosign-installer@d7543c93d881b35a8faa02e8e3605f69b7a1ce62 # v3.10.0
+      - name: "Build Environment"
+        run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
+      - name: "🛠️ Build: Image"
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
+        run: |
+          bash ./tools/scripts/release/native-build.sh --release --publish
+      - name: "Setup: Signing Keys"
+        run: |
+          cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+          gpg --export-secret-keys > ~/.gnupg/secring.gpg
+      - name: "Get Version"
+        id: get-version
+        run: |
+          source ./tools/scripts/release/version-set.sh
+          echo "ELIDE_VERSION=$ELIDE_VERSION" >> $GITHUB_ENV
+          echo "ELIDE_VERSION=$ELIDE_VERSION" >> $GITHUB_OUTPUT
+      - name: "🛠 Release: Package"
+        run: bash ./tools/scripts/release/package-release.sh
+        env:
+          COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_ARGS: "--key env://COSIGN_KEY"
+      - name: "🛠 Release: Stage"
+        run:
+          bash ./tools/scripts/release/stage-release.sh
+      - name: "🛠 Release: Push to Cloud"
+        if: ${{ env.TEST_MODE == 'false' }}
+        run: |
+          bash ./tools/scripts/release/push-to-cloud.sh
+  
+
+  create_release:
+    name: "Release: Create Github Release"
+    runs-on: ubuntu-cipool
+    needs: release
+
+    outputs:
+      release-id: ${{ steps.create_release.outputs.id }}
+
+    permissions:
+      contents: write
+      id-token: write
+
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      if: ${{ env.TEST_MODE == 'false' }}
+      with:
+        draft: false
+        prerelease: false
+        release_name: ${{ needs.release.outputs.elide-version }}
+        tag_name: ${{ github.ref }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+  upload_file_to_release:
+    name: "Release: Upload Artifacts to Github Release"
+    runs-on: ${{ matrix.runner }}
+    needs: [create_release, release]
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: minimax-arm64-1
+            arch: arm64
+            labs: false
+            tag: linux-arm64
+          - runner: macsandbox-arm64-1
+            arch: arm64
+            labs: false
+            tag: darwin-arm64
+          - runner: ci-agent-01
+            arch: amd64
+            labs: false
+            tag: linux-amd64
+          - runner: unclemax-win1
+            arch: amd64
+            labs: false
+            tag: windows-amd64
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: "Setup: Job Mode"
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "TEST_MODE=${{ inputs.test }}" >> $GITHUB_ENV
+          else
+            echo "TEST_MODE=true" >> $GITHUB_ENV
+          fi
+
+      - name: "Upload Files to Release"
+        id: upload-artifacts
+        if: ${{ env.TEST_MODE == 'false' }}
+        uses: actions/github-script@v2
+        env:
+          RELEASE_ID: ${{ needs.create_release.outputs.release-id }}
+          VERSION: ${{ needs.release.outputs.elide-version }}
+          PLATFORM: ${{ matrix.tag }}
+        with:
+          script: |
+            console.log('environment', process.versions);
+            const fs = require('fs').promises;
+            const { repo: { owner, repo }, sha } = context;
+            console.log({ owner, repo, sha });
+            
+            const release_id = process.env.RELEASE_ID;
+            const version = process.env.VERSION;
+            const platform = process.env.PLATFORM;
+            const staging_path = './staging/release/${platform}/${version};
+            
+            for (let file of await fs.readdir(staging_path)) {
+              console.log('uploading', file);
+              
+              await github.repos.uploadReleaseAsset({
+                owner, repo,
+                release_id: release_id,
+                name: file,
+                data: await fs.readFile(`${staging_path}/${file}`)
+              });
+            }

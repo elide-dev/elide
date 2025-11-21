@@ -139,6 +139,16 @@ internal class RemoteManagementImpl(
     access = null
   }
 
+  override fun changeSuperEncryption() {
+    val mode = SecretPrompts.accessMode(prompts)
+    superKey = when (mode) {
+      EncryptionMode.PASSPHRASE ->
+        UserKey(encryption.hashKeySHA256(SecretPrompts.passphrase(prompts).encodeToByteString()))
+
+      EncryptionMode.GPG -> UserKey(SecretPrompts.gpgPrivateKey())
+    }
+  }
+
   override fun rekeyProfile(profile: String) {
     rekeyed.add(profile)
   }
@@ -212,7 +222,9 @@ internal class RemoteManagementImpl(
     )
     deleted.forEach { files.removeProfile(it) }
     SecretsState.updateMetadata { removeAll(deleted) }
+    SecretsState.updateLocal { add(BinarySecret(SecretValues.SUPER_ACCESS_KEY_SECRET, superKey.key)) }
     files.writeMetadata()
+    files.writeLocal()
   }
 
   private fun rekeyProfiles() {

@@ -87,6 +87,7 @@ internal object SecretValues {
   const val DELETE_PROFILES_MESSAGE = "Deleting the profile will also delete it from your local secrets!"
   const val GPG_KEY_REVOKED_MISSING_MESSAGE =
     "GPG private key is expired, revoked or not present. If secrets load correctly, please update your encryption mode!"
+  const val INVALID_SUPER_CREDENTIALS_MESSAGE = "Invalid superuser credentials."
 
   fun accessesWithProfileMessage(accesses: String) =
     "The following access files contain the profile:\n$accesses\n" +

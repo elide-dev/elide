@@ -254,6 +254,11 @@ class ManagementTest : AbstractSecretTest() {
     // regenerate profile key
     remote.rekeyProfile("test")
 
+    // change superuser access passphrase
+    // remote.changeSuperEncryption() asks for encryption mode and passphrase twice.
+    queuePrompts(EncryptionMode.PASSPHRASE, "seus", "seus")
+    remote.changeSuperEncryption()
+
     // push changes and check for files
     remote.push()
     assertTrue(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH).resolve(SecretValues.METADATA_FILE).exists())

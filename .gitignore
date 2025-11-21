@@ -4,6 +4,7 @@
 .dev/dependencies
 .dev/coverage
 .dev/artifacts
+.dev/db-studio
 */.dev/artifacts
 */.dev/coverage
 */.dev/dependencies

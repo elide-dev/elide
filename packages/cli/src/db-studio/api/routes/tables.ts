@@ -1,0 +1,148 @@
+import { jsonResponse, handleSQLError, errorResponse } from "../http/responses.ts";
+import { withDatabase } from "../http/middleware.ts";
+import { requireTableName } from "../utils/validation.ts";
+import { parseRequestBody, parseQueryParams } from "../utils/request.ts";
+import { getTables, getTableData } from "../database.ts";
+import type { Filter } from "../http/schemas.ts";
+
+/**
+ * Get list of tables in a database
+ */
+export const getTablesRoute = withDatabase(async (context) => {
+  const { db } = context;
+  const tables = getTables(db);
+  return jsonResponse({ tables });
+});
+
+/**
+ * Get table data with enhanced column metadata
+ * Supports query parameters: limit (default: 100), offset (default: 0), sort (column name), order (asc/desc), where (JSON-encoded filters)
+ */
+export const getTableDataRoute = withDatabase(async (context) => {
+  const { params, db, url } = context;
+  const tableNameError = requireTableName(params);
+  if (tableNameError) return tableNameError;
+
+  // Parse query parameters for pagination and sorting
+  const queryParams = parseQueryParams(url);
+  const limitParam = queryParams.get('limit');
+  const offsetParam = queryParams.get('offset');
+  const sortParam = queryParams.get('sort');
+  const orderParam = queryParams.get('order');
+  const whereParam = queryParams.get('where');
+  
+  const limit = limitParam ? parseInt(limitParam, 10) : 100;
+  const offset = offsetParam ? parseInt(offsetParam, 10) : 0;
+  
+  // Validate pagination parameters
+  if (isNaN(limit) || limit < 1 || limit > 1000) {
+    return errorResponse("Invalid limit parameter (must be between 1 and 1000)", 400);
+  }
+  if (isNaN(offset) || offset < 0) {
+    return errorResponse("Invalid offset parameter (must be >= 0)", 400);
+  }
+
+  // Validate sorting parameters
+  let sortColumn: string | null = null;
+  let sortDirection: 'asc' | 'desc' | null = null;
+  
+  if (sortParam) {
+    // Validate order parameter if sort is provided
+    if (!orderParam || (orderParam !== 'asc' && orderParam !== 'desc')) {
+      return errorResponse("Invalid order parameter (must be 'asc' or 'desc' when sort is provided)", 400);
+    }
+    sortColumn = sortParam;
+    sortDirection = orderParam as 'asc' | 'desc';
+  }
+
+  // Parse and validate filters
+  let filters: Filter[] | null = null;
+  if (whereParam) {
+    try {
+      const decodedWhere = decodeURIComponent(whereParam);
+      const parsedWhere = JSON.parse(decodedWhere);
+      
+      // Validate that it's an array
+      if (!Array.isArray(parsedWhere)) {
+        return errorResponse("Invalid where parameter: must be a JSON array of filters", 400);
+      }
+
+      // Type cast - rely on compile-time types rather than runtime validation
+      filters = parsedWhere as Filter[];
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      return errorResponse(
+        `Failed to parse where parameter: ${errorMessage}`,
+        400
+      );
+    }
+  }
+
+  try {
+    const tableData = getTableData(db, params.tableName, limit, offset, sortColumn, sortDirection, filters);
+    return jsonResponse(tableData);
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    return errorResponse(errorMessage, 400);
+  }
+});
+
+/**
+ * Create a new table
+ */
+export const createTableRoute = withDatabase(async (context) => {
+  const { db, body } = context;
+  const data = parseRequestBody(body);
+  const tableName = data.name as string | undefined;
+  const schema = data.schema as Array<{ name: string; type: string; constraints?: string }> | undefined;
+
+  if (!tableName) {
+    return errorResponse("Request body must contain 'name' for the table", 400);
+  }
+
+  if (!schema || !Array.isArray(schema) || schema.length === 0) {
+    return errorResponse("Request body must contain 'schema' array with at least one column", 400);
+  }
+
+  const columns = schema.map(col => {
+    const constraints = col.constraints ? ` ${col.constraints}` : "";
+    return `"${col.name}" ${col.type}${constraints}`;
+  }).join(", ");
+
+  const sql = `CREATE TABLE "${tableName}" (${columns})`;
+  const startTime = performance.now();
+
+  try {
+    db.exec(sql);
+    return jsonResponse({ success: true, message: `Table '${tableName}' created successfully` });
+  } catch (err) {
+    return handleSQLError(err, sql, startTime);
+  }
+});
+
+/**
+ * Drop a table
+ */
+export const dropTableRoute = withDatabase(async (context) => {
+  const { params, db, body } = context;
+  const tableNameError = requireTableName(params);
+  if (tableNameError) return tableNameError;
+
+  const data = parseRequestBody(body);
+  const confirm = data.confirm as boolean | undefined;
+
+  if (!confirm) {
+    return errorResponse("Must set 'confirm: true' in request body to drop table (safety check)", 400);
+  }
+
+  const sql = `DROP TABLE "${params.tableName}"`;
+  const startTime = performance.now();
+
+  try {
+    db.exec(sql);
+    return jsonResponse({ success: true, message: `Table '${params.tableName}' dropped successfully` });
+  } catch (err) {
+    return handleSQLError(err, sql, startTime);
+  }
+});
+

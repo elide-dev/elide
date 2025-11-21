@@ -1,0 +1,22 @@
+amends "elide:project.pkl"
+import "elide:JavaScript.pkl" as js
+
+name = "db-studio-api"
+version = "1.0.0"
+description = "Database Studio API Server"
+
+entrypoint {
+  "index.ts"
+}
+
+dependencies {
+  npm {
+    packages {
+      "zod@4"
+    }
+
+    devPackages {
+      "@elide-dev/types@1.0.0-beta10"
+    }
+  }
+}

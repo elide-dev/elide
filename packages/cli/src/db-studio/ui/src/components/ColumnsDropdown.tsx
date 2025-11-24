@@ -21,8 +21,7 @@ export const ColumnsDropdown = function ColumnsDropdown() {
   // Local search state
   const [search, setSearch] = React.useState('')
 
-  const visibility = table.getState().columnVisibility
-  const hasHiddenColumns = Object.values(visibility).some((visible) => !visible)
+  const hasHiddenColumns = table.getAllColumns().some((col) => col.getCanHide() && !col.getIsVisible())
 
   return (
     <DropdownMenu onOpenChange={(open) => !open && setSearch('')}>

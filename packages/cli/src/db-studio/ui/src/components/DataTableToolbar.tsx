@@ -24,16 +24,12 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
 }: DataTableToolbarProps) {
   const { rowCount, metadata, config, appliedFilters, onRefresh } = useDataTable()
 
-  // Filter toggle handler
   const handleFilterToggle = React.useCallback(() => {
-    if (appliedFilters.length === 0) {
-      // If no filters yet, add the first one
+    onFilterToggle()
+    if (!showFilterPanel && appliedFilters.length === 0) {
       onAddFilter()
-    } else {
-      // If filters exist, just toggle visibility
-      onFilterToggle()
     }
-  }, [appliedFilters.length, onAddFilter, onFilterToggle])
+  }, [showFilterPanel, appliedFilters.length, onAddFilter, onFilterToggle])
 
   return (
     <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-800 bg-gray-950 shrink-0">
@@ -78,15 +74,22 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
         {config.showPagination && <DataTablePagination />}
       </div>
       {onRefresh && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onRefresh}
-          disabled={config.isLoading}
-          className="h-9 w-9 p-0 ml-2"
-        >
-          <RefreshCw className={`h-4 w-4 ${config.isLoading ? 'animate-spin' : ''}`} />
-        </Button>
+        <HoverCard openDelay={200}>
+          <HoverCardTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onRefresh}
+              disabled={config.isLoading}
+              className="h-9 w-9 p-0 ml-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${config.isLoading ? 'animate-spin' : ''}`} />
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
+            <span className="text-xs font-semibold">Refresh rows</span>
+          </HoverCardContent>
+        </HoverCard>
       )}
     </div>
   )

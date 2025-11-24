@@ -83,6 +83,6 @@ public interface RandomSource {
    *
    * @return A randomly generated integer between `min` (inclusive) and `max` (exclusive).
    */
-  @Throws(ValueError::class)
-  @Polyglot public fun randomInt(min: Int, max: Int, callback: (AbstractJsException?, Int) -> Unit?): Any
+//  @Throws(ValueError::class)
+//  @Polyglot public fun randomInt(min: , max: Int, callback: (AbstractJsException?, Int) -> Unit?): Any
 }

@@ -12,11 +12,9 @@
  */
 package elide.runtime.intrinsics.js.node.crypto
 
-import elide.runtime.intrinsics.js.err.AbstractJsException
-
 /**
  * ## Callback: `crypto.randomInt`
  *
  * Describes the callback function shape which is provided to the `randomInt` operation.
  */
-public typealias RandomIntCallback = (err: AbstractJsException?, value: Int?) -> Unit
+public typealias RandomIntCallback = (err: Throwable?, value: Long?) -> Unit

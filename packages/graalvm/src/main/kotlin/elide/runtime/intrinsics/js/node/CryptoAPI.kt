@@ -14,6 +14,7 @@ package elide.runtime.intrinsics.js.node
 
 
 import org.graalvm.polyglot.Value
+import java.math.BigInteger
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.crypto.RandomIntCallback
 import elide.vm.annotations.Polyglot
@@ -44,7 +45,7 @@ import elide.vm.annotations.Polyglot
    * @param callback
    * @return A randomly generated integer between `min` (inclusive) and `max` (exclusive) or nothing if a callback was provided.
    */
-  public fun randomInt(min: Int = 0, max: Int, callback: RandomIntCallback? = null): Any
+  @Polyglot public fun randomInt(min: Long, max: Long, callback: RandomIntCallback? = null): Any
 
   /**
    * ## Crypto: randomInt

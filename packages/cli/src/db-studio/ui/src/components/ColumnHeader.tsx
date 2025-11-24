@@ -24,7 +24,7 @@ function ColumnInfo({ column, children }: ColumnInfoProps) {
           </div>
 
           {column.primaryKey && (
-            <div className="flex items-center justify-between py-1 border-b border-gray-800">
+            <div className="flex items-center justify-between py-1 border-b border-gray-800 text-xs">
               <div className="flex items-center gap-1.5">
                 <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
                 <span className="text-gray-500">Primary Key</span>
@@ -34,7 +34,7 @@ function ColumnInfo({ column, children }: ColumnInfoProps) {
           )}
 
           {column.foreignKey && (
-            <div className="py-1 space-y-1">
+            <div className="py-1 space-y-1 text-xs">
               <div className="flex items-center gap-1.5 text-gray-500 mb-1">
                 <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                 <span>Foreign Key</span>

@@ -105,7 +105,7 @@ export default function TableView() {
         },
       }
     })
-  }, [data?.columns])
+  }, [data])
 
   // Build TanStack Table data
   const tableData: Record<string, unknown>[] = React.useMemo(() => {
@@ -120,7 +120,7 @@ export default function TableView() {
         {} as Record<string, unknown>
       )
     )
-  }, [data?.rows, data?.columns])
+  }, [data])
 
   // Create TanStack Table instance
   const table = useReactTable({
@@ -142,9 +142,7 @@ export default function TableView() {
   // Loading state
   if (isLoading && !data) {
     return (
-      <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-gray-500 font-mono">
-        Loading…
-      </div>
+      <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-gray-500 font-mono">Loading…</div>
     )
   }
 

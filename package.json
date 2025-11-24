@@ -44,7 +44,7 @@
     "commitlint": "19.8.1",
     "esbuild": "0.25.0",
     "eslint": "9.38.0",
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "husky": "9.1.7",
     "lint-staged": "16.2.7",
     "mitata": "1.0.34",

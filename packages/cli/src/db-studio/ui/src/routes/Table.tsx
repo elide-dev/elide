@@ -139,6 +139,11 @@ export default function TableView() {
     },
   })
 
+  // Reset column visibility when table changes
+  React.useEffect(() => {
+    table.resetColumnVisibility()
+  }, [tableName, table])
+
   // Loading state
   if (isLoading && !data) {
     return (

@@ -21,6 +21,7 @@ import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
 import elide.runtime.node.crypto.NodeCryptoModule
+import elide.runtime.node.crypto.NodeHash
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `crypto` built-in module. */
@@ -214,6 +215,141 @@ import elide.testing.annotations.TestCase
     """
   }
 
+  @Test fun `createHash should support md5 algorithm`() = conforms {
+    val hash = crypto.provide().createHash("md5")
+    hash.update("hello world")
+    val digest = hash.digest("hex")
+    assertEquals(
+      "5eb63bbbe01eeed093cb22bb8f5acdc3",
+      digest,
+      "MD5 hash of 'hello world' should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("md5");
+    hash.update("hello world");
+    const digest = hash.digest("hex");
+
+    assert.equal(
+      "5eb63bbbe01eeed093cb22bb8f5acdc3",
+      digest,
+      "MD5 hash of 'hello world' should match expected value"
+    );
+    """
+  }
+
+  @Test fun `createHash should support sha1 algorithm`() = conforms {
+    val hash = crypto.provide().createHash("sha1")
+    hash.update("hello world")
+    val digest = hash.digest("hex")
+    assertEquals(
+      "2aae6c35c94fcfb415dbe95f408b9ce91ee846ed",
+      digest,
+      "SHA1 hash of 'hello world' should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha1");
+    hash.update("hello world");
+    const digest = hash.digest("hex");
+
+    assert.equal(
+      "2aae6c35c94fcfb415dbe95f408b9ce91ee846ed",
+      digest,
+      "SHA1 hash of 'hello world' should match expected value"
+    );
+    """
+  }
+
+  @Test fun `createHash should support sha256 algorithm`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    hash.update("hello world")
+    val digest = hash.digest("hex")
+    assertEquals(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digest,
+      "SHA256 hash of 'hello world' should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha256");
+    hash.update("hello world");
+    const digest = hash.digest("hex");
+
+    assert.equal(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digest,
+      "SHA256 hash of 'hello world' should match expected value"
+    );
+    """
+  }
+
+  @Test fun `createHash should support sha512 algorithm`() = conforms {
+    val hash = crypto.provide().createHash("sha512")
+    hash.update("hello world")
+    val digest = hash.digest("hex")
+    assertEquals(
+      "309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f",
+      digest,
+      "SHA512 hash of 'hello world' should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha512");
+    hash.update("hello world");
+    const digest = hash.digest("hex");
+
+    assert.equal(
+      "309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f",
+      digest,
+      "SHA512 hash of 'hello world' should match expected value"
+    );
+    """
+  }
+
+  @Test fun `createHash should support sha3-256 algorithm`() = conforms {
+    val hash = crypto.provide().createHash("sha3-256")
+    hash.update("hello world")
+    val digest = hash.digest("hex")
+    assertEquals(
+      "644bcc7e564373040999aac89e7622f3ca71fba1d972fd94a31c3bfbf24e3938",
+      digest,
+      "SHA3-256 hash of 'hello world' should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha3-256");
+    hash.update("hello world");
+    const digest = hash.digest("hex");
+
+    assert.equal(
+      "644bcc7e564373040999aac89e7622f3ca71fba1d972fd94a31c3bfbf24e3938",
+      digest,
+      "SHA3-256 hash of 'hello world' should match expected value"
+    );
+    """
+  }
+
   @Test fun `createHash should throw for unsupported algorithm`() = conforms {
     assertThrows<IllegalArgumentException> { crypto.provide().createHash("unsupported-algorithm") }
   }.guest {
@@ -307,7 +443,7 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Test fun `createHash should throw if digest called twice`() = conforms {
+  @Test fun `createHash should throw if digest is called twice`() = conforms {
     val hash = crypto.provide().createHash("sha256")
     hash.update("data")
     hash.digest("hex")
@@ -363,6 +499,7 @@ import elide.testing.annotations.TestCase
     val digestOriginal = hash.digest("hex")
     val digestCopy = hashCopy.digest("hex")
 
+    assertIs<NodeHash>(hashCopy)
     assertEquals(
       "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
       digestOriginal,

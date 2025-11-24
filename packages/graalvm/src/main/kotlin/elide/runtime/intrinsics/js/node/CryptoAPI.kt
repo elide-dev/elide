@@ -14,6 +14,7 @@ package elide.runtime.intrinsics.js.node
 
 import org.graalvm.polyglot.Value
 import elide.annotations.API
+import elide.runtime.node.crypto.NodeHash
 import elide.vm.annotations.Polyglot
 
 /**
@@ -30,4 +31,18 @@ import elide.vm.annotations.Polyglot
    * @return A randomly generated 36 character UUID c4 string in lowercase format (e.g. "5cb34cef-5fc2-47e4-a3ac-4bb055fa2025")
    */
   @Polyglot public fun randomUUID(options: Value? = null): String
+
+
+  /**
+   * ## Crypto: createHash
+   * Creates and returns a [NodeHash] object that can be used to update and generate hash digests using the specified algorithm.
+   *
+   * See also: [Node Crypto API: `createHash`](https://nodejs.org/api/crypto.html#cryptocreatehashalgorithm-options)
+   *
+   * @param algorithm The hash algorithm to use (e.g. "sha256", "md5", etc.)
+   * @return A [NodeHash] instance configured to use the specified algorithm.
+   *
+   * @TODO(elijahkotyluk) Support optional options parameter
+   */
+  @Polyglot public fun createHash(algorithm: String): NodeHash
 }

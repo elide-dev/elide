@@ -12,6 +12,7 @@
  */
 package elide.runtime.node
 
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -196,6 +197,162 @@ import elide.testing.annotations.TestCase
 
     assert.equal(typeof uuid1, "string");
     assert.equal(typeof uuid2, "string");
+    """
+  }
+
+  @Test fun `createHash should create a NodeHash object`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    assertNotNull(hash, "createHash should return a hash object")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha256");
+    assert.ok(hash, "createHash should return a node hash object");
+    """
+  }
+
+  @Test fun `createHash should throw for unsupported algorithm`() = conforms {
+    assertThrows<IllegalArgumentException> { crypto.provide().createHash("unsupported-algorithm") }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    assert.throws(() => crypto.createHash("unsupported-algo"), "Should throw for unsupported algorithm");
+    """
+  }
+
+  @Test fun `createHash should create a hash and generate the correct digest`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    hash.update("hello world")
+    val digest = hash.digest("hex")
+    assertEquals(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digest,
+      "SHA-256 hash of 'hello world' should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha256");
+    hash.update("hello world");
+    const digest = hash.digest("hex");
+
+    assert.equal(digest, "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9", "SHA-256 hash of 'hello world' should match expected value");
+    """
+  }
+
+  @Test fun `createHash should allow chainable updates`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    hash.update("hello").update(" ").update("world")
+    val digest = hash.digest("hex")
+
+    assertEquals(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digest,
+      "SHA-256 hash of 'hello world' should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha256");
+    hash.update("hello").update(" ").update("world");
+    const digest = hash.digest("hex");
+
+    assert.equal(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digest,
+      "SHA-256 hash of 'hello world' should match expected value"
+    )
+    """
+  }
+
+  @Test fun `createHash should accept a ByteArray input`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    val input = "hello world".toByteArray(Charsets.UTF_8)
+    hash.update(input)
+    val digest = hash.digest("hex")
+
+    assertEquals(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digest,
+      "SHA-256 hash of 'hello world' byte array should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+    
+    const bytes = new Uint8Array([104,101,108,108,111,32,119,111,114,108,100])
+    const hash = crypto.createHash("sha256");
+    hash.update(bytes);
+    const digestHex = hash.digest("hex");
+    
+    assert.equal(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digestHex,
+      "SHA-256 hash of 'hello world' byte array should match expected value"
+    )
+    """
+  }
+
+  @Test fun `createHash should throw if digest called twice`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    hash.update("data")
+    hash.digest("hex")
+    assertThrows<IllegalStateException> {
+      hash.digest("hex")
+    }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha256");
+    hash.update("data");
+    hash.digest("hex");
+
+    assert.throws(() => {
+      hash.digest("hex");
+    }, "Should throw if digest called twice");
+    """
+  }
+
+  @Test fun `createHash with digested empty input SHA-256`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    val digest = hash.digest("hex")
+    println(digest)
+    assertEquals(
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      digest.toString(),
+      "SHA-256 of empty input should match expected value"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha256");
+    const digest = hash.digest("hex")
+    
+    assert.equal(
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      digest,
+      "SHA-256 of empty input should match expected value"
+    );
     """
   }
 }

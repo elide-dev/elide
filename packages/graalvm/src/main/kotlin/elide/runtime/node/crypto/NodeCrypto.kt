@@ -30,6 +30,7 @@ private const val CRYPTO_MODULE_SYMBOL = "node_${NodeModuleName.CRYPTO}"
 
 // Functiopn name for randomUUID
 private const val F_RANDOM_UUID = "randomUUID"
+private val F_CREATE_HASH = "createHash"
 
 // Installs the Node crypto module into the intrinsic bindings.
 @Intrinsic internal class NodeCryptoModule : AbstractNodeBuiltinModule() {
@@ -54,6 +55,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
     // Module members
     private val moduleMembers = arrayOf(
       F_RANDOM_UUID,
+      F_CREATE_HASH,
     ).apply { sort() }
   }
 
@@ -62,6 +64,10 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
     // Note `options` parameter exists for Node.js compatibility but is currently ignored
     // It supports { disableEntropyCache: boolean } which is not applicable to our implementation
     return java.util.UUID.randomUUID().toString()
+  }
+  
+  @Polyglot override fun createHash(algorithm: String): NodeHash {
+    return NodeHash(algorithm)
   }
 
   // ProxyObject implementation
@@ -75,6 +81,10 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
       // Node.js signature: randomUUID([options])
       val options = args.getOrNull(0)
       randomUUID(options)
+    }
+    F_CREATE_HASH -> ProxyExecutable { args ->
+      val algorithm = args.getOrNull(0)?.asString() ?: throw IllegalArgumentException("Algorithm required")
+      createHash(algorithm)
     }
     else -> null
   }

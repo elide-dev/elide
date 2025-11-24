@@ -32,7 +32,7 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
   }, [showFilterPanel, appliedFilters.length, onAddFilter, onFilterToggle])
 
   return (
-    <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-800 bg-gray-950 shrink-0">
+    <div className="flex items-center gap-2 px-6 py-4 border-b border-border bg-background shrink-0">
       {config.tableName && (
         <div className="flex items-center gap-3 mr-4">
           <h2 className="text-lg font-semibold tracking-tight truncate">{config.tableName}</h2>
@@ -65,9 +65,9 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
 
       <div className="flex items-center gap-2 ml-auto">
         {metadata?.executionTimeMs !== undefined && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-900/50 border border-gray-800 rounded-md">
-            <span className="text-xs text-gray-400">{rowCount} rows ⋅</span>
-            <span className="text-xs font-mono font-semibold text-gray-400">{metadata.executionTimeMs}ms</span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/50 border border-border rounded-md">
+            <span className="text-xs text-muted-foreground">{rowCount} rows ⋅</span>
+            <span className="text-xs font-mono font-semibold text-muted-foreground">{metadata.executionTimeMs}ms</span>
           </div>
         )}
 

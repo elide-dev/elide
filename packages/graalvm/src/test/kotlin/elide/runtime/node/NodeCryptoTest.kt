@@ -355,4 +355,69 @@ import elide.testing.annotations.TestCase
     );
     """
   }
+
+  @Test fun `createHash should be copyable`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    hash.update("hello world")
+    val hashCopy = hash.copy()
+    val digestOriginal = hash.digest("hex")
+    val digestCopy = hashCopy.digest("hex")
+
+    assertEquals(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digestOriginal,
+      "Original SHA-256 hash of 'hello world' should match expected value"
+    )
+    assertEquals(
+      digestOriginal,
+      digestCopy,
+      "Copied hash digest should match original digest"
+    )
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha256");
+    hash.update("hello world");
+    const hashCopy = hash.copy();
+    const digestOriginal = hash.digest("hex");
+    const digestCopy = hashCopy.digest("hex");
+
+    assert.equal(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      digestOriginal,
+      "Original SHA-256 hash of 'hello world' should match expected value"
+    );
+    assert.equal(
+      digestOriginal,
+      digestCopy,
+      "Copied hash digest should match original digest"
+    );
+    """
+  }
+
+  @Test fun `createHash should throw when attempting to copy a digested Hash`() = conforms {
+    val hash = crypto.provide().createHash("sha256")
+    hash.update("data")
+    hash.digest("hex")
+    assertThrows<IllegalStateException> {
+      hash.copy()
+    }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    const hash = crypto.createHash("sha256");
+    hash.update("data");
+    hash.digest("hex");
+
+    assert.throws(() => {
+      hash.copy();
+    }, "Should throw if trying to copy a digested hash");
+    """
+  }
 }

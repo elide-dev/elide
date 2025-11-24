@@ -26,16 +26,41 @@ private val NODE_TO_JVM_ALGORITHM = mapOf(
 )
 
 // @TODO(elijahkotyluk) Add support for an optional options parameter to configure output format, etc.
-// ## Node.js-compatible Hash implementation
-public class NodeHash(algorithm: String) {
-  private val md = MessageDigest.getInstance(resolveAlgorithm(algorithm))
-  private var digested = false
+/**
+ * ## Node API: Hash
+ * Implements the Node.js `Hash` class for feeding data into the Hash object and creating hash digests.
+ * See also: [Node.js Crypto API: `Hash`](https://nodejs.org/api/crypto.html#class-hash)
+ */
+public class NodeHash(
+  private val algorithm: String,
+  md: MessageDigest? = null,
+  private var digested: Boolean = false
+) {
+  private val md: MessageDigest = md ?: MessageDigest.getInstance(resolveAlgorithm(algorithm))
 
+  // @TODO(elijahkotyluk) add support for transform options
+  public fun copy(): NodeHash {
+    if (digested) throw IllegalStateException("Digest already called, cannot copy a finalized Hash.")
+
+    val mdClone = try {
+      md.clone() as MessageDigest // @TODO(elijahkotyluk) see if we can avoid having to cast
+    } catch (e: CloneNotSupportedException) {
+      // @TODO(elijahkotyluk) validate the error messaging and change as needed.
+      throw IllegalStateException(e.message ?: "Failed to clone MessageDigest instance")
+    }
+
+    // Create new NodeHash with the cloned digest
+    return NodeHash(
+      algorithm = this.algorithm,
+      md = mdClone,
+      digested = false
+    )
+  }
   // Update the current hash with new data
   public fun update(data: Any): NodeHash {
     if (digested) throw IllegalStateException("Digest already called")
 
-    // @TODO(elijahkotyluk) Remove debug line once tests are passing correctly
+    // @TODO(elijahkotyluk) Remove debug line once tests are passing correctly.
     println("NodeHash.update called with data of type: ${data::class}, value: $data")
     val bytes = when (data) {
       is String -> data.toByteArray(Charsets.UTF_8)
@@ -56,7 +81,7 @@ public class NodeHash(algorithm: String) {
         val arr = data.map {
           when (it) {
             is Number -> it.toByte()
-            else -> throw IllegalArgumentException("Unsupported element type: ${it?.javaClass}")
+            else -> throw IllegalArgumentException("Unsupported item type: ${it?.javaClass}")
           }
         }.toByteArray()
         arr

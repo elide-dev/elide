@@ -26,7 +26,7 @@ function ColumnInfo({ column, children }: ColumnInfoProps) {
           {column.primaryKey && (
             <div className="flex items-center justify-between py-1 border-b border-border text-xs">
               <div className="flex items-center gap-1.5">
-                <Key className="w-3.5 h-3.5 text-chart-4 shrink-0" />
+                <Key className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                 <span className="text-muted-foreground">Primary Key</span>
               </div>
               <span className="text-foreground">Yes</span>
@@ -36,7 +36,7 @@ function ColumnInfo({ column, children }: ColumnInfoProps) {
           {column.foreignKey && (
             <div className="py-1 space-y-1 text-xs">
               <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
-                <Link className="w-3.5 h-3.5 text-chart-2 shrink-0" />
+                <Link className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                 <span>Foreign Key</span>
               </div>
               <div className="pl-2 space-y-1 border-l-2 border-border">
@@ -152,8 +152,8 @@ export function ColumnHeader({ column, sorted, showControls = true }: ColumnHead
         }`}
         onClick={isSortable ? handleSort : undefined}
       >
-        {isKey && <Key className="w-3.5 h-3.5 text-chart-4 shrink-0" />}
-        {isForeignKey && <Link className="w-3.5 h-3.5 text-chart-2 shrink-0" />}
+        {isKey && <Key className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
+        {isForeignKey && <Link className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
         <div className="flex flex-col gap-0.5 flex-1 min-w-0">
           <span className="text-xs font-semibold text-foreground tracking-wider truncate">{column.name}</span>
           <span className="text-[10px] text-muted-foreground font-normal truncate">{column.type}</span>

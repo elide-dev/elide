@@ -63,18 +63,13 @@ export default function Database() {
     <SidebarProvider defaultOpen={true} className="h-screen">
       <ResizablePanelGroup direction="horizontal" className="h-full">
         <ResizablePanel defaultSize={20} minSize={15} maxSize={40} className="min-w-[200px]">
-          <Sidebar collapsible="none" className="border-sidebar-border h-full">
-            <SidebarHeader className="border-b border-sidebar-border shrink-0">
+          <Sidebar collapsible="none" className="border-border h-full">
+            <SidebarHeader className="border-b border-border shrink-0">
               <Link to="/" className="flex items-center gap-2 px-2 py-3">
                 <img src="/elide-logo.svg" alt="Elide" className="w-8 h-8" />
                 <h1 className="text-lg font-medium">Database Studio</h1>
               </Link>
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="w-full justify-start bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              >
+              <Button asChild variant="outline" size="sm" className="w-full justify-start">
                 <Link to="/" aria-label="Back to databases">
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to databases</span>
@@ -82,18 +77,13 @@ export default function Database() {
               </Button>
             </SidebarHeader>
 
-            <div className="px-4 py-4 shrink-0 border-b border-sidebar-border">
+            <div className="px-4 py-4 shrink-0 border-b border-border">
               <div className="mb-3">
                 <Button
                   asChild
-                  variant={isQueryActive ? 'default' : 'outline'}
+                  variant={isQueryActive ? 'secondary' : 'outline'}
                   size="sm"
-                  className={[
-                    'w-full justify-start',
-                    isQueryActive
-                      ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                      : 'bg-sidebar text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                  ].join(' ')}
+                  className="w-full justify-start"
                 >
                   <Link to={`/database/${dbIndex}/query`}>
                     <Code2 className="w-4 h-4" />
@@ -105,7 +95,7 @@ export default function Database() {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="w-full bg-sidebar-accent border border-sidebar-border rounded px-3 py-2 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-sidebar-ring focus:ring-0 text-sidebar-foreground"
+                  className="w-full bg-muted border border-border rounded px-3 py-2 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-ring focus:ring-0"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   disabled={loading}
@@ -113,25 +103,17 @@ export default function Database() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-sidebar-accent rounded transition-colors cursor-pointer"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded transition-colors cursor-pointer"
                       disabled={loading}
                     >
                       <ListFilter className="w-4 h-4 text-muted-foreground" />
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="bg-sidebar border-sidebar-border">
-                    <DropdownMenuCheckboxItem
-                      checked={showTables}
-                      onCheckedChange={setShowTables}
-                      className="text-sidebar-foreground focus:bg-sidebar-accent focus:text-sidebar-accent-foreground"
-                    >
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuCheckboxItem checked={showTables} onCheckedChange={setShowTables}>
                       Show tables
                     </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showViews}
-                      onCheckedChange={setShowViews}
-                      className="text-sidebar-foreground focus:bg-sidebar-accent focus:text-sidebar-accent-foreground"
-                    >
+                    <DropdownMenuCheckboxItem checked={showViews} onCheckedChange={setShowViews}>
                       Show views
                     </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
@@ -153,7 +135,7 @@ export default function Database() {
                               <Link to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}>
                                 <Icon className="w-4 h-4" />
                                 <span className="flex-1 truncate">{name}</span>
-                                <span className="text-xs text-sidebar-foreground/60">{formatRowCount(rowCount)}</span>
+                                <span className="text-xs text-muted-foreground">{formatRowCount(rowCount)}</span>
                               </Link>
                             </SidebarMenuButton>
                           </SidebarMenuItem>

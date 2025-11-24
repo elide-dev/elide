@@ -15,6 +15,7 @@ package elide.runtime.node.crypto
 import org.graalvm.polyglot.Value
 import java.security.MessageDigest
 import java.util.Base64
+import elide.vm.annotations.Polyglot
 
 // Map Node.js hash algorithm names to the JVM equivalent
 private val NODE_TO_JVM_ALGORITHM = mapOf(
@@ -61,7 +62,7 @@ public class NodeHash(
     if (digested) throw IllegalStateException("Digest already called")
 
     // @TODO(elijahkotyluk) Remove debug line once tests are passing correctly.
-    println("NodeHash.update called with data of type: ${data::class}, value: $data")
+//    println("NodeHash.update called with data of type: ${data::class}, value: $data")
     val bytes = when (data) {
       is String -> data.toByteArray(Charsets.UTF_8)
       is ByteArray -> data
@@ -81,19 +82,33 @@ public class NodeHash(
         val arr = data.map {
           when (it) {
             is Number -> it.toByte()
-            else -> throw IllegalArgumentException("Unsupported item type: ${it?.javaClass}")
+            else -> throw IllegalArgumentException("Unsupported item type, must be of type string or an instance of Buffer, TypedArray, or Dataview. Received: ${it?.javaClass?.name}")
           }
         }.toByteArray()
         arr
       }
-      // @TODO(elijahkotyluk) Support more types as needed and create a better general error message
-      else -> throw IllegalArgumentException("Unsupported input type: ${data::class}")
+      else -> throw IllegalArgumentException("The \"data\" argument must be of type string or an instance of Buffer, TypedArray, or Dataview. Received an instance of: ${data::class}")
     }
 
     md.update(bytes)
 
     return this
   }
+
+  /**
+   * Public overload of [digestInternal].
+   * This is equivalent to calling [digestInternal] with a `null` encoding.
+   * @return The computed digest as a [ByteArray].
+   */
+  @Polyglot public fun digest(): Any = digestInternal(null)
+
+  /**
+   * Public overload of [digestInternal].
+   * This is equivalent to calling [digestInternal] with the specified [encoding].
+   * @param encoding Encoding for the output digest.
+   * @return The computed digest in the specified encoding.
+   */
+  @Polyglot public fun digest(encoding: String?): Any = digestInternal(encoding)
 
   /**
    * Compute the digest of the data passed to [update], returning it in the specified [encoding].
@@ -104,7 +119,7 @@ public class NodeHash(
    * - `"latin1"`: returns a Latin-1 encoded [String]
    * @return The computed digest in the specified encoding.
    */
-  public fun digest(encoding: String? = null): Any {
+  private fun digestInternal(encoding: String? = null): Any {
     if (digested) throw IllegalStateException("Digest already called")
     digested = true
     val result = md.digest()

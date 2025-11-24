@@ -17,45 +17,45 @@ function ColumnInfo({ column, children }: ColumnInfoProps) {
   return (
     <HoverCard openDelay={300}>
       <HoverCardTrigger asChild>{children}</HoverCardTrigger>
-      <HoverCardContent className="w-80 bg-gray-900 border-gray-700" side="bottom" align="start">
+      <HoverCardContent className="w-80 bg-card border-border" side="bottom" align="start">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-semibold text-gray-100 font-mono">{column.name}</h4>
+            <h4 className="text-sm font-semibold text-foreground font-mono">{column.name}</h4>
           </div>
 
           {column.primaryKey && (
-            <div className="flex items-center justify-between py-1 border-b border-gray-800 text-xs">
+            <div className="flex items-center justify-between py-1 border-b border-border text-xs">
               <div className="flex items-center gap-1.5">
-                <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
-                <span className="text-gray-500">Primary Key</span>
+                <Key className="w-3.5 h-3.5 text-chart-4 shrink-0" />
+                <span className="text-muted-foreground">Primary Key</span>
               </div>
-              <span className="text-gray-200">Yes</span>
+              <span className="text-foreground">Yes</span>
             </div>
           )}
 
           {column.foreignKey && (
             <div className="py-1 space-y-1 text-xs">
-              <div className="flex items-center gap-1.5 text-gray-500 mb-1">
-                <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+              <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
+                <Link className="w-3.5 h-3.5 text-chart-2 shrink-0" />
                 <span>Foreign Key</span>
               </div>
-              <div className="pl-2 space-y-1 border-l-2 border-gray-700">
+              <div className="pl-2 space-y-1 border-l-2 border-border">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-500">References</span>
-                  <span className="font-mono text-gray-200">
+                  <span className="text-muted-foreground">References</span>
+                  <span className="font-mono text-foreground">
                     {column.foreignKey.table}.{column.foreignKey.column}
                   </span>
                 </div>
                 {column.foreignKey.onUpdate && (
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-500">On Update</span>
-                    <span className="font-mono text-gray-300">{column.foreignKey.onUpdate}</span>
+                    <span className="text-muted-foreground">On Update</span>
+                    <span className="font-mono text-foreground">{column.foreignKey.onUpdate}</span>
                   </div>
                 )}
                 {column.foreignKey.onDelete && (
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-500">On Delete</span>
-                    <span className="font-mono text-gray-300">{column.foreignKey.onDelete}</span>
+                    <span className="text-muted-foreground">On Delete</span>
+                    <span className="font-mono text-foreground">{column.foreignKey.onDelete}</span>
                   </div>
                 )}
               </div>
@@ -63,34 +63,34 @@ function ColumnInfo({ column, children }: ColumnInfoProps) {
           )}
 
           <div className="space-y-2 text-xs">
-            <div className="flex items-center justify-between py-1 border-b border-gray-800">
-              <span className="text-gray-500">Type</span>
-              <span className="font-mono text-gray-200">{column.type}</span>
+            <div className="flex items-center justify-between py-1 border-b border-border">
+              <span className="text-muted-foreground">Type</span>
+              <span className="font-mono text-foreground">{column.type}</span>
             </div>
 
-            <div className="flex items-center justify-between py-1 border-b border-gray-800">
-              <span className="text-gray-500">Nullable</span>
-              <span className="text-gray-200">{column.nullable ? 'Yes' : 'No'}</span>
+            <div className="flex items-center justify-between py-1 border-b border-border">
+              <span className="text-muted-foreground">Nullable</span>
+              <span className="text-foreground">{column.nullable ? 'Yes' : 'No'}</span>
             </div>
 
             {column.unique && (
-              <div className="flex items-center justify-between py-1 border-b border-gray-800">
-                <span className="text-gray-500">Unique</span>
-                <span className="text-gray-200">Yes</span>
+              <div className="flex items-center justify-between py-1 border-b border-border">
+                <span className="text-muted-foreground">Unique</span>
+                <span className="text-foreground">Yes</span>
               </div>
             )}
 
             {column.autoIncrement && (
-              <div className="flex items-center justify-between py-1 border-b border-gray-800">
-                <span className="text-gray-500">Auto Increment</span>
-                <span className="text-gray-200">Yes</span>
+              <div className="flex items-center justify-between py-1 border-b border-border">
+                <span className="text-muted-foreground">Auto Increment</span>
+                <span className="text-foreground">Yes</span>
               </div>
             )}
 
             {column.defaultValue !== undefined && column.defaultValue !== null && (
-              <div className="flex items-center justify-between py-1 border-b border-gray-800">
-                <span className="text-gray-500">Default</span>
-                <span className="font-mono text-gray-200">{String(column.defaultValue)}</span>
+              <div className="flex items-center justify-between py-1 border-b border-border">
+                <span className="text-muted-foreground">Default</span>
+                <span className="font-mono text-foreground">{String(column.defaultValue)}</span>
               </div>
             )}
           </div>
@@ -148,17 +148,17 @@ export function ColumnHeader({ column, sorted, showControls = true }: ColumnHead
     <ColumnInfo column={column}>
       <div
         className={`flex items-center gap-1.5 px-4 py-2 w-full h-full ${
-          isSortable ? 'cursor-pointer select-none hover:text-gray-200 transition-colors' : ''
+          isSortable ? 'cursor-pointer select-none hover:text-foreground transition-colors' : ''
         }`}
         onClick={isSortable ? handleSort : undefined}
       >
-        {isKey && <Key className="w-3.5 h-3.5 text-yellow-400 shrink-0" />}
-        {isForeignKey && <Link className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
+        {isKey && <Key className="w-3.5 h-3.5 text-chart-4 shrink-0" />}
+        {isForeignKey && <Link className="w-3.5 h-3.5 text-chart-2 shrink-0" />}
         <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-          <span className="text-xs font-semibold text-gray-200 tracking-wider truncate">{column.name}</span>
-          <span className="text-[10px] text-gray-500 font-normal truncate">{column.type}</span>
+          <span className="text-xs font-semibold text-foreground tracking-wider truncate">{column.name}</span>
+          <span className="text-[10px] text-muted-foreground font-normal truncate">{column.type}</span>
         </div>
-        {isSortable && <SortIcon sorted={sorted} className="h-3.5 w-3.5 text-gray-400 shrink-0" />}
+        {isSortable && <SortIcon sorted={sorted} className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
       </div>
     </ColumnInfo>
   )

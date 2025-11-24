@@ -37,7 +37,7 @@ const MemoizedRow = React.memo(({ row, isLoading }: MemoizedRowProps) => {
   const isSelected = row.getIsSelected()
 
   return (
-    <TableRow key={row.id} data-state={isSelected && 'selected'} className="hover:bg-gray-900/30 transition-colors">
+    <TableRow key={row.id} data-state={isSelected && 'selected'} className="hover:bg-accent/30 transition-colors">
       {row.getVisibleCells().map((cell) => {
         const { id, column, getContext } = cell
         const width = column.getSize()
@@ -45,7 +45,7 @@ const MemoizedRow = React.memo(({ row, isLoading }: MemoizedRowProps) => {
         return (
           <TableCell
             key={id}
-            className="px-4 py-2 text-xs text-gray-200 border-r border-gray-800 overflow-hidden font-mono"
+            className="px-4 py-2 text-xs text-foreground border-r border-border overflow-hidden font-mono"
             style={{ width, maxWidth: width }}
           >
             {isLoading ? (
@@ -84,7 +84,7 @@ export function DataTableGrid() {
                 return (
                   <TableHead
                     key={header.id}
-                    className={`text-left border-b border-r border-gray-800 ${config.showControls ? 'p-0 hover:bg-gray-800 relative' : 'px-4 py-2'} sticky top-0 z-10 bg-gray-900 overflow-hidden font-mono`}
+                    className={`text-left border-b border-r border-border ${config.showControls ? 'p-0 hover:bg-accent relative' : 'px-4 py-2'} sticky top-0 z-10 bg-card overflow-hidden font-mono`}
                     style={{ width: header.getSize(), maxWidth: header.getSize() }}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -92,8 +92,8 @@ export function DataTableGrid() {
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}
-                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none hover:bg-blue-500 ${
-                          header.column.getIsResizing() ? 'bg-blue-500' : ''
+                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none hover:bg-chart-2 ${
+                          header.column.getIsResizing() ? 'bg-chart-2' : ''
                         }`}
                       />
                     )}
@@ -115,7 +115,7 @@ export function DataTableGrid() {
       {table.getRowModel().rows?.length === 0 && (
         <div className=" flex items-center justify-center h-full">
           <div className="flex flex-col items-start gap-1">
-            <div className="text-xs text-center text-gray-500 font-mono">
+            <div className="text-xs text-center text-muted-foreground font-mono">
               <div className="font-semibold">No rows</div>
               <div>limit {pagination.limit}</div>
               <div>offset {pagination.offset}</div>

@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -46,7 +47,7 @@ export const ColumnsDropdown = function ColumnsDropdown() {
         <DropdownMenuSeparator />
         <div className="px-2 py-2" onKeyDown={(e) => e.stopPropagation()}>
           <div className="relative">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <Input
               placeholder="Search..."
               value={search}
@@ -61,10 +62,7 @@ export const ColumnsDropdown = function ColumnsDropdown() {
 
         <DropdownMenuSeparator />
         <div className="max-h-[300px] overflow-y-auto">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-7 w-full justify-start text-xs font-normal"
+          <DropdownMenuItem
             onClick={(e) => {
               e.preventDefault()
               const hasHiddenColumns = table.getAllColumns().some((col) => !col.getIsVisible() && col.getCanHide())
@@ -78,7 +76,7 @@ export const ColumnsDropdown = function ColumnsDropdown() {
             {table.getAllColumns().some((col) => !col.getIsVisible() && col.getCanHide())
               ? 'Select all'
               : 'Deselect all'}
-          </Button>
+          </DropdownMenuItem>
           {table
             .getAllColumns()
             .filter((column) => column.getCanHide())
@@ -99,7 +97,7 @@ export const ColumnsDropdown = function ColumnsDropdown() {
             .getAllColumns()
             .filter((column) => column.getCanHide())
             .filter((column) => column.id.toLowerCase().includes(search.toLowerCase())).length === 0 && (
-            <div className="px-2 py-2 text-xs text-gray-500 text-center">No columns found</div>
+            <div className="px-2 py-2 text-xs text-muted-foreground text-center">No columns found</div>
           )}
         </div>
       </DropdownMenuContent>

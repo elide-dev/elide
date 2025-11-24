@@ -120,7 +120,7 @@ export const DataTableFilterPanel = React.memo(function DataTableFilterPanel({
   )
 
   return (
-    <div className="border-b border-gray-800 bg-gray-950/50 shrink-0">
+    <div className="border-b border-border bg-muted/50 shrink-0">
       <div className="flex items-start gap-6 px-6 py-3">
         <div className="space-y-2">
           {draftFilters.map((filter, index) => (
@@ -136,7 +136,7 @@ export const DataTableFilterPanel = React.memo(function DataTableFilterPanel({
           ))}
         </div>
         {/* Separator */}
-        <div className="w-px bg-gray-800 self-stretch"></div>
+        <div className="w-px bg-border self-stretch"></div>
         {/* Action buttons column */}
         <div className="flex items-end gap-2 pt-0.5">
           <Button
@@ -152,7 +152,7 @@ export const DataTableFilterPanel = React.memo(function DataTableFilterPanel({
             <Plus className="mr-1 h-3 w-3" />
             Add filter
           </Button>
-          <Button variant="ghost" size="sm" onClick={handleClear} className="h-8 text-xs text-gray-400">
+          <Button variant="ghost" size="sm" onClick={handleClear} className="h-8 text-xs text-muted-foreground">
             Clear filters
           </Button>
         </div>

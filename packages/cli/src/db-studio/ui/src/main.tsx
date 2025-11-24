@@ -21,7 +21,14 @@ const router = createBrowserRouter([
         path: 'database/:dbIndex',
         element: <Database />,
         children: [
-          { path: 'tables', element: <div className="flex-1 p-6 overflow-auto flex items-center justify-center text-gray-500">Select a table to view data</div> },
+          {
+            path: 'tables',
+            element: (
+              <div className="flex-1 p-6 overflow-auto flex items-center justify-center text-muted-foreground">
+                Select a table to view data
+              </div>
+            ),
+          },
           { path: 'table/:tableName', element: <Table /> },
           { path: 'query', element: <Query /> },
         ],
@@ -35,5 +42,5 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
-  </StrictMode>,
+  </StrictMode>
 )

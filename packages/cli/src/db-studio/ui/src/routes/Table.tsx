@@ -15,7 +15,7 @@ import { ColumnHeader } from '@/components/ColumnHeader'
  * Format cell values with special handling for NULL values
  */
 function formatCellValue(value: unknown): React.ReactNode {
-  if (value === null || value === undefined) return <span className="text-gray-500 font-normal">NULL</span>
+  if (value === null || value === undefined) return <span className="text-muted-foreground font-normal">NULL</span>
   return String(value)
 }
 
@@ -142,14 +142,16 @@ export default function TableView() {
   // Loading state
   if (isLoading && !data) {
     return (
-      <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-gray-500 font-mono">Loading…</div>
+      <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-muted-foreground font-mono">
+        Loading…
+      </div>
     )
   }
 
   // Error state
   if (error && !data) {
     return (
-      <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-red-400 font-mono">
+      <div className="flex-1 p-0 overflow-auto flex items-center justify-center text-destructive font-mono">
         Error: {error.message}
       </div>
     )

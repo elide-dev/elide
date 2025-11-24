@@ -37,7 +37,9 @@ export const FilterRow = React.memo(function FilterRow({
   return (
     <div className="flex items-center gap-2">
       {/* First filter shows "where", others show "and" */}
-      <span className="text-xs text-gray-400 font-mono w-12 uppercase shrink-0">{isFirst ? 'where' : 'and'}</span>
+      <span className="text-xs text-muted-foreground font-mono w-12 uppercase shrink-0">
+        {isFirst ? 'where' : 'and'}
+      </span>
 
       {/* Column selector */}
       <DropdownMenu>
@@ -129,7 +131,7 @@ export const FilterRow = React.memo(function FilterRow({
         variant="ghost"
         size="sm"
         onClick={onRemove}
-        className="h-8 w-8 p-0 shrink-0 text-gray-400 hover:text-gray-200"
+        className="h-8 w-8 p-0 shrink-0 text-muted-foreground hover:text-foreground"
       >
         <X className="h-4 w-4" />
       </Button>

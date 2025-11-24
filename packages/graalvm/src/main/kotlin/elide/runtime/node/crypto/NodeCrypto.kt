@@ -46,8 +46,6 @@ private val cryptoRandomGenerator by lazy { SecureRandom() }
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER
 // @TODO Remove duplicate definitions
 private const val MAX_RANDOM_INT_RANGE = (1L shl 48) - 1 // 281_474_976_710_655L
-private val JS_MAX_SAFE_INTEGER = BigInteger("9007199254740991") // 2^53 - 1
-private val JS_MIN_SAFE_INTEGER = BigInteger("-9007199254740991") // -(2^53 - 1)
 private val MAX_48_BIT_LIMIT = BigInteger.valueOf(2L).pow(48) // 2^48
 
 // Installs the Node crypto module into the intrinsic bindings.
@@ -98,10 +96,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
 
     var randomValue: Long
     try {
-      val rng = cryptoRandomGenerator.nextLong(min, max)
-      println("Generated RNG for randomInt: $rng") // @TODO Remove debug log
-
-      randomValue = rng
+      randomValue = cryptoRandomGenerator.nextLong(min, max)
     } catch (e: Throwable) {
       throw TypeError.create("Error generating random bytes for randomInt: ${e.message}")
     }
@@ -122,17 +117,17 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
   }
 
   @Polyglot override fun randomInt(min: Value, max: Value, callback: Value?): Any {
-    val (safeMin, safeMax) = isRangeSafe(min, max)
+    val (safeMin, safeMax) = genSafeRange(min, max)
     return randomInt(safeMin, safeMax, callback as? RandomIntCallback)
   }
 
   @Polyglot override fun randomInt(max: Value, callback: Value?): Any {
-    val (safeMin, safeMax) = isRangeSafe(Value.asValue(0), max)
+    val (safeMin, safeMax) = genSafeRange(Value.asValue(0), max)
     return randomInt(safeMin, safeMax, callback as? RandomIntCallback)
   }
 
   @Polyglot override fun randomInt(max: Value): Any {
-    val (safeMin, safeMax) = isRangeSafe(Value.asValue(0), max)
+    val (safeMin, safeMax) = genSafeRange(Value.asValue(0), max)
     return randomInt(safeMin, safeMax, null)
   }
 
@@ -152,15 +147,19 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
       // Check if last argument is a callback function
       val lastIsCb = args.lastOrNull()?.canExecute() == true
       val cb = if (lastIsCb) args.last() else null
+
       when (args.size) {
         1 -> {
+          // randomInt(max)
           this.randomInt(args[0])
         }
         2 -> {
           if (lastIsCb) {
+            // randomInt(max, callback)
             this.randomInt(args[0], cb)
           } else {
-            this.randomInt(args[0], args[1], cb)
+            // randomInt(min, max)
+            this.randomInt(args[0], args[1], null)
           }
         }
         3 -> {
@@ -180,7 +179,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
           BigInteger.valueOf(value.asLong())
         }
         // Reject integers that exceed Long.MAX_VALUE or are less than Long.MIN_VALUE
-        value.fitsInBigInteger() -> throw RangeError.create("The \"$name\" argument must be a safe integer. Received an integer that exceeds the max bounds ${MAX_48_BIT_LIMIT}.") // value.asBigInteger()
+        value.fitsInBigInteger() -> throw RangeError.create("The \"$name\" argument must be a safe integer. Received an integer that exceeds the max bounds ${MAX_48_BIT_LIMIT}.")
         // Reject non-integer numbers
         value.fitsInDouble() -> {
           throw TypeError.create("The \"$name\" argument must be a safe integer. Received a non-integer number: ${value.asDouble()}.")
@@ -188,8 +187,12 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
         else -> null // Reject non-integer (e.g. Infinity, NaN, very large BigInts)
       }
 
+      // Define JS safe integer bounds
+      val jsMaxSafeInt = BigInteger("9007199254740991") // 2^53 - 1
+      val jsMinSafeInt = BigInteger("-9007199254740991") // -(2^53 - 1)
+
       // Final check: even if conversion works, ensure it falls within JS safe limits
-      if (bigIntValue != null && bigIntValue >= JS_MIN_SAFE_INTEGER && bigIntValue <= JS_MAX_SAFE_INTEGER) {
+      if (bigIntValue != null && bigIntValue >= jsMinSafeInt && bigIntValue <= jsMaxSafeInt) {
         return bigIntValue
       }
     }
@@ -198,7 +201,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
   }
 
   // Validates that the provided min and max values are safe integers and that the range difference does not exceed 2^48.
-  private fun isRangeSafe(min: Value, max: Value): Pair<Long, Long> {
+  private fun genSafeRange(min: Value, max: Value): Pair<Long, Long> {
     // Safely convert both inputs to BigInteger
     val minBigInt = safeValueToBigInt(min, "min")
     val maxBigInt = safeValueToBigInt(max, "max")
@@ -209,7 +212,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
     }
 
     // Enforce the difference between (max - min) exceeds 2^48
-    val rangeDifference = maxBigInt.subtract(minBigInt) // Since min <= max, difference is non-negative
+    val rangeDifference = maxBigInt.subtract(minBigInt) // Since min < max, difference is non-negative
 
     // If the range difference exceeds 2^48, we throw a RangeError. Node.JS has a range limit of 2^48 for randomInt.
     if (rangeDifference > MAX_48_BIT_LIMIT) {

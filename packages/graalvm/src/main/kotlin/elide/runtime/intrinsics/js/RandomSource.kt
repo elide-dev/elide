@@ -12,7 +12,6 @@
  */
 package elide.runtime.intrinsics.js
 
-import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.QuotaExceededError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.typed.UUID
@@ -75,14 +74,4 @@ public interface RandomSource {
    */
   @Throws(ValueError::class)
   @Polyglot public fun randomUUID(): UUID
-
-  /**
-   * ## Crypto: 'randomInt'
-   *  From [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomInt):
-   *  "The `randomInt` method of the Crypto interface returns a cryptographically secure random integer."
-   *
-   * @return A randomly generated integer between `min` (inclusive) and `max` (exclusive).
-   */
-//  @Throws(ValueError::class)
-//  @Polyglot public fun randomInt(min: , max: Int, callback: (AbstractJsException?, Int) -> Unit?): Any
 }

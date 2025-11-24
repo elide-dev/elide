@@ -231,7 +231,7 @@ export default function Query() {
                       <div className="text-sm text-foreground">
                         <div className="mb-2">
                           <span className="text-muted-foreground">Execution time: </span>
-                          <span className="font-mono font-semibold text-chart-1">
+                          <span className="font-mono font-semibold text-emerald-500">
                             {result.metadata.executionTimeMs}ms
                           </span>
                         </div>

@@ -92,8 +92,8 @@ export function DataTableGrid() {
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}
-                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none hover:bg-chart-2 ${
-                          header.column.getIsResizing() ? 'bg-chart-2' : ''
+                        className={`absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none hover:bg-blue-500 ${
+                          header.column.getIsResizing() ? 'bg-blue-500' : ''
                         }`}
                       />
                     )}

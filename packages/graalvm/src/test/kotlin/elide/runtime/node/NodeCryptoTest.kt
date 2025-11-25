@@ -230,7 +230,7 @@ import elide.testing.annotations.TestCase
   @Test fun `randomInt should throw a RangeError when min is greater than or equal to max`() = conforms {
 
     assertFailsWith<RangeError> { crypto.provide().randomInt(Value.asValue(10L), Value.asValue(10L)) }
-    assertFailsWith<RangeError> { crypto.provide().randomInt(Value.asValue(10L),Value.asValue( 5L)) }
+    assertFailsWith<RangeError> { crypto.provide().randomInt(Value.asValue(10L), Value.asValue( 5L)) }
   }.guest {
     //language=javascript
     """

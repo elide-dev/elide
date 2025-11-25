@@ -174,22 +174,6 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
     return randomInt(safeMin, safeMax)
   }
 
-  @Polyglot override fun randomInt(max: Value, callback: Value?) {
-    val (safeMin, safeMax) = genSafeRange(Value.asValue(0), max)
-    val safeCallback: RandomIntCallback? = callback?.let { cb ->
-      { err: Throwable?, value: Long? ->
-        cb.execute(
-          err?.let { Value.asValue(it) },
-          value?.let { Value.asValue(it) }
-        )
-      }
-    }
-
-    if (safeCallback != null) {
-      randomInt(safeMin, safeMax, safeCallback)
-    }
-  }
-
   @Polyglot override fun randomInt(max: Value): Long {
     val (safeMin, safeMax) = genSafeRange(Value.asValue(0), max)
     return randomInt(safeMin, safeMax)
@@ -219,7 +203,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
         2 -> {
           if (lastIsCb) {
             // randomInt(max, callback)
-            this.randomInt(args[0], args.last())
+            this.randomInt(Value.asValue(0), args[0], args.last())
           } else {
             // randomInt(min, max)
             this.randomInt(args[0], args[1])

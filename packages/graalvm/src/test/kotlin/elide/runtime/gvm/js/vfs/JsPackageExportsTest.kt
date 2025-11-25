@@ -29,9 +29,9 @@ import elide.util.UUID
 
 /**
  * Tests for ESM-style import calls that resolve via package.json "exports" field.
- * 
+ *
  * This tests the fix for nested conditional exports which GraalJS doesn't support natively.
- * 
+ *
  * @see <a href="https://github.com/elide-dev/elide/issues/1793">Issue #1793</a>
  * @see <a href="https://nodejs.org/api/packages.html#conditional-exports">Node.js Conditional Exports</a>
  */
@@ -43,7 +43,7 @@ import elide.util.UUID
 
   /**
    * Test: Import from a package with simple string exports.
-   * 
+   *
    * package.json: { "exports": "./dist/index.mjs" }
    */
   @Test fun testSimpleStringExports() {
@@ -88,7 +88,7 @@ import elide.util.UUID
 
   /**
    * Test: Import from a package with flat conditional exports.
-   * 
+   *
    * package.json: { "exports": { "import": "./dist/index.mjs", "require": "./dist/index.js" } }
    */
   @Test fun testFlatConditionalExports() {
@@ -137,9 +137,9 @@ import elide.util.UUID
 
   /**
    * Test: Import from a package with nested conditional exports (the main fix).
-   * 
+   *
    * This is the pattern used by @discordjs/* packages that caused the original issue.
-   * 
+   *
    * package.json:
    * {
    *   "exports": {
@@ -209,7 +209,7 @@ import elide.util.UUID
 
   /**
    * Test: Import from a scoped package with nested conditional exports.
-   * 
+   *
    * This mimics packages like @discordjs/collection.
    */
   @Test fun testScopedPackageNestedExports() {

@@ -80,11 +80,11 @@ internal object PackageExportsResolver {
     var current: TruffleFile? = parentPath.parent
     while (current != null) {
       val nodeModulesDir = current.resolve(NODE_MODULES)
-      if (nodeModulesDir.exists() && nodeModulesDir.isDirectory) {
+      if (nodeModulesDir.exists() && nodeModulesDir.isDirectory()) {
         val packageDir = nodeModulesDir.resolve(packageName)
-        if (packageDir.exists() && packageDir.isDirectory) {
+        if (packageDir.exists() && packageDir.isDirectory()) {
           val resolved = resolvePackageExports(packageDir, subpath, env, realm)
-          if (resolved != null && resolved.exists() && !resolved.isDirectory) {
+          if (resolved != null && resolved.exists() && !resolved.isDirectory()) {
             return resolved
           }
         }

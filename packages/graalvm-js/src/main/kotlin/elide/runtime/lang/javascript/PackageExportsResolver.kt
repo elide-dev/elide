@@ -251,9 +251,8 @@ internal object PackageExportsResolver {
     return try {
       JSObject.enumerableOwnNames(obj).mapNotNull { key ->
         when (key) {
-          is String -> key
           is com.oracle.truffle.api.strings.TruffleString -> key.toJavaStringUncached()
-          else -> null
+          else -> key?.toString()
         }
       }
     } catch (e: Exception) {

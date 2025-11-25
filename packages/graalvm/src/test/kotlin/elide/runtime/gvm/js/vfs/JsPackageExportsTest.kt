@@ -138,7 +138,7 @@ import elide.util.UUID
   /**
    * Test: Import from a package with nested conditional exports (the main fix).
    *
-   * This is the pattern used by @discordjs/* packages that caused the original issue.
+   * This is the pattern used by `@discordjs/*` packages that caused the original issue.
    *
    * package.json:
    * {

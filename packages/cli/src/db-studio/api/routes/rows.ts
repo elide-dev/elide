@@ -18,17 +18,17 @@ export const deleteRowsRoute = withDatabase(async (context) => {
   if (tableNameError) return tableNameError;
 
   // Parse and validate request body
-  const g = DeleteRowsRequestSchema.safeParse(body);
-  console.log(g)
   const data = parseRequestBody(body);
-  const primaryKeys = data.primaryKeys as Array<Record<string, unknown>> | undefined;
+  const result = DeleteRowsRequestSchema.safeParse(data);
 
-  if (!primaryKeys || !Array.isArray(primaryKeys) || primaryKeys.length === 0) {
+  if (!result.success) {
     return errorResponse(
-      "Request body must contain 'primaryKeys' array with at least one primary key",
+      `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
       400
     );
   }
+
+  const { primaryKeys } = result.data;
 
   try {
     const result = deleteRows(db, params.tableName, primaryKeys);

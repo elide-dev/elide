@@ -4,6 +4,7 @@ import { requireTableName } from "../utils/validation.ts";
 import { parseRequestBody, parseQueryParams } from "../utils/request.ts";
 import { getTables, getTableData } from "../database.ts";
 import type { Filter } from "../http/schemas.ts";
+import { CreateTableRequestSchema, DropTableRequestSchema, FiltersArraySchema } from "../http/schemas.ts";
 
 /**
  * Get list of tables in a database
@@ -61,14 +62,17 @@ export const getTableDataRoute = withDatabase(async (context) => {
     try {
       const decodedWhere = decodeURIComponent(whereParam);
       const parsedWhere = JSON.parse(decodedWhere);
-      
-      // Validate that it's an array
-      if (!Array.isArray(parsedWhere)) {
-        return errorResponse("Invalid where parameter: must be a JSON array of filters", 400);
+
+      // Validate using zod schema
+      const result = FiltersArraySchema.safeParse(parsedWhere);
+      if (!result.success) {
+        return errorResponse(
+          `Invalid where parameter: ${result.error.errors.map(e => e.message).join(", ")}`,
+          400
+        );
       }
 
-      // Type cast - rely on compile-time types rather than runtime validation
-      filters = parsedWhere as Filter[];
+      filters = result.data;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Unknown error";
       return errorResponse(
@@ -93,16 +97,16 @@ export const getTableDataRoute = withDatabase(async (context) => {
 export const createTableRoute = withDatabase(async (context) => {
   const { db, body } = context;
   const data = parseRequestBody(body);
-  const tableName = data.name as string | undefined;
-  const schema = data.schema as Array<{ name: string; type: string; constraints?: string }> | undefined;
+  const result = CreateTableRequestSchema.safeParse(data);
 
-  if (!tableName) {
-    return errorResponse("Request body must contain 'name' for the table", 400);
+  if (!result.success) {
+    return errorResponse(
+      `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
+      400
+    );
   }
 
-  if (!schema || !Array.isArray(schema) || schema.length === 0) {
-    return errorResponse("Request body must contain 'schema' array with at least one column", 400);
-  }
+  const { name: tableName, schema } = result.data;
 
   const columns = schema.map(col => {
     const constraints = col.constraints ? ` ${col.constraints}` : "";
@@ -129,10 +133,13 @@ export const dropTableRoute = withDatabase(async (context) => {
   if (tableNameError) return tableNameError;
 
   const data = parseRequestBody(body);
-  const confirm = data.confirm as boolean | undefined;
+  const result = DropTableRequestSchema.safeParse(data);
 
-  if (!confirm) {
-    return errorResponse("Must set 'confirm: true' in request body to drop table (safety check)", 400);
+  if (!result.success) {
+    return errorResponse(
+      `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
+      400
+    );
   }
 
   const sql = `DROP TABLE "${params.tableName}"`;

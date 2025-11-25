@@ -2,6 +2,7 @@ import { jsonResponse, handleSQLError, errorResponse } from "../http/responses.t
 import { withDatabase } from "../http/middleware.ts";
 import { parseRequestBody } from "../utils/request.ts";
 import { executeQuery } from "../database.ts";
+import { ExecuteQueryRequestSchema } from "../http/schemas.ts";
 
 /**
  * Execute a raw SQL query with rich metadata
@@ -9,13 +10,16 @@ import { executeQuery } from "../database.ts";
 export const executeQueryRoute = withDatabase(async (context) => {
   const { db, body } = context;
   const data = parseRequestBody(body);
-  const sql = data.sql as string | undefined;
-  const queryParams = data.params as unknown[] | undefined;
+  const result = ExecuteQueryRequestSchema.safeParse(data);
 
-  if (!sql) {
-    return errorResponse("Request body must contain 'sql' string", 400);
+  if (!result.success) {
+    return errorResponse(
+      `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
+      400
+    );
   }
 
+  const { sql, params: queryParams } = result.data;
   const trimmedSql = sql.trim();
   const startTime = performance.now();
 

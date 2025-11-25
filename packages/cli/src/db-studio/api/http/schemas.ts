@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v3";
 
 /**
  * Foreign key reference information
@@ -126,6 +126,17 @@ export type Filter = {
 }
 
 /**
+ * Filter schema for runtime validation
+ */
+export const FilterSchema = z.object({
+  column: z.string().min(1, "Column name cannot be empty"),
+  operator: z.enum(['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'not_like', 'in', 'is_null', 'is_not_null']),
+  value: z.union([z.string(), z.number(), z.null(), z.array(z.string())]).optional(),
+});
+
+export const FiltersArraySchema = z.array(FilterSchema);
+
+/**
  * Delete rows request schema
  * Expects an array of primary key objects
  */
@@ -144,4 +155,44 @@ export const DeleteRowsResponseSchema = z.object({
 });
 
 export type DeleteRowsResponse = z.infer<typeof DeleteRowsResponseSchema>;
+
+/**
+ * Execute query request schema
+ */
+export const ExecuteQueryRequestSchema = z.object({
+  sql: z.string().min(1, "SQL query cannot be empty"),
+  params: z.array(z.unknown()).optional(),
+});
+
+export type ExecuteQueryRequest = z.infer<typeof ExecuteQueryRequestSchema>;
+
+/**
+ * Create table column schema
+ */
+export const CreateTableColumnSchema = z.object({
+  name: z.string().min(1, "Column name cannot be empty"),
+  type: z.string().min(1, "Column type cannot be empty"),
+  constraints: z.string().optional(),
+});
+
+/**
+ * Create table request schema
+ */
+export const CreateTableRequestSchema = z.object({
+  name: z.string().min(1, "Table name cannot be empty"),
+  schema: z.array(CreateTableColumnSchema).min(1, "Schema must contain at least one column"),
+});
+
+export type CreateTableRequest = z.infer<typeof CreateTableRequestSchema>;
+
+/**
+ * Drop table request schema
+ */
+export const DropTableRequestSchema = z.object({
+  confirm: z.literal(true, {
+    errorMap: () => ({ message: "Must set 'confirm: true' to drop table (safety check)" }),
+  }),
+});
+
+export type DropTableRequest = z.infer<typeof DropTableRequestSchema>;
 

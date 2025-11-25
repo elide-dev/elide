@@ -76,7 +76,8 @@ public class NodeHash(
             }
             arr
           }
-          else -> data.asString().toByteArray(Charsets.UTF_8)
+          data.isString -> data.asString().toByteArray(Charsets.UTF_8)
+          else -> throw IllegalArgumentException("Unsupported item type, must be of type string or an instance of Buffer, TypedArray, or Dataview. Received: ${data.javaClass.name}")
         }
       }
       is Iterable<*> -> { // @TODO(elijahkotyluk) Handle Polyglot lists as an iterable, may need to revisit

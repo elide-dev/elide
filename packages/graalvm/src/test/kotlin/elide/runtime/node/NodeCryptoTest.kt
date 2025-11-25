@@ -12,6 +12,7 @@
  */
 package elide.runtime.node
 
+import org.graalvm.polyglot.Value
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -388,7 +389,7 @@ import elide.testing.annotations.TestCase
 
   @Test fun `createHash should allow chainable updates`() = conforms {
     val hash = crypto.provide().createHash("sha256")
-    hash.update("hello").update(" ").update("world")
+    hash.update("hello").update(" ").update(Value.asValue("world"))
     val digest = hash.digest("hex")
 
     assertEquals(
@@ -575,6 +576,9 @@ import elide.testing.annotations.TestCase
     }
     assertThrows<IllegalArgumentException> {
       hash.update({ str: String -> str })
+    }
+    assertThrows<IllegalArgumentException> {
+      hash.update(Value.asValue(12345))
     }
   }.guest {
     //language=javascript

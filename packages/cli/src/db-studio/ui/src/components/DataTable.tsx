@@ -3,6 +3,7 @@ import { useDataTable } from '@/contexts/DataTableContext'
 import { DataTableToolbar } from './DataTableToolbar'
 import { DataTableFilterPanel } from './DataTableFilterPanel'
 import { DataTableGrid } from './DataTableGrid'
+import { DeleteRowsDialog } from './DeleteRowsDialog'
 
 /**
  * Reusable data table component for displaying database query results
@@ -15,6 +16,9 @@ export function DataTable() {
 
   // Local state for filter panel visibility
   const [showFilterPanel, setShowFilterPanel] = React.useState(appliedFilters.length > 0)
+
+  // Local state for delete dialog visibility
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
 
   // Show panel when filters are applied
   React.useEffect(() => {
@@ -35,6 +39,10 @@ export function DataTable() {
     setShowFilterPanel(false)
   }, [])
 
+  const handleDeleteRows = React.useCallback(() => {
+    setShowDeleteDialog(true)
+  }, [])
+
   return (
     <div className="w-full flex flex-col h-full">
       {/* Toolbar with metadata and controls */}
@@ -43,6 +51,7 @@ export function DataTable() {
           showFilterPanel={showFilterPanel}
           onFilterToggle={handleFilterToggle}
           onAddFilter={handleAddFilter}
+          onDeleteRows={handleDeleteRows}
         />
       )}
 
@@ -51,6 +60,9 @@ export function DataTable() {
 
       {/* Table */}
       <DataTableGrid />
+
+      {/* Delete rows dialog */}
+      <DeleteRowsDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog} />
     </div>
   )
 }

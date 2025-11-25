@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
-import type { ColumnDef, SortingState } from '@tanstack/react-table'
+import type { ColumnDef, SortingState, RowSelectionState } from '@tanstack/react-table'
 import { getCoreRowModel, getFilteredRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { useTableData } from '../hooks/useTableData'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
@@ -10,6 +10,7 @@ import { parsePaginationParams, parseSortingParams, parseFilterParams, buildSear
 import { DEFAULT_OFFSET } from '@/lib/constants'
 import type { ColumnMetadata, PaginationParams, SortingParams, Filter } from '@/lib/types'
 import { ColumnHeader } from '@/components/ColumnHeader'
+import { Checkbox } from '@/components/ui/checkbox'
 
 /**
  * Format cell values with special handling for NULL values
@@ -72,6 +73,9 @@ export default function TableView() {
     [setSearchParams, pagination, sorting]
   )
 
+  // Row selection state
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
+
   // Convert server-side sorting to TanStack Table format
   const sortingState: SortingState = React.useMemo(() => {
     if (sorting.column && sorting.direction) {
@@ -89,22 +93,49 @@ export default function TableView() {
   const tableColumns: ColumnDef<Record<string, unknown>>[] = React.useMemo(() => {
     if (!data) return []
 
-    return data.columns.map((col: ColumnMetadata) => {
+    // Create checkbox column for row selection
+    const checkboxColumn: ColumnDef<Record<string, unknown>> = {
+      id: 'select',
+      size: 50,
+      minSize: 50,
+      maxSize: 50,
+      enableResizing: false,
+      header: ({ table }) => (
+        <div className="px-4">
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+    }
+
+    const dataColumns = data.columns.map((col: ColumnMetadata) => {
       return {
         accessorKey: col.name,
         size: 200,
         minSize: 100,
         maxSize: 1000,
         enableResizing: true,
-        header: ({ column }) => {
+        header: ({ column }: { column: any }) => {
           const sorted = column.getIsSorted()
           return <ColumnHeader column={col} sorted={sorted} showControls={true} />
         },
-        cell: ({ getValue }) => {
+        cell: ({ getValue }: { getValue: () => unknown }) => {
           return formatCellValue(getValue())
         },
       }
     })
+
+    return [checkboxColumn, ...dataColumns]
   }, [data])
 
   // Build TanStack Table data
@@ -134,15 +165,24 @@ export default function TableView() {
     getFilteredRowModel: getFilteredRowModel(),
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting: sortingState,
+      rowSelection,
     },
   })
 
-  // Reset column visibility when table changes
+  // Reset column visibility and row selection when table changes
   React.useEffect(() => {
     table.resetColumnVisibility()
+    setRowSelection({})
   }, [tableName, table])
+
+  // Clear row selection when pagination changes
+  React.useEffect(() => {
+    setRowSelection({})
+  }, [pagination.offset, pagination.limit])
 
   // Loading state
   if (isLoading && !data) {

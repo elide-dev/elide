@@ -73,7 +73,8 @@ interface CountRow {
  */
 export function getTables(db: Database): TableInfo[] {
   // First query: get all table and view names with their types
-  const tableNamesQuery = "SELECT name, type FROM sqlite_master WHERE type IN ('table', 'view') ORDER BY name";
+  // Exclude SQLite system tables (sqlite_sequence, sqlite_stat1, etc.)
+  const tableNamesQuery = "SELECT name, type FROM sqlite_master WHERE type IN ('table', 'view') AND name NOT LIKE 'sqlite_%' ORDER BY name";
   logQuery(tableNamesQuery);
   const tablesQuery: Statement<TableNameRow> = db.query(tableNamesQuery);
   const tables = tablesQuery.all();
@@ -373,7 +374,8 @@ export function getTableData(
  * Get database metadata
  */
 export function getDatabaseInfo(db: Database, dbPath: string): DatabaseInfo {
-  const sql = "SELECT COUNT(*) as count FROM sqlite_master WHERE type='table'";
+  // Exclude SQLite system tables from count
+  const sql = "SELECT COUNT(*) as count FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
   logQuery(sql);
   const tablesQuery: Statement<CountRow> = db.query(sql);
   const tablesResult = tablesQuery.get();
@@ -451,4 +453,72 @@ export function validateDatabase(db: Database): boolean {
   } catch (err) {
     return false;
   }
+}
+
+/**
+ * Delete rows from a table based on primary key values
+ * @param db Database instance
+ * @param tableName Name of the table
+ * @param primaryKeys Array of primary key objects (e.g., [{ id: 1 }, { id: 2, name: "foo" }])
+ * @returns Number of rows affected
+ */
+export function deleteRows(
+  db: Database,
+  tableName: string,
+  primaryKeys: Record<string, unknown>[]
+): { rowsAffected: number } {
+  if (primaryKeys.length === 0) {
+    return { rowsAffected: 0 };
+  }
+
+  // Get column metadata to identify primary key columns
+  const columns = getColumnMetadata(db, tableName);
+  const pkColumns = columns.filter(col => col.primaryKey);
+
+  if (pkColumns.length === 0) {
+    throw new Error(`Table "${tableName}" has no primary key`);
+  }
+
+  // Validate that all primary keys have the required columns
+  const pkColumnNames = pkColumns.map(col => col.name);
+  for (const pk of primaryKeys) {
+    for (const colName of pkColumnNames) {
+      if (!(colName in pk)) {
+        throw new Error(`Primary key missing required column: "${colName}"`);
+      }
+    }
+  }
+
+  // Build DELETE statement with WHERE clause
+  // For multiple rows, we'll use IN clause or multiple OR conditions
+  let rowsAffected = 0;
+
+  if (pkColumns.length === 1) {
+    // Simple case: single-column primary key - use IN clause
+    const pkColName = pkColumns[0].name;
+    const pkValues = primaryKeys.map(pk => pk[pkColName]);
+    const placeholders = pkValues.map(() => '?').join(', ');
+    const sql = `DELETE FROM "${tableName}" WHERE "${pkColName}" IN (${placeholders})`;
+
+    logQuery(sql, pkValues);
+    const stmt = db.prepare(sql);
+    const result = stmt.run(...(pkValues as (string | number | null)[]));
+    rowsAffected = result?.changes ?? 0;
+  } else {
+    // Complex case: composite primary key - delete one by one or use OR conditions
+    // For simplicity and to avoid very long SQL, we'll delete one by one
+    for (const pk of primaryKeys) {
+      const conditions = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
+      const values = pkColumns.map(col => pk[col.name]);
+      const sql = `DELETE FROM "${tableName}" WHERE ${conditions}`;
+
+      logQuery(sql, values);
+      const stmt = db.prepare(sql);
+      const result = stmt.run(...(values as (string | number | null)[]));
+      console.log(result)
+      rowsAffected += result?.changes ?? 0;
+    }
+  }
+
+  return { rowsAffected };
 }

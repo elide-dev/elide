@@ -9,20 +9,25 @@ import { ColumnsDropdown } from './ColumnsDropdown'
 import { DataTablePagination } from './DataTablePagination'
 import { useDataTable } from '@/contexts/DataTableContext'
 import { Button } from './ui/button'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, Trash2 } from 'lucide-react'
 
 type DataTableToolbarProps = {
   showFilterPanel: boolean
   onFilterToggle: () => void
   onAddFilter: () => void
+  onDeleteRows?: () => void
 }
 
 export const DataTableToolbar = React.memo(function DataTableToolbar({
   showFilterPanel,
   onFilterToggle,
   onAddFilter,
+  onDeleteRows,
 }: DataTableToolbarProps) {
-  const { rowCount, metadata, config, appliedFilters, onRefresh } = useDataTable()
+  const { table, rowCount, metadata, config, appliedFilters, onRefresh } = useDataTable()
+
+  // Get selected row count
+  const selectedRowCount = table.getFilteredSelectedRowModel().rows.length
 
   const handleFilterToggle = React.useCallback(() => {
     onFilterToggle()
@@ -61,6 +66,13 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
           />
           <ColumnsDropdown />
         </>
+      )}
+
+      {selectedRowCount > 0 && onDeleteRows && (
+        <Button variant="destructive" size="sm" onClick={onDeleteRows} className="h-9 gap-2">
+          <Trash2 className="h-4 w-4" />
+          Delete {selectedRowCount} {selectedRowCount === 1 ? 'row' : 'rows'}
+        </Button>
       )}
 
       <div className="flex items-center gap-2 ml-auto">

@@ -37,22 +37,23 @@ const MemoizedRow = React.memo(({ row, isLoading }: MemoizedRowProps) => {
   const isSelected = row.getIsSelected()
 
   return (
-    <TableRow key={row.id} data-state={isSelected && 'selected'} className="hover:bg-accent/30 transition-colors">
+    <TableRow
+      key={row.id}
+      data-state={isSelected && 'selected'}
+      className="hover:bg-accent/70 transition-colors duration-75"
+    >
       {row.getVisibleCells().map((cell) => {
         const { id, column, getContext } = cell
         const width = column.getSize()
+        const isCheckboxColumn = column.id === 'select'
 
         return (
           <TableCell
             key={id}
-            className="px-4 py-2 text-xs text-foreground border-r border-border overflow-hidden font-mono"
+            className={`text-xs text-foreground border-r border-border overflow-hidden truncate px-4 py-2 font-mono`}
             style={{ width, maxWidth: width }}
           >
-            {isLoading ? (
-              <Skeleton className="h-4 w-full" />
-            ) : (
-              <div className="truncate">{flexRender(column.columnDef.cell, getContext())}</div>
-            )}
+            {isLoading ? <Skeleton className="h-4 w-full" /> : flexRender(column.columnDef.cell, getContext())}
           </TableCell>
         )
       })}
@@ -81,14 +82,15 @@ export function DataTableGrid() {
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
+                const isCheckboxColumn = header.column.id === 'select'
                 return (
                   <TableHead
                     key={header.id}
-                    className={`text-left border-b border-r border-border ${config.showControls ? 'p-0 hover:bg-accent relative' : 'px-4 py-2'} sticky top-0 z-10 bg-card overflow-hidden font-mono`}
+                    className={`text-left border-b border-r border-border ${config.showControls ? (isCheckboxColumn ? 'p-0 relative' : 'p-0 hover:bg-accent relative') : 'px-4 py-2'} sticky top-0 z-10 bg-card overflow-hidden ${isCheckboxColumn ? '' : 'font-mono'}`}
                     style={{ width: header.getSize(), maxWidth: header.getSize() }}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    {config.showControls && (
+                    {config.showControls && !isCheckboxColumn && (
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}

@@ -125,3 +125,23 @@ export type Filter = {
   value?: string | number | null | string[] // undefined for is_null/is_not_null, array for 'in'
 }
 
+/**
+ * Delete rows request schema
+ * Expects an array of primary key objects
+ */
+export const DeleteRowsRequestSchema = z.object({
+  primaryKeys: z.array(z.record(z.string(), z.unknown())).min(1, "At least one primary key required"),
+});
+
+export type DeleteRowsRequest = z.infer<typeof DeleteRowsRequestSchema>;
+
+/**
+ * Delete rows response schema
+ */
+export const DeleteRowsResponseSchema = z.object({
+  success: z.literal(true),
+  rowsAffected: z.number(),
+});
+
+export type DeleteRowsResponse = z.infer<typeof DeleteRowsResponseSchema>;
+

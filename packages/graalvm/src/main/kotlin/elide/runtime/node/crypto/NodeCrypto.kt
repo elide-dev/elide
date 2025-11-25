@@ -42,11 +42,69 @@ private const val F_RANDOM_INT = "randomInt"
 // Cached Int generator to ensure we don't create multiple instances.
 private val cryptoRandomGenerator by lazy { SecureRandom() }
 
-// Safe integer bounds for randomInt generation based on Node.js limits:
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER
-// @TODO Remove duplicate definitions
-private const val MAX_RANDOM_INT_RANGE = (1L shl 48) - 1 // 281_474_976_710_655L
-private val MAX_48_BIT_LIMIT = BigInteger.valueOf(2L).pow(48) // 2^48
+// The maximum range (max - min) allowed is 2^48 in Node.js.
+private val MAX_48_BIT_LIMIT = BigInteger.valueOf(2L).pow(48)
+
+// Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+private fun genRandomInt(min: Long, max: Long): Long {
+  try {
+    return cryptoRandomGenerator.nextLong(min, max)
+  } catch (e: Throwable) {
+    throw TypeError.create("Error generating random bytes for randomInt: ${e.message}")
+  }
+}
+
+// Safely converts a Value to a BigInteger, ensuring it is a safe integer within JS limits.
+private fun safeValueToBigInt(value: Value, name: String): BigInteger {
+  if (value.isNumber) {
+    val bigIntValue: BigInteger? = when {
+      value.fitsInLong() -> {
+        BigInteger.valueOf(value.asLong())
+      }
+      // Reject integers that exceed Long.MAX_VALUE or are less than Long.MIN_VALUE
+      value.fitsInBigInteger() -> throw RangeError.create("The \"$name\" argument must be a safe integer. Received an integer that exceeds the max bounds ${MAX_48_BIT_LIMIT}.")
+      // Reject non-integer numbers
+      value.fitsInDouble() -> {
+        throw TypeError.create("The \"$name\" argument must be a safe integer. Received a non-integer number: ${value.asDouble()}.")
+      }
+      else -> null // Reject non-integer (e.g. Infinity, NaN, very large BigInts)
+    }
+
+    // Define JS safe integer bounds
+    val jsMaxSafeInt = BigInteger("9007199254740991") // 2^53 - 1
+    val jsMinSafeInt = BigInteger("-9007199254740991") // -(2^53 - 1)
+
+    // Final check: even if conversion works, ensure it falls within JS safe limits
+    if (bigIntValue != null && bigIntValue >= jsMinSafeInt && bigIntValue <= jsMaxSafeInt) {
+      return bigIntValue
+    }
+  }
+  // Invalid value type, we don't want it
+  throw TypeError.create("The \"$name\" argument must be a safe integer. Received ${value}.")
+}
+
+// Validates that the provided min and max values are safe integers and that the range difference does not exceed 2^48.
+private fun genSafeRange(min: Value, max: Value): Pair<Long, Long> {
+  // Safely convert both inputs to BigInteger
+  val minBigInt = safeValueToBigInt(min, "min")
+  val maxBigInt = safeValueToBigInt(max, "max")
+
+  // Enforce the Min <= Max rule otherwise we throw a RangeError
+  if (minBigInt >= maxBigInt) {
+    throw RangeError.create("The value of \"max\" is out of range. It must be greater than the value of \"min\" (${minBigInt}). Received ${maxBigInt}.")
+  }
+
+  val rangeDifference = maxBigInt.subtract(minBigInt)
+
+  // If the range difference exceeds 2^48, we throw a RangeError. Node.js has a range limit of 2^48 for randomInt.
+  if (rangeDifference > MAX_48_BIT_LIMIT) {
+    println("Range difference exceeds 2^48 limit: $rangeDifference")
+    throw RangeError.create("The value of \"max - min\" is out of range. It must be <= 281474976710655. Received ${rangeDifference}.")
+  }
+
+  // Return the validated safe Long values
+  return Pair(minBigInt.toLong(), maxBigInt.toLong())
+}
 
 // Installs the Node crypto module into the intrinsic bindings.
 @Intrinsic internal class NodeCryptoModule : AbstractNodeBuiltinModule() {
@@ -80,55 +138,61 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
     return java.util.UUID.randomUUID().toString()
   }
 
-  @Polyglot override fun randomInt(min: Long, max: Long, callback: RandomIntCallback?): Any {
-    if (min >= max) throw RangeError.create(
-      "The value of \"max\" is out of range. It must be greater than the value of \"min\" ($min). Received $max"
-    )
+  @Polyglot override fun randomInt(min: Long, max: Long): Long {
+    return genRandomInt(min, max)
+  }
 
-    val range = max - min
+  @Polyglot override fun randomInt(min: Long, max: Long, callback: RandomIntCallback) {
+    val randomValue = genRandomInt(min, max)
 
-    if (range > MAX_RANDOM_INT_RANGE) {
-      throw RangeError.create(
-        "The range (max - min) is out of bounds. It must be <= $MAX_RANDOM_INT_RANGE. " +
-                "Received min=$min, max=$max"
-      )
-    }
-
-    var randomValue: Long
-    try {
-      randomValue = cryptoRandomGenerator.nextLong(min, max)
-    } catch (e: Throwable) {
-      throw TypeError.create("Error generating random bytes for randomInt: ${e.message}")
-    }
-
-    // Handle callback asynchronously if provided, otherwise we return the value directly to reflect Node.js behavior
-    return if (callback != null) {
-      thread {
-        try {
-          callback(null, randomValue)
-        } catch (e: Throwable) {
-          callback(TypeError.create(e.message ?: "Unknown error"), null)
-        }
+    thread {
+      try {
+        callback.invoke(null, randomValue)
+      } catch (e: Throwable) {
+        callback.invoke(TypeError.create(e.message ?: "Unknown error"), randomValue)
       }
-      Unit
-    } else {
-      randomValue
     }
   }
 
-  @Polyglot override fun randomInt(min: Value, max: Value, callback: Value?): Any {
+  @Polyglot override fun randomInt(min: Value, max: Value, callback: Value) {
     val (safeMin, safeMax) = genSafeRange(min, max)
-    return randomInt(safeMin, safeMax, callback as? RandomIntCallback)
+
+    val safeCallback: RandomIntCallback = callback.let { cb ->
+      { err: Throwable?, value: Long? ->
+        cb.execute(
+          err?.let { Value.asValue(it) },
+          value?.let { Value.asValue(it) }
+        )
+      }
+    }
+
+    return randomInt(safeMin, safeMax, safeCallback)
   }
 
-  @Polyglot override fun randomInt(max: Value, callback: Value?): Any {
-    val (safeMin, safeMax) = genSafeRange(Value.asValue(0), max)
-    return randomInt(safeMin, safeMax, callback as? RandomIntCallback)
+  @Polyglot override fun randomInt(min: Value, max: Value): Long {
+    val (safeMin, safeMax) = genSafeRange(min, max)
+    return randomInt(safeMin, safeMax)
   }
 
-  @Polyglot override fun randomInt(max: Value): Any {
+  @Polyglot override fun randomInt(max: Value, callback: Value?) {
     val (safeMin, safeMax) = genSafeRange(Value.asValue(0), max)
-    return randomInt(safeMin, safeMax, null)
+    val safeCallback: RandomIntCallback? = callback?.let { cb ->
+      { err: Throwable?, value: Long? ->
+        cb.execute(
+          err?.let { Value.asValue(it) },
+          value?.let { Value.asValue(it) }
+        )
+      }
+    }
+
+    if (safeCallback != null) {
+      randomInt(safeMin, safeMax, safeCallback)
+    }
+  }
+
+  @Polyglot override fun randomInt(max: Value): Long {
+    val (safeMin, safeMax) = genSafeRange(Value.asValue(0), max)
+    return randomInt(safeMin, safeMax)
   }
 
   // ProxyObject implementation
@@ -146,7 +210,6 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
     F_RANDOM_INT -> ProxyExecutable { args ->
       // Check if last argument is a callback function
       val lastIsCb = args.lastOrNull()?.canExecute() == true
-      val cb = if (lastIsCb) args.last() else null
 
       when (args.size) {
         1 -> {
@@ -156,71 +219,19 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
         2 -> {
           if (lastIsCb) {
             // randomInt(max, callback)
-            this.randomInt(args[0], cb)
+            this.randomInt(args[0], args.last())
           } else {
             // randomInt(min, max)
-            this.randomInt(args[0], args[1], null)
+            this.randomInt(args[0], args[1])
           }
         }
         3 -> {
           // randomInt(min, max, callback)
-          this.randomInt(args[0], args[1], cb)
+          this.randomInt(args[0], args[1], args.last())
         }
         else -> throw JsError.typeError("Invalid number of arguments for crypto.randomInt: ${args.size}")
       }
     }
     else -> null
-  }
-
-  private fun safeValueToBigInt(value: Value, name: String): BigInteger {
-    if (value.isNumber) {
-      val bigIntValue: BigInteger? = when {
-        value.fitsInLong() -> {
-          BigInteger.valueOf(value.asLong())
-        }
-        // Reject integers that exceed Long.MAX_VALUE or are less than Long.MIN_VALUE
-        value.fitsInBigInteger() -> throw RangeError.create("The \"$name\" argument must be a safe integer. Received an integer that exceeds the max bounds ${MAX_48_BIT_LIMIT}.")
-        // Reject non-integer numbers
-        value.fitsInDouble() -> {
-          throw TypeError.create("The \"$name\" argument must be a safe integer. Received a non-integer number: ${value.asDouble()}.")
-        }
-        else -> null // Reject non-integer (e.g. Infinity, NaN, very large BigInts)
-      }
-
-      // Define JS safe integer bounds
-      val jsMaxSafeInt = BigInteger("9007199254740991") // 2^53 - 1
-      val jsMinSafeInt = BigInteger("-9007199254740991") // -(2^53 - 1)
-
-      // Final check: even if conversion works, ensure it falls within JS safe limits
-      if (bigIntValue != null && bigIntValue >= jsMinSafeInt && bigIntValue <= jsMaxSafeInt) {
-        return bigIntValue
-      }
-    }
-    // Invalid value type, we don't want it
-    throw TypeError.create("The \"$name\" argument must be a safe integer. Received ${value}.")
-  }
-
-  // Validates that the provided min and max values are safe integers and that the range difference does not exceed 2^48.
-  private fun genSafeRange(min: Value, max: Value): Pair<Long, Long> {
-    // Safely convert both inputs to BigInteger
-    val minBigInt = safeValueToBigInt(min, "min")
-    val maxBigInt = safeValueToBigInt(max, "max")
-
-    // Enforce the Min <= Max rule otherwise we throw a RangeError
-    if (minBigInt >= maxBigInt) {
-      throw RangeError.create("The value of \"max\" is out of range. It must be greater than the value of \"min\" (${minBigInt}). Received ${maxBigInt}.")
-    }
-
-    // Enforce the difference between (max - min) exceeds 2^48
-    val rangeDifference = maxBigInt.subtract(minBigInt) // Since min < max, difference is non-negative
-
-    // If the range difference exceeds 2^48, we throw a RangeError. Node.JS has a range limit of 2^48 for randomInt.
-    if (rangeDifference > MAX_48_BIT_LIMIT) {
-      println("Range difference exceeds 2^48 limit: $rangeDifference")
-      throw RangeError.create("The value of \"max - min\" is out of range. It must be <= 281474976710655. Received ${rangeDifference}.")
-    }
-
-    // Return the validated safe Long values
-    return Pair(minBigInt.toLong(), maxBigInt.toLong())
   }
 }

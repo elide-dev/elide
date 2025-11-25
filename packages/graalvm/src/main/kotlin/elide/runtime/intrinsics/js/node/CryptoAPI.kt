@@ -12,9 +12,7 @@
  */
 package elide.runtime.intrinsics.js.node
 
-
 import org.graalvm.polyglot.Value
-import java.math.BigInteger
 import elide.annotations.API
 import elide.runtime.intrinsics.js.node.crypto.RandomIntCallback
 import elide.vm.annotations.Polyglot
@@ -35,17 +33,17 @@ import elide.vm.annotations.Polyglot
   @Polyglot public fun randomUUID(options: Value? = null): String
 
   /**
-   * ## Crypto: randomInt
+   * ## Crypto: `randomInt`
    * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
    *
    * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
    *
-   * @param min
-   * @param max
-   * @param callback
-   * @return A randomly generated integer between `min` (inclusive) and `max` (exclusive) or nothing if a callback was provided.
+   * @param min Lower bound (inclusive)
+   * @param max Upper bound (exclusive)
+   * @param callback Callback to receive the generated safe integer or an error.
+   * @return Unit
    */
-  @Polyglot public fun randomInt(min: Long, max: Long, callback: RandomIntCallback? = null): Any
+  @Polyglot public fun randomInt(min: Long, max: Long, callback: RandomIntCallback)
 
   /**
    * ## Crypto: randomInt
@@ -53,12 +51,24 @@ import elide.vm.annotations.Polyglot
    *
    * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
    *
-   * @param min
-   * @param max
-   * @param callback
-   * @return A randomly generated integer between `min` (inclusive) and `max` (exclusive) or nothing if a callback was provided.
+   * @param min Lower bound (inclusive)
+   * @param max Upper bound (exclusive)
+   * @return A randomly generated safe integer between `min` (inclusive) and `max` (exclusive).
    */
-  @Polyglot public fun randomInt(min: Value, max: Value, callback: Value?): Any
+  @Polyglot public fun randomInt(min: Long, max: Long): Long
+
+  /**
+   * ## Crypto: randomInt
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   *
+   * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
+   *
+   * @param min Lower bound (inclusive)
+   * @param max Upper bound (exclusive)
+   * @param callback Callback to receive the generated safe integer or an error.
+   * @return Unit
+   */
+  @Polyglot public fun randomInt(min: Value, max: Value, callback: Value)
 
   /**
    * ## Crypto: randomInt
@@ -68,9 +78,9 @@ import elide.vm.annotations.Polyglot
    *
    * @param max
    * @param callback
-   * @return A randomly generated integer between `0` (inclusive) and `max` (exclusive) or nothing if a callback was provided.
+   * @return A randomly generated safe integer between `0` (inclusive) and `max` (exclusive) or nothing if a callback was provided.
    */
-  @Polyglot public fun randomInt(max: Value, callback: Value?): Any
+  @Polyglot public fun randomInt(max: Value, callback: Value?)
 
   /**
    * ## Crypto: randomInt
@@ -78,8 +88,20 @@ import elide.vm.annotations.Polyglot
    *
    * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
    *
-   * @param max
-   * @return A randomly generated integer between `0` (inclusive) and `max` (exclusive).
+   * @param min Lower bound (inclusive)
+   * @param max Upper bound (exclusive)
+   * @return A randomly generated safe integer between `min` (inclusive) and `max` (exclusive).
    */
-  @Polyglot public fun randomInt(max: Value): Any
+  @Polyglot public fun randomInt(min: Value, max: Value): Long
+
+  /**
+   * ## Crypto: randomInt
+   * Generates a cryptographically secure random integer between `0` (inclusive) and the specified `max` (exclusive) value.
+   *
+   * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
+   *
+   * @param max Upper bound (exclusive)
+   * @return A randomly generated safe integer between `0` (inclusive) and `max` (exclusive).
+   */
+  @Polyglot public fun randomInt(max: Value): Long
 }

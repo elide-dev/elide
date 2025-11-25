@@ -207,8 +207,10 @@ import elide.testing.annotations.TestCase
     """
   }
 
-  @Test fun `randomInt should return an Int when valid min and max are provided with no callback`() = conforms {
-    val result = crypto.provide().randomInt(5L, 10L)
+  @Test fun `randomInt should return a Long when valid min and max are provided with no callback`() = conforms {
+    val min = Value.asValue(5L)
+    val max = Value.asValue(10L)
+    val result = crypto.provide().randomInt(min, max)
 
     assertIs<Long>(result)
     assertTrue(result in 5 until 10)
@@ -226,8 +228,9 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `randomInt should throw a RangeError when min is greater than or equal to max`() = conforms {
-    assertFailsWith<RangeError> { crypto.provide().randomInt(10L, 10L) }
-    assertFailsWith<RangeError> { crypto.provide().randomInt(10L, 5L) }
+
+    assertFailsWith<RangeError> { crypto.provide().randomInt(Value.asValue(10L), Value.asValue(10L)) }
+    assertFailsWith<RangeError> { crypto.provide().randomInt(Value.asValue(10L),Value.asValue( 5L)) }
   }.guest {
     //language=javascript
     """
@@ -346,8 +349,8 @@ import elide.testing.annotations.TestCase
     val validMin: Value = Value.asValue(0L)
     val invalidMax: Value = Value.asValue("b")
 
-    assertFailsWith<TypeError> { crypto.provide().randomInt(invalidMin, validMax, null) }
-    assertFailsWith<TypeError> { crypto.provide().randomInt(validMin, invalidMax, null) }
+    assertFailsWith<TypeError> { crypto.provide().randomInt(invalidMin, validMax) }
+    assertFailsWith<TypeError> { crypto.provide().randomInt(validMin, invalidMax) }
   }.guest {
     //language=javascript
     """
@@ -403,9 +406,9 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `randomInt should throw TypeError for float arguments`() = conforms {
-    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1.5), Value.asValue(10L), null) }
-    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1L), Value.asValue(10.5), null) }
-    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1.5), Value.asValue(10.5), null) }
+    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1.5), Value.asValue(10L)) }
+    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1L), Value.asValue(10.5)) }
+    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1.5), Value.asValue(10.5)) }
   }.guest {
     //language=javascript
     """
@@ -422,7 +425,7 @@ import elide.testing.annotations.TestCase
     val min = Value.asValue(-9007199254740991L)
     val max = Value.asValue(9007199254740991L)
 
-    assertFailsWith<RangeError> { crypto.provide().randomInt(min, max, null) }
+    assertFailsWith<RangeError> { crypto.provide().randomInt(min, max) }
   }.guest {
     //language=javascript
     """
@@ -440,9 +443,9 @@ import elide.testing.annotations.TestCase
     val min = Value.asValue(0L)
     val max = Value.asValue(281474976710655L)
 
-    val result = crypto.provide().randomInt(min, max, null)
+    val result = crypto.provide().randomInt(min, max)
 
-    assertTrue(result is Long && result in 0L until 281474976710655L)
+    assertTrue(result in 0L until 281474976710655L)
   }.guest {
     //language=javascript
     """
@@ -463,7 +466,7 @@ import elide.testing.annotations.TestCase
     val result = crypto.provide().randomInt(min, max)
 
     // @TODO The assertion is causing failures, possibly due to number type coercion?
-    assertTrue(result is Long && result in -9000000000000L until 0L)
+    assertTrue(result in -9000000000000L until 0L)
   }.guest {
     //language=javascript
     """
@@ -479,8 +482,8 @@ import elide.testing.annotations.TestCase
   }
 
   @Test fun `randomInt max safe integer`() = conforms {
-    val min = 0L
-    val max = 9_007_199_254_740_991L
+    val min = Value.asValue(0)
+    val max = Value.asValue(9007199254740991)
 
     assertThrows<RangeError>{ crypto.provide().randomInt(min, max) }
   }.guest {

@@ -15,6 +15,7 @@ package elide.runtime.node.crypto
 import org.graalvm.polyglot.Value
 import java.security.MessageDigest
 import java.util.Base64
+import elide.runtime.node.buffer.NodeHostBuffer
 import elide.vm.annotations.Polyglot
 
 // Map Node.js hash algorithm names to the JVM equivalent
@@ -125,7 +126,7 @@ public class NodeHash(
     val result = md.digest()
 
     return when (encoding?.lowercase()) {
-      null, "buffer" -> result
+      null, "buffer" -> NodeHostBuffer.wrap(result)
       "hex" -> result.joinToString("") { "%02x".format(it) }
       "base64" -> Base64.getEncoder().encodeToString(result)
       // @TODO(elijahkotyluk) take some time to test and validate this encoding

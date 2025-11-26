@@ -61,6 +61,7 @@ object SubprocessRunner {
     shell: ProcessRunner.ProcessShell = ProcessRunner.ProcessShell.Active,
     workingDirectory: Path = Path.of(System.getProperty("user.dir")),
   ): CommandLineProcessTaskBuilder {
+    val cwd = Path.of(System.getProperty("user.dir"))
     val toolname = spec.substringBefore(' ')
     val argsStr = spec.substringAfter(' ')
     val argsArr = argsStr.split(' ')
@@ -70,7 +71,7 @@ object SubprocessRunner {
       // use an identical path to elide so that versions always match.
       // @TODO in jvm mode, this falls through and calls into native elide
       toolname == "elide" && ImageInfo.inImageCode() -> Statics.binPath
-      toolname.startsWith(".") -> Path.of(System.getProperty("user.dir")).resolve(toolpath)
+      toolname.startsWith(".") -> cwd.resolve(toolpath)
       else -> toolpath
     }
     suspend fun resolvedTool(): Path {

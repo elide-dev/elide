@@ -31,6 +31,7 @@ import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.js.JsError
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.*
+import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
 import elide.vm.annotations.Polyglot
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
@@ -83,6 +84,12 @@ internal class FetchRequestIntrinsic internal constructor(
     private const val MEMBER_REFERRER = "referrer"
     private const val MEMBER_REFERRER_POLICY = "referrerPolicy"
     private const val MEMBER_MEMBER_URL = "url"
+    // Body mixin methods
+    private const val MEMBER_ARRAY_BUFFER = "arrayBuffer"
+    private const val MEMBER_BLOB = "blob"
+    private const val MEMBER_FORM_DATA = "formData"
+    private const val MEMBER_JSON = "json"
+    private const val MEMBER_TEXT = "text"
 
     private val MemberKeys = arrayOf(
       MEMBER_BODY,
@@ -99,6 +106,12 @@ internal class FetchRequestIntrinsic internal constructor(
       MEMBER_REFERRER,
       MEMBER_REFERRER_POLICY,
       MEMBER_MEMBER_URL,
+      // Body mixin methods
+      MEMBER_ARRAY_BUFFER,
+      MEMBER_BLOB,
+      MEMBER_FORM_DATA,
+      MEMBER_JSON,
+      MEMBER_TEXT,
     )
 
     @JvmStatic override fun forRequest(request: HttpRequest<*>): FetchMutableRequest {
@@ -197,6 +210,99 @@ internal class FetchRequestIntrinsic internal constructor(
       return bodyData
     }
 
+  // -- Interface: Body Mixin -- //
+
+  /**
+   * Read the body as an ArrayBuffer.
+   *
+   * @return A promise that resolves with an ArrayBuffer.
+   */
+  @Polyglot override fun arrayBuffer(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    try {
+      val stream = body
+      if (stream == null) {
+        promise.resolve(ByteArray(0))
+      } else {
+        // TODO(@darvld): Implement proper ArrayBuffer conversion from ReadableStream
+        // For now, read all bytes and return as byte array
+        throw NotImplementedError("arrayBuffer() not yet implemented - need ArrayBuffer intrinsic")
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+    return promise
+  }
+
+  /**
+   * Read the body as a Blob.
+   *
+   * @return A promise that resolves with a Blob.
+   */
+  @Polyglot override fun blob(): JsPromise<Blob> {
+    val promise = JsPromiseImpl<Blob>()
+    // TODO(@darvld): Implement Blob conversion from ReadableStream
+    promise.reject(NotImplementedError("blob() not yet implemented"))
+    return promise
+  }
+
+  /**
+   * Read the body as FormData.
+   *
+   * @return A promise that resolves with FormData.
+   */
+  @Polyglot override fun formData(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    // TODO(@darvld): Implement FormData parsing from body
+    promise.reject(NotImplementedError("formData() not yet implemented"))
+    return promise
+  }
+
+  /**
+   * Read the body as JSON.
+   *
+   * @return A promise that resolves with the parsed JSON value.
+   */
+  @Polyglot override fun json(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    try {
+      val stream = body
+      if (stream == null) {
+        promise.reject(JsError.typeError("Cannot read body: no body present"))
+      } else {
+        // TODO(@darvld): Need to integrate with JSON.parse intrinsic
+        // For now, read text and parse manually
+        // This is a placeholder - actual implementation needs GraalJS JSON.parse
+        throw NotImplementedError("json() not yet implemented - need JSON.parse integration")
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+    return promise
+  }
+
+  /**
+   * Read the body as text.
+   *
+   * @return A promise that resolves with the body text.
+   */
+  @Polyglot override fun text(): JsPromise<String> {
+    val promise = JsPromiseImpl<String>()
+    try {
+      val stream = body
+      if (stream == null) {
+        promise.resolve("")
+      } else {
+        // TODO(@darvld): Implement proper text reading from ReadableStream
+        // Need to consume the stream and decode as UTF-8
+        throw NotImplementedError("text() not yet implemented - need stream consumption")
+      }
+    } catch (e: Exception) {
+      promise.reject(e)
+    }
+    return promise
+  }
+
   override fun toString(): String {
     return "$method $url"
   }
@@ -218,6 +324,12 @@ internal class FetchRequestIntrinsic internal constructor(
     MEMBER_REFERRER -> referrer
     MEMBER_REFERRER_POLICY -> referrerPolicy
     MEMBER_MEMBER_URL -> url
+    // Body mixin methods - return executable proxies
+    MEMBER_ARRAY_BUFFER -> org.graalvm.polyglot.proxy.ProxyExecutable { arrayBuffer() }
+    MEMBER_BLOB -> org.graalvm.polyglot.proxy.ProxyExecutable { blob() }
+    MEMBER_FORM_DATA -> org.graalvm.polyglot.proxy.ProxyExecutable { formData() }
+    MEMBER_JSON -> org.graalvm.polyglot.proxy.ProxyExecutable { json() }
+    MEMBER_TEXT -> org.graalvm.polyglot.proxy.ProxyExecutable { text() }
     else -> null
   }
 }

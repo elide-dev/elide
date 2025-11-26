@@ -18,6 +18,7 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
+import java.net.Socket
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -30,12 +31,18 @@ import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.name
 import kotlin.io.path.readText
 import kotlin.io.path.writeText
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
+import elide.tool.exec.SubprocessRunner.runTask
+import elide.tool.exec.SubprocessRunner.stringToTask
 
 @Command(
   name = "db",
@@ -74,7 +81,25 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     private const val STUDIO_OUTPUT_DIR = ".dev/db-studio"
     private const val STUDIO_INDEX_FILE = "index.ts"
     private val SQLITE_EXTENSIONS = setOf(".db", ".sqlite", ".sqlite3", ".db3")
+    private const val MAX_WAIT_SECONDS = 60
+    private const val PORT_CHECK_INTERVAL_MS = 1000L
   }
+
+  private suspend fun waitForServerReady(port: Int, name: String, maxWait: Int = MAX_WAIT_SECONDS): Boolean {
+    var waited = 0
+    while (waited < maxWait) {
+      if (isPortListening(port)) {
+        return true
+      }
+      delay(PORT_CHECK_INTERVAL_MS)
+      waited++
+    }
+    return false
+  }
+
+  private fun isPortListening(port: Int): Boolean = runCatching {
+    Socket("localhost", port).use { true }
+  }.getOrDefault(false)
 
   // Extension function for SQLite detection
   private fun Path.isSqliteDatabase(): Boolean =
@@ -286,24 +311,59 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     configFile.writeText(configContent)
 
     output {
-      appendLine("Database Studio files generated in: ${outputDir.toAbsolutePath()}")
-      appendLine()
-      appendLine("To start the Database Studio:")
-      appendLine()
-      appendLine("  Terminal 1 (API Server on port $apiPort):")
-      appendLine("    cd ${apiDir.toAbsolutePath()}")
-      appendLine("    elide serve")
-      appendLine()
-      appendLine("  Terminal 2 (UI Server on port $port):")
-      appendLine("    cd ${uiDir.toAbsolutePath()}")
-      appendLine("    elide serve")
-      appendLine()
-      appendLine("Then open: http://localhost:$port")
-      appendLine()
-      appendLine("Note: Port configuration is read from elide.pkl in each directory")
+      appendLine("Starting Database Studio...")
       appendLine()
     }
 
-    return CommandResult.success()
+    // Start both servers concurrently and wait for them
+    return try {
+      coroutineScope {
+        // Start API server task
+        val apiTask = async {
+          runTask(stringToTask(
+            "elide run $STUDIO_INDEX_FILE",
+            shell = elide.tooling.runner.ProcessRunner.ProcessShell.None,
+            workingDirectory = apiDir
+          ))
+        }
+
+        // Start UI server task
+        val uiTask = async {
+          runTask(stringToTask(
+            "elide serve $STUDIO_OUTPUT_DIR/ui",
+            shell = elide.tooling.runner.ProcessRunner.ProcessShell.None
+          ))
+        }
+
+        // Wait for API server to be ready
+        if (!waitForServerReady(apiPort, "API Server")) {
+          return@coroutineScope CommandResult.err(message = "API Server didn't start within $MAX_WAIT_SECONDS seconds")
+        }
+
+        // Wait for UI server to be ready
+        if (!waitForServerReady(port, "UI Server")) {
+          return@coroutineScope CommandResult.err(message = "UI Server didn't start within $MAX_WAIT_SECONDS seconds")
+        }
+
+        output {
+          appendLine()
+          appendLine("✓ Database Studio is running!")
+          appendLine()
+          appendLine("  UI:  http://localhost:$port")
+          appendLine("  API: http://localhost:$apiPort")
+          appendLine()
+          appendLine("Press Ctrl+C to stop all servers")
+          appendLine()
+        }
+
+        // Wait for both servers to complete (they run until interrupted)
+        awaitAll(apiTask.await().asDeferred(), uiTask.await().asDeferred())
+
+        CommandResult.success()
+      }
+    } catch (e: Exception) {
+      // Servers were interrupted or failed, clean up gracefully
+      CommandResult.success()
+    }
   }
 }

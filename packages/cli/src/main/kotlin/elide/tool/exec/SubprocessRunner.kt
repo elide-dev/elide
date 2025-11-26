@@ -59,6 +59,7 @@ object SubprocessRunner {
   @JvmStatic suspend fun CommandContext.stringToTask(
     spec: String,
     shell: ProcessRunner.ProcessShell = ProcessRunner.ProcessShell.Active,
+    workingDirectory: Path = Path.of(System.getProperty("user.dir")),
   ): CommandLineProcessTaskBuilder {
     val toolname = spec.substringBefore(' ')
     val argsStr = spec.substringAfter(' ')
@@ -79,7 +80,7 @@ object SubprocessRunner {
         which(resolvedToolpath) ?: resolvedToolpath
       }
     }
-    return subprocess(resolvedTool(), shell = shell) {
+    return subprocess(resolvedTool(), shell = shell, workingDirectory = workingDirectory) {
       // add all cli args
       args.addAllStrings(argsTrimmed.toList())
     }
@@ -115,13 +116,12 @@ object SubprocessRunner {
   @JvmStatic fun CommandContext.subprocess(
     exec: Path,
     shell: ProcessRunner.ProcessShell = ProcessRunner.ProcessShell.None,
+    workingDirectory: Path = Path.of(System.getProperty("user.dir")),
     block: CommandLineProcessTaskBuilder.() -> Unit,
   ): CommandLineProcessTaskBuilder {
     val out = ProcessRunner.build(exec) {
-      // by default, user shell access is off; if turned on, activate it from env
-      if (shell != ProcessRunner.ProcessShell.None) {
-        options = ProcessRunner.ProcessOptions(shell = shell)
-      }
+      // set process options with shell and working directory
+      options = ProcessRunner.ProcessOptions(shell = shell, workingDirectory = workingDirectory)
 
       // default environment overrides PATH
       env = Environment.HostEnv.extend(

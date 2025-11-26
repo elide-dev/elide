@@ -7773,6 +7773,12 @@ public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteAPI$ReflectConfig 
 	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
 }
 
+public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteChanges$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	public fun getAnnotationMetadata ()Lio/micronaut/core/annotation/AnnotationMetadata;
+}
+
 public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteDatabase$Defaults$ReflectConfig : io/micronaut/core/graal/GraalReflectionConfigurer {
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
@@ -7836,6 +7842,11 @@ public synthetic class elide/runtime/intrinsics/sqlite/$SQLiteTransactor$Reflect
 public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteAPI : org/graalvm/polyglot/proxy/ProxyObject {
 }
 
+public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteChanges {
+	public abstract fun getChanges ()J
+	public abstract fun getLastInsertRowid ()J
+}
+
 public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteDatabase : elide/runtime/interop/ReadOnlyProxyObject, elide/runtime/intrinsics/js/Disposable, java/io/Closeable, java/lang/AutoCloseable {
 	public static final field DEFAULT_CREATE Z
 	public static final field DEFAULT_READONLY Z
@@ -7847,8 +7858,8 @@ public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteDatabase :
 	public abstract fun connection ()Lorg/sqlite/SQLiteConnection;
 	public abstract fun deserialize ([BLjava/lang/String;)V
 	public static synthetic fun deserialize$default (Lelide/runtime/intrinsics/sqlite/SQLiteDatabase;[BLjava/lang/String;ILjava/lang/Object;)V
-	public abstract fun exec (Lelide/runtime/intrinsics/sqlite/SQLiteStatement;[Ljava/lang/Object;)Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
-	public abstract fun exec (Ljava/lang/String;[Ljava/lang/Object;)Lcom/oracle/truffle/js/runtime/objects/JSDynamicObject;
+	public abstract fun exec (Lelide/runtime/intrinsics/sqlite/SQLiteStatement;[Ljava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteChanges;
+	public abstract fun exec (Ljava/lang/String;[Ljava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteChanges;
 	public abstract fun getActive ()Z
 	public synthetic fun getMemberKeys ()Ljava/lang/Object;
 	public fun getMemberKeys ()[Ljava/lang/String;
@@ -7902,7 +7913,7 @@ public abstract interface class elide/runtime/intrinsics/sqlite/SQLiteStatement 
 	public abstract fun get ([Ljava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteObject;
 	public abstract fun prepare ([Ljava/lang/Object;)Ljava/sql/PreparedStatement;
 	public static synthetic fun prepare$default (Lelide/runtime/intrinsics/sqlite/SQLiteStatement;[Ljava/lang/Object;ILjava/lang/Object;)Ljava/sql/PreparedStatement;
-	public abstract fun run ([Ljava/lang/Object;)V
+	public abstract fun run ([Ljava/lang/Object;)Lelide/runtime/intrinsics/sqlite/SQLiteChanges;
 	public abstract fun unwrap ()Ljava/sql/Statement;
 	public abstract fun values ([Ljava/lang/Object;)Ljava/util/List;
 }

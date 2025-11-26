@@ -2926,7 +2926,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             env = Environment.HostEnv
 
             // activate shell support
-            options = ProcessRunner.ProcessOptions(shell = ProcessRunner.ProcessShell.Active)
+            options = ProcessRunner.ProcessOptions(
+              shell = ProcessRunner.ProcessShell.Active,
+              workingDirectory = Path.of(System.getProperty("user.dir")),
+            )
 
             // copy in the provided arguments
             runnableArgs.takeIf { it.isNotEmpty() }?.let { arguments ->

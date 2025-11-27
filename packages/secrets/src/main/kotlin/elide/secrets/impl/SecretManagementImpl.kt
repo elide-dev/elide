@@ -19,6 +19,7 @@ import java.nio.file.Path
 import kotlinx.io.bytestring.ByteString
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.serialization.BinaryFormat
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import elide.annotations.Singleton
 import elide.secrets.*
@@ -291,8 +292,20 @@ internal class SecretManagementImpl(
           )
         EncryptionMode.GPG -> UserKey(remoteMetadata.superAccess.fingerprint!!)
       }
-    val superAccess: SuperAccess =
+    val superAccess: SuperAccess = try {
       SecretsState.remote.getSuperAccess()!!.decrypt(superKey, encryption).deserialize(cbor)
+    } catch(_: SerializationException) {
+      println(SecretValues.INVALID_SUPER_CREDENTIALS_MESSAGE)
+      val superKey: UserKey =
+        when (remoteMetadata.superAccess.mode) {
+          EncryptionMode.PASSPHRASE ->
+            UserKey(prompts.removeFirstOrNull()?.hashKey(encryption)
+                ?: KInquirer.promptInputPassword(SecretValues.SUPERUSER_PASSPHRASE_PROMPT).hashKey(encryption),
+            )
+          EncryptionMode.GPG -> UserKey(remoteMetadata.superAccess.fingerprint!!)
+        }
+      SecretsState.remote.getSuperAccess()!!.decrypt(superKey, encryption).deserialize(cbor)
+    }
     return RemoteManagementImpl(secrets, files, encryption, json, cbor, remoteMetadata, superAccess, superKey, prompts)
       .apply {
         init()

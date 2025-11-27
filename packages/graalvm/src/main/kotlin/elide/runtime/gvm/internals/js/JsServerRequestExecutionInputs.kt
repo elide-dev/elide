@@ -23,6 +23,7 @@ import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
 import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.*
 import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
+import elide.runtime.node.buffer.NodeBlob
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue as URL
 import elide.vm.annotations.Polyglot
 
@@ -217,7 +218,22 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
   /** Read the body as a Blob. */
   @Polyglot override fun blob(): JsPromise<Blob> {
     val promise = JsPromiseImpl<Blob>()
-    promise.reject(NotImplementedError("blob() not yet implemented - requires Blob intrinsic"))
+    val stream = body
+    if (stream == null) {
+      promise.resolve(NodeBlob(ByteArray(0), null))
+      return promise
+    }
+
+    arrayBuffer().then(
+      onFulfilled = { bytes ->
+        val byteArray = bytes as ByteArray
+        val contentType = headers.get("content-type")
+        promise.resolve(NodeBlob(byteArray, contentType))
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
     return promise
   }
 

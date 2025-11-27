@@ -33,6 +33,7 @@ import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.*
 import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
+import elide.runtime.node.buffer.NodeBlob
 import java.io.ByteArrayOutputStream
 import org.graalvm.polyglot.Context
 import elide.vm.annotations.Polyglot
@@ -266,14 +267,31 @@ internal class FetchRequestIntrinsic internal constructor(
   /**
    * Read the body as a Blob.
    *
-   * Note: Requires Blob intrinsic implementation.
+   * Consumes the ReadableStream and wraps the content in a Blob object.
    *
    * @return A promise that resolves with a Blob.
    */
   @Polyglot override fun blob(): JsPromise<Blob> {
     val promise = JsPromiseImpl<Blob>()
-    // Blob intrinsic not yet available
-    promise.reject(NotImplementedError("blob() not yet implemented - requires Blob intrinsic"))
+    val stream = body
+    if (stream == null) {
+      // Return empty blob
+      promise.resolve(NodeBlob(ByteArray(0), null))
+      return promise
+    }
+
+    // Read all bytes, then wrap in a Blob
+    arrayBuffer().then(
+      onFulfilled = { bytes ->
+        val byteArray = bytes as ByteArray
+        // Get content-type from headers if available
+        val contentType = headers.get("content-type")
+        promise.resolve(NodeBlob(byteArray, contentType))
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
     return promise
   }
 

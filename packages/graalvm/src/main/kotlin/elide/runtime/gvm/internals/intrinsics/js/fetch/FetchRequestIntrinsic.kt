@@ -31,7 +31,10 @@ import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.js.JsError
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.*
+import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
+import java.io.ByteArrayOutputStream
+import org.graalvm.polyglot.Context
 import elide.vm.annotations.Polyglot
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
@@ -219,87 +222,161 @@ internal class FetchRequestIntrinsic internal constructor(
    */
   @Polyglot override fun arrayBuffer(): JsPromise<Any> {
     val promise = JsPromiseImpl<Any>()
-    try {
-      val stream = body
-      if (stream == null) {
-        promise.resolve(ByteArray(0))
-      } else {
-        // TODO(@darvld): Implement proper ArrayBuffer conversion from ReadableStream
-        // For now, read all bytes and return as byte array
-        throw NotImplementedError("arrayBuffer() not yet implemented - need ArrayBuffer intrinsic")
-      }
-    } catch (e: Exception) {
-      promise.reject(e)
+    val stream = body
+    if (stream == null) {
+      promise.resolve(ByteArray(0))
+      return promise
     }
+
+    // Get a reader and consume the stream
+    val reader = stream.getReader() as ReadableStreamDefaultReader
+    val chunks = ByteArrayOutputStream()
+
+    fun readNextChunk() {
+      reader.read().then(
+        onFulfilled = { result ->
+          if (result.value != null) {
+            val value = result.value
+            if (value.hasArrayElements()) {
+              val size = value.arraySize.toInt()
+              for (i in 0 until size) {
+                chunks.write(value.getArrayElement(i.toLong()).asByte().toInt())
+              }
+            }
+          }
+          if (result.done) {
+            reader.releaseLock()
+            // Return as byte array - caller can wrap in ArrayBuffer if needed
+            promise.resolve(chunks.toByteArray())
+          } else {
+            readNextChunk()
+          }
+        },
+        onCatch = { error ->
+          reader.releaseLock()
+          promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+      )
+    }
+
+    readNextChunk()
     return promise
   }
 
   /**
    * Read the body as a Blob.
    *
+   * Note: Requires Blob intrinsic implementation.
+   *
    * @return A promise that resolves with a Blob.
    */
   @Polyglot override fun blob(): JsPromise<Blob> {
     val promise = JsPromiseImpl<Blob>()
-    // TODO(@darvld): Implement Blob conversion from ReadableStream
-    promise.reject(NotImplementedError("blob() not yet implemented"))
+    // Blob intrinsic not yet available
+    promise.reject(NotImplementedError("blob() not yet implemented - requires Blob intrinsic"))
     return promise
   }
 
   /**
    * Read the body as FormData.
    *
+   * Note: Requires multipart/form-data parsing implementation.
+   *
    * @return A promise that resolves with FormData.
    */
   @Polyglot override fun formData(): JsPromise<Any> {
     val promise = JsPromiseImpl<Any>()
-    // TODO(@darvld): Implement FormData parsing from body
-    promise.reject(NotImplementedError("formData() not yet implemented"))
+    // FormData parsing not yet implemented
+    promise.reject(NotImplementedError("formData() not yet implemented - requires multipart parsing"))
     return promise
   }
 
   /**
    * Read the body as JSON.
    *
+   * Consumes the ReadableStream, decodes as UTF-8 text, and parses as JSON
+   * using the JavaScript runtime's JSON.parse.
+   *
    * @return A promise that resolves with the parsed JSON value.
    */
   @Polyglot override fun json(): JsPromise<Any> {
     val promise = JsPromiseImpl<Any>()
-    try {
-      val stream = body
-      if (stream == null) {
-        promise.reject(JsError.typeError("Cannot read body: no body present"))
-      } else {
-        // TODO(@darvld): Need to integrate with JSON.parse intrinsic
-        // For now, read text and parse manually
-        // This is a placeholder - actual implementation needs GraalJS JSON.parse
-        throw NotImplementedError("json() not yet implemented - need JSON.parse integration")
-      }
-    } catch (e: Exception) {
-      promise.reject(e)
+    val stream = body
+    if (stream == null) {
+      promise.reject(JsError.typeError("Cannot read body: no body present"))
+      return promise
     }
+
+    // First read as text, then parse as JSON
+    text().then(
+      onFulfilled = { text ->
+        try {
+          // Use GraalJS JSON.parse to parse the text
+          val context = Context.getCurrent()
+          val jsonParse = context.eval("js", "JSON.parse")
+          val parsed = jsonParse.execute(text)
+          promise.resolve(parsed)
+        } catch (e: Exception) {
+          promise.reject(JsError.typeError("Invalid JSON: ${e.message}"))
+        }
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
     return promise
   }
 
   /**
    * Read the body as text.
    *
+   * Consumes the ReadableStream and decodes the content as UTF-8 text.
+   *
    * @return A promise that resolves with the body text.
    */
   @Polyglot override fun text(): JsPromise<String> {
     val promise = JsPromiseImpl<String>()
-    try {
-      val stream = body
-      if (stream == null) {
-        promise.resolve("")
-      } else {
-        // TODO(@darvld): Implement proper text reading from ReadableStream
-        // Need to consume the stream and decode as UTF-8
-        throw NotImplementedError("text() not yet implemented - need stream consumption")
-      }
-    } catch (e: Exception) {
-      promise.reject(e)
+    val stream = body
+    if (stream == null) {
+      promise.resolve("")
+      return promise
     }
+
+    // Get a reader and consume the stream
+    val reader = stream.getReader() as ReadableStreamDefaultReader
+    val chunks = ByteArrayOutputStream()
+
+    fun readNextChunk() {
+      reader.read().then(
+        onFulfilled = { result ->
+          if (result.value != null) {
+            // Extract bytes from the chunk (Uint8Array)
+            val value = result.value
+            if (value.hasArrayElements()) {
+              val size = value.arraySize.toInt()
+              for (i in 0 until size) {
+                chunks.write(value.getArrayElement(i.toLong()).asByte().toInt())
+              }
+            }
+          }
+          if (result.done) {
+            // All chunks read, decode as UTF-8
+            val text = chunks.toString(StandardCharsets.UTF_8)
+            reader.releaseLock()
+            promise.resolve(text)
+          } else {
+            // Continue reading
+            readNextChunk()
+          }
+        },
+        onCatch = { error ->
+          reader.releaseLock()
+          promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+      )
+    }
+
+    readNextChunk()
     return promise
   }
 

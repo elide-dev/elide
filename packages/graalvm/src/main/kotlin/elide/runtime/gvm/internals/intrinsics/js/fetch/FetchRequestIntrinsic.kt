@@ -35,6 +35,7 @@ import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
 import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
 import elide.runtime.node.buffer.NodeBlob
 import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
 import org.graalvm.polyglot.Context
 import elide.vm.annotations.Polyglot
 
@@ -225,7 +226,7 @@ internal class FetchRequestIntrinsic internal constructor(
     val promise = JsPromiseImpl<Any>()
     val stream = body
     if (stream == null) {
-      promise.resolve(ByteArray(0))
+      promise.resolve(ByteBuffer.allocate(0))
       return promise
     }
 
@@ -247,8 +248,8 @@ internal class FetchRequestIntrinsic internal constructor(
           }
           if (result.done) {
             reader.releaseLock()
-            // Return as byte array - caller can wrap in ArrayBuffer if needed
-            promise.resolve(chunks.toByteArray())
+            // Return as NIO ByteBuffer - maps to JavaScript ArrayBuffer
+            promise.resolve(ByteBuffer.wrap(chunks.toByteArray()))
           } else {
             readNextChunk()
           }
@@ -282,8 +283,10 @@ internal class FetchRequestIntrinsic internal constructor(
 
     // Read all bytes, then wrap in a Blob
     arrayBuffer().then(
-      onFulfilled = { bytes ->
-        val byteArray = bytes as ByteArray
+      onFulfilled = { buffer ->
+        val byteBuffer = buffer as ByteBuffer
+        val byteArray = ByteArray(byteBuffer.remaining())
+        byteBuffer.get(byteArray)
         // Get content-type from headers if available
         val contentType = headers.get("content-type")
         promise.resolve(NodeBlob(byteArray, contentType))
@@ -298,14 +301,45 @@ internal class FetchRequestIntrinsic internal constructor(
   /**
    * Read the body as FormData.
    *
-   * Note: Requires multipart/form-data parsing implementation.
+   * Supports application/x-www-form-urlencoded content type.
+   * Multipart/form-data is not yet supported.
    *
    * @return A promise that resolves with FormData.
    */
   @Polyglot override fun formData(): JsPromise<Any> {
     val promise = JsPromiseImpl<Any>()
-    // FormData parsing not yet implemented
-    promise.reject(NotImplementedError("formData() not yet implemented - requires multipart parsing"))
+    val stream = body
+    if (stream == null) {
+      promise.resolve(FormData())
+      return promise
+    }
+
+    val contentType = headers.get("content-type") ?: ""
+
+    text().then(
+      onFulfilled = { bodyText ->
+        try {
+          when {
+            contentType.contains("application/x-www-form-urlencoded") -> {
+              promise.resolve(FormData.parseUrlEncoded(bodyText))
+            }
+            contentType.contains("multipart/form-data") -> {
+              // Multipart parsing not yet implemented
+              promise.reject(NotImplementedError("multipart/form-data parsing not yet implemented"))
+            }
+            else -> {
+              // Try URL-encoded as fallback
+              promise.resolve(FormData.parseUrlEncoded(bodyText))
+            }
+          }
+        } catch (e: Exception) {
+          promise.reject(JsError.typeError("Failed to parse form data: ${e.message}"))
+        }
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
     return promise
   }
 

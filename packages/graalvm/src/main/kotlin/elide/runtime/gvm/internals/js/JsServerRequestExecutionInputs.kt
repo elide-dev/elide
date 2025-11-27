@@ -15,6 +15,7 @@ package elide.runtime.gvm.internals.js
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.net.URI
+import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
 import org.graalvm.polyglot.Context
@@ -178,7 +179,7 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
     val promise = JsPromiseImpl<Any>()
     val stream = body
     if (stream == null) {
-      promise.resolve(ByteArray(0))
+      promise.resolve(ByteBuffer.allocate(0))
       return promise
     }
 
@@ -199,7 +200,7 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
           }
           if (result.done) {
             reader.releaseLock()
-            promise.resolve(chunks.toByteArray())
+            promise.resolve(ByteBuffer.wrap(chunks.toByteArray()))
           } else {
             readNextChunk()
           }
@@ -225,8 +226,10 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
     }
 
     arrayBuffer().then(
-      onFulfilled = { bytes ->
-        val byteArray = bytes as ByteArray
+      onFulfilled = { buffer ->
+        val byteBuffer = buffer as ByteBuffer
+        val byteArray = ByteArray(byteBuffer.remaining())
+        byteBuffer.get(byteArray)
         val contentType = headers.get("content-type")
         promise.resolve(NodeBlob(byteArray, contentType))
       },
@@ -240,7 +243,36 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
   /** Read the body as FormData. */
   @Polyglot override fun formData(): JsPromise<Any> {
     val promise = JsPromiseImpl<Any>()
-    promise.reject(NotImplementedError("formData() not yet implemented - requires multipart parsing"))
+    val stream = body
+    if (stream == null) {
+      promise.resolve(FormData())
+      return promise
+    }
+
+    val contentType = headers.get("content-type") ?: ""
+
+    text().then(
+      onFulfilled = { bodyText ->
+        try {
+          when {
+            contentType.contains("application/x-www-form-urlencoded") -> {
+              promise.resolve(FormData.parseUrlEncoded(bodyText))
+            }
+            contentType.contains("multipart/form-data") -> {
+              promise.reject(NotImplementedError("multipart/form-data parsing not yet implemented"))
+            }
+            else -> {
+              promise.resolve(FormData.parseUrlEncoded(bodyText))
+            }
+          }
+        } catch (e: Exception) {
+          promise.reject(JsError.typeError("Failed to parse form data: ${e.message}"))
+        }
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
     return promise
   }
 

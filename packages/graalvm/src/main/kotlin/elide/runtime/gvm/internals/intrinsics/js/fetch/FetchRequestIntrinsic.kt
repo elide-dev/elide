@@ -301,8 +301,7 @@ internal class FetchRequestIntrinsic internal constructor(
   /**
    * Read the body as FormData.
    *
-   * Supports application/x-www-form-urlencoded content type.
-   * Multipart/form-data is not yet supported.
+   * Supports both application/x-www-form-urlencoded and multipart/form-data content types.
    *
    * @return A promise that resolves with FormData.
    */
@@ -316,30 +315,43 @@ internal class FetchRequestIntrinsic internal constructor(
 
     val contentType = headers.get("content-type") ?: ""
 
-    text().then(
-      onFulfilled = { bodyText ->
-        try {
-          when {
-            contentType.contains("application/x-www-form-urlencoded") -> {
-              promise.resolve(FormData.parseUrlEncoded(bodyText))
+    when {
+      contentType.contains("multipart/form-data") -> {
+        // Multipart needs raw bytes
+        arrayBuffer().then(
+          onFulfilled = { buffer ->
+            try {
+              val byteBuffer = buffer as ByteBuffer
+              val bytes = ByteArray(byteBuffer.remaining())
+              byteBuffer.get(bytes)
+              val boundary = FormData.extractBoundary(contentType)
+                ?: throw IllegalArgumentException("Missing boundary in Content-Type")
+              promise.resolve(FormData.parseMultipart(bytes, boundary))
+            } catch (e: Exception) {
+              promise.reject(JsError.typeError("Failed to parse multipart form data: ${e.message}"))
             }
-            contentType.contains("multipart/form-data") -> {
-              // Multipart parsing not yet implemented
-              promise.reject(NotImplementedError("multipart/form-data parsing not yet implemented"))
-            }
-            else -> {
-              // Try URL-encoded as fallback
-              promise.resolve(FormData.parseUrlEncoded(bodyText))
-            }
+          },
+          onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
           }
-        } catch (e: Exception) {
-          promise.reject(JsError.typeError("Failed to parse form data: ${e.message}"))
-        }
-      },
-      onCatch = { error ->
-        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        )
       }
-    )
+      else -> {
+        // URL-encoded or fallback
+        text().then(
+          onFulfilled = { bodyText ->
+            try {
+              promise.resolve(FormData.parseUrlEncoded(bodyText))
+            } catch (e: Exception) {
+              promise.reject(JsError.typeError("Failed to parse form data: ${e.message}"))
+            }
+          },
+          onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+          }
+        )
+      }
+    }
     return promise
   }
 

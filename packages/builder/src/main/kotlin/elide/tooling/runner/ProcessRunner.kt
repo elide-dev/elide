@@ -42,6 +42,7 @@ public object ProcessRunner {
    */
   @JvmRecord public data class ProcessOptions(
     public val shell: ProcessShell,
+    public val workingDirectory: Path,
   )
 
   /**
@@ -128,6 +129,9 @@ public object ProcessRunner {
       }
     }
     val procBuilder = ProcessBuilder(resolvedArgs).apply {
+      // handle working directory
+      directory(task.options.workingDirectory.toFile())
+
       // handle task environment
       when (task.env) {
         // inject host environment
@@ -185,7 +189,10 @@ public object ProcessRunner {
     val mutEnv = env.toMutable()
     var executablePath: Path = exec
     var effectiveStreams: StdStreams = streams ?: StdStreams.Defaults
-    var effectiveOptions: ProcessOptions = options ?: ProcessOptions(ProcessShell.None)
+    var effectiveOptions: ProcessOptions = options ?: ProcessOptions(
+      shell = ProcessShell.None,
+      workingDirectory = Path.of(System.getProperty("user.dir")),
+    )
 
     return object : ProcessTaskBuilder {
       override var executable: Path = executablePath

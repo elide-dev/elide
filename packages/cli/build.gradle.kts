@@ -2444,6 +2444,7 @@ tasks {
     from(layout.projectDirectory.dir("src/db-studio/api")) {
       into("api")
       exclude("config.ts")  // Generated at runtime with injected config
+      exclude(".dev/**")    // Exclude development-only dependencies directory
     }
 
     // Copy built UI (dist/ folder only, not source or node_modules)

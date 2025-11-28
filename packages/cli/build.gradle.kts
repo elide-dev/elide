@@ -2440,11 +2440,11 @@ tasks {
     group = "build"
     description = "Prepare Database Studio resources for embedding in CLI"
 
-    // Copy API files
     from(layout.projectDirectory.dir("src/db-studio/api")) {
       into("api")
-      exclude("config.ts")  // Generated at runtime with injected config
-      exclude(".dev/**")    // Exclude development-only dependencies directory
+      exclude("config.ts")        // Generated at runtime with injected config
+      exclude(".dev/**")          // Exclude development-only dependencies directory
+      exclude("node_modules/**")  // Dependencies installed at runtime
     }
 
     // Copy built UI (dist/ folder only, not source or node_modules)

@@ -62,8 +62,6 @@ public class NodeHash(
   public fun update(data: Any): NodeHash {
     if (digested) throw IllegalStateException("Digest already called")
 
-    // @TODO(elijahkotyluk) Remove debug line once tests are passing correctly.
-//    println("NodeHash.update called with data of type: ${data::class}, value: $data")
     val bytes = when (data) {
       is String -> data.toByteArray(Charsets.UTF_8)
       is ByteArray -> data
@@ -118,11 +116,11 @@ public class NodeHash(
    * - `null` or `"buffer"`: returns a [ByteArray]
    * - `"hex"`: returns a hexadecimal [String]
    * - `"base64"`: returns a Base64-encoded [String]
-   * - `"latin1"`: returns a Latin-1 encoded [String]
+   * - `"latin1"`: returns a ISO-8859-1 encoded [String]
    * @return The computed digest in the specified encoding.
    */
   private fun digestInternal(encoding: String? = null): Any {
-    if (digested) throw IllegalStateException("Digest already called")
+    if (digested) throw IllegalStateException("Digest has already been called on this Hash instance.")
     digested = true
     val result = md.digest()
 
@@ -130,10 +128,8 @@ public class NodeHash(
       null, "buffer" -> NodeHostBuffer.wrap(result)
       "hex" -> result.joinToString("") { "%02x".format(it) }
       "base64" -> Base64.getEncoder().encodeToString(result)
-      // @TODO(elijahkotyluk) take some time to test and validate this encoding
-      "latin1" -> result.decodeToString() // ISO-8859-1 is effectively Latin-1 in JVM
-      // @TODO(elijahkotyluk) better error messaging should be added here
-      else -> throw IllegalArgumentException("Unsupported encoding: $encoding")
+      "latin1" -> result.toString(Charsets.ISO_8859_1)
+      else -> throw IllegalArgumentException("Encoding: ${encoding} is not currently supported.")
     }
   }
 

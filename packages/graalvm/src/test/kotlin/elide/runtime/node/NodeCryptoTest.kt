@@ -13,7 +13,10 @@
 package elide.runtime.node
 
 import org.graalvm.polyglot.Value
+import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.assertThrows
+import java.nio.charset.Charset
+import java.security.MessageDigest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -784,6 +787,99 @@ import elide.testing.annotations.TestCase
       actualHex,
       "SHA-256 hash of 'hello world' should match expected value"
     );
+    """
+  }
+
+  @Test fun `digest should support base64, buffer, hex, and latin1 encodings when specified`() = conforms {
+    // Base64 encoding
+    val base64 = crypto.provide().createHash("sha256")
+    base64.update("hello world")
+    val base64Digest = base64.digest("base64")
+    assertEquals(
+      "uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=",
+      base64Digest,
+      "Base64 digest should match expected value"
+    )
+
+    // Buffer encoding
+    val buffer = crypto.provide().createHash("sha256")
+    buffer.update("hello world")
+    val bufferDigest = buffer.digest("buffer")
+    assertIs<NodeHostBuffer>(bufferDigest, "Buffer digest should be a NodeHostBuffer")
+    assertEquals(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      bufferDigest.toString("hex", null, null),
+      "Buffer digest should match expected value"
+    )
+
+    // Hex encoding
+    val hex = crypto.provide().createHash("sha256")
+    hex.update("hello world")
+
+    val hexDigest = hex.digest("hex")
+    assertEquals(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      hexDigest,
+      "Hex digest should match expected value"
+    )
+
+    // Latin1 encoding
+    val latin1 = crypto.provide().createHash("sha256")
+    latin1.update("hello world")
+    val latin1String = latin1.digest("latin1")
+
+    assertIs<String>(latin1String, "Latin1 digest should be a String")
+    val latin1Bytes = latin1String.toByteArray(Charset.forName("ISO-8859-1"))
+    val expectedLatin1Bytes = MessageDigest.getInstance("SHA-256")
+      .digest("hello world".toByteArray(Charsets.UTF_8))
+
+    assertArrayEquals(expectedLatin1Bytes, latin1Bytes)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+    const { Buffer } = require("buffer");
+    
+    // Base64 encoding
+    const base64Digest = crypto.createHash("sha256").update("hello world").digest("base64");
+
+    assert.equal(
+      "uU0nuZNNPgilLlLX2n2r+sSE7+N6U4DukIj3rOLvzek=",
+      base64Digest,
+      "Base64 digest should match expected value"
+    );
+
+    // Buffer encoding
+    const bufferDigest = crypto.createHash("sha256").update("hello world").digest("buffer")
+    
+    assert.equal(Buffer.isBuffer(bufferDigest), true, "Default digest output should be a Buffer");
+    
+    const expectedBufferHex = "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9";
+    const actualBufferHex = bufferDigest.toString("hex");
+    
+    assert.equal(
+      expectedBufferHex,
+      actualBufferHex,
+      "Buffer digest should match expected value"
+    );
+
+    // Hex encoding
+    const hexDigest = crypto.createHash("sha256").update("hello world").digest("hex");
+
+    assert.equal(
+      "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      hexDigest,
+      "Hex digest should match expected value"
+    );
+    
+    // Latin1 encoding
+    const latin1Digest = crypto.createHash("sha256").update("hello world").digest("latin1");
+    
+    const actualLatin1ToHex = Buffer.from(latin1Digest, "latin1").toString("hex");
+    const expectedLatin1ToHex = "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9";
+    
+    assert.strict(expectedLatin1ToHex, actualLatin1ToHex, "Latin1 digest bytes should match expected value");
     """
   }
 }

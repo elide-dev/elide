@@ -2,6 +2,7 @@ import { useState, useMemo, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Play, X, AlignLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Kbd } from '@/components/ui/kbd'
 import CodeMirror from '@uiw/react-codemirror'
 import { sql as sqlLang } from '@codemirror/lang-sql'
 import { oneDark } from '@codemirror/theme-one-dark'
@@ -27,8 +28,10 @@ export default function Query() {
 
   useEffect(() => {
     if (tables.length > 0) {
-      const firstTable = tables[0].name
-      setSql(`SELECT * FROM "${firstTable}";`)
+      const firstTable = tables.find((t) => t.type === 'table')
+      if (firstTable) {
+        setSql(`SELECT * FROM "${firstTable.name}";`)
+      }
     }
   }, [tables])
 
@@ -106,25 +109,29 @@ export default function Query() {
     <div className="flex-1 p-0 overflow-hidden font-mono flex flex-col h-full">
       <ResizablePanelGroup direction="vertical" className="h-full">
         <ResizablePanel defaultSize={40} minSize={20} maxSize={70}>
-          <div className="pt-6 border-b border-border h-full flex flex-col">
-            <div className="flex items-center justify-between mb-4 px-6 shrink-0">
-              <h2 className="text-2xl font-semibold tracking-tight">SQL Query Editor</h2>
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleExecute}
-                  disabled={loading || !sql.trim()}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 border-0"
-                >
-                  <Play className="w-4 h-4" />
-                  Execute Query
-                </Button>
-                <Button onClick={handleClear} variant="outline" disabled={loading}>
-                  <X className="w-4 h-4" />
-                  Clear
-                </Button>
-              </div>
+          <div className="border-b border-border h-full flex flex-col">
+            <div className="flex items-center gap-2 px-6 py-4 border-b border-border bg-background shrink-0">
+              <h2 className="text-lg font-semibold tracking-tight">SQL Query Editor</h2>
+              <Button onClick={handleClear} variant="outline" size="sm" disabled={loading} className="h-9 gap-2">
+                <X className="h-4 w-4" />
+                Clear
+              </Button>
+              <Button onClick={handleFormat} variant="outline" disabled={loading || !sql.trim()}>
+                <AlignLeft className="w-3 h-3 mr-1" />
+                Format
+              </Button>
+              <Button
+                onClick={handleExecute}
+                disabled={loading || !sql.trim()}
+                size="sm"
+                className="h-9 gap-2 bg-primary text-primary-foreground hover:bg-primary/90 border-0"
+              >
+                <Play className="h-4 w-4" />
+                Execute Query
+                <Kbd>⌘↵</Kbd>
+              </Button>
             </div>
-            <div className="w-full border border-border flex-1 flex flex-col min-h-0">
+            <div className="w-full flex-1 flex flex-col min-h-0 border border-border">
               <div className="flex-1 min-h-0">
                 <CodeMirror
                   value={sql}
@@ -140,23 +147,8 @@ export default function Query() {
                     allowMultipleSelections: false,
                   }}
                   editable={!loading}
-                  className="w-full h-full [&_.cm-editor]:bg-card [&_.cm-editor]:border-0 [&_.cm-editor]:rounded-none [&_.cm-scroller]:font-mono [&_.cm-content]:text-foreground [&_.cm-content]:text-sm [&_.cm-placeholder]:text-muted-foreground [&_.cm-editor]:w-full [&_.cm-gutter]:bg-card [&_.cm-lineNumbers]:text-muted-foreground [&_.cm-editor]:p-0 [&_.cm-scroller]:p-0 [&_.cm-content]:p-0 [&_.cm-editor]:h-full"
+                  className="w-full h-full [&_.cm-editor]:bg-background [&_.cm-editor]:border-0 [&_.cm-editor]:rounded-none [&_.cm-scroller]:font-mono [&_.cm-content]:text-foreground [&_.cm-content]:text-sm [&_.cm-placeholder]:text-muted-foreground [&_.cm-editor]:w-full [&_.cm-gutters]:bg-background [&_.cm-lineNumbers]:text-muted-foreground [&_.cm-editor]:p-0 [&_.cm-scroller]:p-0 [&_.cm-content]:p-0 [&_.cm-editor]:h-full"
                 />
-              </div>
-              <div className="flex items-center gap-3 px-3 py-1.5 bg-card border-t border-border shrink-0">
-                <div className="text-xs text-muted-foreground font-mono">
-                  Line {cursorPosition.line}, Column {cursorPosition.column}
-                </div>
-                <Button
-                  onClick={handleFormat}
-                  variant="outline"
-                  size="sm"
-                  disabled={loading || !sql.trim()}
-                  className="h-6 px-2 text-xs"
-                >
-                  <AlignLeft className="w-3 h-3 mr-1" />
-                  Format
-                </Button>
               </div>
             </div>
           </div>

@@ -43,6 +43,10 @@ export function DataTable() {
     setShowDeleteDialog(true)
   }, [])
 
+  // Only allow deletion for tables, not views
+  const isView = config.tableType === 'view'
+  const deleteHandler = isView ? undefined : handleDeleteRows
+
   return (
     <div className="w-full flex flex-col h-full">
       {/* Toolbar with metadata and controls */}
@@ -51,7 +55,7 @@ export function DataTable() {
           showFilterPanel={showFilterPanel}
           onFilterToggle={handleFilterToggle}
           onAddFilter={handleAddFilter}
-          onDeleteRows={handleDeleteRows}
+          onDeleteRows={deleteHandler}
         />
       )}
 

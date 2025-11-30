@@ -489,24 +489,10 @@ export function deleteRows(
     }
   }
 
-  // Build DELETE statement with WHERE clause
-  // For multiple rows, we'll use IN clause or multiple OR conditions
-  let rowsAffected = 0;
+  // Execute all delete operations in a transaction for atomicity
+  const rowsAffected = db.transaction(() => {
+    let rowsAffected = 0;
 
-  if (pkColumns.length === 1) {
-    // Simple case: single-column primary key - use IN clause
-    const pkColName = pkColumns[0].name;
-    const pkValues = primaryKeys.map(pk => pk[pkColName]);
-    const placeholders = pkValues.map(() => '?').join(', ');
-    const sql = `DELETE FROM "${tableName}" WHERE "${pkColName}" IN (${placeholders})`;
-
-    logQuery(sql, pkValues);
-    const stmt = db.prepare(sql);
-    const result = stmt.run(...(pkValues as (string | number | null)[]));
-    rowsAffected = result?.changes ?? 0;
-  } else {
-    // Complex case: composite primary key - delete one by one or use OR conditions
-    // For simplicity and to avoid very long SQL, we'll delete one by one
     for (const pk of primaryKeys) {
       const conditions = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
       const values = pkColumns.map(col => pk[col.name]);
@@ -514,11 +500,12 @@ export function deleteRows(
 
       logQuery(sql, values);
       const stmt = db.prepare(sql);
-      const result = stmt.run(...(values as (string | number | null)[]));
-      console.log(result)
+      const result = stmt.run(...(values as (string | number)[]));
       rowsAffected += result?.changes ?? 0;
     }
-  }
+
+    return rowsAffected;
+  })(); // Execute immediately
 
   return { rowsAffected };
 }

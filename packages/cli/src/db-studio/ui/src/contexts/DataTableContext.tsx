@@ -9,6 +9,7 @@ import type { ColumnMetadata, Filter, PaginationParams, SortingParams } from '@/
 
 type DataTableConfig = {
   tableName?: string
+  tableType?: 'table' | 'view'
   tableRowCount?: number
   totalRows: number
   isLoading: boolean

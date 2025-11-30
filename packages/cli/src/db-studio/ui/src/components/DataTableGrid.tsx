@@ -45,7 +45,6 @@ const MemoizedRow = React.memo(({ row, isLoading }: MemoizedRowProps) => {
       {row.getVisibleCells().map((cell) => {
         const { id, column, getContext } = cell
         const width = column.getSize()
-        const isCheckboxColumn = column.id === 'select'
 
         return (
           <TableCell

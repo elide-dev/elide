@@ -120,7 +120,7 @@ export const DataTableFilterPanel = React.memo(function DataTableFilterPanel({
   )
 
   return (
-    <div className="border-b border-border bg-muted/50 shrink-0">
+    <div className="border-b border-border bg-background shrink-0">
       <div className="flex items-start gap-6 px-6 py-3">
         <div className="space-y-2">
           {draftFilters.map((filter, index) => (

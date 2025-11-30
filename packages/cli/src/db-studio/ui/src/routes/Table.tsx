@@ -41,10 +41,13 @@ export default function TableView() {
     appliedFilters
   )
 
-  // Find the current table's row count from the tables list
-  const tableRowCount = React.useMemo(() => {
+  // Find the current table's metadata from the tables list
+  const tableMetadata = React.useMemo(() => {
     const table = tables.find((t) => t.name === tableName)
-    return table?.rowCount
+    return {
+      rowCount: table?.rowCount,
+      type: table?.type,
+    }
   }, [tables, tableName])
 
   // Change handlers - update URL which triggers re-fetch
@@ -100,6 +103,7 @@ export default function TableView() {
       minSize: 50,
       maxSize: 50,
       enableResizing: false,
+      enableHiding: false,
       header: ({ table }) => (
         <div className="px-4">
           <Checkbox
@@ -222,7 +226,8 @@ export default function TableView() {
     onRefresh: refetch,
     config: {
       tableName: data.name,
-      tableRowCount,
+      tableType: tableMetadata.type,
+      tableRowCount: tableMetadata.rowCount,
       totalRows: data.totalRows,
       isLoading: isFetching,
       showControls: true,

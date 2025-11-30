@@ -1,6 +1,6 @@
 import { Link, Outlet, useParams, useLocation } from 'react-router-dom'
 import { useMemo, useState } from 'react'
-import { TableProperties as TableIcon, Code2, ScanEye, ListFilter, ArrowLeft } from 'lucide-react'
+import { TableProperties as TableIcon, Code2, ScanEye, ListFilter, ArrowLeft, RefreshCw } from 'lucide-react'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
 import { Button } from '@/components/ui/button'
 import { formatRowCount } from '../lib/utils'
@@ -23,11 +23,12 @@ import {
   SidebarProvider,
 } from '@/components/ui/sidebar'
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 
 export default function Database() {
   const { dbIndex, tableName } = useParams()
   const location = useLocation()
-  const { data: tables = [], isLoading: loading } = useDatabaseTables(dbIndex)
+  const { data: tables = [], isLoading: loading, refetch } = useDatabaseTables(dbIndex)
   const [query, setQuery] = useState('')
   const [showTables, setShowTables] = useState(true)
   const [showViews, setShowViews] = useState(true)
@@ -91,33 +92,51 @@ export default function Database() {
                   </Link>
                 </Button>
               </div>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full bg-muted border border-border rounded px-3 py-2 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-ring focus:ring-0"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  disabled={loading}
-                />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded transition-colors cursor-pointer"
+              <div className="flex items-center gap-2">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    className="w-full bg-muted border border-border rounded px-3 py-2 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-ring focus:ring-0"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    disabled={loading}
+                  />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded transition-colors cursor-pointer"
+                        disabled={loading}
+                      >
+                        <ListFilter className="w-4 h-4 text-muted-foreground" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuCheckboxItem checked={showTables} onCheckedChange={setShowTables}>
+                        Show tables
+                      </DropdownMenuCheckboxItem>
+                      <DropdownMenuCheckboxItem checked={showViews} onCheckedChange={setShowViews}>
+                        Show views
+                      </DropdownMenuCheckboxItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <HoverCard openDelay={200}>
+                  <HoverCardTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => refetch()}
                       disabled={loading}
+                      className="h-9 w-9 p-0"
                     >
-                      <ListFilter className="w-4 h-4 text-muted-foreground" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuCheckboxItem checked={showTables} onCheckedChange={setShowTables}>
-                      Show tables
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem checked={showViews} onCheckedChange={setShowViews}>
-                      Show views
-                    </DropdownMenuCheckboxItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                      <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                    </Button>
+                  </HoverCardTrigger>
+                  <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
+                    <span className="text-xs font-semibold">Refresh tables</span>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             </div>
 

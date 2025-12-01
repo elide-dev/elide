@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/sidebar'
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Database() {
   const { dbIndex, tableName } = useParams()
@@ -144,22 +145,32 @@ export default function Database() {
               <SidebarGroup>
                 <SidebarGroupContent>
                   <SidebarMenu>
-                    {!loading &&
-                      filteredTables.map(({ name, type, rowCount }) => {
-                        const isActive = decodeURIComponent(tableName || '') === name
-                        const Icon = type === 'view' ? ScanEye : TableIcon
-                        return (
-                          <SidebarMenuItem key={name}>
-                            <SidebarMenuButton asChild isActive={isActive}>
-                              <Link to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}>
-                                <Icon className="w-4 h-4" />
-                                <span className="flex-1 truncate">{name}</span>
-                                <span className="text-xs text-muted-foreground">{formatRowCount(rowCount)}</span>
-                              </Link>
+                    {loading
+                      ? // Show skeleton items while loading
+                        Array.from({ length: 8 }).map((_, index) => (
+                          <SidebarMenuItem key={index}>
+                            <SidebarMenuButton disabled>
+                              <Skeleton className="w-4 h-4" />
+                              <Skeleton className="h-4 flex-1" />
+                              <Skeleton className="h-3 w-8" />
                             </SidebarMenuButton>
                           </SidebarMenuItem>
-                        )
-                      })}
+                        ))
+                      : filteredTables.map(({ name, type, rowCount }) => {
+                          const isActive = decodeURIComponent(tableName || '') === name
+                          const Icon = type === 'view' ? ScanEye : TableIcon
+                          return (
+                            <SidebarMenuItem key={name}>
+                              <SidebarMenuButton asChild isActive={isActive}>
+                                <Link to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}>
+                                  <Icon className="w-4 h-4" />
+                                  <span className="flex-1 truncate">{name}</span>
+                                  <span className="text-xs text-muted-foreground">{formatRowCount(rowCount)}</span>
+                                </Link>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          )
+                        })}
                   </SidebarMenu>
                 </SidebarGroupContent>
               </SidebarGroup>

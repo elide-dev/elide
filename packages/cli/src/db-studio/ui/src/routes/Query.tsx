@@ -271,7 +271,15 @@ function QueryResultsTable({
   const tableColumns: ColumnDef<Record<string, unknown>>[] = useMemo(() => {
     return tableData.columns.map((col) => ({
       accessorKey: col.name,
-      header: col.name,
+      size: 200,
+      minSize: 100,
+      maxSize: 1000,
+      enableResizing: true,
+      header: () => (
+        <div className="flex items-center gap-1.5 px-4 py-2 w-full h-full">
+          <span className="text-xs font-semibold text-foreground tracking-wider truncate">{col.name}</span>
+        </div>
+      ),
       cell: ({ getValue }) => {
         const value = getValue()
         if (value === null || value === undefined)
@@ -299,6 +307,8 @@ function QueryResultsTable({
     data: tableRows,
     columns: tableColumns,
     getCoreRowModel: getCoreRowModel(),
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
   })
 
   // Build context value

@@ -73,8 +73,8 @@ export function DataTableGrid() {
       <table
         className="w-full caption-bottom text-sm"
         style={{
-          width: config.showControls ? table.getCenterTotalSize() : '100%',
-          tableLayout: config.showControls ? 'fixed' : 'auto',
+          width: table.getCenterTotalSize(),
+          tableLayout: 'fixed',
         }}
       >
         <TableHeader>
@@ -82,14 +82,15 @@ export function DataTableGrid() {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 const isCheckboxColumn = header.column.id === 'select'
+                const isResizable = header.column.getCanResize()
                 return (
                   <TableHead
                     key={header.id}
-                    className={`text-left border-b border-r border-border ${config.showControls ? (isCheckboxColumn ? 'p-0 relative' : 'p-0 hover:bg-accent relative') : 'px-4 py-2'} sticky top-0 z-10 bg-card overflow-hidden ${isCheckboxColumn ? '' : 'font-mono'}`}
+                    className={`text-left border-b border-r border-border ${isCheckboxColumn ? 'p-0 relative' : 'p-0 hover:bg-accent relative'} sticky top-0 z-10 bg-card overflow-hidden ${isCheckboxColumn ? '' : 'font-mono'}`}
                     style={{ width: header.getSize(), maxWidth: header.getSize() }}
                   >
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    {config.showControls && !isCheckboxColumn && (
+                    {isResizable && !isCheckboxColumn && (
                       <div
                         onMouseDown={header.getResizeHandler()}
                         onTouchStart={header.getResizeHandler()}

@@ -41,7 +41,7 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
       {config.tableName && (
         <div className="flex items-center gap-3 mr-4">
           <h2 className="text-lg font-semibold tracking-tight truncate">{config.tableName}</h2>
-          {config.tableRowCount ? (
+          {config.tableRowCount != undefined ? (
             <HoverCard openDelay={200}>
               <HoverCardTrigger asChild>
                 <Badge variant="secondary" className="shrink-0 cursor-default">

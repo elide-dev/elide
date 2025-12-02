@@ -62,9 +62,9 @@ export function QueryEditor({ sql, onSqlChange, onExecute, loading }: QueryEdito
 
   return (
     <div className="border-b border-border h-full flex flex-col">
-      <div className="flex items-center gap-2 px-6 py-4 border-b border-border bg-background shrink-0">
+      <div className="flex font-sans items-center gap-2 px-6 py-4 border-b border-border bg-background shrink-0">
         <h2 className="text-lg font-semibold tracking-tight">SQL Query Editor</h2>
-        <Button onClick={handleClear} variant="outline" size="sm" disabled={loading} className="h-9 gap-2">
+        <Button onClick={handleClear} variant="outline" disabled={loading} className="h-9 gap-2">
           <X className="h-4 w-4" />
           Clear
         </Button>
@@ -75,7 +75,6 @@ export function QueryEditor({ sql, onSqlChange, onExecute, loading }: QueryEdito
         <Button
           onClick={onExecute}
           disabled={loading || !sql.trim()}
-          size="sm"
           className="h-9 gap-2 bg-primary text-primary-foreground hover:bg-primary/90 border-0"
         >
           <Play className="h-4 w-4" />

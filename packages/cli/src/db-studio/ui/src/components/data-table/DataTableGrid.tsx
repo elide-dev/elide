@@ -5,10 +5,14 @@ import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/compon
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDataTable } from '@/contexts/DataTableContext'
 
+type SelectedCell = { rowId: string; columnId: string } | null
+
 type MemoizedRowProps = {
   row: Row<Record<string, unknown>>
   isLoading: boolean
   isResizing: boolean
+  selectedCell: SelectedCell
+  onCellClick: (rowId: string, columnId: string) => void
 }
 
 /**
@@ -25,6 +29,12 @@ function shouldSkipRowRerender(prev: MemoizedRowProps, next: MemoizedRowProps): 
   // Rerender if visible columns changed (column visibility toggled)
   if (prev.row.getVisibleCells().length !== next.row.getVisibleCells().length) return false
 
+  // Rerender if selected cell in this row changed
+  const prevHasSelection = prev.selectedCell?.rowId === prev.row.id
+  const nextHasSelection = next.selectedCell?.rowId === next.row.id
+  if (prevHasSelection !== nextHasSelection) return false
+  if (prevHasSelection && nextHasSelection && prev.selectedCell?.columnId !== next.selectedCell?.columnId) return false
+
   // Skip rerender only if we're currently resizing
   return next.isResizing
 }
@@ -33,7 +43,7 @@ function shouldSkipRowRerender(prev: MemoizedRowProps, next: MemoizedRowProps): 
  * Memoized table row that prevents rerenders during column resizing
  * Maintains smooth performance with large datasets by blocking rerenders during resize operations
  */
-const MemoizedRow = React.memo(({ row, isLoading }: MemoizedRowProps) => {
+const MemoizedRow = React.memo(({ row, isLoading, selectedCell, onCellClick }: MemoizedRowProps) => {
   const isSelected = row.getIsSelected()
 
   return (
@@ -45,11 +55,17 @@ const MemoizedRow = React.memo(({ row, isLoading }: MemoizedRowProps) => {
       {row.getVisibleCells().map((cell) => {
         const { id, column, getContext } = cell
         const width = column.getSize()
+        const isCheckboxColumn = column.id === 'select'
+        const isCellSelected =
+          !isCheckboxColumn && selectedCell?.rowId === row.id && selectedCell?.columnId === column.id
 
         return (
           <TableCell
             key={id}
-            className={`text-xs text-foreground border-r border-border overflow-hidden truncate px-4 py-2 font-mono`}
+            onClick={isCheckboxColumn ? undefined : () => onCellClick(row.id, column.id)}
+            className={`text-xs text-foreground border-r border-border overflow-hidden truncate px-4 py-2 font-mono transition-colors ${
+              isCheckboxColumn ? '' : 'cursor-pointer'
+            } ${isCellSelected ? 'bg-blue-500/20 ring-2 ring-blue-500 ring-inset' : ''}`}
             style={{ width, maxWidth: width }}
           >
             {isLoading ? <Skeleton className="h-4 w-full" /> : flexRender(column.columnDef.cell, getContext())}
@@ -64,9 +80,20 @@ MemoizedRow.displayName = 'MemoizedRow'
 
 export function DataTableGrid() {
   const { table, config, pagination } = useDataTable()
+  const [selectedCell, setSelectedCell] = React.useState<SelectedCell>(null)
 
   // Check if any column is currently being resized
   const isResizing = table.getState().columnSizingInfo.isResizingColumn !== false
+
+  const handleCellClick = React.useCallback((rowId: string, columnId: string) => {
+    setSelectedCell((prev) => {
+      // Toggle off if clicking the same cell
+      if (prev?.rowId === rowId && prev?.columnId === columnId) {
+        return null
+      }
+      return { rowId, columnId }
+    })
+  }, [])
 
   return (
     <div className="overflow-auto flex-1 relative">
@@ -110,7 +137,14 @@ export function DataTableGrid() {
             table
               .getRowModel()
               .rows?.map((row) => (
-                <MemoizedRow key={row.id} row={row} isLoading={config.isLoading} isResizing={isResizing} />
+                <MemoizedRow
+                  key={row.id}
+                  row={row}
+                  isLoading={config.isLoading}
+                  isResizing={isResizing}
+                  selectedCell={selectedCell}
+                  onCellClick={handleCellClick}
+                />
               ))}
         </TableBody>
       </table>

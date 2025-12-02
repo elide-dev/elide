@@ -8,16 +8,18 @@ type FilterButtonProps = {
   showFilters: boolean
   activeFilterCount: number
   onToggle: () => void
+  disabled?: boolean
 }
 
 export const FilterButton = React.memo(function FilterButton({
   showFilters,
   activeFilterCount,
   onToggle,
+  disabled,
 }: FilterButtonProps) {
   return (
     <div className="relative">
-      <Button variant="outline" className={showFilters ? 'bg-accent text-accent-foreground' : ''} onClick={onToggle}>
+      <Button variant="outline" className={showFilters ? 'bg-accent text-accent-foreground' : ''} onClick={onToggle} disabled={disabled}>
         <FilterIcon className="mr-2 h-4 w-4" />
         Filters
       </Button>

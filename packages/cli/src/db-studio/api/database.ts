@@ -505,3 +505,39 @@ export function deleteRows(
 
   return { rowsAffected };
 }
+
+/**
+ * Insert a new row into a table
+ * @param db Database instance
+ * @param tableName Name of the table to insert into
+ * @param row Object mapping column names to values (undefined values are omitted to use DEFAULT)
+ * @returns Object with rowsAffected and lastInsertRowid
+ */
+export function insertRow(
+  db: Database,
+  tableName: string,
+  row: Record<string, unknown>
+): { rowsAffected: number; lastInsertRowid?: number | bigint } {
+  // Filter out undefined values (these will use DEFAULT)
+  const entries = Object.entries(row).filter(([_, value]) => value !== undefined);
+
+  if (entries.length === 0) {
+    throw new Error("No columns specified for insert");
+  }
+
+  // Build INSERT query with parameterized values
+  const columnNames = entries.map(([key]) => `"${key}"`).join(', ');
+  const placeholders = entries.map(() => '?').join(', ');
+  const values = entries.map(([_, value]) => value);
+
+  const sql = `INSERT INTO "${tableName}" (${columnNames}) VALUES (${placeholders})`;
+
+  logQuery(sql, values);
+  const stmt = db.prepare(sql);
+  const info = stmt.run(...(values as (string | number | null)[]));
+
+  return {
+    rowsAffected: info.changes,
+    lastInsertRowid: info.lastInsertRowid,
+  };
+}

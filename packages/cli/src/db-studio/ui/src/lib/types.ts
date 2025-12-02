@@ -107,3 +107,12 @@ export const FILTER_OPERATORS: OperatorMeta[] = [
   { value: 'is_null', label: 'is null', symbol: 'IS NULL', requiresValue: false, isArrayValue: false },
   { value: 'is_not_null', label: 'is not null', symbol: 'IS NOT NULL', requiresValue: false, isArrayValue: false },
 ]
+
+/**
+ * Edit mode state for inline row editing
+ */
+export type EditModeState = {
+  isActive: boolean
+  rowData: Record<string, unknown>
+  hasUnsavedChanges: boolean
+}

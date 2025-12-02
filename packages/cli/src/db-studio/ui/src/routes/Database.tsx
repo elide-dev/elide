@@ -9,7 +9,7 @@ import {
   RefreshCw,
   Trash2,
   MoreHorizontal,
-  Eraser,
+  Scissors,
 } from 'lucide-react'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
 import { Button } from '@/components/ui/button'
@@ -20,7 +20,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import { DropTableDialog } from '@/components/DropTableDialog'
 import { TruncateTableDialog } from '@/components/TruncateTableDialog'
@@ -220,16 +219,13 @@ export default function Database() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent side="bottom" align="start">
                                   {type === 'table' && (
-                                    <>
-                                      <DropdownMenuItem
-                                        className="text-destructive focus:text-destructive"
-                                        onClick={() => openTruncateDialog(name, type)}
-                                      >
-                                        <Eraser className="w-4 h-4" />
-                                        <span>Truncate Table</span>
-                                      </DropdownMenuItem>
-                                      <DropdownMenuSeparator />
-                                    </>
+                                    <DropdownMenuItem
+                                      className="text-destructive focus:text-destructive"
+                                      onClick={() => openTruncateDialog(name, type)}
+                                    >
+                                      <Scissors className="w-4 h-4" />
+                                      <span>Truncate Table</span>
+                                    </DropdownMenuItem>
                                   )}
                                   <DropdownMenuItem
                                     className="text-destructive focus:text-destructive"

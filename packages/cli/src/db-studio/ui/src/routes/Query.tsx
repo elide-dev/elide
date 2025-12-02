@@ -6,7 +6,7 @@ import { Kbd } from '@/components/ui/kbd'
 import CodeMirror from '@uiw/react-codemirror'
 import { sql as sqlLang } from '@codemirror/lang-sql'
 import { oneDark } from '@codemirror/theme-one-dark'
-import { keymap, EditorView } from '@codemirror/view'
+import { keymap } from '@codemirror/view'
 import { Prec } from '@codemirror/state'
 import { format } from 'sql-formatter'
 import { useQueryExecution } from '../hooks/useQueryExecution'
@@ -21,7 +21,6 @@ export default function Query() {
   const { dbIndex } = useParams()
 
   const [sql, setSql] = useState('')
-  const [cursorPosition, setCursorPosition] = useState({ line: 1, column: 1 })
 
   const { data: tables = [] } = useDatabaseTables(dbIndex)
   const { mutate: executeQuery, data: result, isPending: loading, error } = useQueryExecution(dbIndex)
@@ -90,21 +89,6 @@ export default function Query() {
     []
   )
 
-  const cursorPositionExtension = useMemo(
-    () =>
-      EditorView.updateListener.of((update) => {
-        if (update.selectionSet) {
-          const { state } = update.view
-          const { head } = state.selection.main
-          const line = state.doc.lineAt(head)
-          const lineNumber = line.number
-          const column = head - line.from + 1
-          setCursorPosition({ line: lineNumber, column })
-        }
-      }),
-    []
-  )
-
   return (
     <div className="flex-1 p-0 overflow-hidden font-mono flex flex-col h-full">
       <ResizablePanelGroup direction="vertical" className="h-full">
@@ -138,7 +122,7 @@ export default function Query() {
                   onChange={(value) => setSql(value)}
                   placeholder="Enter your SQL query here... (Cmd/Ctrl + Enter to execute)"
                   height="100%"
-                  extensions={[sqlLang(), executeKeymap, cursorPositionExtension]}
+                  extensions={[sqlLang(), executeKeymap]}
                   theme={oneDark}
                   basicSetup={{
                     lineNumbers: true,

@@ -185,14 +185,3 @@ export const CreateTableRequestSchema = z.object({
 
 export type CreateTableRequest = z.infer<typeof CreateTableRequestSchema>;
 
-/**
- * Drop table request schema
- */
-export const DropTableRequestSchema = z.object({
-  confirm: z.literal(true, {
-    errorMap: () => ({ message: "Must set 'confirm: true' to drop table (safety check)" }),
-  }),
-});
-
-export type DropTableRequest = z.infer<typeof DropTableRequestSchema>;
-

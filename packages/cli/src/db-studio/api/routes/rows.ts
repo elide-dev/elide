@@ -74,9 +74,10 @@ export const insertRowRoute = withDatabase(async (context) => {
   const { row } = result.data;
 
   try {
-    insertRow(db, params.tableName, row);
+    const result = insertRow(db, params.tableName, row);
     return jsonResponse({
       success: true,
+      sql: result.sql,
     });
   } catch (err) {
     console.error("Insert row error:", err);

@@ -144,13 +144,11 @@ interface PragmaIndexInfoRow {
 export function getColumnMetadata(db: Database, tableName: string): ColumnMetadata[] {
   // Get basic column information
   const tableInfoSql = `SELECT * FROM pragma_table_info('${tableName}')`;
-  logQuery(tableInfoSql);
   const tableInfoQuery: Statement<PragmaTableInfoRow> = db.prepare(tableInfoSql);
   const columns = tableInfoQuery.all();
 
   // Get foreign key information
   const foreignKeySql = `SELECT * FROM pragma_foreign_key_list('${tableName}')`;
-  logQuery(foreignKeySql);
   const foreignKeyQuery: Statement<PragmaForeignKeyRow> = db.prepare(foreignKeySql);
   const foreignKeys = foreignKeyQuery.all();
 
@@ -167,7 +165,6 @@ export function getColumnMetadata(db: Database, tableName: string): ColumnMetada
 
   // Get unique constraint information from indexes
   const indexListSql = `SELECT * FROM pragma_index_list('${tableName}')`;
-  logQuery(indexListSql);
   const indexListQuery: Statement<PragmaIndexListRow> = db.prepare(indexListSql);
   const indexes = indexListQuery.all();
 
@@ -176,7 +173,6 @@ export function getColumnMetadata(db: Database, tableName: string): ColumnMetada
   for (const index of indexes) {
     if (index.unique === 1) {
       const indexInfoSql = `SELECT * FROM pragma_index_info('${index.name}')`;
-      logQuery(indexInfoSql);
       const indexInfoQuery: Statement<PragmaIndexInfoRow> = db.prepare(indexInfoSql);
       const indexInfo = indexInfoQuery.all();
       

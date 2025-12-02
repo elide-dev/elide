@@ -15,13 +15,16 @@ export default function Database() {
   const [truncateDialogOpen, setTruncateDialogOpen] = useState(false)
   const [selectedTable, setSelectedTable] = useState<{ name: string; type: 'table' | 'view' } | null>(null)
 
-  const handleDropSuccess = () => {
-    // If we're viewing the dropped table, navigate back to query editor
-    if (selectedTable && decodeURIComponent(tableName || '') === selectedTable.name) {
-      navigate(`/database/${dbIndex}/query`)
-    }
+  const handleDropDialogClose = () => {
     setDropDialogOpen(false)
     setSelectedTable(null)
+  }
+
+  const handleDropSuccess = () => {
+    // If we're viewing the dropped table, navigate to database index
+    if (selectedTable && decodeURIComponent(tableName || '') === selectedTable.name) {
+      navigate(`/database/${dbIndex}`)
+    }
   }
 
   const handleTruncateSuccess = () => {
@@ -66,19 +69,20 @@ export default function Database() {
       {selectedTable && dbIndex && (
         <>
           <DropTableDialog
-            open={dropDialogOpen}
-            onOpenChange={(open) => {
-              if (!open) handleDropSuccess()
+            isOpen={dropDialogOpen}
+            onOpenChange={(isOpen) => {
+              if (!isOpen) handleDropDialogClose()
             }}
+            onSuccess={handleDropSuccess}
             dbIndex={dbIndex}
             tableName={selectedTable.name}
             tableType={selectedTable.type}
           />
           {selectedTable.type === 'table' && (
             <TruncateTableDialog
-              open={truncateDialogOpen}
-              onOpenChange={(open) => {
-                if (!open) handleTruncateSuccess()
+              isOpen={truncateDialogOpen}
+              onOpenChange={(isOpen) => {
+                if (!isOpen) handleTruncateSuccess()
               }}
               dbIndex={dbIndex}
               tableName={selectedTable.name}

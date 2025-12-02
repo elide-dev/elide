@@ -12,13 +12,13 @@ import {
 import { useTruncateTable } from '@/hooks/useTruncateTable'
 
 type TruncateTableDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
   dbIndex: string
   tableName: string
 }
 
-export function TruncateTableDialog({ open, onOpenChange, dbIndex, tableName }: TruncateTableDialogProps) {
+export function TruncateTableDialog({ isOpen, onOpenChange, dbIndex, tableName }: TruncateTableDialogProps) {
   const truncateTableMutation = useTruncateTable(dbIndex)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
@@ -36,22 +36,32 @@ export function TruncateTableDialog({ open, onOpenChange, dbIndex, tableName }: 
 
   // Reset error when dialog opens/closes
   React.useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       setErrorMessage(null)
     }
-  }, [open])
+  }, [isOpen])
 
   // Show error dialog if truncate failed
   if (errorMessage) {
     return (
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Truncate Failed</AlertDialogTitle>
-            <AlertDialogDescription>
-              Failed to truncate the table "{tableName}".
-            </AlertDialogDescription>
           </AlertDialogHeader>
+
+          <AlertDialogDescription>
+            <div className="flex items-start flex-col space-y-5">
+              <p>Failed to truncate this table:</p>
+              <ul className="list-disc list-inside">
+                <li>
+                  <span className="font-mono text-sm font-semibold text-foreground px-1.5 py-0.5 rounded border bg-muted/50">
+                    {tableName}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </AlertDialogDescription>
 
           {/* Show error message */}
           <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
@@ -77,21 +87,26 @@ export function TruncateTableDialog({ open, onOpenChange, dbIndex, tableName }: 
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Truncate Table: {tableName}</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to truncate this table? All rows will be deleted, but the table structure will remain intact.
-          </AlertDialogDescription>
+          <AlertDialogTitle>Truncate Table</AlertDialogTitle>
         </AlertDialogHeader>
 
-        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
-          <div className="text-sm font-medium text-destructive">Warning: This will delete all data</div>
-          <div className="text-xs text-destructive/80 mt-1">
-            All rows in the table "{tableName}" will be permanently deleted. The table structure and schema will be preserved.
+        <AlertDialogDescription>
+          <div className="flex items-start flex-col space-y-5">
+            <p>
+              You're about to <span className="font-bold">permanently</span> delete all rows in this table:
+            </p>
+            <ul className="list-disc list-inside">
+              <li>
+                <span className="font-mono text-sm font-semibold text-foreground px-1.5 py-0.5 rounded border bg-muted/50">
+                  {tableName}
+                </span>
+              </li>
+            </ul>
           </div>
-        </div>
+        </AlertDialogDescription>
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={truncateTableMutation.isPending}>Cancel</AlertDialogCancel>

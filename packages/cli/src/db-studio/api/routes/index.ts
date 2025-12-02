@@ -1,7 +1,7 @@
 import type { Route } from "../http/types.ts";
 import { healthCheck } from "./health.ts";
 import { listDatabases, getDatabaseInfoRoute } from "./databases.ts";
-import { getTablesRoute, getTableDataRoute, createTableRoute, dropTableRoute } from "./tables.ts";
+import { getTablesRoute, getTableDataRoute, createTableRoute, dropTableRoute, truncateTableRoute } from "./tables.ts";
 import { executeQueryRoute } from "./query.ts";
 import { deleteRowsRoute } from "./rows.ts";
 
@@ -26,6 +26,7 @@ export const routes: Route[] = [
   // Table operations - write (structure-level operations)
   { method: "POST", pattern: "/api/databases/:dbIndex/tables", handler: createTableRoute },
   { method: "DELETE", pattern: "/api/databases/:dbIndex/tables/:tableName", handler: dropTableRoute },
+  { method: "POST", pattern: "/api/databases/:dbIndex/tables/:tableName/truncate", handler: truncateTableRoute },
 
   // Row operations - write (data-level operations)
   { method: "DELETE", pattern: "/api/databases/:dbIndex/tables/:tableName/rows", handler: deleteRowsRoute },

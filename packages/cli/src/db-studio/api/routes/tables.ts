@@ -4,7 +4,7 @@ import { requireTableName } from "../utils/validation.ts";
 import { parseRequestBody, parseQueryParams } from "../utils/request.ts";
 import { getTables, getTableData } from "../database.ts";
 import type { Filter } from "../http/schemas.ts";
-import { CreateTableRequestSchema, DropTableRequestSchema, FiltersArraySchema } from "../http/schemas.ts";
+import { CreateTableRequestSchema, FiltersArraySchema } from "../http/schemas.ts";
 
 /**
  * Get list of tables in a database
@@ -128,19 +128,9 @@ export const createTableRoute = withDatabase(async (context) => {
  * Drop a table
  */
 export const dropTableRoute = withDatabase(async (context) => {
-  const { params, db, body } = context;
+  const { params, db } = context;
   const tableNameError = requireTableName(params);
   if (tableNameError) return tableNameError;
-
-  const data = parseRequestBody(body);
-  const result = DropTableRequestSchema.safeParse(data);
-
-  if (!result.success) {
-    return errorResponse(
-      `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
-      400
-    );
-  }
 
   const sql = `DROP TABLE "${params.tableName}"`;
   const startTime = performance.now();
@@ -148,6 +138,25 @@ export const dropTableRoute = withDatabase(async (context) => {
   try {
     db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${params.tableName}' dropped successfully` });
+  } catch (err) {
+    return handleSQLError(err, sql, startTime);
+  }
+});
+
+/**
+ * Truncate a table (delete all rows)
+ */
+export const truncateTableRoute = withDatabase(async (context) => {
+  const { params, db } = context;
+  const tableNameError = requireTableName(params);
+  if (tableNameError) return tableNameError;
+
+  const sql = `DELETE FROM "${params.tableName}"`;
+  const startTime = performance.now();
+
+  try {
+    db.exec(sql);
+    return jsonResponse({ success: true, message: `Table '${params.tableName}' truncated successfully` });
   } catch (err) {
     return handleSQLError(err, sql, startTime);
   }

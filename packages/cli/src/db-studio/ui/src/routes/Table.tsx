@@ -4,12 +4,10 @@ import type { ColumnDef, SortingState, RowSelectionState } from '@tanstack/react
 import { getCoreRowModel, getFilteredRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { useTableData } from '../hooks/useTableData'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
-import { DataTable } from '../components/DataTable'
-import { DataTableProvider } from '@/contexts/DataTableContext'
+import { DataTable, DataTableProvider, ColumnHeader } from '@/components/data-table'
 import { parsePaginationParams, parseSortingParams, parseFilterParams, buildSearchParams } from '@/lib/urlParams'
 import { DEFAULT_OFFSET } from '@/lib/constants'
 import type { ColumnMetadata, PaginationParams, SortingParams, Filter } from '@/lib/types'
-import { ColumnHeader } from '@/components/ColumnHeader'
 import { Checkbox } from '@/components/ui/checkbox'
 
 /**

@@ -17,11 +17,7 @@ export const FilterButton = React.memo(function FilterButton({
 }: FilterButtonProps) {
   return (
     <div className="relative">
-      <Button
-        variant="outline"
-        className={showFilters ? 'bg-accent text-accent-foreground' : ''}
-        onClick={onToggle}
-      >
+      <Button variant="outline" className={showFilters ? 'bg-accent text-accent-foreground' : ''} onClick={onToggle}>
         <FilterIcon className="mr-2 h-4 w-4" />
         Filters
       </Button>

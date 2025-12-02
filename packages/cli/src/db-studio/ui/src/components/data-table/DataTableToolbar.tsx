@@ -8,7 +8,7 @@ import { FilterButton } from './FilterButton'
 import { ColumnsDropdown } from './ColumnsDropdown'
 import { DataTablePagination } from './DataTablePagination'
 import { useDataTable } from '@/contexts/DataTableContext'
-import { Button } from './ui/button'
+import { Button } from '@/components/ui/button'
 import { RefreshCw, Trash2 } from 'lucide-react'
 
 type DataTableToolbarProps = {

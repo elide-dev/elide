@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import App from './App.tsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Databases from './routes/Databases.tsx'
+import Home from './routes/Home.tsx'
 import Database from './routes/Database.tsx'
 import Table from './routes/Table.tsx'
 import Query from './routes/Query.tsx'
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <App />,
     children: [
-      { index: true, element: <Databases /> },
+      { index: true, element: <Home /> },
       {
         path: 'database/:dbIndex',
         element: <Database />,

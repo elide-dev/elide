@@ -5,7 +5,6 @@ import { useDataTable } from '@/contexts/DataTableContext'
 
 type DeleteRowsResponse = {
   success: true
-  rowsAffected: number
 }
 
 async function deleteRows(

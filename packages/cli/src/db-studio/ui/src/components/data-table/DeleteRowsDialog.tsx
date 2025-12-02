@@ -10,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { SQLCodeBlock } from '@/components/ui/sql-code-block'
 import { useDeleteRows } from '@/hooks/useDeleteRows'
 import { useDataTable } from '@/contexts/DataTableContext'
 import type { ColumnMetadata } from '@/lib/types'
@@ -47,6 +48,7 @@ export function DeleteRowsDialog({ isOpen, onOpenChange }: DeleteRowsDialogProps
   const selectedRows = table.getFilteredSelectedRowModel().rows
   const deleteRowsMutation = useDeleteRows()
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
+  const [errorSql, setErrorSql] = React.useState<string | null>(null)
 
   // Extract primary keys from all selected rows
   const primaryKeysToDelete = React.useMemo(() => {
@@ -65,14 +67,18 @@ export function DeleteRowsDialog({ isOpen, onOpenChange }: DeleteRowsDialogProps
     console.log('Starting delete operation...')
     try {
       setErrorMessage(null) // Clear any previous errors
+      setErrorSql(null)
       await deleteRowsMutation.mutateAsync(primaryKeysToDelete)
       console.log('Delete successful, closing dialog')
       onOpenChange(false)
-    } catch (error) {
+    } catch (error: unknown) {
       // Show error message in alert dialog
       const message = error instanceof Error ? error.message : 'An unknown error occurred'
+      // Extract SQL from error response if available
+      const sql = (error as { response?: { sql?: string } })?.response?.sql ?? null
       console.log('Delete failed with error:', message, error)
       setErrorMessage(message)
+      setErrorSql(sql)
       console.error('Delete failed:', error)
       // Keep dialog open to show error
     }
@@ -82,13 +88,9 @@ export function DeleteRowsDialog({ isOpen, onOpenChange }: DeleteRowsDialogProps
   React.useEffect(() => {
     if (!isOpen) {
       setErrorMessage(null)
+      setErrorSql(null)
     }
   }, [isOpen])
-
-  // Debug: Log when error message changes
-  React.useEffect(() => {
-    console.log('Error message changed:', errorMessage)
-  }, [errorMessage])
 
   if (!hasPrimaryKeys) {
     return (
@@ -112,7 +114,7 @@ export function DeleteRowsDialog({ isOpen, onOpenChange }: DeleteRowsDialogProps
   if (errorMessage) {
     return (
       <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-lg">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Failed</AlertDialogTitle>
             <AlertDialogDescription>
@@ -125,12 +127,23 @@ export function DeleteRowsDialog({ isOpen, onOpenChange }: DeleteRowsDialogProps
             <div className="text-sm text-destructive">{errorMessage}</div>
           </div>
 
+          {/* Show SQL query if available */}
+          {errorSql && <SQLCodeBlock sql={errorSql} />}
+
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setErrorMessage(null)}>Close</AlertDialogCancel>
+            <AlertDialogCancel
+              onClick={() => {
+                setErrorMessage(null)
+                setErrorSql(null)
+              }}
+            >
+              Close
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault() // Prevent dialog from auto-closing
                 setErrorMessage(null)
+                setErrorSql(null)
                 // Retry the delete
                 handleDelete()
               }}

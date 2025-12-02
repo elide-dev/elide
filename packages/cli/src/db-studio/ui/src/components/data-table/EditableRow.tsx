@@ -43,7 +43,7 @@ export const EditableRow = React.memo(function EditableRow({
                 <button
                   type="button"
                   onClick={() => onRemove(rowId)}
-                  className="p-0.5 rounded hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+                  className="cursor-pointer p-0.5 rounded hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                   aria-label="Remove row"
                 >
                   <X className="h-4 w-4 text-red-500" />

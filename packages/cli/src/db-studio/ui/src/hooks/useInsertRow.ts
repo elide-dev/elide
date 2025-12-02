@@ -4,8 +4,6 @@ import { API_BASE_URL } from '../config'
 
 type InsertRowResponse = {
   success: true
-  rowsAffected: number
-  lastInsertRowid?: number | bigint
 }
 
 async function insertRow(

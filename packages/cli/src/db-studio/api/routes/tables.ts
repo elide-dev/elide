@@ -1,4 +1,4 @@
-import { jsonResponse, handleSQLError, errorResponse } from "../http/responses.ts";
+import { jsonResponse, handleSQLError, errorResponse, extractErrorMessage } from "../http/responses.ts";
 import { withDatabase } from "../http/middleware.ts";
 import { requireTableName } from "../utils/validation.ts";
 import { parseRequestBody, parseQueryParams } from "../utils/request.ts";
@@ -74,9 +74,9 @@ export const getTableDataRoute = withDatabase(async (context) => {
 
       filters = result.data;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      console.error("Error parsing where parameter:", err);
       return errorResponse(
-        `Failed to parse where parameter: ${errorMessage}`,
+        `Failed to parse where parameter: ${extractErrorMessage(err)}`,
         400
       );
     }
@@ -86,8 +86,8 @@ export const getTableDataRoute = withDatabase(async (context) => {
     const tableData = getTableData(db, params.tableName, limit, offset, sortColumn, sortDirection, filters);
     return jsonResponse(tableData);
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(errorMessage, 400);
+    console.error("Error getting table data:", err);
+    return errorResponse(extractErrorMessage(err), 400);
   }
 });
 

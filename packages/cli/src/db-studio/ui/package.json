@@ -40,7 +40,8 @@
     "react-resizable-panels": "^3.0.6",
     "react-router-dom": "^7.9.4",
     "sql-formatter": "^15.6.10",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

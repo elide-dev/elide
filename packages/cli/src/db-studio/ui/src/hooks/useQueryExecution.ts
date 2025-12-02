@@ -32,8 +32,6 @@ export type SelectQueryResult = {
 
 export type WriteQueryResult = {
   success: true
-  rowsAffected: number
-  lastInsertRowid?: number | bigint
   metadata: QueryMetadata
 }
 

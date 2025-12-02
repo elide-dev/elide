@@ -2,7 +2,7 @@ import type { DiscoveredDatabase } from "../database.ts";
 import type { ApiResponse, RouteContext } from "./types.ts";
 import { matchRoute } from "./router.ts";
 import { routes } from "../routes/index.ts";
-import { errorResponse, notFoundResponse } from "./responses.ts";
+import { errorResponse, notFoundResponse, extractErrorMessage } from "./responses.ts";
 
 /**
  * Extracts the path from a URL, removing query strings
@@ -53,9 +53,8 @@ export async function handleApiRequest(
     return response ?? notFoundResponse();
 
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
     console.error("Error handling request:", err);
-    return errorResponse(errorMessage);
+    return errorResponse(extractErrorMessage(err));
   }
 }
 

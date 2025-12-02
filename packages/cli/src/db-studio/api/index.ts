@@ -1,5 +1,4 @@
 import { createServer, IncomingMessage, ServerResponse } from "http";
-import { Database } from "elide:sqlite";
 import { handleApiRequest } from "./http/server.ts";
 import { errorResponse } from "./http/responses.ts";
 import type { ApiResponse } from "./http/types.ts";
@@ -10,8 +9,6 @@ import config from "./config.ts";
  *
  * Bootstraps the HTTP server for the Database Studio API.
  */
-
-export { Database };
 
 const { port, databases } = config;
 
@@ -51,7 +48,7 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse): Promise
     const url = req.url || '/';
     const method = req.method || 'GET';
 
-    const response = await handleApiRequest(url, method, body, databases, Database);
+    const response = await handleApiRequest(url, method, body, databases);
     writeResponse(res, response);
   } catch (err) {
     console.error("Error handling request:", err);

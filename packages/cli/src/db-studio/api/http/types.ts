@@ -1,10 +1,5 @@
-import type { DiscoveredDatabase } from "../database.ts";
 import type { Database } from "elide:sqlite";
-
-/**
- * Database constructor type
- */
-export type DatabaseConstructor = typeof Database;
+import type { DiscoveredDatabase } from "../database.ts";
 
 /**
  * API response structure
@@ -20,7 +15,6 @@ export type ApiResponse = {
  */
 export type RouteContext = {
   databases: DiscoveredDatabase[];
-  Database: DatabaseConstructor;
   params: Record<string, string>;
   body: string;
   url: string;
@@ -49,7 +43,6 @@ export type DatabaseHandlerContext = {
   database: DiscoveredDatabase;
   db: Database;
   databases: DiscoveredDatabase[];
-  Database: DatabaseConstructor;
   params: Record<string, string>;
   body: string;
   url: string;

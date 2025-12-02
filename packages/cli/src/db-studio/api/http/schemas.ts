@@ -185,3 +185,27 @@ export const CreateTableRequestSchema = z.object({
 
 export type CreateTableRequest = z.infer<typeof CreateTableRequestSchema>;
 
+/**
+ * Insert row request schema
+ * Expects an object mapping column names to values
+ */
+export const InsertRowRequestSchema = z.object({
+  row: z.record(z.string(), z.unknown()).refine(
+    (data) => Object.keys(data).length > 0,
+    { message: "Row must contain at least one column" }
+  ),
+});
+
+export type InsertRowRequest = z.infer<typeof InsertRowRequestSchema>;
+
+/**
+ * Insert row response schema
+ */
+export const InsertRowResponseSchema = z.object({
+  success: z.literal(true),
+  rowsAffected: z.number(),
+  lastInsertRowid: z.union([z.number(), z.bigint()]).optional(),
+});
+
+export type InsertRowResponse = z.infer<typeof InsertRowResponseSchema>;
+

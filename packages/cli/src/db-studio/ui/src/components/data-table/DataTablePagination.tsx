@@ -10,6 +10,9 @@ import { MIN_LIMIT, MAX_LIMIT, MIN_OFFSET } from '@/lib/constants'
 export const DataTablePagination = React.memo(function DataTablePagination() {
   const { pagination, onPaginationChange } = useDataTable()
 
+  // Pagination is always enabled now (no editMode in context anymore)
+  const isDisabled = false
+
   // Local state for input values (allows typing before applying)
   const [limitInput, setLimitInput] = React.useState(String(pagination.limit))
   const [offsetInput, setOffsetInput] = React.useState(String(pagination.offset))
@@ -31,14 +34,14 @@ export const DataTablePagination = React.memo(function DataTablePagination() {
               const newOffset = Math.max(MIN_OFFSET, pagination.offset - pagination.limit)
               onPaginationChange({ limit: pagination.limit, offset: newOffset })
             }}
-            disabled={pagination.offset === 0}
+            disabled={pagination.offset === 0 || isDisabled}
             className="h-9 w-9 p-0 rounded-r-none border-r-0"
           >
             <ChevronDown className="h-4 w-4 rotate-90" />
           </Button>
         </HoverCardTrigger>
         <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
-          <span className="text-xs font-semibold">Previous Page</span>
+          <span className="text-xs font-semibold">{isDisabled ? 'Finish editing to navigate' : 'Previous Page'}</span>
         </HoverCardContent>
       </HoverCard>
       <HoverCard openDelay={200}>
@@ -62,6 +65,7 @@ export const DataTablePagination = React.memo(function DataTablePagination() {
             className="h-9 w-20 text-center font-mono text-sm rounded-none border-r-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:z-10"
             min={MIN_LIMIT}
             max={MAX_LIMIT}
+            disabled={isDisabled}
           />
         </HoverCardTrigger>
         <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
@@ -88,6 +92,7 @@ export const DataTablePagination = React.memo(function DataTablePagination() {
             }}
             className="h-9 w-20 text-center font-mono text-sm rounded-none border-r-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus-visible:z-10"
             min={MIN_OFFSET}
+            disabled={isDisabled}
           />
         </HoverCardTrigger>
         <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
@@ -103,13 +108,14 @@ export const DataTablePagination = React.memo(function DataTablePagination() {
               const newOffset = pagination.offset + pagination.limit
               onPaginationChange({ limit: pagination.limit, offset: newOffset })
             }}
+            disabled={isDisabled}
             className="h-9 w-9 p-0 rounded-l-none"
           >
             <ChevronDown className="h-4 w-4 -rotate-90" />
           </Button>
         </HoverCardTrigger>
         <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
-          <span className="text-xs font-semibold">Next Page</span>
+          <span className="text-xs font-semibold">{isDisabled ? 'Finish editing to navigate' : 'Next Page'}</span>
         </HoverCardContent>
       </HoverCard>
     </div>

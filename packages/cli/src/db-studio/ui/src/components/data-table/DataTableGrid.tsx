@@ -4,8 +4,20 @@ import { flexRender, type Row } from '@tanstack/react-table'
 import { TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDataTable } from '@/contexts/DataTableContext'
+import { EditableRow } from './EditableRow'
 
 type SelectedCell = { rowId: string; columnId: string } | null
+
+type EditableRowData = {
+  id: string
+  data: Record<string, unknown>
+}
+
+type DataTableGridProps = {
+  editableRows?: EditableRowData[]
+  onEditCellChange?: (rowId: string, columnName: string, value: unknown) => void
+  onEditRowRemove?: (rowId: string) => void
+}
 
 type MemoizedRowProps = {
   row: Row<Record<string, unknown>>
@@ -78,22 +90,29 @@ const MemoizedRow = React.memo(({ row, isLoading, selectedCell, onCellClick }: M
 
 MemoizedRow.displayName = 'MemoizedRow'
 
-export function DataTableGrid() {
-  const { table, config, pagination } = useDataTable()
+export function DataTableGrid({ editableRows, onEditCellChange, onEditRowRemove }: DataTableGridProps) {
+  const { table, config, pagination, columns } = useDataTable()
   const [selectedCell, setSelectedCell] = React.useState<SelectedCell>(null)
 
   // Check if any column is currently being resized
   const isResizing = table.getState().columnSizingInfo.isResizingColumn !== false
+  const hasEditableRows = (editableRows?.length ?? 0) > 0
 
-  const handleCellClick = React.useCallback((rowId: string, columnId: string) => {
-    setSelectedCell((prev) => {
-      // Toggle off if clicking the same cell
-      if (prev?.rowId === rowId && prev?.columnId === columnId) {
-        return null
-      }
-      return { rowId, columnId }
-    })
-  }, [])
+  const handleCellClick = React.useCallback(
+    (rowId: string, columnId: string) => {
+      // Disable cell selection when there are editable rows
+      if (hasEditableRows) return
+
+      setSelectedCell((prev) => {
+        // Toggle off if clicking the same cell
+        if (prev?.rowId === rowId && prev?.columnId === columnId) {
+          return null
+        }
+        return { rowId, columnId }
+      })
+    },
+    [hasEditableRows]
+  )
 
   return (
     <div className="overflow-auto flex-1 relative">
@@ -133,6 +152,20 @@ export function DataTableGrid() {
           ))}
         </TableHeader>
         <TableBody>
+          {/* Render editable rows */}
+          {editableRows?.map((editableRow) => (
+            <EditableRow
+              key={editableRow.id}
+              rowId={editableRow.id}
+              table={table}
+              columns={columns}
+              rowData={editableRow.data}
+              onCellChange={onEditCellChange!}
+              onRemove={onEditRowRemove!}
+            />
+          ))}
+
+          {/* Render regular data rows */}
           {table.getRowModel().rows?.length > 0 &&
             table
               .getRowModel()
@@ -142,7 +175,7 @@ export function DataTableGrid() {
                   row={row}
                   isLoading={config.isLoading}
                   isResizing={isResizing}
-                  selectedCell={selectedCell}
+                  selectedCell={hasEditableRows ? null : selectedCell}
                   onCellClick={handleCellClick}
                 />
               ))}

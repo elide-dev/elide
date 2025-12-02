@@ -15,7 +15,11 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useDataTable } from '@/contexts/DataTableContext'
 
-export const ColumnsDropdown = function ColumnsDropdown() {
+type ColumnsDropdownProps = {
+  disabled?: boolean
+}
+
+export const ColumnsDropdown = function ColumnsDropdown({ disabled }: ColumnsDropdownProps) {
   const { table } = useDataTable()
 
   // Local search state
@@ -25,9 +29,9 @@ export const ColumnsDropdown = function ColumnsDropdown() {
 
   return (
     <DropdownMenu onOpenChange={(open) => !open && setSearch('')}>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild disabled={disabled}>
         <div className="relative">
-          <Button variant="outline">
+          <Button variant="outline" disabled={disabled}>
             <Settings2 className="mr-2 h-4 w-4" />
             Columns
           </Button>

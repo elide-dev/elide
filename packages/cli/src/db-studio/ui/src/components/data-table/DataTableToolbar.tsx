@@ -7,15 +7,20 @@ import { formatRowCount } from '@/lib/utils'
 import { FilterButton } from './FilterButton'
 import { ColumnsDropdown } from './ColumnsDropdown'
 import { DataTablePagination } from './DataTablePagination'
+import { AddRowButton } from './AddRowButton'
 import { useDataTable } from '@/contexts/DataTableContext'
 import { Button } from '@/components/ui/button'
-import { RefreshCw, Trash2 } from 'lucide-react'
+import { RefreshCw, Trash2, Save, X } from 'lucide-react'
 
 type DataTableToolbarProps = {
   showFilterPanel: boolean
   onFilterToggle: () => void
   onAddFilter: () => void
   onDeleteRows?: () => void
+  onAddRow?: () => void
+  onSaveChanges?: () => void
+  onDiscardChanges?: () => void
+  hasEditableRows?: boolean
 }
 
 export const DataTableToolbar = React.memo(function DataTableToolbar({
@@ -23,6 +28,10 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
   onFilterToggle,
   onAddFilter,
   onDeleteRows,
+  onAddRow,
+  onSaveChanges,
+  onDiscardChanges,
+  hasEditableRows,
 }: DataTableToolbarProps) {
   const { table, rowCount, metadata, config, appliedFilters, onRefresh } = useDataTable()
 
@@ -57,7 +66,7 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
           )}
         </div>
       )}
-      {config.showControls && (
+      {config.showControls && !hasEditableRows && (
         <>
           <FilterButton
             showFilters={showFilterPanel}
@@ -68,7 +77,25 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
         </>
       )}
 
-      {selectedRowCount > 0 && onDeleteRows && (
+      {onAddRow && (
+        <AddRowButton onClick={onAddRow} />
+      )}
+
+      {onSaveChanges && hasEditableRows && (
+        <Button variant="default" size="sm" onClick={onSaveChanges} className="h-9 gap-2">
+          <Save className="h-4 w-4" />
+          Save Changes
+        </Button>
+      )}
+
+      {onDiscardChanges && hasEditableRows && (
+        <Button variant="ghost" size="sm" onClick={onDiscardChanges} className="h-9 gap-2">
+          <X className="h-4 w-4" />
+          Discard
+        </Button>
+      )}
+
+      {selectedRowCount > 0 && onDeleteRows && !hasEditableRows && (
         <Button variant="destructive" size="sm" onClick={onDeleteRows} className="h-9 gap-2">
           <Trash2 className="h-4 w-4" />
           Delete {selectedRowCount} {selectedRowCount === 1 ? 'row' : 'rows'}

@@ -1,6 +1,6 @@
 import * as React from 'react'
+import { useBlocker } from 'react-router-dom'
 import { useDataTable } from '@/contexts/DataTableContext'
-import type { EditModeState } from '@/lib/types'
 import { useInsertRow } from '@/hooks/useInsertRow'
 import { DataTableToolbar } from './DataTableToolbar'
 import { DataTableFilterPanel } from './DataTableFilterPanel'
@@ -34,8 +34,10 @@ export function DataTable() {
 
   // Local state for dialogs
   const [showInsertDialog, setShowInsertDialog] = React.useState(false)
-  const [showDiscardDialog, setShowDiscardDialog] = React.useState(false)
   const [insertError, setInsertError] = React.useState<string | null>(null)
+
+  // Block navigation when there are unsaved editable rows
+  const blocker = useBlocker(editableRows.length > 0)
 
   // Show panel when filters are applied
   React.useEffect(() => {
@@ -62,10 +64,10 @@ export function DataTable() {
 
   // Add row handlers
   const handleAddRow = React.useCallback(() => {
-    // Create a new empty row
+    // Create a new row with all values defaulting to null
     const initialRowData: Record<string, unknown> = {}
     columns.forEach((col) => {
-      initialRowData[col.name] = undefined
+      initialRowData[col.name] = null
     })
 
     const newRow: EditableRowData = {
@@ -118,16 +120,18 @@ export function DataTable() {
     }
   }, [editableRows, insertRowMutation])
 
+  // Immediate discard when user clicks the discard button (intentional action)
   const handleDiscardAll = React.useCallback(() => {
-    if (editableRows.length > 0) {
-      setShowDiscardDialog(true)
-    }
-  }, [editableRows.length])
-
-  const handleConfirmDiscard = React.useCallback(() => {
     setEditableRows([])
-    setShowDiscardDialog(false)
   }, [])
+
+  // Handle navigation blocking - discard and proceed with navigation
+  const handleBlockedDiscard = React.useCallback(() => {
+    setEditableRows([])
+    if (blocker.state === 'blocked') {
+      blocker.proceed()
+    }
+  }, [blocker])
 
   const handleRetryInsert = React.useCallback(() => {
     setInsertError(null)
@@ -172,11 +176,11 @@ export function DataTable() {
       />
 
       {/* Delete rows dialog */}
-      <DeleteRowsDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog} />
+      <DeleteRowsDialog isOpen={showDeleteDialog} onOpenChange={setShowDeleteDialog} />
 
       {/* Insert row dialog */}
       <InsertRowDialog
-        open={showInsertDialog}
+        isOpen={showInsertDialog}
         onOpenChange={setShowInsertDialog}
         errorMessage={insertError}
         isPending={insertRowMutation.isPending}
@@ -184,8 +188,16 @@ export function DataTable() {
         onClose={handleCloseInsertDialog}
       />
 
-      {/* Discard changes dialog */}
-      <DiscardChangesDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog} onDiscard={handleConfirmDiscard} />
+      {/* Discard changes dialog - shown when navigating away with unsaved changes */}
+      <DiscardChangesDialog
+        isOpen={blocker.state === 'blocked'}
+        onOpenChange={(open) => {
+          if (!open && blocker.state === 'blocked') {
+            blocker.reset()
+          }
+        }}
+        onDiscard={handleBlockedDiscard}
+      />
     </div>
   )
 }

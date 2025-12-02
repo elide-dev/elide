@@ -1,5 +1,5 @@
 import type { DiscoveredDatabase } from "../database.ts";
-import type { ApiResponse, RouteContext, DatabaseConstructor } from "./types.ts";
+import type { ApiResponse, RouteContext } from "./types.ts";
 import { matchRoute } from "./router.ts";
 import { routes } from "../routes/index.ts";
 import { errorResponse, notFoundResponse } from "./responses.ts";
@@ -38,14 +38,12 @@ export async function handleApiRequest(
   url: string,
   method: string,
   body: string,
-  databases: DiscoveredDatabase[],
-  Database: DatabaseConstructor
+  databases: DiscoveredDatabase[]
 ): Promise<ApiResponse> {
   try {
     const path = parseUrlPath(url);
     const context: RouteContext = { 
       databases, 
-      Database,
       params: {},
       body,
       url

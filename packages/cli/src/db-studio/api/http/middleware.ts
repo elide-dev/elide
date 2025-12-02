@@ -1,3 +1,4 @@
+import { Database } from "elide:sqlite";
 import type { ApiResponse, RouteContext, RouteHandler, DatabaseHandler } from "./types.ts";
 import { validateDatabaseIndex } from "../utils/validation.ts";
 
@@ -6,7 +7,7 @@ import { validateDatabaseIndex } from "../utils/validation.ts";
  */
 export function withDatabase(handler: DatabaseHandler): RouteHandler {
   return async (context: RouteContext): Promise<ApiResponse> => {
-    const { params, databases, Database } = context;
+    const { params, databases } = context;
     const result = validateDatabaseIndex(params.dbIndex, databases);
     if ("error" in result) return result.error;
 

@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { useBlocker } from 'react-router-dom'
+import { useBlocker, useParams } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { useDataTable } from '@/contexts/DataTableContext'
 import { useInsertRow } from '@/hooks/useInsertRow'
 import { DataTableToolbar } from './DataTableToolbar'
@@ -18,6 +19,8 @@ import { DiscardChangesDialog } from './DiscardChangesDialog'
 export function DataTable() {
   const { config, appliedFilters, columns } = useDataTable()
   const insertRowMutation = useInsertRow()
+  const queryClient = useQueryClient()
+  const { dbIndex, tableName } = useParams<{ dbIndex: string; tableName: string }>()
 
   // Local state for filter panel visibility
   const [showFilterPanel, setShowFilterPanel] = React.useState(appliedFilters.length > 0)
@@ -102,41 +105,51 @@ export function DataTable() {
   const handleSaveAll = React.useCallback(async () => {
     if (editableRows.length === 0) return
 
-    // Initialize results with all rows as pending
-    const initialResults: InsertResult[] = editableRows.map((row) => ({
-      id: row.id,
-      status: 'pending' as const,
-    }))
-    setInsertResults(initialResults)
-    setShowInsertDialog(true)
+    const results: InsertResult[] = []
+    const successfulRowIds: string[] = []
+    let hasFailures = false
 
-    let allSuccess = true
-
-    // Process each row and update results
-    for (let i = 0; i < editableRows.length; i++) {
-      const row = editableRows[i]
+    // Process each row and collect results
+    for (const row of editableRows) {
       try {
         const response = await insertRowMutation.mutateAsync(row.data)
-        // Extract SQL from successful response if available
-        const sql = (response as { sql?: string })?.sql
 
-        setInsertResults((prev) => prev.map((r) => (r.id === row.id ? { ...r, status: 'success' as const, sql } : r)))
+        results.push({
+          id: row.id,
+          status: 'success' as const,
+          sql: response.sql,
+        })
+        successfulRowIds.push(row.id)
       } catch (error: unknown) {
-        allSuccess = false
+        hasFailures = true
         const message = error instanceof Error ? error.message : 'An unknown error occurred'
         const sql = (error as { response?: { sql?: string } })?.response?.sql ?? undefined
 
-        setInsertResults((prev) =>
-          prev.map((r) => (r.id === row.id ? { ...r, status: 'error' as const, sql, error: message } : r))
-        )
+        results.push({
+          id: row.id,
+          status: 'error' as const,
+          sql,
+          error: message,
+        })
       }
     }
 
-    // If all succeeded, clear editable rows (dialog will auto-close)
-    if (allSuccess) {
-      setEditableRows([])
+    // Remove successful rows from editable rows
+    setEditableRows((prev) => prev.filter((row) => !successfulRowIds.includes(row.id)))
+
+    // Refresh table data to show newly inserted rows
+    if (successfulRowIds.length > 0) {
+      queryClient.invalidateQueries({
+        queryKey: ['databases', dbIndex, 'tables', tableName],
+      })
     }
-  }, [editableRows, insertRowMutation])
+
+    // Only show dialog if there were failures
+    if (hasFailures) {
+      setInsertResults(results)
+      setShowInsertDialog(true)
+    }
+  }, [editableRows, insertRowMutation, queryClient, dbIndex, tableName])
 
   // Immediate discard when user clicks the discard button (intentional action)
   const handleDiscardAll = React.useCallback(() => {
@@ -158,35 +171,60 @@ export function DataTable() {
 
     if (failedRows.length === 0) return
 
-    // Reset failed rows to pending
-    setInsertResults((prev) => prev.map((r) => (r.status === 'error' ? { ...r, status: 'pending' as const } : r)))
+    // Close the dialog while retrying
+    setShowInsertDialog(false)
 
-    let allSuccess = true
+    const newResults: InsertResult[] = []
+    const successfulRowIds: string[] = []
+    let hasFailures = false
 
     for (const row of failedRows) {
       try {
         const response = await insertRowMutation.mutateAsync(row.data)
-        const sql = (response as { sql?: string })?.sql
 
-        setInsertResults((prev) =>
-          prev.map((r) => (r.id === row.id ? { ...r, status: 'success' as const, sql, error: undefined } : r))
-        )
+        newResults.push({
+          id: row.id,
+          status: 'success' as const,
+          sql: response.sql,
+        })
+        successfulRowIds.push(row.id)
       } catch (error: unknown) {
-        allSuccess = false
+        hasFailures = true
         const message = error instanceof Error ? error.message : 'An unknown error occurred'
         const sql = (error as { response?: { sql?: string } })?.response?.sql ?? undefined
 
-        setInsertResults((prev) =>
-          prev.map((r) => (r.id === row.id ? { ...r, status: 'error' as const, sql, error: message } : r))
-        )
+        newResults.push({
+          id: row.id,
+          status: 'error' as const,
+          sql,
+          error: message,
+        })
       }
     }
 
-    // If all retries succeeded, clear editable rows
-    if (allSuccess) {
-      setEditableRows([])
+    // Remove successful rows from editable rows
+    setEditableRows((prev) => prev.filter((row) => !successfulRowIds.includes(row.id)))
+
+    // Refresh table data to show newly inserted rows
+    if (successfulRowIds.length > 0) {
+      queryClient.invalidateQueries({
+        queryKey: ['databases', dbIndex, 'tables', tableName],
+      })
     }
-  }, [editableRows, insertResults, insertRowMutation])
+
+    // Merge with previously successful results
+    const successfulResults = insertResults.filter((r) => r.status === 'success')
+    const allResults = [...successfulResults, ...newResults]
+
+    // Only show dialog again if there are still failures
+    if (hasFailures) {
+      setInsertResults(allResults)
+      setShowInsertDialog(true)
+    } else {
+      // All succeeded - clear results
+      setInsertResults([])
+    }
+  }, [editableRows, insertResults, insertRowMutation, queryClient, dbIndex, tableName])
 
   const handleCloseInsertDialog = React.useCallback(() => {
     setInsertResults([])

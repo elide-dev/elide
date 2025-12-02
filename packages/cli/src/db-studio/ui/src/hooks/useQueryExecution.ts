@@ -37,34 +37,27 @@ export type WriteQueryResult = {
 
 export type QueryResult = SelectQueryResult | WriteQueryResult
 
-async function executeQuery(
-  dbIndex: string,
-  sql: string,
-  params?: unknown[]
-): Promise<QueryResult> {
-  const res = await fetch(
-    `${API_BASE_URL}/api/databases/${dbIndex}/query`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sql,
-        params: params || [],
-      }),
-    }
-  )
+async function executeQuery(dbIndex: string, sql: string, params?: unknown[]): Promise<QueryResult> {
+  const res = await fetch(`${API_BASE_URL}/api/databases/${dbIndex}/query`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      sql,
+      params: params || [],
+    }),
+  })
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({ error: res.statusText }))
-    
+
     // Create error with additional context
     const error: any = new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`)
-    
+
     // Attach the full error response for display purposes
     error.response = errorData
-    
+
     throw error
   }
 
@@ -81,4 +74,3 @@ export function useQueryExecution(dbIndex: string | undefined) {
     },
   })
 }
-

@@ -4,13 +4,17 @@ import { API_BASE_URL } from '../config'
 
 type InsertRowResponse = {
   success: true
+  sql: string
 }
 
-async function insertRow(
-  dbIndex: string,
-  tableName: string,
-  row: Record<string, unknown>
-): Promise<InsertRowResponse> {
+type InsertRowError = Error & {
+  response?: {
+    error?: string
+    sql?: string
+  }
+}
+
+async function insertRow(dbIndex: string, tableName: string, row: Record<string, unknown>): Promise<InsertRowResponse> {
   const res = await fetch(`${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}/rows`, {
     method: 'POST',
     headers: {
@@ -23,7 +27,7 @@ async function insertRow(
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({ error: res.statusText }))
-    const error: any = new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`)
+    const error = new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`) as InsertRowError
     error.response = errorData
     throw error
   }

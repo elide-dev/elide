@@ -12,14 +12,22 @@ import {
 import { useDropTable } from '@/hooks/useDropTable'
 
 type DropTableDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  onSuccess?: () => void
   dbIndex: string
   tableName: string
   tableType: 'table' | 'view'
 }
 
-export function DropTableDialog({ open, onOpenChange, dbIndex, tableName, tableType }: DropTableDialogProps) {
+export function DropTableDialog({
+  isOpen,
+  onOpenChange,
+  onSuccess,
+  dbIndex,
+  tableName,
+  tableType,
+}: DropTableDialogProps) {
   const dropTableMutation = useDropTable(dbIndex)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
@@ -27,32 +35,43 @@ export function DropTableDialog({ open, onOpenChange, dbIndex, tableName, tableT
     try {
       setErrorMessage(null)
       await dropTableMutation.mutateAsync(tableName)
+      onSuccess?.()
       onOpenChange(false)
     } catch (error) {
       const message = error instanceof Error ? error.message : 'An unknown error occurred'
       setErrorMessage(message)
       console.error('Drop table failed:', error)
     }
-  }, [dropTableMutation, tableName, onOpenChange])
+  }, [dropTableMutation, tableName, onOpenChange, onSuccess])
 
   // Reset error when dialog opens/closes
   React.useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       setErrorMessage(null)
     }
-  }, [open])
+  }, [isOpen])
 
   // Show error dialog if drop failed
   if (errorMessage) {
     return (
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Drop Failed</AlertDialogTitle>
-            <AlertDialogDescription>
-              Failed to drop the {tableType} "{tableName}".
-            </AlertDialogDescription>
           </AlertDialogHeader>
+
+          <AlertDialogDescription>
+            <div className="flex items-start flex-col space-y-5">
+              <p>Failed to drop this {tableType}:</p>
+              <ul className="list-disc list-inside">
+                <li>
+                  <span className="font-mono text-sm font-semibold text-foreground px-1.5 py-0.5 rounded border bg-muted/50">
+                    {tableName}
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </AlertDialogDescription>
 
           {/* Show error message */}
           <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
@@ -78,24 +97,26 @@ export function DropTableDialog({ open, onOpenChange, dbIndex, tableName, tableT
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
-            Drop {tableType === 'table' ? 'Table' : 'View'}: {tableName}
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to drop this {tableType}? This action cannot be undone and all data will be
-            permanently lost.
-          </AlertDialogDescription>
+          <AlertDialogTitle>Drop {tableType === 'table' ? 'Table' : 'View'}</AlertDialogTitle>
         </AlertDialogHeader>
 
-        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-3">
-          <div className="text-sm font-medium text-destructive">Warning: This is a destructive operation</div>
-          <div className="text-xs text-destructive/80 mt-1">
-            The {tableType} "{tableName}" and all its data will be permanently deleted.
+        <AlertDialogDescription>
+          <div className="flex items-start flex-col space-y-5">
+            <p>
+              You're about to <span className="font-bold">permanently</span> drop this {tableType} and all its data:
+            </p>
+            <ul className="list-disc list-inside">
+              <li>
+                <span className="font-mono text-sm font-semibold text-foreground px-1.5 py-0.5 rounded border bg-muted/50">
+                  {tableName}
+                </span>
+              </li>
+            </ul>
           </div>
-        </div>
+        </AlertDialogDescription>
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={dropTableMutation.isPending}>Cancel</AlertDialogCancel>

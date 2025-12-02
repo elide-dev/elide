@@ -13,7 +13,7 @@ export const EditableCell = React.memo(function EditableCell({ column, value, on
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = e.target.value
       if (newValue === '') {
-        onChange(undefined)
+        onChange(null)
       } else {
         onChange(newValue)
       }
@@ -21,15 +21,14 @@ export const EditableCell = React.memo(function EditableCell({ column, value, on
     [onChange]
   )
 
-  // Auto-increment hint
+  // Placeholder for null values - shows contextual hints
   const placeholder = React.useMemo(() => {
-    if (column.autoIncrement) {
-      return '(auto)'
+    // Primary keys with defaults should show DEFAULT
+    if (column.primaryKey && column.autoIncrement) {
+      return 'DEFAULT'
     }
-    if (column.defaultValue !== undefined && column.defaultValue !== null) {
-      return String(column.defaultValue)
-    }
-    return ''
+    // All other null values show NULL
+    return 'NULL'
   }, [column])
 
   // Determine input type based on column type
@@ -41,22 +40,13 @@ export const EditableCell = React.memo(function EditableCell({ column, value, on
     return 'text'
   }, [column.type])
 
-  const step = React.useMemo(() => {
-    const normalizedType = column.type.toUpperCase()
-    if (normalizedType.includes('INT')) return '1'
-    if (normalizedType.includes('REAL') || normalizedType.includes('FLOAT') || normalizedType.includes('DOUBLE'))
-      return 'any'
-    return undefined
-  }, [column.type])
-
   return (
     <Input
       type={inputType}
-      step={step}
       value={value === null ? '' : String(value ?? '')}
       onChange={handleValueChange}
       placeholder={placeholder}
-      className="h-full w-full border-0 rounded-none bg-transparent px-4 py-2 text-xs font-mono focus-visible:ring-0 focus-visible:ring-offset-0"
+      className="h-full w-full border-0 rounded-none bg-transparent px-4 py-2 text-xs font-mono focus-visible:ring-0 focus-visible:ring-offset-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
     />
   )
 })

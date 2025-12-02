@@ -11,8 +11,8 @@ import {
 } from '@/components/ui/alert-dialog'
 
 type InsertRowDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
   errorMessage: string | null
   isPending: boolean
   onRetry: () => void
@@ -20,7 +20,7 @@ type InsertRowDialogProps = {
 }
 
 export function InsertRowDialog({
-  open,
+  isOpen,
   onOpenChange,
   errorMessage,
   isPending,
@@ -30,7 +30,7 @@ export function InsertRowDialog({
   // Show loading state while mutation is pending
   if (isPending) {
     return (
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Inserting Row</AlertDialogTitle>
@@ -44,7 +44,7 @@ export function InsertRowDialog({
   // Show error dialog if insertion failed
   if (errorMessage) {
     return (
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Insert Failed</AlertDialogTitle>

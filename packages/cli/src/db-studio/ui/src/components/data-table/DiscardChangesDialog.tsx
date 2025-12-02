@@ -11,14 +11,14 @@ import {
 } from '@/components/ui/alert-dialog'
 
 type DiscardChangesDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
   onDiscard: () => void
 }
 
-export function DiscardChangesDialog({ open, onOpenChange, onDiscard }: DiscardChangesDialogProps) {
+export function DiscardChangesDialog({ isOpen, onOpenChange, onDiscard }: DiscardChangesDialogProps) {
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Discard unsaved changes?</AlertDialogTitle>

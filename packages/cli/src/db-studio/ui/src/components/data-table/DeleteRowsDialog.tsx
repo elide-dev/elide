@@ -15,8 +15,8 @@ import { useDataTable } from '@/contexts/DataTableContext'
 import type { ColumnMetadata } from '@/lib/types'
 
 type DeleteRowsDialogProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
 }
 
 /**
@@ -42,7 +42,7 @@ function formatPrimaryKeyDisplay(pk: Record<string, unknown>): string {
   return entries.map(([key, value]) => `${key}: ${value}`).join(', ')
 }
 
-export function DeleteRowsDialog({ open, onOpenChange }: DeleteRowsDialogProps) {
+export function DeleteRowsDialog({ isOpen, onOpenChange }: DeleteRowsDialogProps) {
   const { table, columns } = useDataTable()
   const selectedRows = table.getFilteredSelectedRowModel().rows
   const deleteRowsMutation = useDeleteRows()
@@ -80,10 +80,10 @@ export function DeleteRowsDialog({ open, onOpenChange }: DeleteRowsDialogProps) 
 
   // Reset error when dialog opens/closes
   React.useEffect(() => {
-    if (!open) {
+    if (!isOpen) {
       setErrorMessage(null)
     }
-  }, [open])
+  }, [isOpen])
 
   // Debug: Log when error message changes
   React.useEffect(() => {
@@ -92,7 +92,7 @@ export function DeleteRowsDialog({ open, onOpenChange }: DeleteRowsDialogProps) 
 
   if (!hasPrimaryKeys) {
     return (
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Cannot Delete Rows</AlertDialogTitle>
@@ -111,7 +111,7 @@ export function DeleteRowsDialog({ open, onOpenChange }: DeleteRowsDialogProps) 
   // Show error dialog if deletion failed
   if (errorMessage) {
     return (
-      <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Failed</AlertDialogTitle>
@@ -145,7 +145,7 @@ export function DeleteRowsDialog({ open, onOpenChange }: DeleteRowsDialogProps) 
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>

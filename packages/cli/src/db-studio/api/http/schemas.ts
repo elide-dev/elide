@@ -35,7 +35,7 @@ export type ColumnMetadata = z.infer<typeof ColumnMetadataSchema>;
 export const QueryMetadataSchema = z.object({
   executionTimeMs: z.number(),
   sql: z.string(),
-  rowCount: z.number(),
+  rowCount: z.number().optional(), // Not available for write queries
 });
 
 export type QueryMetadata = z.infer<typeof QueryMetadataSchema>;
@@ -54,11 +54,10 @@ export type SelectQueryResult = z.infer<typeof SelectQueryResultSchema>;
 
 /**
  * Write query (INSERT/UPDATE/DELETE) result schema
+ * Note: rowsAffected and lastInsertRowid are not currently available from elide sqlite
  */
 export const WriteQueryResultSchema = z.object({
   success: z.literal(true),
-  rowsAffected: z.number(),
-  lastInsertRowid: z.union([z.number(), z.bigint()]).optional(),
   metadata: QueryMetadataSchema,
 });
 
@@ -148,10 +147,10 @@ export type DeleteRowsRequest = z.infer<typeof DeleteRowsRequestSchema>;
 
 /**
  * Delete rows response schema
+ * Note: rowsAffected is not currently available from elide sqlite
  */
 export const DeleteRowsResponseSchema = z.object({
   success: z.literal(true),
-  rowsAffected: z.number(),
 });
 
 export type DeleteRowsResponse = z.infer<typeof DeleteRowsResponseSchema>;
@@ -200,11 +199,10 @@ export type InsertRowRequest = z.infer<typeof InsertRowRequestSchema>;
 
 /**
  * Insert row response schema
+ * Note: rowsAffected and lastInsertRowid are not currently available from elide sqlite
  */
 export const InsertRowResponseSchema = z.object({
   success: z.literal(true),
-  rowsAffected: z.number(),
-  lastInsertRowid: z.union([z.number(), z.bigint()]).optional(),
 });
 
 export type InsertRowResponse = z.infer<typeof InsertRowResponseSchema>;

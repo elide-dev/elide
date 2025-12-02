@@ -45,18 +45,16 @@ export const executeQueryRoute = withDatabase(async (context) => {
       });
     } else {
       // For INSERT/UPDATE/DELETE/CREATE/DROP etc.
+      // Note: rowsAffected and lastInsertRowid are not currently available from elide sqlite
       const stmt = db.prepare(trimmedSql);
-      const info = stmt.run(...(params as any));
+      stmt.run(...(params as any));
       const endTime = performance.now();
 
       return jsonResponse({
         success: true,
-        rowsAffected: info.changes,
-        lastInsertRowid: info.lastInsertRowid,
         metadata: {
           executionTimeMs: Number((endTime - startTime).toFixed(2)),
           sql: trimmedSql,
-          rowCount: info.changes,
         },
       });
     }

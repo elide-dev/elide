@@ -452,19 +452,57 @@ export function validateDatabase(db: Database): boolean {
 }
 
 /**
+ * Format a value for SQL display (shows actual values instead of placeholders)
+ */
+function formatSqlValue(value: unknown): string {
+  if (value === null) return 'NULL';
+  if (value === undefined) return 'DEFAULT';
+  if (typeof value === 'string') return `'${value.replace(/'/g, "''")}'`;
+  if (typeof value === 'number' || typeof value === 'bigint') return String(value);
+  if (typeof value === 'boolean') return value ? '1' : '0';
+  return `'${String(value)}'`;
+}
+
+/**
+ * Build a human-readable SQL string with actual values (for error messages)
+ */
+function buildDisplaySql(sql: string, values: unknown[]): string {
+  let displaySql = sql;
+  for (const value of values) {
+    displaySql = displaySql.replace('?', formatSqlValue(value));
+  }
+  return displaySql;
+}
+
+/**
+ * Custom error class that includes SQL context
+ */
+export class SQLError extends Error {
+  public readonly sql: string;
+  
+  constructor(message: string, sql: string) {
+    super(message);
+    this.name = 'SQLError';
+    this.sql = sql;
+  }
+}
+
+/**
  * Delete rows from a table based on primary key values
  * @param db Database instance
  * @param tableName Name of the table
  * @param primaryKeys Array of primary key objects (e.g., [{ id: 1 }, { id: 2, name: "foo" }])
- * @returns Number of rows affected
+ * @returns Object with sql (the first DELETE statement for context)
+ * 
+ * Note: rowsAffected is not currently available from the elide sqlite library
  */
 export function deleteRows(
   db: Database,
   tableName: string,
   primaryKeys: Record<string, unknown>[]
-): { rowsAffected: number } {
+): { sql?: string } {
   if (primaryKeys.length === 0) {
-    return { rowsAffected: 0 };
+    return {};
   }
 
   // Get column metadata to identify primary key columns
@@ -485,25 +523,33 @@ export function deleteRows(
     }
   }
 
-  // Execute all delete operations in a transaction for atomicity
-  const rowsAffected = db.transaction(() => {
-    let rowsAffected = 0;
+  // Build display SQL for the first delete (for error context)
+  const firstPk = primaryKeys[0];
+  const firstConditions = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
+  const firstValues = pkColumns.map(col => firstPk[col.name]);
+  const firstSql = `DELETE FROM "${tableName}" WHERE ${firstConditions}`;
+  const displaySql = buildDisplaySql(firstSql, firstValues);
 
-    for (const pk of primaryKeys) {
-      const conditions = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
-      const values = pkColumns.map(col => pk[col.name]);
-      const sql = `DELETE FROM "${tableName}" WHERE ${conditions}`;
+  try {
+    // Execute all delete operations in a transaction for atomicity
+    db.transaction(() => {
+      for (const pk of primaryKeys) {
+        const conditions = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
+        const values = pkColumns.map(col => pk[col.name]);
+        const sql = `DELETE FROM "${tableName}" WHERE ${conditions}`;
 
-      logQuery(sql, values);
-      const stmt = db.prepare(sql);
-      const result = stmt.run(...(values as (string | number)[]));
-      rowsAffected += result?.changes ?? 0;
-    }
+        logQuery(sql, values);
+        const stmt = db.prepare(sql);
+        stmt.run(...(values as (string | number)[]));
+      }
+    })(); // Execute immediately
 
-    return rowsAffected;
-  })(); // Execute immediately
-
-  return { rowsAffected };
+    return { sql: displaySql };
+  } catch (err) {
+    // Re-throw with SQL context
+    const message = err instanceof Error ? err.message : String(err);
+    throw new SQLError(message, displaySql);
+  }
 }
 
 /**
@@ -511,13 +557,15 @@ export function deleteRows(
  * @param db Database instance
  * @param tableName Name of the table to insert into
  * @param row Object mapping column names to values (undefined values are omitted to use DEFAULT)
- * @returns Object with rowsAffected and lastInsertRowid
+ * @returns Object with sql
+ * 
+ * Note: rowsAffected and lastInsertRowid are not currently available from the elide sqlite library
  */
 export function insertRow(
   db: Database,
   tableName: string,
   row: Record<string, unknown>
-): { rowsAffected: number; lastInsertRowid?: number | bigint } {
+): { sql: string } {
   // Filter out undefined values (these will use DEFAULT)
   const entries = Object.entries(row).filter(([_, value]) => value !== undefined);
 
@@ -531,13 +579,20 @@ export function insertRow(
   const values = entries.map(([_, value]) => value);
 
   const sql = `INSERT INTO "${tableName}" (${columnNames}) VALUES (${placeholders})`;
+  const displaySql = buildDisplaySql(sql, values);
 
   logQuery(sql, values);
-  const stmt = db.prepare(sql);
-  const info = stmt.run(...(values as (string | number | null)[]));
+  
+  try {
+    const stmt = db.prepare(sql);
+    stmt.run(...(values as (string | number | null)[]));
 
-  return {
-    rowsAffected: info.changes,
-    lastInsertRowid: info.lastInsertRowid,
-  };
+    return {
+      sql: displaySql,
+    };
+  } catch (err) {
+    // Re-throw with SQL context
+    const message = err instanceof Error ? err.message : String(err);
+    throw new SQLError(message, displaySql);
+  }
 }

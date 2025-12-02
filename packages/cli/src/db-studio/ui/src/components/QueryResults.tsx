@@ -20,8 +20,6 @@ interface SelectResult {
 }
 
 interface MutationResult {
-  rowsAffected: number
-  lastInsertRowid?: number | bigint
   metadata: QueryMetadata
 }
 
@@ -131,19 +129,13 @@ function MutationResultDisplay({ result }: { result: MutationResult }) {
       <div className="bg-muted/50 border border-border p-4">
         <div className="text-sm text-foreground">
           <div className="mb-2">
+            <span className="text-muted-foreground">Status: </span>
+            <span className="font-semibold text-emerald-500">Success</span>
+          </div>
+          <div>
             <span className="text-muted-foreground">Execution time: </span>
-            <span className="font-mono font-semibold text-emerald-500">{result.metadata.executionTimeMs}ms</span>
+            <span className="font-mono font-semibold">{result.metadata.executionTimeMs}ms</span>
           </div>
-          <div className="mb-2">
-            <span className="text-muted-foreground">Rows affected: </span>
-            <span className="font-semibold">{result.rowsAffected}</span>
-          </div>
-          {result.lastInsertRowid !== undefined && (
-            <div>
-              <span className="text-muted-foreground">Last insert row ID: </span>
-              <span className="font-semibold">{String(result.lastInsertRowid)}</span>
-            </div>
-          )}
         </div>
       </div>
     </div>

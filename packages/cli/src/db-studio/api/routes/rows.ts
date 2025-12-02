@@ -1,8 +1,8 @@
-import { jsonResponse, errorResponse } from "../http/responses.ts";
+import { jsonResponse, extractErrorMessage } from "../http/responses.ts";
 import { withDatabase } from "../http/middleware.ts";
 import { requireTableName } from "../utils/validation.ts";
 import { parseRequestBody } from "../utils/request.ts";
-import { deleteRows, insertRow } from "../database.ts";
+import { deleteRows, insertRow, SQLError } from "../database.ts";
 import { DeleteRowsRequestSchema, InsertRowRequestSchema } from "../http/schemas.ts";
 
 /**
@@ -10,7 +10,7 @@ import { DeleteRowsRequestSchema, InsertRowRequestSchema } from "../http/schemas
  * DELETE /api/databases/:dbIndex/tables/:tableName/rows
  *
  * Request body: { primaryKeys: [{ id: 1 }, { id: 2 }] }
- * Response: { success: true, rowsAffected: 2 }
+ * Response: { success: true }
  */
 export const deleteRowsRoute = withDatabase(async (context) => {
   const { params, db, body } = context;
@@ -22,23 +22,29 @@ export const deleteRowsRoute = withDatabase(async (context) => {
   const result = DeleteRowsRequestSchema.safeParse(data);
 
   if (!result.success) {
-    return errorResponse(
-      `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
-      400
-    );
+    return jsonResponse({
+      success: false,
+      error: `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
+    }, 400);
   }
 
   const { primaryKeys } = result.data;
 
   try {
-    const result = deleteRows(db, params.tableName, primaryKeys);
+    deleteRows(db, params.tableName, primaryKeys);
     return jsonResponse({
       success: true,
-      rowsAffected: result.rowsAffected,
     });
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(errorMessage, 400);
+    console.error("Delete rows error:", err);
+    
+    // SQLError includes the SQL that was executed
+    if (err instanceof SQLError) {
+      return jsonResponse({ success: false, error: err.message, sql: err.sql }, 400);
+    }
+    
+    const errorMessage = extractErrorMessage(err);
+    return jsonResponse({ success: false, error: errorMessage }, 400);
   }
 });
 
@@ -47,7 +53,7 @@ export const deleteRowsRoute = withDatabase(async (context) => {
  * POST /api/databases/:dbIndex/tables/:tableName/rows
  *
  * Request body: { row: { column1: value1, column2: value2 } }
- * Response: { success: true, rowsAffected: 1, lastInsertRowid: 5 }
+ * Response: { success: true }
  */
 export const insertRowRoute = withDatabase(async (context) => {
   const { params, db, body } = context;
@@ -59,23 +65,28 @@ export const insertRowRoute = withDatabase(async (context) => {
   const result = InsertRowRequestSchema.safeParse(data);
 
   if (!result.success) {
-    return errorResponse(
-      `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
-      400
-    );
+    return jsonResponse({
+      success: false,
+      error: `Invalid request body: ${result.error.errors.map(e => e.message).join(", ")}`,
+    }, 400);
   }
 
   const { row } = result.data;
 
   try {
-    const result = insertRow(db, params.tableName, row);
+    insertRow(db, params.tableName, row);
     return jsonResponse({
       success: true,
-      rowsAffected: result.rowsAffected,
-      lastInsertRowid: result.lastInsertRowid,
     });
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    return errorResponse(errorMessage, 400);
+    console.error("Insert row error:", err);
+    
+    // SQLError includes the SQL that was executed
+    if (err instanceof SQLError) {
+      return jsonResponse({ success: false, error: err.message, sql: err.sql }, 400);
+    }
+    
+    const errorMessage = extractErrorMessage(err);
+    return jsonResponse({ success: false, error: errorMessage }, 400);
   }
 });

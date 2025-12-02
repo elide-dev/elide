@@ -29,7 +29,9 @@ export function DatabaseCard({ database, index }: DatabaseCardProps) {
           <div className="flex items-center gap-2 mb-1.5">
             <h3 className="font-medium text-base">{dbName}</h3>
           </div>
-          <p className="text-xs text-muted-foreground truncate mb-2">{database.path}</p>
+          <p className="text-xs text-muted-foreground truncate mb-2" title={database.path}>
+            {database.path}
+          </p>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span>{formatBytes(database.size)}</span>
             <span>•</span>

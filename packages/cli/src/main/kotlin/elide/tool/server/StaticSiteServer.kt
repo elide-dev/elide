@@ -24,6 +24,7 @@ import io.ktor.server.plugins.compression.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondFile
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
@@ -87,6 +88,10 @@ object StaticSiteServer {
     val builtinRoutes: Boolean = true,
     val compression: Boolean = true,
     val prefix: String = site?.prefix ?: "/",
+    /** Enable SPA fallback mode - serves index.html for routes that don't match static files. */
+    val spaFallback: Boolean = false,
+    /** Custom fallback file for SPA mode (default: index.html). */
+    val spaFallbackFile: String = "index.html",
   )
 
   // Build workspace information for a project, or the current server, that can be consumed by Chrome.
@@ -163,6 +168,19 @@ object StaticSiteServer {
 
           // otherwise we can't use this path
           else -> error("Cannot serve static site from path '$root': must be a directory or zip file")
+        }
+
+        // SPA fallback: serve index.html for routes that don't match static files
+        // This enables client-side routing for SPAs built with React Router, Vue Router, etc.
+        if (spaFallback && root.isDirectory()) {
+          get("{...}") {
+            val fallbackFile = root.resolve(spaFallbackFile).toFile()
+            if (fallbackFile.exists() && fallbackFile.isFile) {
+              call.respondFile(fallbackFile)
+            } else {
+              call.respond(HttpStatusCode.NotFound, "SPA fallback file not found: $spaFallbackFile")
+            }
+          }
         }
       }
     }

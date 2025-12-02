@@ -157,8 +157,12 @@ object StaticSiteServer {
           }
 
           // when passed a directory, route to that
-          root.isDirectory() -> staticFiles(prefix, root.toFile()) {
-            if (autoReload) configureStaticAutoReload()
+          root.isDirectory() -> {
+            staticFiles(prefix, root.toFile()) {
+              if (autoReload) configureStaticAutoReload()
+              // default to serving index.html for statically built SPA
+              default("index.html")
+            }
           }
 
           // otherwise we can't use this path

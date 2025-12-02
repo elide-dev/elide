@@ -1,6 +1,6 @@
 import { createServer, IncomingMessage, ServerResponse } from "http";
 import { handleApiRequest } from "./http/server.ts";
-import { errorResponse } from "./http/responses.ts";
+import { errorResponse, corsPreflightResponse } from "./http/responses.ts";
 import type { ApiResponse } from "./http/types.ts";
 import config from "./config.ts";
 
@@ -44,9 +44,16 @@ function writeResponse(res: ServerResponse, response: ApiResponse): void {
  */
 async function handleRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
+    const method = req.method || 'GET';
+
+    // Handle CORS preflight requests
+    if (method === 'OPTIONS') {
+      writeResponse(res, corsPreflightResponse());
+      return;
+    }
+
     const body = await parseRequestBody(req);
     const url = req.url || '/';
-    const method = req.method || 'GET';
 
     const response = await handleApiRequest(url, method, body, databases);
     writeResponse(res, response);

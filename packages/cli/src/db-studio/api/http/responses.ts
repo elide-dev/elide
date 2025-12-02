@@ -5,14 +5,34 @@ const ERROR_STATUS = 500;
 const NOT_FOUND_STATUS = 404;
 
 /**
+ * CORS headers to allow cross-origin requests
+ */
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+/**
  * Create a JSON response
  */
 export function jsonResponse(data: unknown, status: number = SUCCESS_STATUS): ApiResponse {
   // console.log("returning json response", data);
   return {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...corsHeaders },
     body: JSON.stringify(data),
+  };
+}
+
+/**
+ * Create a CORS preflight response for OPTIONS requests
+ */
+export function corsPreflightResponse(): ApiResponse {
+  return {
+    status: 204,
+    headers: corsHeaders,
+    body: "",
   };
 }
 

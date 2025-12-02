@@ -6,10 +6,6 @@
  * - Swap SQLite for other databases (PostgreSQL, MySQL, etc.)
  * - Add caching, connection pooling, or other optimizations
  * - Centralize error handling and validation
- *
- * NOTE: This module does NOT import "elide:sqlite" directly because Elide's
- * module loader can only handle that special protocol in the entry point file.
- * The Database class must be passed from index.ts.
  */
 
 import type { Database, Statement } from "elide:sqlite";

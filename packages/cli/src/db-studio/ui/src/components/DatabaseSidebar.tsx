@@ -25,12 +25,13 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarHeader,
+  SidebarFooter,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuAction,
   SidebarMenuBadge,
+  SidebarSeparator,
 } from '@/components/ui/sidebar'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -94,73 +95,82 @@ export function DatabaseSidebar({
 
   return (
     <Sidebar collapsible="none" className="border-border h-full">
-      <SidebarHeader className="border-b border-border shrink-0">
-        <Link to="/" className="flex items-center gap-2 px-2 py-3">
-          <img src="/elide-logo.svg" alt="Elide" className="w-8 h-8" />
-          <h1 className="text-lg font-medium">Database Studio</h1>
-        </Link>
-        <Button asChild variant="outline" size="sm" className="w-full justify-start">
-          <Link to="/" aria-label="Back to databases">
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to databases</span>
-          </Link>
-        </Button>
-      </SidebarHeader>
-
-      <div className="px-4 py-4 shrink-0 border-b border-border">
-        <div className="mb-3">
-          <Button asChild variant={isQueryActive ? 'secondary' : 'outline'} size="sm" className="w-full justify-start">
-            <Link to={`/database/${dbIndex}/query`}>
-              <Code2 className="w-4 h-4" />
-              <span>Query Editor</span>
-            </Link>
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full bg-muted border border-border rounded px-3 py-2 pr-10 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-ring focus:ring-0"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              disabled={loading}
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-accent rounded transition-colors cursor-pointer"
-                  disabled={loading}
-                >
-                  <ListFilter className="w-4 h-4 text-muted-foreground" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuCheckboxItem checked={showTables} onCheckedChange={setShowTables}>
-                  Show tables
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem checked={showViews} onCheckedChange={setShowViews}>
-                  Show views
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-          <HoverCard openDelay={200}>
-            <HoverCardTrigger asChild>
-              <Button variant="outline" size="sm" onClick={onRefetch} disabled={loading} className="h-9 w-9 p-0">
-                <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-              </Button>
-            </HoverCardTrigger>
-            <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
-              <span className="text-xs font-semibold">Refresh tables</span>
-            </HoverCardContent>
-          </HoverCard>
-        </div>
-      </div>
-
-      <SidebarContent className="flex-1 min-h-0">
-        <SidebarGroup>
+      <SidebarContent className="flex-1 min-h-0 overflow-hidden">
+        {/* Navigation Group */}
+        <SidebarGroup className="shrink-0">
           <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link to="/">
+                    <ArrowLeft className="w-4 h-4" />
+                    <span>Back to databases</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isQueryActive}>
+                  <Link to={`/database/${dbIndex}/query`}>
+                    <Code2 className="w-4 h-4" />
+                    <span>Query Editor</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarSeparator className="shrink-0" />
+
+        {/* Tables Group */}
+        <SidebarGroup className="flex-1 min-h-0 flex flex-col p-0">
+          <div className="flex items-center gap-2 px-2 pb-2 shrink-0">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Search tables..."
+                className="w-full bg-muted border border-border rounded px-3 py-1.5 pr-8 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-ring focus:ring-0"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                disabled={loading}
+              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-accent rounded transition-colors cursor-pointer"
+                    disabled={loading}
+                  >
+                    <ListFilter className="w-4 h-4 text-muted-foreground" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuCheckboxItem checked={showTables} onCheckedChange={setShowTables}>
+                    Show tables
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem checked={showViews} onCheckedChange={setShowViews}>
+                    Show views
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <HoverCard openDelay={200}>
+              <HoverCardTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={onRefetch}
+                  disabled={loading}
+                  className="h-[30px] w-[30px] shrink-0"
+                >
+                  <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
+                <span className="text-xs font-semibold">Refresh tables</span>
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+          <SidebarGroupContent className="flex-1 min-h-0 overflow-auto px-2">
             <SidebarMenu>
               {loading
                 ? // Show skeleton items while loading
@@ -220,6 +230,13 @@ export function DatabaseSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter className="border-t border-border">
+        <div className="flex items-center gap-2 px-2 py-2">
+          <img src="/elide-logo.svg" alt="Elide" className="w-6 h-6" />
+          <span className="text-sm font-medium text-muted-foreground">Database Studio</span>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   )
 }

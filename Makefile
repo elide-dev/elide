@@ -1022,7 +1022,7 @@ info:  ## Show info about the current codebase and toolchain.
 	@echo "- PNPM: $(PNPM)"
 	@echo "" && echo "---- Toolchain Versions -----------------------------------"
 	@echo "Java:"
-	$(CMD)$(JAVA) --version
+	$(CMD)$(JAVA) -version
 	@echo ""
 	@echo "Native Image:"
 	$(CMD)$(NATIVE_IMAGE) --version

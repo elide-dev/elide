@@ -158,7 +158,9 @@ const MemoizedRow = React.memo(
               ) : hasEdit ? (
                 // Show edited value
                 displayValue === null ? (
-                  <span className="text-muted-foreground italic">NULL</span>
+                  <span className="text-muted-foreground">NULL</span>
+                ) : displayValue === '' ? (
+                  <span className="text-muted-foreground">EMPTY STRING</span>
                 ) : (
                   String(displayValue)
                 )

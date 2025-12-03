@@ -102,8 +102,9 @@ export function DataTable() {
       data: initialRowData,
     }
 
+    setShowFilterPanel(false)
     setEditableRows((prev) => [...prev, newRow])
-  }, [columns])
+  }, [columns, setShowFilterPanel])
 
   const handleCellChange = React.useCallback((rowId: string, columnName: string, value: unknown) => {
     setEditableRows((prev) =>
@@ -301,68 +302,6 @@ export function DataTable() {
     }
   }, [blocker])
 
-  const handleRetryInsert = React.useCallback(async () => {
-    // Only retry failed rows
-    const failedRowIds = insertResults.filter((r) => r.status === 'error').map((r) => r.id)
-    const failedRows = editableRows.filter((row) => failedRowIds.includes(row.id))
-
-    if (failedRows.length === 0) return
-
-    // Close the dialog while retrying
-    setShowInsertDialog(false)
-
-    const newResults: InsertResult[] = []
-    const successfulRowIds: string[] = []
-    let hasFailures = false
-
-    for (const row of failedRows) {
-      try {
-        const response = await insertRowMutation.mutateAsync(row.data)
-
-        newResults.push({
-          id: row.id,
-          status: 'success' as const,
-          sql: response.sql,
-        })
-        successfulRowIds.push(row.id)
-      } catch (error: unknown) {
-        hasFailures = true
-        const message = error instanceof Error ? error.message : 'An unknown error occurred'
-        const sql = (error as { response?: { sql?: string } })?.response?.sql ?? undefined
-
-        newResults.push({
-          id: row.id,
-          status: 'error' as const,
-          sql,
-          error: message,
-        })
-      }
-    }
-
-    // Remove successful rows from editable rows
-    setEditableRows((prev) => prev.filter((row) => !successfulRowIds.includes(row.id)))
-
-    // Refresh table data to show newly inserted rows
-    if (successfulRowIds.length > 0) {
-      queryClient.invalidateQueries({
-        queryKey: ['databases', dbIndex, 'tables', tableName],
-      })
-    }
-
-    // Merge with previously successful results
-    const successfulResults = insertResults.filter((r) => r.status === 'success')
-    const allResults = [...successfulResults, ...newResults]
-
-    // Only show dialog again if there are still failures
-    if (hasFailures) {
-      setInsertResults(allResults)
-      setShowInsertDialog(true)
-    } else {
-      // All succeeded - clear results
-      setInsertResults([])
-    }
-  }, [editableRows, insertResults, insertRowMutation, queryClient, dbIndex, tableName])
-
   const handleCloseInsertDialog = React.useCallback(() => {
     setInsertResults([])
     setShowInsertDialog(false)
@@ -414,7 +353,6 @@ export function DataTable() {
         isOpen={showInsertDialog}
         onOpenChange={setShowInsertDialog}
         results={insertResults}
-        onRetry={handleRetryInsert}
         onClose={handleCloseInsertDialog}
       />
 

@@ -26,7 +26,7 @@ export const EditableRow = React.memo(function EditableRow({
   const allColumns = table.getAllColumns()
 
   return (
-    <TableRow className="bg-blue-50 dark:bg-blue-950/20 border-b border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-950/30">
+    <TableRow className="bg-blue-500/20 ring-2 ring-blue-500 ring-inset hover:bg-blue-500/25">
       {allColumns.map((column) => {
         const width = column.getSize()
         const isCheckboxColumn = column.id === 'select'

@@ -592,3 +592,68 @@ export function insertRow(
     throw new SQLError(message, displaySql);
   }
 }
+
+/**
+ * Update a row in a table based on primary key values
+ * @param db Database instance
+ * @param tableName Name of the table to update
+ * @param primaryKey Object mapping primary key column names to values
+ * @param updates Object mapping column names to new values
+ * @returns Object with sql
+ */
+export function updateRow(
+  db: Database,
+  tableName: string,
+  primaryKey: Record<string, unknown>,
+  updates: Record<string, unknown>
+): { sql: string } {
+  // Get column metadata to identify primary key columns
+  const columns = getColumnMetadata(db, tableName);
+  const pkColumns = columns.filter(col => col.primaryKey);
+
+  if (pkColumns.length === 0) {
+    throw new Error(`Table "${tableName}" has no primary key`);
+  }
+
+  // Validate that primary key has the required columns
+  const pkColumnNames = pkColumns.map(col => col.name);
+  for (const colName of pkColumnNames) {
+    if (!(colName in primaryKey)) {
+      throw new Error(`Primary key missing required column: "${colName}"`);
+    }
+  }
+
+  // Filter out undefined values from updates
+  const updateEntries = Object.entries(updates).filter(([_, value]) => value !== undefined);
+
+  if (updateEntries.length === 0) {
+    throw new Error("No columns specified for update");
+  }
+
+  // Build SET clause
+  const setClause = updateEntries.map(([key]) => `"${key}" = ?`).join(', ');
+  const setValues = updateEntries.map(([_, value]) => value);
+
+  // Build WHERE clause from primary key
+  const whereClause = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
+  const pkValues = pkColumns.map(col => primaryKey[col.name]);
+
+  const allValues = [...setValues, ...pkValues];
+  const sql = `UPDATE "${tableName}" SET ${setClause} WHERE ${whereClause}`;
+  const displaySql = buildDisplaySql(sql, allValues);
+
+  logQuery(sql, allValues);
+
+  try {
+    const stmt = db.prepare(sql);
+    stmt.run(...(allValues as (string | number | null)[]));
+
+    return {
+      sql: displaySql,
+    };
+  } catch (err) {
+    // Re-throw with SQL context
+    const message = err instanceof Error ? err.message : String(err);
+    throw new SQLError(message, displaySql);
+  }
+}

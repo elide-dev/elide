@@ -77,12 +77,15 @@ export const DataTableToolbar = React.memo(function DataTableToolbar({
         </>
       )}
 
-      {onAddRow && (
-        <AddRowButton onClick={onAddRow} />
-      )}
+      {onAddRow && <AddRowButton onClick={onAddRow} />}
 
       {onSaveChanges && hasEditableRows && (
-        <Button variant="default" size="sm" onClick={onSaveChanges} className="h-9 gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onSaveChanges}
+          className="h-9 gap-2 bg-green-600 hover:bg-green-700 text-white"
+        >
           <Save className="h-4 w-4" />
           Save Changes
         </Button>

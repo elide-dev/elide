@@ -9,7 +9,7 @@ type AddRowButtonProps = {
 
 export const AddRowButton = React.memo(function AddRowButton({ onClick, disabled }: AddRowButtonProps) {
   return (
-    <Button variant="default" size="sm" onClick={onClick} disabled={disabled}>
+    <Button variant="default" size="sm" onClick={onClick} disabled={disabled} className="h-9">
       <PlusCircle className="h-4 w-4" />
       Add Row
     </Button>

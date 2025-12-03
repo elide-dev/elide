@@ -207,3 +207,30 @@ export const InsertRowResponseSchema = z.object({
 
 export type InsertRowResponse = z.infer<typeof InsertRowResponseSchema>;
 
+/**
+ * Update row request schema
+ * Expects a primary key object and an updates object
+ */
+export const UpdateRowRequestSchema = z.object({
+  primaryKey: z.record(z.string(), z.unknown()).refine(
+    (data) => Object.keys(data).length > 0,
+    { message: "Primary key must contain at least one column" }
+  ),
+  updates: z.record(z.string(), z.unknown()).refine(
+    (data) => Object.keys(data).length > 0,
+    { message: "Updates must contain at least one column" }
+  ),
+});
+
+export type UpdateRowRequest = z.infer<typeof UpdateRowRequestSchema>;
+
+/**
+ * Update row response schema
+ */
+export const UpdateRowResponseSchema = z.object({
+  success: z.literal(true),
+  sql: z.string(),
+});
+
+export type UpdateRowResponse = z.infer<typeof UpdateRowResponseSchema>;
+

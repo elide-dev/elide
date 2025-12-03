@@ -3,7 +3,7 @@ import { healthCheck } from "./health.ts";
 import { listDatabases, getDatabaseInfoRoute } from "./databases.ts";
 import { getTablesRoute, getTableDataRoute, createTableRoute, dropTableRoute, truncateTableRoute } from "./tables.ts";
 import { executeQueryRoute } from "./query.ts";
-import { deleteRowsRoute, insertRowRoute } from "./rows.ts";
+import { deleteRowsRoute, insertRowRoute, updateRowRoute } from "./rows.ts";
 
 /**
  * Route Registry
@@ -30,6 +30,7 @@ export const routes: Route[] = [
 
   // Row operations - write (data-level operations)
   { method: "POST", pattern: "/api/databases/:dbIndex/tables/:tableName/rows", handler: insertRowRoute },
+  { method: "PUT", pattern: "/api/databases/:dbIndex/tables/:tableName/rows", handler: updateRowRoute },
   { method: "DELETE", pattern: "/api/databases/:dbIndex/tables/:tableName/rows", handler: deleteRowsRoute },
 
   // Raw SQL query endpoint (for custom queries)

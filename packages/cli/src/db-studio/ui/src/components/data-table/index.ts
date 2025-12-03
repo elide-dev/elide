@@ -1,5 +1,6 @@
 // Main components
 export { DataTable } from './DataTable'
+export type { CellEdit, EditableRowData } from './DataTable'
 export { DataTableProvider, useDataTable } from '@/contexts/DataTableContext'
 export type { DataTableContextValue } from '@/contexts/DataTableContext'
 

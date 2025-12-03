@@ -388,7 +388,6 @@ configure<DependencyCheckExtension> {
   analyzers.centralEnabled = true
   analyzers.jarEnabled = true
   analyzers.msbuildEnabled = false
-  analyzers.nodeEnabled = false
   analyzers.opensslEnabled = true
 
   analyzers.ossIndex.enabled = true

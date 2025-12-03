@@ -66,6 +66,13 @@ pluginManagement {
       }
     }
     maven {
+      name = "elide-plugins"
+      url = uri("https://maven.elide.dev")
+      content {
+        includeGroup("dev.zacsweers.redacted")
+      }
+    }
+    maven {
       name = "maven-central-explicit"
       url = uri("https://repo1.maven.org/maven2/")
     }

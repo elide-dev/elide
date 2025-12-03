@@ -84,7 +84,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.2.21"
+    const val KOTLIN_SDK_PIN = "2.3.0-RC"
 
     /** Constant: pinned version of Kotlin Coroutines. */
     const val COROUTINES = "1.10.2"
@@ -144,7 +144,7 @@ public object Constants {
     const val PROTOBUF = "4.29.3"
 
     /** Static Netty version. */
-    const val NETTY = "4.2.1.Final"
+    const val NETTY = "4.2.7.Final"
 
     /** Guava version. */
     const val GUAVA = "33.5.0-jre"
@@ -156,7 +156,7 @@ public object Constants {
     const val JLINE = "3.28.0"
 
     /** Okio version. */
-    const val OKIO = "3.16.2"
+    const val OKIO = "3.16.4"
 
     /** GraalVM version. */
     const val GRAALVM = "25.0.1"

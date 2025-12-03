@@ -24,7 +24,7 @@ import elide.tooling.project.ElideConfiguredProject
 public object JvmLibraries {
   // @TODO: don't hard-code any of this
   public const val ELIDE_VERSION: String = "1.0.0-beta10"
-  public const val EMBEDDED_KOTLIN: String = "2.2.21"
+  public const val EMBEDDED_KOTLIN: String = "2.3.0-RC"
 
   public const val EMBEDDED_JUNIT_VERSION: String = "5.13.1"
   public const val EMBEDDED_JUNIT_PLATFORM_VERSION: String = "1.13.1"
@@ -35,7 +35,7 @@ public object JvmLibraries {
   public const val EMBEDDED_KOTLINX_IO_VERSION: String = "0.8.0"
   public const val EMBEDDED_COROUTINES_VERSION: String = "1.10.2"
   public const val EMBEDDED_SERIALIZATION_VERSION: String = "1.9.0"
-  public const val EMBEDDED_REDACTED_VERSION: String = "1.15.0"
+  public const val EMBEDDED_REDACTED_VERSION: String = "1.16.0-rc1"
   public const val APIGUARDIAN_API: String = "org.apiguardian:apiguardian-api"
   public const val JUNIT_JUPITER_API: String = "org.junit.jupiter:junit-jupiter-api"
   public const val JUNIT_JUPITER_ENGINE: String = "org.junit.jupiter:junit-jupiter-engine"

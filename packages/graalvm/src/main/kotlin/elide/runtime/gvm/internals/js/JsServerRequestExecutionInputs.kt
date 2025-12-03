@@ -12,14 +12,21 @@
  */
 package elide.runtime.gvm.internals.js
 
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.net.URI
+import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
+import org.graalvm.polyglot.Context
 import elide.runtime.gvm.RequestExecutionInputs
-import elide.runtime.intrinsics.js.FetchHeaders
-import elide.runtime.intrinsics.js.FetchRequest
-import elide.runtime.intrinsics.js.ReadableStream
+import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
+import elide.runtime.gvm.js.JsError
+import elide.runtime.intrinsics.js.*
+import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
+import elide.runtime.node.buffer.NodeBlob
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue as URL
+import elide.vm.annotations.Polyglot
 
 /**
  * Defines an abstract base class for JavaScript inputs based on an HTTP [Request] type, which has been made to be
@@ -164,4 +171,191 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
    * @return Map of HTTP request headers to their (potentially multiple) values.
    */
   protected abstract fun requestHeaders(): Map<String, List<String>>
+
+  // -- Interface: Body Mixin -- //
+
+  /** Read the body as an ArrayBuffer. */
+  @Polyglot override fun arrayBuffer(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    val stream = body
+    if (stream == null) {
+      promise.resolve(ByteBuffer.allocate(0))
+      return promise
+    }
+
+    val reader = stream.getReader() as ReadableStreamDefaultReader
+    val chunks = ByteArrayOutputStream()
+
+    fun readNextChunk() {
+      reader.read().then(
+        onFulfilled = { result ->
+          if (result.value != null) {
+            val value = result.value
+            if (value.hasArrayElements()) {
+              val size = value.arraySize.toInt()
+              for (i in 0 until size) {
+                chunks.write(value.getArrayElement(i.toLong()).asByte().toInt())
+              }
+            }
+          }
+          if (result.done) {
+            reader.releaseLock()
+            promise.resolve(ByteBuffer.wrap(chunks.toByteArray()))
+          } else {
+            readNextChunk()
+          }
+        },
+        onCatch = { error ->
+          reader.releaseLock()
+          promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+      )
+    }
+
+    readNextChunk()
+    return promise
+  }
+
+  /** Read the body as a Blob. */
+  @Polyglot override fun blob(): JsPromise<Blob> {
+    val promise = JsPromiseImpl<Blob>()
+    val stream = body
+    if (stream == null) {
+      promise.resolve(NodeBlob(ByteArray(0), null))
+      return promise
+    }
+
+    arrayBuffer().then(
+      onFulfilled = { buffer ->
+        val byteBuffer = buffer as ByteBuffer
+        val byteArray = ByteArray(byteBuffer.remaining())
+        byteBuffer.get(byteArray)
+        val contentType = headers.get("content-type")
+        promise.resolve(NodeBlob(byteArray, contentType))
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
+    return promise
+  }
+
+  /** Read the body as FormData. */
+  @Polyglot override fun formData(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    val stream = body
+    if (stream == null) {
+      promise.resolve(FormData())
+      return promise
+    }
+
+    val contentType = headers.get("content-type") ?: ""
+
+    when {
+      contentType.contains("multipart/form-data") -> {
+        arrayBuffer().then(
+          onFulfilled = { buffer ->
+            try {
+              val byteBuffer = buffer as ByteBuffer
+              val bytes = ByteArray(byteBuffer.remaining())
+              byteBuffer.get(bytes)
+              val boundary = FormData.extractBoundary(contentType)
+                ?: throw IllegalArgumentException("Missing boundary in Content-Type")
+              promise.resolve(FormData.parseMultipart(bytes, boundary))
+            } catch (e: Exception) {
+              promise.reject(JsError.typeError("Failed to parse multipart form data: ${e.message}"))
+            }
+          },
+          onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+          }
+        )
+      }
+      else -> {
+        text().then(
+          onFulfilled = { bodyText ->
+            try {
+              promise.resolve(FormData.parseUrlEncoded(bodyText))
+            } catch (e: Exception) {
+              promise.reject(JsError.typeError("Failed to parse form data: ${e.message}"))
+            }
+          },
+          onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+          }
+        )
+      }
+    }
+    return promise
+  }
+
+  /** Read the body as JSON. */
+  @Polyglot override fun json(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    val stream = body
+    if (stream == null) {
+      promise.reject(JsError.typeError("Cannot read body: no body present"))
+      return promise
+    }
+
+    text().then(
+      onFulfilled = { text ->
+        try {
+          val context = Context.getCurrent()
+          val jsonParse = context.eval("js", "JSON.parse")
+          val parsed = jsonParse.execute(text)
+          promise.resolve(parsed)
+        } catch (e: Exception) {
+          promise.reject(JsError.typeError("Invalid JSON: ${e.message}"))
+        }
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
+    return promise
+  }
+
+  /** Read the body as text. */
+  @Polyglot override fun text(): JsPromise<String> {
+    val promise = JsPromiseImpl<String>()
+    val stream = body
+    if (stream == null) {
+      promise.resolve("")
+      return promise
+    }
+
+    val reader = stream.getReader() as ReadableStreamDefaultReader
+    val chunks = ByteArrayOutputStream()
+
+    fun readNextChunk() {
+      reader.read().then(
+        onFulfilled = { result ->
+          if (result.value != null) {
+            val value = result.value
+            if (value.hasArrayElements()) {
+              val size = value.arraySize.toInt()
+              for (i in 0 until size) {
+                chunks.write(value.getArrayElement(i.toLong()).asByte().toInt())
+              }
+            }
+          }
+          if (result.done) {
+            val text = chunks.toString(StandardCharsets.UTF_8)
+            reader.releaseLock()
+            promise.resolve(text)
+          } else {
+            readNextChunk()
+          }
+        },
+        onCatch = { error ->
+          reader.releaseLock()
+          promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+      )
+    }
+
+    readNextChunk()
+    return promise
+  }
 }

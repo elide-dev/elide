@@ -12,7 +12,12 @@
  */
 package elide.runtime.intrinsics.js
 
-/** TBD. */
-public interface Blob {
-  // Not yet implemented.
-}
+import elide.runtime.intrinsics.js.node.BufferAPI
+
+/**
+ * Represents a Blob object - an immutable, raw data file-like object.
+ *
+ * This interface extends the Node.js BufferAPI.Blob to provide compatibility
+ * with both Web API and Node.js Blob implementations.
+ */
+public interface Blob : BufferAPI.Blob

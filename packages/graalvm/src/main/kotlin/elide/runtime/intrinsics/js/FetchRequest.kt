@@ -43,7 +43,7 @@ import elide.vm.annotations.Polyglot
  * constructor, available globally. An instantiated `Request` can then be passed to `fetch` to initiate an HTTP request
  * (host permissions permitting).
  */
-@API public interface FetchRequest {
+@API public interface FetchRequest : FetchBody {
   /** Default values applied to [FetchRequest] interfaces. */
   public object Defaults {
     /** Default `cache` value. */
@@ -71,34 +71,7 @@ import elide.vm.annotations.Polyglot
     public const val DEFAULT_REFERRER_POLICY: String = "no-referrer"
   }
 
-  /**
-   * ## Request: Body.
-   *
-   * Specifies, if any, a [ReadableStream] which holds the body of a [FetchRequest]. Body data may only be provided when
-   * the [method] for the request allows a body, such as `POST`, `PUT`, and so forth.
-   *
-   * From MDN:
-   * "The read-only body property of the Request interface contains a ReadableStream with the body contents that have
-   * been added to the request. Note that a request using the GET or HEAD method cannot have a body and null is returned
-   * in these cases."
-   *
-   * See also: [MDN, Request.body](https://developer.mozilla.org/en-US/docs/Web/API/Request/body).
-   */
-  @get:Polyglot public val body: ReadableStream?
-
-  /**
-   * ## Request: Body usage.
-   *
-   * If the [body] for this request has already been consumed, this property must return `true`; if `false`, the [body]
-   * is still buffered and may be queried.
-   *
-   * From MDN:
-   * "The read-only bodyUsed property of the Request interface is a boolean value that indicates whether the request
-   * body has been read yet."
-   *
-   * See also: [MDN, Request.bodyUsed](https://developer.mozilla.org/en-US/docs/Web/API/Request/bodyUsed).
-   */
-  @get:Polyglot public val bodyUsed: Boolean
+  // Note: `body` and `bodyUsed` are inherited from FetchBody
 
   /**
    * ## Request: Caching.

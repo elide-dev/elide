@@ -25,7 +25,6 @@ type InsertRowDialogProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   results: InsertResult[]
-  onRetry: () => void
   onClose: () => void
 }
 
@@ -81,9 +80,8 @@ function SQLResultItem({ result }: { result: InsertResult }) {
   )
 }
 
-export function InsertRowDialog({ isOpen, onOpenChange, results, onRetry, onClose }: InsertRowDialogProps) {
+export function InsertRowDialog({ isOpen, onOpenChange, results, onClose }: InsertRowDialogProps) {
   const hasResults = results.length > 0
-  const hasErrors = results.some((r) => r.status === 'error')
   const successCount = results.filter((r) => r.status === 'success').length
   const errorCount = results.filter((r) => r.status === 'error').length
 
@@ -119,16 +117,6 @@ export function InsertRowDialog({ isOpen, onOpenChange, results, onRetry, onClos
 
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onClose}>Close</AlertDialogCancel>
-          {hasErrors && (
-            <AlertDialogAction
-              onClick={(e) => {
-                e.preventDefault()
-                onRetry()
-              }}
-            >
-              Retry Failed
-            </AlertDialogAction>
-          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

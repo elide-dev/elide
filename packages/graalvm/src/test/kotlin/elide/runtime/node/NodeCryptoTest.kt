@@ -12,13 +12,21 @@
  */
 package elide.runtime.node
 
+import org.graalvm.polyglot.Value
+import org.junit.jupiter.api.assertThrows
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import elide.annotations.Inject
+import elide.runtime.intrinsics.js.err.RangeError
+import elide.runtime.intrinsics.js.err.TypeError
 import elide.runtime.node.crypto.NodeCryptoModule
 import elide.testing.annotations.TestCase
 
@@ -196,6 +204,318 @@ import elide.testing.annotations.TestCase
 
     assert.equal(typeof uuid1, "string");
     assert.equal(typeof uuid2, "string");
+    """
+  }
+
+  @Test fun `randomInt should return a Long when valid min and max are provided with no callback`() = conforms {
+    val min = Value.asValue(5L)
+    val max = Value.asValue(10L)
+    val result = crypto.provide().randomInt(min, max)
+
+    assertIs<Long>(result)
+    assertTrue(result in 5 until 10)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const result = crypto.randomInt(5, 10);
+        
+    assert.equal(typeof result, "number");
+    assert.ok(result >= 5 && result < 10);
+    """
+  }
+
+  @Test fun `randomInt should throw a RangeError when min is greater than or equal to max`() = conforms {
+
+    assertFailsWith<RangeError> { crypto.provide().randomInt(Value.asValue(10L), Value.asValue(10L)) }
+    assertFailsWith<RangeError> { crypto.provide().randomInt(Value.asValue(10L), Value.asValue( 5L)) }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    assert.throws(() => crypto.randomInt(10, 10), RangeError);
+    assert.throws(() => crypto.randomInt(10, 5), RangeError);
+    """
+  }
+
+  @Test fun `randomInt should default min to 0 when only max is provided`() = conforms {
+    val result = crypto.provide().randomInt(Value.asValue(5L))
+
+    assertIs<Long>(result)
+    assertTrue(result in 0 until 5)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const result = crypto.randomInt(5);
+        
+    assert.equal(typeof result, "number");
+    assert.ok(result >= 0 && result < 5);
+    """
+  }
+
+  @Test fun `randomInt should invoke callback when callback is provided`() = conforms {
+    val latch = CountDownLatch(1)
+    var called = false
+    val result = crypto.provide().randomInt(10L, 20L) { err, value ->
+      called = true
+      assertNull(err)
+      assertTrue(value in 10L until 20L)
+      latch.countDown()
+    }
+    assertIs<Unit>(result)
+    latch.await(1, TimeUnit.SECONDS)
+    assertTrue(called)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto")
+    const assert = require("assert")
+
+    function randomIntPromise(min, max) {
+      return new Promise((resolve, reject) => {
+        crypto.randomInt(min, max, (err, int) => {
+          callbackInvoked = true;
+          assert.equal(err, null, "Callback error should be null");
+          resolve(int);
+        });
+      });
+    };
+
+    let callbackInvoked = false;
+
+    randomIntPromise(10, 20)
+      .then((int) => {
+        assert.equal(typeof int, "number");
+        assert.ok(int >= 10 && int < 20, "randomInt should be within the range");
+        assert.ok(callbackInvoked, "Callback should have been invoked");
+      })
+    """
+  }
+
+  @Test fun `randomInt should return min when range is 1`() = conforms {
+    val min = 7L
+    val max = 8L
+
+    val result = crypto.provide().randomInt(min,max)
+
+    assertEquals(min, result)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const min = 7;
+    const max = 8;
+        
+    const result = crypto.randomInt(min, max);
+        
+    assert.equal(result, min);
+    """
+  }
+
+  @Test fun `randomInt should handle large ranges correctly`() = conforms {
+    val min = 0L
+    val max = 100_000_000_000L
+    val result = crypto.provide().randomInt(min, max)
+
+    assertIs<Long>(result)
+    assertTrue(result in min until max)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const min = 0;
+    const max = 100000000000;
+    const result = crypto.randomInt(min, max);
+        
+    assert.ok(result >= min && result < max);
+    """
+  }
+
+  @Test fun `randomInt should throw TypeError for non-numeric arguments`() = conforms {
+
+    val invalidMin: Value = Value.asValue("a")
+    val validMax: Value = Value.asValue(10L)
+    val validMin: Value = Value.asValue(0L)
+    val invalidMax: Value = Value.asValue("b")
+
+    assertFailsWith<TypeError> { crypto.provide().randomInt(invalidMin, validMax) }
+    assertFailsWith<TypeError> { crypto.provide().randomInt(validMin, invalidMax) }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    assert.throws(() => crypto.randomInt("a", 10), TypeError);
+    assert.throws(() => crypto.randomInt(0, "b"), TypeError);
+    """
+  }
+
+  @Test fun `randomInt callback should be async`() = conforms {
+    var callbackCalled = false
+    val min = 0L
+    val max = 10L
+
+    fun callbackFn (err: Throwable?, value: Long?) {
+      callbackCalled = true
+
+      if (err != null) {
+        throw err
+      } else {
+        assertTrue(value in min until max)
+      }
+    }
+
+    val result = crypto.provide().randomInt(min, max, ::callbackFn)
+    // Callback should not have been called yet
+    assertTrue(!callbackCalled, "Callback should not have been invoked yet")
+
+    // The result should be Unit since a callback was provided
+    assertIs<Unit>(result)
+
+    // Callback should have been called by this point
+    assertTrue(callbackCalled, "Callback should have been invoked asynchronously")
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    let callbackCalled = false;
+    crypto.randomInt(1, 10, (err, val) => {
+      callbackCalled = true;
+      
+      assert.equal(err, null);
+      assert.ok(val >= 1 && val < 10);
+      assert.ok(callbackCalled, "Callback should have been invoked asynchronously");
+     });
+        
+     assert.equal(callbackCalled, false);
+     """
+  }
+
+  @Test fun `randomInt should throw TypeError for float arguments`() = conforms {
+    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1.5), Value.asValue(10L)) }
+    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1L), Value.asValue(10.5)) }
+    assertFailsWith<TypeError> { crypto.provide().randomInt(Value.asValue(1.5), Value.asValue(10.5)) }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    assert.throws(() => crypto.randomInt(1.5, 10), TypeError);
+    assert.throws(() => crypto.randomInt(1, 10.5), TypeError);
+    assert.throws(() => crypto.randomInt(1.5, 10.5), TypeError);
+    """
+  }
+
+  @Test fun `randomInt should throw when range exceeds MAX_SAFE_INTEGER`() = conforms {
+    val min = Value.asValue(-9007199254740991L)
+    val max = Value.asValue(9007199254740991L)
+
+    assertFailsWith<RangeError> { crypto.provide().randomInt(min, max) }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const min = Number.MIN_SAFE_INTEGER;
+    const max = Number.MAX_SAFE_INTEGER;
+
+    assert.throws(() => crypto.randomInt(min, max), RangeError);
+    """
+  }
+
+  @Test fun `randomInt large positive range`() = conforms {
+    val min = Value.asValue(0L)
+    val max = Value.asValue(281474976710655L)
+
+    val result = crypto.provide().randomInt(min, max)
+
+    assertTrue(result in 0L until 281474976710655L)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const min = 0;
+    const max = 281474976710655;
+    const result = crypto.randomInt(min, max);
+    
+    assert.ok(result >= min && result < max, "Value is within the expected range");
+    """
+  }
+
+  @Test fun `randomInt large negative range`() = conforms {
+    val min = -9_000_000_000_000L
+    val max = 0L
+    val result = crypto.provide().randomInt(min, max)
+
+    // @TODO The assertion is causing failures, possibly due to number type coercion?
+    assertTrue(result in -9000000000000L until 0L)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const min = -9000000000000;
+    const max = 0;
+    const result = crypto.randomInt(min, max);
+
+    assert.ok(result >= min && result < max, "Value is within the expected range");
+    """
+  }
+
+  @Test fun `randomInt max safe integer`() = conforms {
+    val min = Value.asValue(0)
+    val max = Value.asValue(9007199254740991)
+
+    assertThrows<RangeError>{ crypto.provide().randomInt(min, max) }
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const min = 0;
+    const max = Number.MAX_SAFE_INTEGER;
+
+    assert.throws(() => crypto.randomInt(min, max), RangeError);
+    """
+  }
+
+  @Test fun `randomInt range crossing zero`() = conforms {
+    val min = -100L
+    val max = 100L
+    val result = crypto.provide().randomInt(min, max)
+
+    assertTrue(result in min until max)
+  }.guest {
+    //language=javascript
+    """
+    const crypto = require("crypto");
+    const assert = require("assert");
+
+    const min = -100;
+    const max = 100;
+    const result = crypto.randomInt(min, max);
+
+    assert.ok(result >= min && result < max);
     """
   }
 }

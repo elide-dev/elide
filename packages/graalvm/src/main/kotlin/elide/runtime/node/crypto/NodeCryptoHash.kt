@@ -45,10 +45,9 @@ public class NodeHash(
     if (digested) throw IllegalStateException("Digest already called, cannot copy a finalized Hash.")
 
     val mdClone = try {
-      md.clone() as MessageDigest // @TODO(elijahkotyluk) see if we can avoid having to cast
+      md.clone() as MessageDigest
     } catch (e: CloneNotSupportedException) {
-      // @TODO(elijahkotyluk) validate the error messaging and change as needed.
-      throw IllegalStateException(e.message ?: "Failed to clone MessageDigest instance")
+      throw IllegalStateException(e.message ?: "Failed to clone MessageDigest instance.")
     }
 
     // Create new NodeHash with the cloned digest
@@ -129,11 +128,11 @@ public class NodeHash(
       "hex" -> result.joinToString("") { "%02x".format(it) }
       "base64" -> Base64.getEncoder().encodeToString(result)
       "latin1" -> result.toString(Charsets.ISO_8859_1)
-      else -> throw IllegalArgumentException("Encoding: ${encoding} is not currently supported.")
+      else -> throw IllegalArgumentException("Encoding: ${encoding} is not supported.")
     }
   }
 
   // @TODO(elijahkotyluk) better error messaging should be added here
   private fun resolveAlgorithm(nodeAlgo: String): String =
-    NODE_TO_JVM_ALGORITHM[nodeAlgo.lowercase()] ?: throw IllegalArgumentException("Unsupported algorithm: $nodeAlgo")
+    NODE_TO_JVM_ALGORITHM[nodeAlgo.lowercase()] ?: throw IllegalArgumentException("Unsupported algorithm: $nodeAlgo.")
 }

@@ -28,9 +28,9 @@ import elide.vm.annotations.Polyglot
 // Internal symbol where the Node built-in module is installed.
 private const val CRYPTO_MODULE_SYMBOL = "node_${NodeModuleName.CRYPTO}"
 
-// Functiopn name for randomUUID
+// Function name for randomUUID
 private const val F_RANDOM_UUID = "randomUUID"
-private val F_CREATE_HASH = "createHash"
+private const val F_CREATE_HASH = "createHash"
 
 // Installs the Node crypto module into the intrinsic bindings.
 @Intrinsic internal class NodeCryptoModule : AbstractNodeBuiltinModule() {
@@ -83,7 +83,7 @@ internal class NodeCrypto private constructor () : ReadOnlyProxyObject, CryptoAP
       randomUUID(options)
     }
     F_CREATE_HASH -> ProxyExecutable { args ->
-      val algorithm = args.getOrNull(0)?.asString() ?: throw IllegalArgumentException("Algorithm required")
+      val algorithm = args.getOrNull(0)?.asString() ?: throw IllegalArgumentException("The \"algorithm\" argument must be of type string. received: ${args[0]}")
       createHash(algorithm)
     }
     else -> null

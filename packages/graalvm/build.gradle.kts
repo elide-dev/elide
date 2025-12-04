@@ -707,6 +707,9 @@ val thirdPartyDir: String =
 val buildThirdPartyNatives by tasks.registering(Exec::class) {
   workingDir(rootProject.layout.projectDirectory.asFile.path)
 
+  // Check for required build dependencies before attempting native build
+  dependsOn(rootProject.tasks.named("checkNativeBuildDeps"))
+
   commandLine(
     "make",
     "-C", "third_party",

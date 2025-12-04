@@ -522,8 +522,11 @@ export function deleteRows(
 
   // Build display SQL for the first delete (for error context)
   const firstPk = primaryKeys[0];
-  const firstConditions = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
-  const firstValues = pkColumns.map(col => firstPk[col.name]);
+  const firstConditions = pkColumns.map(col => {
+    const value = firstPk[col.name];
+    return value === null ? `"${col.name}" IS NULL` : `"${col.name}" = ?`;
+  }).join(' AND ');
+  const firstValues = pkColumns.map(col => firstPk[col.name]).filter(v => v !== null);
   const firstSql = `DELETE FROM "${tableName}" WHERE ${firstConditions}`;
   const displaySql = buildDisplaySql(firstSql, firstValues);
 
@@ -531,8 +534,13 @@ export function deleteRows(
     // Execute all delete operations in a transaction for atomicity
     db.transaction(() => {
       for (const pk of primaryKeys) {
-        const conditions = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
-        const values = pkColumns.map(col => pk[col.name]);
+        // Handle null values with IS NULL instead of = ?
+        const conditions = pkColumns.map(col => {
+          const value = pk[col.name];
+          return value === null ? `"${col.name}" IS NULL` : `"${col.name}" = ?`;
+        }).join(' AND ');
+        // Only include non-null values as parameters
+        const values = pkColumns.map(col => pk[col.name]).filter(v => v !== null);
         const sql = `DELETE FROM "${tableName}" WHERE ${conditions}`;
 
         logQuery(sql, values);
@@ -635,9 +643,13 @@ export function updateRow(
   const setClause = updateEntries.map(([key]) => `"${key}" = ?`).join(', ');
   const setValues = updateEntries.map(([_, value]) => value);
 
-  // Build WHERE clause from primary key
-  const whereClause = pkColumns.map(col => `"${col.name}" = ?`).join(' AND ');
-  const pkValues = pkColumns.map(col => primaryKey[col.name]);
+  // Build WHERE clause from primary key (handle null values with IS NULL)
+  const whereClause = pkColumns.map(col => {
+    const value = primaryKey[col.name];
+    return value === null ? `"${col.name}" IS NULL` : `"${col.name}" = ?`;
+  }).join(' AND ');
+  // Only include non-null primary key values as parameters
+  const pkValues = pkColumns.map(col => primaryKey[col.name]).filter(v => v !== null);
 
   const allValues = [...setValues, ...pkValues];
   const sql = `UPDATE "${tableName}" SET ${setClause} WHERE ${whereClause}`;

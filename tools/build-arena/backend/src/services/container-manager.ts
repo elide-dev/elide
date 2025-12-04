@@ -1,5 +1,4 @@
 import { spawn } from 'child_process';
-import * as path from 'path';
 import Docker from 'dockerode';
 
 const docker = new Docker();
@@ -19,9 +18,6 @@ export async function startContainer(options: StartContainerOptions): Promise<st
   const { image, repoUrl, jobId, buildType, apiKey } = options;
 
   return new Promise((resolve, reject) => {
-    const instructionsFile = buildType === 'elide' ? 'CLAUDE-ELIDE.md' : 'CLAUDE-STANDARD.md';
-    const instructionsPath = path.join(process.cwd(), '../docker', instructionsFile);
-
     // Start container with interactive bash
     // The minder will connect via WebSocket and send the claude command
     const docker = spawn('docker', [
@@ -37,8 +33,6 @@ export async function startContainer(options: StartContainerOptions): Promise<st
       `JOB_ID=${jobId}`,
       '-e',
       `BUILD_TYPE=${buildType}`,
-      '-v',
-      `${instructionsPath}:/instructions.md:ro`,
       '--name',
       `race-${jobId}-${buildType}`,
       image,

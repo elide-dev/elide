@@ -138,14 +138,12 @@ export function RacePage() {
   // Start timers when live race begins
   useEffect(() => {
     if (raceStatus?.mode === 'live' && raceStatus.status === 'running') {
-      // For live races, DON'T use the local timer - rely on WebSocket metadata
-      // The WebSocket will provide elapsed time with each message
-      console.log('[RacePage] Live race detected - timers will be updated from WebSocket metadata');
-      // Initialize to 0, WebSocket will update immediately
-      setElideElapsed(0);
-      setStandardElapsed(0);
+      // For live races, start the local timer to show elapsed time ticking
+      // WebSocket messages will update elapsed time when available (for accuracy)
+      console.log('[RacePage] Live race detected - starting local timers');
+      startTimers(0);
     }
-  }, [raceStatus?.mode, raceStatus?.status, raceStatus?.startedAt, setElideElapsed, setStandardElapsed]);
+  }, [raceStatus?.mode, raceStatus?.status, raceStatus?.startedAt, startTimers]);
 
   // Start race
   const startRace = async () => {

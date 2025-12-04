@@ -114,14 +114,15 @@ export class RaceMinder {
           const instructionsPath = join(__dirname, `../../instructions/${this.config.buildType}.md`);
           const instructions = readFileSync(instructionsPath, 'utf-8');
 
-          // Format instructions for Claude command, escaping quotes and newlines
+          // Format instructions for Claude command using $'...' ANSI-C quoting
+          // which properly interprets escape sequences like \n as newlines
           const escapedInstructions = instructions
             .replace(/\\/g, '\\\\')  // Escape backslashes first
-            .replace(/"/g, '\\"')     // Escape quotes
-            .replace(/\n/g, '\\n');   // Escape newlines for shell command
+            .replace(/'/g, "\\'")    // Escape single quotes for $'...' syntax
+            .replace(/\n/g, '\\n');  // \n will be interpreted as newline in $'...'
 
-          // Send instructions + task
-          const command = `claude "Here are your instructions:\n\n${escapedInstructions}\n\nNow execute this task: Clone ${this.config.repoUrl}, build it following the instructions above, and ring the bell when done."\n`;
+          // Send instructions + task using $'...' syntax for proper escape handling
+          const command = `claude $'Here are your instructions:\\n\\n${escapedInstructions}\\n\\nNow execute this task: Clone ${this.config.repoUrl}, build it following the instructions above, and ring the bell when done.'\n`;
 
           console.log(`[Minder:${this.config.buildType}] Sending Claude command with ${instructions.split('\n').length} lines of instructions`);
           this.sendInput(command);

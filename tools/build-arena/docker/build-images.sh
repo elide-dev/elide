@@ -13,56 +13,62 @@ NC='\033[0m'
 echo -e "${GREEN}Building Docker images for Build Arena${NC}"
 echo ""
 
-# Step 1: Build Elide from source on remote Linux machine
-echo -e "${BLUE}Step 1: Building Elide from source on remote Linux machine...${NC}"
-cd ../../..  # Navigate to repo root from tools/build-arena/docker
+# Step 1: Build Elide from source on remote Linux machine (or use existing build)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -d "$SCRIPT_DIR/elide-dist" ]; then
+    echo -e "${YELLOW}Using existing Elide distribution at $SCRIPT_DIR/elide-dist${NC}"
+    echo "Skipping remote build..."
+else
+    echo -e "${BLUE}Step 1: Building Elide from source on remote Linux machine...${NC}"
+    cd ../../..  # Navigate to repo root from tools/build-arena/docker
 
-# Get current branch name
-CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-echo "Current branch: ${CURRENT_BRANCH}"
+    # Get current branch name
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    echo "Current branch: ${CURRENT_BRANCH}"
 
-# Get remote repository URL
-REPO_URL=$(git config --get remote.origin.url)
-echo "Repository: ${REPO_URL}"
+    # Get remote repository URL
+    REPO_URL=$(git config --get remote.origin.url)
+    echo "Repository: ${REPO_URL}"
 
-# Remote build configuration
-REMOTE_USER="rwalters"
-REMOTE_HOST="192.168.1.135"
-REMOTE_DIR="/tmp/elide-build-$(date +%s)"
+    # Remote build configuration
+    REMOTE_USER="rwalters"
+    REMOTE_HOST="192.168.1.135"
+    REMOTE_DIR="/tmp/elide-build-$(date +%s)"
 
-echo "Cloning ${CURRENT_BRANCH} on remote machine..."
-# Clone the repository and checkout the current branch on remote machine
-ssh ${REMOTE_USER}@${REMOTE_HOST} "git clone -b ${CURRENT_BRANCH} ${REPO_URL} ${REMOTE_DIR}"
+    echo "Cloning ${CURRENT_BRANCH} on remote machine..."
+    # Clone the repository and checkout the current branch on remote machine
+    ssh ${REMOTE_USER}@${REMOTE_HOST} "git clone -b ${CURRENT_BRANCH} ${REPO_URL} ${REMOTE_DIR}"
 
-echo "Building Elide on remote Linux machine..."
-# Build on remote machine
-ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_DIR} && ./gradlew :packages:cli:installDist --no-daemon"
+    echo "Building Elide on remote Linux machine..."
+    # Build on remote machine
+    ssh ${REMOTE_USER}@${REMOTE_HOST} "cd ${REMOTE_DIR} && ./gradlew :packages:cli:installDist --no-daemon"
 
-echo "Copying build artifacts back..."
-# Copy build artifacts back
-rsync -az ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/packages/cli/build/install/cli/ \
-  ./packages/cli/build/install/cli/
+    echo "Copying build artifacts back..."
+    # Copy build artifacts back
+    rsync -az ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/packages/cli/build/install/cli/ \
+      ./packages/cli/build/install/cli/
 
-# Cleanup remote directory
-ssh ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${REMOTE_DIR}"
-echo "Remote build complete!"
-cd tools/build-arena/docker
+    # Cleanup remote directory
+    ssh ${REMOTE_USER}@${REMOTE_HOST} "rm -rf ${REMOTE_DIR}"
+    echo "Remote build complete!"
+    cd tools/build-arena/docker
 
-# Step 2: Copy Elide distribution to docker build context
-echo -e "${BLUE}Step 2: Copying Elide distribution to docker build context...${NC}"
-ELIDE_DIST="packages/cli/build/install/cli"
-if [ ! -d "$ELIDE_DIST" ]; then
-    echo "Error: Elide distribution not found at $ELIDE_DIST"
+    # Copy entire distribution (bin/ and lib/)
+    cp -r "../../../packages/cli/build/install/cli" elide-dist
+    echo "✓ Copied Elide distribution to tools/build-arena/docker/elide-dist"
+fi
+
+# Step 2: Verify Elide distribution exists
+echo -e "${BLUE}Step 2: Verifying Elide distribution...${NC}"
+cd "$SCRIPT_DIR"
+if [ ! -d "elide-dist" ]; then
+    echo "Error: Elide distribution not found at elide-dist/"
     echo "Build may have failed. Check output above."
     exit 1
 fi
 
-# Copy entire distribution (bin/ and lib/)
-cp -r "$ELIDE_DIST" tools/build-arena/docker/elide-dist
-echo "✓ Copied Elide distribution to tools/build-arena/docker/elide-dist"
-
-# Return to docker directory
-cd tools/build-arena/docker
+echo "✓ Elide distribution ready at elide-dist/"
+echo "  $(find elide-dist/lib -name '*.jar' | wc -l | tr -d ' ') JAR files in lib/"
 echo ""
 
 # Check if buildx is available

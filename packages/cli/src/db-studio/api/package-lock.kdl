@@ -1,0 +1,35 @@
+lockfile-version 1
+root{
+dependencies{
+zod ">=4.0.0 <5.0.0-0"
+    }
+dev-dependencies{
+"@elide-dev/types" "1.0.0-beta10"
+    }
+}
+pkg "@elide-dev/types"{
+version "1.0.0-beta10"
+resolved "https://registry.npmjs.org/@elide-dev/types/-/types-1.0.0-beta10.tgz"
+integrity "sha512-VAaiwprV0ekDHn0cXxn/GnvNohm2gLk0SOqymMCyWK6Tk0Q9rf0O4PCR4NGOFZf51zfghB1Pd204w72lhQbPhg=="
+dependencies{
+"@types/node" ">=0.0.0"
+    }
+}
+pkg "@types/node"{
+version "24.10.1"
+resolved "https://registry.npmjs.org/@types/node/-/node-24.10.1.tgz"
+integrity "sha512-GNWcUTRBgIRJD5zj+Tq0fKOJ5XZajIiBroOF0yvj2bSU1WvNdYS/dn9UxwsujGW4JX06dnHyjV2y9rRaybH0iQ=="
+dependencies{
+undici-types ">=7.16.0 <7.17.0-0"
+    }
+}
+pkg undici-types{
+version "7.16.0"
+resolved "https://registry.npmjs.org/undici-types/-/undici-types-7.16.0.tgz"
+integrity "sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw=="
+}
+pkg zod{
+version "4.1.12"
+resolved "https://registry.npmjs.org/zod/-/zod-4.1.12.tgz"
+integrity "sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ=="
+}

@@ -37,8 +37,8 @@ export type WriteQueryResult = {
 
 export type QueryResult = SelectQueryResult | WriteQueryResult
 
-async function executeQuery(dbIndex: string, sql: string, params?: unknown[]): Promise<QueryResult> {
-  const res = await fetch(`${API_BASE_URL}/api/databases/${dbIndex}/query`, {
+async function executeQuery(dbId: string, sql: string, params?: unknown[]): Promise<QueryResult> {
+  const res = await fetch(`${API_BASE_URL}/api/databases/${dbId}/query`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -64,13 +64,13 @@ async function executeQuery(dbIndex: string, sql: string, params?: unknown[]): P
   return res.json()
 }
 
-export function useQueryExecution(dbIndex: string | undefined) {
+export function useQueryExecution(dbId: string | undefined) {
   return useMutation({
     mutationFn: ({ sql, params }: { sql: string; params?: unknown[] }) => {
-      if (!dbIndex) {
-        throw new Error('Database index is required')
+      if (!dbId) {
+        throw new Error('Database ID is required')
       }
-      return executeQuery(dbIndex, sql, params)
+      return executeQuery(dbId, sql, params)
     },
   })
 }

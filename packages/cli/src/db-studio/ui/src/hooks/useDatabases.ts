@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { API_BASE_URL } from '../config'
 
 export type DiscoveredDatabase = {
+  id: string
   path: string
   size: number
   lastModified: number

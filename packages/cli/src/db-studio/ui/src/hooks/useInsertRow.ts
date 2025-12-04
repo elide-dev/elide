@@ -14,8 +14,8 @@ type InsertRowError = Error & {
   }
 }
 
-async function insertRow(dbIndex: string, tableName: string, row: Record<string, unknown>): Promise<InsertRowResponse> {
-  const res = await fetch(`${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}/rows`, {
+async function insertRow(dbId: string, tableName: string, row: Record<string, unknown>): Promise<InsertRowResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/databases/${dbId}/tables/${encodeURIComponent(tableName)}/rows`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,20 +36,20 @@ async function insertRow(dbIndex: string, tableName: string, row: Record<string,
 }
 
 export function useInsertRow() {
-  const { dbIndex, tableName } = useParams<{ dbIndex: string; tableName: string }>()
+  const { dbId, tableName } = useParams<{ dbId: string; tableName: string }>()
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (row: Record<string, unknown>) => {
-      if (!dbIndex || !tableName) {
-        throw new Error('Database index and table name are required')
+      if (!dbId || !tableName) {
+        throw new Error('Database ID and table name are required')
       }
-      return insertRow(dbIndex, tableName, row)
+      return insertRow(dbId, tableName, row)
     },
     onSuccess: () => {
       // Invalidate table data to trigger a refetch
       queryClient.invalidateQueries({
-        queryKey: ['databases', dbIndex, 'tables', tableName],
+        queryKey: ['databases', dbId, 'tables', tableName],
       })
     },
     onError: (error: Error) => {

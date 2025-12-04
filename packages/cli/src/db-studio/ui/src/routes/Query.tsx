@@ -7,11 +7,11 @@ import { QueryResults } from '../components/QueryResults'
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
 
 export default function Query() {
-  const { dbIndex } = useParams()
+  const { dbId } = useParams()
   const [sql, setSql] = useState('')
 
-  const { data: tables = [] } = useDatabaseTables(dbIndex)
-  const { mutate: executeQuery, data: result, isPending: loading, error } = useQueryExecution(dbIndex)
+  const { data: tables = [] } = useDatabaseTables(dbId)
+  const { mutate: executeQuery, data: result, isPending: loading, error } = useQueryExecution(dbId)
 
   useEffect(() => {
     if (tables.length > 0) {

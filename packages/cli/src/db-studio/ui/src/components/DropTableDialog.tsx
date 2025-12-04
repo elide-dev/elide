@@ -15,20 +15,13 @@ type DropTableDialogProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   onSuccess?: () => void
-  dbIndex: string
+  dbId: string
   tableName: string
   tableType: 'table' | 'view'
 }
 
-export function DropTableDialog({
-  isOpen,
-  onOpenChange,
-  onSuccess,
-  dbIndex,
-  tableName,
-  tableType,
-}: DropTableDialogProps) {
-  const dropTableMutation = useDropTable(dbIndex)
+export function DropTableDialog({ isOpen, onOpenChange, onSuccess, dbId, tableName, tableType }: DropTableDialogProps) {
+  const dropTableMutation = useDropTable(dbId)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const handleDrop = React.useCallback(async () => {

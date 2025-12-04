@@ -21,6 +21,7 @@ function logQuery(sql: string, params?: unknown[]): void {
 }
 
 export interface DiscoveredDatabase {
+  id: string;
   path: string;
   name: string;
   size: number;

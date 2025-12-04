@@ -18,7 +18,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       {
-        path: 'database/:dbIndex',
+        path: 'database/:dbId',
         element: <Database />,
         children: [
           {

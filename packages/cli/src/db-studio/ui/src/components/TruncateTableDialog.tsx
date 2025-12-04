@@ -14,12 +14,12 @@ import { useTruncateTable } from '@/hooks/useTruncateTable'
 type TruncateTableDialogProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
-  dbIndex: string
+  dbId: string
   tableName: string
 }
 
-export function TruncateTableDialog({ isOpen, onOpenChange, dbIndex, tableName }: TruncateTableDialogProps) {
-  const truncateTableMutation = useTruncateTable(dbIndex)
+export function TruncateTableDialog({ isOpen, onOpenChange, dbId, tableName }: TruncateTableDialogProps) {
+  const truncateTableMutation = useTruncateTable(dbId)
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
   const handleTruncate = React.useCallback(async () => {

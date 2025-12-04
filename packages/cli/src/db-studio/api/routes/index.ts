@@ -17,23 +17,23 @@ export const routes: Route[] = [
 
   // Database operations
   { method: "GET", pattern: "/api/databases", handler: listDatabases },
-  { method: "GET", pattern: "/api/databases/:dbIndex", handler: getDatabaseInfoRoute },
+  { method: "GET", pattern: "/api/databases/:dbId", handler: getDatabaseInfoRoute },
 
   // Table operations - read
-  { method: "GET", pattern: "/api/databases/:dbIndex/tables", handler: getTablesRoute },
-  { method: "GET", pattern: "/api/databases/:dbIndex/tables/:tableName", handler: getTableDataRoute },
+  { method: "GET", pattern: "/api/databases/:dbId/tables", handler: getTablesRoute },
+  { method: "GET", pattern: "/api/databases/:dbId/tables/:tableName", handler: getTableDataRoute },
 
   // Table operations - write (structure-level operations)
-  { method: "POST", pattern: "/api/databases/:dbIndex/tables", handler: createTableRoute },
-  { method: "DELETE", pattern: "/api/databases/:dbIndex/tables/:tableName", handler: dropTableRoute },
-  { method: "POST", pattern: "/api/databases/:dbIndex/tables/:tableName/truncate", handler: truncateTableRoute },
+  { method: "POST", pattern: "/api/databases/:dbId/tables", handler: createTableRoute },
+  { method: "DELETE", pattern: "/api/databases/:dbId/tables/:tableName", handler: dropTableRoute },
+  { method: "POST", pattern: "/api/databases/:dbId/tables/:tableName/truncate", handler: truncateTableRoute },
 
   // Row operations - write (data-level operations)
-  { method: "POST", pattern: "/api/databases/:dbIndex/tables/:tableName/rows", handler: insertRowRoute },
-  { method: "PUT", pattern: "/api/databases/:dbIndex/tables/:tableName/rows", handler: updateRowRoute },
-  { method: "DELETE", pattern: "/api/databases/:dbIndex/tables/:tableName/rows", handler: deleteRowsRoute },
+  { method: "POST", pattern: "/api/databases/:dbId/tables/:tableName/rows", handler: insertRowRoute },
+  { method: "PUT", pattern: "/api/databases/:dbId/tables/:tableName/rows", handler: updateRowRoute },
+  { method: "DELETE", pattern: "/api/databases/:dbId/tables/:tableName/rows", handler: deleteRowsRoute },
 
   // Raw SQL query endpoint (for custom queries)
-  { method: "POST", pattern: "/api/databases/:dbIndex/query", handler: executeQueryRoute },
+  { method: "POST", pattern: "/api/databases/:dbId/query", handler: executeQueryRoute },
 ];
 

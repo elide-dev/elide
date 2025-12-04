@@ -20,11 +20,11 @@ type UpdateRowParams = {
 }
 
 async function updateRow(
-  dbIndex: string,
+  dbId: string,
   tableName: string,
   params: UpdateRowParams
 ): Promise<UpdateRowResponse> {
-  const res = await fetch(`${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}/rows`, {
+  const res = await fetch(`${API_BASE_URL}/api/databases/${dbId}/tables/${encodeURIComponent(tableName)}/rows`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -43,20 +43,20 @@ async function updateRow(
 }
 
 export function useUpdateRow() {
-  const { dbIndex, tableName } = useParams<{ dbIndex: string; tableName: string }>()
+  const { dbId, tableName } = useParams<{ dbId: string; tableName: string }>()
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (params: UpdateRowParams) => {
-      if (!dbIndex || !tableName) {
-        throw new Error('Database index and table name are required')
+      if (!dbId || !tableName) {
+        throw new Error('Database ID and table name are required')
       }
-      return updateRow(dbIndex, tableName, params)
+      return updateRow(dbId, tableName, params)
     },
     onSuccess: () => {
       // Invalidate table data to trigger a refetch
       queryClient.invalidateQueries({
-        queryKey: ['databases', dbIndex, 'tables', tableName],
+        queryKey: ['databases', dbId, 'tables', tableName],
       })
     },
     onError: (error: Error) => {

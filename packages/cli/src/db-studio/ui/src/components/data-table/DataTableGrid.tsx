@@ -193,8 +193,6 @@ export function DataTableGrid({
 
   // Check if any column is currently being resized
   const isResizing = table.getState().columnSizingInfo.isResizingColumn !== false
-  const hasEditableRows = (editableRows?.length ?? 0) > 0
-  const hasCellEdits = cellEdits.length > 0
 
   const handleCellClick = React.useCallback(
     (rowId: string, columnId: string) => {
@@ -316,7 +314,7 @@ export function DataTableGrid({
                   rowIndex={index}
                   isLoading={config.isLoading}
                   isResizing={isResizing}
-                  selectedCell={hasEditableRows || hasCellEdits ? null : selectedCell}
+                  selectedCell={selectedCell}
                   editingCell={editingCell}
                   editingValue={editingValue}
                   cellEdits={cellEdits}

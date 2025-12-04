@@ -3,6 +3,7 @@ import { Database, ChevronRight } from 'lucide-react'
 import { formatBytes, formatDate } from '../lib/utils'
 
 interface DatabaseInfo {
+  id: string
   path: string
   size: number
   lastModified: number
@@ -10,15 +11,14 @@ interface DatabaseInfo {
 
 interface DatabaseCardProps {
   database: DatabaseInfo
-  index: number
 }
 
-export function DatabaseCard({ database, index }: DatabaseCardProps) {
+export function DatabaseCard({ database }: DatabaseCardProps) {
   const dbName = database.path.split('/').pop() || 'Unknown'
 
   return (
     <Link
-      to={`/database/${index}/tables`}
+      to={`/database/${database.id}/tables`}
       className="bg-card border border-border rounded-lg p-5 hover:border-ring hover:bg-accent transition-all text-left group hover:-translate-y-0.5 hover:shadow-lg"
     >
       <div className="flex items-start gap-4">

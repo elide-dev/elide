@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { API_BASE_URL } from '../config'
 
-async function truncateTable(dbIndex: string, tableName: string): Promise<void> {
-  const res = await fetch(`${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}/truncate`, {
+async function truncateTable(dbId: string, tableName: string): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/databases/${dbId}/tables/${encodeURIComponent(tableName)}/truncate`, {
     method: 'POST',
   })
 
@@ -12,15 +12,15 @@ async function truncateTable(dbIndex: string, tableName: string): Promise<void> 
   }
 }
 
-export function useTruncateTable(dbIndex: string) {
+export function useTruncateTable(dbId: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (tableName: string) => truncateTable(dbIndex, tableName),
+    mutationFn: (tableName: string) => truncateTable(dbId, tableName),
     onSuccess: () => {
       // Invalidate the tables list to refetch after truncating
       queryClient.invalidateQueries({
-        queryKey: ['databases', dbIndex, 'tables'],
+        queryKey: ['databases', dbId, 'tables'],
       })
     },
   })

@@ -3,23 +3,32 @@ import type { DiscoveredDatabase } from "../database.ts";
 import { errorResponse } from "../http/responses.ts";
 
 /**
- * Validate database index parameter
+ * Validate database ID parameter
  */
-export function validateDatabaseIndex(
-  dbIndexStr: string,
+export function validateDatabaseId(
+  dbId: string,
   databases: DiscoveredDatabase[]
 ): { database: DiscoveredDatabase } | { error: ApiResponse } {
-  const dbIndex = parseInt(dbIndexStr, 10);
-
-  if (isNaN(dbIndex)) {
-    return { error: errorResponse("Invalid database index", 400) };
+  const database = databases.find(db => db.id === dbId);
+  if (!database) {
+    return { error: errorResponse(`Database not found with ID: ${dbId}`, 404) };
   }
+  return { database };
+}
 
-  if (dbIndex < 0 || dbIndex >= databases.length) {
-    return { error: errorResponse(`Database not found at index ${dbIndex}`, 404) };
+/**
+ * Validate database index parameter
+ * @deprecated Use validateDatabaseId instead
+ */
+export function validateDatabaseIndex(
+  dbId: string,
+  databases: DiscoveredDatabase[]
+): { database: DiscoveredDatabase } | { error: ApiResponse } {
+  const database = databases.find(db => db.id === dbId);
+  if (!database) {
+    return { error: errorResponse(`Database not found with ID: ${dbId}`, 404) };
   }
-
-  return { database: databases[dbIndex] };
+  return { database };
 }
 
 /**

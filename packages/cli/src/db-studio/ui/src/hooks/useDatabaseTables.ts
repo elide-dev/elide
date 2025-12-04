@@ -11,8 +11,8 @@ type TablesResponse = {
   tables: TableMeta[]
 }
 
-async function fetchDatabaseTables(dbIndex: string): Promise<TableMeta[]> {
-  const res = await fetch(`${API_BASE_URL}/api/databases/${dbIndex}/tables`)
+async function fetchDatabaseTables(dbId: string): Promise<TableMeta[]> {
+  const res = await fetch(`${API_BASE_URL}/api/databases/${dbId}/tables`)
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}: ${res.statusText}`)
   }
@@ -20,10 +20,10 @@ async function fetchDatabaseTables(dbIndex: string): Promise<TableMeta[]> {
   return data.tables
 }
 
-export function useDatabaseTables(dbIndex: string | undefined) {
+export function useDatabaseTables(dbId: string | undefined) {
   return useQuery({
-    queryKey: ['databases', dbIndex, 'tables'],
-    queryFn: () => fetchDatabaseTables(dbIndex!),
-    enabled: !!dbIndex,
+    queryKey: ['databases', dbId, 'tables'],
+    queryFn: () => fetchDatabaseTables(dbId!),
+    enabled: !!dbId,
   })
 }

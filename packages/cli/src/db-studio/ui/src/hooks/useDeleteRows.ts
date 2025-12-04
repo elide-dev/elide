@@ -8,11 +8,11 @@ type DeleteRowsResponse = {
 }
 
 async function deleteRows(
-  dbIndex: string,
+  dbId: string,
   tableName: string,
   primaryKeys: Record<string, unknown>[]
 ): Promise<DeleteRowsResponse> {
-  const res = await fetch(`${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}/rows`, {
+  const res = await fetch(`${API_BASE_URL}/api/databases/${dbId}/tables/${encodeURIComponent(tableName)}/rows`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -33,21 +33,21 @@ async function deleteRows(
 }
 
 export function useDeleteRows() {
-  const { dbIndex, tableName } = useParams<{ dbIndex: string; tableName: string }>()
+  const { dbId, tableName } = useParams<{ dbId: string; tableName: string }>()
   const { table } = useDataTable()
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (primaryKeys: Record<string, unknown>[]) => {
-      if (!dbIndex || !tableName) {
-        throw new Error('Database index and table name are required')
+      if (!dbId || !tableName) {
+        throw new Error('Database ID and table name are required')
       }
-      return deleteRows(dbIndex, tableName, primaryKeys)
+      return deleteRows(dbId, tableName, primaryKeys)
     },
     onSuccess: () => {
       // Invalidate table data to trigger a refetch
       queryClient.invalidateQueries({
-        queryKey: ['databases', dbIndex, 'tables', tableName],
+        queryKey: ['databases', dbId, 'tables', tableName],
       })
 
       // Clear row selection

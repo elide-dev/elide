@@ -8,9 +8,9 @@ import { TruncateTableDialog } from '@/components/TruncateTableDialog'
 import { DatabaseSidebar } from '@/components/DatabaseSidebar'
 
 export default function Database() {
-  const { dbIndex, tableName } = useParams()
+  const { dbId, tableName } = useParams()
   const navigate = useNavigate()
-  const { data: tables = [], isLoading: loading, refetch } = useDatabaseTables(dbIndex)
+  const { data: tables = [], isLoading: loading, refetch } = useDatabaseTables(dbId)
   const [dropDialogOpen, setDropDialogOpen] = useState(false)
   const [truncateDialogOpen, setTruncateDialogOpen] = useState(false)
   const [selectedTable, setSelectedTable] = useState<{ name: string; type: 'table' | 'view' } | null>(null)
@@ -23,7 +23,7 @@ export default function Database() {
   const handleDropSuccess = () => {
     // If we're viewing the dropped table, navigate to database index
     if (selectedTable && decodeURIComponent(tableName || '') === selectedTable.name) {
-      navigate(`/database/${dbIndex}`)
+      navigate(`/database/${dbId}`)
     }
   }
 
@@ -47,7 +47,7 @@ export default function Database() {
       <ResizablePanelGroup direction="horizontal" className="h-full">
         <ResizablePanel defaultSize={20} minSize={15} maxSize={40} className="min-w-[200px]">
           <DatabaseSidebar
-            dbIndex={dbIndex!}
+            dbId={dbId!}
             tableName={tableName}
             tables={tables}
             loading={loading}
@@ -66,7 +66,7 @@ export default function Database() {
         </ResizablePanel>
       </ResizablePanelGroup>
 
-      {selectedTable && dbIndex && (
+      {selectedTable && dbId && (
         <>
           <DropTableDialog
             isOpen={dropDialogOpen}
@@ -74,7 +74,7 @@ export default function Database() {
               if (!isOpen) handleDropDialogClose()
             }}
             onSuccess={handleDropSuccess}
-            dbIndex={dbIndex}
+            dbId={dbId}
             tableName={selectedTable.name}
             tableType={selectedTable.type}
           />
@@ -84,7 +84,7 @@ export default function Database() {
               onOpenChange={(isOpen) => {
                 if (!isOpen) handleTruncateSuccess()
               }}
-              dbIndex={dbIndex}
+              dbId={dbId}
               tableName={selectedTable.name}
             />
           )}

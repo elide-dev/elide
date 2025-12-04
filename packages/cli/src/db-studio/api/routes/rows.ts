@@ -7,7 +7,7 @@ import { DeleteRowsRequestSchema, InsertRowRequestSchema, UpdateRowRequestSchema
 
 /**
  * Delete rows from a table based on primary key values
- * DELETE /api/databases/:dbIndex/tables/:tableName/rows
+ * DELETE /api/databases/:dbId/tables/:tableName/rows
  *
  * Request body: { primaryKeys: [{ id: 1 }, { id: 2 }] }
  * Response: { success: true }
@@ -50,7 +50,7 @@ export const deleteRowsRoute = withDatabase(async (context) => {
 
 /**
  * Insert a new row into a table
- * POST /api/databases/:dbIndex/tables/:tableName/rows
+ * POST /api/databases/:dbId/tables/:tableName/rows
  *
  * Request body: { row: { column1: value1, column2: value2 } }
  * Response: { success: true }
@@ -94,7 +94,7 @@ export const insertRowRoute = withDatabase(async (context) => {
 
 /**
  * Update a row in a table based on primary key
- * PUT /api/databases/:dbIndex/tables/:tableName/rows
+ * PUT /api/databases/:dbId/tables/:tableName/rows
  *
  * Request body: { primaryKey: { id: 1 }, updates: { column1: newValue } }
  * Response: { success: true, sql: "UPDATE..." }

@@ -60,6 +60,7 @@ internal class DbCommand : AbstractSubcommand<ToolState, CommandContext>() {
 
 @Serializable
 data class DiscoveredDatabase(
+  val id: String,
   val path: String,
   val name: String,
   val size: Long,
@@ -105,9 +106,30 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
   private fun Path.isSqliteDatabase(): Boolean =
     isRegularFile() && SQLITE_EXTENSIONS.any { name.endsWith(it, ignoreCase = true) }
 
+  // Generate a stable database identifier: {filename}-{hash}
+  private fun generateDatabaseId(dbPath: Path): String {
+    val filename = dbPath.name
+      .removeSuffix(".db")
+      .removeSuffix(".sqlite")
+      .removeSuffix(".sqlite3")
+      .removeSuffix(".db3")
+
+    val hash = hashFilePath(dbPath)
+    return "${filename}-${hash}"
+  }
+
+  // Create hash from absolute path using SHA-256
+  private fun hashFilePath(dbPath: Path): String {
+    val absolutePath = dbPath.toAbsolutePath().toString()
+    val digest = java.security.MessageDigest.getInstance("SHA-256")
+    val hashBytes = digest.digest(absolutePath.toByteArray(Charsets.UTF_8))
+    return hashBytes.take(4).joinToString("") { "%02x".format(it) }
+  }
+
   // Extension function to safely convert Path to DiscoveredDatabase
   private fun Path.toDiscoveredDatabase(): DiscoveredDatabase? = runCatching {
     DiscoveredDatabase(
+      id = generateDatabaseId(this),
       path = toAbsolutePath().toString(),
       name = name,
       size = fileSize(),
@@ -141,7 +163,15 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
         .flatMap { searchDirectory(it, depth = 1, maxDepth = 1) }
     }.getOrElse { emptyList() }
 
-    return (currentDir + subDirs).sortedByDescending { it.lastModified }
+    val allDatabases = (currentDir + subDirs).sortedByDescending { it.lastModified }
+
+    // Handle ID collisions by appending numeric suffix
+    val seenIds = mutableMapOf<String, Int>()
+    return allDatabases.map { db ->
+      val count = seenIds.getOrDefault(db.id, 0)
+      seenIds[db.id] = count + 1
+      if (count > 0) db.copy(id = "${db.id}-${count}") else db
+    }
   }
 
   private fun copyDirectory(sourcePath: Path, targetDir: Path) {
@@ -280,6 +310,7 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
         dbPath.isRegularFile() -> {
           listOf(
             DiscoveredDatabase(
+              id = generateDatabaseId(dbPath),
               path = dbPath.toAbsolutePath().toString(),
               name = dbPath.name,
               size = dbPath.fileSize(),

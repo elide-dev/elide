@@ -2,7 +2,6 @@ import * as React from 'react'
 import { CheckCircle2, XCircle, ChevronDown, ChevronRight } from 'lucide-react'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -10,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Item, ItemGroup, ItemMedia, ItemContent, ItemTitle } from '@/components/ui/item'
+import { Item, ItemMedia, ItemContent, ItemTitle } from '@/components/ui/item'
 import { SQLCodeBlock } from '@/components/ui/sql-code-block'
 import { cn } from '@/lib/utils'
 

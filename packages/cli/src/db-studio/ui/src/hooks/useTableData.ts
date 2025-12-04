@@ -11,7 +11,7 @@ export type TableData = {
 }
 
 async function fetchTableData(
-  dbIndex: string,
+  dbId: string,
   tableName: string,
   pagination?: PaginationParams,
   sorting?: SortingParams,
@@ -32,7 +32,7 @@ async function fetchTableData(
   }
 
   const queryString = params.toString()
-  const url = `${API_BASE_URL}/api/databases/${dbIndex}/tables/${encodeURIComponent(tableName)}${queryString ? `?${queryString}` : ''}`
+  const url = `${API_BASE_URL}/api/databases/${dbId}/tables/${encodeURIComponent(tableName)}${queryString ? `?${queryString}` : ''}`
 
   const res = await fetch(url)
   if (!res.ok) {
@@ -42,16 +42,16 @@ async function fetchTableData(
 }
 
 export function useTableData(
-  dbIndex: string | undefined,
+  dbId: string | undefined,
   tableName: string | undefined,
   pagination?: PaginationParams,
   sorting?: SortingParams,
   filters?: Filter[]
 ) {
   return useQuery({
-    queryKey: ['databases', dbIndex, 'tables', tableName, pagination, sorting, filters],
-    queryFn: () => fetchTableData(dbIndex!, tableName!, pagination, sorting, filters),
-    enabled: !!dbIndex && !!tableName,
+    queryKey: ['databases', dbId, 'tables', tableName, pagination, sorting, filters],
+    queryFn: () => fetchTableData(dbId!, tableName!, pagination, sorting, filters),
+    enabled: !!dbId && !!tableName,
     placeholderData: (previousData) => previousData, // Keep previous data while fetching
   })
 }

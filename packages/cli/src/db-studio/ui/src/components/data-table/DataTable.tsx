@@ -45,7 +45,7 @@ export function DataTable() {
   const insertRowMutation = useInsertRow()
   const updateRowMutation = useUpdateRow()
   const queryClient = useQueryClient()
-  const { dbIndex, tableName } = useParams<{ dbIndex: string; tableName: string }>()
+  const { dbId, tableName } = useParams<{ dbId: string; tableName: string }>()
 
   // Local state for filter panel visibility
   const [showFilterPanel, setShowFilterPanel] = React.useState(appliedFilters.length > 0)
@@ -276,7 +276,7 @@ export function DataTable() {
     // Refresh table data to show changes
     if (successfulRowIds.length > 0 || successfulEditIds.length > 0) {
       queryClient.invalidateQueries({
-        queryKey: ['databases', dbIndex, 'tables', tableName],
+        queryKey: ['databases', dbId, 'tables', tableName],
       })
     }
 
@@ -285,7 +285,7 @@ export function DataTable() {
       setInsertResults(results)
       setShowInsertDialog(true)
     }
-  }, [editableRows, cellEdits, insertRowMutation, updateRowMutation, queryClient, dbIndex, tableName])
+  }, [editableRows, cellEdits, insertRowMutation, updateRowMutation, queryClient, dbId, tableName])
 
   // Immediate discard when user clicks the discard button (intentional action)
   const handleDiscardAll = React.useCallback(() => {

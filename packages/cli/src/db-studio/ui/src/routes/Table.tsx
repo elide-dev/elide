@@ -19,7 +19,7 @@ function formatCellValue(value: unknown): React.ReactNode {
 }
 
 export default function TableView() {
-  const { dbIndex, tableName } = useParams()
+  const { dbId, tableName } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
 
   // Parse URL params once (source of truth)
@@ -28,11 +28,11 @@ export default function TableView() {
   const appliedFilters = React.useMemo(() => parseFilterParams(searchParams), [searchParams])
 
   // Get tables list to access the total row count
-  const { data: tables = [] } = useDatabaseTables(dbIndex)
+  const { data: tables = [] } = useDatabaseTables(dbId)
 
   // Fetch table data with server params
   const { data, isLoading, isFetching, error, refetch } = useTableData(
-    dbIndex,
+    dbId,
     tableName,
     pagination,
     sorting,

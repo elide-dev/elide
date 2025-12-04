@@ -43,7 +43,7 @@ interface TableInfo {
 }
 
 interface DatabaseSidebarProps {
-  dbIndex: string
+  dbId: string
   tableName?: string
   tables: TableInfo[]
   loading: boolean
@@ -53,7 +53,7 @@ interface DatabaseSidebarProps {
 }
 
 export function DatabaseSidebar({
-  dbIndex,
+  dbId,
   tableName,
   tables,
   loading,
@@ -110,7 +110,7 @@ export function DatabaseSidebar({
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isQueryActive}>
-                  <Link to={`/database/${dbIndex}/query`}>
+                  <Link to={`/database/${dbId}/query`}>
                     <Code2 className="w-4 h-4" />
                     <span>Query Editor</span>
                   </Link>
@@ -189,7 +189,7 @@ export function DatabaseSidebar({
                     return (
                       <SidebarMenuItem key={name} className="group">
                         <SidebarMenuButton asChild isActive={isActive}>
-                          <Link to={`/database/${dbIndex}/table/${encodeURIComponent(name)}`}>
+                          <Link to={`/database/${dbId}/table/${encodeURIComponent(name)}`}>
                             <Icon className="w-4 h-4" />
                             <span className="flex-1 truncate">{name}</span>
                           </Link>

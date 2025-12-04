@@ -66,8 +66,8 @@ function matchPathSegment(
  * Pattern segments starting with ':' are treated as parameters.
  * 
  * @example
- * matchRoute("/api/:dbIndex/query", "/api/0/query") 
- * // Returns: { dbIndex: "0" }
+ * matchRoute("/api/:dbId/query", "/api/0/query") 
+ * // Returns: { dbId: "0" }
  */
 export function matchRoute(pattern: string, path: string): Record<string, string> | null {
   const patternSegments = splitPathIntoSegments(pattern);

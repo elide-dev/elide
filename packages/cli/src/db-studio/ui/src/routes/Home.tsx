@@ -22,8 +22,8 @@ export default function Home() {
       <div className="max-w-5xl mx-auto">
         <HomeHeader databaseCount={databases.length} />
         <div className="grid grid-cols-2 gap-4">
-          {databases.map((db, index) => (
-            <DatabaseCard key={index} database={db} index={index} />
+          {databases.map((db) => (
+            <DatabaseCard key={db.id} database={db} />
           ))}
         </div>
       </div>

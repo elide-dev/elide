@@ -102,9 +102,12 @@ export function DataTable() {
       data: initialRowData,
     }
 
+    // Show all columns so user can fill in all fields
+    table.toggleAllColumnsVisible(true)
     setShowFilterPanel(false)
+
     setEditableRows((prev) => [...prev, newRow])
-  }, [columns, setShowFilterPanel])
+  }, [columns, table, setShowFilterPanel])
 
   const handleCellChange = React.useCallback((rowId: string, columnName: string, value: unknown) => {
     setEditableRows((prev) =>

@@ -193,6 +193,12 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param args Set of arguments to format and include with the log message.
    */
   private fun handleLog(level: LogLevel, args: Array<out Any?>) {
+    if (args == null) {
+      interceptor.value?.log(level, listOf("null"))
+      logging.log(level, listOf("null"))
+      return
+    }
+
     if (disableStreams) return
     val serializedArgs = args.toList().filterNotNull()
     interceptor.value?.log(level, serializedArgs)

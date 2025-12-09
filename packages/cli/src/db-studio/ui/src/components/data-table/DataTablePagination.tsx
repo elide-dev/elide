@@ -1,16 +1,18 @@
 import * as React from 'react'
 import { ChevronDown } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { useDataTable } from '@/contexts/DataTableContext'
 import { MIN_LIMIT, MAX_LIMIT, MIN_OFFSET } from '@/lib/constants'
-import { useLocalStorage } from '@/hooks/useLocalStorage'
+import { useDbLocalStorage } from '@/hooks/useLocalStorage'
 
 export const DataTablePagination = React.memo(function DataTablePagination() {
+  const { dbId } = useParams()
   const { pagination, onPaginationChange } = useDataTable()
-  const [, saveLimitPreference] = useLocalStorage('db-studio:pagination-limit', pagination.limit)
+  const [, saveLimitPreference] = useDbLocalStorage(dbId, 'pagination-limit', pagination.limit)
 
   // Pagination is always enabled now (no editMode in context anymore)
   const isDisabled = false

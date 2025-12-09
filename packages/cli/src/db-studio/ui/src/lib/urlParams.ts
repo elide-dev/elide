@@ -4,20 +4,22 @@
 
 import type { Filter, PaginationParams, SortingParams } from './types'
 import { DEFAULT_LIMIT, DEFAULT_OFFSET } from './constants'
-import { getStorageValue } from '@/hooks/useLocalStorage'
+import { getDbStorageValue } from '@/hooks/useLocalStorage'
 
 /**
- * Get the user's preferred limit from localStorage, falling back to default
+ * Get the user's preferred limit from localStorage for a specific database, falling back to default
  */
-function getPreferredLimit(): number {
-  return getStorageValue('db-studio:pagination-limit', DEFAULT_LIMIT)
+function getPreferredLimit(dbId: string | undefined): number {
+  return getDbStorageValue(dbId, 'pagination-limit', DEFAULT_LIMIT)
 }
 
 /**
  * Parse pagination parameters from URLSearchParams
+ * @param searchParams - The URL search params
+ * @param dbId - The database ID for fetching per-database preferences
  */
-export function parsePaginationParams(searchParams: URLSearchParams | null): PaginationParams {
-  const preferredLimit = getPreferredLimit()
+export function parsePaginationParams(searchParams: URLSearchParams | null, dbId?: string): PaginationParams {
+  const preferredLimit = getPreferredLimit(dbId)
 
   if (!searchParams) {
     return { limit: preferredLimit, offset: DEFAULT_OFFSET }

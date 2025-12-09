@@ -12,7 +12,9 @@ import {
   Scissors,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { formatRowCount } from '../lib/utils'
+import { VERSION } from '../lib/constants'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -232,9 +234,14 @@ export function DatabaseSidebar({
       </SidebarContent>
 
       <SidebarFooter className="border-t border-border">
-        <div className="flex items-center gap-2 px-2 py-2">
-          <img src="/elide-logo.svg" alt="Elide" className="w-6 h-6" />
-          <span className="text-sm font-medium text-muted-foreground">Database Studio</span>
+        <div className="flex items-center justify-between px-2 py-2">
+          <div className="flex items-center gap-2">
+            <img src="/elide-logo.svg" alt="Elide" className="w-6 h-6" />
+            <span className="text-sm font-medium text-muted-foreground">Database Studio</span>
+          </div>
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+            v{VERSION}
+          </Badge>
         </div>
       </SidebarFooter>
     </Sidebar>

@@ -4,17 +4,27 @@
 
 import type { Filter, PaginationParams, SortingParams } from './types'
 import { DEFAULT_LIMIT, DEFAULT_OFFSET } from './constants'
+import { getStorageValue } from '@/hooks/useLocalStorage'
+
+/**
+ * Get the user's preferred limit from localStorage, falling back to default
+ */
+function getPreferredLimit(): number {
+  return getStorageValue('db-studio:pagination-limit', DEFAULT_LIMIT)
+}
 
 /**
  * Parse pagination parameters from URLSearchParams
  */
 export function parsePaginationParams(searchParams: URLSearchParams | null): PaginationParams {
+  const preferredLimit = getPreferredLimit()
+
   if (!searchParams) {
-    return { limit: DEFAULT_LIMIT, offset: DEFAULT_OFFSET }
+    return { limit: preferredLimit, offset: DEFAULT_OFFSET }
   }
 
   return {
-    limit: parseInt(searchParams.get('limit') || String(DEFAULT_LIMIT), 10),
+    limit: parseInt(searchParams.get('limit') || String(preferredLimit), 10),
     offset: parseInt(searchParams.get('offset') || String(DEFAULT_OFFSET), 10),
   }
 }

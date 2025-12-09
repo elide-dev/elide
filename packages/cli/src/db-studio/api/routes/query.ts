@@ -1,7 +1,7 @@
 import { jsonResponse, handleSQLError, errorResponse } from "../http/responses.ts";
 import { withDatabase } from "../http/middleware.ts";
 import { parseRequestBody } from "../utils/request.ts";
-import { executeQuery } from "../database.ts";
+import { executeQuery, logQuery } from "../database.ts";
 import { ExecuteQueryRequestSchema } from "../http/schemas.ts";
 
 /**
@@ -46,6 +46,7 @@ export const executeQueryRoute = withDatabase(async (context) => {
     } else {
       // For INSERT/UPDATE/DELETE/CREATE/DROP etc.
       // Note: rowsAffected and lastInsertRowid are not currently available from elide sqlite
+      logQuery(trimmedSql, params);
       const stmt = db.prepare(trimmedSql);
       stmt.run(...(params as any));
       const endTime = performance.now();

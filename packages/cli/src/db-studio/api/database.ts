@@ -14,7 +14,7 @@ import type { ColumnMetadata, ForeignKeyReference, Filter } from "./http/schemas
 /**
  * Log SQL queries to console
  */
-function logQuery(sql: string, params?: unknown[]): void {
+export function logQuery(sql: string, params?: unknown[]): void {
   const timestamp = new Date().toISOString();
   const paramsStr = params && params.length > 0 ? ` [${params.join(", ")}]` : "";
   console.log(`[${timestamp}] SQL: ${sql}${paramsStr}`);
@@ -72,7 +72,6 @@ export function getTables(db: Database): TableInfo[] {
   // First query: get all table and view names with their types
   // Exclude SQLite system tables (sqlite_sequence, sqlite_stat1, etc.)
   const tableNamesQuery = "SELECT name, type FROM sqlite_master WHERE type IN ('table', 'view') AND name NOT LIKE 'sqlite_%' ORDER BY name";
-  logQuery(tableNamesQuery);
   const tablesQuery: Statement<TableNameRow> = db.query(tableNamesQuery);
   const tables = tablesQuery.all();
 
@@ -84,8 +83,6 @@ export function getTables(db: Database): TableInfo[] {
   const tableCountQuery = tables.map(({ name }) =>
     `SELECT '${name}' as tableName, COUNT(*) as count FROM "${name}"`
   ).join(' UNION ALL ');
-  
-  logQuery(tableCountQuery);
   
   interface CountResultRow {
     tableName: string;
@@ -338,12 +335,11 @@ export function getTableData(
   const dataQuery = db.query(dataSql);
   const rows = whereParams.length > 0 ? dataQuery.all(...(whereParams as (string | number | null)[])) : dataQuery.all();
 
-  // Get total row count with same WHERE clause
+  // Get total row count with same WHERE clause (no logging - background query)
   let countSql = `SELECT COUNT(*) as count FROM "${tableName}"`;
   if (whereClause) {
     countSql += ` WHERE ${whereClause}`;
   }
-  logQuery(countSql, whereParams);
   const countQuery: Statement<CountRow> = db.query(countSql);
   const countResult = whereParams.length > 0 ? countQuery.get(...(whereParams as (string | number | null)[])) : countQuery.get();
   const totalRows = countResult?.count ?? 0;
@@ -367,9 +363,8 @@ export function getTableData(
  * Get database metadata
  */
 export function getDatabaseInfo(db: Database, dbPath: string): DatabaseInfo {
-  // Exclude SQLite system tables from count
+  // Exclude SQLite system tables from count (no logging - background query)
   const sql = "SELECT COUNT(*) as count FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'";
-  logQuery(sql);
   const tablesQuery: Statement<CountRow> = db.query(sql);
   const tablesResult = tablesQuery.get();
 

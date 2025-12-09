@@ -119,8 +119,11 @@ import elide.vm.annotations.Polyglot
    *
    * Repeated calls to this method with unchanging [args] will cache the underlying rendered query, but will not cache
    * execution of the query (in other words, the query is executed each time [run] is called).
+   *
+   * @param args Arguments to render into the query.
+   * @return Changes object containing the number of affected rows and last insert rowid.
    */
-  @Polyglot public fun run(vararg args: Any?)
+  @Polyglot public fun run(vararg args: Any?): SQLiteChanges
 
   /**
    * ## Finalize Statement

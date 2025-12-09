@@ -266,6 +266,27 @@ internal class SqliteDatabaseProxy private constructor (
     }
   }
 
+  // Internal SQLiteChanges implementation
+  private data class SQLiteChangesImpl(
+    override val changes: Long,
+    override val lastInsertRowid: Long,
+  ) : SQLiteChanges, ProxyObject {
+    override fun getMemberKeys(): Array<String> = arrayOf("changes", "lastInsertRowid")
+    override fun hasMember(key: String): Boolean = key == "changes" || key == "lastInsertRowid"
+    override fun getMember(key: String): Any? = when (key) {
+      "changes" -> changes
+      "lastInsertRowid" -> lastInsertRowid
+      else -> null
+    }
+    override fun putMember(key: String?, value: Value?) {
+      throw UnsupportedOperationException("SQLiteChanges is immutable")
+    }
+
+    companion object {
+      val EMPTY = SQLiteChangesImpl(0, 0)
+    }
+  }
+
   // Internal SQLite object implementation, backed by a de-serialized map.
   private data class SQLiteObjectImpl private constructor (
     private val schema: SQLiteObjectSchema,
@@ -430,8 +451,8 @@ internal class SqliteDatabaseProxy private constructor (
       resultSet.firstOrNull()
     }
 
-    @Polyglot override fun run(vararg args: Any?) {
-      requireNotNull(db.get()) { "Database is closed" }.exec(this, *args)
+    @Polyglot override fun run(vararg args: Any?): SQLiteChanges {
+      return requireNotNull(db.get()) { "Database is closed" }.exec(this, *args)
     }
 
     @Polyglot @JvmSynthetic override fun finalize() {
@@ -579,10 +600,11 @@ internal class SqliteDatabaseProxy private constructor (
   override fun connection(): SQLiteConnection = withOpen { this }
   override fun unwrap(): DB = withOpen { database }
 
-  @Polyglot override fun loadExtension(extension: String) = withOpen {
+  @Polyglot override fun loadExtension(extension: String): JSDynamicObject = withOpen {
     unwrap().enable_load_extension(true)
     require(';' !in extension && ' ' !in extension) { "Invalid extension name" } // sanity check
     exec("SELECT load_extension('$extension')")
+    Undefined.instance
   }
 
   @Polyglot override fun prepare(statement: String, vararg args: Any?): Statement = withOpen {
@@ -603,15 +625,23 @@ internal class SqliteDatabaseProxy private constructor (
     }
   }
 
-  @Polyglot override fun exec(statement: String, vararg args: Any?): JSDynamicObject = withOpen {
+  @Polyglot override fun exec(statement: String, vararg args: Any?): SQLiteChanges = withOpen {
     exec(oneShotStatement(statement, args))
   }
 
-  @Polyglot override fun exec(statement: Statement, vararg args: Any?): JSDynamicObject = withOpen {
-    statement.prepare(args).use {
-      it.execute()
+  @Polyglot override fun exec(statement: Statement, vararg args: Any?): SQLiteChanges = withOpen {
+    val prepared = statement.prepare(args)
+    prepared.use { stmt ->
+      stmt.execute()
+      val updateCount = stmt.updateCount.toLong()
+      // Get last insert rowid via SQLite function
+      val lastRowId = connection().prepareStatement("SELECT last_insert_rowid()").use { rowIdStmt ->
+        rowIdStmt.executeQuery().use { rs ->
+          if (rs.next()) rs.getLong(1) else 0L
+        }
+      }
+      SQLiteChangesImpl(updateCount, lastRowId)
     }
-    Undefined.instance
   }
 
   @Polyglot override fun <R> transaction(runnable: SQLiteTransactor<R>): SQLiteTransaction<R> = withOpen {

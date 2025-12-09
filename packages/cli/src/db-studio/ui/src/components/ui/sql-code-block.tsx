@@ -12,11 +12,9 @@ interface SQLCodeBlockProps {
 
 /**
  * A read-only SQL code block with syntax highlighting
- * Used to display SQL queries in error messages and dialogs
+ * Styled for inline use without border or background
  */
 export function SQLCodeBlock({ sql, format = false, className = '' }: SQLCodeBlockProps) {
-  // Truncate very long SQL for display
-
   const formattedSql = format
     ? formatSql(sql, {
         language: 'sql',
@@ -26,7 +24,7 @@ export function SQLCodeBlock({ sql, format = false, className = '' }: SQLCodeBlo
     : sql
 
   return (
-    <div className={`rounded-md border border-border overflow-hidden ${className}`}>
+    <div className={className}>
       <CodeMirror
         value={formattedSql}
         height="auto"
@@ -42,7 +40,7 @@ export function SQLCodeBlock({ sql, format = false, className = '' }: SQLCodeBlo
           highlightSelectionMatches: false,
         }}
         editable={false}
-        className="[&_.cm-editor]:bg-zinc-900 [&_.cm-editor]:border-0 [&_.cm-scroller]:font-mono [&_.cm-content]:text-sm [&_.cm-content]:py-3 [&_.cm-content]:px-4 [&_.cm-editor]:cursor-text [&_.cm-focused]:outline-none"
+        className="[&_.cm-editor]:bg-transparent [&_.cm-editor]:border-0 [&_.cm-scroller]:font-mono [&_.cm-content]:text-sm [&_.cm-content]:py-0 [&_.cm-content]:px-0 [&_.cm-editor]:cursor-text [&_.cm-focused]:outline-none"
       />
     </div>
   )

@@ -8,6 +8,7 @@ import Home from './routes/Home.tsx'
 import Database from './routes/Database.tsx'
 import Table from './routes/Table.tsx'
 import Query from './routes/Query.tsx'
+import { TableEditor } from './routes/TableEditor.tsx'
 
 const queryClient = new QueryClient()
 
@@ -30,7 +31,9 @@ const router = createBrowserRouter([
             ),
           },
           { path: 'table/:tableName', element: <Table /> },
+          { path: 'table/:tableName/edit', element: <TableEditor /> },
           { path: 'query', element: <Query /> },
+          { path: 'tables/new', element: <TableEditor /> },
         ],
       },
     ],

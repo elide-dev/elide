@@ -42,6 +42,14 @@ export default function Database() {
     setTruncateDialogOpen(true)
   }
 
+  const handleCreateTable = () => {
+    navigate(`/database/${dbId}/tables/new`)
+  }
+
+  const handleEditTable = (tableName: string) => {
+    navigate(`/database/${dbId}/table/${encodeURIComponent(tableName)}/edit`)
+  }
+
   return (
     <SidebarProvider defaultOpen={true} className="h-screen">
       <ResizablePanelGroup direction="horizontal" className="h-full">
@@ -54,6 +62,8 @@ export default function Database() {
             onRefetch={refetch}
             onDropTable={openDropDialog}
             onTruncateTable={openTruncateDialog}
+            onCreateTable={handleCreateTable}
+            onEditTable={handleEditTable}
           />
         </ResizablePanel>
 

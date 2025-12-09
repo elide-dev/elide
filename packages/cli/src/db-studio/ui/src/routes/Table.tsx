@@ -23,7 +23,7 @@ export default function TableView() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   // Parse URL params once (source of truth)
-  const pagination = React.useMemo(() => parsePaginationParams(searchParams), [searchParams])
+  const pagination = React.useMemo(() => parsePaginationParams(searchParams, dbId), [searchParams, dbId])
   const sorting = React.useMemo(() => parseSortingParams(searchParams), [searchParams])
   const appliedFilters = React.useMemo(() => parseFilterParams(searchParams), [searchParams])
 

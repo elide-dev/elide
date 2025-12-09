@@ -2,14 +2,14 @@ import { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQueryExecution } from '../hooks/useQueryExecution'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
-import { useLocalStorage } from '../hooks/useLocalStorage'
+import { useDbLocalStorage } from '../hooks/useLocalStorage'
 import { QueryEditor } from '../components/QueryEditor'
 import { QueryResults } from '../components/QueryResults'
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
 
 export default function Query() {
   const { dbId } = useParams()
-  const [sql, setSql] = useLocalStorage('db-studio:query-editor-sql', '')
+  const [sql, setSql] = useDbLocalStorage(dbId, 'query-editor-sql', '')
   const hasSetDefault = useRef(false)
 
   const { data: tables = [] } = useDatabaseTables(dbId)

@@ -3,6 +3,11 @@
  */
 
 /**
+ * Version information (injected from package.json at build time)
+ */
+export const VERSION = __APP_VERSION__
+
+/**
  * Default pagination values
  */
 export const DEFAULT_LIMIT = 100

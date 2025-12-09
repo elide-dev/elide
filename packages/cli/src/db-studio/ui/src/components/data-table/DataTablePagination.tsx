@@ -6,9 +6,11 @@ import { Input } from '@/components/ui/input'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 import { useDataTable } from '@/contexts/DataTableContext'
 import { MIN_LIMIT, MAX_LIMIT, MIN_OFFSET } from '@/lib/constants'
+import { useLocalStorage } from '@/hooks/useLocalStorage'
 
 export const DataTablePagination = React.memo(function DataTablePagination() {
   const { pagination, onPaginationChange } = useDataTable()
+  const [, saveLimitPreference] = useLocalStorage('db-studio:pagination-limit', pagination.limit)
 
   // Pagination is always enabled now (no editMode in context anymore)
   const isDisabled = false
@@ -55,6 +57,7 @@ export const DataTablePagination = React.memo(function DataTablePagination() {
             onBlur={(e) => {
               const newLimit = Math.max(MIN_LIMIT, Math.min(MAX_LIMIT, parseInt(e.target.value) || MIN_LIMIT))
               setLimitInput(String(newLimit))
+              saveLimitPreference(newLimit)
               onPaginationChange({ limit: newLimit, offset: pagination.offset })
             }}
             onKeyDown={(e) => {

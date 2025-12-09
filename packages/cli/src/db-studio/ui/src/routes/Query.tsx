@@ -1,26 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQueryExecution } from '../hooks/useQueryExecution'
 import { useDatabaseTables } from '../hooks/useDatabaseTables'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { QueryEditor } from '../components/QueryEditor'
 import { QueryResults } from '../components/QueryResults'
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
 
 export default function Query() {
   const { dbId } = useParams()
-  const [sql, setSql] = useState('')
+  const [sql, setSql] = useLocalStorage('db-studio:query-editor-sql', '')
+  const hasSetDefault = useRef(false)
 
   const { data: tables = [] } = useDatabaseTables(dbId)
   const { mutate: executeQuery, data: result, isPending: loading, error } = useQueryExecution(dbId)
 
+  // Set default query only if localStorage was empty and we haven't set it yet
   useEffect(() => {
-    if (tables.length > 0) {
+    if (!hasSetDefault.current && !sql && tables.length > 0) {
       const firstTable = tables.find((t) => t.type === 'table')
       if (firstTable) {
-        setSql(`SELECT * FROM "${firstTable.name}";`)
+        setSql(`SELECT * FROM "${firstTable.name}" LIMIT 50;`)
+        hasSetDefault.current = true
       }
     }
-  }, [tables])
+  }, [tables, sql, setSql])
 
   const handleExecute = () => executeQuery({ sql: sql.trim() })
 

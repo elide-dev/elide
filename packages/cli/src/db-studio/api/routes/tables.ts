@@ -2,7 +2,7 @@ import { jsonResponse, handleSQLError, errorResponse, extractErrorMessage } from
 import { withDatabase } from "../http/middleware.ts";
 import { requireTableName } from "../utils/validation.ts";
 import { parseRequestBody, parseQueryParams } from "../utils/request.ts";
-import { getTables, getTableData, getColumnMetadata } from "../database.ts";
+import { getTables, getTableData, getColumnMetadata, logQuery } from "../database.ts";
 import type { Filter } from "../http/schemas.ts";
 import { CreateTableRequestSchema, FiltersArraySchema, AlterTableRequestSchema } from "../http/schemas.ts";
 
@@ -152,6 +152,7 @@ export const createTableRoute = withDatabase(async (context) => {
   const startTime = performance.now();
 
   try {
+    logQuery(sql);
     db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${tableName}' created successfully` });
   } catch (err) {
@@ -171,6 +172,7 @@ export const dropTableRoute = withDatabase(async (context) => {
   const startTime = performance.now();
 
   try {
+    logQuery(sql);
     db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${params.tableName}' dropped successfully` });
   } catch (err) {
@@ -190,6 +192,7 @@ export const truncateTableRoute = withDatabase(async (context) => {
   const startTime = performance.now();
 
   try {
+    logQuery(sql);
     db.exec(sql);
     return jsonResponse({ success: true, message: `Table '${params.tableName}' truncated successfully` });
   } catch (err) {
@@ -297,6 +300,7 @@ export const alterTableRoute = withDatabase(async (context) => {
             throw new Error(`Unknown operation type: ${(op as any).type}`);
         }
 
+        logQuery(sql);
         db.exec(sql);
         executedStatements.push(sql);
       }

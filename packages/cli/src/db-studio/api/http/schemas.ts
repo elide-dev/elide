@@ -166,7 +166,22 @@ export const ExecuteQueryRequestSchema = z.object({
 export type ExecuteQueryRequest = z.infer<typeof ExecuteQueryRequestSchema>;
 
 /**
- * Create table column schema
+ * Column definition for table creation/editing
+ */
+export const ColumnDefinitionSchema = z.object({
+  name: z.string().min(1, "Column name cannot be empty"),
+  type: z.enum(['INTEGER', 'TEXT', 'REAL', 'BLOB', 'NUMERIC']),
+  nullable: z.boolean(),
+  primaryKey: z.boolean(),
+  autoIncrement: z.boolean().optional(),
+  unique: z.boolean(),
+  defaultValue: z.union([z.string(), z.number(), z.null()]),
+});
+
+export type ColumnDefinition = z.infer<typeof ColumnDefinitionSchema>;
+
+/**
+ * Create table column schema (legacy)
  */
 export const CreateTableColumnSchema = z.object({
   name: z.string().min(1, "Column name cannot be empty"),
@@ -175,14 +190,82 @@ export const CreateTableColumnSchema = z.object({
 });
 
 /**
- * Create table request schema
+ * Create table request schema (updated to support new editor)
  */
-export const CreateTableRequestSchema = z.object({
-  name: z.string().min(1, "Table name cannot be empty"),
-  schema: z.array(CreateTableColumnSchema).min(1, "Schema must contain at least one column"),
-});
+export const CreateTableRequestSchema = z.union([
+  // New format from table editor
+  z.object({
+    name: z.string().min(1, "Table name cannot be empty"),
+    columns: z.array(ColumnDefinitionSchema).min(1, "At least one column required"),
+  }).refine(
+    (data) => {
+      const pkCount = data.columns.filter(c => c.primaryKey).length;
+      return pkCount <= 1;
+    },
+    { message: "Maximum one primary key column allowed" }
+  ).refine(
+    (data) => {
+      const names = data.columns.map(c => c.name.toLowerCase());
+      return names.length === new Set(names).size;
+    },
+    { message: "Column names must be unique" }
+  ),
+  // Legacy format (for backwards compatibility)
+  z.object({
+    name: z.string().min(1, "Table name cannot be empty"),
+    schema: z.array(CreateTableColumnSchema).min(1, "Schema must contain at least one column"),
+  }),
+]);
 
 export type CreateTableRequest = z.infer<typeof CreateTableRequestSchema>;
+
+/**
+ * ALTER TABLE operations
+ */
+export const AddColumnOperationSchema = z.object({
+  type: z.literal('add_column'),
+  column: z.object({
+    name: z.string().min(1, "Column name cannot be empty"),
+    type: z.enum(['INTEGER', 'TEXT', 'REAL', 'BLOB', 'NUMERIC']),
+    nullable: z.boolean(),
+    defaultValue: z.union([z.string(), z.number(), z.null()]),
+  }),
+});
+
+export const DropColumnOperationSchema = z.object({
+  type: z.literal('drop_column'),
+  columnName: z.string().min(1),
+});
+
+export const RenameColumnOperationSchema = z.object({
+  type: z.literal('rename_column'),
+  oldName: z.string().min(1),
+  newName: z.string().min(1),
+});
+
+export const AlterTableOperationSchema = z.discriminatedUnion('type', [
+  AddColumnOperationSchema,
+  DropColumnOperationSchema,
+  RenameColumnOperationSchema,
+]);
+
+export type AlterTableOperation = z.infer<typeof AlterTableOperationSchema>;
+
+export const AlterTableRequestSchema = z.object({
+  operations: z.array(AlterTableOperationSchema).min(1, "At least one operation required"),
+});
+
+export type AlterTableRequest = z.infer<typeof AlterTableRequestSchema>;
+
+/**
+ * Table schema response
+ */
+export const TableSchemaResponseSchema = z.object({
+  tableName: z.string(),
+  columns: z.array(ColumnDefinitionSchema),
+});
+
+export type TableSchemaResponse = z.infer<typeof TableSchemaResponseSchema>;
 
 /**
  * Insert row request schema

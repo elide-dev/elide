@@ -10,6 +10,8 @@ import {
   Trash2,
   MoreHorizontal,
   Scissors,
+  Plus,
+  Edit,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -44,7 +46,7 @@ interface TableInfo {
   rowCount: number
 }
 
-interface DatabaseSidebarProps {
+type DatabaseSidebarProps = {
   dbId: string
   tableName?: string
   tables: TableInfo[]
@@ -52,6 +54,8 @@ interface DatabaseSidebarProps {
   onRefetch: () => void
   onDropTable: (name: string, type: 'table' | 'view') => void
   onTruncateTable: (name: string, type: 'table' | 'view') => void
+  onCreateTable: () => void
+  onEditTable: (name: string) => void
 }
 
 export function DatabaseSidebar({
@@ -62,6 +66,8 @@ export function DatabaseSidebar({
   onRefetch,
   onDropTable,
   onTruncateTable,
+  onCreateTable,
+  onEditTable,
 }: DatabaseSidebarProps) {
   const location = useLocation()
   const [query, setQuery] = useState('')
@@ -155,22 +161,34 @@ export function DatabaseSidebar({
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <HoverCard openDelay={200}>
-              <HoverCardTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={onRefetch}
-                  disabled={loading}
-                  className="h-[30px] w-[30px] shrink-0"
-                >
-                  <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
-                <span className="text-xs font-semibold">Refresh tables</span>
-              </HoverCardContent>
-            </HoverCard>
+            <div className="flex gap-1">
+              <HoverCard openDelay={200}>
+                <HoverCardTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={onRefetch}
+                    disabled={loading}
+                    className="h-[30px] w-[30px] shrink-0"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+                  </Button>
+                </HoverCardTrigger>
+                <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
+                  <span className="text-xs font-semibold">Refresh tables</span>
+                </HoverCardContent>
+              </HoverCard>
+              <HoverCard openDelay={200}>
+                <HoverCardTrigger asChild>
+                  <Button variant="outline" size="icon" onClick={onCreateTable} className="h-[30px] w-[30px] shrink-0">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </HoverCardTrigger>
+                <HoverCardContent side="bottom" className="w-auto px-3 py-1.5">
+                  <span className="text-xs font-semibold">Create new table</span>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
           </div>
           <SidebarGroupContent className="flex-1 min-h-0 overflow-auto px-2">
             <SidebarMenu>
@@ -205,6 +223,12 @@ export function DatabaseSidebar({
                           </DropdownMenuTrigger>
                           <DropdownMenuContent side="bottom" align="start">
                             {type === 'table' && (
+                              <DropdownMenuItem onClick={() => onEditTable(name)}>
+                                <Edit className="w-4 h-4" />
+                                <span>Alter Table</span>
+                              </DropdownMenuItem>
+                            )}
+                            {type === 'table' && (
                               <DropdownMenuItem
                                 className="text-destructive focus:text-destructive"
                                 onClick={() => onTruncateTable(name, type)}
@@ -237,7 +261,7 @@ export function DatabaseSidebar({
         <div className="flex items-center justify-between px-2 py-2">
           <div className="flex items-center gap-2">
             <img src="/elide-logo.svg" alt="Elide" className="w-6 h-6" />
-            <span className="text-sm font-medium text-muted-foreground">Database Studio</span>
+            <span className="text-sm font-medium text-foreground">Database Studio</span>
           </div>
           <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
             v{VERSION}

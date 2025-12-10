@@ -14,6 +14,7 @@ package elide.runtime.intrinsics.js.node
 
 import org.graalvm.polyglot.Value
 import elide.annotations.API
+import elide.runtime.intrinsics.js.node.crypto.RandomIntCallback
 import elide.vm.annotations.Polyglot
 
 /**
@@ -30,4 +31,56 @@ import elide.vm.annotations.Polyglot
    * @return A randomly generated 36 character UUID c4 string in lowercase format (e.g. "5cb34cef-5fc2-47e4-a3ac-4bb055fa2025")
    */
   @Polyglot public fun randomUUID(options: Value? = null): String
+
+  /**
+   * ## Crypto: `randomInt`
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   *
+   * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
+   *
+   * @param min Lower bound (inclusive)
+   * @param max Upper bound (exclusive)
+   * @param callback Callback to receive the generated safe integer or an error.
+   * @return Unit
+   */
+  @Polyglot public fun randomInt(min: Long, max: Long, callback: RandomIntCallback)
+
+  /**
+   * ## Crypto: randomInt
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   *
+   * See also: [Node Crypto API: `randomInt`](https://nodejs.org/api/crypto.html#cryptorandomintmin-max-callback)
+   *
+   * @param min Lower bound (inclusive)
+   * @param max Upper bound (exclusive)
+   * @return A randomly generated safe integer between `min` (inclusive) and `max` (exclusive).
+   */
+  @Polyglot public fun randomInt(min: Long, max: Long): Long
+
+  /**
+   * ## Crypto: randomInt
+   * Public overload of [randomInt].
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   * @param min Lower bound (inclusive)
+   * @param max Upper bound (exclusive)
+   * @param callback Callback to receive the generated safe integer or an error.
+   */
+  @Polyglot public fun randomInt(min: Value, max: Value, callback: Value)
+
+  /**
+   * ## Crypto: randomInt
+   * Public overload of [randomInt].
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   * @param min Lower bound (inclusive)
+   * @param max Upper bound (exclusive)
+   */
+  @Polyglot public fun randomInt(min: Value, max: Value): Long
+
+  /**
+   * ## Crypto: randomInt
+   * Public overload of [randomInt].
+   * Generates a cryptographically secure random integer between the specified `min` (inclusive) and `max` (exclusive) values.
+   * @param max Upper bound (exclusive)
+   */
+  @Polyglot public fun randomInt(max: Value): Long
 }

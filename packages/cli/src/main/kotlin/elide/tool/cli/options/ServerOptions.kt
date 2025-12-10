@@ -74,6 +74,14 @@ import elide.tooling.project.ElideProject
   )
   var transport: TransportOverride? = null
 
+  /** Enable SPA fallback mode for serving static sites. */
+  @Option(
+    names = ["--single"],
+    description = ["Enable SPA fallback mode - serves index.html for routes that don't match static files"],
+    defaultValue = "false",
+  )
+  var spaMode: Boolean = false
+
   fun effectiveServerOptions(project: ElideProject?): EffectiveServerOptions {
     return EffectiveServerOptions(
       host = host ?: project?.manifest?.dev?.server?.host ?: DEFAULT_SERVER_HOST,

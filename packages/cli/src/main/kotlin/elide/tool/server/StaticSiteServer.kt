@@ -87,6 +87,7 @@ object StaticSiteServer {
     val builtinRoutes: Boolean = true,
     val compression: Boolean = true,
     val prefix: String = site?.prefix ?: "/",
+    val spaMode: Boolean = false,
   )
 
   // Build workspace information for a project, or the current server, that can be consumed by Chrome.
@@ -159,6 +160,10 @@ object StaticSiteServer {
           // when passed a directory, route to that
           root.isDirectory() -> staticFiles(prefix, root.toFile()) {
             if (autoReload) configureStaticAutoReload()
+            if (spaMode) {
+              // serve index.html for routes that don't match static files (usually with single page applications with client side routing)
+              default("index.html")
+            }
           }
 
           // otherwise we can't use this path

@@ -153,21 +153,24 @@ import elide.vm.annotations.Polyglot
     value.isString -> {
       val bytes = value.asString().toByteArray(StandardCharsets.UTF_8)
 
-      headers.set("Content-Type", "text/plain")
+      // Only set Content-Type if not already specified by user
+      if (!headers.has("Content-Type")) headers.set("Content-Type", "text/plain")
       headers.set("Content-Length", bytes.size.toString())
 
       ReadableStream.wrap(bytes)
     }
     // buffer-like objects are wrapped as-is, the consumer can choose to use the bytes
     value.hasBufferElements() -> {
-      headers.set("Content-Type", "application/octet-stream")
+      // Only set Content-Type if not already specified by user
+      if (!headers.has("Content-Type")) headers.set("Content-Type", "application/octet-stream")
       headers.set("Content-Length", value.bufferSize.toString())
 
       ReadableStream.from(listOf(value))
     }
     // array buffer views can be unwrapped and sent as plain buffers
     ArrayBufferViews.getViewTypeOrNull(value) != null -> {
-      headers.set("Content-Type", "application/octet-stream")
+      // Only set Content-Type if not already specified by user
+      if (!headers.has("Content-Type")) headers.set("Content-Type", "application/octet-stream")
       headers.set("Content-Length", ArrayBufferViews.getLength(value).toString())
 
       ReadableStream.wrap(ArrayBufferViews.readViewedBytes(value))
@@ -176,7 +179,8 @@ import elide.vm.annotations.Polyglot
     else -> {
       val json = Json.encodeToString(GuestValueSerializer, value)
 
-      headers.set("Content-Type", "application/json")
+      // Only set Content-Type if not already specified by user
+      if (!headers.has("Content-Type")) headers.set("Content-Type", "application/json")
       headers.set("Content-Length", json.length.toString())
 
       ReadableStream.wrap(json.toByteArray(StandardCharsets.UTF_8))

@@ -1,0 +1,12 @@
+{
+  "name": "@elide/build-arena-shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared types and utilities for Build Arena",
+  "type": "module",
+  "main": "./types.ts",
+  "types": "./types.ts",
+  "exports": {
+    "./types": "./types.ts"
+  }
+}

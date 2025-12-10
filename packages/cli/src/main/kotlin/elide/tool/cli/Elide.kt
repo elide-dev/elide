@@ -43,6 +43,7 @@ import elide.runtime.gvm.internals.intrinsics.ElideIntrinsic
 import elide.tool.cli.cfg.ElideCLITool.ELIDE_TOOL_VERSION
 import elide.tool.cli.cmd.builder.ToolBuildCommand
 import elide.tool.cli.cmd.builder.ToolWhichCommand
+import elide.tool.cli.cmd.adopt.AdoptCommand
 import elide.tool.cli.cmd.classpath.ClasspathCommand
 import elide.tool.cli.cmd.deps.AddCommand
 import elide.tool.cli.cmd.deps.InstallCommand
@@ -117,6 +118,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     ClasspathCommand::class,
     ToolProjectCommand::class,
     InitCommand::class,
+    AdoptCommand::class,
     InstallCommand::class,
     AddCommand::class,
     ToolInfoCommand::class,

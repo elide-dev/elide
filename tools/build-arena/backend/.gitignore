@@ -1,0 +1,10 @@
+# Database files
+backend/build-arena.db
+backend/build-arena.db-shm
+backend/build-arena.db-wal
+*.db
+*.db-shm
+*.db-wal
+# WebSocket recordings (binary compressed files)
+recordings/
+*.json.gz

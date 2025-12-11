@@ -44,8 +44,8 @@ env:
 jobs:
   gradle:
     name: "Native (linux-amd64, nativeCompile)"
-    runs-on: ${{ inputs.runner }}
-
+#    runs-on: ${{ inputs.runner }}
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write

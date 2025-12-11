@@ -12,20 +12,26 @@
 
 name: Native Image (nativeCompile)
 
-"on":
+on:
+  push:
+    branches:
+      - feat/deb-native-compile
   workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner"
-        type: string
-        default: ubuntu-cipool
 
-  workflow_call:
-    inputs:
-      runner:
-        description: "Runner"
-        type: string
-        default: ubuntu-cipool
+#"on":
+#  workflow_dispatch:
+#    inputs:
+#      runner:
+#        description: "Runner"
+#        type: string
+#        default: ubuntu-cipool
+
+#  workflow_call:
+#    inputs:
+#      runner:
+#        description: "Runner"
+#        type: string
+#        default: ubuntu-cipool
 
 permissions:
   contents: read

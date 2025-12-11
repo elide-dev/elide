@@ -18,20 +18,21 @@ on:
       - feat/deb-native-compile
   workflow_dispatch:
 
-#"on":
-#  workflow_dispatch:
-#    inputs:
-#      runner:
-#        description: "Runner"
-#        type: string
-#        default: ubuntu-cipool
-
-#  workflow_call:
-#    inputs:
-#      runner:
-#        description: "Runner"
-#        type: string
-#        default: ubuntu-cipool
+# исходные варианты для реюзабельного воркфлоу — пригодятся позже
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       runner:
+#         description: "Runner"
+#         type: string
+#         default: ubuntu-cipool
+#
+#   workflow_call:
+#     inputs:
+#       runner:
+#         description: "Runner"
+#         type: string
+#         default: ubuntu-cipool
 
 permissions:
   contents: read
@@ -44,18 +45,18 @@ env:
 jobs:
   gradle:
     name: "Native (linux-amd64, nativeCompile)"
-#    runs-on: ${{ inputs.runner }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
+
     permissions:
       contents: write
       id-token: write
-      
+
     env:
       CI: true
       GRADLE_OPTS: "-Dorg.gradle.workers.max=2 -Dorg.gradle.daemon=false"
       ORG_GRADLE_PROJECT_orgGradleParallel: "false"
-      
+
     defaults:
       run:
         shell: bash
@@ -103,8 +104,6 @@ jobs:
       - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         id: gradlebuild
-        env:
-          CI: true
         with:
           cache-read-only: false
           dependency-graph: disabled
@@ -127,19 +126,15 @@ jobs:
         run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
 
       - name: "🛠️ Build: Native CLI (nativeCompile)"
-        env:
-          CI: true
         run: |
           ./gradlew \
             :packages:cli:nativeCompile \
             -x check \
             -x test \
             -x jvmTest \
-#           --scan \
-            --build-cache \
-#           --daemon \
             --no-daemon \
             --no-parallel \
+            --build-cache \
             --dependency-verification=off \
             --no-configuration-cache \
             --stacktrace \

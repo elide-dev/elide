@@ -46,10 +46,16 @@ jobs:
     name: "Native (linux-amd64, nativeCompile)"
 #    runs-on: ${{ inputs.runner }}
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     permissions:
       contents: write
       id-token: write
-
+      
+    env:
+      CI: true
+      GRADLE_OPTS: "-Dorg.gradle.workers.max=2 -Dorg.gradle.daemon=false"
+      ORG_GRADLE_PROJECT_orgGradleParallel=false
+      
     defaults:
       run:
         shell: bash
@@ -103,7 +109,8 @@ jobs:
           cache-read-only: false
           dependency-graph: disabled
           gradle-home-cache-cleanup: true
-          gradle-home-cache-includes: binaryen
+          gradle-home-cache-includes: |
+            binaryen
             caches
             jdks
             native
@@ -128,9 +135,11 @@ jobs:
             -x check \
             -x test \
             -x jvmTest \
-            --scan \
+#           --scan \
             --build-cache \
-            --daemon \
+#           --daemon \
+            --no-daemon \
+            --no-parallel \
             --dependency-verification=off \
             --no-configuration-cache \
             --stacktrace \

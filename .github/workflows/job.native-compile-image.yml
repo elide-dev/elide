@@ -54,7 +54,7 @@ jobs:
     env:
       CI: true
       GRADLE_OPTS: "-Dorg.gradle.workers.max=2 -Dorg.gradle.daemon=false"
-      ORG_GRADLE_PROJECT_orgGradleParallel=false
+      ORG_GRADLE_PROJECT_orgGradleParallel: "false"
       
     defaults:
       run:

@@ -1,0 +1,240 @@
+/// Describes the structure of Nomad configurations.
+@ModuleInfo { minPklVersion = "0.28.1" }
+module elide.deployment.nomad
+
+import "../Base.pkl" as _base
+
+/// Represents a region in which a datacenter or job can run.
+typealias NomadRegion = String
+
+/// Name for a group of tasks within a Nomad job.
+typealias GroupName = String
+
+/// Name of a port within a port definition or request.
+typealias PortName = String
+
+/// Represents a datacenter in which a job can run.
+typealias NomadDatacenter = String
+
+/// Name of a task within a task group.
+typealias TaskName = String
+
+/// Defines types of task health checks.
+typealias TaskCheckType = "http" | "tcp" | String
+
+/// Defines Nomad task execution drivers.
+typealias NomadDriver = "docker" | "exec" | "java" | "raw_exec" | String
+
+/// Cgroup namespace selections.
+typealias CGroupNamespace = "host" | "private"
+
+/// Container image coordinate.
+typealias ContainerImage = String
+
+/// Settings which apply to a job's update strategy.
+class JobUpdateStrategy {
+  /// Duration with which to stagger allocation updates.
+  stagger: Duration?
+
+  /// Max number of parallel updates.
+  maxParallel: Int?
+}
+
+/// Settings for networking which apply at various job scopes.
+open class NetworkSettings {}
+
+/// Specifies parameters for a port request within a task group.
+abstract class TaskGroupPortRequest {}
+
+/// Represents a named dynamic port request within a task group.
+class DynamicPortRequest extends TaskGroupPortRequest {}
+
+/// Represents a named static port request within a task group.
+class StaticPortRequest extends TaskGroupPortRequest {
+  /// Specifies the static port number requested for this task group.
+  static: _base.NonRootPortNumber
+}
+
+/// Defines the type of health check to perform for a task group's registered service.
+class TaskGroupCheck {
+  /// Type of health check to perform.
+  type: TaskCheckType
+
+  /// Optional HTTP path to use for this check.
+  path: String?
+
+  /// Check interval to apply.
+  interval: Duration?
+
+  /// Timeout for this check.
+  timeout: Duration?
+}
+
+/// Service registration settings for a task group.
+open class Service {
+  /// Tells Consul to monitor the assigned port; uses a port name as defined within the task group block.
+  port: PortName?
+}
+
+/// Settings which apply to the Consul Connect sidecar integration.
+class ConnectSidecar {}
+
+/// Settings which apply to Consul Connect.
+class ConnectSettings {
+  /// Consul Connect sidecar service settings.
+  sidecarService: ConnectSidecar
+}
+
+/// Service settings for a group of tasks.
+open class GroupService {
+  /// Required registration name for this service.
+  name: String
+
+  /// Consul Connect settings for this service group.
+  connect: ConnectSettings
+}
+
+/// Settings for networking which apply to task groups.
+typealias TaskGroupNetworking = Mapping<PortName, TaskGroupPortRequest>
+
+/// Specifies the resource constraints applied to a given Nomad task.
+class TaskResources {
+  /// CPU share to allocate to this task.
+  cpu: Int?
+
+  /// Memory, in megabytes, to allocate to this task.
+  memory: Int?
+}
+
+/// Nomad task configuration.
+typealias NomadTaskConfig = Mapping<String, Any>
+
+/// Specifies the particulars for an actual running process/task within a Nomad job's task group; this is where process
+/// execution is defined, along with resource constraints and other settings.
+open class NomadTask {
+  /// Nomad execution driver to use.
+  driver: NomadDriver
+
+  /// Driver-specific configuration for this task.
+  config: NomadTaskConfig = new {}
+
+  /// Environment variables to set for this task.
+  env: Mapping<String, String> = new {}
+
+  /// Resource limits to apply to this task.
+  resources: TaskResources = new {}
+}
+
+/// Abstract base class for task configurations.
+abstract class TaskConfig {}
+
+/// Settings which apply to a container task's health checks.
+class ContainerHealthchecksConfig {
+  /// Force-disable enforcement of HEALTHCHECK directives.
+  disable: Boolean?
+}
+
+/// Specifies task configuration for a container-based task.
+class ContainerTaskConfig extends TaskConfig {
+  /// Container image coordinates to use for this task.
+  image: ContainerImage
+
+  /// Timeout duration for pulling the container image.
+  imagePullTimeout: Duration?
+
+  /// Ports to expose from this container.
+  ports: Listing<PortName> = new {}
+
+  /// Arguments to set for this container.
+  args: Listing<String> = new {}
+
+  /// Command string to execute.
+  command: String?
+
+  /// Cgroup namespace to use; set to `host` or `private`.
+  cgroupns: CGroupNamespace?
+
+  /// Number of attempts to be made to purge a container.
+  containerExistsAttempts: Int?
+
+  /// A list of DNS search domains for the container to use.
+  dnsSearchDomains: Listing<_base.DomainName>?
+
+  /// A suite of DNS options for the container to use; if you are using bridge networking mode with a `network` block in
+  /// the task group, you must set all DNS options in the `network.dns` block instead.
+  dnsOptions: Mapping<String, String>?
+
+  /// A list of DNS servers for the container to use; requires Docker v1.10 or greater. If you are using bridge
+  /// networking mode with a `network` block in the task group, you must set all DNS options within the `network.dns`
+  /// block instead.
+  dnsServers: Listing<String>?
+
+  /// Entrypoint to set for this container.
+  entrypoint: String?
+
+  /// A list of hosts, given as `host:IP`, to be added to `/etc/hosts`. This option may not work as expected in `bridge`
+  /// network mode when there is more than one task within the same group.
+  extraHosts: Listing<String>?
+
+  /// Always pull the most recent image instead of using existing local image. Should be set to `true` if repository
+  /// tags are mutable; if image's tag is `latest` or omitted, the image will always be pulled regardless of this
+  /// setting.
+  forcePull: Boolean?
+
+  /// A list of supplementary groups to be applied to the container user.
+  groupAdd: List<String>?
+
+  /// Health check configuration for this container task.
+  healthchecks: ContainerHealthchecksConfig
+
+  /// The hostname to assign to the container. When launching more than one of a task (using `count`) with this option
+  /// set, every container the task starts will have the same hostname.
+  hostname: String?
+}
+
+/// Defines a Nomad task implemented via a Docker or OCI container.
+class ContainerTask extends NomadTask {
+  /// Default driver as Docker.
+  driver = "docker"
+
+  /// Container-specific task configuration.
+  config: ContainerTaskConfig = new {}
+}
+
+/// Defines the constituent tasks for a given task group within a Nomad job.
+typealias NomadTasks = Mapping<TaskName, NomadTask>
+
+/// Represents a group of tasks within a Nomad job; task groups define related co-located tasks which are scheduled on
+/// the same host machine.
+class NomadTaskGroup {
+  /// Count of task instances to run.
+  count: Int?
+
+  /// Network configuration for this group.
+  network: TaskGroupNetworking = new {}
+
+  /// The service block tells Nomad how to register this service with Consul for service discovery and monitoring.
+  service: Service = new {}
+
+  /// Defines tasks which are constituent to this task group.
+  tasks: NomadTasks = new {}
+}
+
+/// Represents a Nomad job configuration; jobs are the core unit of execution within a Nomad cluster.
+open class NomadJob {
+  /// Region where this job should run based on region pinning.
+  region: NomadRegion?
+
+  /// Group-level service block, for integration with Consul Connect.
+  service: GroupService?
+
+  /// Datacenters which this job is assigned to run in.
+  datacenters: Listing<NomadDatacenter> = new {}
+
+  /// Update strategy settings for this job.
+  update: JobUpdateStrategy?
+
+  /// A group defines a series of tasks that should be co-located on the same client (host). All tasks within a group
+  /// will be placed on the same host; this is similar to Kubernetes' concept of "pods."
+  groups: Mapping<GroupName, NomadTaskGroup> = new {}
+}

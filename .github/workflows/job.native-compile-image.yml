@@ -162,6 +162,7 @@ env:
   RUST_BACKTRACE: full
   SCCACHE_DIRECT: "true"
   RUSTC_WRAPPER: "sccache"
+  RUSTFLAGS: "-A unnecessary-transmutes"
   BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
 
 permissions:

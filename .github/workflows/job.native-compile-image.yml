@@ -336,7 +336,7 @@ jobs:
           TEST_EXCEPTIONS: true
         run: |
           ./gradlew \
-            :packages:cli:nativeCompile \
+            :packages:cli:nativeOptimizedCompile \
             -x check \
             -x test \
             -x jvmTest \

@@ -336,13 +336,14 @@ jobs:
           TEST_EXCEPTIONS: true
         run: |
           ./gradlew \
-            :packages:cli:nativeOptimizedCompile \
+            :packages:cli:nativeCompile \
             -x check \
             -x test \
             -x jvmTest \
             --scan \
             --build-cache \
-            --daemon \
+            --no-daemon \
+            --max-workers=2 \
             --dependency-verification=off \
             --no-configuration-cache \
             --stacktrace \

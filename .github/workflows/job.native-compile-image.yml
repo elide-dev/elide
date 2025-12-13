@@ -7,7 +7,7 @@
 #
 # Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
 # an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and l imitations under the License.
+# License for the specific language governing permissions and limitations under the License.
 #
 
 name: Native Image (nativeCompile)
@@ -281,7 +281,8 @@ jobs:
           echo PATH=$PATH >> $GITHUB_ENV
           echo "Installing dependencies..."
           pnpm install
-       - name: "Setup: Gradle"
+ 
+      - name: "Setup: Gradle"
         uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         id: gradlebuild
         continue-on-error: ${{ matrix.mode == 'labs' }}

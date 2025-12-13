@@ -1811,12 +1811,6 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
   "-Delide.vm.engine.preinitialize=true",
 ) else listOf(
   "-Delide.vm.engine.preinitialize=false",
-#)).plus(if (project.properties["elide.ci"] == "true") listOf(
-#  "-J-Xmx${nativeBuildRam("64g")}",
-#  "--parallelism=${nativeBuildCpus(Runtime.getRuntime().availableProcessors())}",
-#) else listOf(
-#  "-J-Xmx64g",
-#  "--parallelism=12",
 )).plus(if (project.properties["elide.ci"] == "true") listOf(
   "-J-Xmx32g",
   "--parallelism=8",

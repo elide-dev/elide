@@ -192,9 +192,12 @@ internal class ConsoleIntrinsic : JavaScriptConsole, AbstractJsIntrinsic() {
    * @param level Log level to emit this log message at.
    * @param args Set of arguments to format and include with the log message.
    */
-  private fun handleLog(level: LogLevel, args: Array<out Any?>) {
+  private fun handleLog(level: LogLevel, args: Array<out Any?>?) {
     if (disableStreams) return
-    val serializedArgs = args.toList().filterNotNull()
+    val serializedArgs = when {
+    args == null -> listOf("null")
+    else -> args.toList().filterNotNull()
+    }
     interceptor.value?.log(level, serializedArgs)
     logging.log(level, serializedArgs.map(this::formatLogComponent))
   }

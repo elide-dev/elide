@@ -2704,14 +2704,16 @@ public final class elide/tooling/runner/ProcessRunner {
 }
 
 public final class elide/tooling/runner/ProcessRunner$ProcessOptions : java/lang/Record {
-	public fun <init> (Lelide/tooling/runner/ProcessRunner$ProcessShell;)V
+	public fun <init> (Lelide/tooling/runner/ProcessRunner$ProcessShell;Ljava/nio/file/Path;)V
 	public final fun component1 ()Lelide/tooling/runner/ProcessRunner$ProcessShell;
-	public final fun copy (Lelide/tooling/runner/ProcessRunner$ProcessShell;)Lelide/tooling/runner/ProcessRunner$ProcessOptions;
-	public static synthetic fun copy$default (Lelide/tooling/runner/ProcessRunner$ProcessOptions;Lelide/tooling/runner/ProcessRunner$ProcessShell;ILjava/lang/Object;)Lelide/tooling/runner/ProcessRunner$ProcessOptions;
+	public final fun component2 ()Ljava/nio/file/Path;
+	public final fun copy (Lelide/tooling/runner/ProcessRunner$ProcessShell;Ljava/nio/file/Path;)Lelide/tooling/runner/ProcessRunner$ProcessOptions;
+	public static synthetic fun copy$default (Lelide/tooling/runner/ProcessRunner$ProcessOptions;Lelide/tooling/runner/ProcessRunner$ProcessShell;Ljava/nio/file/Path;ILjava/lang/Object;)Lelide/tooling/runner/ProcessRunner$ProcessOptions;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public final fun shell ()Lelide/tooling/runner/ProcessRunner$ProcessShell;
 	public fun toString ()Ljava/lang/String;
+	public final fun workingDirectory ()Ljava/nio/file/Path;
 }
 
 public abstract interface class elide/tooling/runner/ProcessRunner$ProcessShell {

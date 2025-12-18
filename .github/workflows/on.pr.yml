@@ -63,6 +63,7 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
             github.com:443
+            release-assets.githubusercontent.com:443
       - name: "Setup: Checkout"
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
         with:

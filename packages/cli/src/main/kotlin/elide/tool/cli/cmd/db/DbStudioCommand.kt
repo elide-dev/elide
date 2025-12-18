@@ -243,12 +243,8 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
   )
   internal var port: Int = 4983
 
-  @Option(
-    names = ["--api-port"],
-    description = ["Port to run the API server on"],
-    defaultValue = "4984",
-  )
-  internal var apiPort: Int = 4984
+  // API server always runs on port 4984
+  private val apiPort = 4984
 
   internal var host: String = "localhost"
 
@@ -394,7 +390,7 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
         // Start UI server task
         val uiTask = async {
           runTask(stringToTask(
-            "elide serve $STUDIO_OUTPUT_DIR/ui",
+            "elide serve $STUDIO_OUTPUT_DIR/ui --port $port",
             shell = elide.tooling.runner.ProcessRunner.ProcessShell.None
           ))
         }

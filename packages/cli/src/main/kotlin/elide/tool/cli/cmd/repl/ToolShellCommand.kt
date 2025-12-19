@@ -1647,6 +1647,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         root = effectiveTarget,
         host = server.hostPair(),
         devMode = true,
+        spaMode = serverSettings.spaMode,
       ),
     ) {
       buildStaticServer().start(wait = true)
@@ -1665,6 +1666,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       project = activeProject.value,
       host = server.hostPair(),
       devMode = devMode,
+      spaMode = serverSettings.spaMode,
     ),
   ) {
     @Suppress("HttpUrlsUsage")

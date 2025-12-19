@@ -87,6 +87,7 @@ jobs:
             github.com:22
             gradle.elide.dev:443
             github.com:443
+            gradle.elide.dev:443
             gradle.less.build:443
             gradle.pkg.st:443
             ha.pool.sks-keyservers.net:11371

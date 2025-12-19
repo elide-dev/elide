@@ -53,6 +53,7 @@ import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.init.InitCommand
+import elide.tool.cli.cmd.manifest.ManifestCommand
 import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
 import elide.tool.cli.cmd.tool.ToolInvokeCommand
@@ -112,9 +113,10 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
   synopsisHeading = "",
   subcommands = [
     ToolShellCommand::class,
-    ToolBuildCommand::class,
     DevCommand::class,
+    ToolBuildCommand::class,
     ClasspathCommand::class,
+    ManifestCommand::class,
     ToolProjectCommand::class,
     InitCommand::class,
     InstallCommand::class,

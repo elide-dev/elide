@@ -1,0 +1,33 @@
+{
+  "name": "@elide/build-arena",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Interactive AI-driven build comparison platform for Elide",
+  "scripts": {
+    "dev": "pnpm --parallel --stream run dev",
+    "dev:frontend": "pnpm --filter @elide/build-arena-frontend dev",
+    "dev:backend": "pnpm --filter @elide/build-arena-backend dev",
+    "build": "pnpm --recursive run build",
+    "build:frontend": "pnpm --filter @elide/build-arena-frontend build",
+    "build:backend": "pnpm --filter @elide/build-arena-backend build",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@playwright/test": "^1.48.2",
+    "@types/node": "^20.11.5",
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.3.3",
+    "ws": "^8.16.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.1"
+}

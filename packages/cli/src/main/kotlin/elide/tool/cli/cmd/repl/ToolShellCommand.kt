@@ -2702,7 +2702,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   private fun langsActiveForProject(project: ElideProject): Set<GuestLanguage> = buildSet {
     fun hasAnySourcesOf(vararg ext: String): Boolean {
       return project.manifest.sources.values.flatMap { sourceSet ->
-        sourceSet.spec
+        sourceSet.paths
       }.any { sourcePath ->
         ext.any { candidateExtension ->
           // not yet implemented: glob resolution here @TODO

@@ -76,7 +76,7 @@ public fun interface SourceSetFactory {
     }
 
     override suspend fun load(root: Path, key: String, sourceSetSpec: ElidePackageManifest.SourceSet): SourceSet {
-      val sourceFilePaths: Sequence<SourceFilePath> = sourceSetSpec.spec.mapNotNull { spec ->
+      val sourceFilePaths: Sequence<SourceFilePath> = sourceSetSpec.paths.mapNotNull { spec ->
         Path.of(spec).let { path ->
           when {
             // if there are asterisks, or it doesn't exist as a file, resolve this path as a glob.
@@ -139,7 +139,7 @@ public fun interface SourceSetFactory {
       return object : SourceSet {
         override val name: SourceSetName = key
         override val languages: Set<SourceSetLanguage> = taggedPaths.mapNotNull { it.lang }.toSet()
-        override val spec: List<String> = sourceSetSpec.spec
+        override val spec: List<String> = sourceSetSpec.paths
         override val paths: SourceTaggedPathSuite = taggedPaths
         override val type: SourceSetType = when (key) {
           "test" -> SourceSetType.Tests

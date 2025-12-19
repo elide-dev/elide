@@ -4499,6 +4499,32 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tool.cli.cmd.manifest.$ManifestCommand$Definition",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.manifest.$ManifestCommand$Introspection",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "type": "elide.tool.cli.cmd.manifest.ManifestCommand",
+      "fields": [
+        {
+          "name": "projectManager"
+        }
+      ]
+    },
+    {
       "type": "elide.tool.cli.cmd.pkl.$ToolPklCommand$Introspection",
       "methods": [
         {
@@ -6034,7 +6060,20 @@
       ]
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$SourceSet"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$SourceSet",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "elide.tooling.project.manifest.ElidePackageManifest$SourceSet$SourceSetType",
+            "boolean",
+            "java.util.List"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$SourceSet$SourceSetType"
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$StaticSite",

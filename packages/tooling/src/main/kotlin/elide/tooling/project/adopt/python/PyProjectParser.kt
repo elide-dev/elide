@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt.python
 
 import com.akuleshov7.ktoml.Toml
 import com.akuleshov7.ktoml.TomlIndentation
@@ -32,35 +32,8 @@ import kotlin.io.path.readText
  * - [project.scripts]
  * - [build-system]
  * - requires-python version constraints
- *
- * Example pyproject.toml:
- * ```toml
- * [project]
- * name = "my-app"
- * version = "1.0.0"
- * description = "My Python application"
- * requires-python = ">=3.11"
- *
- * dependencies = [
- *     "fastapi>=0.104.0",
- *     "uvicorn[standard]>=0.24.0",
- * ]
- *
- * [project.optional-dependencies]
- * dev = [
- *     "pytest>=7.4.0",
- *     "black>=23.11.0",
- * ]
- *
- * [project.scripts]
- * my-app = "my_app.main:run"
- *
- * [build-system]
- * requires = ["setuptools>=61.0"]
- * build-backend = "setuptools.build_meta"
- * ```
  */
-internal object PyProjectParser {
+public object PyProjectParser {
   /**
    * Parse a pyproject.toml file into a PythonDescriptor.
    *
@@ -68,7 +41,7 @@ internal object PyProjectParser {
    * @return Parsed PythonDescriptor
    * @throws IllegalArgumentException if the file is invalid or missing required fields
    */
-  fun parse(path: Path): PythonDescriptor {
+  public fun parse(path: Path): PythonDescriptor {
     val content = path.readText()
     val toml = Toml(
       inputConfig = TomlInputConfig(
@@ -110,7 +83,7 @@ internal object PyProjectParser {
    * @param path Path to check
    * @return true if the file exists and contains a [project] section
    */
-  fun isValidPyProjectToml(path: Path): Boolean {
+  public fun isValidPyProjectToml(path: Path): Boolean {
     return try {
       val content = path.readText()
       content.contains("[project]") && content.contains("name")
@@ -127,7 +100,7 @@ internal object PyProjectParser {
    * @param descriptor PythonDescriptor with optional dependencies
    * @return Updated descriptor with dev dependencies extracted
    */
-  fun extractDevDependencies(descriptor: PythonDescriptor): PythonDescriptor {
+  public fun extractDevDependencies(descriptor: PythonDescriptor): PythonDescriptor {
     val devKeys = setOf("dev", "test", "testing", "development", "dev-dependencies")
     val devDeps = mutableListOf<String>()
     val remainingOptional = descriptor.optionalDependencies.toMutableMap()

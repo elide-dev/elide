@@ -11,11 +11,10 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt.maven
 
 import org.w3c.dom.Document
 import org.w3c.dom.Element
-import org.w3c.dom.NodeList
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -30,90 +29,18 @@ import kotlin.io.path.inputStream
 import kotlin.io.path.writeText
 
 /**
- * Represents a parent POM reference.
- */
-data class ParentPom(
-  val groupId: String,
-  val artifactId: String,
-  val version: String,
-  val relativePath: String? = null
-)
-
-/**
- * Represents a Maven repository.
- */
-data class Repository(
-  val id: String,
-  val url: String,
-  val name: String? = null
-)
-
-/**
- * Represents a Maven profile.
- */
-data class Profile(
-  val id: String,
-  val properties: Map<String, String> = emptyMap(),
-  val dependencies: List<Dependency> = emptyList(),
-  val dependencyManagement: Map<String, String> = emptyMap(),
-  val repositories: List<Repository> = emptyList()
-)
-
-/**
- * Represents a Maven build plugin.
- */
-data class Plugin(
-  val groupId: String,
-  val artifactId: String,
-  val version: String? = null
-)
-
-/**
- * Represents a dependency in Maven POM.
- */
-data class Dependency(
-  val groupId: String,
-  val artifactId: String,
-  val version: String?,
-  val scope: String = "compile",
-  val type: String = "jar",
-  val classifier: String? = null,
-  val optional: Boolean = false
-)
-
-/**
- * Get Maven coordinate string for a dependency.
- */
-fun Dependency.coordinate(): String = buildString {
-  append("$groupId:$artifactId")
-  if (version != null) append(":$version")
-}
-
-/**
- * Represents a Maven POM file.
- */
-data class PomDescriptor(
-  val groupId: String,
-  val artifactId: String,
-  val version: String,
-  val name: String?,
-  val description: String?,
-  val packaging: String = "jar",
-  val dependencies: List<Dependency> = emptyList(),
-  val dependencyManagement: Map<String, String> = emptyMap(),
-  val modules: List<String> = emptyList(),
-  val properties: Map<String, String> = emptyMap(),
-  val parent: ParentPom? = null,
-  val repositories: List<Repository> = emptyList(),
-  val profiles: List<Profile> = emptyList(),
-  val plugins: List<Plugin> = emptyList(),
-  val path: Path
-)
-
-/**
  * Parser for Maven POM files.
+ *
+ * Provides comprehensive parsing of Maven POM files including:
+ * - Basic project metadata (groupId, artifactId, version, description)
+ * - Dependencies with scope and version resolution
+ * - Dependency management (including BOM imports)
+ * - Parent POM resolution (local filesystem, .m2 repository, Maven Central)
+ * - Maven profiles
+ * - Custom repositories
+ * - Property interpolation
  */
-object PomParser {
+public object MavenParser {
   private const val MAVEN_NS = "http://maven.apache.org/POM/4.0.0"
   private const val MAVEN_CENTRAL_URL = "https://repo.maven.apache.org/maven2"
 
@@ -129,7 +56,7 @@ object PomParser {
   /**
    * Parse a Maven POM file from the given path.
    */
-  fun parse(pomPath: Path): PomDescriptor {
+  public fun parse(pomPath: Path): PomDescriptor {
     require(pomPath.exists()) { "POM file not found: $pomPath" }
 
     val doc = DocumentBuilderFactory.newInstance().apply {
@@ -207,7 +134,7 @@ object PomParser {
   /**
    * Parse repositories section from POM.
    */
-  private fun parseRepositories(root: Element): List<Repository> {
+  private fun parseRepositories(root: Element): List<MavenRepository> {
     val repositoriesElement = findElement(root, "repositories") ?: return emptyList()
     val repositoryList = repositoriesElement.getElementsByTagName("repository")
 
@@ -217,14 +144,14 @@ object PomParser {
       val url = findText(repo, "url") ?: return@mapNotNull null
       val name = findText(repo, "name")
 
-      Repository(id = id, url = url, name = name)
+      MavenRepository(id = id, url = url, name = name)
     }
   }
 
   /**
    * Parse profiles from POM.
    */
-  private fun parseProfiles(root: Element, pomPath: Path? = null): List<Profile> {
+  private fun parseProfiles(root: Element, pomPath: Path? = null): List<MavenProfile> {
     val profilesElement = findElement(root, "profiles") ?: return emptyList()
     val profileList = profilesElement.getElementsByTagName("profile")
 
@@ -244,7 +171,7 @@ object PomParser {
       // Parse profile repositories
       val profileRepos = parseRepositories(profileElement)
 
-      Profile(
+      MavenProfile(
         id = profileId,
         properties = profileProps,
         dependencies = profileDeps,
@@ -257,7 +184,7 @@ object PomParser {
   /**
    * Parse build plugins from POM.
    */
-  private fun parsePlugins(root: Element): List<Plugin> {
+  private fun parsePlugins(root: Element): List<MavenPlugin> {
     val buildElement = findElement(root, "build") ?: return emptyList()
     val pluginsElement = findElement(buildElement, "plugins") ?: return emptyList()
     val pluginList = pluginsElement.getElementsByTagName("plugin")
@@ -268,7 +195,7 @@ object PomParser {
       val artifactId = findText(pluginElement, "artifactId") ?: return@mapNotNull null
       val version = findText(pluginElement, "version")
 
-      Plugin(
+      MavenPlugin(
         groupId = groupId,
         artifactId = artifactId,
         version = version
@@ -276,7 +203,11 @@ object PomParser {
     }
   }
 
-  private fun parseDependencyManagement(root: Element, pomPath: Path? = null, properties: Map<String, String> = emptyMap()): Map<String, String> {
+  private fun parseDependencyManagement(
+    root: Element,
+    pomPath: Path? = null,
+    properties: Map<String, String> = emptyMap()
+  ): Map<String, String> {
     val depMgmt = mutableMapOf<String, String>()
 
     val depMgmtElement = findElement(root, "dependencyManagement") ?: return depMgmt
@@ -425,8 +356,8 @@ object PomParser {
     }
   }
 
-  private fun parseDependencies(root: Element, depMgmt: Map<String, String>): List<Dependency> {
-    val dependencies = mutableListOf<Dependency>()
+  private fun parseDependencies(root: Element, depMgmt: Map<String, String>): List<MavenDependency> {
+    val dependencies = mutableListOf<MavenDependency>()
 
     // Find direct dependencies element under project root
     val depsElement = root.childNodes.let { nodes ->
@@ -452,7 +383,7 @@ object PomParser {
 
       if (version != null) {
         dependencies.add(
-          Dependency(
+          MavenDependency(
             groupId = groupId,
             artifactId = artifactId,
             version = version,
@@ -678,7 +609,7 @@ object PomParser {
    * @param profileIds List of profile IDs to activate
    * @return A new PomDescriptor with activated profile data merged in
    */
-  fun activateProfiles(pom: PomDescriptor, profileIds: List<String>): PomDescriptor {
+  public fun activateProfiles(pom: PomDescriptor, profileIds: List<String>): PomDescriptor {
     if (profileIds.isEmpty()) return pom
 
     // Find activated profiles

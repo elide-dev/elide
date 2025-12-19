@@ -18,7 +18,6 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
-import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
@@ -27,6 +26,9 @@ import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
+import elide.tooling.project.adopt.PklGenerator
+import elide.tooling.project.adopt.maven.MavenParser
+import elide.tooling.project.adopt.maven.PomDescriptor
 
 /**
  * Adopt Maven pom.xml to elide.pkl.
@@ -113,7 +115,7 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
 
     // Parse POM
     val basePom = try {
-      PomParser.parse(pomPath)
+      MavenParser.parse(pomPath)
     } catch (e: Exception) {
       return err("@|bold,red ✗ Failed to parse POM file|@\n  ${e.message}\n\n" +
         "Tip: Ensure the POM file is valid XML and follows Maven POM schema.")
@@ -125,7 +127,7 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
         append("@|bold,yellow ⚙ Activating Maven profiles...|@")
         append("  Profiles: ${activateProfiles.joinToString(", ")}")
       }
-      PomParser.activateProfiles(basePom, activateProfiles)
+      MavenParser.activateProfiles(basePom, activateProfiles)
     } else {
       basePom
     }
@@ -241,7 +243,7 @@ internal class MavenAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
       }
 
       try {
-        val modulePom = PomParser.parse(modulePomPath)
+        val modulePom = MavenParser.parse(modulePomPath)
         modulePoms.add(modulePom)
         output {
           append("  @|green ✓|@ [@|bold ${index + 1}/${parentPom.modules.size}|@] ${modulePom.artifactId}")

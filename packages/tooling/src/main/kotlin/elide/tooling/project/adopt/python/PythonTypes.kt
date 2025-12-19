@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt.python
 
 import java.nio.file.Path
 
@@ -52,7 +52,7 @@ public data class PythonDescriptor(
   /**
    * Type of Python configuration source.
    */
-  enum class SourceType {
+  public enum class SourceType {
     PYPROJECT_TOML,
     REQUIREMENTS_TXT,
     PIPFILE,
@@ -62,42 +62,42 @@ public data class PythonDescriptor(
   /**
    * Get all dependencies (production + dev).
    */
-  fun allDependencies(): List<String> {
+  public fun allDependencies(): List<String> {
     return dependencies + devDependencies
   }
 
   /**
    * Get all optional dependencies flattened.
    */
-  fun allOptionalDependencies(): List<String> {
+  public fun allOptionalDependencies(): List<String> {
     return optionalDependencies.values.flatten()
   }
 
   /**
    * Check if this project has development dependencies.
    */
-  fun hasDevDependencies(): Boolean {
+  public fun hasDevDependencies(): Boolean {
     return devDependencies.isNotEmpty()
   }
 
   /**
    * Check if this project has optional dependencies.
    */
-  fun hasOptionalDependencies(): Boolean {
+  public fun hasOptionalDependencies(): Boolean {
     return optionalDependencies.isNotEmpty()
   }
 
   /**
    * Check if this project has entry points/scripts.
    */
-  fun hasScripts(): Boolean {
+  public fun hasScripts(): Boolean {
     return scripts.isNotEmpty()
   }
 
   /**
    * Get the display name for the source type.
    */
-  fun sourceDisplayName(): String = when (sourceType) {
+  public fun sourceDisplayName(): String = when (sourceType) {
     SourceType.PYPROJECT_TOML -> "pyproject.toml"
     SourceType.REQUIREMENTS_TXT -> "requirements.txt"
     SourceType.PIPFILE -> "Pipfile"
@@ -116,11 +116,11 @@ public data class PythonDescriptor(
  *
  * @property raw Raw dependency string
  */
-internal data class PythonDependency(val raw: String) {
+public data class PythonDependency(val raw: String) {
   /**
    * Package name (without extras or version).
    */
-  val packageName: String by lazy {
+  public val packageName: String by lazy {
     raw.split("[")[0].split(">=")[0].split("==")[0].split("~=")[0].split("!=")[0]
       .split(">")[0].split("<")[0].trim()
   }
@@ -128,7 +128,7 @@ internal data class PythonDependency(val raw: String) {
   /**
    * Extras (e.g., "standard" from "uvicorn[standard]").
    */
-  val extras: List<String> by lazy {
+  public val extras: List<String> by lazy {
     val match = Regex("""\[([^\]]+)]""").find(raw)
     match?.groupValues?.get(1)?.split(",")?.map { it.trim() } ?: emptyList()
   }
@@ -136,7 +136,7 @@ internal data class PythonDependency(val raw: String) {
   /**
    * Version specifier (e.g., ">=0.104.0").
    */
-  val versionSpecifier: String? by lazy {
+  public val versionSpecifier: String? by lazy {
     val withoutExtras = if (raw.contains("[")) {
       raw.substring(raw.indexOf("]") + 1)
     } else {
@@ -149,12 +149,12 @@ internal data class PythonDependency(val raw: String) {
   /**
    * Check if this dependency has extras.
    */
-  fun hasExtras(): Boolean = extras.isNotEmpty()
+  public fun hasExtras(): Boolean = extras.isNotEmpty()
 
   /**
    * Format with extras.
    */
-  fun withExtras(): String {
+  public fun withExtras(): String {
     return if (hasExtras()) {
       "$packageName[${extras.joinToString(",")}]${versionSpecifier ?: ""}"
     } else {

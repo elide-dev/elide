@@ -11,60 +11,11 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt.gradle
 
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.readText
-
-/**
- * Gradle project descriptor containing all relevant build information.
- *
- * @property name Project name
- * @property group Project group ID
- * @property version Project version
- * @property description Project description
- * @property modules List of subproject modules (for multi-module projects)
- * @property dependencies List of project dependencies
- * @property repositories List of repository URLs
- * @property plugins List of applied plugins
- * @property buildFile Path to the build file (build.gradle or build.gradle.kts)
- */
-internal data class GradleDescriptor(
-  val name: String,
-  val group: String = "",
-  val version: String = "unspecified",
-  val description: String? = null,
-  val modules: List<String> = emptyList(),
-  val dependencies: List<Dependency> = emptyList(),
-  val repositories: List<Repository> = emptyList(),
-  val plugins: List<Plugin> = emptyList(),
-  val includedBuilds: List<String> = emptyList(),
-  val buildFile: Path? = null,
-) {
-  data class Dependency(
-    val configuration: String,  // e.g., implementation, testImplementation
-    val groupId: String,
-    val artifactId: String,
-    val version: String? = null,
-  ) {
-    fun coordinate(): String = "$groupId:$artifactId${version?.let { ":$it" } ?: ""}"
-
-    fun isTestScope(): Boolean = configuration.contains("test", ignoreCase = true)
-
-    fun isCompileOnly(): Boolean = configuration.contains("compileOnly", ignoreCase = true)
-  }
-
-  data class Repository(
-    val name: String,
-    val url: String,
-  )
-
-  data class Plugin(
-    val id: String,
-    val version: String? = null,
-  )
-}
 
 /**
  * Parser for Gradle build files.
@@ -72,19 +23,18 @@ internal data class GradleDescriptor(
  * Extracts project information from Gradle build files by:
  * 1. Parsing settings.gradle[.kts] for project name and modules
  * 2. Parsing build.gradle[.kts] for metadata, dependencies, and repositories
- * 3. Running `gradle dependencies --configuration compileClasspath` to extract dependency tree
  *
  * Note: This is a text-based parser that handles common Gradle patterns. For complex
  * builds with dynamic configuration, consider using Gradle Tooling API.
  */
-internal object GradleParser {
+public object GradleParser {
   /**
    * Parse a Gradle project from its build file.
    *
    * @param buildFilePath Path to build.gradle or build.gradle.kts
    * @return Parsed Gradle project descriptor
    */
-  fun parse(buildFilePath: Path): GradleDescriptor {
+  public fun parse(buildFilePath: Path): GradleDescriptor {
     if (!buildFilePath.exists()) {
       throw IllegalArgumentException("Build file not found: $buildFilePath")
     }
@@ -102,8 +52,8 @@ internal object GradleParser {
     }
 
     // Parse version catalog if present
-    val versionCatalog = GradleVersionCatalogParser.findVersionCatalog(projectDir)?.let {
-      GradleVersionCatalogParser.parse(it)
+    val versionCatalog = VersionCatalogParser.findVersionCatalog(projectDir)?.let {
+      VersionCatalogParser.parse(it)
     }
 
     // Parse build file for metadata

@@ -11,7 +11,15 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt
+
+import elide.tooling.project.adopt.bazel.BazelDescriptor
+import elide.tooling.project.adopt.gradle.GradleDescriptor
+import elide.tooling.project.adopt.maven.MavenDependency
+import elide.tooling.project.adopt.maven.MavenRepository
+import elide.tooling.project.adopt.maven.PomDescriptor
+import elide.tooling.project.adopt.node.PackageJsonDescriptor
+import elide.tooling.project.adopt.python.PythonDescriptor
 
 /**
  * Generates elide.pkl content from various build system descriptors.
@@ -19,7 +27,7 @@ package elide.tool.cli.cmd.adopt
  * This generator creates well-formatted, documented PKL configuration files
  * with helpful comments and organized sections.
  */
-object PklGenerator {
+public object PklGenerator {
   /**
    * Generate a header comment block explaining the conversion.
    */
@@ -49,12 +57,12 @@ object PklGenerator {
   }
 
   /**
-   * Generate elide.pkl content for a multi-module project.
+   * Generate elide.pkl content for a multi-module Maven project.
    *
    * @param parentPom The parent/aggregator POM
    * @param modulePoms List of child module POMs
    */
-  fun generateMultiModule(parentPom: PomDescriptor, modulePoms: List<PomDescriptor>): String = buildString {
+  public fun generateMultiModule(parentPom: PomDescriptor, modulePoms: List<PomDescriptor>): String = buildString {
     // Header
     appendLine("amends \"elide:project.pkl\"")
     appendLine()
@@ -80,9 +88,9 @@ object PklGenerator {
     }
 
     // Aggregate all dependencies from all modules
-    val allCompileDeps = mutableSetOf<Dependency>()
-    val allTestDeps = mutableSetOf<Dependency>()
-    val allRepositories = mutableSetOf<Repository>()
+    val allCompileDeps = mutableSetOf<MavenDependency>()
+    val allTestDeps = mutableSetOf<MavenDependency>()
+    val allRepositories = mutableSetOf<MavenRepository>()
 
     // Include parent dependencies and repositories
     allCompileDeps.addAll(parentPom.dependencies.filter { it.scope == "compile" || it.scope == "runtime" })
@@ -164,7 +172,7 @@ object PklGenerator {
   /**
    * Generate elide.pkl content from a POM descriptor.
    */
-  fun generate(pom: PomDescriptor): String = buildString {
+  public fun generate(pom: PomDescriptor): String = buildString {
     // Generated header
     append(generatedHeader("Maven", "pom.xml"))
 
@@ -246,7 +254,7 @@ object PklGenerator {
    *
    * @param gradle The Gradle project descriptor
    */
-  internal fun generate(gradle: GradleDescriptor): String = buildString {
+  public fun generate(gradle: GradleDescriptor): String = buildString {
     // Generated header
     append(generatedHeader("Gradle", "build.gradle / build.gradle.kts"))
 
@@ -368,7 +376,7 @@ object PklGenerator {
    * @param rootProject The root Gradle project
    * @param subprojects List of subproject descriptors
    */
-  internal fun generateMultiModule(rootProject: GradleDescriptor, subprojects: List<GradleDescriptor>): String = buildString {
+  public fun generateMultiModule(rootProject: GradleDescriptor, subprojects: List<GradleDescriptor>): String = buildString {
     // Header
     appendLine("amends \"elide:project.pkl\"")
     appendLine()
@@ -513,7 +521,7 @@ object PklGenerator {
    *
    * @param pkg The package.json descriptor
    */
-  internal fun generate(pkg: PackageJsonDescriptor): String = buildString {
+  public fun generate(pkg: PackageJsonDescriptor): String = buildString {
     // Generated header
     append(generatedHeader("Node.js", "package.json"))
 
@@ -617,7 +625,7 @@ object PklGenerator {
    * @param rootPkg The root package.json descriptor
    * @param workspacePackages List of workspace package descriptors
    */
-  internal fun generateWorkspace(
+  public fun generateWorkspace(
     rootPkg: PackageJsonDescriptor,
     workspacePackages: List<PackageJsonDescriptor>
   ): String = buildString {
@@ -727,7 +735,7 @@ object PklGenerator {
    * @param bazel Bazel project descriptor
    * @return Generated elide.pkl content
    */
-  internal fun generate(bazel: BazelDescriptor): String = buildString {
+  public fun generate(bazel: BazelDescriptor): String = buildString {
     // Generated header
     append(generatedHeader("Bazel", "WORKSPACE / MODULE.bazel / BUILD"))
 
@@ -824,7 +832,6 @@ object PklGenerator {
    * Infer a source pattern from a list of source files.
    *
    * This attempts to find a common pattern among the source files.
-   * For example, if all sources are in "src/main/java", it returns a glob pattern for java/kt files.
    */
   private fun inferSourcePattern(srcs: Set<String>): String? {
     if (srcs.isEmpty()) return null
@@ -862,7 +869,7 @@ object PklGenerator {
    *
    * @param python PythonDescriptor parsed from pyproject.toml, requirements.txt, etc.
    */
-  fun generateFromPython(python: PythonDescriptor): String = buildString {
+  public fun generateFromPython(python: PythonDescriptor): String = buildString {
     // Determine source file name
     val sourceFile = when (python.sourceType) {
       PythonDescriptor.SourceType.PYPROJECT_TOML -> "pyproject.toml"

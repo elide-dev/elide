@@ -27,6 +27,9 @@ import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
+import elide.tooling.project.adopt.PklGenerator
+import elide.tooling.project.adopt.python.PyProjectParser
+import elide.tooling.project.adopt.python.RequirementsTxtParser
 
 /**
  * Adopt Python project configuration to elide.pkl.

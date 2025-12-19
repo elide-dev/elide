@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt.bazel
 
 import java.nio.file.Path
 import kotlin.io.path.exists
@@ -26,28 +26,40 @@ import kotlin.io.path.readText
  * @property workspaceFile Path to WORKSPACE or MODULE.bazel file
  * @property buildFile Path to BUILD or BUILD.bazel file
  */
-internal data class BazelDescriptor(
+public data class BazelDescriptor(
   val name: String,
   val dependencies: List<Dependency> = emptyList(),
   val targets: List<Target> = emptyList(),
   val workspaceFile: Path? = null,
   val buildFile: Path? = null,
 ) {
-  data class Dependency(
+  /**
+   * Represents a Maven dependency in Bazel.
+   */
+  public data class Dependency(
     val coordinate: String,  // e.g., "com.google.guava:guava:32.1.3-jre"
   ) {
-    fun groupId(): String = coordinate.split(":").getOrNull(0) ?: ""
-    fun artifactId(): String = coordinate.split(":").getOrNull(1) ?: ""
-    fun version(): String? = coordinate.split(":").getOrNull(2)
+    /** Get the group ID from the coordinate. */
+    public fun groupId(): String = coordinate.split(":").getOrNull(0) ?: ""
+
+    /** Get the artifact ID from the coordinate. */
+    public fun artifactId(): String = coordinate.split(":").getOrNull(1) ?: ""
+
+    /** Get the version from the coordinate. */
+    public fun version(): String? = coordinate.split(":").getOrNull(2)
   }
 
-  data class Target(
+  /**
+   * Represents a Bazel build target.
+   */
+  public data class Target(
     val name: String,
     val rule: String,  // e.g., "java_library", "java_binary", "java_test"
     val srcs: List<String> = emptyList(),
     val deps: List<String> = emptyList(),
   ) {
-    fun isTestTarget(): Boolean = rule.contains("test", ignoreCase = true)
+    /** Check if this is a test target. */
+    public fun isTestTarget(): Boolean = rule.contains("test", ignoreCase = true)
   }
 }
 
@@ -61,14 +73,14 @@ internal data class BazelDescriptor(
  * Note: This is a text-based parser that handles common Bazel patterns. For complex
  * builds with dynamic Starlark code, this parser provides best-effort extraction.
  */
-internal object BazelParser {
+public object BazelParser {
   /**
    * Parse a Bazel project from its workspace and build files.
    *
    * @param projectDir Project directory containing WORKSPACE/MODULE.bazel and BUILD files
    * @return Parsed Bazel project descriptor
    */
-  fun parse(projectDir: Path): BazelDescriptor {
+  public fun parse(projectDir: Path): BazelDescriptor {
     // Find workspace file (WORKSPACE, WORKSPACE.bazel, or MODULE.bazel)
     val workspaceFile = findWorkspaceFile(projectDir)
       ?: throw IllegalArgumentException("No WORKSPACE or MODULE.bazel file found in: $projectDir")

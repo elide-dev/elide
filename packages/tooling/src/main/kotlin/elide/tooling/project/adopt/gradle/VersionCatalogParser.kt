@@ -11,74 +11,11 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt.gradle
 
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.readLines
-
-/**
- * Data class representing a Gradle version catalog.
- *
- * @property versions Map of version variable names to version strings
- * @property libraries Map of library aliases to library declarations
- * @property bundles Map of bundle names to lists of library aliases
- * @property plugins Map of plugin aliases to plugin declarations
- */
-internal data class VersionCatalog(
-  val versions: Map<String, String> = emptyMap(),
-  val libraries: Map<String, Library> = emptyMap(),
-  val bundles: Map<String, List<String>> = emptyMap(),
-  val plugins: Map<String, Plugin> = emptyMap(),
-) {
-  /**
-   * Represents a library declaration in the version catalog.
-   *
-   * @property module The Maven coordinates (groupId:artifactId)
-   * @property version The version (direct or ref to [versions])
-   * @property versionRef Reference to a version in [versions] map
-   */
-  data class Library(
-    val module: String,
-    val version: String? = null,
-    val versionRef: String? = null,
-  ) {
-    /**
-     * Resolve the actual version using the version catalog's versions map.
-     */
-    fun resolveVersion(versions: Map<String, String>): String? {
-      return when {
-        version != null -> version
-        versionRef != null -> versions[versionRef]
-        else -> null
-      }
-    }
-  }
-
-  /**
-   * Represents a plugin declaration in the version catalog.
-   *
-   * @property id The plugin ID
-   * @property version The version (direct or ref to [versions])
-   * @property versionRef Reference to a version in [versions] map
-   */
-  data class Plugin(
-    val id: String,
-    val version: String? = null,
-    val versionRef: String? = null,
-  ) {
-    /**
-     * Resolve the actual version using the version catalog's versions map.
-     */
-    fun resolveVersion(versions: Map<String, String>): String? {
-      return when {
-        version != null -> version
-        versionRef != null -> versions[versionRef]
-        else -> null
-      }
-    }
-  }
-}
 
 /**
  * Parser for Gradle version catalogs (libs.versions.toml).
@@ -89,14 +26,14 @@ internal data class VersionCatalog(
  * - [bundles] section
  * - [plugins] section
  */
-internal object GradleVersionCatalogParser {
+public object VersionCatalogParser {
   /**
    * Parse a version catalog file.
    *
    * @param catalogPath Path to the libs.versions.toml file
    * @return Parsed VersionCatalog
    */
-  fun parse(catalogPath: Path): VersionCatalog {
+  public fun parse(catalogPath: Path): VersionCatalog {
     if (!catalogPath.exists()) {
       return VersionCatalog()
     }
@@ -154,7 +91,6 @@ internal object GradleVersionCatalogParser {
 
     val key = parts[0].trim()
     // Strip any trailing comments first, then remove quotes, then trim again
-    // (final trim handles edge cases like version = "1.9.21 " with space inside quotes)
     val value = parts[1].trim()
       .substringBefore("#").trim()
       .removeSurrounding("\"")
@@ -262,7 +198,7 @@ internal object GradleVersionCatalogParser {
    * Find the version catalog file in a project directory.
    * Looks for: gradle/libs.versions.toml
    */
-  fun findVersionCatalog(projectDir: Path): Path? {
+  public fun findVersionCatalog(projectDir: Path): Path? {
     val catalogPath = projectDir.resolve("gradle/libs.versions.toml")
     return if (catalogPath.exists()) catalogPath else null
   }

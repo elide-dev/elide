@@ -11,7 +11,7 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt.python
 
 import java.nio.file.Path
 import kotlin.io.path.exists
@@ -27,20 +27,8 @@ import kotlin.io.path.readLines
  * - Blank lines
  * - -r includes (references to other requirements files)
  * - Environment markers (e.g., "package>=1.0; python_version>='3.8'")
- *
- * Example requirements.txt:
- * ```
- * # Production dependencies
- * fastapi>=0.104.0
- * uvicorn[standard]>=0.24.0
- * pydantic>=2.5.0
- *
- * # Development dependencies
- * pytest>=7.4.0  # dev
- * black>=23.11.0  # dev
- * ```
  */
-internal object RequirementsTxtParser {
+public object RequirementsTxtParser {
   /**
    * Parse a requirements.txt file into a PythonDescriptor.
    *
@@ -48,7 +36,7 @@ internal object RequirementsTxtParser {
    * @param projectName Optional project name (defaults to directory name)
    * @return Parsed PythonDescriptor
    */
-  fun parse(path: Path, projectName: String? = null): PythonDescriptor {
+  public fun parse(path: Path, projectName: String? = null): PythonDescriptor {
     val lines = path.readLines()
     val dependencies = mutableListOf<String>()
     val devDependencies = mutableListOf<String>()
@@ -147,7 +135,7 @@ internal object RequirementsTxtParser {
    * @param path Path to check
    * @return true if the path looks like a requirements file
    */
-  fun isRequirementsFile(path: Path): Boolean {
+  public fun isRequirementsFile(path: Path): Boolean {
     val fileName = path.fileName?.toString() ?: return false
     return fileName.matches(Regex("requirements.*\\.txt", RegexOption.IGNORE_CASE))
   }
@@ -158,7 +146,7 @@ internal object RequirementsTxtParser {
    * @param directory Directory to search
    * @return List of found requirements files
    */
-  fun findRequirementsFiles(directory: Path): List<Path> {
+  public fun findRequirementsFiles(directory: Path): List<Path> {
     val commonNames = listOf(
       "requirements.txt",
       "requirements-dev.txt",
@@ -182,7 +170,7 @@ internal object RequirementsTxtParser {
    * @param projectName Optional project name
    * @return Merged PythonDescriptor
    */
-  fun parseMultiple(
+  public fun parseMultiple(
     prodFile: Path,
     devFile: Path? = null,
     projectName: String? = null,
@@ -210,7 +198,7 @@ internal object RequirementsTxtParser {
    * @param projectName Optional project name
    * @return Parsed PythonDescriptor or null if no requirements files found
    */
-  fun detectAndParse(directory: Path, projectName: String? = null): PythonDescriptor? {
+  public fun detectAndParse(directory: Path, projectName: String? = null): PythonDescriptor? {
     val reqFile = directory.resolve("requirements.txt")
     if (!reqFile.exists()) return null
 

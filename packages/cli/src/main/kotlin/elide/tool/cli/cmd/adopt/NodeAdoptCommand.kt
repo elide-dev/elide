@@ -18,7 +18,6 @@ import io.micronaut.core.annotation.ReflectiveAccess
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
-import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.absolute
 import kotlin.io.path.exists
@@ -27,6 +26,9 @@ import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
+import elide.tooling.project.adopt.PklGenerator
+import elide.tooling.project.adopt.node.NodeParser
+import elide.tooling.project.adopt.node.PackageJsonDescriptor
 
 /**
  * Adopt Node.js package.json to elide.pkl.
@@ -105,7 +107,7 @@ internal class NodeAdoptCommand : AbstractSubcommand<ToolState, CommandContext>(
 
     // Parse package.json
     val rootPkg = try {
-      PackageJsonParser.parse(packageJsonPath)
+      NodeParser.parse(packageJsonPath)
     } catch (e: Exception) {
       return err("@|bold,red ✗ Failed to parse package.json file|@\n  ${e.message}\n\n" +
         "Tip: Ensure the package.json file is valid JSON.")
@@ -135,7 +137,7 @@ internal class NodeAdoptCommand : AbstractSubcommand<ToolState, CommandContext>(
 
         if (workspacePkgJson.exists()) {
           try {
-            PackageJsonParser.parse(workspacePkgJson)
+            NodeParser.parse(workspacePkgJson)
           } catch (e: Exception) {
             output {
               append("@|yellow ⚠ Warning: Failed to parse workspace package.json at $workspacePath|@")

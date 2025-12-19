@@ -26,6 +26,9 @@ import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
+import elide.tooling.project.adopt.PklGenerator
+import elide.tooling.project.adopt.gradle.GradleDescriptor
+import elide.tooling.project.adopt.gradle.GradleParser
 
 /**
  * Adopt Gradle build files to elide.pkl.

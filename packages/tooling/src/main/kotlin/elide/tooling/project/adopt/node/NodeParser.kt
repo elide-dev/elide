@@ -11,10 +11,13 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-package elide.tool.cli.cmd.adopt
+package elide.tooling.project.adopt.node
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.nio.file.Path
 import kotlin.io.path.exists
@@ -34,7 +37,7 @@ import kotlin.io.path.readText
  * @property scripts NPM scripts
  * @property packageJsonPath Path to package.json file
  */
-internal data class PackageJsonDescriptor(
+public data class PackageJsonDescriptor(
   val name: String,
   val version: String? = null,
   val description: String? = null,
@@ -88,17 +91,17 @@ private object WorkspacesConfigSerializer : kotlinx.serialization.KSerializer<Wo
   }
 
   override fun deserialize(decoder: kotlinx.serialization.encoding.Decoder): WorkspacesConfig {
-    val jsonDecoder = decoder as? kotlinx.serialization.json.JsonDecoder
+    val jsonDecoder = decoder as? JsonDecoder
       ?: error("Can only deserialize from JSON")
 
     val element = jsonDecoder.decodeJsonElement()
     return when {
-      element is kotlinx.serialization.json.JsonArray -> {
+      element is JsonArray -> {
         val packages = element.map { it.jsonPrimitive.content }
         WorkspacesConfig.Array(packages)
       }
-      element is kotlinx.serialization.json.JsonObject -> {
-        val packagesArray = element["packages"] as? kotlinx.serialization.json.JsonArray
+      element is JsonObject -> {
+        val packagesArray = element["packages"] as? JsonArray
           ?: error("Expected 'packages' array in workspaces object")
         val packages = packagesArray.map { it.jsonPrimitive.content }
         WorkspacesConfig.Object(packages)
@@ -117,7 +120,7 @@ private object WorkspacesConfigSerializer : kotlinx.serialization.KSerializer<Wo
  * - Workspaces configuration (for monorepos)
  * - NPM scripts
  */
-internal object PackageJsonParser {
+public object NodeParser {
   private val json = Json {
     ignoreUnknownKeys = true
     isLenient = true
@@ -129,7 +132,7 @@ internal object PackageJsonParser {
    * @param packageJsonPath Path to package.json
    * @return Parsed package.json descriptor
    */
-  fun parse(packageJsonPath: Path): PackageJsonDescriptor {
+  public fun parse(packageJsonPath: Path): PackageJsonDescriptor {
     if (!packageJsonPath.exists()) {
       throw IllegalArgumentException("package.json not found: $packageJsonPath")
     }

@@ -112,14 +112,14 @@ public class AdoptPythonCodec : PackageManifestCodec<AdoptPythonManifest> {
       name = source.name ?: "",
       version = source.version,
       description = source.description,
-      pythonVersion = source.python?.version,
+      pythonVersion = null, // PythonSettings doesn't have a version field
       dependencies = source.dependencies.pip.packages.map { it.name + (it.version?.let { v -> ">=$v" } ?: "") },
       devDependencies = emptyList(),
       optionalDependencies = source.dependencies.pip.optionalPackages.mapValues { (_, pkgs) ->
         pkgs.map { it.name + (it.version?.let { v -> ">=$v" } ?: "") }
       },
       scripts = emptyMap(),
-      sourceType = PythonDescriptor.SourceType.PYPROJECT,
+      sourceType = PythonDescriptor.SourceType.PYPROJECT_TOML,
     )
     return AdoptPythonManifest(descriptor = descriptor)
   }

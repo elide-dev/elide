@@ -19,6 +19,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.createTempFile
 import kotlin.io.path.name
 import kotlin.io.path.writeBytes
+import kotlin.io.path.createTempDirectory
 import elide.tooling.project.ProjectEcosystem
 import elide.tooling.project.adopt.PklGenerator
 import elide.tooling.project.adopt.maven.MavenParser
@@ -91,6 +92,7 @@ public class AdoptMavenCodec : PackageManifestCodec<AdoptMavenManifest> {
 
   override fun fromElidePackage(source: ElidePackageManifest): AdoptMavenManifest {
     // Convert ElidePackageManifest back to PomDescriptor
+    val tempDir = createTempDirectory(prefix = "maven")
     val descriptor = PomDescriptor(
       groupId = source.dependencies.maven.coordinates?.group ?: "",
       artifactId = source.dependencies.maven.coordinates?.name ?: source.name ?: "",
@@ -102,7 +104,7 @@ public class AdoptMavenCodec : PackageManifestCodec<AdoptMavenManifest> {
           groupId = pkg.group,
           artifactId = pkg.name,
           version = pkg.version,
-          scope = null,
+          scope = "compile",
         )
       } + source.dependencies.maven.testPackages.map { pkg ->
         elide.tooling.project.adopt.maven.MavenDependency(
@@ -118,6 +120,7 @@ public class AdoptMavenCodec : PackageManifestCodec<AdoptMavenManifest> {
           url = repo.url,
         )
       },
+      path = tempDir.resolve("pom.xml"),
     )
     return AdoptMavenManifest(descriptor = descriptor)
   }

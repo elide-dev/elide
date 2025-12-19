@@ -102,17 +102,17 @@ public class AdoptGradleCodec : PackageManifestCodec<AdoptGradleManifest> {
       description = source.description,
       dependencies = source.dependencies.maven.packages.map { pkg ->
         GradleDescriptor.Dependency(
-          group = pkg.group,
-          name = pkg.name,
-          version = pkg.version,
           configuration = "implementation",
+          groupId = pkg.group,
+          artifactId = pkg.name,
+          version = pkg.version,
         )
       } + source.dependencies.maven.testPackages.map { pkg ->
         GradleDescriptor.Dependency(
-          group = pkg.group,
-          name = pkg.name,
-          version = pkg.version,
           configuration = "testImplementation",
+          groupId = pkg.group,
+          artifactId = pkg.name,
+          version = pkg.version,
         )
       },
       repositories = source.dependencies.maven.repositories.map { (name, repo) ->
@@ -138,22 +138,22 @@ public class AdoptGradleCodec : PackageManifestCodec<AdoptGradleManifest> {
         maven = MavenDependencies(
           packages = compileDeps.map { dep ->
             MavenPackage(
-              group = dep.group,
-              name = dep.name,
+              group = dep.groupId,
+              name = dep.artifactId,
               version = dep.version,
               coordinate = dep.coordinate(),
             )
           },
           testPackages = testDeps.map { dep ->
             MavenPackage(
-              group = dep.group,
-              name = dep.name,
+              group = dep.groupId,
+              name = dep.artifactId,
               version = dep.version,
               coordinate = dep.coordinate(),
             )
           },
           repositories = descriptor.repositories.associate { repo ->
-            (repo.name ?: repo.url) to MavenRepository(url = repo.url, name = repo.name)
+            repo.name to MavenRepository(url = repo.url, name = repo.name)
           },
         ),
       ),

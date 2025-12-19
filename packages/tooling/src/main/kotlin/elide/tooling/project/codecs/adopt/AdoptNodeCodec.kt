@@ -104,6 +104,12 @@ public class AdoptNodeCodec : PackageManifestCodec<AdoptNodeManifest> {
   override fun toElidePackage(source: AdoptNodeManifest): ElidePackageManifest {
     val descriptor = source.descriptor
 
+    // Combine peerDependencies and optionalDependencies with regular packages
+    // since NpmDependencies only supports packages and devPackages
+    val allPackages = descriptor.dependencies +
+      descriptor.peerDependencies +
+      descriptor.optionalDependencies
+
     return ElidePackageManifest(
       name = descriptor.name,
       version = descriptor.version,
@@ -112,16 +118,10 @@ public class AdoptNodeCodec : PackageManifestCodec<AdoptNodeManifest> {
       workspaces = descriptor.workspaces,
       dependencies = DependencyResolution(
         npm = NpmDependencies(
-          packages = descriptor.dependencies.map { (name, version) ->
+          packages = allPackages.map { (name, version) ->
             NpmPackage(name = name, version = version.takeIf { it != "*" })
           },
           devPackages = descriptor.devDependencies.map { (name, version) ->
-            NpmPackage(name = name, version = version.takeIf { it != "*" })
-          },
-          peerPackages = descriptor.peerDependencies.map { (name, version) ->
-            NpmPackage(name = name, version = version.takeIf { it != "*" })
-          },
-          optionalPackages = descriptor.optionalDependencies.map { (name, version) ->
             NpmPackage(name = name, version = version.takeIf { it != "*" })
           },
         ),

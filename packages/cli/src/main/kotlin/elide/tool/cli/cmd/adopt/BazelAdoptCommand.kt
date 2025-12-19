@@ -101,11 +101,11 @@ internal class BazelAdoptCommand : AbstractSubcommand<ToolState, CommandContext>
     output {
       append("@|bold,green ✓ Parsed Bazel project successfully|@")
       append("  Project: @|bold ${bazelDescriptor.name}|@")
-      if (bazelDescriptor.workspaceFile != null) {
-        append("  Workspace: ${bazelDescriptor.workspaceFile.fileName}")
+      bazelDescriptor.workspaceFile?.let { wsFile ->
+        append("  Workspace: ${wsFile.fileName}")
       }
-      if (bazelDescriptor.buildFile != null) {
-        append("  Build file: ${bazelDescriptor.buildFile.fileName}")
+      bazelDescriptor.buildFile?.let { buildFile ->
+        append("  Build file: ${buildFile.fileName}")
       }
       if (bazelDescriptor.dependencies.isNotEmpty()) {
         append("  Dependencies: ${bazelDescriptor.dependencies.size}")

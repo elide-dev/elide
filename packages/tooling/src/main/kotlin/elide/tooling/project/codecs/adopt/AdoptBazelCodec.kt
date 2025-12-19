@@ -101,9 +101,7 @@ public class AdoptBazelCodec : PackageManifestCodec<AdoptBazelManifest> {
       name = source.name ?: "",
       dependencies = source.dependencies.maven.packages.map { pkg ->
         BazelDescriptor.Dependency(
-          group = pkg.group,
-          artifact = pkg.name,
-          version = pkg.version ?: "",
+          coordinate = pkg.coordinate,
         )
       },
       targets = emptyList(),
@@ -120,10 +118,10 @@ public class AdoptBazelCodec : PackageManifestCodec<AdoptBazelManifest> {
         maven = MavenDependencies(
           packages = descriptor.dependencies.map { dep ->
             MavenPackage(
-              group = dep.group,
-              name = dep.artifact,
-              version = dep.version,
-              coordinate = "${dep.group}:${dep.artifact}:${dep.version}",
+              group = dep.groupId(),
+              name = dep.artifactId(),
+              version = dep.version(),
+              coordinate = dep.coordinate,
             )
           },
         ),

@@ -18,11 +18,7 @@ import org.pkl.config.java.mapper.Converter
 import org.pkl.config.java.mapper.ValueMapper
 import org.pkl.config.kotlin.forKotlin
 import org.pkl.config.kotlin.to
-import org.pkl.core.ModuleSource
-import org.pkl.core.PClassInfo
-import org.pkl.core.PObject
-import org.pkl.core.SecurityManager
-import org.pkl.core.SecurityManagers
+import org.pkl.core.*
 import org.pkl.core.module.ModuleKey
 import org.pkl.core.module.ModuleKeyFactory
 import org.pkl.core.module.ResolvedModuleKey
@@ -33,7 +29,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
 import java.nio.file.Path
-import java.util.Optional
+import java.util.*
 import kotlin.io.path.Path
 import kotlin.io.path.extension
 import kotlin.io.path.nameWithoutExtension
@@ -189,6 +185,11 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         // convert string to source set spec
         Conversion.of(PClassInfo.String, SourceSet::class.java, StrConverter {
           SourceSet.parse(it)
+        })
+      ).addConversion(
+        // convert string to source set Type
+        Conversion.of(PClassInfo.String, SourceSet.SourceSetType ::class.java, StrConverter {
+          SourceSet.SourceSetType.parse(it)
         })
       ).addConversion(
         // convert string to gradle catalog spec

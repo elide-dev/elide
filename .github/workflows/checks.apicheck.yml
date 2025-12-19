@@ -85,6 +85,7 @@ jobs:
             elide-snapshots.storage-download.googleapis.com:443
             gha.elide.zip:443
             github.com:22
+            gradle.elide.dev:443
             github.com:443
             gradle.less.build:443
             gradle.pkg.st:443
@@ -108,6 +109,7 @@ jobs:
             plugins-artifacts.gradle.org:443
             plugins.gradle.org:443
             raw.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
             registry.npmjs.org:443
             repo.maven.apache.org:443
             scans-in.gradle.com:443

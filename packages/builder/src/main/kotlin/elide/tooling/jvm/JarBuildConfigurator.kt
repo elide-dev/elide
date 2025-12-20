@@ -26,6 +26,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.name
+import kotlin.io.path.notExists
 import kotlin.io.path.outputStream
 import kotlin.io.path.relativeTo
 import kotlin.reflect.KClass
@@ -247,7 +248,7 @@ internal class JarBuildConfigurator : BuildConfigurator {
 
         // is it a file? if so, copy it. if not, and it's a directory, create it.
         when {
-          from.isDirectory() -> Files.createDirectory(to)
+          from.isDirectory() -> if (to.notExists()) Files.createDirectory(to)
           from.isRegularFile() -> Files.copy(from, to)
           else -> error("Cannot copy non-file and non-directory to JAR: $from")
         }

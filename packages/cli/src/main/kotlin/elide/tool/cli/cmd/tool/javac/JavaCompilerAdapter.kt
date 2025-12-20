@@ -114,10 +114,7 @@ import elide.tooling.jvm.javac
         }
         success()
       }
-      else -> {
-        val errorMessage = toolErr?.message ?: "Failed to compile"
-        err(errorMessage)
-      }
+      else -> err(toolErr?.message ?: "Failed to compile")
     }
   }
 

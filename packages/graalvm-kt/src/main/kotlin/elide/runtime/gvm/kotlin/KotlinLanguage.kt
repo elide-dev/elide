@@ -27,7 +27,7 @@ import elide.runtime.gvm.kotlin.feature.KotlinResource
 private const val KOTLIN_ID = "kotlin"
 private const val KOTLIN_NAME = "Kotlin"
 private const val KOTLIN_IMPL = "Kotlin/JVM (Espresso)"
-private const val KOTLIN_IMPL_VERSION = "2.3.0-RC"
+private const val KOTLIN_IMPL_VERSION = "2.3.0"
 private const val KOTLIN_MIME_TYPE = "application/x-kotlin"
 
 /**

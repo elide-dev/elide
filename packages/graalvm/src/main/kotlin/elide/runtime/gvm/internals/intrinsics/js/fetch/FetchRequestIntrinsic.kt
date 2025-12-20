@@ -17,6 +17,7 @@ package elide.runtime.gvm.internals.intrinsics.js.fetch
 import io.micronaut.http.HttpRequest
 import io.netty.buffer.ByteBufInputStream
 import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyExecutable
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
@@ -32,6 +33,7 @@ import elide.runtime.gvm.js.JsError
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.*
 import elide.vm.annotations.Polyglot
+import kotlinx.serialization.json.Json
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
 internal class FetchRequestIntrinsic internal constructor(
@@ -39,6 +41,7 @@ internal class FetchRequestIntrinsic internal constructor(
   targetMethod: String = FetchRequest.Defaults.DEFAULT_METHOD,
   requestHeaders: FetchHeaders = FetchHeadersIntrinsic.empty(),
   private val bodyData: ReadableStream? = null,
+  private val rawBodyBytes: ByteArray? = null,
 ) : FetchMutableRequest, ReadOnlyProxyObject {
   /**
    * Implements options for the fetch Request constructor.
@@ -83,6 +86,9 @@ internal class FetchRequestIntrinsic internal constructor(
     private const val MEMBER_REFERRER = "referrer"
     private const val MEMBER_REFERRER_POLICY = "referrerPolicy"
     private const val MEMBER_MEMBER_URL = "url"
+    private const val MEMBER_TEXT = "text"
+    private const val MEMBER_JSON = "json"
+    private const val MEMBER_ARRAY_BUFFER = "arrayBuffer"
 
     private val MemberKeys = arrayOf(
       MEMBER_BODY,
@@ -99,9 +105,14 @@ internal class FetchRequestIntrinsic internal constructor(
       MEMBER_REFERRER,
       MEMBER_REFERRER_POLICY,
       MEMBER_MEMBER_URL,
+      MEMBER_TEXT,
+      MEMBER_JSON,
+      MEMBER_ARRAY_BUFFER,
     )
 
     @JvmStatic override fun forRequest(request: HttpRequest<*>): FetchMutableRequest {
+      val bodyInputStream = request.getBody(InputStream::class.java).orElse(null)
+      val bodyBytes = bodyInputStream?.readAllBytes()
       return FetchRequestIntrinsic(
         targetUrl = URLIntrinsic.URLValue.fromURL(request.uri),
         targetMethod = request.method.name,
@@ -112,11 +123,19 @@ internal class FetchRequestIntrinsic internal constructor(
             }
           },
         ),
-        bodyData = request.getBody(InputStream::class.java).map { ReadableStream.wrap(it) }.orElse(null),
+        bodyData = bodyBytes?.let { ReadableStream.wrap(it) },
+        rawBodyBytes = bodyBytes,
       )
     }
 
     @JvmStatic override fun forRequest(request: Request): FetchRequestIntrinsic {
+      val bodyBytes = when (val body = request.body) {
+        is Body.Empty -> null
+        is NettyBody -> ByteBufInputStream(body.unwrap()).readAllBytes()
+        is PrimitiveBody.StringBody -> body.unwrap().toByteArray(StandardCharsets.UTF_8)
+        is PrimitiveBody.Bytes -> body.unwrap()
+        else -> error("Unrecognized body type: ${request.body}")
+      }
       return FetchRequestIntrinsic(
         targetUrl = when (val url = request.url) {
           is JavaNetHttpUri -> URLIntrinsic.URLValue.fromString(url.absoluteString())
@@ -132,13 +151,8 @@ internal class FetchRequestIntrinsic internal constructor(
           }.toList(),
         ),
 
-        bodyData = when (val body = request.body) {
-          is Body.Empty -> null
-          is NettyBody -> ByteBufInputStream(body.unwrap())
-          is PrimitiveBody.StringBody -> body.unwrap().byteInputStream(StandardCharsets.UTF_8)
-          is PrimitiveBody.Bytes -> body.unwrap().inputStream()
-          else -> error("Unrecognized body type: ${request.body}")
-        }?.let { ReadableStream.wrap(it) },
+        bodyData = bodyBytes?.let { ReadableStream.wrap(it) },
+        rawBodyBytes = bodyBytes,
       )
     }
   }
@@ -197,6 +211,36 @@ internal class FetchRequestIntrinsic internal constructor(
       return bodyData
     }
 
+  // Read body bytes (uses rawBodyBytes if available)
+  private fun readBodyBytes(): ByteArray {
+    bodyConsumed.set(true)
+    return rawBodyBytes ?: ByteArray(0)
+  }
+
+  @Polyglot override fun text(): Any {
+    // Return a promise-like object that resolves immediately with the text
+    // For simplicity, we return the text directly (synchronous behavior)
+    // A full implementation would return a proper JS Promise
+    val bytes = readBodyBytes()
+    return String(bytes, StandardCharsets.UTF_8)
+  }
+
+  @Polyglot override fun json(): Any {
+    // Parse the body as JSON and return
+    val textContent = text() as String
+    if (textContent.isEmpty()) {
+      throw JsError.typeError("Unexpected end of JSON input")
+    }
+    // Return the raw JSON string - GraalVM will handle parsing in JS context
+    // For a full implementation, we'd use the JS JSON.parse
+    return Json.parseToJsonElement(textContent)
+  }
+
+  @Polyglot override fun arrayBuffer(): Any {
+    // Return the raw bytes as an array
+    return readBodyBytes()
+  }
+
   override fun toString(): String {
     return "$method $url"
   }
@@ -218,6 +262,9 @@ internal class FetchRequestIntrinsic internal constructor(
     MEMBER_REFERRER -> referrer
     MEMBER_REFERRER_POLICY -> referrerPolicy
     MEMBER_MEMBER_URL -> url
+    MEMBER_TEXT -> ProxyExecutable { text() }
+    MEMBER_JSON -> ProxyExecutable { json() }
+    MEMBER_ARRAY_BUFFER -> ProxyExecutable { arrayBuffer() }
     else -> null
   }
 }

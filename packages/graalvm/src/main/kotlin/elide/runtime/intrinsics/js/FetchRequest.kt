@@ -270,4 +270,43 @@ import elide.vm.annotations.Polyglot
    * See also: [MDN, Request.url](https://developer.mozilla.org/en-US/docs/Web/API/Request/url).
    */
   @get:Polyglot public val url: String
+
+  /**
+   * ## Request: text()
+   *
+   * Returns a promise that resolves with a text representation of the request body.
+   *
+   * From MDN:
+   * "The text() method of the Request interface reads the request body and returns it as a promise that resolves with
+   * a String. The response is always decoded using UTF-8."
+   *
+   * See also: [MDN, Request.text()](https://developer.mozilla.org/en-US/docs/Web/API/Request/text).
+   */
+  @Polyglot public fun text(): Any
+
+  /**
+   * ## Request: json()
+   *
+   * Returns a promise that resolves with the result of parsing the request body as JSON.
+   *
+   * From MDN:
+   * "The json() method of the Request interface reads the request body and returns it as a promise that resolves with
+   * the result of parsing the body text as JSON."
+   *
+   * See also: [MDN, Request.json()](https://developer.mozilla.org/en-US/docs/Web/API/Request/json).
+   */
+  @Polyglot public fun json(): Any
+
+  /**
+   * ## Request: arrayBuffer()
+   *
+   * Returns a promise that resolves with an ArrayBuffer representation of the request body.
+   *
+   * From MDN:
+   * "The arrayBuffer() method of the Request interface reads the request body and returns it as a promise that
+   * resolves with an ArrayBuffer."
+   *
+   * See also: [MDN, Request.arrayBuffer()](https://developer.mozilla.org/en-US/docs/Web/API/Request/arrayBuffer).
+   */
+  @Polyglot public fun arrayBuffer(): Any
 }

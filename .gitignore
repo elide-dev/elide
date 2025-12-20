@@ -1,5 +1,6 @@
 .venv/
 .DS_Store
+TODO.md
 .dev/cache
 .dev/dependencies
 .dev/coverage
@@ -60,3 +61,8 @@ README.md.br
 node_modules
 .intellijPlatform/
 cosign.key
+
+# External submodule build artifacts
+external/ktoml/build/
+external/ktoml/.gradle/
+external/ktoml/kotlin-js-store/

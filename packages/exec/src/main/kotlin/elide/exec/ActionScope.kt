@@ -14,11 +14,10 @@ package elide.exec
 
 import java.lang.AutoCloseable
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.StructuredTaskScope
-import java.util.concurrent.ThreadFactory
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 import elide.runtime.Logger
 import elide.runtime.Logging
@@ -29,11 +28,11 @@ import elide.runtime.Logging
 public sealed interface ActionScope : CoroutineScope, AutoCloseable {
   public val actionContext: Action.ActionContext
   public val taskScope: TaskGraphScope
-  public val allTasks: Sequence<StructuredTaskScope.Subtask<*>>
+  public val allTasks: Sequence<Job>
   public val logging: Logger
   public fun bind(execution: TaskGraphExecution.Listener)
   public fun currentExecution(): TaskGraphExecution.Listener
-  public fun <R> register(subtask: StructuredTaskScope.Subtask<R>): StructuredTaskScope.Subtask<R>
+  public fun register(job: Job): Job
 
   public class DefaultActionScope internal constructor (
     override val actionContext: Action.ActionContext,
@@ -44,15 +43,15 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
     // Bound execution scope, if any.
     private val boundScope = atomic<TaskGraphExecution.Listener?>(null)
 
-    // Registered subtasks.
-    private val allRegisteredSubtasks = ConcurrentLinkedQueue<StructuredTaskScope.Subtask<*>>()
+    // Registered jobs.
+    private val allRegisteredJobs = ConcurrentLinkedQueue<Job>()
 
-    override fun <R> register(subtask: StructuredTaskScope.Subtask<R>): StructuredTaskScope.Subtask<R> {
-      return subtask.also { allRegisteredSubtasks.add(it) }
+    override fun register(job: Job): Job {
+      return job.also { allRegisteredJobs.add(it) }
     }
 
     // Retrieve all tasks seen by this scope.
-    override val allTasks: Sequence<StructuredTaskScope.Subtask<*>> get() = allRegisteredSubtasks.asSequence()
+    override val allTasks: Sequence<Job> get() = allRegisteredJobs.asSequence()
 
     override fun bind(execution: TaskGraphExecution.Listener) {
       boundScope.value = execution
@@ -73,20 +72,17 @@ public sealed interface ActionScope : CoroutineScope, AutoCloseable {
 
   public class TaskGraphScope internal constructor (
     internal val name: String,
-    internal val fac: ThreadFactory,
   ) {
-    internal val scope = StructuredTaskScope.open<Any?>()
+    // Track active jobs for this task graph
+    internal val jobs = ConcurrentLinkedQueue<Job>()
   }
 
   /** Factories for creating or obtaining an [ActionScope]. */
   public companion object {
-    // Create a default thread factory for execution of a task graph.
-    private fun namedStructuredScope(name: String): TaskGraphScope = TaskGraphScope(
-      name,
-      Thread.ofVirtual().name("$name-exec-", 1L).factory()
-    )
+    // Create a named task graph scope.
+    private fun namedStructuredScope(name: String): TaskGraphScope = TaskGraphScope(name)
 
-    // Create a default thread factory for execution of a task graph.
+    // Create a default task graph scope.
     private fun defaultStructuredTaskScope(): TaskGraphScope = namedStructuredScope(
       "elide-default-graph"
     )

@@ -206,11 +206,25 @@ LDFLAGS_APR +=$(LDFLAGS_BASE)
 # APR does not link with LLD.
 APR_PREFIX = CC="$(CC_INJECTED)" CXX="$(CXX)" LD="ld" CFLAGS="$(CFLAGS_APR)" LDFLAGS="$(LDFLAGS_APR)"
 
+HAVE_AUTOCONF := $(shell which autoconf 2>/dev/null)
+HAVE_LIBTOOL := $(shell which libtool 2>/dev/null)
+
 ifeq ($(OS),Darwin)
 apache/apr/.libs: boringssl
 else
 apache/apr/.libs:
 endif
+ifndef HAVE_AUTOCONF
+	@echo ""
+	@echo "Warning: autoconf not found, skipping APR build"
+	@echo "To build APR, install autoconf and libtool"
+	@mkdir -p apache/apr/.libs
+else ifndef HAVE_LIBTOOL
+	@echo ""
+	@echo "Warning: libtool not found, skipping APR build"
+	@echo "To build APR, install autoconf and libtool"
+	@mkdir -p apache/apr/.libs
+else
 	@echo ""
 	@echo "Building apache/apr..."
 	$(RULE)cd apache/apr && ./buildconf \
@@ -223,6 +237,7 @@ endif
 			--enable-sysv-shm \
 			$(TARGET_FLAGS) \
 		&& $(APR_PREFIX) make
+endif
 
 clean-apr:
 	$(RULE)cd apache/apr && git clean -xdf

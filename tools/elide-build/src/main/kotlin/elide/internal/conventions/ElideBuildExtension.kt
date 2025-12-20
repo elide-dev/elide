@@ -135,8 +135,8 @@ public class ElideBuildExtension internal constructor(internal val project: Proj
     // on by default
     override var requested: Boolean = true
 
-    /** Whether to enable Detekt support. */
-    public var detekt: Boolean = true
+    /** Whether to enable Detekt support. Disabled by default due to JDK 25 compatibility issues. */
+    public var detekt: Boolean = false
 
     /** Whether to enable Sonar support. */
     public var sonar: Boolean = true

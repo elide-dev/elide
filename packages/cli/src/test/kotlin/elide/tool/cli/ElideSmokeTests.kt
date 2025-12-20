@@ -94,6 +94,8 @@ import elide.testing.annotations.TestCase
     private val knownBroken = sortedSetOf<String>(
       "main.kts",
       "main-another.kts",
+      "react-imports.mjs",  // requires react/react-dom npm packages
+      "react-render.tsx",   // requires react/react-dom npm packages
     )
   }
 

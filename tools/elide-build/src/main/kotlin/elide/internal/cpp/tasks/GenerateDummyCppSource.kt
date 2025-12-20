@@ -28,7 +28,7 @@ public abstract class GenerateDummyCppSource : DefaultTask() {
   private val symbolName: Property<String> = project.objects.property(String::class.java).value("dummy")
   @get:OutputFile public val outputFile: RegularFileProperty = project.objects.fileProperty()
 
-  @TaskAction @Throws(IOException::class) private fun doGenerate() {
+  @TaskAction @Throws(IOException::class) public fun doGenerate() {
     val source = ("void " + symbolName.get()) + "() {}"
     Files.write(outputFile.asFile.get().toPath(), source.toByteArray())
   }

@@ -20,4 +20,6 @@ public enum class ProjectEcosystem {
   PythonRequirements,
   MavenPom,
   GradleCatalog,
+  Gradle,
+  Bazel,
 }

@@ -12,6 +12,7 @@
  */
 package elide.secrets
 
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.assertThrows
 import java.nio.file.Files
 import java.nio.file.Path
@@ -314,6 +315,7 @@ class ManagementTest : AbstractSecretTest() {
 
   @Test
   fun `initialize from remote`() = withTemp { path ->
+    assumeTrue(isGpgAvailable, "GPG is not installed, skipping test")
     // copy remote files.
     val remoteDir = Files.createDirectory(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH))
     copyFiles(remoteDir, remoteFiles)
@@ -346,6 +348,7 @@ class ManagementTest : AbstractSecretTest() {
 
   @Test
   fun `initialize from remote non-interactively`() = withTemp { path ->
+    assumeTrue(isGpgAvailable, "GPG is not installed, skipping test")
     // copy remote files.
     val remoteDir = Files.createDirectory(path.resolve(SecretValues.PROJECT_REMOTE_DEFAULT_PATH))
     copyFiles(remoteDir, remoteFiles)

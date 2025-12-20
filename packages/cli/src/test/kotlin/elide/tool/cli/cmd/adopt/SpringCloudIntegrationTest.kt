@@ -18,6 +18,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import elide.tooling.project.adopt.maven.MavenParser
+import elide.tooling.project.adopt.maven.PomDescriptor
+import elide.tooling.project.adopt.PklGenerator
 
 /**
  * Integration test for Spring Cloud - validates multi-module project handling.
@@ -68,7 +71,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(pomPath)
+    val pom = MavenParser.parse(pomPath)
 
     // Verify basic project info
     assertTrue(pom.groupId.startsWith("org.springframework"), "GroupId should be Spring: ${pom.groupId}")
@@ -101,7 +104,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(pomPath)
+    val pom = MavenParser.parse(pomPath)
 
     // If this is a multi-module project, verify modules are detected
     if (pom.packaging == "pom") {
@@ -140,7 +143,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val parentPom = PomParser.parse(pomPath)
+    val parentPom = MavenParser.parse(pomPath)
 
     // Find a child module to test
     val moduleName = parentPom.modules.firstOrNull()
@@ -148,7 +151,7 @@ class SpringCloudIntegrationTest {
       val modulePath = springCloudPath!!.resolve(moduleName).resolve("pom.xml")
 
       if (modulePath.exists()) {
-        val modulePom = PomParser.parse(modulePath)
+        val modulePom = MavenParser.parse(modulePath)
 
         // Module should reference parent
         assertNotNull(modulePom.parent, "Module should have parent POM reference")
@@ -185,7 +188,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(pomPath)
+    val pom = MavenParser.parse(pomPath)
 
     // Spring Cloud projects typically have Spring Boot in their parent chain
     var currentParent = pom.parent
@@ -220,7 +223,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(pomPath)
+    val pom = MavenParser.parse(pomPath)
 
     // Spring Cloud heavily uses dependency management
     assertTrue(
@@ -251,7 +254,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(pomPath)
+    val pom = MavenParser.parse(pomPath)
 
     // Spring projects use extensive property-based configuration
     assertTrue(pom.properties.isNotEmpty(), "Should have properties")
@@ -288,7 +291,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(pomPath)
+    val pom = MavenParser.parse(pomPath)
 
     // For multi-module projects, test PKL generation
     if (pom.modules.isNotEmpty()) {
@@ -298,7 +301,7 @@ class SpringCloudIntegrationTest {
           val modulePath = springCloudPath!!.resolve(moduleName).resolve("pom.xml")
           if (modulePath.exists()) {
             try {
-              PomParser.parse(modulePath)
+              MavenParser.parse(modulePath)
             } catch (e: Exception) {
               println("Warning: Could not parse module $moduleName: ${e.message}")
               null
@@ -355,7 +358,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(pomPath)
+    val pom = MavenParser.parse(pomPath)
 
     // Spring Cloud often uses BOM (Bill of Materials) pattern
     // BOMs typically have:
@@ -398,7 +401,7 @@ class SpringCloudIntegrationTest {
       return
     }
 
-    val parentPom = PomParser.parse(pomPath)
+    val parentPom = MavenParser.parse(pomPath)
 
     if (parentPom.modules.isEmpty()) {
       println("Not a multi-module project, skipping inter-module dependency test")
@@ -410,7 +413,7 @@ class SpringCloudIntegrationTest {
       val modulePath = springCloudPath!!.resolve(moduleName).resolve("pom.xml")
       if (modulePath.exists()) {
         try {
-          moduleName to PomParser.parse(modulePath)
+          moduleName to MavenParser.parse(modulePath)
         } catch (e: Exception) {
           println("Warning: Could not parse module $moduleName: ${e.message}")
           null

@@ -28,6 +28,21 @@ abstract class AbstractSecretTest {
     SecretsState.reset()
   }
 
+  companion object {
+    /** Check if GPG is available on the system. */
+    val isGpgAvailable: Boolean by lazy {
+      try {
+        val process = ProcessBuilder("gpg", "--version")
+          .redirectErrorStream(true)
+          .start()
+        val exitCode = process.waitFor()
+        exitCode == 0
+      } catch (e: Exception) {
+        false
+      }
+    }
+  }
+
   protected val secretPass = "sus"
 
   protected val secretFiles =

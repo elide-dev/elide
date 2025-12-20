@@ -17,6 +17,8 @@ import kotlin.test.*
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
+import elide.tooling.project.adopt.maven.MavenParser
+import elide.tooling.project.adopt.PklGenerator
 
 /**
  * Integration test for Apache Commons Lang - validates our implementation works with a real-world project.
@@ -42,7 +44,7 @@ class ApacheCommonsLangIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(commonsLangPath)
+    val pom = MavenParser.parse(commonsLangPath)
 
     // Verify basic project info
     assertEquals("org.apache.commons", pom.groupId)
@@ -106,7 +108,7 @@ class ApacheCommonsLangIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(commonsLangPath)
+    val pom = MavenParser.parse(commonsLangPath)
     val pkl = PklGenerator.generate(pom)
 
     // Verify PKL structure
@@ -144,7 +146,7 @@ class ApacheCommonsLangIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(commonsLangPath)
+    val pom = MavenParser.parse(commonsLangPath)
 
     // Parent POM should be resolved from Maven Central since it's not in the local filesystem
     assertNotNull(pom.parent)

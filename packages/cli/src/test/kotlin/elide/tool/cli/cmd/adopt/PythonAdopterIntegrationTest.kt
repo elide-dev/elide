@@ -17,6 +17,9 @@ import kotlin.test.*
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import elide.tooling.project.adopt.PklGenerator
+import elide.tooling.project.adopt.python.PyProjectParser
+import elide.tooling.project.adopt.python.RequirementsTxtParser
 
 /**
  * Integration tests for Python adopter functionality.

@@ -17,9 +17,11 @@ import kotlin.test.*
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import elide.tooling.project.adopt.gradle.VersionCatalogParser
+import elide.tooling.project.adopt.gradle.VersionCatalog
 
 /** Tests for Gradle version catalog parser functionality. */
-class GradleVersionCatalogParserTest {
+class VersionCatalogParserTest {
   private fun createTempCatalog(content: String): Path {
     val tempFile = Files.createTempFile("test-catalog", ".toml")
     tempFile.writeText(content)
@@ -35,7 +37,7 @@ class GradleVersionCatalogParserTest {
       junit = "5.10.1"
     """.trimIndent())
 
-    val parsed = GradleVersionCatalogParser.parse(catalog)
+    val parsed = VersionCatalogParser.parse(catalog)
 
     assertEquals(3, parsed.versions.size)
     assertEquals("1.9.21", parsed.versions["kotlin"])
@@ -54,7 +56,7 @@ class GradleVersionCatalogParserTest {
       kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
     """.trimIndent())
 
-    val parsed = GradleVersionCatalogParser.parse(catalog)
+    val parsed = VersionCatalogParser.parse(catalog)
 
     assertEquals(2, parsed.libraries.size)
 
@@ -72,7 +74,7 @@ class GradleVersionCatalogParserTest {
       commons-lang3 = { module = "org.apache.commons:commons-lang3", version = "3.14.0" }
     """.trimIndent())
 
-    val parsed = GradleVersionCatalogParser.parse(catalog)
+    val parsed = VersionCatalogParser.parse(catalog)
 
     assertEquals(1, parsed.libraries.size)
 
@@ -90,7 +92,7 @@ class GradleVersionCatalogParserTest {
       junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
     """.trimIndent())
 
-    val parsed = GradleVersionCatalogParser.parse(catalog)
+    val parsed = VersionCatalogParser.parse(catalog)
 
     assertEquals(1, parsed.libraries.size)
 
@@ -114,7 +116,7 @@ class GradleVersionCatalogParserTest {
       ktor = ["ktor-server-core", "ktor-server-netty", "ktor-serialization"]
     """.trimIndent())
 
-    val parsed = GradleVersionCatalogParser.parse(catalog)
+    val parsed = VersionCatalogParser.parse(catalog)
 
     assertEquals(1, parsed.bundles.size)
 
@@ -135,7 +137,7 @@ class GradleVersionCatalogParserTest {
       ktor = { id = "io.ktor.plugin", version = "2.3.6" }
     """.trimIndent())
 
-    val parsed = GradleVersionCatalogParser.parse(catalog)
+    val parsed = VersionCatalogParser.parse(catalog)
 
     assertEquals(2, parsed.plugins.size)
 
@@ -156,7 +158,7 @@ class GradleVersionCatalogParserTest {
     val catalogResource = this::class.java.getResource("/version-catalogs/comprehensive.versions.toml")
     assertNotNull(catalogResource, "Test resource not found")
     val catalogPath = Path.of(catalogResource.toURI())
-    val parsed = GradleVersionCatalogParser.parse(catalogPath)
+    val parsed = VersionCatalogParser.parse(catalogPath)
 
     // Check versions
     assertEquals("1.9.21", parsed.versions["kotlin"])
@@ -188,7 +190,7 @@ class GradleVersionCatalogParserTest {
   @Test
   fun testParseEmptyCatalog() {
     val catalog = createTempCatalog("")
-    val parsed = GradleVersionCatalogParser.parse(catalog)
+    val parsed = VersionCatalogParser.parse(catalog)
 
     assertTrue(parsed.versions.isEmpty())
     assertTrue(parsed.libraries.isEmpty())
@@ -209,7 +211,7 @@ class GradleVersionCatalogParserTest {
       kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
     """.trimIndent())
 
-    val parsed = GradleVersionCatalogParser.parse(catalog)
+    val parsed = VersionCatalogParser.parse(catalog)
 
     assertEquals(1, parsed.versions.size)
     assertEquals("1.9.21", parsed.versions["kotlin"])
@@ -225,7 +227,7 @@ class GradleVersionCatalogParserTest {
     val catalogFile = gradleDir.resolve("libs.versions.toml")
     catalogFile.writeText("[versions]\nkotlin = \"1.9.21\"")
 
-    val found = GradleVersionCatalogParser.findVersionCatalog(projectDir)
+    val found = VersionCatalogParser.findVersionCatalog(projectDir)
     assertNotNull(found)
     assertEquals(catalogFile, found)
   }
@@ -233,7 +235,7 @@ class GradleVersionCatalogParserTest {
   @Test
   fun testFindVersionCatalogNotPresent() {
     val projectDir = Files.createTempDirectory("test-project")
-    val found = GradleVersionCatalogParser.findVersionCatalog(projectDir)
+    val found = VersionCatalogParser.findVersionCatalog(projectDir)
     assertNull(found)
   }
 }

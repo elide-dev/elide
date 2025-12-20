@@ -21,6 +21,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import elide.tooling.project.adopt.python.RequirementsTxtParser
+import elide.tooling.project.adopt.python.PythonDescriptor
 
 /**
  * Tests for [RequirementsTxtParser].

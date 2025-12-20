@@ -17,6 +17,8 @@ import kotlin.test.*
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
+import elide.tooling.project.adopt.node.NodeParser
+import elide.tooling.project.adopt.PklGenerator
 
 /**
  * Integration test for Express.js - validates our Node.js implementation works with a real-world project.
@@ -42,7 +44,7 @@ class ExpressNodeIntegrationTest {
       return
     }
 
-    val pkg = PackageJsonParser.parse(expressPath)
+    val pkg = NodeParser.parse(expressPath)
 
     // Verify basic project info
     assertEquals("express", pkg.name)
@@ -86,7 +88,7 @@ class ExpressNodeIntegrationTest {
       return
     }
 
-    val pkg = PackageJsonParser.parse(expressPath)
+    val pkg = NodeParser.parse(expressPath)
     val pkl = PklGenerator.generate(pkg)
 
     // Verify PKL structure
@@ -125,7 +127,7 @@ class ExpressNodeIntegrationTest {
       return
     }
 
-    val pkg = PackageJsonParser.parse(expressPath)
+    val pkg = NodeParser.parse(expressPath)
     val pkl = PklGenerator.generate(pkg)
 
     // Verify version specs have ^ prefix
@@ -153,7 +155,7 @@ class ExpressNodeIntegrationTest {
       return
     }
 
-    val pkg = PackageJsonParser.parse(expressPath)
+    val pkg = NodeParser.parse(expressPath)
 
     // If Express has peer or optional dependencies, they should be parsed
     if (pkg.peerDependencies.isNotEmpty()) {
@@ -190,7 +192,7 @@ class ExpressNodeIntegrationTest {
       return
     }
 
-    val pkg = PackageJsonParser.parse(expressPath)
+    val pkg = NodeParser.parse(expressPath)
     val pkl = PklGenerator.generate(pkg)
 
     // Scripts should be documented if present

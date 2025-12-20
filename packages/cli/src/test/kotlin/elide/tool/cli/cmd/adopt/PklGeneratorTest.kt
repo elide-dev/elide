@@ -15,6 +15,13 @@ package elide.tool.cli.cmd.adopt
 
 import kotlin.test.*
 import java.nio.file.Paths
+import elide.tooling.project.adopt.PklGenerator
+import elide.tooling.project.adopt.maven.PomDescriptor
+import elide.tooling.project.adopt.maven.MavenDependency
+import elide.tooling.project.adopt.maven.MavenRepository
+import elide.tooling.project.adopt.gradle.GradleDescriptor
+import elide.tooling.project.adopt.python.PythonDescriptor
+import elide.tooling.project.adopt.node.PackageJsonDescriptor
 
 /** Tests for PKL generator functionality. */
 class PklGeneratorTest {
@@ -57,7 +64,7 @@ class PklGeneratorTest {
       modules = emptyList(),
       properties = emptyMap(),
       dependencies = listOf(
-        Dependency("com.google.guava", "guava", "32.1.3-jre", "compile")
+        MavenDependency("com.google.guava", "guava", "32.1.3-jre", "compile")
       ),
       dependencyManagement = emptyMap(),
       parent = null,
@@ -86,12 +93,12 @@ class PklGeneratorTest {
       modules = emptyList(),
       properties = emptyMap(),
       dependencies = listOf(
-        Dependency("com.google.guava", "guava", "32.1.3-jre", "compile")
+        MavenDependency("com.google.guava", "guava", "32.1.3-jre", "compile")
       ),
       dependencyManagement = emptyMap(),
       parent = null,
       repositories = listOf(
-        Repository("central", "https://repo.maven.apache.org/maven2", "Maven Central")
+        MavenRepository("central", "https://repo.maven.apache.org/maven2", "Maven Central")
       ),
       profiles = emptyList(),
       plugins = emptyList(),
@@ -117,12 +124,12 @@ class PklGeneratorTest {
       modules = emptyList(),
       properties = emptyMap(),
       dependencies = listOf(
-        Dependency("com.example", "lib", "1.0.0", "compile")
+        MavenDependency("com.example", "lib", "1.0.0", "compile")
       ),
       dependencyManagement = emptyMap(),
       parent = null,
       repositories = listOf(
-        Repository("jitpack.io", "https://jitpack.io", "JitPack")
+        MavenRepository("jitpack.io", "https://jitpack.io", "JitPack")
       ),
       profiles = emptyList(),
       plugins = emptyList(),
@@ -149,8 +156,8 @@ class PklGeneratorTest {
       modules = emptyList(),
       properties = emptyMap(),
       dependencies = listOf(
-        Dependency("com.google.guava", "guava", "32.1.3-jre", "compile"),
-        Dependency("junit", "junit", "4.13.2", "test")
+        MavenDependency("com.google.guava", "guava", "32.1.3-jre", "compile"),
+        MavenDependency("junit", "junit", "4.13.2", "test")
       ),
       dependencyManagement = emptyMap(),
       parent = null,
@@ -201,7 +208,7 @@ class PklGeneratorTest {
       modules = emptyList(),
       properties = emptyMap(),
       dependencies = listOf(
-        Dependency("com.google.guava", "guava", "32.1.3-jre", "compile")
+        MavenDependency("com.google.guava", "guava", "32.1.3-jre", "compile")
       ),
       dependencyManagement = emptyMap(),
       parent = null,
@@ -221,9 +228,9 @@ class PklGeneratorTest {
       modules = emptyList(),
       properties = emptyMap(),
       dependencies = listOf(
-        Dependency("org.slf4j", "slf4j-api", "2.0.9", "compile"),
+        MavenDependency("org.slf4j", "slf4j-api", "2.0.9", "compile"),
         // Inter-module dependency (should be filtered out)
-        Dependency("com.example", "module-a", "1.0.0", "compile")
+        MavenDependency("com.example", "module-a", "1.0.0", "compile")
       ),
       dependencyManagement = emptyMap(),
       parent = null,
@@ -281,7 +288,7 @@ class PklGeneratorTest {
       modules = emptyList(),
       properties = emptyMap(),
       dependencies = listOf(
-        Dependency("com.google.guava", "guava", "32.1.3-jre", "compile")
+        MavenDependency("com.google.guava", "guava", "32.1.3-jre", "compile")
       ),
       dependencyManagement = emptyMap(),
       parent = null,

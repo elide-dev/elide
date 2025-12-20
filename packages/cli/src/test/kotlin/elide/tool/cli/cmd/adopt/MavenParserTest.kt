@@ -17,9 +17,10 @@ import kotlin.test.*
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import elide.tooling.project.adopt.maven.MavenParser
 
 /** Tests for POM parser functionality. */
-class PomParserTest {
+class MavenParserTest {
   private fun createTempPom(content: String): Path {
     val tempFile = Files.createTempFile("test-pom", ".xml")
     tempFile.writeText(content)
@@ -38,7 +39,7 @@ class PomParserTest {
       </project>
     """.trimIndent())
 
-    val descriptor = PomParser.parse(pom)
+    val descriptor = MavenParser.parse(pom)
 
     assertEquals("com.example", descriptor.groupId)
     assertEquals("test-project", descriptor.artifactId)
@@ -70,7 +71,7 @@ class PomParserTest {
       </project>
     """.trimIndent())
 
-    val descriptor = PomParser.parse(pom)
+    val descriptor = MavenParser.parse(pom)
 
     assertEquals(2, descriptor.plugins.size)
 
@@ -122,7 +123,7 @@ class PomParserTest {
       </project>
     """.trimIndent())
 
-    val descriptor = PomParser.parse(pom)
+    val descriptor = MavenParser.parse(pom)
 
     assertEquals(3, descriptor.dependencies.size)
 
@@ -166,7 +167,7 @@ class PomParserTest {
       </project>
     """.trimIndent())
 
-    val descriptor = PomParser.parse(pom)
+    val descriptor = MavenParser.parse(pom)
 
     val guavaDep = descriptor.dependencies.find { it.artifactId == "guava" }
     assertNotNull(guavaDep)
@@ -198,7 +199,7 @@ class PomParserTest {
       </project>
     """.trimIndent())
 
-    val descriptor = PomParser.parse(pom)
+    val descriptor = MavenParser.parse(pom)
 
     assertEquals(2, descriptor.repositories.size)
 
@@ -231,7 +232,7 @@ class PomParserTest {
       </project>
     """.trimIndent())
 
-    val descriptor = PomParser.parse(pom)
+    val descriptor = MavenParser.parse(pom)
 
     assertEquals("pom", descriptor.packaging)
     assertEquals(3, descriptor.modules.size)
@@ -275,7 +276,7 @@ class PomParserTest {
       </project>
     """.trimIndent())
 
-    val descriptor = PomParser.parse(pom)
+    val descriptor = MavenParser.parse(pom)
 
     assertEquals(2, descriptor.profiles.size)
 
@@ -323,10 +324,10 @@ class PomParserTest {
       </project>
     """.trimIndent())
 
-    val descriptor = PomParser.parse(pom)
+    val descriptor = MavenParser.parse(pom)
     assertEquals(1, descriptor.dependencies.size)
 
-    val activatedDescriptor = PomParser.activateProfiles(descriptor, listOf("extra-deps"))
+    val activatedDescriptor = MavenParser.activateProfiles(descriptor, listOf("extra-deps"))
     assertEquals(2, activatedDescriptor.dependencies.size)
 
     val baseDep = activatedDescriptor.dependencies.find { it.artifactId == "base-lib" }

@@ -17,6 +17,9 @@ import kotlin.test.*
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import elide.tooling.project.adopt.bazel.BazelParser
+import elide.tooling.project.adopt.bazel.BazelDescriptor
+import elide.tooling.project.adopt.PklGenerator
 
 /**
  * Unit tests for BazelParser.

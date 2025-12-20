@@ -17,6 +17,8 @@ import kotlin.test.*
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
+import elide.tooling.project.adopt.maven.MavenParser
+import elide.tooling.project.adopt.PklGenerator
 
 /**
  * Integration test for Jackson Databind - validates complex parent POM hierarchy resolution.
@@ -54,7 +56,7 @@ class JacksonDatabindIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(jacksonDatabindPath!!)
+    val pom = MavenParser.parse(jacksonDatabindPath!!)
 
     // Verify basic project info
     assertEquals("com.fasterxml.jackson.core", pom.groupId)
@@ -100,7 +102,7 @@ class JacksonDatabindIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(jacksonDatabindPath!!)
+    val pom = MavenParser.parse(jacksonDatabindPath!!)
 
     // Jackson Databind has multi-level parent hierarchy:
     // jackson-databind -> jackson-base -> jackson-parent -> oss-parent
@@ -134,7 +136,7 @@ class JacksonDatabindIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(jacksonDatabindPath!!)
+    val pom = MavenParser.parse(jacksonDatabindPath!!)
 
     // Jackson uses dependency management extensively across modules
     assertTrue(pom.dependencyManagement.isNotEmpty(), "Should have dependency management")
@@ -169,7 +171,7 @@ class JacksonDatabindIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(jacksonDatabindPath!!)
+    val pom = MavenParser.parse(jacksonDatabindPath!!)
     val pkl = PklGenerator.generate(pom)
 
     // Verify PKL structure
@@ -212,7 +214,7 @@ class JacksonDatabindIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(jacksonDatabindPath!!)
+    val pom = MavenParser.parse(jacksonDatabindPath!!)
 
     // Jackson uses various Maven plugins
     assertTrue(pom.plugins.isNotEmpty(), "Should detect build plugins")
@@ -245,7 +247,7 @@ class JacksonDatabindIntegrationTest {
       return
     }
 
-    val pom = PomParser.parse(jacksonDatabindPath!!)
+    val pom = MavenParser.parse(jacksonDatabindPath!!)
 
     // Jackson uses property-based version management
     assertTrue(pom.properties.isNotEmpty(), "Should have properties")

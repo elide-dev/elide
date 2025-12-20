@@ -663,6 +663,7 @@ dependencies {
   // Tests
   testImplementation(libs.kotlin.test.junit5)
   testImplementation(projects.packages.test)
+  testImplementation(projects.packages.tooling)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.junit.jupiter.api)
   testImplementation(libs.junit.jupiter.params)

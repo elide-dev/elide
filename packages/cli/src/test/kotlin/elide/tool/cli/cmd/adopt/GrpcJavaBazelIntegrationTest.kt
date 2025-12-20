@@ -17,6 +17,8 @@ import kotlin.test.*
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
+import elide.tooling.project.adopt.bazel.BazelParser
+import elide.tooling.project.adopt.PklGenerator
 
 /**
  * Integration test for gRPC-Java - validates our Bazel implementation works with a real-world project.

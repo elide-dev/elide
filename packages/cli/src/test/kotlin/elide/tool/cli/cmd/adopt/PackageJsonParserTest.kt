@@ -17,11 +17,14 @@ import kotlin.test.*
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import elide.tooling.project.adopt.node.NodeParser
+import elide.tooling.project.adopt.node.PackageJsonDescriptor
+import elide.tooling.project.adopt.PklGenerator
 
 /**
- * Unit tests for PackageJsonParser.
+ * Unit tests for NodeParser.
  */
-class PackageJsonParserTest {
+class NodeParserTest {
   private lateinit var tempDir: Path
 
   @BeforeTest
@@ -55,7 +58,7 @@ class PackageJsonParserTest {
     val packageJsonFile = tempDir.resolve("package.json")
     packageJsonFile.writeText(packageJsonContent)
 
-    val pkg = PackageJsonParser.parse(packageJsonFile)
+    val pkg = NodeParser.parse(packageJsonFile)
 
     assertEquals("test-package", pkg.name)
     assertEquals("1.0.0", pkg.version)
@@ -86,7 +89,7 @@ class PackageJsonParserTest {
     val packageJsonFile = tempDir.resolve("package.json")
     packageJsonFile.writeText(packageJsonContent)
 
-    val pkg = PackageJsonParser.parse(packageJsonFile)
+    val pkg = NodeParser.parse(packageJsonFile)
 
     assertEquals("monorepo", pkg.name)
     assertEquals(2, pkg.workspaces.size)
@@ -112,7 +115,7 @@ class PackageJsonParserTest {
     val packageJsonFile = tempDir.resolve("package.json")
     packageJsonFile.writeText(packageJsonContent)
 
-    val pkg = PackageJsonParser.parse(packageJsonFile)
+    val pkg = NodeParser.parse(packageJsonFile)
 
     assertEquals("monorepo", pkg.name)
     assertEquals(2, pkg.workspaces.size)
@@ -139,7 +142,7 @@ class PackageJsonParserTest {
     val packageJsonFile = tempDir.resolve("package.json")
     packageJsonFile.writeText(packageJsonContent)
 
-    val pkg = PackageJsonParser.parse(packageJsonFile)
+    val pkg = NodeParser.parse(packageJsonFile)
 
     assertEquals("plugin-package", pkg.name)
 
@@ -169,7 +172,7 @@ class PackageJsonParserTest {
     val packageJsonFile = tempDir.resolve("package.json")
     packageJsonFile.writeText(packageJsonContent)
 
-    val pkg = PackageJsonParser.parse(packageJsonFile)
+    val pkg = NodeParser.parse(packageJsonFile)
 
     assertEquals(4, pkg.scripts.size)
     assertEquals("node index.js", pkg.scripts["start"])
@@ -189,7 +192,7 @@ class PackageJsonParserTest {
     val packageJsonFile = tempDir.resolve("package.json")
     packageJsonFile.writeText(packageJsonContent)
 
-    val pkg = PackageJsonParser.parse(packageJsonFile)
+    val pkg = NodeParser.parse(packageJsonFile)
 
     assertEquals("minimal-package", pkg.name)
     assertNull(pkg.version)
@@ -204,7 +207,7 @@ class PackageJsonParserTest {
     val nonExistentFile = tempDir.resolve("missing-package.json")
 
     assertFailsWith<IllegalArgumentException> {
-      PackageJsonParser.parse(nonExistentFile)
+      NodeParser.parse(nonExistentFile)
     }
   }
 

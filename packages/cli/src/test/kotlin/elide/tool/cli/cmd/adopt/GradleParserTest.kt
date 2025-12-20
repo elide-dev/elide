@@ -17,6 +17,8 @@ import kotlin.test.*
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.writeText
+import elide.tooling.project.adopt.gradle.GradleParser
+import elide.tooling.project.adopt.PklGenerator
 
 /** Tests for Gradle build file parser functionality. */
 class GradleParserTest {

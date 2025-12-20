@@ -18,6 +18,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
+import elide.tooling.project.adopt.gradle.GradleParser
+import elide.tooling.project.adopt.gradle.VersionCatalogParser
+import elide.tooling.project.adopt.PklGenerator
 
 /**
  * Integration test for OkHttp - validates Gradle build file parsing.

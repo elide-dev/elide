@@ -16,6 +16,10 @@ package elide.tool.cli.cmd.adopt
 import kotlin.test.*
 import java.nio.file.Paths
 import kotlin.io.path.exists
+import elide.tooling.project.adopt.PklGenerator
+import elide.tooling.project.adopt.python.PyProjectParser
+import elide.tooling.project.adopt.python.RequirementsTxtParser
+import elide.tooling.project.adopt.python.PythonDescriptor
 
 /**
  * Real-world integration tests for Python projects.

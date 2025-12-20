@@ -56,7 +56,7 @@ class JarOptions {
 
 /// Abstract definition of a JAR resource.
 abstract class JarResource {
-  /// File path to mount this resource at within the JAR.
+  /// File path to be mounted as a resource within the JAR.
   path: common.FilePath
 }
 

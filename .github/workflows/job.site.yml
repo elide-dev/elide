@@ -119,12 +119,12 @@ jobs:
         run: |
           tar -czf site.tar.gz build/site
       - name: "Upload: Manifest"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: site-tarball-phase1
           path: ./site.tar.gz
       - name: "Upload: Site"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: site-manifest
           path: ./site/docs/app/build/generated/ksp/main/resources/elide/runtime/generated/app.manifest.pb
@@ -247,7 +247,7 @@ jobs:
           rm -fv site.tar.gz;
           tar -czf site.tar.gz build/site;
       - name: "Upload: Site Tarball"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: site-tarball-phase2
           path: ./site.tar.gz

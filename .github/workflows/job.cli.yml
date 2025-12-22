@@ -253,21 +253,21 @@ jobs:
           popd;
           echo "Binary compressed.";
       - name: "Artifacts: Debug Binary (Unix)"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: success() && !contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide.xz
       - name: "Artifacts: Debug Binary (Windows)"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-debug-${{ matrix.tag }}
           path: |
             ./packages/cli/build/native/nativeCompile/elide
       - name: "Artifacts: Dashboard Dump"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: success()
         with:
           name: cli-debug-report-${{ matrix.tag }}
@@ -398,7 +398,7 @@ jobs:
             -Pversion=${{ inputs.version }} \
             -Pelide.version=${{ inputs.version }}
       - name: "Artifacts: Release Binary (Posix)"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: success() && contains(matrix.runner, 'windows') != true
         with:
           name: cli-release-${{ matrix.tag }}
@@ -408,7 +408,7 @@ jobs:
             ./packages/cli/build/nativeOptimizedCompile/elide-${{ inputs.version }}-${{ matrix.tag }}.*.tgz
             ./packages/cli/build/nativeOptimizedCompile/elide-${{ inputs.version }}-${{ matrix.tag }}.*.txz
       - name: "Artifacts: Release Binary (Windows)"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         if: success() && contains(matrix.runner, 'windows')
         with:
           name: cli-release-${{ matrix.tag }}

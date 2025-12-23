@@ -232,7 +232,6 @@ val buildEmbedded: String by settings
 val buildBenchmarks: String by settings
 val enableNativeTransport: String by settings
 val buildExperimentalEntrypoint: String by settings
-val buildIdePlugins: String by settings
 
 if (buildExperimentalEntrypoint.toBoolean()) {
   include(":packages:entry")
@@ -258,12 +257,6 @@ if (enableNativeTransport.toBoolean()) {
 if (buildBenchmarks.toBoolean()) {
   include(
     ":tools:benchmarks:bench-graalvm",
-  )
-}
-
-if (buildIdePlugins.toBoolean()) {
-  include(
-    ":packages:plugin-idea",
   )
 }
 

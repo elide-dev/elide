@@ -37,12 +37,16 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextStyle
+import com.github.ajalt.mordant.rendering.TextStyles
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
 import elide.tool.cli.ToolState
 import elide.tool.exec.SubprocessRunner.runTask
 import elide.tool.exec.SubprocessRunner.stringToTask
+import elide.tooling.cli.Statics
 
 @Command(
   name = "db",
@@ -84,6 +88,24 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     private val SQLITE_EXTENSIONS = setOf(".db", ".sqlite", ".sqlite3", ".db3")
     private const val MAX_WAIT_SECONDS = 60
     private const val PORT_CHECK_INTERVAL_MS = 1000L
+  }
+
+  private suspend fun <T> CommandContext.executeStep(
+    stepName: String,
+    block: suspend () -> T
+  ): Result<T> {
+    val result = runCatching { block() }
+
+    output {
+      append(TextStyles.dim("  $stepName... "))
+      if (result.isSuccess) {
+        append(TextColors.green("✓"))
+      } else {
+        append(TextColors.red("✗"))
+      }
+    }
+
+    return result
   }
 
   private suspend fun waitForServerReady(port: Int, name: String, maxWait: Int = MAX_WAIT_SECONDS): Boolean {
@@ -257,66 +279,77 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     Files.createDirectories(apiDir)
     Files.createDirectories(uiDir)
 
+    output {
+      appendLine(TextStyles.bold("Generating DB Studio files..."))
+    }
+
     // Extract API server files from embedded resources to .dev/db-studio/api/
-    try {
+    executeStep("Extracting API resources") {
       extractResourceDirectory(STUDIO_API_RESOURCE, apiDir)
-    } catch (e: Exception) {
+    }.onFailure { e ->
       return CommandResult.err(
         message = "Failed to extract API resources from $STUDIO_API_RESOURCE: ${e.message}"
       )
     }
 
     // Extract React app UI files from embedded resources to .dev/db-studio/ui/
-    try {
+    executeStep("Extracting UI resources") {
       extractResourceDirectory(STUDIO_UI_RESOURCE, uiDir)
-    } catch (e: Exception) {
+    }.onFailure { e ->
       return CommandResult.err(
         message = "Failed to extract UI resources from $STUDIO_UI_RESOURCE: ${e.message}"
       )
     }
 
-    // Always use databases array - either discover or create from single path
-    val databases = if (databasePath == null) {
-      val discovered = discoverDatabases()
+    // Discover databases
+    val databases = executeStep("Discovering databases") {
+      if (databasePath == null) {
+        discoverDatabases()
+      } else {
+        val dbPath = Path.of(databasePath!!)
 
-      if (discovered.isEmpty()) {
-        return CommandResult.err(message = "No SQLite databases found in current directory or user data directories. If you're targeting a database file outside of this directory, provide the path as an argument (e.g. \"elide db studio /my/database/path.db\")")
-      }
-
-      discovered
-    } else {
-      val dbPath = Path.of(databasePath!!)
-
-      if (!dbPath.exists()) {
-        return CommandResult.err(message = "Path not found: $databasePath")
-      }
-
-      when {
-        // If it's a directory, discover databases within it
-        dbPath.isDirectory() -> {
-          val discovered = discoverDatabases(dbPath)
-
-          if (discovered.isEmpty()) {
-            return CommandResult.err(message = "No SQLite databases found in directory: $databasePath")
-          }
-
-          discovered
+        if (!dbPath.exists()) {
+          error("Path not found: $databasePath")
         }
-        // If it's a file, use it as a single database
-        dbPath.isRegularFile() -> {
-          listOf(
-            DiscoveredDatabase(
-              id = generateDatabaseId(dbPath),
-              path = dbPath.toAbsolutePath().toString(),
-              name = dbPath.name,
-              size = dbPath.fileSize(),
-              lastModified = dbPath.getLastModifiedTime().toMillis(),
+
+        when {
+          // If it's a directory, discover databases within it
+          dbPath.isDirectory() -> discoverDatabases(dbPath)
+          // If it's a file, use it as a single database
+          dbPath.isRegularFile() -> {
+            listOf(
+              DiscoveredDatabase(
+                id = generateDatabaseId(dbPath),
+                path = dbPath.toAbsolutePath().toString(),
+                name = dbPath.name,
+                size = dbPath.fileSize(),
+                lastModified = dbPath.getLastModifiedTime().toMillis(),
+              )
             )
-          )
+          }
+          else -> error("Path must be a file or directory: $databasePath")
         }
-        else -> {
-          return CommandResult.err(message = "Path must be a file or directory: $databasePath")
+      }
+    }.onFailure { e ->
+      return CommandResult.err(message = e.message ?: "Failed to discover databases")
+    }.getOrThrow()
+
+    // Check if any databases were found
+    if (databases.isEmpty()) {
+      return CommandResult.err(
+        message = if (databasePath == null) {
+          "No SQLite databases found in current directory or user data directories. If you're targeting a database file outside of this directory, provide the path as an argument (e.g. \"elide db studio /my/database/path.db\")"
+        } else {
+          "No SQLite databases found in directory: $databasePath"
         }
+      )
+    }
+
+    // Output discovered databases
+    output {
+      appendLine(TextStyles.dim("  Found ${databases.size} database(s):"))
+      databases.forEach { db ->
+        appendLine(TextStyles.dim("    • ${db.path}"))
       }
     }
 
@@ -338,47 +371,35 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
     val configFile = apiDir.resolve("config.ts")
     configFile.writeText(configContent)
 
-    output {
-      appendLine("Starting Database Studio...")
-      appendLine()
-    }
-
     // Install and build API server dependencies
-    try {
-      output {
-        appendLine("Installing API dependencies...")
-      }
-
+    executeStep("Installing dependencies") {
       runTask(stringToTask(
-        "elide install",
-        shell = elide.tooling.runner.ProcessRunner.ProcessShell.None,
+        "elide install > /dev/null 2>&1",
+        shell = elide.tooling.runner.ProcessRunner.ProcessShell.Active,
         workingDirectory = apiDir
       )).asDeferred().await()
-
-      output {
-        appendLine("Building API server...")
-      }
-
-      runTask(stringToTask(
-        "elide build",
-        shell = elide.tooling.runner.ProcessRunner.ProcessShell.None,
-        workingDirectory = apiDir
-      )).asDeferred().await()
-
-      output {
-        appendLine("Setup complete!")
-        appendLine()
-      }
-    } catch (e: Exception) {
+    }.onFailure { e ->
       return CommandResult.err(
         message = "Failed to setup API server: ${e.message}"
       )
     }
 
-    // Start both servers concurrently and wait for them
+    executeStep("Building API server") {
+      runTask(stringToTask(
+        "elide build > /dev/null 2>&1",
+        shell = elide.tooling.runner.ProcessRunner.ProcessShell.Active,
+        workingDirectory = apiDir
+      )).asDeferred().await()
+    }.onFailure { e ->
+      return CommandResult.err(
+        message = "Failed to setup API server: ${e.message}"
+      )
+    }
+
+    output { appendLine() }
+
     return try {
       coroutineScope {
-        // Start API server task
         val apiTask = async {
           runTask(stringToTask(
             "elide run $STUDIO_INDEX_FILE",
@@ -387,42 +408,39 @@ internal class DbStudioCommand : AbstractSubcommand<ToolState, CommandContext>()
           ))
         }
 
-        // Start UI server task
         val uiTask = async {
           runTask(stringToTask(
-            "elide serve $STUDIO_OUTPUT_DIR/ui --port $port",
-            shell = elide.tooling.runner.ProcessRunner.ProcessShell.None
+            "elide serve --single $STUDIO_OUTPUT_DIR/ui --port $port > /dev/null 2>&1",
+            shell = elide.tooling.runner.ProcessRunner.ProcessShell.Active
           ))
         }
 
-        // Wait for API server to be ready
         if (!waitForServerReady(apiPort, "API Server")) {
           return@coroutineScope CommandResult.err(message = "API Server didn't start within $MAX_WAIT_SECONDS seconds")
         }
 
-        // Wait for UI server to be ready
         if (!waitForServerReady(port, "UI Server")) {
           return@coroutineScope CommandResult.err(message = "UI Server didn't start within $MAX_WAIT_SECONDS seconds")
         }
 
+
         output {
           appendLine()
-          appendLine("✓ Database Studio is running!")
+          val url = "http://localhost:$port/"
+          append((TextStyles.bold)(TextColors.brightMagenta("Elide Database Studio")))
+          append(TextStyles.dim(" is running at "))
+          append((TextStyles.bold)(url))
           appendLine()
-          appendLine("  UI:  http://localhost:$port")
-          appendLine("  API: http://localhost:$apiPort")
           appendLine()
-          appendLine("Press Ctrl+C to stop all servers")
+          appendLine(TextStyles.dim("  → Press ${TextStyles.bold("Ctrl+C")} to stop"))
           appendLine()
         }
 
-        // Wait for both servers to complete (they run until interrupted)
         awaitAll(apiTask.await().asDeferred(), uiTask.await().asDeferred())
 
         CommandResult.success()
       }
     } catch (e: Exception) {
-      // Servers were interrupted or failed, clean up gracefully
       CommandResult.success()
     }
   }

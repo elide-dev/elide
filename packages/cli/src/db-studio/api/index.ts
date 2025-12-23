@@ -69,5 +69,5 @@ const server = createServer(handleRequest);
 
 // Start listening on configured port
 server.listen(port, () => {
-  console.log(`Database Studio API started on http://localhost:${port} 🚀`);
+  // console.log(`Database Studio API started on http://localhost:${port} 🚀`);
 });

@@ -1,0 +1,48 @@
+import { useEffect, useRef } from 'react'
+import { useParams } from 'react-router-dom'
+import { useQueryExecution } from '../hooks/useQueryExecution'
+import { useDatabaseTables } from '../hooks/useDatabaseTables'
+import { useDbLocalStorage } from '../hooks/useLocalStorage'
+import { QueryEditor } from '../components/QueryEditor'
+import { QueryResults } from '../components/QueryResults'
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable'
+
+export default function Query() {
+  const { dbId } = useParams()
+  const [sql, setSql] = useDbLocalStorage(dbId, 'query-editor-sql', '')
+  const hasSetDefault = useRef(false)
+
+  const { data: tables = [] } = useDatabaseTables(dbId)
+  const { mutate: executeQuery, data: result, isPending: loading, error } = useQueryExecution(dbId)
+
+  // Set default query only if localStorage was empty and we haven't set it yet
+  useEffect(() => {
+    if (!hasSetDefault.current && !sql && tables.length > 0) {
+      const firstTable = tables.find((t) => t.type === 'table')
+      if (firstTable) {
+        setSql(`SELECT * FROM "${firstTable.name}" LIMIT 50;`)
+        hasSetDefault.current = true
+      }
+    }
+  }, [tables, sql, setSql])
+
+  const handleExecute = () => executeQuery({ sql: sql.trim() })
+
+  return (
+    <div className="flex-1 p-0 overflow-hidden font-mono flex flex-col h-full">
+      <ResizablePanelGroup direction="vertical" className="h-full">
+        <ResizablePanel defaultSize={40} minSize={20} maxSize={70}>
+          <QueryEditor sql={sql} onSqlChange={setSql} onExecute={handleExecute} loading={loading} />
+        </ResizablePanel>
+
+        <ResizableHandle withHandle className="bg-border" />
+
+        <ResizablePanel defaultSize={60} minSize={30}>
+          <div className="flex-1 overflow-auto h-full">
+            <QueryResults result={result ?? null} loading={loading} error={error} />
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
+  )
+}

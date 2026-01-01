@@ -153,7 +153,10 @@ import elide.vm.annotations.Polyglot
     value.isString -> {
       val bytes = value.asString().toByteArray(StandardCharsets.UTF_8)
 
+      if (!headers.has("Content-Type")) {
       headers.set("Content-Type", "text/plain")
+  }
+
       headers.set("Content-Length", bytes.size.toString())
 
       ReadableStream.wrap(bytes)
@@ -176,7 +179,10 @@ import elide.vm.annotations.Polyglot
     else -> {
       val json = Json.encodeToString(GuestValueSerializer, value)
 
+      if (!headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json")
+  }
+
       headers.set("Content-Length", json.length.toString())
 
       ReadableStream.wrap(json.toByteArray(StandardCharsets.UTF_8))

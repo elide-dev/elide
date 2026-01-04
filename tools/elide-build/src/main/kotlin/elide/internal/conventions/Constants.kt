@@ -219,7 +219,7 @@ public object Constants {
   /** Static library configuration values. */
   public object Elide {
     /** Version string for the library. */
-    public const val VERSION: String = "1.0.0-beta11-rc5"
+    public const val VERSION: String = "1.0.0-beta11-rc6"
 
     /** Maven group shared by Elide artifacts. */
     public const val GROUP: String = "dev.elide"

@@ -12,12 +12,6 @@
  */
 package elide.runtime.gvm.internals.intrinsics.js.fetch
 
-import io.micronaut.core.annotation.Introspected
-import io.micronaut.core.annotation.ReflectiveAccess
-import org.graalvm.polyglot.Value
-import org.graalvm.polyglot.proxy.ProxyInstantiable
-import java.nio.charset.StandardCharsets
-import kotlinx.serialization.json.Json
 import elide.runtime.core.DelicateElideApi
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractJsIntrinsic
@@ -29,13 +23,23 @@ import elide.runtime.gvm.js.JsSymbol.JsSymbols.asPublicJsSymbol
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.*
 import elide.vm.annotations.Polyglot
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
+import java.nio.charset.StandardCharsets
+import kotlinx.serialization.json.Json
+import org.graalvm.polyglot.Value
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 
 /**
  * # Fetch API
  *
  * TBD.
  */
-@Intrinsic @ReflectiveAccess @Introspected internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
+@Intrinsic
+@ReflectiveAccess
+@Introspected
+internal class FetchIntrinsic : FetchAPI, AbstractJsIntrinsic() {
+
   internal companion object {
     /** Global where the fetch method is available. */
     private const val GLOBAL_FETCH = "fetch"
@@ -60,16 +64,17 @@ import elide.vm.annotations.Polyglot
       val first = it.getOrNull(0)
       val second = it.getOrNull(1)
 
-      // first parameter is expected to be a URL string or parsed URL
       val url: URLIntrinsic.URLValue = when {
         first != null && first.isProxyObject -> first.asProxyObject()
         first != null && first.isString -> URLIntrinsic.URLValue.create(first.asString())
         else -> throw JsError.typeError("First parameter to Request must be a string or URL")
       }
+
       val options = when {
         second == null || second.isNull -> FetchRequestIntrinsic.FetchRequestOptions()
         else -> FetchRequestIntrinsic.FetchRequestOptions.from(second)
       }
+
       FetchRequestIntrinsic(
         targetUrl = url,
         targetMethod = options.method,
@@ -86,8 +91,12 @@ import elide.vm.annotations.Polyglot
     bindings[GLOBAL_RESPONSE.asPublicJsSymbol()] = ProxyInstantiable {
       val first = it.getOrNull(0)
       val second = it.getOrNull(1)
+
       if (first == null && second == null) {
-        return@ProxyInstantiable FetchResponseIntrinsic(null, FetchResponseIntrinsic.FetchResponseOptions())
+        return@ProxyInstantiable FetchResponseIntrinsic(
+          null,
+          FetchResponseIntrinsic.FetchResponseOptions(),
+        )
       }
 
       val options = when {
@@ -95,8 +104,8 @@ import elide.vm.annotations.Polyglot
         else -> FetchResponseIntrinsic.FetchResponseOptions.from(second)
       }
 
-      val headers = options.headers?.let { headers ->
-        headers as? FetchMutableHeaders ?: FetchHeadersIntrinsic.from(headers)
+      val headers = options.headers?.let { hdrs ->
+        hdrs as? FetchMutableHeaders ?: FetchHeadersIntrinsic.from(hdrs)
       } ?: FetchHeadersIntrinsic.empty()
 
       FetchResponseIntrinsic.ResponseConstructors.create(
@@ -108,37 +117,34 @@ import elide.vm.annotations.Polyglot
       )
     }
 
-    // mount `fetch` method
+    // mount `fetch`
     bindings[GLOBAL_FETCH.asPublicJsSymbol()] = { request: Value ->
       handleFetch(request)
     }
   }
 
   // Handle a polymorphic VM-originating request to `fetch`.
-  @Polyglot private fun handleFetch(request: Value): JsPromise<FetchResponse> = when {
-    // invocation with a plain URL string
+  @Polyglot
+  private fun handleFetch(request: Value): JsPromise<FetchResponse> = when {
     request.isString -> fetch(request.asString())
 
-    // invocation with a mocked `Request`
-    request.isHostObject && request.asHostObject<Any>() is FetchRequest -> fetch(
-      request.asHostObject() as FetchRequest,
-    )
+    request.isHostObject && request.asHostObject<Any>() is FetchRequest ->
+      fetch(request.asHostObject() as FetchRequest)
 
-    // invocation with a mocked `Request`
-    request.isHostObject && request.asHostObject<Any>() is URL -> fetch(
-      request.asHostObject() as URL,
-    )
+    request.isHostObject && request.asHostObject<Any>() is URL ->
+      fetch(request.asHostObject() as URL)
 
     else -> error("Unsupported invocation of `fetch`")
   }
 
-  override fun fetch(url: String): JsPromise<FetchResponse> = fetch(
-    FetchRequestIntrinsic(url),
-  )
+  override fun fetch(url: String): JsPromise<FetchResponse> =
+    fetch(FetchRequestIntrinsic(url))
 
-  override fun fetch(request: FetchRequest): JsPromise<FetchResponse> = handleFetch(Value.asValue(request))
+  override fun fetch(request: FetchRequest): JsPromise<FetchResponse> =
+    handleFetch(Value.asValue(request))
 
-  override fun fetch(url: URL): JsPromise<FetchResponse> = handleFetch(Value.asValue(url))
+  override fun fetch(url: URL): JsPromise<FetchResponse> =
+    handleFetch(Value.asValue(url))
 
   private fun mapResponseBody(
     value: Value?,
@@ -146,43 +152,49 @@ import elide.vm.annotations.Polyglot
     fallback: Boolean = false,
   ): ReadableStream? = when {
     value == null || value.isNull -> null
-    // readable streams can be passed directly
-    value.isProxyObject && !fallback -> runCatching { value.asProxyObject<ReadableStream>() }
-      .getOrElse { mapResponseBody(value, headers, fallback = true) }
-    // strings are supported directly
+
+    value.isProxyObject && !fallback ->
+      runCatching { value.asProxyObject<ReadableStream>() }
+        .getOrElse { mapResponseBody(value, headers, fallback = true) }
+
     value.isString -> {
       val bytes = value.asString().toByteArray(StandardCharsets.UTF_8)
 
       if (!headers.has("Content-Type")) {
-      headers.set("Content-Type", "text/plain")
-  }
-
+        headers.set("Content-Type", "text/plain")
+      }
       headers.set("Content-Length", bytes.size.toString())
 
       ReadableStream.wrap(bytes)
     }
-    // buffer-like objects are wrapped as-is, the consumer can choose to use the bytes
+
     value.hasBufferElements() -> {
-      headers.set("Content-Type", "application/octet-stream")
+      if (!headers.has("Content-Type")) {
+        headers.set("Content-Type", "application/octet-stream")
+      }
       headers.set("Content-Length", value.bufferSize.toString())
 
       ReadableStream.from(listOf(value))
     }
-    // array buffer views can be unwrapped and sent as plain buffers
+
     ArrayBufferViews.getViewTypeOrNull(value) != null -> {
-      headers.set("Content-Type", "application/octet-stream")
-      headers.set("Content-Length", ArrayBufferViews.getLength(value).toString())
+      if (!headers.has("Content-Type")) {
+        headers.set("Content-Type", "application/octet-stream")
+      }
+      headers.set(
+        "Content-Length",
+        ArrayBufferViews.getLength(value).toString(),
+      )
 
       ReadableStream.wrap(ArrayBufferViews.readViewedBytes(value))
     }
-    // fall back to JSON serialization
+
     else -> {
       val json = Json.encodeToString(GuestValueSerializer, value)
 
       if (!headers.has("Content-Type")) {
-      headers.set("Content-Type", "application/json")
-  }
-
+        headers.set("Content-Type", "application/json")
+      }
       headers.set("Content-Length", json.length.toString())
 
       ReadableStream.wrap(json.toByteArray(StandardCharsets.UTF_8))

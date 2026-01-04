@@ -1,0 +1,13 @@
+{
+    "name": "db-studio-api",
+    "version": "1.0.0",
+    "description": "Database Studio API Server",
+    "main": "index.ts",
+    "scripts": {},
+    "dependencies": {
+        "zod": "4"
+    },
+    "devDependencies": {
+        "@elide-dev/types": "1.0.0-beta10"
+    }
+}

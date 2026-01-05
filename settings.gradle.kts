@@ -214,6 +214,7 @@ include(
   ":packages:graalvm-wasm",
   ":packages:http",
   ":packages:local-ai",
+  ":packages:manager",
   ":packages:platform",
   ":packages:runner",
   ":packages:secrets",

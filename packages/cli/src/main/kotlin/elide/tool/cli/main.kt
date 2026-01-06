@@ -29,7 +29,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.system.exitProcess
-import elide.manager.InstallManager
+import elide.versions.VersionManager
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.tool.cli.Elide.Companion.installStatics
 import elide.tool.cli.Elide.Companion.runVersion
@@ -84,7 +84,7 @@ private inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI_ENTRY_V
   false -> Elide.entry(args)
   true -> createApplicationContext(args).start().use { applicationContext ->
     // if a different version of elide is requested, run that version
-    runVersion(args, applicationContext.getBean(InstallManager::class.java)) ?:
+    runVersion(args, applicationContext.getBean(VersionManager::class.java)) ?:
       MicronautFactory(applicationContext).use { factory ->
         runCatching {
           val procInfo = ProcessHandle.current().info()

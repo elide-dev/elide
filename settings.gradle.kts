@@ -214,7 +214,6 @@ include(
   ":packages:graalvm-wasm",
   ":packages:http",
   ":packages:local-ai",
-  ":packages:manager",
   ":packages:platform",
   ":packages:runner",
   ":packages:secrets",
@@ -225,6 +224,7 @@ include(
   ":packages:telemetry",
   ":packages:test",
   ":packages:tooling",
+  ":packages:versions",
   ":tools:reports",
   ":tools:umbrella",
 )

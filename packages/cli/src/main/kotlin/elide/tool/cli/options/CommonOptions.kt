@@ -22,12 +22,9 @@ import java.util.*
 import kotlin.properties.Delegates
 import elide.tooling.cli.Statics
 import elide.tool.cli.output.TOOL_LOGGER_NAME
+import elide.versions.VersionsValues
 
 private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
-
-internal const val IGNORE_VERSION_FLAG = "--ignore-version"
-
-internal const val USE_VERSION_FLAG = "--use-version"
 
 /**
  * # Options: Common
@@ -120,7 +117,7 @@ internal const val USE_VERSION_FLAG = "--use-version"
 
   /** Specifies that `.elideversion` in current directory should be ignored. */
   @Option(
-    names = [IGNORE_VERSION_FLAG],
+    names = [VersionsValues.IGNORE_VERSION_FLAG],
     description = ["Whether .elideversion should be ignored"],
     defaultValue = "false",
   )
@@ -128,7 +125,7 @@ internal const val USE_VERSION_FLAG = "--use-version"
 
   /** Specifies a version of Elide to be used, overriding `.elideversion`. */
   @Option(
-    names = [USE_VERSION_FLAG],
+    names = [VersionsValues.USE_VERSION_FLAG],
     description = ["Version of Elide to use"],
     paramLabel = "version",
   )

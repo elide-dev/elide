@@ -620,7 +620,7 @@ dependencies {
   implementation(projects.packages.secrets)
 
   // Version management
-  implementation(projects.packages.manager)
+  implementation(projects.packages.versions)
 
   // KotlinX
   implementation(libs.kotlinx.serialization.core)

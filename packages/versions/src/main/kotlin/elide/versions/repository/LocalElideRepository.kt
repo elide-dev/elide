@@ -1,4 +1,16 @@
-package elide.manager.repository
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+package elide.versions.repository
 
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.io.Buffer
@@ -9,10 +21,12 @@ import kotlinx.io.files.SystemFileSystem
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.decodeFromSource
-import elide.manager.DownloadCompletedEvent
-import elide.manager.DownloadProgressEvent
-import elide.manager.DownloadStartEvent
-import elide.manager.ElideInstallEvent
+import elide.versions.DownloadCompletedEvent
+import elide.versions.DownloadProgressEvent
+import elide.versions.DownloadStartEvent
+import elide.versions.ElideInstallEvent
+import elide.versions.VersionsValues.INSTALL_IO_BUFFER
+import elide.versions.VersionsValues.INSTALL_PROGRESS_INTERVAL
 
 /**
  * Local implementation of [StandardElideRepository]. [catalogPath] is a local absolute file path.
@@ -34,11 +48,11 @@ internal class LocalElideRepository(catalogPath: String) : StandardElideReposito
         progress?.emit(DownloadStartEvent)
         var progressCounter = 0
         while (!source.exhausted()) {
-          if (progressCounter == PROGRESS_INTERVAL) {
+          if (progressCounter == INSTALL_PROGRESS_INTERVAL) {
             progress?.emit(DownloadProgressEvent(read.toFloat() / size.toFloat()))
             progressCounter = 0
           }
-          source.readAtMostTo(buffer, BUFFER)
+          source.readAtMostTo(buffer, INSTALL_IO_BUFFER)
           read += buffer.transferTo(sink)
           progressCounter++
         }
@@ -48,9 +62,4 @@ internal class LocalElideRepository(catalogPath: String) : StandardElideReposito
   }
 
   override fun close() = Unit
-
-  companion object {
-    private const val BUFFER = 1024 * 1024L
-    private const val PROGRESS_INTERVAL = 20
-  }
 }

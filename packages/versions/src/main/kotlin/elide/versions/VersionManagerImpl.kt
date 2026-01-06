@@ -1,4 +1,16 @@
-package elide.manager
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+package elide.versions
 
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import org.bouncycastle.crypto.digests.SHA256Digest
@@ -17,18 +29,30 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.decodeFromSource
 import elide.annotations.Singleton
-import elide.manager.repository.ElideRepository
-import elide.manager.repository.ElideRepositoryFactory
-import elide.manager.repository.getFile
+import elide.versions.repository.ElideRepository
+import elide.versions.repository.ElideRepositoryFactory
+import elide.versions.repository.getFile
 import elide.runtime.core.HostPlatform
+import elide.versions.VersionsValues.INSTALL_IO_BUFFER
+import elide.versions.VersionsValues.CONFIG_FILE
+import elide.versions.VersionsValues.ELEVATED_FLAG
+import elide.versions.VersionsValues.INSTALL_PATH_FLAG
+import elide.versions.VersionsValues.INSTALL_VERSION_FLAG
+import elide.versions.VersionsValues.NO_CONFIRM_FLAG
+import elide.versions.VersionsValues.INSTALL_PROGRESS_INTERVAL
+import elide.versions.VersionsValues.PROJECT_VERSION_FILE
+import elide.versions.VersionsValues.STAMP_FILE
+import elide.versions.VersionsValues.UNINSTALL_VERSION_FLAG
+import elide.versions.VersionsValues.VERSIONS_COMMAND
+import elide.versions.VersionsValues.VERSION_FILE
 
 /**
- * Implementation of [InstallManager].
+ * Implementation of [VersionManager].
  *
  * @author Lauri Heino <datafox>
  */
 @Singleton
-internal class InstallManagerImpl(repositoryFactory: ElideRepositoryFactory) : InstallManager {
+internal class VersionManagerImpl(repositoryFactory: ElideRepositoryFactory) : VersionManager {
   private val config: ElideInstallConfig by lazy { resolveConfig() }
   private val repositories by lazy { config.repositories.asSequence().map { repositoryFactory.get(it) }.toList() }
 
@@ -55,6 +79,7 @@ internal class InstallManagerImpl(repositoryFactory: ElideRepositoryFactory) : I
     repositories
       .flatMap { it.getVersions() }
       .let { if (onlyCurrentSystem) it.filter { ver -> ver.platform == PLATFORM } else it }
+      .distinct()
 
   override suspend fun install(elevated: Boolean, version: String, path: String?, progress: FlowCollector<ElideInstallEvent>?): String? {
     repositories.forEach { repository ->
@@ -74,6 +99,7 @@ internal class InstallManagerImpl(repositoryFactory: ElideRepositoryFactory) : I
     val stampFile = Path(path, STAMP_FILE)
     require(SystemFileSystem.exists(stampFile)) { "stampfile does not exist" }
     val lines = SystemFileSystem.source(stampFile).buffered().readString().trim().lines()
+    if (lines.size == 1 && lines.first().isBlank()) return listOf("!!blank stampfile!!")
     progress?.emit(FileVerifyStartEvent)
     val failed = mutableListOf<String>()
     lines.forEachIndexed { index, line ->
@@ -103,6 +129,17 @@ internal class InstallManagerImpl(repositoryFactory: ElideRepositoryFactory) : I
     else if (!elevated) elevatedUninstall(installation)
     else throw IllegalStateException("Process is already elevated but files cannot be deleted")
   }
+
+  override suspend fun generateStampFile(path: String): String = Path(path)
+    .recursive()
+    .filter { it.name != STAMP_FILE }
+    .filter { SystemFileSystem.metadataOrNull(it)!!.isRegularFile }
+    .sortedBy { it.toString() }
+    .map {
+      val relativePath = it.toString().substringAfter(path)
+      val hash = calculateHash(it)
+      "$hash  .$relativePath"
+    }.joinToString("\n")
 
   private fun Path.recursive(): Sequence<Path> = SystemFileSystem.list(this).asSequence().flatMap {
     if (SystemFileSystem.metadataOrNull(it)!!.isDirectory) {
@@ -225,23 +262,23 @@ internal class InstallManagerImpl(repositoryFactory: ElideRepositoryFactory) : I
   }
 
   private fun elevatedInstall(version: ElideVersionDto, path: String, installDir: Path): String? = if (elevatedAction(buildList {
-      add("manager")
-      add("--install-version")
+      add(VERSIONS_COMMAND)
+      add(INSTALL_VERSION_FLAG)
       add(version.version)
-      add("--install-path")
+      add(INSTALL_PATH_FLAG)
       add(path)
-      add("--no-confirm")
-      add("--elevated")
+      add(NO_CONFIRM_FLAG)
+      add(ELEVATED_FLAG)
     })) installDir.toString() else null
 
   private fun elevatedUninstall(install: ElideInstallation): Boolean = elevatedAction(buildList {
-    add("manager")
-    add("--uninstall-version")
+    add(VERSIONS_COMMAND)
+    add(UNINSTALL_VERSION_FLAG)
     add(install.version.version)
-    add("--install-path")
+    add(INSTALL_PATH_FLAG)
     add(install.path)
-    add("--no-confirm")
-    add("--elevated")
+    add(NO_CONFIRM_FLAG)
+    add(ELEVATED_FLAG)
   })
 
   private fun elevatedAction(params: List<String>): Boolean = if (ImageInfo.isExecutable() && runElevated(params) == 0) true
@@ -292,12 +329,12 @@ internal class InstallManagerImpl(repositoryFactory: ElideRepositoryFactory) : I
     progress?.emit(VerifyStartEvent)
     var progressCounter = 0
     while (!source.exhausted()) {
-      if (progressCounter == PROGRESS_INTERVAL) {
+      if (progressCounter == INSTALL_PROGRESS_INTERVAL) {
         progress?.emit(VerifyProgressEvent(read.toFloat() / size.toFloat()))
         progressCounter = 0
       }
       val data = Buffer()
-      read += source.readAtMostTo(data, BUFFER)
+      read += source.readAtMostTo(data, INSTALL_IO_BUFFER)
       val arr = data.readByteArray()
       digest.update(arr, 0, arr.size)
       progressCounter++
@@ -351,15 +388,11 @@ internal class InstallManagerImpl(repositoryFactory: ElideRepositoryFactory) : I
     }
   }
 
+  /**
+   * Platform-specific defaults for configuration. Linux user directories depend on XDG standards, specifically
+   * XDG_CONFIG_HOME and XDG_DATA_HOME.
+   */
   companion object {
-    private const val BUFFER = 1024 * 1024L
-    private const val PROGRESS_INTERVAL = 20
-
-    const val CONFIG_FILE = "elide.json"
-    const val STAMP_FILE = "stampfile"
-    const val VERSION_FILE = "version"
-    const val PROJECT_VERSION_FILE = ".elideversion"
-
     val PLATFORM = HostPlatform.resolve()
     val BINARY_NAME = if (PLATFORM.os == HostPlatform.OperatingSystem.WINDOWS) "elide.exe" else "elide"
     val GLOBAL_CONFIG_PATH =
@@ -383,8 +416,11 @@ internal class InstallManagerImpl(repositoryFactory: ElideRepositoryFactory) : I
         HostPlatform.OperatingSystem.DARWIN -> "$HOME/Library/Application Support/config/elide/$CONFIG_FILE"
         HostPlatform.OperatingSystem.WINDOWS -> "$HOME\\AppData\\Local\\elide\\config\\$CONFIG_FILE"
       }
-    // TODO: get default repositories when they exist
-    val DEFAULT_REPOSITORIES = listOf<String>()
+    val DEFAULT_REPOSITORIES by lazy {
+      Any::class.java.getResourceAsStream("/repositories")?.run {
+        asSource().buffered().readString().trim().lineSequence().filter { it.startsWith('#') }.toList()
+      } ?: emptyList()
+    }
     val DEFAULT_CONFIG =
       ElideInstallConfig(
         when (PLATFORM.os) {

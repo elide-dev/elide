@@ -1,4 +1,16 @@
-package elide.manager.repository
+/*
+ * Copyright (c) 2024-2025 Elide Technologies, Inc.
+ *
+ * Licensed under the MIT license (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ *   https://opensource.org/license/mit/
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under the License.
+ */
+package elide.versions.repository
 
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -10,10 +22,11 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.io.Sink
-import elide.manager.DownloadCompletedEvent
-import elide.manager.DownloadProgressEvent
-import elide.manager.DownloadStartEvent
-import elide.manager.ElideInstallEvent
+import elide.versions.DownloadCompletedEvent
+import elide.versions.DownloadProgressEvent
+import elide.versions.DownloadStartEvent
+import elide.versions.ElideInstallEvent
+import elide.versions.VersionsValues.INSTALL_IO_BUFFER
 
 /**
  * Remote implementation of [StandardElideRepository]. [catalogPath] is an HTTPS address.
@@ -38,7 +51,7 @@ internal class RemoteElideRepository(
         var read = 0L
         while (!channel.exhausted()) {
           progress?.emit(DownloadProgressEvent(read.toFloat() / size.toFloat()))
-          read += channel.readRemaining(BUFFER).transferTo(sink)
+          read += channel.readRemaining(INSTALL_IO_BUFFER).transferTo(sink)
         }
         progress?.emit(DownloadCompletedEvent)
       }
@@ -47,9 +60,5 @@ internal class RemoteElideRepository(
 
   override fun close() {
     client.close()
-  }
-
-  companion object {
-    private const val BUFFER = 1024 * 1024L
   }
 }

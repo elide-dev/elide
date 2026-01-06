@@ -1,0 +1,386 @@
+public synthetic class elide/versions/$VersionManagerImpl$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public final class elide/versions/DownloadCompletedEvent : elide/versions/ElideInstallEvent {
+	public static final field INSTANCE Lelide/versions/DownloadCompletedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/DownloadProgressEvent : elide/versions/ElideInstallEvent {
+	public fun <init> (F)V
+	public final fun component1 ()F
+	public final fun copy (F)Lelide/versions/DownloadProgressEvent;
+	public static synthetic fun copy$default (Lelide/versions/DownloadProgressEvent;FILjava/lang/Object;)Lelide/versions/DownloadProgressEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getProgress ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/DownloadStartEvent : elide/versions/ElideInstallEvent {
+	public static final field INSTANCE Lelide/versions/DownloadStartEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/versions/ElideFileVerifyEvent : elide/versions/ElideInstallEvent {
+}
+
+public final class elide/versions/ElideInstallConfig {
+	public static final field Companion Lelide/versions/ElideInstallConfig$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;)Lelide/versions/ElideInstallConfig;
+	public static synthetic fun copy$default (Lelide/versions/ElideInstallConfig;Ljava/util/List;Ljava/util/List;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lelide/versions/ElideInstallConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDefaultInstallDir ()Ljava/lang/String;
+	public final fun getInstallDirs ()Ljava/util/List;
+	public final fun getRepositories ()Ljava/util/List;
+	public final fun getSearchDirs ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/versions/ElideInstallConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/versions/ElideInstallConfig$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/versions/ElideInstallConfig;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/versions/ElideInstallConfig;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/versions/ElideInstallConfig$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/versions/ElideInstallEvent {
+}
+
+public final class elide/versions/ElideInstallation {
+	public static final field Companion Lelide/versions/ElideInstallation$Companion;
+	public fun <init> (Lelide/versions/ElideVersionDto;Ljava/lang/String;)V
+	public final fun component1 ()Lelide/versions/ElideVersionDto;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lelide/versions/ElideVersionDto;Ljava/lang/String;)Lelide/versions/ElideInstallation;
+	public static synthetic fun copy$default (Lelide/versions/ElideInstallation;Lelide/versions/ElideVersionDto;Ljava/lang/String;ILjava/lang/Object;)Lelide/versions/ElideInstallation;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPath ()Ljava/lang/String;
+	public final fun getVersion ()Lelide/versions/ElideVersionDto;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/versions/ElideInstallation$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/versions/ElideInstallation$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/versions/ElideInstallation;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/versions/ElideInstallation;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/versions/ElideInstallation$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class elide/versions/ElideUninstallEvent {
+}
+
+public final class elide/versions/ElideVersionDto {
+	public static final field Companion Lelide/versions/ElideVersionDto$Companion;
+	public fun <init> (Ljava/lang/String;Lelide/runtime/core/HostPlatform;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lelide/runtime/core/HostPlatform;
+	public final fun copy (Ljava/lang/String;Lelide/runtime/core/HostPlatform;)Lelide/versions/ElideVersionDto;
+	public static synthetic fun copy$default (Lelide/versions/ElideVersionDto;Ljava/lang/String;Lelide/runtime/core/HostPlatform;ILjava/lang/Object;)Lelide/versions/ElideVersionDto;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInfo ()Lelide/runtime/version/ElideVersion;
+	public final fun getPlatform ()Lelide/runtime/core/HostPlatform;
+	public final fun getVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/versions/ElideVersionDto$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/versions/ElideVersionDto$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/versions/ElideVersionDto;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/versions/ElideVersionDto;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/versions/ElideVersionDto$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/versions/FileVerifyCompletedEvent : elide/versions/ElideFileVerifyEvent {
+	public static final field INSTANCE Lelide/versions/FileVerifyCompletedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/FileVerifyIndeterminateEvent : elide/versions/ElideFileVerifyEvent {
+	public static final field INSTANCE Lelide/versions/FileVerifyIndeterminateEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/FileVerifyProgressEvent : elide/versions/ElideFileVerifyEvent {
+	public fun <init> (FLjava/lang/String;)V
+	public final fun component1 ()F
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (FLjava/lang/String;)Lelide/versions/FileVerifyProgressEvent;
+	public static synthetic fun copy$default (Lelide/versions/FileVerifyProgressEvent;FLjava/lang/String;ILjava/lang/Object;)Lelide/versions/FileVerifyProgressEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getProgress ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/FileVerifyStartEvent : elide/versions/ElideFileVerifyEvent {
+	public static final field INSTANCE Lelide/versions/FileVerifyStartEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/InstallCompletedEvent : elide/versions/ElideInstallEvent {
+	public static final field INSTANCE Lelide/versions/InstallCompletedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/InstallFileEvent : elide/versions/ElideInstallEvent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/versions/InstallFileEvent;
+	public static synthetic fun copy$default (Lelide/versions/InstallFileEvent;Ljava/lang/String;ILjava/lang/Object;)Lelide/versions/InstallFileEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/InstallProgressEvent : elide/versions/ElideInstallEvent {
+	public fun <init> (F)V
+	public final fun component1 ()F
+	public final fun copy (F)Lelide/versions/InstallProgressEvent;
+	public static synthetic fun copy$default (Lelide/versions/InstallProgressEvent;FILjava/lang/Object;)Lelide/versions/InstallProgressEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getProgress ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/InstallStartEvent : elide/versions/ElideInstallEvent {
+	public static final field INSTANCE Lelide/versions/InstallStartEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/UninstallCompletedEvent : elide/versions/ElideUninstallEvent {
+	public static final field INSTANCE Lelide/versions/UninstallCompletedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/UninstallProgressEvent : elide/versions/ElideUninstallEvent {
+	public fun <init> (FLjava/lang/String;)V
+	public final fun component1 ()F
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (FLjava/lang/String;)Lelide/versions/UninstallProgressEvent;
+	public static synthetic fun copy$default (Lelide/versions/UninstallProgressEvent;FLjava/lang/String;ILjava/lang/Object;)Lelide/versions/UninstallProgressEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getProgress ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/UninstallStartEvent : elide/versions/ElideUninstallEvent {
+	public static final field INSTANCE Lelide/versions/UninstallStartEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/VerifyCompletedEvent : elide/versions/ElideInstallEvent {
+	public static final field INSTANCE Lelide/versions/VerifyCompletedEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/VerifyProgressEvent : elide/versions/ElideInstallEvent {
+	public fun <init> (F)V
+	public final fun component1 ()F
+	public final fun copy (F)Lelide/versions/VerifyProgressEvent;
+	public static synthetic fun copy$default (Lelide/versions/VerifyProgressEvent;FILjava/lang/Object;)Lelide/versions/VerifyProgressEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getProgress ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class elide/versions/VerifyStartEvent : elide/versions/ElideInstallEvent {
+	public static final field INSTANCE Lelide/versions/VerifyStartEvent;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class elide/versions/VersionManager {
+	public abstract fun generateStampFile (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getAvailable (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getAvailable$default (Lelide/versions/VersionManager;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getInstallPaths ()Ljava/util/List;
+	public abstract fun getInstallations (Z)Ljava/util/List;
+	public abstract fun install (ZLjava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun install$default (Lelide/versions/VersionManager;ZLjava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun onStartup (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun onStartup$default (Lelide/versions/VersionManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public abstract fun uninstall (ZLelide/versions/ElideInstallation;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun uninstall$default (Lelide/versions/VersionManager;ZLelide/versions/ElideInstallation;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun verifyInstall (Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun verifyInstall$default (Lelide/versions/VersionManager;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class elide/versions/VersionsValues {
+	public static final field CATALOG_FILE Ljava/lang/String;
+	public static final field CONFIG_FILE Ljava/lang/String;
+	public static final field ELEVATED_FLAG Ljava/lang/String;
+	public static final field IGNORE_VERSION_FLAG Ljava/lang/String;
+	public static final field INSTALL_PATH_FLAG Ljava/lang/String;
+	public static final field INSTALL_VERSION_FLAG Ljava/lang/String;
+	public static final field INSTANCE Lelide/versions/VersionsValues;
+	public static final field NO_CONFIRM_FLAG Ljava/lang/String;
+	public static final field PROJECT_VERSION_FILE Ljava/lang/String;
+	public static final field STAMP_FILE Ljava/lang/String;
+	public static final field UNINSTALL_VERSION_FLAG Ljava/lang/String;
+	public static final field USE_VERSION_FLAG Ljava/lang/String;
+	public static final field VERSIONS_COMMAND Ljava/lang/String;
+	public static final field VERSION_FILE Ljava/lang/String;
+}
+
+public synthetic class elide/versions/repository/$ElideRepositoryFactoryImpl$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public synthetic class elide/versions/repository/$VersionCatalogFactoryImpl$Definition : io/micronaut/context/AbstractInitializableBeanDefinitionAndReference {
+	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
+	public fun <init> ()V
+	protected fun <init> (Ljava/lang/Class;Lio/micronaut/context/AbstractInitializableBeanDefinition$MethodOrFieldReference;)V
+	public fun instantiate (Lio/micronaut/context/BeanResolutionContext;Lio/micronaut/context/BeanContext;)Ljava/lang/Object;
+	public fun isEnabled (Lio/micronaut/context/BeanContext;)Z
+	public fun isEnabled (Lio/micronaut/context/BeanContext;Lio/micronaut/context/BeanResolutionContext;)Z
+	public fun load ()Lio/micronaut/inject/BeanDefinition;
+}
+
+public abstract interface class elide/versions/repository/ElideRepository {
+	public abstract fun close ()V
+	public abstract fun getFile (Lelide/versions/ElideVersionDto;Ljava/lang/String;Lkotlinx/io/Sink;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getFile$default (Lelide/versions/repository/ElideRepository;Lelide/versions/ElideVersionDto;Ljava/lang/String;Lkotlinx/io/Sink;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getVersions (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class elide/versions/repository/ElideRepositoryFactory {
+	public abstract fun get (Ljava/lang/String;)Lelide/versions/repository/ElideRepository;
+}
+
+public final class elide/versions/repository/ElideRepositoryKt {
+	public static final fun getFile (Lelide/versions/repository/ElideRepository;Lelide/versions/ElideVersionDto;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class elide/versions/repository/ElideSystemCatalog {
+	public static final field Companion Lelide/versions/repository/ElideSystemCatalog$Companion;
+	public fun <init> (Ljava/util/Map;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;)Lelide/versions/repository/ElideSystemCatalog;
+	public static synthetic fun copy$default (Lelide/versions/repository/ElideSystemCatalog;Ljava/util/Map;ILjava/lang/Object;)Lelide/versions/repository/ElideSystemCatalog;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPlatforms ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/versions/repository/ElideSystemCatalog$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/versions/repository/ElideSystemCatalog$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/versions/repository/ElideSystemCatalog;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/versions/repository/ElideSystemCatalog;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/versions/repository/ElideSystemCatalog$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/versions/repository/ElideVersionCatalog {
+	public static final field Companion Lelide/versions/repository/ElideVersionCatalog$Companion;
+	public fun <init> (Ljava/util/Map;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;)Lelide/versions/repository/ElideVersionCatalog;
+	public static synthetic fun copy$default (Lelide/versions/repository/ElideVersionCatalog;Ljava/util/Map;ILjava/lang/Object;)Lelide/versions/repository/ElideVersionCatalog;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getVersions ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/versions/repository/ElideVersionCatalog$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/versions/repository/ElideVersionCatalog$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/versions/repository/ElideVersionCatalog;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/versions/repository/ElideVersionCatalog;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/versions/repository/ElideVersionCatalog$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/versions/repository/ElideVersionCatalogKt {
+	public static final fun toVersionCatalog (Ljava/util/Map;)Lelide/versions/repository/ElideVersionCatalog;
+}
+
+public abstract interface class elide/versions/repository/VersionCatalogFactory {
+	public abstract fun createLocalCatalog (Lkotlinx/io/files/Path;Z)Ljava/lang/String;
+	public abstract fun createRemoteCatalog (Lkotlinx/io/files/Path;Ljava/lang/String;)Ljava/lang/String;
+}
+

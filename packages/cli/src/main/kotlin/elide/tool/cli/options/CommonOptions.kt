@@ -118,7 +118,7 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
   /** Specifies that `.elideversion` in current directory should be ignored. */
   @Option(
     names = [VersionsValues.IGNORE_VERSION_FLAG],
-    description = ["Whether .elideversion should be ignored"],
+    description = ["Ignore .elideversion file and ${VersionsValues.USE_VERSION_FLAG}"],
     defaultValue = "false",
   )
   var ignoreVersion: Boolean = false
@@ -126,7 +126,7 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
   /** Specifies a version of Elide to be used, overriding `.elideversion`. */
   @Option(
     names = [VersionsValues.USE_VERSION_FLAG],
-    description = ["Version of Elide to use"],
+    description = ["Version of Elide to run"],
     paramLabel = "version",
   )
   var useVersion: String? = null

@@ -76,7 +76,7 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
   /** Specifies a version of Elide that should be installed. */
   @CommandLine.Option(
     names = [VersionsValues.INSTALL_VERSION_FLAG],
-    description = ["Installs specified version of Elide if possible and exits."],
+    description = ["Install specified version of Elide if possible and exit"],
     paramLabel = "version",
   )
   private var installVersion: String? = null
@@ -84,7 +84,7 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
   /** Specifies a version of Elide that should be uninstalled. */
   @CommandLine.Option(
     names = [VersionsValues.UNINSTALL_VERSION_FLAG],
-    description = ["Uninstalls specified version of Elide if possible and exits."],
+    description = ["Uninstall specified version of Elide if possible and exit"],
     paramLabel = "version",
   )
   private var uninstallVersion: String? = null
@@ -92,7 +92,7 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
   /** Specifies if this version of Elide should be verified with a stampfile. */
   @CommandLine.Option(
     names = ["--verify-stampfile"],
-    description = ["Verifies all files of this Elide installation and exits."],
+    description = ["Verify all files of this Elide installation and exit"],
     defaultValue = "false",
   )
   private var verify: Boolean = false
@@ -116,7 +116,7 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
   /** Specifies a path to install Elide to. */
   @CommandLine.Option(
     names = [VersionsValues.INSTALL_PATH_FLAG],
-    description = ["Specifies a path to install Elide to."],
+    description = ["Path to install Elide to"],
     paramLabel = "path",
   )
   private var installPath: String? = null
@@ -124,7 +124,7 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
   /** Specifies if confirmations should be ignored. */
   @CommandLine.Option(
     names = [VersionsValues.NO_CONFIRM_FLAG],
-    description = ["If specified, ignores confirmations."],
+    description = ["Ignore all confirmations"],
     defaultValue = "false",
   )
   private var noConfirm: Boolean = false

@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.manager
+package elide.versions
 
 import kotlinx.coroutines.flow.FlowCollector
 
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.FlowCollector
  *
  * @author Lauri Heino <datafox>
  */
-public interface InstallManager {
+public interface VersionManager {
   /** Returns the path to the version of Elide that should be run, or `null` if current should be used. */
   public fun onStartup(currentVersion: String, requestedVersion: String? = null): String?
 
@@ -71,4 +71,11 @@ public interface InstallManager {
    * @param progress Flow collector for progress events.
    */
   public suspend fun uninstall(elevated: Boolean, installation: ElideInstallation, progress: FlowCollector<ElideUninstallEvent>? = null)
+
+  /**
+   * Generates a stampfile for all files in [path] and returns it.
+   *
+   * @param path Path to a directory.
+   */
+  public suspend fun generateStampFile(path: String): String
 }

@@ -33,7 +33,7 @@ import kotlin.time.TimeSource
 import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
-import elide.manager.InstallManager
+import elide.versions.VersionManager
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.runtime.gvm.internals.ProcessManager
@@ -51,7 +51,7 @@ import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.init.InitCommand
-import elide.tool.cli.cmd.manager.ToolManagerCommand
+import elide.tool.cli.cmd.versions.ToolVersionsCommand
 import elide.tool.cli.cmd.manifest.ManifestCommand
 import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
@@ -65,11 +65,9 @@ import elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter
 import elide.tool.cli.cmd.tool.jib.JibAdapter
 import elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapter
 import elide.tool.cli.cmd.tool.nativeImage.NativeImageAdapter
-import elide.tool.cli.cmd.verify.ToolVerifyCommand
 import elide.tool.cli.options.CommonOptions
-import elide.tool.cli.options.IGNORE_VERSION_FLAG
+import elide.versions.VersionsValues
 import elide.tool.cli.options.ProjectOptions
-import elide.tool.cli.options.USE_VERSION_FLAG
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
 import elide.tool.err.DefaultErrorHandler
@@ -140,8 +138,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     Elide.Completions::class,
     ToolSecretsCommand::class,
     ToolS3Command::class,
-    ToolManagerCommand::class,
-    ToolVerifyCommand::class,
+    ToolVersionsCommand::class,
   ],
   customSynopsis = [
     "",
@@ -360,17 +357,17 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     }
 
     // parse version delegation flags and run with a different version of elide if applicable
-    fun runVersion(args: Array<String>, manager: InstallManager): Int? {
-      if (IGNORE_VERSION_FLAG in args) return null
+    fun runVersion(args: Array<String>, manager: VersionManager): Int? {
+      if (VersionsValues.IGNORE_VERSION_FLAG in args) return null
       var args: Array<String> = args
-      val requested = args.find { it.startsWith(USE_VERSION_FLAG) }?.let {
+      val requested = args.find { it.startsWith(VersionsValues.USE_VERSION_FLAG) }?.let {
         val mutableArgs = args.toMutableList()
         val index = args.indexOf(it)
         mutableArgs.removeAt(index)
-        val version = if (it == USE_VERSION_FLAG) {
+        val version = if (it == VersionsValues.USE_VERSION_FLAG) {
           mutableArgs.removeAt(index)
           args.getOrNull(index + 1)
-        } else it.substring(USE_VERSION_FLAG.length + 1)
+        } else it.substring(VersionsValues.USE_VERSION_FLAG.length + 1)
         args = mutableArgs.toTypedArray()
         version
       }
@@ -409,7 +406,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
         .also { initLog("Application context started; loading tool entrypoint") }
         .use {
           // if a different version of elide is requested, run that version
-          runVersion(args, it.getBean(InstallManager::class.java))?.let { exitCode ->
+          runVersion(args, it.getBean(VersionManager::class.java))?.let { exitCode ->
             return exitCode
           }
 

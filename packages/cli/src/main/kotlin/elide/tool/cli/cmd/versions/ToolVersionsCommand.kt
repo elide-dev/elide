@@ -10,7 +10,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under the License.
  */
-package elide.tool.cli.cmd.manager
+package elide.tool.cli.cmd.versions
 
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptConfirm
@@ -27,27 +27,28 @@ import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.writeString
+import kotlin.io.path.absolutePathString
 import kotlin.time.Clock
 import elide.annotations.Inject
-import elide.manager.DownloadCompletedEvent
-import elide.manager.DownloadProgressEvent
-import elide.manager.DownloadStartEvent
-import elide.manager.FileVerifyCompletedEvent
-import elide.manager.FileVerifyIndeterminateEvent
-import elide.manager.FileVerifyProgressEvent
-import elide.manager.FileVerifyStartEvent
-import elide.manager.InstallCompletedEvent
-import elide.manager.InstallFileEvent
-import elide.manager.InstallManager
-import elide.manager.InstallProgressEvent
-import elide.manager.InstallStartEvent
-import elide.manager.UninstallCompletedEvent
-import elide.manager.UninstallProgressEvent
-import elide.manager.UninstallStartEvent
-import elide.manager.VerifyCompletedEvent
-import elide.manager.VerifyProgressEvent
-import elide.manager.VerifyStartEvent
-import elide.manager.repository.RepositoryManager
+import elide.versions.DownloadCompletedEvent
+import elide.versions.DownloadProgressEvent
+import elide.versions.DownloadStartEvent
+import elide.versions.FileVerifyCompletedEvent
+import elide.versions.FileVerifyIndeterminateEvent
+import elide.versions.FileVerifyProgressEvent
+import elide.versions.FileVerifyStartEvent
+import elide.versions.InstallCompletedEvent
+import elide.versions.InstallFileEvent
+import elide.versions.VersionManager
+import elide.versions.InstallProgressEvent
+import elide.versions.InstallStartEvent
+import elide.versions.UninstallCompletedEvent
+import elide.versions.UninstallProgressEvent
+import elide.versions.UninstallStartEvent
+import elide.versions.VerifyCompletedEvent
+import elide.versions.VerifyProgressEvent
+import elide.versions.VerifyStartEvent
+import elide.versions.repository.VersionCatalogFactory
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
@@ -56,24 +57,25 @@ import elide.tool.cli.cfg.ElideCLITool
 import elide.tool.cli.progress.Progress
 import elide.tool.cli.progress.TrackedTask
 import elide.tooling.cli.Statics
+import elide.versions.VersionsValues
 
 /** Subcommand for managing concurrent installations of Elide. */
 @Command(
-  name = "manager",
+  name = VersionsValues.VERSIONS_COMMAND,
   description = ["Manage Elide installations on this system"],
   mixinStandardHelpOptions = true,
 )
 @Introspected
 @ReflectiveAccess
-internal class ToolManagerCommand : AbstractSubcommand<ToolState, CommandContext>() {
-  @Inject private lateinit var managerProvider: Provider<InstallManager>
-  @Inject private lateinit var repositoryManagerProvider: Provider<RepositoryManager>
-  private val manager: InstallManager by lazy { managerProvider.get() }
-  private val repositoryManager: RepositoryManager by lazy { repositoryManagerProvider.get() }
+internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContext>() {
+  @Inject private lateinit var managerProvider: Provider<VersionManager>
+  @Inject private lateinit var factoryProvider: Provider<VersionCatalogFactory>
+  private val manager: VersionManager by lazy { managerProvider.get() }
+  private val factory: VersionCatalogFactory by lazy { factoryProvider.get() }
 
   /** Specifies a version of Elide that should be installed. */
   @CommandLine.Option(
-    names = ["--install-version"],
+    names = [VersionsValues.INSTALL_VERSION_FLAG],
     description = ["Installs specified version of Elide if possible and exits."],
     paramLabel = "version",
   )
@@ -81,15 +83,39 @@ internal class ToolManagerCommand : AbstractSubcommand<ToolState, CommandContext
 
   /** Specifies a version of Elide that should be uninstalled. */
   @CommandLine.Option(
-    names = ["--uninstall-version"],
+    names = [VersionsValues.UNINSTALL_VERSION_FLAG],
     description = ["Uninstalls specified version of Elide if possible and exits."],
     paramLabel = "version",
   )
   private var uninstallVersion: String? = null
 
+  /** Specifies if this version of Elide should be verified with a stampfile. */
+  @CommandLine.Option(
+    names = ["--verify-stampfile"],
+    description = ["Verifies all files of this Elide installation and exits."],
+    defaultValue = "false",
+  )
+  private var verify: Boolean = false
+
+  /** Specifies if a stampfile should be generated. */
+  @CommandLine.Option(
+    names = ["--generate-stampfile"],
+    defaultValue = "false",
+    hidden = true,
+  )
+  private var generate: Boolean = false
+
+  /** Specifies if the repository catalog generator should be used. */
+  @CommandLine.Option(
+    names = ["--create-catalog"],
+    defaultValue = "false",
+    hidden = true,
+  )
+  private var catalog: Boolean = false
+
   /** Specifies a path to install Elide to. */
   @CommandLine.Option(
-    names = ["--install-path"],
+    names = [VersionsValues.INSTALL_PATH_FLAG],
     description = ["Specifies a path to install Elide to."],
     paramLabel = "path",
   )
@@ -97,7 +123,7 @@ internal class ToolManagerCommand : AbstractSubcommand<ToolState, CommandContext
 
   /** Specifies if confirmations should be ignored. */
   @CommandLine.Option(
-    names = ["--no-confirm"],
+    names = [VersionsValues.NO_CONFIRM_FLAG],
     description = ["If specified, ignores confirmations."],
     defaultValue = "false",
   )
@@ -105,25 +131,23 @@ internal class ToolManagerCommand : AbstractSubcommand<ToolState, CommandContext
 
   /** Specifies if this command was run elevated by another Elide process. */
   @CommandLine.Option(
-    names = ["--elevated"],
+    names = [VersionsValues.ELEVATED_FLAG],
     defaultValue = "false",
     hidden = true,
   )
   private var elevated: Boolean = false
 
-  /** Specifies if the repository catalog generator should be used. */
-  @CommandLine.Option(
-    names = ["--catalog"],
-    defaultValue = "false",
-    hidden = true,
-  )
-  private var catalog: Boolean = false
-
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    if (catalog) return catalogTool()
-    if (installVersion != null && uninstallVersion != null) {
-      return CommandResult.err(1, "--install-version and --uninstall-version must not be set simultaneously")
+    val operatingModes = mapOf(
+      VersionsValues.INSTALL_VERSION_FLAG to (installVersion != null),
+      VersionsValues.UNINSTALL_VERSION_FLAG to (uninstallVersion != null),
+      "--verify-stampfile" to verify,
+      "--generate-stampfile" to generate,
+      "--create-catalog" to catalog
+    ).filterValues { it }
+    if (operatingModes.size > 1) {
+      return CommandResult.err(1, "Only one of these flags can be used at a time: ${operatingModes.keys.joinToString()}")
     }
     try {
       installVersion?.let {
@@ -134,28 +158,88 @@ internal class ToolManagerCommand : AbstractSubcommand<ToolState, CommandContext
         uninstall(it)
         return CommandResult.success()
       }
+      if (verify) {
+        verify()?.let { return CommandResult.err(1, it) }
+        return CommandResult.success()
+      }
+      if (generate) {
+        generate()
+        return CommandResult.success()
+      }
+      if (catalog) return catalogTool()
       return mainMenu()
     } catch (e: Exception) {
       return CommandResult.err(1, e.message, e)
     }
   }
 
+  private suspend fun verify(): String? {
+    val home = Statics.elideHome.absolutePathString()
+    val progress = Progress.create("Verify installation files", Statics.terminal) {
+      add(TrackedTask("Verify files", 1000))
+    }
+    manager.verifyInstall(home) {
+      when (it) {
+        is FileVerifyStartEvent -> {
+          progress.updateTask(0) {
+            copy(position = 0)
+          }
+          progress.start()
+        }
+        is FileVerifyProgressEvent -> {
+          val time = Clock.System.now().toEpochMilliseconds()
+          progress.updateTask(0) { copy(position = (it.progress * 1000).toInt(), output = output + (time to it.name)) }
+        }
+        FileVerifyCompletedEvent -> {
+          progress.updateTask(0) {
+            copy(position = target)
+          }
+        }
+        FileVerifyIndeterminateEvent -> {
+          progress.updateTask(0) {
+            copy(position = target, status = "no stampfile, individual files not verified")
+          }
+        }
+      }
+    }.apply {
+      if (isNotEmpty()) {
+        progress.updateTask(0) {
+          copy(position = target, status = "invalid files", failed = true)
+        }
+        return "The following files did not match the stampfile:\n${joinToString("\n")}"
+      }
+    }
+    return null
+  }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  private suspend fun generate() {
+    val home = Statics.elideHome.absolutePathString()
+    Statics.terminal.println("generating stampfile...")
+    val data = manager.generateStampFile(home)
+    val stampFile = Path(home, VersionsValues.STAMP_FILE)
+    SystemFileSystem.sink(stampFile).buffered().use {
+      it.writeString(data)
+    }
+    Statics.terminal.println("stampfile written to $stampFile")
+  }
+
   private fun catalogTool(): CommandResult {
     val repositoryType = KInquirer.promptList("Do you want to create a local or a remote repository catalog?", listOf("local", "remote"))
-    val path = Path(KInquirer.promptInput("Please enter the absolute path to the directory containing Elide packages"))
+    val path = Path(KInquirer.promptInput("Please enter the absolute path to the directory containing Elide packages:"))
     if (!SystemFileSystem.exists(path)) return CommandResult.err(1, "Directory does not exist")
     val json = when (repositoryType) {
       "local" -> {
         val relativePaths = KInquirer.promptConfirm("Do you want to use relative paths?")
-        repositoryManager.createLocalCatalog(path, relativePaths)
+        factory.createLocalCatalog(path, relativePaths)
       }
       "remote" -> {
-        val root = KInquirer.promptInput("Please enter the HTTPS address prefix")
-        repositoryManager.createRemoteCatalog(path, root)
+        val root = KInquirer.promptInput("Please enter the HTTPS address prefix:")
+        factory.createRemoteCatalog(path, root)
       }
       else -> return CommandResult.err(1, "Invalid repository type: $repositoryType")
     }
-    SystemFileSystem.sink(Path(path, "catalog.json")).buffered().use {
+    SystemFileSystem.sink(Path(path, VersionsValues.CATALOG_FILE)).buffered().use {
       it.writeString(json)
     }
     return CommandResult.success()

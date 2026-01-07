@@ -63,6 +63,7 @@ public data class ElidePackageManifest(
   val secrets: SecretSettings? = null,
   val engine: RuntimeEngineSettings? = null,
   val server: ServerSettings? = null,
+  val execTasks: List<ExecTask> = emptyList(),
 ) : PackageManifest {
   @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
 
@@ -80,6 +81,44 @@ public data class ElidePackageManifest(
     public val from: List<String>
     public val dependsOn: List<String>
   }
+
+  /** Type of exec task - either running a Java main class or an external executable */
+  @Serializable public enum class ExecTaskType {
+    JAVA,        // Run a Java main class with classpath
+    EXECUTABLE,  // Run an external executable/binary
+  }
+
+  /** Maven build phase for exec task ordering */
+  @Serializable public enum class BuildPhase {
+    GENERATE_SOURCES,      // before compilation
+    PROCESS_RESOURCES,     // resource processing
+    COMPILE,               // during/after compilation
+    PROCESS_CLASSES,       // after compilation
+    TEST_COMPILE,          // test compilation
+    TEST,                  // test execution
+    PACKAGE,               // packaging
+  }
+
+  /** Classpath scope for Java exec tasks */
+  @Serializable public enum class ClasspathScope {
+    COMPILE,
+    RUNTIME,
+    TEST,
+  }
+
+  /** Exec task parsed from Maven exec-maven-plugin */
+  @Serializable public data class ExecTask(
+    val id: String,
+    val type: ExecTaskType,
+    val phase: BuildPhase = BuildPhase.COMPILE,
+    val mainClass: String? = null,      // For JAVA type
+    val executable: String? = null,     // For EXECUTABLE type
+    val args: List<String> = emptyList(),
+    val env: Map<String, String> = emptyMap(),
+    val classpathScope: ClasspathScope = ClasspathScope.COMPILE,
+    val systemProperties: Map<String, String> = emptyMap(),
+    val workingDirectory: String? = null,
+  )
 
   @Serializable public data class JarResource(
     val path: String,

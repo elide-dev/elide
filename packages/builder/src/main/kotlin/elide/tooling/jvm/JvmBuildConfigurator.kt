@@ -67,6 +67,7 @@ import elide.tooling.project.SourceSetLanguage.Kotlin
 import elide.tooling.project.SourceSetType
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.KotlinJvmCompilerOptions
+import elide.tooling.runner.ProcessRunner
 
 private fun srcSetTaskName(srcSet: SourceSet, name: String): String = buildString {
   append(name)
@@ -848,8 +849,182 @@ internal class JvmBuildConfigurator : BuildConfigurator {
               }
             } // end kotlin test compiles
           } // end kotlin source sets
+
+          // Configure exec tasks from Maven exec-maven-plugin
+          val execTasks = state.manifest.execTasks
+          if (execTasks.isNotEmpty()) {
+            logging.debug { "Found ${execTasks.size} exec task(s) from Maven configuration" }
+
+            // Compile tasks that exec tasks should depend on
+            val compileTasks = javacs + kotlincs
+
+            execTasks.forEach { execTask ->
+              val taskName = "exec:${execTask.id}"
+              logging.debug { "Configuring exec task: $taskName (type=${execTask.type})" }
+
+              val task = fn(taskName) {
+                contributeExecTask(state, config, execTask, resolver).asExecResult()
+              }.describedBy {
+                when (execTask.type) {
+                  ElidePackageManifest.ExecTaskType.JAVA ->
+                    "Running ${execTask.mainClass}"
+                  ElidePackageManifest.ExecTaskType.EXECUTABLE ->
+                    "Executing ${execTask.executable}"
+                }
+              }
+
+              addNode(task)
+
+              // Exec tasks depend on compilation
+              compileTasks.forEach { compileTask ->
+                putEdge(task, compileTask)
+              }
+            }
+          }
         } // end task graph scope
       } // end action scope
     } // end kotlin/java presence
   } // end contributions for jvm
+
+  /** Execute a Maven exec-maven-plugin task */
+  private suspend fun contributeExecTask(
+    state: ElideBuildState,
+    config: BuildConfigurator.BuildConfiguration,
+    execTask: ElidePackageManifest.ExecTask,
+    resolver: MavenAetherResolver?,
+  ): Tool.Result {
+    val workingDir = execTask.workingDirectory?.let {
+      state.project.root.resolve(it)
+    } ?: state.project.root
+
+    when (execTask.type) {
+      ElidePackageManifest.ExecTaskType.JAVA -> {
+        // Build classpath based on scope
+        val classpathPaths = buildList {
+          // Add compiled classes
+          val classesDir = state.layout.artifacts
+            .resolve("jvm")
+            .resolve("classes")
+            .resolve("main")
+          if (classesDir.exists()) add(classesDir)
+
+          // Add resolved dependencies via classpath provider
+          resolver?.classpathProvider(
+            object : ClasspathSpec {
+              override val usage: MultiPathUsage = when (execTask.classpathScope) {
+                ElidePackageManifest.ClasspathScope.COMPILE -> MultiPathUsage.Compile
+                ElidePackageManifest.ClasspathScope.RUNTIME -> MultiPathUsage.Runtime
+                ElidePackageManifest.ClasspathScope.TEST -> MultiPathUsage.TestCompile
+              }
+            },
+          )?.classpath()?.paths?.forEach { item ->
+            add(item.path)
+          }
+        }
+
+        val classpathString = classpathPaths.joinToString(File.pathSeparator) { it.absolutePathString() }
+
+        // Build java command
+        val javaHome = System.getProperty("java.home")
+        val javaExec = Path.of(javaHome, "bin", "java")
+
+        val args = Arguments.empty().toMutable().apply {
+          // Classpath
+          add("-cp")
+          add(classpathString)
+
+          // System properties
+          execTask.systemProperties.forEach { (k, v) ->
+            add("-D$k=$v")
+          }
+
+          // Main class
+          add(execTask.mainClass!!)
+
+          // Arguments
+          execTask.args.forEach { add(it) }
+        }
+
+        val env = Environment.host().extend(execTask.env)
+
+        logging.info { "Executing: java -cp ... ${execTask.mainClass} ${execTask.args.joinToString(" ")}" }
+
+        val task = ProcessRunner.buildFrom(
+          javaExec,
+          args,
+          env,
+          options = ProcessRunner.ProcessOptions(
+            shell = ProcessRunner.ProcessShell.None,
+            workingDirectory = workingDir,
+          ),
+        )
+
+        val process = task.spawn()
+        val status = process.asDeferred().await()
+
+        return when (status) {
+          is ProcessRunner.ProcessStatus.Success -> {
+            logging.debug { "Exec task '${execTask.id}' completed successfully" }
+            Tool.Result.Success
+          }
+          is ProcessRunner.ProcessStatus.ExitCode -> {
+            logging.error { "Exec task '${execTask.id}' failed with exit code ${status.code}" }
+            Tool.Result.UnspecifiedFailure
+          }
+          is ProcessRunner.ProcessStatus.Err -> {
+            logging.error { "Exec task '${execTask.id}' failed with error: ${status.err.message}" }
+            Tool.Result.UnspecifiedFailure
+          }
+          else -> {
+            logging.error { "Exec task '${execTask.id}' ended with unexpected status: $status" }
+            Tool.Result.UnspecifiedFailure
+          }
+        }
+      }
+
+      ElidePackageManifest.ExecTaskType.EXECUTABLE -> {
+        val execPath = Path.of(execTask.executable!!)
+
+        val args = Arguments.empty().toMutable().apply {
+          execTask.args.forEach { add(it) }
+        }
+
+        val env = Environment.host().extend(execTask.env)
+
+        logging.info { "Executing: ${execTask.executable} ${execTask.args.joinToString(" ")}" }
+
+        val task = ProcessRunner.buildFrom(
+          execPath,
+          args,
+          env,
+          options = ProcessRunner.ProcessOptions(
+            shell = ProcessRunner.ProcessShell.Active,
+            workingDirectory = workingDir,
+          ),
+        )
+
+        val process = task.spawn()
+        val status = process.asDeferred().await()
+
+        return when (status) {
+          is ProcessRunner.ProcessStatus.Success -> {
+            logging.debug { "Exec task '${execTask.id}' completed successfully" }
+            Tool.Result.Success
+          }
+          is ProcessRunner.ProcessStatus.ExitCode -> {
+            logging.error { "Exec task '${execTask.id}' failed with exit code ${status.code}" }
+            Tool.Result.UnspecifiedFailure
+          }
+          is ProcessRunner.ProcessStatus.Err -> {
+            logging.error { "Exec task '${execTask.id}' failed with error: ${status.err.message}" }
+            Tool.Result.UnspecifiedFailure
+          }
+          else -> {
+            logging.error { "Exec task '${execTask.id}' ended with unexpected status: $status" }
+            Tool.Result.UnspecifiedFailure
+          }
+        }
+      }
+    }
+  }
 }

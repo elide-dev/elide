@@ -20,6 +20,7 @@ import org.apache.maven.model.Plugin
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import java.io.File
+import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import jakarta.inject.Inject
@@ -27,6 +28,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.bufferedWriter
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import elide.tooling.project.codecs.MavenPomManifestCodec
 import elide.tooling.project.codecs.PackageManifestCodec
@@ -128,9 +130,78 @@ internal val defaultManifestState = object: PackageManifestCodec.ManifestBuildSt
     assertTrue(elide.artifacts.containsKey("jar"))
   }
 
+  @Test fun `should parse exec-maven-plugin java goal`() {
+    val resource = loadManifestResource("/manifests/pom-with-exec.xml")
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Should have 2 exec tasks
+    assertEquals(2, elide.execTasks.size)
+
+    // Find the java exec task
+    val javaTask = elide.execTasks.find { it.type == ElidePackageManifest.ExecTaskType.JAVA }
+    assertNotNull(javaTask)
+    assertEquals("generate-data", javaTask.id)
+    assertEquals("com.example.DataGenerator", javaTask.mainClass)
+    assertEquals(ElidePackageManifest.BuildPhase.COMPILE, javaTask.phase)
+    assertEquals(2, javaTask.args.size)
+    assertEquals("--output", javaTask.args[0])
+    assertEquals("target/data", javaTask.args[1])
+    assertEquals(ElidePackageManifest.ClasspathScope.COMPILE, javaTask.classpathScope)
+    assertEquals("json", javaTask.systemProperties["data.format"])
+  }
+
+  @Test fun `should parse exec-maven-plugin exec goal`() {
+    val resource = loadManifestResource("/manifests/pom-with-exec.xml")
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Find the executable exec task
+    val execTask = elide.execTasks.find { it.type == ElidePackageManifest.ExecTaskType.EXECUTABLE }
+    assertNotNull(execTask)
+    assertEquals("run-script", execTask.id)
+    assertEquals("scripts/generate.sh", execTask.executable)
+    assertEquals(ElidePackageManifest.BuildPhase.GENERATE_SOURCES, execTask.phase)
+    assertEquals(2, execTask.args.size)
+    assertEquals("--verbose", execTask.args[0])
+    assertEquals("src/main", execTask.args[1])
+    assertEquals("test-value", execTask.env["ENV_VAR"])
+    assertNotNull(execTask.workingDirectory)
+  }
+
+  @Test fun `should prefer release flag over source target in maven-compiler-plugin`() {
+    val resource = loadManifestResource("/manifests/pom-with-release.xml")
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // release=17 should take precedence over source=11, target=11 and properties
+    assertNotNull(elide.jvm)
+    assertEquals("17", elide.jvm?.target?.argValue)
+  }
+
+  @Test fun `should normalize legacy 1-dot-x jvm target to modern format`() {
+    val resource = loadManifestResource("/manifests/pom-legacy-jvm.xml")
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // 1.8 should be normalized to 8
+    assertNotNull(elide.jvm)
+    assertEquals("8", elide.jvm?.target?.argValue)
+  }
+
+  @Test fun `should return empty exec tasks when no exec plugin configured`() {
+    val resource = sampleManifestResource()
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Standard pom.xml has no exec plugin
+    assertTrue(elide.execTasks.isEmpty())
+  }
+
   companion object {
-    fun sampleManifestResource(): File {
-      val stream = MavenPomCodecTest::class.java.getResourceAsStream("/manifests/pom.xml")!!
+    fun loadManifestResource(resourcePath: String): File {
+      val stream: InputStream = MavenPomCodecTest::class.java.getResourceAsStream(resourcePath)
+        ?: error("Resource not found: $resourcePath")
       val tmpdir = Files.createTempDirectory("elide-test-maven")
       stream.bufferedReader(StandardCharsets.UTF_8).use { inbuf ->
         tmpdir.resolve("pom.xml").bufferedWriter(StandardCharsets.UTF_8).use { outbuf ->
@@ -141,6 +212,8 @@ internal val defaultManifestState = object: PackageManifestCodec.ManifestBuildSt
       target.deleteOnExit()
       return target
     }
+
+    fun sampleManifestResource(): File = loadManifestResource("/manifests/pom.xml")
 
     val SampleManifest = MavenPomManifest(
       model = Model().apply {

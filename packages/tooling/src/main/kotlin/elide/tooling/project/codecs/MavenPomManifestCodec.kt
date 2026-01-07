@@ -157,14 +157,8 @@ import elide.tooling.project.manifest.MavenPomManifest
       )
     }
 
-    // Extract JVM target from maven.compiler.target or maven.compiler.source properties
-    val jvmTarget = model.properties?.let { props ->
-      (props["maven.compiler.target"] ?: props["maven.compiler.source"])?.toString()
-    }?.let { target ->
-      // Normalize "1.8" -> "8", "1.5" -> "5", etc.
-      val normalized = if (target.startsWith("1.")) target.substring(2) else target
-      normalized.toUIntOrNull()?.let { ElidePackageManifest.JvmTarget.NumericJvmTarget(it) }
-    }
+    // Extract JVM target - check maven-compiler-plugin first, then properties
+    val jvmTarget = extractJvmTarget(model)
 
     // Extract Maven coordinates
     val coordinates = if (!model.groupId.isNullOrBlank() && !model.artifactId.isNullOrBlank()) {
@@ -194,6 +188,9 @@ import elide.tooling.project.manifest.MavenPomManifest
     // Parse maven-jar-plugin configuration to discover JAR artifacts
     val artifacts = parseJarArtifacts(model)
 
+    // Parse exec-maven-plugin executions for build-time code generation
+    val execTasks = parseExecTasks(model)
+
     return ElidePackageManifest(
       name = model.artifactId ?: model.name,
       version = model.version,
@@ -201,6 +198,7 @@ import elide.tooling.project.manifest.MavenPomManifest
       jvm = jvmTarget?.let { ElidePackageManifest.JvmSettings(target = it) },
       sources = sources,
       artifacts = artifacts,
+      execTasks = execTasks,
       dependencies = ElidePackageManifest.DependencyResolution(
         maven = ElidePackageManifest.MavenDependencies(
           coordinates = coordinates,
@@ -214,6 +212,34 @@ import elide.tooling.project.manifest.MavenPomManifest
   override fun write(manifest: MavenPomManifest, output: OutputStream) {
     OutputStreamWriter(output, StandardCharsets.UTF_8).use { writer ->
       MavenXpp3Writer().write(writer, manifest.model)
+    }
+  }
+
+  /** Extract JVM target from maven-compiler-plugin config or properties */
+  private fun extractJvmTarget(model: Model): ElidePackageManifest.JvmTarget? {
+    // 1. Check maven-compiler-plugin configuration (most authoritative)
+    val compilerPlugin = model.build?.plugins?.find {
+      it.groupId == MAVEN_PLUGINS_GROUP && it.artifactId == MAVEN_COMPILER_PLUGIN
+    }
+    val pluginConfig = compilerPlugin?.configuration as? Xpp3Dom
+    val pluginTarget = pluginConfig?.let { cfg ->
+      cfg.getChild("release")?.value      // Java 9+ release flag (highest priority)
+        ?: cfg.getChild("target")?.value  // Classic target
+        ?: cfg.getChild("source")?.value  // Fallback to source
+    }
+
+    // 2. Fall back to properties
+    val propsTarget = model.properties?.let { props ->
+      (props["maven.compiler.release"]
+        ?: props["maven.compiler.target"]
+        ?: props["maven.compiler.source"])?.toString()
+    }
+
+    val target = pluginTarget ?: propsTarget ?: return null
+    // Normalize "1.8" -> "8", "1.5" -> "5", etc.
+    val normalized = if (target.startsWith("1.")) target.substring(2) else target
+    return normalized.toUIntOrNull()?.let {
+      ElidePackageManifest.JvmTarget.NumericJvmTarget(it)
     }
   }
 
@@ -308,12 +334,102 @@ import elide.tooling.project.manifest.MavenPomManifest
     )
   }
 
+  /** Parse exec-maven-plugin executions into ExecTask list */
+  private fun parseExecTasks(model: Model): List<ElidePackageManifest.ExecTask> {
+    val execPlugin = model.build?.plugins?.find {
+      it.groupId == EXEC_MAVEN_PLUGIN_GROUP && it.artifactId == EXEC_MAVEN_PLUGIN
+    } ?: return emptyList()
+
+    return execPlugin.executions.mapNotNull { execution ->
+      val config = execution.configuration as? Xpp3Dom ?: return@mapNotNull null
+      val goal = execution.goals?.firstOrNull() ?: return@mapNotNull null
+
+      when (goal) {
+        "java" -> {
+          val mainClass = config.getChild("mainClass")?.value ?: return@mapNotNull null
+          ElidePackageManifest.ExecTask(
+            id = execution.id ?: "exec-java",
+            type = ElidePackageManifest.ExecTaskType.JAVA,
+            phase = mapMavenPhase(execution.phase ?: "compile"),
+            mainClass = mainClass,
+            args = parseArguments(config),
+            classpathScope = mapClasspathScope(config.getChild("classpathScope")?.value),
+            systemProperties = parseSystemProperties(config),
+            workingDirectory = config.getChild("workingDirectory")?.value,
+          )
+        }
+        "exec" -> {
+          val executable = config.getChild("executable")?.value ?: return@mapNotNull null
+          ElidePackageManifest.ExecTask(
+            id = execution.id ?: "exec-binary",
+            type = ElidePackageManifest.ExecTaskType.EXECUTABLE,
+            phase = mapMavenPhase(execution.phase ?: "compile"),
+            executable = executable,
+            args = parseArguments(config),
+            env = parseEnvironment(config),
+            workingDirectory = config.getChild("workingDirectory")?.value,
+          )
+        }
+        else -> null
+      }
+    }
+  }
+
+  /** Map Maven phase string to BuildPhase enum */
+  private fun mapMavenPhase(phase: String): ElidePackageManifest.BuildPhase = when (phase) {
+    "generate-sources", "generate-resources" -> ElidePackageManifest.BuildPhase.GENERATE_SOURCES
+    "process-resources" -> ElidePackageManifest.BuildPhase.PROCESS_RESOURCES
+    "compile" -> ElidePackageManifest.BuildPhase.COMPILE
+    "process-classes" -> ElidePackageManifest.BuildPhase.PROCESS_CLASSES
+    "test-compile" -> ElidePackageManifest.BuildPhase.TEST_COMPILE
+    "test" -> ElidePackageManifest.BuildPhase.TEST
+    "package" -> ElidePackageManifest.BuildPhase.PACKAGE
+    else -> ElidePackageManifest.BuildPhase.COMPILE
+  }
+
+  /** Map classpath scope string to ClasspathScope enum */
+  private fun mapClasspathScope(scope: String?): ElidePackageManifest.ClasspathScope = when (scope) {
+    "runtime" -> ElidePackageManifest.ClasspathScope.RUNTIME
+    "test" -> ElidePackageManifest.ClasspathScope.TEST
+    else -> ElidePackageManifest.ClasspathScope.COMPILE
+  }
+
+  /** Parse arguments from exec plugin configuration */
+  private fun parseArguments(config: Xpp3Dom): List<String> {
+    val argsNode = config.getChild("arguments") ?: return emptyList()
+    return argsNode.children.mapNotNull { child ->
+      // Handle both <argument>value</argument> and direct text
+      child.value?.takeIf { it.isNotBlank() }
+    }
+  }
+
+  /** Parse system properties from exec plugin configuration */
+  private fun parseSystemProperties(config: Xpp3Dom): Map<String, String> {
+    val propsNode = config.getChild("systemProperties") ?: return emptyMap()
+    return propsNode.children.mapNotNull { propNode ->
+      val key = propNode.getChild("key")?.value ?: return@mapNotNull null
+      val value = propNode.getChild("value")?.value ?: return@mapNotNull null
+      key to value
+    }.toMap()
+  }
+
+  /** Parse environment variables from exec plugin configuration */
+  private fun parseEnvironment(config: Xpp3Dom): Map<String, String> {
+    val envNode = config.getChild("environmentVariables") ?: return emptyMap()
+    return envNode.children.mapNotNull { child ->
+      child.name to (child.value ?: return@mapNotNull null)
+    }.toMap()
+  }
+
   private companion object {
     const val DEFAULT_EXTENSION = "xml"
     const val DEFAULT_NAME = "pom"
     const val DEFAULT_MAIN_SOURCE_DIR = "src/main/java"
     const val DEFAULT_TEST_SOURCE_DIR = "src/test/java"
     const val MAVEN_PLUGINS_GROUP = "org.apache.maven.plugins"
+    const val MAVEN_COMPILER_PLUGIN = "maven-compiler-plugin"
     const val MAVEN_JAR_PLUGIN = "maven-jar-plugin"
+    const val EXEC_MAVEN_PLUGIN_GROUP = "org.codehaus.mojo"
+    const val EXEC_MAVEN_PLUGIN = "exec-maven-plugin"
   }
 }

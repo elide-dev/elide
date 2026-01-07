@@ -200,6 +200,45 @@ public data class ElidePackageManifest(
     override val dependsOn: List<String> = emptyList(),
   ) : Artifact
 
+  /** Javadoc JAR artifact - generates and packages Javadoc documentation */
+  @Serializable public data class JavadocJar(
+    val groups: Map<String, List<String>> = emptyMap(),  // title -> packages
+    val links: List<String> = emptyList(),               // external doc links
+    val excludes: List<String> = emptyList(),
+    val windowTitle: String? = null,
+    val docTitle: String? = null,
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ) : Artifact
+
+  /** Source JAR artifact - packages source files */
+  @Serializable public data class SourceJar(
+    val classifier: String? = null,      // e.g., "sources" or "no-tzdb-sources"
+    val excludes: List<String> = emptyList(),
+    val includes: List<String> = emptyList(),
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ) : Artifact
+
+  /** Assembly archive artifact - creates distribution archives (tar.gz, zip) */
+  @Serializable public data class Assembly(
+    val id: String,
+    val formats: List<String> = listOf("tar.gz", "zip"),
+    val baseDirectory: String? = null,
+    val fileSets: List<AssemblyFileSet> = emptyList(),
+    val descriptorPath: String? = null,  // path to assembly descriptor XML
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ) : Artifact
+
+  /** File set within an assembly descriptor */
+  @Serializable public data class AssemblyFileSet(
+    val directory: String? = null,
+    val outputDirectory: String? = null,
+    val includes: List<String> = emptyList(),
+    val excludes: List<String> = emptyList(),
+  )
+
   @JvmRecord @Serializable public data class SourceSet(
     val type: SourceSetType = SourceSetType.Main,
     val synthetic: Boolean = false,

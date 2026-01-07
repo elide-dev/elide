@@ -67,6 +67,8 @@ import elide.tooling.project.SourceSetLanguage.Kotlin
 import elide.tooling.project.SourceSetType
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.ElidePackageManifest.KotlinJvmCompilerOptions
+import elide.tooling.archive.ArchiveBuilder
+import elide.tooling.project.codecs.AssemblyDescriptorParser
 import elide.tooling.runner.ProcessRunner
 
 private fun srcSetTaskName(srcSet: SourceSet, name: String): String = buildString {
@@ -881,6 +883,32 @@ internal class JvmBuildConfigurator : BuildConfigurator {
               }
             }
           }
+
+          // Configure javadoc JAR tasks from maven-javadoc-plugin
+          val compileTasks = javacs + kotlincs
+          val javadocJarTasks = state.manifest.artifacts.filterValues {
+            it is ElidePackageManifest.JavadocJar
+          }.map { (name, artifact) ->
+            val javadocArtifact = artifact as ElidePackageManifest.JavadocJar
+            contributeJavadocJarTask(name, state, config, javadocArtifact, compileTasks)
+          }
+
+          // Configure source JAR tasks from maven-source-plugin
+          val sourceJarTasks = state.manifest.artifacts.filterValues {
+            it is ElidePackageManifest.SourceJar
+          }.map { (name, artifact) ->
+            val sourceArtifact = artifact as ElidePackageManifest.SourceJar
+            contributeSourceJarTask(name, state, config, sourceArtifact, compileTasks)
+          }
+
+          // Configure assembly tasks from maven-assembly-plugin
+          val allJarTasks = javadocJarTasks + sourceJarTasks
+          state.manifest.artifacts.filterValues {
+            it is ElidePackageManifest.Assembly
+          }.forEach { (name, artifact) ->
+            val assembly = artifact as ElidePackageManifest.Assembly
+            contributeAssemblyTasks(name, state, config, assembly, allJarTasks + compileTasks)
+          }
         } // end task graph scope
       } // end action scope
     } // end kotlin/java presence
@@ -1026,5 +1054,304 @@ internal class JvmBuildConfigurator : BuildConfigurator {
         }
       }
     }
+  }
+
+  /** Contribute a javadoc JAR task */
+  private fun ActionScope.contributeJavadocJarTask(
+    name: String,
+    state: ElideBuildState,
+    config: BuildConfigurator.BuildConfiguration,
+    artifact: ElidePackageManifest.JavadocJar,
+    dependencies: List<Task>,
+  ): Task {
+    val projectName = state.manifest.name ?: "project"
+    val projectVersion = state.manifest.version ?: "0.0.0"
+
+    return fn("javadoc:$name", taskDependencies(dependencies)) {
+      val javadocOutputDir = state.layout.artifacts.resolve("javadoc")
+      val javadocJarPath = state.layout.artifacts.resolve("$projectName-$projectVersion-javadoc.jar")
+
+      // Ensure output dir exists
+      if (!javadocOutputDir.exists()) {
+        javadocOutputDir.createDirectories()
+      }
+
+      // Build javadoc arguments
+      val sourceDir = state.project.root.resolve("src/main/java")
+      if (!sourceDir.exists()) {
+        logging.warn { "Source directory not found for javadoc: $sourceDir" }
+        return@fn Tool.Result.Success.asExecResult()
+      }
+
+      val args = Arguments.empty().toMutable().apply {
+        add("-d")
+        add(javadocOutputDir.absolutePathString())
+        add("-sourcepath")
+        add(sourceDir.absolutePathString())
+
+        // Add groups
+        artifact.groups.forEach { (title, packages) ->
+          add("-group")
+          add(title)
+          add(packages.joinToString(":"))
+        }
+
+        // Add window title
+        artifact.windowTitle?.let {
+          add("-windowtitle")
+          add(it)
+        }
+
+        // Add doc title
+        artifact.docTitle?.let {
+          add("-doctitle")
+          add(it)
+        }
+
+        // Add links
+        artifact.links.forEach { link ->
+          add("-link")
+          add(link)
+        }
+
+        // Add subpackages to process
+        add("-subpackages")
+        add(state.manifest.dependencies.maven.coordinates?.group ?: ".")
+      }.build()
+
+      // Run javadoc
+      val javadocTool = JavadocTool(
+        args = args,
+        env = Environment.host(),
+        inputs = JavadocTool.JavadocInputs.NoInputs,
+        outputs = JavadocTool.JavadocOutputs.NoOutputs,
+      )
+
+      val javadocResult = javadocTool.invoke(object : AbstractTool.EmbeddedToolState {
+        override val resourcesPath: Path get() = state.resourcesPath
+        override val project: ElideProject? get() = state.project
+      })
+
+      if (javadocResult != Tool.Result.Success) {
+        logging.warn { "Javadoc generation had warnings or errors" }
+      }
+
+      // Create JAR from javadoc output
+      if (javadocOutputDir.exists() && Files.list(javadocOutputDir).findAny().isPresent) {
+        val jarArgs = Arguments.empty().toMutable().apply {
+          add("--create")
+          add("--file")
+          add(javadocJarPath.absolutePathString())
+          add("-C")
+          add(javadocOutputDir.absolutePathString())
+          add(".")
+        }.build()
+
+        val jarTool = JarTool.create(
+          args = jarArgs,
+          env = Environment.host(),
+          inputs = JarTool.JarToolInputs.NoInputs,
+          outputs = JarTool.outputJar(javadocJarPath),
+        )
+
+        jarTool.invoke(object : AbstractTool.EmbeddedToolState {
+          override val resourcesPath: Path get() = state.resourcesPath
+          override val project: ElideProject? get() = state.project
+        }).asExecResult()
+      } else {
+        Tool.Result.Success.asExecResult()
+      }
+    }.describedBy {
+      "Generating Javadoc JAR"
+    }.also { task ->
+      config.taskGraph.apply {
+        addNode(task)
+        dependencies.forEach { dep -> putEdge(task, dep) }
+      }
+    }
+  }
+
+  /** Contribute a source JAR task */
+  private fun ActionScope.contributeSourceJarTask(
+    name: String,
+    state: ElideBuildState,
+    config: BuildConfigurator.BuildConfiguration,
+    artifact: ElidePackageManifest.SourceJar,
+    dependencies: List<Task>,
+  ): Task {
+    val projectName = state.manifest.name ?: "project"
+    val projectVersion = state.manifest.version ?: "0.0.0"
+    val classifier = artifact.classifier ?: "sources"
+
+    return fn("sourceJar:$name", taskDependencies(dependencies)) {
+      val sourceJarPath = state.layout.artifacts.resolve("$projectName-$projectVersion-$classifier.jar")
+      val sourceDir = state.project.root.resolve("src/main/java")
+
+      if (!sourceDir.exists()) {
+        logging.warn { "Source directory not found for source JAR: $sourceDir" }
+        return@fn Tool.Result.Success.asExecResult()
+      }
+
+      // Build jar arguments
+      val jarArgs = Arguments.empty().toMutable().apply {
+        add("--create")
+        add("--file")
+        add(sourceJarPath.absolutePathString())
+        add("-C")
+        add(sourceDir.absolutePathString())
+        add(".")
+      }.build()
+
+      val jarTool = JarTool.create(
+        args = jarArgs,
+        env = Environment.host(),
+        inputs = JarTool.JarToolInputs.NoInputs,
+        outputs = JarTool.outputJar(sourceJarPath),
+      )
+
+      jarTool.invoke(object : AbstractTool.EmbeddedToolState {
+        override val resourcesPath: Path get() = state.resourcesPath
+        override val project: ElideProject? get() = state.project
+      }).asExecResult()
+    }.describedBy {
+      "Packaging source JAR ($classifier)"
+    }.also { task ->
+      config.taskGraph.apply {
+        addNode(task)
+        dependencies.forEach { dep -> putEdge(task, dep) }
+      }
+    }
+  }
+
+  /** Contribute assembly tasks for creating distribution archives */
+  private fun ActionScope.contributeAssemblyTasks(
+    name: String,
+    state: ElideBuildState,
+    config: BuildConfigurator.BuildConfiguration,
+    assembly: ElidePackageManifest.Assembly,
+    dependencies: List<Task>,
+  ) {
+    val projectName = state.manifest.name ?: "project"
+    val projectVersion = state.manifest.version ?: "0.0.0"
+
+    // Parse descriptor if path provided
+    val resolvedAssembly = assembly.descriptorPath?.let { descPath ->
+      val fullPath = state.project.root.resolve(descPath)
+      if (fullPath.exists()) {
+        try {
+          AssemblyDescriptorParser.parse(fullPath)
+        } catch (e: Exception) {
+          logging.warn { "Failed to parse assembly descriptor $descPath: ${e.message}" }
+          assembly
+        }
+      } else assembly
+    } ?: assembly
+
+    // Resolve base directory with Maven-like variable substitution
+    val baseDir = resolvedAssembly.baseDirectory
+      ?.replace("\${artifactId}", projectName)
+      ?.replace("\${version}", projectVersion)
+      ?.replace("\${project.artifactId}", projectName)
+      ?.replace("\${project.version}", projectVersion)
+
+    resolvedAssembly.formats.forEach { format ->
+      val task = fn("assembly:${assembly.id}:$format", taskDependencies(dependencies)) {
+        val outputFile = state.layout.artifacts.resolve("$projectName-${assembly.id}.$format")
+
+        // Collect files based on fileSets
+        val files = resolvedAssembly.fileSets.flatMap { fileSet ->
+          val sourceDir = fileSet.directory?.let { state.project.root.resolve(it) }
+            ?: state.project.root
+          val outputDir = fileSet.outputDirectory ?: fileSet.directory ?: ""
+
+          if (!sourceDir.exists()) return@flatMap emptyList<Pair<Path, String>>()
+
+          collectFilesForAssembly(sourceDir, fileSet.includes, fileSet.excludes).map { file ->
+            val relativePath = if (sourceDir == state.project.root) {
+              file.fileName.toString()
+            } else {
+              sourceDir.relativize(file).toString()
+            }
+            val archivePath = if (outputDir.isEmpty()) relativePath else "$outputDir/$relativePath"
+            file to archivePath
+          }
+        }
+
+        if (files.isEmpty()) {
+          logging.debug { "No files to include in assembly ${assembly.id}" }
+          return@fn Tool.Result.Success.asExecResult()
+        }
+
+        when (format) {
+          "tar.gz" -> {
+            val builder = ArchiveBuilder.tarGzBuilder(outputFile)
+            files.forEach { (sourcePath, archivePath) ->
+              val finalPath = baseDir?.let { "$it/$archivePath" } ?: archivePath
+              builder.packFile(sourcePath, finalPath)
+            }
+            builder.finalizeArchive()
+          }
+          "zip" -> {
+            val builder = ArchiveBuilder.zipBuilder(outputFile)
+            files.forEach { (sourcePath, archivePath) ->
+              val finalPath = baseDir?.let { "$it/$archivePath" } ?: archivePath
+              builder.packFile(sourcePath, finalPath)
+            }
+            builder.finalizeArchive()
+          }
+          else -> {
+            logging.warn { "Unsupported archive format: $format" }
+          }
+        }
+
+        Tool.Result.Success.asExecResult()
+      }.describedBy {
+        "Creating $format assembly (${assembly.id})"
+      }
+
+      config.taskGraph.apply {
+        addNode(task)
+        dependencies.forEach { dep -> putEdge(task, dep) }
+      }
+    }
+  }
+
+  /** Collect files for assembly based on includes/excludes patterns */
+  private fun collectFilesForAssembly(
+    sourceDir: Path,
+    includes: List<String>,
+    excludes: List<String>,
+  ): List<Path> {
+    if (!sourceDir.exists()) return emptyList()
+
+    return Files.walk(sourceDir)
+      .filter { Files.isRegularFile(it) }
+      .filter { file ->
+        val relativePath = sourceDir.relativize(file).toString()
+
+        // If no includes specified, include all; otherwise check includes
+        val included = includes.isEmpty() || includes.any { pattern ->
+          matchGlobPattern(relativePath, pattern)
+        }
+
+        // Check excludes
+        val excluded = excludes.any { pattern ->
+          matchGlobPattern(relativePath, pattern)
+        }
+
+        included && !excluded
+      }
+      .toList()
+  }
+
+  /** Simple glob pattern matching for assembly file filtering */
+  private fun matchGlobPattern(path: String, pattern: String): Boolean {
+    // Convert glob to regex
+    val regex = pattern
+      .replace(".", "\\.")
+      .replace("**", ".*")
+      .replace("*", "[^/]*")
+      .replace("?", ".")
+    return path.matches(Regex(regex))
   }
 }

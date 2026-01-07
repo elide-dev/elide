@@ -14,11 +14,17 @@ package elide.tooling.archive
 
 import org.apache.commons.compress.archivers.ArchiveEntry
 import org.apache.commons.compress.archivers.ArchiveOutputStream
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream
+import java.io.BufferedOutputStream
+import java.nio.file.Files
 import java.nio.file.Path
 
 private typealias ZipStream = ArchiveOutputStream<ZipArchiveEntry>
+private typealias TarStream = ArchiveOutputStream<TarArchiveEntry>
 
 /**
  * ## Archive Builder
@@ -62,6 +68,33 @@ public sealed interface ArchiveBuilder {
     }
   }
 
+  /**
+   * ### Tar.gz Builder
+   *
+   * Specializes [ArchiveBuilder] into functions that relate to gzip-compressed tar archives.
+   */
+  public class TarGzBuilder internal constructor (
+    private val stream: TarStream,
+    private val gzipStream: GzipCompressorOutputStream? = null,
+  ): ArchiveBuilder {
+    override fun packFile(from: Path, to: String): ArchiveEntry = from.toFile().let { file ->
+      TarArchiveEntry(file, to).also { entry ->
+        entry.size = file.length()
+        stream.putArchiveEntry(entry)
+        file.inputStream().use { input ->
+          input.copyTo(stream, DEFAULT_BUFFER_SIZE)
+        }
+        stream.closeArchiveEntry()
+      }
+    }
+
+    override fun finalizeArchive() {
+      stream.finish()
+      stream.close()
+      gzipStream?.close()
+    }
+  }
+
   /** Methods for obtaining [ArchiveBuilder] context instances of various types. */
   public companion object {
     /** @return Zip builder using the provided [stream]. */
@@ -74,6 +107,22 @@ public sealed interface ArchiveBuilder {
           opts(this)
         }
       )
+    }
+
+    /** @return Tar.gz builder using the provided [stream] and [gzipStream]. */
+    @JvmStatic public fun tarGzBuilder(stream: TarStream, gzipStream: GzipCompressorOutputStream? = null): TarGzBuilder {
+      return TarGzBuilder(stream, gzipStream)
+    }
+
+    /** @return Tar.gz builder using the provided [path]. */
+    @JvmStatic public fun tarGzBuilder(path: Path, opts: TarArchiveOutputStream.() -> Unit = {}): TarGzBuilder {
+      val gzipStream = GzipCompressorOutputStream(BufferedOutputStream(Files.newOutputStream(path)))
+      val tarStream = TarArchiveOutputStream(gzipStream).apply {
+        setLongFileMode(TarArchiveOutputStream.LONGFILE_GNU)
+        setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_STAR)
+        opts(this)
+      }
+      return TarGzBuilder(tarStream, gzipStream)
     }
   }
 }

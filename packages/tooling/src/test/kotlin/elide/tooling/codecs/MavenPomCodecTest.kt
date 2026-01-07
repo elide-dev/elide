@@ -198,6 +198,74 @@ internal val defaultManifestState = object: PackageManifestCodec.ManifestBuildSt
     assertTrue(elide.execTasks.isEmpty())
   }
 
+  @Test fun `should parse maven-javadoc-plugin configuration`() {
+    val resource = loadManifestResource("/manifests/pom-with-javadoc.xml")
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Should have javadoc artifact
+    val javadocArtifact = elide.artifacts["javadoc"]
+    assertNotNull(javadocArtifact)
+    assertTrue(javadocArtifact is ElidePackageManifest.JavadocJar)
+
+    val javadoc = javadocArtifact as ElidePackageManifest.JavadocJar
+    assertEquals("Example API", javadoc.windowTitle)
+    assertEquals("Example API Documentation", javadoc.docTitle)
+    assertEquals(2, javadoc.groups.size)
+    assertTrue(javadoc.groups.containsKey("Core API"))
+    assertTrue(javadoc.groups.containsKey("Implementation"))
+    assertEquals(listOf("com.example.core", "com.example.api"), javadoc.groups["Core API"])
+    assertEquals(1, javadoc.links.size)
+  }
+
+  @Test fun `should parse maven-source-plugin configuration`() {
+    val resource = loadManifestResource("/manifests/pom-with-sources.xml")
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Should have source artifacts
+    val sourcesArtifact = elide.artifacts["sources"]
+    assertNotNull(sourcesArtifact)
+    assertTrue(sourcesArtifact is ElidePackageManifest.SourceJar)
+
+    val sources = sourcesArtifact as ElidePackageManifest.SourceJar
+    assertEquals("sources", sources.classifier)
+    assertTrue(sources.excludes.contains("**/*.properties"))
+
+    // Should also have filtered-sources artifact
+    val filteredArtifact = elide.artifacts["filtered-sources"]
+    assertNotNull(filteredArtifact)
+    assertTrue(filteredArtifact is ElidePackageManifest.SourceJar)
+
+    val filtered = filteredArtifact as ElidePackageManifest.SourceJar
+    assertEquals("filtered-sources", filtered.classifier)
+    assertTrue(filtered.excludes.contains("com/example/internal/**"))
+  }
+
+  @Test fun `should parse maven-assembly-plugin configuration`() {
+    val resource = loadManifestResource("/manifests/pom-with-assembly.xml")
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Should have assembly artifact
+    val assemblyArtifact = elide.artifacts["assembly:make-assembly"]
+    assertNotNull(assemblyArtifact)
+    assertTrue(assemblyArtifact is ElidePackageManifest.Assembly)
+
+    val assembly = assemblyArtifact as ElidePackageManifest.Assembly
+    assertEquals("make-assembly", assembly.id)
+    assertEquals("src/main/assembly/dist.xml", assembly.descriptorPath)
+  }
+
+  @Test fun `should return empty javadoc artifacts when no javadoc plugin configured`() {
+    val resource = sampleManifestResource()
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Standard pom.xml has no javadoc plugin
+    assertNull(elide.artifacts["javadoc"])
+  }
+
   companion object {
     fun loadManifestResource(resourcePath: String): File {
       val stream: InputStream = MavenPomCodecTest::class.java.getResourceAsStream(resourcePath)

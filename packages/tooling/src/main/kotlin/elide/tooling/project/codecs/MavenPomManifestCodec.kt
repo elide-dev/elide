@@ -185,8 +185,13 @@ import elide.tooling.project.manifest.MavenPomManifest
       ))
     }
 
-    // Parse maven-jar-plugin configuration to discover JAR artifacts
-    val artifacts = parseJarArtifacts(model)
+    // Parse all artifact-producing plugins
+    val artifacts = buildMap {
+      putAll(parseJarArtifacts(model))
+      putAll(parseJavadocArtifacts(model))
+      putAll(parseSourceArtifacts(model))
+      putAll(parseAssemblyArtifacts(model))
+    }
 
     // Parse exec-maven-plugin executions for build-time code generation
     val execTasks = parseExecTasks(model)
@@ -334,6 +339,133 @@ import elide.tooling.project.manifest.MavenPomManifest
     )
   }
 
+  /** Parse maven-javadoc-plugin configuration to discover javadoc JAR artifacts */
+  private fun parseJavadocArtifacts(model: Model): Map<String, ElidePackageManifest.Artifact> {
+    val javadocPlugin = model.build?.plugins?.find {
+      it.groupId == MAVEN_PLUGINS_GROUP && it.artifactId == MAVEN_JAVADOC_PLUGIN
+    } ?: return emptyMap()
+
+    val config = javadocPlugin.configuration as? Xpp3Dom
+
+    // Parse groups configuration: <groups><group><title>...</title><packages>...</packages></group></groups>
+    val groups = config?.getChild("groups")?.children?.associate { group ->
+      val title = group.getChild("title")?.value ?: ""
+      val packages = group.getChild("packages")?.value?.split(":") ?: emptyList()
+      title to packages
+    } ?: emptyMap()
+
+    // Parse external doc links
+    val links = config?.getChild("links")?.children?.mapNotNull { it.value } ?: emptyList()
+
+    // Parse excludes
+    val excludes = config?.getChild("excludes")?.children?.mapNotNull { it.value } ?: emptyList()
+
+    // Parse window/doc titles
+    val windowTitle = config?.getChild("windowtitle")?.value
+    val docTitle = config?.getChild("doctitle")?.value
+
+    // Check for jar execution (attach-javadocs goal or jar goal)
+    val hasJarExecution = javadocPlugin.executions?.any { execution ->
+      execution.goals?.any { it == "jar" || it == "aggregate-jar" } == true
+    } == true
+
+    return if (hasJarExecution || config != null) {
+      mapOf("javadoc" to ElidePackageManifest.JavadocJar(
+        groups = groups,
+        links = links,
+        excludes = excludes,
+        windowTitle = windowTitle,
+        docTitle = docTitle,
+      ))
+    } else emptyMap()
+  }
+
+  /** Parse maven-source-plugin configuration to discover source JAR artifacts */
+  private fun parseSourceArtifacts(model: Model): Map<String, ElidePackageManifest.Artifact> {
+    val sourcePlugin = model.build?.plugins?.find {
+      it.groupId == MAVEN_PLUGINS_GROUP && it.artifactId == MAVEN_SOURCE_PLUGIN
+    } ?: return emptyMap()
+
+    val artifacts = mutableMapOf<String, ElidePackageManifest.Artifact>()
+
+    // Parse global excludes from plugin-level configuration
+    val globalConfig = sourcePlugin.configuration as? Xpp3Dom
+    val globalExcludes = globalConfig?.getChild("excludes")?.children?.mapNotNull { it.value } ?: emptyList()
+    val globalIncludes = globalConfig?.getChild("includes")?.children?.mapNotNull { it.value } ?: emptyList()
+
+    // Parse each execution
+    sourcePlugin.executions?.forEach { execution ->
+      // Only process jar-related goals
+      if (execution.goals?.any { it.startsWith("jar") } != true) return@forEach
+
+      val execConfig = execution.configuration as? Xpp3Dom
+      val classifier = execConfig?.getChild("classifier")?.value ?: "sources"
+      val execExcludes = execConfig?.getChild("excludes")?.children?.mapNotNull { it.value } ?: emptyList()
+      val execIncludes = execConfig?.getChild("includes")?.children?.mapNotNull { it.value } ?: emptyList()
+
+      artifacts[classifier] = ElidePackageManifest.SourceJar(
+        classifier = classifier,
+        excludes = (globalExcludes + execExcludes).distinct(),
+        includes = (globalIncludes + execIncludes).distinct(),
+      )
+    }
+
+    // If no executions but plugin is present, add default sources jar
+    if (artifacts.isEmpty()) {
+      artifacts["sources"] = ElidePackageManifest.SourceJar(
+        classifier = "sources",
+        excludes = globalExcludes,
+        includes = globalIncludes,
+      )
+    }
+
+    return artifacts
+  }
+
+  /** Parse maven-assembly-plugin configuration to discover assembly artifacts */
+  private fun parseAssemblyArtifacts(model: Model): Map<String, ElidePackageManifest.Artifact> {
+    val assemblyPlugin = model.build?.plugins?.find {
+      it.groupId == MAVEN_PLUGINS_GROUP && it.artifactId == MAVEN_ASSEMBLY_PLUGIN
+    } ?: return emptyMap()
+
+    val artifacts = mutableMapOf<String, ElidePackageManifest.Artifact>()
+
+    assemblyPlugin.executions?.forEach { execution ->
+      // Only process single/attached goals
+      if (execution.goals?.any { it == "single" || it == "attached" } != true) return@forEach
+
+      val execConfig = execution.configuration as? Xpp3Dom
+
+      // Parse descriptor paths
+      val descriptors = execConfig?.getChild("descriptors")?.children?.mapNotNull { it.value } ?: emptyList()
+
+      // Parse inline formats if no descriptor
+      val formats = execConfig?.getChild("formats")?.children?.mapNotNull { it.value }
+        ?: listOf("tar.gz", "zip")
+
+      descriptors.forEach { descriptorPath ->
+        val id = execution.id ?: "dist"
+        artifacts["assembly:$id"] = ElidePackageManifest.Assembly(
+          id = id,
+          formats = formats,
+          descriptorPath = descriptorPath,
+        )
+      }
+
+      // If no descriptors but descriptorRef is present
+      val descriptorRef = execConfig?.getChild("descriptorRef")?.value
+      if (descriptors.isEmpty() && descriptorRef != null) {
+        val id = execution.id ?: descriptorRef
+        artifacts["assembly:$id"] = ElidePackageManifest.Assembly(
+          id = id,
+          formats = formats,
+        )
+      }
+    }
+
+    return artifacts
+  }
+
   /** Parse exec-maven-plugin executions into ExecTask list */
   private fun parseExecTasks(model: Model): List<ElidePackageManifest.ExecTask> {
     val execPlugin = model.build?.plugins?.find {
@@ -431,5 +563,8 @@ import elide.tooling.project.manifest.MavenPomManifest
     const val MAVEN_JAR_PLUGIN = "maven-jar-plugin"
     const val EXEC_MAVEN_PLUGIN_GROUP = "org.codehaus.mojo"
     const val EXEC_MAVEN_PLUGIN = "exec-maven-plugin"
+    const val MAVEN_JAVADOC_PLUGIN = "maven-javadoc-plugin"
+    const val MAVEN_SOURCE_PLUGIN = "maven-source-plugin"
+    const val MAVEN_ASSEMBLY_PLUGIN = "maven-assembly-plugin"
   }
 }

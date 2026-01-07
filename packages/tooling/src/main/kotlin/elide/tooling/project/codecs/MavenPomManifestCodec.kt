@@ -261,7 +261,7 @@ import elide.tooling.project.manifest.MavenPomManifest
 
     // No jar plugin configured - return default jar artifact
     if (jarPlugin == null) {
-      return mapOf("jar" to ElidePackageManifest.Jar())
+      return mapOf("jar" to ElidePackageManifest.Jar(sources = listOf("main")))
     }
 
     val artifacts = mutableMapOf<String, ElidePackageManifest.Artifact>()
@@ -287,7 +287,7 @@ import elide.tooling.project.manifest.MavenPomManifest
           artifacts[artifactInfo.first] = artifactInfo.second
         }
       } else {
-        artifacts["jar"] = ElidePackageManifest.Jar()
+        artifacts["jar"] = ElidePackageManifest.Jar(sources = listOf("main"))
       }
     }
 
@@ -297,7 +297,7 @@ import elide.tooling.project.manifest.MavenPomManifest
     } || artifacts.containsKey("jar") || artifacts.containsKey("default-jar")
 
     if (!hasDefaultJar && artifacts.isNotEmpty()) {
-      artifacts["jar"] = ElidePackageManifest.Jar()
+      artifacts["jar"] = ElidePackageManifest.Jar(sources = listOf("main"))
     }
 
     return artifacts
@@ -333,6 +333,7 @@ import elide.tooling.project.manifest.MavenPomManifest
 
     return artifactName to ElidePackageManifest.Jar(
       name = classifier,
+      sources = listOf("main"),
       manifest = manifestEntries,
       manifestFile = manifestFile,
       excludes = excludes,

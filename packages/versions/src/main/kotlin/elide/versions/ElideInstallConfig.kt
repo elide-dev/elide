@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
  *
  * @property installDirs Paths to directories that Elide may be installed to.
  * @property searchDirs Paths to directories that Elide may be installed to, but should not be installed to with install
- * management.
+ *   management.
  * @property repositories Repositories to search for versions of Elide.
  * @property defaultInstallDir Default directory to install Elide versions to.
  * @author Lauri Heino <datafox>

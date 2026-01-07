@@ -29,22 +29,22 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.io.decodeFromSource
 import elide.annotations.Singleton
-import elide.versions.repository.ElideRepository
-import elide.versions.repository.ElideRepositoryFactory
-import elide.versions.repository.getFile
 import elide.runtime.core.HostPlatform
-import elide.versions.VersionsValues.INSTALL_IO_BUFFER
 import elide.versions.VersionsValues.CONFIG_FILE
 import elide.versions.VersionsValues.ELEVATED_FLAG
+import elide.versions.VersionsValues.INSTALL_IO_BUFFER
 import elide.versions.VersionsValues.INSTALL_PATH_FLAG
+import elide.versions.VersionsValues.INSTALL_PROGRESS_INTERVAL
 import elide.versions.VersionsValues.INSTALL_VERSION_FLAG
 import elide.versions.VersionsValues.NO_CONFIRM_FLAG
-import elide.versions.VersionsValues.INSTALL_PROGRESS_INTERVAL
 import elide.versions.VersionsValues.PROJECT_VERSION_FILE
 import elide.versions.VersionsValues.STAMP_FILE
 import elide.versions.VersionsValues.UNINSTALL_VERSION_FLAG
 import elide.versions.VersionsValues.VERSIONS_COMMAND
 import elide.versions.VersionsValues.VERSION_FILE
+import elide.versions.repository.ElideRepository
+import elide.versions.repository.ElideRepositoryFactory
+import elide.versions.repository.getFile
 
 /**
  * Implementation of [VersionManager].
@@ -61,14 +61,16 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
     val version = requestedVersion ?: readVersionFile() ?: return null
     if (version == currentVersion) return null
     val path =
-      getInstallations(true).find { it.version.version == version }?.path ?: runBlocking {
-        try {
-          install(false, version)
-        } catch (e: Exception) {
-          println(e.message)
-          null
+      getInstallations(true).find { it.version.version == version }?.path
+        ?: runBlocking {
+          try {
+            install(false, version)
+          } catch (e: Exception) {
+            println(e.message)
+            null
+          }
         }
-      } ?: return null
+        ?: return null
     return resolveBinary(Path(path)).toString()
   }
 
@@ -89,7 +91,12 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
       .let { if (onlyCurrentSystem) it.filter { ver -> ver.platform == PLATFORM } else it }
       .distinct()
 
-  override suspend fun install(doNotElevate: Boolean, version: String, path: String?, progress: FlowCollector<ElideInstallEvent>?): String? {
+  override suspend fun install(
+    doNotElevate: Boolean,
+    version: String,
+    path: String?,
+    progress: FlowCollector<ElideInstallEvent>?
+  ): String? {
     (extraRepositories + repositories).forEach { repository ->
       repository
         .getVersions()
@@ -115,8 +122,7 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
       val filePath = Path(path, relativePath)
       if (!SystemFileSystem.exists(filePath)) {
         failed.add("$relativePath does not exist")
-      }
-      else if (hash != calculateHash(filePath)) {
+      } else if (hash != calculateHash(filePath)) {
         failed.add("$relativePath is invalid")
       }
     }
@@ -124,42 +130,47 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
     return failed
   }
 
-  override suspend fun uninstall(doNotElevate: Boolean, installation: ElideInstallation, progress: FlowCollector<ElideUninstallEvent>?) {
+  override suspend fun uninstall(
+    doNotElevate: Boolean,
+    installation: ElideInstallation,
+    progress: FlowCollector<ElideUninstallEvent>?
+  ) {
     val installDir = Path(installation.path)
     val files = installDir.recursive()
-    if (files.all {
-      canWrite(it, true)
-    }) {
+    if (files.all { canWrite(it, true) }) {
       val size = files.count()
       progress?.emit(UninstallStartEvent)
       files.forEachIndexed { index, file ->
-        progress?.emit(UninstallProgressEvent(index.toFloat() / size.toFloat(), file.toString().substringAfter(installation.path)))
+        progress?.emit(
+          UninstallProgressEvent(index.toFloat() / size.toFloat(), file.toString().substringAfter(installation.path)))
         SystemFileSystem.delete(file)
       }
       progress?.emit(UninstallCompletedEvent)
-    }
-    else if (!doNotElevate) elevatedUninstall(installation)
+    } else if (!doNotElevate) elevatedUninstall(installation)
     else throw IllegalStateException("Process is already elevated but files cannot be deleted")
   }
 
-  override suspend fun generateStampFile(path: String): String = Path(path)
-    .recursive()
-    .filter { it.name != STAMP_FILE }
-    .filter { SystemFileSystem.metadataOrNull(it)!!.isRegularFile }
-    .sortedBy { it.toString() }
-    .map {
-      val relativePath = it.toString().substringAfter(path)
-      val hash = calculateHash(it)
-      "$hash  .$relativePath"
-    }.joinToString("\n")
+  override suspend fun generateStampFile(path: String): String =
+    Path(path)
+      .recursive()
+      .filter { it.name != STAMP_FILE }
+      .filter { SystemFileSystem.metadataOrNull(it)!!.isRegularFile }
+      .sortedBy { it.toString() }
+      .map {
+        val relativePath = it.toString().substringAfter(path)
+        val hash = calculateHash(it)
+        "$hash  .$relativePath"
+      }
+      .joinToString("\n")
 
-  private fun Path.recursive(): Sequence<Path> = SystemFileSystem.list(this).asSequence().flatMap {
-    if (SystemFileSystem.metadataOrNull(it)!!.isDirectory) {
-      it.recursive()
-    } else {
-      sequenceOf(it)
-    }
-  } + this
+  private fun Path.recursive(): Sequence<Path> =
+    SystemFileSystem.list(this).asSequence().flatMap {
+      if (SystemFileSystem.metadataOrNull(it)!!.isDirectory) {
+        it.recursive()
+      } else {
+        sequenceOf(it)
+      }
+    } + this
 
   private fun resolveConfig(): ElideInstallConfig {
     val global = readConfig(GLOBAL_CONFIG_PATH)
@@ -256,8 +267,7 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
       verifyInstall(installDir.toString(), progress).apply {
         require(isEmpty()) { "The following files were not installed correctly:\n${joinToString("\n")}" }
       }
-    }
-    else progress?.emit(FileVerifyIndeterminateEvent)
+    } else progress?.emit(FileVerifyIndeterminateEvent)
 
     return installDir.toString()
   }
@@ -269,37 +279,43 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
     }
     val javaPath = Paths.get(path.toString())
     return if (Files.isWritable(javaPath)) true
-    else if (tryChangePermissions) javaPath.toFile().setWritable(true, true)
-    else false
+    else if (tryChangePermissions) javaPath.toFile().setWritable(true, true) else false
   }
 
-  private fun elevatedInstall(version: ElideVersionDto, path: String, installDir: Path): String? = if (elevatedAction(buildList {
-      add(VERSIONS_COMMAND)
-      add(INSTALL_VERSION_FLAG)
-      add(version.version)
-      add(INSTALL_PATH_FLAG)
-      add(path)
-      add(NO_CONFIRM_FLAG)
-      add(ELEVATED_FLAG)
-    })) installDir.toString() else null
+  private fun elevatedInstall(version: ElideVersionDto, path: String, installDir: Path): String? =
+    if (elevatedAction(
+      buildList {
+        add(VERSIONS_COMMAND)
+        add(INSTALL_VERSION_FLAG)
+        add(version.version)
+        add(INSTALL_PATH_FLAG)
+        add(path)
+        add(NO_CONFIRM_FLAG)
+        add(ELEVATED_FLAG)
+      }))
+      installDir.toString()
+    else null
 
-  private fun elevatedUninstall(install: ElideInstallation): Boolean = elevatedAction(buildList {
-    add(VERSIONS_COMMAND)
-    add(UNINSTALL_VERSION_FLAG)
-    add(install.version.version)
-    add(INSTALL_PATH_FLAG)
-    add(install.path)
-    add(NO_CONFIRM_FLAG)
-    add(ELEVATED_FLAG)
-  })
+  private fun elevatedUninstall(install: ElideInstallation): Boolean =
+    elevatedAction(
+      buildList {
+        add(VERSIONS_COMMAND)
+        add(UNINSTALL_VERSION_FLAG)
+        add(install.version.version)
+        add(INSTALL_PATH_FLAG)
+        add(install.path)
+        add(NO_CONFIRM_FLAG)
+        add(ELEVATED_FLAG)
+      })
 
-  private fun elevatedAction(params: List<String>): Boolean = if (ImageInfo.isExecutable() && runElevated(params) == 0) true
-  else {
-    println(
-      "Please run this version of elide with the following parameters as root/administrator to proceed with installation")
-    println(params.joinToString(" ") { it.escapeWhitespace("\"") })
-    false
-  }
+  private fun elevatedAction(params: List<String>): Boolean =
+    if (ImageInfo.isExecutable() && runElevated(params) == 0) true
+    else {
+      println(
+        "Please run this version of elide with the following parameters as root/administrator to proceed with installation")
+      println(params.joinToString(" ") { it.escapeWhitespace("\"") })
+      false
+    }
 
   private fun runElevated(params: List<String>): Int {
     val path = Paths.get(ProcessHandle.current().info().command().get()).toAbsolutePath().toString()
@@ -312,16 +328,17 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
           val escaped = pathAndParams.joinToString(" ") { it.escapeWhitespace("'") }
           ProcessBuilder("osascript", "-e", "do shell script \"$escaped\" with administrator privileges").inheritIO()
         }
-        HostPlatform.OperatingSystem.WINDOWS -> ProcessBuilder(
-          "powershell.exe",
-          "-command",
-          "Start-Process",
-          "-Wait",
-          "-FilePath",
-          "\"\"\"$path\"\"\"",
-          "-verb RunAs",
-          "-ArgumentList",
-          params.joinToString(" ") { it.escapeWhitespace("`\"") })
+        HostPlatform.OperatingSystem.WINDOWS ->
+          ProcessBuilder(
+            "powershell.exe",
+            "-command",
+            "Start-Process",
+            "-Wait",
+            "-FilePath",
+            "\"\"\"$path\"\"\"",
+            "-verb RunAs",
+            "-ArgumentList",
+            params.joinToString(" ") { it.escapeWhitespace("`\"") })
       }
     return process.start().waitFor()
   }
@@ -444,8 +461,7 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
     val DEFAULT_CONFIG =
       ElideInstallConfig(
         when (PLATFORM.os) {
-          HostPlatform.OperatingSystem.LINUX ->
-            listOf("/usr/local/share/elide", "$LINUX_INSTALL_HOME/elide")
+          HostPlatform.OperatingSystem.LINUX -> listOf("/usr/local/share/elide", "$LINUX_INSTALL_HOME/elide")
 
           HostPlatform.OperatingSystem.DARWIN -> listOf("/Applications/elide", "$HOME/Applications/elide")
           HostPlatform.OperatingSystem.WINDOWS ->

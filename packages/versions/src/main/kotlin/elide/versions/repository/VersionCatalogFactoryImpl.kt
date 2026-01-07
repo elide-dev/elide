@@ -25,7 +25,8 @@ import elide.runtime.core.HostPlatform
  */
 @Singleton
 internal class VersionCatalogFactoryImpl : VersionCatalogFactory {
-  override fun createLocalCatalog(directory: Path, relativePaths: Boolean): String = createCatalog(directory, relativePaths)
+  override fun createLocalCatalog(directory: Path, relativePaths: Boolean): String =
+    createCatalog(directory, relativePaths)
 
   override fun createRemoteCatalog(directory: Path, root: String): String = createCatalog(directory, true, root)
 
@@ -34,7 +35,8 @@ internal class VersionCatalogFactoryImpl : VersionCatalogFactory {
     directory.recursive().forEach {
       if (!it.name.startsWith("elide-") ||
         !it.name.endsWith(".txz") ||
-        !SystemFileSystem.exists(Path(it.parent!!, "${it.name}.sha256"))) return@forEach
+        !SystemFileSystem.exists(Path(it.parent!!, "${it.name}.sha256")))
+        return@forEach
       val versionString = it.name.substringAfter("elide-").substringBeforeLast(".txz")
       val parts = versionString.split('-')
       if (parts.size < 3) return@forEach
@@ -42,26 +44,27 @@ internal class VersionCatalogFactoryImpl : VersionCatalogFactory {
       val os = parts[parts.size - 2]
       val version = versionString.substringBeforeLast("-$os-$arch")
       val platform = HostPlatform(HostPlatform.parseOperatingSystem(os), HostPlatform.parseArchitecture(arch))
-      var path = if (relativePaths) {
-        it.toString().substringAfter(directory.toString()).substring(1).substringBeforeLast(".txz")
-      } else {
-        it.toString().substringBeforeLast(".txz")
-      }
+      var path =
+        if (relativePaths) {
+          it.toString().substringAfter(directory.toString()).substring(1).substringBeforeLast(".txz")
+        } else {
+          it.toString().substringBeforeLast(".txz")
+        }
       if (prefix != null) {
         path = "$prefix/${path.replace('\\', '/')}"
       }
       versions.getOrPut(version) { mutableMapOf() }.put(platform, path)
     }
-    return Json.Default.encodeToString(ElideVersionCatalog(versions.mapValues { (_, platforms) ->
-      ElideSystemCatalog(platforms)
-    }))
+    return Json.Default.encodeToString(
+      ElideVersionCatalog(versions.mapValues { (_, platforms) -> ElideSystemCatalog(platforms) }))
   }
 
-  private fun Path.recursive(): Sequence<Path> = SystemFileSystem.list(this).asSequence().flatMap {
-    if (SystemFileSystem.metadataOrNull(it)!!.isDirectory) {
-      it.recursive()
-    } else {
-      sequenceOf(it)
+  private fun Path.recursive(): Sequence<Path> =
+    SystemFileSystem.list(this).asSequence().flatMap {
+      if (SystemFileSystem.metadataOrNull(it)!!.isDirectory) {
+        it.recursive()
+      } else {
+        sequenceOf(it)
+      }
     }
-  }
 }

@@ -13,9 +13,9 @@
 package elide.versions.repository
 
 import kotlinx.serialization.Serializable
+import elide.runtime.core.HostPlatform
 import elide.versions.ElideVersionDto
 import elide.versions.HostPlatformSerializer
-import elide.runtime.core.HostPlatform
 
 /**
  * A version catalog. Every [StandardElideRepository] has exactly one.

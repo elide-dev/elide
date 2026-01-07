@@ -15,10 +15,11 @@ package elide.versions.repository
 import kotlinx.io.files.Path
 
 /**
- * Factory for creating [version catalog][ElideVersionCatalog] files for [standard repositories][StandardElideRepository].
+ * Factory for creating [version catalog][ElideVersionCatalog] files for
+ * [standard repositories][StandardElideRepository].
  *
-* @author Lauri Heino <datafox>
-*/
+ * @author Lauri Heino <datafox>
+ */
 public interface VersionCatalogFactory {
   public fun createLocalCatalog(directory: Path, relativePaths: Boolean): String
 

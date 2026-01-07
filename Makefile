@@ -206,11 +206,14 @@ JAVA_HOME ?= $(shell echo $$JAVA_HOME)
 GRAALVM_HOME ?= $(shell echo $$GRAALVM_HOME)
 
 ifneq ("$(wildcard ./.java-home)","")
-		$(info Using custom JVM...)
-    CUSTOM_JVM = $(shell cat .java-home)
-    JAVA_HOME = $(CUSTOM_JVM)
-    PATH := $(JAVA_HOME)/bin:$(PATH)
-    JAVA = $(JAVA_HOME)/bin/java
+$(info Using custom JVM...)
+CUSTOM_JVM = $(shell cat .java-home)
+JAVA_HOME = $(CUSTOM_JVM)
+GRAALVM_HOME = $(CUSTOM_JVM)
+PATH := $(JAVA_HOME)/bin:$(PATH)
+JAVA = $(JAVA_HOME)/bin/java
+export JAVA_HOME
+export GRAALVM_HOME
 endif
 
 # Handle custom GraalVM home path.

@@ -45,13 +45,13 @@ public interface VersionManager {
    * Installs a [version] of Elide to [path] or [ElideInstallConfig.defaultInstallDir] and returns the path to the
    * installation.
    *
-   * @param elevated If `true`, this process is considered elevated and will not attempt elevation again, throwing an
-   * exception if a file cannot be installed.
+   * @param doNotElevate If `true`, process elevation will not be attempted and an exception is thrown if a file
+   * cannot be installed.
    * @param version Version of Elide to install.
    * @param path Path to install Elide to, or `null` if [ElideInstallConfig.defaultInstallDir] should be used.
    * @param progress Flow collector for progress events.
    */
-  public suspend fun install(elevated: Boolean, version: String, path: String? = null, progress: FlowCollector<ElideInstallEvent>? = null): String?
+  public suspend fun install(doNotElevate: Boolean, version: String, path: String? = null, progress: FlowCollector<ElideInstallEvent>? = null): String?
 
   /**
    * Verifies an installation of Elide at [path] with a stampfile. Returns the relative paths to any files that were not
@@ -65,12 +65,12 @@ public interface VersionManager {
   /**
    * Uninstalls an [installation][install] of Elide.
    *
-   * @param elevated If `true`, this process is considered elevated and will not attempt elevation again, throwing an
-   * exception if a file cannot be installed.
+   * @param doNotElevate If `true`, process elevation will not be attempted and an exception is thrown if a file
+   * cannot be uninstalled.
    * @param install Installation of Elide.
    * @param progress Flow collector for progress events.
    */
-  public suspend fun uninstall(elevated: Boolean, installation: ElideInstallation, progress: FlowCollector<ElideUninstallEvent>? = null)
+  public suspend fun uninstall(doNotElevate: Boolean, installation: ElideInstallation, progress: FlowCollector<ElideUninstallEvent>? = null)
 
   /**
    * Generates a stampfile for all files in [path] and returns it.

@@ -3,6 +3,13 @@
   <groupId>com.example</groupId>
   <artifactId>my-app</artifactId>
   <version>1</version>
+  <name>My Example App</name>
+  <description>An example Maven project</description>
+
+  <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+  </properties>
 
   <build>
     <plugins>

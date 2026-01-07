@@ -140,6 +140,8 @@ public data class ElidePackageManifest(
     val sources: List<String> = emptyList(),
     val resources: Map<String, JarResource> = emptyMap(),
     val manifest: Map<String, String> = emptyMap(),
+    val manifestFile: String? = null,
+    val excludes: List<String> = emptyList(),
     val options: JarOptions = JarOptions(),
     override val from: List<String> = emptyList(),
     override val dependsOn: List<String> = emptyList(),

@@ -94,6 +94,40 @@ internal val defaultManifestState = object: PackageManifestCodec.ManifestBuildSt
     assertEquals(pluginFirst.version, pomPluginFirst.version)
   }
 
+  @Test fun `should convert pom to elide manifest`() {
+    val resource = sampleManifestResource()
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Basic project info
+    assertEquals("my-app", elide.name)
+    assertEquals("1", elide.version)
+    assertEquals("An example Maven project", elide.description)
+
+    // JVM target from maven.compiler.target property
+    assertNotNull(elide.jvm)
+    assertEquals("21", elide.jvm?.target?.argValue)
+
+    // Maven coordinates
+    assertNotNull(elide.dependencies.maven.coordinates)
+    assertEquals("com.example", elide.dependencies.maven.coordinates?.group)
+    assertEquals("my-app", elide.dependencies.maven.coordinates?.name)
+
+    // Dependencies
+    assertEquals(1, elide.dependencies.maven.packages.size)
+    assertEquals("com.google.guava", elide.dependencies.maven.packages[0].group)
+    assertEquals("guava", elide.dependencies.maven.packages[0].name)
+    assertEquals(2, elide.dependencies.maven.testPackages.size)
+
+    // Source directories
+    assertEquals(2, elide.sources.size)
+    assertTrue(elide.sources.containsKey("main"))
+    assertTrue(elide.sources.containsKey("test"))
+
+    // Jar artifact
+    assertTrue(elide.artifacts.containsKey("jar"))
+  }
+
   companion object {
     fun sampleManifestResource(): File {
       val stream = MavenPomCodecTest::class.java.getResourceAsStream("/manifests/pom.xml")!!
@@ -113,6 +147,8 @@ internal val defaultManifestState = object: PackageManifestCodec.ManifestBuildSt
         groupId = "com.example"
         artifactId = "my-app"
         version = "1"
+        name = "My Example App"
+        description = "An example Maven project"
 
         build = Build().apply {
           plugins = listOf(Plugin().apply {

@@ -16,7 +16,10 @@ package elide.tooling.project.codecs
 
 import org.apache.maven.model.Dependency
 import org.apache.maven.model.Model
+import org.apache.maven.model.Plugin
+import org.apache.maven.model.PluginExecution
 import org.apache.maven.model.building.DefaultModelBuilderFactory
+import org.codehaus.plexus.util.xml.Xpp3Dom
 import org.apache.maven.model.building.DefaultModelBuildingRequest
 import org.apache.maven.model.building.ModelBuildingRequest
 import org.apache.maven.model.building.ModelProblem
@@ -128,8 +131,9 @@ import elide.tooling.project.manifest.MavenPomManifest
   }
 
   override fun toElidePackage(source: MavenPomManifest): ElidePackageManifest {
-    val deps = source.model.dependencies ?: emptyList()
-    val managed = source.model.dependencyManagement?.dependencies ?: emptyList()
+    val model = source.model
+    val deps = model.dependencies ?: emptyList()
+    val managed = model.dependencyManagement?.dependencies ?: emptyList()
     val resolvedDeps = deps.map {
       val group = it.groupId
       val artifact = it.artifactId
@@ -153,9 +157,53 @@ import elide.tooling.project.manifest.MavenPomManifest
       )
     }
 
+    // Extract JVM target from maven.compiler.target or maven.compiler.source properties
+    val jvmTarget = model.properties?.let { props ->
+      (props["maven.compiler.target"] ?: props["maven.compiler.source"])?.toString()
+    }?.let { target ->
+      // Normalize "1.8" -> "8", "1.5" -> "5", etc.
+      val normalized = if (target.startsWith("1.")) target.substring(2) else target
+      normalized.toUIntOrNull()?.let { ElidePackageManifest.JvmTarget.NumericJvmTarget(it) }
+    }
+
+    // Extract Maven coordinates
+    val coordinates = if (!model.groupId.isNullOrBlank() && !model.artifactId.isNullOrBlank()) {
+      ElidePackageManifest.MavenCoordinates(
+        group = model.groupId,
+        name = model.artifactId,
+      )
+    } else null
+
+    // Extract source directories from Maven build configuration
+    // Use Maven's configured directories, falling back to Maven conventions
+    val build = model.build
+    val mainSourceDir = build?.sourceDirectory ?: DEFAULT_MAIN_SOURCE_DIR
+    val testSourceDir = build?.testSourceDirectory ?: DEFAULT_TEST_SOURCE_DIR
+
+    val sources = buildMap {
+      put("main", ElidePackageManifest.SourceSet(
+        type = ElidePackageManifest.SourceSet.SourceSetType.Main,
+        paths = listOf("$mainSourceDir/**/*.java"),
+      ))
+      put("test", ElidePackageManifest.SourceSet(
+        type = ElidePackageManifest.SourceSet.SourceSetType.Test,
+        paths = listOf("$testSourceDir/**/*.java"),
+      ))
+    }
+
+    // Parse maven-jar-plugin configuration to discover JAR artifacts
+    val artifacts = parseJarArtifacts(model)
+
     return ElidePackageManifest(
+      name = model.artifactId ?: model.name,
+      version = model.version,
+      description = model.description,
+      jvm = jvmTarget?.let { ElidePackageManifest.JvmSettings(target = it) },
+      sources = sources,
+      artifacts = artifacts,
       dependencies = ElidePackageManifest.DependencyResolution(
         maven = ElidePackageManifest.MavenDependencies(
+          coordinates = coordinates,
           packages = resolvedDeps.filter { it.first != "test" }.map { it.second },
           testPackages = resolvedDeps.filter { it.first == "test" }.map { it.second },
         )
@@ -169,8 +217,103 @@ import elide.tooling.project.manifest.MavenPomManifest
     }
   }
 
+  /** Parse maven-jar-plugin configuration to discover all JAR artifacts */
+  private fun parseJarArtifacts(model: Model): Map<String, ElidePackageManifest.Artifact> {
+    // If not a jar packaging, return empty
+    if (model.packaging != null && model.packaging != "jar") {
+      return emptyMap()
+    }
+
+    val jarPlugin = model.build?.plugins?.find {
+      it.groupId == MAVEN_PLUGINS_GROUP && it.artifactId == MAVEN_JAR_PLUGIN
+    }
+
+    // No jar plugin configured - return default jar artifact
+    if (jarPlugin == null) {
+      return mapOf("jar" to ElidePackageManifest.Jar())
+    }
+
+    val artifacts = mutableMapOf<String, ElidePackageManifest.Artifact>()
+
+    // Parse each execution of the jar plugin
+    val executions = jarPlugin.executions ?: emptyList()
+
+    for (execution in executions) {
+      val config = execution.configuration as? Xpp3Dom ?: continue
+      val artifactInfo = parseJarExecutionConfig(execution.id, config)
+      if (artifactInfo != null) {
+        artifacts[artifactInfo.first] = artifactInfo.second
+      }
+    }
+
+    // If no executions produced artifacts, check for default-jar or add a default
+    if (artifacts.isEmpty()) {
+      // Check plugin-level configuration for default jar
+      val defaultConfig = jarPlugin.configuration as? Xpp3Dom
+      if (defaultConfig != null) {
+        val artifactInfo = parseJarExecutionConfig("jar", defaultConfig)
+        if (artifactInfo != null) {
+          artifacts[artifactInfo.first] = artifactInfo.second
+        }
+      } else {
+        artifacts["jar"] = ElidePackageManifest.Jar()
+      }
+    }
+
+    // Ensure we have a default jar if only classified jars were found
+    val hasDefaultJar = artifacts.values.any { jar ->
+      jar is ElidePackageManifest.Jar && jar.name == null
+    } || artifacts.containsKey("jar") || artifacts.containsKey("default-jar")
+
+    if (!hasDefaultJar && artifacts.isNotEmpty()) {
+      artifacts["jar"] = ElidePackageManifest.Jar()
+    }
+
+    return artifacts
+  }
+
+  /** Parse a single jar plugin execution configuration */
+  private fun parseJarExecutionConfig(
+    executionId: String,
+    config: Xpp3Dom
+  ): Pair<String, ElidePackageManifest.Jar>? {
+    val classifier = config.getChild("classifier")?.value
+    val excludesNode = config.getChild("excludes")
+    val archiveNode = config.getChild("archive")
+
+    // Parse excludes (patterns like org/joda/time/tz/data/**)
+    val excludes = excludesNode?.children?.mapNotNull { it.value } ?: emptyList()
+
+    // Parse manifest entries from archive/manifestEntries
+    val manifestEntries = mutableMapOf<String, String>()
+    archiveNode?.getChild("manifestEntries")?.children?.forEach { entry ->
+      entry.value?.let { manifestEntries[entry.name] = it }
+    }
+
+    // Parse manifest file path from archive/manifestFile
+    val manifestFile = archiveNode?.getChild("manifestFile")?.value
+
+    // Determine artifact name: use classifier if present, otherwise execution id
+    val artifactName = when {
+      classifier != null -> classifier
+      executionId == "default-jar" -> "jar"
+      else -> executionId
+    }
+
+    return artifactName to ElidePackageManifest.Jar(
+      name = classifier,
+      manifest = manifestEntries,
+      manifestFile = manifestFile,
+      excludes = excludes,
+    )
+  }
+
   private companion object {
     const val DEFAULT_EXTENSION = "xml"
     const val DEFAULT_NAME = "pom"
+    const val DEFAULT_MAIN_SOURCE_DIR = "src/main/java"
+    const val DEFAULT_TEST_SOURCE_DIR = "src/test/java"
+    const val MAVEN_PLUGINS_GROUP = "org.apache.maven.plugins"
+    const val MAVEN_JAR_PLUGIN = "maven-jar-plugin"
   }
 }

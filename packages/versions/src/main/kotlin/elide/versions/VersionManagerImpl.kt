@@ -52,15 +52,23 @@ import elide.versions.VersionsValues.VERSION_FILE
  * @author Lauri Heino <datafox>
  */
 @Singleton
-internal class VersionManagerImpl(repositoryFactory: ElideRepositoryFactory) : VersionManager {
+internal class VersionManagerImpl(private val repositoryFactory: ElideRepositoryFactory) : VersionManager {
   private val config: ElideInstallConfig by lazy { resolveConfig() }
   private val repositories by lazy { config.repositories.asSequence().map { repositoryFactory.get(it) }.toList() }
+  private val extraRepositories = mutableListOf<ElideRepository>()
 
   override fun onStartup(currentVersion: String, requestedVersion: String?): String? {
     val version = requestedVersion ?: readVersionFile() ?: return null
     if (version == currentVersion) return null
     val path =
-      getInstallations(true).find { it.version.version == version }?.path ?: runBlocking { install(false, version) } ?: return null
+      getInstallations(true).find { it.version.version == version }?.path ?: runBlocking {
+        try {
+          install(false, version)
+        } catch (e: Exception) {
+          println(e.message)
+          null
+        }
+      } ?: return null
     return resolveBinary(Path(path)).toString()
   }
 
@@ -76,43 +84,47 @@ internal class VersionManagerImpl(repositoryFactory: ElideRepositoryFactory) : V
     (listOfNotNull(config.defaultInstallDir) + config.installDirs).distinct()
 
   override suspend fun getAvailable(onlyCurrentSystem: Boolean): List<ElideVersionDto> =
-    repositories
+    (extraRepositories + repositories)
       .flatMap { it.getVersions() }
       .let { if (onlyCurrentSystem) it.filter { ver -> ver.platform == PLATFORM } else it }
       .distinct()
 
-  override suspend fun install(elevated: Boolean, version: String, path: String?, progress: FlowCollector<ElideInstallEvent>?): String? {
-    repositories.forEach { repository ->
+  override suspend fun install(doNotElevate: Boolean, version: String, path: String?, progress: FlowCollector<ElideInstallEvent>?): String? {
+    (extraRepositories + repositories).forEach { repository ->
       repository
         .getVersions()
         .find { it.version == version && it.platform == PLATFORM }
         ?.let {
-          return install(elevated, repository, it, path, progress)
+          return install(doNotElevate, repository, it, path, progress)
         }
     }
-    println("Elide version $version not found in repositories")
-    return null
+    throw IllegalArgumentException("Elide version $version not found in repositories")
   }
 
   override suspend fun verifyInstall(path: String, progress: FlowCollector<ElideFileVerifyEvent>?): List<String> {
     val path = Path(path)
     val stampFile = Path(path, STAMP_FILE)
-    require(SystemFileSystem.exists(stampFile)) { "stampfile does not exist" }
+    if (!SystemFileSystem.exists(stampFile)) return listOf("stampfile does not exist")
     val lines = SystemFileSystem.source(stampFile).buffered().readString().trim().lines()
-    if (lines.size == 1 && lines.first().isBlank()) return listOf("!!blank stampfile!!")
+    if (lines.size == 1 && lines.first().isBlank()) return listOf("stampfile is empty")
     progress?.emit(FileVerifyStartEvent)
     val failed = mutableListOf<String>()
     lines.forEachIndexed { index, line ->
       val (hash, relativePath) = line.split("  ./")
       progress?.emit(FileVerifyProgressEvent(index.toFloat() / lines.size.toFloat(), relativePath))
-      val realHash = calculateHash(Path(path, relativePath))
-      if (hash != realHash) { failed.add(relativePath) }
+      val filePath = Path(path, relativePath)
+      if (!SystemFileSystem.exists(filePath)) {
+        failed.add("$relativePath does not exist")
+      }
+      else if (hash != calculateHash(filePath)) {
+        failed.add("$relativePath is invalid")
+      }
     }
     progress?.emit(FileVerifyCompletedEvent)
     return failed
   }
 
-  override suspend fun uninstall(elevated: Boolean, installation: ElideInstallation, progress: FlowCollector<ElideUninstallEvent>?) {
+  override suspend fun uninstall(doNotElevate: Boolean, installation: ElideInstallation, progress: FlowCollector<ElideUninstallEvent>?) {
     val installDir = Path(installation.path)
     val files = installDir.recursive()
     if (files.all {
@@ -126,7 +138,7 @@ internal class VersionManagerImpl(repositoryFactory: ElideRepositoryFactory) : V
       }
       progress?.emit(UninstallCompletedEvent)
     }
-    else if (!elevated) elevatedUninstall(installation)
+    else if (!doNotElevate) elevatedUninstall(installation)
     else throw IllegalStateException("Process is already elevated but files cannot be deleted")
   }
 
@@ -218,7 +230,7 @@ internal class VersionManagerImpl(repositoryFactory: ElideRepositoryFactory) : V
 
   @OptIn(ExperimentalStdlibApi::class)
   private suspend fun install(
-    elevated: Boolean,
+    attemptElevation: Boolean,
     repository: ElideRepository,
     version: ElideVersionDto,
     path: String?,
@@ -228,7 +240,7 @@ internal class VersionManagerImpl(repositoryFactory: ElideRepositoryFactory) : V
     val installDir = Path(path, version.version)
     if (SystemFileSystem.exists(installDir)) throw IllegalArgumentException("Directory $installDir already exists")
     if (!canWrite(installDir)) {
-      if (!elevated) return elevatedInstall(version, path, installDir)
+      if (!attemptElevation) return elevatedInstall(version, path, installDir)
       else throw IllegalStateException("Process is already elevated but path $installDir cannot be created")
     }
     val buffer = Buffer()
@@ -386,6 +398,14 @@ internal class VersionManagerImpl(repositoryFactory: ElideRepositoryFactory) : V
       if (mode and 256 > 0) perms.add(PosixFilePermission.OWNER_READ)
       Files.setPosixFilePermissions(Paths.get(path.toString()), perms)
     }
+  }
+
+  internal fun addExtraRepository(repository: String) {
+    extraRepositories.add(repositoryFactory.get(repository))
+  }
+
+  internal fun clearExtraRepositories() {
+    extraRepositories.clear()
   }
 
   /**

@@ -125,6 +125,7 @@ public final class elide/runtime/core/HostPlatform$Companion {
 	public final fun parseOperatingSystem (Ljava/lang/String;)Lelide/runtime/core/HostPlatform$OperatingSystem;
 	public final fun parsePlatform (Ljava/lang/String;)Lelide/runtime/core/HostPlatform;
 	public final fun resolve ()Lelide/runtime/core/HostPlatform;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class elide/runtime/core/HostPlatform$OperatingSystem : java/lang/Enum {

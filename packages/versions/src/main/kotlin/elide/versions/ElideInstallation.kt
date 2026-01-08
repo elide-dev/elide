@@ -12,6 +12,7 @@
  */
 package elide.versions
 
+import elide.runtime.version.ElideVersion
 import kotlinx.serialization.Serializable
 
 /**
@@ -21,6 +22,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 public data class ElideInstallation(
-  val version: ElideVersionDto,
+  val version: ElideVersion,
   val path: String,
 )

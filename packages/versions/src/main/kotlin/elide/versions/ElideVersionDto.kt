@@ -12,10 +12,10 @@
  */
 package elide.versions
 
-import kotlinx.serialization.Serializable
 import elide.runtime.core.HostPlatform
 import elide.runtime.version.ElideVersion
 import elide.runtime.version.ElideVersionInfo
+import kotlinx.serialization.Serializable
 
 /**
  * DTO object for a platform-specific version of Elide.
@@ -25,7 +25,7 @@ import elide.runtime.version.ElideVersionInfo
 @Serializable
 public data class ElideVersionDto(
   public val version: String,
-  public val platform: @Serializable(with = HostPlatformSerializer::class) HostPlatform,
+  public val platform: HostPlatform,
 ) {
   public val info: ElideVersion by lazy { ElideVersionInfo(version) }
 }

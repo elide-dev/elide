@@ -12,24 +12,10 @@
  */
 package elide.versions
 
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
-import org.bouncycastle.crypto.digests.SHA256Digest
-import org.graalvm.nativeimage.ImageInfo
-import org.tukaani.xz.XZInputStream
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.attribute.PosixFilePermission
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.runBlocking
-import kotlinx.io.*
-import kotlinx.io.bytestring.decodeToString
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.io.decodeFromSource
 import elide.annotations.Singleton
 import elide.runtime.core.HostPlatform
+import elide.runtime.version.ElideVersion
+import elide.runtime.version.ElideVersionInfo
 import elide.versions.VersionsValues.CONFIG_FILE
 import elide.versions.VersionsValues.ELEVATED_FLAG
 import elide.versions.VersionsValues.INSTALL_IO_BUFFER
@@ -38,13 +24,31 @@ import elide.versions.VersionsValues.INSTALL_PROGRESS_INTERVAL
 import elide.versions.VersionsValues.INSTALL_VERSION_FLAG
 import elide.versions.VersionsValues.NO_CONFIRM_FLAG
 import elide.versions.VersionsValues.PROJECT_VERSION_FILE
+import elide.versions.VersionsValues.SHA256_EXTENSION
 import elide.versions.VersionsValues.STAMP_FILE
+import elide.versions.VersionsValues.STAMP_FILE_DELIMITER
+import elide.versions.VersionsValues.TAR_XZ_EXTENSION
 import elide.versions.VersionsValues.UNINSTALL_VERSION_FLAG
 import elide.versions.VersionsValues.VERSIONS_COMMAND
 import elide.versions.VersionsValues.VERSION_FILE
 import elide.versions.repository.ElideRepository
 import elide.versions.repository.ElideRepositoryFactory
 import elide.versions.repository.getFile
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.attribute.PosixFilePermission
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.io.*
+import kotlinx.io.bytestring.decodeToString
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.io.decodeFromSource
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
+import org.bouncycastle.crypto.digests.SHA256Digest
+import org.graalvm.nativeimage.ImageInfo
+import org.tukaani.xz.XZInputStream
 
 /**
  * Implementation of [VersionManager].
@@ -57,22 +61,30 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
   private val repositories by lazy { config.repositories.asSequence().map { repositoryFactory.get(it) }.toList() }
   private val extraRepositories = mutableListOf<ElideRepository>()
 
-  override fun onStartup(currentVersion: String, requestedVersion: String?): String? {
-    val version = requestedVersion ?: readVersionFile() ?: return null
+  override suspend fun getOrInstallTargetVersion(
+    currentVersion: String,
+    requestedVersion: String?,
+    progress: FlowCollector<ElideInstallEvent>?,
+  ): String? {
+    val version = requestedVersion ?: return null
     if (version == currentVersion) return null
     val path =
-      getInstallations(true).find { it.version.version == version }?.path
-        ?: runBlocking {
-          try {
-            install(false, version)
-          } catch (e: Exception) {
-            println(e.message)
-            null
-          }
+      getInstallations(true).find { it.version.asString == version }?.path
+        ?: try {
+          install(false, version, null, progress)
+        } catch (e: Exception) {
+          println(e.message)
+          null
         }
         ?: return null
     return resolveBinary(Path(path)).toString()
   }
+
+  override fun readVersionFile(): String? =
+    Path(System.getProperty("user.dir"), PROJECT_VERSION_FILE).let {
+      if (SystemFileSystem.exists(it)) SystemFileSystem.source(it).buffered().readString(Charsets.UTF_8).trim()
+      else null
+    }
 
   override fun getInstallations(includeSearchDirs: Boolean): List<ElideInstallation> =
     (if (includeSearchDirs) (config.searchDirs + config.installDirs).distinct() else config.installDirs)
@@ -85,11 +97,22 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
   override fun getInstallPaths(): List<String> =
     (listOfNotNull(config.defaultInstallDir) + config.installDirs).distinct()
 
-  override suspend fun getAvailable(onlyCurrentSystem: Boolean): List<ElideVersionDto> =
+  override fun getDefaultInstallPath(): String = config.defaultInstallDir ?: config.installDirs.first()
+
+  override suspend fun getAvailableVersions(): List<ElideVersion> =
     (extraRepositories + repositories)
       .flatMap { it.getVersions() }
-      .let { if (onlyCurrentSystem) it.filter { ver -> ver.platform == PLATFORM } else it }
+      .filter { ver -> ver.platform == PLATFORM }
+      .map { it.info }
       .distinct()
+
+  override suspend fun getAllAvailableVersions(): Map<ElideVersion, Set<HostPlatform>> =
+    buildMap<ElideVersion, MutableSet<HostPlatform>> {
+      (extraRepositories + repositories)
+        .flatMap { it.getVersions() }
+        .distinct()
+        .forEach { getOrPut(it.info) { mutableSetOf() }.add(it.platform) }
+    }
 
   override suspend fun install(
     doNotElevate: Boolean,
@@ -111,12 +134,16 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
   override suspend fun verifyInstall(path: String, progress: FlowCollector<ElideFileVerifyEvent>?): List<String> {
     val path = Path(path)
     val stampFile = Path(path, STAMP_FILE)
-    if (!SystemFileSystem.exists(stampFile)) return listOf("stampfile does not exist")
-    val lines = SystemFileSystem.source(stampFile).buffered().readString().trim().lines()
-    if (lines.size == 1 && lines.first().isBlank()) return listOf("stampfile is empty")
+    if (!SystemFileSystem.exists(stampFile)) return listOf("$STAMP_FILE does not exist")
+    val string = SystemFileSystem.source(stampFile).buffered().readString().trim()
+    if (string.isBlank()) return listOf("$STAMP_FILE is empty")
+    val lines = string.lines()
     progress?.emit(FileVerifyStartEvent)
     val failed = mutableListOf<String>()
     lines.forEachIndexed { index, line ->
+      if (!line.contains(STAMP_FILE_DELIMITER)) {
+        failed.add("$STAMP_FILE has invalid line ${index + 1}")
+      }
       val (hash, relativePath) = line.split("  ./")
       progress?.emit(FileVerifyProgressEvent(index.toFloat() / lines.size.toFloat(), relativePath))
       val filePath = Path(path, relativePath)
@@ -198,18 +225,17 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
   @OptIn(ExperimentalStdlibApi::class)
   private fun calculateHash(path: Path): String {
     val digest = SHA256Digest()
-    val bytes = SystemFileSystem.source(path).buffered().readByteArray()
-    digest.update(bytes, 0, bytes.size)
+    SystemFileSystem.source(path).buffered().use { source ->
+      val buffer = Buffer()
+      while (!source.exhausted()) {
+        val read = source.readAtMostTo(buffer, INSTALL_IO_BUFFER)
+        digest.update(buffer.readByteArray(), 0, read.toInt())
+      }
+    }
     val out = ByteArray(digest.digestSize)
     digest.doFinal(out, 0)
     return out.toHexString()
   }
-
-  private fun readVersionFile(): String? =
-    Path(System.getProperty("user.dir"), PROJECT_VERSION_FILE).let {
-      if (SystemFileSystem.exists(it)) SystemFileSystem.source(it).buffered().readString(Charsets.UTF_8).trim()
-      else null
-    }
 
   private fun resolveInstall(path: Path): Sequence<ElideInstallation> {
     try {
@@ -225,7 +251,7 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
               .trim()
           }
           ?: return emptySequence()
-      return sequenceOf(ElideInstallation(ElideVersionDto(version, PLATFORM), path.toString()))
+      return sequenceOf(ElideInstallation(ElideVersionInfo(version), path.toString()))
     } catch (_: Throwable) {
       return emptySequence()
     }
@@ -255,9 +281,9 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
       else throw IllegalStateException("Process is already elevated but path $installDir cannot be created")
     }
     val buffer = Buffer()
-    val format = "txz"
+    val format = TAR_XZ_EXTENSION
     repository.getFile(version, format, buffer, progress)
-    val hash = repository.getFile(version, "$format.sha256").decodeToString().substringBefore(' ')
+    val hash = repository.getFile(version, "$format.$SHA256_EXTENSION").decodeToString().substringBefore(' ')
     if (!checkHash(buffer, hash.hexToByteArray(), progress)) throw IllegalArgumentException("invalid hash")
 
     SystemFileSystem.createDirectories(installDir, true)
@@ -301,7 +327,7 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
       buildList {
         add(VERSIONS_COMMAND)
         add(UNINSTALL_VERSION_FLAG)
-        add(install.version.version)
+        add(install.version.asString)
         add(INSTALL_PATH_FLAG)
         add(install.path)
         add(NO_CONFIRM_FLAG)

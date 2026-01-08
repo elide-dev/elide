@@ -22,6 +22,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import elide.annotations.Inject
 import elide.runtime.core.HostPlatform
+import elide.runtime.version.ElideVersionInfo
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
 import elide.versions.repository.VersionCatalogFactory
@@ -86,7 +87,7 @@ class VersionsInstallTest : AbstractVersionsTest() {
       assertTrue(installDir.exists())
       manager.uninstall(
         true,
-        ElideInstallation(ElideVersionDto("1.0.0-dummy", HostPlatform.resolve()), installDir.absolutePathString()))
+        ElideInstallation(ElideVersionInfo("1.0.0-dummy"), installDir.absolutePathString()))
       assertFalse(installDir.exists())
     }
   }

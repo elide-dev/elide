@@ -12,11 +12,13 @@
  */
 package elide.versions.repository
 
+import elide.annotations.Singleton
+import elide.runtime.core.HostPlatform
+import elide.versions.VersionsValues.SHA256_EXTENSION
+import elide.versions.VersionsValues.TAR_XZ_EXTENSION
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.serialization.json.Json
-import elide.annotations.Singleton
-import elide.runtime.core.HostPlatform
 
 /**
  * Implementation of [VersionCatalogFactory].
@@ -33,11 +35,11 @@ internal class VersionCatalogFactoryImpl : VersionCatalogFactory {
   private fun createCatalog(directory: Path, relativePaths: Boolean, prefix: String? = null): String {
     val versions = mutableMapOf<String, MutableMap<HostPlatform, String>>()
     directory.recursive().forEach {
-      if (!it.name.startsWith("elide-") ||
-        !it.name.endsWith(".txz") ||
-        !SystemFileSystem.exists(Path(it.parent!!, "${it.name}.sha256")))
+      if (!it.name.startsWith(ELIDE_PACKAGE_PREFIX) ||
+        !it.name.endsWith(".$TAR_XZ_EXTENSION") ||
+        !SystemFileSystem.exists(Path(it.parent!!, "${it.name}.$SHA256_EXTENSION")))
         return@forEach
-      val versionString = it.name.substringAfter("elide-").substringBeforeLast(".txz")
+      val versionString = it.name.substringAfter(ELIDE_PACKAGE_PREFIX).substringBeforeLast(".$TAR_XZ_EXTENSION")
       val parts = versionString.split('-')
       if (parts.size < 3) return@forEach
       val arch = parts[parts.size - 1]
@@ -46,9 +48,9 @@ internal class VersionCatalogFactoryImpl : VersionCatalogFactory {
       val platform = HostPlatform(HostPlatform.parseOperatingSystem(os), HostPlatform.parseArchitecture(arch))
       var path =
         if (relativePaths) {
-          it.toString().substringAfter(directory.toString()).substring(1).substringBeforeLast(".txz")
+          it.toString().substringAfter(directory.toString()).substring(1).substringBeforeLast(".$TAR_XZ_EXTENSION")
         } else {
-          it.toString().substringBeforeLast(".txz")
+          it.toString().substringBeforeLast(".$TAR_XZ_EXTENSION")
         }
       if (prefix != null) {
         path = "$prefix/${path.replace('\\', '/')}"
@@ -67,4 +69,8 @@ internal class VersionCatalogFactoryImpl : VersionCatalogFactory {
         sequenceOf(it)
       }
     }
+
+  companion object {
+    const val ELIDE_PACKAGE_PREFIX = "elide-"
+  }
 }

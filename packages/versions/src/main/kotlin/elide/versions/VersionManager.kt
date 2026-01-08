@@ -12,6 +12,8 @@
  */
 package elide.versions
 
+import elide.runtime.core.HostPlatform
+import elide.runtime.version.ElideVersion
 import kotlinx.coroutines.flow.FlowCollector
 
 /**
@@ -21,7 +23,14 @@ import kotlinx.coroutines.flow.FlowCollector
  */
 public interface VersionManager {
   /** Returns the path to the version of Elide that should be run, or `null` if current should be used. */
-  public fun onStartup(currentVersion: String, requestedVersion: String? = null): String?
+  public suspend fun getOrInstallTargetVersion(
+    currentVersion: String,
+    requestedVersion: String? = null,
+    progress: FlowCollector<ElideInstallEvent>? = null,
+  ): String?
+
+  /** Returns the contents of `.elideversion` file in the current directory if present. */
+  public fun readVersionFile(): String?
 
   /**
    * Returns all versions of Elide installed in the current system. Searches directories specified in
@@ -34,13 +43,17 @@ public interface VersionManager {
   /** Returns [ElideInstallConfig.installDirs]. */
   public fun getInstallPaths(): List<String>
 
+  /** Returns [ElideInstallConfig.defaultInstallDir] or first element of [ElideInstallConfig.installDirs]. */
+  public fun getDefaultInstallPath(): String
+
   /**
-   * Returns all versions of Elide available in [ElideInstallConfig.repositories].
-   *
-   * @param onlyCurrentSystem If `true`, only returns versions of Elide available for the current operating system and
-   *   architecture.
+   * Returns all versions of Elide available in [ElideInstallConfig.repositories] for the current operating system and
+   * architecture.
    */
-  public suspend fun getAvailable(onlyCurrentSystem: Boolean = true): List<ElideVersionDto>
+  public suspend fun getAvailableVersions(): List<ElideVersion>
+
+  /** Returns all versions of Elide available in [ElideInstallConfig.repositories]. */
+  public suspend fun getAllAvailableVersions(): Map<ElideVersion, Set<HostPlatform>>
 
   /**
    * Installs a [version] of Elide to [path] or [ElideInstallConfig.defaultInstallDir] and returns the path to the

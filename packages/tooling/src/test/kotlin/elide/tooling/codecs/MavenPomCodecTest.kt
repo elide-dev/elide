@@ -34,6 +34,7 @@ import elide.tooling.project.codecs.MavenPomManifestCodec
 import elide.tooling.project.codecs.PackageManifestCodec
 import elide.tooling.project.manifest.ElidePackageManifest
 import elide.tooling.project.manifest.MavenPomManifest
+import elide.tooling.project.manifest.merge
 
 internal val defaultManifestState = object: PackageManifestCodec.ManifestBuildState {
   override val isDebug: Boolean get() = false
@@ -264,6 +265,58 @@ internal val defaultManifestState = object: PackageManifestCodec.ManifestBuildSt
 
     // Standard pom.xml has no javadoc plugin
     assertNull(elide.artifacts["javadoc"])
+  }
+
+  @Test fun `should produce relative source paths not absolute`() {
+    val resource = sampleManifestResource()
+    val pom = codec.parseAsFile(resource.toPath(), defaultManifestState)
+    val elide = codec.toElidePackage(pom)
+
+    // Source paths should be relative, not absolute
+    elide.sources.values.forEach { sourceSet ->
+      sourceSet.paths.forEach { path ->
+        assertFalse(path.startsWith("/"), "Source path should be relative, not absolute: $path")
+      }
+    }
+
+    // Should contain standard Maven source directories
+    val mainSourceSet = elide.sources["main"]
+    assertNotNull(mainSourceSet)
+    assertTrue(mainSourceSet.paths.any { it.contains("src/main/java") })
+
+    val testSourceSet = elide.sources["test"]
+    assertNotNull(testSourceSet)
+    assertTrue(testSourceSet.paths.any { it.contains("src/test/java") })
+  }
+
+  @Test fun `should merge sources when merging manifests`() {
+    // Create two manifests with different source sets
+    val manifest1 = ElidePackageManifest(
+      name = "project1",
+      sources = mapOf(
+        "main" to ElidePackageManifest.SourceSet(
+          type = ElidePackageManifest.SourceSet.SourceSetType.Main,
+          paths = listOf("src/main/java/**/*.java"),
+        )
+      )
+    )
+    val manifest2 = ElidePackageManifest(
+      name = "project2",
+      sources = mapOf(
+        "test" to ElidePackageManifest.SourceSet(
+          type = ElidePackageManifest.SourceSet.SourceSetType.Test,
+          paths = listOf("src/test/java/**/*.java"),
+        )
+      )
+    )
+
+    // Use the merge extension function
+    val merged = manifest1.merge(manifest2)
+
+    // Should have both source sets
+    assertEquals(2, merged.sources.size)
+    assertTrue(merged.sources.containsKey("main"))
+    assertTrue(merged.sources.containsKey("test"))
   }
 
   companion object {

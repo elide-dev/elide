@@ -170,9 +170,19 @@ import elide.tooling.project.manifest.MavenPomManifest
 
     // Extract source directories from Maven build configuration
     // Use Maven's configured directories, falling back to Maven conventions
+    // Maven's effective model returns absolute paths, so we relativize them
     val build = model.build
-    val mainSourceDir = build?.sourceDirectory ?: DEFAULT_MAIN_SOURCE_DIR
-    val testSourceDir = build?.testSourceDirectory ?: DEFAULT_TEST_SOURCE_DIR
+    val projectRoot = source.path?.parent
+    val mainSourceDirRaw = build?.sourceDirectory ?: DEFAULT_MAIN_SOURCE_DIR
+    val testSourceDirRaw = build?.testSourceDirectory ?: DEFAULT_TEST_SOURCE_DIR
+
+    // Relativize absolute paths from Maven's effective model
+    val mainSourceDir = if (projectRoot != null && mainSourceDirRaw.startsWith("/")) {
+      projectRoot.relativize(java.nio.file.Path.of(mainSourceDirRaw)).toString().ifEmpty { DEFAULT_MAIN_SOURCE_DIR }
+    } else mainSourceDirRaw
+    val testSourceDir = if (projectRoot != null && testSourceDirRaw.startsWith("/")) {
+      projectRoot.relativize(java.nio.file.Path.of(testSourceDirRaw)).toString().ifEmpty { DEFAULT_TEST_SOURCE_DIR }
+    } else testSourceDirRaw
 
     val sources = buildMap {
       put("main", ElidePackageManifest.SourceSet(

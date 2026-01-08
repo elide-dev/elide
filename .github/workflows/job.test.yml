@@ -253,6 +253,11 @@ jobs:
           submodules: true
           persist-credentials: false
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Clone Test Projects"
+        run: |
+          # Clone joda-time for Maven integration tests
+          mkdir -p ~/src
+          git clone --depth 1 https://github.com/JodaOrg/joda-time.git ~/src/joda-time
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore
         uses: buildjet/cache/restore@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2

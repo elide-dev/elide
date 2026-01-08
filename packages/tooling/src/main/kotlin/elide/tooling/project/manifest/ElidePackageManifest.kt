@@ -919,6 +919,8 @@ public fun ElidePackageManifest.merge(other: ElidePackageManifest): ElidePackage
     scripts = scripts + other.scripts,
     artifacts = artifacts + other.artifacts,
     dependencies = dependencies.merge(other.dependencies),
+    sources = sources + other.sources,
+    execTasks = execTasks + other.execTasks,
     jvm = (other.jvm ?: jvm),
     kotlin = (other.kotlin ?: kotlin),
     python = (other.python ?: python),

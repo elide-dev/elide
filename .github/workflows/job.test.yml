@@ -257,6 +257,7 @@ jobs:
         run: |
           # Clone joda-time for Maven integration tests
           mkdir -p ~/src
+          rm -rf ~/src/joda-time
           git clone --depth 1 https://github.com/JodaOrg/joda-time.git ~/src/joda-time
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore

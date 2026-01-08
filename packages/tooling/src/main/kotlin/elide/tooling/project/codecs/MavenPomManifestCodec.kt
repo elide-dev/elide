@@ -483,8 +483,12 @@ import elide.tooling.project.manifest.MavenPomManifest
       it.groupId == EXEC_MAVEN_PLUGIN_GROUP && it.artifactId == EXEC_MAVEN_PLUGIN
     } ?: return emptyList()
 
+    // Plugin-level configuration is inherited by executions that don't have their own
+    val pluginConfig = execPlugin.configuration as? Xpp3Dom
+
     return execPlugin.executions.mapNotNull { execution ->
-      val config = execution.configuration as? Xpp3Dom ?: return@mapNotNull null
+      // Fall back to plugin-level config if execution config is null
+      val config = (execution.configuration as? Xpp3Dom) ?: pluginConfig ?: return@mapNotNull null
       val goal = execution.goals?.firstOrNull() ?: return@mapNotNull null
 
       when (goal) {

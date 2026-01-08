@@ -29,6 +29,7 @@ import org.graalvm.nativeimage.ProcessProperties
 import picocli.CommandLine
 import picocli.CommandLine.*
 import java.util.*
+import kotlinx.coroutines.runBlocking
 import kotlin.time.TimeSource
 import elide.annotations.Context
 import elide.annotations.Eager
@@ -357,8 +358,8 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     }
 
     // parse version delegation flags and run with a different version of elide if applicable
-    fun runVersion(args: Array<String>, manager: VersionManager): Int? {
-      if (VersionsValues.IGNORE_VERSION_FLAG in args) return null
+    suspend fun runVersion(args: Array<String>, manager: VersionManager): Int? {
+      if (VersionsValues.IGNORE_VERSION_FLAG in args || VersionsValues.VERSIONS_COMMAND in args) return null
       var args: Array<String> = args
       val requested = args.find { it.startsWith(VersionsValues.USE_VERSION_FLAG) }?.let {
         val mutableArgs = args.toMutableList()
@@ -370,8 +371,10 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
         } else it.substring(VersionsValues.USE_VERSION_FLAG.length + 1)
         args = mutableArgs.toTypedArray()
         version
-      }
-      manager.onStartup(ELIDE_TOOL_VERSION, requested)?.let {
+      } ?: manager.readVersionFile() ?: return null
+      ToolVersionsCommand.installElide("Installing Elide version \"$requested\" to \"${manager.getDefaultInstallPath()}\"") {
+        manager.getOrInstallTargetVersion(ELIDE_TOOL_VERSION, requested, it)
+      }?.let {
         return ProcessBuilder().command(it, *args).inheritIO().start().waitFor()
       }
       return null
@@ -406,7 +409,9 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
         .also { initLog("Application context started; loading tool entrypoint") }
         .use {
           // if a different version of elide is requested, run that version
-          runVersion(args, it.getBean(VersionManager::class.java))?.let { exitCode ->
+          runBlocking {
+            runVersion(args, it.getBean(VersionManager::class.java))
+          }?.let { exitCode ->
             return exitCode
           }
 

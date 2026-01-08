@@ -31,4 +31,7 @@ public object VersionsValues {
 
   internal const val INSTALL_IO_BUFFER = 1024 * 1024L
   internal const val INSTALL_PROGRESS_INTERVAL = 20
+  internal const val TAR_XZ_EXTENSION = "txz"
+  internal const val SHA256_EXTENSION = "sha256"
+  internal const val STAMP_FILE_DELIMITER = "  ./"
 }

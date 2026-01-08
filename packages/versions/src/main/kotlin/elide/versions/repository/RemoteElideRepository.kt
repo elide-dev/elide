@@ -12,6 +12,11 @@
  */
 package elide.versions.repository
 
+import elide.versions.DownloadCompletedEvent
+import elide.versions.DownloadProgressEvent
+import elide.versions.DownloadStartEvent
+import elide.versions.ElideInstallEvent
+import elide.versions.VersionsValues.INSTALL_IO_BUFFER
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -22,27 +27,19 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.io.Sink
-import elide.versions.DownloadCompletedEvent
-import elide.versions.DownloadProgressEvent
-import elide.versions.DownloadStartEvent
-import elide.versions.ElideInstallEvent
-import elide.versions.VersionsValues.INSTALL_IO_BUFFER
 
 /**
  * Remote implementation of [StandardElideRepository]. [catalogPath] is an HTTPS address.
  *
  * @author Lauri Heino <datafox>
  */
-internal class RemoteElideRepository(
-  catalogPath: String,
-  val client: HttpClient = HttpClient(CIO) { install(ContentNegotiation) { json() } }
-) : StandardElideRepository(catalogPath), ElideRepository {
+internal class RemoteElideRepository(catalogPath: String, val client: HttpClient = defaultHttpClient()) :
+  StandardElideRepository(catalogPath), ElideRepository {
   override suspend fun getVersionCatalog(): ElideVersionCatalog =
     client.get(this@RemoteElideRepository.catalogPath).body<ElideVersionCatalog>()
 
   override suspend fun streamFile(path: String, sink: Sink, progress: FlowCollector<ElideInstallEvent>?) {
-    val actualPath =
-      if (path.matches("https?://.+".toRegex())) path else "${catalogPath.substringBeforeLast('/')}/$path"
+    val actualPath = if (path.matches(HTTP_REGEX)) path else "${catalogPath.substringBeforeLast('/')}/$path"
     client.prepareGet(actualPath).execute { response ->
       val size = response.contentLength() ?: -1L
       val channel: ByteReadChannel = response.body()
@@ -60,5 +57,11 @@ internal class RemoteElideRepository(
 
   override fun close() {
     client.close()
+  }
+
+  companion object {
+    val HTTP_REGEX = "https?://.+".toRegex()
+
+    fun defaultHttpClient(): HttpClient = HttpClient(CIO) { install(ContentNegotiation) { json() } }
   }
 }

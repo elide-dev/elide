@@ -12,10 +12,9 @@
  */
 package elide.versions.repository
 
-import kotlinx.serialization.Serializable
 import elide.runtime.core.HostPlatform
 import elide.versions.ElideVersionDto
-import elide.versions.HostPlatformSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A version catalog. Every [StandardElideRepository] has exactly one.
@@ -39,10 +38,7 @@ import elide.versions.HostPlatformSerializer
  *
  * @property platforms [HostPlatforms][HostPlatform] mapped to a path without extension.
  */
-@Serializable
-public data class ElideSystemCatalog(
-  val platforms: Map<@Serializable(with = HostPlatformSerializer::class) HostPlatform, String>
-)
+@Serializable public data class ElideSystemCatalog(val platforms: Map<HostPlatform, String>)
 
 /**
  * Creates an [ElideVersionCatalog] from a map of [ElideVersionDtos][ElideVersionDto] and paths. Paths must follow

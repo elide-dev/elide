@@ -18,37 +18,7 @@ import com.github.kinquirer.components.promptInput
 import com.github.kinquirer.components.promptList
 import com.github.kinquirer.components.promptListObject
 import com.github.kinquirer.core.Choice
-import io.micronaut.core.annotation.Introspected
-import io.micronaut.core.annotation.ReflectiveAccess
-import picocli.CommandLine
-import picocli.CommandLine.Command
-import jakarta.inject.Provider
-import kotlinx.io.buffered
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
-import kotlinx.io.writeString
-import kotlin.io.path.absolutePathString
-import kotlin.time.Clock
 import elide.annotations.Inject
-import elide.versions.DownloadCompletedEvent
-import elide.versions.DownloadProgressEvent
-import elide.versions.DownloadStartEvent
-import elide.versions.FileVerifyCompletedEvent
-import elide.versions.FileVerifyIndeterminateEvent
-import elide.versions.FileVerifyProgressEvent
-import elide.versions.FileVerifyStartEvent
-import elide.versions.InstallCompletedEvent
-import elide.versions.InstallFileEvent
-import elide.versions.VersionManager
-import elide.versions.InstallProgressEvent
-import elide.versions.InstallStartEvent
-import elide.versions.UninstallCompletedEvent
-import elide.versions.UninstallProgressEvent
-import elide.versions.UninstallStartEvent
-import elide.versions.VerifyCompletedEvent
-import elide.versions.VerifyProgressEvent
-import elide.versions.VerifyStartEvent
-import elide.versions.repository.VersionCatalogFactory
 import elide.tool.cli.AbstractSubcommand
 import elide.tool.cli.CommandContext
 import elide.tool.cli.CommandResult
@@ -57,7 +27,20 @@ import elide.tool.cli.cfg.ElideCLITool
 import elide.tool.cli.progress.Progress
 import elide.tool.cli.progress.TrackedTask
 import elide.tooling.cli.Statics
-import elide.versions.VersionsValues
+import elide.versions.*
+import elide.versions.repository.VersionCatalogFactory
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.ReflectiveAccess
+import jakarta.inject.Provider
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.io.buffered
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlinx.io.writeString
+import picocli.CommandLine
+import picocli.CommandLine.Command
+import kotlin.io.path.absolutePathString
+import kotlin.time.Clock
 
 /** Subcommand for managing concurrent installations of Elide. */
 @Command(
@@ -139,15 +122,17 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
 
   /** @inheritDoc */
   override suspend fun CommandContext.invoke(state: ToolContext<ToolState>): CommandResult {
-    val operatingModes = mapOf(
-      VersionsValues.INSTALL_VERSION_FLAG to (installVersion != null),
-      VersionsValues.UNINSTALL_VERSION_FLAG to (uninstallVersion != null),
-      "--verify-stampfile" to verify,
-      "--generate-stampfile" to generate,
-      "--create-catalog" to catalog
-    ).filterValues { it }
+    val operatingModes =
+      mapOf(
+          VersionsValues.INSTALL_VERSION_FLAG to (installVersion != null),
+          VersionsValues.UNINSTALL_VERSION_FLAG to (uninstallVersion != null),
+          "--verify-stampfile" to verify,
+          "--generate-stampfile" to generate,
+          "--create-catalog" to catalog)
+        .filterValues { it }
     if (operatingModes.size > 1) {
-      return CommandResult.err(1, "Only one of these flags can be used at a time: ${operatingModes.keys.joinToString()}")
+      return CommandResult.err(
+        1, "Only one of these flags can be used at a time: ${operatingModes.keys.joinToString()}")
     }
     try {
       installVersion?.let {
@@ -159,7 +144,9 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
         return CommandResult.success()
       }
       if (verify) {
-        verify()?.let { return CommandResult.err(1, it) }
+        verify()?.let {
+          return CommandResult.err(1, it)
+        }
         return CommandResult.success()
       }
       if (generate) {
@@ -175,40 +162,35 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
 
   private suspend fun verify(): String? {
     val home = Statics.elideHome.absolutePathString()
-    val progress = Progress.create("Verify installation files", Statics.terminal) {
-      add(TrackedTask("Verify files", 1000))
-    }
-    manager.verifyInstall(home) {
-      when (it) {
-        is FileVerifyStartEvent -> {
-          progress.updateTask(0) {
-            copy(position = 0)
+    val progress =
+      Progress.create("Verify installation files", Statics.terminal) { add(TrackedTask("Verify files", 1000)) }
+    manager
+      .verifyInstall(home) {
+        when (it) {
+          is FileVerifyStartEvent -> {
+            progress.updateTask(0) { copy(position = 0) }
+            progress.start()
           }
-          progress.start()
-        }
-        is FileVerifyProgressEvent -> {
-          val time = Clock.System.now().toEpochMilliseconds()
-          progress.updateTask(0) { copy(position = (it.progress * 1000).toInt(), output = output + (time to it.name)) }
-        }
-        FileVerifyCompletedEvent -> {
-          progress.updateTask(0) {
-            copy(position = target)
+          is FileVerifyProgressEvent -> {
+            val time = Clock.System.now().toEpochMilliseconds()
+            progress.updateTask(0) {
+              copy(position = (it.progress * 1000).toInt(), output = output + (time to it.name))
+            }
           }
-        }
-        FileVerifyIndeterminateEvent -> {
-          progress.updateTask(0) {
-            copy(position = target, status = "no stampfile, individual files not verified")
+          FileVerifyCompletedEvent -> {
+            progress.updateTask(0) { copy(position = target) }
+          }
+          FileVerifyIndeterminateEvent -> {
+            progress.updateTask(0) { copy(position = target, status = "no stampfile, individual files not verified") }
           }
         }
       }
-    }.apply {
-      if (isNotEmpty()) {
-        progress.updateTask(0) {
-          copy(position = target, status = "invalid files", failed = true)
+      .apply {
+        if (isNotEmpty()) {
+          progress.updateTask(0) { copy(position = target, status = "invalid files", failed = true) }
+          return "The following files did not match the stampfile:\n${joinToString("\n")}"
         }
-        return "The following files did not match the stampfile:\n${joinToString("\n")}"
       }
-    }
     return null
   }
 
@@ -218,30 +200,28 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
     Statics.terminal.println("generating stampfile...")
     val data = manager.generateStampFile(home)
     val stampFile = Path(home, VersionsValues.STAMP_FILE)
-    SystemFileSystem.sink(stampFile).buffered().use {
-      it.writeString(data)
-    }
+    SystemFileSystem.sink(stampFile).buffered().use { it.writeString(data) }
     Statics.terminal.println("stampfile written to $stampFile")
   }
 
   private fun catalogTool(): CommandResult {
-    val repositoryType = KInquirer.promptList("Do you want to create a local or a remote repository catalog?", listOf("local", "remote"))
+    val repositoryType =
+      KInquirer.promptList("Do you want to create a local or a remote repository catalog?", listOf("local", "remote"))
     val path = Path(KInquirer.promptInput("Please enter the absolute path to the directory containing Elide packages:"))
     if (!SystemFileSystem.exists(path)) return CommandResult.err(1, "Directory does not exist")
-    val json = when (repositoryType) {
-      "local" -> {
-        val relativePaths = KInquirer.promptConfirm("Do you want to use relative paths?")
-        factory.createLocalCatalog(path, relativePaths)
+    val json =
+      when (repositoryType) {
+        "local" -> {
+          val relativePaths = KInquirer.promptConfirm("Do you want to use relative paths?")
+          factory.createLocalCatalog(path, relativePaths)
+        }
+        "remote" -> {
+          val root = KInquirer.promptInput("Please enter the HTTPS address prefix:")
+          factory.createRemoteCatalog(path, root)
+        }
+        else -> return CommandResult.err(1, "Invalid repository type: $repositoryType")
       }
-      "remote" -> {
-        val root = KInquirer.promptInput("Please enter the HTTPS address prefix:")
-        factory.createRemoteCatalog(path, root)
-      }
-      else -> return CommandResult.err(1, "Invalid repository type: $repositoryType")
-    }
-    SystemFileSystem.sink(Path(path, VersionsValues.CATALOG_FILE)).buffered().use {
-      it.writeString(json)
-    }
+    SystemFileSystem.sink(Path(path, VersionsValues.CATALOG_FILE)).buffered().use { it.writeString(json) }
     return CommandResult.success()
   }
 
@@ -260,153 +240,85 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
   }
 
   private fun listInstalls(): String =
-    manager.getInstallations(true).asSequence().map {
-      "${it.version.version} (${it.path})"
-    }.joinToString("\n")
+    manager.getInstallations(true).asSequence().map { "${it.version.asString} (${it.path})" }.joinToString("\n")
 
   private suspend fun listAvailable(): String =
-    manager.getAvailable(false).asSequence().map {
-      "${it.version} (${it.platform.platformString().replace('_', ' ')})"
-    }.joinToString("\n")
+    manager
+      .getAllAvailableVersions()
+      .asSequence()
+      .flatMap { (key, value) -> value.asSequence().map { key to it } }
+      .map { (version, platform) -> "$version (${platform.platformString().replace('_', ' ')})" }
+      .joinToString("\n")
 
   private suspend fun install(version: String? = null) {
     val installedVersions = manager.getInstallations(true).map { it.version }.toSet()
-    val available = manager.getAvailable().filter { it !in installedVersions }
+    val available = manager.getAvailableVersions().filter { it !in installedVersions }
     if (available.isEmpty()) {
       Statics.terminal.println("No versions available")
       return
     }
-    val version = if (version == null) {
-      KInquirer.promptListObject("Please select a version to install:", available.map { Choice(it.version, it) })
-    } else {
-      available.find { it.version == version }
-    }
+    val version =
+      if (version == null) {
+        KInquirer.promptListObject("Please select a version to install:", available.map { Choice(it.asString, it) })
+      } else {
+        available.find { it.asString == version }
+      }
     if (version == null) {
       Statics.terminal.println("Could not find elide version $version")
       return
     }
-    val directory = installPath ?: KInquirer.promptList("Please select a path to install to:", manager.getInstallPaths())
-    if (noConfirm || KInquirer.promptConfirm("Do you want to install Elide \"${version.version}\" to \"$directory\"?")) {
-      val progress = Progress.create("Installing Elide version \"${version.version}\" to \"$directory\"", Statics.terminal) {
-        add(TrackedTask("Download", 1000))
-        add(TrackedTask("Verify", 1000))
-        add(TrackedTask("Install", 1000))
-        add(TrackedTask("Verify files", 1000))
+    val directory =
+      installPath ?: KInquirer.promptList("Please select a path to install to:", manager.getInstallPaths())
+    if (noConfirm ||
+      KInquirer.promptConfirm("Do you want to install Elide \"${version.asString}\" to \"$directory\"?")) {
+      installElide("Installing Elide version \"${version.asString}\" to \"$directory\"") {
+        manager.install(elevated, version.asString, directory, it)
       }
-      manager.install(elevated, version.version, directory) {
-        when(it) {
-          is DownloadStartEvent -> {
-            progress.updateTask(0) {
-              copy(position = 0)
-            }
-            progress.start()
-          }
-          is DownloadProgressEvent -> {
-            progress.updateTask(0) {
-              copy(position = (it.progress * 1000).toInt())
-            }
-          }
-          DownloadCompletedEvent -> {
-            progress.updateTask(0) {
-              copy(position = target)
-            }
-          }
-          is VerifyStartEvent -> {
-            progress.updateTask(1) {
-              copy(position = 0)
-            }
-          }
-          is VerifyProgressEvent -> {
-            progress.updateTask(1) {
-              copy(position = (it.progress * 1000).toInt())
-            }
-          }
-          VerifyCompletedEvent -> {
-              progress.updateTask(1) {
-                copy(position = target)
-              }
-            }
-          is InstallStartEvent -> {
-            progress.updateTask(2) {
-              copy(position = 0)
-            }
-          }
-          is InstallProgressEvent -> {
-            progress.updateTask(2) {
-              copy(position = (it.progress * 1000).toInt())
-            }
-          }
-          is InstallFileEvent -> {
-            val time = Clock.System.now().toEpochMilliseconds()
-            progress.updateTask(2) { copy(output = output + (time to it.name)) }
-          }
-          InstallCompletedEvent -> {
-            progress.updateTask(2) {
-              copy(position = target)
-            }
-          }
-          is FileVerifyStartEvent -> {
-            progress.updateTask(3) {
-              copy(position = 0)
-            }
-          }
-          is FileVerifyProgressEvent -> {
-            val time = Clock.System.now().toEpochMilliseconds()
-            progress.updateTask(3) { copy(position = (it.progress * 1000).toInt(), output = output + (time to it.name)) }
-          }
-          FileVerifyCompletedEvent -> {
-            progress.updateTask(3) {
-              copy(position = target)
-            }
-          }
-          FileVerifyIndeterminateEvent -> {
-            progress.updateTask(3) {
-              copy(position = target, status = "no stampfile, individual files not verified")
-            }
-          }
-        }
-      }
-      if (progress.running) progress.stop()
     }
   }
 
   private suspend fun uninstall(version: String? = null) {
     val current = ElideCLITool.ELIDE_TOOL_VERSION
-    val installations = manager.getInstallations(false).filter { it.version.version != current }
+    val installations = manager.getInstallations(false).filter { it.version.asString != current }
     if (installations.isEmpty()) {
       Statics.terminal.println("No installs to uninstall")
       return
     }
-    val install = if (version == null) {
-      KInquirer.promptListObject("Please select a version to uninstall:", installations.map { Choice(it.path, it) })
-    } else {
-      installations.find { it.version.version == version }
-    }
+    val install =
+      if (version == null) {
+        KInquirer.promptListObject("Please select a version to uninstall:", installations.map { Choice(it.path, it) })
+      } else {
+        installations.find { it.version.asString == version }
+      }
     if (install == null) {
       Statics.terminal.println("Could not find elide version $version")
       return
     }
-    require(!elevated || installPath == install.path) { "Process is elevated and specified install path $installPath does not match found version install path ${install.path}" }
-    if (noConfirm || KInquirer.promptConfirm("Do you want to uninstall Elide \"${install.version.version}\" from \"${install.path}\"?")) {
-      val progress = Progress.create("Uninstalling Elide version \"${install.version.version}\" from \"${install.path}\"", Statics.terminal) {
-        add(TrackedTask("Uninstall", 1000))
-      }
+    require(!elevated || installPath == install.path) {
+      "Process is elevated and specified install path $installPath does not match found version install path ${install.path}"
+    }
+    if (noConfirm ||
+      KInquirer.promptConfirm(
+        "Do you want to uninstall Elide \"${install.version.asString}\" from \"${install.path}\"?")) {
+      val progress =
+        Progress.create(
+          "Uninstalling Elide version \"${install.version.asString}\" from \"${install.path}\"", Statics.terminal) {
+            add(TrackedTask("Uninstall", 1000))
+          }
       manager.uninstall(elevated, install) {
         when (it) {
           UninstallStartEvent -> {
-            progress.updateTask(0) {
-              copy(position = 0)
-            }
+            progress.updateTask(0) { copy(position = 0) }
             progress.start()
           }
           is UninstallProgressEvent -> {
             val time = Clock.System.now().toEpochMilliseconds()
-            progress.updateTask(0) { copy(position = (it.progress * 1000).toInt(), output = output + (time to it.name)) }
+            progress.updateTask(0) {
+              copy(position = (it.progress * 1000).toInt(), output = output + (time to it.name))
+            }
           }
           UninstallCompletedEvent -> {
-            progress.updateTask(0) {
-              copy(position = target)
-            }
+            progress.updateTask(0) { copy(position = target) }
           }
         }
       }
@@ -420,5 +332,69 @@ internal class ToolVersionsCommand : AbstractSubcommand<ToolState, CommandContex
     UNINSTALL("Uninstall a version of Elide"),
     LIST_ALL("List available versions for all systems"),
     EXIT("Exit install management"),
+  }
+
+  companion object {
+    suspend fun <T> installElide(title: String, fn: suspend (FlowCollector<ElideInstallEvent>) -> T): T {
+      val progress =
+        Progress.create(title, Statics.terminal) {
+          add(TrackedTask("Download", 1000))
+          add(TrackedTask("Verify", 1000))
+          add(TrackedTask("Install", 1000))
+          add(TrackedTask("Verify files", 1000))
+        }
+      return fn {
+          when (it) {
+            is DownloadStartEvent -> {
+              progress.updateTask(0) { copy(position = 0) }
+              progress.start()
+            }
+            is DownloadProgressEvent -> {
+              progress.updateTask(0) { copy(position = (it.progress * 1000).toInt()) }
+            }
+            DownloadCompletedEvent -> {
+              progress.updateTask(0) { copy(position = target) }
+            }
+            is VerifyStartEvent -> {
+              progress.updateTask(1) { copy(position = 0) }
+            }
+            is VerifyProgressEvent -> {
+              progress.updateTask(1) { copy(position = (it.progress * 1000).toInt()) }
+            }
+            VerifyCompletedEvent -> {
+              progress.updateTask(1) { copy(position = target) }
+            }
+            is InstallStartEvent -> {
+              progress.updateTask(2) { copy(position = 0) }
+            }
+            is InstallProgressEvent -> {
+              progress.updateTask(2) { copy(position = (it.progress * 1000).toInt()) }
+            }
+            is InstallFileEvent -> {
+              val time = Clock.System.now().toEpochMilliseconds()
+              progress.updateTask(2) { copy(output = output + (time to it.name)) }
+            }
+            InstallCompletedEvent -> {
+              progress.updateTask(2) { copy(position = target) }
+            }
+            is FileVerifyStartEvent -> {
+              progress.updateTask(3) { copy(position = 0) }
+            }
+            is FileVerifyProgressEvent -> {
+              val time = Clock.System.now().toEpochMilliseconds()
+              progress.updateTask(3) {
+                copy(position = (it.progress * 1000).toInt(), output = output + (time to it.name))
+              }
+            }
+            FileVerifyCompletedEvent -> {
+              progress.updateTask(3) { copy(position = target) }
+            }
+            FileVerifyIndeterminateEvent -> {
+              progress.updateTask(3) { copy(position = target, status = "no stampfile, individual files not verified") }
+            }
+          }
+        }
+        .also { if (progress.running) progress.stop() }
+    }
   }
 }

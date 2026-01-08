@@ -344,7 +344,9 @@ public final class elide/runtime/version/ElideVersionInfo : elide/runtime/versio
 	public fun beta-0hXNFcg ()Lkotlin/UInt;
 	public fun compareTo (Lelide/runtime/version/ElideVersion;)I
 	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getAsString ()Ljava/lang/String;
+	public fun hashCode ()I
 	public fun releaseCandidate-0hXNFcg ()Lkotlin/UInt;
 	public final fun satisfies (Lorg/semver4j/Semver;)Z
 	public fun toString ()Ljava/lang/String;

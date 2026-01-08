@@ -75,14 +75,14 @@ public abstract interface class elide/versions/ElideInstallEvent {
 
 public final class elide/versions/ElideInstallation {
 	public static final field Companion Lelide/versions/ElideInstallation$Companion;
-	public fun <init> (Lelide/versions/ElideVersionDto;Ljava/lang/String;)V
-	public final fun component1 ()Lelide/versions/ElideVersionDto;
+	public fun <init> (Lelide/runtime/version/ElideVersion;Ljava/lang/String;)V
+	public final fun component1 ()Lelide/runtime/version/ElideVersion;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Lelide/versions/ElideVersionDto;Ljava/lang/String;)Lelide/versions/ElideInstallation;
-	public static synthetic fun copy$default (Lelide/versions/ElideInstallation;Lelide/versions/ElideVersionDto;Ljava/lang/String;ILjava/lang/Object;)Lelide/versions/ElideInstallation;
+	public final fun copy (Lelide/runtime/version/ElideVersion;Ljava/lang/String;)Lelide/versions/ElideInstallation;
+	public static synthetic fun copy$default (Lelide/versions/ElideInstallation;Lelide/runtime/version/ElideVersion;Ljava/lang/String;ILjava/lang/Object;)Lelide/versions/ElideInstallation;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getPath ()Ljava/lang/String;
-	public final fun getVersion ()Lelide/versions/ElideVersionDto;
+	public final fun getVersion ()Lelide/runtime/version/ElideVersion;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -257,14 +257,16 @@ public final class elide/versions/VerifyStartEvent : elide/versions/ElideInstall
 
 public abstract interface class elide/versions/VersionManager {
 	public abstract fun generateStampFile (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun getAvailable (ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun getAvailable$default (Lelide/versions/VersionManager;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getAllAvailableVersions (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getAvailableVersions (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getDefaultInstallPath ()Ljava/lang/String;
 	public abstract fun getInstallPaths ()Ljava/util/List;
 	public abstract fun getInstallations (Z)Ljava/util/List;
+	public abstract fun getOrInstallTargetVersion (Ljava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun getOrInstallTargetVersion$default (Lelide/versions/VersionManager;Ljava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun install (ZLjava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun install$default (Lelide/versions/VersionManager;ZLjava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public abstract fun onStartup (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-	public static synthetic fun onStartup$default (Lelide/versions/VersionManager;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
+	public abstract fun readVersionFile ()Ljava/lang/String;
 	public abstract fun uninstall (ZLelide/versions/ElideInstallation;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun uninstall$default (Lelide/versions/VersionManager;ZLelide/versions/ElideInstallation;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun verifyInstall (Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

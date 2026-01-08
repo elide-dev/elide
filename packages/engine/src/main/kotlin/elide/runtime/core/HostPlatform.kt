@@ -12,13 +12,22 @@
  */
 package elide.runtime.core
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import elide.runtime.core.HostPlatform.OperatingSystem.*
 
 /**
  * Provides read-only information about the Host platform, which can be used by plugins to run platform-specific
  * code.
  */
-@DelicateElideApi public data class HostPlatform(
+@DelicateElideApi
+@Serializable(with = HostPlatform.Serializer::class)
+public data class HostPlatform(
   public val os: OperatingSystem,
   public val arch: Architecture,
 ) {
@@ -97,6 +106,15 @@ import elide.runtime.core.HostPlatform.OperatingSystem.*
         arch = parseArchitecture(System.getProperty("os.arch", "unknown").lowercase()),
       )
     }
+  }
+
+  internal class Serializer : KSerializer<HostPlatform> {
+    override val descriptor: SerialDescriptor =
+      PrimitiveSerialDescriptor("elide.runtime.core.HostPlatform", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: HostPlatform) = encoder.encodeString(value.platformString())
+
+    override fun deserialize(decoder: Decoder): HostPlatform = parsePlatform(decoder.decodeString())
   }
 }
 

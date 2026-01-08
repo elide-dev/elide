@@ -144,7 +144,7 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
       if (!line.contains(STAMP_FILE_DELIMITER)) {
         failed.add("$STAMP_FILE has invalid line ${index + 1}")
       }
-      val (hash, relativePath) = line.split("  ./")
+      val (hash, relativePath) = line.split(STAMP_FILE_DELIMITER)
       progress?.emit(FileVerifyProgressEvent(index.toFloat() / lines.size.toFloat(), relativePath))
       val filePath = Path(path, relativePath)
       if (!SystemFileSystem.exists(filePath)) {

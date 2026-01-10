@@ -32,6 +32,7 @@ import elide.testing.annotations.TestCase
   override fun requiredMembers(): Sequence<String> = sequence {
     yield("Resolver")
     yield("getServers")
+    yield("lookup")
     yield("lookupService")
     yield("resolve")
     yield("resolve4")
@@ -53,5 +54,33 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(dns)
+  }
+
+  @Test fun `test module can be required and has expected shape`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns/promises');
+        test(dns).isNotNull();
+        test(typeof dns.resolve4).isEqualTo('function');
+        test(typeof dns.resolve6).isEqualTo('function');
+        test(typeof dns.lookup).isEqualTo('function');
+        test(typeof dns.getServers).isEqualTo('function');
+        test(typeof dns.Resolver).isEqualTo('function');
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test Resolver class can be instantiated`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns/promises');
+        const resolver = new dns.Resolver();
+        test(resolver).isNotNull();
+        test(typeof resolver.resolve4).isEqualTo('function');
+        test(typeof resolver.resolve6).isEqualTo('function');
+      """
+    }.doesNotFail()
   }
 }

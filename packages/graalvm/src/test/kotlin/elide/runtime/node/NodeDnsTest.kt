@@ -32,6 +32,7 @@ import elide.testing.annotations.TestCase
   override fun requiredMembers(): Sequence<String> = sequence {
     yield("Resolver")
     yield("getServers")
+    yield("lookup")
     yield("lookupService")
     yield("resolve")
     yield("resolve4")
@@ -113,14 +114,34 @@ import elide.testing.annotations.TestCase
     }.doesNotFail()
   }
 
-  @Test fun `test resolve with A record type`() {
+  @Test fun `test lookup resolves hostname`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns');
+        let resolved = false;
+        let result = null;
+        dns.lookup('dns.google', (err, address, family) => {
+          if (!err && address) {
+            resolved = true;
+            result = { address, family };
+          }
+        });
+        test(resolved).shouldBeTrue();
+        test(result.address).isNotNull();
+        test(result.family === 4 || result.family === 6).shouldBeTrue();
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test resolve6 resolves google dns`() {
     executeGuest {
       // language=JavaScript
       """
         const dns = require('node:dns');
         let resolved = false;
         let addresses = null;
-        dns.resolve('dns.google', 'A', (err, addrs) => {
+        dns.resolve6('dns.google', (err, addrs) => {
           if (!err && addrs && addrs.length > 0) {
             resolved = true;
             addresses = addrs;
@@ -128,6 +149,8 @@ import elide.testing.annotations.TestCase
         });
         test(resolved).shouldBeTrue();
         test(addresses.length > 0).shouldBeTrue();
+        // IPv6 addresses contain colons
+        test(addresses[0].includes(':')).shouldBeTrue();
       """
     }.doesNotFail()
   }

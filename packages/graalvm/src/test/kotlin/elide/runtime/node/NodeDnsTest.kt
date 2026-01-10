@@ -15,13 +15,15 @@ package elide.runtime.node
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
+import elide.runtime.exec.GuestExecution
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.node.dns.NodeDNSModule
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `dns` built-in module. */
 @TestCase internal class NodeDnsTest : NodeModuleConformanceTest<NodeDNSModule>() {
   override val moduleName: String get() = "dns"
-  override fun provide(): NodeDNSModule = NodeDNSModule()
+  override fun provide(): NodeDNSModule = NodeDNSModule(GuestExecutorProvider { GuestExecution.direct() })
   @Inject lateinit var dns: NodeDNSModule
 
   // @TODO(sgammon): Not yet fully supported
@@ -59,7 +61,7 @@ import elide.testing.annotations.TestCase
       """
         const dns = require('node:dns');
         const order = dns.getDefaultResultOrder();
-        test(order === 'verbatim' || order === 'ipv4first' || order === 'ipv6first').isTrue();
+        test(order === 'verbatim' || order === 'ipv4first' || order === 'ipv6first').shouldBeTrue();
       """
     }.doesNotFail()
   }
@@ -83,7 +85,7 @@ import elide.testing.annotations.TestCase
       """
         const dns = require('node:dns');
         const servers = dns.getServers();
-        test(Array.isArray(servers)).isTrue();
+        test(Array.isArray(servers)).shouldBeTrue();
       """
     }.doesNotFail()
   }
@@ -102,11 +104,11 @@ import elide.testing.annotations.TestCase
           }
         });
         // Give time for async resolution
-        test(resolved).isTrue();
-        test(addresses.length > 0).isTrue();
+        test(resolved).shouldBeTrue();
+        test(addresses.length > 0).shouldBeTrue();
         // dns.google has well-known IPs: 8.8.8.8 and 8.8.4.4
         const hasExpectedIP = addresses.some(ip => ip === '8.8.8.8' || ip === '8.8.4.4');
-        test(hasExpectedIP).isTrue();
+        test(hasExpectedIP).shouldBeTrue();
       """
     }.doesNotFail()
   }
@@ -124,8 +126,8 @@ import elide.testing.annotations.TestCase
             addresses = addrs;
           }
         });
-        test(resolved).isTrue();
-        test(addresses.length > 0).isTrue();
+        test(resolved).shouldBeTrue();
+        test(addresses.length > 0).shouldBeTrue();
       """
     }.doesNotFail()
   }

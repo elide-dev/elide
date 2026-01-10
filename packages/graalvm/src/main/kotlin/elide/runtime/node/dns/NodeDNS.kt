@@ -15,13 +15,19 @@ package elide.runtime.node.dns
 import org.graalvm.polyglot.Value
 import org.graalvm.polyglot.proxy.ProxyArray
 import org.graalvm.polyglot.proxy.ProxyExecutable
+import org.graalvm.polyglot.proxy.ProxyInstantiable
 import org.graalvm.polyglot.proxy.ProxyObject
+import elide.annotations.Inject
+import elide.runtime.exec.GuestExecutor
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.gvm.api.Intrinsic
 import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
+import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.intrinsics.js.JsPromise.Companion.spawn
 import elide.runtime.intrinsics.js.node.DNSAPI
 import elide.runtime.lang.javascript.NodeModuleName
 
@@ -149,19 +155,21 @@ internal object RecordParsers {
 
 // -- Module --
 
-@Intrinsic internal class NodeDNSModule : AbstractNodeBuiltinModule() {
-  private val singleton by lazy { NodeDNS.create() }
+@Intrinsic internal class NodeDNSModule @Inject constructor(
+  private val executorProvider: GuestExecutorProvider,
+) : AbstractNodeBuiltinModule() {
+  private val singleton by lazy { NodeDNS.create(executorProvider.executor()) }
   internal fun provide(): DNSAPI = singleton
   override fun install(bindings: MutableIntrinsicBindings) {
     ModuleRegistry.deferred(ModuleInfo.of(NodeModuleName.DNS)) { singleton }
   }
 }
 
-internal class NodeDNS private constructor() : ReadOnlyProxyObject, DNSAPI {
+internal class NodeDNS private constructor(private val exec: GuestExecutor) : ReadOnlyProxyObject, DNSAPI {
   init { NativeDNS.initialize() }
 
   companion object {
-    @JvmStatic fun create(): NodeDNS = NodeDNS()
+    @JvmStatic fun create(exec: GuestExecutor): NodeDNS = NodeDNS(exec)
     private val MEMBERS = arrayOf(
       "Resolver", "getServers", "setServers", "lookup", "lookupService",
       "resolve", "resolve4", "resolve6", "resolveAny", "resolveCname", "resolveCaa",
@@ -174,12 +182,12 @@ internal class NodeDNS private constructor() : ReadOnlyProxyObject, DNSAPI {
   override fun getMemberKeys(): Array<String> = MEMBERS
 
   override fun getMember(key: String?): Any? = when (key) {
-    "Resolver" -> DNSResolver()
+    "Resolver" -> DNSResolverFactory(exec)
     "getServers" -> ProxyExecutable { NativeDNS.getServers().toProxyArray() }
     "setServers" -> ProxyExecutable { args -> NativeDNS.setServers(args.getOrNull(0).toStringArray()); null }
     "getDefaultResultOrder" -> ProxyExecutable { NativeDNS.getDefaultResultOrder() }
     "setDefaultResultOrder" -> ProxyExecutable { args -> NativeDNS.setDefaultResultOrder(args.getOrNull(0)?.asString() ?: "verbatim"); null }
-    "promises" -> NodeDNSPromises.create()
+    "promises" -> NodeDNSPromises.create(exec)
 
     "lookup" -> ProxyExecutable { args ->
       val hostname = args.getOrNull(0)?.asString() ?: ""
@@ -191,81 +199,79 @@ internal class NodeDNS private constructor() : ReadOnlyProxyObject, DNSAPI {
         else -> 0
       }
       val all = opts?.hasMembers() == true && opts.getMember("all")?.asBoolean() == true
-      val raw = NativeDNS.lookup(hostname, family, all)
-      when (val r = parseArrayResult(raw)) {
-        is DnsResult.Success -> {
-          if (all) {
-            // Return array of {address, family} objects
-            val results = r.data.map { entry ->
-              val (addr, fam) = entry.split(":").let { it[0] to it[1].toInt() }
-              ProxyObject.fromMap(mapOf("address" to addr, "family" to fam))
-            }.toProxyArray()
-            cb?.executeVoid(null, results) ?: results
-          } else {
-            val (addr, fam) = r.data.firstOrNull()?.split(":")?.let { it[0] to it[1].toInt() } ?: ("" to 4)
-            cb?.executeVoid(null, addr, fam) ?: ProxyObject.fromMap(mapOf("address" to addr, "family" to fam))
+      asyncOp(cb) {
+        val raw = NativeDNS.lookup(hostname, family, all)
+        when (val r = parseArrayResult(raw)) {
+          is DnsResult.Success -> {
+            if (all) {
+              val results = r.data.map { entry ->
+                val (addr, fam) = entry.split(":").let { it[0] to it[1].toInt() }
+                ProxyObject.fromMap(mapOf("address" to addr, "family" to fam))
+              }.toProxyArray()
+              DnsCallbackResult.Success(results)
+            } else {
+              val (addr, fam) = r.data.firstOrNull()?.split(":")?.let { it[0] to it[1].toInt() } ?: ("" to 4)
+              DnsCallbackResult.SuccessMulti(addr, fam)
+            }
           }
+          is DnsResult.Error -> DnsCallbackResult.Error(r.code, r.message)
         }
-        is DnsResult.Error -> {
-          cb?.executeVoid(dnsError(r.code, r.message), null, null) ?: ProxyObject.fromMap(mapOf("address" to "", "family" to 4))
-        }
-      }.also { if (cb != null) return@ProxyExecutable null }
+      }
     }
 
     "lookupService" -> ProxyExecutable { args ->
       val addr = args.getOrNull(0)?.asString() ?: ""
       val port = args.getOrNull(1)?.asInt() ?: 0
       val cb = args.getOrNull(2)
-      when (val r = parseStringResult(NativeDNS.lookupService(addr, port))) {
-        is DnsResult.Success -> {
-          val (host, svc) = r.data.split(":", limit = 2).let { it[0] to it.getOrElse(1) { "" } }
-          cb?.executeVoid(null, host, svc) ?: ProxyObject.fromMap(mapOf("hostname" to host, "service" to svc))
+      asyncOp(cb) {
+        when (val r = parseStringResult(NativeDNS.lookupService(addr, port))) {
+          is DnsResult.Success -> {
+            val (host, svc) = r.data.split(":", limit = 2).let { it[0] to it.getOrElse(1) { "" } }
+            DnsCallbackResult.SuccessMulti(host, svc)
+          }
+          is DnsResult.Error -> DnsCallbackResult.Error(r.code, r.message)
         }
-        is DnsResult.Error -> {
-          cb?.executeVoid(dnsError(r.code, r.message), null, null) ?: ProxyObject.fromMap(mapOf("hostname" to "", "service" to ""))
-        }
-      }.also { if (cb != null) return@ProxyExecutable null }
+      }
     }
 
     "resolve" -> ProxyExecutable { args ->
       val hostname = args.getOrNull(0)?.asString() ?: ""
       val rrtype = args.getOrNull(1)?.asString() ?: "A"
       val cb = args.getOrNull(2) ?: args.getOrNull(1)?.takeIf { it.canExecute() }
-      if (rrtype.uppercase() == "SOA") return@ProxyExecutable resolveSoa(hostname, cb)
-      val raw = resolveByType(hostname, rrtype.uppercase())
-      withCallback(parseArrayResult(raw), cb) { it.toProxyArray() }
+      if (rrtype.uppercase() == "SOA") return@ProxyExecutable asyncResolveSoa(hostname, cb)
+      asyncResolve(cb) { parseArrayResult(resolveByType(hostname, rrtype.uppercase())).map { it.toProxyArray() } }
     }
 
-    "resolve4" -> resolveSimple { NativeDNS.resolve4(it) }
-    "resolve6" -> resolveSimple { NativeDNS.resolve6(it) }
-    "resolveCname" -> resolveSimple { NativeDNS.resolveCname(it) }
-    "resolveNs" -> resolveSimple { NativeDNS.resolveNs(it) }
-    "resolvePtr" -> resolveSimple { NativeDNS.resolvePtr(it) }
+    "resolve4" -> asyncResolveSimple { NativeDNS.resolve4(it) }
+    "resolve6" -> asyncResolveSimple { NativeDNS.resolve6(it) }
+    "resolveCname" -> asyncResolveSimple { NativeDNS.resolveCname(it) }
+    "resolveNs" -> asyncResolveSimple { NativeDNS.resolveNs(it) }
+    "resolvePtr" -> asyncResolveSimple { NativeDNS.resolvePtr(it) }
 
-    "resolveAny" -> resolveWithTransform({ NativeDNS.resolveAny(it) }) { list ->
+    "resolveAny" -> asyncResolveWithTransform({ NativeDNS.resolveAny(it) }) { list ->
       list.map { ProxyObject.fromMap(RecordParsers.any(it)) }.toProxyArray()
     }
-    "resolveMx" -> resolveWithTransform({ NativeDNS.resolveMx(it) }) { list ->
+    "resolveMx" -> asyncResolveWithTransform({ NativeDNS.resolveMx(it) }) { list ->
       list.map { ProxyObject.fromMap(RecordParsers.mx(it)) }.toProxyArray()
     }
-    "resolveSrv" -> resolveWithTransform({ NativeDNS.resolveSrv(it) }) { list ->
+    "resolveSrv" -> asyncResolveWithTransform({ NativeDNS.resolveSrv(it) }) { list ->
       list.map { ProxyObject.fromMap(RecordParsers.srv(it)) }.toProxyArray()
     }
-    "resolveNaptr" -> resolveWithTransform({ NativeDNS.resolveNaptr(it) }) { list ->
+    "resolveNaptr" -> asyncResolveWithTransform({ NativeDNS.resolveNaptr(it) }) { list ->
       list.map { ProxyObject.fromMap(RecordParsers.naptr(it)) }.toProxyArray()
     }
-    "resolveCaa" -> resolveWithTransform({ NativeDNS.resolveCaa(it) }) { list ->
+    "resolveCaa" -> asyncResolveWithTransform({ NativeDNS.resolveCaa(it) }) { list ->
       list.map { ProxyObject.fromMap(RecordParsers.caa(it)) }.toProxyArray()
     }
-    "resolveTlsa" -> resolveWithTransform({ NativeDNS.resolveTlsa(it) }) { list ->
+    "resolveTlsa" -> asyncResolveWithTransform({ NativeDNS.resolveTlsa(it) }) { list ->
       list.map { ProxyObject.fromMap(RecordParsers.tlsa(it)) }.toProxyArray()
     }
-    "resolveTxt" -> resolveWithTransform({ NativeDNS.resolveTxt(it) }) { list ->
+    "resolveTxt" -> asyncResolveWithTransform({ NativeDNS.resolveTxt(it) }) { list ->
       list.map { listOf(it).toProxyArray() }.toProxyArray()
     }
-    "resolveSoa" -> ProxyExecutable { args -> resolveSoa(args.getOrNull(0)?.asString() ?: "", args.getOrNull(1)) }
+    "resolveSoa" -> ProxyExecutable { args -> asyncResolveSoa(args.getOrNull(0)?.asString() ?: "", args.getOrNull(1)) }
 
-    "reverse" -> resolveSimple { NativeDNS.reverse(it) }
+    "reverse" -> asyncResolveSimple { NativeDNS.reverse(it) }
 
     else -> null
   }
@@ -286,48 +292,83 @@ internal class NodeDNS private constructor() : ReadOnlyProxyObject, DNSAPI {
     else -> NativeDNS.resolve4(hostname)
   }
 
-  private fun resolveSoa(hostname: String, cb: Value?): Any? {
-    return when (val r = parseStringResult(NativeDNS.resolveSoa(hostname))) {
-      is DnsResult.Success -> {
-        val obj = ProxyObject.fromMap(RecordParsers.soa(r.data))
-        cb?.executeVoid(null, obj) ?: obj
-      }
-      is DnsResult.Error -> {
-        cb?.executeVoid(dnsError(r.code, r.message), null)
-      }
-    }.let { if (cb != null) null else it }
+  // Callback result types for async operations
+  private sealed class DnsCallbackResult {
+    data class Success(val data: Any) : DnsCallbackResult()
+    data class SuccessMulti(val arg1: Any, val arg2: Any) : DnsCallbackResult()
+    data class Error(val code: String, val message: String) : DnsCallbackResult()
   }
 
-  private fun resolveSimple(resolver: (String) -> Array<String>): ProxyExecutable = ProxyExecutable { args ->
+  // Execute operation asynchronously and invoke callback when done
+  private fun asyncOp(cb: Value?, op: () -> DnsCallbackResult): Any? {
+    if (cb == null) {
+      // Synchronous fallback when no callback provided
+      return when (val r = op()) {
+        is DnsCallbackResult.Success -> r.data
+        is DnsCallbackResult.SuccessMulti -> ProxyObject.fromMap(mapOf("arg1" to r.arg1, "arg2" to r.arg2))
+        is DnsCallbackResult.Error -> dnsError(r.code, r.message)
+      }
+    }
+    exec.spawn {
+      when (val r = op()) {
+        is DnsCallbackResult.Success -> cb.executeVoid(null, r.data)
+        is DnsCallbackResult.SuccessMulti -> cb.executeVoid(null, r.arg1, r.arg2)
+        is DnsCallbackResult.Error -> cb.executeVoid(dnsError(r.code, r.message), null)
+      }
+    }
+    return null
+  }
+
+  private fun <T> DnsResult<T>.map(transform: (T) -> Any): DnsResult<Any> = when (this) {
+    is DnsResult.Success -> DnsResult.Success(transform(data))
+    is DnsResult.Error -> this
+  }
+
+  private fun asyncResolve(cb: Value?, op: () -> DnsResult<Any>): Any? {
+    if (cb == null) {
+      return when (val r = op()) {
+        is DnsResult.Success -> r.data
+        is DnsResult.Error -> dnsError(r.code, r.message)
+      }
+    }
+    exec.spawn {
+      when (val r = op()) {
+        is DnsResult.Success -> cb.executeVoid(null, r.data)
+        is DnsResult.Error -> cb.executeVoid(dnsError(r.code, r.message), null)
+      }
+    }
+    return null
+  }
+
+  private fun asyncResolveSoa(hostname: String, cb: Value?): Any? {
+    return asyncResolve(cb) {
+      parseStringResult(NativeDNS.resolveSoa(hostname)).map { ProxyObject.fromMap(RecordParsers.soa(it)) }
+    }
+  }
+
+  private fun asyncResolveSimple(resolver: (String) -> Array<String>): ProxyExecutable = ProxyExecutable { args ->
     val hostname = args.getOrNull(0)?.asString() ?: ""
     val cb = args.getOrNull(1)
-    withCallback(parseArrayResult(resolver(hostname)), cb) { it.toProxyArray() }
+    asyncResolve(cb) { parseArrayResult(resolver(hostname)).map { it.toProxyArray() } }
   }
 
-  private fun resolveWithTransform(
+  private fun asyncResolveWithTransform(
     resolver: (String) -> Array<String>,
     transform: (List<String>) -> ProxyArray
   ): ProxyExecutable = ProxyExecutable { args ->
     val hostname = args.getOrNull(0)?.asString() ?: ""
     val cb = args.getOrNull(1)
-    withCallback(parseArrayResult(resolver(hostname)), cb, transform)
-  }
-
-  private fun <T> withCallback(result: DnsResult<T>, cb: Value?, transform: (T) -> Any): Any? {
-    return when (result) {
-      is DnsResult.Success -> {
-        val data = transform(result.data)
-        cb?.executeVoid(null, data) ?: data
-      }
-      is DnsResult.Error -> {
-        cb?.executeVoid(dnsError(result.code, result.message), null) ?: emptyList<String>().toProxyArray()
-      }
-    }.let { if (cb != null) null else it }
+    asyncResolve(cb) { parseArrayResult(resolver(hostname)).map(transform) }
   }
 }
 
-internal class DNSResolver : ReadOnlyProxyObject {
-  private val dns = NodeDNS.create()
+// Factory for creating DNS Resolver instances (supports `new dns.Resolver()`)
+internal class DNSResolverFactory(private val exec: GuestExecutor) : ProxyInstantiable {
+  override fun newInstance(vararg arguments: Value?): Any = DNSResolver(exec)
+}
+
+internal class DNSResolver(private val exec: GuestExecutor) : ReadOnlyProxyObject {
+  private val dns = NodeDNS.create(exec)
   override fun getMemberKeys(): Array<String> = arrayOf(
     "getServers", "resolve", "resolve4", "resolve6", "resolveAny", "resolveCname",
     "resolveCaa", "resolveMx", "resolveNaptr", "resolveNs", "resolvePtr", "resolveSoa",

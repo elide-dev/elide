@@ -15,13 +15,15 @@ package elide.runtime.node
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
+import elide.runtime.exec.GuestExecution
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.node.dns.NodeDNSPromisesModule
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `dns` built-in module. */
 @TestCase internal class NodeDnsPromisesTest : NodeModuleConformanceTest<NodeDNSPromisesModule>() {
   override val moduleName: String get() = "dns/promises"
-  override fun provide(): NodeDNSPromisesModule = NodeDNSPromisesModule()
+  override fun provide(): NodeDNSPromisesModule = NodeDNSPromisesModule(GuestExecutorProvider { GuestExecution.direct() })
   @Inject lateinit var dns: NodeDNSPromisesModule
 
   // @TODO(sgammon): Not yet fully supported

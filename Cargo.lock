@@ -2259,6 +2259,7 @@ dependencies = [
  "java_native",
  "jni",
  "jni-sys",
+ "libc",
  "once_cell",
  "tokio",
 ]

@@ -32,4 +32,5 @@ jni-sys = { workspace = true }
 hickory-resolver = { version = "0.25", features = ["tokio"] }
 tokio = { workspace = true }
 once_cell = { workspace = true }
+libc = "0.2"
 

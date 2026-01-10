@@ -13,13 +13,13 @@
 
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe)]
 
+use hickory_resolver::ResolveErrorKind;
 use hickory_resolver::TokioResolver;
 use hickory_resolver::config::{ResolverConfig, ResolverOpts};
 use hickory_resolver::name_server::GenericConnector;
 use hickory_resolver::proto::ProtoErrorKind;
 use hickory_resolver::proto::runtime::TokioRuntimeProvider;
 use hickory_resolver::proto::xfer::Protocol;
-use hickory_resolver::ResolveErrorKind;
 
 use java_native::jni;
 use jni::JNIEnv;
@@ -889,9 +889,32 @@ pub fn reverse<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, ip: JString<'a>) -> 
 }
 
 /// Get configured DNS servers.
+/// Returns custom servers if set, otherwise returns system DNS servers.
 #[jni("elide.runtime.node.dns.NativeDNS")]
 pub fn getServers<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>) -> jobjectArray {
-  let servers = CUSTOM_SERVERS.lock().unwrap().clone();
+  let custom_servers = CUSTOM_SERVERS.lock().unwrap().clone();
+
+  let servers = if custom_servers.is_empty() {
+    // Return system DNS servers from resolver config
+    let (config, _) = hickory_resolver::system_conf::read_system_conf()
+      .unwrap_or_else(|_| (ResolverConfig::default(), ResolverOpts::default()));
+
+    config
+      .name_servers()
+      .iter()
+      .map(|ns| {
+        let addr = ns.socket_addr;
+        if addr.port() == 53 {
+          addr.ip().to_string()
+        } else {
+          addr.to_string()
+        }
+      })
+      .collect()
+  } else {
+    custom_servers
+  };
+
   create_string_array(&mut env, servers)
 }
 
@@ -952,6 +975,18 @@ pub fn getTries<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> i32 {
   *RESOLVER_TRIES.lock().unwrap() as i32
 }
 
+/// Look up service name using libc getservbyport.
+fn get_service_name(port: i32) -> Option<String> {
+  // SAFETY: getservbyport is thread-safe for reading, returns static data
+  let servent = unsafe { libc::getservbyport((port as u16).to_be() as i32, std::ptr::null()) };
+  if servent.is_null() {
+    return None;
+  }
+  // SAFETY: servent is valid and s_name is a valid C string
+  let name = unsafe { std::ffi::CStr::from_ptr((*servent).s_name) };
+  name.to_str().ok().map(|s| s.to_string())
+}
+
 /// Lookup service name for port/protocol.
 /// Returns "OK:hostname:service" on success, or "ERROR_CODE:message" on failure.
 #[jni("elide.runtime.node.dns.NativeDNS")]
@@ -982,56 +1017,8 @@ pub fn lookupService<'a>(
               ));
             }
 
-            // Get service name from port (extended list)
-            let service = match port {
-              7 => "echo",
-              20 => "ftp-data",
-              21 => "ftp",
-              22 => "ssh",
-              23 => "telnet",
-              25 => "smtp",
-              53 => "domain",
-              67 => "bootps",
-              68 => "bootpc",
-              69 => "tftp",
-              80 => "http",
-              110 => "pop3",
-              119 => "nntp",
-              123 => "ntp",
-              137 => "netbios-ns",
-              138 => "netbios-dgm",
-              139 => "netbios-ssn",
-              143 => "imap",
-              161 => "snmp",
-              162 => "snmptrap",
-              179 => "bgp",
-              389 => "ldap",
-              443 => "https",
-              445 => "microsoft-ds",
-              465 => "smtps",
-              514 => "syslog",
-              587 => "submission",
-              636 => "ldaps",
-              993 => "imaps",
-              995 => "pop3s",
-              1433 => "ms-sql-s",
-              1521 => "oracle",
-              3306 => "mysql",
-              3389 => "ms-wbt-server",
-              5432 => "postgresql",
-              5672 => "amqp",
-              6379 => "redis",
-              8080 => "http-proxy",
-              8443 => "https-alt",
-              27017 => "mongodb",
-              _ => "",
-            };
-
-            let service_name = if service.is_empty() {
-              port.to_string()
-            } else {
-              service.to_string()
-            };
+            // Get service name from system services database or fallback
+            let service_name = get_service_name(port).unwrap_or_else(|| port.to_string());
 
             Ok(format!("{}:{}", hostname, service_name))
           }

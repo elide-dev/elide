@@ -269,6 +269,9 @@ defaultTasks: _tasks.DefaultTasks = new {}
 /// Main tasks container for this project.
 tasks: _tasks.Tasks = new {}
 
+/// Exec tasks (for Maven exec-maven-plugin compatibility).
+execTasks: Listing<_tasks.ExecTask> = new {}
+
 
 /// Create a simple JAR artifact with defaults.
 function jar() = new _jvm.Jar {}

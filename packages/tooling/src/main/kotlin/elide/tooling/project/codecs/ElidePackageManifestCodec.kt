@@ -243,6 +243,21 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
           }
         })
       ).addConversion(
+        // convert exec task type enums
+        Conversion.of(PClassInfo.String, ExecTaskType::class.java, StrConverter {
+          ExecTaskType.valueOf(it)
+        })
+      ).addConversion(
+        // convert build phase enums
+        Conversion.of(PClassInfo.String, BuildPhase::class.java, StrConverter {
+          BuildPhase.valueOf(it)
+        })
+      ).addConversion(
+        // convert classpath scope enums
+        Conversion.of(PClassInfo.String, ClasspathScope::class.java, StrConverter {
+          ClasspathScope.valueOf(it)
+        })
+      ).addConversion(
         // convert image type enums
         Conversion.of(PClassInfo.String, NativeImageType::class.java, StrConverter {
           NativeImageType.resolve(it)
@@ -293,6 +308,10 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
 
           "elide.server#DomainSocketAddress" -> Optional.of(Converter { value: PObject, mapper ->
             mapper.map(value, ServerSettings.BindingAddress.DomainSocketAddress::class.java)
+          })
+
+          "elide.tasks#ExecTask" -> Optional.of(Converter { value: PObject, mapper ->
+            mapper.map(value, ExecTask::class.java)
           })
 
           else -> Optional.empty()

@@ -76,3 +76,45 @@ class DefaultTasks {
 
 /// Tasks container definition.
 typealias Tasks = Mapping<TaskName, Task>
+
+/// Exec task type - Java main class or external executable.
+typealias ExecTaskType = "JAVA" | "EXECUTABLE"
+
+/// Maven build phase for exec task ordering.
+typealias BuildPhase = "GENERATE_SOURCES" | "PROCESS_RESOURCES" | "COMPILE" | "PROCESS_CLASSES" | "TEST_COMPILE" | "TEST" | "PACKAGE"
+
+/// Classpath scope for Java exec tasks.
+typealias ClasspathScope = "COMPILE" | "RUNTIME" | "TEST"
+
+/// Exec task definition (Maven exec-maven-plugin compatibility).
+class ExecTask {
+  /// Unique identifier for this exec task.
+  id: String
+
+  /// Type of exec task.
+  type: ExecTaskType
+
+  /// Build phase when this task runs.
+  phase: BuildPhase = "COMPILE"
+
+  /// Main class (for JAVA type).
+  mainClass: String?
+
+  /// Executable path (for EXECUTABLE type).
+  executable: String?
+
+  /// Arguments to pass.
+  args: Listing<Argument> = new {}
+
+  /// Environment variables.
+  env: Mapping<EnvironmentVariable, EnvironmentValue> = new {}
+
+  /// Classpath scope (for JAVA type).
+  classpathScope: ClasspathScope = "COMPILE"
+
+  /// System properties (for JAVA type).
+  systemProperties: Mapping<String, String> = new {}
+
+  /// Working directory.
+  workingDirectory: String?
+}

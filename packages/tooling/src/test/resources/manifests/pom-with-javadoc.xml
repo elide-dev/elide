@@ -1,0 +1,44 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>javadoc-test</artifactId>
+  <version>1.0</version>
+  <name>Javadoc Plugin Test</name>
+  <description>Tests maven-javadoc-plugin parsing</description>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.3</version>
+        <configuration>
+          <windowtitle>Example API</windowtitle>
+          <doctitle>Example API Documentation</doctitle>
+          <groups>
+            <group>
+              <title>Core API</title>
+              <packages>com.example.core:com.example.api</packages>
+            </group>
+            <group>
+              <title>Implementation</title>
+              <packages>com.example.impl:com.example.internal</packages>
+            </group>
+          </groups>
+          <links>
+            <link>https://docs.oracle.com/en/java/javase/21/docs/api/</link>
+          </links>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

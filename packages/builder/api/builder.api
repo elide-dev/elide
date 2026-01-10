@@ -2,19 +2,36 @@ public abstract interface class elide/tooling/archive/ArchiveBuilder {
 	public static final field Companion Lelide/tooling/archive/ArchiveBuilder$Companion;
 	public abstract fun finalizeArchive ()V
 	public abstract fun packFile (Ljava/nio/file/Path;Ljava/lang/String;)Lorg/apache/commons/compress/archivers/ArchiveEntry;
+	public static fun tarGzBuilder (Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/archive/ArchiveBuilder$TarGzBuilder;
+	public static fun tarGzBuilder (Lorg/apache/commons/compress/archivers/ArchiveOutputStream;Lorg/apache/commons/compress/compressors/gzip/GzipCompressorOutputStream;)Lelide/tooling/archive/ArchiveBuilder$TarGzBuilder;
 	public static fun zipBuilder (Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
 	public static fun zipBuilder (Lorg/apache/commons/compress/archivers/ArchiveOutputStream;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
 }
 
 public final class elide/tooling/archive/ArchiveBuilder$Companion {
+	public final fun tarGzBuilder (Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/archive/ArchiveBuilder$TarGzBuilder;
+	public final fun tarGzBuilder (Lorg/apache/commons/compress/archivers/ArchiveOutputStream;Lorg/apache/commons/compress/compressors/gzip/GzipCompressorOutputStream;)Lelide/tooling/archive/ArchiveBuilder$TarGzBuilder;
+	public static synthetic fun tarGzBuilder$default (Lelide/tooling/archive/ArchiveBuilder$Companion;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/tooling/archive/ArchiveBuilder$TarGzBuilder;
+	public static synthetic fun tarGzBuilder$default (Lelide/tooling/archive/ArchiveBuilder$Companion;Lorg/apache/commons/compress/archivers/ArchiveOutputStream;Lorg/apache/commons/compress/compressors/gzip/GzipCompressorOutputStream;ILjava/lang/Object;)Lelide/tooling/archive/ArchiveBuilder$TarGzBuilder;
 	public final fun zipBuilder (Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
 	public final fun zipBuilder (Lorg/apache/commons/compress/archivers/ArchiveOutputStream;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
 	public static synthetic fun zipBuilder$default (Lelide/tooling/archive/ArchiveBuilder$Companion;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/tooling/archive/ArchiveBuilder$ZipBuilder;
 }
 
+public final class elide/tooling/archive/ArchiveBuilder$TarGzBuilder : elide/tooling/archive/ArchiveBuilder {
+	public fun finalizeArchive ()V
+	public fun packFile (Ljava/nio/file/Path;Ljava/lang/String;)Lorg/apache/commons/compress/archivers/ArchiveEntry;
+}
+
 public final class elide/tooling/archive/ArchiveBuilder$ZipBuilder : elide/tooling/archive/ArchiveBuilder {
 	public fun finalizeArchive ()V
 	public fun packFile (Ljava/nio/file/Path;Ljava/lang/String;)Lorg/apache/commons/compress/archivers/ArchiveEntry;
+}
+
+public final class elide/tooling/archive/TarGzTasks {
+	public static final field INSTANCE Lelide/tooling/archive/TarGzTasks;
+	public final fun tarGz (Lelide/exec/Action$ActionContext;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;)Lelide/exec/Result;
+	public static synthetic fun tarGz$default (Lelide/tooling/archive/TarGzTasks;Lelide/exec/Action$ActionContext;Ljava/nio/file/Path;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lelide/exec/Result;
 }
 
 public final class elide/tooling/archive/ZipTasks {

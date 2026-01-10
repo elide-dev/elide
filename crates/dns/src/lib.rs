@@ -19,7 +19,7 @@ use hickory_resolver::name_server::GenericConnector;
 use hickory_resolver::proto::ProtoErrorKind;
 use hickory_resolver::proto::runtime::TokioRuntimeProvider;
 use hickory_resolver::proto::xfer::Protocol;
-use hickory_resolver::{ResolveError, ResolveErrorKind};
+use hickory_resolver::ResolveErrorKind;
 
 use java_native::jni;
 use jni::JNIEnv;
@@ -58,17 +58,9 @@ static RESOLVER_TRIES: Lazy<Mutex<u8>> = Lazy::new(|| Mutex::new(4));
 mod error_codes {
   pub const ENODATA: &str = "ENODATA";
   pub const EFORMERR: &str = "EFORMERR";
-  pub const SERVFAIL: &str = "SERVFAIL";
   pub const ENOTFOUND: &str = "ENOTFOUND";
-  pub const ENOTIMP: &str = "ENOTIMP";
-  pub const EREFUSED: &str = "EREFUSED";
-  pub const EBADQUERY: &str = "EBADQUERY";
   pub const EBADNAME: &str = "EBADNAME";
-  pub const EBADFAMILY: &str = "EBADFAMILY";
-  pub const EBADRESP: &str = "EBADRESP";
-  pub const ECONNREFUSED: &str = "ECONNREFUSED";
   pub const ETIMEOUT: &str = "ETIMEOUT";
-  pub const ECANCELLED: &str = "ECANCELLED";
 }
 
 /// Convert hickory error to Node.js DNS error code.

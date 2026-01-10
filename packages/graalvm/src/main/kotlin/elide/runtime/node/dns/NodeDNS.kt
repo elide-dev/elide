@@ -75,6 +75,29 @@ internal fun Value?.toStringArray(): Array<String> {
 internal fun dnsError(code: String, message: String): ProxyObject =
   ProxyObject.fromMap(mapOf("code" to code, "message" to message, "name" to "Error"))
 
+internal fun <T> DnsResult<T>.map(transform: (T) -> Any): DnsResult<Any> = when (this) {
+  is DnsResult.Success -> DnsResult.Success(transform(data))
+  is DnsResult.Error -> this
+}
+
+internal class DnsException(val code: String, override val message: String) : Exception("$code: $message")
+
+internal fun resolveByType(hostname: String, type: String): Array<String> = when (type) {
+  "A" -> NativeDNS.resolve4(hostname)
+  "AAAA" -> NativeDNS.resolve6(hostname)
+  "ANY" -> NativeDNS.resolveAny(hostname)
+  "CNAME" -> NativeDNS.resolveCname(hostname)
+  "CAA" -> NativeDNS.resolveCaa(hostname)
+  "MX" -> NativeDNS.resolveMx(hostname)
+  "NAPTR" -> NativeDNS.resolveNaptr(hostname)
+  "NS" -> NativeDNS.resolveNs(hostname)
+  "PTR" -> NativeDNS.resolvePtr(hostname)
+  "SRV" -> NativeDNS.resolveSrv(hostname)
+  "TLSA" -> NativeDNS.resolveTlsa(hostname)
+  "TXT" -> NativeDNS.resolveTxt(hostname)
+  else -> NativeDNS.resolve4(hostname)
+}
+
 // -- Record Parsers --
 
 internal object RecordParsers {
@@ -276,22 +299,6 @@ internal class NodeDNS private constructor(private val exec: GuestExecutor) : Re
     else -> null
   }
 
-  private fun resolveByType(hostname: String, type: String): Array<String> = when (type) {
-    "A" -> NativeDNS.resolve4(hostname)
-    "AAAA" -> NativeDNS.resolve6(hostname)
-    "ANY" -> NativeDNS.resolveAny(hostname)
-    "CNAME" -> NativeDNS.resolveCname(hostname)
-    "CAA" -> NativeDNS.resolveCaa(hostname)
-    "MX" -> NativeDNS.resolveMx(hostname)
-    "NAPTR" -> NativeDNS.resolveNaptr(hostname)
-    "NS" -> NativeDNS.resolveNs(hostname)
-    "PTR" -> NativeDNS.resolvePtr(hostname)
-    "SRV" -> NativeDNS.resolveSrv(hostname)
-    "TLSA" -> NativeDNS.resolveTlsa(hostname)
-    "TXT" -> NativeDNS.resolveTxt(hostname)
-    else -> NativeDNS.resolve4(hostname)
-  }
-
   // Callback result types for async operations
   private sealed class DnsCallbackResult {
     data class Success(val data: Any) : DnsCallbackResult()
@@ -317,11 +324,6 @@ internal class NodeDNS private constructor(private val exec: GuestExecutor) : Re
       }
     }
     return null
-  }
-
-  private fun <T> DnsResult<T>.map(transform: (T) -> Any): DnsResult<Any> = when (this) {
-    is DnsResult.Success -> DnsResult.Success(transform(data))
-    is DnsResult.Error -> this
   }
 
   private fun asyncResolve(cb: Value?, op: () -> DnsResult<Any>): Any? {

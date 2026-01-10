@@ -149,27 +149,6 @@ internal class NodeDNSPromises private constructor(private val exec: GuestExecut
     else -> null
   }
 
-  private fun resolveByType(hostname: String, type: String): Array<String> = when (type) {
-    "A" -> NativeDNS.resolve4(hostname)
-    "AAAA" -> NativeDNS.resolve6(hostname)
-    "ANY" -> NativeDNS.resolveAny(hostname)
-    "CNAME" -> NativeDNS.resolveCname(hostname)
-    "CAA" -> NativeDNS.resolveCaa(hostname)
-    "MX" -> NativeDNS.resolveMx(hostname)
-    "NAPTR" -> NativeDNS.resolveNaptr(hostname)
-    "NS" -> NativeDNS.resolveNs(hostname)
-    "PTR" -> NativeDNS.resolvePtr(hostname)
-    "SRV" -> NativeDNS.resolveSrv(hostname)
-    "TLSA" -> NativeDNS.resolveTlsa(hostname)
-    "TXT" -> NativeDNS.resolveTxt(hostname)
-    else -> NativeDNS.resolve4(hostname)
-  }
-
-  private fun <T> DnsResult<T>.map(transform: (T) -> Any): DnsResult<Any> = when (this) {
-    is DnsResult.Success -> DnsResult.Success(transform(data))
-    is DnsResult.Error -> this
-  }
-
   // Execute operation asynchronously and return a promise
   private fun asyncPromise(op: () -> DnsResult<Any>): JsPromise<Any?> = exec.spawn {
     when (val r = op()) {
@@ -191,9 +170,6 @@ internal class NodeDNSPromises private constructor(private val exec: GuestExecut
     asyncPromise { parseArrayResult(resolver(hostname)).map(transform) }
   }
 }
-
-// DNS exception for promise rejection
-internal class DnsException(val code: String, override val message: String) : Exception("$code: $message")
 
 // Factory for creating DNS Promise Resolver instances (supports `new dns.promises.Resolver()`)
 internal class DNSPromiseResolverFactory(private val exec: GuestExecutor) : ProxyInstantiable {

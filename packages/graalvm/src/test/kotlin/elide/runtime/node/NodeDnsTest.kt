@@ -52,4 +52,107 @@ import elide.testing.annotations.TestCase
   @Test override fun testInjectable() {
     assertNotNull(dns)
   }
+
+  @Test fun `test getDefaultResultOrder returns valid order`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns');
+        const order = dns.getDefaultResultOrder();
+        test(order === 'verbatim' || order === 'ipv4first' || order === 'ipv6first').isTrue();
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test setDefaultResultOrder changes result order`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns');
+        dns.setDefaultResultOrder('ipv4first');
+        test(dns.getDefaultResultOrder()).isEqualTo('ipv4first');
+        dns.setDefaultResultOrder('verbatim');
+        test(dns.getDefaultResultOrder()).isEqualTo('verbatim');
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test getServers returns an array`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns');
+        const servers = dns.getServers();
+        test(Array.isArray(servers)).isTrue();
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test resolve4 resolves google dns with callback`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns');
+        let resolved = false;
+        let addresses = null;
+        dns.resolve4('dns.google', (err, addrs) => {
+          if (!err && addrs && addrs.length > 0) {
+            resolved = true;
+            addresses = addrs;
+          }
+        });
+        // Give time for async resolution
+        test(resolved).isTrue();
+        test(addresses.length > 0).isTrue();
+        // dns.google has well-known IPs: 8.8.8.8 and 8.8.4.4
+        const hasExpectedIP = addresses.some(ip => ip === '8.8.8.8' || ip === '8.8.4.4');
+        test(hasExpectedIP).isTrue();
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test resolve with A record type`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns');
+        let resolved = false;
+        let addresses = null;
+        dns.resolve('dns.google', 'A', (err, addrs) => {
+          if (!err && addrs && addrs.length > 0) {
+            resolved = true;
+            addresses = addrs;
+          }
+        });
+        test(resolved).isTrue();
+        test(addresses.length > 0).isTrue();
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test Resolver class can be instantiated`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns');
+        const resolver = new dns.Resolver();
+        test(resolver).isNotNull();
+        test(typeof resolver.resolve4).isEqualTo('function');
+        test(typeof resolver.resolve6).isEqualTo('function');
+        test(typeof resolver.getServers).isEqualTo('function');
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test dns promises module is available`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns');
+        test(dns.promises).isNotNull();
+        test(typeof dns.promises.resolve4).isEqualTo('function');
+        test(typeof dns.promises.resolve6).isEqualTo('function');
+      """
+    }.doesNotFail()
+  }
 }

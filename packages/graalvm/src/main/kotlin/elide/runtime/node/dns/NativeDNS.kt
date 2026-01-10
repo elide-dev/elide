@@ -226,4 +226,16 @@ internal object NativeDNS {
   @JvmStatic
   @JvmName("lookupService")
   external fun lookupService(address: String, port: Int): String
+
+  /**
+   * Perform hostname lookup using getaddrinfo (respects /etc/hosts, NSS, etc).
+   *
+   * @param hostname The hostname to lookup.
+   * @param family 0 for any, 4 for IPv4, 6 for IPv6.
+   * @param all If true, return all addresses; if false, return only the first.
+   * @return Array with "OK" prefix followed by "address:family" entries, or error.
+   */
+  @JvmStatic
+  @JvmName("lookup")
+  external fun lookup(hostname: String, family: Int, all: Boolean): Array<String>
 }

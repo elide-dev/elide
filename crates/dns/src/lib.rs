@@ -975,16 +975,121 @@ pub fn getTries<'a>(_env: JNIEnv<'a>, _class: JClass<'a>) -> i32 {
   *RESOLVER_TRIES.lock().unwrap() as i32
 }
 
+/// Mutex to protect non-thread-safe libc calls (getservbyport, getaddrinfo on some platforms).
+static LIBC_MUTEX: Lazy<Mutex<()>> = Lazy::new(|| Mutex::new(()));
+
 /// Look up service name using libc getservbyport.
 fn get_service_name(port: i32) -> Option<String> {
-  // SAFETY: getservbyport is thread-safe for reading, returns static data
+  let _guard = LIBC_MUTEX.lock().unwrap();
+  // SAFETY: protected by mutex, returns pointer to static data we copy immediately
   let servent = unsafe { libc::getservbyport((port as u16).to_be() as i32, std::ptr::null()) };
   if servent.is_null() {
     return None;
   }
-  // SAFETY: servent is valid and s_name is a valid C string
+  // SAFETY: servent is valid, s_name is valid C string, we copy before releasing lock
   let name = unsafe { std::ffi::CStr::from_ptr((*servent).s_name) };
   name.to_str().ok().map(|s| s.to_string())
+}
+
+/// Perform hostname lookup using getaddrinfo (respects /etc/hosts, NSS, etc).
+/// Returns array: ["OK", "address:family", ...] on success, ["ERROR_CODE:message"] on failure.
+/// If all=false, returns only first result. If all=true, returns all results.
+#[jni("elide.runtime.node.dns.NativeDNS")]
+pub fn lookup<'a>(
+  mut env: JNIEnv<'a>,
+  _class: JClass<'a>,
+  hostname: JString<'a>,
+  family: i32,
+  all: bool,
+) -> jobjectArray {
+  let host: String = env.get_string(&hostname).unwrap().into();
+  let host_cstr = match std::ffi::CString::new(host.as_str()) {
+    Ok(s) => s,
+    Err(_) => {
+      return create_string_array(
+        &mut env,
+        vec![format!(
+          "{}:getaddrinfo EBADNAME {}",
+          error_codes::EBADNAME,
+          host
+        )],
+      );
+    }
+  };
+
+  let _guard = LIBC_MUTEX.lock().unwrap();
+
+  let mut hints: libc::addrinfo = unsafe { std::mem::zeroed() };
+  hints.ai_family = match family {
+    4 => libc::AF_INET,
+    6 => libc::AF_INET6,
+    _ => libc::AF_UNSPEC,
+  };
+  hints.ai_socktype = libc::SOCK_STREAM;
+
+  let mut result: *mut libc::addrinfo = std::ptr::null_mut();
+
+  // SAFETY: host_cstr is valid, hints is initialized, result is valid pointer
+  let ret = unsafe { libc::getaddrinfo(host_cstr.as_ptr(), std::ptr::null(), &hints, &mut result) };
+
+  if ret != 0 {
+    let code = match ret {
+      libc::EAI_NONAME => error_codes::ENOTFOUND,
+      libc::EAI_AGAIN => error_codes::ETIMEOUT,
+      _ => error_codes::ENOTFOUND,
+    };
+    return create_string_array(
+      &mut env,
+      vec![format!("{}:getaddrinfo {} {}", code, code, host)],
+    );
+  }
+
+  let mut addresses = Vec::new();
+  let mut current = result;
+
+  // SAFETY: we checked ret == 0, so result is valid linked list
+  while !current.is_null() {
+    let info = unsafe { &*current };
+    let addr_str = match info.ai_family {
+      libc::AF_INET => {
+        let sockaddr = info.ai_addr as *const libc::sockaddr_in;
+        let addr = unsafe { (*sockaddr).sin_addr };
+        let ip = std::net::Ipv4Addr::from(u32::from_be(addr.s_addr));
+        Some((ip.to_string(), 4))
+      }
+      libc::AF_INET6 => {
+        let sockaddr = info.ai_addr as *const libc::sockaddr_in6;
+        let addr = unsafe { (*sockaddr).sin6_addr };
+        let ip = std::net::Ipv6Addr::from(addr.s6_addr);
+        Some((ip.to_string(), 6))
+      }
+      _ => None,
+    };
+
+    if let Some((addr, fam)) = addr_str {
+      addresses.push(format!("{}:{}", addr, fam));
+      if !all {
+        break;
+      }
+    }
+    current = info.ai_next;
+  }
+
+  // SAFETY: result was allocated by getaddrinfo
+  unsafe { libc::freeaddrinfo(result) };
+
+  if addresses.is_empty() {
+    create_string_array(
+      &mut env,
+      vec![format!(
+        "{}:getaddrinfo ENOTFOUND {}",
+        error_codes::ENOTFOUND,
+        host
+      )],
+    )
+  } else {
+    create_string_array(&mut env, format_array_result(Ok(addresses)))
+  }
 }
 
 /// Lookup service name for port/protocol.

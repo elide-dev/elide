@@ -13,18 +13,18 @@
 
 #![forbid(unsafe_op_in_unsafe_fn, unused_unsafe)]
 
-use hickory_resolver::config::{ResolverConfig, ResolverOpts};
 use hickory_resolver::TokioResolver;
-use hickory_resolver::proto::ProtoErrorKind;
-use hickory_resolver::proto::xfer::Protocol;
-use hickory_resolver::proto::runtime::TokioRuntimeProvider;
+use hickory_resolver::config::{ResolverConfig, ResolverOpts};
 use hickory_resolver::name_server::GenericConnector;
+use hickory_resolver::proto::ProtoErrorKind;
+use hickory_resolver::proto::runtime::TokioRuntimeProvider;
+use hickory_resolver::proto::xfer::Protocol;
 use hickory_resolver::{ResolveError, ResolveErrorKind};
 
 use java_native::jni;
+use jni::JNIEnv;
 use jni::objects::{JClass, JObjectArray, JString};
 use jni::sys::jobjectArray;
-use jni::JNIEnv;
 use once_cell::sync::Lazy;
 use std::net::IpAddr;
 use std::sync::Mutex;
@@ -74,13 +74,11 @@ mod error_codes {
 /// Convert hickory error to Node.js DNS error code.
 fn resolve_error_to_code(err: &hickory_resolver::ResolveError) -> &'static str {
   match err.kind() {
-    ResolveErrorKind::Proto(pr) => {
-      match pr.kind() {
-        ProtoErrorKind::NoRecordsFound{ .. } => error_codes::ENODATA,
-        ProtoErrorKind::Timeout{ .. } => error_codes::ETIMEOUT,
-        _ => error_codes::EFORMERR
-      }
-    }
+    ResolveErrorKind::Proto(pr) => match pr.kind() {
+      ProtoErrorKind::NoRecordsFound { .. } => error_codes::ENODATA,
+      ProtoErrorKind::Timeout { .. } => error_codes::ETIMEOUT,
+      _ => error_codes::EFORMERR,
+    },
     _ => error_codes::ENOTFOUND,
   }
 }
@@ -122,9 +120,12 @@ fn get_resolver() -> TokioResolver {
           ));
         }
       }
-      TokioResolver::builder_with_config(config, GenericConnector::new(TokioRuntimeProvider::default()))
-        .with_options(opts)
-        .build()
+      TokioResolver::builder_with_config(
+        config,
+        GenericConnector::new(TokioRuntimeProvider::default()),
+      )
+      .with_options(opts)
+      .build()
     };
     *resolver_guard = Some(resolver);
   }
@@ -146,7 +147,9 @@ fn create_string_array<'a>(env: &mut JNIEnv<'a>, strings: Vec<String>) -> jobjec
 
   for (i, s) in strings.iter().enumerate() {
     let jstr = env.new_string(s).unwrap();
-    env.set_object_array_element(&array, i as i32, jstr).unwrap();
+    env
+      .set_object_array_element(&array, i as i32, jstr)
+      .unwrap();
   }
 
   array.into_raw()
@@ -177,7 +180,11 @@ fn format_array_result(result: Result<Vec<String>, (&'static str, String)>) -> V
 /// Resolve A records (IPv4 addresses) for a hostname.
 /// Returns array with first element "OK" on success, or "ERROR_CODE:message" on failure.
 #[jni("elide.runtime.node.dns.NativeDNS")]
-pub fn resolve4<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JString<'a>) -> jobjectArray {
+pub fn resolve4<'a>(
+  mut env: JNIEnv<'a>,
+  _class: JClass<'a>,
+  hostname: JString<'a>,
+) -> jobjectArray {
   let host: String = env.get_string(&hostname).unwrap().into();
   let resolver = get_resolver();
 
@@ -191,7 +198,10 @@ pub fn resolve4<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JString<'
           Ok(addrs)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryA {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryA {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -201,7 +211,11 @@ pub fn resolve4<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JString<'
 /// Resolve A records with TTL information.
 /// Returns array: ["OK", "address:ttl", ...] on success, or ["ERROR_CODE:message"] on failure.
 #[jni("elide.runtime.node.dns.NativeDNS")]
-pub fn resolve4WithTtl<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JString<'a>) -> jobjectArray {
+pub fn resolve4WithTtl<'a>(
+  mut env: JNIEnv<'a>,
+  _class: JClass<'a>,
+  hostname: JString<'a>,
+) -> jobjectArray {
   let host: String = env.get_string(&hostname).unwrap().into();
   let resolver = get_resolver();
 
@@ -209,7 +223,8 @@ pub fn resolve4WithTtl<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JS
     match resolver.ipv4_lookup(&host).await {
       Ok(response) => {
         // Get TTL from the first record's valid_until, convert to seconds
-        let ttl = response.valid_until()
+        let ttl = response
+          .valid_until()
           .duration_since(std::time::Instant::now())
           .as_secs() as u32;
         let addrs: Vec<String> = response
@@ -222,7 +237,10 @@ pub fn resolve4WithTtl<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JS
           Ok(addrs)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryA {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryA {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -232,7 +250,11 @@ pub fn resolve4WithTtl<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JS
 /// Resolve AAAA records (IPv6 addresses) for a hostname.
 /// Returns array with first element "OK" on success, or "ERROR_CODE:message" on failure.
 #[jni("elide.runtime.node.dns.NativeDNS")]
-pub fn resolve6<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JString<'a>) -> jobjectArray {
+pub fn resolve6<'a>(
+  mut env: JNIEnv<'a>,
+  _class: JClass<'a>,
+  hostname: JString<'a>,
+) -> jobjectArray {
   let host: String = env.get_string(&hostname).unwrap().into();
   let resolver = get_resolver();
 
@@ -246,7 +268,10 @@ pub fn resolve6<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JString<'
           Ok(addrs)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryAAAA {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryAAAA {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -256,14 +281,19 @@ pub fn resolve6<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JString<'
 /// Resolve AAAA records with TTL information.
 /// Returns array: ["OK", "address:ttl", ...] on success, or ["ERROR_CODE:message"] on failure.
 #[jni("elide.runtime.node.dns.NativeDNS")]
-pub fn resolve6WithTtl<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JString<'a>) -> jobjectArray {
+pub fn resolve6WithTtl<'a>(
+  mut env: JNIEnv<'a>,
+  _class: JClass<'a>,
+  hostname: JString<'a>,
+) -> jobjectArray {
   let host: String = env.get_string(&hostname).unwrap().into();
   let resolver = get_resolver();
 
   let result = RUNTIME.block_on(async {
     match resolver.ipv6_lookup(&host).await {
       Ok(response) => {
-        let ttl = response.valid_until()
+        let ttl = response
+          .valid_until()
           .duration_since(std::time::Instant::now())
           .as_secs() as u32;
         let addrs: Vec<String> = response
@@ -276,7 +306,10 @@ pub fn resolve6WithTtl<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, hostname: JS
           Ok(addrs)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryAAAA {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryAAAA {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -303,7 +336,8 @@ pub fn resolveAny<'a>(
     // Get A records with TTL
     if let Ok(response) = resolver.ipv4_lookup(&host).await {
       has_any = true;
-      let ttl = response.valid_until()
+      let ttl = response
+        .valid_until()
         .duration_since(std::time::Instant::now())
         .as_secs() as u32;
       for ip in response.iter() {
@@ -314,7 +348,8 @@ pub fn resolveAny<'a>(
     // Get AAAA records with TTL
     if let Ok(response) = resolver.ipv6_lookup(&host).await {
       has_any = true;
-      let ttl = response.valid_until()
+      let ttl = response
+        .valid_until()
         .duration_since(std::time::Instant::now())
         .as_secs() as u32;
       for ip in response.iter() {
@@ -370,7 +405,10 @@ pub fn resolveAny<'a>(
     }
 
     // Get CNAME records
-    if let Ok(response) = resolver.lookup(&host, hickory_resolver::proto::rr::RecordType::CNAME).await {
+    if let Ok(response) = resolver
+      .lookup(&host, hickory_resolver::proto::rr::RecordType::CNAME)
+      .await
+    {
       has_any = true;
       for r in response.iter() {
         if let Some(cname) = r.as_cname() {
@@ -382,7 +420,10 @@ pub fn resolveAny<'a>(
     if has_any {
       Ok(results)
     } else {
-      Err((error_codes::ENOTFOUND, format!("queryAny ENOTFOUND {}", host)))
+      Err((
+        error_codes::ENOTFOUND,
+        format!("queryAny ENOTFOUND {}", host),
+      ))
     }
   });
 
@@ -406,7 +447,13 @@ pub fn resolveMx<'a>(
       Ok(response) => {
         let records: Vec<String> = response
           .iter()
-          .map(|mx| format!("{}:{}", mx.preference(), mx.exchange().to_string().trim_end_matches('.')))
+          .map(|mx| {
+            format!(
+              "{}:{}",
+              mx.preference(),
+              mx.exchange().to_string().trim_end_matches('.')
+            )
+          })
           .collect();
         if records.is_empty() {
           Err((error_codes::ENODATA, format!("queryMx ENODATA {}", host)))
@@ -414,7 +461,10 @@ pub fn resolveMx<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryMx {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryMx {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -452,7 +502,10 @@ pub fn resolveTxt<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryTxt {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryTxt {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -492,7 +545,10 @@ pub fn resolveSrv<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("querySrv {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("querySrv {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -523,7 +579,10 @@ pub fn resolveNs<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryNs {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryNs {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -542,11 +601,17 @@ pub fn resolveCname<'a>(
   let resolver = get_resolver();
 
   let result = RUNTIME.block_on(async {
-    match resolver.lookup(&host, hickory_resolver::proto::rr::RecordType::CNAME).await {
+    match resolver
+      .lookup(&host, hickory_resolver::proto::rr::RecordType::CNAME)
+      .await
+    {
       Ok(response) => {
         let records: Vec<String> = response
           .iter()
-          .filter_map(|r| r.as_cname().map(|c| c.to_string().trim_end_matches('.').to_string()))
+          .filter_map(|r| {
+            r.as_cname()
+              .map(|c| c.to_string().trim_end_matches('.').to_string())
+          })
           .collect();
         if records.is_empty() {
           Err((error_codes::ENODATA, format!("queryCname ENODATA {}", host)))
@@ -554,7 +619,10 @@ pub fn resolveCname<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryCname {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryCname {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -574,16 +642,21 @@ pub fn resolveCaa<'a>(
   let resolver = get_resolver();
 
   let result = RUNTIME.block_on(async {
-    match resolver.lookup(&host, hickory_resolver::proto::rr::RecordType::CAA).await {
+    match resolver
+      .lookup(&host, hickory_resolver::proto::rr::RecordType::CAA)
+      .await
+    {
       Ok(response) => {
         let records: Vec<String> = response
           .iter()
-          .filter_map(|r| r.as_caa().map(|caa| {
-            let critical = if caa.issuer_critical() { 128 } else { 0 };
-            let tag = caa.tag();
-            let value = String::from_utf8_lossy(caa.raw_value()).to_string();
-            format!("{}:{}:{}", critical, tag, value)
-          }))
+          .filter_map(|r| {
+            r.as_caa().map(|caa| {
+              let critical = if caa.issuer_critical() { 128 } else { 0 };
+              let tag = caa.tag();
+              let value = String::from_utf8_lossy(caa.raw_value()).to_string();
+              format!("{}:{}:{}", critical, tag, value)
+            })
+          })
           .collect();
         if records.is_empty() {
           Err((error_codes::ENODATA, format!("queryCaa ENODATA {}", host)))
@@ -591,7 +664,10 @@ pub fn resolveCaa<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryCaa {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryCaa {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -610,11 +686,17 @@ pub fn resolvePtr<'a>(
   let resolver = get_resolver();
 
   let result = RUNTIME.block_on(async {
-    match resolver.lookup(&host, hickory_resolver::proto::rr::RecordType::PTR).await {
+    match resolver
+      .lookup(&host, hickory_resolver::proto::rr::RecordType::PTR)
+      .await
+    {
       Ok(response) => {
         let records: Vec<String> = response
           .iter()
-          .filter_map(|r| r.as_ptr().map(|ptr| ptr.to_string().trim_end_matches('.').to_string()))
+          .filter_map(|r| {
+            r.as_ptr()
+              .map(|ptr| ptr.to_string().trim_end_matches('.').to_string())
+          })
           .collect();
         if records.is_empty() {
           Err((error_codes::ENODATA, format!("queryPtr ENODATA {}", host)))
@@ -622,7 +704,10 @@ pub fn resolvePtr<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryPtr {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryPtr {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -642,7 +727,10 @@ pub fn resolveNaptr<'a>(
   let resolver = get_resolver();
 
   let result = RUNTIME.block_on(async {
-    match resolver.lookup(&host, hickory_resolver::proto::rr::RecordType::NAPTR).await {
+    match resolver
+      .lookup(&host, hickory_resolver::proto::rr::RecordType::NAPTR)
+      .await
+    {
       Ok(response) => {
         let records: Vec<String> = response
           .iter()
@@ -666,7 +754,10 @@ pub fn resolveNaptr<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryNaptr {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryNaptr {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -686,13 +777,18 @@ pub fn resolveTlsa<'a>(
   let resolver = get_resolver();
 
   let result = RUNTIME.block_on(async {
-    match resolver.lookup(&host, hickory_resolver::proto::rr::RecordType::TLSA).await {
+    match resolver
+      .lookup(&host, hickory_resolver::proto::rr::RecordType::TLSA)
+      .await
+    {
       Ok(response) => {
         let records: Vec<String> = response
           .iter()
           .filter_map(|r| {
             r.as_tlsa().map(|tlsa| {
-              let data_hex = tlsa.cert_data().iter()
+              let data_hex = tlsa
+                .cert_data()
+                .iter()
                 .map(|b| format!("{:02x}", b))
                 .collect::<String>();
               format!(
@@ -711,7 +807,10 @@ pub fn resolveTlsa<'a>(
           Ok(records)
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("queryTlsa {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("queryTlsa {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -748,7 +847,10 @@ pub fn resolveSoa<'a>(
           Err((error_codes::ENODATA, format!("querySoa ENODATA {}", host)))
         }
       }
-      Err(e) => Err((resolve_error_to_code(&e), format!("querySoa {} {}", resolve_error_to_code(&e), host))),
+      Err(e) => Err((
+        resolve_error_to_code(&e),
+        format!("querySoa {} {}", resolve_error_to_code(&e), host),
+      )),
     }
   });
 
@@ -764,23 +866,30 @@ pub fn reverse<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, ip: JString<'a>) -> 
 
   let result = RUNTIME.block_on(async {
     match ip_str.parse::<IpAddr>() {
-      Ok(addr) => {
-        match resolver.reverse_lookup(addr).await {
-          Ok(response) => {
-            let hostnames: Vec<String> = response
-              .iter()
-              .map(|name| name.to_string().trim_end_matches('.').to_string())
-              .collect();
-            if hostnames.is_empty() {
-              Err((error_codes::ENOTFOUND, format!("getHostByAddr ENOTFOUND {}", ip_str)))
-            } else {
-              Ok(hostnames)
-            }
+      Ok(addr) => match resolver.reverse_lookup(addr).await {
+        Ok(response) => {
+          let hostnames: Vec<String> = response
+            .iter()
+            .map(|name| name.to_string().trim_end_matches('.').to_string())
+            .collect();
+          if hostnames.is_empty() {
+            Err((
+              error_codes::ENOTFOUND,
+              format!("getHostByAddr ENOTFOUND {}", ip_str),
+            ))
+          } else {
+            Ok(hostnames)
           }
-          Err(e) => Err((resolve_error_to_code(&e), format!("getHostByAddr {} {}", resolve_error_to_code(&e), ip_str))),
         }
-      }
-      Err(_) => Err((error_codes::EBADNAME, format!("getHostByAddr EBADNAME {}", ip_str))),
+        Err(e) => Err((
+          resolve_error_to_code(&e),
+          format!("getHostByAddr {} {}", resolve_error_to_code(&e), ip_str),
+        )),
+      },
+      Err(_) => Err((
+        error_codes::EBADNAME,
+        format!("getHostByAddr EBADNAME {}", ip_str),
+      )),
     }
   });
 
@@ -796,11 +905,7 @@ pub fn getServers<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>) -> jobjectArray {
 
 /// Set DNS servers.
 #[jni("elide.runtime.node.dns.NativeDNS")]
-pub fn setServers<'a>(
-  mut env: JNIEnv<'a>,
-  _class: JClass<'a>,
-  servers: JObjectArray<'a>,
-) {
+pub fn setServers<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, servers: JObjectArray<'a>) {
   let len = env.get_array_length(&servers).unwrap();
   let mut new_servers = Vec::with_capacity(len as usize);
 
@@ -824,11 +929,7 @@ pub fn getDefaultResultOrder<'a>(env: JNIEnv<'a>, _class: JClass<'a>) -> JString
 
 /// Set default result order.
 #[jni("elide.runtime.node.dns.NativeDNS")]
-pub fn setDefaultResultOrder<'a>(
-  mut env: JNIEnv<'a>,
-  _class: JClass<'a>,
-  order: JString<'a>,
-) {
+pub fn setDefaultResultOrder<'a>(mut env: JNIEnv<'a>, _class: JClass<'a>, order: JString<'a>) {
   let order_str: String = env.get_string(&order).unwrap().into();
   *DEFAULT_RESULT_ORDER.lock().unwrap() = order_str;
 }
@@ -883,7 +984,10 @@ pub fn lookupService<'a>(
               .unwrap_or_default();
 
             if hostname.is_empty() {
-              return Err((error_codes::ENOTFOUND, format!("getnameinfo ENOTFOUND {}", addr_str)));
+              return Err((
+                error_codes::ENOTFOUND,
+                format!("getnameinfo ENOTFOUND {}", addr_str),
+              ));
             }
 
             // Get service name from port (extended list)
@@ -939,10 +1043,16 @@ pub fn lookupService<'a>(
 
             Ok(format!("{}:{}", hostname, service_name))
           }
-          Err(e) => Err((resolve_error_to_code(&e), format!("getnameinfo {} {}", resolve_error_to_code(&e), addr_str))),
+          Err(e) => Err((
+            resolve_error_to_code(&e),
+            format!("getnameinfo {} {}", resolve_error_to_code(&e), addr_str),
+          )),
         }
       }
-      Err(_) => Err((error_codes::EBADNAME, format!("getnameinfo EBADNAME {}", addr_str))),
+      Err(_) => Err((
+        error_codes::EBADNAME,
+        format!("getnameinfo EBADNAME {}", addr_str),
+      )),
     }
   });
 

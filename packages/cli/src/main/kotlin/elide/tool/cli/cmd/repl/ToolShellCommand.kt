@@ -1647,6 +1647,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
         root = effectiveTarget,
         host = server.hostPair(),
         devMode = true,
+        spaMode = serverSettings.spaMode,
       ),
     ) {
       buildStaticServer().start(wait = true)
@@ -1665,6 +1666,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
       project = activeProject.value,
       host = server.hostPair(),
       devMode = devMode,
+      spaMode = serverSettings.spaMode,
     ),
   ) {
     @Suppress("HttpUrlsUsage")
@@ -2700,7 +2702,7 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
   private fun langsActiveForProject(project: ElideProject): Set<GuestLanguage> = buildSet {
     fun hasAnySourcesOf(vararg ext: String): Boolean {
       return project.manifest.sources.values.flatMap { sourceSet ->
-        sourceSet.spec
+        sourceSet.paths
       }.any { sourcePath ->
         ext.any { candidateExtension ->
           // not yet implemented: glob resolution here @TODO
@@ -2926,7 +2928,10 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
             env = Environment.HostEnv
 
             // activate shell support
-            options = ProcessRunner.ProcessOptions(shell = ProcessRunner.ProcessShell.Active)
+            options = ProcessRunner.ProcessOptions(
+              shell = ProcessRunner.ProcessShell.Active,
+              workingDirectory = Path.of(System.getProperty("user.dir")),
+            )
 
             // copy in the provided arguments
             runnableArgs.takeIf { it.isNotEmpty() }?.let { arguments ->

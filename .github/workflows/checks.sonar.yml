@@ -54,7 +54,7 @@ jobs:
       contents: read
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
       - name: "Setup: Checkout"
@@ -64,7 +64,7 @@ jobs:
           persist-credentials: false
       - name: "Setup: Cache Restore (Test)"
         id: cache-restore-test
-        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache/restore@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         with:
           key: elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
           path: |
@@ -78,7 +78,7 @@ jobs:
             elide-framework-v2-tests-${{ hashFiles('gradle/elide.versions.toml') }}
             elide-framework-v2-tests-
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
+        uses: graalvm/setup-graalvm@790e28947b79a9c09c3391c0f18bf8d0f102ed69 # v1.4.4
         with:
           distribution: "graalvm"
           java-version: "25"

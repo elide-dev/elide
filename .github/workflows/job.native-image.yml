@@ -204,7 +204,7 @@ jobs:
 
     steps:
       - name: "Setup: Harden Runner"
-        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           disable-sudo: false
           egress-policy: audit
@@ -244,7 +244,7 @@ jobs:
       - name: "Setup: Rust Caching"
         run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
       - name: "Setup: GraalVM (Java 25)"
-        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
+        uses: graalvm/setup-graalvm@790e28947b79a9c09c3391c0f18bf8d0f102ed69 # v1.4.4
         with:
           distribution: "graalvm"
           java-version: "25"
@@ -258,7 +258,7 @@ jobs:
         with:
           version: "10.6.2"
       - name: "Setup: Node"
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: 23
       - name: "Setup: Bun"
@@ -266,7 +266,7 @@ jobs:
         with:
           bun-version: "1.2.14"
       - name: "Setup: uv"
-        uses: astral-sh/setup-uv@5a7eac68fb9809dea845d802897dc5c723910fa3 # v7.1.3
+        uses: astral-sh/setup-uv@681c641aba71e4a1c380be3ab5e12ad51f415867 # v7.1.6
       - name: "Setup: Dependencies"
         run: |
           echo "Setting up venv..."
@@ -351,7 +351,7 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
           gpg --export-secret-keys > /home/runner/.gnupg/secring.gpg
       - name: "Artifact: Build Outputs"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         id: build-artifact
         with:
           name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}
@@ -387,7 +387,7 @@ jobs:
           tree -L 3 staging/
           echo "Release built."
       - name: "Artifact: Release Package"
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         id: pack-artifact
         if: inputs.pack
         with:

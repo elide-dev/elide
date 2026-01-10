@@ -84,7 +84,7 @@ public object Constants {
     const val KOTLIN = "versions.kotlin.language"
 
     /** Constant: default Kotlin SDK version if no other version is defined. */
-    const val KOTLIN_SDK_PIN = "2.3.0-RC"
+    const val KOTLIN_SDK_PIN = "2.3.0"
 
     /** Constant: pinned version of Kotlin Coroutines. */
     const val COROUTINES = "1.10.2"
@@ -219,7 +219,7 @@ public object Constants {
   /** Static library configuration values. */
   public object Elide {
     /** Version string for the library. */
-    public const val VERSION: String = "1.0.0-beta10"
+    public const val VERSION: String = "1.0.0-beta11-rc3"
 
     /** Maven group shared by Elide artifacts. */
     public const val GROUP: String = "dev.elide"

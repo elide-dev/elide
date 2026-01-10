@@ -160,11 +160,36 @@ public data class ElidePackageManifest(
   ) : Artifact
 
   @JvmRecord @Serializable public data class SourceSet(
-    val spec: List<String>,
+    val type: SourceSetType = SourceSetType.Main,
+    val synthetic: Boolean = false,
+    val paths: List<String>,
   ) {
+    public enum class SourceSetType {
+      Main,
+      Test,
+      Integration,
+      Example,
+      Docs,
+      Infra,
+      Other
+      ;
+
+      public companion object {
+        public fun parse(spec: String): SourceSetType = when (spec) {
+          "main" -> Main
+          "test" -> Test
+          "integration" -> Integration
+          "example" -> Example
+          "docs" -> Docs
+          "infra" -> Infra
+          else -> Other
+        }
+      }
+    }
+
     public companion object {
       @JvmStatic public fun parse(str: String): SourceSet {
-        return SourceSet(listOf(str))
+        return SourceSet(paths = listOf(str))
       }
     }
   }
@@ -347,13 +372,14 @@ public data class ElidePackageManifest(
     val from: List<String> = emptyList(),
   ) : DependencyEcosystemConfig {
     public fun hasPackages(): Boolean = (
-      packages.isNotEmpty() ||
-      devPackages.isNotEmpty() ||
-      testPackages.isNotEmpty() ||
-      modules.isNotEmpty() ||
-      compileOnly.isNotEmpty() ||
-      runtimeOnly.isNotEmpty()
-    )
+            packages.isNotEmpty() ||
+                    devPackages.isNotEmpty() ||
+                    testPackages.isNotEmpty() ||
+                    modules.isNotEmpty() ||
+                    compileOnly.isNotEmpty() ||
+                    runtimeOnly.isNotEmpty()
+            )
+
     public fun allPackages(): Sequence<MavenPackage> = sequence<MavenPackage> {
       yieldAll(packages.asSequence())
       yieldAll(modules.asSequence())
@@ -595,11 +621,11 @@ public data class ElidePackageManifest(
     val profiles: List<String> = emptyList(),
   )
 
-  @Serializable public enum class NativeImageDriverMode (override val symbol: String) : Symbolic<String> {
+  @Serializable public enum class NativeImageDriverMode(override val symbol: String) : Symbolic<String> {
     EMBEDDED("embedded"),
     EXTERNAL("external");
 
-    public companion object: Symbolic.SealedResolver<String, NativeImageDriverMode> {
+    public companion object : Symbolic.SealedResolver<String, NativeImageDriverMode> {
       override fun resolve(symbol: String): NativeImageDriverMode = when (symbol) {
         "embedded" -> EMBEDDED
         "external" -> EXTERNAL

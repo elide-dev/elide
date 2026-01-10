@@ -18,7 +18,8 @@
   improper_ctypes,
   dead_code,
   clippy::missing_safety_doc,
-  clippy::type_complexity
+  clippy::type_complexity,
+  unnecessary_transmutes
 )]
 
 use core::ffi::c_void;

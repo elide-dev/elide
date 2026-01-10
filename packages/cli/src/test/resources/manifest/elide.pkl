@@ -53,6 +53,20 @@ dependencies {
       ["optional"] { "optional-package" }
     }
   }
+  gems {
+    packages {
+      new Ruby.GemSpec {
+        name = "gem-package"
+        version = "1.0.0"
+      }
+    }
+    devPackages {
+      new Ruby.GemSpec {
+        name = "dev-package"
+        version = "1.0.0"
+      }
+    }
+  }
   pkl { }
   huggingface {
     models {
@@ -105,6 +119,15 @@ kotlin {
     jvmTargetValidationMode = "IGNORE"
   }
 }
+javascript {
+  debug = true
+  ecma = "stable"
+  packageManager = "bun"
+  runner = "node"
+}
+typescript {
+  debug = true
+}
 python {
   debug = true
   wsgi {
@@ -113,6 +136,12 @@ python {
       "argument"
     }
   }
+}
+ruby {
+  debug = true
+}
+pkl {
+  debug = true
 }
 nativeImage {
   verbose = true
@@ -190,12 +219,32 @@ dev {
       "someDelegate"
     }
   }
+  mcp {
+    resources {
+      new Dev.McpResource {
+        path = "somePath"
+        mimeType = "mime/type"
+      }
+    }
+  }
   server {
     host = "1.2.3.4"
     port = 9001
   }
   builder { }
   testrunner { }
+  flags {
+    new Flags.ProjectFlag {
+      name = "flag"
+      type = "string"
+      description = "a flag"
+      defaultValue = "something"
+      aliases {
+        "flagAlias"
+      }
+      required = true
+    }
+  }
 }
 toolchain {
   native { }
@@ -283,7 +332,7 @@ artifacts {
     srcs = "somePath"
     domain = "elide.dev"
     preview = "example.com"
-    prefix = "//"
+    prefix = ""
     assets = "assetPath"
     stylesheets {
       "sheety weety"
@@ -327,10 +376,51 @@ lockfile {
   enabled = false
   format = "binary"
 }
+web {
+  debug = true
+  css {
+    minify = false
+    targets {
+      new Web.CssTarget {
+        browser = "edge"
+        version = "edging"
+      }
+    }
+  }
+  browsers {
+    "chrome"
+  }
+}
 secrets {
   profile = "secretProfile"
   remote = "project"
+  project {
+    path = "secretPath"
+  }
   github {
     repository = "super/secret"
   }
+}
+server {
+  address = "someAddress"
+  cleartext = false
+  transport = "kqueue"
+  https {
+    certificate = new Server.LocalFileCertificate {
+      certFile = "certPath"
+      keyFile = "keyPath"
+      keyPassphrase = "superSecretPass"
+    }
+    address = "https"
+  }
+  http3 {
+    certificate = new Server.SelfSignedCertificate {
+      subject = "subject"
+      notBefore = 25
+      notAfter = 6400
+    }
+    address = "3addr"
+    advertise = true
+  }
+  serverName = "name"
 }

@@ -3,4 +3,7 @@
 module elide.typescript
 
 /// Configures TypeScript language features and settings.
-class TypeScriptSettings {}
+class TypeScriptSettings {
+  /// Enable additional TypeScript debugging features.
+  debug: Boolean = false
+}

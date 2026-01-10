@@ -556,7 +556,23 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class JavaScriptSettings(
     val debug: Boolean = false,
+    val ecma: EcmaStandard? = null,
+    val packageManager: String? = null,
+    val runner: String? = null,
   )
+
+  @Serializable
+  public sealed interface EcmaStandard {
+    @JvmRecord @Serializable public data class NumericEcmaStandard(public val number: UInt) : EcmaStandard {
+      override val argValue: String get() = number.toString()
+    }
+
+    @JvmRecord @Serializable public data class StringEcmaStandard(public val name: String) : EcmaStandard {
+      override val argValue: String get() = name
+    }
+
+    public val argValue: String
+  }
 
   @JvmRecord @Serializable public data class TypeScriptSettings(
     val debug: Boolean = false,

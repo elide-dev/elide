@@ -15,6 +15,7 @@ package elide.tooling.project.manifest
 import java.net.URI
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
@@ -748,6 +749,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class NativeImage(
     val name: String? = null,
+    @SerialName("imageType")
     val type: NativeImageType = NativeImageType.BINARY,
     val entrypoint: String? = null,
     val moduleName: String? = null,

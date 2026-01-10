@@ -61,30 +61,19 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
   private val repositories by lazy { config.repositories.asSequence().map { repositoryFactory.get(it) }.toList() }
   private val extraRepositories = mutableListOf<ElideRepository>()
 
-  override suspend fun getOrInstallTargetVersion(
-    currentVersion: String,
-    requestedVersion: String?,
-    progress: FlowCollector<ElideInstallEvent>?,
-  ): String? {
-    val version = requestedVersion ?: return null
-    if (version == currentVersion) return null
-    val path =
-      getInstallations(true).find { it.version.asString == version }?.path
-        ?: try {
-          install(false, version, null, progress)
-        } catch (e: Exception) {
-          println(e.message)
-          null
-        }
-        ?: return null
-    return resolveBinary(Path(path)).toString()
-  }
-
   override fun readVersionFile(): String? =
     Path(System.getProperty("user.dir"), PROJECT_VERSION_FILE).let {
       if (SystemFileSystem.exists(it)) SystemFileSystem.source(it).buffered().readString(Charsets.UTF_8).trim()
       else null
     }
+
+  override fun resolveBinary(path: Path): Path? =
+    SystemFileSystem.list(path)
+      .find { it.name == BINARY_NAME || it.name == "bin" }
+      ?.let {
+        if (it.name == BINARY_NAME) it
+        else Path(it, BINARY_NAME).let { elide -> if (SystemFileSystem.exists(elide)) it else null }
+      }
 
   override fun getInstallations(includeSearchDirs: Boolean): List<ElideInstallation> =
     (if (includeSearchDirs) (config.searchDirs + config.installDirs).distinct() else config.installDirs)
@@ -256,14 +245,6 @@ internal class VersionManagerImpl(private val repositoryFactory: ElideRepository
       return emptySequence()
     }
   }
-
-  private fun resolveBinary(path: Path): Path? =
-    SystemFileSystem.list(path)
-      .find { it.name == BINARY_NAME || it.name == "bin" }
-      ?.let {
-        if (it.name == BINARY_NAME) it
-        else Path(it, BINARY_NAME).let { elide -> if (SystemFileSystem.exists(elide)) it else null }
-      }
 
   @OptIn(ExperimentalStdlibApi::class)
   private suspend fun install(

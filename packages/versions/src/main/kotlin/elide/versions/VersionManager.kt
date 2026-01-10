@@ -15,6 +15,7 @@ package elide.versions
 import elide.runtime.core.HostPlatform
 import elide.runtime.version.ElideVersion
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.io.files.Path
 
 /**
  * Manages concurrent installations of Elide.
@@ -22,15 +23,11 @@ import kotlinx.coroutines.flow.FlowCollector
  * @author Lauri Heino <datafox>
  */
 public interface VersionManager {
-  /** Returns the path to the version of Elide that should be run, or `null` if current should be used. */
-  public suspend fun getOrInstallTargetVersion(
-    currentVersion: String,
-    requestedVersion: String? = null,
-    progress: FlowCollector<ElideInstallEvent>? = null,
-  ): String?
-
   /** Returns the contents of `.elideversion` file in the current directory if present. */
   public fun readVersionFile(): String?
+
+  /** Returns Elide binary path from installation path. */
+  public fun resolveBinary(path: Path): Path?
 
   /**
    * Returns all versions of Elide installed in the current system. Searches directories specified in

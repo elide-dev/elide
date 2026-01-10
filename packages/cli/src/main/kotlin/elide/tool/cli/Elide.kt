@@ -30,6 +30,7 @@ import picocli.CommandLine
 import picocli.CommandLine.*
 import java.util.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.io.files.Path
 import kotlin.time.TimeSource
 import elide.annotations.Context
 import elide.annotations.Eager
@@ -358,7 +359,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     }
 
     // parse version delegation flags and run with a different version of elide if applicable
-    suspend fun runVersion(args: Array<String>, manager: VersionManager): Int? {
+    fun runVersion(args: Array<String>, manager: VersionManager): Int? {
       if (VersionsValues.IGNORE_VERSION_FLAG in args || VersionsValues.VERSIONS_COMMAND in args) return null
       var args: Array<String> = args
       val requested = args.find { it.startsWith(VersionsValues.USE_VERSION_FLAG) }?.let {
@@ -372,12 +373,26 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
         args = mutableArgs.toTypedArray()
         version
       } ?: manager.readVersionFile() ?: return null
-      ToolVersionsCommand.installElide("Installing Elide version \"$requested\" to \"${manager.getDefaultInstallPath()}\"") {
-        manager.getOrInstallTargetVersion(ELIDE_TOOL_VERSION, requested, it)
-      }?.let {
-        return ProcessBuilder().command(it, *args).inheritIO().start().waitFor()
+      if (requested == ELIDE_TOOL_VERSION) return null
+      val installPath = try {
+        manager.getInstallations(true).find { it.version.asString == requested }?.path
+          ?: runBlocking {
+            ToolVersionsCommand.installElide(
+              "Installing Elide version \"$requested\" to \"${manager.getDefaultInstallPath()}\""
+            ) {
+              manager.install(false, requested, null, it)
+            }
+          } ?: return null
+      } catch (e: Exception) {
+        println(e.message)
+        return null
       }
-      return null
+      val binary = manager.resolveBinary(Path(installPath))?.toString()
+      if (binary == null) {
+        println("Elide version \"$requested\" was installed but binary was not found")
+        return null
+      }
+      return ProcessBuilder().command(binary, *args).inheritIO().start().waitFor()
     }
 
     /** CLI entrypoint and [args]. */
@@ -409,9 +424,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
         .also { initLog("Application context started; loading tool entrypoint") }
         .use {
           // if a different version of elide is requested, run that version
-          runBlocking {
-            runVersion(args, it.getBean(VersionManager::class.java))
-          }?.let { exitCode ->
+          runVersion(args, it.getBean(VersionManager::class.java))?.let { exitCode ->
             return exitCode
           }
 

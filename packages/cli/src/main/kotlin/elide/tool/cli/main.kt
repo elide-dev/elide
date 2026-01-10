@@ -84,7 +84,7 @@ private inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI_ENTRY_V
   false -> Elide.entry(args)
   true -> createApplicationContext(args).start().use { applicationContext ->
     // if a different version of elide is requested, run that version
-    runBlocking { runVersion(args, applicationContext.getBean(VersionManager::class.java)) } ?:
+    runVersion(args, applicationContext.getBean(VersionManager::class.java)) ?:
       MicronautFactory(applicationContext).use { factory ->
         runCatching {
           val procInfo = ProcessHandle.current().info()

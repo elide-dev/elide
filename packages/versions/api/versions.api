@@ -262,11 +262,10 @@ public abstract interface class elide/versions/VersionManager {
 	public abstract fun getDefaultInstallPath ()Ljava/lang/String;
 	public abstract fun getInstallPaths ()Ljava/util/List;
 	public abstract fun getInstallations (Z)Ljava/util/List;
-	public abstract fun getOrInstallTargetVersion (Ljava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun getOrInstallTargetVersion$default (Lelide/versions/VersionManager;Ljava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun install (ZLjava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun install$default (Lelide/versions/VersionManager;ZLjava/lang/String;Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun readVersionFile ()Ljava/lang/String;
+	public abstract fun resolveBinary (Lkotlinx/io/files/Path;)Lkotlinx/io/files/Path;
 	public abstract fun uninstall (ZLelide/versions/ElideInstallation;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun uninstall$default (Lelide/versions/VersionManager;ZLelide/versions/ElideInstallation;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun verifyInstall (Ljava/lang/String;Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;

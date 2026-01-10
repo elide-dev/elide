@@ -1,0 +1,336 @@
+amends "elide:project.pkl"
+import "elide:Ruby.pkl" as Ruby
+import "elide:HuggingFace.pkl" as HuggingFace
+import "elide:Workspace.pkl" as Workspace
+import "elide:Sources.pkl" as Sources
+import "elide:Dev.pkl" as Dev
+import "elide:Flags.pkl" as Flags
+import "elide:Cloudflare.pkl" as Cloudflare
+import "elide:Container.pkl" as Container
+import "elide:JavaScript.pkl" as JavaScript
+import "elide:Jvm.pkl" as Jvm
+import "elide:NativeImage.pkl" as NativeImage
+import "elide:Web.pkl" as Web
+import "elide:Server.pkl" as Server
+
+name = "project"
+version = "1.0.0"
+description = "test"
+entrypoint {
+  "some.entry"
+}
+engine {
+  maxContexts = 42
+}
+scripts {
+  ["script"] = "testscript"
+}
+dependencies {
+  maven {
+    modules {
+      "test:module"
+    }
+    compileOnly {
+      "test:compile"
+    }
+    runtimeOnly {
+      "test:runtime"
+    }
+  }
+  npm {
+    packages {
+      "npm-package"
+    }
+    devPackages {
+      "dev-package"
+    }
+  }
+  pip {
+    packages {
+      "pip-package"
+    }
+    optionalPackages {
+      ["optional"] { "optional-package" }
+    }
+  }
+  pkl { }
+  huggingface {
+    models {
+      new HuggingFace.HuggingFace {
+        repository = "repo"
+        model = "model"
+      }
+    }
+  }
+}
+
+workspaces {
+  "workspace"
+  new Workspace.WorkspaceModule {
+    name = "other"
+    path = "/work/space"
+  }
+}
+jvm {
+  main = "test.class"
+  target = "latest"
+  javaHome = "home"
+  features {
+    testing = false
+    automodules = true
+  }
+  java {
+    source = "stable"
+    release = "latest"
+    compiler {
+      flags {
+        "someFlag"
+      }
+    }
+  }
+  flags {
+    "runtimeFlag"
+  }
+  defs {
+    ["definition"] = "something"
+  }
+}
+kotlin {
+  apiLevel = "2.2"
+  languageLevel = "auto"
+  compilerOptions {
+    javaParameters = true
+    jvmTarget = "stable"
+    noJdk = true
+    jvmTargetValidationMode = "IGNORE"
+  }
+}
+python {
+  debug = true
+  wsgi {
+    name = "entry"
+    args {
+      "argument"
+    }
+  }
+}
+nativeImage {
+  verbose = true
+  driverMode = "external"
+  linkAtBuildTime {
+    enabled = false
+    packages {
+      "somePackage"
+    }
+  }
+  classInit {
+    enabled = false
+    buildtime {
+      "buildPackage"
+    }
+    runtime {
+      "runPackage"
+    }
+  }
+  exclusions {
+    all {
+      "exclude:package"
+    }
+    classpath {
+      "exclude:classpath"
+    }
+    modulepath {
+      "exclude:modulepath"
+    }
+  }
+  optimization = "3"
+  pgo {
+    enabled = false
+    autoprofile = true
+    instrument = true
+    sampling = true
+    profiles {
+      "somefile"
+    }
+  }
+  features {
+    "some.feature.class"
+  }
+  flags {
+    "someFlag"
+  }
+  cflags {
+    "someCFlag"
+  }
+  ldflags {
+    "someLdFlag"
+  }
+  defs {
+    ["definition"] = "some"
+  }
+}
+sources {
+  ["simple"] = "someSource"
+  ["spec"] = new Sources.SourceSetSpec {
+    type = "other"
+    synthetic = true
+    paths {
+      "somePath"
+    }
+  }
+}
+dev {
+  source {
+    platform = "git"
+    project = "project"
+    subpath = "somePath"
+  }
+  lsp {
+    delegates {
+      "someDelegate"
+    }
+  }
+  server {
+    host = "1.2.3.4"
+    port = 9001
+  }
+  builder { }
+  testrunner { }
+}
+toolchain {
+  native { }
+  jvm { }
+  engines {
+    ["deno"] = "1.2.5"
+  }
+}
+artifacts {
+  ["container"] = new Container.ContainerImage {
+    image = "image"
+    base = "base"
+    tags {
+      "someContainerTag"
+    }
+  }
+  ["jar"] = new Jvm.Jar {
+    name = "jarFile"
+    sources {
+      "jarSourceSet"
+    }
+  }
+  ["native"] = new NativeImage.NativeImage {
+    name = "native"
+    entrypoint = "someEntrypoint"
+    type = "library"
+    moduleName = "module"
+    options {
+      verbose = true
+      driverMode = "external"
+      linkAtBuildTime {
+        enabled = false
+        packages {
+          "somePackage"
+        }
+      }
+      classInit {
+        enabled = false
+        buildtime {
+          "buildPackage"
+        }
+        runtime {
+          "runPackage"
+        }
+      }
+      exclusions {
+        all {
+          "exclude:package"
+        }
+        classpath {
+          "exclude:classpath"
+        }
+        modulepath {
+          "exclude:modulepath"
+        }
+      }
+      optimization = "3"
+      pgo {
+        enabled = false
+        autoprofile = true
+        instrument = true
+        sampling = true
+        profiles {
+          "somefile"
+        }
+      }
+      features {
+        "some.feature.class"
+      }
+      flags {
+        "someFlag"
+      }
+      cflags {
+        "someCFlag"
+      }
+      ldflags {
+        "someLdFlag"
+      }
+      defs {
+        ["definition"] = "some"
+      }
+    }
+  }
+  ["web"] = new Web.StaticSite {
+    srcs = "somePath"
+    domain = "elide.dev"
+    preview = "example.com"
+    prefix = "//"
+    assets = "assetPath"
+    stylesheets {
+      "sheety weety"
+    }
+    scripts {
+      "someScript"
+    }
+    hosting = "github-pages"
+  }
+}
+products { }
+infra { }
+ops { }
+tests {
+  coverage {
+    enabled = false
+    reports {
+      defaults = false
+      html {
+        format = "htmx"
+      }
+      xml {
+        format = "xdl"
+      }
+      lcov {
+        format = "lcow"
+      }
+      json {
+        format = "cbor"
+      }
+      text {
+        format = "binary"
+      }
+    }
+    paths {
+      "someTestPath"
+    }
+  }
+}
+lockfile {
+  enabled = false
+  format = "binary"
+}
+secrets {
+  profile = "secretProfile"
+  remote = "project"
+  github {
+    repository = "super/secret"
+  }
+}

@@ -31,7 +31,7 @@
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "2.3.11",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "20.2.0",
     "@mdx-js/esbuild": "3.1.1",

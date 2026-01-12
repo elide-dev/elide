@@ -38,6 +38,17 @@ pluginManagement {
       name = "oss-snapshots"
       url = uri("https://oss.sonatype.org/content/repositories/snapshots")
     }
+    maven {
+      name = "maven-central-explicit"
+      url = uri("https://repo1.maven.org/maven2/")
+    }
+    maven {
+      name = "kotlin-dev"
+      url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+      content {
+        includeGroupByRegex("org\\.jetbrains.*")
+      }
+    }
     gradlePluginPortal()
     mavenCentral()
     google()
@@ -76,11 +87,22 @@ dependencyResolutionManagement {
         includeGroup("com.google.devtools.ksp")
       }
     }
+    maven {
+      name = "maven-central-explicit"
+      url = uri("https://repo1.maven.org/maven2/")
+    }
+    maven {
+      name = "kotlin-dev"
+      url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+      content {
+        includeGroupByRegex("org\\.jetbrains.*")
+      }
+    }
     gradlePluginPortal()
     mavenCentral()
     google()
   }
-  
+
   versionCatalogs {
     create("libs") {
       from(files("../../gradle/elide.versions.toml"))

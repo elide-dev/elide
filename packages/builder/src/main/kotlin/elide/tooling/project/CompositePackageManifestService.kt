@@ -78,6 +78,8 @@ public class CompositePackageManifestService @Inject constructor (
     ProjectEcosystem.MavenPom -> mavenPomCodec
     ProjectEcosystem.GradleCatalog -> gradleCatalogCodec
     ProjectEcosystem.Ruby -> error("Ruby environments are not supported yet")
+    ProjectEcosystem.Gradle -> error("Use MavenPom codec with Gradle build files for now")
+    ProjectEcosystem.Bazel -> error("Bazel environments are not supported yet")
   } as PackageManifestCodec<PackageManifest>
 
   @Suppress("UNCHECKED_CAST")
@@ -88,6 +90,7 @@ public class CompositePackageManifestService @Inject constructor (
     is PythonRequirementsManifest -> pythonRequirementsCodec
     is MavenPomManifest -> mavenPomCodec
     is GradleCatalogManifest -> gradleCatalogCodec
+    else -> error("Unsupported manifest type: ${manifest::class.simpleName}")
   } as PackageManifestCodec<PackageManifest>
 
   override fun configure(state: PackageManifestCodec.ManifestBuildState) {

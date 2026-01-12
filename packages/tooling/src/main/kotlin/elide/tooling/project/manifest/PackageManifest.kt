@@ -13,9 +13,8 @@
 
 package elide.tooling.project.manifest
 
-import kotlinx.serialization.Serializable
 import elide.tooling.project.ProjectEcosystem
 
-@Serializable public sealed interface PackageManifest {
+public interface PackageManifest {
   public val ecosystem: ProjectEcosystem
 }

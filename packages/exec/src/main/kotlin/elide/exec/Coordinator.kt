@@ -94,11 +94,11 @@ public interface Coordinator {
                 if (task == null) {
                   latch.countDown()
                 } else {
-                  scope.taskScope.scope.fork<Void> {
-                    runBlocking(scope.coroutineContext) {
-                      task.executeTask(scope)
-                    }
+                  val job = scope.async {
+                    task.executeTask(scope)
                   }
+                  scope.taskScope.jobs.add(job)
+                  scope.register(job)
                 }
               }
             }

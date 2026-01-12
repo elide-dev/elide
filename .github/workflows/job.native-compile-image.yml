@@ -1,0 +1,401 @@
+# Copyright (c) 2025 Elide Technologies, Inc.
+#
+# Licensed under the MIT license (the "License"); you may not use this file except in compliance
+# with the License. You may obtain a copy of the License at
+#
+# https://opensource.org/license/mit/
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+# an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under the License.
+#
+
+name: Native Image (nativeCompile)
+
+"on":
+  workflow_dispatch:
+    inputs:
+      ## Input: Enable Release Targets
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+
+      ## Input: Static Linkage
+      static:
+        description: "Static"
+        type: boolean
+        default: false
+
+      ## Input: Runner
+      runner:
+        description: "Runner"
+        type: string
+        default: ubuntu-cipool
+
+      ## Input: Architecture
+      arch:
+        description: "Architecture Tag"
+        type: choice
+        options:
+          - "amd64"
+          - "arm64"
+          - "aarch64"
+        default: amd64
+
+      ## Input: Operating System
+      os:
+        description: "OS Tag"
+        type: choice
+        options:
+          - "linux"
+          - "darwin"
+          - "windows"
+        default: "linux"
+
+      ## Input: Optimization
+      opt:
+        description: "Optimization"
+        type: choice
+        options:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "b"
+          - "s"
+        default: "4"
+
+      ## Input: PGO
+      pgo:
+        description: "PGO"
+        type: boolean
+        default: false
+
+      ## Input: Release Packing
+      pack:
+        description: "Pack"
+        type: boolean
+        default: false
+
+      ## Input: Version Override
+      version:
+        description: "Version Override"
+        type: string
+        default: ""
+
+  workflow_call:
+    inputs:
+      release:
+        description: "Release"
+        type: boolean
+        default: false
+      static:
+        description: "Static"
+        type: boolean
+        default: false
+      runner:
+        description: "Runner"
+        type: string
+        default: ubuntu-cipool
+      arch:
+        description: "Architecture Tag"
+        type: string
+        default: amd64
+      os:
+        description: "OS Tag"
+        type: string
+        default: linux
+      opt:
+        description: "Optimization"
+        type: string
+        default: "4"
+      pgo:
+        description: "PGO"
+        type: boolean
+        default: false
+      pack:
+        description: "Pack"
+        type: boolean
+        default: false
+      version:
+        description: "Version Override"
+        type: string
+        default: ""
+    outputs:
+      hashes:
+        description: "Provenance Hashes"
+        value: ${{ jobs.gradle.outputs.hashes }}
+      version:
+        description: "Release Version"
+        value: ${{ jobs.gradle.outputs.version }}
+
+    secrets:
+      BUILDLESS_APIKEY:
+        required: false
+        description: "Buildless API Key"
+      BUILDBOT_SERVICE_ACCOUNT:
+        required: false
+        description: "GCP Service Account"
+      BUILDBOT_GHCR_TOKEN:
+        required: false
+        description: "GHCR Token"
+      CODECOV_TOKEN:
+        required: false
+        description: "Codecov token"
+      GRADLE_CONFIGURATION_KEY:
+        required: false
+        description: "Gradle cache key"
+      COSIGN_KEY:
+        required: false
+        description: "Cosign Key"
+      COSIGN_PASSWORD:
+        required: false
+        description: "Cosign Password"
+      SIGNING_KEY:
+        required: true
+        description: "GPG Signing Key"
+
+# Do not add `ELIDE_VERSION` here like other workflows, or it may interfere with the release version override.
+env:
+  RUST_BACKTRACE: full
+  SCCACHE_DIRECT: "true"
+  RUSTC_WRAPPER: "sccache"
+  RUSTFLAGS: "-A unnecessary-transmutes"
+  BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+
+permissions:
+  contents: read
+
+jobs:
+  ##
+  ## Job: Library Build
+  ##
+  gradle:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["${{ inputs.os }}"]
+        mode: ["Strict"]
+        machine:
+          - ${{ inputs.runner }}
+        arch:
+          - ${{ inputs.arch }}
+
+    name: "Native (${{ matrix.os }}-${{ matrix.arch }})"
+    runs-on: ${{ matrix.machine }}
+    continue-on-error: ${{ matrix.mode != 'Strict' }}
+
+    permissions:
+      contents: write
+      id-token: write
+
+    defaults:
+      run:
+        shell: bash
+
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
+      version: ${{ steps.release-prep.outputs.version }}
+      platform: ${{ inputs.os }}-${{ inputs.arch }}
+      releaseArtifact: ${{ steps.pack-artifact.outputs.id }}
+      builtArtifact: ${{ steps.build-artifact.outputs.id }}
+
+    steps:
+      - name: "Setup: Harden Runner"
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
+        with:
+          disable-sudo: false
+          egress-policy: audit
+      - name: "Setup: Checkout"
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        with:
+          fetch-depth: 0
+          submodules: true
+          persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Cache Restore"
+        id: cache-restore
+        uses: buildjet/cache/restore@3e70d19e31d6a8030aeddf6ed8dbe601f94d09f4 # v4.0.2
+        with:
+          key: elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
+          path: |
+            tools/elide-build/build/**/*.*
+            packages/*/build/**/*.*
+            target/
+            target/x86_64-unknown-linux-gnu/debug/*.a
+            target/x86_64-unknown-linux-gnu/debug/*.so
+            third_party/sqlite/install/
+          restore-keys: |
+            elide-v3-build-${{ hashFiles('gradle/elide.versions.toml') }}
+            elide-v3-
+      - name: "Fix git-lfs repo (questing)"
+        if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
+        run: sudo rm -f /etc/apt/sources.list.d/github_git-lfs.list /etc/apt/sources.list.d/git-lfs.list 2>/dev/null || true
+      - name: "Setup: Packages"
+        if: contains(inputs.runner, 'ubuntu') || contains(inputs.runner, 'linux')
+        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev libtool libtool-bin
+      - name: "Setup: Rust"
+        uses: actions-rust-lang/setup-rust-toolchain@1780873c7b576612439a134613cc4cc74ce5538c # v1.15.2
+        with:
+          toolchain: stable
+          cache: true # handled by sccache
+          cache-key: "elide-rust-v1-{{ hashFiles('Cargo.lock') }}"
+      - name: "Setup: SCCache"
+        uses: mozilla-actions/sccache-action@7d986dd989559c6ecdb630a3fd2557667be217ad # v0.0.9
+      - name: "Setup: Rust Caching"
+        run: echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
+      - name: "Setup: GraalVM (Java 25)"
+        uses: graalvm/setup-graalvm@eec48106e0bf45f2976c2ff0c3e22395cced8243 # v1.4.2
+        with:
+          distribution: "graalvm"
+          java-version: "25"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Setup: Elide"
+        uses: elide-dev/setup-elide@d91d5859c0722417ea1ac4c682382ac8a6622b80 # v3.0.0
+        with:
+          version: "1.0.0-beta10"
+      - name: "Setup: PNPM"
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+        with:
+          version: "10.6.2"
+      - name: "Setup: Node"
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: 23
+      - name: "Setup: Bun"
+        uses: step-security/setup-bun@81c6b5758214d7e8b68a403c6a55a040e9b8879a # v2.0.3
+        with:
+          bun-version: "1.2.14"
+      - name: "Setup: uv"
+        uses: astral-sh/setup-uv@5a7eac68fb9809dea845d802897dc5c723910fa3 # v7.1.3
+      - name: "Setup: Dependencies"
+        run: |
+          echo "Setting up venv..."
+          uv venv
+          echo "Activating venv..."
+          . .venv/bin/activate
+          echo "Installing dependencies via Pip..."
+          uv pip install -r config/requirements.txt
+          echo PATH=$PATH >> $GITHUB_ENV
+          echo "Installing dependencies..."
+          pnpm install
+ 
+      - name: "Setup: Gradle"
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
+        id: gradlebuild
+        continue-on-error: ${{ matrix.mode == 'labs' }}
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+        with:
+          cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_CONFIGURATION_KEY }}
+          dependency-graph: disabled
+          gradle-home-cache-cleanup: true
+          gradle-home-cache-includes: binaryen
+            caches
+            jdks
+            native
+            native-build-tools
+            nodejs
+            notifications
+            wrapper
+            yarn
+      - name: "Setup: Gradle Settings"
+        run: cp -fv ./.github/workflows/gradle-ci.properties ~/.gradle/gradle.properties
+      - name: "Setup: Gradle Settings (Globals)"
+        run: cp -fv /home/ci-agent/gradle-ci.properties ~/.gradle/gradle.properties || echo "No global settings."
+      - name: "Setup: Cosign"
+        if: inputs.pack
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
+      - name: "Build Environment"
+        run: file Makefile && make info CI=yes 2>&1 | tee build-info.txt
+      - name: "Overrides: Version"
+        if: inputs.version != ''
+        run: |
+          current_version=$(cat ./.version)
+          echo "${{ inputs.version }}" > ./.version
+          echo "${{ inputs.version }}" > ./.release
+          sed -i "s/elide = \"${current_version}\"/elide = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
+          sed -i "s/elide-bin = \"${current_version}\"/elide-bin = \"${{ inputs.version }}\"/g" gradle/elide.versions.toml
+          sed -i "s/${current_version}/${{ inputs.version }}/g" tools/elide-build/src/main/kotlin/elide/internal/conventions/Constants.kt
+      - name: "🛠️ Release: Image"
+        env:
+          CI: true
+          BUILDLESS_APIKEY: ${{ secrets.BUILDLESS_APIKEY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          TEST_EXCEPTIONS: true
+        run: |
+          ./gradlew \
+            :packages:cli:nativeOptimizedCompile \
+            -x check \
+            -x test \
+            -x jvmTest \
+            --scan \
+            --build-cache \
+            --no-daemon \
+            --max-workers=2 \
+            --dependency-verification=off \
+            --no-configuration-cache \
+            --stacktrace \
+            -Pelide.ci=true \
+            -PbuildSamples=false \
+            -PbuildDocs=false \
+            -Pelide.optMode=${{ inputs.opt }} \
+            -Pelide.stamp=${{ inputs.release }} \
+            -Pelide.pgo=${{ inputs.pgo }} \
+            -Pelide.static=${{ inputs.static == true && 'true' || 'false' }} \
+            -Pelide.release=${{ inputs.release }} \
+            -Pelide.buildMode=${{ inputs.release == true && 'release' || 'dev' }}
+      - name: "Setup: Signing Keys"
+        run: |
+          cat <(echo -e "${{ secrets.SIGNING_KEY }}") | base64 -d | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+          mkdir -p "$HOME/.gnupg"
+          gpg --export-secret-keys > "$HOME/.gnupg/secring.gpg"
+      - name: "Artifact: Build Outputs"
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        id: build-artifact
+        with:
+          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}
+          path: packages/cli/build/native/nativeOptimizedCompile/**/*.*
+      - name: "Artifact: Provenance Subject"
+        id: hash
+        if: ${{ matrix.os == 'linux' && inputs.release }}
+        run: |
+          echo "hashes=$(sha256sum ./packages/cli/build/native/nativeOptimizedCompile/elide | base64 -w0)" >> "$GITHUB_OUTPUT"
+      - name: "🛠️ Release: Package"
+        if: inputs.pack
+        run: bash ./tools/scripts/release/build-release.sh
+        env:
+          COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          COSIGN_ARGS: "--key env://COSIGN_KEY"
+      - name: "Release: Prepare"
+        if: inputs.pack
+        id: release-prep
+        run: |
+          currentVersion=$(cat ./.release)
+          releaseOverride="${{ inputs.version }}"
+          version="${releaseOverride:-$currentVersion}"
+          cd ./packages/cli/build/native/nativeOptimizedCompile/;
+          mkdir -p "release/${{ inputs.os }}-${{ inputs.arch }}/$version"
+          cp -fv elide-*.{tgz,txz,zip}* "release/${{ inputs.os }}-${{ inputs.arch }}/$version/"
+          cp -fv elide.sbom.json "release/${{ inputs.os }}-${{ inputs.arch }}/$version/"
+          cp -fv elide-build-report.html "release/${{ inputs.os }}-${{ inputs.arch }}/$version/elide.build-report.html"
+          cd -;
+          mkdir -p staging/release
+          mv "packages/cli/build/native/nativeOptimizedCompile/release" "staging/"
+          echo "version=$version" >> $GITHUB_OUTPUT
+          tree -L 3 staging/
+          echo "Release built."
+      - name: "Artifact: Release Package"
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        id: pack-artifact
+        if: inputs.pack
+        with:
+          name: elide-native-${{ inputs.release == true && 'release' || 'dev' }}-${{ matrix.os }}-${{ matrix.arch }}-release.zip
+          path: staging/**/*.*

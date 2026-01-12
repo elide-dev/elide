@@ -31,6 +31,12 @@ import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic
 import elide.runtime.gvm.js.JsError
 import elide.runtime.interop.ReadOnlyProxyObject
 import elide.runtime.intrinsics.js.*
+import elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
+import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
+import elide.runtime.node.buffer.NodeBlob
+import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import org.graalvm.polyglot.Context
 import elide.vm.annotations.Polyglot
 
 /** Implements an intrinsic for the Fetch API `Request` object. */
@@ -83,6 +89,12 @@ internal class FetchRequestIntrinsic internal constructor(
     private const val MEMBER_REFERRER = "referrer"
     private const val MEMBER_REFERRER_POLICY = "referrerPolicy"
     private const val MEMBER_MEMBER_URL = "url"
+    // Body mixin methods
+    private const val MEMBER_ARRAY_BUFFER = "arrayBuffer"
+    private const val MEMBER_BLOB = "blob"
+    private const val MEMBER_FORM_DATA = "formData"
+    private const val MEMBER_JSON = "json"
+    private const val MEMBER_TEXT = "text"
 
     private val MemberKeys = arrayOf(
       MEMBER_BODY,
@@ -99,6 +111,12 @@ internal class FetchRequestIntrinsic internal constructor(
       MEMBER_REFERRER,
       MEMBER_REFERRER_POLICY,
       MEMBER_MEMBER_URL,
+      // Body mixin methods
+      MEMBER_ARRAY_BUFFER,
+      MEMBER_BLOB,
+      MEMBER_FORM_DATA,
+      MEMBER_JSON,
+      MEMBER_TEXT,
     )
 
     @JvmStatic override fun forRequest(request: HttpRequest<*>): FetchMutableRequest {
@@ -197,6 +215,235 @@ internal class FetchRequestIntrinsic internal constructor(
       return bodyData
     }
 
+  // -- Interface: Body Mixin -- //
+
+  /**
+   * Read the body as an ArrayBuffer.
+   *
+   * @return A promise that resolves with an ArrayBuffer.
+   */
+  @Polyglot override fun arrayBuffer(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    val stream = body
+    if (stream == null) {
+      promise.resolve(ByteBuffer.allocate(0))
+      return promise
+    }
+
+    // Get a reader and consume the stream
+    val reader = stream.getReader() as ReadableStreamDefaultReader
+    val chunks = ByteArrayOutputStream()
+
+    fun readNextChunk() {
+      reader.read().then(
+        onFulfilled = { result ->
+          if (result.value != null) {
+            val value = result.value
+            if (value.hasArrayElements()) {
+              val size = value.arraySize.toInt()
+              for (i in 0 until size) {
+                chunks.write(value.getArrayElement(i.toLong()).asByte().toInt())
+              }
+            }
+          }
+          if (result.done) {
+            reader.releaseLock()
+            // Return as NIO ByteBuffer - maps to JavaScript ArrayBuffer
+            promise.resolve(ByteBuffer.wrap(chunks.toByteArray()))
+          } else {
+            readNextChunk()
+          }
+        },
+        onCatch = { error ->
+          reader.releaseLock()
+          promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+      )
+    }
+
+    readNextChunk()
+    return promise
+  }
+
+  /**
+   * Read the body as a Blob.
+   *
+   * Consumes the ReadableStream and wraps the content in a Blob object.
+   *
+   * @return A promise that resolves with a Blob.
+   */
+  @Polyglot override fun blob(): JsPromise<Blob> {
+    val promise = JsPromiseImpl<Blob>()
+    val stream = body
+    if (stream == null) {
+      // Return empty blob
+      promise.resolve(NodeBlob(ByteArray(0), null))
+      return promise
+    }
+
+    // Read all bytes, then wrap in a Blob
+    arrayBuffer().then(
+      onFulfilled = { buffer ->
+        val byteBuffer = buffer as ByteBuffer
+        val byteArray = ByteArray(byteBuffer.remaining())
+        byteBuffer.get(byteArray)
+        // Get content-type from headers if available
+        val contentType = headers.get("content-type")
+        promise.resolve(NodeBlob(byteArray, contentType))
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
+    return promise
+  }
+
+  /**
+   * Read the body as FormData.
+   *
+   * Supports both application/x-www-form-urlencoded and multipart/form-data content types.
+   *
+   * @return A promise that resolves with FormData.
+   */
+  @Polyglot override fun formData(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    val stream = body
+    if (stream == null) {
+      promise.resolve(FormData())
+      return promise
+    }
+
+    val contentType = headers.get("content-type") ?: ""
+
+    when {
+      contentType.contains("multipart/form-data") -> {
+        // Multipart needs raw bytes
+        arrayBuffer().then(
+          onFulfilled = { buffer ->
+            try {
+              val byteBuffer = buffer as ByteBuffer
+              val bytes = ByteArray(byteBuffer.remaining())
+              byteBuffer.get(bytes)
+              val boundary = FormData.extractBoundary(contentType)
+                ?: throw IllegalArgumentException("Missing boundary in Content-Type")
+              promise.resolve(FormData.parseMultipart(bytes, boundary))
+            } catch (e: Exception) {
+              promise.reject(JsError.typeError("Failed to parse multipart form data: ${e.message}"))
+            }
+          },
+          onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+          }
+        )
+      }
+      else -> {
+        // URL-encoded or fallback
+        text().then(
+          onFulfilled = { bodyText ->
+            try {
+              promise.resolve(FormData.parseUrlEncoded(bodyText))
+            } catch (e: Exception) {
+              promise.reject(JsError.typeError("Failed to parse form data: ${e.message}"))
+            }
+          },
+          onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+          }
+        )
+      }
+    }
+    return promise
+  }
+
+  /**
+   * Read the body as JSON.
+   *
+   * Consumes the ReadableStream, decodes as UTF-8 text, and parses as JSON
+   * using the JavaScript runtime's JSON.parse.
+   *
+   * @return A promise that resolves with the parsed JSON value.
+   */
+  @Polyglot override fun json(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    val stream = body
+    if (stream == null) {
+      promise.reject(JsError.typeError("Cannot read body: no body present"))
+      return promise
+    }
+
+    // First read as text, then parse as JSON
+    text().then(
+      onFulfilled = { text ->
+        try {
+          // Use GraalJS JSON.parse to parse the text
+          val context = Context.getCurrent()
+          val jsonParse = context.eval("js", "JSON.parse")
+          val parsed = jsonParse.execute(text)
+          promise.resolve(parsed)
+        } catch (e: Exception) {
+          promise.reject(JsError.typeError("Invalid JSON: ${e.message}"))
+        }
+      },
+      onCatch = { error ->
+        promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+      }
+    )
+    return promise
+  }
+
+  /**
+   * Read the body as text.
+   *
+   * Consumes the ReadableStream and decodes the content as UTF-8 text.
+   *
+   * @return A promise that resolves with the body text.
+   */
+  @Polyglot override fun text(): JsPromise<String> {
+    val promise = JsPromiseImpl<String>()
+    val stream = body
+    if (stream == null) {
+      promise.resolve("")
+      return promise
+    }
+
+    // Get a reader and consume the stream
+    val reader = stream.getReader() as ReadableStreamDefaultReader
+    val chunks = ByteArrayOutputStream()
+
+    fun readNextChunk() {
+      reader.read().then(
+        onFulfilled = { result ->
+          if (result.value != null) {
+            // Extract bytes from the chunk (Uint8Array)
+            val value = result.value
+            if (value.hasArrayElements()) {
+              val size = value.arraySize.toInt()
+              for (i in 0 until size) {
+                chunks.write(value.getArrayElement(i.toLong()).asByte().toInt())
+              }
+            }
+          }
+          if (result.done) {
+            // All chunks read, decode as UTF-8
+            val text = chunks.toString(StandardCharsets.UTF_8)
+            reader.releaseLock()
+            promise.resolve(text)
+          } else {
+            // Continue reading
+            readNextChunk()
+          }
+        },
+        onCatch = { error ->
+          reader.releaseLock()
+          promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+      )
+    }
+
+    readNextChunk()
+    return promise
+  }
+
   override fun toString(): String {
     return "$method $url"
   }
@@ -218,6 +465,12 @@ internal class FetchRequestIntrinsic internal constructor(
     MEMBER_REFERRER -> referrer
     MEMBER_REFERRER_POLICY -> referrerPolicy
     MEMBER_MEMBER_URL -> url
+    // Body mixin methods - return executable proxies
+    MEMBER_ARRAY_BUFFER -> org.graalvm.polyglot.proxy.ProxyExecutable { arrayBuffer() }
+    MEMBER_BLOB -> org.graalvm.polyglot.proxy.ProxyExecutable { blob() }
+    MEMBER_FORM_DATA -> org.graalvm.polyglot.proxy.ProxyExecutable { formData() }
+    MEMBER_JSON -> org.graalvm.polyglot.proxy.ProxyExecutable { json() }
+    MEMBER_TEXT -> org.graalvm.polyglot.proxy.ProxyExecutable { text() }
     else -> null
   }
 }

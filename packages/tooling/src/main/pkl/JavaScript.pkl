@@ -68,6 +68,9 @@ function browser(sourceSetName: String) = new BrowserJs {
 
 /// Configures JavaScript language features and settings.
 class JavaScriptSettings {
+  /// Enable additional JavaScript debugging features.
+  debug: Boolean = false
+
   /// The target ECMAScript standard to support.
   ecma: EcmaStandard = defaultEcmaStandard
 

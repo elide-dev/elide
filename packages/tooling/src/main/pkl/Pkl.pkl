@@ -6,4 +6,7 @@ module elide.pkl
 class PklDependencies {}
 
 /// Configures Pkl language features and settings.
-class PklSettings {}
+class PklSettings {
+  /// Enable additional Pkl debugging features.
+  debug: Boolean = false
+}

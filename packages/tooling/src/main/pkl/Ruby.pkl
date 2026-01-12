@@ -26,4 +26,7 @@ class GemDependencies {
 }
 
 /// Configures Ruby language features and settings.
-class RubySettings {}
+class RubySettings {
+  /// Enable additional Ruby debugging features.
+  debug: Boolean = false
+}

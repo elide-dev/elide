@@ -5667,6 +5667,12 @@
       "allDeclaredConstructors": true
     },
     {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$EcmaStandard",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
+    },
+    {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$EngineSettings",
       "allDeclaredFields": true,
       "allDeclaredMethods": true,
@@ -5679,7 +5685,10 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$GemPackage"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$GemPackage",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$GithubRemoteSettings",
@@ -5928,7 +5937,10 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$PklSettings"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$PklSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ProfileGuidedOptimization",
@@ -5937,7 +5949,10 @@
       "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$ProjectRemoteSettings"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ProjectRemoteSettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ProjectSourceSpec",
@@ -5958,7 +5973,10 @@
       ]
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$RubySettings"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$RubySettings",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$RuntimeEngineSettings",
@@ -5990,21 +6008,15 @@
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings",
-      "methods": [
-        {
-          "name": "<init>",
-          "parameterTypes": [
-            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress",
-            "boolean",
-            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$HttpsServerSettings",
-            "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$Http3ServerSettings",
-            "java.lang.String"
-          ]
-        }
-      ]
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
-      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress"
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$BindingAddress$SocketAddress",
@@ -6058,6 +6070,12 @@
           ]
         }
       ]
+    },
+    {
+      "type": "elide.tooling.project.manifest.ElidePackageManifest$ServerSettings$SSLCertificate$SelfSignedCertificate",
+      "allDeclaredFields": true,
+      "allDeclaredMethods": true,
+      "allDeclaredConstructors": true
     },
     {
       "type": "elide.tooling.project.manifest.ElidePackageManifest$SourceSet",

@@ -272,6 +272,16 @@ public class ElidePackageManifestCodec : PackageManifestCodec<ElidePackageManife
         Conversion.of(PClassInfo.List, Browsers::class.java, ListConverter<String, Browsers> { them ->
           Browsers.parse(them)
         })
+      ).addConversion(
+        // convert int ecma standard specs to ecma standard
+        Conversion.of(PClassInfo.Int, EcmaStandard ::class.java, LongConverter {
+          EcmaStandard.NumericEcmaStandard(it.toUInt())
+        })
+      ).addConversion(
+        // convert string ecma standard specs to ecma standard
+        Conversion.of(PClassInfo.String, EcmaStandard::class.java, StrConverter {
+          EcmaStandard.StringEcmaStandard(it)
+        })
       ).addConverterFactory { info, _ ->
         when (info.qualifiedName) {
           "elide.jvm#Jar" -> Optional.of(Converter { value: PObject, mapper ->

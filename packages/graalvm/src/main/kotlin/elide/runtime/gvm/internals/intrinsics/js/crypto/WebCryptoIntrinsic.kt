@@ -27,6 +27,7 @@ import elide.runtime.gvm.internals.intrinsics.js.typed.UUIDValue
 import elide.runtime.intrinsics.GuestIntrinsic
 import elide.runtime.intrinsics.js.Crypto.Companion.MAX_RANDOM_BYTES_SIZE
 import elide.runtime.intrinsics.js.SubtleCrypto
+import elide.runtime.intrinsics.js.err.AbstractJsException
 import elide.runtime.intrinsics.js.err.QuotaExceededError
 import elide.runtime.intrinsics.js.err.ValueError
 import elide.runtime.intrinsics.js.typed.UUID

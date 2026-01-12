@@ -4366,6 +4366,11 @@ public abstract interface class elide/runtime/intrinsics/js/node/ConsoleAPI : el
 }
 
 public abstract interface class elide/runtime/intrinsics/js/node/CryptoAPI : elide/runtime/intrinsics/js/node/NodeAPI {
+	public abstract fun randomInt (JJ)J
+	public abstract fun randomInt (JJLkotlin/jvm/functions/Function2;)V
+	public abstract fun randomInt (Lorg/graalvm/polyglot/Value;)J
+	public abstract fun randomInt (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)J
+	public abstract fun randomInt (Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;Lorg/graalvm/polyglot/Value;)V
 	public abstract fun randomUUID (Lorg/graalvm/polyglot/Value;)Ljava/lang/String;
 	public static synthetic fun randomUUID$default (Lelide/runtime/intrinsics/js/node/CryptoAPI;Lorg/graalvm/polyglot/Value;ILjava/lang/Object;)Ljava/lang/String;
 }

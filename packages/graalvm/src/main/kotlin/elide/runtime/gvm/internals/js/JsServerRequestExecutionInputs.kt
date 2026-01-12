@@ -14,12 +14,17 @@ package elide.runtime.gvm.internals.js
 
 import java.io.InputStream
 import java.net.URI
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 import elide.runtime.gvm.RequestExecutionInputs
+import elide.runtime.gvm.js.JsError
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchRequest
 import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue as URL
+import elide.vm.annotations.Polyglot
+import kotlinx.serialization.json.Json
 
 /**
  * Defines an abstract base class for JavaScript inputs based on an HTTP [Request] type, which has been made to be
@@ -33,6 +38,23 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
 ) : RequestExecutionInputs<Request>, FetchRequest {
   /** Internal indicator of whether the request body stream has been consumed. */
   protected val consumed: AtomicBoolean = AtomicBoolean(false)
+
+  /** Cached body bytes for text/json/arrayBuffer methods. */
+  private val cachedBodyBytes: AtomicReference<ByteArray?> = AtomicReference(null)
+
+  /** Read and cache body bytes. */
+  private fun readBodyBytes(): ByteArray {
+    val cached = cachedBodyBytes.get()
+    if (cached != null) return cached
+    if (!hasBody()) {
+      cachedBodyBytes.set(ByteArray(0))
+      return ByteArray(0)
+    }
+    consumed.set(true)
+    val bytes = requestBody().readAllBytes()
+    cachedBodyBytes.set(bytes)
+    return bytes
+  }
 
   /**
    * ## Request: Body.
@@ -164,4 +186,36 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
    * @return Map of HTTP request headers to their (potentially multiple) values.
    */
   protected abstract fun requestHeaders(): Map<String, List<String>>
+
+  /**
+   * ## Request: text()
+   *
+   * Returns the request body as a text string (UTF-8 decoded).
+   */
+  @Polyglot override fun text(): Any {
+    val bytes = readBodyBytes()
+    return String(bytes, StandardCharsets.UTF_8)
+  }
+
+  /**
+   * ## Request: json()
+   *
+   * Returns the request body parsed as JSON.
+   */
+  @Polyglot override fun json(): Any {
+    val textContent = text() as String
+    if (textContent.isEmpty()) {
+      throw JsError.typeError("Unexpected end of JSON input")
+    }
+    return Json.parseToJsonElement(textContent)
+  }
+
+  /**
+   * ## Request: arrayBuffer()
+   *
+   * Returns the request body as a byte array.
+   */
+  @Polyglot override fun arrayBuffer(): Any {
+    return readBodyBytes()
+  }
 }

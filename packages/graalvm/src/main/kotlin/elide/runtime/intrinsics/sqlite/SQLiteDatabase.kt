@@ -196,12 +196,11 @@ private val SQLITE_DATABASE_PROPS_AND_METHODS = arrayOf(
    * Parse, prepare, and then execute an SQL query [statement] with the provided [args] (if any), against the current
    * SQLite database.
    *
-   * This method does not return a value.
-   *
    * @param statement SQL query to execute.
    * @param args Arguments to bind to the statement.
+   * @return Changes object containing the number of affected rows and last insert rowid.
    */
-  @Polyglot public fun exec(@Language("sql") statement: String, vararg args: Any?): JSDynamicObject
+  @Polyglot public fun exec(@Language("sql") statement: String, vararg args: Any?): SQLiteChanges
 
   /**
    * ## Execute (Statement)
@@ -209,12 +208,11 @@ private val SQLITE_DATABASE_PROPS_AND_METHODS = arrayOf(
    * Execute the provided [statement], preparing it if necessary, with the provided [args] (if any), against the current
    * SQLite database.
    *
-   * This method does not return a value.
-   *
    * @param statement Prepared statement to execute.
    * @param args Arguments to bind to the statement.
+   * @return Changes object containing the number of affected rows and last insert rowid.
    */
-  @Polyglot public fun exec(statement: SQLiteStatement, vararg args: Any?): JSDynamicObject
+  @Polyglot public fun exec(statement: SQLiteStatement, vararg args: Any?): SQLiteChanges
 
   /**
    * ## Execute Transaction

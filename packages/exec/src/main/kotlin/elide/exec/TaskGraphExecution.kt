@@ -14,7 +14,6 @@ package elide.exec
 
 import java.util.concurrent.ConcurrentSkipListMap
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.StructuredTaskScope
 import kotlinx.coroutines.Deferred
 
 /**

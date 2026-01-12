@@ -656,6 +656,106 @@ fun forceDisableNpmTasks() {
   tasks.findByName("setupNodeJs")?.let { forceDisableTask(it) }
 }
 
+// --- Tasks: Git Submodule Initialization
+//
+// Automatically initialize git submodules if they're not present.
+// This ensures external/ktoml is available without manual intervention.
+//
+val initSubmodules by tasks.registering(Exec::class) {
+  description = "Initialize git submodules if not already initialized"
+  group = "build setup"
+
+  val ktomlDir = file("external/ktoml")
+  onlyIf { !ktomlDir.exists() || ktomlDir.list()?.isEmpty() != false }
+
+  commandLine("git", "submodule", "update", "--init", "--recursive")
+
+  doFirst {
+    logger.lifecycle("Initializing git submodules...")
+  }
+}
+
+// Make all projects depend on submodule initialization
+allprojects {
+  tasks.matching { it.name != "initSubmodules" }.configureEach {
+    dependsOn(initSubmodules)
+  }
+}
+
+// --- Tasks: Build Dependency Checking
+//
+// Check for required build tools before attempting native builds.
+// Provides helpful error messages with installation instructions.
+//
+val checkNativeBuildDeps by tasks.registering {
+  description = "Check for required native build dependencies (make, gcc, etc.)"
+  group = "build setup"
+
+  doLast {
+    val isLinux = System.getProperty("os.name").lowercase().contains("linux")
+    val isMac = System.getProperty("os.name").lowercase().contains("mac")
+
+    if (!isLinux && !isMac) {
+      logger.warn("Native build dependency checking only supported on Linux and macOS")
+      return@doLast
+    }
+
+    val missingTools = mutableListOf<String>()
+
+    // Check for make
+    try {
+      exec {
+        commandLine("which", "make")
+        standardOutput = java.io.ByteArrayOutputStream()
+        errorOutput = java.io.ByteArrayOutputStream()
+        isIgnoreExitValue = true
+      }.apply {
+        if (exitValue != 0) missingTools.add("make")
+      }
+    } catch (e: Exception) {
+      missingTools.add("make")
+    }
+
+    // Check for gcc/clang
+    val hasCompiler = try {
+      exec {
+        commandLine("which", "gcc")
+        standardOutput = java.io.ByteArrayOutputStream()
+        errorOutput = java.io.ByteArrayOutputStream()
+        isIgnoreExitValue = true
+      }.exitValue == 0 || exec {
+        commandLine("which", "clang")
+        standardOutput = java.io.ByteArrayOutputStream()
+        errorOutput = java.io.ByteArrayOutputStream()
+        isIgnoreExitValue = true
+      }.exitValue == 0
+    } catch (e: Exception) {
+      false
+    }
+
+    if (!hasCompiler) {
+      missingTools.add("gcc/clang")
+    }
+
+    if (missingTools.isNotEmpty()) {
+      val installCmd = when {
+        isLinux -> "sudo apt-get install -y build-essential"
+        isMac -> "xcode-select --install"
+        else -> "install build tools for your platform"
+      }
+
+      logger.warn("")
+      logger.warn("⚠️  Missing native build dependencies: ${missingTools.joinToString(", ")}")
+      logger.warn("   These are required for building native libraries (SQLite, BoringSSL, etc.)")
+      logger.warn("")
+      logger.warn("   To install: $installCmd")
+      logger.warn("")
+      logger.warn("   Alternatively, skip native builds with: -x buildThirdPartyNatives")
+      logger.warn("")
+    }
+  }
+}
+
 forceDisableNpmTasks()
 
 afterEvaluate {

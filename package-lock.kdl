@@ -772,14 +772,6 @@ dependencies{
 "@types/node" ">=0.0.0"
     }
 }
-pkg "@types/conventional-commits-parser" "@types/node"{
-version "24.8.1"
-resolved "https://registry.npmjs.org/@types/node/-/node-24.8.1.tgz"
-integrity "sha512-alv65KGRadQVfVcG69MuB4IzdYVpRwMG/mq8KWOaoOdyY617P5ivaDiMCGOFDWD2sAn5Q0mR3mRtUOgm99hL9Q=="
-dependencies{
-undici-types ">=7.14.0 <7.15.0-0"
-    }
-}
 pkg "@types/debug"{
 version "4.1.12"
 resolved "https://registry.npmjs.org/@types/debug/-/debug-4.1.12.tgz"
@@ -4440,11 +4432,6 @@ pkg typescript{
 version "5.9.3"
 resolved "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz"
 integrity "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="
-}
-pkg undici-types{
-version "7.14.0"
-resolved "https://registry.npmjs.org/undici-types/-/undici-types-7.14.0.tgz"
-integrity "sha512-QQiYxHuyZ9gQUIrmPo3IA+hUl4KYk8uSA7cHrcKd/l3p1OTpZcM0Tbp9x7FAtXdAYhlasd60ncPpgu6ihG6TOA=="
 }
 pkg unicorn-magic{
 version "0.1.0"

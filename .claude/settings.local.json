@@ -1,0 +1,53 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(fi)",
+      "Bash(xargs:*)",
+      "Bash(docker container prune:*)",
+      "Bash(open:*)",
+      "Bash(killall:*)",
+      "Bash(chmod:*)",
+      "Bash(/Users/rwalters/GitHub/elide/tools/build-arena/scripts/check-resources.sh:*)",
+      "Bash(../scripts/check-resources.sh)",
+      "Bash(docker image prune:*)",
+      "Bash(docker build:*)",
+      "Bash(docker logs:*)",
+      "Bash(lsof:*)",
+      "Bash(pnpm dev)",
+      "Bash(curl:*)",
+      "Bash(docker ps:*)",
+      "Bash(./build-images.sh:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker:*)",
+      "Bash(pnpm --version:*)",
+      "Bash(node --version:*)",
+      "Bash(/dev/null)",
+      "Bash(pnpm install:*)",
+      "Bash(timeout 5 docker images:*)",
+      "Bash(timeout 10 curl:*)",
+      "WebFetch(domain:code.claude.com)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:support.claude.com)",
+      "Bash(npm info:*)",
+      "Bash(source backend/.env)",
+      "Bash(npm view:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(source /Users/rwalters/GitHub/elide/tools/build-arena/backend/.env)",
+      "Bash(sqlite3:*)",
+      "Bash(pnpm drizzle-kit push:*)",
+      "Bash(cd:*)",
+      "Bash(cat:*)",
+      "Bash(pkill:*)",
+      "Bash(paste:*)",
+      "Bash(pnpm -s --filter backend dev:*)",
+      "Bash(pnpm exec tsx:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "elide"
+  ]
+}

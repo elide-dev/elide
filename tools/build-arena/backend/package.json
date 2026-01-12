@@ -1,0 +1,46 @@
+{
+  "name": "@elide/build-arena-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend API for Build Arena - Elide vs Standard Toolchain Comparison",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "export $(cat .env | grep -v '^#' | xargs) && tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.15.15",
+    "cors": "^2.8.5",
+    "dockerode": "^4.0.2",
+    "drizzle-orm": "^0.44.7",
+    "express": "^4.18.2",
+    "uuid": "^9.0.1",
+    "ws": "^8.16.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/dockerode": "^3.3.45",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.5",
+    "@types/uuid": "^9.0.7",
+    "@types/ws": "^8.5.10",
+    "drizzle-kit": "^0.31.6",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "elide",
+    "build",
+    "comparison",
+    "benchmark"
+  ],
+  "author": "Elide",
+  "license": "MIT"
+}

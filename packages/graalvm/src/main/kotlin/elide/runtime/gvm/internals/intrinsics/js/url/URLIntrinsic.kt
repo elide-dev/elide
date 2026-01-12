@@ -360,7 +360,12 @@ private const val GLOBAL_URL = "URL"
       // Calculate a spec-compliant value for the `searchParams` property.
       @Suppress("UNUSED_PARAMETER")
       @JvmStatic private fun computeSearchParams(uri: NativeURL, proto: KnownProtocol?) = cachedParse<URLSearchParams> {
-        TODO("not yet implemented")
+        val query = uri.query
+        if (query.isNullOrBlank()) {
+          URLSearchParamsIntrinsic.URLSearchParams()
+        } else {
+          URLSearchParamsIntrinsic.URLSearchParams(query)
+        }
       }
 
       // Calculate a spec-compliant value for the `host` property.

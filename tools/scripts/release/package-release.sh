@@ -1,7 +1,6 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 #
-# Copyright (c) 2024 Elide Technologies, Inc.
+# Copyright (c) 2025 Elide Technologies, Inc.
 #
 # Licensed under the MIT license (the "License"); you may not use this file except in compliance
 # with the License. You may obtain a copy of the License at
@@ -14,7 +13,8 @@
 #
 
 set -euo pipefail
-source tools/scripts/release/commons.sh
+source tools/scripts/release/version-set.sh
+source tools/scripts/release/platform-set.sh
 
 set +x
 
@@ -51,33 +51,33 @@ if [ "$version" = "" ]; then exit 4; fi
 if [ "$arch" = "" ]; then exit 5; fi
 
 root=$(pwd)
-echo "- Building release root (variant: $variant / platform: $platform)..."
+echo "- Building release root (variant: $variant / platform: $platform-$arch)..."
 pushd packages/cli/build/native/nativeOptimizedCompile \
-  && mkdir -p "$archive_prefix-$version-$platform/" \
-  && cp -fr elide ./*.{so,dylib,dll} $root/packages/cli/packaging/content/* resources "$archive_prefix-$version-$platform/" || echo "OK with copy warnings."
+  && mkdir -p "$archive_prefix-$version-$platform-$arch/" \
+  && cp -fr elide ./*.{so,dylib,dll} $root/packages/cli/packaging/content/* resources "$archive_prefix-$version-$platform-$arch/" || echo "OK with copy warnings."
 
-echo "- Building tar package (variant: $variant / platform: $platform)..."
-tar -cf "$archive_prefix-$version-$platform.tar" "$archive_prefix-$version-$platform/"
+echo "- Building tar package (variant: $variant / platform: $platform-$arch)..."
+tar -cf "$archive_prefix-$version-$platform-$arch.tar" "$archive_prefix-$version-$platform-$arch/"
 
-echo "- Building zip package (variant: $variant / platform: $platform)..."
-zip -v -9 -r "$archive_prefix-$version-$platform.zip" "$archive_prefix-$version-$platform/"
+echo "- Building zip package (variant: $variant / platform: $platform-$arch)..."
+zip -v -9 -r "$archive_prefix-$version-$platform-$arch.zip" "$archive_prefix-$version-$platform-$arch/"
 
-echo "- Building tgz package (variant: $variant / platform: $platform)..."
-gzip -v --best -k "$archive_prefix-$version-$platform.tar"
-mv "$archive_prefix-$version-$platform.tar.gz" "$archive_prefix-$version-$platform.tgz"
+echo "- Building tgz package (variant: $variant / platform: $platform-$arch)..."
+gzip -v --best -k "$archive_prefix-$version-$platform-$arch.tar"
+mv "$archive_prefix-$version-$platform-$arch.tar.gz" "$archive_prefix-$version-$platform-$arch.tgz"
 
-echo "- Building txz package (variant: $variant / platform: $platform)..."
-xz -v --best -k "$archive_prefix-$version-$platform.tar"
-mv "$archive_prefix-$version-$platform.tar.xz" "$archive_prefix-$version-$platform.txz"
+echo "- Building txz package (variant: $variant / platform: $platform-$arch)..."
+xz -v --best -k "$archive_prefix-$version-$platform-$arch.tar"
+mv "$archive_prefix-$version-$platform-$arch.tar.xz" "$archive_prefix-$version-$platform-$arch.txz"
 
 if [[ "$@" == *"--dry"* ]]; then
   echo "Dry run mode enabled, skipping further steps."
   exit 0
 fi
 
-echo "- Stamping releases (variant: $variant / platform: $platform)..."
+echo "- Stamping releases (variant: $variant / platform: $platform-$arch)..."
 
-if [ "$(uname -o)" = "Darwin" ]; then
+if [ "$hostPlatform" = "darwin" ]; then
   SHA256SUM="gsha256sum"
   SHA512SUM="gsha512sum"
 else

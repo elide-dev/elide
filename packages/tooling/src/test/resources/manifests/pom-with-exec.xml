@@ -1,0 +1,64 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>exec-test</artifactId>
+  <version>1.0</version>
+  <name>Exec Plugin Test</name>
+  <description>Tests exec-maven-plugin parsing</description>
+
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <id>generate-data</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>com.example.DataGenerator</mainClass>
+              <arguments>
+                <argument>--output</argument>
+                <argument>target/data</argument>
+              </arguments>
+              <classpathScope>compile</classpathScope>
+              <systemProperties>
+                <systemProperty>
+                  <key>data.format</key>
+                  <value>json</value>
+                </systemProperty>
+              </systemProperties>
+            </configuration>
+          </execution>
+          <execution>
+            <id>run-script</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>scripts/generate.sh</executable>
+              <arguments>
+                <argument>--verbose</argument>
+                <argument>src/main</argument>
+              </arguments>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <environmentVariables>
+                <ENV_VAR>test-value</ENV_VAR>
+              </environmentVariables>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

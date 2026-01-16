@@ -619,6 +619,9 @@ dependencies {
   // Secrets
   implementation(projects.packages.secrets)
 
+  // Version management
+  implementation(projects.packages.versions)
+
   // KotlinX
   implementation(libs.kotlinx.serialization.core)
   implementation(libs.kotlinx.serialization.json)

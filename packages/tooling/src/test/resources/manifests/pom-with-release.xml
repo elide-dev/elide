@@ -1,0 +1,30 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>release-test</artifactId>
+  <version>1.0</version>
+  <name>Release Flag Test</name>
+  <description>Tests maven-compiler-plugin release flag precedence</description>
+
+  <properties>
+    <!-- Properties should be overridden by plugin config -->
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.14.0</version>
+        <configuration>
+          <!-- Release flag takes precedence over source/target -->
+          <release>17</release>
+          <source>11</source>
+          <target>11</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

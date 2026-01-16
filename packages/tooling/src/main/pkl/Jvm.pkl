@@ -90,6 +90,12 @@ open class Jar extends artifacts.Artifact {
   /// Keys and values to include in the JAR's manifest.
   manifest: Mapping<JarManifestKey, JarManifestValue> = new {}
 
+  /// Manifest file path
+  manifestFile: common.FilePath?
+
+  /// Patterns to exclude
+  excludes: Listing<String> = new {}
+
   /// Options for the JAR.
   options: JarOptions = new {}
 }

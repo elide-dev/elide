@@ -90,4 +90,12 @@ public actual class ElideVersionInfo actual constructor (
     // must be equal or greater
     return compared >= 0
   }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other !is ElideVersionInfo) return false
+    return asString == other.asString
+  }
+
+  override fun hashCode(): Int = asString.hashCode()
 }

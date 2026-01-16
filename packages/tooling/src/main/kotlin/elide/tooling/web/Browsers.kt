@@ -12,6 +12,8 @@
  */
 package elide.tooling.web
 
+import kotlinx.serialization.Serializable
+
 /**
  * # Browsers
  *
@@ -35,6 +37,7 @@ package elide.tooling.web
  * object. Other types exist for specifying browsers, in versioned or unqualified form, and, as applicable, with other
  * support tokens specified.
  */
+@Serializable
 public sealed interface Browsers {
   /**
    * Produce a sequence of constituent [Browser] instances.
@@ -76,11 +79,13 @@ public sealed interface Browsers {
    * Specifies a type hierarchy representing a single browser instance, potentially with additional metadata (versions
    * or ranges, and so on).
    */
+  @Serializable
   public sealed interface Browser: Browsers
 
   /**
    * Default implementation of a [Browser] instance, which just represents the spec via a string.
    */
+  @Serializable
   public data class DefaultBrowser internal constructor (private val token: String): Browser {
     override fun asTokens(): Set<String> = setOf(token)
     override fun asSequence(): Sequence<Browser> = sequenceOf(this)
@@ -97,11 +102,13 @@ public sealed interface Browsers {
    * Specifies a suite of browser information, i.e., collectively, a suite of [Browser] instances; browser lists can be
    * parsed from a single or multiple strings, consisting of Browserslist tokens and expressions.
    */
+  @Serializable
   public sealed interface BrowserList: Browsers
 
   /**
    * Default implementation of a [BrowserList] instance, which holds more than one [Browser].
    */
+  @Serializable
   public data class DefaultBrowserList internal constructor (
     private val suite: List<Browser>,
   ): BrowserList {

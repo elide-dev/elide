@@ -16,6 +16,8 @@ package elide.tool.cli
 import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.assertDoesNotThrow
 import java.nio.file.Files
+import kotlin.io.path.absolutePathString
+import kotlin.io.path.deleteRecursively
 import kotlin.test.assertNotNull
 import elide.testing.annotations.Test
 import elide.testing.annotations.TestCase
@@ -271,5 +273,20 @@ import elide.testing.annotations.TestCase
         "5"
       )
     }
+  }
+
+  @Test fun testEntrypointManifest() {
+    val dir = Files.createTempDirectory("elide-test")
+    val manifest = dir.resolve("elide.pkl")
+    Files.copy(ElideToolTest::class.java.getResourceAsStream("/manifest/elide.pkl")!!, manifest)
+    assertDoesNotThrow {
+      assertToolRunsWith(
+        "manifest",
+        "--project",
+        dir.absolutePathString(),
+      )
+    }
+    Files.delete(manifest)
+    Files.delete(dir)
   }
 }

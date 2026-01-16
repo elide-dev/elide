@@ -27,15 +27,14 @@ import io.micronaut.core.annotation.Introspected
 import org.graalvm.nativeimage.ImageInfo
 import org.graalvm.nativeimage.ProcessProperties
 import picocli.CommandLine
-import picocli.CommandLine.Command
-import picocli.CommandLine.Help
-import picocli.CommandLine.Parameters
-import picocli.CommandLine.ScopeType
+import picocli.CommandLine.*
 import java.util.*
+import kotlinx.coroutines.runBlocking
 import kotlin.time.TimeSource
 import elide.annotations.Context
 import elide.annotations.Eager
 import elide.annotations.Inject
+import elide.versions.VersionManager
 import elide.runtime.core.HostPlatform
 import elide.runtime.core.HostPlatform.OperatingSystem
 import elide.runtime.gvm.internals.ProcessManager
@@ -53,13 +52,14 @@ import elide.tool.cli.cmd.discord.ToolDiscordCommand
 import elide.tool.cli.cmd.help.HelpCommand
 import elide.tool.cli.cmd.info.ToolInfoCommand
 import elide.tool.cli.cmd.init.InitCommand
+import elide.tool.cli.cmd.versions.ToolVersionsCommand
 import elide.tool.cli.cmd.manifest.ManifestCommand
 import elide.tool.cli.cmd.pkl.ToolPklCommand
 import elide.tool.cli.cmd.project.ToolProjectCommand
-import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.repl.ToolShellCommand
 import elide.tool.cli.cmd.s3.ToolS3Command
 import elide.tool.cli.cmd.secrets.ToolSecretsCommand
+import elide.tool.cli.cmd.tool.ToolInvokeCommand
 import elide.tool.cli.cmd.tool.jar.JarToolAdapter
 import elide.tool.cli.cmd.tool.javac.JavaCompilerAdapter
 import elide.tool.cli.cmd.tool.javadoc.JavadocToolAdapter
@@ -67,6 +67,7 @@ import elide.tool.cli.cmd.tool.jib.JibAdapter
 import elide.tool.cli.cmd.tool.kotlinc.KotlinCompilerAdapter
 import elide.tool.cli.cmd.tool.nativeImage.NativeImageAdapter
 import elide.tool.cli.options.CommonOptions
+import elide.versions.VersionsValues
 import elide.tool.cli.options.ProjectOptions
 import elide.tool.cli.state.CommandState
 import elide.tool.engine.NativeEngine
@@ -138,6 +139,7 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
     Elide.Completions::class,
     ToolSecretsCommand::class,
     ToolS3Command::class,
+    ToolVersionsCommand::class,
   ],
   customSynopsis = [
     "",
@@ -355,6 +357,29 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
       }
     }
 
+    // parse version delegation flags and run with a different version of elide if applicable
+    suspend fun runVersion(args: Array<String>, manager: VersionManager): Int? {
+      if (VersionsValues.IGNORE_VERSION_FLAG in args || VersionsValues.VERSIONS_COMMAND in args) return null
+      var args: Array<String> = args
+      val requested = args.find { it.startsWith(VersionsValues.USE_VERSION_FLAG) }?.let {
+        val mutableArgs = args.toMutableList()
+        val index = args.indexOf(it)
+        mutableArgs.removeAt(index)
+        val version = if (it == VersionsValues.USE_VERSION_FLAG) {
+          mutableArgs.removeAt(index)
+          args.getOrNull(index + 1)
+        } else it.substring(VersionsValues.USE_VERSION_FLAG.length + 1)
+        args = mutableArgs.toTypedArray()
+        version
+      } ?: manager.readVersionFile() ?: return null
+      ToolVersionsCommand.installElide("Installing Elide version \"$requested\" to \"${manager.getDefaultInstallPath()}\"") {
+        manager.getOrInstallTargetVersion(ELIDE_TOOL_VERSION, requested, it)
+      }?.let {
+        return ProcessBuilder().command(it, *args).inheritIO().start().waitFor()
+      }
+      return null
+    }
+
     /** CLI entrypoint and [args]. */
     @JvmStatic fun entry(args: Array<String>): Int {
       initLog("Firing entrypoint")
@@ -383,6 +408,13 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
         .start()
         .also { initLog("Application context started; loading tool entrypoint") }
         .use {
+          // if a different version of elide is requested, run that version
+          runBlocking {
+            runVersion(args, it.getBean(VersionManager::class.java))
+          }?.let { exitCode ->
+            return exitCode
+          }
+
           Locale.setDefault(globalLocale)
           initLog("Preparing CLI configuration (locale: $globalLocale)")
 

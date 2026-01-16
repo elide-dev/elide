@@ -15,6 +15,7 @@ package elide.tooling.project.manifest
 import java.net.URI
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicReference
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import elide.core.api.Symbolic
@@ -63,6 +64,7 @@ public data class ElidePackageManifest(
   val secrets: SecretSettings? = null,
   val engine: RuntimeEngineSettings? = null,
   val server: ServerSettings? = null,
+  val execTasks: List<ExecTask> = emptyList(),
 ) : PackageManifest {
   @Transient private val workspace: AtomicReference<Pair<Path, ElidePackageManifest>> = AtomicReference(null)
 
@@ -80,6 +82,44 @@ public data class ElidePackageManifest(
     public val from: List<String>
     public val dependsOn: List<String>
   }
+
+  /** Type of exec task - either running a Java main class or an external executable */
+  @Serializable public enum class ExecTaskType {
+    JAVA,        // Run a Java main class with classpath
+    EXECUTABLE,  // Run an external executable/binary
+  }
+
+  /** Maven build phase for exec task ordering */
+  @Serializable public enum class BuildPhase {
+    GENERATE_SOURCES,      // before compilation
+    PROCESS_RESOURCES,     // resource processing
+    COMPILE,               // during/after compilation
+    PROCESS_CLASSES,       // after compilation
+    TEST_COMPILE,          // test compilation
+    TEST,                  // test execution
+    PACKAGE,               // packaging
+  }
+
+  /** Classpath scope for Java exec tasks */
+  @Serializable public enum class ClasspathScope {
+    COMPILE,
+    RUNTIME,
+    TEST,
+  }
+
+  /** Exec task parsed from Maven exec-maven-plugin */
+  @Serializable public data class ExecTask(
+    val id: String,
+    val type: ExecTaskType,
+    val phase: BuildPhase = BuildPhase.COMPILE,
+    val mainClass: String? = null,      // For JAVA type
+    val executable: String? = null,     // For EXECUTABLE type
+    val args: List<String> = emptyList(),
+    val env: Map<String, String> = emptyMap(),
+    val classpathScope: ClasspathScope = ClasspathScope.COMPILE,
+    val systemProperties: Map<String, String> = emptyMap(),
+    val workingDirectory: String? = null,
+  )
 
   @Serializable public data class JarResource(
     val path: String,
@@ -140,6 +180,8 @@ public data class ElidePackageManifest(
     val sources: List<String> = emptyList(),
     val resources: Map<String, JarResource> = emptyMap(),
     val manifest: Map<String, String> = emptyMap(),
+    val manifestFile: String? = null,
+    val excludes: List<String> = emptyList(),
     val options: JarOptions = JarOptions(),
     override val from: List<String> = emptyList(),
     override val dependsOn: List<String> = emptyList(),
@@ -158,6 +200,45 @@ public data class ElidePackageManifest(
     override val from: List<String> = emptyList(),
     override val dependsOn: List<String> = emptyList(),
   ) : Artifact
+
+  /** Javadoc JAR artifact - generates and packages Javadoc documentation */
+  @Serializable public data class JavadocJar(
+    val groups: Map<String, List<String>> = emptyMap(),  // title -> packages
+    val links: List<String> = emptyList(),               // external doc links
+    val excludes: List<String> = emptyList(),
+    val windowTitle: String? = null,
+    val docTitle: String? = null,
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ) : Artifact
+
+  /** Source JAR artifact - packages source files */
+  @Serializable public data class SourceJar(
+    val classifier: String? = null,      // e.g., "sources" or "no-tzdb-sources"
+    val excludes: List<String> = emptyList(),
+    val includes: List<String> = emptyList(),
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ) : Artifact
+
+  /** Assembly archive artifact - creates distribution archives (tar.gz, zip) */
+  @Serializable public data class Assembly(
+    val id: String,
+    val formats: List<String> = listOf("tar.gz", "zip"),
+    val baseDirectory: String? = null,
+    val fileSets: List<AssemblyFileSet> = emptyList(),
+    val descriptorPath: String? = null,  // path to assembly descriptor XML
+    override val from: List<String> = emptyList(),
+    override val dependsOn: List<String> = emptyList(),
+  ) : Artifact
+
+  /** File set within an assembly descriptor */
+  @Serializable public data class AssemblyFileSet(
+    val directory: String? = null,
+    val outputDirectory: String? = null,
+    val includes: List<String> = emptyList(),
+    val excludes: List<String> = emptyList(),
+  )
 
   @JvmRecord @Serializable public data class SourceSet(
     val type: SourceSetType = SourceSetType.Main,
@@ -475,7 +556,23 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class JavaScriptSettings(
     val debug: Boolean = false,
+    val ecma: EcmaStandard? = null,
+    val packageManager: String? = null,
+    val runner: String? = null,
   )
+
+  @Serializable
+  public sealed interface EcmaStandard {
+    @JvmRecord @Serializable public data class NumericEcmaStandard(public val number: UInt) : EcmaStandard {
+      override val argValue: String get() = number.toString()
+    }
+
+    @JvmRecord @Serializable public data class StringEcmaStandard(public val name: String) : EcmaStandard {
+      override val argValue: String get() = name
+    }
+
+    public val argValue: String
+  }
 
   @JvmRecord @Serializable public data class TypeScriptSettings(
     val debug: Boolean = false,
@@ -668,6 +765,7 @@ public data class ElidePackageManifest(
 
   @JvmRecord @Serializable public data class NativeImage(
     val name: String? = null,
+    @SerialName("imageType")
     val type: NativeImageType = NativeImageType.BINARY,
     val entrypoint: String? = null,
     val moduleName: String? = null,
@@ -839,6 +937,8 @@ public fun ElidePackageManifest.merge(other: ElidePackageManifest): ElidePackage
     scripts = scripts + other.scripts,
     artifacts = artifacts + other.artifacts,
     dependencies = dependencies.merge(other.dependencies),
+    sources = sources + other.sources,
+    execTasks = execTasks + other.execTasks,
     jvm = (other.jvm ?: jvm),
     kotlin = (other.kotlin ?: kotlin),
     python = (other.python ?: python),

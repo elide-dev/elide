@@ -1,0 +1,13 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>legacy-test</artifactId>
+  <version>1.0</version>
+  <name>Legacy JVM Target Test</name>
+  <description>Tests normalization of 1.8 style JVM targets</description>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+</project>

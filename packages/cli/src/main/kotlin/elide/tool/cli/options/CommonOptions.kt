@@ -22,6 +22,7 @@ import java.util.*
 import kotlin.properties.Delegates
 import elide.tooling.cli.Statics
 import elide.tool.cli.output.TOOL_LOGGER_NAME
+import elide.versions.VersionsValues
 
 private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
 
@@ -114,6 +115,22 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
   )
   var internalOptions: Map<String, Optional<String>> = emptyMap()
 
+  /** Specifies that `.elideversion` in current directory should be ignored. */
+  @Option(
+    names = [VersionsValues.IGNORE_VERSION_FLAG],
+    description = ["Ignore .elideversion file and ${VersionsValues.USE_VERSION_FLAG}"],
+    defaultValue = "false",
+  )
+  var ignoreVersion: Boolean = false
+
+  /** Specifies a version of Elide to be used, overriding `.elideversion`. */
+  @Option(
+    names = [VersionsValues.USE_VERSION_FLAG],
+    description = ["Version of Elide to run"],
+    paramLabel = "version",
+  )
+  var useVersion: String? = null
+
   override fun merge(other: CommonOptions?): CommonOptions {
     val options = CommonOptions()
     options.verbose = this.verbose || other?.verbose == true
@@ -123,6 +140,8 @@ private const val DEFAULT_TIMEOUT_SECONDS: Int = 1
     options.timeoutSeconds = this.timeoutSeconds + (other?.timeoutSeconds ?: 0)
     options.systemProperties = this.systemProperties + (other?.systemProperties ?: emptyMap())
     options.internalOptions = this.internalOptions + (other?.internalOptions ?: emptyMap())
+    options.ignoreVersion = this.ignoreVersion || other?.ignoreVersion == true
+    options.useVersion = other?.useVersion ?: useVersion
     return options
   }
 }

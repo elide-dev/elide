@@ -42,6 +42,12 @@ class McpResource {
   /// Path to the file.
   path: _common.FilePath
 
+  /// Resource name
+  name: String = ""
+
+  /// Resource description
+  description: String = ""
+
   /// Mime type to explicitly set; one is detected if not provided.
   mimeType: String?
 }

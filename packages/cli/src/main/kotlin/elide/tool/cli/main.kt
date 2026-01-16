@@ -29,11 +29,12 @@ import kotlinx.coroutines.runBlocking
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.system.exitProcess
+import elide.versions.VersionManager
 import elide.runtime.gvm.kotlin.KotlinLanguage
 import elide.tool.cli.Elide.Companion.installStatics
+import elide.tool.cli.Elide.Companion.runVersion
 import elide.tool.cli.cmd.repl.HandledExit
 import elide.tooling.cli.Statics
-import elide.tooling.project.PackageManifestService
 
 // Whether to enable the experimental V2 entrypoint through Clikt.
 private const val ENABLE_CLI_ENTRY_V2 = false
@@ -82,6 +83,8 @@ private fun sorryIHaveToFactory(args: Array<String>): CommandLine =
 private inline fun runInner(args: Array<String>): Int = when (ENABLE_CLI_ENTRY_V2) {
   false -> Elide.entry(args)
   true -> createApplicationContext(args).start().use { applicationContext ->
+    // if a different version of elide is requested, run that version
+    runBlocking { runVersion(args, applicationContext.getBean(VersionManager::class.java)) } ?:
       MicronautFactory(applicationContext).use { factory ->
         runCatching {
           val procInfo = ProcessHandle.current().info()

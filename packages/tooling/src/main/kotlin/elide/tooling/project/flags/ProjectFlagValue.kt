@@ -12,6 +12,7 @@
  */
 package elide.tooling.project.flags
 
+import kotlinx.serialization.Serializable
 import elide.annotations.API
 
 /**
@@ -22,6 +23,7 @@ import elide.annotations.API
  *
  * @see ProjectFlag concept of project flags
  */
+@Serializable
 @API public sealed interface ProjectFlagValue {
   public val asString: String
 
@@ -30,6 +32,7 @@ import elide.annotations.API
    *
    * Sentinel which indicates that no value is set for a given flag.
    */
+  @Serializable
   public data object NoValue : ProjectFlagValue {
     override val asString: String get() = ""
   }
@@ -41,6 +44,7 @@ import elide.annotations.API
    *
    * @property value Raw value of this flag.
    */
+  @Serializable
   public sealed interface BooleanTypeValue : ProjectFlagValue {
     public val value: Boolean
     override val asString: String get() = value.toString()
@@ -51,6 +55,7 @@ import elide.annotations.API
    *
    * Sentinel which indicates a boolean `true` value.
    */
+  @Serializable
   public data object True : BooleanTypeValue {
     override val value: Boolean get() = true
   }
@@ -60,6 +65,7 @@ import elide.annotations.API
    *
    * Sentinel which indicates a boolean `false` value.
    */
+  @Serializable
   public data object False : BooleanTypeValue {
     override val value: Boolean get() = false
   }
@@ -71,6 +77,7 @@ import elide.annotations.API
    *
    * @property value Raw value of this flag.
    */
+  @Serializable
   public sealed interface StringTypeValue : ProjectFlagValue {
     public val value: String
     override val asString: String get() = value
@@ -83,5 +90,6 @@ import elide.annotations.API
    *
    * @property value Raw value of this flag.
    */
+  @Serializable
   @JvmInline public value class StringValue (override val value: String) : StringTypeValue
 }

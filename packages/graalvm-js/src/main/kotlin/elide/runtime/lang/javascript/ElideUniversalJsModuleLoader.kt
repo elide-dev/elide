@@ -29,6 +29,7 @@ import com.oracle.truffle.api.TruffleFile
 import com.oracle.truffle.api.frame.VirtualFrame
 import com.oracle.truffle.api.source.Source
 import com.oracle.truffle.js.builtins.commonjs.NpmCompatibleESModuleLoader
+import com.oracle.truffle.js.lang.JavaScriptLanguage
 import com.oracle.truffle.js.nodes.JSFrameDescriptor
 import com.oracle.truffle.js.nodes.JSFrameSlot
 import com.oracle.truffle.js.runtime.JSArguments
@@ -440,15 +441,70 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     val (prefix, unprefixed) = parsePrefixedMaybe(requested)
     val mod = toModuleInfo(unprefixed)
 
+    // Try TypeScript extension resolution for relative imports without extensions
+    val resolvedRequest = tryResolveWithTypeScriptExtensions(referencingModule, moduleRequest, requested)
+      ?: moduleRequest
+
     return when (determineModuleStrategy(requested, referencingModule, builtin = mod)) {
-      FALLBACK -> super.resolveImportedModule(referencingModule, moduleRequest)
+      FALLBACK -> super.resolveImportedModule(referencingModule, resolvedRequest)
       DELEGATED -> delegatedModuleCache.computeIfAbsent(unprefixed) {
-        resolveDelegatedImportedModule(referencingModule, moduleRequest, unprefixed)
+        resolveDelegatedImportedModule(referencingModule, resolvedRequest, unprefixed)
       }
       SYNTHETIC -> injectedModuleCache.computeIfAbsent(unprefixed) {
-        synthesizeInjected(referencingModule, moduleRequest, prefix, unprefixed)
+        synthesizeInjected(referencingModule, resolvedRequest, prefix, unprefixed)
       }
     }
+  }
+
+  /**
+   * Try to resolve a relative import by adding TypeScript/JavaScript extensions.
+   * Returns a new ModuleRequest with the resolved path, or null if resolution fails.
+   */
+  private fun tryResolveWithTypeScriptExtensions(
+    referencingModule: ScriptOrModule,
+    moduleRequest: ModuleRequest,
+    specifier: String,
+  ): ModuleRequest? {
+    // Only handle relative imports without extensions
+    if (!isRelativeImport(specifier) || hasFileExtension(specifier)) {
+      return null
+    }
+
+    // Only try resolution when referencing from TypeScript sources
+    val source = referencingModule.source
+    if (source == null || !isTypeScriptSource(source)) {
+      return null
+    }
+
+    val env = JavaScriptLanguage.getCurrentEnv()
+    val basePath = source.path
+    val baseUri = source.uri
+
+    val parentFile: TruffleFile? = when {
+      basePath != null -> env.getPublicTruffleFile(basePath).parent
+      baseUri != null && baseUri.scheme != "truffle" -> env.getPublicTruffleFile(baseUri).parent
+      else -> null
+    } ?: return null
+
+    // Try each TypeScript/JavaScript extension
+    for (ext in typeScriptExtensionsToTry) {
+      val resolvedPath = specifier + ext
+      val resolvedFile = parentFile.resolve(resolvedPath)
+      if (resolvedFile != null && resolvedFile.exists()) {
+        return ModuleRequest.create(Strings.constant(resolvedPath))
+      }
+    }
+
+    // Try index file resolution (./foo -> ./foo/index.ts)
+    for (ext in typeScriptExtensionsToTry) {
+      val indexPath = "$specifier/index$ext"
+      val indexFile = parentFile.resolve(indexPath)
+      if (indexFile != null && indexFile.exists()) {
+        return ModuleRequest.create(Strings.constant(indexPath))
+      }
+    }
+
+    return null
   }
 
   override fun loadModuleFromFile(
@@ -526,6 +582,27 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
   )
 
   companion object : CommonJSModuleResolver {
+    // Extensions to try when resolving TypeScript imports (in order of preference)
+    private val typeScriptExtensionsToTry = listOf(".ts", ".tsx", ".mts", ".cts", ".js", ".mjs", ".cjs", ".jsx")
+
+    // Check if the specifier is a relative import
+    private fun isRelativeImport(specifier: String): Boolean {
+      return specifier.startsWith("./") || specifier.startsWith("../")
+    }
+
+    // Check if the specifier already has a file extension
+    private fun hasFileExtension(specifier: String): Boolean {
+      val filename = specifier.substringAfterLast('/')
+      return filename.contains('.') && !filename.startsWith('.')
+    }
+
+    // Check if the source is a TypeScript file
+    private fun isTypeScriptSource(source: Source): Boolean {
+      val name = source.name ?: source.path ?: return false
+      val ext = name.substringAfterLast('.', "")
+      return ext in tsExtensions
+    }
+
     private fun parsePrefixedMaybe(identifier: String): Pair<String?, String> {
       val indexOfSplit = identifier.indexOf(':')
       val prefix = if (indexOfSplit != -1) identifier.substring(0, indexOfSplit) else null

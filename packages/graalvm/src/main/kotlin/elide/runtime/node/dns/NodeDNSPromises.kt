@@ -24,11 +24,16 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
+import elide.runtime.interop.toProxyArray
+import elide.runtime.interop.toStringArray
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
 import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.JsPromise.Companion.spawn
 import elide.runtime.intrinsics.js.node.DNSPromisesAPI
 import elide.runtime.lang.javascript.NodeModuleName
+import elide.runtime.node.dns.DnsHelpers.parseArrayResult
+import elide.runtime.node.dns.DnsHelpers.parseStringResult
+import elide.runtime.node.dns.DnsHelpers.resolveByType
 
 @Intrinsic internal class NodeDNSPromisesModule @Inject constructor(
   private val executorProvider: GuestExecutorProvider,

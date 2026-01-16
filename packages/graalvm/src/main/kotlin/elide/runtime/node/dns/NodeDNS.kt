@@ -25,156 +25,16 @@ import elide.runtime.gvm.internals.intrinsics.js.AbstractNodeBuiltinModule
 import elide.runtime.gvm.loader.ModuleInfo
 import elide.runtime.gvm.loader.ModuleRegistry
 import elide.runtime.interop.ReadOnlyProxyObject
+import elide.runtime.interop.toProxyArray
+import elide.runtime.interop.toStringArray
 import elide.runtime.intrinsics.GuestIntrinsic.MutableIntrinsicBindings
-import elide.runtime.intrinsics.js.JsPromise
 import elide.runtime.intrinsics.js.JsPromise.Companion.spawn
 import elide.runtime.intrinsics.js.node.DNSAPI
 import elide.runtime.lang.javascript.NodeModuleName
-
-// -- Result Parsing --
-
-internal sealed class DnsResult<out T> {
-  data class Success<T>(val data: T) : DnsResult<T>()
-  data class Error(val code: String, val message: String) : DnsResult<Nothing>()
-}
-
-internal fun parseArrayResult(result: Array<String>): DnsResult<List<String>> {
-  if (result.isEmpty()) return DnsResult.Error("ENOTFOUND", "No results")
-  val first = result[0]
-  return when {
-    first == "OK" -> DnsResult.Success(result.drop(1))
-    ':' in first -> DnsResult.Error(first.substringBefore(':'), first.substringAfter(':'))
-    else -> DnsResult.Error("EFORMERR", "Unexpected response format")
-  }
-}
-
-internal fun parseStringResult(result: String): DnsResult<String> {
-  if (result.isEmpty()) return DnsResult.Error("ENOTFOUND", "No results")
-  val idx = result.indexOf(':')
-  if (idx == -1) return DnsResult.Error("EFORMERR", "Unexpected response format")
-  val prefix = result.substring(0, idx)
-  val data = result.substring(idx + 1)
-  return if (prefix == "OK") DnsResult.Success(data) else DnsResult.Error(prefix, data)
-}
-
-// -- Proxy Helpers --
-
-internal fun List<*>.toProxyArray(): ProxyArray = object : ProxyArray {
-  override fun get(index: Long): Any? = this@toProxyArray[index.toInt()]
-  override fun set(index: Long, value: Value?) {}
-  override fun getSize(): Long = this@toProxyArray.size.toLong()
-}
-
-internal fun Array<String>.toProxyArray(): ProxyArray = toList().toProxyArray()
-
-internal fun Value?.toStringArray(): Array<String> {
-  if (this == null || !hasArrayElements()) return emptyArray()
-  return Array(arraySize.toInt()) { getArrayElement(it.toLong()).asString() }
-}
-
-internal fun dnsError(code: String, message: String): ProxyObject =
-  ProxyObject.fromMap(mapOf("code" to code, "message" to message, "name" to "Error"))
-
-internal fun <T> DnsResult<T>.map(transform: (T) -> Any): DnsResult<Any> = when (this) {
-  is DnsResult.Success -> DnsResult.Success(transform(data))
-  is DnsResult.Error -> this
-}
-
-internal class DnsException(val code: String, override val message: String) : Exception("$code: $message")
-
-internal fun resolveByType(hostname: String, type: String): Array<String> = when (type) {
-  "A" -> NativeDNS.resolve4(hostname)
-  "AAAA" -> NativeDNS.resolve6(hostname)
-  "ANY" -> NativeDNS.resolveAny(hostname)
-  "CNAME" -> NativeDNS.resolveCname(hostname)
-  "CAA" -> NativeDNS.resolveCaa(hostname)
-  "MX" -> NativeDNS.resolveMx(hostname)
-  "NAPTR" -> NativeDNS.resolveNaptr(hostname)
-  "NS" -> NativeDNS.resolveNs(hostname)
-  "PTR" -> NativeDNS.resolvePtr(hostname)
-  "SRV" -> NativeDNS.resolveSrv(hostname)
-  "TLSA" -> NativeDNS.resolveTlsa(hostname)
-  "TXT" -> NativeDNS.resolveTxt(hostname)
-  else -> NativeDNS.resolve4(hostname)
-}
-
-// -- Record Parsers --
-
-internal object RecordParsers {
-  fun mx(raw: String): Map<String, Any> = raw.split(":").let {
-    mapOf("priority" to (it.getOrNull(0)?.toIntOrNull() ?: 0), "exchange" to (it.getOrNull(1) ?: ""))
-  }
-
-  fun srv(raw: String): Map<String, Any> = raw.split(":").let {
-    mapOf(
-      "priority" to (it.getOrNull(0)?.toIntOrNull() ?: 0),
-      "weight" to (it.getOrNull(1)?.toIntOrNull() ?: 0),
-      "port" to (it.getOrNull(2)?.toIntOrNull() ?: 0),
-      "name" to (it.getOrNull(3) ?: "")
-    )
-  }
-
-  fun naptr(raw: String): Map<String, Any> = raw.split(":").let {
-    mapOf(
-      "order" to (it.getOrNull(0)?.toIntOrNull() ?: 0),
-      "preference" to (it.getOrNull(1)?.toIntOrNull() ?: 0),
-      "flags" to (it.getOrNull(2) ?: ""),
-      "service" to (it.getOrNull(3) ?: ""),
-      "regexp" to (it.getOrNull(4) ?: ""),
-      "replacement" to (it.getOrNull(5) ?: "")
-    )
-  }
-
-  fun caa(raw: String): Map<String, Any> = raw.split(":", limit = 3).let {
-    val critical = it.getOrNull(0)?.toIntOrNull() ?: 0
-    val tag = it.getOrNull(1) ?: ""
-    val value = it.getOrNull(2) ?: ""
-    mapOf("critical" to critical, tag to value)
-  }
-
-  fun soa(raw: String): Map<String, Any> = raw.split(":").let {
-    mapOf(
-      "nsname" to (it.getOrNull(0) ?: ""),
-      "hostmaster" to (it.getOrNull(1) ?: ""),
-      "serial" to (it.getOrNull(2)?.toLongOrNull() ?: 0L),
-      "refresh" to (it.getOrNull(3)?.toIntOrNull() ?: 0),
-      "retry" to (it.getOrNull(4)?.toIntOrNull() ?: 0),
-      "expire" to (it.getOrNull(5)?.toIntOrNull() ?: 0),
-      "minttl" to (it.getOrNull(6)?.toIntOrNull() ?: 0)
-    )
-  }
-
-  fun tlsa(raw: String): Map<String, Any> = raw.split(":", limit = 4).let {
-    val hex = it.getOrNull(3) ?: ""
-    val data = if (hex.isNotEmpty()) hex.chunked(2).map { b -> b.toInt(16).toByte() }.toByteArray() else byteArrayOf()
-    mapOf(
-      "certUsage" to (it.getOrNull(0)?.toIntOrNull() ?: 0),
-      "selector" to (it.getOrNull(1)?.toIntOrNull() ?: 0),
-      "match" to (it.getOrNull(2)?.toIntOrNull() ?: 0),
-      "data" to data
-    )
-  }
-
-  fun any(record: String): Map<String, Any> {
-    val idx = record.indexOf(':')
-    if (idx == -1) return mapOf("type" to "UNKNOWN", "value" to record)
-    val type = record.substring(0, idx)
-    val data = record.substring(idx + 1)
-    return when (type) {
-      "A" -> data.split(":").let { mapOf("type" to "A", "address" to it[0], "ttl" to (it.getOrNull(1)?.toIntOrNull() ?: 0)) }
-      "AAAA" -> {
-        val lastColon = data.lastIndexOf(':')
-        mapOf("type" to "AAAA", "address" to data.substring(0, lastColon), "ttl" to (data.substring(lastColon + 1).toIntOrNull() ?: 0))
-      }
-      "MX" -> mx(data) + ("type" to "MX")
-      "TXT" -> mapOf("type" to "TXT", "entries" to listOf(data))
-      "NS" -> mapOf("type" to "NS", "value" to data)
-      "CNAME" -> mapOf("type" to "CNAME", "value" to data)
-      "SOA" -> soa(data) + ("type" to "SOA")
-      else -> mapOf("type" to type, "value" to data)
-    }
-  }
-}
+import elide.runtime.node.dns.DnsHelpers.dnsError
+import elide.runtime.node.dns.DnsHelpers.parseArrayResult
+import elide.runtime.node.dns.DnsHelpers.parseStringResult
+import elide.runtime.node.dns.DnsHelpers.resolveByType
 
 // -- Module --
 

@@ -441,13 +441,59 @@ internal class ElideUniversalJsModuleLoader private constructor(realm: JSRealm) 
     val mod = toModuleInfo(unprefixed)
 
     return when (determineModuleStrategy(requested, referencingModule, builtin = mod)) {
-      FALLBACK -> super.resolveImportedModule(referencingModule, moduleRequest)
+      FALLBACK -> resolveWithExportsFallback(referencingModule, moduleRequest, requested)
       DELEGATED -> delegatedModuleCache.computeIfAbsent(unprefixed) {
         resolveDelegatedImportedModule(referencingModule, moduleRequest, unprefixed)
       }
       SYNTHETIC -> injectedModuleCache.computeIfAbsent(unprefixed) {
         synthesizeInjected(referencingModule, moduleRequest, prefix, unprefixed)
       }
+    }
+  }
+
+  /**
+   * Try to resolve using package.json exports before falling back to GraalJS default behavior.
+   *
+   * GraalJS's NpmCompatibleESModuleLoader throws "Unsupported package exports" when it encounters
+   * packages with an `exports` field. This method intercepts npm package resolution and handles
+   * the exports field according to Node.js specification, supporting nested conditional exports.
+   */
+  private fun resolveWithExportsFallback(
+    referencingModule: ScriptOrModule,
+    moduleRequest: ModuleRequest,
+    specifier: String,
+  ): AbstractModuleRecord {
+    // Only try exports resolution for bare specifiers (npm packages)
+    if (!specifier.startsWith(".") && !specifier.startsWith("/") && ":" !in specifier) {
+      val parentPath = getReferencingModulePath(referencingModule)
+      if (parentPath != null) {
+        val resolved = PackageExportsResolver.tryResolveWithExports(
+          specifier,
+          parentPath,
+          realm.env,
+          realm,
+        )
+        if (resolved != null) {
+          return loadModuleFromFile(referencingModule, moduleRequest, resolved, resolved.path)
+            ?: super.resolveImportedModule(referencingModule, moduleRequest)
+        }
+      }
+    }
+    
+    // Fall back to GraalJS default behavior
+    return super.resolveImportedModule(referencingModule, moduleRequest)
+  }
+
+  /**
+   * Get the file path of the referencing module.
+   */
+  private fun getReferencingModulePath(referencingModule: ScriptOrModule): TruffleFile? {
+    val source = referencingModule.source
+    val path = source?.path ?: realm.contextOptions.requireCwd
+    return if (path != null) {
+      realm.env.getPublicTruffleFile(path)
+    } else {
+      null
     }
   }
 

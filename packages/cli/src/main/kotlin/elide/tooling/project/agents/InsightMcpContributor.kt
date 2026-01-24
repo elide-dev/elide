@@ -220,7 +220,7 @@ internal class InsightMcpContributor : McpContributor {
 
     addTool(
       name = "trace-functions",
-      description = "Trace function entry/exit with arguments and return values. Useful for understanding control flow.",
+      description = "Trace function entry/exit with arguments and return values. Supports all polyglot languages.",
       inputSchema = Tool.Input(
         properties = buildJsonObject {
           putJsonObject("code") {
@@ -229,7 +229,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("functions") {
             put("type", JsonPrimitive("array"))
@@ -250,7 +250,7 @@ internal class InsightMcpContributor : McpContributor {
 
     addTool(
       name = "count-calls",
-      description = "Count how many times each function is called. Useful for profiling.",
+      description = "Count how many times each function is called. Supports all polyglot languages.",
       inputSchema = Tool.Input(
         properties = buildJsonObject {
           putJsonObject("code") {
@@ -259,7 +259,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -291,7 +291,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
         },
         required = listOf("code")
@@ -313,7 +313,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -349,7 +349,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -381,7 +381,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -422,7 +422,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -458,7 +458,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -490,7 +490,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -531,7 +531,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("line") {
             put("type", JsonPrimitive("number"))
@@ -576,7 +576,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("maxStatements") {
             put("type", JsonPrimitive("number"))
@@ -603,7 +603,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("maxExpressions") {
             put("type", JsonPrimitive("number"))
@@ -630,7 +630,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("includeInternals") {
             put("type", JsonPrimitive("boolean"))
@@ -661,7 +661,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
         },
         required = listOf("code")
@@ -683,7 +683,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -734,7 +734,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
         },
         required = listOf("code")
@@ -756,7 +756,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("maxAttempts") {
             put("type", JsonPrimitive("number"))
@@ -803,7 +803,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("functions") {
             put("type", JsonPrimitive("array"))
@@ -838,7 +838,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("hookType") {
             put("type", JsonPrimitive("string"))
@@ -874,7 +874,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("types") {
             put("type", JsonPrimitive("object"))
@@ -904,7 +904,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("atFunction") {
             put("type", JsonPrimitive("string"))
@@ -934,7 +934,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("tracePromises") {
             put("type", JsonPrimitive("boolean"))
@@ -964,7 +964,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("mocks") {
             put("type", JsonPrimitive("array"))
@@ -994,7 +994,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("format") {
             put("type", JsonPrimitive("string"))
@@ -1020,7 +1020,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("function") {
             put("type", JsonPrimitive("string"))
@@ -1055,7 +1055,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("mutations") {
             put("type", JsonPrimitive("array"))
@@ -1082,7 +1082,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("detectRaces") {
             put("type", JsonPrimitive("boolean"))
@@ -1112,7 +1112,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("query") {
             put("type", JsonPrimitive("string"))
@@ -1142,7 +1142,7 @@ internal class InsightMcpContributor : McpContributor {
           }
           putJsonObject("language") {
             put("type", JsonPrimitive("string"))
-            put("description", JsonPrimitive("Language: 'python' or 'js' (default: python)"))
+            put("description", JsonPrimitive("Language: python, js, ruby, R, wasm (default: python)"))
           }
           putJsonObject("showUncovered") {
             put("type", JsonPrimitive("boolean"))

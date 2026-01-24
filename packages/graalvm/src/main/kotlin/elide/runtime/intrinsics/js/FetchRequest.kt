@@ -43,7 +43,7 @@ import elide.vm.annotations.Polyglot
  * constructor, available globally. An instantiated `Request` can then be passed to `fetch` to initiate an HTTP request
  * (host permissions permitting).
  */
-@API public interface FetchRequest {
+@API public interface FetchRequest : FetchBody {
   /** Default values applied to [FetchRequest] interfaces. */
   public object Defaults {
     /** Default `cache` value. */
@@ -84,7 +84,7 @@ import elide.vm.annotations.Polyglot
    *
    * See also: [MDN, Request.body](https://developer.mozilla.org/en-US/docs/Web/API/Request/body).
    */
-  @get:Polyglot public val body: ReadableStream?
+  @get:Polyglot override val body: ReadableStream?
 
   /**
    * ## Request: Body usage.
@@ -98,7 +98,7 @@ import elide.vm.annotations.Polyglot
    *
    * See also: [MDN, Request.bodyUsed](https://developer.mozilla.org/en-US/docs/Web/API/Request/bodyUsed).
    */
-  @get:Polyglot public val bodyUsed: Boolean
+  @get:Polyglot override val bodyUsed: Boolean
 
   /**
    * ## Request: Caching.

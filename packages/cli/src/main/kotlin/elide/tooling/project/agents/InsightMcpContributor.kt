@@ -1116,7 +1116,7 @@ internal class InsightMcpContributor : McpContributor {
           // Note: insight.on requires --insight flag, fallback to basic execution
         }
         
-        val source = Source.newBuilder(language, code, "user-code").build()
+        val source = Source.newBuilder(language, code, "user-code-${System.currentTimeMillis()}").cached(false).build()
         val result = ctx.eval(source)
         if (result != null && !result.isNull) {
           output.append("Result: ${result.toString()}\n")
@@ -1176,7 +1176,7 @@ internal class InsightMcpContributor : McpContributor {
     for (attempt in 1..maxAttempts) {
       try {
         createContext(language).use { ctx ->
-          val source = Source.newBuilder(language, currentCode, "attempt-$attempt").build()
+          val source = Source.newBuilder(language, currentCode, "attempt-$attempt-${System.currentTimeMillis()}").cached(false).build()
           ctx.eval(source)
           success = true
           attempts.add("Attempt $attempt: SUCCESS")

@@ -12,13 +12,21 @@
  */
 package elide.runtime.gvm.internals.js
 
+import org.graalvm.polyglot.Value
+
 import java.io.InputStream
 import java.net.URI
+import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
 import elide.runtime.gvm.RequestExecutionInputs
 import elide.runtime.intrinsics.js.FetchHeaders
 import elide.runtime.intrinsics.js.FetchRequest
 import elide.runtime.intrinsics.js.ReadableStream
+import elide.runtime.intrinsics.js.JsPromise
+import elide.runtime.intrinsics.js.FormData
+import elide.runtime.gvm.js.JsError
+import elide.runtime.gvm.internals.intrinsics.js.JsPromiseImpl
+import elide.runtime.node.buffer.NodeBlob
 import elide.runtime.gvm.internals.intrinsics.js.url.URLIntrinsic.URLValue as URL
 
 /**
@@ -50,7 +58,18 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
   override val body: ReadableStream? get() = if (!hasBody()) {
     null  // no data available for body
   } else {
-    ReadableStream.wrap(requestBody())
+    System.err.println("JsServerReq: accessing body logic")
+    try {
+      val stream = requestBody()
+      System.err.println("JsServerReq: got stream $stream")
+      val bytes = stream.readAllBytes()
+      System.err.println("JsServerReq: read ${bytes.size} bytes")
+      ReadableStream.wrap(bytes)
+    } catch (e: Exception) {
+      System.err.println("JsServerReq: failed to read body: $e")
+      e.printStackTrace()
+      null
+    }
   }
 
   /**
@@ -164,4 +183,187 @@ internal abstract class JsServerRequestExecutionInputs<Request: Any> (
    * @return Map of HTTP request headers to their (potentially multiple) values.
    */
   protected abstract fun requestHeaders(): Map<String, List<String>>
+
+  // -- Interface: FetchBody -- //
+
+  override fun arrayBuffer(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    val stream = body
+    if (stream == null) {
+        promise.resolve(ByteBuffer.allocate(0))
+        return promise
+    }
+    if (consumed.getAndSet(true)) {
+        promise.reject(JsError.typeError("Body already consumed"))
+        return promise
+    }
+
+    consumeStream(stream).then(
+        onFulfilled = { bytes ->
+            promise.resolve(ByteBuffer.wrap(bytes))
+        },
+        onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+    )
+    return promise
+  }
+
+  override fun blob(): JsPromise<elide.runtime.intrinsics.js.Blob> {
+    val promise = JsPromiseImpl<elide.runtime.intrinsics.js.Blob>()
+    val stream = body
+    if (stream == null) {
+        promise.resolve(NodeBlob(ByteArray(0), null))
+        return promise
+    }
+    if (consumed.getAndSet(true)) {
+        promise.reject(JsError.typeError("Body already consumed"))
+        return promise
+    }
+
+    consumeStream(stream).then(
+        onFulfilled = { bytes ->
+            promise.resolve(NodeBlob(bytes, null))
+        },
+        onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+    )
+    return promise
+  }
+
+  override fun formData(): JsPromise<Any> {
+    val promise = JsPromiseImpl<Any>()
+    val stream = body
+    if (stream == null) {
+        promise.reject(JsError.typeError("Cannot read body: no body present"))
+        return promise
+    }
+    
+    // Check Content-Type header
+    val contentType = headers.get("content-type") ?: ""
+    val boundary = FormData.extractBoundary(contentType)
+
+    // Parse body as bytes
+    arrayBuffer().then(
+        onFulfilled = { buffer ->
+            try {
+                // buffer is likely a ByteBuffer or byte[]
+                val bytes = when (buffer) {
+                    is ByteBuffer -> {
+                        val arr = ByteArray(buffer.remaining())
+                        buffer.get(arr)
+                        arr
+                    }
+                    is ByteArray -> buffer
+                    else -> throw JsError.typeError("Unknown buffer type: ${buffer::class.java}")
+                }
+
+                val parsed = if (boundary != null) {
+                    FormData.parseMultipart(bytes, boundary)
+                } else {
+                    FormData.parseUrlEncoded(String(bytes, java.nio.charset.StandardCharsets.UTF_8))
+                }
+                promise.resolve(parsed)
+
+            } catch (e: Exception) {
+                promise.reject(JsError.typeError("Failed to parse FormData: ${e.message}"))
+            }
+        },
+        onCatch = { error ->
+            promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+    )
+    return promise
+  }
+
+  override fun json(): JsPromise<Any> {
+     System.err.println("JsServerReq: json() called")
+     val promise = JsPromiseImpl<Any>()
+     val stream = body
+     if (stream == null) {
+         System.err.println("JsServerReq: json() body is null")
+         promise.reject(JsError.typeError("Cannot read body: no body present"))
+         return promise
+     }
+
+     // First read as text, then parse as JSON
+     text().then(
+         onFulfilled = { text ->
+             try {
+                // Use GraalJS JSON.parse to parse the text
+                val context = org.graalvm.polyglot.Context.getCurrent()
+                val jsonParse = context.eval("js", "JSON.parse")
+                val parsed = jsonParse.execute(text)
+                promise.resolve(parsed)
+             } catch (e: Exception) {
+                 promise.reject(JsError.typeError("Invalid JSON: ${e.message}"))
+             }
+         },
+         onCatch = { error ->
+             promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+         }
+     )
+     return promise
+  }
+
+  override fun text(): JsPromise<String> {
+     val promise = JsPromiseImpl<String>()
+     val stream = body
+     if (stream == null) {
+         promise.resolve("")
+         return promise
+     }
+     if (consumed.getAndSet(true)) {
+         promise.reject(JsError.typeError("Body already consumed"))
+         return promise
+     }
+
+     consumeStream(stream).then(
+         onFulfilled = { bytes ->
+             promise.resolve(String(bytes, java.nio.charset.StandardCharsets.UTF_8))
+         },
+         onCatch = { error ->
+             promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+         }
+     )
+     return promise
+  }
+
+  private fun consumeStream(stream: ReadableStream): JsPromise<ByteArray> {
+    val promise = JsPromiseImpl<ByteArray>()
+    val chunks = java.io.ByteArrayOutputStream()
+    val reader = stream.getReader() as elide.runtime.intrinsics.js.stream.ReadableStreamDefaultReader
+
+    fun readNext() {
+      reader.read().then(
+        onFulfilled = { res ->
+          val result = res as Value
+          val done = result.getMember("done").asBoolean()
+          val value = result.getMember("value")
+
+          if (value != null && !value.isNull) {
+             if (value.hasArrayElements()) {
+                val size = value.arraySize.toInt()
+                for (i in 0 until size) {
+                   chunks.write(value.getArrayElement(i.toLong()).asInt())
+                }
+             }
+          }
+
+          if (done) {
+            promise.resolve(chunks.toByteArray())
+          } else {
+            readNext()
+          }
+        },
+        onCatch = { error ->
+          promise.reject(error as? Throwable ?: RuntimeException(error.toString()))
+        }
+      )
+    }
+
+    readNext()
+    return promise
+  }
 }

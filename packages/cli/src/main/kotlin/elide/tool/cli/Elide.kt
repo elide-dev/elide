@@ -253,17 +253,26 @@ internal const val ELIDE_HEADER = ("@|bold,fg(magenta)%n" +
       // load natives
       initLog("Initializing natives")
 
-      NativeEngine.boot(
-        { RuntimeWorkdirManager.acquire() },
-        server = server,
-        tooling = tooling,
-      ) {
-        emptyList()
-      }.also {
-        if (tooling) {
-          dev.elide.cli.bridge.CliNativeBridge.initialize()
+      try {
+        NativeEngine.boot(
+          { RuntimeWorkdirManager.acquire() },
+          server = server,
+          tooling = tooling,
+        ) {
+          emptyList()
+        }.also {
+          if (tooling) {
+            dev.elide.cli.bridge.CliNativeBridge.initialize()
+          }
+          initLog("Natives ready")
         }
-        initLog("Natives ready")
+      } catch (e: Throwable) {
+        // in jvm mode, we might not have natives
+        if (!ImageInfo.inImageCode()) {
+          initLog("Failed to initialize natives (ignoring in JVM mode): ${e.message}")
+        } else {
+          throw e
+        }
       }
     }
 

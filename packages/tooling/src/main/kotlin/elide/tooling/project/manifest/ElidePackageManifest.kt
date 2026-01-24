@@ -106,6 +106,7 @@ public data class ElidePackageManifest(
     val resources: List<McpResource>? = null,
     val advice: Boolean = true,
     val registerElide: Boolean = true,
+    val insight: Boolean = true,
   )
 
   @Serializable public data class DevServerSettings(

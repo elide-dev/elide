@@ -12,7 +12,9 @@
  */
 package elide.runtime.intrinsics.js
 
+import elide.runtime.intrinsics.js.node.BufferAPI
+
 /** TBD. */
-public interface Blob {
+public interface Blob : BufferAPI.Blob {
   // Not yet implemented.
 }

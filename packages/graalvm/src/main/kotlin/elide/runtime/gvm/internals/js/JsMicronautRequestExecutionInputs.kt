@@ -26,6 +26,11 @@ internal class JsMicronautRequestExecutionInputs private constructor (
   FetchRequest,
   MicronautRequestExecutionInputs<Any>,
   JsServerRequestExecutionInputs<HttpRequest<Any>>(state) {
+  
+  init {
+    System.err.println("JsMicronautReq: init")
+  }
+
   /** @inheritDoc */
   override fun getURL(): URI = request.uri
 

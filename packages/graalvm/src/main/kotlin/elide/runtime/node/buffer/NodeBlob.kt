@@ -25,6 +25,8 @@ import elide.runtime.intrinsics.js.ReadableStream
 import elide.runtime.intrinsics.js.node.BufferAPI
 import elide.vm.annotations.Polyglot
 
+import elide.runtime.intrinsics.js.Blob
+
 /**
  * Implements the `Blob` type from the Node.js `buffer` built-in module. Blobs are read-only chunks of byte data which
  * can be used to derive buffers, strings, and other objects.
@@ -32,7 +34,7 @@ import elide.vm.annotations.Polyglot
 @DelicateElideApi @Implementable public open class NodeBlob internal constructor(
   internal val bytes: ByteArray,
   @Polyglot override val type: String?
-) : BufferAPI.Blob, ProxyObject {
+) : Blob, ProxyObject {
   /** Creates a new empty buffer. */
   @Polyglot public constructor() : this(sources = null, options = null)
 

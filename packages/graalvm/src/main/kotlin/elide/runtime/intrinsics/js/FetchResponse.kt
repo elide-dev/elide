@@ -51,7 +51,7 @@ import elide.vm.annotations.Polyglot
  * Responses can be created from within a JavaScript guest, or received from within a guest context when executing a
  * fetched [FetchRequest] (host permissions permitting).
  */
-@API public interface FetchResponse {
+@API public interface FetchResponse : FetchBody {
   /** Default values applied to [FetchResponse] interfaces. */
   public object Defaults {
     /** Default value for `type`. */
@@ -122,7 +122,7 @@ import elide.vm.annotations.Polyglot
    *
    * See also: [MDN, Response.body](https://developer.mozilla.org/en-US/docs/Web/API/Response/body).
    */
-  @get:Polyglot public val body: ReadableStream?
+  @get:Polyglot public override val body: ReadableStream?
 
   /**
    * ## Response: Body status.
@@ -135,7 +135,7 @@ import elide.vm.annotations.Polyglot
    *
    * See also: [MDN, Response.bodyUsed](https://developer.mozilla.org/en-US/docs/Web/API/Response/bodyUsed).
    */
-  @get:Polyglot public val bodyUsed: Boolean
+  @get:Polyglot public override val bodyUsed: Boolean
 
   /**
    * ## Response: Headers.

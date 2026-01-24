@@ -1,0 +1,145 @@
+Configuration on demand is an incubating feature.
+> Task :elide-build:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :elide-build:compileKotlin UP-TO-DATE
+> Task :elide-build:compileJava NO-SOURCE
+> Task :elide-build:pluginDescriptors UP-TO-DATE
+> Task :elide-build:processResources UP-TO-DATE
+> Task :elide-build:classes UP-TO-DATE
+> Task :elide-build:jar UP-TO-DATE
+Type-safe project accessors is an incubating feature.
+
+> Configure project :packages:graalvm
+Compiling natives for target 'x86_64-unknown-linux-gnu' (config: config.x86_64.toml)
+
+> Task :packages:graalvm-py:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-js:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:tooling:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-wasm:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:exec:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:base:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:graalvm-ts:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-js:processResources UP-TO-DATE
+> Task :packages:core:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:base:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm:distTar NO-SOURCE
+> Task :packages:http:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:exec:processResources NO-SOURCE
+> Task :packages:http:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:local-ai:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm:distZip NO-SOURCE
+> Task :packages:graalvm-ts:processResources UP-TO-DATE
+> Task :packages:graalvm-wasm:processResources UP-TO-DATE
+> Task :packages:graalvm:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:secrets:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:http:jvmProcessResources NO-SOURCE
+> Task :packages:http:processJvmMainResources SKIPPED
+> Task :packages:local-ai:processResources NO-SOURCE
+> Task :packages:base:generateBuildConfig UP-TO-DATE
+> Task :packages:base:generateJvmMainBuildConfig SKIPPED
+> Task :packages:ssr:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:base:jvmProcessResources NO-SOURCE
+> Task :packages:sqlite:compileJava UP-TO-DATE
+> Task :packages:ssr:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:base:processJvmMainResources SKIPPED
+> Task :packages:ssr:jvmProcessResources NO-SOURCE
+> Task :packages:ssr:processJvmMainResources SKIPPED
+> Task :packages:core:compileKotlinJvm UP-TO-DATE
+> Task :packages:core:compileJvmMainJava NO-SOURCE
+> Task :packages:core:jvmProcessResources NO-SOURCE
+> Task :packages:core:processJvmMainResources SKIPPED
+> Task :packages:core:jvmMainClasses UP-TO-DATE
+> Task :packages:core:jvmJar UP-TO-DATE
+> Task :packages:base:compileKotlinJvm UP-TO-DATE
+> Task :packages:base:compileJvmMainJava UP-TO-DATE
+> Task :packages:base:jvmMainClasses UP-TO-DATE
+> Task :packages:base:jvmJar UP-TO-DATE
+> Task :packages:exec:compileKotlin UP-TO-DATE
+> Task :packages:exec:compileJava NO-SOURCE
+> Task :packages:exec:classes UP-TO-DATE
+> Task :packages:exec:jar UP-TO-DATE
+> Task :packages:http:compileKotlinJvm UP-TO-DATE
+> Task :packages:http:compileJvmMainJava NO-SOURCE
+> Task :packages:http:jvmMainClasses UP-TO-DATE
+> Task :packages:http:jvmJar UP-TO-DATE
+> Task :packages:tooling:kspKotlin UP-TO-DATE
+> Task :packages:ssr:compileKotlinJvm UP-TO-DATE
+> Task :packages:ssr:compileJvmMainJava NO-SOURCE
+> Task :packages:ssr:jvmMainClasses UP-TO-DATE
+> Task :packages:ssr:jvmJar UP-TO-DATE
+> Task :packages:tooling:compileKotlin UP-TO-DATE
+> Task :packages:tooling:compileJava UP-TO-DATE
+> Task :packages:tooling:processResources UP-TO-DATE
+> Task :packages:tooling:classes UP-TO-DATE
+> Task :packages:tooling:jar UP-TO-DATE
+> Task :packages:engine:kspKotlin UP-TO-DATE
+> Task :packages:secrets:kspKotlin UP-TO-DATE
+> Task :packages:engine:compileKotlin UP-TO-DATE
+> Task :packages:secrets:compileKotlin UP-TO-DATE
+> Task :packages:engine:compileJava UP-TO-DATE
+> Task :packages:secrets:compileJava NO-SOURCE
+> Task :packages:engine:processResources UP-TO-DATE
+> Task :packages:engine:classes UP-TO-DATE
+> Task :packages:engine:jar UP-TO-DATE
+> Task :packages:secrets:processResources UP-TO-DATE
+> Task :packages:secrets:classes UP-TO-DATE
+> Task :packages:secrets:jar UP-TO-DATE
+> Task :packages:local-ai:compileKotlin UP-TO-DATE
+> Task :packages:local-ai:compileJava NO-SOURCE
+> Task :packages:local-ai:classes UP-TO-DATE
+> Task :packages:local-ai:jar UP-TO-DATE
+> Task :packages:graalvm-py:kspKotlin UP-TO-DATE
+> Task :packages:graalvm-wasm:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-wasm:compileJava NO-SOURCE
+> Task :packages:graalvm-wasm:classes UP-TO-DATE
+> Task :packages:graalvm-wasm:jar UP-TO-DATE
+> Task :packages:graalvm-py:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-py:compileJava UP-TO-DATE
+> Task :packages:graalvm-py:processResources UP-TO-DATE
+> Task :packages:graalvm-py:classes UP-TO-DATE
+> Task :packages:graalvm-py:jar UP-TO-DATE
+> Task :packages:graalvm-js:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-js:compileJava UP-TO-DATE
+> Task :packages:graalvm-js:classes UP-TO-DATE
+> Task :packages:graalvm-js:jar UP-TO-DATE
+> Task :packages:graalvm-ts:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-ts:compileJava UP-TO-DATE
+> Task :packages:graalvm-ts:classes UP-TO-DATE
+> Task :packages:graalvm-ts:jar UP-TO-DATE
+
+> Task :packages:graalvm:kspKotlin
+w: [ksp] /home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/gvm/internals/vfs/GuestVFSPolicy.kt:36: Default methods are skipped on @ConfigurationProperties interfaces: evaluateForPath(elide.runtime.gvm.internals.vfs.AccessRequest)
+w: [ksp] /home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/gvm/internals/vfs/GuestVFSPolicy.kt:36: Default methods are skipped on @ConfigurationProperties interfaces: evaluateForPath(elide.runtime.gvm.internals.vfs.AccessRequest)
+
+> Task :packages:graalvm:processResources UP-TO-DATE
+> Task :packages:graalvm:sourcesJar
+> Task :packages:graalvm:compileKotlin
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/feature/js/FetchFeature.kt:31:33 This class is not recommended for use in Kotlin. Use 'kotlin.Comparable' instead.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl.kt:267:59 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/gvm/internals/vfs/EmbeddedGuestVFSImpl.kt:270:34 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:416:52 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:417:54 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:418:56 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:429:52 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:430:54 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:431:56 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:496:54 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:497:56 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:605:52 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:609:54 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:613:56 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/asserts/NodeAssert.kt:617:58 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/path/NodePaths.kt:348:54 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/util/StringFormatter.kt:116:50 Redundant call of conversion method.
+w: file:///home/pug/dev/@elide-dev/elide/packages/graalvm/src/main/kotlin/elide/runtime/node/util/StringFormatter.kt:226:43 Redundant call of conversion method.
+
+> Task :packages:graalvm:compileJava NO-SOURCE
+> Task :packages:graalvm:classes UP-TO-DATE
+> Task :packages:graalvm:jar
+> Task :packages:graalvm:assemble
+
+[Incubating] Problems report is available at: file:///home/pug/dev/@elide-dev/elide/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m 26s
+58 actionable tasks: 8 executed, 50 up-to-date

@@ -38,6 +38,8 @@ test-results-native/
 .codebase/shared-indexes
 .kotlin/
 .qodana/
+.windsurf/
+.claude/
 .pnp*
 packages/graalvm/test.mjs
 *.pyc

@@ -1,0 +1,95 @@
+{
+  "mcpServers": {
+    "jetbrains": {
+      "disabledTools": [
+        "permission_prompt",
+        "create_new_file",
+        "get_all_open_file_paths",
+        "execute_terminal_command",
+        "runNotebookCell",
+        "get_repositories"
+      ],
+      "serverUrl": "http://localhost:64543/sse",
+      "disabled": false
+    },
+    "exa": {
+      "disabled": false,
+      "headers": {},
+      "serverUrl": "https://mcp.exa.ai/mcp"
+    },
+    "fetch": {
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "command": "uvx",
+      "env": {}
+    },
+    "filesystem": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        ""
+      ],
+      "command": "npx",
+      "disabled": true,
+      "env": {}
+    },
+    "github": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "command": "npx",
+      "disabled": false,
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
+      },
+      "disabledTools": [
+        "fork_repository"
+      ]
+    },
+    "mcp-playwright": {
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ],
+      "command": "npx",
+      "disabled": true,
+      "env": {}
+    },
+    "playwriter": {
+      "args": [
+        "playwriter@latest"
+      ],
+      "command": "npx"
+    },
+    "puppeteer": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
+      "command": "npx",
+      "disabled": true,
+      "env": {}
+    },
+    "sequential-thinking": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "command": "npx",
+      "disabled": true,
+      "env": {}
+    },
+    "linear-mcp-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.linear.app/sse"
+      ],
+      "env": {},
+      "disabled": true
+    }
+  }
+}

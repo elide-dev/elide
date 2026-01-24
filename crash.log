@@ -1,0 +1,448 @@
+Configuration on demand is an incubating feature.
+> Task :elide-build:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :elide-build:compileKotlin UP-TO-DATE
+> Task :elide-build:compileJava NO-SOURCE
+> Task :elide-build:pluginDescriptors UP-TO-DATE
+> Task :elide-build:processResources UP-TO-DATE
+> Task :elide-build:classes UP-TO-DATE
+> Task :elide-build:jar UP-TO-DATE
+Type-safe project accessors is an incubating feature.
+
+> Configure project :packages:cli
+Building for architecture 'x86-64-v3' (default: 'x86-64-v3')
+
+> Configure project :packages:graalvm
+Compiling natives for target 'x86_64-unknown-linux-gnu' (config: config.x86_64.toml)
+
+> Task :packages:tooling:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:builder:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:exec:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-js:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-wasm:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:core:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:base:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:graalvm-py:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-ts:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:base:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:exec:processResources NO-SOURCE
+> Task :packages:local-ai:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:http:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:secrets:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-wasm:processResources UP-TO-DATE
+> Task :packages:graalvm-ts:processResources UP-TO-DATE
+> Task :packages:graalvm-js:processResources UP-TO-DATE
+> Task :packages:http:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-java:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:local-ai:processResources NO-SOURCE
+> Task :packages:base:generateBuildConfig UP-TO-DATE
+> Task :packages:graalvm-jvm:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:base:generateJvmMainBuildConfig SKIPPED
+> Task :packages:graalvm-kt:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-java:processResources UP-TO-DATE
+> Task :packages:graalvm-jvm:processResources UP-TO-DATE
+> Task :packages:ssr:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:http:jvmProcessResources NO-SOURCE
+> Task :packages:base:jvmProcessResources NO-SOURCE
+> Task :packages:ssr:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:cli:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:test:kmpPartiallyResolvedDependenciesChecker
+> Task :packages:telemetry:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:base:processJvmMainResources SKIPPED
+> Task :packages:http:processJvmMainResources SKIPPED
+> Task :packages:ssr:jvmProcessResources NO-SOURCE
+> Task :packages:test:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-llvm:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:ssr:processJvmMainResources SKIPPED
+> Task :packages:runner:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :packages:graalvm-llvm:processResources UP-TO-DATE
+> Task :packages:test:jvmProcessResources UP-TO-DATE
+> Task :packages:test:processJvmMainResources SKIPPED
+> Task :packages:sqlite:compileJava UP-TO-DATE
+> Task :packages:cli:generateBuildConfig UP-TO-DATE
+> Task :packages:telemetry:generateBuildConfig UP-TO-DATE
+> Task :packages:sqlite:processResources UP-TO-DATE
+> Task :packages:cli:packSampleContainers UP-TO-DATE
+> Task :packages:terminal:compileJava UP-TO-DATE
+> Task :packages:sqlite:classes UP-TO-DATE
+> Task :packages:terminal:processResources UP-TO-DATE
+> Task :packages:cli:packSampleContainers-jvm UP-TO-DATE
+> Task :packages:terminal:classes UP-TO-DATE
+> Task :packages:cli:packSampleFlask UP-TO-DATE
+> Task :packages:cli:packSampleFlask-react UP-TO-DATE
+> Task :packages:terminal:jar UP-TO-DATE
+> Task :packages:cli:packSampleFlask-wsgi UP-TO-DATE
+> Task :packages:cli:packSampleJava UP-TO-DATE
+> Task :packages:sqlite:jar UP-TO-DATE
+> Task :packages:cli:packSampleKterr UP-TO-DATE
+> Task :packages:core:compileKotlinJvm UP-TO-DATE
+> Task :packages:cli:packSampleKterr-gradle UP-TO-DATE
+> Task :packages:core:compileJvmMainJava NO-SOURCE
+> Task :packages:cli:packSampleKtjvm UP-TO-DATE
+> Task :packages:core:jvmProcessResources NO-SOURCE
+> Task :packages:core:processJvmMainResources SKIPPED
+> Task :packages:cli:packSampleKtjvm-gradle UP-TO-DATE
+> Task :packages:core:jvmMainClasses UP-TO-DATE
+> Task :packages:cli:packSampleKtjvm-plugins UP-TO-DATE
+> Task :packages:core:jvmJar UP-TO-DATE
+> Task :packages:cli:packSampleKtweb UP-TO-DATE
+> Task :packages:cli:packSampleMavenjvm UP-TO-DATE
+> Task :packages:cli:packSampleTsweb UP-TO-DATE
+> Task :packages:cli:packSampleWeb-static-worker UP-TO-DATE
+> Task :packages:cli:packSamples UP-TO-DATE
+> Task :packages:base:compileKotlinJvm UP-TO-DATE
+> Task :packages:test:compileKotlinJvm UP-TO-DATE
+> Task :packages:test:compileJvmMainJava NO-SOURCE
+> Task :packages:test:jvmMainClasses UP-TO-DATE
+> Task :packages:base:compileJvmMainJava UP-TO-DATE
+> Task :packages:base:jvmMainClasses UP-TO-DATE
+> Task :packages:test:jvmJar UP-TO-DATE
+> Task :packages:base:jvmJar UP-TO-DATE
+> Task :packages:graalvm-kt:prepKotlinResources UP-TO-DATE
+> Task :packages:graalvm-kt:buildKotlinResourcesArchive UP-TO-DATE
+> Task :packages:graalvm-kt:buildResourcesManifest
+> Task :packages:exec:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-kt:processResources UP-TO-DATE
+> Task :packages:exec:compileJava NO-SOURCE
+> Task :packages:http:compileKotlinJvm UP-TO-DATE
+> Task :packages:exec:classes UP-TO-DATE
+> Task :packages:http:compileJvmMainJava NO-SOURCE
+> Task :packages:http:jvmMainClasses UP-TO-DATE
+> Task :packages:http:jvmJar UP-TO-DATE
+> Task :packages:exec:jar UP-TO-DATE
+> Task :packages:cli:inspectRuntimeClasspath UP-TO-DATE
+> Task :packages:cli:prepKotlinResources UP-TO-DATE
+> Task :packages:telemetry:kspKotlin UP-TO-DATE
+> Task :packages:tooling:kspKotlin UP-TO-DATE
+> Task :packages:ssr:compileKotlinJvm UP-TO-DATE
+> Task :packages:ssr:compileJvmMainJava NO-SOURCE
+> Task :packages:ssr:jvmMainClasses UP-TO-DATE
+> Task :packages:ssr:jvmJar UP-TO-DATE
+> Task :packages:telemetry:compileKotlin UP-TO-DATE
+> Task :packages:telemetry:compileJava NO-SOURCE
+> Task :packages:telemetry:processResources UP-TO-DATE
+> Task :packages:tooling:compileKotlin UP-TO-DATE
+> Task :packages:telemetry:classes UP-TO-DATE
+> Task :packages:telemetry:jar UP-TO-DATE
+> Task :packages:tooling:compileJava UP-TO-DATE
+> Task :packages:tooling:processResources UP-TO-DATE
+> Task :packages:tooling:classes UP-TO-DATE
+> Task :packages:tooling:jar UP-TO-DATE
+> Task :packages:secrets:kspKotlin UP-TO-DATE
+> Task :packages:secrets:compileKotlin UP-TO-DATE
+> Task :packages:secrets:compileJava NO-SOURCE
+> Task :packages:engine:kspKotlin UP-TO-DATE
+> Task :packages:secrets:processResources UP-TO-DATE
+> Task :packages:secrets:classes UP-TO-DATE
+> Task :packages:secrets:jar UP-TO-DATE
+> Task :packages:runner:kspKotlin UP-TO-DATE
+> Task :packages:engine:compileKotlin UP-TO-DATE
+> Task :packages:runner:compileKotlin UP-TO-DATE
+> Task :packages:runner:compileJava NO-SOURCE
+> Task :packages:runner:processResources UP-TO-DATE
+> Task :packages:runner:classes UP-TO-DATE
+> Task :packages:runner:jar UP-TO-DATE
+> Task :packages:engine:compileJava UP-TO-DATE
+> Task :packages:engine:processResources UP-TO-DATE
+> Task :packages:engine:classes UP-TO-DATE
+> Task :packages:engine:jar UP-TO-DATE
+> Task :packages:local-ai:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-wasm:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-llvm:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-jvm:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-llvm:compileJava NO-SOURCE
+> Task :packages:local-ai:compileJava NO-SOURCE
+> Task :packages:graalvm-llvm:classes UP-TO-DATE
+> Task :packages:graalvm-wasm:compileJava NO-SOURCE
+> Task :packages:local-ai:classes UP-TO-DATE
+> Task :packages:graalvm-wasm:classes UP-TO-DATE
+> Task :packages:graalvm-py:kspKotlin UP-TO-DATE
+> Task :packages:local-ai:jar UP-TO-DATE
+> Task :packages:graalvm-jvm:compileJava UP-TO-DATE
+> Task :packages:graalvm-wasm:jar UP-TO-DATE
+> Task :packages:graalvm-jvm:classes UP-TO-DATE
+> Task :packages:graalvm-llvm:jar UP-TO-DATE
+> Task :packages:graalvm-jvm:jar UP-TO-DATE
+> Task :packages:graalvm-py:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-py:compileJava UP-TO-DATE
+> Task :packages:graalvm-py:processResources UP-TO-DATE
+> Task :packages:graalvm-py:classes UP-TO-DATE
+> Task :packages:graalvm-py:jar UP-TO-DATE
+> Task :packages:graalvm-kt:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-java:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-java:compileJava NO-SOURCE
+> Task :packages:graalvm-java:classes UP-TO-DATE
+> Task :packages:graalvm-kt:compileJava UP-TO-DATE
+> Task :packages:graalvm-java:jar UP-TO-DATE
+> Task :packages:graalvm-kt:classes UP-TO-DATE
+> Task :packages:graalvm-kt:jar UP-TO-DATE
+> Task :packages:graalvm-js:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-js:compileJava UP-TO-DATE
+> Task :packages:graalvm-js:classes UP-TO-DATE
+> Task :packages:graalvm-js:jar UP-TO-DATE
+> Task :packages:graalvm-ts:compileKotlin UP-TO-DATE
+> Task :packages:graalvm-ts:compileJava UP-TO-DATE
+> Task :packages:graalvm-ts:classes UP-TO-DATE
+> Task :packages:graalvm-ts:jar UP-TO-DATE
+> Task :packages:graalvm:kspKotlin UP-TO-DATE
+> Task :packages:graalvm:compileKotlin UP-TO-DATE
+> Task :packages:graalvm:compileJava NO-SOURCE
+> Task :packages:graalvm:processResources UP-TO-DATE
+> Task :packages:graalvm:classes UP-TO-DATE
+> Task :packages:graalvm:jar UP-TO-DATE
+> Task :packages:builder:kspKotlin UP-TO-DATE
+> Task :packages:builder:compileKotlin UP-TO-DATE
+> Task :packages:builder:compileJava UP-TO-DATE
+> Task :packages:builder:processResources UP-TO-DATE
+> Task :packages:builder:classes UP-TO-DATE
+> Task :packages:builder:jar UP-TO-DATE
+> Task :packages:cli:kspKotlin UP-TO-DATE
+> Task :packages:cli:compileKotlin UP-TO-DATE
+> Task :packages:cli:compileJava UP-TO-DATE
+> Task :packages:cli:processResources UP-TO-DATE
+> Task :packages:cli:classes UP-TO-DATE
+
+> Task :packages:cli:run
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.graal.reporter specified to --add-exports
+WARNING: Unknown module: com.oracle.graal.reporter specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+WARNING: Unknown module: com.oracle.svm.svm_enterprise specified to --add-exports
+Uncaught fatal exception: org.sqlite.NativeLibraryNotFoundException: No native library found for name 'libsqlitejdbc.so', os.name=linux, os.arch=x86-64, paths=[/home/pug/dev/@elide-dev/elide/packages/cli/build/native/nativeCompile:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/third_party/sqlite/install/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/packages/cli/build/native/nativeCompile:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/third_party/sqlite/install/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+org.sqlite.SQLiteJDBCLoader.loadSQLiteNativeLibrary(SQLiteJDBCLoader.java:456)
+org.sqlite.SQLiteJDBCLoader.initialize(SQLiteJDBCLoader.java:76)
+elide.tool.engine.NativeEngine.load(NativeEngine.kt:404)
+elide.tool.cli.Elide$Companion.initializeNatives(Elide.kt:572)
+elide.tool.cli.Elide$Companion.requestNatives(Elide.kt:246)
+elide.tool.cli.cmd.repl.ToolShellCommand.invoke(ToolShellCommand.kt:2721)
+elide.tool.cli.AbstractSubcommand$invoke$2$1.invokeSuspend(AbstractSubcommand.kt:607)
+elide.tool.cli.AbstractSubcommand$invoke$2$1.invoke(AbstractSubcommand.kt)
+elide.tool.cli.AbstractSubcommand$invoke$2$1.invoke(AbstractSubcommand.kt)
+elide.tool.cli.AbstractSubcommand.initializeToolResources(AbstractSubcommand.kt:480)
+elide.tool.cli.AbstractSubcommand.invoke-AZeniH0$suspendImpl(AbstractSubcommand.kt:605)
+elide.tool.cli.AbstractSubcommand.invoke-AZeniH0(AbstractSubcommand.kt)
+elide.tool.cli.AbstractToolCommand$call$$inlined$execute$1.invokeSuspend(AbstractToolCommand.kt:267)
+kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)
+kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)
+kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)
+kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)
+kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)
+kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source)
+kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)
+kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source)
+elide.tool.cli.AbstractToolCommand.call(AbstractToolCommand.kt:315)
+elide.tool.cli.AbstractToolCommand.call(AbstractToolCommand.kt:59)
+picocli.CommandLine.executeUserObject(CommandLine.java:2031)
+picocli.CommandLine.access$1500(CommandLine.java:148)
+picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2469)
+picocli.CommandLine$RunLast.handle(CommandLine.java:2461)
+picocli.CommandLine$RunLast.handle(CommandLine.java:2423)
+picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2277)
+picocli.CommandLine$RunLast.execute(CommandLine.java:2425)
+picocli.CommandLine.execute(CommandLine.java:2174)
+elide.tool.cli.Elide$Companion.entry(Elide.kt:620)
+elide.tool.cli.MainKt.main(main.kt:390)
+[31m[1morg.sqlite.NativeLibraryNotFoundException: No native library found for name 'libsqlitejdbc.so', os.name=linux, os.arch=x86-64, paths=[/home/pug/dev/@elide-dev/elide/packages/cli/build/native/nativeCompile:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/third_party/sqlite/install/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/packages/cli/build/native/nativeCompile:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/third_party/sqlite/install/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib][21m[39m[0m
+[3m	at org.sqlite.SQLiteJDBCLoader.loadSQLiteNativeLibrary(SQLiteJDBCLoader.java:456)[23m[0m
+[3m	at org.sqlite.SQLiteJDBCLoader.initialize(SQLiteJDBCLoader.java:76)[23m[0m
+[3m	at elide.tool.engine.NativeEngine.load(NativeEngine.kt:404)[23m[0m
+[3m	at elide.tool.cli.Elide$Companion.initializeNatives(Elide.kt:572)[23m[0m
+[3m	at elide.tool.cli.Elide$Companion.requestNatives(Elide.kt:246)[23m[0m
+[3m	at elide.tool.cli.cmd.repl.ToolShellCommand.invoke(ToolShellCommand.kt:2721)[23m[0m
+[3m	at elide.tool.cli.AbstractSubcommand$invoke$2$1.invokeSuspend(AbstractSubcommand.kt:607)[23m[0m
+[3m	at elide.tool.cli.AbstractSubcommand$invoke$2$1.invoke(AbstractSubcommand.kt)[23m[0m
+[3m	at elide.tool.cli.AbstractSubcommand$invoke$2$1.invoke(AbstractSubcommand.kt)[23m[0m
+[3m	at elide.tool.cli.AbstractSubcommand.initializeToolResources(AbstractSubcommand.kt:480)[23m[0m
+[3m	at elide.tool.cli.AbstractSubcommand.invoke-AZeniH0$suspendImpl(AbstractSubcommand.kt:605)[23m[0m
+[3m	at elide.tool.cli.AbstractSubcommand.invoke-AZeniH0(AbstractSubcommand.kt)[23m[0m
+[3m	at elide.tool.cli.AbstractToolCommand$call$$inlined$execute$1.invokeSuspend(AbstractToolCommand.kt:267)[23m[0m
+[3m	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:34)[23m[0m
+[3m	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:100)[23m[0m
+[3m	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:263)[23m[0m
+[3m	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:94)[23m[0m
+[3m	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:70)[23m[0m
+[3m	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source)[23m[0m
+[3m	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:48)[23m[0m
+[3m	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source)[23m[0m
+[3m	at elide.tool.cli.AbstractToolCommand.call(AbstractToolCommand.kt:315)[23m[0m
+[3m	at elide.tool.cli.AbstractToolCommand.call(AbstractToolCommand.kt:59)[23m[0m
+[3m	at picocli.CommandLine.executeUserObject(CommandLine.java:2031)[23m[0m
+[3m	at picocli.CommandLine.access$1500(CommandLine.java:148)[23m[0m
+[3m	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2469)[23m[0m
+[3m	at picocli.CommandLine$RunLast.handle(CommandLine.java:2461)[23m[0m
+[3m	at picocli.CommandLine$RunLast.handle(CommandLine.java:2423)[23m[0m
+[3m	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2277)[23m[0m
+[3m	at picocli.CommandLine$RunLast.execute(CommandLine.java:2425)[23m[0m
+[3m	at picocli.CommandLine.execute(CommandLine.java:2174)[23m[0m
+[3m	at elide.tool.cli.Elide$Companion.entry(Elide.kt:620)[23m[0m
+[3m	at elide.tool.cli.MainKt.main(main.kt:390)[23m[0m
+Exiting with code -1 due to uncaught org.sqlite.NativeLibraryNotFoundException: No native library found for name 'libsqlitejdbc.so', os.name=linux, os.arch=x86-64, paths=[/home/pug/dev/@elide-dev/elide/packages/cli/build/native/nativeCompile:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/third_party/sqlite/install/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/packages/cli/build/native/nativeCompile:/home/pug/dev/@elide-dev/elide/target/x86_64-unknown-linux-gnu/debug:/home/pug/dev/@elide-dev/elide/third_party/sqlite/install/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib]
+
+> Task :packages:cli:run FAILED
+
+[Incubating] Problems report is available at: file:///home/pug/dev/@elide-dev/elide/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':packages:cli:run'.
+> Process 'command '/usr/lib/jvm/graalvm-25.0.1/bin/java'' finished with non-zero exit value 255
+
+* Try:
+> Run with --info or --debug option to get more log output.
+> Get more help at https://help.gradle.org.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':packages:cli:run'.
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:135)
+	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:288)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:133)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:121)
+	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:41)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.DefaultNodeExecutor.executeLocalTaskNode(DefaultNodeExecutor.java:55)
+	at org.gradle.execution.plan.DefaultNodeExecutor.execute(DefaultNodeExecutor.java:34)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:355)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:343)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:339)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:84)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:339)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:328)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
+Caused by: org.gradle.process.ProcessExecutionException: Process 'command '/usr/lib/jvm/graalvm-25.0.1/bin/java'' finished with non-zero exit value 255
+	at org.gradle.process.internal.DefaultExecHandle$ExecResultImpl.assertNormalExitValue(DefaultExecHandle.java:450)
+	at org.gradle.process.internal.DefaultJavaExecAction.execute(DefaultJavaExecAction.java:58)
+	at org.gradle.api.tasks.JavaExec.exec(JavaExec.java:166)
+	at org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:125)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.doExecute(StandardTaskAction.java:58)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:51)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:29)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:252)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:29)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:26)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:47)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:237)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:220)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:203)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:170)
+	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:68)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:38)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:39)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:28)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$1(BuildCacheStep.java:75)
+	at org.gradle.internal.Either$Right.fold(Either.java:176)
+	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:64)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:35)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:62)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:40)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:76)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:45)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:136)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:61)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:38)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:297)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:44)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:31)
+	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:64)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:132)
+	... 30 more
+
+
+BUILD FAILED in 8s
+120 actionable tasks: 7 executed, 113 up-to-date

@@ -32,11 +32,17 @@ import elide.tooling.project.mcp.McpContributor
  * # Insight MCP Contributor
  *
  * Contributes GraalVM Insight-based debugging and tracing tools to the MCP server.
- * These tools enable AI agents to execute code with deep instrumentation capabilities:
+ * These tools enable AI agents to execute code with deep instrumentation capabilities
+ * across ALL GraalVM polyglot languages.
  *
- * ## Basic Execution
- * - **run-python**: Execute Python code with optional tracing
- * - **run-javascript**: Execute JavaScript code with optional tracing
+ * ## Basic Execution (Full Polyglot)
+ * - **run-python**: Execute Python code with GraalPy
+ * - **run-javascript**: Execute JavaScript code with GraalJS
+ * - **run-ruby**: Execute Ruby code with TruffleRuby
+ * - **run-r**: Execute R code with FastR (data science)
+ * - **run-wasm**: Execute WebAssembly with GraalWasm
+ * - **polyglot-exec**: Execute any language with cross-language interop
+ * - **list-languages**: List all available polyglot languages
  *
  * ## Tracing & Profiling
  * - **trace-functions**: Trace function entry/exit with arguments and return values
@@ -118,6 +124,94 @@ internal class InsightMcpContributor : McpContributor {
       val code = request.arguments["code"]?.jsonPrimitive?.content ?: return@addTool errorResult("Missing code")
       val trace = request.arguments["trace"]?.jsonPrimitive?.content?.toBooleanStrictOrNull() ?: false
       executeCode("js", code, trace)
+    }
+
+    addTool(
+      name = "run-ruby",
+      description = "Execute Ruby code with TruffleRuby. Returns output, errors, and result.",
+      inputSchema = Tool.Input(
+        properties = buildJsonObject {
+          putJsonObject("code") {
+            put("type", JsonPrimitive("string"))
+            put("description", JsonPrimitive("Ruby code to execute"))
+          }
+        },
+        required = listOf("code")
+      ),
+    ) { request ->
+      val code = request.arguments["code"]?.jsonPrimitive?.content ?: return@addTool errorResult("Missing code")
+      executeCode("ruby", code, false)
+    }
+
+    addTool(
+      name = "run-r",
+      description = "Execute R code with FastR. Ideal for data science and statistical computing.",
+      inputSchema = Tool.Input(
+        properties = buildJsonObject {
+          putJsonObject("code") {
+            put("type", JsonPrimitive("string"))
+            put("description", JsonPrimitive("R code to execute"))
+          }
+        },
+        required = listOf("code")
+      ),
+    ) { request ->
+      val code = request.arguments["code"]?.jsonPrimitive?.content ?: return@addTool errorResult("Missing code")
+      executeCode("R", code, false)
+    }
+
+    addTool(
+      name = "run-wasm",
+      description = "Execute WebAssembly code with GraalWasm. Pass base64-encoded WASM binary.",
+      inputSchema = Tool.Input(
+        properties = buildJsonObject {
+          putJsonObject("code") {
+            put("type", JsonPrimitive("string"))
+            put("description", JsonPrimitive("WebAssembly code (base64-encoded binary or WAT text)"))
+          }
+        },
+        required = listOf("code")
+      ),
+    ) { request ->
+      val code = request.arguments["code"]?.jsonPrimitive?.content ?: return@addTool errorResult("Missing code")
+      executeCode("wasm", code, false)
+    }
+
+    addTool(
+      name = "polyglot-exec",
+      description = "Execute code in any supported language with cross-language interop. Languages: python, js, ruby, R, wasm, llvm.",
+      inputSchema = Tool.Input(
+        properties = buildJsonObject {
+          putJsonObject("language") {
+            put("type", JsonPrimitive("string"))
+            put("description", JsonPrimitive("Target language: python, js, ruby, R, wasm, llvm"))
+          }
+          putJsonObject("code") {
+            put("type", JsonPrimitive("string"))
+            put("description", JsonPrimitive("Code to execute in the specified language"))
+          }
+          putJsonObject("bindings") {
+            put("type", JsonPrimitive("object"))
+            put("description", JsonPrimitive("Optional: key-value pairs to bind into the polyglot context"))
+          }
+        },
+        required = listOf("language", "code")
+      ),
+    ) { request ->
+      val language = request.arguments["language"]?.jsonPrimitive?.content ?: return@addTool errorResult("Missing language")
+      val code = request.arguments["code"]?.jsonPrimitive?.content ?: return@addTool errorResult("Missing code")
+      executeCode(language, code, false)
+    }
+
+    addTool(
+      name = "list-languages",
+      description = "List all available polyglot languages in the current GraalVM runtime.",
+      inputSchema = Tool.Input(
+        properties = buildJsonObject {},
+        required = emptyList()
+      ),
+    ) { _ ->
+      listAvailableLanguages()
     }
 
     // ========================================================================
@@ -1082,24 +1176,50 @@ internal class InsightMcpContributor : McpContributor {
     content = listOf(TextContent(text = text))
   )
 
+  // Supported GraalVM polyglot languages
+  private val SUPPORTED_LANGUAGES = mapOf(
+    "python" to "python",
+    "js" to "js",
+    "javascript" to "js",
+    "ruby" to "ruby",
+    "r" to "R",
+    "R" to "R",
+    "wasm" to "wasm",
+    "webassembly" to "wasm",
+    "llvm" to "llvm"
+  )
+
+  private fun normalizeLanguage(language: String): String {
+    return SUPPORTED_LANGUAGES[language.lowercase()] ?: language
+  }
+
   private fun createContext(language: String): Context {
-    val languages = when (language) {
-      "python" -> arrayOf("python")
-      "js", "javascript" -> arrayOf("js")
-      else -> arrayOf("python", "js")
-    }
-    return Context.newBuilder(*languages)
+    val normalizedLang = normalizeLanguage(language)
+    return Context.newBuilder()  // Empty = all available languages
       .allowAllAccess(true)
       .option("engine.WarnInterpreterOnly", "false")
-      .out(java.io.ByteArrayOutputStream()) // Capture output
-      .err(java.io.ByteArrayOutputStream()) // Capture errors
+      .out(java.io.ByteArrayOutputStream())
+      .err(java.io.ByteArrayOutputStream())
       .build()
   }
   
   private fun createContextWithOutput(): Triple<Context, java.io.ByteArrayOutputStream, java.io.ByteArrayOutputStream> {
     val stdout = java.io.ByteArrayOutputStream()
     val stderr = java.io.ByteArrayOutputStream()
-    val ctx = Context.newBuilder("python", "js")
+    val ctx = Context.newBuilder()  // Empty = all available languages
+      .allowAllAccess(true)
+      .option("engine.WarnInterpreterOnly", "false")
+      .out(stdout)
+      .err(stderr)
+      .build()
+    return Triple(ctx, stdout, stderr)
+  }
+  
+  private fun createContextForLanguage(language: String): Triple<Context, java.io.ByteArrayOutputStream, java.io.ByteArrayOutputStream> {
+    val stdout = java.io.ByteArrayOutputStream()
+    val stderr = java.io.ByteArrayOutputStream()
+    val normalizedLang = normalizeLanguage(language)
+    val ctx = Context.newBuilder(normalizedLang)
       .allowAllAccess(true)
       .option("engine.WarnInterpreterOnly", "false")
       .out(stdout)
@@ -1157,6 +1277,40 @@ internal class InsightMcpContributor : McpContributor {
   
   private fun buildJsonString(block: StringBuilder.() -> Unit): String {
     return StringBuilder().apply(block).toString()
+  }
+
+  private fun listAvailableLanguages(): CallToolResult {
+    val startTime = System.currentTimeMillis()
+    return try {
+      val ctx = Context.newBuilder().allowAllAccess(true).build()
+      ctx.use { context ->
+        val engine = context.engine
+        val languages = engine.languages.map { (id, lang) ->
+          mapOf(
+            "id" to id,
+            "name" to lang.name,
+            "version" to lang.version,
+            "interactive" to lang.isInteractive.toString()
+          )
+        }
+        val executionMs = System.currentTimeMillis() - startTime
+        successResult(buildJsonString {
+          appendLine("{")
+          appendLine("  \"success\": true,")
+          appendLine("  \"languages\": [")
+          languages.forEachIndexed { index, lang ->
+            val comma = if (index < languages.size - 1) "," else ""
+            appendLine("    {\"id\": ${jsonEscape(lang["id"] ?: "")}, \"name\": ${jsonEscape(lang["name"] ?: "")}, \"version\": ${jsonEscape(lang["version"] ?: "")}, \"interactive\": ${lang["interactive"]}}$comma")
+          }
+          appendLine("  ],")
+          appendLine("  \"count\": ${languages.size},")
+          appendLine("  \"executionMs\": $executionMs")
+          appendLine("}")
+        })
+      }
+    } catch (e: Exception) {
+      errorResult("Failed to list languages: ${e.message}")
+    }
   }
 
   // Real implementations using language-specific tracing APIs

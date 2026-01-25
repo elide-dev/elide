@@ -46,4 +46,8 @@ elide {
 
 dependencies {
     api(projects.packages.engine)
+    
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }

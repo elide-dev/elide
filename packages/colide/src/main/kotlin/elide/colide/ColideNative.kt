@@ -32,14 +32,22 @@ import elide.runtime.core.lib.NativeLibraries
  */
 public object ColideNative {
     private var initialized = false
+    private var nativeAvailable = false
 
     init {
         NativeLibraries.resolve("colide") { loaded ->
+            nativeAvailable = loaded
             if (!loaded) {
                 System.err.println("Warning: Colide native library not available")
             }
         }
     }
+
+    /**
+     * Check if native library is available.
+     */
+    @JvmStatic
+    public val isAvailable: Boolean get() = nativeAvailable
 
     /**
      * Initialize all Colide native drivers.

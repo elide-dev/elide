@@ -14,6 +14,7 @@
 package elide.colide.gui
 
 import elide.colide.Vesa
+import elide.colide.fs.FileSystem
 
 /**
  * # File Browser Widget
@@ -199,27 +200,25 @@ public class FileBrowser : Widget() {
     }
     
     /**
-     * Load directory contents.
+     * Load directory contents from FileSystem.
      */
     private fun loadDirectory(path: String) {
         entries.clear()
         
-        when (path) {
-            "/zip" -> {
-                entries.add(FileEntry("bin", "/zip/bin", true))
-                entries.add(FileEntry("models", "/zip/models", true))
-            }
-            "/zip/bin" -> {
-                entries.add(FileEntry("elide.com", "/zip/bin/elide.com", false, 14_000_000, "com"))
-                entries.add(FileEntry("links.com", "/zip/bin/links.com", false, 6_000_000, "com"))
-                entries.add(FileEntry("llamafile", "/zip/bin/llamafile", false, 2_000_000, ""))
-                entries.add(FileEntry("vim.com", "/zip/bin/vim.com", false, 3_000_000, "com"))
-                entries.add(FileEntry("bash.com", "/zip/bin/bash.com", false, 2_000_000, "com"))
-                entries.add(FileEntry("nano.com", "/zip/bin/nano.com", false, 1_000_000, "com"))
-            }
-            "/zip/models" -> {
-                entries.add(FileEntry("tinyllama.gguf", "/zip/models/tinyllama.gguf", false, 637_000_000, "gguf"))
-            }
+        val fsEntries = FileSystem.listDirectory(path)
+        for (fsEntry in fsEntries) {
+            entries.add(FileEntry(
+                name = fsEntry.name,
+                path = fsEntry.path,
+                isDirectory = fsEntry.isDirectory,
+                size = fsEntry.size,
+                extension = fsEntry.extension
+            ))
+        }
+        
+        if (entries.isEmpty() && path == "/zip") {
+            entries.add(FileEntry("bin", "/zip/bin", true))
+            entries.add(FileEntry("models", "/zip/models", true))
         }
     }
     

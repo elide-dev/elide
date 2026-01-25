@@ -27,6 +27,7 @@
 pub mod vesa;
 pub mod keyboard;
 pub mod ai;
+pub mod filesystem;
 
 use java_native::jni;
 use jni::JNIEnv;
@@ -131,6 +132,100 @@ pub extern "system" fn Java_elide_colide_ColideNative_mouseButtons(
     _class: JClass,
 ) -> jint {
     keyboard::mouse_buttons()
+}
+
+// ============ FileSystem JNI Bindings ============
+
+use jni::objects::JString;
+use jni::objects::JObjectArray;
+
+/// Check if file exists.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_fs_FileSystem_nativeFileExists(
+    mut env: JNIEnv,
+    _class: JClass,
+    path: JString,
+) -> jboolean {
+    let path: String = env.get_string(&path).map(|s| s.into()).unwrap_or_default();
+    if filesystem::file_exists(&path) { JNI_TRUE } else { JNI_FALSE }
+}
+
+/// Check if path is directory.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_fs_FileSystem_nativeFileIsDir(
+    mut env: JNIEnv,
+    _class: JClass,
+    path: JString,
+) -> jboolean {
+    let path: String = env.get_string(&path).map(|s| s.into()).unwrap_or_default();
+    if filesystem::file_is_dir(&path) { JNI_TRUE } else { JNI_FALSE }
+}
+
+/// Get file size.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_fs_FileSystem_nativeFileSize(
+    mut env: JNIEnv,
+    _class: JClass,
+    path: JString,
+) -> jni::sys::jlong {
+    let path: String = env.get_string(&path).map(|s| s.into()).unwrap_or_default();
+    filesystem::file_size(&path)
+}
+
+/// Read file as text.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_fs_FileSystem_nativeFileReadText<'a>(
+    mut env: JNIEnv<'a>,
+    _class: JClass,
+    path: JString,
+) -> JString<'a> {
+    let path: String = env.get_string(&path).map(|s| s.into()).unwrap_or_default();
+    match filesystem::file_read_text(&path) {
+        Some(content) => env.new_string(&content).unwrap_or_else(|_| JString::default()),
+        None => JString::default(),
+    }
+}
+
+/// Read file as bytes.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_fs_FileSystem_nativeFileReadBytes(
+    mut env: JNIEnv,
+    _class: JClass,
+    path: JString,
+) -> jni::sys::jbyteArray {
+    let path: String = env.get_string(&path).map(|s| s.into()).unwrap_or_default();
+    match filesystem::file_read_bytes(&path) {
+        Some(bytes) => {
+            let arr = env.new_byte_array(bytes.len() as i32).unwrap();
+            let _ = env.set_byte_array_region(&arr, 0, unsafe {
+                std::slice::from_raw_parts(bytes.as_ptr() as *const i8, bytes.len())
+            });
+            arr.into_raw()
+        }
+        None => std::ptr::null_mut(),
+    }
+}
+
+/// List directory contents.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_fs_FileSystem_nativeListDir(
+    mut env: JNIEnv,
+    _class: JClass,
+    path: JString,
+) -> jni::sys::jobjectArray {
+    let path: String = env.get_string(&path).map(|s| s.into()).unwrap_or_default();
+    match filesystem::dir_list(&path) {
+        Some(entries) => {
+            let string_class = env.find_class("java/lang/String").unwrap();
+            let arr = env.new_object_array(entries.len() as i32, &string_class, JString::default()).unwrap();
+            for (i, entry) in entries.iter().enumerate() {
+                let jstr = env.new_string(entry).unwrap();
+                let _ = env.set_object_array_element(&arr, i as i32, jstr);
+            }
+            arr.into_raw()
+        }
+        None => std::ptr::null_mut(),
+    }
 }
 
 // JNI_OnLoad for dynamic loading

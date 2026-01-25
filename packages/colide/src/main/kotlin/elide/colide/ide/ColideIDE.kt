@@ -181,9 +181,12 @@ public class ColideIDE {
      * Open a file in the editor.
      */
     private fun openFile(path: String) {
-        codeEditor?.filePath = path
-        terminal?.printInfo("Opened: $path")
-        terminal?.println("(File loading requires native integration)")
+        val success = codeEditor?.loadFile(path) ?: false
+        if (success) {
+            terminal?.printSuccess("Opened: $path")
+        } else {
+            terminal?.printError("Failed to open: $path")
+        }
     }
     
     /**

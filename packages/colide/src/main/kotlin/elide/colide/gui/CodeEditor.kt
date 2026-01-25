@@ -14,6 +14,7 @@
 package elide.colide.gui
 
 import elide.colide.Vesa
+import elide.colide.fs.FileSystem
 
 /**
  * # Code Editor Widget
@@ -256,6 +257,30 @@ public class CodeEditor : Widget() {
      */
     public fun gotoLine(line: Int) {
         setCursorPosition(line - 1, 0)
+    }
+    
+    /**
+     * Load file from path using FileSystem.
+     */
+    public fun loadFile(path: String): Boolean {
+        val content = FileSystem.readText(path) ?: return false
+        setText(content)
+        filePath = path
+        setModified(false)
+        return true
+    }
+    
+    /**
+     * Save file to path using FileSystem.
+     */
+    public fun saveFile(path: String? = filePath): Boolean {
+        val targetPath = path ?: return false
+        val success = FileSystem.writeText(targetPath, getText())
+        if (success) {
+            filePath = targetPath
+            setModified(false)
+        }
+        return success
     }
     
     /**

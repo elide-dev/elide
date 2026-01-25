@@ -37,8 +37,16 @@ public class CodeEditor : Widget() {
     private var scrollY = 0
     private var scrollX = 0
     private var modified = false
+    private var highlighter: SyntaxHighlighter = SyntaxHighlighter.forLanguage(SyntaxHighlighter.Language.PLAIN)
     
     public var filePath: String? = null
+        set(value) {
+            field = value
+            val ext = value?.substringAfterLast('.', "") ?: ""
+            highlighter = SyntaxHighlighter.forExtension(ext)
+        }
+    
+    public var syntaxHighlightingEnabled: Boolean = true
     public var onModified: ((Boolean) -> Unit)? = null
     
     private val visibleLines: Int get() = (height - HEADER_HEIGHT) / Font.CHAR_HEIGHT
@@ -73,13 +81,17 @@ public class CodeEditor : Widget() {
             Font.drawText(x + 2, screenY, lineNum, numColor)
             
             val line = lines[lineIdx]
-            val displayStart = scrollX.coerceAtMost(line.length)
-            val displayEnd = (scrollX + visibleCols).coerceAtMost(line.length)
-            val displayText = if (displayStart < displayEnd) {
-                line.substring(displayStart, displayEnd)
-            } else ""
             
-            Font.drawText(x + GUTTER_WIDTH + PADDING, screenY, displayText, foregroundColor)
+            if (syntaxHighlightingEnabled && line.isNotEmpty()) {
+                renderHighlightedLine(line, screenY)
+            } else {
+                val displayStart = scrollX.coerceAtMost(line.length)
+                val displayEnd = (scrollX + visibleCols).coerceAtMost(line.length)
+                val displayText = if (displayStart < displayEnd) {
+                    line.substring(displayStart, displayEnd)
+                } else ""
+                Font.drawText(x + GUTTER_WIDTH + PADDING, screenY, displayText, foregroundColor)
+            }
             
             if (lineIdx == cursorLine && focused) {
                 val cursorScreenX = x + GUTTER_WIDTH + PADDING + (cursorCol - scrollX) * Font.CHAR_WIDTH
@@ -306,6 +318,33 @@ public class CodeEditor : Widget() {
             scrollX = cursorCol
         } else if (cursorCol >= scrollX + visibleCols) {
             scrollX = cursorCol - visibleCols + 1
+        }
+    }
+    
+    private fun renderHighlightedLine(line: String, screenY: Int) {
+        val tokens = highlighter.tokenizeLine(line)
+        var drawX = x + GUTTER_WIDTH + PADDING
+        
+        for (token in tokens) {
+            if (token.end <= scrollX) continue
+            if (token.start >= scrollX + visibleCols) break
+            
+            val visStart = (token.start - scrollX).coerceAtLeast(0)
+            val visEnd = (token.end - scrollX).coerceAtMost(visibleCols)
+            
+            if (visStart < visEnd) {
+                val textStart = if (token.start < scrollX) scrollX - token.start else 0
+                val textEnd = textStart + (visEnd - visStart)
+                val visibleText = token.text.substring(
+                    textStart.coerceAtMost(token.text.length),
+                    textEnd.coerceAtMost(token.text.length)
+                )
+                
+                if (visibleText.isNotEmpty()) {
+                    val tokenX = x + GUTTER_WIDTH + PADDING + visStart * Font.CHAR_WIDTH
+                    Font.drawText(tokenX, screenY, visibleText, token.color)
+                }
+            }
         }
     }
     

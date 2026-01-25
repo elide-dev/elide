@@ -76,6 +76,24 @@ public object ColideNative {
     public external fun screenHeight(): Int
 
     /**
+     * Get mouse X position.
+     */
+    @JvmStatic
+    public external fun mouseX(): Int
+
+    /**
+     * Get mouse Y position.
+     */
+    @JvmStatic
+    public external fun mouseY(): Int
+
+    /**
+     * Get mouse button state (bit 0 = left, bit 1 = right, bit 2 = middle).
+     */
+    @JvmStatic
+    public external fun mouseButtons(): Int
+
+    /**
      * Ensure drivers are initialized before use.
      */
     public fun ensureInitialized(): Boolean {

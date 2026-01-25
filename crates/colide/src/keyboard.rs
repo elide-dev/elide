@@ -27,6 +27,9 @@ extern "C" {
     fn colide_keyboard_getchar() -> i32;
     fn colide_keyboard_available() -> i32;
     fn colide_keyboard_getmods() -> i32;
+    fn colide_mouse_x() -> i32;
+    fn colide_mouse_y() -> i32;
+    fn colide_mouse_buttons() -> i32;
 }
 
 /// Initialize keyboard driver.
@@ -86,6 +89,42 @@ pub extern "system" fn Java_elide_colide_Keyboard_getModifiers(
     #[cfg(feature = "bare-metal")]
     {
         unsafe { colide_keyboard_getmods() }
+    }
+    #[cfg(not(feature = "bare-metal"))]
+    {
+        0
+    }
+}
+
+/// Get mouse X position.
+pub fn mouse_x() -> i32 {
+    #[cfg(feature = "bare-metal")]
+    {
+        unsafe { colide_mouse_x() }
+    }
+    #[cfg(not(feature = "bare-metal"))]
+    {
+        0
+    }
+}
+
+/// Get mouse Y position.
+pub fn mouse_y() -> i32 {
+    #[cfg(feature = "bare-metal")]
+    {
+        unsafe { colide_mouse_y() }
+    }
+    #[cfg(not(feature = "bare-metal"))]
+    {
+        0
+    }
+}
+
+/// Get mouse button state.
+pub fn mouse_buttons() -> i32 {
+    #[cfg(feature = "bare-metal")]
+    {
+        unsafe { colide_mouse_buttons() }
     }
     #[cfg(not(feature = "bare-metal"))]
     {

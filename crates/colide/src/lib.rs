@@ -106,6 +106,33 @@ pub extern "system" fn Java_elide_colide_ColideNative_screenHeight(
     vesa::height()
 }
 
+/// Get mouse X position.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_ColideNative_mouseX(
+    _env: JNIEnv,
+    _class: JClass,
+) -> jint {
+    keyboard::mouse_x()
+}
+
+/// Get mouse Y position.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_ColideNative_mouseY(
+    _env: JNIEnv,
+    _class: JClass,
+) -> jint {
+    keyboard::mouse_y()
+}
+
+/// Get mouse button state.
+#[unsafe(no_mangle)]
+pub extern "system" fn Java_elide_colide_ColideNative_mouseButtons(
+    _env: JNIEnv,
+    _class: JClass,
+) -> jint {
+    keyboard::mouse_buttons()
+}
+
 // JNI_OnLoad for dynamic loading
 #[unsafe(no_mangle)]
 pub extern "system" fn JNI_OnLoad(

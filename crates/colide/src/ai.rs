@@ -11,8 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-//! AI Inference Driver
+//! AI Inference JNI bindings for Colide OS.
 //!
+#![allow(unsafe_attr_outside_unsafe)]
 //! Provides llamafile integration for bare metal AI inference.
 
 use java_native::jni;
@@ -34,7 +35,7 @@ extern "C" {
 }
 
 /// Initialize AI with the given model path.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Ai_init(
     mut env: JNIEnv,
     _class: JClass,
@@ -68,7 +69,7 @@ pub extern "system" fn Java_elide_colide_Ai_init(
 }
 
 /// Complete a prompt using the AI model.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Ai_complete<'local>(
     mut env: JNIEnv<'local>,
     _class: JClass<'local>,
@@ -106,7 +107,7 @@ pub extern "system" fn Java_elide_colide_Ai_complete<'local>(
 }
 
 /// Shutdown AI and release resources.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Ai_shutdown(
     _env: JNIEnv,
     _class: JClass,

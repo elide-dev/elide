@@ -11,8 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-//! PS/2 Keyboard Driver
+//! PS/2 Keyboard JNI bindings for Colide OS.
 //!
+#![allow(unsafe_attr_outside_unsafe)]
 //! Provides direct keyboard input on bare metal via Intel 8042 controller.
 
 use java_native::jni;
@@ -41,7 +42,7 @@ pub fn init() -> bool {
 }
 
 /// Get a character from keyboard (blocking).
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Keyboard_getChar(
     _env: JNIEnv,
     _class: JClass,
@@ -58,7 +59,7 @@ pub extern "system" fn Java_elide_colide_Keyboard_getChar(
 }
 
 /// Check if keyboard input is available (non-blocking).
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Keyboard_available(
     _env: JNIEnv,
     _class: JClass,
@@ -77,7 +78,7 @@ pub extern "system" fn Java_elide_colide_Keyboard_available(
 
 /// Get modifier key state (shift, ctrl, alt).
 /// Returns bitmask: bit 0 = shift, bit 1 = ctrl, bit 2 = alt
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Keyboard_getModifiers(
     _env: JNIEnv,
     _class: JClass,

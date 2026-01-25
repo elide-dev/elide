@@ -11,8 +11,9 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
-//! VESA Framebuffer Driver
+//! VESA Framebuffer JNI bindings for Colide OS.
 //!
+#![allow(unsafe_attr_outside_unsafe)]
 //! Provides direct framebuffer access on bare metal via Cosmopolitan.
 
 use java_native::jni;
@@ -83,7 +84,7 @@ pub fn height() -> i32 {
 }
 
 /// Put a pixel at (x, y) with the given color.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Vesa_putPixel(
     _env: JNIEnv,
     _class: JClass,
@@ -98,7 +99,7 @@ pub extern "system" fn Java_elide_colide_Vesa_putPixel(
 }
 
 /// Fill a rectangle with the given color.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Vesa_fillRect(
     _env: JNIEnv,
     _class: JClass,
@@ -115,7 +116,7 @@ pub extern "system" fn Java_elide_colide_Vesa_fillRect(
 }
 
 /// Clear the screen with the given color.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_Vesa_clear(
     _env: JNIEnv,
     _class: JClass,

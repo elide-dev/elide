@@ -22,6 +22,7 @@
 //! enabling Elide to run directly on hardware without an OS.
 
 #![allow(clippy::missing_safety_doc)]
+#![allow(unsafe_attr_outside_unsafe)]
 
 pub mod vesa;
 pub mod keyboard;
@@ -40,7 +41,7 @@ lazy_static! {
 
 /// Initialize Colide native drivers.
 /// Returns true if initialization succeeded.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_ColideNative_init(
     _env: JNIEnv,
     _class: JClass,
@@ -65,7 +66,7 @@ pub extern "system" fn Java_elide_colide_ColideNative_init(
 }
 
 /// Check if running on bare metal (Cosmopolitan).
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_ColideNative_isMetal(
     _env: JNIEnv,
     _class: JClass,
@@ -88,7 +89,7 @@ pub extern "system" fn Java_elide_colide_ColideNative_isMetal(
 }
 
 /// Get screen width.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_ColideNative_screenWidth(
     _env: JNIEnv,
     _class: JClass,
@@ -97,7 +98,7 @@ pub extern "system" fn Java_elide_colide_ColideNative_screenWidth(
 }
 
 /// Get screen height.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn Java_elide_colide_ColideNative_screenHeight(
     _env: JNIEnv,
     _class: JClass,
@@ -106,7 +107,7 @@ pub extern "system" fn Java_elide_colide_ColideNative_screenHeight(
 }
 
 // JNI_OnLoad for dynamic loading
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn JNI_OnLoad(
     _vm: *mut jni::sys::JavaVM,
     _reserved: *mut std::ffi::c_void,
@@ -115,7 +116,7 @@ pub extern "system" fn JNI_OnLoad(
 }
 
 // JNI_OnLoad for static linking (GraalVM native image)
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn JNI_OnLoad_colide(
     _vm: *mut jni::sys::JavaVM,
     _reserved: *mut std::ffi::c_void,
@@ -123,7 +124,7 @@ pub extern "system" fn JNI_OnLoad_colide(
     jni::sys::JNI_VERSION_1_8
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "system" fn JNI_OnUnload_colide(
     _vm: *mut jni::sys::JavaVM,
     _reserved: *mut std::ffi::c_void,

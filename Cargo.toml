@@ -49,6 +49,9 @@ codegen-units = 1
 [profile.release.package.diag]
 opt-level = "s"
 
+[profile.release.package.colide]
+opt-level = "s"
+
 [profile.release.package.local-ai]
 opt-level = "s"
 
@@ -76,6 +79,7 @@ jni = { git = "https://github.com/elide-tools/jni-rs", rev = "52526ede7ff165632b
 [workspace.dependencies]
 ## Local
 builder = { path = "crates/builder" }
+colide = { path = "crates/colide" }
 diag = { path = "crates/diag" }
 substrate = { path = "crates/substrate" }
 trace = { path = "crates/trace" }

@@ -213,6 +213,7 @@ include(
   ":packages:graalvm-ts",
   ":packages:graalvm-wasm",
   ":packages:http",
+  ":packages:colide",
   ":packages:local-ai",
   ":packages:platform",
   ":packages:runner",

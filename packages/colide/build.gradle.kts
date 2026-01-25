@@ -11,9 +11,12 @@
  * License for the specific language governing permissions and limitations under the License.
  */
 
+import elide.internal.conventions.kotlin.KotlinTarget
+import elide.internal.conventions.publishing.publish
+
 plugins {
     kotlin("jvm")
-    id("elide.internal.conventions")
+    alias(libs.plugins.elide.conventions)
 }
 
 elide {
@@ -21,13 +24,26 @@ elide {
         id = "colide"
         name = "Colide OS Native Drivers"
         description = "JNI bindings for Colide OS bare metal drivers (VESA, keyboard, AI)"
+
+        publish("jvm") {
+            from(components["kotlin"])
+        }
     }
 
     kotlin {
+        target = KotlinTarget.JVM
         explicitApi = true
+    }
+
+    java {
+        configureModularity = false
+    }
+
+    checks {
+        diktat = false
     }
 }
 
 dependencies {
-    implementation(projects.packages.engine)
+    api(projects.packages.engine)
 }

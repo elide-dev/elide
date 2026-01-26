@@ -1827,6 +1827,178 @@ pub mod ReasonCode {
     pub const INVALID_AKMP: u16 = 20;
 }
 
+/// 802.11n High Throughput (HT) capabilities
+#[derive(Debug, Clone, Copy)]
+pub struct HtCapabilities {
+    pub ht_supported: bool,
+    pub channel_width_40mhz: bool,
+    pub short_gi_20mhz: bool,
+    pub short_gi_40mhz: bool,
+    pub rx_stbc: u8,           // 0-3 spatial streams
+    pub tx_stbc: bool,
+    pub max_amsdu_len: u16,    // 3839 or 7935 bytes
+    pub mcs_set: [u8; 16],     // Supported MCS indices
+}
+
+impl HtCapabilities {
+    /// Create MT7601U HT capabilities (single stream, 20MHz)
+    pub fn mt7601u_default() -> Self {
+        let mut mcs_set = [0u8; 16];
+        mcs_set[0] = 0xFF; // MCS 0-7 supported (single spatial stream)
+        
+        Self {
+            ht_supported: true,
+            channel_width_40mhz: false, // MT7601U is 20MHz only
+            short_gi_20mhz: true,
+            short_gi_40mhz: false,
+            rx_stbc: 1,
+            tx_stbc: false,
+            max_amsdu_len: 3839,
+            mcs_set,
+        }
+    }
+    
+    /// Build HT Capabilities IE for association
+    pub fn build_ie(&self) -> heapless::Vec<u8, 32> {
+        let mut ie = heapless::Vec::new();
+        
+        // Element ID: HT Capabilities (45)
+        let _ = ie.push(45);
+        // Length: 26 bytes
+        let _ = ie.push(26);
+        
+        // HT Capabilities Info (2 bytes)
+        let mut cap_info: u16 = 0;
+        if self.channel_width_40mhz { cap_info |= 0x0002; }
+        if self.short_gi_20mhz { cap_info |= 0x0020; }
+        if self.short_gi_40mhz { cap_info |= 0x0040; }
+        if self.tx_stbc { cap_info |= 0x0080; }
+        cap_info |= (self.rx_stbc as u16 & 0x03) << 8;
+        if self.max_amsdu_len == 7935 { cap_info |= 0x0800; }
+        let _ = ie.extend_from_slice(&cap_info.to_le_bytes());
+        
+        // A-MPDU Parameters (1 byte)
+        let _ = ie.push(0x17); // Max length exponent=3, min spacing=4μs
+        
+        // Supported MCS Set (16 bytes)
+        let _ = ie.extend_from_slice(&self.mcs_set);
+        
+        // HT Extended Capabilities (2 bytes)
+        let _ = ie.extend_from_slice(&[0x00, 0x00]);
+        
+        // Transmit Beamforming Capabilities (4 bytes)
+        let _ = ie.extend_from_slice(&[0x00, 0x00, 0x00, 0x00]);
+        
+        // Antenna Selection Capabilities (1 byte)
+        let _ = ie.push(0x00);
+        
+        ie
+    }
+    
+    /// Parse HT Capabilities IE from beacon/probe response
+    pub fn parse_ie(data: &[u8]) -> Option<Self> {
+        if data.len() < 26 {
+            return None;
+        }
+        
+        let cap_info = u16::from_le_bytes([data[0], data[1]]);
+        
+        let mut mcs_set = [0u8; 16];
+        mcs_set.copy_from_slice(&data[3..19]);
+        
+        Some(Self {
+            ht_supported: true,
+            channel_width_40mhz: (cap_info & 0x0002) != 0,
+            short_gi_20mhz: (cap_info & 0x0020) != 0,
+            short_gi_40mhz: (cap_info & 0x0040) != 0,
+            tx_stbc: (cap_info & 0x0080) != 0,
+            rx_stbc: ((cap_info >> 8) & 0x03) as u8,
+            max_amsdu_len: if (cap_info & 0x0800) != 0 { 7935 } else { 3839 },
+            mcs_set,
+        })
+    }
+    
+    /// Get maximum PHY rate in Mbps
+    pub fn max_rate_mbps(&self) -> u32 {
+        let mcs_count = self.mcs_set[0].count_ones();
+        let base_rate = if self.short_gi_20mhz { 72 } else { 65 }; // MCS7 rate
+        
+        if self.channel_width_40mhz {
+            base_rate * 2 * mcs_count / 8
+        } else {
+            base_rate * mcs_count / 8
+        }
+    }
+}
+
+impl Default for HtCapabilities {
+    fn default() -> Self {
+        Self::mt7601u_default()
+    }
+}
+
+/// 802.11n HT Operation (from AP beacon)
+#[derive(Debug, Clone, Copy)]
+pub struct HtOperation {
+    pub primary_channel: u8,
+    pub secondary_channel_offset: u8,  // 0=none, 1=above, 3=below
+    pub sta_channel_width: bool,       // AP allows 40MHz
+    pub rifs_mode: bool,
+    pub protection_mode: u8,           // 0-3
+}
+
+impl HtOperation {
+    /// Parse HT Operation IE (Element ID 61)
+    pub fn parse_ie(data: &[u8]) -> Option<Self> {
+        if data.len() < 22 {
+            return None;
+        }
+        
+        Some(Self {
+            primary_channel: data[0],
+            secondary_channel_offset: data[1] & 0x03,
+            sta_channel_width: (data[1] & 0x04) != 0,
+            rifs_mode: (data[1] & 0x08) != 0,
+            protection_mode: (data[2] & 0x03),
+        })
+    }
+}
+
+/// A-MPDU (Aggregated MAC Protocol Data Unit) handling
+pub struct AmpduConfig {
+    pub enabled: bool,
+    pub max_length: u32,      // Max A-MPDU length in bytes
+    pub min_spacing: u8,      // Minimum MPDU spacing (0-7)
+    pub density: u8,          // MPDU density
+}
+
+impl AmpduConfig {
+    pub fn new() -> Self {
+        Self {
+            enabled: true,
+            max_length: 65535,  // 64KB max
+            min_spacing: 4,     // 4μs
+            density: 0,
+        }
+    }
+    
+    /// Calculate max MPDUs per A-MPDU based on rate
+    pub fn max_mpdus(&self, mcs: u8) -> u8 {
+        match mcs {
+            0..=3 => 8,
+            4..=5 => 16,
+            6..=7 => 32,
+            _ => 64,
+        }
+    }
+}
+
+impl Default for AmpduConfig {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Driver errors
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Mt7601uError {

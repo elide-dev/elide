@@ -38,6 +38,7 @@ pub mod udp;
 pub mod arp;
 pub mod stack;
 pub mod ipv6;
+pub mod tls;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

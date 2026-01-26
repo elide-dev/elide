@@ -18,6 +18,7 @@ pub mod drivers;
 pub mod firmware;
 pub mod nl80211;
 pub mod regulatory;
+pub mod power;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

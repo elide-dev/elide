@@ -55,6 +55,7 @@ public class CodeEditor : Widget() {
         }
     
     public var syntaxHighlightingEnabled: Boolean = true
+    public var autoCloseBrackets: Boolean = true
     public var onModified: ((Boolean) -> Unit)? = null
     public var onSave: ((String) -> Boolean)? = null
     public var onOpen: (() -> Unit)? = null
@@ -189,10 +190,26 @@ public class CodeEditor : Widget() {
                 val currentLine = lines[cursorLine]
                 val beforeCursor = currentLine.substring(0, cursorCol)
                 val afterCursor = currentLine.substring(cursorCol)
+                
+                // Calculate indent from current line
+                val indent = getIndent(currentLine)
+                var extraIndent = ""
+                
+                // Add extra indent after opening brackets
+                if (beforeCursor.isNotEmpty()) {
+                    val lastChar = beforeCursor.last()
+                    if (lastChar in OPENING_BRACKETS) {
+                        extraIndent = INDENT_STRING
+                    }
+                }
+                
+                val newIndent = indent + extraIndent
+                
+                undoManager.recordEdit(UndoManager.EditAction.NewLine(cursorLine, cursorCol, cursorLine))
                 lines[cursorLine] = beforeCursor
-                lines.add(cursorLine + 1, afterCursor)
+                lines.add(cursorLine + 1, newIndent + afterCursor)
                 cursorLine++
-                cursorCol = 0
+                cursorCol = newIndent.length
                 setModified(true)
                 ensureCursorVisible()
                 return true
@@ -229,7 +246,24 @@ public class CodeEditor : Widget() {
                 return true
             }
             in 0x20..0x7E -> {
-                insertText(keyCode.toChar().toString())
+                val ch = keyCode.toChar()
+                val closing = BRACKET_PAIRS[ch]
+                if (closing != null && autoCloseBrackets) {
+                    // Auto-close brackets and quotes
+                    insertText(ch.toString() + closing)
+                    cursorCol-- // Move cursor between brackets
+                } else if (ch in CLOSING_BRACKETS && autoCloseBrackets) {
+                    // Skip over closing bracket if it matches
+                    val line = lines[cursorLine]
+                    if (cursorCol < line.length && line[cursorCol] == ch) {
+                        cursorCol++
+                        ensureCursorVisible()
+                        return true
+                    }
+                    insertText(ch.toString())
+                } else {
+                    insertText(ch.toString())
+                }
                 return true
             }
         }
@@ -571,6 +605,17 @@ public class CodeEditor : Widget() {
         }
     }
     
+    private fun getIndent(line: String): String {
+        val indent = StringBuilder()
+        for (ch in line) {
+            if (ch == ' ' || ch == '\t') indent.append(ch)
+            else break
+        }
+        return indent.toString()
+    }
+    
+    private fun getMatchingBracket(bracket: Char): Char? = BRACKET_PAIRS[bracket]
+    
     public companion object {
         private const val PADDING = 4
         private const val GUTTER_WIDTH = 40
@@ -583,5 +628,13 @@ public class CodeEditor : Widget() {
         private const val LINE_NUM_COLOR = 0x006c7086
         private const val LINE_NUM_ACTIVE = 0x00cdd6f4
         private const val CURSOR_COLOR = 0x00f5e0dc
+        
+        private const val INDENT_STRING = "    "
+        private val OPENING_BRACKETS = setOf('{', '(', '[')
+        private val CLOSING_BRACKETS = setOf('}', ')', ']')
+        private val BRACKET_PAIRS = mapOf(
+            '{' to '}', '(' to ')', '[' to ']',
+            '"' to '"', '\'' to '\''
+        )
     }
 }

@@ -709,3 +709,156 @@ pub enum WsError {
     InvalidFrame,
     ConnectionClosed,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_ws_frame_text_build_parse() {
+        let frame = WsFrame::text("Hello, WebSocket!");
+        let built = frame.build();
+        
+        // Verify frame structure
+        assert!(built.len() > 2);
+        assert_eq!(built[0] & 0x0F, WsOpcode::Text as u8); // Opcode
+        assert!(built[0] & 0x80 != 0); // FIN bit set
+        
+        // Parse and verify roundtrip (without mask for server frames)
+        let mut unmasked = WsFrame {
+            fin: true,
+            opcode: WsOpcode::Text,
+            mask: None,
+            payload: "Hello, WebSocket!".as_bytes().to_vec(),
+        };
+        let server_frame = unmasked.build();
+        let (parsed, _) = WsFrame::parse(&server_frame).unwrap();
+        assert_eq!(parsed.payload_text().unwrap(), "Hello, WebSocket!");
+    }
+
+    #[test]
+    fn test_ws_frame_binary() {
+        let data = vec![0x01, 0x02, 0x03, 0xFF, 0xFE];
+        let frame = WsFrame::binary(data.clone());
+        assert_eq!(frame.opcode, WsOpcode::Binary);
+        assert_eq!(frame.payload, data);
+        assert!(frame.fin);
+    }
+
+    #[test]
+    fn test_ws_frame_close_code() {
+        let frame = WsFrame::close(WsCloseCode::Normal, "goodbye");
+        assert_eq!(frame.opcode, WsOpcode::Close);
+        assert_eq!(frame.close_code(), Some(WsCloseCode::Normal));
+        assert_eq!(frame.close_reason(), Some("goodbye".to_string()));
+    }
+
+    #[test]
+    fn test_ws_frame_ping_pong() {
+        let ping = WsFrame::ping(vec![1, 2, 3]);
+        assert_eq!(ping.opcode, WsOpcode::Ping);
+        
+        let pong = WsFrame::pong(vec![1, 2, 3]);
+        assert_eq!(pong.opcode, WsOpcode::Pong);
+    }
+
+    #[test]
+    fn test_ws_opcode_control() {
+        assert!(WsOpcode::Close.is_control());
+        assert!(WsOpcode::Ping.is_control());
+        assert!(WsOpcode::Pong.is_control());
+        assert!(!WsOpcode::Text.is_control());
+        assert!(!WsOpcode::Binary.is_control());
+    }
+
+    #[test]
+    fn test_sha1_known_vector() {
+        // Test vector: SHA-1("abc") = a9993e36...
+        let hash = sha1(b"abc");
+        assert_eq!(hash[0], 0xa9);
+        assert_eq!(hash[1], 0x99);
+        assert_eq!(hash[2], 0x3e);
+        assert_eq!(hash[3], 0x36);
+    }
+
+    #[test]
+    fn test_base64_encode() {
+        assert_eq!(base64_encode(b""), "");
+        assert_eq!(base64_encode(b"f"), "Zg==");
+        assert_eq!(base64_encode(b"fo"), "Zm8=");
+        assert_eq!(base64_encode(b"foo"), "Zm9v");
+        assert_eq!(base64_encode(b"foob"), "Zm9vYg==");
+        assert_eq!(base64_encode(b"fooba"), "Zm9vYmE=");
+        assert_eq!(base64_encode(b"foobar"), "Zm9vYmFy");
+    }
+
+    #[test]
+    fn test_ws_accept_key() {
+        // RFC 6455 example
+        let key = "dGhlIHNhbXBsZSBub25jZQ==";
+        let accept = compute_accept_key(key);
+        assert_eq!(accept, "s3pPLMBiTxaQ9kYGzzhZRbK+xOo=");
+    }
+
+    #[test]
+    fn test_ws_handshake_build() {
+        let handshake = WsHandshake::new("example.com", "/chat");
+        let request = handshake.build();
+        let text = String::from_utf8(request).unwrap();
+        
+        assert!(text.starts_with("GET /chat HTTP/1.1\r\n"));
+        assert!(text.contains("Host: example.com\r\n"));
+        assert!(text.contains("Upgrade: websocket\r\n"));
+        assert!(text.contains("Connection: Upgrade\r\n"));
+        assert!(text.contains("Sec-WebSocket-Key:"));
+        assert!(text.contains("Sec-WebSocket-Version: 13\r\n"));
+        assert!(text.ends_with("\r\n\r\n"));
+    }
+
+    #[test]
+    fn test_websocket_state_machine() {
+        let mut ws = WebSocket::new("example.com", "/ws");
+        assert_eq!(ws.state(), WsState::Connecting);
+        
+        let action = ws.connect();
+        assert!(matches!(action, WsAction::Send(_)));
+        assert_eq!(ws.state(), WsState::Handshaking);
+    }
+
+    #[test]
+    fn test_ws_frame_length_encoding() {
+        // Small payload (< 126 bytes)
+        let small = WsFrame { fin: true, opcode: WsOpcode::Text, mask: None, payload: vec![0; 10] };
+        let built = small.build();
+        assert_eq!(built[1] & 0x7F, 10);
+        
+        // Medium payload (126-65535 bytes)
+        let medium = WsFrame { fin: true, opcode: WsOpcode::Binary, mask: None, payload: vec![0; 1000] };
+        let built = medium.build();
+        assert_eq!(built[1] & 0x7F, 126);
+        let len = u16::from_be_bytes([built[2], built[3]]);
+        assert_eq!(len, 1000);
+    }
+
+    #[test]
+    fn test_ws_masking() {
+        let mask = [0x12, 0x34, 0x56, 0x78];
+        let payload = vec![0x48, 0x65, 0x6c, 0x6c, 0x6f]; // "Hello"
+        
+        let frame = WsFrame {
+            fin: true,
+            opcode: WsOpcode::Text,
+            mask: Some(mask),
+            payload: payload.clone(),
+        };
+        
+        let built = frame.build();
+        
+        // Verify mask is in frame
+        assert!(built[1] & 0x80 != 0); // Mask bit set
+        
+        // Parse should unmask correctly
+        let (parsed, _) = WsFrame::parse(&built).unwrap();
+        assert_eq!(parsed.payload, payload);
+    }
+}

@@ -16,6 +16,8 @@ pub use mt7601u::{
     DeauthFrame, DisassocFrame, ReasonCode,
     // Encryption
     CcmpEncryption,
+    // Power/QoS
+    PowerSaveMode, PowerConfig, AccessCategory, WmmParams, AcParams,
     // EAPOL/WPA
     EapolFrame, EapolHandler, EapolState,
     EAPOL_ETHER_TYPE, EAPOL_VERSION_2, EAPOL_KEY,

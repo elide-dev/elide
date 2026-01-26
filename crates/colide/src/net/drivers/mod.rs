@@ -3,6 +3,7 @@
 
 pub mod mt7601u;
 pub mod rtl8188eu;
+pub mod iwlwifi;
 pub mod traits;
 
 pub use traits::{

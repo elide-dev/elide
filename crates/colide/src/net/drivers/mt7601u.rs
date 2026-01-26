@@ -760,6 +760,275 @@ impl Default for Mt7601uDriver {
     }
 }
 
+impl Default for ScanState {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// 802.11 Authentication frame builder
+pub struct AuthFrame;
+
+impl AuthFrame {
+    /// Build Open System authentication request (seq 1)
+    pub fn build_request(sa: &[u8; 6], da: &[u8; 6], bssid: &[u8; 6]) -> Vec<u8> {
+        let mut frame = Vec::with_capacity(30);
+        
+        // Frame Control: Authentication (0x00b0)
+        frame.extend_from_slice(&[0xb0, 0x00]);
+        // Duration
+        frame.extend_from_slice(&[0x00, 0x00]);
+        // DA (AP)
+        frame.extend_from_slice(da);
+        // SA (us)
+        frame.extend_from_slice(sa);
+        // BSSID
+        frame.extend_from_slice(bssid);
+        // Sequence Control
+        frame.extend_from_slice(&[0x00, 0x00]);
+        
+        // Authentication Algorithm: Open System (0)
+        frame.extend_from_slice(&[0x00, 0x00]);
+        // Authentication Sequence: 1
+        frame.extend_from_slice(&[0x01, 0x00]);
+        // Status Code: Success (0)
+        frame.extend_from_slice(&[0x00, 0x00]);
+        
+        frame
+    }
+    
+    /// Parse authentication response
+    pub fn parse_response(frame: &[u8]) -> Option<AuthResponse> {
+        if frame.len() < 30 {
+            return None;
+        }
+        
+        let fc = u16::from_le_bytes([frame[0], frame[1]]);
+        if fc != frame_type::MGMT_AUTH {
+            return None;
+        }
+        
+        let algo = u16::from_le_bytes([frame[24], frame[25]]);
+        let seq = u16::from_le_bytes([frame[26], frame[27]]);
+        let status = u16::from_le_bytes([frame[28], frame[29]]);
+        
+        Some(AuthResponse { algo, seq, status })
+    }
+}
+
+/// Authentication response
+#[derive(Debug, Clone, Copy)]
+pub struct AuthResponse {
+    pub algo: u16,
+    pub seq: u16,
+    pub status: u16,
+}
+
+impl AuthResponse {
+    pub fn is_success(&self) -> bool {
+        self.status == 0 && self.seq == 2
+    }
+}
+
+/// 802.11 Association frame builder
+pub struct AssocFrame;
+
+impl AssocFrame {
+    /// Build association request
+    pub fn build_request(
+        sa: &[u8; 6],
+        bssid: &[u8; 6],
+        ssid: &[u8],
+        supported_rates: &[u8],
+        rsn_ie: Option<&[u8]>,
+    ) -> Vec<u8> {
+        let mut frame = Vec::with_capacity(128);
+        
+        // Frame Control: Association Request (0x0000)
+        frame.extend_from_slice(&[0x00, 0x00]);
+        // Duration
+        frame.extend_from_slice(&[0x00, 0x00]);
+        // DA (AP/BSSID)
+        frame.extend_from_slice(bssid);
+        // SA (us)
+        frame.extend_from_slice(sa);
+        // BSSID
+        frame.extend_from_slice(bssid);
+        // Sequence Control
+        frame.extend_from_slice(&[0x00, 0x00]);
+        
+        // Capability Info: ESS, Short Preamble
+        frame.extend_from_slice(&[0x21, 0x00]);
+        // Listen Interval
+        frame.extend_from_slice(&[0x0a, 0x00]);
+        
+        // SSID IE
+        frame.push(ie_id::SSID);
+        frame.push(ssid.len() as u8);
+        frame.extend_from_slice(ssid);
+        
+        // Supported Rates IE
+        frame.push(ie_id::SUPPORTED_RATES);
+        let rate_len = supported_rates.len().min(8);
+        frame.push(rate_len as u8);
+        frame.extend_from_slice(&supported_rates[..rate_len]);
+        
+        // Extended Supported Rates if needed
+        if supported_rates.len() > 8 {
+            frame.push(50); // Extended Supported Rates ID
+            let ext_len = supported_rates.len() - 8;
+            frame.push(ext_len as u8);
+            frame.extend_from_slice(&supported_rates[8..]);
+        }
+        
+        // RSN IE for WPA2
+        if let Some(rsn) = rsn_ie {
+            frame.push(ie_id::RSN);
+            frame.push(rsn.len() as u8);
+            frame.extend_from_slice(rsn);
+        }
+        
+        frame
+    }
+    
+    /// Parse association response
+    pub fn parse_response(frame: &[u8]) -> Option<AssocResponse> {
+        if frame.len() < 30 {
+            return None;
+        }
+        
+        let fc = u16::from_le_bytes([frame[0], frame[1]]);
+        if fc != frame_type::MGMT_ASSOC_RESP {
+            return None;
+        }
+        
+        let capability = u16::from_le_bytes([frame[24], frame[25]]);
+        let status = u16::from_le_bytes([frame[26], frame[27]]);
+        let aid = u16::from_le_bytes([frame[28], frame[29]]) & 0x3fff;
+        
+        Some(AssocResponse { capability, status, aid })
+    }
+}
+
+/// Association response
+#[derive(Debug, Clone, Copy)]
+pub struct AssocResponse {
+    pub capability: u16,
+    pub status: u16,
+    pub aid: u16,
+}
+
+impl AssocResponse {
+    pub fn is_success(&self) -> bool {
+        self.status == 0
+    }
+}
+
+/// Default RSN IE for WPA2-PSK with CCMP
+pub const WPA2_RSN_IE: &[u8] = &[
+    0x01, 0x00,             // Version 1
+    0x00, 0x0f, 0xac, 0x04, // Group Cipher: CCMP
+    0x01, 0x00,             // Pairwise Cipher Count: 1
+    0x00, 0x0f, 0xac, 0x04, // Pairwise Cipher: CCMP
+    0x01, 0x00,             // AKM Count: 1
+    0x00, 0x0f, 0xac, 0x02, // AKM: PSK
+    0x00, 0x00,             // RSN Capabilities
+];
+
+/// Default supported rates for 802.11bgn
+pub const DEFAULT_RATES: &[u8] = &[
+    0x82, 0x84, 0x8b, 0x96,  // 1, 2, 5.5, 11 Mbps (basic)
+    0x0c, 0x12, 0x18, 0x24,  // 6, 9, 12, 18 Mbps
+    0x30, 0x48, 0x60, 0x6c,  // 24, 36, 48, 54 Mbps
+];
+
+/// Connection state machine
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum ConnState {
+    Disconnected,
+    Authenticating,
+    Authenticated,
+    Associating,
+    Associated,
+    WpaHandshake,
+    Connected,
+}
+
+/// Connection manager for MT7601U
+pub struct ConnectionManager {
+    pub state: ConnState,
+    pub target_ssid: heapless::String<32>,
+    pub target_bssid: [u8; 6],
+    pub aid: u16,
+    pub retry_count: u8,
+}
+
+impl ConnectionManager {
+    pub fn new() -> Self {
+        Self {
+            state: ConnState::Disconnected,
+            target_ssid: heapless::String::new(),
+            target_bssid: [0; 6],
+            aid: 0,
+            retry_count: 0,
+        }
+    }
+    
+    /// Start connection to a network
+    pub fn connect(&mut self, ssid: &str, bssid: [u8; 6]) {
+        self.target_ssid.clear();
+        let _ = self.target_ssid.push_str(ssid);
+        self.target_bssid = bssid;
+        self.state = ConnState::Authenticating;
+        self.retry_count = 0;
+    }
+    
+    /// Handle authentication response
+    pub fn handle_auth_response(&mut self, resp: &AuthResponse) {
+        if self.state != ConnState::Authenticating {
+            return;
+        }
+        
+        if resp.is_success() {
+            self.state = ConnState::Authenticated;
+        } else {
+            self.retry_count += 1;
+            if self.retry_count >= 3 {
+                self.state = ConnState::Disconnected;
+            }
+        }
+    }
+    
+    /// Handle association response
+    pub fn handle_assoc_response(&mut self, resp: &AssocResponse) {
+        if self.state != ConnState::Associating {
+            return;
+        }
+        
+        if resp.is_success() {
+            self.aid = resp.aid;
+            self.state = ConnState::Associated;
+        } else {
+            self.retry_count += 1;
+            if self.retry_count >= 3 {
+                self.state = ConnState::Disconnected;
+            }
+        }
+    }
+    
+    /// Disconnect
+    pub fn disconnect(&mut self) {
+        self.state = ConnState::Disconnected;
+        self.aid = 0;
+    }
+}
+
+impl Default for ConnectionManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Driver errors
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Mt7601uError {

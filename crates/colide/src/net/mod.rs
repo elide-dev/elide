@@ -31,6 +31,7 @@ pub mod wps;
 pub mod mesh;
 pub mod ap;
 pub mod eap;
+pub mod dhcp;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

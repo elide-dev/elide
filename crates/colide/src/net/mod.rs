@@ -29,6 +29,7 @@ pub mod monitor;
 pub mod p2p;
 pub mod wps;
 pub mod mesh;
+pub mod ap;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

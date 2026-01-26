@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "cloudflare-docs": {
+      "type": "http",
+      "serverUrl": "https://docs.mcp.cloudflare.com/sse",
+      "description": "Cloudflare documentation search"
+    },
+    "elide-classic-insight": {
+      "type": "http",
+      "serverUrl": "https://elide-classic-insight.fly.dev/mcp",
+      "description": "GraalVM Insight debugging tools (Python+JS)"
+    },
+    "elide-whiplash-insight": {
+      "type": "http",
+      "serverUrl": "https://elide-insight-mcp.fly.dev/mcp",
+      "description": "Whiplash debugging tools (34 advanced tools)"
+    },
+    "exa": {
+      "type": "http",
+      "serverUrl": "https://mcp.exa.ai/mcp",
+      "description": "Exa AI web search and research"
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "description": "GitHub repository access"
+    }
+  }
+}

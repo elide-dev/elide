@@ -194,6 +194,43 @@ public object CommandRegistry {
         })
         
         register(Command(
+            name = "model",
+            description = "Load/manage AI models",
+            usage = "model <load|info|list> [path]",
+            category = Category.AI
+        ) { ctx ->
+            when (ctx.args.firstOrNull()?.lowercase()) {
+                "load" -> {
+                    val path = ctx.args.drop(1).joinToString(" ")
+                    if (path.isEmpty()) {
+                        CommandResult.Error("Usage: model load <path-or-hf:repo>")
+                    } else {
+                        CommandResult.Success("__MODEL_LOAD:${path}__")
+                    }
+                }
+                "info" -> CommandResult.Success("__MODEL_INFO__")
+                "list" -> CommandResult.Output(listOf(
+                    "Available models:",
+                    "  /zip/share/tinyllama.gguf  (bundled, 1.1B)",
+                    "",
+                    "Load any GGUF model:",
+                    "  model load /path/to/model.gguf",
+                    "",
+                    "In hosted mode, also supports HuggingFace:",
+                    "  model load hf:openai/gpt-oss-20b",
+                    "  model load hf:TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF"
+                ))
+                null, "help" -> CommandResult.Output(listOf(
+                    "model load <path>   - Load GGUF model from path",
+                    "model load hf:<id>  - Load from HuggingFace (hosted mode)",
+                    "model info          - Show loaded model info",
+                    "model list          - Show available models"
+                ))
+                else -> CommandResult.Error("Unknown subcommand: ${ctx.args[0]}")
+            }
+        })
+        
+        register(Command(
             name = "ai",
             description = "Ask the AI assistant",
             usage = "ai <question>",

@@ -28,6 +28,8 @@ package elide.colide
  */
 public object Ai {
     private var initialized = false
+    private var currentModelPath: String? = null
+    private var currentModelName: String? = null
 
     /**
      * Initialize AI with the given model.
@@ -53,6 +55,79 @@ public object Ai {
     public external fun shutdown()
 
     /**
+     * Load a model from path or HuggingFace.
+     * 
+     * Supports:
+     * - Local paths: /path/to/model.gguf
+     * - Bundled: /zip/share/tinyllama.gguf
+     * - HuggingFace (hosted mode): hf:openai/gpt-oss-20b
+     * 
+     * @param pathOrHf Model path or HuggingFace ID (hf:owner/repo)
+     * @return Result message
+     */
+    public fun loadModel(pathOrHf: String): String {
+        // Shutdown current model if any
+        if (initialized) {
+            shutdown()
+            initialized = false
+        }
+        
+        val actualPath = if (pathOrHf.startsWith("hf:")) {
+            // HuggingFace model - requires network (hosted mode only)
+            val hfId = pathOrHf.removePrefix("hf:")
+            // In hosted mode, Elide can download from HF
+            // For now, we'll simulate this path resolution
+            val localCache = "/tmp/hf-models/${hfId.replace("/", "_")}.gguf"
+            // TODO: Actually download from HuggingFace
+            // For now, return error if not cached
+            if (!java.io.File(localCache).exists()) {
+                return "HuggingFace download not yet implemented. Please download model manually:\n" +
+                       "  huggingface-cli download $hfId --local-dir /tmp/hf-models\n" +
+                       "Then: model load $localCache"
+            }
+            localCache
+        } else {
+            pathOrHf
+        }
+        
+        // Try to load the model
+        initialized = init(actualPath)
+        return if (initialized) {
+            currentModelPath = actualPath
+            currentModelName = actualPath.substringAfterLast("/").removeSuffix(".gguf")
+            "Model loaded: $currentModelName\nPath: $actualPath"
+        } else {
+            "Failed to load model: $actualPath\nCheck path exists and is valid GGUF."
+        }
+    }
+    
+    /**
+     * Get info about currently loaded model.
+     */
+    public fun modelInfo(): String {
+        return if (initialized && currentModelPath != null) {
+            """
+            |Current Model: ${currentModelName ?: "Unknown"}
+            |Path: $currentModelPath
+            |Status: Loaded and ready
+            """.trimMargin()
+        } else {
+            """
+            |No model loaded.
+            |
+            |Load a model with:
+            |  model load /path/to/model.gguf
+            |  model load hf:openai/gpt-oss-20b
+            """.trimMargin()
+        }
+    }
+    
+    /**
+     * Check if a model is currently loaded.
+     */
+    public fun isLoaded(): Boolean = initialized
+
+    /**
      * High-level chat interface.
      * @param message User message
      * @return AI response
@@ -61,8 +136,12 @@ public object Ai {
         if (!initialized) {
             // Try default model path
             initialized = init("/zip/share/tinyllama.gguf")
+            if (initialized) {
+                currentModelPath = "/zip/share/tinyllama.gguf"
+                currentModelName = "tinyllama"
+            }
             if (!initialized) {
-                return "[AI not available - model not loaded]"
+                return "[AI not available - use 'model load <path>' first]"
             }
         }
         return complete(message)

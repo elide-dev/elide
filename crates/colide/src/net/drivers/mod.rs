@@ -12,6 +12,8 @@ pub use mt7601u::{
     // Connection management
     AuthFrame, AuthResponse, AssocFrame, AssocResponse,
     ConnState, ConnectionManager, WifiConnection,
+    // Disconnection
+    DeauthFrame, DisassocFrame, ReasonCode,
     // EAPOL/WPA
     EapolFrame, EapolHandler, EapolState,
     EAPOL_ETHER_TYPE, EAPOL_VERSION_2, EAPOL_KEY,

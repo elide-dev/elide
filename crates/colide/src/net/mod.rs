@@ -13,6 +13,8 @@ pub mod linux_compat;
 pub mod cfg80211;
 pub mod mac80211;
 pub mod wpa;
+pub mod aes;
+pub mod drivers;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

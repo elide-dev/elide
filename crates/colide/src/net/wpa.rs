@@ -3,6 +3,7 @@
 // Based on IEEE 802.11i and RFC 4764
 
 use super::linux_compat::SpinLock;
+use super::aes::{Aes128, AesCcm, aes_key_unwrap as aes_unwrap_impl, KEY_SIZE};
 
 /// WPA versions
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -810,95 +811,27 @@ pub fn sha1(data: &[u8]) -> [u8; 20] {
 /// AES Key Unwrap (RFC 3394)
 /// Used to decrypt GTK in EAPOL-Key messages
 pub fn aes_key_unwrap(kek: &[u8], ciphertext: &[u8]) -> Option<Vec<u8>> {
-    if ciphertext.len() < 24 || ciphertext.len() % 8 != 0 {
+    // Delegate to proper AES implementation
+    if kek.len() != KEY_SIZE {
         return None;
     }
-    
-    let n = ciphertext.len() / 8 - 1;
-    let mut a = [0u8; 8];
-    a.copy_from_slice(&ciphertext[0..8]);
-    
-    let mut r: Vec<[u8; 8]> = Vec::with_capacity(n);
-    for i in 0..n {
-        let mut block = [0u8; 8];
-        block.copy_from_slice(&ciphertext[(i + 1) * 8..(i + 2) * 8]);
-        r.push(block);
-    }
-    
-    // Unwrap rounds
-    for j in (0..=5).rev() {
-        for i in (0..n).rev() {
-            let t = ((n * j + i + 1) as u64).to_be_bytes();
-            for k in 0..8 {
-                a[k] ^= t[k];
-            }
-            
-            let mut input = [0u8; 16];
-            input[0..8].copy_from_slice(&a);
-            input[8..16].copy_from_slice(&r[i]);
-            
-            let output = aes_128_decrypt(kek, &input);
-            
-            a.copy_from_slice(&output[0..8]);
-            r[i].copy_from_slice(&output[8..16]);
-        }
-    }
-    
-    // Check integrity value
-    if a != [0xA6u8; 8] {
-        return None;
-    }
-    
-    let mut result = Vec::with_capacity(n * 8);
-    for block in r {
-        result.extend_from_slice(&block);
-    }
-    Some(result)
+    let mut key = [0u8; KEY_SIZE];
+    key.copy_from_slice(kek);
+    aes_unwrap_impl(&key, ciphertext)
 }
 
-/// AES-128 block decryption
-/// Minimal implementation - in production use AES-NI
-fn aes_128_decrypt(key: &[u8], block: &[u8; 16]) -> [u8; 16] {
-    // Placeholder - real implementation would use AES
-    // For bare metal, use AES-NI instructions on x86-64
-    let mut output = *block;
-    
-    // This is a stub - real AES decrypt needed
-    // In actual implementation:
-    // 1. Expand key to 11 round keys
-    // 2. AddRoundKey with last round key
-    // 3. 9 rounds of InvShiftRows, InvSubBytes, AddRoundKey, InvMixColumns
-    // 4. Final round without InvMixColumns
-    
-    for i in 0..16 {
-        output[i] ^= key[i % key.len()];
-    }
-    
-    output
-}
-
-/// AES-128-CCM encryption for WiFi frames
+/// AES-128-CCM encryption for WiFi frames (IEEE 802.11i)
+/// Uses proper AES-CCM implementation with 8-byte MIC
 pub fn aes_ccm_encrypt(key: &[u8; 16], nonce: &[u8], aad: &[u8], plaintext: &[u8]) -> Vec<u8> {
-    // CCM mode: Counter with CBC-MAC
-    // Output: ciphertext || MIC (8 bytes)
-    
-    // This is a stub - real implementation needed
-    let mut output = plaintext.to_vec();
-    output.extend_from_slice(&[0u8; 8]);  // MIC placeholder
-    output
+    let ccm = AesCcm::new(key, 8);  // 8-byte MIC for WiFi
+    ccm.encrypt(nonce, aad, plaintext)
 }
 
-/// AES-128-CCM decryption for WiFi frames
+/// AES-128-CCM decryption for WiFi frames (IEEE 802.11i)
+/// Returns plaintext if MIC verification passes
 pub fn aes_ccm_decrypt(key: &[u8; 16], nonce: &[u8], aad: &[u8], ciphertext: &[u8]) -> Option<Vec<u8>> {
-    // CCM mode decryption with MIC verification
-    
-    if ciphertext.len() < 8 {
-        return None;
-    }
-    
-    // This is a stub - real implementation needed
-    let plaintext_len = ciphertext.len() - 8;
-    Some(ciphertext[..plaintext_len].to_vec())
+    let ccm = AesCcm::new(key, 8);  // 8-byte MIC for WiFi
+    ccm.decrypt(nonce, aad, ciphertext)
 }
 
 #[cfg(test)]

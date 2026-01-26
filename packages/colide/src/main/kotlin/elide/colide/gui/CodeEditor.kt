@@ -38,6 +38,14 @@ public class CodeEditor : Widget() {
     private var scrollX = 0
     private var modified = false
     private var highlighter: SyntaxHighlighter = SyntaxHighlighter.forLanguage(SyntaxHighlighter.Language.PLAIN)
+    private val undoManager = UndoManager()
+    private var lastKeyMods = 0
+    
+    // Search state
+    private var searchMode = false
+    private var searchQuery = ""
+    private var searchResults = mutableListOf<Pair<Int, Int>>() // (line, col)
+    private var currentSearchIndex = -1
     
     public var filePath: String? = null
         set(value) {
@@ -48,6 +56,8 @@ public class CodeEditor : Widget() {
     
     public var syntaxHighlightingEnabled: Boolean = true
     public var onModified: ((Boolean) -> Unit)? = null
+    public var onSave: ((String) -> Boolean)? = null
+    public var onOpen: (() -> Unit)? = null
     
     private val visibleLines: Int get() = (height - HEADER_HEIGHT) / Font.CHAR_HEIGHT
     private val visibleCols: Int get() = (width - GUTTER_WIDTH - PADDING) / Font.CHAR_WIDTH
@@ -102,7 +112,32 @@ public class CodeEditor : Widget() {
         }
     }
     
+    /**
+     * Set keyboard modifiers (called before onKeyPress).
+     * Bit 0 = Ctrl, Bit 1 = Shift, Bit 2 = Alt
+     */
+    public fun setKeyModifiers(mods: Int) {
+        lastKeyMods = mods
+    }
+    
+    private val ctrlPressed: Boolean get() = (lastKeyMods and 1) != 0
+    private val shiftPressed: Boolean get() = (lastKeyMods and 2) != 0
+    
     override fun onKeyPress(keyCode: Int): Boolean {
+        // Handle keyboard shortcuts with Ctrl
+        if (ctrlPressed) {
+            when (keyCode.toChar().lowercaseChar()) {
+                'z' -> { performUndo(); return true }
+                'y' -> { performRedo(); return true }
+                's' -> { performSave(); return true }
+                'o' -> { onOpen?.invoke(); return true }
+                'a' -> { selectAll(); return true }
+                'd' -> { duplicateLine(); return true }
+                'f' -> { toggleSearch(); return true }
+                'g' -> { findNext(); return true }
+            }
+        }
+        
         when (keyCode) {
             0x101 -> { // Up
                 if (cursorLine > 0) {
@@ -320,6 +355,194 @@ public class CodeEditor : Widget() {
             scrollX = cursorCol - visibleCols + 1
         }
     }
+    
+    private fun performUndo() {
+        val action = undoManager.undo() ?: return
+        applyUndoAction(action, isUndo = true)
+    }
+    
+    private fun performRedo() {
+        val action = undoManager.redo() ?: return
+        applyUndoAction(action, isUndo = false)
+    }
+    
+    private fun applyUndoAction(action: UndoManager.EditAction, isUndo: Boolean) {
+        when (action) {
+            is UndoManager.EditAction.Insert -> {
+                if (isUndo) {
+                    val line = lines[action.line]
+                    lines[action.line] = line.removeRange(action.col, action.col + action.text.length)
+                } else {
+                    val line = lines[action.line]
+                    lines[action.line] = line.substring(0, action.col) + action.text + line.substring(action.col)
+                }
+            }
+            is UndoManager.EditAction.Delete -> {
+                if (isUndo) {
+                    val line = lines[action.line]
+                    lines[action.line] = line.substring(0, action.col) + action.text + line.substring(action.col)
+                } else {
+                    val line = lines[action.line]
+                    lines[action.line] = line.removeRange(action.col, action.col + action.text.length)
+                }
+            }
+            is UndoManager.EditAction.NewLine -> {
+                if (isUndo) {
+                    val current = lines[action.line]
+                    val next = lines.removeAt(action.line + 1)
+                    lines[action.line] = current + next
+                } else {
+                    val current = lines[action.line]
+                    lines[action.line] = ""
+                    lines.add(action.line + 1, current)
+                }
+            }
+            is UndoManager.EditAction.DeleteLine -> {
+                if (isUndo) {
+                    lines.add(action.line, action.content)
+                } else {
+                    lines.removeAt(action.line)
+                }
+            }
+            is UndoManager.EditAction.MergeLine -> {
+                if (isUndo) {
+                    val line = lines[action.line]
+                    lines[action.line] = line.substring(0, action.col)
+                    lines.add(action.line + 1, line.substring(action.col))
+                } else {
+                    val current = lines[action.line]
+                    val next = lines.removeAt(action.line + 1)
+                    lines[action.line] = current + next
+                }
+            }
+            is UndoManager.EditAction.Replace -> {
+                val line = lines[action.line]
+                val text = if (isUndo) action.oldText else action.newText
+                val removeText = if (isUndo) action.newText else action.oldText
+                lines[action.line] = line.substring(0, action.col) + text + line.substring(action.col + removeText.length)
+            }
+            is UndoManager.EditAction.Batch -> {
+                val actions = if (isUndo) action.actions.reversed() else action.actions
+                for (a in actions) {
+                    applyUndoAction(a, isUndo)
+                }
+            }
+        }
+        cursorLine = action.cursorLine
+        cursorCol = action.cursorCol
+        setModified(true)
+        ensureCursorVisible()
+    }
+    
+    private fun performSave() {
+        val path = filePath
+        if (path != null) {
+            val success = onSave?.invoke(path) ?: saveFile(path)
+            if (success) setModified(false)
+        }
+    }
+    
+    private fun selectAll() {
+        cursorLine = 0
+        cursorCol = 0
+        ensureCursorVisible()
+    }
+    
+    private fun duplicateLine() {
+        val currentLine = lines[cursorLine]
+        undoManager.recordEdit(UndoManager.EditAction.NewLine(cursorLine, cursorCol, cursorLine))
+        lines.add(cursorLine + 1, currentLine)
+        cursorLine++
+        setModified(true)
+        ensureCursorVisible()
+    }
+    
+    /**
+     * Check if undo is available.
+     */
+    public fun canUndo(): Boolean = undoManager.canUndo()
+    
+    /**
+     * Check if redo is available.
+     */
+    public fun canRedo(): Boolean = undoManager.canRedo()
+    
+    private fun toggleSearch() {
+        searchMode = !searchMode
+        if (!searchMode) {
+            searchQuery = ""
+            searchResults.clear()
+            currentSearchIndex = -1
+        }
+    }
+    
+    private fun findNext() {
+        if (searchResults.isEmpty()) return
+        currentSearchIndex = (currentSearchIndex + 1) % searchResults.size
+        val (line, col) = searchResults[currentSearchIndex]
+        cursorLine = line
+        cursorCol = col
+        ensureCursorVisible()
+    }
+    
+    private fun findPrevious() {
+        if (searchResults.isEmpty()) return
+        currentSearchIndex = if (currentSearchIndex <= 0) searchResults.lastIndex else currentSearchIndex - 1
+        val (line, col) = searchResults[currentSearchIndex]
+        cursorLine = line
+        cursorCol = col
+        ensureCursorVisible()
+    }
+    
+    private fun performSearch() {
+        searchResults.clear()
+        currentSearchIndex = -1
+        if (searchQuery.isEmpty()) return
+        
+        for (lineIdx in lines.indices) {
+            val line = lines[lineIdx]
+            var startIdx = 0
+            while (true) {
+                val foundIdx = line.indexOf(searchQuery, startIdx, ignoreCase = true)
+                if (foundIdx < 0) break
+                searchResults.add(Pair(lineIdx, foundIdx))
+                startIdx = foundIdx + 1
+            }
+        }
+        
+        if (searchResults.isNotEmpty()) {
+            val nearestIdx = searchResults.indexOfFirst { (line, _) -> line >= cursorLine }
+            currentSearchIndex = if (nearestIdx >= 0) nearestIdx else 0
+            val (line, col) = searchResults[currentSearchIndex]
+            cursorLine = line
+            cursorCol = col
+            ensureCursorVisible()
+        }
+    }
+    
+    /**
+     * Set search query and find matches.
+     */
+    public fun search(query: String) {
+        searchQuery = query
+        searchMode = query.isNotEmpty()
+        performSearch()
+    }
+    
+    /**
+     * Get current search results count.
+     */
+    public fun searchResultCount(): Int = searchResults.size
+    
+    /**
+     * Get current search result index (1-based for display).
+     */
+    public fun currentSearchResult(): Int = if (currentSearchIndex >= 0) currentSearchIndex + 1 else 0
+    
+    /**
+     * Check if search mode is active.
+     */
+    public fun isSearchMode(): Boolean = searchMode
     
     private fun renderHighlightedLine(line: String, screenY: Int) {
         val tokens = highlighter.tokenizeLine(line)

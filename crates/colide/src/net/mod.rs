@@ -27,6 +27,7 @@ pub mod connection;
 pub mod roaming;
 pub mod monitor;
 pub mod p2p;
+pub mod wps;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

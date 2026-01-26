@@ -30,26 +30,90 @@ pub enum BridgeStatus {
 static mut BRIDGE_INITIALIZED: bool = false;
 static mut BRIDGE_PORT: u16 = 0; // COM port or USB CDC endpoint
 
+/// USB CDC class codes
+const USB_CLASS_CDC: u8 = 0x02;
+const USB_SUBCLASS_ACM: u8 = 0x02;
+
+/// Serial port base addresses (COM1-COM4)
+const SERIAL_PORTS: [u16; 4] = [0x3F8, 0x2F8, 0x3E8, 0x2E8];
+
 /// Initialize bridge connection
 /// 
 /// Looks for a USB CDC device or serial port connected to bridge daemon
 pub fn init() -> Result<(), &'static str> {
-    // TODO: Scan for USB CDC devices or open serial port
-    // For now, simulate initialization
-    unsafe {
-        BRIDGE_INITIALIZED = true;
-        BRIDGE_PORT = 1;
+    // First, try USB CDC devices
+    if let Some(cdc_endpoint) = find_usb_cdc_device() {
+        unsafe {
+            BRIDGE_INITIALIZED = true;
+            BRIDGE_PORT = cdc_endpoint;
+        }
+        return Ok(());
     }
-    Ok(())
+    
+    // Fall back to serial port detection
+    for &port in &SERIAL_PORTS {
+        if probe_serial_port(port) {
+            unsafe {
+                BRIDGE_INITIALIZED = true;
+                BRIDGE_PORT = port;
+            }
+            return Ok(());
+        }
+    }
+    
+    Err("No bridge device found")
+}
+
+/// Find USB CDC ACM device
+fn find_usb_cdc_device() -> Option<u16> {
+    // Scan USB devices for CDC ACM class
+    // Would enumerate USB devices and check class/subclass
+    // Return endpoint number if found
+    None
+}
+
+/// Probe serial port for bridge daemon
+fn probe_serial_port(port: u16) -> bool {
+    #[cfg(target_arch = "x86_64")]
+    unsafe {
+        // Read Line Status Register (LSR) at port+5
+        let lsr: u8;
+        core::arch::asm!("in al, dx", out("al") lsr, in("dx") port + 5);
+        
+        // Check if UART is present (bits 5-6 should be set when TX empty)
+        if lsr == 0xFF || lsr == 0x00 {
+            return false;
+        }
+        
+        // Try to detect bridge by sending identification request
+        // Send ENQ (0x05) and wait for ACK (0x06)
+        core::arch::asm!("out dx, al", in("al") 0x05u8, in("dx") port);
+        
+        // Brief wait
+        for _ in 0..10000 {
+            core::arch::asm!("nop");
+        }
+        
+        // Check for response
+        let status: u8;
+        core::arch::asm!("in al, dx", out("al") status, in("dx") port + 5);
+        if status & 1 != 0 {
+            let response: u8;
+            core::arch::asm!("in al, dx", out("al") response, in("dx") port);
+            return response == 0x06;
+        }
+    }
+    false
 }
 
 /// Send command to bridge and receive response
 fn send_command(cmd: BridgeCommand, payload: &[u8]) -> Result<Vec<u8>, &'static str> {
-    unsafe {
+    let port = unsafe {
         if !BRIDGE_INITIALIZED {
             return Err("Bridge not initialized");
         }
-    }
+        BRIDGE_PORT
+    };
     
     // Build command packet: [CMD:1][LEN:2][PAYLOAD:N]
     let mut packet = Vec::with_capacity(3 + payload.len());
@@ -58,13 +122,69 @@ fn send_command(cmd: BridgeCommand, payload: &[u8]) -> Result<Vec<u8>, &'static 
     packet.push((payload.len() & 0xFF) as u8);
     packet.extend_from_slice(payload);
     
-    // TODO: Actually send over serial/USB CDC
-    // For now, return empty response
+    // Send packet over serial port
+    for byte in &packet {
+        serial_write_byte(port, *byte)?;
+    }
     
-    // Parse response: [STATUS:1][LEN:2][PAYLOAD:N]
-    // TODO: Read from serial/USB CDC
+    // Read response header: [STATUS:1][LEN:2]
+    let status = serial_read_byte(port)?;
+    if status != BridgeStatus::Ok as u8 {
+        return Err("Bridge command failed");
+    }
     
-    Ok(Vec::new())
+    let len_hi = serial_read_byte(port)?;
+    let len_lo = serial_read_byte(port)?;
+    let len = ((len_hi as usize) << 8) | (len_lo as usize);
+    
+    // Read payload
+    let mut response = Vec::with_capacity(len);
+    for _ in 0..len {
+        response.push(serial_read_byte(port)?);
+    }
+    
+    Ok(response)
+}
+
+/// Write byte to serial port
+fn serial_write_byte(port: u16, byte: u8) -> Result<(), &'static str> {
+    #[cfg(target_arch = "x86_64")]
+    unsafe {
+        // Wait for TX buffer empty
+        for _ in 0..100000 {
+            let lsr: u8;
+            core::arch::asm!("in al, dx", out("al") lsr, in("dx") port + 5);
+            if lsr & 0x20 != 0 {
+                // Write byte
+                core::arch::asm!("out dx, al", in("al") byte, in("dx") port);
+                return Ok(());
+            }
+        }
+        return Err("Serial TX timeout");
+    }
+    #[cfg(not(target_arch = "x86_64"))]
+    { let _ = (port, byte); Err("Not implemented") }
+}
+
+/// Read byte from serial port with timeout
+fn serial_read_byte(port: u16) -> Result<u8, &'static str> {
+    #[cfg(target_arch = "x86_64")]
+    unsafe {
+        // Wait for RX data available
+        for _ in 0..100000 {
+            let lsr: u8;
+            core::arch::asm!("in al, dx", out("al") lsr, in("dx") port + 5);
+            if lsr & 0x01 != 0 {
+                // Read byte
+                let byte: u8;
+                core::arch::asm!("in al, dx", out("al") byte, in("dx") port);
+                return Ok(byte);
+            }
+        }
+        return Err("Serial RX timeout");
+    }
+    #[cfg(not(target_arch = "x86_64"))]
+    { let _ = port; Err("Not implemented") }
 }
 
 /// Scan for WiFi networks via bridge

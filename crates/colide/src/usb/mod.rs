@@ -2,6 +2,8 @@
 // Provides USB host controller support for WiFi dongles and peripherals
 
 pub mod host;
+pub mod mass_storage;
+pub mod hid;
 
 pub use host::{
     UsbHostController, UsbDevice, UsbDeviceDescriptor, UsbManager,
@@ -9,3 +11,6 @@ pub use host::{
     XhciController, EhciController,
     EndpointType, EndpointDirection, UsbEndpoint,
 };
+
+pub use mass_storage::{UsbMassStorage, UsbStorageBlockDevice};
+pub use hid::{UsbKeyboard, UsbMouse, KeyboardEvent, MouseEvent};

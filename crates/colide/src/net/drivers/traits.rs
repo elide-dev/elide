@@ -238,14 +238,85 @@ impl DriverRegistry {
     /// Probe for available hardware and initialize appropriate driver
     /// Returns the driver type if hardware is found
     pub fn probe(&mut self) -> Result<DriverType, WifiError> {
-        // Check for MT7601U (USB VID:PID 0x148f:0x7601)
-        // In real impl, would enumerate USB devices
-        // For now, return NotFound - hardware detection is stubbed
+        // Check USB devices for WiFi dongles
+        if let Some(driver_type) = self.probe_usb_wifi() {
+            self.active = Some(driver_type);
+            return Ok(driver_type);
+        }
         
-        // TODO: Enumerate USB devices and match against known WiFi VID/PIDs
-        // TODO: Enumerate PCIe devices for Intel WiFi
+        // Check PCIe devices for Intel WiFi
+        if let Some(driver_type) = self.probe_pcie_wifi() {
+            self.active = Some(driver_type);
+            return Ok(driver_type);
+        }
         
         Err(WifiError::HardwareNotFound)
+    }
+    
+    /// Probe USB bus for WiFi devices
+    fn probe_usb_wifi(&self) -> Option<DriverType> {
+        // Known USB WiFi VID/PIDs
+        const MT7601U_IDS: [(u16, u16); 3] = [
+            (0x148f, 0x7601), // MediaTek default
+            (0x148f, 0x760b), // MediaTek alternate
+            (0x0e8d, 0x7610), // MediaTek
+        ];
+        
+        const RTL8188EU_IDS: [(u16, u16); 5] = [
+            (0x0bda, 0x8179), // Realtek default
+            (0x2357, 0x010c), // TP-Link TL-WN725N v2
+            (0x2357, 0x0111), // TP-Link TL-WN725N v3
+            (0x0df6, 0x0076), // Sitecom
+            (0x0b05, 0x18f0), // ASUS
+        ];
+        
+        // Scan USB bus (simplified - would use USB subsystem)
+        for bus in 0..8u8 {
+            for port in 0..8u8 {
+                if let Some((vid, pid)) = read_usb_device_ids(bus, port) {
+                    for &(known_vid, known_pid) in &MT7601U_IDS {
+                        if vid == known_vid && pid == known_pid {
+                            return Some(DriverType::Mt7601u);
+                        }
+                    }
+                    for &(known_vid, known_pid) in &RTL8188EU_IDS {
+                        if vid == known_vid && pid == known_pid {
+                            return Some(DriverType::Rtl8188eu);
+                        }
+                    }
+                }
+            }
+        }
+        None
+    }
+    
+    /// Probe PCIe bus for Intel WiFi
+    fn probe_pcie_wifi(&self) -> Option<DriverType> {
+        // Intel WiFi PCI IDs (subset)
+        const INTEL_WIFI_IDS: [(u16, u16); 8] = [
+            (0x8086, 0x2723), // Wi-Fi 6 AX200
+            (0x8086, 0x2725), // Wi-Fi 6E AX210
+            (0x8086, 0x51F0), // Wi-Fi 6E AX211
+            (0x8086, 0x51F1), // Wi-Fi 6E AX211
+            (0x8086, 0x54F0), // Wi-Fi 6E AX211
+            (0x8086, 0x7AF0), // Wi-Fi 6E AX211
+            (0x8086, 0x4DF0), // Wi-Fi 6 AX201
+            (0x8086, 0x06F0), // Wi-Fi 6 AX201
+        ];
+        
+        // Scan PCI bus for Intel WiFi
+        for bus in 0..256u16 {
+            for device in 0..32u8 {
+                if let Some((vid, pid)) = read_pci_device_ids(bus as u8, device) {
+                    for &(known_vid, known_pid) in &INTEL_WIFI_IDS {
+                        if vid == known_vid && pid == known_pid {
+                            return Some(DriverType::Iwlwifi);
+                        }
+                    }
+                }
+            }
+        }
+        None
     }
     
     /// Get active driver type
@@ -336,4 +407,39 @@ pub mod api {
     pub fn is_connected() -> bool {
         state() == ConnectionState::Connected
     }
+}
+
+/// Read USB device VID/PID (placeholder - would use USB subsystem)
+fn read_usb_device_ids(_bus: u8, _port: u8) -> Option<(u16, u16)> {
+    // This would interface with the USB host controller to read device descriptors
+    // For now, returns None (no devices)
+    None
+}
+
+/// Read PCI device VID/PID
+fn read_pci_device_ids(bus: u8, device: u8) -> Option<(u16, u16)> {
+    let address = 0x80000000u32
+        | ((bus as u32) << 16)
+        | ((device as u32) << 11)
+        | 0; // function 0, offset 0
+    
+    #[cfg(target_arch = "x86_64")]
+    unsafe {
+        // Write address to CONFIG_ADDRESS (0xCF8)
+        core::arch::asm!("out dx, eax", in("dx") 0xCF8u16, in("eax") address);
+        // Read from CONFIG_DATA (0xCFC)
+        let value: u32;
+        core::arch::asm!("in eax, dx", out("eax") value, in("dx") 0xCFCu16);
+        
+        let vid = (value & 0xFFFF) as u16;
+        let pid = ((value >> 16) & 0xFFFF) as u16;
+        
+        if vid == 0xFFFF {
+            return None;
+        }
+        
+        Some((vid, pid))
+    }
+    #[cfg(not(target_arch = "x86_64"))]
+    { None }
 }

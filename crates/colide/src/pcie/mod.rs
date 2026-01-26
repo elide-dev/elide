@@ -9,6 +9,7 @@ pub mod config;
 pub mod device;
 pub mod mmio;
 pub mod msi;
+pub mod dma;
 
 pub use config::*;
 pub use device::*;

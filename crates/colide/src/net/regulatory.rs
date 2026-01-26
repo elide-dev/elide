@@ -77,6 +77,10 @@ pub mod Channel6g {
 pub struct ChannelFlags(u32);
 
 impl ChannelFlags {
+    pub const fn new() -> Self {
+        Self(0)
+    }
+    
     pub const DISABLED: Self = Self(1 << 0);
     pub const NO_IR: Self = Self(1 << 1);        // No initiating radiation (passive scan only)
     pub const RADAR: Self = Self(1 << 2);        // DFS required

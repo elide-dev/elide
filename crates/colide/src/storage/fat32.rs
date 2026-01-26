@@ -298,7 +298,11 @@ impl Fat32 {
                     };
                     
                     let mut name_part = String::new();
-                    for &ch in lfn.name1.iter().chain(lfn.name2.iter()).chain(lfn.name3.iter()) {
+                    // Copy packed fields to local arrays to avoid unaligned access
+                    let name1: [u16; 5] = lfn.name1;
+                    let name2: [u16; 6] = lfn.name2;
+                    let name3: [u16; 2] = lfn.name3;
+                    for &ch in name1.iter().chain(name2.iter()).chain(name3.iter()) {
                         if ch == 0 || ch == 0xFFFF {
                             break;
                         }

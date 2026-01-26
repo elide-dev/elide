@@ -219,12 +219,26 @@ impl HostCmdHeader {
             reserved: 0,
         }
     }
+    
+    pub fn to_bytes(&self) -> [u8; 8] {
+        let mut buf = [0u8; 8];
+        buf[0] = self.cmd;
+        buf[1] = self.group_id;
+        buf[2] = (self.sequence & 0xFF) as u8;
+        buf[3] = (self.sequence >> 8) as u8;
+        buf[4] = (self.length & 0xFF) as u8;
+        buf[5] = (self.length >> 8) as u8;
+        buf[6] = (self.reserved & 0xFF) as u8;
+        buf[7] = (self.reserved >> 8) as u8;
+        buf
+    }
 }
 
 /// Intel WiFi driver
 pub struct IwlwifiDriver {
     device: Option<PcieDevice>,
     mmio: Option<MmioRegion>,
+    mmio_base: usize,
     state: IwlState,
     fw_state: FirmwareState,
     hw_rev: HwRevision,
@@ -241,6 +255,7 @@ impl IwlwifiDriver {
         Self {
             device: None,
             mmio: None,
+            mmio_base: 0,
             state: IwlState::Uninitialized,
             fw_state: FirmwareState::NotLoaded,
             hw_rev: HwRevision { hw_rev: 0, hw_rev_step: 0 },
@@ -271,9 +286,11 @@ impl IwlwifiDriver {
         device.enable_bus_master()?;
         device.enable_memory_space()?;
         
+        let mmio_base = bar.base as usize;
         let mut driver = Self {
             device: Some(device),
             mmio: Some(mmio),
+            mmio_base,
             state: IwlState::Probed,
             ..Self::new()
         };
@@ -385,7 +402,7 @@ impl IwlwifiDriver {
         let _fw_data = loader.load(fw_name)?;
         
         // Parse firmware sections and load to device
-        self.parse_and_load_firmware(&_fw_data)?;
+        self.parse_and_load_firmware(_fw_data.bytes())?;
         
         self.fw_state = FirmwareState::Loaded;
         self.state = IwlState::FirmwareLoaded;
@@ -605,20 +622,53 @@ impl IwlwifiDriver {
         }
         
         // Load IRAM section
-        if let Some(iram) = self.find_fw_section(fw_data, 1) {
-            self.write_mem(0x00000000, iram)?;
+        let iram_range = Self::find_fw_section_range(fw_data, 1);
+        if let Some((start, end)) = iram_range {
+            self.write_mem(0x00000000, &fw_data[start..end])?;
         }
         
         // Load DRAM section
-        if let Some(dram) = self.find_fw_section(fw_data, 2) {
-            self.write_mem(0x00400000, dram)?;
+        let dram_range = Self::find_fw_section_range(fw_data, 2);
+        if let Some((start, end)) = dram_range {
+            self.write_mem(0x00400000, &fw_data[start..end])?;
         }
         
         Ok(())
     }
     
+    /// Find firmware section range by type (static version to avoid borrow issues)
+    fn find_fw_section_range(fw_data: &[u8], section_type: u32) -> Option<(usize, usize)> {
+        if fw_data.len() < 16 {
+            return None;
+        }
+        
+        let num_sections = u32::from_le_bytes([fw_data[8], fw_data[9], fw_data[10], fw_data[11]]) as usize;
+        let mut offset = 12;
+        
+        for _ in 0..num_sections {
+            if offset + 12 > fw_data.len() {
+                break;
+            }
+            
+            let sec_type = u32::from_le_bytes([fw_data[offset], fw_data[offset+1], fw_data[offset+2], fw_data[offset+3]]);
+            let sec_offset = u32::from_le_bytes([fw_data[offset+4], fw_data[offset+5], fw_data[offset+6], fw_data[offset+7]]) as usize;
+            let sec_size = u32::from_le_bytes([fw_data[offset+8], fw_data[offset+9], fw_data[offset+10], fw_data[offset+11]]) as usize;
+            
+            if sec_type == section_type {
+                if sec_offset + sec_size <= fw_data.len() {
+                    return Some((sec_offset, sec_offset + sec_size));
+                }
+            }
+            
+            offset += 12;
+        }
+        
+        None
+    }
+    
     /// Find firmware section by type
-    fn find_fw_section(&self, fw_data: &[u8], section_type: u32) -> Option<&[u8]> {
+    #[allow(dead_code)]
+    fn find_fw_section<'a>(&self, fw_data: &'a [u8], section_type: u32) -> Option<&'a [u8]> {
         if fw_data.len() < 16 {
             return None;
         }

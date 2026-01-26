@@ -24,7 +24,6 @@ use std::sync::{Arc, Mutex};
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum MscSubclass {
-    Scsi = 0x06,
     Rbc = 0x01,
     Mmc5 = 0x02,
     Ufi = 0x04,

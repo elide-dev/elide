@@ -1029,6 +1029,184 @@ impl Default for ConnectionManager {
     }
 }
 
+/// High-level WiFi connection API integrating driver + WPA
+pub struct WifiConnection {
+    pub driver: Mt7601uDriver,
+    pub scan_state: ScanState,
+    pub conn_mgr: ConnectionManager,
+    pub passphrase: heapless::String<64>,
+}
+
+impl WifiConnection {
+    pub fn new() -> Self {
+        Self {
+            driver: Mt7601uDriver::new(),
+            scan_state: ScanState::new(),
+            conn_mgr: ConnectionManager::new(),
+            passphrase: heapless::String::new(),
+        }
+    }
+    
+    /// Initialize the WiFi hardware
+    pub fn init<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+        device: &UsbDevice,
+    ) -> Result<(), Mt7601uError> {
+        self.driver.init(controller, device)?;
+        self.driver.start(controller)?;
+        Ok(())
+    }
+    
+    /// Scan for available networks
+    pub fn scan<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+    ) -> Result<&[ScanResult], Mt7601uError> {
+        // Scan channels 1-11 (US)
+        let channels: &[u8] = &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        self.scan_state.start(channels);
+        
+        self.driver.start_scan(controller)?;
+        
+        // Scan each channel
+        while let Some(ch) = self.scan_state.next_channel() {
+            self.driver.set_channel(controller, ch)?;
+            
+            // Send probe request
+            self.driver.send_probe_request(controller, None)?;
+            
+            // Listen for responses (100ms per channel)
+            for _ in 0..10 {
+                let mut buf = [0u8; 2048];
+                if let Ok(info) = self.driver.rx_frame(controller, &mut buf) {
+                    self.scan_state.process_frame(&buf[..info.length], info.rssi);
+                }
+                self.driver.delay_ms(10);
+            }
+        }
+        
+        self.driver.stop_scan(controller)?;
+        Ok(&self.scan_state.results)
+    }
+    
+    /// Connect to a WPA2 network
+    pub fn connect<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+        ssid: &str,
+        passphrase: &str,
+    ) -> Result<(), Mt7601uError> {
+        // Find best AP for this SSID
+        let network = self.scan_state.best_network(ssid)
+            .ok_or(Mt7601uError::NetworkNotFound)?;
+        
+        if !network.is_wpa2 && !network.is_wpa && !network.is_open {
+            return Err(Mt7601uError::UnsupportedSecurity);
+        }
+        
+        let bssid = network.bssid;
+        let channel = network.channel;
+        
+        // Store passphrase for WPA handshake
+        self.passphrase.clear();
+        let _ = self.passphrase.push_str(passphrase);
+        
+        // Set channel
+        self.driver.set_channel(controller, channel)?;
+        
+        // Start connection
+        self.conn_mgr.connect(ssid, bssid);
+        
+        // Send authentication request
+        let auth_frame = AuthFrame::build_request(
+            &self.driver.mac_address(),
+            &bssid,
+            &bssid,
+        );
+        self.driver.tx_frame(controller, &auth_frame)?;
+        
+        // Wait for auth response
+        for _ in 0..50 {
+            let mut buf = [0u8; 2048];
+            if let Ok(info) = self.driver.rx_frame(controller, &mut buf) {
+                if let Some(resp) = AuthFrame::parse_response(&buf[..info.length]) {
+                    self.conn_mgr.handle_auth_response(&resp);
+                    break;
+                }
+            }
+            self.driver.delay_ms(20);
+        }
+        
+        if self.conn_mgr.state != ConnState::Authenticated {
+            return Err(Mt7601uError::AuthFailed);
+        }
+        
+        // Send association request
+        self.conn_mgr.state = ConnState::Associating;
+        let rsn_ie = if network.is_wpa2 { Some(WPA2_RSN_IE) } else { None };
+        let assoc_frame = AssocFrame::build_request(
+            &self.driver.mac_address(),
+            &bssid,
+            ssid.as_bytes(),
+            DEFAULT_RATES,
+            rsn_ie,
+        );
+        self.driver.tx_frame(controller, &assoc_frame)?;
+        
+        // Wait for assoc response
+        for _ in 0..50 {
+            let mut buf = [0u8; 2048];
+            if let Ok(info) = self.driver.rx_frame(controller, &mut buf) {
+                if let Some(resp) = AssocFrame::parse_response(&buf[..info.length]) {
+                    self.conn_mgr.handle_assoc_response(&resp);
+                    break;
+                }
+            }
+            self.driver.delay_ms(20);
+        }
+        
+        if self.conn_mgr.state != ConnState::Associated {
+            return Err(Mt7601uError::AssocFailed);
+        }
+        
+        // Set BSSID in hardware
+        self.driver.set_bssid(controller, bssid)?;
+        
+        // For WPA2, wait for EAPOL handshake
+        if network.is_wpa2 || network.is_wpa {
+            self.conn_mgr.state = ConnState::WpaHandshake;
+            // WPA handshake handled by wpa.rs WpaSupplicant
+            // Driver just needs to pass EAPOL frames
+        } else {
+            self.conn_mgr.state = ConnState::Connected;
+        }
+        
+        Ok(())
+    }
+    
+    /// Check if connected
+    pub fn is_connected(&self) -> bool {
+        self.conn_mgr.state == ConnState::Connected
+    }
+    
+    /// Disconnect from network
+    pub fn disconnect<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+    ) -> Result<(), Mt7601uError> {
+        self.conn_mgr.disconnect();
+        self.driver.stop(controller)?;
+        Ok(())
+    }
+}
+
+impl Default for WifiConnection {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Driver errors
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Mt7601uError {
@@ -1041,4 +1219,8 @@ pub enum Mt7601uError {
     HwError,
     TxFailed,
     RxFailed,
+    NetworkNotFound,
+    UnsupportedSecurity,
+    AuthFailed,
+    AssocFailed,
 }

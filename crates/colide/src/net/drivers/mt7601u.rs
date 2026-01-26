@@ -1681,6 +1681,131 @@ impl Default for CcmpEncryption {
     }
 }
 
+/// Power save mode for 802.11 (PSM)
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum PowerSaveMode {
+    Active,           // Always awake
+    LegacyPsm,        // Legacy PS-Poll based
+    Uapsd,            // Unscheduled Automatic Power Save Delivery
+    Wow,              // Wake-on-Wireless LAN
+}
+
+/// Power management configuration
+pub struct PowerConfig {
+    pub mode: PowerSaveMode,
+    pub listen_interval: u16,    // Beacon intervals to sleep
+    pub dtim_period: u8,         // DTIM period from AP
+    pub awake: bool,             // Currently awake?
+}
+
+impl PowerConfig {
+    pub fn new() -> Self {
+        Self {
+            mode: PowerSaveMode::Active,
+            listen_interval: 1,
+            dtim_period: 1,
+            awake: true,
+        }
+    }
+    
+    /// Enable power save mode
+    pub fn enable_psm(&mut self, listen_interval: u16) {
+        self.mode = PowerSaveMode::LegacyPsm;
+        self.listen_interval = listen_interval;
+    }
+    
+    /// Disable power save (stay active)
+    pub fn disable_psm(&mut self) {
+        self.mode = PowerSaveMode::Active;
+        self.awake = true;
+    }
+    
+    /// Check if should wake for beacon
+    pub fn should_wake_for_beacon(&self, beacon_count: u64) -> bool {
+        match self.mode {
+            PowerSaveMode::Active => true,
+            PowerSaveMode::LegacyPsm => {
+                beacon_count % self.listen_interval as u64 == 0
+            }
+            PowerSaveMode::Uapsd => {
+                // Wake for DTIM beacons
+                beacon_count % self.dtim_period as u64 == 0
+            }
+            PowerSaveMode::Wow => false, // Only wake on specific patterns
+        }
+    }
+}
+
+impl Default for PowerConfig {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// QoS Access Categories (WMM)
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum AccessCategory {
+    BestEffort = 0,   // AC_BE - Default
+    Background = 1,   // AC_BK - Low priority
+    Video = 2,        // AC_VI - Video streaming
+    Voice = 3,        // AC_VO - VoIP, highest priority
+}
+
+/// WMM (WiFi Multimedia) parameters
+pub struct WmmParams {
+    pub enabled: bool,
+    pub ac_params: [AcParams; 4],
+}
+
+/// Access Category parameters
+#[derive(Debug, Clone, Copy)]
+pub struct AcParams {
+    pub aifsn: u8,     // Arbitration Inter-Frame Spacing Number
+    pub cwmin: u16,    // Contention Window minimum
+    pub cwmax: u16,    // Contention Window maximum
+    pub txop: u16,     // Transmit Opportunity limit (in 32μs units)
+}
+
+impl WmmParams {
+    pub fn new() -> Self {
+        Self {
+            enabled: false,
+            ac_params: [
+                // AC_BE (Best Effort)
+                AcParams { aifsn: 3, cwmin: 15, cwmax: 1023, txop: 0 },
+                // AC_BK (Background)
+                AcParams { aifsn: 7, cwmin: 15, cwmax: 1023, txop: 0 },
+                // AC_VI (Video)
+                AcParams { aifsn: 2, cwmin: 7, cwmax: 15, txop: 94 },
+                // AC_VO (Voice)
+                AcParams { aifsn: 2, cwmin: 3, cwmax: 7, txop: 47 },
+            ],
+        }
+    }
+    
+    /// Get parameters for access category
+    pub fn get_ac(&self, ac: AccessCategory) -> &AcParams {
+        &self.ac_params[ac as usize]
+    }
+    
+    /// Map TID (Traffic Identifier) to Access Category
+    pub fn tid_to_ac(tid: u8) -> AccessCategory {
+        match tid & 0x07 {
+            1 | 2 => AccessCategory::Background,
+            0 | 3 => AccessCategory::BestEffort,
+            4 | 5 => AccessCategory::Video,
+            6 | 7 => AccessCategory::Voice,
+            _ => AccessCategory::BestEffort,
+        }
+    }
+}
+
+impl Default for WmmParams {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Common 802.11 reason codes
 pub mod ReasonCode {
     pub const UNSPECIFIED: u16 = 1;

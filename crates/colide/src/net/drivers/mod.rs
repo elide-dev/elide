@@ -18,6 +18,8 @@ pub use mt7601u::{
     CcmpEncryption,
     // Power/QoS
     PowerSaveMode, PowerConfig, AccessCategory, WmmParams, AcParams,
+    // 802.11n HT
+    HtCapabilities, HtOperation, AmpduConfig,
     // EAPOL/WPA
     EapolFrame, EapolHandler, EapolState,
     EAPOL_ETHER_TYPE, EAPOL_VERSION_2, EAPOL_KEY,

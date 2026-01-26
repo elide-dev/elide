@@ -1207,6 +1207,222 @@ impl Default for WifiConnection {
     }
 }
 
+/// EAPOL frame types for WPA handshake
+pub const EAPOL_ETHER_TYPE: u16 = 0x888E;
+pub const EAPOL_VERSION_2: u8 = 2;
+pub const EAPOL_KEY: u8 = 3;
+
+/// EAPOL-Key frame structure (simplified)
+#[derive(Debug, Clone)]
+pub struct EapolFrame {
+    pub version: u8,
+    pub packet_type: u8,
+    pub body_length: u16,
+    pub key_descriptor: u8,
+    pub key_info: u16,
+    pub key_length: u16,
+    pub replay_counter: [u8; 8],
+    pub key_nonce: [u8; 32],
+    pub key_iv: [u8; 16],
+    pub key_rsc: [u8; 8],
+    pub key_id: [u8; 8],
+    pub key_mic: [u8; 16],
+    pub key_data_length: u16,
+    pub key_data: heapless::Vec<u8, 256>,
+}
+
+impl EapolFrame {
+    /// Parse EAPOL frame from raw bytes
+    pub fn parse(data: &[u8]) -> Option<Self> {
+        if data.len() < 99 {
+            return None;
+        }
+        
+        let version = data[0];
+        let packet_type = data[1];
+        if packet_type != EAPOL_KEY {
+            return None;
+        }
+        
+        let body_length = u16::from_be_bytes([data[2], data[3]]);
+        let key_descriptor = data[4];
+        let key_info = u16::from_be_bytes([data[5], data[6]]);
+        let key_length = u16::from_be_bytes([data[7], data[8]]);
+        
+        let mut replay_counter = [0u8; 8];
+        replay_counter.copy_from_slice(&data[9..17]);
+        
+        let mut key_nonce = [0u8; 32];
+        key_nonce.copy_from_slice(&data[17..49]);
+        
+        let mut key_iv = [0u8; 16];
+        key_iv.copy_from_slice(&data[49..65]);
+        
+        let mut key_rsc = [0u8; 8];
+        key_rsc.copy_from_slice(&data[65..73]);
+        
+        let mut key_id = [0u8; 8];
+        key_id.copy_from_slice(&data[73..81]);
+        
+        let mut key_mic = [0u8; 16];
+        key_mic.copy_from_slice(&data[81..97]);
+        
+        let key_data_length = u16::from_be_bytes([data[97], data[98]]);
+        
+        let mut key_data = heapless::Vec::new();
+        if key_data_length > 0 && data.len() >= 99 + key_data_length as usize {
+            let _ = key_data.extend_from_slice(&data[99..99 + key_data_length as usize]);
+        }
+        
+        Some(Self {
+            version,
+            packet_type,
+            body_length,
+            key_descriptor,
+            key_info,
+            key_length,
+            replay_counter,
+            key_nonce,
+            key_iv,
+            key_rsc,
+            key_id,
+            key_mic,
+            key_data_length,
+            key_data,
+        })
+    }
+    
+    /// Check if this is Message 1 (ANonce from AP)
+    pub fn is_msg1(&self) -> bool {
+        (self.key_info & 0x0080) != 0 && // Key ACK
+        (self.key_info & 0x0100) == 0    // No Key MIC
+    }
+    
+    /// Check if this is Message 3 (encrypted GTK)
+    pub fn is_msg3(&self) -> bool {
+        (self.key_info & 0x0080) != 0 && // Key ACK
+        (self.key_info & 0x0100) != 0 && // Key MIC
+        (self.key_info & 0x0040) != 0    // Secure
+    }
+    
+    /// Build EAPOL response frame (Message 2 or 4)
+    pub fn build_response(
+        key_info: u16,
+        replay_counter: &[u8; 8],
+        snonce: Option<&[u8; 32]>,
+        mic: &[u8; 16],
+        rsn_ie: Option<&[u8]>,
+    ) -> heapless::Vec<u8, 512> {
+        let mut frame = heapless::Vec::new();
+        
+        // EAPOL header
+        let _ = frame.push(EAPOL_VERSION_2);
+        let _ = frame.push(EAPOL_KEY);
+        
+        // Calculate body length (95 + key_data_length)
+        let key_data_len = rsn_ie.map_or(0, |ie| ie.len());
+        let body_len = (95 + key_data_len) as u16;
+        let _ = frame.extend_from_slice(&body_len.to_be_bytes());
+        
+        // Key descriptor type (RSN)
+        let _ = frame.push(2);
+        
+        // Key info
+        let _ = frame.extend_from_slice(&key_info.to_be_bytes());
+        
+        // Key length (16 for CCMP)
+        let _ = frame.extend_from_slice(&16u16.to_be_bytes());
+        
+        // Replay counter
+        let _ = frame.extend_from_slice(replay_counter);
+        
+        // Key nonce (SNonce for Msg2, zeros for Msg4)
+        if let Some(nonce) = snonce {
+            let _ = frame.extend_from_slice(nonce);
+        } else {
+            let _ = frame.extend_from_slice(&[0u8; 32]);
+        }
+        
+        // Key IV (zeros)
+        let _ = frame.extend_from_slice(&[0u8; 16]);
+        
+        // Key RSC (zeros)
+        let _ = frame.extend_from_slice(&[0u8; 8]);
+        
+        // Key ID (zeros)
+        let _ = frame.extend_from_slice(&[0u8; 8]);
+        
+        // Key MIC
+        let _ = frame.extend_from_slice(mic);
+        
+        // Key data length
+        let _ = frame.extend_from_slice(&(key_data_len as u16).to_be_bytes());
+        
+        // Key data (RSN IE for Msg2)
+        if let Some(ie) = rsn_ie {
+            let _ = frame.extend_from_slice(ie);
+        }
+        
+        frame
+    }
+}
+
+/// EAPOL handler for WPA handshake
+pub struct EapolHandler {
+    pub state: EapolState,
+    pub anonce: [u8; 32],
+    pub snonce: [u8; 32],
+    pub replay_counter: [u8; 8],
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum EapolState {
+    Idle,
+    WaitingMsg1,
+    SentMsg2,
+    WaitingMsg3,
+    SentMsg4,
+    Complete,
+}
+
+impl EapolHandler {
+    pub fn new() -> Self {
+        Self {
+            state: EapolState::Idle,
+            anonce: [0u8; 32],
+            snonce: [0u8; 32],
+            replay_counter: [0u8; 8],
+        }
+    }
+    
+    /// Generate random SNonce
+    pub fn generate_snonce(&mut self) {
+        let seed = unsafe { core::arch::x86_64::_rdtsc() as u64 };
+        let mut state = seed;
+        for i in 0..32 {
+            state = state.wrapping_mul(6364136223846793005).wrapping_add(1);
+            self.snonce[i] = (state >> 56) as u8;
+        }
+    }
+    
+    /// Start handshake (after association)
+    pub fn start(&mut self) {
+        self.state = EapolState::WaitingMsg1;
+        self.generate_snonce();
+    }
+    
+    /// Check if handshake is complete
+    pub fn is_complete(&self) -> bool {
+        self.state == EapolState::Complete
+    }
+}
+
+impl Default for EapolHandler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// Driver errors
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Mt7601uError {

@@ -3,6 +3,14 @@
 
 pub mod mt7601u;
 pub mod rtl8188eu;
+pub mod traits;
+
+pub use traits::{
+    WifiDriver, WifiError, SecurityType, WifiBand, ChannelWidth,
+    ScanResult as UnifiedScanResult, ConnectionState, ConnectionInfo,
+    DriverCapabilities, DriverRegistry, DriverType, api as wifi_api,
+    MAX_SCAN_RESULTS, MAX_SSID_LEN,
+};
 
 pub use mt7601u::{
     // Driver core

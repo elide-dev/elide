@@ -15,6 +15,7 @@ pub mod mac80211;
 pub mod wpa;
 pub mod aes;
 pub mod drivers;
+pub mod firmware;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

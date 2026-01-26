@@ -15,6 +15,7 @@ package elide.colide.gui
 
 import elide.colide.ColideNative
 import elide.colide.Keyboard
+import elide.colide.Mouse
 import elide.colide.Vesa
 
 /**
@@ -199,9 +200,14 @@ public class GuiManager {
      * Update mouse position from native driver.
      */
     private fun updateMouse() {
-        // These would be native calls in real implementation
-        // For now, track via keyboard arrows as fallback
-        if (ColideNative.isMetal()) {
+        // Use dedicated Mouse driver
+        if (Mouse.isInitialized() || Mouse.init()) {
+            Mouse.poll()
+            mouseX = Mouse.getX()
+            mouseY = Mouse.getY()
+            mouseButtons = Mouse.getButtons()
+        } else if (ColideNative.isMetal()) {
+            // Fallback to ColideNative mouse methods
             mouseX = ColideNative.mouseX()
             mouseY = ColideNative.mouseY()
             mouseButtons = ColideNative.mouseButtons()

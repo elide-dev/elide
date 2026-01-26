@@ -93,10 +93,16 @@ pub fn frequency_to_channel(freq: i32) -> i32 {
 }
 
 /// Convert network list to Java ArrayList
-pub fn networks_to_java_list<'a>(env: JNIEnv<'a>, networks: &[WifiNetwork]) -> JObject<'a> {
+pub fn networks_to_java_list<'a>(mut env: JNIEnv<'a>, networks: &[WifiNetwork]) -> JObject<'a> {
     // Create ArrayList
-    let list_class = env.find_class("java/util/ArrayList").unwrap();
-    let list = env.new_object(list_class, "()V", &[]).unwrap();
+    let list_class = match env.find_class("java/util/ArrayList") {
+        Ok(c) => c,
+        Err(_) => return JObject::null(),
+    };
+    let list = match env.new_object(&list_class, "()V", &[]) {
+        Ok(l) => l,
+        Err(_) => return JObject::null(),
+    };
     
     // Find WifiNetwork class and constructor
     let network_class = match env.find_class("elide/colide/net/WifiNetwork") {
@@ -104,15 +110,26 @@ pub fn networks_to_java_list<'a>(env: JNIEnv<'a>, networks: &[WifiNetwork]) -> J
         Err(_) => return list, // Return empty list if class not found
     };
     
+    // Find WifiSecurity class once
+    let security_class = match env.find_class("elide/colide/net/WifiSecurity") {
+        Ok(c) => c,
+        Err(_) => return list,
+    };
+    
     for network in networks {
         // Create BSSID byte array
-        let bssid = env.byte_array_from_slice(&network.bssid).unwrap();
+        let bssid = match env.byte_array_from_slice(&network.bssid) {
+            Ok(b) => b,
+            Err(_) => continue,
+        };
         
         // Create SSID string
-        let ssid = env.new_string(&network.ssid).unwrap();
+        let ssid = match env.new_string(&network.ssid) {
+            Ok(s) => s,
+            Err(_) => continue,
+        };
         
         // Create WifiSecurity enum value
-        let security_class = env.find_class("elide/colide/net/WifiSecurity").unwrap();
         let security_name = match network.security {
             0 => "OPEN",
             1 => "WEP",
@@ -121,15 +138,21 @@ pub fn networks_to_java_list<'a>(env: JNIEnv<'a>, networks: &[WifiNetwork]) -> J
             4 => "WPA3",
             _ => "OPEN",
         };
-        let security = env.get_static_field(
-            security_class,
+        let security = match env.get_static_field(
+            &security_class,
             security_name,
             "Lelide/colide/net/WifiSecurity;"
-        ).unwrap().l().unwrap();
+        ) {
+            Ok(f) => match f.l() {
+                Ok(obj) => obj,
+                Err(_) => continue,
+            },
+            Err(_) => continue,
+        };
         
         // Create WifiNetwork object
-        let net_obj = env.new_object(
-            network_class,
+        let net_obj = match env.new_object(
+            &network_class,
             "(Ljava/lang/String;[BILelide/colide/net/WifiSecurity;II)V",
             &[
                 (&ssid).into(),
@@ -139,40 +162,48 @@ pub fn networks_to_java_list<'a>(env: JNIEnv<'a>, networks: &[WifiNetwork]) -> J
                 (network.channel as i32).into(),
                 (network.frequency as i32).into(),
             ],
-        ).unwrap();
+        ) {
+            Ok(obj) => obj,
+            Err(_) => continue,
+        };
         
         // Add to list
-        env.call_method(
+        let _ = env.call_method(
             &list,
             "add",
             "(Ljava/lang/Object;)Z",
             &[(&net_obj).into()],
-        ).unwrap();
+        );
     }
     
     list
 }
 
+use std::sync::atomic::{AtomicI32, Ordering};
+use std::sync::Mutex;
+
 /// Current connection state
-static mut CURRENT_IP: Option<String> = None;
-static mut CURRENT_SIGNAL: i32 = 0;
+static CURRENT_IP: Mutex<Option<String>> = Mutex::new(None);
+static CURRENT_SIGNAL: AtomicI32 = AtomicI32::new(0);
 
 /// Get current IP address
 pub fn get_ip_address() -> Option<String> {
-    unsafe { CURRENT_IP.clone() }
+    CURRENT_IP.lock().ok().and_then(|ip| ip.clone())
 }
 
 /// Get current signal strength
 pub fn get_signal_strength() -> i32 {
-    unsafe { CURRENT_SIGNAL }
+    CURRENT_SIGNAL.load(Ordering::Relaxed)
 }
 
 /// Set IP address (called by DHCP)
 pub fn set_ip_address(ip: Option<String>) {
-    unsafe { CURRENT_IP = ip; }
+    if let Ok(mut current) = CURRENT_IP.lock() {
+        *current = ip;
+    }
 }
 
 /// Update signal strength
 pub fn set_signal_strength(signal: i32) {
-    unsafe { CURRENT_SIGNAL = signal; }
+    CURRENT_SIGNAL.store(signal, Ordering::Relaxed);
 }

@@ -26,9 +26,11 @@
 
 pub mod vesa;
 pub mod keyboard;
+pub mod mouse;
 pub mod ai;
 pub mod filesystem;
 pub mod net;
+pub mod exec;
 
 use java_native::jni;
 use jni::JNIEnv;

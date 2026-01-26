@@ -591,6 +591,11 @@ impl DnsResolver {
         self.cache.clear();
     }
     
+    /// Get configured servers
+    pub fn servers(&self) -> &[Ipv4Addr] {
+        &self.servers
+    }
+    
     /// Reverse DNS lookup
     pub fn reverse_lookup(&mut self, addr: Ipv4Addr, timestamp: u64) -> DnsAction {
         let octets = addr.octets();

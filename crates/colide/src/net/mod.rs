@@ -35,6 +35,7 @@ pub mod dhcp;
 pub mod dns;
 pub mod tcp;
 pub mod udp;
+pub mod arp;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

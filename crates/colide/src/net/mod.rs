@@ -11,6 +11,7 @@ pub mod wifi;
 pub mod ieee80211;
 pub mod linux_compat;
 pub mod cfg80211;
+pub mod mac80211;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

@@ -6,8 +6,9 @@ use super::linux_compat::{SkBuff, SpinLock};
 use core::sync::atomic::AtomicU32;
 
 /// WiFi frequency bands
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum Band {
+    #[default]
     Band2GHz = 0,
     Band5GHz = 1,
     Band6GHz = 2,

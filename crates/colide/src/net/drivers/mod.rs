@@ -2,6 +2,7 @@
 // Based on Linux driver architecture with Rust safety
 
 pub mod mt7601u;
+pub mod rtl8188eu;
 
 pub use mt7601u::{
     // Driver core

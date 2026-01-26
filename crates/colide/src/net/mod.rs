@@ -20,6 +20,7 @@ pub mod nl80211;
 pub mod regulatory;
 pub mod power;
 pub mod rate_control;
+pub mod aggregation;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

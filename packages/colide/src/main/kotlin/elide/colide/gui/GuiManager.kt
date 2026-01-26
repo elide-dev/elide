@@ -39,6 +39,9 @@ public class GuiManager {
     /** All managed windows */
     private val windows: MutableList<Window> = mutableListOf()
     
+    /** Modal dialogs (rendered on top of windows) */
+    private val dialogs: MutableList<Dialog> = mutableListOf()
+    
     /** Currently focused/active window */
     private var activeWindow: Window? = null
     
@@ -83,6 +86,26 @@ public class GuiManager {
     }
     
     /**
+     * Show a modal dialog.
+     */
+    public fun showDialog(dialog: Dialog) {
+        dialogs.add(dialog)
+        dialog.focused = true
+    }
+    
+    /**
+     * Remove a dialog.
+     */
+    public fun removeDialog(dialog: Dialog) {
+        dialogs.remove(dialog)
+    }
+    
+    /**
+     * Check if any dialog is currently shown.
+     */
+    public fun hasActiveDialog(): Boolean = dialogs.isNotEmpty()
+    
+    /**
      * Initialize the GUI system.
      */
     public fun init(): Boolean {
@@ -125,11 +148,18 @@ public class GuiManager {
         // Keyboard input
         if (Keyboard.available()) {
             val key = Keyboard.getChar()
-            if (key == 0x1B) { // Escape
-                stop()
-                return
+            
+            // If dialog is active, send input to dialog first
+            if (dialogs.isNotEmpty()) {
+                val activeDialog = dialogs.last()
+                if (activeDialog.onKeyPress(key)) return
+            } else {
+                if (key == 0x1B) { // Escape (only if no dialog)
+                    stop()
+                    return
+                }
+                activeWindow?.onKeyPress(key)
             }
-            activeWindow?.onKeyPress(key)
         }
         
         // Mouse input (via native)
@@ -140,6 +170,14 @@ public class GuiManager {
         val rightClick = (mouseButtons and 2) != 0 && (lastMouseButtons and 2) == 0
         
         if (leftClick) {
+            // If dialog is active, send click to dialog first
+            if (dialogs.isNotEmpty()) {
+                val activeDialog = dialogs.last()
+                if (activeDialog.onMouseClick(mouseX, mouseY, 1)) {
+                    lastMouseButtons = mouseButtons
+                    return
+                }
+            }
             handleMouseClick(mouseX, mouseY, 1)
         }
         if (rightClick) {
@@ -196,6 +234,16 @@ public class GuiManager {
         windows.forEach { window ->
             if (window.visible) {
                 window.render()
+            }
+        }
+        
+        // Render dialogs on top of windows (modal overlay)
+        if (dialogs.isNotEmpty()) {
+            // Optional: dim background for modal effect
+            dialogs.forEach { dialog ->
+                if (dialog.visible) {
+                    dialog.render()
+                }
             }
         }
         

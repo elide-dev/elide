@@ -242,6 +242,83 @@ public class ColideIDE {
         terminal?.prompt = "ai> "
     }
     
+    /**
+     * Show Save As dialog.
+     */
+    private fun showSaveAsDialog() {
+        val dialog = FileDialog().apply {
+            title = "Save As"
+            mode = FileDialog.Mode.SAVE
+            x = (screenWidth - width) / 2
+            y = (screenHeight - height) / 2
+            currentPath = codeEditor?.filePath?.substringBeforeLast('/') ?: "/"
+            filename = codeEditor?.filePath?.substringAfterLast('/') ?: "untitled.txt"
+            onFileSelected = { path ->
+                if (codeEditor?.saveFile(path) == true) {
+                    terminal?.printSuccess("Saved: $path")
+                    statusBar?.modified = false
+                } else {
+                    terminal?.printError("Failed to save: $path")
+                }
+            }
+            onClose = { guiManager.removeDialog(this) }
+        }
+        guiManager.showDialog(dialog)
+    }
+    
+    /**
+     * Show New File dialog.
+     */
+    private fun showNewFileDialog() {
+        val dialog = InputDialog().apply {
+            title = "New File"
+            prompt = "Enter filename:"
+            placeholder = "untitled.txt"
+            x = (screenWidth - 300) / 2
+            y = (screenHeight - 150) / 2
+            width = 300
+            height = 150
+            onConfirm = {
+                val filename = getValue()
+                if (filename.isNotEmpty()) {
+                    codeEditor?.setText("")
+                    codeEditor?.filePath = filename
+                    val ext = filename.substringAfterLast('.', "")
+                    statusBar?.updateLanguage(ext)
+                    statusBar?.modified = true
+                    terminal?.printSuccess("New file: $filename")
+                }
+            }
+            onClose = { guiManager.removeDialog(this) }
+        }
+        guiManager.showDialog(dialog)
+    }
+    
+    /**
+     * Show confirm dialog for unsaved changes.
+     */
+    private fun showUnsavedChangesDialog(onSave: () -> Unit, onDiscard: () -> Unit) {
+        val dialog = ConfirmDialog().apply {
+            title = "Unsaved Changes"
+            message = "You have unsaved changes.\nDo you want to save them?"
+            x = (screenWidth - 350) / 2
+            y = (screenHeight - 150) / 2
+            width = 350
+            height = 150
+            onYes = {
+                codeEditor?.filePath?.let { path ->
+                    if (codeEditor?.saveFile(path) == true) {
+                        terminal?.printSuccess("Saved: $path")
+                        onSave()
+                    }
+                } ?: showSaveAsDialog()
+            }
+            onNo = { onDiscard() }
+            onClose = { guiManager.removeDialog(this) }
+        }
+        guiManager.showDialog(dialog)
+    }
+    
     public companion object {
         /**
          * Main entry point for the Colide IDE.

@@ -21,6 +21,7 @@ pub mod regulatory;
 pub mod power;
 pub mod rate_control;
 pub mod aggregation;
+pub mod qos;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

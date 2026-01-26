@@ -16,6 +16,7 @@ pub mod wpa;
 pub mod aes;
 pub mod drivers;
 pub mod firmware;
+pub mod nl80211;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

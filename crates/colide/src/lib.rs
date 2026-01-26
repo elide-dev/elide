@@ -34,6 +34,7 @@ pub mod exec;
 pub mod usb;
 pub mod pcie;
 pub mod llm;
+pub mod hw;
 
 use java_native::jni;
 use jni::JNIEnv;

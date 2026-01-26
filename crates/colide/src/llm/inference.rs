@@ -382,6 +382,9 @@ pub fn benchmark(
     n_tokens: u32,
 ) -> Result<BenchmarkResult, InferenceError> {
     let config = engine.config.as_ref().ok_or(InferenceError::NotReady)?;
+    let model_name = config.path.clone();
+    let quantization = format!("{:?}", config.quantization);
+    let memory_used_gb = config.estimate_memory_gb();
     
     let params = GenerationParams {
         max_tokens: n_tokens,
@@ -392,15 +395,15 @@ pub fn benchmark(
     let result = engine.generate(prompt, params)?;
     
     Ok(BenchmarkResult {
-        model_name: config.path.clone(),
-        quantization: format!("{:?}", config.quantization),
+        model_name,
+        quantization,
         prompt_tokens: result.prompt_tokens,
         generated_tokens: result.completion_tokens,
         prompt_eval_time_ms: result.time_to_first_token_ms,
         generation_time_ms: result.total_time_ms - result.time_to_first_token_ms,
         prompt_eval_tps: result.prompt_tokens as f32 * 1000.0 / result.time_to_first_token_ms.max(1) as f32,
         generation_tps: result.tokens_per_second,
-        memory_used_gb: config.estimate_memory_gb(),
+        memory_used_gb,
     })
 }
 

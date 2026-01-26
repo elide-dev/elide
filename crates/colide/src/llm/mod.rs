@@ -142,6 +142,7 @@ impl Default for OffloadConfig {
             gpu_layers: 0, // CPU-only by default
             use_mmap: true,
             mlock: false,
+            tensor_split: None,
             context_size: 4096,
             batch_size: 512,
         }

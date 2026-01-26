@@ -40,6 +40,7 @@ pub mod stack;
 pub mod ipv6;
 pub mod tls;
 pub mod http;
+pub mod websocket;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

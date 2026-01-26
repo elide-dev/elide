@@ -483,6 +483,7 @@ dependencies {
   api(mn.micronaut.inject)
   implementation(projects.packages.terminal)
   implementation(projects.packages.localAi)
+  implementation(projects.packages.colide)
   implementation(projects.packages.telemetry)
   implementation(projects.packages.runner)
   implementation(libs.dirs)
@@ -1801,6 +1802,7 @@ val darwinOnlyArgs = defaultPlatformArgs.plus(listOfNotNull(
   "-H:NativeLinkerOption=$nativesPath/libtrace.a",
   "-H:NativeLinkerOption=$nativesPath/libexec.a",
   "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
+  "-H:NativeLinkerOption=$nativesPath/libcolide.a",
   "-H:NativeLinkerOption=$nativesPath/libterminal.a",
   "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
   "-H:NativeLinkerOption=$nativesPath/libweb.a",
@@ -1841,6 +1843,7 @@ val linuxOnlyArgs = defaultPlatformArgs.plus(
     "-H:NativeLinkerOption=$nativesPath/libtrace.a",
     "-H:NativeLinkerOption=$nativesPath/libexec.a",
     "-H:NativeLinkerOption=$nativesPath/liblocal_ai.a",
+    "-H:NativeLinkerOption=$nativesPath/libcolide.a",
     "-H:NativeLinkerOption=$nativesPath/libterminal.a",
     "-H:NativeLinkerOption=$nativesPath/libsubstrate.a",
     "-H:NativeLinkerOption=$nativesPath/libweb.a",

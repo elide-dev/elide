@@ -29,7 +29,7 @@ crate-type = ["lib", "staticlib", "cdylib"]
 [features]
 default = ["jni"]
 jni = []
-bare-metal = []
+bare-metal = ["x86"]
 
 [build-dependencies]
 builder = { workspace = true }
@@ -39,3 +39,6 @@ java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
 lazy_static = { workspace = true }
 heapless = "0.8"
+
+[target.'cfg(target_arch = "x86_64")'.dependencies]
+x86 = { version = "0.52", optional = true }

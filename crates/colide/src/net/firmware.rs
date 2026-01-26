@@ -249,22 +249,21 @@ impl Default for EmbeddedFirmwareLoader {
 
 impl FirmwareLoader for EmbeddedFirmwareLoader {
     fn load(&self, name: &str) -> Result<FirmwareData, FirmwareError> {
-        let _path = self.get_path(name);
+        let path = self.get_path(name);
         
-        // In actual implementation, would read from Cosmopolitan /zip/ filesystem
-        // For now, return stub
-        Err(FirmwareError::NotFound)
+        // Read from Cosmopolitan /zip/ filesystem using standard file operations
+        // The /zip/ directory is embedded in the APE binary
+        read_firmware_file(&path)
     }
     
     fn exists(&self, name: &str) -> bool {
-        let _path = self.get_path(name);
-        // Would check /zip/ filesystem
-        false
+        let path = self.get_path(name);
+        file_exists(&path)
     }
     
     fn info(&self, name: &str) -> Result<FirmwareInfo, FirmwareError> {
-        let _path = self.get_path(name);
-        Err(FirmwareError::NotFound)
+        let path = self.get_path(name);
+        get_firmware_info(&path, name)
     }
 }
 
@@ -298,8 +297,9 @@ impl FirmwareLoader for ExternalFirmwareLoader {
             let _ = path.extend_from_slice(base.as_bytes());
             let _ = path.extend_from_slice(name.as_bytes());
             
-            // Would attempt to read from filesystem
-            // Return stub for now
+            if let Ok(fw) = read_firmware_file(&path) {
+                return Ok(fw);
+            }
         }
         
         Err(FirmwareError::NotFound)
@@ -311,13 +311,23 @@ impl FirmwareLoader for ExternalFirmwareLoader {
             let _ = path.extend_from_slice(base.as_bytes());
             let _ = path.extend_from_slice(name.as_bytes());
             
-            // Would check filesystem
+            if file_exists(&path) {
+                return true;
+            }
         }
         false
     }
     
     fn info(&self, name: &str) -> Result<FirmwareInfo, FirmwareError> {
-        let _ = name;
+        for base in &self.base_paths {
+            let mut path = HVec::<u8, 128>::new();
+            let _ = path.extend_from_slice(base.as_bytes());
+            let _ = path.extend_from_slice(name.as_bytes());
+            
+            if let Ok(info) = get_firmware_info(&path, name) {
+                return Ok(info);
+            }
+        }
         Err(FirmwareError::NotFound)
     }
 }
@@ -361,6 +371,149 @@ impl FirmwareLoader for CombinedFirmwareLoader {
     fn info(&self, name: &str) -> Result<FirmwareInfo, FirmwareError> {
         self.embedded.info(name)
             .or_else(|_| self.external.info(name))
+    }
+}
+
+/// Check if a file exists at the given path
+fn file_exists(path: &[u8]) -> bool {
+    // Use Cosmopolitan/libc stat() to check file existence
+    // Path must be null-terminated
+    let mut path_buf = [0u8; 129];
+    let len = path.len().min(128);
+    path_buf[..len].copy_from_slice(&path[..len]);
+    path_buf[len] = 0; // Null terminate
+    
+    #[cfg(target_os = "none")]
+    {
+        // Bare metal: use our filesystem abstraction
+        extern "C" {
+            fn colide_file_exists(path: *const u8) -> i32;
+        }
+        unsafe { colide_file_exists(path_buf.as_ptr()) != 0 }
+    }
+    
+    #[cfg(not(target_os = "none"))]
+    {
+        // Hosted: use std or libc
+        use core::ffi::CStr;
+        let path_cstr = unsafe { CStr::from_ptr(path_buf.as_ptr() as *const i8) };
+        if let Ok(path_str) = path_cstr.to_str() {
+            std::path::Path::new(path_str).exists()
+        } else {
+            false
+        }
+    }
+}
+
+/// Read firmware file from path
+fn read_firmware_file(path: &[u8]) -> Result<FirmwareData, FirmwareError> {
+    let mut path_buf = [0u8; 129];
+    let len = path.len().min(128);
+    path_buf[..len].copy_from_slice(&path[..len]);
+    path_buf[len] = 0;
+    
+    #[cfg(target_os = "none")]
+    {
+        // Bare metal: use our filesystem abstraction
+        extern "C" {
+            fn colide_file_size(path: *const u8) -> i64;
+            fn colide_file_read(path: *const u8, buf: *mut u8, size: usize) -> i64;
+        }
+        
+        let size = unsafe { colide_file_size(path_buf.as_ptr()) };
+        if size <= 0 {
+            return Err(FirmwareError::NotFound);
+        }
+        if size as usize > MAX_FIRMWARE_SIZE {
+            return Err(FirmwareError::TooLarge);
+        }
+        
+        let mut fw = FirmwareData::new();
+        fw.data.resize(size as usize, 0).map_err(|_| FirmwareError::TooLarge)?;
+        
+        let read = unsafe { colide_file_read(path_buf.as_ptr(), fw.data.as_mut_ptr(), size as usize) };
+        if read != size {
+            return Err(FirmwareError::IoError);
+        }
+        
+        fw.info.size = size as usize;
+        fw.info.checksum = crc32(&fw.data);
+        Ok(fw)
+    }
+    
+    #[cfg(not(target_os = "none"))]
+    {
+        use core::ffi::CStr;
+        let path_cstr = unsafe { CStr::from_ptr(path_buf.as_ptr() as *const i8) };
+        if let Ok(path_str) = path_cstr.to_str() {
+            match std::fs::read(path_str) {
+                Ok(data) => {
+                    if data.len() > MAX_FIRMWARE_SIZE {
+                        return Err(FirmwareError::TooLarge);
+                    }
+                    let mut fw = FirmwareData::new();
+                    fw.data.extend_from_slice(&data).map_err(|_| FirmwareError::TooLarge)?;
+                    fw.info.size = data.len();
+                    fw.info.checksum = crc32(&fw.data);
+                    Ok(fw)
+                }
+                Err(_) => Err(FirmwareError::NotFound),
+            }
+        } else {
+            Err(FirmwareError::NotFound)
+        }
+    }
+}
+
+/// Get firmware info without fully loading
+fn get_firmware_info(path: &[u8], name: &str) -> Result<FirmwareInfo, FirmwareError> {
+    let mut path_buf = [0u8; 129];
+    let len = path.len().min(128);
+    path_buf[..len].copy_from_slice(&path[..len]);
+    path_buf[len] = 0;
+    
+    #[cfg(target_os = "none")]
+    {
+        extern "C" {
+            fn colide_file_size(path: *const u8) -> i64;
+        }
+        
+        let size = unsafe { colide_file_size(path_buf.as_ptr()) };
+        if size <= 0 {
+            return Err(FirmwareError::NotFound);
+        }
+        
+        let mut info = FirmwareInfo {
+            name: HVec::new(),
+            version: 0,
+            size: size as usize,
+            checksum: 0,
+        };
+        let _ = info.name.extend_from_slice(name.as_bytes());
+        Ok(info)
+    }
+    
+    #[cfg(not(target_os = "none"))]
+    {
+        use core::ffi::CStr;
+        let path_cstr = unsafe { CStr::from_ptr(path_buf.as_ptr() as *const i8) };
+        if let Ok(path_str) = path_cstr.to_str() {
+            match std::fs::metadata(path_str) {
+                Ok(meta) => {
+                    let mut info = FirmwareInfo {
+                        name: HVec::new(),
+                        version: 0,
+                        size: meta.len() as usize,
+                        checksum: 0,
+                    };
+                    let _ = info.name.extend_from_slice(name.as_bytes());
+                    Ok(info)
+                }
+                Err(_) => Err(FirmwareError::NotFound),
+            }
+        } else {
+            Err(FirmwareError::NotFound)
+        }
     }
 }
 

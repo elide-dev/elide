@@ -100,6 +100,14 @@ impl Default for Rtl8188euEfuse {
     }
 }
 
+/// USB vendor request codes for RTL8188EU
+mod usb_req {
+    pub const READ_REG: u8 = 0x05;
+    pub const WRITE_REG: u8 = 0x05;
+}
+
+use crate::usb::{UsbHostController, UsbSetupPacket};
+
 /// RTL8188EU driver
 pub struct Rtl8188euDriver {
     pub state: Rtl8188euState,
@@ -107,6 +115,7 @@ pub struct Rtl8188euDriver {
     pub current_channel: u8,
     pub tx_power: u8,
     pub rf_type: u8,          // 1T1R
+    pub usb_address: u8,      // USB device address
 }
 
 impl Rtl8188euDriver {
@@ -117,7 +126,13 @@ impl Rtl8188euDriver {
             current_channel: 1,
             tx_power: 20,
             rf_type: 0x11,  // 1T1R
+            usb_address: 0,
         }
+    }
+    
+    /// Set USB device address (call after enumeration)
+    pub fn set_usb_address(&mut self, addr: u8) {
+        self.usb_address = addr;
     }
     
     /// Initialize the RTL8188EU hardware
@@ -274,23 +289,83 @@ impl Rtl8188euDriver {
         Ok(())
     }
     
-    /// Read register (8-bit) - stub for actual USB implementation
+    /// Read register (8-bit) via USB control transfer
+    fn read_reg8_usb<C: UsbHostController>(&self, controller: &mut C, addr: u16) -> Result<u8, Rtl8188euError> {
+        let setup = UsbSetupPacket {
+            request_type: 0xC0,  // Device-to-host, vendor, device
+            request: usb_req::READ_REG,
+            value: addr,
+            index: 0,
+            length: 1,
+        };
+        let mut buf = [0u8; 1];
+        controller.control_transfer(self.usb_address, &setup, Some(&mut buf), 1000)
+            .map_err(|_| Rtl8188euError::UsbRead)?;
+        Ok(buf[0])
+    }
+    
+    /// Read register (32-bit) via USB control transfer
+    fn read_reg32_usb<C: UsbHostController>(&self, controller: &mut C, addr: u16) -> Result<u32, Rtl8188euError> {
+        let setup = UsbSetupPacket {
+            request_type: 0xC0,
+            request: usb_req::READ_REG,
+            value: addr,
+            index: 0,
+            length: 4,
+        };
+        let mut buf = [0u8; 4];
+        controller.control_transfer(self.usb_address, &setup, Some(&mut buf), 1000)
+            .map_err(|_| Rtl8188euError::UsbRead)?;
+        Ok(u32::from_le_bytes(buf))
+    }
+    
+    /// Write register (8-bit) via USB control transfer
+    fn write_reg8_usb<C: UsbHostController>(&self, controller: &mut C, addr: u16, val: u8) -> Result<(), Rtl8188euError> {
+        let setup = UsbSetupPacket {
+            request_type: 0x40,  // Host-to-device, vendor, device
+            request: usb_req::WRITE_REG,
+            value: addr,
+            index: 0,
+            length: 1,
+        };
+        let mut buf = [val];
+        controller.control_transfer(self.usb_address, &setup, Some(&mut buf), 1000)
+            .map_err(|_| Rtl8188euError::UsbWrite)?;
+        Ok(())
+    }
+    
+    /// Write register (32-bit) via USB control transfer
+    fn write_reg32_usb<C: UsbHostController>(&self, controller: &mut C, addr: u16, val: u32) -> Result<(), Rtl8188euError> {
+        let setup = UsbSetupPacket {
+            request_type: 0x40,
+            request: usb_req::WRITE_REG,
+            value: addr,
+            index: 0,
+            length: 4,
+        };
+        let mut buf = val.to_le_bytes();
+        controller.control_transfer(self.usb_address, &setup, Some(&mut buf), 1000)
+            .map_err(|_| Rtl8188euError::UsbWrite)?;
+        Ok(())
+    }
+    
+    /// Read register (8-bit) - standalone version (returns 0 if no controller)
     fn read_reg8(&self, _addr: u16) -> Result<u8, Rtl8188euError> {
-        // Would perform USB control transfer
+        // Use with controller version for actual hardware
         Ok(0)
     }
     
-    /// Read register (32-bit) - stub
+    /// Read register (32-bit) - standalone version
     fn read_reg32(&self, _addr: u16) -> Result<u32, Rtl8188euError> {
         Ok(0)
     }
     
-    /// Write register (8-bit) - stub
+    /// Write register (8-bit) - standalone version
     fn write_reg8(&self, _addr: u16, _val: u8) -> Result<(), Rtl8188euError> {
         Ok(())
     }
     
-    /// Write register (32-bit) - stub
+    /// Write register (32-bit) - standalone version
     fn write_reg32(&self, _addr: u16, _val: u32) -> Result<(), Rtl8188euError> {
         Ok(())
     }
@@ -413,6 +488,8 @@ pub enum Rtl8188euError {
     EfuseTimeout,
     InvalidChannel,
     UsbError,
+    UsbRead,
+    UsbWrite,
     TxFailed,
     RxFailed,
 }

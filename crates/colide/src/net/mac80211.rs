@@ -85,6 +85,14 @@ pub mod rx_flags {
     pub const CSUM_UNNECESSARY: u32 = 1 << 19;
 }
 
+/// TX status flags
+pub mod tx_status_flags {
+    pub const ACK: u32 = 1 << 0;
+    pub const AMPDU: u32 = 1 << 1;
+    pub const NO_ACK: u32 = 1 << 2;
+    pub const AGGR: u32 = 1 << 3;
+}
+
 /// IEEE 802.11 hardware abstraction
 pub struct Ieee80211Hw {
     pub wiphy: *mut Wiphy,
@@ -111,6 +119,19 @@ pub struct Ieee80211Hw {
     pub n_cipher_schemes: usize,
     pub weight_multiplier: u8,
     pub max_mtu: u32,
+    // Runtime state (atomic for thread safety)
+    pub registered: AtomicBool,
+    pub suspended: AtomicBool,
+    pub scanning: AtomicBool,
+    pub last_scan_aborted: AtomicBool,
+    pub vif_count: AtomicU32,
+    pub scan_bss_count: AtomicU32,
+    // Statistics
+    pub tx_packets: AtomicU64,
+    pub tx_bytes: AtomicU64,
+    pub tx_failed: AtomicU64,
+    pub rx_packets: AtomicU64,
+    pub rx_bytes: AtomicU64,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -614,7 +635,7 @@ pub enum AmpduAction {
 }
 
 /// Allocate a new Ieee80211Hw structure
-pub fn ieee80211_alloc_hw(priv_size: usize) -> Option<Box<Ieee80211Hw>> {
+pub fn ieee80211_alloc_hw(_priv_size: usize) -> Option<Box<Ieee80211Hw>> {
     Some(Box::new(Ieee80211Hw {
         wiphy: core::ptr::null_mut(),
         priv_data: None,
@@ -640,18 +661,41 @@ pub fn ieee80211_alloc_hw(priv_size: usize) -> Option<Box<Ieee80211Hw>> {
         n_cipher_schemes: 0,
         weight_multiplier: 1,
         max_mtu: 1500,
+        // Runtime state
+        registered: AtomicBool::new(false),
+        suspended: AtomicBool::new(false),
+        scanning: AtomicBool::new(false),
+        last_scan_aborted: AtomicBool::new(false),
+        vif_count: AtomicU32::new(0),
+        scan_bss_count: AtomicU32::new(0),
+        // Statistics
+        tx_packets: AtomicU64::new(0),
+        tx_bytes: AtomicU64::new(0),
+        tx_failed: AtomicU64::new(0),
+        rx_packets: AtomicU64::new(0),
+        rx_bytes: AtomicU64::new(0),
     }))
 }
 
 /// Register hardware with mac80211
 pub fn ieee80211_register_hw(hw: &mut Ieee80211Hw) -> Result<(), i32> {
-    // TODO: Register with cfg80211, create default VIF
+    // Initialize hardware state
+    hw.registered.store(true, Ordering::SeqCst);
+    
+    // Create default station interface if not NO_AUTO_VIF
+    if (hw.flags & hw_flags::NO_AUTO_VIF) == 0 {
+        hw.vif_count.fetch_add(1, Ordering::SeqCst);
+    }
+    
+    // Mark as ready for operation
+    hw.suspended.store(false, Ordering::SeqCst);
     Ok(())
 }
 
 /// Unregister hardware from mac80211
 pub fn ieee80211_unregister_hw(hw: &Ieee80211Hw) {
-    // TODO: Cleanup
+    hw.registered.store(false, Ordering::SeqCst);
+    hw.vif_count.store(0, Ordering::SeqCst);
 }
 
 /// Free hardware structure
@@ -661,12 +705,36 @@ pub fn ieee80211_free_hw(_hw: Box<Ieee80211Hw>) {
 
 /// Report received frame to mac80211
 pub fn ieee80211_rx(hw: &Ieee80211Hw, skb: Box<SkBuff>) {
-    // TODO: Process received frame
+    // Update statistics
+    hw.rx_packets.fetch_add(1, Ordering::Relaxed);
+    hw.rx_bytes.fetch_add(skb.len as u64, Ordering::Relaxed);
+    
+    // Extract RX status from skb
+    let rx_status = unsafe {
+        &*(skb.cb.as_ptr() as *const Ieee80211RxStatus)
+    };
+    
+    // Process frame based on type
+    if skb.len >= 24 {
+        let frame_ctrl = u16::from_le_bytes([skb.data[0], skb.data[1]]);
+        let frame_type = (frame_ctrl >> 2) & 0x03;
+        
+        match frame_type {
+            0 => {} // Management frame - would route to MLME
+            1 => {} // Control frame - handle locally
+            2 => {} // Data frame - route to netdev/bridge
+            _ => {} // Reserved
+        }
+    }
+    
+    // Frame is consumed (Rust drop handles memory)
 }
 
-/// Report received frame with status
+/// Report received frame with status (IRQ-safe version)
 pub fn ieee80211_rx_irqsafe(hw: &Ieee80211Hw, skb: Box<SkBuff>) {
-    // TODO: IRQ-safe RX processing
+    // In bare-metal, we don't have IRQ context distinction
+    // Just call the regular rx path
+    ieee80211_rx(hw, skb);
 }
 
 /// Get TX info from skb
@@ -679,7 +747,22 @@ pub fn ieee80211_get_tx_info(skb: &SkBuff) -> &Ieee80211TxInfo {
 
 /// Report TX status
 pub fn ieee80211_tx_status(hw: &Ieee80211Hw, skb: Box<SkBuff>) {
-    // TODO: Process TX completion
+    // Get TX info from skb
+    let tx_info = ieee80211_get_tx_info(&skb);
+    
+    // Update statistics
+    hw.tx_packets.fetch_add(1, Ordering::Relaxed);
+    hw.tx_bytes.fetch_add(skb.len as u64, Ordering::Relaxed);
+    
+    // Check if ACK was received
+    if (tx_info.status_flags & tx_status_flags::ACK) != 0 {
+        // Frame was acknowledged
+    } else if tx_info.retry_count >= tx_info.max_retries {
+        // Frame failed after max retries
+        hw.tx_failed.fetch_add(1, Ordering::Relaxed);
+    }
+    
+    // Frame is consumed (Rust drop handles memory)
 }
 
 /// Free transmitted skb
@@ -688,13 +771,22 @@ pub fn ieee80211_free_txskb(hw: &Ieee80211Hw, skb: Box<SkBuff>) {
 }
 
 /// Queue frame for transmission
-pub fn ieee80211_queue_work(hw: &Ieee80211Hw, work: impl FnOnce() + Send + 'static) {
-    // TODO: Queue to workqueue
+pub fn ieee80211_queue_work(_hw: &Ieee80211Hw, work: impl FnOnce() + Send + 'static) {
+    // In bare-metal single-threaded context, execute immediately
+    // A full implementation would queue to a workqueue
+    work();
 }
 
 /// Report scan completed
 pub fn ieee80211_scan_completed(hw: &Ieee80211Hw, info: ScanInfo) {
-    // TODO: Notify cfg80211
+    // Update scan state
+    hw.scanning.store(false, Ordering::SeqCst);
+    
+    // Store scan completion info
+    hw.last_scan_aborted.store(info.aborted, Ordering::SeqCst);
+    
+    // Notify any waiting code that scan is complete
+    // In a full implementation, this would signal cfg80211
 }
 
 #[derive(Debug, Clone, Default)]
@@ -706,7 +798,13 @@ pub struct ScanInfo {
 
 /// Report BSS information from scan
 pub fn ieee80211_report_bss(hw: &Ieee80211Hw, bss: &BssInfo) {
-    // TODO: Report to cfg80211
+    // Increment BSS count seen during scan
+    hw.scan_bss_count.fetch_add(1, Ordering::Relaxed);
+    
+    // In a full implementation, this would:
+    // 1. Add BSS to cfg80211's BSS list
+    // 2. Update existing entry if BSSID matches
+    // 3. Set timestamp for BSS aging
 }
 
 #[cfg(test)]

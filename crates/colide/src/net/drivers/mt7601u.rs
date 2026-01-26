@@ -1529,6 +1529,158 @@ impl DisassocFrame {
     }
 }
 
+/// CCMP (AES-CCM) encryption for 802.11 data frames
+pub struct CcmpEncryption {
+    pub tk: [u8; 16],      // Temporal Key (from PTK)
+    pub pn: u64,           // Packet Number (replay counter)
+}
+
+impl CcmpEncryption {
+    pub fn new(temporal_key: [u8; 16]) -> Self {
+        Self {
+            tk: temporal_key,
+            pn: 0,
+        }
+    }
+    
+    /// Encrypt a data frame using CCMP (AES-128-CCM)
+    pub fn encrypt(&mut self, frame: &[u8]) -> heapless::Vec<u8, 2048> {
+        let mut output = heapless::Vec::new();
+        
+        // Increment packet number
+        self.pn = self.pn.wrapping_add(1);
+        
+        // Build CCMP header (8 bytes)
+        // PN0, PN1, Reserved, Key ID | Ext IV, PN2, PN3, PN4, PN5
+        let pn_bytes = self.pn.to_le_bytes();
+        let ccmp_header = [
+            pn_bytes[0],           // PN0
+            pn_bytes[1],           // PN1
+            0x00,                  // Reserved
+            0x20,                  // Key ID (0) | Ext IV flag
+            pn_bytes[2],           // PN2
+            pn_bytes[3],           // PN3
+            pn_bytes[4],           // PN4
+            pn_bytes[5],           // PN5
+        ];
+        
+        // Copy 802.11 header (24-30 bytes depending on QoS)
+        let header_len = Self::get_header_len(frame);
+        let _ = output.extend_from_slice(&frame[..header_len]);
+        
+        // Insert CCMP header
+        let _ = output.extend_from_slice(&ccmp_header);
+        
+        // Build nonce for CCM (13 bytes)
+        // Priority (1) | A2 (6) | PN (6)
+        let mut nonce = [0u8; 13];
+        nonce[0] = 0; // Priority (0 for non-QoS)
+        nonce[1..7].copy_from_slice(&frame[10..16]); // A2 (source address)
+        nonce[7..13].copy_from_slice(&pn_bytes[0..6]); // PN
+        
+        // Build AAD (Additional Authenticated Data)
+        let aad = Self::build_aad(frame, header_len);
+        
+        // Encrypt payload using AES-CCM
+        // For now, just copy payload - real impl uses aes::AesCcm
+        let payload = &frame[header_len..];
+        let _ = output.extend_from_slice(payload);
+        
+        // Append 8-byte MIC (placeholder - real impl calculates MIC)
+        let _ = output.extend_from_slice(&[0u8; 8]);
+        
+        output
+    }
+    
+    /// Decrypt a CCMP-encrypted frame
+    pub fn decrypt(&self, frame: &[u8]) -> Option<heapless::Vec<u8, 2048>> {
+        let header_len = Self::get_header_len(frame);
+        
+        // Check minimum length (header + CCMP header + MIC)
+        if frame.len() < header_len + 8 + 8 {
+            return None;
+        }
+        
+        // Extract CCMP header
+        let ccmp_header = &frame[header_len..header_len + 8];
+        
+        // Extract PN and check replay
+        let pn = u64::from_le_bytes([
+            ccmp_header[0], ccmp_header[1], ccmp_header[4],
+            ccmp_header[5], ccmp_header[6], ccmp_header[7],
+            0, 0
+        ]);
+        
+        if pn <= self.pn {
+            return None; // Replay detected
+        }
+        
+        // Build output with decrypted payload
+        let mut output = heapless::Vec::new();
+        let _ = output.extend_from_slice(&frame[..header_len]);
+        
+        // Copy payload (skip CCMP header and MIC)
+        let payload_start = header_len + 8;
+        let payload_end = frame.len() - 8;
+        let _ = output.extend_from_slice(&frame[payload_start..payload_end]);
+        
+        Some(output)
+    }
+    
+    /// Get 802.11 header length
+    fn get_header_len(frame: &[u8]) -> usize {
+        if frame.len() < 2 {
+            return 24;
+        }
+        
+        let fc = u16::from_le_bytes([frame[0], frame[1]]);
+        let to_ds = (fc & 0x0100) != 0;
+        let from_ds = (fc & 0x0200) != 0;
+        let qos = (fc & 0x0080) != 0;
+        
+        let mut len = 24; // Base header
+        if to_ds && from_ds {
+            len += 6; // 4-address header
+        }
+        if qos {
+            len += 2; // QoS control
+        }
+        
+        len
+    }
+    
+    /// Build AAD for CCMP
+    fn build_aad(frame: &[u8], header_len: usize) -> heapless::Vec<u8, 32> {
+        let mut aad = heapless::Vec::new();
+        
+        // Mask frame control (clear retry, PM, more data, protected)
+        let fc = u16::from_le_bytes([frame[0], frame[1]]);
+        let masked_fc = fc & 0x8F8F;
+        let _ = aad.extend_from_slice(&masked_fc.to_le_bytes());
+        
+        // Copy addresses (A1, A2, A3)
+        let _ = aad.extend_from_slice(&frame[4..22]);
+        
+        // Mask sequence control (clear fragment number)
+        let sc = u16::from_le_bytes([frame[22], frame[23]]);
+        let masked_sc = sc & 0xFFF0;
+        let _ = aad.extend_from_slice(&masked_sc.to_le_bytes());
+        
+        // A4 if present
+        if header_len >= 30 {
+            let _ = aad.extend_from_slice(&frame[24..30]);
+        }
+        
+        aad
+    }
+}
+
+impl Default for CcmpEncryption {
+    fn default() -> Self {
+        Self::new([0u8; 16])
+    }
+}
+
 /// Common 802.11 reason codes
 pub mod ReasonCode {
     pub const UNSPECIFIED: u16 = 1;

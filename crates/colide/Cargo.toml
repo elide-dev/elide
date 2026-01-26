@@ -38,3 +38,4 @@ builder = { workspace = true }
 java_native = { workspace = true }
 jni = { workspace = true, default-features = false }
 lazy_static = { workspace = true }
+heapless = "0.8"

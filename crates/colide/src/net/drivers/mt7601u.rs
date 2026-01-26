@@ -571,6 +571,189 @@ pub struct RxFrameInfo {
     pub short_gi: bool,
 }
 
+/// Scan result from beacon/probe response
+#[derive(Debug, Clone)]
+pub struct ScanResult {
+    pub bssid: [u8; 6],
+    pub ssid: heapless::String<32>,
+    pub channel: u8,
+    pub rssi: i8,
+    pub capability: u16,
+    pub beacon_interval: u16,
+    pub is_wpa: bool,
+    pub is_wpa2: bool,
+    pub is_open: bool,
+}
+
+/// 802.11 frame types
+mod frame_type {
+    pub const MGMT_BEACON: u16 = 0x0080;
+    pub const MGMT_PROBE_RESP: u16 = 0x0050;
+    pub const MGMT_AUTH: u16 = 0x00b0;
+    pub const MGMT_DEAUTH: u16 = 0x00c0;
+    pub const MGMT_ASSOC_REQ: u16 = 0x0000;
+    pub const MGMT_ASSOC_RESP: u16 = 0x0010;
+    pub const MGMT_DISASSOC: u16 = 0x00a0;
+}
+
+/// Information Element IDs
+mod ie_id {
+    pub const SSID: u8 = 0;
+    pub const SUPPORTED_RATES: u8 = 1;
+    pub const DS_PARAMS: u8 = 3;
+    pub const TIM: u8 = 5;
+    pub const RSN: u8 = 48;
+    pub const VENDOR: u8 = 221;
+}
+
+/// WPA OUI
+const WPA_OUI: [u8; 4] = [0x00, 0x50, 0xf2, 0x01];
+
+impl ScanResult {
+    /// Parse beacon or probe response frame into ScanResult
+    pub fn from_frame(frame: &[u8], rssi: i8) -> Option<Self> {
+        if frame.len() < 36 {
+            return None;
+        }
+        
+        // Check frame type (beacon or probe response)
+        let fc = u16::from_le_bytes([frame[0], frame[1]]);
+        if fc != frame_type::MGMT_BEACON && fc != frame_type::MGMT_PROBE_RESP {
+            return None;
+        }
+        
+        // Extract BSSID (offset 16)
+        let mut bssid = [0u8; 6];
+        bssid.copy_from_slice(&frame[16..22]);
+        
+        // Fixed fields start at offset 24
+        // Timestamp (8) + Beacon Interval (2) + Capability (2) = 12 bytes
+        let beacon_interval = u16::from_le_bytes([frame[32], frame[33]]);
+        let capability = u16::from_le_bytes([frame[34], frame[35]]);
+        
+        // Parse Information Elements starting at offset 36
+        let mut ssid = heapless::String::new();
+        let mut channel = 0u8;
+        let mut is_wpa = false;
+        let mut is_wpa2 = false;
+        
+        let mut pos = 36;
+        while pos + 2 <= frame.len() {
+            let ie_id = frame[pos];
+            let ie_len = frame[pos + 1] as usize;
+            pos += 2;
+            
+            if pos + ie_len > frame.len() {
+                break;
+            }
+            
+            match ie_id {
+                ie_id::SSID => {
+                    if ie_len <= 32 {
+                        if let Ok(s) = core::str::from_utf8(&frame[pos..pos + ie_len]) {
+                            let _ = ssid.push_str(s);
+                        }
+                    }
+                }
+                ie_id::DS_PARAMS => {
+                    if ie_len >= 1 {
+                        channel = frame[pos];
+                    }
+                }
+                ie_id::RSN => {
+                    is_wpa2 = true;
+                }
+                ie_id::VENDOR => {
+                    if ie_len >= 4 && frame[pos..pos + 4] == WPA_OUI {
+                        is_wpa = true;
+                    }
+                }
+                _ => {}
+            }
+            
+            pos += ie_len;
+        }
+        
+        let is_open = !is_wpa && !is_wpa2 && (capability & 0x0010) == 0;
+        
+        Some(ScanResult {
+            bssid,
+            ssid,
+            channel,
+            rssi,
+            capability,
+            beacon_interval,
+            is_wpa,
+            is_wpa2,
+            is_open,
+        })
+    }
+}
+
+/// Scan state for collecting results
+pub struct ScanState {
+    pub results: heapless::Vec<ScanResult, 32>,
+    pub current_channel: u8,
+    pub channels_to_scan: heapless::Vec<u8, 14>,
+    pub active: bool,
+}
+
+impl ScanState {
+    pub fn new() -> Self {
+        Self {
+            results: heapless::Vec::new(),
+            current_channel: 1,
+            channels_to_scan: heapless::Vec::new(),
+            active: false,
+        }
+    }
+    
+    /// Start a new scan on specified channels
+    pub fn start(&mut self, channels: &[u8]) {
+        self.results.clear();
+        self.channels_to_scan.clear();
+        for &ch in channels {
+            let _ = self.channels_to_scan.push(ch);
+        }
+        self.active = true;
+        self.current_channel = channels.first().copied().unwrap_or(1);
+    }
+    
+    /// Process received frame during scan
+    pub fn process_frame(&mut self, frame: &[u8], rssi: i8) {
+        if !self.active {
+            return;
+        }
+        
+        if let Some(result) = ScanResult::from_frame(frame, rssi) {
+            // Check if we already have this BSSID
+            let exists = self.results.iter().any(|r| r.bssid == result.bssid);
+            if !exists && !self.results.is_full() {
+                let _ = self.results.push(result);
+            }
+        }
+    }
+    
+    /// Move to next channel, returns false when done
+    pub fn next_channel(&mut self) -> Option<u8> {
+        if let Some(pos) = self.channels_to_scan.iter().position(|&c| c == self.current_channel) {
+            if pos + 1 < self.channels_to_scan.len() {
+                self.current_channel = self.channels_to_scan[pos + 1];
+                return Some(self.current_channel);
+            }
+        }
+        self.active = false;
+        None
+    }
+    
+    /// Get best network by RSSI
+    pub fn best_network(&self, ssid: &str) -> Option<&ScanResult> {
+        self.results.iter()
+            .filter(|r| r.ssid.as_str() == ssid)
+            .max_by_key(|r| r.rssi)
+    }
+}
+
 impl Default for Mt7601uDriver {
     fn default() -> Self {
         Self::new()

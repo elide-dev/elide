@@ -1423,6 +1423,133 @@ impl Default for EapolHandler {
     }
 }
 
+/// Deauthentication frame (for disconnection)
+pub struct DeauthFrame;
+
+impl DeauthFrame {
+    /// Build deauthentication frame
+    pub fn build(
+        src_addr: &[u8; 6],
+        dst_addr: &[u8; 6],
+        bssid: &[u8; 6],
+        reason_code: u16,
+    ) -> heapless::Vec<u8, 64> {
+        let mut frame = heapless::Vec::new();
+        
+        // Frame control: Deauth (0x00C0)
+        let _ = frame.extend_from_slice(&[0xC0, 0x00]);
+        
+        // Duration
+        let _ = frame.extend_from_slice(&[0x00, 0x00]);
+        
+        // Destination
+        let _ = frame.extend_from_slice(dst_addr);
+        
+        // Source
+        let _ = frame.extend_from_slice(src_addr);
+        
+        // BSSID
+        let _ = frame.extend_from_slice(bssid);
+        
+        // Sequence control
+        let _ = frame.extend_from_slice(&[0x00, 0x00]);
+        
+        // Reason code
+        let _ = frame.extend_from_slice(&reason_code.to_le_bytes());
+        
+        frame
+    }
+    
+    /// Parse deauth frame, returns reason code
+    pub fn parse(data: &[u8]) -> Option<u16> {
+        if data.len() < 26 {
+            return None;
+        }
+        
+        // Check frame type (deauth = 0xC0)
+        if data[0] != 0xC0 {
+            return None;
+        }
+        
+        // Reason code at offset 24
+        Some(u16::from_le_bytes([data[24], data[25]]))
+    }
+}
+
+/// Disassociation frame
+pub struct DisassocFrame;
+
+impl DisassocFrame {
+    /// Build disassociation frame
+    pub fn build(
+        src_addr: &[u8; 6],
+        dst_addr: &[u8; 6],
+        bssid: &[u8; 6],
+        reason_code: u16,
+    ) -> heapless::Vec<u8, 64> {
+        let mut frame = heapless::Vec::new();
+        
+        // Frame control: Disassoc (0x00A0)
+        let _ = frame.extend_from_slice(&[0xA0, 0x00]);
+        
+        // Duration
+        let _ = frame.extend_from_slice(&[0x00, 0x00]);
+        
+        // Destination
+        let _ = frame.extend_from_slice(dst_addr);
+        
+        // Source
+        let _ = frame.extend_from_slice(src_addr);
+        
+        // BSSID
+        let _ = frame.extend_from_slice(bssid);
+        
+        // Sequence control
+        let _ = frame.extend_from_slice(&[0x00, 0x00]);
+        
+        // Reason code
+        let _ = frame.extend_from_slice(&reason_code.to_le_bytes());
+        
+        frame
+    }
+    
+    /// Parse disassoc frame, returns reason code
+    pub fn parse(data: &[u8]) -> Option<u16> {
+        if data.len() < 26 {
+            return None;
+        }
+        
+        // Check frame type (disassoc = 0xA0)
+        if data[0] != 0xA0 {
+            return None;
+        }
+        
+        // Reason code at offset 24
+        Some(u16::from_le_bytes([data[24], data[25]]))
+    }
+}
+
+/// Common 802.11 reason codes
+pub mod ReasonCode {
+    pub const UNSPECIFIED: u16 = 1;
+    pub const PREV_AUTH_NOT_VALID: u16 = 2;
+    pub const DEAUTH_LEAVING: u16 = 3;
+    pub const DISASSOC_INACTIVITY: u16 = 4;
+    pub const DISASSOC_AP_BUSY: u16 = 5;
+    pub const CLASS2_FRAME_FROM_NONAUTH: u16 = 6;
+    pub const CLASS3_FRAME_FROM_NONASSOC: u16 = 7;
+    pub const DISASSOC_STA_LEAVING: u16 = 8;
+    pub const STA_REQ_ASSOC_WITHOUT_AUTH: u16 = 9;
+    pub const INVALID_IE: u16 = 13;
+    pub const MIC_FAILURE: u16 = 14;
+    pub const FOURWAY_HANDSHAKE_TIMEOUT: u16 = 15;
+    pub const GK_HANDSHAKE_TIMEOUT: u16 = 16;
+    pub const IE_DIFFERENT: u16 = 17;
+    pub const INVALID_GROUP_CIPHER: u16 = 18;
+    pub const INVALID_PAIRWISE_CIPHER: u16 = 19;
+    pub const INVALID_AKMP: u16 = 20;
+}
+
 /// Driver errors
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Mt7601uError {

@@ -32,6 +32,7 @@ mod regs {
     pub const RF_BYPASS_0: u16 = 0x0504;
     pub const RF_SETTING_0: u16 = 0x050c;
     pub const BBP_CSR_CFG: u16 = 0x101c;
+    pub const RX_FILTER_CFG: u16 = 0x1400;
 }
 
 /// USB request types
@@ -389,6 +390,185 @@ impl Mt7601uDriver {
     pub fn channel(&self) -> u8 { self.current_channel }
     pub fn state(&self) -> Mt7601uState { self.state }
     pub fn bssid(&self) -> [u8; 6] { self.bssid }
+    
+    /// Transmit an 802.11 frame via USB bulk endpoint
+    pub fn tx_frame<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+        frame: &[u8],
+    ) -> Result<(), Mt7601uError> {
+        if self.state != Mt7601uState::Started && self.state != Mt7601uState::Connected {
+            return Err(Mt7601uError::NotInitialized);
+        }
+        
+        // Build TXWI (TX Wireless Info) header - 20 bytes
+        let mut txwi = [0u8; 20];
+        txwi[0] = 0x00;  // FRAG, MPDUtotalByteCount[7:0]
+        txwi[1] = (frame.len() as u8) & 0x0f;  // MPDUtotalByteCount[11:8]
+        txwi[2] = 0x00;  // TX_PACKET_ID, MCS
+        txwi[3] = 0x00;  // BW, ShortGI, STBC, PHYMODE
+        txwi[4] = 0x00;  // ACK, NSEQ, BAWinSize[5:0]
+        txwi[5] = 0x00;  // WCID
+        txwi[6] = 0x00;  // PacketId
+        txwi[7] = 0x00;  // Reserved
+        
+        // Build USB TX packet: TXINFO (4) + TXWI (20) + Frame + Padding
+        let frame_len = frame.len();
+        let total_len = 4 + 20 + frame_len;
+        let padded_len = (total_len + 3) & !3;  // 4-byte alignment
+        
+        let mut tx_buf = vec![0u8; padded_len];
+        
+        // TXINFO header (4 bytes)
+        let info_len = (20 + frame_len) as u32;
+        tx_buf[0..4].copy_from_slice(&info_len.to_le_bytes());
+        tx_buf[0] |= 0x80;  // USB_TX_BURST flag
+        
+        // TXWI
+        tx_buf[4..24].copy_from_slice(&txwi);
+        
+        // Frame data
+        tx_buf[24..24 + frame_len].copy_from_slice(frame);
+        
+        // Send via bulk OUT endpoint (EP1 OUT = 0x01)
+        controller.bulk_transfer(self.usb_address, 0x01, &mut tx_buf, 1000)
+            .map_err(|_| Mt7601uError::TxFailed)?;
+        
+        Ok(())
+    }
+    
+    /// Receive 802.11 frames via USB bulk endpoint
+    pub fn rx_frame<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+        buf: &mut [u8],
+    ) -> Result<RxFrameInfo, Mt7601uError> {
+        if self.state != Mt7601uState::Started && self.state != Mt7601uState::Connected {
+            return Err(Mt7601uError::NotInitialized);
+        }
+        
+        // Receive from bulk IN endpoint (EP1 IN = 0x81)
+        let mut rx_buf = [0u8; 2048];
+        let len = controller.bulk_transfer(self.usb_address, 0x81, &mut rx_buf, 100)
+            .map_err(|_| Mt7601uError::RxFailed)?;
+        
+        if len < 8 {
+            return Err(Mt7601uError::RxFailed);
+        }
+        
+        // Parse RXINFO (4 bytes) + RXWI (24 bytes)
+        let rx_len = u32::from_le_bytes([rx_buf[0], rx_buf[1], rx_buf[2], rx_buf[3]]) & 0xffff;
+        
+        // RXWI fields
+        let rssi = rx_buf[6] as i8 - 110;  // Convert to dBm
+        let snr = rx_buf[7];
+        let mcs = rx_buf[4] & 0x7f;
+        let bw = (rx_buf[5] >> 7) & 0x01;
+        let sgi = (rx_buf[5] >> 6) & 0x01;
+        
+        // Frame starts after RXINFO (4) + RXWI (24) = 28 bytes
+        let frame_start = 28;
+        let frame_len = (rx_len as usize).saturating_sub(24).min(buf.len());
+        
+        if frame_start + frame_len <= len {
+            buf[..frame_len].copy_from_slice(&rx_buf[frame_start..frame_start + frame_len]);
+        }
+        
+        Ok(RxFrameInfo {
+            length: frame_len,
+            rssi,
+            snr,
+            rate_mcs: mcs,
+            bandwidth_40mhz: bw != 0,
+            short_gi: sgi != 0,
+        })
+    }
+    
+    /// Start a passive scan on current channel
+    pub fn start_scan<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+    ) -> Result<(), Mt7601uError> {
+        if self.state != Mt7601uState::Started {
+            return Err(Mt7601uError::NotInitialized);
+        }
+        
+        // Set promiscuous mode for scanning
+        self.rx_filter = 0x0001;  // Accept all frames
+        self.write_reg(controller, regs::RX_FILTER_CFG, self.rx_filter)?;
+        
+        self.state = Mt7601uState::Scanning;
+        Ok(())
+    }
+    
+    /// Stop scanning and return to normal mode
+    pub fn stop_scan<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+    ) -> Result<(), Mt7601uError> {
+        // Restore normal RX filter
+        self.rx_filter = 0x17f9;  // Normal station mode filter
+        self.write_reg(controller, regs::RX_FILTER_CFG, self.rx_filter)?;
+        
+        self.state = Mt7601uState::Started;
+        Ok(())
+    }
+    
+    /// Send a probe request for active scanning
+    pub fn send_probe_request<C: UsbHostController>(
+        &mut self,
+        controller: &mut C,
+        ssid: Option<&[u8]>,
+    ) -> Result<(), Mt7601uError> {
+        // Build 802.11 probe request frame
+        let mut frame = Vec::with_capacity(128);
+        
+        // Frame Control: Probe Request (0x0040)
+        frame.extend_from_slice(&[0x40, 0x00]);
+        // Duration
+        frame.extend_from_slice(&[0x00, 0x00]);
+        // DA: Broadcast
+        frame.extend_from_slice(&[0xff, 0xff, 0xff, 0xff, 0xff, 0xff]);
+        // SA: Our MAC
+        frame.extend_from_slice(&self.mac_addr);
+        // BSSID: Broadcast
+        frame.extend_from_slice(&[0xff, 0xff, 0xff, 0xff, 0xff, 0xff]);
+        // Sequence Control
+        frame.extend_from_slice(&[0x00, 0x00]);
+        
+        // Information Elements
+        // SSID
+        frame.push(0);  // Element ID
+        if let Some(s) = ssid {
+            frame.push(s.len() as u8);
+            frame.extend_from_slice(s);
+        } else {
+            frame.push(0);  // Wildcard SSID
+        }
+        
+        // Supported Rates
+        frame.push(1);  // Element ID
+        frame.push(8);  // Length
+        frame.extend_from_slice(&[0x82, 0x84, 0x8b, 0x96, 0x0c, 0x12, 0x18, 0x24]);
+        
+        // Extended Supported Rates
+        frame.push(50);  // Element ID
+        frame.push(4);   // Length
+        frame.extend_from_slice(&[0x30, 0x48, 0x60, 0x6c]);
+        
+        self.tx_frame(controller, &frame)
+    }
+}
+
+/// Received frame information
+#[derive(Debug, Clone, Copy)]
+pub struct RxFrameInfo {
+    pub length: usize,
+    pub rssi: i8,
+    pub snr: u8,
+    pub rate_mcs: u8,
+    pub bandwidth_40mhz: bool,
+    pub short_gi: bool,
 }
 
 impl Default for Mt7601uDriver {
@@ -407,4 +587,6 @@ pub enum Mt7601uError {
     BbpTimeout,
     InvalidChannel,
     HwError,
+    TxFailed,
+    RxFailed,
 }

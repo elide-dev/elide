@@ -24,6 +24,7 @@ pub mod aggregation;
 pub mod qos;
 pub mod scan;
 pub mod connection;
+pub mod roaming;
 
 use jni::JNIEnv;
 use jni::objects::{JClass, JString, JByteArray, JObject};

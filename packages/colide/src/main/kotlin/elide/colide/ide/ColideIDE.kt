@@ -45,6 +45,7 @@ public class ColideIDE {
     private var fileBrowser: FileBrowser? = null
     private var codeEditor: CodeEditor? = null
     private var terminal: Terminal? = null
+    private var statusBar: StatusBar? = null
     private var aiAssistant = AiAssistant.getInstance()
     
     private var running = true
@@ -85,8 +86,9 @@ public class ColideIDE {
         val sidebarWidth = 200
         val bottomHeight = 150
         val menuHeight = 24
+        val statusBarHeight = StatusBar.BAR_HEIGHT
         val contentY = menuHeight
-        val editorHeight = screenHeight - menuHeight - bottomHeight - 30
+        val editorHeight = screenHeight - menuHeight - bottomHeight - statusBarHeight - 30
         
         fileBrowser = FileBrowser().apply {
             x = 0
@@ -104,9 +106,16 @@ public class ColideIDE {
         }
         mainWindow.add(codeEditor!!)
         
+        statusBar = StatusBar().apply {
+            x = sidebarWidth + 2
+            y = contentY + editorHeight
+            width = screenWidth - sidebarWidth - 4
+        }
+        mainWindow.add(statusBar!!)
+        
         terminal = Terminal().apply {
             x = sidebarWidth + 2
-            y = contentY + editorHeight + 2
+            y = contentY + editorHeight + statusBarHeight + 2
             width = screenWidth - sidebarWidth - 4
             height = bottomHeight - 4
             prompt = "colide> "
@@ -184,9 +193,22 @@ public class ColideIDE {
         val success = codeEditor?.loadFile(path) ?: false
         if (success) {
             terminal?.printSuccess("Opened: $path")
+            val ext = path.substringAfterLast('.', "")
+            statusBar?.updateLanguage(ext)
+            statusBar?.modified = false
+            updateStatusBar()
         } else {
             terminal?.printError("Failed to open: $path")
         }
+    }
+    
+    /**
+     * Update status bar from editor state.
+     */
+    private fun updateStatusBar() {
+        statusBar?.line = 1
+        statusBar?.column = 1
+        statusBar?.modified = codeEditor?.isModified() ?: false
     }
     
     /**

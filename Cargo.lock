@@ -1493,6 +1493,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b9e769b5c8c8283982a987c6e948e540254f1058d5a74b8794914d4ef5fc2a24"
 
 [[package]]
+name = "colide"
+version = "1.0.0-beta10"
+dependencies = [
+ "builder",
+ "java_native",
+ "jni",
+ "lazy_static",
+]
+
+[[package]]
 name = "collection_literals"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"

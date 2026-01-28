@@ -1075,6 +1075,12 @@ public abstract interface class elide/runtime/gvm/loader/ModuleResolver {
 public abstract interface class elide/runtime/interop/InteropProxyObject : org/graalvm/polyglot/proxy/ProxyObject {
 }
 
+public final class elide/runtime/interop/ProxyArraysKt {
+	public static final fun toProxyArray (Ljava/util/List;)Lorg/graalvm/polyglot/proxy/ProxyArray;
+	public static final fun toProxyArray ([Ljava/lang/String;)Lorg/graalvm/polyglot/proxy/ProxyArray;
+	public static final fun toStringArray (Lorg/graalvm/polyglot/Value;)[Ljava/lang/String;
+}
+
 public abstract interface class elide/runtime/interop/ReadOnlyProxyObject : elide/runtime/interop/SealedProxyObject {
 	public fun putMember (Ljava/lang/String;Lorg/graalvm/polyglot/Value;)V
 	public fun removeMember (Ljava/lang/String;)Z

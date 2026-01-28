@@ -8943,7 +8943,6 @@ public final synthetic class elide/runtime/node/dns/$NodeDNSModule$Introspection
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z
-	public fun instantiate ()Ljava/lang/Object;
 	public fun isBuildable ()Z
 }
 
@@ -8962,7 +8961,6 @@ public final synthetic class elide/runtime/node/dns/$NodeDNSPromisesModule$Intro
 	public static final field $ANNOTATION_METADATA Lio/micronaut/core/annotation/AnnotationMetadata;
 	public fun <init> ()V
 	public fun hasBuilder ()Z
-	public fun instantiate ()Ljava/lang/Object;
 	public fun isBuildable ()Z
 }
 

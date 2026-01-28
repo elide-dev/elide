@@ -378,6 +378,7 @@ val testLibArgs = sharedLibArgs.plus(listOf(
   "-H:NativeLinkerOption=$nativesPath/libjs.so",
   "-H:NativeLinkerOption=$nativesPath/libposix.so",
   "-H:NativeLinkerOption=$nativesPath/libterminal.so",
+  "-H:NativeLinkerOption=$nativesPath/libdns.so",
 ))
 
 val layerOut = layout.buildDirectory.file("native/nativeLayerCompile/elide-graalvm.nil")

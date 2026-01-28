@@ -15,13 +15,15 @@ package elide.runtime.node
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 import elide.annotations.Inject
+import elide.runtime.exec.GuestExecution
+import elide.runtime.exec.GuestExecutorProvider
 import elide.runtime.node.dns.NodeDNSPromisesModule
 import elide.testing.annotations.TestCase
 
 /** Tests for Elide's implementation of the Node `dns` built-in module. */
 @TestCase internal class NodeDnsPromisesTest : NodeModuleConformanceTest<NodeDNSPromisesModule>() {
   override val moduleName: String get() = "dns/promises"
-  override fun provide(): NodeDNSPromisesModule = NodeDNSPromisesModule()
+  override fun provide(): NodeDNSPromisesModule = NodeDNSPromisesModule(GuestExecutorProvider { GuestExecution.direct() })
   @Inject lateinit var dns: NodeDNSPromisesModule
 
   // @TODO(sgammon): Not yet fully supported
@@ -30,6 +32,7 @@ import elide.testing.annotations.TestCase
   override fun requiredMembers(): Sequence<String> = sequence {
     yield("Resolver")
     yield("getServers")
+    yield("lookup")
     yield("lookupService")
     yield("resolve")
     yield("resolve4")
@@ -51,5 +54,33 @@ import elide.testing.annotations.TestCase
 
   @Test override fun testInjectable() {
     assertNotNull(dns)
+  }
+
+  @Test fun `test module can be required and has expected shape`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns/promises');
+        test(dns).isNotNull();
+        test(typeof dns.resolve4).isEqualTo('function');
+        test(typeof dns.resolve6).isEqualTo('function');
+        test(typeof dns.lookup).isEqualTo('function');
+        test(typeof dns.getServers).isEqualTo('function');
+        test(typeof dns.Resolver).isEqualTo('function');
+      """
+    }.doesNotFail()
+  }
+
+  @Test fun `test Resolver class can be instantiated`() {
+    executeGuest {
+      // language=JavaScript
+      """
+        const dns = require('node:dns/promises');
+        const resolver = new dns.Resolver();
+        test(resolver).isNotNull();
+        test(typeof resolver.resolve4).isEqualTo('function');
+        test(typeof resolver.resolve6).isEqualTo('function');
+      """
+    }.doesNotFail()
   }
 }

@@ -57,7 +57,26 @@ Opening issues for compatibility bugs helps us prioritize what to work on next.
 
 ### [`node:dns`](https://nodejs.org/api/dns.html)
 
-🔴 Not implemented.
+🟢 Fully implemented via native Rust bindings using [hickory-resolver](https://github.com/hickory-dns/hickory-dns).
+
+**Callback API (`dns`):**
+- `lookup(hostname, [options], callback)` - Uses `getaddrinfo` (respects `/etc/hosts`, NSS)
+- `lookupService(address, port, callback)` - Uses `getservbyport` for service names
+- `resolve(hostname, [rrtype], callback)` - DNS resolution (A, AAAA, MX, TXT, etc.)
+- `resolve4`, `resolve6`, `resolveCname`, `resolveNs`, `resolvePtr`, `resolveMx`, `resolveSrv`, `resolveTxt`, `resolveNaptr`, `resolveCaa`, `resolveTlsa`, `resolveSoa`, `resolveAny`
+- `reverse(ip, callback)` - Reverse DNS lookup
+- `getServers()`, `setServers(servers)` - DNS server configuration
+- `getDefaultResultOrder()`, `setDefaultResultOrder(order)` - IPv4/IPv6 ordering
+
+**Promise API (`dns.promises`):** All callback methods available as promise-returning functions.
+
+**Resolver class:** `dns.Resolver` and `dns.promises.Resolver` for isolated resolver instances.
+
+**Notes:**
+- Native implementation uses Rust JNI bindings for performance
+- `lookup()` uses libc `getaddrinfo` (thread-safe via mutex) for OS-level resolution
+- `resolve*()` methods use hickory-resolver for pure DNS queries
+- System DNS servers detected automatically via `/etc/resolv.conf`
 
 ### [`node:domain`](https://nodejs.org/api/domain.html)
 

@@ -3575,12 +3575,22 @@ public final class elide/tooling/project/flags/ProjectFlagType : java/lang/Enum 
 }
 
 public abstract interface class elide/tooling/project/flags/ProjectFlagValue {
+	public static final field Companion Lelide/tooling/project/flags/ProjectFlagValue$Companion;
 	public abstract fun getAsString ()Ljava/lang/String;
 }
 
 public abstract interface class elide/tooling/project/flags/ProjectFlagValue$BooleanTypeValue : elide/tooling/project/flags/ProjectFlagValue {
+	public static final field Companion Lelide/tooling/project/flags/ProjectFlagValue$BooleanTypeValue$Companion;
 	public fun getAsString ()Ljava/lang/String;
 	public abstract fun getValue ()Z
+}
+
+public final class elide/tooling/project/flags/ProjectFlagValue$BooleanTypeValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/flags/ProjectFlagValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class elide/tooling/project/flags/ProjectFlagValue$False : elide/tooling/project/flags/ProjectFlagValue$BooleanTypeValue {
@@ -3588,6 +3598,7 @@ public final class elide/tooling/project/flags/ProjectFlagValue$False : elide/to
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getValue ()Z
 	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -3596,15 +3607,22 @@ public final class elide/tooling/project/flags/ProjectFlagValue$NoValue : elide/
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getAsString ()Ljava/lang/String;
 	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 	public fun toString ()Ljava/lang/String;
 }
 
 public abstract interface class elide/tooling/project/flags/ProjectFlagValue$StringTypeValue : elide/tooling/project/flags/ProjectFlagValue {
+	public static final field Companion Lelide/tooling/project/flags/ProjectFlagValue$StringTypeValue$Companion;
 	public fun getAsString ()Ljava/lang/String;
 	public abstract fun getValue ()Ljava/lang/String;
 }
 
+public final class elide/tooling/project/flags/ProjectFlagValue$StringTypeValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/tooling/project/flags/ProjectFlagValue$StringValue : elide/tooling/project/flags/ProjectFlagValue$StringTypeValue {
+	public static final field Companion Lelide/tooling/project/flags/ProjectFlagValue$StringValue$Companion;
 	public static final synthetic fun box-impl (Ljava/lang/String;)Lelide/tooling/project/flags/ProjectFlagValue$StringValue;
 	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
 	public fun equals (Ljava/lang/Object;)Z
@@ -3618,11 +3636,26 @@ public final class elide/tooling/project/flags/ProjectFlagValue$StringValue : el
 	public final synthetic fun unbox-impl ()Ljava/lang/String;
 }
 
+public final synthetic class elide/tooling/project/flags/ProjectFlagValue$StringValue$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/flags/ProjectFlagValue$StringValue$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-babNSlc (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-1oW952g (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+}
+
+public final class elide/tooling/project/flags/ProjectFlagValue$StringValue$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/tooling/project/flags/ProjectFlagValue$True : elide/tooling/project/flags/ProjectFlagValue$BooleanTypeValue {
 	public static final field INSTANCE Lelide/tooling/project/flags/ProjectFlagValue$True;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getValue ()Z
 	public fun hashCode ()I
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -4078,6 +4111,71 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$DevSettin
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public abstract interface class elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$Companion;
+	public abstract fun getArgValue ()Ljava/lang/String;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard$Companion;
+	public synthetic fun <init> (ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun argValue ()Ljava/lang/String;
+	public final fun component1-pVg5ArA ()I
+	public final fun copy-WZ4Q5Ns (I)Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard;
+	public static synthetic fun copy-WZ4Q5Ns$default (Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard;IILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getArgValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun number ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$NumericEcmaStandard$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard : java/lang/Record, elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard {
+	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public fun argValue ()Ljava/lang/String;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard;
+	public fun equals (Ljava/lang/Object;)Z
+	public synthetic fun getArgValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun name ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/project/manifest/ElidePackageManifest$EcmaStandard$StringEcmaStandard$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/tooling/project/manifest/ElidePackageManifest$EngineSettings {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$EngineSettings$Companion;
 	public fun <init> ()V
@@ -4448,14 +4546,20 @@ public final class elide/tooling/project/manifest/ElidePackageManifest$JavaLangu
 public final class elide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings : java/lang/Record {
 	public static final field Companion Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings$Companion;
 	public fun <init> ()V
-	public fun <init> (Z)V
-	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (ZLelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Z
-	public final fun copy (Z)Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;
-	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;ZILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;
+	public final fun component2 ()Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (ZLelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard;Ljava/lang/String;Ljava/lang/String;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;
+	public static synthetic fun copy$default (Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;ZLelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lelide/tooling/project/manifest/ElidePackageManifest$JavaScriptSettings;
 	public final fun debug ()Z
+	public final fun ecma ()Lelide/tooling/project/manifest/ElidePackageManifest$EcmaStandard;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
+	public final fun packageManager ()Ljava/lang/String;
+	public final fun runner ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -7971,9 +8075,19 @@ public abstract interface class elide/tooling/web/Browsers {
 }
 
 public abstract interface class elide/tooling/web/Browsers$Browser : elide/tooling/web/Browsers {
+	public static final field Companion Lelide/tooling/web/Browsers$Browser$Companion;
+}
+
+public final class elide/tooling/web/Browsers$Browser$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public abstract interface class elide/tooling/web/Browsers$BrowserList : elide/tooling/web/Browsers {
+	public static final field Companion Lelide/tooling/web/Browsers$BrowserList$Companion;
+}
+
+public final class elide/tooling/web/Browsers$BrowserList$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public abstract interface class elide/tooling/web/Browsers$BrowserListBuilder {
@@ -7994,9 +8108,11 @@ public final class elide/tooling/web/Browsers$Companion {
 	public final fun parse (Ljava/lang/Iterable;)Lelide/tooling/web/Browsers$BrowserList;
 	public final fun parse (Ljava/lang/String;[Ljava/lang/String;)Lelide/tooling/web/Browsers$BrowserList;
 	public final fun parse (Lkotlin/sequences/Sequence;)Lelide/tooling/web/Browsers$BrowserList;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class elide/tooling/web/Browsers$DefaultBrowser : elide/tooling/web/Browsers$Browser {
+	public static final field Companion Lelide/tooling/web/Browsers$DefaultBrowser$Companion;
 	public fun asSequence ()Lkotlin/sequences/Sequence;
 	public fun asTokens ()Ljava/util/Set;
 	public fun contains (Lelide/tooling/web/Browsers;)Z
@@ -8005,13 +8121,42 @@ public final class elide/tooling/web/Browsers$DefaultBrowser : elide/tooling/web
 	public fun toString ()Ljava/lang/String;
 }
 
+public final synthetic class elide/tooling/web/Browsers$DefaultBrowser$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/web/Browsers$DefaultBrowser$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/web/Browsers$DefaultBrowser;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/web/Browsers$DefaultBrowser;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/web/Browsers$DefaultBrowser$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class elide/tooling/web/Browsers$DefaultBrowserList : elide/tooling/web/Browsers$BrowserList {
+	public static final field Companion Lelide/tooling/web/Browsers$DefaultBrowserList$Companion;
 	public fun asSequence ()Lkotlin/sequences/Sequence;
 	public fun asTokens ()Ljava/util/Set;
 	public fun contains (Lelide/tooling/web/Browsers;)Z
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class elide/tooling/web/Browsers$DefaultBrowserList$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lelide/tooling/web/Browsers$DefaultBrowserList$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lelide/tooling/web/Browsers$DefaultBrowserList;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lelide/tooling/web/Browsers$DefaultBrowserList;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class elide/tooling/web/Browsers$DefaultBrowserList$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
 public final class elide/tooling/web/Browsers$DefaultBrowserListBuilder : elide/tooling/web/Browsers$BrowserListBuilder {

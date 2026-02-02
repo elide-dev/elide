@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-<b>Elide is a fast batteries-included runtime, combining support for Kotlin, JavaScript, TypeScript, and Python.</b>
+<b>One runtime, combining support for Kotlin, JavaScript, TypeScript, and Python.</b>
 <br />
 <br />
 <i>elide: verb. to omit (a sound or syllable) when speaking. to join together; to merge.</i>
@@ -37,9 +37,6 @@ Latest: <code>1.0.0-beta10</code>
 </p>
 
 <hr />
-
-> [!IMPORTANT]
-> Careful! Elide is in beta.
 
 ## Usage
 

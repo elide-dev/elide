@@ -1,6 +1,0 @@
-{
-  "include": "src/**/*.{ts,mts,tsx}",
-  "compilerOptions": {
-    "lib": ["DOM"]
-  }
-}

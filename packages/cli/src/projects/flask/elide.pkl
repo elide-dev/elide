@@ -1,3 +1,0 @@
-amends "elide:project.pkl"
-
-name = "elide-flask-sample"

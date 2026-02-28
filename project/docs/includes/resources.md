@@ -1,3 +1,0 @@
-## Docs & Resources
-
-Coming soon.

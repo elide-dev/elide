@@ -1,2 +1,0 @@
-# default elide repository catalogs in format remote:https://example.com/somepath/catalog.json
-# one repository per line, lines starting with # are comments and ignored

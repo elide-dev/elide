@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<SmellBaseline>
-  <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>FunctionOnlyReturningConstant:TraceNative.kt$TraceNative$@JvmStatic @JvmName("flushNativeLoggers") public fun flushNativeLoggers(): Boolean</ID>
-    <ID>MatchingDeclarationName:TracingImpl.kt$DefaultTraceChannel : TraceChannel</ID>
-    <ID>ReturnCount:TaskGraph.kt$TaskGraph.DefaultTaskGraph$private fun taskIsReady(task: Task): Boolean</ID>
-  </CurrentIssues>
-</SmellBaseline>

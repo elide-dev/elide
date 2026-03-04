@@ -46,7 +46,7 @@
     "eslint": "9.38.0",
     "express": "^4.21.2",
     "husky": "9.1.7",
-    "lint-staged": "16.2.7",
+    "lint-staged": "16.3.2",
     "mitata": "1.0.34",
     "postcss-cli": "11.0.1",
     "prettier": "3.7.4",

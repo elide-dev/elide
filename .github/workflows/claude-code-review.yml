@@ -76,7 +76,7 @@ jobs:
           version: "1.0.0-beta10"
       - name: "Review: Claude"
         id: claude-review
-        uses: anthropics/claude-code-action@7145c3e0510bcdbdd29f67cc4a8c1958f1acfa2f # beta
+        uses: anthropics/claude-code-action@e763fe78de2db7389e04818a00b5ff8ba13d1360 # beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           custom_instructions: |

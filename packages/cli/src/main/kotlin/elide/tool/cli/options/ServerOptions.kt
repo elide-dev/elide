@@ -64,6 +64,16 @@ import elide.tooling.project.ElideProject
   )
   var wsgi: String? = null
 
+  /** Specifies an ASGI app to be served (e.g. FastAPI, Starlette). */
+  @Option(
+    names = ["--asgi"],
+    description = [
+      "Name of a callable symbol to be used as the ASGI application, may contain arguments for factory functions, " +
+              "e.g. app(arg1,arg2). Use this for async frameworks like FastAPI and Starlette.",
+    ],
+  )
+  var asgi: String? = null
+
   /** Specifies a server transport override. */
   @Option(
     names = ["--transport"],

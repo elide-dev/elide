@@ -92,6 +92,8 @@ import elide.runtime.gvm.internals.IntrinsicsManager
 import elide.runtime.gvm.kotlin.*
 import elide.runtime.http.server.js.worker.JsWorkerApplication
 import elide.runtime.http.server.netty.*
+import elide.runtime.http.server.python.asgi.AsgiEntrypoint
+import elide.runtime.http.server.python.asgi.AsgiServerApplication
 import elide.runtime.http.server.python.wsgi.WsgiEntrypoint
 import elide.runtime.http.server.python.wsgi.WsgiServerApplication
 import elide.runtime.intrinsics.js.node.util.DebugLogger
@@ -1713,20 +1715,30 @@ internal class ToolShellCommand : ProjectAwareSubcommand<ToolState, CommandConte
           JsWorkerApplication(source, runtimeExecutor.acquire())
         }
 
-        PYTHON -> {
-          logging.debug { "Starting WSGI server" }
-          val wsgiOptions = activeProject.value?.manifest?.python?.wsgi
-          val entrypoint = wsgiOptions?.let { wsgi ->
-            // resolve from manifest
-            val bindingName = wsgi.name ?: error("Serve mode should only be active if the binding name is specified")
-            WsgiEntrypoint(source, bindingName, wsgi.args)
-          } ?: serverSettings.wsgi?.let {
-            // resolve from CLI arguments
-            WsgiEntrypoint.from(it, source)
+        PYTHON -> when {
+          // ASGI mode: async frameworks like FastAPI, Starlette
+          serverSettings.asgi != null -> {
+            logging.debug { "Starting ASGI server" }
+            val entrypoint = AsgiEntrypoint.from(serverSettings.asgi!!, source)
+            AsgiServerApplication(entrypoint, runtimeExecutor.acquire())
           }
-          ?: error("No available WSGI configuration in manifest or CLI arguments")
 
-          WsgiServerApplication(entrypoint, runtimeExecutor.acquire())
+          // WSGI mode: synchronous frameworks like Flask, Django
+          else -> {
+            logging.debug { "Starting WSGI server" }
+            val wsgiOptions = activeProject.value?.manifest?.python?.wsgi
+            val entrypoint = wsgiOptions?.let { wsgi ->
+              // resolve from manifest
+              val bindingName = wsgi.name ?: error("Serve mode should only be active if the binding name is specified")
+              WsgiEntrypoint(source, bindingName, wsgi.args)
+            } ?: serverSettings.wsgi?.let {
+              // resolve from CLI arguments
+              WsgiEntrypoint.from(it, source)
+            }
+            ?: error("No available WSGI or ASGI configuration in manifest or CLI arguments")
+
+            WsgiServerApplication(entrypoint, runtimeExecutor.acquire())
+          }
         }
 
         else -> error("Cannot run embedded server for language $language")

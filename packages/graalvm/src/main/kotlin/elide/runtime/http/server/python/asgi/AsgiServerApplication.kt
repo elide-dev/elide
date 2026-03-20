@@ -16,8 +16,6 @@ import io.netty.handler.codec.http.HttpRequest
 import io.netty.handler.codec.http.HttpResponse
 import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Value
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.TimeUnit
 import kotlin.time.TimeSource
 import elide.runtime.Logging
 import elide.runtime.exec.ContextAwareExecutor
@@ -59,7 +57,7 @@ import elide.runtime.http.server.netty.HttpsService
  *
  * The ASGI application runs on GraalPy's asyncio event loop within the context-aware executor thread.
  * The bridge uses `asyncio.get_event_loop().run_until_complete()` to drive the coroutine, with results
- * bridged back to Netty via [CompletableFuture].
+ * bridged back to Netty via the call lifecycle.
  *
  * @see AsgiScope
  * @see AsgiReceive
@@ -71,10 +69,11 @@ public class AsgiServerApplication(
   private val executor: ContextAwareExecutor,
 ) : HttpApplication<AsgiCallContext> {
 
-  /** Wrapper for a resolved ASGI application callable and its asyncio runner. */
+  /** Wrapper for a resolved ASGI application callable, asyncio runner, and async bridge factory. */
   private class AsgiStack(
     val app: Value,
     val asyncioRunUntilComplete: Value,
+    val asyncWrapperFactory: Value,
   )
 
   /** Host information resolved once the application starts, used to build ASGI scopes. */
@@ -109,11 +108,9 @@ public class AsgiServerApplication(
 
   override fun handle(call: HttpCall<AsgiCallContext>) {
     val ctx = call.context
-    val completionFuture = CompletableFuture<Unit>()
 
     val send = AsgiSend(call.response, call.responseBody) {
       call.send()
-      completionFuture.complete(Unit)
     }
 
     call.requestBody.consume(ctx.receive)
@@ -127,23 +124,11 @@ public class AsgiServerApplication(
         callAsgiApplication(stack, ctx, send)
 
         if (!send.isComplete) {
-          completionFuture.completeExceptionally(
-            IllegalStateException("ASGI application returned without sending a complete response")
-          )
+          call.fail(IllegalStateException("ASGI application returned without sending a complete response"))
         }
       }.onFailure { cause ->
         log.debug("ASGI application call failed", cause)
         call.fail(cause)
-        completionFuture.completeExceptionally(cause)
-      }
-    }
-
-    try {
-      completionFuture.get(REQUEST_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-    } catch (ex: Exception) {
-      if (!send.isComplete) {
-        log.warn("ASGI request timed out or failed: {}", ex.message)
-        call.fail(ex)
       }
     }
   }
@@ -186,8 +171,20 @@ public class AsgiServerApplication(
       "asyncio event loop does not have a callable run_until_complete"
     }
 
+    // Create a Python factory that wraps Java callables (ProxyExecutable) into proper Python
+    // async functions. ASGI requires receive/send to be async callables — calling them must return
+    // an awaitable. Our Java-side ProxyExecutable.execute() returns plain values, so `await receive()`
+    // would raise TypeError without this bridge. The wrapper creates thin async def functions that
+    // call through to the Java side synchronously (acceptable for single-request-per-coroutine flow).
+    @Suppress("MaxLineLength")
+    val asyncWrapperFactory = context.eval("python", ASYNC_WRAPPER_SOURCE)
+
+    check(asyncWrapperFactory.canExecute()) {
+      "Failed to create async wrapper factory for ASGI bridge"
+    }
+
     log.trace("Initialized ASGI stack for context {} in {}", context, start.elapsedNow())
-    return AsgiStack(app, runUntilComplete)
+    return AsgiStack(app, runUntilComplete, asyncWrapperFactory)
   }
 
   /**
@@ -197,8 +194,14 @@ public class AsgiServerApplication(
    * which we then drive to completion using `asyncio.get_event_loop().run_until_complete(coro)`.
    */
   private fun callAsgiApplication(stack: AsgiStack, ctx: AsgiCallContext, send: AsgiSend) {
+    // Wrap Java ProxyExecutable receive/send into Python async functions so that
+    // `await receive()` and `await send(msg)` work correctly in the ASGI app.
+    val wrappers = stack.asyncWrapperFactory.execute(ctx.receive, send)
+    val asyncReceive = wrappers.getArrayElement(0)
+    val asyncSend = wrappers.getArrayElement(1)
+
     // Call the ASGI application — this returns a coroutine object
-    val coroutine = stack.app.execute(ctx.scope, ctx.receive, send)
+    val coroutine = stack.app.execute(ctx.scope, asyncReceive, asyncSend)
 
     // Drive the coroutine to completion using asyncio's event loop
     stack.asyncioRunUntilComplete.execute(coroutine)
@@ -208,7 +211,15 @@ public class AsgiServerApplication(
     private val log = Logging.of(AsgiServerApplication::class.java)
     private val LocalAsgiStack = ContextLocal<AsgiStack>()
 
-    /** Maximum time to wait for an ASGI application to complete a request. */
-    private const val REQUEST_TIMEOUT_SECONDS = 30L
+    // language=python
+    private const val ASYNC_WRAPPER_SOURCE = """
+def _make_async_wrappers(java_receive, java_send):
+    async def receive():
+        return java_receive()
+    async def send(message):
+        java_send(message)
+    return (receive, send)
+_make_async_wrappers
+"""
   }
 }

@@ -46,13 +46,14 @@ public class AsgiReceive : ProxyExecutable, HttpRequestConsumer {
 
   override fun onAttached(reader: HttpRequestBody.Reader) {
     this.reader = reader
+    reader.pull()
   }
 
   override fun onRead(content: ByteBuf) {
     val bytes = ByteArray(content.readableBytes())
     content.readBytes(bytes)
-    content.release()
     chunks.offer(BodyChunk.Data(bytes))
+    reader?.pull()
   }
 
   override fun onClose(failure: Throwable?) {

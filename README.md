@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-Latest: <code>1.0.0-beta10</code>
+Latest: <code>1.0.0</code>
 </p>
 <p align="center">
   Learn more at <a href="https://elide.dev">elide.dev</a> | <a href="https://docs.elide.dev">Docs, Guides, and Samples</a>
@@ -32,3 +32,6 @@ Latest: <code>1.0.0-beta10</code>
 <hr />
 
 [Releases](https://github.com/elide-dev/elide/releases) are published to this repository.
+
+> [!NOTE]
+> Elide has moved to a source-available license. If you want to contribute, just join the [Discord](https://elide.dev/discord) and we can get you started. "Elide Classic," our older code, is still public on the [`v5` branch](https://github.com/elide-dev/elide/tree/v5).

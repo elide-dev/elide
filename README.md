@@ -23,9 +23,6 @@
 </p>
 
 <p align="center">
-Latest: <code>1.0.0</code>
-</p>
-<p align="center">
   Learn more at <a href="https://elide.dev">elide.dev</a> | <a href="https://docs.elide.dev">Docs, Guides, and Samples</a>
 </p>
 
